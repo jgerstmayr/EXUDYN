@@ -4,10 +4,15 @@
 
 A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is in its current implementation inefficient for large number of meshNodeNumbers). The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object.
 
-**Additional information for MarkerSuperElementPosition**:
-- This `Marker` has/provides the following types = `Object`, `Body`, `Position`
+## Interface
 
-The item **MarkerSuperElementPosition** with type = 'SuperElementPosition' has the following parameters:
+- Provides: `Position`
+- Bodies it can be placed on: [](#sec-item-objectgenericode2), [](#sec-item-objectffrf), [](#sec-item-objectffrfreducedorder)
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorspringdamper), [](#sec-item-objectconnectorcartesianspringdamper), [](#sec-item-objectconnectorgravity), [](#sec-item-objectconnectorhydraulicactuatorsimple), [](#sec-item-objectconnectordistance), [](#sec-item-objectcontactspheresphere), [](#sec-item-objectcontactspheretriangle), [](#sec-item-objectjointspherical), [](#sec-item-objectjointrevolute2d), [](#sec-item-loadforcevector)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'SuperElementPosition':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -17,16 +22,17 @@ The item **MarkerSuperElementPosition** with type = 'SuperElementPosition' has t
 | **weightingFactors** $[w_{0},\,\ldots,\,w_{n_m-1}]\tp$ | Vector |  | [] | a list of $n_m$ weighting factors per node to compute the final local position; the sum of these weights shall be 1, such that a summation of all nodal positions times weights gives the average position of the marker |
 | **visualization** | VMarkerSuperElementPosition |  |  | parameters for visualization of item |
 
-The item VMarkerSuperElementPosition has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerSuperElementPosition`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **showMarkerNodes** | Bool |  | True | set true, if all nodes are shown (similar to marker, but with less intensity) |
 
-
 (description-markersuperelementposition)=
-## DESCRIPTION of MarkerSuperElementPosition
+## Detailed description
 
 **Definition of marker quantities**:
 
@@ -62,7 +68,7 @@ Note that $\Jm_{m,pos}$ is actually computed by the
 `ObjectSuperElement` within the function `GetAccessFunctionSuperElement`.
 
 (miniexample-markersuperelementposition)=
-### MINI EXAMPLE for MarkerSuperElementPosition
+## Mini example
 
 
 ```python

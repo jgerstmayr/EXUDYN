@@ -4,12 +4,14 @@
 
 Load attached to MarkerBodyMass marker, applying a 3D vector load (e.g. the vector [0,-g,0] is used to apply gravitational loading of size g in negative y-direction).
 
-**Additional information for LoadMassProportional**:
-- Requested `Marker` type = `Body` + `BodyMass`
-- **Short name** for Python = `Gravity`
-- **Short name** for Python visualization object = `VGravity`
+## Interface
 
-The item **LoadMassProportional** with type = 'MassProportional' has the following parameters:
+- Python names: `LoadMassProportional` or `Gravity`, and `VGravity` for its visualization
+- Markers it acts on: those providing `BodyMass`: [](#sec-item-markerbodymass)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'MassProportional':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -19,15 +21,16 @@ The item **LoadMassProportional** with type = 'MassProportional' has the followi
 | **loadVectorUserFunction** $\mathrm{UF} \in \Rcal^3$ | PyFunctionVector3DmbsScalarVector3D |  | 0 | A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector! |
 | **visualization** | VLoadMassProportional |  |  | parameters for visualization of item |
 
-The item VLoadMassProportional has the following parameters:
+## Visualization parameters
+
+The parameters of `VLoadMassProportional`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
-
 (description-loadmassproportional)=
-## DESCRIPTION of LoadMassProportional
+## Detailed description
 
 ### Details
 
@@ -46,7 +49,7 @@ Example of user function: functionality same as in `LoadForceVector`
 | **return value** | Vector3D | computed load vector |
 
 (miniexample-loadmassproportional)=
-### MINI EXAMPLE for LoadMassProportional
+## Mini example
 
 
 ```python

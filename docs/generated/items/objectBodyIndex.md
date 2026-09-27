@@ -4,7 +4,7 @@
 A Body is a special Object, which has physical properties such as mass. A localPosition can be measured w.r.t. the reference point of the body
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
 
 ObjectGround
 ObjectMassPoint

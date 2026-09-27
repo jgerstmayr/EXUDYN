@@ -4,10 +4,14 @@
 
 A special Marker attached to the coordinates of a 2D ANCF beam finite element with cubic interpolation.
 
-**Additional information for MarkerBodyCable2DCoordinates**:
-- This `Marker` has/provides the following types = `Object`, `Body`, `Coordinate`
+## Interface
 
-The item **MarkerBodyCable2DCoordinates** with type = 'BodyCable2DCoordinates' has the following parameters:
+- Provides: `Coordinate`
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorcoordinatespringdamper), [](#sec-item-objectconnectorcoordinatespringdamperext), [](#sec-item-objectconnectorcoordinate), [](#sec-item-objectcontactcoordinate), [](#sec-item-loadcoordinate)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'BodyCable2DCoordinates':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -15,15 +19,13 @@ The item **MarkerBodyCable2DCoordinates** with type = 'BodyCable2DCoordinates' h
 | **bodyNumber** | ObjectIndex |  | invalid (-1) | body number to which marker is attached to |
 | **visualization** | VMarkerBodyCable2DCoordinates |  |  | parameters for visualization of item |
 
-The item VMarkerBodyCable2DCoordinates has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerBodyCable2DCoordinates`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-
-
-(description-markerbodycable2dcoordinates)=
-## DESCRIPTION of MarkerBodyCable2DCoordinates
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFslidingJoint2Drigid.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py) (Ex), [`ANCFswitchingSlidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFswitchingSlidingJoint2D.py) (Ex), [`ANCFmovingRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py) (TM), [`SlidingJoint2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/SlidingJoint2DTest.py) (TM)

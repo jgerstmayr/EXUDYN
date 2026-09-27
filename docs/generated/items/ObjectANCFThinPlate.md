@@ -4,11 +4,14 @@
 
 OBJECT UNDER CONSTRUCTION: A 3D thin Kirchhoff plate finite element based on the absolute nodal coordinate formulation, using 4 nodes of type NodePointSlope12. The geometry as well as (deformed and distorted) reference configuration is given by the nodes. The localPosition follows unit-coordinates in the range [-1,1] for X, Y and Z coordinates; the thickness of the plate is h; This element is under construction.
 
-**Additional information for ObjectANCFThinPlate**:
-- This `Object` has/provides the following types = `Body`, `MultiNoded`
-- Requested `Node` type = `Position`
+## Interface
 
-The item **ObjectANCFThinPlate** with type = 'ANCFThinPlate' has the following parameters:
+- Nodes it takes: [](#sec-item-nodepointslope12)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ANCFThinPlate':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -25,18 +28,18 @@ The item **ObjectANCFThinPlate** with type = 'ANCFThinPlate' has the following p
 | **useReducedOrderIntegration** | Index |  | 0 | 0/false: use highest Gauss integration for virtual work of strains |
 | **visualization** | VObjectANCFThinPlate |  |  | parameters for visualization of item |
 
-The item VObjectANCFThinPlate has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectANCFThinPlate`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color of the object; if R==-1, use default color |
 
+## Output variables
 
-(description-objectancfthinplate)=
-## DESCRIPTION of ObjectANCFThinPlate
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -52,10 +55,13 @@ The item VObjectANCFThinPlate has the following parameters:
 | StressLocal |  | local inplane stress components |
 | Acceleration | $\LU{0}{\av(x,y,z)} = \LU{0}{\ddot \rv(x,y,z)}$ | global acceleration vector of local position |
 
+(description-objectancfthinplate)=
+## Detailed description
+
 Note: For output variables, the localPosition is defined in $[-1,-1,-1] ... [1,1,1]$, where $[-1,-1,0]$ is the position of node 0.
 
 (miniexample-objectancfthinplate)=
-### MINI EXAMPLE for ObjectANCFThinPlate
+## Mini example
 
 
 ```python

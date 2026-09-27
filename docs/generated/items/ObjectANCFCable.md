@@ -4,13 +4,15 @@
 
 A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the {ref}`EOM <EOM>`). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
 
-**Additional information for ObjectANCFCable**:
-- This `Object` has/provides the following types = `Body`, `MultiNoded`
-- Requested `Node` type = `Position`
-- **Short name** for Python = `Cable`
-- **Short name** for Python visualization object = `VCable`
+## Interface
 
-The item **ObjectANCFCable** with type = 'ANCFCable' has the following parameters:
+- Python names: `ObjectANCFCable` or `Cable`, and `VCable` for its visualization
+- Nodes it takes: [](#sec-item-nodepointslope1)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ANCFCable':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -27,7 +29,9 @@ The item **ObjectANCFCable** with type = 'ANCFCable' has the following parameter
 | **useReducedOrderIntegration** | Index |  | 0 | 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments |
 | **visualization** | VObjectANCFCable |  |  | parameters for visualization of item |
 
-The item VObjectANCFCable has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectANCFCable`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -35,11 +39,9 @@ The item VObjectANCFCable has the following parameters:
 | **radius** | float |  | 0. | if radius==0, only the centerline is drawn; else, a cylinder with radius is drawn; circumferential tiling follows general.cylinderTiling and beam axis tiling follows bodies.beams.axialTiling |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color of the object; if R==-1, use default color |
 
+## Output variables
 
-(description-objectancfcable)=
-## DESCRIPTION of ObjectANCFCable
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -53,10 +55,8 @@ The item VObjectANCFCable has the following parameters:
 | TorqueLocal | $M$ | (local) bending moment (scalar) (at $y$=$z$=0), which are bending moments as there is no torque |
 | Acceleration | $\LU{0}{\av(x,0,0)} = \LU{0}{\ddot \rv(x)}$ | global acceleration vector of local position |
 
-
-
 (miniexample-objectancfcable)=
-### MINI EXAMPLE for ObjectANCFCable
+## Mini example
 
 
 ```python

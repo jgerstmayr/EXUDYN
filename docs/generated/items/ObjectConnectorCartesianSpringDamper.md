@@ -4,13 +4,14 @@
 
 An 3D spring-damper element, providing springs and dampers in three (global) directions (x,y,z); the connector can be attached to position-based markers.
 
-**Additional information for ObjectConnectorCartesianSpringDamper**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Position`
-- **Short name** for Python = `CartesianSpringDamper`
-- **Short name** for Python visualization object = `VCartesianSpringDamper`
+## Interface
 
-The item **ObjectConnectorCartesianSpringDamper** with type = 'ConnectorCartesianSpringDamper' has the following parameters:
+- Python names: `ObjectConnectorCartesianSpringDamper` or `CartesianSpringDamper`, and `VCartesianSpringDamper` for its visualization
+- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorCartesianSpringDamper':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -23,7 +24,9 @@ The item **ObjectConnectorCartesianSpringDamper** with type = 'ConnectorCartesia
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorCartesianSpringDamper |  |  | parameters for visualization of item |
 
-The item VObjectConnectorCartesianSpringDamper has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorCartesianSpringDamper`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -31,11 +34,9 @@ The item VObjectConnectorCartesianSpringDamper has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectconnectorcartesianspringdamper)=
-## DESCRIPTION of ObjectConnectorCartesianSpringDamper
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -43,6 +44,9 @@ The item VObjectConnectorCartesianSpringDamper has the following parameters:
 | Distance | $L=\|\Delta\! \LU{0}{\pv}\|$ | scalar distance between both marker points |
 | Velocity | $\Delta\! \LU{0}{\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ | relative translational velocity in global coordinates |
 | Force | $\fv_{SD}$ | joint force in global coordinates, see equations |
+
+(description-objectconnectorcartesianspringdamper)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -183,7 +187,7 @@ mbs.AddObject(CartesianSpringDamper(markerNumbers = [mGround, mMass],
 ```
 
 (miniexample-objectconnectorcartesianspringdamper)=
-### MINI EXAMPLE for ObjectConnectorCartesianSpringDamper
+## Mini example
 
 
 ```python

@@ -4,13 +4,15 @@
 
 A 3D beam finite element based on the absolute nodal coordinate formulation, using two nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes; assuming dimensions $w_y$ and $w_z$ in cross section, the local position range is $\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]$. NOTE: Requires further development and tests!
 
-**Additional information for ObjectANCFBeam**:
-- This `Object` has/provides the following types = `Body`, `MultiNoded`
-- Requested `Node` type = `Position` + `Orientation`
-- **Short name** for Python = `ANCFBeam`
-- **Short name** for Python visualization object = `VANCFBeam`
+## Interface
 
-The item **ObjectANCFBeam** with type = 'ANCFBeam' has the following parameters:
+- Python names: `ObjectANCFBeam` or `ANCFBeam`, and `VANCFBeam` for its visualization
+- Nodes it takes: [](#sec-item-nodepointslope23)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ANCFBeam':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -22,7 +24,9 @@ The item **ObjectANCFBeam** with type = 'ANCFBeam' has the following parameters:
 | **crossSectionDamping** $d_{cs} = [d_{fyy},\,d_{fzz},\,d_{fyz}]\tp$ | Vector3D | 3 | [0.,0.,0.] | [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read $d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp$ |
 | **visualization** | VObjectANCFBeam |  |  | parameters for visualization of item |
 
-The item VObjectANCFBeam has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectANCFBeam`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -30,11 +34,9 @@ The item VObjectANCFBeam has the following parameters:
 | **sectionGeometry** | BeamSectionGeometry |  | BeamSectionGeometry() | defines cross section shape used for visualization and contact |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color of the object; if R==-1, use default color |
 
+## Output variables
 
-(description-objectancfbeam)=
-## DESCRIPTION of ObjectANCFBeam
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -47,6 +49,9 @@ The item VObjectANCFBeam has the following parameters:
 | Acceleration |  | global acceleration vector of local position vector |
 | Rotation |  | 3D Tait-Bryan rotation components of cross section rotation |
 | RotationMatrix |  | rotation matrix of cross section rotation as 9D vector |
+
+(description-objectancfbeam)=
+## Detailed description
 
 Detailed description coming later.
 

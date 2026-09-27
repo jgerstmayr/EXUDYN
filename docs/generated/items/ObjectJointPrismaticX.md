@@ -8,13 +8,14 @@ A prismatic joint in 3D; constrains the relative rotation of two rigid body mark
 :width: 400
 ```
 
-**Additional information for ObjectJointPrismaticX**:
-- This `Object` has/provides the following types = `Connector`, `Constraint`
-- Requested `Marker` type = `Position` + `Orientation`
-- **Short name** for Python = `PrismaticJointX`
-- **Short name** for Python visualization object = `VPrismaticJointX`
+## Interface
 
-The item **ObjectJointPrismaticX** with type = 'JointPrismaticX' has the following parameters:
+- Python names: `ObjectJointPrismaticX` or `PrismaticJointX`, and `VPrismaticJointX` for its visualization
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'JointPrismaticX':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -25,7 +26,9 @@ The item **ObjectJointPrismaticX** with type = 'JointPrismaticX' has the followi
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectJointPrismaticX |  |  | parameters for visualization of item |
 
-The item VObjectJointPrismaticX has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectJointPrismaticX`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -34,11 +37,9 @@ The item VObjectJointPrismaticX has the following parameters:
 | **axisLength** | float |  | 0.4 | length of joint axis to draw |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectjointprismaticx)=
-## DESCRIPTION of ObjectJointPrismaticX
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -50,6 +51,9 @@ The item VObjectJointPrismaticX has the following parameters:
 | AngularVelocityLocal | $\LU{J0}{\Delta\tomega}$ | relative angular velocity in local joint0 coordinates; if all axes are fixed, this output represents the angular velocity constraint error; for a revolute joint, it contains the angular velocity of this axis |
 | ForceLocal | $\LU{J0}{\fv}$ | joint force in local $J0$ coordinates |
 | TorqueLocal | $\LU{J0}{\mv}$ | joint torque in local $J0$ coordinates; depending on joint configuration, the result may not be the according torque vector |
+
+(description-objectjointprismaticx)=
+## Detailed description
 
 (sec-objectjointprismaticx-definitionofquantities)=
 ### Definition of quantities

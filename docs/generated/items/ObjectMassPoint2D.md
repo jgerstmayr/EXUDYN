@@ -4,13 +4,15 @@
 
 A 2D mass point which is attached to a position-based 2D node.
 
-**Additional information for ObjectMassPoint2D**:
-- This `Object` has/provides the following types = `Body`, `SingleNoded`
-- Requested `Node` type = `Position2D` + `Position`
-- **Short name** for Python = `MassPoint2D`
-- **Short name** for Python visualization object = `VMassPoint2D`
+## Interface
 
-The item **ObjectMassPoint2D** with type = 'MassPoint2D' has the following parameters:
+- Python names: `ObjectMassPoint2D` or `MassPoint2D`, and `VMassPoint2D` for its visualization
+- Nodes it takes: [](#sec-item-nodepoint2d), [](#sec-item-noderigidbody2d), [](#sec-item-nodepoint2dslope1), [](#sec-item-nodepointground)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'MassPoint2D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -19,18 +21,18 @@ The item **ObjectMassPoint2D** with type = 'MassPoint2D' has the following param
 | **nodeNumber** $n0$ | NodeIndex |  | invalid (-1) | node number (type NodeIndex) for mass point |
 | **visualization** | VObjectMassPoint2D |  |  | parameters for visualization of item |
 
-The item VObjectMassPoint2D has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectMassPoint2D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **graphicsData** | BodyGraphicsData |  |  | Structure contains data for body visualization; data is defined in special list / dictionary structure |
 
+## Output variables
 
-(description-objectmasspoint2d)=
-## DESCRIPTION of ObjectMassPoint2D
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -42,6 +44,9 @@ The item VObjectMassPoint2D has the following parameters:
 | Rotation | $[0,0,0]$ | (only for completeness) |
 | AngularVelocity | $[0,0,0]$ | (only for completeness) |
 | AngularVelocityLocal | $[0,0,0]$ | (only for completeness) |
+
+(description-objectmasspoint2d)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -78,7 +83,7 @@ $$
 $$
 
 (miniexample-objectmasspoint2d)=
-### MINI EXAMPLE for ObjectMassPoint2D
+## Mini example
 
 
 ```python

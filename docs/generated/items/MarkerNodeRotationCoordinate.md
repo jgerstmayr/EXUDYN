@@ -4,10 +4,15 @@
 
 A node-Marker attached to a a node containing rotation; the Marker measures a rotation coordinate (Tait-Bryan angles) or angular velocities on the velocity level.
 
-**Additional information for MarkerNodeRotationCoordinate**:
-- This `Marker` has/provides the following types = `Node`, `Coordinate`
+## Interface
 
-The item **MarkerNodeRotationCoordinate** with type = 'NodeRotationCoordinate' has the following parameters:
+- Provides: `Coordinate`
+- Nodes it can be attached to: [](#sec-item-noderigidbodyep), [](#sec-item-noderigidbodyrxyz), [](#sec-item-noderigidbodyrotveclg), [](#sec-item-nodepointslope12), [](#sec-item-nodepointslope23), [](#sec-item-nodepointground)
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorcoordinatespringdamper), [](#sec-item-objectconnectorcoordinatespringdamperext), [](#sec-item-objectconnectorcoordinate), [](#sec-item-objectcontactcoordinate), [](#sec-item-loadcoordinate)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'NodeRotationCoordinate':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -16,15 +21,13 @@ The item **MarkerNodeRotationCoordinate** with type = 'NodeRotationCoordinate' h
 | **rotationCoordinate** | UInt |  | invalid (-1) | rotation coordinate: 0=x, 1=y, 2=z; **must be given**: the default is only a placeholder |
 | **visualization** | VMarkerNodeRotationCoordinate |  |  | parameters for visualization of item |
 
-The item VMarkerNodeRotationCoordinate has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerNodeRotationCoordinate`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-
-
-(description-markernoderotationcoordinate)=
-## DESCRIPTION of MarkerNodeRotationCoordinate
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pistonEngine.py) (Ex), [`rigidRotor3DbasicBehaviour.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3DbasicBehaviour.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`driveTrainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/driveTrainTest.py) (TM), [`sliderCrank3Dbenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrank3Dbenchmark.py) (TM)

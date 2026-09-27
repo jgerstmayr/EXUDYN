@@ -4,13 +4,14 @@
 
 A constraint which constrains the coordinate vectors of two markers Marker[Node|Object|Body]Coordinates attached to nodes or bodies. The marker uses the objects {ref}`LTG <LTG>`-lists to build the according coordinate mappings.
 
-**Additional information for ObjectConnectorCoordinateVector**:
-- This `Object` has/provides the following types = `Connector`, `Constraint`
-- Requested `Marker` type = `Coordinate`
-- **Short name** for Python = `CoordinateVectorConstraint`
-- **Short name** for Python visualization object = `VCoordinateVectorConstraint`
+## Interface
 
-The item **ObjectConnectorCoordinateVector** with type = 'ConnectorCoordinateVector' has the following parameters:
+- Python names: `ObjectConnectorCoordinateVector` or `CoordinateVectorConstraint`, and `VCoordinateVectorConstraint` for its visualization
+- Markers it acts on: those providing `Coordinates`: [](#sec-item-markernodecoordinates), [](#sec-item-markerobjectode2coordinates)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorCoordinateVector':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -27,18 +28,18 @@ The item **ObjectConnectorCoordinateVector** with type = 'ConnectorCoordinateVec
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorCoordinateVector |  |  | parameters for visualization of item |
 
-The item VObjectConnectorCoordinateVector has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorCoordinateVector`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectconnectorcoordinatevector)=
-## DESCRIPTION of ObjectConnectorCoordinateVector
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -46,6 +47,9 @@ The item VObjectConnectorCoordinateVector has the following parameters:
 | Velocity | $\Delta \vv$ | difference of scalar marker velocity coordinates, not including scaling matrices |
 | ConstraintEquation | $\cv$ | (residuum of) constraint equations |
 | Force | $\tlambda$ | constraint force vector (vector of Lagrange multipliers), resulting from action of constraint equations |
+
+(description-objectconnectorcoordinatevector)=
+## Detailed description
 
 ### Definition of quantities
 

@@ -6,13 +6,15 @@ This object is used to represent modally reduced flexible bodies using the {ref}
 
 Authors: Gerstmayr Johannes, Zwölfer Andreas
 
-**Additional information for ObjectFFRFreducedOrder**:
-- This `Object` has/provides the following types = `Body`, `MultiNoded`, `SuperElement`
-- Requested `Node` type: read detailed information of item
-- **Short name** for Python = `CMSobject`
-- **Short name** for Python visualization object = `VCMSobject`
+## Interface
 
-The item **ObjectFFRFreducedOrder** with type = 'FFRFreducedOrder' has the following parameters:
+- Python names: `ObjectFFRFreducedOrder` or `CMSobject`, and `VCMSobject` for its visualization
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid)
+- Nodes: see the detailed description
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'FFRFreducedOrder':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -42,7 +44,9 @@ The item **ObjectFFRFreducedOrder** with type = 'FFRFreducedOrder' has the follo
 | **tempUserFunctionForce** $\fv_{temp} \in \Rcal^{n_{ODE2}}$ | NumpyVector |  | [] | temporary vector for UF force |
 | **visualization** | VObjectFFRFreducedOrder |  |  | parameters for visualization of item |
 
-The item VObjectFFRFreducedOrder has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectFFRFreducedOrder`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -51,17 +55,18 @@ The item VObjectFFRFreducedOrder has the following parameters:
 | **triangleMesh** | NumpyMatrixI |  | [] | a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame! |
 | **showNodes** | Bool |  | False | set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF' |
 
+## Output variables
 
-(description-objectffrfreducedorder)=
-## DESCRIPTION of ObjectFFRFreducedOrder
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
 | Coordinates |  | all {ref}`ODE2 <ODE2>` coordinates |
 | Coordinates_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
 | Force |  | generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS) |
+
+(description-objectffrfreducedorder)=
+## Detailed description
 
 (sec-objectffrfreducedorder-superelementoutput)=
 ### Super element output variables

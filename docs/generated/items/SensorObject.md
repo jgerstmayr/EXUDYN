@@ -3,7 +3,10 @@
 # SensorObject
 
 A sensor attached to any object except bodies  (connectors, constraint, spring-damper, etc). As a difference to other SensorBody, the connector sensor measures quantities without a local position. The sensor measures OutputVariable and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
-The item **SensorObject** with type = 'Object' has the following parameters:
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'Object':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -15,15 +18,13 @@ The item **SensorObject** with type = 'Object' has the following parameters:
 | **storeInternal** | Bool |  | False | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available |
 | **visualization** | VSensorObject |  |  | parameters for visualization of item |
 
-The item VSensorObject has the following parameters:
+## Visualization parameters
+
+The parameters of `VSensorObject`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; sensors can be shown at the position assiciated with the object - note that in some cases, there might be no such position (e.g. data object)! |
-
-
-(description-sensorobject)=
-## DESCRIPTION of SensorObject
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex), [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`camFollowerExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py) (Ex), [`ComputeSensitivitiesExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ComputeSensitivitiesExample.py) (Ex), [`craneReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/craneReevingSystem.py) (Ex), [`HydraulicActuator2Arms.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicActuator2Arms.py) (Ex), [`HydraulicActuatorStaticInitialization.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicActuatorStaticInitialization.py) (Ex), [`HydraulicsUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicsUserFunction.py) (Ex), [`leggedRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/leggedRobot.py) (Ex), [`lugreFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/lugreFrictionTest.py) (Ex), [`ballBearingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ballBearingTest.py) (TM), [`carRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py) (TM), [`complexEigenvaluesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/complexEigenvaluesTest.py) (TM), ...

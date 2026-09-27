@@ -4,10 +4,13 @@
 
 Load with scalar value, which is attached to a coordinate-based marker; the load can be used e.g. to apply a force to a single axis of a body, a nodal coordinate of a finite element  or a torque to the rotatory DOF of a rigid body.
 
-**Additional information for LoadCoordinate**:
-- Requested `Marker` type = `Coordinate`
+## Interface
 
-The item **LoadCoordinate** with type = 'Coordinate' has the following parameters:
+- Markers it acts on: those providing `Coordinate`: [](#sec-item-markernodecoordinate), [](#sec-item-markernodeode1coordinate), [](#sec-item-markernoderotationcoordinate), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markerbodycable2dshape), [](#sec-item-markerbodycable2dcoordinates)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'Coordinate':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -17,15 +20,16 @@ The item **LoadCoordinate** with type = 'Coordinate' has the following parameter
 | **loadUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalar2 |  | 0 | A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector! |
 | **visualization** | VLoadCoordinate |  |  | parameters for visualization of item |
 
-The item VLoadCoordinate has the following parameters:
+## Visualization parameters
+
+The parameters of `VLoadCoordinate`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
-
 (description-loadcoordinate)=
-## DESCRIPTION of LoadCoordinate
+## Detailed description
 
 ### Details
 

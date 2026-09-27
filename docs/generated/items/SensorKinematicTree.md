@@ -3,7 +3,10 @@
 # SensorKinematicTree
 
 A sensor attached to a KinematicTree with local position $\pLocB$ and link number $n_l$. As a difference to SensorBody, the KinematicTree sensor needs a local position and a link number, which defines the sub-body at which the sensor values are evaluated. The local position is given in sub-body (link) local coordinates. The sensor measures OutputVariableKinematicTree and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
-The item **SensorKinematicTree** with type = 'KinematicTree' has the following parameters:
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'KinematicTree':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -17,15 +20,13 @@ The item **SensorKinematicTree** with type = 'KinematicTree' has the following p
 | **storeInternal** | Bool |  | False | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available |
 | **visualization** | VSensorKinematicTree |  |  | parameters for visualization of item |
 
-The item VSensorKinematicTree has the following parameters:
+## Visualization parameters
+
+The parameters of `VSensorKinematicTree`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-
-
-(description-sensorkinematictree)=
-## DESCRIPTION of SensorKinematicTree
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`openAIgymNLinkContinuous.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkContinuous.py) (Ex), [`reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex), [`stiffFlyballGovernorKT.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py) (Ex), [`kinematicTreeAndMBStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py) (TM), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM)

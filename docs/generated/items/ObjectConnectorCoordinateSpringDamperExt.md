@@ -4,14 +4,15 @@
 
 A 1D (scalar) spring-damper element acting on single {ref}`ODE2 <ODE2>` coordinates, same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction. It has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.
 
-**Additional information for ObjectConnectorCoordinateSpringDamperExt**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Coordinate`
-- Requested `Node` type = `GenericData`
-- **Short name** for Python = `CoordinateSpringDamperExt`
-- **Short name** for Python visualization object = `VCoordinateSpringDamperExt`
+## Interface
 
-The item **ObjectConnectorCoordinateSpringDamperExt** with type = 'ConnectorCoordinateSpringDamperExt' has the following parameters:
+- Python names: `ObjectConnectorCoordinateSpringDamperExt` or `CoordinateSpringDamperExt`, and `VCoordinateSpringDamperExt` for its visualization
+- Nodes it takes: [](#sec-item-nodegenericdata)
+- Markers it acts on: those providing `Coordinate`: [](#sec-item-markernodecoordinate), [](#sec-item-markernodeode1coordinate), [](#sec-item-markernoderotationcoordinate), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markerbodycable2dshape), [](#sec-item-markerbodycable2dcoordinates)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorCoordinateSpringDamperExt':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -40,7 +41,9 @@ The item **ObjectConnectorCoordinateSpringDamperExt** with type = 'ConnectorCoor
 | **springForceUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalarIndexScalar11 |  | 0 | A Python function which defines the spring force with 8 parameters, see equations section / see description below |
 | **visualization** | VObjectConnectorCoordinateSpringDamperExt |  |  | parameters for visualization of item |
 
-The item VObjectConnectorCoordinateSpringDamperExt has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorCoordinateSpringDamperExt`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -48,17 +51,18 @@ The item VObjectConnectorCoordinateSpringDamperExt has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectconnectorcoordinatespringdamperext)=
-## DESCRIPTION of ObjectConnectorCoordinateSpringDamperExt
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
 | Displacement | $\Delta q$ | relative scalar displacement of marker coordinates |
 | Velocity | $\Delta v$ | difference of scalar marker velocity coordinates |
 | Force | $f_{SD}$ | scalar spring force |
+
+(description-objectconnectorcoordinatespringdamperext)=
+## Detailed description
 
 ### Definition of quantities
 

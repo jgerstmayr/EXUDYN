@@ -4,10 +4,14 @@
 
 A node-Marker attached to a {ref}`ODE1 <ODE1>` coordinate of a node.
 
-**Additional information for MarkerNodeODE1Coordinate**:
-- This `Marker` has/provides the following types = `Node`, `Coordinate`
+## Interface
 
-The item **MarkerNodeODE1Coordinate** with type = 'NodeODE1Coordinate' has the following parameters:
+- Provides: `Coordinate`
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorcoordinatespringdamper), [](#sec-item-objectconnectorcoordinatespringdamperext), [](#sec-item-objectconnectorcoordinate), [](#sec-item-objectcontactcoordinate), [](#sec-item-loadcoordinate)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'NodeODE1Coordinate':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -16,7 +20,9 @@ The item **MarkerNodeODE1Coordinate** with type = 'NodeODE1Coordinate' has the f
 | **coordinate** | UInt |  | invalid (-1) | coordinate of node to which marker is attached to; **must be given**: the default is only a placeholder |
 | **visualization** | VMarkerNodeODE1Coordinate |  |  | parameters for visualization of item |
 
-The item VMarkerNodeODE1Coordinate has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerNodeODE1Coordinate`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

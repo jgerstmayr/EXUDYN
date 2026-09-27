@@ -8,13 +8,14 @@ A spherical joint, which constrains the relative translation between two positio
 :width: 400
 ```
 
-**Additional information for ObjectJointSpherical**:
-- This `Object` has/provides the following types = `Connector`, `Constraint`
-- Requested `Marker` type = `Position`
-- **Short name** for Python = `SphericalJoint`
-- **Short name** for Python visualization object = `VSphericalJoint`
+## Interface
 
-The item **ObjectJointSpherical** with type = 'JointSpherical' has the following parameters:
+- Python names: `ObjectJointSpherical` or `SphericalJoint`, and `VSphericalJoint` for its visualization
+- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'JointSpherical':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -24,7 +25,9 @@ The item **ObjectJointSpherical** with type = 'JointSpherical' has the following
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectJointSpherical |  |  | parameters for visualization of item |
 
-The item VObjectJointSpherical has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectJointSpherical`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -32,11 +35,9 @@ The item VObjectJointSpherical has the following parameters:
 | **jointRadius** | float |  | 0.1 | radius of joint to draw |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectjointspherical)=
-## DESCRIPTION of ObjectJointSpherical
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -44,6 +45,9 @@ The item VObjectJointSpherical has the following parameters:
 | Velocity | $\LU{0}{\vv}_{m0}$ | current global velocity of position marker $m0$ |
 | Displacement | $\LU{0}{\Delta\pv}=\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$ | constraint drift or relative motion, if not all axes fixed |
 | Force | $\LU{0}{\fv}$ | joint force in global coordinates |
+
+(description-objectjointspherical)=
+## Detailed description
 
 ### Definition of quantities
 

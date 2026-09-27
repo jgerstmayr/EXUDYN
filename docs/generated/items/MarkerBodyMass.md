@@ -4,10 +4,15 @@
 
 A marker attached to the body mass; use this marker to apply a body-load (e.g. gravitational force).
 
-**Additional information for MarkerBodyMass**:
-- This `Marker` has/provides the following types = `Object`, `Body`, `BodyMass`
+## Interface
 
-The item **MarkerBodyMass** with type = 'BodyMass' has the following parameters:
+- Provides: `BodyMass`
+- Bodies it can be placed on: [](#sec-item-objectground), [](#sec-item-objectmasspoint), [](#sec-item-objectmasspoint2d), [](#sec-item-objectmass1d), [](#sec-item-objectrigidbody), [](#sec-item-objectrigidbody2d), [](#sec-item-objectgenericode2), [](#sec-item-objectffrf), [](#sec-item-objectffrfreducedorder), [](#sec-item-objectancfcable), [](#sec-item-objectancfcable2d), [](#sec-item-objectaleancfcable2d), [](#sec-item-objectancfbeam), [](#sec-item-objectbeamgeometricallyexact2d), [](#sec-item-objectbeamgeometricallyexact), [](#sec-item-objectancfthinplate)
+- Connectors, constraints and loads that can use it: [](#sec-item-loadmassproportional)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'BodyMass':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -15,15 +20,13 @@ The item **MarkerBodyMass** with type = 'BodyMass' has the following parameters:
 | **bodyNumber** | ObjectIndex |  | invalid (-1) | body number to which marker is attached to |
 | **visualization** | VMarkerBodyMass |  |  | parameters for visualization of item |
 
-The item VMarkerBodyMass has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerBodyMass`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-
-
-(description-markerbodymass)=
-## DESCRIPTION of MarkerBodyMass
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ALEANCFpipe.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ALEANCFpipe.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFslidingJoint2Drigid.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py) (Ex), [`ANCFswitchingSlidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFswitchingSlidingJoint2D.py) (Ex), [`CMSexampleCourse.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/CMSexampleCourse.py) (Ex), [`finiteSegmentMethod.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/finiteSegmentMethod.py) (Ex), [`NGsolveCMStutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCMStutorial.py) (Ex), [`NGsolvePostProcessingStresses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePostProcessingStresses.py) (Ex), [`ObjectFFRFconvergenceTestBeam.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ObjectFFRFconvergenceTestBeam.py) (Ex), [`ObjectFFRFconvergenceTestHinge.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ObjectFFRFconvergenceTestHinge.py) (Ex), [`pendulumGeomExactBeam2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2D.py) (Ex), [`ANCFThinPlateTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py) (TM), [`fourBarMechanismIftomm.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/fourBarMechanismIftomm.py) (TM), [`genericJointUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericJointUserFunctionTest.py) (TM), ...

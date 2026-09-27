@@ -4,13 +4,14 @@
 
 An linear spring-damper element acting on relative translations along given axis of local joint0 coordinate system. It connects to position and orientation-based markers; the linear spring-damper is intended to act within prismatic joints or in situations where only one translational axis is free; if the two markers rotate relative to each other, the spring-damper will always act in the local joint0 coordinate system.
 
-**Additional information for ObjectConnectorLinearSpringDamper**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Position` + `Orientation`
-- **Short name** for Python = `LinearSpringDamper`
-- **Short name** for Python visualization object = `VLinearSpringDamper`
+## Interface
 
-The item **ObjectConnectorLinearSpringDamper** with type = 'ConnectorLinearSpringDamper' has the following parameters:
+- Python names: `ObjectConnectorLinearSpringDamper` or `LinearSpringDamper`, and `VLinearSpringDamper` for its visualization
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorLinearSpringDamper':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -26,7 +27,9 @@ The item **ObjectConnectorLinearSpringDamper** with type = 'ConnectorLinearSprin
 | **springForceUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalarIndexScalar5 |  | 0 | A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in $m0$ coordinates, if activeConnector=True; see description below |
 | **visualization** | VObjectConnectorLinearSpringDamper |  |  | parameters for visualization of item |
 
-The item VObjectConnectorLinearSpringDamper has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorLinearSpringDamper`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -35,17 +38,18 @@ The item VObjectConnectorLinearSpringDamper has the following parameters:
 | **drawAsCylinder** | Bool |  | False | if this flag is True, the spring-damper is represented as cylinder; this may fit better if the spring-damper represents an actuator |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectconnectorlinearspringdamper)=
-## DESCRIPTION of ObjectConnectorLinearSpringDamper
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
 | DisplacementLocal | $\Delta x$ | (scalar) relative displacement of the spring-damper |
 | VelocityLocal | $\Delta v$ | (scalar) relative velocity of spring-damper |
 | ForceLocal | $f_{SD}$ | (scalar) spring-damper force |
+
+(description-objectconnectorlinearspringdamper)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -121,7 +125,7 @@ mbs.AddObject(LinearSpringDamper(markerNumbers = [mGround, mBody],
 ```
 
 (miniexample-objectconnectorlinearspringdamper)=
-### MINI EXAMPLE for ObjectConnectorLinearSpringDamper
+## Mini example
 
 
 ```python

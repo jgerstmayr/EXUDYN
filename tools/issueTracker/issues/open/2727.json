@@ -1,0 +1,12 @@
+{
+  "number": 2727,
+  "title": "generate the node type check of the node markers from requestedNodeTypes",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IDEA",
+  "effort": "MEDIUM",
+  "description": "Since revision2026b step RG13.5.0.3 (#2725) the node markers declare the node types they need (requestedNodeTypes: MarkerNodePosition, MarkerNodeRigid, MarkerNodeRotationCoordinate), and the item pages say from it which nodes fit. The check itself is still hand-written C++ in CSystem::CheckSystemIntegrity and MainMarkerNodeRotationCoordinate::CheckPreAssembleConsistency, so the declaration and the check can drift apart. Generate the check from the declaration (or at least test that they agree), and declare the coordinate markers as well.",
+  "dateRaised": "2026-09-28",
+  "deadline": "2027-03-27",
+  "file": "definitions/itemDefsMarkers.py"
+}

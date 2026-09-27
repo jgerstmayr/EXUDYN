@@ -4,12 +4,16 @@
 
 A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams. All coordinates lead to second order differential equations; NOTE: this node has a singularity if the second rotation parameter reaches $\psi_1 = (2k-1) \pi/2$, with $k \in \Ncal$ or $-k \in \Ncal$.
 
-**Additional information for NodeRigidBodyRxyz**:
-- This `Node` has/provides the following types = `Position`, `Orientation`, `RigidBody`, `RotationRxyz`
-- **Short name** for Python = `RigidRxyz`
-- **Short name** for Python visualization object = `VRigidRxyz`
+## Interface
 
-The item **NodeRigidBodyRxyz** with type = 'RigidBodyRxyz' has the following parameters:
+- Python names: `NodeRigidBodyRxyz` or `RigidRxyz`, and `VRigidRxyz` for its visualization
+- Provides: `Position`, `Orientation`, `RigidBody`, `RotationRxyz`
+- Node markers that can be attached: [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markernoderotationcoordinate)
+- Objects that take this node: [](#sec-item-objectmasspoint), [](#sec-item-objectrigidbody), [](#sec-item-objectbeamgeometricallyexact)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'RigidBodyRxyz':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -19,7 +23,9 @@ The item **NodeRigidBodyRxyz** with type = 'RigidBodyRxyz' has the following par
 | **initialVelocities** $\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tpsi\tp\cIni]\tp$ | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | initial velocity coordinate: time derivatives of ux,uy,uz and of 3 Euler angles (xyz) |
 | **visualization** | VNodeRigidBodyRxyz |  |  | parameters for visualization of item |
 
-The item VNodeRigidBodyRxyz has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodeRigidBodyRxyz`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -27,11 +33,9 @@ The item VNodeRigidBodyRxyz has the following parameters:
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 
+## Output variables
 
-(description-noderigidbodyrxyz)=
-## DESCRIPTION of NodeRigidBodyRxyz
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -48,6 +52,9 @@ The item VNodeRigidBodyRxyz has the following parameters:
 | AngularVelocity | $\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ | global 3D angular velocity vector of node |
 | AngularVelocityLocal | $\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ | local (body-fixed) 3D angular velocity vector of node |
 | AngularAcceleration | $\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp$ | global 3D angular acceleration vector of node |
+
+(description-noderigidbodyrxyz)=
+## Detailed description
 
 **Detailed information:**
 The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and 3 rotation coordinates $[\psi_0,\,\psi_1,\,\psi_2]\tp$ for consecutive rotations around the 0, 1 and 2-axis ($x$, $y$ and $z$).

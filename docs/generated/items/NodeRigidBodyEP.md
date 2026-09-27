@@ -4,12 +4,16 @@
 
 A 3D rigid body node based on Euler parameters for rigid bodies or beams. The node has 3 displacement coordinates (representing displacement of reference point $\LU{0}{\rv}$) and four rotation coordinates (Euler parameters = unit quaternions).
 
-**Additional information for NodeRigidBodyEP**:
-- This `Node` has/provides the following types = `Position`, `Orientation`, `RigidBody`, `RotationEulerParameters`
-- **Short name** for Python = `RigidEP`
-- **Short name** for Python visualization object = `VRigidEP`
+## Interface
 
-The item **NodeRigidBodyEP** with type = 'RigidBodyEP' has the following parameters:
+- Python names: `NodeRigidBodyEP` or `RigidEP`, and `VRigidEP` for its visualization
+- Provides: `Position`, `Orientation`, `RigidBody`, `RotationEulerParameters`
+- Node markers that can be attached: [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markernoderotationcoordinate)
+- Objects that take this node: [](#sec-item-objectmasspoint), [](#sec-item-objectrigidbody), [](#sec-item-objectbeamgeometricallyexact)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'RigidBodyEP':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -20,7 +24,9 @@ The item **NodeRigidBodyEP** with type = 'RigidBodyEP' has the following paramet
 | **addConstraintEquation** | Bool |  | True | True: automatically add Euler parameter constraint for node; False: Euler parameter constraint is not added, must be done manually (e.g., with CoordinateVectorConstraint) |
 | **visualization** | VNodeRigidBodyEP |  |  | parameters for visualization of item |
 
-The item VNodeRigidBodyEP has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodeRigidBodyEP`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -28,11 +34,9 @@ The item VNodeRigidBodyEP has the following parameters:
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 
+## Output variables
 
-(description-noderigidbodyep)=
-## DESCRIPTION of NodeRigidBodyEP
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -49,6 +53,9 @@ The item VNodeRigidBodyEP has the following parameters:
 | AngularVelocity | $\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ | global 3D angular velocity vector of node |
 | AngularVelocityLocal | $\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ | local (body-fixed) 3D angular velocity vector of node |
 | AngularAcceleration | $\LU{0}{\talpha}\cConfig = \LU{0}{[\alpha_0,\,\alpha_1,\,\alpha_2]}\cConfig\tp$ | global 3D angular acceleration vector of node |
+
+(description-noderigidbodyep)=
+## Detailed description
 
 **Detailed information:**
 All coordinates $\cv\cConfig$ lead to second order differential equations.

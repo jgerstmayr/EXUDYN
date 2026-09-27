@@ -4,12 +4,14 @@
 
 A penalty-based contact condition for one coordinate; the contact gap $g$ is defined as $g=marker.value[1]- marker.value[0] - offset$; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
 
-**Additional information for ObjectContactCoordinate**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Coordinate`
-- Requested `Node` type = `GenericData`
+## Interface
 
-The item **ObjectContactCoordinate** with type = 'ContactCoordinate' has the following parameters:
+- Nodes it takes: [](#sec-item-nodegenericdata)
+- Markers it acts on: those providing `Coordinate`: [](#sec-item-markernodecoordinate), [](#sec-item-markernodeode1coordinate), [](#sec-item-markernoderotationcoordinate), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markerbodycable2dshape), [](#sec-item-markerbodycable2dcoordinates)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ContactCoordinate':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -22,17 +24,15 @@ The item **ObjectContactCoordinate** with type = 'ContactCoordinate' has the fol
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactCoordinate |  |  | parameters for visualization of item |
 
-The item VObjectContactCoordinate has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectContactCoordinate`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
-
-
-(description-objectcontactcoordinate)=
-## DESCRIPTION of ObjectContactCoordinate
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFcontactCircleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py) (TM), [`contactCoordinateTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactCoordinateTest.py) (TM)

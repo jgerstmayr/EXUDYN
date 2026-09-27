@@ -9,8 +9,8 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 General information on current version:
 
 - Exudyn version = 1.12.135.dev1
-- last change = 2026-09-27
-- Number of issues = 2727
+- last change = 2026-09-28
+- Number of issues = 2728
 - Number of resolved issues = 2449 (135 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` generate the node type check of the node markers from requestedNodeTypes (#2727)
+  - description: Since revision2026b step RG13.5.0.3 (\#2725) the node markers declare the node types they need (requestedNodeTypes: MarkerNodePosition, MarkerNodeRigid, MarkerNodeRotationCoordinate), and the item pages say from it which nodes fit. The check itself is still hand-written C++ in CSystem::CheckSystemIntegrity and MainMarkerNodeRotationCoordinate::CheckPreAssembleConsistency, so the declaration and the check can drift apart. Generate the check from the declaration (or at least test that they agree), and declare the coordinate markers as well.
+  - date raised: 2026-09-28
 - `DOCU` `HUGE EFF` `raised by: Claude-JG` RG13.5: the documentation of the items, written by the development documents of RG13.4 - nodes, objects, markers, loads, sensors (#2725)
   - description: The maintainer, 2026-09-27, after reading the node, load and sensor documents of RG13.4: those three are complete; 'start a new step RG13.5, which adds according documentation for these types, again adding 13.5.1 for nodes, .2 for objects, ...'. For loads the generalized forces keep their frames: a load is given in global or local coordinates, and the transformation belongs in the equation. For the slope nodes, the interpretation of the slopes goes into the detailed description of each node. RG13.5.0 is the generated frame and the general section per kind (definitions/itemKindDefinitions.py), before the pages are written. revision2026b step RG13.5.
   - date raised: 2026-09-27

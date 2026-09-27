@@ -4,10 +4,15 @@
 
 A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 6 displacement degrees of freedom (3 for displacement of point node and 3 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime\;\;r_z^\prime]^T=[1\;\;0]^T$.
 
-**Additional information for NodePointSlope1**:
-- This `Node` has/provides the following types = `Position`
+## Interface
 
-The item **NodePointSlope1** with type = 'PointSlope1' has the following parameters:
+- Provides: `Position`, `PointSlope1`
+- Node markers that can be attached: [](#sec-item-markernodeposition)
+- Objects that take this node: [](#sec-item-objectmasspoint), [](#sec-item-objectancfcable)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'PointSlope1':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -17,7 +22,9 @@ The item **NodePointSlope1** with type = 'PointSlope1' has the following paramet
 | **initialVelocities** | Vector6D | 6 | [0.,0.,0.,0.,0.,0.] | initial velocity coordinates |
 | **visualization** | VNodePointSlope1 |  |  | parameters for visualization of item |
 
-The item VNodePointSlope1 has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodePointSlope1`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -25,11 +32,9 @@ The item VNodePointSlope1 has the following parameters:
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 
+## Output variables
 
-(description-nodepointslope1)=
-## DESCRIPTION of NodePointSlope1
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|

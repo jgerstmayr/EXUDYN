@@ -3,7 +3,10 @@
 # SensorUserFunction
 
 A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors and recombine the output into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.
-The item **SensorUserFunction** with type = 'UserFunction' has the following parameters:
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'UserFunction':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -16,15 +19,16 @@ The item **SensorUserFunction** with type = 'UserFunction' has the following par
 | **storeInternal** | Bool |  | False | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available |
 | **visualization** | VSensorUserFunction |  |  | parameters for visualization of item |
 
-The item VSensorUserFunction has the following parameters:
+## Visualization parameters
+
+The parameters of `VSensorUserFunction`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED |
 
-
 (description-sensoruserfunction)=
-## DESCRIPTION of SensorUserFunction
+## Detailed description
 
 The sensor collects data via a user function, which completely describes the output itself.
 Note that the sensorNumbers and factors need to be consistent.

@@ -4,10 +4,15 @@
 
 A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeX' and 'slopeY'); all coordinates lead to second order differential equations; the slopeX vector defines the directional derivative w.r.t the local axial (x) coordinate, etc.; in straight configuration aligned at the global x-axis, the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$.
 
-**Additional information for NodePointSlope12**:
-- This `Node` has/provides the following types = `Position`, `Orientation`
+## Interface
 
-The item **NodePointSlope12** with type = 'PointSlope12' has the following parameters:
+- Provides: `Position`, `Orientation`, `PointSlope12`
+- Node markers that can be attached: [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markernoderotationcoordinate)
+- Objects that take this node: [](#sec-item-objectmasspoint), [](#sec-item-objectbeamgeometricallyexact), [](#sec-item-objectancfthinplate)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'PointSlope12':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -17,7 +22,9 @@ The item **NodePointSlope12** with type = 'PointSlope12' has the following param
 | **initialVelocities** | Vector9D | 9 | [0.,0.,0.,0.,0.,0.,0.,0.,0.] | initial velocity coordinates |
 | **visualization** | VNodePointSlope12 |  |  | parameters for visualization of item |
 
-The item VNodePointSlope12 has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodePointSlope12`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -25,11 +32,9 @@ The item VNodePointSlope12 has the following parameters:
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 
+## Output variables
 
-(description-nodepointslope12)=
-## DESCRIPTION of NodePointSlope12
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|

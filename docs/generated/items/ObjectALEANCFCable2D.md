@@ -4,12 +4,15 @@
 
 A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2, which adds additional (redundant) motion in axial direction of the beam. This allows modeling pipes but also axially moving beams. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the {ref}`EOM <EOM>`).
 
-**Additional information for ObjectALEANCFCable2D**:
-- Requested `Node` type: read detailed information of item
-- **Short name** for Python = `ALECable2D`
-- **Short name** for Python visualization object = `VALECable2D`
+## Interface
 
-The item **ObjectALEANCFCable2D** with type = 'ALEANCFCable2D' has the following parameters:
+- Python names: `ObjectALEANCFCable2D` or `ALECable2D`, and `VALECable2D` for its visualization
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+- Nodes: see the detailed description
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ALEANCFCable2D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -30,7 +33,9 @@ The item **ObjectALEANCFCable2D** with type = 'ALEANCFCable2D' has the following
 | **strainIsRelativeToReference** $f\cRef$ | Real |  | 0. | if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1. |
 | **visualization** | VObjectALEANCFCable2D |  |  | parameters for visualization of item |
 
-The item VObjectALEANCFCable2D has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectALEANCFCable2D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -38,11 +43,9 @@ The item VObjectALEANCFCable2D has the following parameters:
 | **drawHeight** | float |  | 0. | if beam is drawn with rectangular shape, this is the drawing height |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color of the object; if R==-1, use default color |
 
+## Output variables
 
-(description-objectaleancfcable2d)=
-## DESCRIPTION of ObjectALEANCFCable2D
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -56,6 +59,9 @@ The item VObjectALEANCFCable2D has the following parameters:
 | CurvatureLocal | $K$ | axial strain (scalar) |
 | ForceLocal | $N$ | (local) section normal force (scalar, including reference strains) (at Y=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint |
 | TorqueLocal | $M$ | (local) bending moment (scalar) (at Y=0) |
+
+(description-objectaleancfcable2d)=
+## Detailed description
 
 A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and an axially moving coordinate of type NodeGenericODE2.
 The element has 8+1 coordinates and uses cubic polynomials for position interpolation.

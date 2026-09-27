@@ -4,12 +4,16 @@
 
 A 2D rigid body node for rigid bodies or beams. The node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: $\psi_0$). All coordinates are {ref}`ODE2 <ODE2>`, used for second order differetial equations.
 
-**Additional information for NodeRigidBody2D**:
-- This `Node` has/provides the following types = `Position2D`, `Orientation2D`, `Position`, `Orientation`, `RigidBody`
-- **Short name** for Python = `Rigid2D`
-- **Short name** for Python visualization object = `VRigid2D`
+## Interface
 
-The item **NodeRigidBody2D** with type = 'RigidBody2D' has the following parameters:
+- Python names: `NodeRigidBody2D` or `Rigid2D`, and `VRigid2D` for its visualization
+- Provides: `Position2D`, `Orientation2D`, `RigidBody`
+- Node markers that can be attached: [](#sec-item-markernodeposition), [](#sec-item-markernoderigid)
+- Objects that take this node: [](#sec-item-objectmasspoint2d), [](#sec-item-objectrigidbody2d), [](#sec-item-objectbeamgeometricallyexact2d)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'RigidBody2D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -19,7 +23,9 @@ The item **NodeRigidBody2D** with type = 'RigidBody2D' has the following paramet
 | **initialVelocities** $\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cIni =  [v_0,\,v_1,\,\omega_2]\tp\cIni$ | Vector3D | 3 | [0.,0.,0.] | initial velocity coordinates |
 | **visualization** | VNodeRigidBody2D |  |  | parameters for visualization of item |
 
-The item VNodeRigidBody2D has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodeRigidBody2D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -27,11 +33,9 @@ The item VNodeRigidBody2D has the following parameters:
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 
+## Output variables
 
-(description-noderigidbody2d)=
-## DESCRIPTION of NodeRigidBody2D
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -48,6 +52,9 @@ The item VNodeRigidBody2D has the following parameters:
 | Rotation | $[0,\,0,\,\theta_0]\tp\cConfig = [0,\,0,\,\psi_0]\tp\cRef + [0,\,0,\,\psi_0]\tp\cConfig$ | vector with 3rd angle around out of plane axis |
 | AngularVelocityLocal | $\LU{b}{\tomega}\cConfig = \LU{b}{[0,\,0,\,\dot \psi_0]}\cConfig\tp$ | local (body-fixed) 3D angular velocity vector of node |
 | AngularAcceleration | $\LU{0}{\talpha}\cConfig = \LU{0}{[0,\,0,\,\ddot \psi_0]}\cConfig\tp$ | global 3D angular acceleration vector of node |
+
+(description-noderigidbody2d)=
+## Detailed description
 
 **Detailed information:**
 The node provides 2 displacement coordinates (displacement of {ref}`COM <COM>`, ($q_0,q_1$) ) and 1 rotation parameter ($\theta_0$). According equations need to be provided by an according object (e.g., RigidBody2D).

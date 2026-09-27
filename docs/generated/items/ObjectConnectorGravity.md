@@ -4,13 +4,14 @@
 
 A connector for additing forces due to gravitational fields beween two bodies, which can be used for aerospace and small-scale astronomical problems. NOTE: DO NOT USE this connector for adding gravitational forces (loads), which should be using LoadMassProportional, which is acting global and always in the same direction.
 
-**Additional information for ObjectConnectorGravity**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Position`
-- **Short name** for Python = `ConnectorGravity`
-- **Short name** for Python visualization object = `VConnectorGravity`
+## Interface
 
-The item **ObjectConnectorGravity** with type = 'ConnectorGravity' has the following parameters:
+- Python names: `ObjectConnectorGravity` or `ConnectorGravity`, and `VConnectorGravity` for its visualization
+- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorGravity':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -23,7 +24,9 @@ The item **ObjectConnectorGravity** with type = 'ConnectorGravity' has the follo
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorGravity |  |  | parameters for visualization of item |
 
-The item VObjectConnectorGravity has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorGravity`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -31,17 +34,18 @@ The item VObjectConnectorGravity has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectconnectorgravity)=
-## DESCRIPTION of ObjectConnectorGravity
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
 | Distance | $L$ | distance between both points |
 | Displacement | $\Delta\! \LU{0}{\pv}$ | relative displacement between both points |
 | Force | $\fv$ | gravity force vector, pointing from marker $m0$ to marker $m1$ |
+
+(description-objectconnectorgravity)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -122,7 +126,7 @@ $$
 where $\Jm_{pos,m1}$ represents the derivative of marker $m1$ w.r.t. its associated coordinates $\qv_{m1}$, analogously $\Jm_{pos,m0}$.
 
 (miniexample-objectconnectorgravity)=
-### MINI EXAMPLE for ObjectConnectorGravity
+## Mini example
 
 
 ```python

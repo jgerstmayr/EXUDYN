@@ -4,13 +4,15 @@
 
 A 1D (translational) mass which is attached to Node1D. Note, that the mass does not need to have the interpretation as a translational mass.
 
-**Additional information for ObjectMass1D**:
-- This `Object` has/provides the following types = `Body`, `SingleNoded`
-- Requested `Node` type = `GenericODE2`
-- **Short name** for Python = `Mass1D`
-- **Short name** for Python visualization object = `VMass1D`
+## Interface
 
-The item **ObjectMass1D** with type = 'Mass1D' has the following parameters:
+- Python names: `ObjectMass1D` or `Mass1D`, and `VMass1D` for its visualization
+- Nodes it takes: [](#sec-item-node1d), [](#sec-item-nodegenericode2), [](#sec-item-nodepointground)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'Mass1D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -21,18 +23,18 @@ The item **ObjectMass1D** with type = 'Mass1D' has the following parameters:
 | **referenceRotation** $\LU{0b}{\Rot_{0}} \in \Rcal^{3 \times 3}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates |
 | **visualization** | VObjectMass1D |  |  | parameters for visualization of item |
 
-The item VObjectMass1D has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectMass1D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **graphicsData** | BodyGraphicsData |  |  | Structure contains data for body visualization; data is defined in special list / dictionary structure |
 
+## Output variables
 
-(description-objectmass1d)=
-## DESCRIPTION of ObjectMass1D
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -43,6 +45,9 @@ The item VObjectMass1D has the following parameters:
 | Rotation |  | vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix $\LU{0b}{\Rot}$ |
 | AngularVelocity | $\LU{0}{\tomega}\cConfig$ | global 3D angular velocity vector of body |
 | AngularVelocityLocal | $\LU{b}{\tomega}\cConfig$ | local (body-fixed) 3D angular velocity vector of body |
+
+(description-objectmass1d)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -82,7 +87,7 @@ $$
 $$
 
 (miniexample-objectmass1d)=
-### MINI EXAMPLE for ObjectMass1D
+## Mini example
 
 
 ```python

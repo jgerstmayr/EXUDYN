@@ -4,13 +4,15 @@
 
 A 1D rotational inertia (mass) which is attached to Node1D.
 
-**Additional information for ObjectRotationalMass1D**:
-- This `Object` has/provides the following types = `Body`, `SingleNoded`
-- Requested `Node` type = `GenericODE2`
-- **Short name** for Python = `Rotor1D`
-- **Short name** for Python visualization object = `VRotor1D`
+## Interface
 
-The item **ObjectRotationalMass1D** with type = 'RotationalMass1D' has the following parameters:
+- Python names: `ObjectRotationalMass1D` or `Rotor1D`, and `VRotor1D` for its visualization
+- Nodes it takes: [](#sec-item-node1d), [](#sec-item-nodegenericode2), [](#sec-item-nodepointground)
+- Body markers that can be placed on it: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'RotationalMass1D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -21,18 +23,18 @@ The item **ObjectRotationalMass1D** with type = 'RotationalMass1D' has the follo
 | **referenceRotation** $\LU{0i}{\Rot_{0}} \in \Rcal^{3 \times 3}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description |
 | **visualization** | VObjectRotationalMass1D |  |  | parameters for visualization of item |
 
-The item VObjectRotationalMass1D has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectRotationalMass1D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **graphicsData** | BodyGraphicsData |  |  | Structure contains data for body visualization; data is defined in special list / dictionary structure |
 
+## Output variables
 
-(description-objectrotationalmass1d)=
-## DESCRIPTION of ObjectRotationalMass1D
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -43,6 +45,9 @@ The item VObjectRotationalMass1D has the following parameters:
 | Rotation | $\theta$ | scalar rotation angle obtained from underlying node |
 | AngularVelocity | $\LU{0}{\tomega}\cConfig$ | global 3D angular velocity vector of body |
 | AngularVelocityLocal | $\LU{b}{\tomega}\cConfig$ | local (body-fixed) 3D angular velocity vector of body |
+
+(description-objectrotationalmass1d)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -85,7 +90,7 @@ $$
 $$
 
 (miniexample-objectrotationalmass1d)=
-### MINI EXAMPLE for ObjectRotationalMass1D
+## Mini example
 
 
 ```python

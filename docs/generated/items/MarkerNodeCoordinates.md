@@ -4,10 +4,14 @@
 
 A node-Marker attached to all {ref}`ODE2 <ODE2>` coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For {ref}`ODE1 <ODE1>` coordinates use `MarkerNodeODE1Coordinates`.
 
-**Additional information for MarkerNodeCoordinates**:
-- This `Marker` has/provides the following types = `Node`, `Coordinate`
+## Interface
 
-The item **MarkerNodeCoordinates** with type = 'NodeCoordinates' has the following parameters:
+- Provides: `Coordinates`
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorcoordinatevector)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'NodeCoordinates':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -15,15 +19,13 @@ The item **MarkerNodeCoordinates** with type = 'NodeCoordinates' has the followi
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number to which marker is attached to |
 | **visualization** | VMarkerNodeCoordinates |  |  | parameters for visualization of item |
 
-The item VMarkerNodeCoordinates has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerNodeCoordinates`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-
-
-(description-markernodecoordinates)=
-## DESCRIPTION of MarkerNodeCoordinates
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`coordinateVectorConstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraint.py) (TM), [`coordinateVectorConstraintGenericODE2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM)

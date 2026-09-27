@@ -6,11 +6,14 @@ This object is used to represent equations modelled by the {ref}`FFRF <FFRF>`. I
 
 Authors: Gerstmayr Johannes, Zwölfer Andreas
 
-**Additional information for ObjectFFRF**:
-- This `Object` has/provides the following types = `Body`, `MultiNoded`, `SuperElement`
-- Requested `Node` type: read detailed information of item
+## Interface
 
-The item **ObjectFFRF** with type = 'FFRF' has the following parameters:
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid)
+- Nodes: see the detailed description
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'FFRF':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -37,7 +40,9 @@ The item **ObjectFFRF** with type = 'FFRF' has the following parameters:
 | **tempVelSkew** $\dot{\tilde\cv}\indf \in \Rcal^{n\indf \times 3}$ | NumpyMatrix |  | [] | temporary matrix with skew symmetric local node velocities |
 | **visualization** | VObjectFFRF |  |  | parameters for visualization of item |
 
-The item VObjectFFRF has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectFFRF`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -46,11 +51,9 @@ The item VObjectFFRF has the following parameters:
 | **triangleMesh** | NumpyMatrixI |  | [] | a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame! |
 | **showNodes** | Bool |  | False | set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF' |
 
+## Output variables
 
-(description-objectffrf)=
-## DESCRIPTION of ObjectFFRF
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -58,6 +61,9 @@ The item VObjectFFRF has the following parameters:
 | Coordinates_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
 | Coordinates_tt |  | all {ref}`ODE2 <ODE2>` acceleration coordinates |
 | Force |  | generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS) |
+
+(description-objectffrf)=
+## Detailed description
 
 ### Additional output variables for superelement node access
 

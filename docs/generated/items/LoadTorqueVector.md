@@ -4,12 +4,14 @@
 
 Load with (3D) torque vector; attached to rigidbody-based marker.
 
-**Additional information for LoadTorqueVector**:
-- Requested `Marker` type = `Orientation`
-- **Short name** for Python = `Torque`
-- **Short name** for Python visualization object = `VTorque`
+## Interface
 
-The item **LoadTorqueVector** with type = 'TorqueVector' has the following parameters:
+- Python names: `LoadTorqueVector` or `Torque`, and `VTorque` for its visualization
+- Markers it acts on: those providing `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'TorqueVector':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -20,15 +22,16 @@ The item **LoadTorqueVector** with type = 'TorqueVector' has the following param
 | **loadVectorUserFunction** $\mathrm{UF} \in \Rcal^3$ | PyFunctionVector3DmbsScalarVector3D |  | 0 | A Python function which defines the time-dependent load and replaces loadVector; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0] |
 | **visualization** | VLoadTorqueVector |  |  | parameters for visualization of item |
 
-The item VLoadTorqueVector has the following parameters:
+## Visualization parameters
+
+The parameters of `VLoadTorqueVector`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
-
 (description-loadtorquevector)=
-## DESCRIPTION of LoadTorqueVector
+## Detailed description
 
 ### Details
 

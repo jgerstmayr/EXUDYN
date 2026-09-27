@@ -4,12 +4,13 @@
 
 A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
 
-**Additional information for ObjectContactCircleCable2D**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `_None`
-- Requested `Node` type = `GenericData`
+## Interface
 
-The item **ObjectContactCircleCable2D** with type = 'ContactCircleCable2D' has the following parameters:
+- Nodes it takes: [](#sec-item-nodegenericdata)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ContactCircleCable2D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -24,7 +25,9 @@ The item **ObjectContactCircleCable2D** with type = 'ContactCircleCable2D' has t
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactCircleCable2D |  |  | parameters for visualization of item |
 
-The item VObjectContactCircleCable2D has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectContactCircleCable2D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -33,9 +36,8 @@ The item VObjectContactCircleCable2D has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
-
 (description-objectcontactcirclecable2d)=
-## DESCRIPTION of ObjectContactCircleCable2D
+## Detailed description
 
 ### Connector equations
 

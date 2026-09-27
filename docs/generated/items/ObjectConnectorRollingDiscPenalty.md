@@ -4,14 +4,15 @@
 
 A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation for the arbitrary disc axis is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.
 
-**Additional information for ObjectConnectorRollingDiscPenalty**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Position` + `Orientation`
-- Requested `Node` type = `GenericData`
-- **Short name** for Python = `RollingDiscPenalty`
-- **Short name** for Python visualization object = `VRollingDiscPenalty`
+## Interface
 
-The item **ObjectConnectorRollingDiscPenalty** with type = 'ConnectorRollingDiscPenalty' has the following parameters:
+- Python names: `ObjectConnectorRollingDiscPenalty` or `RollingDiscPenalty`, and `VRollingDiscPenalty` for its visualization
+- Nodes it takes: [](#sec-item-nodegenericdata)
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorRollingDiscPenalty':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -32,7 +33,9 @@ The item **ObjectConnectorRollingDiscPenalty** with type = 'ConnectorRollingDisc
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorRollingDiscPenalty |  |  | parameters for visualization of item |
 
-The item VObjectConnectorRollingDiscPenalty has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorRollingDiscPenalty`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -40,11 +43,9 @@ The item VObjectConnectorRollingDiscPenalty has the following parameters:
 | **discWidth** | float |  | 0.1 | width of disc for drawing |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectconnectorrollingdiscpenalty)=
-## DESCRIPTION of ObjectConnectorRollingDiscPenalty
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -53,6 +54,9 @@ The item VObjectConnectorRollingDiscPenalty has the following parameters:
 | VelocityLocal | $\LU{J1}{\vv}$ | relative slip velocity at contact point in special $J1$ joint coordinates |
 | ForceLocal | $\LU{J1}{\fv} = \LU{0}{[f_{t,x},\, f_{t,y},\, f_{n}]\tp}$ | contact forces acting on disc, in special $J1$ joint coordinates, see section Connector Forces, $f_{t,x}$ being the lateral force (parallel to ground plane), $f_{t,y}$ being the longitudinal force and $f_{n}$ being the contact normal force |
 | RotationMatrix | $\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$ | transformation matrix of special joint coordinates $J1$ to global coordinates |
+
+(description-objectconnectorrollingdiscpenalty)=
+## Detailed description
 
 ### Definition of quantities
 

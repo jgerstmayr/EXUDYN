@@ -4,13 +4,14 @@
 
 Connector which enforces constant or prescribed distance between two bodies/nodes.
 
-**Additional information for ObjectConnectorDistance**:
-- This `Object` has/provides the following types = `Connector`, `Constraint`
-- Requested `Marker` type = `Position`
-- **Short name** for Python = `DistanceConstraint`
-- **Short name** for Python visualization object = `VDistanceConstraint`
+## Interface
 
-The item **ObjectConnectorDistance** with type = 'ConnectorDistance' has the following parameters:
+- Python names: `ObjectConnectorDistance` or `DistanceConstraint`, and `VDistanceConstraint` for its visualization
+- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorDistance':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -20,7 +21,9 @@ The item **ObjectConnectorDistance** with type = 'ConnectorDistance' has the fol
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorDistance |  |  | parameters for visualization of item |
 
-The item VObjectConnectorDistance has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorDistance`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -28,11 +31,9 @@ The item VObjectConnectorDistance has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = link size; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectconnectordistance)=
-## DESCRIPTION of ObjectConnectorDistance
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -40,6 +41,9 @@ The item VObjectConnectorDistance has the following parameters:
 | Velocity | $\LU{0}{\Delta\vv}$ | relative translational velocity in global coordinates |
 | Distance | $\|\LU{0}{\Delta\pv}\|$ | distance between markers (should stay constant; shows constraint deviation) |
 | Force | $\lambda_0$ | joint force (=scalar Lagrange multiplier) |
+
+(description-objectconnectordistance)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -81,7 +85,7 @@ $$
 $$
 
 (miniexample-objectconnectordistance)=
-### MINI EXAMPLE for ObjectConnectorDistance
+## Mini example
 
 
 ```python

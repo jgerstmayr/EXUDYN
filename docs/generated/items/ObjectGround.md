@@ -4,10 +4,13 @@
 
 A ground object behaving like a rigid body, but having no degrees of freedom. Used to attach body-connectors without an action. For examples see spring dampers and joints.
 
-**Additional information for ObjectGround**:
-- This `Object` has/provides the following types = `Ground`, `Body`
+## Interface
 
-The item **ObjectGround** with type = 'Ground' has the following parameters:
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'Ground':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -16,7 +19,9 @@ The item **ObjectGround** with type = 'Ground' has the following parameters:
 | **referenceRotation** $\LU{0b}{\Rot} \in \Rcal^{3 \times 3}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates |
 | **visualization** | VObjectGround |  |  | parameters for visualization of item |
 
-The item VObjectGround has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectGround`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -24,11 +29,9 @@ The item VObjectGround has the following parameters:
 | **graphicsDataUserFunction** | PyFunctionGraphicsData |  | 0 | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function |
 | **graphicsData** | BodyGraphicsData |  |  | Structure contains data for body visualization; data is defined in special list / dictionary structure |
 
+## Output variables
 
-(description-objectground)=
-## DESCRIPTION of ObjectGround
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -37,6 +40,9 @@ The item VObjectGround has the following parameters:
 | Velocity | $\Null$ | global velocity vector of local position |
 | AngularVelocity | $\Null$ | angular velocity of body |
 | RotationMatrix | $\LU{0b}{\Rot}$ | rotation matrix in vector form (stored in row-major order) |
+
+(description-objectground)=
+## Detailed description
 
 ### Equations
 

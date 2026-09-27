@@ -4,11 +4,14 @@
 
 A system of $n$ second order ordinary differential equations ({ref}`ODE2 <ODE2>`), having a mass matrix, damping/gyroscopic matrix, stiffness matrix and generalized forces. It can combine generic nodes, or node points. User functions can be used to compute mass matrix and generalized forces depending on given coordinates. NOTE: all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, except for the mass matrix which always needs to have dimensions $(n \times n)$.
 
-**Additional information for ObjectGenericODE2**:
-- This `Object` has/provides the following types = `Body`, `MultiNoded`, `SuperElement`
-- Requested `Node` type: read detailed information of item
+## Interface
 
-The item **ObjectGenericODE2** with type = 'GenericODE2' has the following parameters:
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid)
+- Nodes: see the detailed description
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'GenericODE2':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -27,7 +30,9 @@ The item **ObjectGenericODE2** with type = 'GenericODE2' has the following param
 | **tempCoordinates_tt** $\ddot \cv_{temp} \in \Rcal^{n}$ | NumpyVector |  | [] | temporary vector containing acceleration coordinates |
 | **visualization** | VObjectGenericODE2 |  |  | parameters for visualization of item |
 
-The item VObjectGenericODE2 has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectGenericODE2`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -37,11 +42,9 @@ The item VObjectGenericODE2 has the following parameters:
 | **showNodes** | Bool |  | False | set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF' |
 | **graphicsDataUserFunction** | PyFunctionGraphicsData |  | 0 | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization |
 
+## Output variables
 
-(description-objectgenericode2)=
-## DESCRIPTION of ObjectGenericODE2
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -50,6 +53,9 @@ The item VObjectGenericODE2 has the following parameters:
 | Coordinates_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
 | Coordinates_tt |  | all {ref}`ODE2 <ODE2>` acceleration coordinates |
 | Force |  | generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS) |
+
+(description-objectgenericode2)=
+## Detailed description
 
 ### Additional output variables for superelement node access
 
@@ -199,7 +205,7 @@ oGenericODE2 = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[nMass0,nMass1],
 ```
 
 (miniexample-objectgenericode2)=
-### MINI EXAMPLE for ObjectGenericODE2
+## Mini example
 
 
 ```python

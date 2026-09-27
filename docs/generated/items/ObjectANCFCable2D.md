@@ -4,12 +4,15 @@
 
 A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the {ref}`EOM <EOM>`).
 
-**Additional information for ObjectANCFCable2D**:
-- Requested `Node` type = `Position2D` + `Orientation2D` + `Point2DSlope1` + `Position` + `Orientation`
-- **Short name** for Python = `Cable2D`
-- **Short name** for Python visualization object = `VCable2D`
+## Interface
 
-The item **ObjectANCFCable2D** with type = 'ANCFCable2D' has the following parameters:
+- Python names: `ObjectANCFCable2D` or `Cable2D`, and `VCable2D` for its visualization
+- Nodes it takes: [](#sec-item-nodepoint2dslope1)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ANCFCable2D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -29,7 +32,9 @@ The item **ObjectANCFCable2D** with type = 'ANCFCable2D' has the following param
 | **bendingMomentUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalarIndexScalar9 |  | 0 | A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below |
 | **visualization** | VObjectANCFCable2D |  |  | parameters for visualization of item |
 
-The item VObjectANCFCable2D has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectANCFCable2D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -37,11 +42,9 @@ The item VObjectANCFCable2D has the following parameters:
 | **drawHeight** | float |  | 0. | if beam is drawn with rectangular shape, this is the drawing height |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color of the object; if R==-1, use default color |
 
+## Output variables
 
-(description-objectancfcable2d)=
-## DESCRIPTION of ObjectANCFCable2D
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -58,6 +61,9 @@ The item VObjectANCFCable2D has the following parameters:
 | AngularVelocity | $\tomega = [0,\, ,0,\, \omega_2]$ | angular velocity of local axis position (at $y$=0) |
 | Acceleration | $\LU{0}{\av(x,y,0)} = \LU{0}{\ddot \rv(x)} - y \cdot \dot\omega_2 \cdot\LU{0}{\tv(x)}- y \cdot \omega_2 \cdot\LU{0}{\dot\tv(x)} $ | global acceleration vector of local position |
 | AngularAcceleration | $\talpha = [0,\, ,0,\, \dot\omega_2]$ | angular acceleration of local axis position |
+
+(description-objectancfcable2d)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -413,7 +419,7 @@ cable = ObjectANCFCable2D(physicsMassPerLength=rhoA,
 ```
 
 (miniexample-objectancfcable2d)=
-### MINI EXAMPLE for ObjectANCFCable2D
+## Mini example
 
 
 ```python

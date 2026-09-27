@@ -6,12 +6,14 @@ A simple contact connector between a sphere (marker0) and a torus (marker1). The
 
 Author: Gerstmayr Johannes
 
-**Additional information for ObjectContactSphereTorus**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Position` + `Orientation`
-- Requested `Node` type = `GenericData`
+## Interface
 
-The item **ObjectContactSphereTorus** with type = 'ContactSphereTorus' has the following parameters:
+- Nodes it takes: [](#sec-item-nodegenericdata)
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ContactSphereTorus':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -33,18 +35,18 @@ The item **ObjectContactSphereTorus** with type = 'ContactSphereTorus' has the f
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactSphereTorus |  |  | parameters for visualization of item |
 
-The item VObjectContactSphereTorus has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectContactSphereTorus`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | False | set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii |
 | **color** | Float4 | 4 | [0.7,0.7,0.7,1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectcontactspheretorus)=
-## DESCRIPTION of ObjectContactSphereTorus
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -56,6 +58,9 @@ The item VObjectContactSphereTorus has the following parameters:
 | Director3 |  | normalized vector from the projected point on the major circle (center of the minor circle) to marker 1, being in direction of the contact and normal to the surface |
 | Force |  | global contact force vector |
 | Torque |  | global torque due to friction on marker 0 |
+
+(description-objectcontactspheretorus)=
+## Detailed description
 
 ### Definition of quantities
 

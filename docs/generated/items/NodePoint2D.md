@@ -4,12 +4,16 @@
 
 A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for {ref}`ODE2 <ODE2>`.
 
-**Additional information for NodePoint2D**:
-- This `Node` has/provides the following types = `Position2D`, `Position`
-- **Short name** for Python = `Point2D`
-- **Short name** for Python visualization object = `VPoint2D`
+## Interface
 
-The item **NodePoint2D** with type = 'Point2D' has the following parameters:
+- Python names: `NodePoint2D` or `Point2D`, and `VPoint2D` for its visualization
+- Provides: `Position2D`
+- Node markers that can be attached: [](#sec-item-markernodeposition)
+- Objects that take this node: [](#sec-item-objectmasspoint2d)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'Point2D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -19,7 +23,9 @@ The item **NodePoint2D** with type = 'Point2D' has the following parameters:
 | **initialVelocities** $\dot\qv\cIni = \vv\cIni = [\dot q_0,\,\dot q_1]\cIni\tp$ | Vector2D | 2 | [0.,0.] | initial velocity coordinate |
 | **visualization** | VNodePoint2D |  |  | parameters for visualization of item |
 
-The item VNodePoint2D has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodePoint2D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -27,11 +33,9 @@ The item VNodePoint2D has the following parameters:
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 
+## Output variables
 
-(description-nodepoint2d)=
-## DESCRIPTION of NodePoint2D
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -47,6 +51,9 @@ The item VNodePoint2D has the following parameters:
 | Rotation | $[0,0,0]$ | (only for completeness) |
 | AngularVelocity | $[0,0,0]$ | (only for completeness) |
 | AngularVelocityLocal | $[0,0,0]$ | (only for completeness) |
+
+(description-nodepoint2d)=
+## Detailed description
 
 **Detailed information:**
 The node provides $n_c=2$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint2D).

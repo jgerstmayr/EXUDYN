@@ -4,14 +4,14 @@
 
 A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the {ref}`ODE2 <ODE2>` coordinate q[0] provides the (given) moving coordinate in the cable element.
 
-**Additional information for ObjectJointALEMoving2D**:
-- This `Object` has/provides the following types = `Connector`, `Constraint`
-- Requested `Marker` type = `_None`
-- Requested `Node` type: read detailed information of item
-- **Short name** for Python = `ALEMovingJoint2D`
-- **Short name** for Python visualization object = `VALEMovingJoint2D`
+## Interface
 
-The item **ObjectJointALEMoving2D** with type = 'JointALEMoving2D' has the following parameters:
+- Python names: `ObjectJointALEMoving2D` or `ALEMovingJoint2D`, and `VALEMovingJoint2D` for its visualization
+- Nodes: see the detailed description
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'JointALEMoving2D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -26,7 +26,9 @@ The item **ObjectJointALEMoving2D** with type = 'JointALEMoving2D' has the follo
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectJointALEMoving2D |  |  | parameters for visualization of item |
 
-The item VObjectJointALEMoving2D has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectJointALEMoving2D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -34,11 +36,9 @@ The item VObjectJointALEMoving2D has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = radius of revolute joint; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectjointalemoving2d)=
-## DESCRIPTION of ObjectJointALEMoving2D
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -48,6 +48,9 @@ The item VObjectJointALEMoving2D has the following parameters:
 | Coordinates | $[x_{data0},\,q_{ALE}]\tp$ | provides two values: [0] = current sliding marker index, [1] = ALE sliding coordinate |
 | Coordinates_t | $[\dot q_{ALE}]\tp$ | provides ALE sliding velocity |
 | Force | $\fv$ | joint force vector (3D) |
+
+(description-objectjointalemoving2d)=
+## Detailed description
 
 ### Definition of quantities
 

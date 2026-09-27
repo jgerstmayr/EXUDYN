@@ -4,10 +4,15 @@
 
 A node-Marker attached to a position-based node. It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerNodeRigid.
 
-**Additional information for MarkerNodePosition**:
-- This `Marker` has/provides the following types = `Node`, `Position`
+## Interface
 
-The item **MarkerNodePosition** with type = 'NodePosition' has the following parameters:
+- Provides: `Position`
+- Nodes it can be attached to: [](#sec-item-nodepoint), [](#sec-item-nodepoint2d), [](#sec-item-noderigidbodyep), [](#sec-item-noderigidbodyrxyz), [](#sec-item-noderigidbodyrotveclg), [](#sec-item-noderigidbody2d), [](#sec-item-nodepoint2dslope1), [](#sec-item-nodepointslope1), [](#sec-item-nodepointslope12), [](#sec-item-nodepointslope23), [](#sec-item-nodepointground)
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorspringdamper), [](#sec-item-objectconnectorcartesianspringdamper), [](#sec-item-objectconnectorgravity), [](#sec-item-objectconnectorhydraulicactuatorsimple), [](#sec-item-objectconnectordistance), [](#sec-item-objectcontactspheresphere), [](#sec-item-objectcontactspheretriangle), [](#sec-item-objectjointspherical), [](#sec-item-objectjointrevolute2d), [](#sec-item-loadforcevector)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'NodePosition':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -15,15 +20,16 @@ The item **MarkerNodePosition** with type = 'NodePosition' has the following par
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number to which marker is attached to |
 | **visualization** | VMarkerNodePosition |  |  | parameters for visualization of item |
 
-The item VMarkerNodePosition has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerNodePosition`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
-
 (description-markernodeposition)=
-## DESCRIPTION of MarkerNodePosition
+## Detailed description
 
 The node position marker provides an interface to a node which contains a position
 (`NodePoint`, `NodePoint2D`, `NodeRigidBodyEP`, `NodePointSlope`, ...)

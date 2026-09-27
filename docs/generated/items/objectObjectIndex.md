@@ -4,7 +4,7 @@
 A Object provides equations, using coordinates from Nodes. General objects lead to system equations, that do not represent physical Bodies or Connectors.
 
 ```{toctree}
-:maxdepth: 2
+:maxdepth: 1
 
 ObjectGenericODE1
 ```

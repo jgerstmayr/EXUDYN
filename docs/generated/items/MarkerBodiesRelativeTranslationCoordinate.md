@@ -4,10 +4,14 @@
 
 A coordinate-based Marker attached to two rigid bodies or beams which computes the relative translation between the bodies according to the given axis. This marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). NOTE: it is assumed that the two bodies can only move along the given axis (e.g., constrained by a prismatic joint) -- otherwise results may be unexpected. NOTE: this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body.
 
-**Additional information for MarkerBodiesRelativeTranslationCoordinate**:
-- This `Marker` has/provides the following types = `Object`, `Body`, `Position`, `Orientation`, `Coordinate`
+## Interface
 
-The item **MarkerBodiesRelativeTranslationCoordinate** with type = 'BodiesRelativeTranslationCoordinate' has the following parameters:
+- Provides: `Coordinate`, `Position`, `Orientation`
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorspringdamper), [](#sec-item-objectconnectorcartesianspringdamper), [](#sec-item-objectconnectorrigidbodyspringdamper), [](#sec-item-objectconnectorlinearspringdamper), [](#sec-item-objectconnectortorsionalspringdamper), [](#sec-item-objectconnectorcoordinatespringdamper), [](#sec-item-objectconnectorcoordinatespringdamperext), [](#sec-item-objectconnectorgravity), [](#sec-item-objectconnectorhydraulicactuatorsimple), [](#sec-item-objectconnectordistance), [](#sec-item-objectconnectorcoordinate), [](#sec-item-objectconnectorrollingdiscpenalty), [](#sec-item-objectcontactconvexroll), [](#sec-item-objectcontactcoordinate), [](#sec-item-objectcontactspheresphere), [](#sec-item-objectcontactspheretorus), [](#sec-item-objectcontactspheretriangle), [](#sec-item-objectcontactcurvecircles), [](#sec-item-objectjointgeneric), [](#sec-item-objectjointrevolutez), [](#sec-item-objectjointprismaticx), [](#sec-item-objectjointspherical), [](#sec-item-objectjointrollingdisc), [](#sec-item-objectjointrevolute2d), [](#sec-item-objectjointprismatic2d), [](#sec-item-loadforcevector), [](#sec-item-loadtorquevector), [](#sec-item-loadcoordinate)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'BodiesRelativeTranslationCoordinate':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -19,15 +23,16 @@ The item **MarkerBodiesRelativeTranslationCoordinate** with type = 'BodiesRelati
 | **offset** $x_\mathrm{off}$ | Real |  | 0. | translation offset [SI:m] subtracted from the translation; can be used to change the zero position |
 | **visualization** | VMarkerBodiesRelativeTranslationCoordinate |  |  | parameters for visualization of item |
 
-The item VMarkerBodiesRelativeTranslationCoordinate has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerBodiesRelativeTranslationCoordinate`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
-
 (description-markerbodiesrelativetranslationcoordinate)=
-## DESCRIPTION of MarkerBodiesRelativeTranslationCoordinate
+## Detailed description
 
 The marker consists of two bodies, body $b_0$ and body $b_1$ with respective global marker positions $\LU{0}{\pv}_{m0}$ and $\LU{0}{\pv}_{m1}$,
 depending on local positions $\LU{m_0}{\pv}_0$ and $\LU{m_1}{\pv}_1$,

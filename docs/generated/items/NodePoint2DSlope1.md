@@ -4,12 +4,16 @@
 
 A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 4 displacement degrees of freedom (2 for displacement of point node and 2 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime]^T=[1\;\;0]^T$.
 
-**Additional information for NodePoint2DSlope1**:
-- This `Node` has/provides the following types = `Position2D`, `Orientation2D`, `Point2DSlope1`, `Position`, `Orientation`
-- **Short name** for Python = `Point2DS1`
-- **Short name** for Python visualization object = `VPoint2DS1`
+## Interface
 
-The item **NodePoint2DSlope1** with type = 'Point2DSlope1' has the following parameters:
+- Python names: `NodePoint2DSlope1` or `Point2DS1`, and `VPoint2DS1` for its visualization
+- Provides: `Position2D`, `Orientation2D`, `Point2DSlope1`
+- Node markers that can be attached: [](#sec-item-markernodeposition), [](#sec-item-markernoderigid)
+- Objects that take this node: [](#sec-item-objectmasspoint2d), [](#sec-item-objectrigidbody2d), [](#sec-item-objectancfcable2d), [](#sec-item-objectbeamgeometricallyexact2d)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'Point2DSlope1':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -19,7 +23,9 @@ The item **NodePoint2DSlope1** with type = 'Point2DSlope1' has the following par
 | **initialVelocities** | Vector4D | 4 | [0.,0.,0.,0.] | initial velocity coordinates |
 | **visualization** | VNodePoint2DSlope1 |  |  | parameters for visualization of item |
 
-The item VNodePoint2DSlope1 has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodePoint2DSlope1`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -27,11 +33,9 @@ The item VNodePoint2DSlope1 has the following parameters:
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 
+## Output variables
 
-(description-nodepoint2dslope1)=
-## DESCRIPTION of NodePoint2DSlope1
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|

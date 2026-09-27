@@ -4,14 +4,14 @@
 
 A specialized 3D sliding joint between a list of beam elements (updated marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.
 
-**Additional information for ObjectJointSliding**:
-- This `Object` has/provides the following types = `Connector`, `Constraint`
-- Requested `Marker` type = `_None`
-- Requested `Node` type = `GenericData`
-- **Short name** for Python = `SlidingJoint`
-- **Short name** for Python visualization object = `VSlidingJoint`
+## Interface
 
-The item **ObjectJointSliding** with type = 'JointSliding' has the following parameters:
+- Python names: `ObjectJointSliding` or `SlidingJoint`, and `VSlidingJoint` for its visualization
+- Nodes it takes: [](#sec-item-nodegenericdata)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'JointSliding':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -26,7 +26,9 @@ The item **ObjectJointSliding** with type = 'JointSliding' has the following par
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectJointSliding |  |  | parameters for visualization of item |
 
-The item VObjectJointSliding has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectJointSliding`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -34,11 +36,9 @@ The item VObjectJointSliding has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = radius of revolute joint; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectjointsliding)=
-## DESCRIPTION of ObjectJointSliding
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -46,6 +46,9 @@ The item VObjectJointSliding has the following parameters:
 | Velocity |  | velocity vector of joint given by marker0 |
 | SlidingCoordinate |  | global sliding coordinate along all elements; the maximum sliding coordinate is equivalent to the reference lengths of all sliding elements |
 | Force |  | joint force vector (3D) |
+
+(description-objectjointsliding)=
+## Detailed description
 
 ### Definition of quantities
 

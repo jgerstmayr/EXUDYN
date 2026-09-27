@@ -4,10 +4,13 @@
 
 A special Marker attached to a 3D beam finite element which provides at least position and tangent to the beam axis.
 
-**Additional information for MarkerBodyBeamShape**:
-- This `Marker` has/provides the following types = `Object`, `Body`
+## Interface
 
-The item **MarkerBodyBeamShape** with type = 'BodyBeamShape' has the following parameters:
+- Provides: `Beam3DShape`
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'BodyBeamShape':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -15,15 +18,13 @@ The item **MarkerBodyBeamShape** with type = 'BodyBeamShape' has the following p
 | **bodyNumber** | ObjectIndex |  | invalid (-1) | body number to which marker is attached to (beam type) |
 | **visualization** | VMarkerBodyBeamShape |  |  | parameters for visualization of item |
 
-The item VMarkerBodyBeamShape has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerBodyBeamShape`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-
-
-(description-markerbodybeamshape)=
-## DESCRIPTION of MarkerBodyBeamShape
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`NGsolveFFRFSlidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py) (Ex)

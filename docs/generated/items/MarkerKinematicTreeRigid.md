@@ -4,10 +4,15 @@
 
 A position and orientation (rigid-body) marker attached to a kinematic tree. The marker is attached to the ObjectKinematicTree object and additionally needs a link number as well as a local position, similar to the SensorKinematicTree. The marker allows to attach loads (LoadForceVector and LoadTorqueVector) at arbitrary links or position. It also allows to attach connectors (e.g., spring dampers or actuators) to the kinematic tree. Finally, joint constraints can be attached, which allows for realization of closed loop structures. NOTE, however, that it is less efficient to attach many markers to a kinematic tree, therefor for forces or joint control use the structures available in kinematic tree whenever possible.
 
-**Additional information for MarkerKinematicTreeRigid**:
-- This `Marker` has/provides the following types = `Object`, `Body`, `Position`, `Orientation`
+## Interface
 
-The item **MarkerKinematicTreeRigid** with type = 'KinematicTreeRigid' has the following parameters:
+- Provides: `Position`, `Orientation`
+- Bodies it can be placed on: [](#sec-item-objectkinematictree)
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorspringdamper), [](#sec-item-objectconnectorcartesianspringdamper), [](#sec-item-objectconnectorrigidbodyspringdamper), [](#sec-item-objectconnectorlinearspringdamper), [](#sec-item-objectconnectortorsionalspringdamper), [](#sec-item-objectconnectorgravity), [](#sec-item-objectconnectorhydraulicactuatorsimple), [](#sec-item-objectconnectordistance), [](#sec-item-objectconnectorrollingdiscpenalty), [](#sec-item-objectcontactconvexroll), [](#sec-item-objectcontactspheresphere), [](#sec-item-objectcontactspheretorus), [](#sec-item-objectcontactspheretriangle), [](#sec-item-objectcontactcurvecircles), [](#sec-item-objectjointgeneric), [](#sec-item-objectjointrevolutez), [](#sec-item-objectjointprismaticx), [](#sec-item-objectjointspherical), [](#sec-item-objectjointrollingdisc), [](#sec-item-objectjointrevolute2d), [](#sec-item-objectjointprismatic2d), [](#sec-item-loadforcevector), [](#sec-item-loadtorquevector)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'KinematicTreeRigid':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -17,15 +22,16 @@ The item **MarkerKinematicTreeRigid** with type = 'KinematicTreeRigid' has the f
 | **localPosition** $\LU{l}{\bv}$ | Vector3D | 3 | [0.,0.,0.] | local (link-fixed) position of marker at link $n_l$, using the link ($n_l$) coordinate system |
 | **visualization** | VMarkerKinematicTreeRigid |  |  | parameters for visualization of item |
 
-The item VMarkerKinematicTreeRigid has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerKinematicTreeRigid`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
-
 (description-markerkinematictreerigid)=
-## DESCRIPTION of MarkerKinematicTreeRigid
+## Detailed description
 
 ### Marker quantities
 

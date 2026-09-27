@@ -4,12 +4,13 @@
 
 A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a RigidBody Marker, from node or object) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with 3$\times$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]. The connector works with Cable2D and ALECable2D, HOWEVER, due to conceptual differences the (tangential) frictionStiffness cannot be used with ALECable2D; if using, it gives wrong tangential stresses, even though it may work in general.
 
-**Additional information for ObjectContactFrictionCircleCable2D**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `_None`
-- Requested `Node` type = `GenericData`
+## Interface
 
-The item **ObjectContactFrictionCircleCable2D** with type = 'ContactFrictionCircleCable2D' has the following parameters:
+- Nodes it takes: [](#sec-item-nodegenericdata)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ContactFrictionCircleCable2D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -27,7 +28,9 @@ The item **ObjectContactFrictionCircleCable2D** with type = 'ContactFrictionCirc
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactFrictionCircleCable2D |  |  | parameters for visualization of item |
 
-The item VObjectContactFrictionCircleCable2D has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectContactFrictionCircleCable2D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -36,17 +39,18 @@ The item VObjectContactFrictionCircleCable2D has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectcontactfrictioncirclecable2d)=
-## DESCRIPTION of ObjectContactFrictionCircleCable2D
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
 | Coordinates | $[u_{t,0},\, g_0,\, u_{t,1},\, g_1,\, \ldots,\, u_{t,n_{cs}},\, g_{n_{cs}}]\tp$ | local (relative) displacement in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$); values are only provided in case of contact, otherwise zero; tangential displacement is only non-zero in case of sticking! |
 | Coordinates_t | $[v_{t,0},\, v_{n,0},\, v_{t,1},\, v_{n,1},\, \ldots,\, v_{t,n_{cs}},\, v_{n,n_{cs}}]\tp$ | local (relative) velocity in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$); values are only provided in case of contact, otherwise zero |
 | ForceLocal | $[f_{t,0},\, f_{n,0},\, f_{t,1},\, f_{n,1},\, \ldots,\, f_{t,n_{cs}},\, f_{n,n_{cs}}]\tp$ | local contact forces in tangential ($\tv$) and normal ($\nv$) direction per segment ($n_{cs}$) |
+
+(description-objectcontactfrictioncirclecable2d)=
+## Detailed description
 
 ### Definition of quantities
 

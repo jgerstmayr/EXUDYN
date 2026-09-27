@@ -4,13 +4,15 @@
 
 A 3D mass point which is attached to a position-based node, usually NodePoint.
 
-**Additional information for ObjectMassPoint**:
-- This `Object` has/provides the following types = `Body`, `SingleNoded`
-- Requested `Node` type = `Position`
-- **Short name** for Python = `MassPoint`
-- **Short name** for Python visualization object = `VMassPoint`
+## Interface
 
-The item **ObjectMassPoint** with type = 'MassPoint' has the following parameters:
+- Python names: `ObjectMassPoint` or `MassPoint`, and `VMassPoint` for its visualization
+- Nodes it takes: [](#sec-item-nodepoint), [](#sec-item-noderigidbodyep), [](#sec-item-noderigidbodyrxyz), [](#sec-item-noderigidbodyrotveclg), [](#sec-item-nodepointslope1), [](#sec-item-nodepointslope12), [](#sec-item-nodepointslope23), [](#sec-item-nodepointground)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'MassPoint':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -19,18 +21,18 @@ The item **ObjectMassPoint** with type = 'MassPoint' has the following parameter
 | **nodeNumber** $n0$ | NodeIndex |  | invalid (-1) | node number (type NodeIndex) for mass point |
 | **visualization** | VObjectMassPoint |  |  | parameters for visualization of item |
 
-The item VObjectMassPoint has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectMassPoint`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **graphicsData** | BodyGraphicsData |  |  | Structure contains data for body visualization; data is defined in special list / dictionary structure |
 
+## Output variables
 
-(description-objectmasspoint)=
-## DESCRIPTION of ObjectMassPoint
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -42,6 +44,9 @@ The item VObjectMassPoint has the following parameters:
 | Rotation | $[0,0,0]$ | (only for completeness) |
 | AngularVelocity | $[0,0,0]$ | (only for completeness) |
 | AngularVelocityLocal | $[0,0,0]$ | (only for completeness) |
+
+(description-objectmasspoint)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -75,7 +80,7 @@ $$
 $$
 
 (miniexample-objectmasspoint)=
-### MINI EXAMPLE for ObjectMassPoint
+## Mini example
 
 
 ```python

@@ -4,13 +4,14 @@
 
 A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers
 
-**Additional information for ObjectJointRevolute2D**:
-- This `Object` has/provides the following types = `Connector`, `Constraint`
-- Requested `Marker` type = `Position`
-- **Short name** for Python = `RevoluteJoint2D`
-- **Short name** for Python visualization object = `VRevoluteJoint2D`
+## Interface
 
-The item **ObjectJointRevolute2D** with type = 'JointRevolute2D' has the following parameters:
+- Python names: `ObjectJointRevolute2D` or `RevoluteJoint2D`, and `VRevoluteJoint2D` for its visualization
+- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'JointRevolute2D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -19,17 +20,15 @@ The item **ObjectJointRevolute2D** with type = 'JointRevolute2D' has the followi
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectJointRevolute2D |  |  | parameters for visualization of item |
 
-The item VObjectJointRevolute2D has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectJointRevolute2D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **drawSize** | float |  | -1. | drawing size = radius of revolute joint; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
-
-
-(description-objectjointrevolute2d)=
-## DESCRIPTION of ObjectJointRevolute2D
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pendulumGeomExactBeam2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2D.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFslidingJoint2Drigid.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py) (Ex), [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex), [`beltDrivesComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py) (Ex), [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`doublePendulum2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/doublePendulum2D.py) (Ex), [`finiteSegmentMethod.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/finiteSegmentMethod.py) (Ex), [`geneticOptimizationSliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/geneticOptimizationSliderCrank.py) (Ex), [`ANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py) (TM), [`ANCFgeneralContactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFgeneralContactCircle.py) (TM), [`ANCFoutputTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFoutputTest.py) (TM), ...

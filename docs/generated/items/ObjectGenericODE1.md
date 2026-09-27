@@ -4,11 +4,13 @@
 
 A system of $n$ {ref}`ODE1 <ODE1>`, having a system matrix, a rhs vector, but mostly it will use a user function to describe special {ref}`ODE1 <ODE1>` systems. It is based on NodeGenericODE1 nodes. NOTE that all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, using [] in Python.
 
-**Additional information for ObjectGenericODE1**:
-- This `Object` has/provides the following types = `MultiNoded`
-- Requested `Node` type: read detailed information of item
+## Interface
 
-The item **ObjectGenericODE1** with type = 'GenericODE1' has the following parameters:
+- Nodes: see the detailed description
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'GenericODE1':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -22,23 +24,26 @@ The item **ObjectGenericODE1** with type = 'GenericODE1' has the following param
 | **tempCoordinates_t** $\dot \cv_{temp} \in \Rcal^{n}$ | NumpyVector |  | [] | temporary vector containing velocity coordinates |
 | **visualization** | VObjectGenericODE1 |  |  | parameters for visualization of item |
 
-The item VObjectGenericODE1 has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectGenericODE1`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
+## Output variables
 
-(description-objectgenericode1)=
-## DESCRIPTION of ObjectGenericODE1
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
 | CoordinatesTotal |  | all {ref}`ODE2 <ODE2>` displacement plus reference coordinates of object |
 | Coordinates |  | all {ref}`ODE1 <ODE1>` coordinates |
 | Coordinates_t |  | all {ref}`ODE1 <ODE1>` velocity coordinates |
+
+(description-objectgenericode1)=
+## Detailed description
 
 ### Equations of motion
 
@@ -92,7 +97,7 @@ Note that itemNumber represents the index of the ObjectGenericODE1 object in mbs
 | **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
 
 (miniexample-objectgenericode1)=
-### MINI EXAMPLE for ObjectGenericODE1
+## Mini example
 
 
 ```python

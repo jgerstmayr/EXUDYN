@@ -6,12 +6,16 @@ A 3D rigid body node based on rotation vector and Lie group methods for rigid bo
 
 Authors: Gerstmayr Johannes, Holzinger Stefan
 
-**Additional information for NodeRigidBodyRotVecLG**:
-- This `Node` has/provides the following types = `Position`, `Orientation`, `RigidBody`, `RotationRotationVector`
-- **Short name** for Python = `RigidRotVecLG`
-- **Short name** for Python visualization object = `VRigidRotVecLG`
+## Interface
 
-The item **NodeRigidBodyRotVecLG** with type = 'RigidBodyRotVecLG' has the following parameters:
+- Python names: `NodeRigidBodyRotVecLG` or `RigidRotVecLG`, and `VRigidRotVecLG` for its visualization
+- Provides: `Position`, `Orientation`, `RigidBody`, `RotationRotationVector`, `LieGroupWithDirectUpdate`
+- Node markers that can be attached: [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markernoderotationcoordinate)
+- Objects that take this node: [](#sec-item-objectmasspoint), [](#sec-item-objectrigidbody), [](#sec-item-objectbeamgeometricallyexact)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'RigidBodyRotVecLG':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -21,7 +25,9 @@ The item **NodeRigidBodyRotVecLG** with type = 'RigidBodyRotVecLG' has the follo
 | **initialVelocities** $\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tnu\tp\cIni]\tp$ | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | initial velocity coordinate: time derivatives of displacement and angular velocity vector |
 | **visualization** | VNodeRigidBodyRotVecLG |  |  | parameters for visualization of item |
 
-The item VNodeRigidBodyRotVecLG has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodeRigidBodyRotVecLG`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -29,11 +35,9 @@ The item VNodeRigidBodyRotVecLG has the following parameters:
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 
+## Output variables
 
-(description-noderigidbodyrotveclg)=
-## DESCRIPTION of NodeRigidBodyRotVecLG
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -48,6 +52,9 @@ The item VNodeRigidBodyRotVecLG has the following parameters:
 | Rotation | $[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$ | vector with 3 components of the Euler/Tait-Bryan angles in xyz-sequence ($\LU{0b}{\Rot}\cConfig=:\Rot_0(\varphi_0) \cdot \Rot_1(\varphi_1) \cdot \Rot_2(\varphi_2)$), recomputed from rotation matrix |
 | AngularVelocity | $\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ | global 3D angular velocity vector of node |
 | AngularVelocityLocal | $\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ | local (body-fixed) 3D angular velocity vector of node |
+
+(description-noderigidbodyrotveclg)=
+## Detailed description
 
 **Detailed information:**
 For a detailed description on the rigid body dynamics formulation using this node,

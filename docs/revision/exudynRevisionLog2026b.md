@@ -6140,3 +6140,40 @@ where it is not, the page gets it after the paragraph and the list of items unde
 of its own, so that the navigation does not hang the items under the last section of the general
 text. The introduction of the whole chapter stays in the emitter: it is not a kind, and its
 `\mybold` and `\refSection` would need the converter's help that a definition is not given.
+
+<a id="rg13-5-0-3"></a>
+### RG13.5.0.3 — the generated frame of an item page (2026-09-28, #2725)
+
+What `itemDocsEmitter.py` writes around the authored text of every item page, changed as
+`itemDefinitionsDev.md` §2 and §3 proposed and the maintainer decided to do first:
+
+| before | now |
+|---|---|
+| **Additional information for X**: a list of type bits - *"This Node has/provides the following types = Position"*, *"Requested Marker type = Position"* - and two lines of short names | `## Interface`: the Python names on one line, and **which items fit**, as links: the node markers a node takes and the objects that take it, the nodes an object takes and the body markers that can be placed on it, the markers a connector, joint or load acts on, and for a marker the nodes or bodies it sits on and the connectors, constraints and loads that can use it |
+| *The item **X** with type = 'Point' has the following parameters:* | `## Parameters`, with the type name of the dictionary in one sentence |
+| *The item VX has the following parameters:* | `## Visualization parameters` |
+| `## DESCRIPTION of X` over the output variables, the detailed description, the user functions, the MiniExample and the examples | `## Output variables`, `## Detailed description` (with the user functions), `## Mini example`; the examples after them |
+
+The anchors `description-x` and `miniexample-x` are kept; nothing in the documentation linked them.
+The page of a kind lists its items with `maxdepth: 1` now - with 2 it listed every section of every
+item, which five headings per page would have made a wall.
+
+**The compatibility is generated, not written**: `tools/generators/itemCompatibility.py` reads the
+types every item declares - `ItemTypes`, `GetRequestedMarkerType`, `GetRequestedNodeType`,
+`ItemAccessFunctionTypes` - and applies the rules of `CSystem::CheckSystemIntegrity`: a body marker
+of type `Position` needs the access function `TranslationalVelocity_qt`, `Orientation` needs
+`AngularVelocity_qt`, `BodyMass` needs `DisplacementMassIntegral_q`. **One rule was not declared**:
+which node a node marker needs. It is now, as `requestedNodeTypes` of `MarkerNodePosition`
+(`Position` or `Position2D`), `MarkerNodeRigid` (and `Orientation` or `Orientation2D`) and
+`MarkerNodeRotationCoordinate` (`Orientation`), copied from the C++ checks and citing them; that the
+C++ check could be generated from it is #2727. What is not declared is not said: the coordinate
+markers, which fit any node with coordinates of their kind, and the cable and beam shape markers,
+which name their element themselves, appear in no list.
+
+The lists say what the code accepts, which is not always what a reader would choose:
+`ObjectMassPoint` accepts a rigid body node, because it requests only `Position`. They are the
+rules, and a page that wants to say more says it in its detailed description. The Python docstrings
+of the item classes still carry the old sentence (`itemInterfaceEmitter.py`), because the lists are
+links that a docstring cannot show.
+
+All 97 item pages and the eleven pages of kinds changed; HTML and PDF build without a warning.

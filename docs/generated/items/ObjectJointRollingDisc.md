@@ -4,13 +4,14 @@
 
 A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly). The ground body can be a rigid body which is moving. In this case, the flat surface is assumed to be in the $x$-$y$-plane at $z=0$. Note that the rolling body must have the reference point at the center of the disc. NOTE: the cases of normal other than $z$-direction, wheel axis other than $x$-axis and moving ground body needs to be tested further, check your results!
 
-**Additional information for ObjectJointRollingDisc**:
-- This `Object` has/provides the following types = `Connector`, `Constraint`
-- Requested `Marker` type = `Position` + `Orientation`
-- **Short name** for Python = `RollingDiscJoint`
-- **Short name** for Python visualization object = `VRollingDiscJoint`
+## Interface
 
-The item **ObjectJointRollingDisc** with type = 'JointRollingDisc' has the following parameters:
+- Python names: `ObjectJointRollingDisc` or `RollingDiscJoint`, and `VRollingDiscJoint` for its visualization
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'JointRollingDisc':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -23,7 +24,9 @@ The item **ObjectJointRollingDisc** with type = 'JointRollingDisc' has the follo
 | **planeNormal** $\LU{m0}{\vv_{PN}}$ | Vector3D | 3 | [0,0,1] | normal to the contact / rolling plane defined in marker $m0$ coordinates |
 | **visualization** | VObjectJointRollingDisc |  |  | parameters for visualization of item |
 
-The item VObjectJointRollingDisc has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectJointRollingDisc`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -31,11 +34,9 @@ The item VObjectJointRollingDisc has the following parameters:
 | **discWidth** | float |  | 0.1 | width of disc for drawing |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectjointrollingdisc)=
-## DESCRIPTION of ObjectJointRollingDisc
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -43,6 +44,9 @@ The item VObjectJointRollingDisc has the following parameters:
 | Velocity | $\LU{0}{\vv}_{trail}$ | current velocity of the trail (according to motion of the contact point along the trail!) in global coordinates; this is not the velocity of the contact point; needs further testing for general case of relative moving bodies |
 | ForceLocal | $\LU{J1}{\fv} = \LU{0}{[f_0,\, f_1,\, f_2]\tp}= [-\zv^T \LU{0}{\wv_{lat}}, \, -\zv^T \LU{0}{\wv_2}, \, -\zv^T \LU{0}{\vv_{PN}}]\tp$ | contact forces acting on disc, in special $J1$ joint coordinates, $f_0$ being the lateral force (parallel to ground plane), $f_1$ being the longitudinal force and $f_2$ being the normal force |
 | RotationMatrix | $\LU{0,J1}{\Am} = [\LU{0}{\wv_{lat}},\, \LU{0}{\wv}_2,\, \LU{0}{\vv_{PN}}]$ | transformation matrix of special joint coordinates $J1$ to global coordinates |
+
+(description-objectjointrollingdisc)=
+## Detailed description
 
 ### Definition of quantities
 

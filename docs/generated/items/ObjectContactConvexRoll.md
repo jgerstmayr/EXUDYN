@@ -6,12 +6,14 @@ A contact connector representing a convex roll (marker 1) on a flat surface (mar
 
 Author: Manzl Peter
 
-**Additional information for ObjectContactConvexRoll**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Position` + `Orientation`
-- Requested `Node` type = `GenericData`
+## Interface
 
-The item **ObjectContactConvexRoll** with type = 'ContactConvexRoll' has the following parameters:
+- Nodes it takes: [](#sec-item-nodegenericdata)
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ContactConvexRoll':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -34,18 +36,18 @@ The item **ObjectContactConvexRoll** with type = 'ContactConvexRoll' has the fol
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactConvexRoll |  |  | parameters for visualization of item |
 
-The item VObjectContactConvexRoll has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectContactConvexRoll`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectcontactconvexroll)=
-## DESCRIPTION of ObjectContactConvexRoll
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -53,6 +55,9 @@ The item VObjectContactConvexRoll has the following parameters:
 | Velocity | $\LU{0}{\vv}_{C}$ | current velocity of the trail (contact) point in global coordinates; this is the velocity with which the contact moves over the ground plane |
 | Force | $\LU{0}{\fv}$ | Roll-ground force in ground coordinates |
 | Torque | $\LU{0}{\mv}$ | Roll-ground torque in ground coordinates |
+
+(description-objectcontactconvexroll)=
+## Detailed description
 
 ### Definition of quantities
 

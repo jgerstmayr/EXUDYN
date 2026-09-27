@@ -4,10 +4,14 @@
 
 A node with one {ref}`ODE2 <ODE2>` coordinate for one dimensional (1D) problems. Use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.
 
-**Additional information for Node1D**:
-- This `Node` has/provides the following types = `GenericODE2`
+## Interface
 
-The item **Node1D** with type = '1D' has the following parameters:
+- Provides: `GenericODE2`
+- Objects that take this node: [](#sec-item-objectmass1d), [](#sec-item-objectrotationalmass1d), [](#sec-item-objectkinematictree)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is '1D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -17,17 +21,17 @@ The item **Node1D** with type = '1D' has the following parameters:
 | **initialVelocities** $[\dot q_0]\tp\cIni$ | Vector |  | [0.] | initial velocity coordinate (in vector form) |
 | **visualization** | VNode1D |  |  | parameters for visualization of item |
 
-The item VNode1D has the following parameters:
+## Visualization parameters
+
+The parameters of `VNode1D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | False | set true, if item is shown in visualization and false if it is not shown; The node1D is represented as reference position and displacement along the global x-axis, which must not agree with the representation in the object using the Node1D |
 
+## Output variables
 
-(description-node1d)=
-## DESCRIPTION of Node1D
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -35,6 +39,9 @@ The item VNode1D has the following parameters:
 | Coordinates | $\qv\cConfig = [q_0]\tp\cConfig$ | {ref}`ODE2 <ODE2>` coordinate of node (in vector form) |
 | Coordinates_t | $\dot \qv\cConfig = [\dot q_0]\tp\cConfig$ | {ref}`ODE2 <ODE2>` velocity coordinate of node (in vector form) |
 | Coordinates_tt | $\ddot \qv\cConfig = [\ddot q_0]\tp\cConfig$ | {ref}`ODE2 <ODE2>` acceleration coordinate of node (in vector form) |
+
+(description-node1d)=
+## Detailed description
 
 **Detailed information:**
 The current position/rotation coordinate of the 1D node is computed from

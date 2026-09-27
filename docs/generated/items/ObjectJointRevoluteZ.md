@@ -12,13 +12,14 @@ A revolute joint in 3D; constrains the position of two rigid body markers and th
 :width: 400
 ```
 
-**Additional information for ObjectJointRevoluteZ**:
-- This `Object` has/provides the following types = `Connector`, `Constraint`
-- Requested `Marker` type = `Position` + `Orientation`
-- **Short name** for Python = `RevoluteJointZ`
-- **Short name** for Python visualization object = `VRevoluteJointZ`
+## Interface
 
-The item **ObjectJointRevoluteZ** with type = 'JointRevoluteZ' has the following parameters:
+- Python names: `ObjectJointRevoluteZ` or `RevoluteJointZ`, and `VRevoluteJointZ` for its visualization
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'JointRevoluteZ':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -29,7 +30,9 @@ The item **ObjectJointRevoluteZ** with type = 'JointRevoluteZ' has the following
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectJointRevoluteZ |  |  | parameters for visualization of item |
 
-The item VObjectJointRevoluteZ has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectJointRevoluteZ`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -38,11 +41,9 @@ The item VObjectJointRevoluteZ has the following parameters:
 | **axisLength** | float |  | 0.4 | length of joint axis to draw |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectjointrevolutez)=
-## DESCRIPTION of ObjectJointRevoluteZ
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -54,6 +55,9 @@ The item VObjectJointRevoluteZ has the following parameters:
 | AngularVelocityLocal | $\LU{J0}{\Delta\tomega}$ | relative angular velocity in joint J0 coordinates, giving a vector with Z-component only |
 | ForceLocal | $\LU{J0}{\fv}$ | joint force in local $J0$ coordinates |
 | TorqueLocal | $\LU{J0}{\mv}$ | joint torques in local $J0$ coordinates; torque around Z is zero |
+
+(description-objectjointrevolutez)=
+## Detailed description
 
 (sec-objectjointrevolutez-definitionofquantities)=
 ### Definition of quantities
@@ -118,7 +122,7 @@ $$
 $$
 
 (miniexample-objectjointrevolutez)=
-### MINI EXAMPLE for ObjectJointRevoluteZ
+## Mini example
 
 
 ```python

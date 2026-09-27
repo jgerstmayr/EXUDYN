@@ -4,10 +4,14 @@
 
 A Marker attached to all coordinates of an object (currently only body is possible), e.g. to apply special constraints or loads on all coordinates. The measured coordinates INCLUDE reference + current coordinates.
 
-**Additional information for MarkerObjectODE2Coordinates**:
-- This `Marker` has/provides the following types = `Object`, `Body`, `Coordinate`
+## Interface
 
-The item **MarkerObjectODE2Coordinates** with type = 'ObjectODE2Coordinates' has the following parameters:
+- Provides: `Coordinates`
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorcoordinatevector)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ObjectODE2Coordinates':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -15,15 +19,13 @@ The item **MarkerObjectODE2Coordinates** with type = 'ObjectODE2Coordinates' has
 | **objectNumber** | ObjectIndex |  | invalid (-1) | body number to which marker is attached to |
 | **visualization** | VMarkerObjectODE2Coordinates |  |  | parameters for visualization of item |
 
-The item VMarkerObjectODE2Coordinates has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerObjectODE2Coordinates`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-
-
-(description-markerobjectode2coordinates)=
-## DESCRIPTION of MarkerObjectODE2Coordinates
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`coordinateVectorConstraintGenericODE2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py) (TM)

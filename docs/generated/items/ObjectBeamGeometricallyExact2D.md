@@ -4,13 +4,15 @@
 
 A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the {ref}`EOM <EOM>`).
 
-**Additional information for ObjectBeamGeometricallyExact2D**:
-- This `Object` has/provides the following types = `Body`, `MultiNoded`
-- Requested `Node` type = `Position2D` + `Orientation2D` + `Position` + `Orientation`
-- **Short name** for Python = `Beam2D`
-- **Short name** for Python visualization object = `VBeam2D`
+## Interface
 
-The item **ObjectBeamGeometricallyExact2D** with type = 'BeamGeometricallyExact2D' has the following parameters:
+- Python names: `ObjectBeamGeometricallyExact2D` or `Beam2D`, and `VBeam2D` for its visualization
+- Nodes it takes: [](#sec-item-noderigidbody2d), [](#sec-item-nodepoint2dslope1)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'BeamGeometricallyExact2D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -29,7 +31,9 @@ The item **ObjectBeamGeometricallyExact2D** with type = 'BeamGeometricallyExact2
 | **includeReferenceRotations** | bool |  | False | if True, rotation of the cross section at the nodes includes node reference rotations (within referenceCoordinates of NodeRigidBody2D), which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the reference slope vector. This allows to easily share nodes among several beams with different reference cross section orientation (i.e., only the change of rotation counts). |
 | **visualization** | VObjectBeamGeometricallyExact2D |  |  | parameters for visualization of item |
 
-The item VObjectBeamGeometricallyExact2D has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectBeamGeometricallyExact2D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -37,11 +41,9 @@ The item VObjectBeamGeometricallyExact2D has the following parameters:
 | **drawHeight** | float |  | 0. | if beam is drawn with rectangular shape, this is the drawing height |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color of the object; if R==-1, use default color |
 
+## Output variables
 
-(description-objectbeamgeometricallyexact2d)=
-## DESCRIPTION of ObjectBeamGeometricallyExact2D
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -53,6 +55,9 @@ The item VObjectBeamGeometricallyExact2D has the following parameters:
 | CurvatureLocal |  | 3D vector of (local) curvature, only $Z$ component is non-zero |
 | ForceLocal |  | 3D vector of (local) section normal force, containing axial (X) and shear force (Y) |
 | TorqueLocal |  | 3D vector of (local) torques, containing only bending moment (Z) |
+
+(description-objectbeamgeometricallyexact2d)=
+## Detailed description
 
 See paper of Simo and Vu-Quoc (1986).
 Detailed description coming later.

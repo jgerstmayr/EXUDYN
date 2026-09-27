@@ -4,14 +4,15 @@
 
 An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers. It represents a penalty-based rigid joint (or prismatic, revolute, etc.)
 
-**Additional information for ObjectConnectorRigidBodySpringDamper**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Position` + `Orientation`
-- Requested `Node` type = `GenericData`
-- **Short name** for Python = `RigidBodySpringDamper`
-- **Short name** for Python visualization object = `VRigidBodySpringDamper`
+## Interface
 
-The item **ObjectConnectorRigidBodySpringDamper** with type = 'ConnectorRigidBodySpringDamper' has the following parameters:
+- Python names: `ObjectConnectorRigidBodySpringDamper` or `RigidBodySpringDamper`, and `VRigidBodySpringDamper` for its visualization
+- Nodes it takes: [](#sec-item-nodegenericdata)
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorRigidBodySpringDamper':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -29,7 +30,9 @@ The item **ObjectConnectorRigidBodySpringDamper** with type = 'ConnectorRigidBod
 | **postNewtonStepUserFunction** $\mathrm{UF}_{PN} \in \Rcal$ | PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D |  | 0 | A Python function which computes the error of the PostNewtonStep; see description below |
 | **visualization** | VObjectConnectorRigidBodySpringDamper |  |  | parameters for visualization of item |
 
-The item VObjectConnectorRigidBodySpringDamper has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorRigidBodySpringDamper`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -37,11 +40,9 @@ The item VObjectConnectorRigidBodySpringDamper has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectconnectorrigidbodyspringdamper)=
-## DESCRIPTION of ObjectConnectorRigidBodySpringDamper
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -51,6 +52,9 @@ The item VObjectConnectorRigidBodySpringDamper has the following parameters:
 | AngularVelocityLocal | $\LU{J0}{\Delta\tomega}$ | relative angular velocity in local joint0 coordinates |
 | ForceLocal | $\LU{J0}{\fv}$ | joint force in local joint0 coordinates |
 | TorqueLocal | $\LU{J0}{\mv}$ | joint torque in in local joint0 coordinates |
+
+(description-objectconnectorrigidbodyspringdamper)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -175,7 +179,7 @@ Detailed description of the arguments and local quantities:
 | **return value** | Vector | $\left[\varepsilon_{PN},\; t_{recom},\; d_0^{k},\; d_1^{k}, ...\right]$ where $k$ indicates the current step |
 
 (miniexample-objectconnectorrigidbodyspringdamper)=
-### MINI EXAMPLE for ObjectConnectorRigidBodySpringDamper
+## Mini example
 
 
 ```python

@@ -3,7 +3,10 @@
 # SensorBody
 
 A sensor attached to a body-object with local position $\pLocB$. As a difference to SensorObject, the body sensor needs a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
-The item **SensorBody** with type = 'Body' has the following parameters:
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'Body':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -16,15 +19,13 @@ The item **SensorBody** with type = 'Body' has the following parameters:
 | **storeInternal** | Bool |  | False | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available |
 | **visualization** | VSensorBody |  |  | parameters for visualization of item |
 
-The item VSensorBody has the following parameters:
+## Visualization parameters
+
+The parameters of `VSensorBody`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-
-
-(description-sensorbody)=
-## DESCRIPTION of SensorBody
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex), [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`bungeeJump.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bungeeJump.py) (Ex), [`camFollowerExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py) (Ex), [`cartesianSpringDamperUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamperUserFunction.py) (Ex), [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`contactCurvePolynomial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurvePolynomial.py) (Ex), [`contactCurveWithLongCurve.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurveWithLongCurve.py) (Ex), [`finiteSegmentMethod.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/finiteSegmentMethod.py) (Ex), [`flexiblePendulumANCF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/flexiblePendulumANCF.py) (Ex), [`fourBarMechanism3D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py) (Ex), [`ANCFoutputTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFoutputTest.py) (TM), [`carRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py) (TM), [`compareFullModifiedNewton.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/compareFullModifiedNewton.py) (TM), ...

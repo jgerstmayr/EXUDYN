@@ -3,7 +3,14 @@
 # NodeGenericAE
 
 A node containing a number of {ref}`AE <AE>` variables. Use e.g. linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
-The item **NodeGenericAE** with type = 'GenericAE' has the following parameters:
+
+## Interface
+
+- Provides: `GenericAE`
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'GenericAE':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -13,17 +20,17 @@ The item **NodeGenericAE** with type = 'GenericAE' has the following parameters:
 | **numberOfAECoordinates** $n_c$ | PInt |  | 0 | number of generic {ref}`AE <AE>` coordinates; **must be given**: the default is only a placeholder |
 | **visualization** | VNodeGenericAE |  |  | parameters for visualization of item |
 
-The item VNodeGenericAE has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodeGenericAE`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | False | set true, if item is shown in visualization and false if it is not shown |
 
+## Output variables
 
-(description-nodegenericae)=
-## DESCRIPTION of NodeGenericAE
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|

@@ -4,13 +4,14 @@
 
 A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint acts directly on coordinates, but does not include reference values, e.g., of nodal values. This constraint is computationally efficient and should be used to constrain nodal coordinates.
 
-**Additional information for ObjectConnectorCoordinate**:
-- This `Object` has/provides the following types = `Connector`, `Constraint`
-- Requested `Marker` type = `Coordinate`
-- **Short name** for Python = `CoordinateConstraint`
-- **Short name** for Python visualization object = `VCoordinateConstraint`
+## Interface
 
-The item **ObjectConnectorCoordinate** with type = 'ConnectorCoordinate' has the following parameters:
+- Python names: `ObjectConnectorCoordinate` or `CoordinateConstraint`, and `VCoordinateConstraint` for its visualization
+- Markers it acts on: those providing `Coordinate`: [](#sec-item-markernodecoordinate), [](#sec-item-markernodeode1coordinate), [](#sec-item-markernoderotationcoordinate), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markerbodycable2dshape), [](#sec-item-markerbodycable2dcoordinates)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorCoordinate':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -24,7 +25,9 @@ The item **ObjectConnectorCoordinate** with type = 'ConnectorCoordinate' has the
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorCoordinate |  |  | parameters for visualization of item |
 
-The item VObjectConnectorCoordinate has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorCoordinate`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -32,11 +35,9 @@ The item VObjectConnectorCoordinate has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = link size; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectconnectorcoordinate)=
-## DESCRIPTION of ObjectConnectorCoordinate
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -44,6 +45,9 @@ The item VObjectConnectorCoordinate has the following parameters:
 | Velocity | $\Delta v$ | difference of scalar marker velocity coordinates, not including factorValue1 |
 | ConstraintEquation | $\cv$ | (residuum of) constraint equation |
 | Force | $\lambda_0$ | scalar constraint force (Lagrange multiplier) |
+
+(description-objectconnectorcoordinate)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -158,7 +162,7 @@ mbs.AddObject(CoordinateConstraint(markerNumbers = [groundMarker, nodeMarker],
 ```
 
 (miniexample-objectconnectorcoordinate)=
-### MINI EXAMPLE for ObjectConnectorCoordinate
+## Mini example
 
 
 ```python

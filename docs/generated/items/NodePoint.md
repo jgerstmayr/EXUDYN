@@ -4,12 +4,16 @@
 
 A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for {ref}`ODE2 <ODE2>`.
 
-**Additional information for NodePoint**:
-- This `Node` has/provides the following types = `Position`
-- **Short name** for Python = `Point`
-- **Short name** for Python visualization object = `VPoint`
+## Interface
 
-The item **NodePoint** with type = 'Point' has the following parameters:
+- Python names: `NodePoint` or `Point`, and `VPoint` for its visualization
+- Provides: `Position`
+- Node markers that can be attached: [](#sec-item-markernodeposition)
+- Objects that take this node: [](#sec-item-objectmasspoint)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'Point':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -19,7 +23,9 @@ The item **NodePoint** with type = 'Point' has the following parameters:
 | **initialVelocities** $\dot\qv\cIni = \vv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2]\cIni\tp$ | Vector3D | 3 | [0.,0.,0.] | initial velocity coordinate |
 | **visualization** | VNodePoint |  |  | parameters for visualization of item |
 
-The item VNodePoint has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodePoint`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -27,11 +33,9 @@ The item VNodePoint has the following parameters:
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 
+## Output variables
 
-(description-nodepoint)=
-## DESCRIPTION of NodePoint
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -47,6 +51,9 @@ The item VNodePoint has the following parameters:
 | Rotation | $[0,0,0]$ | (only for completeness) |
 | AngularVelocity | $[0,0,0]$ | (only for completeness) |
 | AngularVelocityLocal | $[0,0,0]$ | (only for completeness) |
+
+(description-nodepoint)=
+## Detailed description
 
 **Detailed information:**
 The node provides $n_c=3$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint, finite elements, ...).

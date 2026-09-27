@@ -3,7 +3,10 @@
 # SensorMarker
 
 A sensor attached to a marker. The sensor measures the selected marker values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Depending on markers, it can measure Coordinates (MarkerNodeCoordinate), Position and Velocity (MarkerXXXPosition), Position, Velocity, Rotation and AngularVelocityLocal (MarkerXXXRigid). Note that marker values are only available for the current configuration. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file
-The item **SensorMarker** with type = 'Marker' has the following parameters:
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'Marker':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -15,15 +18,13 @@ The item **SensorMarker** with type = 'Marker' has the following parameters:
 | **storeInternal** | Bool |  | False | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available |
 | **visualization** | VSensorMarker |  |  | parameters for visualization of item |
 
-The item VSensorMarker has the following parameters:
+## Visualization parameters
+
+The parameters of `VSensorMarker`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-
-
-(description-sensormarker)=
-## DESCRIPTION of SensorMarker
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`NGsolveCMStutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCMStutorial.py) (Ex), [`NGsolveFFRFSlidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py) (Ex), [`NGsolveModalAnalysis.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveModalAnalysis.py) (Ex), [`ObjectFFRFconvergenceTestHinge.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ObjectFFRFconvergenceTestHinge.py) (Ex), [`pendulumVerify.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumVerify.py) (Ex), [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`ANCFCableBeamDampingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py) (TM), [`distanceSensor.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/distanceSensor.py) (TM), [`pendulumFriction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/pendulumFriction.py) (TM), [`plotSensorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/plotSensorTest.py) (TM), [`reevingSystemSpringsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/reevingSystemSpringsTest.py) (TM), [`relativeRotationTranslationMechanism.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/relativeRotationTranslationMechanism.py) (TM)

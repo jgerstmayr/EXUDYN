@@ -2773,10 +2773,12 @@ What depends on it: the graphics regression test takes every item through its Mi
         general section of each kind of item, in a new definitions file
         `definitions/itemKindDefinitions.py` (maintainer's decision), with an `overallDescription` -
         today's paragraph of the index page - and a `detailedDescription`, written by .1 to .5.
-      - **RG13.5.0.3** the generated frame of every item page: *Interface* instead of *Additional
-        information*, the types in words (which markers, nodes, connectors and loads fit), the Python
-        names on one line, headings of their own for parameters, output variables and the detailed
-        description; `requestedNodeTypes` declared for the node markers.
+      - **RG13.5.0.3** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-0-3) - the
+        generated frame of every item page: *Interface* instead of *Additional information*, the
+        types in words (which markers, nodes, connectors and loads fit), the Python names on one
+        line, headings of their own for parameters, output variables and the detailed description;
+        `requestedNodeTypes` declared for the node markers. Generating the C++ check of the node
+        markers from that declaration is #2727.
     - **RG13.5.1** nodes - the table of coordinates, the frame and interpretation, the action on the
       equations of motion, constraints, singularities; the slopes of the slope nodes.
     - **RG13.5.2** objects - after `objectDefinitionsDev.md` is agreed.

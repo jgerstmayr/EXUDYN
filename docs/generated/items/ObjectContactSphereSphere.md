@@ -6,12 +6,14 @@ A simple contact connector between two spheres, using various contact models and
 
 Authors: Gerstmayr Johannes, Weyrer Sebastian
 
-**Additional information for ObjectContactSphereSphere**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Position` + `Orientation`
-- Requested `Node` type = `GenericData`
+## Interface
 
-The item **ObjectContactSphereSphere** with type = 'ContactSphereSphere' has the following parameters:
+- Nodes it takes: [](#sec-item-nodegenericdata)
+- Markers it acts on: those providing `Position` (and `Orientation` if `dynamicFriction` is not zero): [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ContactSphereSphere':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -35,18 +37,18 @@ The item **ObjectContactSphereSphere** with type = 'ContactSphereSphere' has the
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactSphereSphere |  |  | parameters for visualization of item |
 
-The item VObjectContactSphereSphere has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectContactSphereSphere`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | False | set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii |
 | **color** | Float4 | 4 | [0.7,0.7,0.7,1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectcontactspheresphere)=
-## DESCRIPTION of ObjectContactSphereSphere
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -57,6 +59,9 @@ The item VObjectContactSphereSphere has the following parameters:
 | Force |  | global contact force vector |
 | Director1 |  | contains normalized vector from marker 0 to marker 1 |
 | Torque |  | global torque due to friction on marker 0; to obetain torque on marker 1, multiply the torque with the factor $\frac{r_1+g/2}{r_0+g/2}$ |
+
+(description-objectcontactspheresphere)=
+## Detailed description
 
 ### Definition of quantities
 

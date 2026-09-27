@@ -4,10 +4,15 @@
 
 A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.
 
-**Additional information for MarkerSuperElementRigid**:
-- This `Marker` has/provides the following types = `Object`, `Body`, `Position`, `Orientation`
+## Interface
 
-The item **MarkerSuperElementRigid** with type = 'SuperElementRigid' has the following parameters:
+- Provides: `Position`, `Orientation`
+- Bodies it can be placed on: [](#sec-item-objectgenericode2), [](#sec-item-objectffrf), [](#sec-item-objectffrfreducedorder)
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorspringdamper), [](#sec-item-objectconnectorcartesianspringdamper), [](#sec-item-objectconnectorrigidbodyspringdamper), [](#sec-item-objectconnectorlinearspringdamper), [](#sec-item-objectconnectortorsionalspringdamper), [](#sec-item-objectconnectorgravity), [](#sec-item-objectconnectorhydraulicactuatorsimple), [](#sec-item-objectconnectordistance), [](#sec-item-objectconnectorrollingdiscpenalty), [](#sec-item-objectcontactconvexroll), [](#sec-item-objectcontactspheresphere), [](#sec-item-objectcontactspheretorus), [](#sec-item-objectcontactspheretriangle), [](#sec-item-objectcontactcurvecircles), [](#sec-item-objectjointgeneric), [](#sec-item-objectjointrevolutez), [](#sec-item-objectjointprismaticx), [](#sec-item-objectjointspherical), [](#sec-item-objectjointrollingdisc), [](#sec-item-objectjointrevolute2d), [](#sec-item-objectjointprismatic2d), [](#sec-item-loadforcevector), [](#sec-item-loadtorquevector)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'SuperElementRigid':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -20,16 +25,17 @@ The item **MarkerSuperElementRigid** with type = 'SuperElementRigid' has the fol
 | **rotationsExponentialMap** | Index |  | 2 | Experimental flag (2 is the correct value and will be used in future, removing this flag): This value switches different behavior for computation of rotations and angular velocities: 0 uses linearized rotations and angular velocities, 1 uses the exponential map for rotations but linear angular velocities, 2 uses the exponential map for rotations and the according tangent map for angular velocities |
 | **visualization** | VMarkerSuperElementRigid |  |  | parameters for visualization of item |
 
-The item VMarkerSuperElementRigid has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerSuperElementRigid`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **showMarkerNodes** | Bool |  | True | set true, if all nodes are shown (similar to marker, but with less intensity) |
 
-
 (description-markersuperelementrigid)=
-## DESCRIPTION of MarkerSuperElementRigid
+## Detailed description
 
 **Definition of marker quantities**:
 

@@ -4,14 +4,15 @@
 
 An torsional spring-damper element acting on relative rotations around Z-axis of local joint0 coordinate system. It connects to orientation-based markers; if other rotation axis than the local joint0 Z axis shall be used, the joint rotationMarker0 / rotationMarker1 may be used. The joint perfectly extends a RevoluteJoint with a spring-damper, which can also be used to represent feedback control in an elegant and efficient way, by chosing appropriate user functions. It also allows to measure continuous / infinite rotations by making use of a NodeGeneric which compensates $\pm \pi$ jumps in the measured rotation (`OutputVariableType.Rotation`).
 
-**Additional information for ObjectConnectorTorsionalSpringDamper**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Orientation`
-- Requested `Node` type = `GenericData`
-- **Short name** for Python = `TorsionalSpringDamper`
-- **Short name** for Python visualization object = `VTorsionalSpringDamper`
+## Interface
 
-The item **ObjectConnectorTorsionalSpringDamper** with type = 'ConnectorTorsionalSpringDamper' has the following parameters:
+- Python names: `ObjectConnectorTorsionalSpringDamper` or `TorsionalSpringDamper`, and `VTorsionalSpringDamper` for its visualization
+- Nodes it takes: [](#sec-item-nodegenericdata)
+- Markers it acts on: those providing `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorTorsionalSpringDamper':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -29,7 +30,9 @@ The item **ObjectConnectorTorsionalSpringDamper** with type = 'ConnectorTorsiona
 | **springTorqueUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalarIndexScalar5 |  | 0 | A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below |
 | **visualization** | VObjectConnectorTorsionalSpringDamper |  |  | parameters for visualization of item |
 
-The item VObjectConnectorTorsionalSpringDamper has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorTorsionalSpringDamper`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -37,17 +40,18 @@ The item VObjectConnectorTorsionalSpringDamper has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectconnectortorsionalspringdamper)=
-## DESCRIPTION of ObjectConnectorTorsionalSpringDamper
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
 | Rotation | $\Delta\theta$ | relative rotation around the spring-damper Z-coordinate, enhanced to a continuous rotation (infinite rotations $>+\pi$ and $<-\pi$) if a NodeGeneric with 1 coordinate as added |
 | AngularVelocityLocal | $\Delta\omega$ | scalar relative angular velocity around joint0 Z-axis |
 | TorqueLocal | $\tau_{SD}$ | scalar spring-damper torque around the local joint0 Z-axis |
+
+(description-objectconnectortorsionalspringdamper)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -125,7 +129,7 @@ mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody],
 ```
 
 (miniexample-objectconnectortorsionalspringdamper)=
-### MINI EXAMPLE for ObjectConnectorTorsionalSpringDamper
+## Mini example
 
 
 ```python

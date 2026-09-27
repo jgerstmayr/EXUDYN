@@ -4,12 +4,14 @@
 
 Load with (3D) force vector; attached to position-based marker.
 
-**Additional information for LoadForceVector**:
-- Requested `Marker` type = `Position`
-- **Short name** for Python = `Force`
-- **Short name** for Python visualization object = `VForce`
+## Interface
 
-The item **LoadForceVector** with type = 'ForceVector' has the following parameters:
+- Python names: `LoadForceVector` or `Force`, and `VForce` for its visualization
+- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ForceVector':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -20,15 +22,16 @@ The item **LoadForceVector** with type = 'ForceVector' has the following paramet
 | **loadVectorUserFunction** $\mathrm{UF} \in \Rcal^3$ | PyFunctionVector3DmbsScalarVector3D |  | 0 | A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object |
 | **visualization** | VLoadForceVector |  |  | parameters for visualization of item |
 
-The item VLoadForceVector has the following parameters:
+## Visualization parameters
+
+The parameters of `VLoadForceVector`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
-
 (description-loadforcevector)=
-## DESCRIPTION of LoadForceVector
+## Detailed description
 
 ### Details
 

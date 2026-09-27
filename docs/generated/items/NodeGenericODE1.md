@@ -3,7 +3,14 @@
 # NodeGenericODE1
 
 A node containing a number of {ref}`ODE1 <ODE1>` variables. Use this node e.g. for linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.
-The item **NodeGenericODE1** with type = 'GenericODE1' has the following parameters:
+
+## Interface
+
+- Provides: `GenericODE1`
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'GenericODE1':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -13,17 +20,17 @@ The item **NodeGenericODE1** with type = 'GenericODE1' has the following paramet
 | **numberOfODE1Coordinates** $n_c$ | PInt |  | 0 | number of generic {ref}`ODE1 <ODE1>` coordinates; **must be given**: the default is only a placeholder |
 | **visualization** | VNodeGenericODE1 |  |  | parameters for visualization of item |
 
-The item VNodeGenericODE1 has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodeGenericODE1`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | False | set true, if item is shown in visualization and false if it is not shown |
 
+## Output variables
 
-(description-nodegenericode1)=
-## DESCRIPTION of NodeGenericODE1
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|

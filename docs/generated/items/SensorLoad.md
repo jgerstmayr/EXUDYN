@@ -3,7 +3,10 @@
 # SensorLoad
 
 A sensor attached to a load. The sensor measures the load values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
-The item **SensorLoad** with type = 'Load' has the following parameters:
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'Load':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -14,15 +17,13 @@ The item **SensorLoad** with type = 'Load' has the following parameters:
 | **storeInternal** | Bool |  | False | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available |
 | **visualization** | VSensorLoad |  |  | parameters for visualization of item |
 
-The item VSensorLoad has the following parameters:
+## Visualization parameters
+
+The parameters of `VSensorLoad`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED |
-
-
-(description-sensorload)=
-## DESCRIPTION of SensorLoad
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`leggedRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/leggedRobot.py) (Ex), [`nMassOscillator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillator.py) (Ex), [`nMassOscillatorInteractive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorInteractive.py) (Ex), [`serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py) (Ex), [`simulateInteractively.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/simulateInteractively.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`movingGroundRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py) (TM), [`plotSensorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/plotSensorTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM), [`serialRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/serialRobotTest.py) (TM), [`springDamperUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/springDamperUserFunctionTest.py) (TM)

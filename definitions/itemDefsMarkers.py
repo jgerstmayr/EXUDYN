@@ -233,6 +233,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodePosition',
     cParentClass=ParentClassCMarker,
+    #the node types it needs, as CSystem::CheckSystemIntegrity checks them (src/Main/CSystem.cpp); each
+    #entry is a list of alternatives, and the page of the marker and of the nodes say it (#2725)
+    requestedNodeTypes=[['Position', 'Position2D']],
     overallDescription=r'A node-Marker attached to a position-based node. It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerNodeRigid.',
     classType=ClassTypeMarker,
     detailedDescription=r"""    The node position marker provides an interface to a node which contains a position
@@ -300,6 +303,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodeRigid',
     cParentClass=ParentClassCMarker,
+    requestedNodeTypes=[['Position', 'Position2D'], ['Orientation', 'Orientation2D']],
     overallDescription=r'A rigid-body (position+orientation) node-marker attached to a rigid-body node. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.',
     classType=ClassTypeMarker,
     detailedDescription=r"""    The node rigid body marker provides an interface to a node which contains a position and an orientation
@@ -523,6 +527,8 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodeRotationCoordinate',
     cParentClass=ParentClassCMarker,
+    #checked by MainMarkerNodeRotationCoordinate::CheckPreAssembleConsistency (#2725)
+    requestedNodeTypes=[['Orientation']],
     overallDescription=r'A node-Marker attached to a a node containing rotation; the Marker measures a rotation coordinate (Tait-Bryan angles) or angular velocities on the velocity level.',
     classType=ClassTypeMarker,
     mainParentClass=MainParentClassMainMarker,

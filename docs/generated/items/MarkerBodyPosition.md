@@ -4,10 +4,15 @@
 
 A position body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position information as well as the according derivatives (=velocity and derivative of position w.r.t. body coordinates). It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerBodyRigid.
 
-**Additional information for MarkerBodyPosition**:
-- This `Marker` has/provides the following types = `Object`, `Body`, `Position`
+## Interface
 
-The item **MarkerBodyPosition** with type = 'BodyPosition' has the following parameters:
+- Provides: `Position`
+- Bodies it can be placed on: [](#sec-item-objectground), [](#sec-item-objectmasspoint), [](#sec-item-objectmasspoint2d), [](#sec-item-objectmass1d), [](#sec-item-objectrotationalmass1d), [](#sec-item-objectrigidbody), [](#sec-item-objectrigidbody2d), [](#sec-item-objectgenericode2), [](#sec-item-objectkinematictree), [](#sec-item-objectffrf), [](#sec-item-objectffrfreducedorder), [](#sec-item-objectancfcable), [](#sec-item-objectancfcable2d), [](#sec-item-objectaleancfcable2d), [](#sec-item-objectancfbeam), [](#sec-item-objectbeamgeometricallyexact2d), [](#sec-item-objectbeamgeometricallyexact), [](#sec-item-objectancfthinplate)
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorspringdamper), [](#sec-item-objectconnectorcartesianspringdamper), [](#sec-item-objectconnectorgravity), [](#sec-item-objectconnectorhydraulicactuatorsimple), [](#sec-item-objectconnectordistance), [](#sec-item-objectcontactspheresphere), [](#sec-item-objectcontactspheretriangle), [](#sec-item-objectjointspherical), [](#sec-item-objectjointrevolute2d), [](#sec-item-loadforcevector)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'BodyPosition':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -16,15 +21,16 @@ The item **MarkerBodyPosition** with type = 'BodyPosition' has the following par
 | **localPosition** $\pLocB$ | Vector3D | 3 | [0.,0.,0.] | local body position of marker; e.g. local (body-fixed) position where force is applied to |
 | **visualization** | VMarkerBodyPosition |  |  | parameters for visualization of item |
 
-The item VMarkerBodyPosition has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerBodyPosition`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
-
 (description-markerbodyposition)=
-## DESCRIPTION of MarkerBodyPosition
+## Detailed description
 
 The body position marker provides an interface to a object of type body
 (`ObjectGround`, `ObjectMassPoint`, `ObjectRigidBody`, ...)

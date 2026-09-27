@@ -4,10 +4,15 @@
 
 A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeY' and 'slopeZ'); all coordinates lead to second order differential equations; the slopeY vector defines the directional derivative w.r.t the local axial (y) coordinate, etc.; the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$ and slopeZ gets $\rv_z^\prime=[0\;\;0\;\;1]^T$.
 
-**Additional information for NodePointSlope23**:
-- This `Node` has/provides the following types = `Position`, `Orientation`
+## Interface
 
-The item **NodePointSlope23** with type = 'PointSlope23' has the following parameters:
+- Provides: `Position`, `Orientation`, `PointSlope23`
+- Node markers that can be attached: [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markernoderotationcoordinate)
+- Objects that take this node: [](#sec-item-objectmasspoint), [](#sec-item-objectancfbeam), [](#sec-item-objectbeamgeometricallyexact)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'PointSlope23':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -17,7 +22,9 @@ The item **NodePointSlope23** with type = 'PointSlope23' has the following param
 | **initialVelocities** | Vector9D | 9 | [0.,0.,0.,0.,0.,0.,0.,0.,0.] | initial velocity coordinates |
 | **visualization** | VNodePointSlope23 |  |  | parameters for visualization of item |
 
-The item VNodePointSlope23 has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodePointSlope23`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -25,11 +32,9 @@ The item VNodePointSlope23 has the following parameters:
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 
+## Output variables
 
-(description-nodepointslope23)=
-## DESCRIPTION of NodePointSlope23
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|

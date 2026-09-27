@@ -4,14 +4,15 @@
 
 A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING; friction not yet available]
 
-**Additional information for ObjectContactCurveCircles**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Position` + `Orientation`
-- Requested `Node` type = `GenericData`
-- **Short name** for Python = `CamFollowerContactPlanar`
-- **Short name** for Python visualization object = `VCamFollowerContactPlanar`
+## Interface
 
-The item **ObjectContactCurveCircles** with type = 'ContactCurveCircles' has the following parameters:
+- Python names: `ObjectContactCurveCircles` or `CamFollowerContactPlanar`, and `VCamFollowerContactPlanar` for its visualization
+- Nodes it takes: [](#sec-item-nodegenericdata)
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ContactCurveCircles':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -34,24 +35,27 @@ The item **ObjectContactCurveCircles** with type = 'ContactCurveCircles' has the
 | **segmentsForceLocalY** | NumpyVector |  | [] | temporary vector for contact force per segment in local Y-direction |
 | **visualization** | VObjectContactCurveCircles |  |  | parameters for visualization of item |
 
-The item VObjectContactCurveCircles has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectContactCurveCircles`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; draws curve and circles with given radii; uses visualizationSettings circleTiling for circles and circleTiling/2 for tiling of non-straight segments |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectcontactcurvecircles)=
-## DESCRIPTION of ObjectContactCurveCircles
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
 | DisplacementLocal |  | vector containing the minimum distance to segments per circle midpoint (< 0 in case of contact, and -1 if not computed: if not in according vicinity in search tree) |
 | VelocityLocal |  | vector containing relative (normal) velocity per circle midpoint (or NaN if not computed) |
 | ForceLocal |  | pairs of normal and tangential forces per circle or (Nan,Nan) if not computed |
+
+(description-objectcontactcurvecircles)=
+## Detailed description
 
 ### Definition of quantities
 

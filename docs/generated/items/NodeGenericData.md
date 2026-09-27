@@ -4,10 +4,14 @@
 
 A node containing a number of data (history) variables. Use this node e.g. for contact (active set), friction or plasticity (history variables).
 
-**Additional information for NodeGenericData**:
-- This `Node` has/provides the following types = `GenericData`
+## Interface
 
-The item **NodeGenericData** with type = 'GenericData' has the following parameters:
+- Provides: `GenericData`
+- Objects that take this node: [](#sec-item-objectconnectorrigidbodyspringdamper), [](#sec-item-objectconnectortorsionalspringdamper), [](#sec-item-objectconnectorcoordinatespringdamperext), [](#sec-item-objectconnectorrollingdiscpenalty), [](#sec-item-objectcontactconvexroll), [](#sec-item-objectcontactcoordinate), [](#sec-item-objectcontactcirclecable2d), [](#sec-item-objectcontactfrictioncirclecable2d), [](#sec-item-objectcontactspheresphere), [](#sec-item-objectcontactspheretorus), [](#sec-item-objectcontactspheretriangle), [](#sec-item-objectcontactcurvecircles), [](#sec-item-objectjointsliding), [](#sec-item-objectjointsliding2d)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'GenericData':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -16,17 +20,17 @@ The item **NodeGenericData** with type = 'GenericData' has the following paramet
 | **numberOfDataCoordinates** $n_c$ | UInt |  | 0 | number of generic data coordinates (history variables) |
 | **visualization** | VNodeGenericData |  |  | parameters for visualization of item |
 
-The item VNodeGenericData has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodeGenericData`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | False | set true, if item is shown in visualization and false if it is not shown |
 
+## Output variables
 
-(description-nodegenericdata)=
-## DESCRIPTION of NodeGenericData
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|

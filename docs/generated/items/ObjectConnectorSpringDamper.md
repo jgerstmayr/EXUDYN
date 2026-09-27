@@ -4,13 +4,14 @@
 
 An simple spring-damper element with additional force, connecting to position-based markers.
 
-**Additional information for ObjectConnectorSpringDamper**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Position`
-- **Short name** for Python = `SpringDamper`
-- **Short name** for Python visualization object = `VSpringDamper`
+## Interface
 
-The item **ObjectConnectorSpringDamper** with type = 'ConnectorSpringDamper' has the following parameters:
+- Python names: `ObjectConnectorSpringDamper` or `SpringDamper`, and `VSpringDamper` for its visualization
+- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorSpringDamper':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -25,7 +26,9 @@ The item **ObjectConnectorSpringDamper** with type = 'ConnectorSpringDamper' has
 | **springForceUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalarIndexScalar5 |  | 0 | A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below |
 | **visualization** | VObjectConnectorSpringDamper |  |  | parameters for visualization of item |
 
-The item VObjectConnectorSpringDamper has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorSpringDamper`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -33,11 +36,9 @@ The item VObjectConnectorSpringDamper has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectconnectorspringdamper)=
-## DESCRIPTION of ObjectConnectorSpringDamper
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -46,6 +47,9 @@ The item VObjectConnectorSpringDamper has the following parameters:
 | Velocity |  | relative velocity between both points |
 | Force | $\fv$ | 3D spring-damper force vector |
 | ForceLocal | $f_{SD}$ | scalar spring-damper force |
+
+(description-objectconnectorspringdamper)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -256,7 +260,7 @@ mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
 ```
 
 (miniexample-objectconnectorspringdamper)=
-### MINI EXAMPLE for ObjectConnectorSpringDamper
+## Mini example
 
 
 ```python

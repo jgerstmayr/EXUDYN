@@ -4,14 +4,15 @@
 
 A basic hydraulic actuator with pressure build up equations. The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the `MainSystem` `PreStepUserFunction(...)`.
 
-**Additional information for ObjectConnectorHydraulicActuatorSimple**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Position`
-- Requested `Node` type: read detailed information of item
-- **Short name** for Python = `HydraulicActuatorSimple`
-- **Short name** for Python visualization object = `VHydraulicActuatorSimple`
+## Interface
 
-The item **ObjectConnectorHydraulicActuatorSimple** with type = 'ConnectorHydraulicActuatorSimple' has the following parameters:
+- Python names: `ObjectConnectorHydraulicActuatorSimple` or `HydraulicActuatorSimple`, and `VHydraulicActuatorSimple` for its visualization
+- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+- Nodes: see the detailed description
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorHydraulicActuatorSimple':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -37,7 +38,9 @@ The item **ObjectConnectorHydraulicActuatorSimple** with type = 'ConnectorHydrau
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorHydraulicActuatorSimple |  |  | parameters for visualization of item |
 
-The item VObjectConnectorHydraulicActuatorSimple has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorHydraulicActuatorSimple`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -52,11 +55,9 @@ The item VObjectConnectorHydraulicActuatorSimple has the following parameters:
 | **colorCylinder** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA cylinder color; if R==-1, use default connector color |
 | **colorPiston** | Float4 | 4 | [0.8,0.8,0.8,1.] | RGBA piston color |
 
+## Output variables
 
-(description-objectconnectorhydraulicactuatorsimple)=
-## DESCRIPTION of ObjectConnectorHydraulicActuatorSimple
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -65,6 +66,9 @@ The item VObjectConnectorHydraulicActuatorSimple has the following parameters:
 | Velocity | $\Delta\! \LU{0}{\vv}$ | relative velocity between both points |
 | VelocityLocal | $\dot L$ | actuator velocity, the derivative of actuator length |
 | Force |  | force in actuator resulting as the difference of both pressures times according cross sections |
+
+(description-objectconnectorhydraulicactuatorsimple)=
+## Detailed description
 
 ### Definition of quantities
 

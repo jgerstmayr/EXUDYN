@@ -4,13 +4,15 @@
 
 A 2D rigid body which is attached to a rigid body 2D node. The body obtains coordinates, position, velocity, etc. from the underlying 2D node.
 
-**Additional information for ObjectRigidBody2D**:
-- This `Object` has/provides the following types = `Body`, `SingleNoded`
-- Requested `Node` type = `Position2D` + `Orientation2D` + `Position` + `Orientation`
-- **Short name** for Python = `RigidBody2D`
-- **Short name** for Python visualization object = `VRigidBody2D`
+## Interface
 
-The item **ObjectRigidBody2D** with type = 'RigidBody2D' has the following parameters:
+- Python names: `ObjectRigidBody2D` or `RigidBody2D`, and `VRigidBody2D` for its visualization
+- Nodes it takes: [](#sec-item-noderigidbody2d), [](#sec-item-nodepoint2dslope1)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'RigidBody2D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -21,7 +23,9 @@ The item **ObjectRigidBody2D** with type = 'RigidBody2D' has the following param
 | **nodeNumber** $n_0$ | NodeIndex |  | invalid (-1) | node number (type NodeIndex) for 2D rigid body node |
 | **visualization** | VObjectRigidBody2D |  |  | parameters for visualization of item |
 
-The item VObjectRigidBody2D has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectRigidBody2D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -29,11 +33,9 @@ The item VObjectRigidBody2D has the following parameters:
 | **graphicsDataUserFunction** | PyFunctionGraphicsData |  | 0 | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates |
 | **graphicsData** | BodyGraphicsData |  |  | Structure contains data for body visualization; data is defined in special list / dictionary structure |
 
+## Output variables
 
-(description-objectrigidbody2d)=
-## DESCRIPTION of ObjectRigidBody2D
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -49,6 +51,9 @@ The item VObjectRigidBody2D has the following parameters:
 | AccelerationLocal | $\LU{b}{\av}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\av}\cConfig(\pLocB)$ | local (body-fixed) acceleration vector of body-fixed point given by local position vector $\pLocB$ |
 | AngularAcceleration | $\LU{0}{\talpha}\cConfig$ | angular acceleration vector of body |
 | AngularAccelerationLocal | $\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talpha}\cConfig$ | local angular acceleration vector of body |
+
+(description-objectrigidbody2d)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -129,7 +134,7 @@ For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-obj
 | **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata) |
 
 (miniexample-objectrigidbody2d)=
-### MINI EXAMPLE for ObjectRigidBody2D
+## Mini example
 
 
 ```python

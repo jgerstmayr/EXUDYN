@@ -4,10 +4,15 @@
 
 A rigid-body (position+orientation) body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.
 
-**Additional information for MarkerBodyRigid**:
-- This `Marker` has/provides the following types = `Object`, `Body`, `Position`, `Orientation`
+## Interface
 
-The item **MarkerBodyRigid** with type = 'BodyRigid' has the following parameters:
+- Provides: `Position`, `Orientation`
+- Bodies it can be placed on: [](#sec-item-objectground), [](#sec-item-objectmass1d), [](#sec-item-objectrotationalmass1d), [](#sec-item-objectrigidbody), [](#sec-item-objectrigidbody2d), [](#sec-item-objectgenericode2), [](#sec-item-objectkinematictree), [](#sec-item-objectffrf), [](#sec-item-objectffrfreducedorder), [](#sec-item-objectancfcable), [](#sec-item-objectancfcable2d), [](#sec-item-objectaleancfcable2d), [](#sec-item-objectbeamgeometricallyexact2d), [](#sec-item-objectbeamgeometricallyexact)
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorspringdamper), [](#sec-item-objectconnectorcartesianspringdamper), [](#sec-item-objectconnectorrigidbodyspringdamper), [](#sec-item-objectconnectorlinearspringdamper), [](#sec-item-objectconnectortorsionalspringdamper), [](#sec-item-objectconnectorgravity), [](#sec-item-objectconnectorhydraulicactuatorsimple), [](#sec-item-objectconnectordistance), [](#sec-item-objectconnectorrollingdiscpenalty), [](#sec-item-objectcontactconvexroll), [](#sec-item-objectcontactspheresphere), [](#sec-item-objectcontactspheretorus), [](#sec-item-objectcontactspheretriangle), [](#sec-item-objectcontactcurvecircles), [](#sec-item-objectjointgeneric), [](#sec-item-objectjointrevolutez), [](#sec-item-objectjointprismaticx), [](#sec-item-objectjointspherical), [](#sec-item-objectjointrollingdisc), [](#sec-item-objectjointrevolute2d), [](#sec-item-objectjointprismatic2d), [](#sec-item-loadforcevector), [](#sec-item-loadtorquevector)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'BodyRigid':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -16,15 +21,13 @@ The item **MarkerBodyRigid** with type = 'BodyRigid' has the following parameter
 | **localPosition** $\pLocB$ | Vector3D | 3 | [0.,0.,0.] | local body position of marker; e.g. local (body-fixed) position where force is applied to |
 | **visualization** | VMarkerBodyRigid |  |  | parameters for visualization of item |
 
-The item VMarkerBodyRigid has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerBodyRigid`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-
-
-(description-markerbodyrigid)=
-## DESCRIPTION of MarkerBodyRigid
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismaticJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py) (Ex), [`addRevoluteJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py) (Ex), [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFtestHalfcircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtestHalfcircle.py) (Ex), [`ANCFtests2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtests2.py) (Ex), [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`beamTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beamTutorial.py) (Ex), [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`abaqusImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/abaqusImportTest.py) (TM), [`ACFtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py) (TM), [`ANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py) (TM), ...

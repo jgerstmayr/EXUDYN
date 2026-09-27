@@ -4,13 +4,15 @@
 
 A special object to represent open kinematic trees using minimal coordinate formulation. The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc. per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl. translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.
 
-**Additional information for ObjectKinematicTree**:
-- This `Object` has/provides the following types = `Body`, `MultiNoded`, `SuperElement`
-- Requested `Node` type = `GenericODE2`
-- **Short name** for Python = `KinematicTree`
-- **Short name** for Python visualization object = `VKinematicTree`
+## Interface
 
-The item **ObjectKinematicTree** with type = 'KinematicTree' has the following parameters:
+- Python names: `ObjectKinematicTree` or `KinematicTree`, and `VKinematicTree` for its visualization
+- Nodes it takes: [](#sec-item-node1d), [](#sec-item-nodegenericode2), [](#sec-item-nodepointground)
+- Body markers that can be placed on it: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'KinematicTree':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -35,7 +37,9 @@ The item **ObjectKinematicTree** with type = 'KinematicTree' has the following p
 | **forceUserFunction** $\fv_{user} \in \Rcal^{n}$ | PyFunctionVectorMbsScalarIndex2Vector |  | 0 | A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below |
 | **visualization** | VObjectKinematicTree |  |  | parameters for visualization of item |
 
-The item VObjectKinematicTree has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectKinematicTree`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -45,11 +49,9 @@ The item VObjectKinematicTree has the following parameters:
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 | **graphicsDataList** | BodyGraphicsDataList |  |  | Structure contains data for link/joint visualization; data is defined as list of BodyGraphicsData where every BodyGraphicsData corresponds to one link/joint; must either be emtpy list or length must agree with number of links |
 
+## Output variables
 
-(description-objectkinematictree)=
-## DESCRIPTION of ObjectKinematicTree
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -57,6 +59,9 @@ The item VObjectKinematicTree has the following parameters:
 | Coordinates_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
 | Coordinates_tt |  | all {ref}`ODE2 <ODE2>` acceleration coordinates |
 | Force |  | generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS) |
+
+(description-objectkinematictree)=
+## Detailed description
 
 (sec-kinematictree-additionaloutput)=
 ### SensorKinematicTree output variables
@@ -265,7 +270,7 @@ Note that itemNumber represents the index of the ObjectKinematicTree object in m
 | **return value** | Vector $\in \Rcal^{n}$ | returns force vector for object |
 
 (miniexample-objectkinematictree)=
-### MINI EXAMPLE for ObjectKinematicTree
+## Mini example
 
 
 ```python

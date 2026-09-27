@@ -4,13 +4,15 @@
 
 A 3D geometrically exact beam finite element, currently using two 3D rigid body nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes. NOTE: Requires further development and tests!
 
-**Additional information for ObjectBeamGeometricallyExact**:
-- This `Object` has/provides the following types = `Body`, `MultiNoded`
-- Requested `Node` type = `Position` + `Orientation`
-- **Short name** for Python = `Beam3D`
-- **Short name** for Python visualization object = `VBeam3D`
+## Interface
 
-The item **ObjectBeamGeometricallyExact** with type = 'BeamGeometricallyExact' has the following parameters:
+- Python names: `ObjectBeamGeometricallyExact` or `Beam3D`, and `VBeam3D` for its visualization
+- Nodes it takes: [](#sec-item-noderigidbodyep), [](#sec-item-noderigidbodyrxyz), [](#sec-item-noderigidbodyrotveclg), [](#sec-item-nodepointslope12), [](#sec-item-nodepointslope23), [](#sec-item-nodepointground)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'BeamGeometricallyExact':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -20,7 +22,9 @@ The item **ObjectBeamGeometricallyExact** with type = 'BeamGeometricallyExact' h
 | **sectionData** | BeamSection |  | BeamSection() | data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section. |
 | **visualization** | VObjectBeamGeometricallyExact |  |  | parameters for visualization of item |
 
-The item VObjectBeamGeometricallyExact has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectBeamGeometricallyExact`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -28,11 +32,9 @@ The item VObjectBeamGeometricallyExact has the following parameters:
 | **sectionGeometry** | BeamSectionGeometry |  | BeamSectionGeometry() | defines cross section shape used for visualization and contact |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color of the object; if R==-1, use default color |
 
+## Output variables
 
-(description-objectbeamgeometricallyexact)=
-## DESCRIPTION of ObjectBeamGeometricallyExact
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
@@ -42,6 +44,9 @@ The item VObjectBeamGeometricallyExact has the following parameters:
 | Rotation |  | 3D Tait-Bryan rotation components, containing rotation around $z$-axis only |
 | StrainLocal |  | 6 strain components, containing only axial ($xx$) and shear strain ($xy$) |
 | CurvatureLocal |  | 3D vector of curvature, containing only curvature w.r.t. $z$-axis |
+
+(description-objectbeamgeometricallyexact)=
+## Detailed description
 
 Detailed description coming later.
 

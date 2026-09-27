@@ -4,10 +4,14 @@
 
 A special Marker attached to a 2D ANCF beam finite element with cubic interpolation and 8 coordinates.
 
-**Additional information for MarkerBodyCable2DShape**:
-- This `Marker` has/provides the following types = `Object`, `Body`, `Coordinate`
+## Interface
 
-The item **MarkerBodyCable2DShape** with type = 'BodyCable2DShape' has the following parameters:
+- Provides: `Coordinate`
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorcoordinatespringdamper), [](#sec-item-objectconnectorcoordinatespringdamperext), [](#sec-item-objectconnectorcoordinate), [](#sec-item-objectcontactcoordinate), [](#sec-item-loadcoordinate)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'BodyCable2DShape':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -17,15 +21,13 @@ The item **MarkerBodyCable2DShape** with type = 'BodyCable2DShape' has the follo
 | **verticalOffset** | Real |  | 0. | vertical offset from beam axis in positive (local) Y-direction; this offset accounts for consistent computation of positions and velocities at the surface of the beam |
 | **visualization** | VMarkerBodyCable2DShape |  |  | parameters for visualization of item |
 
-The item VMarkerBodyCable2DShape has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerBodyCable2DShape`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-
-
-(description-markerbodycable2dshape)=
-## DESCRIPTION of MarkerBodyCable2DShape
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex), [`beltDrivesComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py) (Ex), [`sliderCrank3DwithANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`ANCFcontactCircleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py) (TM), [`ANCFcontactFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactFrictionTest.py) (TM), [`ANCFmovingRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py) (TM), [`ANCFslidingAndALEjointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFslidingAndALEjointTest.py) (TM)

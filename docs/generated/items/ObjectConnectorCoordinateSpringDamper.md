@@ -4,13 +4,14 @@
 
 A 1D (scalar) spring-damper element acting on single {ref}`ODE2 <ODE2>` coordinates and connecting to coordinate-based markers. NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.
 
-**Additional information for ObjectConnectorCoordinateSpringDamper**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `Coordinate`
-- **Short name** for Python = `CoordinateSpringDamper`
-- **Short name** for Python visualization object = `VCoordinateSpringDamper`
+## Interface
 
-The item **ObjectConnectorCoordinateSpringDamper** with type = 'ConnectorCoordinateSpringDamper' has the following parameters:
+- Python names: `ObjectConnectorCoordinateSpringDamper` or `CoordinateSpringDamper`, and `VCoordinateSpringDamper` for its visualization
+- Markers it acts on: those providing `Coordinate`: [](#sec-item-markernodecoordinate), [](#sec-item-markernodeode1coordinate), [](#sec-item-markernoderotationcoordinate), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markerbodycable2dshape), [](#sec-item-markerbodycable2dcoordinates)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorCoordinateSpringDamper':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -23,7 +24,9 @@ The item **ObjectConnectorCoordinateSpringDamper** with type = 'ConnectorCoordin
 | **springForceUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalarIndexScalar5 |  | 0 | A Python function which defines the spring force with 8 parameters, see equations section / see description below |
 | **visualization** | VObjectConnectorCoordinateSpringDamper |  |  | parameters for visualization of item |
 
-The item VObjectConnectorCoordinateSpringDamper has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorCoordinateSpringDamper`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -31,17 +34,18 @@ The item VObjectConnectorCoordinateSpringDamper has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectconnectorcoordinatespringdamper)=
-## DESCRIPTION of ObjectConnectorCoordinateSpringDamper
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
 | Displacement | $\Delta q$ | relative scalar displacement of marker coordinates |
 | Velocity | $\Delta v$ | difference of scalar marker velocity coordinates |
 | Force | $f_{SD}$ | scalar force in connector |
+
+(description-objectconnectorcoordinatespringdamper)=
+## Detailed description
 
 ### Definition of quantities
 
@@ -122,7 +126,7 @@ def UFforce(mbs, t, itemNumber, u, v, k, d, offset):
 ```
 
 (miniexample-objectconnectorcoordinatespringdamper)=
-### MINI EXAMPLE for ObjectConnectorCoordinateSpringDamper
+## Mini example
 
 
 ```python

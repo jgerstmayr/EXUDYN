@@ -4,10 +4,15 @@
 
 A rigid-body (position+orientation) node-marker attached to a rigid-body node. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.
 
-**Additional information for MarkerNodeRigid**:
-- This `Marker` has/provides the following types = `Node`, `Position`, `Orientation`
+## Interface
 
-The item **MarkerNodeRigid** with type = 'NodeRigid' has the following parameters:
+- Provides: `Position`, `Orientation`
+- Nodes it can be attached to: [](#sec-item-noderigidbodyep), [](#sec-item-noderigidbodyrxyz), [](#sec-item-noderigidbodyrotveclg), [](#sec-item-noderigidbody2d), [](#sec-item-nodepoint2dslope1), [](#sec-item-nodepointslope12), [](#sec-item-nodepointslope23), [](#sec-item-nodepointground)
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorspringdamper), [](#sec-item-objectconnectorcartesianspringdamper), [](#sec-item-objectconnectorrigidbodyspringdamper), [](#sec-item-objectconnectorlinearspringdamper), [](#sec-item-objectconnectortorsionalspringdamper), [](#sec-item-objectconnectorgravity), [](#sec-item-objectconnectorhydraulicactuatorsimple), [](#sec-item-objectconnectordistance), [](#sec-item-objectconnectorrollingdiscpenalty), [](#sec-item-objectcontactconvexroll), [](#sec-item-objectcontactspheresphere), [](#sec-item-objectcontactspheretorus), [](#sec-item-objectcontactspheretriangle), [](#sec-item-objectcontactcurvecircles), [](#sec-item-objectjointgeneric), [](#sec-item-objectjointrevolutez), [](#sec-item-objectjointprismaticx), [](#sec-item-objectjointspherical), [](#sec-item-objectjointrollingdisc), [](#sec-item-objectjointrevolute2d), [](#sec-item-objectjointprismatic2d), [](#sec-item-loadforcevector), [](#sec-item-loadtorquevector)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'NodeRigid':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -15,15 +20,16 @@ The item **MarkerNodeRigid** with type = 'NodeRigid' has the following parameter
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number to which marker is attached to |
 | **visualization** | VMarkerNodeRigid |  |  | parameters for visualization of item |
 
-The item VMarkerNodeRigid has the following parameters:
+## Visualization parameters
+
+The parameters of `VMarkerNodeRigid`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
-
 (description-markernoderigid)=
-## DESCRIPTION of MarkerNodeRigid
+## Detailed description
 
 The node rigid body marker provides an interface to a node which contains a position and an orientation
 (`NodeRigidBodyEP`, `NodeRigidBody2D`, ...)

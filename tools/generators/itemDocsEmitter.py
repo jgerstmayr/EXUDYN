@@ -34,11 +34,17 @@ from latexToMarkdown import NormalizeHeadings, DropRepeatedTitle, ConvertText as
 from userFunctionModel import ReadUserFunction
 
 import copy
+import re
 import os
 import io #RST files written as UTF-8
 import generatorPaths as paths
 from exudynVersion import exudynVersionString
 import definitionLoader
+import itemCompatibility
+
+#which items fit together, from their declared types, for the Interface block of each page (#2725)
+compatibilityItems = itemCompatibility.LoadItems()
+compatibilityByName = dict((item.name, item) for item in compatibilityItems)
 
 ADD_DOCSTRINGS = True
 
@@ -180,9 +186,10 @@ def WriteFile(parseInfo, parameterList):
         cWriter = DeclarationWriter()
         vWriter = DeclarationWriter()
 
-        cWriter.AddDocu('The item \\mybold{' + parseInfo['class'] + "} with type = '"+
-                     sTypeName + "' has the following parameters:")
-        vWriter.AddDocu('The item V' + parseInfo['class'] + ' has the following parameters:')
+        cWriter.AddDocu('The parameters of the item; in a dictionary, its type is ' + "'" + sTypeName + "':",
+                        section='Parameters', sectionLevel=1)
+        vWriter.AddDocu('The parameters of `V' + parseInfo['class'] + '`, given as `visualization`:',
+                        section='Visualization parameters', sectionLevel=1)
 
         cWriter.DefItemStartTable(classStr=parseInfo['class'])        
         vWriter.DefItemStartTable(classStr=parseInfo['class'])        
@@ -256,24 +263,19 @@ def WriteFile(parseInfo, parameterList):
                 pluralAuthors ='s'
             writer.AddDocu('Author'+pluralAuthors+': ' + parseInfo['author'] + '\n')
 
-        if len(requestedMarkerString) + len(itemTypeString) + len(parseInfo['pythonShortName']) !=0:
-            lstAdd = []
-            writer.AddDocu('\\mybold{Additional information for ' + parseInfo['class'] + '}:\n', preNewLine=True)
-            if len(itemTypeString) != 0:
-                lstAdd += ['This \\texttt{' + parseInfo['classType'] + '} has/provides the following types = ' + itemTypeString]
-
-            if len(requestedMarkerString) != 0:
-                lstAdd += ['Requested \\texttt{Marker} type = ' + requestedMarkerString]
-            if len(requestedNodeString) != 0:
-                if requestedNodeString.find('_None') != -1:
-                    lstAdd += ['Requested \\texttt{Node} type: read detailed information of item']
-                else:
-                    lstAdd += ['Requested \\texttt{Node} type = ' + requestedNodeString]
-            if len(parseInfo['pythonShortName']) != 0:
-                lstAdd += ['{\\bf Short name} for Python = \\texttt{' + parseInfo['pythonShortName'] + '}']
-                lstAdd += ['{\\bf Short name} for Python visualization object = \\texttt{V' + parseInfo['pythonShortName'] + '}']
-
-            writer.AddDocuList(lstAdd)
+        #THE INTERFACE: the Python names and, in words, which items fit to this one - generated from
+        #the types the definitions declare, instead of the type bits the reader had to match (#2725)
+        interfaceLines = []
+        if len(parseInfo['pythonShortName']) != 0:
+            interfaceLines.append('Python names: `' + parseInfo['class'] + '` or `' + parseInfo['pythonShortName']
+                                  + '`, and `V' + parseInfo['pythonShortName'] + '` for its visualization')
+        interfaceLines += itemCompatibility.InterfaceLines(compatibilityByName[parseInfo['class']],
+                                                           compatibilityItems)
+        if requestedNodeString.find('_None') != -1:
+            interfaceLines.append('Nodes: see the detailed description')
+        if len(interfaceLines) != 0:
+            writer.AddDocu('', section='Interface', sectionLevel=1)
+            writer.AddDocuList(interfaceLines)
 
         writer += cWriter
         writer += vWriter
@@ -289,9 +291,11 @@ def WriteFile(parseInfo, parameterList):
 
         #++++++++++++++++++++++++++++++++++++++++++++++
         #process outputVariables, including symbols
+        writerOutput = DeclarationWriter()
         if len(parseInfo['outputVariables']) != 0:
-            writerAdd.AddDocu('\\mybold{The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions}:')
-            writerAdd.DefStartTable3(['output variable','symbol','description'])        
+            writerOutput.AddDocu('Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:',
+                                 section='Output variables', sectionLevel=1)
+            writerOutput.DefStartTable3(['output variable','symbol','description'])        
 
             #print("dict=",parseInfo['outputVariables'].replace('\\','\\\\'))
             dictOV = eval(parseInfo['outputVariables'].replace('\n','\\n').replace('\\','\\\\')) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
@@ -302,9 +306,9 @@ def WriteFile(parseInfo, parameterList):
                 oVariable = outputVariables[0]
                 description = outputVariables[1]
                 [description, mathSymbol] = ExtractMathSymbol(description)
-                writerAdd.Table3WriteRow(cols=[oVariable, mathSymbol, description])
+                writerOutput.Table3WriteRow(cols=[oVariable, mathSymbol, description])
             
-            writerAdd.DefFinishTable()
+            writerOutput.DefFinishTable()
 
         #++++++++++++++++++++++++++++++++++++++++++++++
         #the equations; everything before the %%RSTCOMPATIBLE marker is what the web
@@ -325,22 +329,31 @@ def WriteFile(parseInfo, parameterList):
                 writerAdd.sMarkdown += LatexText2Markdown(
                     UserFunctionDocumentation(parameter)) + '\n\n'
 
-        if len(parseInfo['miniExample']) != 0:
-            writerAdd.AddDocu('', section='MINI EXAMPLE for ' + parseInfo['class'], sectionLevel=3, 
-                        sectionLabel='miniExample_'+parseInfo['class'], preNewLine = True)
-            writerAdd.AddDocuCodeBlock(parseInfo['miniExample'])
-
-        writerAdd.sMarkdown += KeywordExamplesMarkdown(parseInfo['classType'],
-                                                    parseInfo['class'],
-                                                    parseInfo['pythonShortName'])
-
-        #the equations, the output variables, the mini example and the examples, under their own
-        #DESCRIPTION heading
+        #the output variables, the detailed description with the user functions, the mini example
+        #and the examples - each under a heading of its own (#2725)
+        writer.sMarkdown += writerOutput.sMarkdown
         if len(writerAdd.sMarkdown.strip()) != 0:
-            writer.sMarkdown += '\n' + MarkdownLabel('description_'+parseInfo['class']) + '\n'
-            writer.sMarkdown += MarkdownHeading('DESCRIPTION of ' + parseInfo['class'], 2) + '\n\n'
+            if not writer.sMarkdown.endswith('\n\n'):
+                writer.sMarkdown += '\n'
+            writer.sMarkdown += MarkdownLabel('description_'+parseInfo['class']) + '\n'
+            writer.sMarkdown += MarkdownHeading('Detailed description', 1) + '\n\n'
             writer.sMarkdown += writerAdd.sMarkdown
 
+        writerExamples = DeclarationWriter()
+        if len(parseInfo['miniExample']) != 0:
+            writerExamples.AddDocu('', section='Mini example', sectionLevel=1,
+                                   sectionLabel='miniExample_'+parseInfo['class'], preNewLine = True)
+            writerExamples.AddDocuCodeBlock(parseInfo['miniExample'])
+        writerExamples.sMarkdown += KeywordExamplesMarkdown(parseInfo['classType'],
+                                                         parseInfo['class'],
+                                                         parseInfo['pythonShortName'])
+        if len(writerExamples.sMarkdown.strip()) != 0:
+            if not writer.sMarkdown.endswith('\n\n'):
+                writer.sMarkdown += '\n'
+            writer.sMarkdown += writerExamples.sMarkdown
+
+    #one blank line before a heading or its target, however many the parts above end with
+    writer.sMarkdown = re.sub(r'\n{3,}(?=\(|#{2,} )', '\n\n', writer.sMarkdown)
     return [classTypeStr, writer.sMarkdown]
 
 
@@ -395,7 +408,7 @@ def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros,
             typeText += (LatexText2Markdown(RemoveIndentation2(kindEntry['detailedDescription'],
                                                                removeAllSpaces=False))
                          + '\n\n' + MarkdownHeading('Items', 1) + '\n\n')
-        typeText += '```{toctree}\n:maxdepth: 2\n\n'
+        typeText += '```{toctree}\n:maxdepth: 1\n\n'
 
         for (classType, className, text) in markdownItemList:
             if classType != key:
@@ -459,7 +472,8 @@ def main():
                  'outputVariables':'',  #definition of output variables and description given as dictionary "{'OutputVariableType':'description ...', ...}"
                  'miniExample':'',      #mini python example (without headers and typical setup); code in separate lines, ended with '/end' in separate line
                  'detailedDescription':'', #the full description of the page, after the generated part: Markdown with LaTeX mathematics (definitions/README.md)
-                 'overallDescription':''} #the brief description: the class, the docstring, the paragraph under the heading
+                 'overallDescription':'', #the brief description: the class, the docstring, the paragraph under the heading
+                 'requestedNodeTypes':''} #node markers: the node types they need (itemCompatibility.py)
     #this defines the columns of the line, which is then filled into this structure
     lineDefinition = ['lineType',       #[V|F[v]]P: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; P ... write Pybind11 interface
                       'destination',    #M ... Main object, C ... computational object, V ... visualization object; P ... parameter structure

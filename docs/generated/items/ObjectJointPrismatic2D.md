@@ -4,13 +4,14 @@
 
 A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers.
 
-**Additional information for ObjectJointPrismatic2D**:
-- This `Object` has/provides the following types = `Connector`, `Constraint`
-- Requested `Marker` type = `Position` + `Orientation`
-- **Short name** for Python = `PrismaticJoint2D`
-- **Short name** for Python visualization object = `VPrismaticJoint2D`
+## Interface
 
-The item **ObjectJointPrismatic2D** with type = 'JointPrismatic2D' has the following parameters:
+- Python names: `ObjectJointPrismatic2D` or `PrismaticJoint2D`, and `VPrismaticJoint2D` for its visualization
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'JointPrismatic2D':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -22,7 +23,9 @@ The item **ObjectJointPrismatic2D** with type = 'JointPrismatic2D' has the follo
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectJointPrismatic2D |  |  | parameters for visualization of item |
 
-The item VObjectJointPrismatic2D has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectJointPrismatic2D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -30,9 +33,8 @@ The item VObjectJointPrismatic2D has the following parameters:
 | **drawSize** | float |  | -1. | drawing size = radius of revolute joint; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
-
 (description-objectjointprismatic2d)=
-## DESCRIPTION of ObjectJointPrismatic2D
+## Detailed description
 
 ### Geometric relations
 

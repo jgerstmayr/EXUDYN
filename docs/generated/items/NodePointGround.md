@@ -4,12 +4,16 @@
 
 A 3D point node fixed to ground which is similar to NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' {ref}`ODE2 <ODE2>` and {ref}`ODE1 <ODE1>` coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.
 
-**Additional information for NodePointGround**:
-- This `Node` has/provides the following types = `Ground`, `Position2D`, `Position`, `Orientation`, `GenericODE2`
-- **Short name** for Python = `PointGround`
-- **Short name** for Python visualization object = `VPointGround`
+## Interface
 
-The item **NodePointGround** with type = 'PointGround' has the following parameters:
+- Python names: `NodePointGround` or `PointGround`, and `VPointGround` for its visualization
+- Provides: `Position`, `Position2D`, `Orientation`, `GenericODE2`, `Ground`
+- Node markers that can be attached: [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markernoderotationcoordinate)
+- Objects that take this node: [](#sec-item-objectmasspoint), [](#sec-item-objectmasspoint2d), [](#sec-item-objectmass1d), [](#sec-item-objectrotationalmass1d), [](#sec-item-objectkinematictree), [](#sec-item-objectbeamgeometricallyexact)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'PointGround':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -17,7 +21,9 @@ The item **NodePointGround** with type = 'PointGround' has the following paramet
 | **referenceCoordinates** $\qv\cRef = [q_0,\,q_1,\,q_2]\tp\cRef = \pv\cRef = [r_0,\,r_1,\,r_2]\tp$ | Vector3D | 3 | [0.,0.,0.] | reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement |
 | **visualization** | VNodePointGround |  |  | parameters for visualization of item |
 
-The item VNodePointGround has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodePointGround`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -25,11 +31,9 @@ The item VNodePointGround has the following parameters:
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 
+## Output variables
 
-(description-nodepointground)=
-## DESCRIPTION of NodePointGround
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|

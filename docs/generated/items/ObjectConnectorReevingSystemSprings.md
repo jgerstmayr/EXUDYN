@@ -4,13 +4,13 @@
 
 A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by $nr$ rigid body markers $[m_0, \, m_1, \, \ldots, \, m_{nr-1}]$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by $m_{c0}$ and $m_{c1}$ .
 
-**Additional information for ObjectConnectorReevingSystemSprings**:
-- This `Object` has/provides the following types = `Connector`
-- Requested `Marker` type = `_None`
-- **Short name** for Python = `ReevingSystemSprings`
-- **Short name** for Python visualization object = `VReevingSystemSprings`
+## Interface
 
-The item **ObjectConnectorReevingSystemSprings** with type = 'ConnectorReevingSystemSprings' has the following parameters:
+- Python names: `ObjectConnectorReevingSystemSprings` or `ReevingSystemSprings`, and `VReevingSystemSprings` for its visualization
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'ConnectorReevingSystemSprings':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -29,7 +29,9 @@ The item **ObjectConnectorReevingSystemSprings** with type = 'ConnectorReevingSy
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorReevingSystemSprings |  |  | parameters for visualization of item |
 
-The item VObjectConnectorReevingSystemSprings has the following parameters:
+## Visualization parameters
+
+The parameters of `VObjectConnectorReevingSystemSprings`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -37,17 +39,18 @@ The item VObjectConnectorReevingSystemSprings has the following parameters:
 | **ropeRadius** | float |  | 0.001 | radius of rope |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Output variables
 
-(description-objectconnectorreevingsystemsprings)=
-## DESCRIPTION of ObjectConnectorReevingSystemSprings
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
 | Distance | $L$ | current total length of rope |
 | VelocityLocal | $\dot L$ | scalar time derivative of current total length of rope |
 | ForceLocal | $F$ | scalar force in reeving system (constant over length of rope) |
+
+(description-objectconnectorreevingsystemsprings)=
+## Detailed description
 
 ### General model assumptions
 

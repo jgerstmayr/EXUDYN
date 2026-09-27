@@ -4,10 +4,14 @@
 
 A node containing a number of {ref}`ODE2 <ODE2>` variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(_t) must be initialized, because no default values exist.
 
-**Additional information for NodeGenericODE2**:
-- This `Node` has/provides the following types = `GenericODE2`
+## Interface
 
-The item **NodeGenericODE2** with type = 'GenericODE2' has the following parameters:
+- Provides: `GenericODE2`
+- Objects that take this node: [](#sec-item-objectmass1d), [](#sec-item-objectrotationalmass1d), [](#sec-item-objectkinematictree)
+
+## Parameters
+
+The parameters of the item; in a dictionary, its type is 'GenericODE2':
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -18,17 +22,17 @@ The item **NodeGenericODE2** with type = 'GenericODE2' has the following paramet
 | **numberOfODE2Coordinates** $n_c$ | PInt |  | 0 | number of generic {ref}`ODE2 <ODE2>` coordinates; **must be given**: the default is only a placeholder |
 | **visualization** | VNodeGenericODE2 |  |  | parameters for visualization of item |
 
-The item VNodeGenericODE2 has the following parameters:
+## Visualization parameters
+
+The parameters of `VNodeGenericODE2`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | False | set true, if item is shown in visualization and false if it is not shown |
 
+## Output variables
 
-(description-nodegenericode2)=
-## DESCRIPTION of NodeGenericODE2
-
-**The following output variables are available as OutputVariableType in sensors, Get...Output() and other functions**:
+Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
 
 | output variable | symbol | description |
 |---|---|---|
