@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.110.dev1
+- Exudyn version = 1.12.111.dev1
 - last change = 2026-09-27
 - Number of issues = 2699
-- Number of resolved issues = 2424 (110 in current version)
+- Number of resolved issues = 2425 (111 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7581,9 +7581,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: The results monitor introduced ~/.exudyn/resultsMonitor.json without a decision about what such a directory is for (maintainer, 2026-09-26). The maintainer sees it as generally useful - window positions, dialog sizes, font scaling, overrides for visualizationSettings except special types, and for exudyn.config such as outputDirectory - and asks for ONE file rather than one per tool, for whether C++ could read it (py::module\_::import('json')) or whether \_\_init\_\_.py should read it and write the values into the module through the dict interface, and for a note printed on the first import when the stored settings are not empty, because stored settings make a run less reproducible. It needs documentation and belongs in the revisions chapter, because it changes behaviour when a file is present. Related: \#2608 (window states) and the dialog settings storeDialogPositions and storeDialogSettings.
   - **remarks:** revision2026b step RG12.5.1 done: ~/.exudyn/config.json with the config and visualizationSettings sections, read by python/exudyn/settings.py from \_\_init\_\_.py (no C++ change), applied at import and at every SystemContainer, with one note at import and exudyn.settings.Print() for the list. Only plain values and lists of them may be stored; anything else is refused with a message. Nothing writes the file by itself - Store(SC) is explicit. EXUDYN\_NO\_USER\_SETTINGS=1 ignores it and the four test runners set it, so a stored setting cannot move a test result. Open: .2 the enum types, .3 the dialogs section (= RG6.2.26 / \#2608), .4 folding in resultsMonitor.json with a migration.
   - date raised: 2026-09-26
-- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` The simulation settings section does not mention that the settings can be browsed before writing a model (#2659)
-  - description: The Simulation settings section of Exudyn Basics explains the substructures and how to assign values, and says nothing about looking a setting up. Since revision2026b step RG6.2 there is 'python -m exudyn dialogs sim', which opens the same tree the renderer's V key opens, with no model and no renderer - which is exactly what somebody reading this section for the first time needs. One sentence, with a link to the command line chapter; the same applies to 'dialogs vis' where the visualization settings are introduced.
-  - date raised: 2026-09-25
 - `DOCU` <span class="textblue">`LOW`</span> `MEDIUM EFF` `raised by: Claude-JG` 235 references to the revision plan are left in comments, each inside a sentence (#2649)
   - description: What RG3.13 could not do mechanically. Of the 887 mentions of revision2026 outside docs/revision, 652 were parentheticals or appended clauses and could be removed by rule, keeping the issue number where there was one. The remaining 235 in 149 files are inside a sentence - 'step R4.3 is moving outputs from the old generators to separate emitters', 'the name the function had between steps R8.7 and R8.3.4' - and each needs a sentence written for it, which a pattern cannot do: an attempt that allowed the phrase to wrap across two comment lines matched from a code line into a comment and merged prose into code (tools/generators/generatorPaths.py:35), so that pass was withdrawn and every file rebuilt from its committed content with the line-based rules only. None of the 235 is in a published page; they are comments in src/, tools/ and python/, where the rule is the older one of CODING\_STYLE 6.1 - a comment cites the issue - so this is tidiness rather than a defect.
   - date raised: 2026-09-24

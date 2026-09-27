@@ -92,6 +92,8 @@ same table as the help dialog, which opens with the key **H**:
 Visualization settings are used for user interaction with the model. E.g., the nodes, markers, loads, etc., can be visualized for every model. There are default values, e.g., for the size of nodes, which may be inappropriate for your model. Therefore, you can adjust those parameters. In some cases, huge models require simpler graphics representation, in order not to slow down performance -- e.g., the number of faces to represent a cylinder should be small if there are 10000s of cylinders drawn. Even computation performance can be slowed down, if visualization takes lots of CPU power. However, visualization is performed in a separate thread, which usually does not influence the computation exhaustively.
 
 Details on visualization settings and its substructures are provided in {ref}`sec-visualizationsettingsmain`. These settings may also be edited by pressing 'V' in the active render window (does not work, if there is no active render loop using, e.g., `SC.renderer.DoIdleTasks()` ).
+`python -m exudyn dialogs vis` opens the same dialog with no model and no renderer, which is the way
+to look a setting up while writing the script; see {ref}`sec-commandline`.
 The visualization settings dialog is shown exemplarily in {ref}`fig-visualizationsettings`.
 Note that this dialog is automatically created and uses Python's `tkinter`, which is lightweight, but not very well suited if display scalings are large (e.g., on high resolution laptop screens). If working with Spyder, it is recommended to restart Spyder, if display scaling is changed, in order to adjust scaling not only for Spyder but also for Exudyn.
 

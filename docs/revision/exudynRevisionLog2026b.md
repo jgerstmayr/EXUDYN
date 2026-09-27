@@ -5359,3 +5359,37 @@ The step reserved this one, because the thing it names **is** LaTeX: the `$...$`
 description opens with, which becomes mathematics on the page. The options are in the plan; the
 recommendation is `mathSymbol`, because the reader of the emitter wants to know *what* it is and the
 markup is the converter's business.
+
+<a id="rg3-22"></a>
+### RG3.22 — the settings sections say how to look a setting up (2026-09-27, #2659)
+
+Two places introduce a settings structure to somebody who has not written a model yet, and both told
+them only how to *assign* a value: the *Simulation settings* section of Exudyn Basics and the
+*Visualization settings dialog* section of the GUI chapter. The answer to *what is this setting
+called* is `python -m exudyn dialogs sim` and `... dialogs vis`, which open the tree the renderer's
+**V** key opens with no model and no renderer - and the second section even explained that **V** does
+not work without a running render loop, without saying what does.
+
+Two sentences and a line of code in the first, one sentence in the second, both pointing at
+{ref}`sec-commandline`, where the command and what closing the dialog prints are described. Named with
+them: **CTRL-F** to find a setting and *copy line* to take the statement that sets it, because that is
+what makes the browsing useful rather than merely possible.
+
+**Gates**: the strict HTML build, and the two references resolve.
+
+<a id="rg3-22"></a>
+### RG3.22 — the settings sections say how to look a setting up (2026-09-27, #2659)
+
+Two places introduce a settings structure to somebody who has not written a model yet, and both told
+them only how to *assign* a value: the *Simulation settings* section of Exudyn Basics and the
+*Visualization settings dialog* section of the GUI chapter. The answer to *what is this setting
+called* is `python -m exudyn dialogs sim` and `... dialogs vis`, which open the tree the renderer's
+**V** key opens with no model and no renderer - and the second section even explained that **V** does
+not work without a running render loop, without saying what does.
+
+Two sentences and a line of code in the first, one sentence in the second, both pointing at
+{ref}`sec-commandline`, where the command and what closing the dialog prints are described. Named with
+them: **CTRL-F** to find a setting and *copy line* to take the statement that sets it, because that is
+what makes the browsing useful rather than merely possible.
+
+**Gates**: the strict HTML build, and the two references resolve.

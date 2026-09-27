@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 108 | 1.12.110 |
+| 1.12 | Metheney | 109 | 1.12.111 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.111** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The simulation settings section does not mention that the settings can be browsed before writing a model (#2659)
+  - description: The Simulation settings section of Exudyn Basics explains the substructures and how to assign values, and says nothing about looking a setting up. Since revision2026b step RG6.2 there is 'python -m exudyn dialogs sim', which opens the same tree the renderer's V key opens, with no model and no renderer - which is exactly what somebody reading this section for the first time needs. One sentence, with a link to the command line chapter; the same applies to 'dialogs vis' where the visualization settings are introduced.
+  - **notes:** The two sections that introduce a settings structure now say how to look a setting up: the Simulation settings section of Exudyn Basics names 'python -m exudyn dialogs sim' with CTRL-F to find a setting and copy line to take the statement that sets it, and the visualization settings dialog section names 'python -m exudyn dialogs vis' beside the V key, which needs a running render loop. Both link to the command line chapter.
+  - date resolved: **2026-09-27 09:02**, date raised: 2026-09-25
 - **1.12.110** `DOCU` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The generator API still says Latex where it writes Markdown (#2681)
   - description: The maintainer, 2026-09-26: DefLatexDataAccess and similar Latex commands need to be renamed consistently; search for latex, rename where it is clear (Markdown) and suggest options where it is not. Measured the same day over tools/generators/ and definitions/: 28 files carry the word. The declaration API every definition file uses - DefLatexDataAccess (64 uses), DefLatexStartTable (32), DefLatexFinishTable (27), DefLatexOperator (17), DefLatexStartClass (13) - writes Markdown and has done since RG3.14; PyLatexRST (18 uses) writes Python, a stub and Markdown and neither LaTeX nor RST. Names that describe real LaTeX stay: GetTypesStringLatex and Str2Latex feed mathematics and C++ comments, and latexToMarkdown.py is named after what it converts from. The open kind is latexSymbol and its family, the dollar-symbol of an item parameter, which IS LaTeX inside Markdown. A rename of 64 call sites changes no output, so the gate is that the regeneration stays a no-op.
   - **notes:** The generator API no longer says Latex where it writes Markdown: the declaration calls the definition files are written in are DefDataAccess, DefStartTable, DefFinishTable, DefOperator and DefStartClass, the class that collects the pybind code, the stub and the documentation of one declaration run is DeclarationWriter, and GetTypesStringLatex and Latex2RSTlabel are GetTypesStringDocu and MarkdownLabelName - 184 occurrences. What is named after real LaTeX keeps its name: Str2Doxygen, latexToMarkdown.py, LatexText2Markdown, ToLatex, CleanLatex, RemoveLatexCommands. Reading every occurrence also removed 55 lines that nothing runs - a dead function writing LaTeX lists, commented-out longtables, three unread locals - and corrected a field name in definitions/README.md that exists nowhere in the code. The regeneration writes byte-identical files, which was the gate. The latexSymbol family is not renamed: it names a real dollar-sign symbol and the options go to the maintainer (revision2026b step RG3.24.4).

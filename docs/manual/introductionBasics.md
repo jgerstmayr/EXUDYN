@@ -32,6 +32,16 @@ The simulation settings consists of a couple of substructures, e.g., for `soluti
 
 Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver.
 
+There are many of them, so the fastest way to answer *what is this setting called* is to look at the
+whole tree with its types and descriptions, without a model and without a renderer:
+
+```
+python -m exudyn dialogs sim
+```
+
+**CTRL-F** finds a setting by name and *copy line* gives the Python statement that sets it, ready to
+paste into the script; see {ref}`sec-commandline`.
+
  The simulation settings structure is created with
 
 ```python

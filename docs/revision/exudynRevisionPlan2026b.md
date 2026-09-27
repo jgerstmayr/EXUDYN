@@ -146,6 +146,70 @@ NOT cover, and about the testing that no suite can do.
     Open in the tracker for this group besides these: **#2498** (nothing checks that an item type
     provides the member functions it must), **#2511** (the ROS examples were last run in 2023).
 
+    - **RG2.3.1** *(sub-step of RG2.3, #2582; measured 2026-09-27 on the maintainer's request:
+      "check a specific older renderer export function which exports txt with the drawing elements -
+      this could be json in future ... also used for testing")* **the drawing elements as data, and
+      what the existing export cannot do.**
+
+      **What exists.** `SC.visualizationSettings.exportImages.saveImageFormat = 'TXT'` writes the
+      scene as text instead of as an image - `GlfwRenderer::SaveSceneToFile`,
+      `src/Graphics/GlfwClient.cpp` - with `saveImageAsTextLines`, `...Circles`, `...Triangles` and
+      `...Texts` selecting what goes in. The format is comment-marked sections: `#COLOR` then RGBA,
+      `#LINE` then a polyline of `x, y, z` triplets, `#TRIANGLE` then three points, `#END` at the
+      end. `exudyn.plot.LoadImage` reads it back into lists and `PlotImage` draws it with matplotlib;
+      `NGsolveCraigBampton.py` and `NGsolvePistonEngine.py` are the only users, both behind an `if`.
+
+      **The blocking fact, and it is the reason this is a sub-step and not a use of what is there**:
+      `MainRenderer::RedrawAndSaveImage` calls `RendererInActiveError`, so the export needs the
+      **running OpenGL renderer** - a window on somebody's screen. A test cannot ask for it:
+      `EXUDYN_SUPPRESS_UI_WINDOW_OPEN=1` means there is no renderer at all.
+
+      **The path that does work already exists.** `RedrawAndGetImage(useRaytracer=True)` runs with the
+      renderer **inactive**: `MainRenderer` updates the post-processing data of every system, then
+      `VSC.UpdateGraphicsDataNow()` and `VSC.UpdateGraphicsData()`, and hands the graphics data to the
+      software renderer. `raytracerNOGLFWtest.py` does exactly this inside the test suite, so
+      **building the graphics data without a window is proven, and only the serialization is missing**.
+
+      **What the text format loses** - each of these is a reason to write the data rather than to
+      extend the text:
+
+      | lost | why it matters for a test |
+      |---|---|
+      | **`itemID`**, which **every** primitive carries (`GLLine`, `GLSphere`, `GLCircleXY`, `GLText`, `GLTriangle`) and `Index2ItemID` decodes into item type and index | it is the difference between *something changed* and *ObjectRigidBody 7 draws 12 triangles fewer*; it is the one field a graphics regression suite cannot do without |
+      | **spheres**, not exported at all | `graphics.Sphere` and every node drawn as a sphere are invisible to the export |
+      | **texts**, `PrintDelayed("SageImage: Text export not yet implemented!")` - and the message says SageImage | the text settings are among the things RG2.3 wants to vary |
+      | triangle **normals** and the per-vertex colours; a line's `color2` | a shading or a contour-colour change would not show |
+      | circles become polylines whose vertex count comes from `general.circleTiling` | a display setting leaks into the data, so the reference changes when the setting does |
+      | no version, no counts, no fingerprint of the settings the scene was drawn with | a reference file cannot say what it is a reference *of* |
+
+      **The suggestion, in one sentence**: a **JSON export of the graphics data, taken with the
+      renderer inactive**, as the oracle of the suite - the counts RG2.3 asks for fall out of it
+      (`len` per primitive per `itemID`), and the low-resolution reference images stay the human half
+      of the comparison, from `RedrawAndGetImage(True)`, which the suite can already produce.
+
+      Shape, to be decided with the maintainer:
+
+      - **where it lives**: `VisualizationSystemContainer`, beside `UpdateGraphicsData`, so it is
+        reachable with the renderer inactive; the GLFW path keeps TXT for what it is used for today.
+      - **what Python sees**: `SC.renderer.GetGraphicsData(viewID=0)` returning a **dict** is the
+        useful primitive - a test compares numbers and does not want a file - with
+        `SaveGraphicsData(fileName)` writing the same thing as JSON for a reference that a human reads
+        and `git diff` shows.
+      - **what goes in**: the five primitive lists with every field, `itemID` **decoded** to
+        `(itemType, itemIndex)` because a raw `Index` is not a stable thing to compare, plus a header
+        with a format version, the per-primitive counts, and the settings that were in force.
+      - **what stays out**: nothing derived from the window - no zoom, no model view, no screen size -
+        or the data is not comparable between machines, which is the mistake the pixel checksum makes.
+      - **the tolerance question**: a float coordinate compared exactly will fail across compilers, so
+        the reference wants the counts per item exact and the coordinates rounded, and the rounding is
+        a decision (the TXT export writes 8 digits of a `float`).
+      - **whether `LoadImage`/`PlotImage` follow**: they read the TXT today; reading JSON as well is
+        small, and it gives the suite's reference files a viewer for free.
+
+      **What this replaces**: the only drawing test today is `raytracerNOGLFWtest.py`, one pixel
+      checksum of one model, removed from the reference set on macOS because the offscreen path
+      crashes there since 1.11.0. A count per item is portable in a way a checksum of pixels is not.
+
 ## RG3 — Docs
 
 The documentation is Markdown, built with Sphinx and published for every release since
@@ -819,7 +883,7 @@ find its file and line, on every raise).
     nothing else can be planned before it exists. It decides whether the rest is one commit or five.
 
 <a id="rg3-22"></a>
-**RG3.22** *(group RG3; maintainer 2026-09-25)* **The simulation settings section says how to look a
+**RG3.22** *(group RG3; maintainer 2026-09-25)* **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg3-22) — **The simulation settings section says how to look a
     setting up** (#2659). It explains the substructures and how to assign values, and says nothing
     about *finding* one. `python -m exudyn dialogs sim` opens the same tree the renderer's V key
     opens, with no model and no renderer, and it is the fastest way to answer "what is this setting
@@ -2381,9 +2445,9 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582 | a graphics regression suite |
+| RG2.3.1 | #2582 | the drawing elements as data (JSON, renderer inactive) - the suite's oracle |
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
-| RG3.22 | #2659 | the simulation settings section mentions `python -m exudyn dialogs sim` |
 | RG3.24.4 | - | what the latexSymbol family should be called - three options for the maintainer |
 | RG3.25 | #2683 | a tab instead of a backslash puts "exttt{...}" on three pages of the Symbolic manual |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
