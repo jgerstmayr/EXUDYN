@@ -2,7 +2,7 @@
 (sec-item-sensorload)=
 # SensorLoad
 
-A sensor attached to a load. The sensor measures the load values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+A sensor attached to a load, which measures the value of the load.
 
 ## Parameters
 
@@ -13,7 +13,7 @@ The parameters of the item; in a dictionary, its type is 'Load':
 | **name** | String |  | '' | sensor's unique name |
 | **loadNumber** | LoadIndex |  | invalid (-1) | load number to which sensor is attached to |
 | **writeToFile** | Bool |  | True | True: write sensor output to file; flag is ignored (interpreted as False), if fileName='' |
-| **fileName** | String |  | '' | directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist |
+| **fileName** | String |  | '' | directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist |
 | **storeInternal** | Bool |  | False | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available |
 | **visualization** | VSensorLoad |  |  | parameters for visualization of item |
 
@@ -24,6 +24,20 @@ The parameters of `VSensorLoad`, given as `visualization`:
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED |
+
+(description-sensorload)=
+## Detailed description
+
+### Attached to
+
+The load `loadNumber`.
+
+### Measures
+
+The value of the load at the current time: the vector or the scalar, as the load item computes it -
+from `loadVector` or `load`, or from its user function - and in the frame it is given in, which is
+the body frame for a load with `bodyFixed = True`. The load factor of a static computation is not
+included. There is no `outputVariableType`.
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`leggedRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/leggedRobot.py) (Ex), [`nMassOscillator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillator.py) (Ex), [`nMassOscillatorInteractive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorInteractive.py) (Ex), [`serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py) (Ex), [`simulateInteractively.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/simulateInteractively.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`movingGroundRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py) (TM), [`plotSensorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/plotSensorTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM), [`serialRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/serialRobotTest.py) (TM), [`springDamperUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/springDamperUserFunctionTest.py) (TM)

@@ -6229,3 +6229,35 @@ the static solver's load factor - which multiplies every load **except** one wit
 whose function gets the quasi-time of the load step instead (`CSolverStatic`, #603) - and what
 `CreateForce`, `CreateTorque` and the `gravity` argument add: a `MarkerBodyPosition`, or a
 `MarkerBodyRigid` if the force is body-fixed.
+
+<a id="rg13-5-5"></a>
+### RG13.5.5 — the pages of the sensors (2026-09-28, #2725)
+
+As `sensorDefinitionsDev.md` proposed and the maintainer agreed: the general sensor section on the
+page of the sensors says once what all eight said in their class descriptions, and more - what a
+sensor is, what `outputVariableType` selects and where its list is, when the values are written and
+stored (`sensorsWritePeriod`, the file, `storeInternal`, `sensorsStoreAndWriteFiles`,
+`sensorsAppendToFile`), `GetSensorValues`, plotting, `SensorUserFunction` and the traces. Each sensor
+keeps **one sentence of its own** as its overall description, and a detailed description of two
+parts, **Attached to** and **Measures**; the C++ enum names `OutputVariableBody`,
+`OutputVariableSuperElement`, `OutputVariableKinematicTree` are gone, replaced by *the output
+variables of the item, as its page lists them*. `SensorUserFunction` keeps its text, which was its
+own already.
+
+Written from the code, which corrected three statements:
+
+- **the `fileName` of every sensor**: its description said *"default: empty string generates sensor +
+  sensorNumber + outputVariableType"*, while `CSolverBase` opens a file only if the name is not empty
+  - which the description of `writeToFile` said correctly beside it. It says now that an empty name
+  writes no file, and that a relative name is placed in `exudyn.config.outputDirectory` (#2418);
+- **the local position of `SensorBody`** is measured from the reference point of the body, the
+  position of its node; `CreateRigidBody` passes the center of mass as `physicsCenterOfMass`, so the
+  reference point is **not** the center of mass unless that is zero - the one interpretation the
+  maintainer said a sensor needs;
+- **`SensorMarker`**: what it can measure follows from the types of the marker
+  (`CMarker::GetOutputVariableTypes`) - position markers `Position`, `Displacement`, `Velocity`,
+  orientation adds `RotationMatrix`, `Rotation`, `AngularVelocity`, `AngularVelocityLocal`,
+  coordinate markers `Coordinates` and `Coordinates_t` - which is the table on its page now; an
+  unavailable output variable is an error of `Assemble()` (`checkPreAssembleConsistenciesSensors`),
+  as the general section says. `SensorLoad` measures the load as its item computes it, in the frame it
+  is given in and without the static load factor (`CSensorLoad::GetSensorValues`).

@@ -3,6 +3,56 @@
 
 A Sensor is used to measure quantities during simulation. Sensors may be attached to Nodes, Objects, Markers or Loads. Sensor values may be directly read via mbs or can be continuously written to files or SensorRecorder during simulation. The exudyn.plot Python utility function PlotSensor(...) can be conveniently used to show Sensor values over time.
 
+## What a sensor is
+
+A sensor reads a value of the model - an output variable of a node, an object, a body at a point, a
+marker, or the value of a load - and does not act on the system. Every sensor page says only what it
+is attached to and what it measures; what follows is the same for all of them.
+
+## What a sensor measures
+
+`outputVariableType` selects the quantity, an `exu.OutputVariableType`, and the item the sensor is
+attached to must provide it: the page of the item lists its output variables with their symbols and
+frames. Asking for one the item does not provide is an error of `mbs.Assemble()`.
+
+## When and where the values go
+
+During a simulation, the solver evaluates every sensor at the times given by
+`simulationSettings.solutionSettings.sensorsWritePeriod`, and
+
+- writes a line `time, value[0], value[1], ...` to the file `fileName`, if `writeToFile = True` and a
+file name is given; the directory is created if it does not exist, and a header and a footer
+describe the sensor (`sensorsWriteFileHeader`, `sensorsWriteFileFooter`);
+- stores the same rows in memory if `storeInternal = True`, which `mbs.GetSensorStoredData(sensor)`
+returns as an array, one row per time;
+- does neither if `solutionSettings.sensorsStoreAndWriteFiles = False`.
+
+`solutionSettings.sensorsAppendToFile` appends to an existing file, or to the stored data, so that
+several simulations continue one record.
+
+## Reading a value at any time
+
+`mbs.GetSensorValues(sensor, configuration)` returns the value now, in the current configuration by
+default, without storing it.
+
+## Plotting
+
+`mbs.PlotSensor(sensor, ...)` plots the stored or written values over time, several sensors and
+components at once; the results monitor shows sensor files while a simulation runs.
+
+## Values computed from other sensors
+
+`SensorUserFunction` computes its value with a Python function from the values of other sensors,
+e.g. to transform them into another frame or to combine them; it is stored and written like any
+other sensor.
+
+## Drawing
+
+Sensors are drawn as small symbols; with `visualizationSettings.sensors.traces` the positions, and
+vectors or frames, of position sensors are drawn along their history.
+
+## Items
+
 ```{toctree}
 :maxdepth: 1
 

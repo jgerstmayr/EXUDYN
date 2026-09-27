@@ -2,7 +2,7 @@
 (sec-item-sensornode)=
 # SensorNode
 
-A sensor attached to a {ref}`ODE2 <ODE2>` or {ref}`ODE1 <ODE1>` node. The sensor measures OutputVariables and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+A sensor attached to a node, which measures one of the output variables of the node.
 
 ## Parameters
 
@@ -13,7 +13,7 @@ The parameters of the item; in a dictionary, its type is 'Node':
 | **name** | String |  | '' | sensor's unique name |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number to which sensor is attached to |
 | **writeToFile** | Bool |  | True | True: write sensor output to file; flag is ignored (interpreted as False), if fileName='' |
-| **fileName** | String |  | '' | directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist |
+| **fileName** | String |  | '' | directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist |
 | **outputVariableType** | OutputVariableType |  | OutputVariableType::_None | OutputVariableType for sensor |
 | **storeInternal** | Bool |  | False | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available |
 | **visualization** | VSensorNode |  |  | parameters for visualization of item |
@@ -25,6 +25,20 @@ The parameters of `VSensorNode`, given as `visualization`:
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
+
+(description-sensornode)=
+## Detailed description
+
+### Attached to
+
+The node `nodeNumber`: every node, with {ref}`ODE2 <ODE2>`, {ref}`ODE1 <ODE1>` or other coordinates.
+
+### Measures
+
+`outputVariableType` is one of the output variables of the node, as its page lists them under
+**Output variables** - `Position`, `Velocity`, `Coordinates`, and for a rigid body node also
+`RotationMatrix`, `AngularVelocity` and the like. The frame is the one the node page gives for the
+variable.
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py) (Ex), [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex), [`beltDrivesComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py) (Ex), [`craneReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/craneReevingSystem.py) (Ex), [`flexiblePendulumANCF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/flexiblePendulumANCF.py) (Ex), [`geneticOptimizationSliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/geneticOptimizationSliderCrank.py) (Ex), [`gyroStability.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/gyroStability.py) (Ex), [`HydraulicActuator2Arms.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicActuator2Arms.py) (Ex), [`HydraulicActuatorStaticInitialization.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicActuatorStaticInitialization.py) (Ex), [`HydraulicsUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicsUserFunction.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`ACFtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py) (TM), [`ANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py) (TM), [`ANCFgeneralContactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFgeneralContactCircle.py) (TM), ...

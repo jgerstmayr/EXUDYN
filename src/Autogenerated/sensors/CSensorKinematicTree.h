@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  19:35:47 (last modified)
+* @date         2026-09-28  00:34:30 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,7 +31,7 @@ public: // AUTO:
     Index linkNumber;                             //!< AUTO: must be >= 0; number of link in KinematicTree to measure quantities
     Vector3D localPosition;                       //!< AUTO: local (link-fixed) position of sensor, defined in link (\f$n_l\f$) coordinate system
     bool writeToFile;                             //!< AUTO: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
-    std::string fileName;                         //!< AUTO: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+    std::string fileName;                         //!< AUTO: directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist
     OutputVariableType outputVariableType;        //!< AUTO: OutputVariableType for sensor
     bool storeInternal;                           //!< AUTO: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
     //! AUTO: default constructor with parameter initialization
@@ -50,7 +50,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CSensorKinematicTree
-* @brief        A sensor attached to a KinematicTree with local position \f$\pLocB\f$ and link number \f$n_l\f$. As a difference to SensorBody, the KinematicTree sensor needs a local position and a link number, which defines the sub-body at which the sensor values are evaluated. The local position is given in sub-body (link) local coordinates. The sensor measures OutputVariableKinematicTree and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+* @brief        A sensor attached to a link \f$n_l\f$ of an ObjectKinematicTree at a local position \f$\pLocB\f$ in the frame of the link, which measures one of the output variables of the kinematic tree at that point.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

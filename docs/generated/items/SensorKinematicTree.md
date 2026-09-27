@@ -2,7 +2,7 @@
 (sec-item-sensorkinematictree)=
 # SensorKinematicTree
 
-A sensor attached to a KinematicTree with local position $\pLocB$ and link number $n_l$. As a difference to SensorBody, the KinematicTree sensor needs a local position and a link number, which defines the sub-body at which the sensor values are evaluated. The local position is given in sub-body (link) local coordinates. The sensor measures OutputVariableKinematicTree and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+A sensor attached to a link $n_l$ of an ObjectKinematicTree at a local position $\pLocB$ in the frame of the link, which measures one of the output variables of the kinematic tree at that point.
 
 ## Parameters
 
@@ -15,7 +15,7 @@ The parameters of the item; in a dictionary, its type is 'KinematicTree':
 | **linkNumber** $n_l$ | UInt |  | invalid (-1) | number of link in KinematicTree to measure quantities; **must be given**: the default is only a placeholder |
 | **localPosition** $\LU{l}{\bv}$ | Vector3D | 3 | [0.,0.,0.] | local (link-fixed) position of sensor, defined in link ($n_l$) coordinate system |
 | **writeToFile** | Bool |  | True | True: write sensor output to file; flag is ignored (interpreted as False), if fileName='' |
-| **fileName** | String |  | '' | directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist |
+| **fileName** | String |  | '' | directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist |
 | **outputVariableType** | OutputVariableType |  | OutputVariableType::_None | OutputVariableType for sensor |
 | **storeInternal** | Bool |  | False | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available |
 | **visualization** | VSensorKinematicTree |  |  | parameters for visualization of item |
@@ -27,6 +27,20 @@ The parameters of `VSensorKinematicTree`, given as `visualization`:
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
+
+(description-sensorkinematictree)=
+## Detailed description
+
+### Attached to
+
+The `ObjectKinematicTree` `objectNumber`, at its link `linkNumber` $n_l$ and the point
+`localPosition` $\LU{l}{\bv}$, given in the frame of that link.
+
+### Measures
+
+`outputVariableType` is one of the output variables the kinematic tree provides for a link, as its
+page lists them under the output variables of `SensorKinematicTree` - e.g. the position, velocity or
+rotation of that point of the link.
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`openAIgymNLinkContinuous.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkContinuous.py) (Ex), [`reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex), [`stiffFlyballGovernorKT.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py) (Ex), [`kinematicTreeAndMBStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py) (TM), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM)

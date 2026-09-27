@@ -12,8 +12,8 @@
 | Object (Joint) | 10 | 1 | 5 | 9 | 0 of 100 | 0 of 46 | 0 | 0 |
 | Marker | 18 | 10 | 17 | 17 | 1 of 81 | 0 of 0 | 1 | 1 |
 | Load | 4 | 0 | 4 | 3 | 0 of 22 | 0 of 0 | 0 | 0 |
-| Sensor | 8 | 7 | 8 | 8 | 0 of 60 | 0 of 0 | 0 | 0 |
-| **all** | 97 | 20 | 84 | 74 | 3 of 985 | 0 of 413 | 7 | 4 |
+| Sensor | 8 | 0 | 8 | 8 | 0 of 60 | 0 of 0 | 0 | 0 |
+| **all** | 97 | 13 | 84 | 74 | 3 of 985 | 0 of 413 | 7 | 4 |
 
 | item | kind | overall description (words) | detailed description (words, sections) | figure | parameters: without a real description | output variables (undescribed) | MiniExample | used in scripts | used in the package |
 |---|---|---|---|---|---|---|---|---|---|
@@ -106,11 +106,11 @@
 | LoadTorqueVector | Load | 9 | 126, 2 | - | 0 of 6 | 0 | - | 51 | 2 |
 | LoadMassProportional | Load | 21 | 98, 2 | - | 0 of 5 | 0 | yes | 23 | 3 |
 | LoadCoordinate | Load | 38 | 90, 2 | - | 0 of 5 | 0 | - | 36 | 0 |
-| SensorNode | Sensor | 38 | - | - | 0 of 7 | 0 | - | 68 | 1 |
-| SensorObject | Sensor | 54 | - | - | 0 of 7 | 0 | - | 48 | 0 |
-| SensorBody | Sensor | 54 | - | - | 0 of 8 | 0 | - | 75 | 0 |
-| SensorSuperElement | Sensor | 57 | - | - | 0 of 8 | 0 | - | 15 | 0 |
-| SensorKinematicTree | Sensor | 75 | - | - | 0 of 9 | 0 | - | 8 | 0 |
-| SensorMarker | Sensor | 65 | - | - | 0 of 7 | 0 | - | 13 | 1 |
-| SensorLoad | Sensor | 35 | - | - | 0 of 6 | 0 | - | 11 | 0 |
+| SensorNode | Sensor | 14 | 60, 2 | - | 0 of 7 | 0 | - | 68 | 1 |
+| SensorObject | Sensor | 28 | 57, 2 | - | 0 of 7 | 0 | - | 48 | 0 |
+| SensorBody | Sensor | 20 | 95, 2 | - | 0 of 8 | 0 | - | 75 | 0 |
+| SensorSuperElement | Sensor | 21 | 86, 2 | - | 0 of 8 | 0 | - | 15 | 0 |
+| SensorKinematicTree | Sensor | 30 | 56, 2 | - | 0 of 9 | 0 | - | 8 | 0 |
+| SensorMarker | Sensor | 14 | 75, 2 | - | 0 of 7 | 0 | - | 13 | 1 |
+| SensorLoad | Sensor | 11 | 66, 2 | - | 0 of 6 | 0 | - | 11 | 0 |
 | SensorUserFunction | Sensor | 56 | 55, 0 | - | 0 of 8 | 0 | - | 8 | 3 |

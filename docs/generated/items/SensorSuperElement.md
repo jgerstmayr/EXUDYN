@@ -2,7 +2,7 @@
 (sec-item-sensorsuperelement)=
 # SensorSuperElement
 
-A sensor attached to a SuperElement-object with mesh node number. As a difference to other ObjectSensors, the SuperElement sensor has a mesh node number at which the sensor is attached to. The sensor measures OutputVariableSuperElement and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+A sensor attached to a mesh node of a superelement, which measures one of the output variables of the superelement at that mesh node.
 
 ## Parameters
 
@@ -14,7 +14,7 @@ The parameters of the item; in a dictionary, its type is 'SuperElement':
 | **bodyNumber** | ObjectIndex |  | invalid (-1) | body (=object) number to which sensor is attached to |
 | **meshNodeNumber** | UInt |  | invalid (-1) | mesh node number, which is a local node number with in the object (starting with 0); the node number may represent a real Node in mbs, or may be virtual and reconstructed from the object coordinates such as in ObjectFFRFreducedOrder; **must be given**: the default is only a placeholder |
 | **writeToFile** | Bool |  | True | True: write sensor output to file; flag is ignored (interpreted as False), if fileName='' |
-| **fileName** | String |  | '' | directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist |
+| **fileName** | String |  | '' | directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist |
 | **outputVariableType** | OutputVariableType |  | OutputVariableType::_None | OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, [](#sec-objectffrfreducedorder-superelementoutput)) |
 | **storeInternal** | Bool |  | False | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available |
 | **visualization** | VSensorSuperElement |  |  | parameters for visualization of item |
@@ -26,6 +26,22 @@ The parameters of `VSensorSuperElement`, given as `visualization`:
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
+
+(description-sensorsuperelement)=
+## Detailed description
+
+### Attached to
+
+The superelement `bodyNumber` - `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectGenericODE2` - at its
+mesh node `meshNodeNumber`, a node number local to the object, starting with 0. The mesh node may be
+a node of the system (`ObjectFFRF`) or exist only in the object and be reconstructed from its
+coordinates (`ObjectFFRFreducedOrder`).
+
+### Measures
+
+`outputVariableType` is one of the output variables the superelement provides for its mesh nodes, as
+its page lists them - the section on superelement output variables of `ObjectFFRFreducedOrder`, e.g.
+the displacement or position of the mesh node in the local or global frame.
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleCourse.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/CMSexampleCourse.py) (Ex), [`NGsolveCraigBampton.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py) (Ex), [`NGsolvePostProcessingStresses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePostProcessingStresses.py) (Ex), [`ObjectFFRFconvergenceTestBeam.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ObjectFFRFconvergenceTestBeam.py) (Ex), [`objectFFRFreducedOrderNetgen.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/objectFFRFreducedOrderNetgen.py) (Ex), [`pendulumVerify.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumVerify.py) (Ex), [`abaqusImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/abaqusImportTest.py) (TM), [`NGsolveCMStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/NGsolveCMStest.py) (TM), [`objectFFRFreducedOrderAccelerations.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderAccelerations.py) (TM), [`objectFFRFreducedOrderStressModesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderStressModesTest.py) (TM), [`objectFFRFreducedOrderTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderTest.py) (TM), [`objectFFRFTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py) (TM), [`objectFFRFTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest2.py) (TM), [`objectGenericODE2Test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectGenericODE2Test.py) (TM), [`superElementRigidJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/superElementRigidJointTest.py) (TM)

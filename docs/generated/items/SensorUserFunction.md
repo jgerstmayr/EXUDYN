@@ -14,7 +14,7 @@ The parameters of the item; in a dictionary, its type is 'UserFunction':
 | **sensorNumbers** $\mathbf{n}_s = [s_0,\,\ldots,\,s_n]\tp$ | ArraySensorIndex |  | [] | optional list of $n$ sensor numbers for use in user function |
 | **factors** $\mathbf{f}_s = [f_0,\,\ldots,\,f_m]\tp$ | Vector |  | [] | optional list of $m$ factors which can be used, e.g., for weighting sensor values |
 | **writeToFile** | Bool |  | True | True: write sensor output to file; flag is ignored (interpreted as False), if fileName='' |
-| **fileName** | String |  | '' | directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist |
+| **fileName** | String |  | '' | directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist |
 | **sensorUserFunction** | PyFunctionVectorMbsScalarArrayIndexVectorConfiguration |  | 0 | A Python function which defines the time-dependent user function, which usually evaluates one or several sensors and computes a new sensor value, see example |
 | **storeInternal** | Bool |  | False | true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available |
 | **visualization** | VSensorUserFunction |  |  | parameters for visualization of item |

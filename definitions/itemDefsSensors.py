@@ -36,8 +36,19 @@ definitions = []
 definitions.append(ItemDefinition(
     className='SensorNode',
     cParentClass=ParentClassCSensor,
-    overallDescription=r"""A sensor attached to a ABRV:ODE2 or ABRV:ODE1 node. The sensor measures OutputVariables and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.""",
+    overallDescription=r"""A sensor attached to a node, which measures one of the output variables of the node.""",
     classType=ClassTypeSensor,
+    detailedDescription=r"""    #### Attached to
+
+    The node `nodeNumber`: every node, with ABRV:ODE2, ABRV:ODE1 or other coordinates.
+
+    #### Measures
+
+    `outputVariableType` is one of the output variables of the node, as its page lists them under
+    **Output variables** - `Position`, `Velocity`, `Coordinates`, and for a rigid body node also
+    `RotationMatrix`, `AngularVelocity` and the like. The frame is the one the node page gives for the
+    variable.
+    """,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
     members=[
@@ -56,7 +67,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TString, destination=DestComp+DestParam,
             pythonName='fileName',
             defaultValue=NoDefaultValue,
-            description=r'directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist'),
+            description=r'directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist'),
         ItemParameter(type=TOutputVariableType, destination=DestComp+DestParam,
             pythonName='outputVariableType',
             defaultValue='OutputVariableType::_None',
@@ -101,8 +112,19 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='SensorObject',
     cParentClass=ParentClassCSensor,
-    overallDescription=r'A sensor attached to any object except bodies  (connectors, constraint, spring-damper, etc). As a difference to other SensorBody, the connector sensor measures quantities without a local position. The sensor measures OutputVariable and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.',
+    overallDescription=r"""A sensor attached to an object other than a body - a connector, a constraint, a joint - which measures one of the output variables of the object; a body is measured at a point, with SensorBody.""",
     classType=ClassTypeSensor,
+    detailedDescription=r"""    #### Attached to
+
+    The object `objectNumber`, usually a connector, constraint or joint, which is measured as a whole and
+    not at a point.
+
+    #### Measures
+
+    `outputVariableType` is one of the output variables of the object, as its page lists them under
+    **Output variables** - for a spring-damper e.g. `Force` and `Distance`, for a joint the reaction
+    forces and torques in the frame its page gives.
+    """,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
     members=[
@@ -121,7 +143,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TString, destination=DestComp+DestParam,
             pythonName='fileName',
             defaultValue=NoDefaultValue,
-            description=r'directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist'),
+            description=r'directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist'),
         ItemParameter(type=TOutputVariableType, destination=DestComp+DestParam,
             pythonName='outputVariableType',
             defaultValue='OutputVariableType::_None',
@@ -167,8 +189,21 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='SensorBody',
     cParentClass=ParentClassCSensor,
-    overallDescription=r"""A sensor attached to a body-object with local position $\pLocB$. As a difference to SensorObject, the body sensor needs a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.""",
+    overallDescription=r"""A sensor attached to a body at a local position $\pLocB$, which measures one of the output variables of the body at that point.""",
     classType=ClassTypeSensor,
+    detailedDescription=r"""    #### Attached to
+
+    The body `bodyNumber`, at the point `localPosition` $\pLocB$. The local position is given in the
+    body frame and measured from the **reference point** of the body - the position of its node, which
+    is `referencePosition` in `CreateRigidBody`. The center of mass of an `ObjectRigidBody` lies at
+    `physicsCenterOfMass` from it, so a sensor at the center of mass has that local position.
+
+    #### Measures
+
+    `outputVariableType` is one of the output variables of the body, evaluated at $\pLocB$, as its page
+    lists them under **Output variables** - e.g. `Position`, `Velocity`, `Displacement`,
+    `AngularVelocity`; for a flexible body also strains or forces along its axis.
+    """,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
     members=[
@@ -191,7 +226,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TString, destination=DestComp+DestParam,
             pythonName='fileName',
             defaultValue=NoDefaultValue,
-            description=r'directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist'),
+            description=r'directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist'),
         ItemParameter(type=TOutputVariableType, destination=DestComp+DestParam,
             pythonName='outputVariableType',
             defaultValue='OutputVariableType::_None',
@@ -241,8 +276,21 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='SensorSuperElement',
     cParentClass=ParentClassCSensor,
-    overallDescription=r'A sensor attached to a SuperElement-object with mesh node number. As a difference to other ObjectSensors, the SuperElement sensor has a mesh node number at which the sensor is attached to. The sensor measures OutputVariableSuperElement and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.',
+    overallDescription=r"""A sensor attached to a mesh node of a superelement, which measures one of the output variables of the superelement at that mesh node.""",
     classType=ClassTypeSensor,
+    detailedDescription=r"""    #### Attached to
+
+    The superelement `bodyNumber` - `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectGenericODE2` - at its
+    mesh node `meshNodeNumber`, a node number local to the object, starting with 0. The mesh node may be
+    a node of the system (`ObjectFFRF`) or exist only in the object and be reconstructed from its
+    coordinates (`ObjectFFRFreducedOrder`).
+
+    #### Measures
+
+    `outputVariableType` is one of the output variables the superelement provides for its mesh nodes, as
+    its page lists them - the section on superelement output variables of `ObjectFFRFreducedOrder`, e.g.
+    the displacement or position of the mesh node in the local or global frame.
+    """,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
     members=[
@@ -265,7 +313,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TString, destination=DestComp+DestParam,
             pythonName='fileName',
             defaultValue=NoDefaultValue,
-            description=r'directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist'),
+            description=r'directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist'),
         ItemParameter(type=TOutputVariableType, destination=DestComp+DestParam,
             pythonName='outputVariableType',
             defaultValue='OutputVariableType::_None',
@@ -315,8 +363,19 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='SensorKinematicTree',
     cParentClass=ParentClassCSensor,
-    overallDescription=r"""A sensor attached to a KinematicTree with local position $\pLocB$ and link number $n_l$. As a difference to SensorBody, the KinematicTree sensor needs a local position and a link number, which defines the sub-body at which the sensor values are evaluated. The local position is given in sub-body (link) local coordinates. The sensor measures OutputVariableKinematicTree and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.""",
+    overallDescription=r"""A sensor attached to a link $n_l$ of an ObjectKinematicTree at a local position $\pLocB$ in the frame of the link, which measures one of the output variables of the kinematic tree at that point.""",
     classType=ClassTypeSensor,
+    detailedDescription=r"""    #### Attached to
+
+    The `ObjectKinematicTree` `objectNumber`, at its link `linkNumber` $n_l$ and the point
+    `localPosition` $\LU{l}{\bv}$, given in the frame of that link.
+
+    #### Measures
+
+    `outputVariableType` is one of the output variables the kinematic tree provides for a link, as its
+    page lists them under the output variables of `SensorKinematicTree` - e.g. the position, velocity or
+    rotation of that point of the link.
+    """,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
     members=[
@@ -343,7 +402,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TString, destination=DestComp+DestParam,
             pythonName='fileName',
             defaultValue=NoDefaultValue,
-            description=r'directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist'),
+            description=r'directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist'),
         ItemParameter(type=TOutputVariableType, destination=DestComp+DestParam,
             pythonName='outputVariableType',
             defaultValue='OutputVariableType::_None',
@@ -397,8 +456,25 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='SensorMarker',
     cParentClass=ParentClassCSensor,
-    overallDescription=r'A sensor attached to a marker. The sensor measures the selected marker values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Depending on markers, it can measure Coordinates (MarkerNodeCoordinate), Position and Velocity (MarkerXXXPosition), Position, Velocity, Rotation and AngularVelocityLocal (MarkerXXXRigid). Note that marker values are only available for the current configuration. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file',
+    overallDescription=r"""A sensor attached to a marker, which measures what the marker provides, in the current configuration.""",
     classType=ClassTypeSensor,
+    detailedDescription=r"""    #### Attached to
+
+    The marker `markerNumber`, any kind of marker.
+
+    #### Measures
+
+    What the marker provides, which depends on its types, and only in the **current** configuration:
+
+    | the marker provides | `outputVariableType` can be |
+    |---|---|
+    | a position (`MarkerBodyPosition`, `MarkerNodePosition`, ...) | `Position`, `Displacement`, `Velocity` |
+    | an orientation (`MarkerBodyRigid`, `MarkerNodeRigid`, ...) | in addition `RotationMatrix`, `Rotation`, `AngularVelocity`, `AngularVelocityLocal` |
+    | coordinates (`MarkerNodeCoordinate`, `MarkerNodeCoordinates`, ...) | `Coordinates`, `Coordinates_t` |
+    | a relative coordinate of two bodies | `Coordinates`, `Coordinates_t` |
+
+    Markers have no output variables of their own, which is why this sensor lists them here.
+    """,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
     members=[
@@ -417,7 +493,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TString, destination=DestComp+DestParam,
             pythonName='fileName',
             defaultValue=NoDefaultValue,
-            description=r'directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist'),
+            description=r'directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist'),
         ItemParameter(type=TOutputVariableType, destination=DestComp+DestParam,
             pythonName='outputVariableType',
             defaultValue='OutputVariableType::_None',
@@ -463,8 +539,19 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='SensorLoad',
     cParentClass=ParentClassCSensor,
-    overallDescription=r'A sensor attached to a load. The sensor measures the load values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.',
+    overallDescription=r"""A sensor attached to a load, which measures the value of the load.""",
     classType=ClassTypeSensor,
+    detailedDescription=r"""    #### Attached to
+
+    The load `loadNumber`.
+
+    #### Measures
+
+    The value of the load at the current time: the vector or the scalar, as the load item computes it -
+    from `loadVector` or `load`, or from its user function - and in the frame it is given in, which is
+    the body frame for a load with `bodyFixed = True`. The load factor of a static computation is not
+    included. There is no `outputVariableType`.
+    """,
     mainParentClass=MainParentClassMainSensor,
     visuParentClass=VisuParentClassVisualizationSensor,
     members=[
@@ -483,7 +570,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TString, destination=DestComp+DestParam,
             pythonName='fileName',
             defaultValue=NoDefaultValue,
-            description=r'directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist'),
+            description=r'directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist'),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='storeInternal',
             defaultValue=False,
@@ -573,7 +660,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TString, destination=DestComp+DestParam,
             pythonName='fileName',
             defaultValue=NoDefaultValue,
-            description=r'directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist'),
+            description=r'directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist'),
         ItemParameter(type=TPyFunctionVectorMbsScalarArrayIndexVectorConfiguration, destination=DestComp+DestParam,
             pythonName='sensorUserFunction',
             defaultValue=0,

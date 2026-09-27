@@ -2788,7 +2788,8 @@ What depends on it: the graphics regression test takes every item through its Mi
     - **RG13.5.3** markers - after `markerDefinitionsDev.md` is agreed.
     - **RG13.5.4** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-4) - loads - the
       load, its frame, the generalized forces with the transformation.
-    - **RG13.5.5** sensors - the general sensor section, and each sensor with what is its own.
+    - **RG13.5.5** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-5) - sensors - the
+      general sensor section, and each sensor with what is its own.
 
 ## Next steps recommended
 

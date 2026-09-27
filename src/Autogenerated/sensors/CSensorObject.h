@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-28  00:34:30 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,7 +29,7 @@ class CSensorObjectParameters // AUTO:
 public: // AUTO:
     Index objectNumber;                           //!< AUTO: object (e.g. connector) number to which sensor is attached to
     bool writeToFile;                             //!< AUTO: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
-    std::string fileName;                         //!< AUTO: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+    std::string fileName;                         //!< AUTO: directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist
     OutputVariableType outputVariableType;        //!< AUTO: OutputVariableType for sensor
     bool storeInternal;                           //!< AUTO: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
     //! AUTO: default constructor with parameter initialization
@@ -46,7 +46,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CSensorObject
-* @brief        A sensor attached to any object except bodies  (connectors, constraint, spring-damper, etc). As a difference to other SensorBody, the connector sensor measures quantities without a local position. The sensor measures OutputVariable and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+* @brief        A sensor attached to an object other than a body - a connector, a constraint, a joint - which measures one of the output variables of the object; a body is measured at a point, with SensorBody.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-23  22:48:23 (last modified)
+* @date         2026-09-28  00:34:30 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -33,7 +33,7 @@ public: // AUTO:
     ArrayIndex sensorNumbers;                     //!< AUTO: optional list of \f$n\f$ sensor numbers for use in user function
     Vector factors;                               //!< AUTO: optional list of \f$m\f$ factors which can be used, e.g., for weighting sensor values
     bool writeToFile;                             //!< AUTO: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
-    std::string fileName;                         //!< AUTO: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+    std::string fileName;                         //!< AUTO: directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist
     PythonUserFunctionBase< std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)> > sensorUserFunction;//!< AUTO: A Python function which defines the time-dependent user function, which usually evaluates one or several sensors and computes a new sensor value, see example
     bool storeInternal;                           //!< AUTO: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
     //! AUTO: default constructor with parameter initialization

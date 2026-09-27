@@ -8002,9 +8002,7 @@ class VSensorNode:
         return str(dict(self))
 
 class SensorNode:
-    """A sensor attached to a ODE2 or ODE1 node.
-    
-    The sensor measures OutputVariables and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+    """A sensor attached to a node, which measures one of the output variables of the node.
     
     Args:
         name: sensor's unique name; type: str
@@ -8013,7 +8011,7 @@ class SensorNode:
 
         writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; empty: no file is written; a relative name is placed in ``exudyn.config.outputDirectory`` if that is set; the directory is created if it does not exist; type: str
 
         outputVariableType: OutputVariableType for sensor
 
@@ -8061,9 +8059,7 @@ class VSensorObject:
         return str(dict(self))
 
 class SensorObject:
-    """A sensor attached to any object except bodies  (connectors, constraint, spring-damper, etc).
-    
-    As a difference to other SensorBody, the connector sensor measures quantities without a local position. The sensor measures OutputVariable and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+    """A sensor attached to an object other than a body - a connector, a constraint, a joint - which measures one of the output variables of the object; a body is measured at a point, with SensorBody.
     
     Args:
         name: sensor's unique name; type: str
@@ -8072,7 +8068,7 @@ class SensorObject:
 
         writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; empty: no file is written; a relative name is placed in ``exudyn.config.outputDirectory`` if that is set; the directory is created if it does not exist; type: str
 
         outputVariableType: OutputVariableType for sensor
 
@@ -8120,9 +8116,7 @@ class VSensorBody:
         return str(dict(self))
 
 class SensorBody:
-    r"""A sensor attached to a body-object with local position :math:`{}^{b}{\mathbf{b}}`.
-    
-    As a difference to SensorObject, the body sensor needs a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+    r"""A sensor attached to a body at a local position :math:`{}^{b}{\mathbf{b}}`, which measures one of the output variables of the body at that point.
     
     Args:
         name: sensor's unique name; type: str
@@ -8133,7 +8127,7 @@ class SensorBody:
 
         writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; empty: no file is written; a relative name is placed in ``exudyn.config.outputDirectory`` if that is set; the directory is created if it does not exist; type: str
 
         outputVariableType: OutputVariableType for sensor
 
@@ -8183,9 +8177,7 @@ class VSensorSuperElement:
         return str(dict(self))
 
 class SensorSuperElement:
-    """A sensor attached to a SuperElement-object with mesh node number.
-    
-    As a difference to other ObjectSensors, the SuperElement sensor has a mesh node number at which the sensor is attached to. The sensor measures OutputVariableSuperElement and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+    """A sensor attached to a mesh node of a superelement, which measures one of the output variables of the superelement at that mesh node.
     
     Args:
         name: sensor's unique name; type: str
@@ -8196,7 +8188,7 @@ class SensorSuperElement:
 
         writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; empty: no file is written; a relative name is placed in ``exudyn.config.outputDirectory`` if that is set; the directory is created if it does not exist; type: str
 
         outputVariableType: OutputVariableType for sensor, based on the output variables available for the mesh nodes (see special section for super element output variables, e.g, in ObjectFFRFreducedOrder, sec-objectffrfreducedorder-superelementoutput)
 
@@ -8246,9 +8238,7 @@ class VSensorKinematicTree:
         return str(dict(self))
 
 class SensorKinematicTree:
-    r"""A sensor attached to a KinematicTree with local position :math:`{}^{b}{\mathbf{b}}` and link number :math:`n_l`.
-    
-    As a difference to SensorBody, the KinematicTree sensor needs a local position and a link number, which defines the sub-body at which the sensor values are evaluated. The local position is given in sub-body (link) local coordinates. The sensor measures OutputVariableKinematicTree and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+    r"""A sensor attached to a link :math:`n_l` of an ObjectKinematicTree at a local position :math:`{}^{b}{\mathbf{b}}` in the frame of the link, which measures one of the output variables of the kinematic tree at that point.
     
     Args:
         name: sensor's unique name; type: str
@@ -8261,7 +8251,7 @@ class SensorKinematicTree:
 
         writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; empty: no file is written; a relative name is placed in ``exudyn.config.outputDirectory`` if that is set; the directory is created if it does not exist; type: str
 
         outputVariableType: OutputVariableType for sensor
 
@@ -8313,9 +8303,7 @@ class VSensorMarker:
         return str(dict(self))
 
 class SensorMarker:
-    """A sensor attached to a marker.
-    
-    The sensor measures the selected marker values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Depending on markers, it can measure Coordinates (MarkerNodeCoordinate), Position and Velocity (MarkerXXXPosition), Position, Velocity, Rotation and AngularVelocityLocal (MarkerXXXRigid). Note that marker values are only available for the current configuration. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file
+    """A sensor attached to a marker, which measures what the marker provides, in the current configuration.
     
     Args:
         name: sensor's unique name; type: str
@@ -8324,7 +8312,7 @@ class SensorMarker:
 
         writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; empty: no file is written; a relative name is placed in ``exudyn.config.outputDirectory`` if that is set; the directory is created if it does not exist; type: str
 
         outputVariableType: OutputVariableType for sensor; output variables are only possible according to markertype, see general description of SensorMarker
 
@@ -8372,9 +8360,7 @@ class VSensorLoad:
         return str(dict(self))
 
 class SensorLoad:
-    """A sensor attached to a load.
-    
-    The sensor measures the load values and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+    """A sensor attached to a load, which measures the value of the load.
     
     Args:
         name: sensor's unique name; type: str
@@ -8383,7 +8369,7 @@ class SensorLoad:
 
         writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; empty: no file is written; a relative name is placed in ``exudyn.config.outputDirectory`` if that is set; the directory is created if it does not exist; type: str
 
         storeInternal: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available; type: bool
 
@@ -8440,7 +8426,7 @@ class SensorUserFunction:
 
         writeToFile: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''; type: bool
 
-        fileName: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+        fileName: directory and file name for sensor file output; empty: no file is written; a relative name is placed in ``exudyn.config.outputDirectory`` if that is set; the directory is created if it does not exist; type: str
 
         sensorUserFunction: A Python function which defines the time-dependent user function, which usually evaluates one or several sensors and computes a new sensor value, see example; type: PyFunctionVectorMbsScalarArrayIndexVectorConfiguration
 

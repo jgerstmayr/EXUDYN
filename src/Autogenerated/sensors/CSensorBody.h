@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-28  00:34:30 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,7 +30,7 @@ public: // AUTO:
     Index bodyNumber;                             //!< AUTO: body (=object) number to which sensor is attached to
     Vector3D localPosition;                       //!< AUTO: local (body-fixed) body position of sensor
     bool writeToFile;                             //!< AUTO: True: write sensor output to file; flag is ignored (interpreted as False), if fileName=''
-    std::string fileName;                         //!< AUTO: directory and file name for sensor file output; default: empty string generates sensor + sensorNumber + outputVariableType; directory will be created if it does not exist
+    std::string fileName;                         //!< AUTO: directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist
     OutputVariableType outputVariableType;        //!< AUTO: OutputVariableType for sensor
     bool storeInternal;                           //!< AUTO: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available
     //! AUTO: default constructor with parameter initialization
@@ -48,7 +48,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CSensorBody
-* @brief        A sensor attached to a body-object with local position \f$\pLocB\f$. As a difference to SensorObject, the body sensor needs a local position at which the sensor is attached to. The sensor measures OutputVariableBody and outputs values into a file, showing per line [time, sensorValue[0], sensorValue[1], ...]. Use SensorUserFunction to modify sensor results (e.g., transforming to other coordinates) and writing to file.
+* @brief        A sensor attached to a body at a local position \f$\pLocB\f$, which measures one of the output variables of the body at that point.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
