@@ -31,11 +31,21 @@ The parameters of `VLoadCoordinate`, given as `visualization`:
 (description-loadcoordinate)=
 ## Detailed description
 
-### Details
+### Load and its frame
 
-The scalar `load` is applied on a coordinate defined by a Marker of type 'Coordinate', e.g., `MarkerNodeCoordinate`.
-This can be used to create simple 1D problems, or to simply apply a translational force on a Node or even a torque
-on a rotation coordinate (but take care for its meaning).
+The scalar $f$ = `load`, or the return value of `loadUserFunction`, acts on one coordinate: the one
+the coordinate marker selects, e.g. `MarkerNodeCoordinate`. It has no frame of its own: it is a
+generalized force in the direction of the coordinate, which is a force for a displacement coordinate
+and a torque-like quantity for a rotation parameter - for Euler parameters or a slope, not a torque
+in the physical sense, so take care what the coordinate means.
+
+### Generalized forces
+
+$$
+Q_i = f
+$$
+
+for the marked coordinate $i$, and zero for all others. The load factor applies as for a force.
 
 **Userfunction**: `loadUserFunction(mbs, t, load)`
 A user function, which computes the scalar load depending on time and the object's `load` parameter.

@@ -6208,3 +6208,24 @@ and `NodePointSlope23` are parallel - both $[1,\,0,\,0]$ - which is neither a pl
 section (#2728); the pages tell the user to give them. The generic nodes get the one-sentence rule
 the maintainer agreed - their coordinates mean what the object says - with the objects named, and
 the Interface block of RG13.5.0.3 lists them as links.
+
+<a id="rg13-5-4"></a>
+### RG13.5.4 — the pages of the loads (2026-09-28, #2725)
+
+The four loads have a detailed description of two parts, **Load and its frame** and **Generalized
+forces**, and the page of the loads a general section. As the maintainer asked, the frames are not
+lost on the way to the generalized forces: a force or torque given with `bodyFixed = True` is
+transformed with the rotation matrix of the marker, $\LU{0}{\fv} = \LU{0m}{\Rot}\,\LU{m}{\fv}$,
+before the global Jacobian takes it to the coordinates, $\Qm = \LU{0}{\Jm_{pos}}\tp \LU{0}{\fv}$ -
+which is the order `CSystem::ComputeODE2SingleLoad` computes it in. `LoadMassProportional` is the
+integral $(\int_V \rho \LU{0}{\Jm_{pos}} dV)\tp \LU{0}{\bv}$ that `MarkerBodyMass` provides
+(`DisplacementMassIntegral_q`), which is why it is a distributed load and not a point force; the
+coordinate load is $Q_i = f$ on one coordinate, with the warning that its meaning is the
+coordinate's.
+
+The general section says once what every load page repeated: how a marker takes a load to the
+coordinates, global and body-fixed loads and which markers they need, loads that change in time,
+the static solver's load factor - which multiplies every load **except** one with a user function,
+whose function gets the quasi-time of the load step instead (`CSolverStatic`, #603) - and what
+`CreateForce`, `CreateTorque` and the `gravity` argument add: a `MarkerBodyPosition`, or a
+`MarkerBodyRigid` if the force is body-fixed.

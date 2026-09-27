@@ -33,10 +33,31 @@ The parameters of `VLoadTorqueVector`, given as `visualization`:
 (description-loadtorquevector)=
 ## Detailed description
 
-### Details
+### Load and its frame
 
-The torque vector acts on a body or node via the local (`bodyFixed = True`) or global coordinates of a body or at a node.
-The marker transforms the torque via the according jacobian matrix of the object (or node) to object (or node) coordinates.
+The torque $\ttau$ = `loadVector`, or the return value of `loadVectorUserFunction`, acts on the body
+or node of the marker, which must provide an orientation (`MarkerBodyRigid`, `MarkerNodeRigid`).
+With `bodyFixed = False` it is given in the global frame, $\LU{0}{\ttau} = \ttau$; with
+`bodyFixed = True` in the frame of the marker, turning with it, and transformed into the global frame
+with the rotation matrix of the marker,
+
+$$
+\LU{0}{\ttau} = \LU{0m}{\Rot}\, \LU{m}{\ttau} .
+$$
+
+### Generalized forces
+
+The global torque enters the equations through the rotation Jacobian of the marker, the derivative
+of the global angular velocity with respect to the velocity coordinates,
+$\LU{0}{\Jm_{rot}} = \partial \LU{0}{\tomega}_m / \partial \dot\qv$,
+
+$$
+\Qm = \LU{0}{\Jm_{rot}}\tp\, \LU{0}{\ttau} .
+$$
+
+For a rigid body node, $\LU{0}{\Jm_{rot}}$ contains the velocity transformation $\LU{0}{\Gm}$ of its
+rotation parameters, which is how a torque reaches Euler parameters or angles, see the page of the
+node. The load factor applies as for a force.
 
 **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
 A user function, which computes the torque vector depending on time and object parameters, which is hereafter applied to object or node.

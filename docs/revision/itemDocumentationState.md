@@ -102,10 +102,10 @@
 | MarkerBodyCable2DShape | Marker | 13 | - | - | 0 of 5 | 0 | - | 13 | 0 |
 | MarkerBodyCable2DCoordinates | Marker | 14 | - | - | 0 of 3 | 0 | - | 6 | 1 |
 | MarkerBodyBeamShape | Marker | 18 | - | - | 0 of 3 | 0 | - | 2 | 0 |
-| LoadForceVector | Load | 9 | 43, 1 | - | 0 of 6 | 0 | - | 109 | 2 |
-| LoadTorqueVector | Load | 9 | 42, 1 | - | 0 of 6 | 0 | - | 51 | 2 |
-| LoadMassProportional | Load | 21 | 30, 1 | - | 0 of 5 | 0 | yes | 23 | 3 |
-| LoadCoordinate | Load | 38 | 43, 1 | - | 0 of 5 | 0 | - | 36 | 0 |
+| LoadForceVector | Load | 9 | 111, 2 | - | 0 of 6 | 0 | - | 109 | 2 |
+| LoadTorqueVector | Load | 9 | 126, 2 | - | 0 of 6 | 0 | - | 51 | 2 |
+| LoadMassProportional | Load | 21 | 98, 2 | - | 0 of 5 | 0 | yes | 23 | 3 |
+| LoadCoordinate | Load | 38 | 90, 2 | - | 0 of 5 | 0 | - | 36 | 0 |
 | SensorNode | Sensor | 38 | - | - | 0 of 7 | 0 | - | 68 | 1 |
 | SensorObject | Sensor | 54 | - | - | 0 of 7 | 0 | - | 48 | 0 |
 | SensorBody | Sensor | 54 | - | - | 0 of 8 | 0 | - | 75 | 0 |

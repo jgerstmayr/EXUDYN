@@ -32,10 +32,24 @@ The parameters of `VLoadMassProportional`, given as `visualization`:
 (description-loadmassproportional)=
 ## Detailed description
 
-### Details
+### Load and its frame
 
-The load applies a (translational) and distributed load proportional to the distributed body's density.
-The marker of type `MarkerBodyMass` transforms the loadVector via an according jacobian matrix to object coordinates.
+The load $\bv$ = `loadVector`, or the return value of `loadVectorUserFunction`, is a force **per
+mass** - an acceleration, $[0,\,-g,\,0]$ for gravity along $-y$ - given in the global frame. It acts
+on every part of the body in proportion to its density $\rho$, and is not a point force at the
+center of mass: on a flexible body it is the distributed body load.
+
+### Generalized forces
+
+`MarkerBodyMass` provides the mass-weighted integral of the position Jacobian of the body, and the
+generalized forces are
+
+$$
+\Qm = \left(\int_V \rho\, \LU{0}{\Jm_{pos}} \, dV\right)\tp \LU{0}{\bv} .
+$$
+
+For a rigid body this is the force $m\,\LU{0}{\bv}$ at the center of mass. The load factor applies
+as for a force.
 
 **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
 A user function, which computes the mass proporitional load vector depending on time and object parameters, which is hereafter applied to object or node.

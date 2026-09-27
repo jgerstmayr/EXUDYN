@@ -52,12 +52,30 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCLoad,
     overallDescription=r'Load with (3D) force vector; attached to position-based marker.',
     classType=ClassTypeLoad,
-    detailedDescription=r"""    #### Details
+    detailedDescription=r"""    #### Load and its frame
 
-    The load vector acts on a body or node via the local (`bodyFixed = True`) or global coordinates of a body or at a node. 
-    The marker transforms the (translational) force via the according jacobian matrix of the object (or node) to object (or node) coordinates.
+    The force $\fv$ = `loadVector`, or the return value of `loadVectorUserFunction`, acts at the point
+    of the marker. With `bodyFixed = False` it is given in the global frame, $\LU{0}{\fv} = \fv$. With
+    `bodyFixed = True` it is given in the frame of the marker and turns with it - a follower force -
+    which needs a marker that provides an orientation (`MarkerBodyRigid`, `MarkerNodeRigid`); it is
+    transformed into the global frame with the rotation matrix of the marker,
 
-""",
+    $$
+    \LU{0}{\fv} = \LU{0m}{\Rot}\, \LU{m}{\fv} .
+    $$
+
+    #### Generalized forces
+
+    The global force enters the equations of the body or node through the position Jacobian of the
+    marker, $\LU{0}{\Jm_{pos}} = \partial \LU{0}{\pv}_m / \partial \qv$,
+
+    $$
+    \Qm = \LU{0}{\Jm_{pos}}\tp\, \LU{0}{\fv} ,
+    $$
+
+    multiplied by the load factor of a static computation unless a user function gives the load, see
+    the page of the loads.
+    """,
     mainParentClass=MainParentClassMainLoad,
     pythonShortName='Force',
     visuParentClass=VisuParentClassVisualizationLoad,
@@ -138,12 +156,32 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCLoad,
     overallDescription=r'Load with (3D) torque vector; attached to rigidbody-based marker.',
     classType=ClassTypeLoad,
-    detailedDescription=r"""    #### Details
+    detailedDescription=r"""    #### Load and its frame
 
-    The torque vector acts on a body or node via the local (`bodyFixed = True`) or global coordinates of a body or at a node. 
-    The marker transforms the torque via the according jacobian matrix of the object (or node) to object (or node) coordinates.
+    The torque $\ttau$ = `loadVector`, or the return value of `loadVectorUserFunction`, acts on the body
+    or node of the marker, which must provide an orientation (`MarkerBodyRigid`, `MarkerNodeRigid`).
+    With `bodyFixed = False` it is given in the global frame, $\LU{0}{\ttau} = \ttau$; with
+    `bodyFixed = True` in the frame of the marker, turning with it, and transformed into the global frame
+    with the rotation matrix of the marker,
 
-""",
+    $$
+    \LU{0}{\ttau} = \LU{0m}{\Rot}\, \LU{m}{\ttau} .
+    $$
+
+    #### Generalized forces
+
+    The global torque enters the equations through the rotation Jacobian of the marker, the derivative
+    of the global angular velocity with respect to the velocity coordinates,
+    $\LU{0}{\Jm_{rot}} = \partial \LU{0}{\tomega}_m / \partial \dot\qv$,
+
+    $$
+    \Qm = \LU{0}{\Jm_{rot}}\tp\, \LU{0}{\ttau} .
+    $$
+
+    For a rigid body node, $\LU{0}{\Jm_{rot}}$ contains the velocity transformation $\LU{0}{\Gm}$ of its
+    rotation parameters, which is how a torque reaches Euler parameters or angles, see the page of the
+    node. The load factor applies as for a force.
+    """,
     mainParentClass=MainParentClassMainLoad,
     pythonShortName='Torque',
     visuParentClass=VisuParentClassVisualizationLoad,
@@ -227,12 +265,25 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCLoad,
     overallDescription=r'Load attached to MarkerBodyMass marker, applying a 3D vector load (e.g. the vector [0,-g,0] is used to apply gravitational loading of size g in negative y-direction).',
     classType=ClassTypeLoad,
-    detailedDescription=r"""    #### Details
+    detailedDescription=r"""    #### Load and its frame
 
-    The load applies a (translational) and distributed load proportional to the distributed body's density.
-    The marker of type `MarkerBodyMass` transforms the loadVector via an according jacobian matrix to object coordinates.
+    The load $\bv$ = `loadVector`, or the return value of `loadVectorUserFunction`, is a force **per
+    mass** - an acceleration, $[0,\,-g,\,0]$ for gravity along $-y$ - given in the global frame. It acts
+    on every part of the body in proportion to its density $\rho$, and is not a point force at the
+    center of mass: on a flexible body it is the distributed body load.
 
-""",
+    #### Generalized forces
+
+    `MarkerBodyMass` provides the mass-weighted integral of the position Jacobian of the body, and the
+    generalized forces are
+
+    $$
+    \Qm = \left(\int_V \rho\, \LU{0}{\Jm_{pos}} \, dV\right)\tp \LU{0}{\bv} .
+    $$
+
+    For a rigid body this is the force $m\,\LU{0}{\bv}$ at the center of mass. The load factor applies
+    as for a force.
+    """,
     mainParentClass=MainParentClassMainLoad,
     miniExample=r"""    node = mbs.AddNode(NodePoint(referenceCoordinates = [1,0,0]))
     body = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=2))
@@ -316,13 +367,22 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCLoad,
     overallDescription=r'Load with scalar value, which is attached to a coordinate-based marker; the load can be used e.g. to apply a force to a single axis of a body, a nodal coordinate of a finite element  or a torque to the rotatory DOF of a rigid body.',
     classType=ClassTypeLoad,
-    detailedDescription=r"""    #### Details
+    detailedDescription=r"""    #### Load and its frame
 
-    The scalar `load` is applied on a coordinate defined by a Marker of type 'Coordinate', e.g., `MarkerNodeCoordinate`.
-    This can be used to create simple 1D problems, or to simply apply a translational force on a Node or even a torque
-    on a rotation coordinate (but take care for its meaning).
+    The scalar $f$ = `load`, or the return value of `loadUserFunction`, acts on one coordinate: the one
+    the coordinate marker selects, e.g. `MarkerNodeCoordinate`. It has no frame of its own: it is a
+    generalized force in the direction of the coordinate, which is a force for a displacement coordinate
+    and a torque-like quantity for a rotation parameter - for Euler parameters or a slope, not a torque
+    in the physical sense, so take care what the coordinate means.
 
-""",
+    #### Generalized forces
+
+    $$
+    Q_i = f
+    $$
+
+    for the marked coordinate $i$, and zero for all others. The load factor applies as for a force.
+    """,
     mainParentClass=MainParentClassMainLoad,
     visuParentClass=VisuParentClassVisualizationLoad,
     members=[

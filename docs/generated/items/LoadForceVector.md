@@ -33,10 +33,29 @@ The parameters of `VLoadForceVector`, given as `visualization`:
 (description-loadforcevector)=
 ## Detailed description
 
-### Details
+### Load and its frame
 
-The load vector acts on a body or node via the local (`bodyFixed = True`) or global coordinates of a body or at a node.
-The marker transforms the (translational) force via the according jacobian matrix of the object (or node) to object (or node) coordinates.
+The force $\fv$ = `loadVector`, or the return value of `loadVectorUserFunction`, acts at the point
+of the marker. With `bodyFixed = False` it is given in the global frame, $\LU{0}{\fv} = \fv$. With
+`bodyFixed = True` it is given in the frame of the marker and turns with it - a follower force -
+which needs a marker that provides an orientation (`MarkerBodyRigid`, `MarkerNodeRigid`); it is
+transformed into the global frame with the rotation matrix of the marker,
+
+$$
+\LU{0}{\fv} = \LU{0m}{\Rot}\, \LU{m}{\fv} .
+$$
+
+### Generalized forces
+
+The global force enters the equations of the body or node through the position Jacobian of the
+marker, $\LU{0}{\Jm_{pos}} = \partial \LU{0}{\pv}_m / \partial \qv$,
+
+$$
+\Qm = \LU{0}{\Jm_{pos}}\tp\, \LU{0}{\fv} ,
+$$
+
+multiplied by the load factor of a static computation unless a user function gives the load, see
+the page of the loads.
 
 **Userfunction**: `loadVectorUserFunction(mbs, t, loadVector)`
 A user function, which computes the force vector depending on time and object parameters, which is hereafter applied to object or node.
