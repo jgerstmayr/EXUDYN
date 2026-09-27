@@ -8,5 +8,6 @@
   "description": "The maintainer, 2026-09-27: 'File graphicdata test as step. It could include also metrics for positions, colors - mean/min/max - so the content is also checked.' A set of models, each under several visualization settings, reduced to a fingerprint from SC.renderer.GetGraphicsData() (#2700) and compared with a stored reference: the NUMBER of lines, spheres, circles, texts and triangles per item exactly, and the CONTENT through metrics - min, max and mean of the points per coordinate, of the colors per channel, of radii and normals - with a tolerance, because the data is float32 and must compare across compilers. Texts are compared as their strings. The fingerprint is small enough to be a readable JSON reference, so a change shows in git diff as 'ObjectRigidBody 3: 12 triangles -> 10' or 'mean z of the triangles of object 0 moved by 0.2'. No window is opened. revision2026b step RG2.3.3.",
   "dateRaised": "2026-09-27",
   "deadline": "2027-03-26",
-  "file": "python/testing"
+  "file": "python/testing",
+  "workingRemarks": "RG2.3.3.2 done 2026-09-27: the 28 most used visualization settings as variants of one representative model, stored as what each changes (python/testing/graphicsReferences/settings.json); the fingerprint holds sphere resolutions, circle segments and font sizes as well. The view0.scene settings are applied by OpenGL and are not in the graphics data."
 }

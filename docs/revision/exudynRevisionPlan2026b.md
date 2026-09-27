@@ -255,10 +255,15 @@ NOT cover, and about the testing that no suite can do.
         a small STL written by the test, and the transforms Move, Transform, MergeTriangleLists,
         InvertTriangles, AddEdgesAndSmoothenNormals). No solver. **This is the feasibility test**:
         size of the references, how stable the metrics are, how long it takes.
-      - **RG2.3.3.2** **the settings on one representative model** - not every setting on every model,
-        which grows too fast: one model carrying what the most used settings change - the basic edge
-        and face features, show/hide of nodes, markers, loads and sensors, `showNumbers`, the tilings.
-        `deformationScaleFactor` and the contour settings are **later**, they are special.
+      - **RG2.3.3.2** **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg2-3-3-2) - **the
+        settings on one representative model** - not every setting on every model, which grows too
+        fast: one model carrying what the most used settings change - the basic edge and face
+        features, show/hide of nodes, markers, loads and sensors, `showNumbers`, the tilings.
+        `deformationScaleFactor` and the contour settings are **later**, they are special. Done as 28
+        variants of one model of 21 items, each stored as what it changes; **the `view0.scene`
+        settings - faces, face edges, lines, transparency - are not in the graphics data**: OpenGL
+        applies them when it draws, so this test cannot see them, and the raytracer images of
+        RG2.3.3.4 are where they can be seen.
       - **RG2.3.3.3** **special cases as manual examples** - graphics user functions, and whatever else
         needs a model of its own; sensor traces only if they become part of the graphics data.
       - **RG2.3.3.4** **the raytracer** - `RedrawAndGetImage(True)` at a very low resolution, about
@@ -2691,6 +2696,36 @@ What depends on it: the graphics regression test takes every item through its Mi
     fingerprint, and after the description has been looked at again, the new one replaces the old
     one: one command, not a hand edit of a hash.
 
+<a id="rg13-4"></a>
+**RG13.4** *(group RG13; maintainer 2026-09-27)* **The development documents per item type** (#2721)
+    - *what the documentation of a node, object, marker, load and sensor must contain*, evaluated on
+    the text: from the tutorials and the Create functions - *"most model scripts now use Create
+    functions, so the core functionality is hidden, which means that one has to build a combined view
+    of a script and the Create functions in the background"* - and from the text the generator writes
+    around the generated information (*"This Node has/provides the following types = Position"* could
+    say which markers that allows, and could be generated). Nodes: how their coordinates are
+    interpreted, made systematic. Objects in groups: rigid bodies, flexible bodies (nonlinear finite
+    elements), connectors - which act on two or more markers, define the force from the kinematics and
+    apply it through what the markers provide. Sensors, loads, markers: a general section before the
+    first item, which every item refers to.
+
+    **Written first as temporary documents** `docs/revision/<itemType>DefinitionsDev.md`; when the
+    group is done, they become the section of the developer documentation that says what
+    documentation an item needs, what it contains and how it is structured, and are removed. They
+    are the input of RG13.2's plan.
+
+    - **RG13.4.0** **STARTED 2026-09-27** - [itemDefinitionsDev.md](itemDefinitionsDev.md): what is
+      common - how a reader meets an item (through Create functions), the frame text of the
+      generator, the types and what they should say, the order of every page.
+    - **RG13.4.1** **STARTED 2026-09-27** - [nodeDefinitionsDev.md](nodeDefinitionsDev.md).
+    - **RG13.4.2** **STARTED 2026-09-27** - [objectDefinitionsDev.md](objectDefinitionsDev.md).
+    - **RG13.4.3** **STARTED 2026-09-27** - [markerDefinitionsDev.md](markerDefinitionsDev.md).
+    - **RG13.4.4** **STARTED 2026-09-27** - [loadDefinitionsDev.md](loadDefinitionsDev.md).
+    - **RG13.4.5** **STARTED 2026-09-27** - [sensorDefinitionsDev.md](sensorDefinitionsDev.md).
+    - **RG13.4.6** the documents, once agreed, folded into `docs/dev/` and removed.
+
+    Each document ends with the questions it leaves to the maintainer.
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where
@@ -2709,7 +2744,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582 | a graphics regression suite |
-| RG2.3.3.2 | #2704 | graphics regression test: the most used settings on one representative model |
 | RG2.3.3.3 | #2704 | graphics regression test: special cases as manual examples |
 | RG2.3.3.4 | #2704 | graphics regression test: low-resolution raytracer images |
 | RG2.3.3.5 | #2704 | graphics regression test: every item through its MiniExample (needs the MiniExample group) |
@@ -2731,6 +2765,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 | RG13.2 | #2716 | the ideal documentation per kind of item, and the plan that makes it work |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
+| RG13.4 | #2721 | the development documents per item type, `docs/revision/<itemType>DefinitionsDev.md` - drafted |
 
 ### Raised by the current work, and not yet a step
 

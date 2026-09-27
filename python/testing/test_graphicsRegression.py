@@ -9,6 +9,9 @@
 #           own, so that the item index in a difference names the function: "Object 7: triangles
 #           96 -> 48" is the torus. No solver, no window.
 #
+#           The second case is the most used visualization settings on one representative model,
+#           each setting a variant of the same model, stored as what it changes in the drawing.
+#
 #           A new or changed reference: EXUDYN_RECORD_GRAPHICS_REFERENCES=1 pytest <this file>,
 #           then look at the diff of python/testing/graphicsReferences/ before committing it.
 #
@@ -140,3 +143,98 @@ def testTheComparisonSeesWhatChanged():
     assert graphicsRegression.Differences(reference, reference) == []
     assert any(line.startswith('Object 0: texts') for line in differences)
     assert any('triangles points mean[2]' in line for line in differences)      #moved by 0.5
+
+
+#the settings of the second case, each drawn on the same model; a variant of more than one setting
+#takes what the first one switches on, as the tiling of the nodes needs them drawn as solids
+settingVariants = [
+    {'nodes.show': False}, {'nodes.showNumbers': True}, {'nodes.drawNodesAsPoint': False},
+    {'nodes.drawNodesAsPoint': False, 'nodes.tiling': 8}, {'nodes.showBasis': True}, {'nodes.defaultSize': 0.2},
+    {'bodies.show': False}, {'bodies.showNumbers': True}, {'bodies.beams.axialTiling': 16},
+    {'connectors.show': False}, {'connectors.showNumbers': True}, {'connectors.showJointAxes': True},
+    {'connectors.showJointAxes': True, 'general.axesTiling': 24}, {'connectors.springNumberOfWindings': 4},
+    {'connectors.defaultSize': 0.2},
+    {'markers.show': False}, {'markers.showNumbers': True}, {'markers.drawSimplified': False},
+    {'markers.defaultSize': 0.1},
+    {'loads.show': False}, {'loads.showNumbers': True}, {'loads.drawSimplified': False},
+    {'loads.fixedLoadSize': False},
+    {'sensors.show': False}, {'sensors.showNumbers': True}, {'sensors.drawSimplified': False},
+    {'general.circleTiling': 32}, {'general.cylinderTiling': 32},
+    ]
+
+
+def RepresentativeModel():
+    """a model with an item of every type that draws: a ground, a mass point, a rigid body on a
+    revolute joint, a spring-damper, a force and a torque, two sensors, a 2D cable"""
+    from exudyn.utilities import (InertiaCuboid, SensorBody, SensorNode, NodePoint2DSlope1,
+                                  ObjectANCFCable2D, VCable2D)
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    oGround = mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0, 0, -0.5], size=4, nTiles=4)])
+    oMass = mbs.CreateMassPoint(referencePosition=[1, 1, 0], physicsMass=1, drawSize=0.1)
+    oBody = mbs.CreateRigidBody(inertia=InertiaCuboid(1000, [1, 0.2, 0.2]), referencePosition=[1, 0, 0],
+                                graphicsDataList=[graphics.Brick(size=[1, 0.2, 0.2], color=red)])
+    mbs.CreateRevoluteJoint(bodyNumbers=[oGround, oBody], position=[0.5, 0, 0], axis=[0, 0, 1])
+    mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass], localPosition0=[1, 2, 0], stiffness=100, damping=1)
+    mbs.CreateForce(bodyNumber=oBody, loadVector=[0, -10, 0], localPosition=[0.5, 0, 0])
+    mbs.CreateTorque(bodyNumber=oBody, loadVector=[0, 0, 1])
+    mbs.AddSensor(SensorBody(bodyNumber=oBody, localPosition=[0.5, 0, 0],
+                             outputVariableType=exu.OutputVariableType.Position, storeInternal=True))
+    mbs.AddSensor(SensorNode(nodeNumber=mbs.GetObject(oMass)['nodeNumber'],
+                             outputVariableType=exu.OutputVariableType.Position, storeInternal=True))
+    n0 = mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[-2, 0, 1, 0]))
+    n1 = mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[-1, 0, 1, 0]))
+    mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[n0, n1], physicsLength=1, physicsMassPerLength=1,
+                                    physicsBendingStiffness=1, physicsAxialStiffness=100,
+                                    visualization=VCable2D(drawHeight=0.05)))
+    mbs.Assemble()
+    return SC
+
+
+def SetSettings(visualizationSettings, settings):
+    for (path, value) in settings.items():
+        parts = path.split('.')
+        structure = visualizationSettings
+        for part in parts[:-1]:
+            structure = getattr(structure, part)
+        setattr(structure, parts[-1], value)
+
+
+def testTheMostUsedSettings():
+    """one model, drawn with the default settings and with each variant in turn; the view0.scene
+    settings (showFaces, showFaceEdges, ...) are applied by OpenGL when it draws and are not in the
+    graphics data, and general.sphereTiling reaches no sphere of this model"""
+    SC = RepresentativeModel()
+    default = graphicsRegression.Fingerprint(SC.renderer.GetGraphicsData())
+    defaultSettings = {path: eval('SC.visualizationSettings.' + path)
+                       for settings in settingVariants for path in settings}
+    variants = {}
+    for settings in settingVariants:
+        SetSettings(SC.visualizationSettings, settings)
+        name = ', '.join(path + '=' + str(value) for (path, value) in settings.items())
+        variants[name] = graphicsRegression.Fingerprint(SC.renderer.GetGraphicsData(), perItem=default['perItem'])
+        SetSettings(SC.visualizationSettings, {path: defaultSettings[path] for path in settings})
+
+    assert default['perItem']
+    #a setting that no longer changes the drawing is a failure as well
+    unchanged = [name for (name, fingerprint) in variants.items()
+                 if not graphicsRegression.Differences(default, fingerprint)]
+    assert unchanged == [], 'these settings change nothing any more: ' + ', '.join(unchanged)
+    differences = graphicsRegression.CheckVariantsAgainstReference('settings', default, variants)
+    assert differences == [], '\n'.join(differences)
+
+
+def testAVariantIsStoredAsWhatDiffers():
+    """the machinery of the variants: the default and the delta give the variant back, and a delta
+    holds only the kinds of element that changed"""
+    SC = RepresentativeModel()
+    default = graphicsRegression.Fingerprint(SC.renderer.GetGraphicsData())
+    for settings in [{'nodes.showNumbers': True}, {'loads.show': False}, {'general.cylinderTiling': 32}]:
+        SC = RepresentativeModel()
+        SetSettings(SC.visualizationSettings, settings)
+        variant = graphicsRegression.Fingerprint(SC.renderer.GetGraphicsData())
+        delta = graphicsRegression.VariantDelta(default, variant)
+        assert delta
+        assert graphicsRegression.Differences(graphicsRegression.ApplyDelta(default, delta), variant) == []
+        if 'nodes.showNumbers' in settings:     #the numbers add texts, nothing else
+            assert all(set(change) == {'texts'} for change in delta.values() if change and 'texts' in change)

@@ -5954,3 +5954,67 @@ and interactive simulations all are:
 
 The GUI chapter says both. What no test can do is look at a window: the columns and the size are for
 the maintainer to see.
+
+<a id="rg2-3-3-2"></a>
+### RG2.3.3.2 — the most used settings on one representative model (2026-09-27, #2704)
+
+**The model**: a ground with a checkerboard, a mass point with its spring-damper to the ground, a rigid
+body on a revolute joint with a force and a torque, two sensors, and a two-node 2D ANCF cable - 21
+items that draw, so that the fingerprint is per item. **The variants**: 28, each one setting (or a
+setting and the one it needs switched on - the node tiling needs the nodes drawn as solids, the axes
+tiling the joint axes), set on the same model and set back:
+
+| group | settings |
+|---|---|
+| nodes | `show`, `showNumbers`, `drawNodesAsPoint`, `tiling`, `showBasis`, `defaultSize` |
+| bodies | `show`, `showNumbers`, `beams.axialTiling` |
+| connectors | `show`, `showNumbers`, `showJointAxes`, `general.axesTiling`, `springNumberOfWindings`, `defaultSize` |
+| markers, loads, sensors | `show`, `showNumbers`, `drawSimplified`; `markers.defaultSize`, `loads.fixedLoadSize` |
+| general | `circleTiling`, `cylinderTiling` |
+
+**What it cannot see, measured**: the `view0.scene` settings - `showFaces`, `showFaceEdges`,
+`showLines`, `facesTransparent`, `showMeshEdges`, `drawWorldBasis`, `drawCoordinateSystem` - change
+nothing in `GetGraphicsData()`, because OpenGL applies them when it draws; `general.sphereTiling`
+reaches no sphere of this model, and `bodies.beams.crossSectionTiling` no 2D beam. None of them is in
+the case. The test also **fails if a variant stops changing the drawing**, so that a setting that
+silently does nothing any more is seen.
+
+**The size**: 28 full fingerprints would be about 400 KB. The reference stores the default and, per
+variant, **only the groups and kinds of element that differ from it** (`VariantDelta`,
+`ApplyDelta`, `CheckVariantsAgainstReference` in `graphicsRegression.py`), and every statistic is
+rounded to 8 digits - what float32 data carries, and far below the tolerance of 1e-5: 50 KB for the
+settings, 24 KB for the functions of RG2.3.3.1 (26 KB before the rounding). The whole test runs in
+0.3 s.
+
+**The fingerprint grew** by the sphere resolutions, the circle segments and the font sizes: the
+tilings of circles and spheres change the resolution a sphere or circle is drawn with, not its count,
+and the fingerprint did not hold it. The reference of RG2.3.3.1 was recorded again; its diff was the
+additions and the rounding only.
+
+<a id="rg13-4"></a>
+### RG13.4 — the development documents per item type, drafted (2026-09-27, #2721)
+
+The maintainer asked for a textual evaluation: what a reader needs to know about each kind of item,
+seen from the tutorials and the Create functions, and what the generator writes around the
+generated information. Six documents in `docs/revision/`: `itemDefinitionsDev.md` for what is common,
+and one per kind - node, object, marker, load, sensor.
+
+What was measured for them, beyond the table of RG13.1:
+
+- **the Create functions**: a static scan of `mainSystemExtensions.py` - the 22 Create functions make
+  36 different items; a static scan misses what an argument selects (the node of `CreateRigidBody`,
+  the marker of `CreateForce`), so the documents propose recording it by running them;
+- **the types**: the provided and requested types of all 97 items, from the definitions. They are
+  the compatibility rules of the model and can be said in words on each page - except one rule that
+  is only in C++: which node a node marker needs (`CSystem::CheckSystemIntegrity`);
+- **the structure the equations texts already have**: the sub-headings per kind - bodies
+  *Definition of quantities* and *Equations of motion*, connectors *Connector forces*, joints
+  *Connector constraint equations* - so that the structure to prescribe is the one most object pages
+  already follow; nodes and sensors have no sub-headings at all.
+
+The largest gaps, by kind: the finite elements (`ObjectANCFBeam`, `ObjectBeamGeometricallyExact`
+and `...2D`, `ObjectANCFThinPlate` have 4 to 15 words, `ObjectANCFCable` none); 9 of 16 nodes and 10
+of 18 markers without text beyond the class description (`MarkerBodyRigid`, used in 127 scripts,
+among them); sensors, whose class descriptions repeat the same three sentences eight times. Content
+errors met on the way are listed in the documents and not fixed (e.g. `NodePointSlope1` gives a 3D
+slope vector with two components).
