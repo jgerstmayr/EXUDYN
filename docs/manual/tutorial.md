@@ -205,7 +205,7 @@ As the simulation is still very fast, we will not see the motion of our node. Us
 Finally, we start the solver, by telling which system to be solved, solver type and the simulation settings:
 
 ```python
-  exu.SolveDynamic(mbs, simulationSettings)
+  mbs.SolveDynamic(simulationSettings)
 ```
 
 After simulation, our renderer needs to be stopped (otherwise it will stop unsafely as soon as the Python kernel is stopped or restarted).

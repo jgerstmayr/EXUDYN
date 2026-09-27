@@ -22,7 +22,7 @@ It is important that the Exudyn module is basically a state machine, where you c
 Whenever a system container is created with `SC = exu.SystemContainer()`, the structure `SC` becomes a variable in the Python interpreter, but it is managed inside the C++ code and it can be modified via the Python interface.
 Usually, the system container will hold at least one system, usually called `mbs`.
 Commands such as `mbs.AddNode(...)` add objects to the system `mbs`.
-The system will be prepared for simulation by `mbs.Assemble()` and can be solved (e.g., using `exu.SolveDynamic(...)`) and evaluated hereafter using the results files.
+The system will be prepared for simulation by `mbs.Assemble()` and can be solved (e.g., using `mbs.SolveDynamic(...)`) and evaluated hereafter using the results files.
 Using `mbs.Reset()` will clear the system and allows to set up a new system. Items can be modified (`ModifyObject(...)`) after first initialization, even during simulation.
 
 (sec-overview-basics-simulationsettings)=

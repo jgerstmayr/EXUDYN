@@ -80,7 +80,7 @@ The basic things to know are:
   ...
   #after computation, switch to raytracing
   SC.visualizationSettings.openGL.multiSampling = 1
-  SC.visualizationSettings.openGL.imageSizeFactor = 3 #reduce resolution for first tests!
+  SC.visualizationSettings.raytracer.imageSizeFactor = 3 #reduce resolution for first tests!
   SC.visualizationSettings.openGL.light1.enable = False
   SC.visualizationSettings.raytracer.numberOfThreads = 16 #adjust to your n-threads
   SC.visualizationSettings.view0.camera.useRaytracer = True
@@ -310,7 +310,7 @@ To show the interoperability with julia, test the following example (similar to 
   simulationSettings.timeIntegration.verboseMode=1 #provide some output
   simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/demo1.txt'
 
-  exu.SolveDynamic(mbs, simulationSettings)
+  mbs.SolveDynamic(simulationSettings)
   print('results can be found in local directory: solution/demo1.txt')
   """
 ```
@@ -365,7 +365,7 @@ For the full range of possibilities, see [github.com/JuliaPy/PyCall.jl](https://
 ## The C++ core
 
 The computation happens in C++: `mbs.AddObject(...)` creates an object on the C++ side from a
-validated dictionary, `exu.SolveDynamic(...)` runs a C++ solver, and Python holds the model and
+validated dictionary, `mbs.SolveDynamic(...)` runs a C++ solver, and Python holds the model and
 reads the results. Nothing of that needs to be known to use Exudyn - but two questions come up
 often enough to say where they are answered, both in the
 [developer documentation](../dev/README.md), which is part of this documentation:

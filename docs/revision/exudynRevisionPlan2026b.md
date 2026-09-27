@@ -786,8 +786,10 @@ Open in the tracker for this group: **#2423** (every C++ user error inspects the
 find its file and line, on every raise).
 
 <a id="rg3-21"></a>
-**RG3.21** *(group RG3; maintainer 2026-09-24, clarified on their request 2026-09-27)* **The pages that
-    still describe the state before a step that is done** (#2673).
+**RG3.21** *(group RG3; maintainer 2026-09-24, clarified on their request 2026-09-27)* **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg3-21) — **The pages that
+    still describe the state before a step that is done** (#2673). The list was made by measurement -
+    496 identifiers, 129 settings paths, 11 deprecated call forms - and everything it found was fixed in
+    one commit; the two scripts are the cheap way to ask again.
 
     **The reason**: six weeks of revision2026 and revision2026b changed behaviour that `docs/manual/`
     pages describe, and a page is corrected only when somebody walks past it - so some of them still
@@ -2325,7 +2327,7 @@ package).
     `resultsMonitor` section like the rest, with `--always-on-top` on the command line.
 
 <a id="rg12-23"></a>
-**RG12.23** *(group RG12; maintainer 2026-09-27)* **The plot windows cannot be stored while the renderer
+**RG12.23** *(group RG12; maintainer 2026-09-27)* **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg12-23) — **The plot windows cannot be stored while the renderer
     is still open** (#2698). RG12.12 places a plot window where the one of the same sequence number was
     left, and stores it when it closes - but the maintainer is pointing at the *moment*: a user arranges
     several windows and wants to store them together, and the settings dialog, which is where storing
@@ -2360,7 +2362,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.3 | #2582 | a graphics regression suite |
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
-| RG3.21 | #2673 | the pages that still describe the state before a step that is done |
 | RG3.22 | #2659 | the simulation settings section mentions `python -m exudyn dialogs sim` |
 | RG3.24 | #2681 | the generator API still says "Latex" where it writes Markdown |
 | RG3.25 | #2683 | a tab instead of a backslash puts "exttt{...}" on three pages of the Symbolic manual |
@@ -2378,7 +2379,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG3.26 | #2697 | index.md and pdfIndex.md are two tables of contents that must agree |
-| RG12.23 | #2698 | the plot windows cannot be stored while the renderer is still open |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 
 ### Raised by the current work, and not yet a step

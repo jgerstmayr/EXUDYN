@@ -118,7 +118,8 @@ batch script, a machine reached over SSH — and it is how the monitor itself is
 (`python/TestModels/resultsMonitorTest.py`).
 
 The same happens automatically when window opening is suppressed
-(`EXUDYN_SUPPRESS_UI_WINDOW_OPEN`, `exudyn.config.suppressPlots`): the monitor draws once and
+(`EXUDYN_SUPPRESS_UI_WINDOW_OPEN`, `exudyn.special.userInterface.suppressPlots`): the monitor
+draws once and
 returns rather than waiting for a human who is not there.
 
 ## Every option

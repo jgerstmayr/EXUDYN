@@ -493,6 +493,32 @@ not touched it since. `view*.window.storeRenderWindowGeometry` writes where the 
 these settings when it closes, and `SC.renderer.GetState()['currentWindowPosition']` is where it is
 while it is open.
 
+#### The plot windows of PlotSensor
+
+A plot window is remembered by its **sequence**, the order `PlotSensor` made it in, because plot
+windows have no title of their own: the first one of a run is stored as `'PlotSensor 1'`, the second
+as `'PlotSensor 2'`, and `PlotSensor(..., closeAll=True)` starts that order over. They are stored in
+the same `dialogs` section, with the same rules - the size comes back always, the position only if the
+window would still be reachable - so the next run opens the plots where they were arranged.
+
+Storing them is asked for, once the windows are where they should be:
+
+```python
+from exudyn.plot import StorePlotWindowGeometry
+
+#after arranging the plot windows on the screen:
+StorePlotWindowGeometry()          #returns how many windows it stored
+```
+
+This is the call to use, because the plots are usually made after `SC.renderer.Stop()`, when the
+settings dialog and its **store positions** button are gone. `PlotSensorDefaults().storeWindowPositions
+= True` in addition stores each window when it closes, one window at a time, which asks nothing but
+also keeps whatever a window happened to be when it was closed.
+
+A plot window is only placed by a backend that has one: with matplotlib on `Agg` - which
+`EXUDYN_SUPPRESS_UI_WINDOW_OPEN` selects - there is no window, nothing is placed and nothing is
+stored.
+
 **For this run only**, a script can write into `exudyn.special.overrideSettings` instead of the file:
 
 ```python

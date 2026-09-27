@@ -213,5 +213,5 @@ The faster versions are available for all release versions, but only for some `.
 - use `simulationSettings.timeIntegration.verboseMode = 1`; larger values create lots of output which drastically slows down
 - use `simulationSettings.timeIntegration.verboseModeFile = 0`, otherwise output written to file
 - adjust `simulationSettings.solutionSettings.sensorsWritePeriod` to avoid time spent on writing sensor files
-- use `simulationSettings.timeIntegration.writeSolutionToFile = False`, otherwise much output may be written to file;
+- use `simulationSettings.solutionSettings.writeSolutionToFile = False`, otherwise much output may be written to file;
 - if solution file is needed, adjust `simulationSettings.solutionSettings.solutionWritePeriod` to larger values and also adjust `simulationSettings.solutionSettings.outputPrecision`, e.g., to 6, in order to avoid larger files; also adjust `simulationSettings.solutionSettings.exportVelocities = False` and `simulationSettings.solutionSettings.exportAccelerations = False` to avoid large output files

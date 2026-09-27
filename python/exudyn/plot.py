@@ -23,9 +23,9 @@ import copy
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
-    'listMarkerStyles', 'listMarkerStylesFilled', 'componentNorm', 'ParseOutputFileHeader',
-    'PlotSensorDefaults', 'PlotSensor', 'PlotFFT', 'FileStripSpaces', 'DataArrayFromSensorList',
-    'LoadImage', 'PlotImage',
+    'StorePlotWindowGeometry', 'listMarkerStyles', 'listMarkerStylesFilled', 'componentNorm',
+    'ParseOutputFileHeader', 'PlotSensorDefaults', 'PlotSensor', 'PlotFFT', 'FileStripSpaces',
+    'DataArrayFromSensorList', 'LoadImage', 'PlotImage',
     ]
 
 #++++++++++++++++++++++++++++++++
@@ -64,26 +64,103 @@ __plotSensorDefaults.storeWindowPositions=False
 #the sequence number of the next plot window; PlotSensor(..., closeAll=True) starts over
 __plotWindowCount = [0]
 
+#THE PLOT WINDOWS THAT ARE OPEN, in the order PlotSensor made them (revision2026b step RG12.23,
+##2698): [(sequenceNumber, figure)]. It is cleared by PlotSensor(..., closeAll=True), which is what a
+#script says when it starts over, and a figure that has been closed is dropped the next time the list
+#is used - which is how StorePlotWindowGeometry knows which windows still exist.
+#
+#WHY A LIST IS NEEDED AT ALL, in the maintainer's words: "the sensor windows are opened at a point
+#when the renderer is usually already stopped", so the settings dialog - which is where storing
+#happens for everything else - is gone by then. A user arranges the windows and then wants to store
+#them together, and that needs to be possible while they are open.
+__plotWindowFigures = []
+
 
 def __PlotWindowName(number):
-    """the name the position of the n-th plot window is stored under"""
+    """the name the geometry of the n-th plot window is stored under"""
     return 'PlotSensor ' + str(number)
+
+
+def __PlotWindowOf(figure):
+    """the backend window of a figure, or None if there is none or it is already gone"""
+    try:
+        return getattr(figure.canvas.manager, 'window', None)
+    except Exception:                                       # noqa: BLE001
+        return None
+
+
+def __StorePlotWindow(figure, name):
+    """store where one plot window is; True if it was stored"""
+    from exudyn.misc import overrideSettings                                 # noqa: PLC0415
+    from exudyn.misc.GUI import StoreGeometryString                          # noqa: PLC0415
+
+    window = __PlotWindowOf(figure)
+    if window is None:
+        return False
+    if hasattr(window, 'geometry'):          #'WIDTHxHEIGHT+X+Y', as a tkinter dialog gives it
+        return StoreGeometryString(window.geometry(), name)
+    if hasattr(window, 'x'):                 #Qt
+        overrideSettings.StoreDialogGeometry(name, [window.width(), window.height()],
+                                             [window.x(), window.y()])
+        return True
+    return False
+
+
+def StorePlotWindowGeometry():
+    """Store where the plot windows are now, so that the next run opens them there.
+
+    Returns:
+        the number of windows that were stored
+
+    Note:
+        This is the answer to *"I have arranged my plots, keep them like this"*, and it can be called
+        while the windows are open - which the automatic storing cannot, because it happens when a
+        window closes, one window at a time, and only if
+        `PlotSensorDefaults().storeWindowPositions` is on (revision2026b step RG12.23).
+
+        The windows are stored **by their sequence**, the order `PlotSensor` made them, because plot
+        windows have no unique title; `PlotSensor(..., closeAll=True)` starts that order over. A
+        window that has been closed since is skipped and forgotten. The geometry goes into the
+        `dialogs` section of `~/.exudyn/config.json`, the same place and the same rules as a dialog:
+        the size comes back always, the position only if the window would still be reachable.
+
+    Example:
+        #after arranging the plot windows on the screen:
+        from exudyn.plot import StorePlotWindowGeometry
+        StorePlotWindowGeometry()
+    """
+    stored = 0
+    alive = []
+    for (number, figure) in __plotWindowFigures:
+        if __PlotWindowOf(figure) is None:
+            continue                                        #closed: forget it
+        alive.append((number, figure))
+        try:
+            if __StorePlotWindow(figure, __PlotWindowName(number)):
+                stored += 1
+        except Exception as error:                           # noqa: BLE001
+            exudyn.Print('WARNING: could not store the position of plot window ' + str(number)
+                         + ': ' + str(error))
+    __plotWindowFigures[:] = alive
+    return stored
 
 
 def __PlacePlotWindow(fig):
     """put a new plot window where the window of the same sequence number was left
 
-    Only the position, and only if it would still be reachable: the rule of revision2026b step
-    RG6.2.11, and the same ~/.exudyn/config.json section the dialogs use. Backend-dependent, so
-    anything it cannot do it leaves alone.
+    The SIZE always and the POSITION only if it would still be reachable - the rule of revision2026b
+    step RG6.2.11, and the same ~/.exudyn/config.json section the dialogs use. The size is the window's
+    own, in pixels, and leaves `sizeInches` as what a figure gets when nothing is stored.
+    Backend-dependent, so anything it cannot do it leaves alone.
     """
     __plotWindowCount[0] += 1
+    number = __plotWindowCount[0]
     try:
-        from exudyn.misc import overrideSettings
-        from exudyn.misc.GUI import StoreGeometryString
+        from exudyn.misc import overrideSettings                             # noqa: PLC0415
 
-        name = __PlotWindowName(__plotWindowCount[0])
-        window = getattr(fig.canvas.manager, 'window', None)
+        __plotWindowFigures.append((number, fig))
+        name = __PlotWindowName(number)
+        window = __PlotWindowOf(fig)
         if window is None:
             return                              #a backend without a window: nothing to place
 
@@ -92,22 +169,29 @@ def __PlacePlotWindow(fig):
             screen = None
             if hasattr(window, 'winfo_screenwidth'):        #tkinter
                 screen = [0, 0, window.winfo_screenwidth(), window.winfo_screenheight()]
-            if screen is None or overrideSettings.PositionIsReachable(position, screen):
-                if hasattr(window, 'wm_geometry'):          #tkinter, and matplotlib TkAgg
-                    window.wm_geometry('+' + str(position[0]) + '+' + str(position[1]))
-                elif hasattr(window, 'move'):               #Qt
+            if screen is not None and not overrideSettings.PositionIsReachable(position, screen):
+                position = None                             #the screen it was on is gone
+        geometry = ''
+        if size is not None:
+            geometry += str(size[0]) + 'x' + str(size[1])
+        if position is not None:
+            geometry += '+' + str(position[0]) + '+' + str(position[1])
+        if geometry != '':
+            if hasattr(window, 'wm_geometry'):              #tkinter, and matplotlib TkAgg
+                window.wm_geometry(geometry)
+            else:                                           #Qt
+                if size is not None and hasattr(window, 'resize'):
+                    window.resize(int(size[0]), int(size[1]))
+                if position is not None and hasattr(window, 'move'):
                     window.move(int(position[0]), int(position[1]))
 
         if not __plotSensorDefaults.storeWindowPositions:
             return
-        #WHERE IT ENDS UP, when it closes: the geometry cannot be read afterwards
+        #AND WHERE IT ENDS UP, when it closes: the geometry cannot be read afterwards. This is the
+        #automatic half; StorePlotWindowGeometry() is the one a user asks for
         def Store(event=None):
             try:
-                if hasattr(window, 'geometry'):             #'WIDTHxHEIGHT+X+Y', as a dialog gives it
-                    StoreGeometryString(window.geometry(), name)
-                elif hasattr(window, 'x'):                  #Qt
-                    overrideSettings.StoreDialogGeometry(name, [window.width(), window.height()],
-                                                         [window.x(), window.y()])
+                __StorePlotWindow(fig, name)
             except Exception as error:                      # noqa: BLE001
                 exudyn.Print('WARNING: PlotSensor could not store the window position: ' + str(error))
 
@@ -422,7 +506,10 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel=None, yLabel=None, la
     
     if closeAll:
         plt.close('all')
-        __plotWindowCount[0] = 0    #the windows are remembered by their sequence, which starts over
+        #the windows are remembered by their sequence, which starts over - and so does the list of
+        #the ones that are open (revision2026b step RG12.23)
+        __plotWindowCount[0] = 0
+        __plotWindowFigures.clear()
 
     logScaleX = False
     if 'logScaleX' in kwargs:

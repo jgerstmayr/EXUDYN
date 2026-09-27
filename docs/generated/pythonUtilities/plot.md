@@ -12,23 +12,58 @@ Plot utility functions based on matplotlib, including plotting of sensors and FF
 (sec-plot---plotwindowname)=
 ## Function: __PlotWindowName
 
-[`__PlotWindowName(number)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L68)
+[`__PlotWindowName(number)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L79)
 
-- **function description**: the name the position of the n-th plot window is stored under
+- **function description**: the name the geometry of the n-th plot window is stored under
+
+
+(sec-plot---plotwindowof)=
+## Function: __PlotWindowOf
+
+[`__PlotWindowOf(figure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L84)
+
+- **function description**: the backend window of a figure, or None if there is none or it is already gone
+
+
+(sec-plot---storeplotwindow)=
+## Function: __StorePlotWindow
+
+[`__StorePlotWindow(figure, name)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L92)
+
+- **function description**: store where one plot window is; True if it was stored
+
+
+(sec-plot-storeplotwindowgeometry)=
+## Function: StorePlotWindowGeometry
+
+[`StorePlotWindowGeometry()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L109)
+
+- **function description**: Store where the plot windows are now, so that the next run opens them there.
+- **output**: the number of windows that were stored
+- **notes**: This is the answer to *"I have arranged my plots, keep them like this"*, and it can be called while the windows are open - which the automatic storing cannot, because it happens when a window closes, one window at a time, and only if `PlotSensorDefaults().storeWindowPositions` is on (revision2026b step RG12.23). The windows are stored **by their sequence**, the order `PlotSensor` made them, because plot windows have no unique title; `PlotSensor(..., closeAll=True)` starts that order over. A window that has been closed since is skipped and forgotten. The geometry goes into the `dialogs` section of `~/.exudyn/config.json`, the same place and the same rules as a dialog: the size comes back always, the position only if the window would still be reachable.
+
+*example*:
+
+```python
+  #after arranging the plot windows on the screen:
+  from exudyn.plot import StorePlotWindowGeometry
+  StorePlotWindowGeometry()
+```
+
 
 
 (sec-plot---placeplotwindow)=
 ## Function: __PlacePlotWindow
 
-[`__PlacePlotWindow(fig)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L73)
+[`__PlacePlotWindow(fig)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L148)
 
-- **function description**: put a new plot window where the window of the same sequence number was left Only the position, and only if it would still be reachable: the rule of revision2026b step RG6.2.11, and the same ~/.exudyn/config.json section the dialogs use. Backend-dependent, so anything it cannot do it leaves alone.
+- **function description**: put a new plot window where the window of the same sequence number was left The SIZE always and the POSITION only if it would still be reachable - the rule of revision2026b step RG6.2.11, and the same ~/.exudyn/config.json section the dialogs use. The size is the window's own, in pixels, and leaves `sizeInches` as what a figure gets when nothing is stored. Backend-dependent, so anything it cannot do it leaves alone.
 
 
 (sec-plot-parseoutputfileheader)=
 ## Function: ParseOutputFileHeader
 
-[`ParseOutputFileHeader(lines)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L147)
+[`ParseOutputFileHeader(lines)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L231)
 
 - **function description**: parse header of output file (solution file, sensor file, genetic optimization output, ...) given in file.readlines() format
 - **output**: return dictionary with 'type'=['sensor','solution','geneticOptimization','parameterVariation'], 'variableType' containing variable types, 'variableRanges' containing ranges for parameter variation
@@ -37,7 +72,7 @@ Plot utility functions based on matplotlib, including plotting of sensors and FF
 (sec-plot-plotsensordefaults)=
 ## Function: PlotSensorDefaults
 
-[`PlotSensorDefaults()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L238)
+[`PlotSensorDefaults()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L322)
 
 - **function description**: returns structure with default values for PlotSensor which can be modified once to be set for all later calls of PlotSensor
 
@@ -63,7 +98,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-plot-plotsensor)=
 ## Function: PlotSensor
 
-[`PlotSensor(mbs, sensorNumbers = [], components = 0, xLabel = None, yLabel = None, labels = [], colorCodeOffset = 0, newFigure = True, closeAll = False, componentsX = [], title = '', figureName = '', fontSize = None, colors = None, lineStyles = None, lineWidths = None, markerStyles = None, markerSizes = None, markerDensity = None, rangeX = [], rangeY = [], majorTicksX = None, majorTicksY = None, offsets = [], factors = [], subPlot = [], sizeInches = None, fileName = '', useXYZcomponents = True, legendArgs = None, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L257)
+[`PlotSensor(mbs, sensorNumbers = [], components = 0, xLabel = None, yLabel = None, labels = [], colorCodeOffset = 0, newFigure = True, closeAll = False, componentsX = [], title = '', figureName = '', fontSize = None, colors = None, lineStyles = None, lineWidths = None, markerStyles = None, markerSizes = None, markerDensity = None, rangeX = [], rangeY = [], majorTicksX = None, majorTicksY = None, offsets = [], factors = [], subPlot = [], sizeInches = None, fileName = '', useXYZcomponents = True, legendArgs = None, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L341)
 
 - **function description**: Helper function for direct and easy visualization of sensor outputs, without need for loading text files, etc.; PlotSensor can be used to simply plot, e.g., the measured x-Position over time in a figure. PlotSensor provides an interface to matplotlib (which needs to be installed). Default values of many function arguments can be changed using the exudyn.plot function PlotSensorDefaults(), see there for usage.
 - **input**:
@@ -142,7 +177,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-plot-plotfft)=
 ## Function: PlotFFT
 
-[`PlotFFT(frequency, data, xLabel = 'frequency', yLabel = 'magnitude', label = '', freqStart = 0, freqEnd = -1, logScaleX = True, logScaleY = True, majorGrid = True, minorGrid = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L795)
+[`PlotFFT(frequency, data, xLabel = 'frequency', yLabel = 'magnitude', label = '', freqStart = 0, freqEnd = -1, logScaleX = True, logScaleY = True, majorGrid = True, minorGrid = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L882)
 
 - **function description**: plot fft spectrum of signal
 - **input**:
@@ -166,7 +201,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`nMassOscill
 (sec-plot-filestripspaces)=
 ## Function: FileStripSpaces
 
-[`FileStripSpaces(filename, outputFilename, fileCommentChar = '', removeDoubleChars = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L856)
+[`FileStripSpaces(filename, outputFilename, fileCommentChar = '', removeDoubleChars = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L943)
 
 - **function description**: strip spaces at beginning / end of lines; this may be sometimes necessary when reading solutions from files that are space-separated
 - **input**:
@@ -180,7 +215,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`nMassOscill
 (sec-plot-dataarrayfromsensorlist)=
 ## Function: DataArrayFromSensorList
 
-[`DataArrayFromSensorList(mbs, sensorNumbers, positionList = [], time = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L887)
+[`DataArrayFromSensorList(mbs, sensorNumbers, positionList = [], time = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L974)
 
 - **function description**: helper function to create data array from outputs defined by sensorNumbers list [+optional positionList which must have, e.g., local arc-length of beam according to sensor numbers]; if time=='', current sensor values will be used; if time!=[], evaluation will be based on loading values from file or sensor internal data and evaluate at that time
 - **input**:
@@ -197,7 +232,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-plot-loadimage)=
 ## Function: LoadImage
 
-[`LoadImage(fileName, trianglesAsLines = True, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L922)
+[`LoadImage(fileName, trianglesAsLines = True, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1009)
 
 - **function description**: import image text file as exported from renderer.RedrawAndSaveImage() with exportImages.saveImageFormat='TXT'; triangles are converted to lines
 - **input**: fileName includes directory
@@ -210,7 +245,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveCrai
 (sec-plot-plotimage)=
 ## Function: PlotImage
 
-[`PlotImage(imageData, HT = np.eye(4), axesEqual = True, plot3D = False, lineWidths = 1, lineStyles = '-', triangleEdgeColors = 'black', triangleEdgeWidths = 0.5, removeAxes = True, orthogonalProjection = True, title = '', figureName = '', fileName = '', fontSize = 16, closeAll = False, azim = 0., elev = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L983)
+[`PlotImage(imageData, HT = np.eye(4), axesEqual = True, plot3D = False, lineWidths = 1, lineStyles = '-', triangleEdgeColors = 'black', triangleEdgeWidths = 0.5, removeAxes = True, orthogonalProjection = True, title = '', figureName = '', fileName = '', fontSize = 16, closeAll = False, azim = 0., elev = 0.)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1070)
 
 - **function description**: plot 2D or 3D vector image data as provided by LoadImage(...) using matplotlib
 - **input**:

@@ -2,12 +2,16 @@
   "number": 2673,
   "title": "Pages that still describe the state before a step that is already done",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "The maintainer, 2026-09-24: the documentation of the steps that are done, where a page still describes the state before one of them. Six weeks of revision2026 and revision2026b changed behaviour that hand-written pages describe - the renderer keys, the settings dialogs, the output directory, the star imports, the command line, the results monitor - and a page is only corrected when someone walks past it. The first job of the step is to LIST them: what a page claims against what the code does, per chapter, because nothing can be planned before that list exists. [2026-09-27, Claude-JG]: Asked for by the maintainer on 2026-09-27: 'I don't understand any more what was the reason, and what is the content (which exact audit - there are a couple of open tasks).' THE REASON: they asked on 2026-09-24 for the hand-written documentation to be checked against what the code now does. Six weeks of revision2026 and revision2026b changed behaviour that docs/manual/ pages describe, and a page is corrected only when somebody walks past it, so some pages still describe how Exudyn worked in August. THE CONTENT, which is one audit and not several: docs/manual/ only - not docs/generated/, which is rewritten from definitions/ and cannot be stale, and not docs/dev/ or docs/howTo/, which describe the workflow rather than the behaviour. The subjects are the ones the closed issues name: the renderer keys and the dialogs, the output directory, the star imports and exudyn.config, the command line, the results monitor, the override settings, the deprecated names, and the PlotSensor defaults. THE METHOD, and the reason it is cheap: docs/manual/revisions.md is the list of what changed for a user, and every closed issue of the two revisions carries its release note - so this is a comparison of two lists against the pages, not a re-reading of the manual. THE FIRST DELIVERABLE is the LIST: per page, what it claims against what the code does. Nothing else can be planned before it exists, and it decides whether the rest is one commit or five. revision2026b step RG3.21.",
   "dateRaised": "2026-09-26",
   "deadline": "2027-03-25",
-  "file": "docs/manual"
+  "dateResolved": "2026-09-27 07:39",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual",
+  "releaseNotes": "The manual no longer teaches the deprecated module-level solver calls: solver.md, the tutorial, the FAQ and the introduction say mbs.SolveDynamic(...), mbs.SolveStatic(...), mbs.ComputeLinearizedSystem(...) and mbs.ComputeODE2Eigenvalues(...), which is what the examples use and what does not warn. Three wrong identifiers were corrected (among them openGL.raytracer.imageSizeFactor), and the settings dialog page now describes all four of its buttons and what each one stores. Measured: of 496 identifiers named in the manual 3 were wrong, and of 129 settings paths none was deprecated.",
+  "resolvedInVersion": "1.12.108"
 }

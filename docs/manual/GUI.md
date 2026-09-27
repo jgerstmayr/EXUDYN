@@ -109,10 +109,23 @@ script, with a button that copies it:
 ```
 
 A setting whose value differs from the Exudyn **default** is shown in colour, from the moment the
-dialog opens, so that a model's own settings can be told from the rest. The two buttons beside the
-copy button open a window that lists those differences as the code that makes them, and copies all
-of it at once: **diff to default** for everything that differs from the defaults, and
-**this session** for what was changed since the dialog was opened.
+dialog opens, so that a model's own settings can be told from the rest. Four buttons act on that:
+
+- **diff to default** and **changes since start** open a window listing the differences as the code
+  that makes them, and copy all of it at once — everything that differs from the defaults, and
+  everything changed since the dialog was opened. A setting that `~/.exudyn/config.json` already
+  stores is listed with the others and then named again under a comment saying so, because a stored
+  setting *is* a difference to the default.
+- **store settings** writes the settings that differ from the defaults into that file, so that every
+  run starts with them — including the size and position of the render window, which are ordinary
+  settings (`view*.window.renderWindowSize` and `renderWindowPosition`).
+- **store positions** writes the size and position of *this dialog*, so that it opens where you left
+  it.
+
+Both storing buttons show exactly what they will write, and ask, before anything is written; see
+[](#sec-overridesettings). A geometry that **is** stored is used whenever a dialog opens, whatever
+`visualizationSettings.dialogs.storeDialogPositions` says — that flag decides whether a dialog stores
+*itself* when it closes.
 
 To find a setting without knowing which folder it sits in, use the **find** field at the top or
 press CTRL+F: it searches the names first and the descriptions second, RETURN or F3 steps to the

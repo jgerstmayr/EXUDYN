@@ -5217,3 +5217,85 @@ is not an Exudyn header is refused rather than waited for - that last one was al
 guarded.
 
 **Gates**: 11/11 checks, the wheel, the full suite, 509 pytest, the strict HTML build.
+
+<a id="rg3-21"></a>
+### RG3.21 — the pages that still described August (2026-09-27, #2673)
+
+**The list was made by measurement, not by reading**, which is what made the step cheap. Two scripts:
+one collects every `exudyn.x`, `exu.x`, `mbs.x` and `SC.x` identifier out of the fenced code and the
+backtick spans of `docs/manual/`, imports the package and asks whether the name exists; the other
+collects every settings path and assigns it under `warnings.catch_warnings(record=True)`, so a
+deprecated one says so itself instead of being compared against a list somebody has to maintain.
+
+**What the measurement said:**
+
+| what was checked | how many | wrong |
+|---|---|---|
+| identifiers named in the manual | 496 | **3** |
+| settings paths assigned under captured warnings | 129 | **0** |
+| deprecated module-level call forms | 11 | **11** |
+
+**The three wrong names**: `raytracer.imageSizeFactor` (the setting is under `openGL.raytracer`),
+and two that were spelled as the module attribute of a `SystemContainer` method. **Zero deprecated
+settings paths** is the interesting number: the manual was suspected of teaching settings that have
+moved, and it teaches none - the measurement replaced a suspicion with a fact.
+
+**The eleven were all the same thing**: `exu.SolveDynamic(mbs, ...)`, `exu.SolveStatic`,
+`exu.ComputeLinearizedSystem`, `exu.ComputeODE2Eigenvalues` - the module-level forms that warn since
+revision2026, written in `solver.md` as *the* list of the solvers, in a FAQ snippet **and in the
+traceback printed under it**, and in the tutorial. A reader who copies the tutorial gets a warning
+for something the tutorial told them to write. They are `mbs.` methods now, everywhere in the manual.
+
+**Two hits are left in the list on purpose**: `exudyn.artificialIntelligence`, whose module exists but
+does not import without the optional Gym and stable-baselines, and `mbs.Create...(...)`, which is a
+family and not a name. A measurement that reports two known false positives is more useful than one
+that hides them, so the two are recorded here rather than filtered.
+
+**The prose the scripts cannot see** was read for the subjects the step lists, and one page was
+**made stale by this week's own work**: `GUI.md` described *"the two buttons beside the copy button"*
+and the dialog has four since RG12.19 and RG12.20. It now says what all four do, and what the
+storing rules are - including that a stored geometry is used whenever a dialog opens, whatever
+`storeDialogPositions` says, which is the distinction RG12.13 had to fix in the code.
+
+Also corrected while walking the same pages: `resultsMonitor.md` (the suppress flag's name, the focus
+paragraph of RG12.22, the waiting of RG11.3.1), `performanceErrors.md`
+(`solutionSettings.writeSolutionToFile`, and a heading that promised behaviour rather than causes),
+`introductionAdvanced.md`, `introductionBasics.md`, `tutorial.md` and `gettingStartedFAQ.md`.
+
+**The step asked for the list first and the list decided the rest**: one commit, because what it found
+was small. The two scripts are the thing to keep - they are the cheap way to ask the same question
+again after the next group of steps, and the answer is a number.
+
+<a id="rg12-23"></a>
+### RG12.23 — the plot windows are stored while they are open (2026-09-27, #2698)
+
+**What was missing was a moment, not a mechanism.** RG12.12 already placed a plot window where the one
+of its sequence number was left and stored it when it closed. The maintainer pointed at when that
+happens: *"the sensor windows are opened at a point when the renderer is usually already stopped"*, so
+the settings dialog and its **store positions** button are gone, and a user who has just arranged four
+plots has nothing to press. Storing on close also stores whatever a window happened to be at the
+moment it was closed, one window at a time.
+
+**`exudyn.plot.StorePlotWindowGeometry()`** is the answer, and it returns how many windows it stored.
+It needs the list the maintainer described: `__plotWindowFigures`, `[(sequenceNumber, figure)]`,
+appended to when `PlotSensor` places a window and cleared by `PlotSensor(..., closeAll=True)` - the
+same moment the sequence counter starts over, because the two have to agree or a window is placed under
+another window's name.
+
+**A closed figure is recognised by its window being gone**, not by a flag: `figure.canvas.manager` has
+no `window` attribute once the backend window is destroyed. So the list prunes itself every time it is
+used - the store call skips such a figure and drops it - and nothing has to be unregistered.
+
+**The size is now restored as well**, which the close handler alone could not make useful: a stored
+geometry gives `WIDTHxHEIGHT+X+Y` to tkinter, or `resize`/`move` to Qt, and the position still only
+when it would be reachable on the screen you have now. `sizeInches` stays what a figure gets when
+nothing is stored.
+
+**Tested without opening a window**, which is the only way a test of this can run in the suite: the
+suite runs matplotlib on `Agg`, where a figure has **no window at all** and the whole mechanism is
+correctly inert. So the store path is exercised with a stub figure whose window answers `geometry()`,
+exactly as tkinter's does - five tests: nothing to store is not an error, two windows are stored under
+their sequence names, a closed one is skipped *and* forgotten while its neighbour is kept, storing
+twice keeps the latest, and the automatic half is off by default.
+
+**Gates**: the wheel, 11/11 checks, the full suite, pytest, the strict HTML build.

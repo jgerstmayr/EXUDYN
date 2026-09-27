@@ -89,7 +89,7 @@ is what most answers need to start from, see {ref}`sec-commandline`.
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     sims=exu.SimulationSettings()
-    exu.SolveDynamic(mbs, sims)
+    mbs.SolveDynamic(sims)
   ```
 
 - This will results in error messages similar to:
@@ -114,7 +114,7 @@ is what most answers need to start from, see {ref}`sec-commandline`.
     Traceback (most recent call last):
 
       File "C:\Users\username\AppData\Local\Temp\ipykernel_24988\3348856385.py", line 1, in <module>
-        exu.SolveDynamic(mbs, sims)
+        mbs.SolveDynamic(sims)
 
       File "C:\Users\username\.conda\envs\venvP39\lib\site-packages\exudyn\solver.py", line 255, in SolveDynamic
         raise ValueError("SolveDynamic terminated")
@@ -155,7 +155,7 @@ is what most answers need to start from, see {ref}`sec-commandline`.
         object 7, name='object7', type=JointGeneric
   ```
   - object 7 seems to be the reason, possibly there are too much (joint) constraints applied to your system, check this object.
-  - show typical REASONS and SOLUTIONS, by using `showHints=True` in `exu.SolveDynamic(...)` or `exu.SolveStatic(...)`
+  - show typical REASONS and SOLUTIONS, by using `showHints=True` in `mbs.SolveDynamic(...)` or `mbs.SolveStatic(...)`
   - You can also **highlight** object 7 by using the following code in the iPython console:
   ```python
     SC.renderer.Start()
@@ -258,7 +258,7 @@ is what most answers need to start from, see {ref}`sec-commandline`.
 
   - Position markers (and nodes) do not have information on the orientation (rotation). For that reason, there is a difference between position based and rigid-body based markers. In case of a rigid body attached to ground with a SpringDamper, you can use both, MarkerBodyPosition or MarkerBodyRigid, markers. For a prismatic joint, you will need a MarkerBodyRigid.
 
-10. I get an error in `exu.SolveDynamic(mbs, ...)` OR in `exu.SolveStatic(mbs, ...)` but no further information -- how can I solve it?
+10. I get an error in `mbs.SolveDynamic(...)` OR in `mbs.SolveStatic(...)` but no further information -- how can I solve it?
 
   - Typical **time integration errors** may look like:
   ```python

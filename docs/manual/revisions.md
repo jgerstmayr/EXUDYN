@@ -91,6 +91,13 @@ anything that runs unattended: `EXUDYN_SUPPRESS_UI_WINDOW_OPEN=1` opens no rende
 or dialog window, and `EXUDYN_OUTPUTDIRECTORY=<path>` puts the files a model writes where you want
 them.
 
+**The windows can remember where you put them.** The settings dialog has a **store settings** and a
+**store positions** button, the render window has a size and a position among its settings
+(`view0.window.renderWindowSize` and `renderWindowPosition`), and
+`exudyn.plot.StorePlotWindowGeometry()` keeps the plot windows of `PlotSensor` where they are
+arranged. Everything goes into `~/.exudyn/config.json`, after showing what will be written
+([](#sec-overridesettings)).
+
 **`exudyn.types`** answers questions about items from Python: which markers an object accepts,
 which item types exist.
 
