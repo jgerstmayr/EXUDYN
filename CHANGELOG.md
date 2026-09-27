@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 125 | 1.12.128 |
+| 1.12 | Metheney | 126 | 1.12.129 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.129** `DOCU` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` RG13: the state of the documentation and the MiniExample of every item (#2715)
+  - description: The maintainer, 2026-09-27: each item needs a full documentation and a MiniExample - more than fits into RG3, so a group of its own, RG13, and one of the most important steps before Exudyn 1.13. RG13.1 evaluates the current state: per item, what its definition in definitions/itemDefs\*.py carries (class description, the description of the equations, parameters described, output variables, a MiniExample, an image, examples and test models that use it) and what is missing. revision2026b step RG13.1.
+  - **notes:** The state of the documentation of every item is measured by tools/itemDocumentationReport.py and written down in docs/revision/itemDocumentationState.md: the parameters and output variables are described almost without exception, 29 of 97 items have no text on their equations (mostly nodes, markers and sensors), 84 show no figure, and 74 have no MiniExample.
+  - date resolved: **2026-09-27 19:08**, date raised: 2026-09-27
 - **1.12.128** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the files a run writes by default go into solution/, and scripts that write beside themselves are found (#2718)
   - description: The maintainer, 2026-09-27: examples still write into the folder of the script instead of solution/, because the default solution file name 'coordinatesSolution' has no directory. As small API changes are made anyway, this is the time: coordinatesSolutionFileName, solverInformationFileName and restartFileName default to solution/...; a script that sets such a name itself, or reads the solution file back by its old name, has to be changed consistently, and exudev scripts finds both; sensors, the resultsFile of the processing functions and exported images write wherever the script names them, so the scripts of the repository are checked for names without a directory, and the example and test suites show what still lands beside a script. revision2026b step RG12.24.
   - **notes:** The files a run writes by default are in the directory solution/: the solution file is solution/coordinatesSolution.txt, and the solver information and the restart file are there too, so a run writes nothing beside the script. A script that reads the solution file back as 'coordinatesSolution.txt' has to read 'solution/coordinatesSolution.txt'; exudev scripts finds that, and every file a script names without a directory. The documentation of the environment variables says how Spyder sets an output directory for every run.

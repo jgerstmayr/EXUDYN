@@ -5819,3 +5819,92 @@ module: the *Run code* startup line of the IPython console, and `setx` outside S
 
 Two more tests of the checker (13). **Gates**: the wheel, 12/12 checks, the full suite, the examples
 (169 of 170; the known `rendererNOGLFWexample.py`), pytest, the strict HTML build.
+
+<a id="rg2-3-3-1"></a>
+### RG2.3.3.1 — the graphics regression test runs: the machinery and every graphics function (2026-09-27, #2704)
+
+The first sub-step of the graphics test, built so that whether the approach carries is seen now.
+
+**The machinery** is `python/testing/graphicsRegression.py`: `Fingerprint(SC.renderer.GetGraphicsData())`
+reduces a scene to, per item and per kind of element, the exact **count** and **min, max and mean** of
+points, colors, radii and normals, plus the texts; `Differences(reference, current)` compares two of
+them and says what differs in one line each - *"Object 12: triangles 256 -> 128"*,
+*"Object 7: triangles points mean[2] 0.0 -> 0.5"*. The maintainer's decisions are in it: a relative
+tolerance of **1e-5** (as `|a-b| <= 1e-5 (1 + max(|a|,|b|))`, so that a mean near zero is not held to a
+relative tolerance of nothing), **per item up to 32 items and per item type above**, and the
+references in **`python/testing/graphicsReferences/`**, one JSON file per case. A missing reference,
+or every one when `EXUDYN_RECORD_GRAPHICS_REFERENCES=1` is set, is written and the test **fails once
+saying so**, so that nothing is recorded without being looked at.
+
+**The first case is every function of `exudyn.graphics`** - 32 of them, each on a ground object of its
+own and at a place of its own, so that the object index in a difference names the function; the test
+translates it back (*"Torus - Object 12: ..."*). Sphere (with and without edges), Lines, Circle, Text,
+Cuboid, BrickXYZ, Brick (and rounded), Cylinder (and hollow, half), Tube, Torus, RigidLink,
+SolidOfRevolution, Arrow, Basis, Frame, Quad, CheckerBoard, SolidExtrusion, LinkedCylinders,
+InvoluteGear, ToothedRack, BallBearingRings, and the transforms Move, Transform, MergeTriangleLists,
+InvertTriangles, AddEdgesAndSmoothenNormals, FromPointsAndTrigs and an STL written and read back.
+
+**What it measured, and what that says about the approach**:
+
+- **the reference is 26 KB for 32 items and 5,700 triangles**, and the run takes **0.7 s** with the
+  import - so a case per item family, as RG2.3.3.5 plans, stays small;
+- the counts are what the functions promise - a brick is 12 triangles, BrickXYZ with edges adds 12
+  lines, the gear is 2392 triangles - and **two recording runs in a row agree exactly**, so the data is
+  deterministic within a machine; across compilers is what the tolerance is for, and the Linux CI will
+  be the first measurement of it;
+- **32 is exactly the limit**: a 33rd function would switch the fingerprint to per item type. The test
+  asserts that it is per item and holds one item per function, so that happens loudly, and a second
+  case is the answer then.
+
+**Three things the functions do that a test has to know**: `BallBearingRings` returns a **dict** of
+three graphics, not a list; `InvertTriangles` refuses a triangle list without normals; `FromSTLfile`
+needs the optional numpy-stl, so the test uses `FromSTLfileASCII`. And a second test checks the
+comparison itself: a changed text and a moved body are each reported.
+
+<a id="rg13-1"></a>
+### RG13.1 — the state of the documentation of every item, measured (2026-09-27, #2715)
+
+`tools/itemDocumentationReport.py` reads the 97 item definitions and the 342 scripts of the repository
+and writes the table, [itemDocumentationState.md](itemDocumentationState.md): per item, the words of the
+class description and of the equations text and how many sections it has, whether the page shows a
+figure, which parameters and output variables lack a description, whether there is a MiniExample, and
+in how many examples and test models it is used - the same search as the links on its page. It can be
+run again at any time, which is how the progress of RG13 will be measured.
+
+**The summary, by kind of item**:
+
+| kind | items | no equations text | no figure | no MiniExample |
+|---|---|---|---|---|
+| Node | 16 | 9 | 16 | 16 |
+| Object (Body) | 7 | 0 | 6 | 2 |
+| Object (SuperElement) | 4 | 0 | 3 | 2 |
+| Object (FiniteElement) | 7 | 1 | 7 | 4 |
+| Object (Connector) | 19 | 1 | 14 | 12 |
+| Object (Constraint) | 3 | 0 | 3 | 1 |
+| Object (Joint) | 10 | 1 | 5 | 9 |
+| Object (Object) | 1 | 0 | 1 | 0 |
+| Marker | 18 | 10 | 17 | 17 |
+| Load | 4 | 0 | 4 | 3 |
+| Sensor | 8 | 7 | 8 | 8 |
+| **all** | **97** | **29** | **84** | **74** |
+
+**What it says**:
+
+- **The parameters are described**: 3 of 985 have fewer than three words (`name`, the same in every
+  item, is not counted), and every one of the 413 output variables has a description. RG13 is not about
+  the tables of a page.
+- **The objects have their equations; nodes, markers and sensors mostly do not**: 26 of the 29 items
+  without an equations text are nodes (9), markers (10) and sensors (7) - the items whose behaviour is
+  least obvious to a new user are the objects, and those are written.
+- **A figure is the rare case**: 13 of 97 items show one, and most of them are joints and connectors.
+- **A MiniExample is the rarer case**: 23 of 97 have one - the gap RG13 was created for, and the one the
+  graphics test (RG2.3.3.5) and the figures of the items both depend on.
+- **7 items are used in no example or test model**: NodePointSlope1, NodePointSlope12, NodeGenericAE,
+  ObjectANCFCable, ObjectANCFThinPlate, ObjectContactSphereTorus, MarkerNodeODE1Coordinate. The search
+  is the one of the documentation pages - `mbs.Add<Type>(<Name>(` and the item's `Create...` function -
+  so an item created only through a helper such as the beam utilities is counted as unused; ANCFCable is
+  probably such a case. It is where a MiniExample adds the most.
+
+**What the table cannot say** is whether a description is **right** - that is RG13.3, the one-time
+synchronization with the implementation. What it can say is what is missing, per item, and that is
+what RG13.2 needs to decide what the ideal page contains.

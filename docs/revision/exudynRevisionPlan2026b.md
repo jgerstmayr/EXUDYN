@@ -247,7 +247,8 @@ NOT cover, and about the testing that no suite can do.
       the **raytracer does not draw `glSpheres`**, which `GetGraphicsData()` does return. Both are
       recorded, not worked around.
 
-      - **RG2.3.3.1** **the machinery and the first cases** - the fingerprint, the comparison, the
+      - **RG2.3.3.1** **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg2-3-3-1) - **the
+        machinery and the first cases** - the fingerprint, the comparison, the
         references, and the `graphics.*` functions: one `ObjectGround` per function (Sphere,
         Cylinder, Brick, Tube, Torus, Arrow, Basis, Frame, RigidLink, SolidOfRevolution,
         SolidExtrusion, Quad, CheckerBoard, Circle, Lines, Text, the gear parts, FromPointsAndTrigs and
@@ -2619,7 +2620,10 @@ What depends on it: the graphics regression test takes every item through its Mi
 (RG2.3.3.5), and the image of each item on its page can be written by the same run.
 
 <a id="rg13-1"></a>
-**RG13.1** *(group RG13; maintainer 2026-09-27)* **The state of the documentation, item by item**
+**RG13.1** *(group RG13; maintainer 2026-09-27)* **DONE 2026-09-27** —
+    [log](exudynRevisionLog2026b.md#rg13-1) — the table is
+    [itemDocumentationState.md](itemDocumentationState.md), written by
+    `tools/itemDocumentationReport.py`. **The state of the documentation, item by item**
     (#2715). Per item, measured from its definition and not estimated: the class description, the
     description of its equations, which parameters and output variables are described and which are
     not, whether it has a MiniExample and whether that one runs, an image, the examples and test
@@ -2667,7 +2671,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582 | a graphics regression suite |
-| RG2.3.3.1 | #2704 | graphics regression test: the machinery, and the graphics.* functions as the first cases |
 | RG2.3.3.2 | #2704 | graphics regression test: the most used settings on one representative model |
 | RG2.3.3.3 | #2704 | graphics regression test: special cases as manual examples |
 | RG2.3.3.4 | #2704 | graphics regression test: low-resolution raytracer images |
@@ -2683,14 +2686,13 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
-| RG13.1 | #2715 | the state of the documentation of every item, measured |
-| RG13.2 | #2716 | the ideal documentation per kind of item, and the plan that makes it work |
-| RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG10.11 | #2541 | `exudyn.config` and `exudyn.special` reach a stub file |
 | RG11.3.1 | #2672 | the results monitor waits for a file that does not exist yet |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
+| RG13.2 | #2716 | the ideal documentation per kind of item, and the plan that makes it work |
+| RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 
 ### Raised by the current work, and not yet a step
 
