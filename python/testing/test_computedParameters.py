@@ -2,7 +2,7 @@
 # This is an EXUDYN test file
 #
 # Details:  A parameter that the core COMPUTES can be read from Python and cannot be written
-#           (revision2026b step RG4.2, #2413). `ObjectContactConvexRoll` has two of them:
+#           (#2413). `ObjectContactConvexRoll` has two of them:
 #
 #               pContact          the current potential contact point, computed in every
 #                                 contact evaluation

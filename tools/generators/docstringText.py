@@ -80,7 +80,7 @@ def CleanStringForPyiDescription(text, enforcePeriod=False):
     #text = text.replace(r'\Am',r'\mathbf{A}')
     
     text = re.sub(r'\\texttt\{(.*?)\}', r'``\1``', text) #NOTE: regex needs r"\\" - two backslash!
-    #a description writes inline code as Markdown since revision2026b step RG3.14.7.2; this file
+    #a description writes inline code as Markdown; this file
     #writes RST, where one backtick is a title reference and two are the literal (#2655)
     text = re.sub(r'(?<!`)`([^`\n]+)`(?!`)', r'``\1``', text)
 

@@ -2,8 +2,7 @@
 # This is an EXUDYN test file
 #
 # Details:  The override settings: the file ~/.exudyn/config.json and the dictionary
-#           exudyn.special.overrideSettings it is read into (revision2026b steps RG12.5 and
-#           RG12.9, #2666 and #2679).
+#           exudyn.special.overrideSettings it is read into (#2666, #2679).
 #
 #           These tests never touch the real file: EXUDYN_CONFIG_FILE names one in the pytest
 #           temporary directory, and the application functions are called directly, so nothing
@@ -36,8 +35,8 @@ def settingsFile(tmp_path, monkeypatch):
     """a settings file of this test's own, and no memory of an earlier one
 
     Writing it also fills exudyn.special.overrideSettings, which is what `import exudyn` does with
-    the file and what the functions read when nothing is passed to them (revision2026b step
-    RG12.9). The store is process-wide, so it is emptied again afterwards."""
+    the file and what the functions read when nothing is passed to them (#2679).
+    The store is process-wide, so it is emptied again afterwards."""
     fileName = str(tmp_path / 'config.json')
     monkeypatch.setenv('EXUDYN_CONFIG_FILE', fileName)
     monkeypatch.delenv('EXUDYN_NO_USER_SETTINGS', raising=False)
@@ -45,7 +44,7 @@ def settingsFile(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, '_ignored', [])
 
     def Write(content, addVersion=True):
-        #a real file carries its format version (revision2026b step RG12.13.2), so the fixture
+        #a real file carries its format version, so the fixture
         #writes it unless a test is ABOUT its absence
         content = dict(content)
         if addVersion and 'version' not in content:
@@ -156,7 +155,7 @@ def test_theFileCanBeSwitchedOff(settingsFile, monkeypatch):
 
 
 def test_theStoreIsOnTheCppSideAndIsTheOneTheModuleReads():
-    """exudyn.special.overrideSettings is where the values live (revision2026b step RG12.9, #2679)
+    """exudyn.special.overrideSettings is where the values live (#2679)
 
     A dict on the C++ side rather than a Python global, so that the core can read a user setting
     without importing anything - and so that there is ONE of them."""
@@ -197,7 +196,7 @@ def test_theApplyFunctionsTakeTheStoreWhenNothingIsGiven(monkeypatch):
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the workflow (revision2026b step RG12.10, #2684): what applies the stored settings, and when.
+#the workflow (#2684): what applies the stored settings, and when.
 #The import-time path cannot be tested here - the import is long over - so what is tested is the
 #classes it installs and the functions they call
 def test_aVisualizationSettingsStructureAppliesTheStoredSettingsWhenItIsCreated():
@@ -287,7 +286,7 @@ def test_theResultsMonitorReadsAndWritesItsSectionOfTheOneFile(settingsFile):
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#exudyn.config has a dictionary interface and its defaults (revision2026b step RG12.11, #2685)
+#exudyn.config has a dictionary interface and its defaults (#2685)
 def test_theConfigDefaultsAreWhatExudynStartedWith():
     """they cannot be constructed: every getter of ExudynConfig reads a GLOBAL
 
@@ -348,7 +347,7 @@ def test_theConfigDictionaryHasEverySettingTheInterfaceHas():
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#what "diff to default" means once an override file exists (revision2026b step RG12.11, #2685).
+#what "diff to default" means once an override file exists (#2685).
 #The grouping is a function of its own, so it is tested without opening a dialog
 def test_theStoredSettingsAreNamedSeparatelyInTheDiff():
     """the difference is to the REAL default, and what the file covers is said so
@@ -389,7 +388,7 @@ def test_aGeometryStringIsStoredWithoutTheFlag(settingsFile):
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the format version of the file (revision2026b step RG12.13.2, #2690)
+#the format version of the file (#2690)
 def test_aFileOfAnotherFormatVersionIsIgnored(settingsFile, capsys):
     """a plain integer, and it has to match: nothing is guessed at and nothing is repaired"""
     settingsFile({'version': settings.fileFormatVersion + 1,
@@ -417,7 +416,7 @@ def test_theVersionIsWrittenAndIsNotASection(settingsFile):
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the override settings must not change what a class IS (revision2026b step RG12.17, #2691)
+#the override settings must not change what a class IS (#2691)
 def test_theModuleClassesAreTheCompiledOnes():
     """a Python SUBCLASS installed as exudyn.SystemContainer broke three things in two days
 
@@ -428,8 +427,8 @@ def test_theModuleClassesAreTheCompiledOnes():
     assert exu.SystemContainer is exu._compiledModule.SystemContainer
     assert exu.VisualizationSettings is exu._compiledModule.VisualizationSettings
 
-    #and what the C++ hands over is an instance of the module's class: since revision2026b step
-    #RG12.18 the link is exudyn.special.currentRendererSystemContainer, set by creating a container
+    #and what the C++ hands over is an instance of the module's class: the link is
+    #exudyn.special.currentRendererSystemContainer (#2692), set by creating a container
     from exudyn.misc.GUI import GetRendererSystemContainer
 
     container = exu.SystemContainer()
@@ -461,7 +460,7 @@ def test_theSnapshottedDefaultsSurviveAWrappedConstructor():
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#reading the file again (revision2026b step RG12.14, #2687)
+#reading the file again (#2687)
 def test_reloadReadsTheFileAgainAndAppliesTheConfigSection(settingsFile):
     """import exudyn reads it once, and importing it again does nothing - which in a console that
     keeps its kernel makes a stored setting look as if it had not been stored"""
@@ -509,7 +508,7 @@ def test_reloadRestartsTheRecords(settingsFile):
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the results monitor's own settings (revision2026b step RG12.22, #2696)
+#the results monitor's own settings (#2696)
 def test_theMonitorHasAnAlwaysOnTopSettingAndItIsOff():
     """the monitor used to come to the front on every update; now that is a choice, and not the
     default - the cause was plt.pause, which raises the window every time it is called"""
@@ -544,7 +543,7 @@ def test_theRunnersIgnoreTheFile():
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the dialogs section (revision2026b step RG12.5.3, from RG6.2.11 / #2608). The window itself is not
+#the dialogs section (#2608). The window itself is not
 #opened here - a test must never wait for a human - so what is tested is the file layer and the
 #rule that decides whether a stored position may be used at all
 def test_theDialogKeyIsTheTitleWithoutSpacesAndCase():

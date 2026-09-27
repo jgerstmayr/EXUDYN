@@ -37,7 +37,7 @@ definitions = []
 #the user functions of ObjectGround. A user function is an ordinary Python def: its arguments,
 #their types and what they mean are read from THIS source, and the documentation block of the
 #item page, the argument table and the entries of userFunctionArgsDict are generated from it
-#(revision2026b step RG12.4, #2664). It is never called - see tools/generators/userFunctionModel.py
+#(#2664). It is never called - see tools/generators/userFunctionModel.py
 def ObjectGround_graphicsDataUserFunction(mbs: MainSystem,
                                           itemNumber: Index) -> BodyGraphicsData:
     r"""A user function, which is called by the visualization thread in order to draw user-defined objects.

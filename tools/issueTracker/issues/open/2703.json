@@ -1,0 +1,11 @@
+{
+  "number": 2703,
+  "title": "88 bare plan step numbers are left in comments and docstrings, without the word revision2026",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "Measured 2026-09-27 at the end of revision2026b step RG3.13.1 (#2649), which removed every mention of 'revision2026' from the comments and docstrings of src/, tools/, python/ and definitions/: the same rule (CLAUDE.md rule 8, code cites the issue, not the plan step) is broken 88 more times in 39 files by step numbers written WITHOUT the plan's name - 'step R6.3.8', 'the rule RG6.2.11 wrote down', 'dies with the LaTeX branch in R7.1.7', 'measured before RG9.1'. They were out of RG3.13.1's measure, which counted 'revision2026'. The same three passes apply - a parenthetical keeps its issue, a two-line reference is rejoined, the rest gets a sentence - with the same proof that no code changed: the Python AST without docstrings and the C++ tokens without comments are identical. revision2026b step RG3.13.2.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26"
+}

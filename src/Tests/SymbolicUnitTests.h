@@ -21,7 +21,7 @@
 *				  what it changed and leaves the counters balanced.
 *
 * @author		Gerstmayr Johannes
-* @date			2026-09-17 (created; revision2026 step R5.4.2, issue #2479)
+* @date			2026-09-17 (#2479)
 * @copyright	This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 * @note			Bug reports, support and further information:
 * 				- email: johannes.gerstmayr@uibk.ac.at

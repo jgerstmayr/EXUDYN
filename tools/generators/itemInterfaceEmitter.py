@@ -4,7 +4,7 @@
 # Details:  Emits python/exudyn/itemInterface.py - the Python classes (ObjectMassPoint,
 #           VObjectMassPoint, ...) that users instantiate to build item dictionaries - directly
 #           from definitions/. The first emitter split out of pythonAutoGenerateObjects.py
-#           (revision2026 step R4.3, part 2b); the code was moved from there, so the output is
+#           ; the code was moved from there, so the output is
 #           byte-identical to what the monolith wrote.
 #
 # Usage:    python tools/generators/itemInterfaceEmitter.py [--output FILE]
@@ -101,7 +101,7 @@ def CreateStringSymbolicUserFunctionArgs(pySymbolicUserFunction):
             cnt+=1
 
         #a parameter that carries a Python def knows what its arguments are CALLED; arg0, arg1, ...
-        #are the fallback for the ones still written as prose (revision2026b step RG12.4, #2664).
+        #are the fallback for the ones still written as prose (#2664).
         #The def is checked against the std::function here, because this is the one place that holds
         #both; tools/checkDefinitions.py reports the same findings with the file and the line
         if item.get('userFunction') is not None:
@@ -116,7 +116,7 @@ def CreateStringSymbolicUserFunctionArgs(pySymbolicUserFunction):
         entry = [fcnTypesList, fcnArgsList, [fcnType]]
         if protocolName is not None:
             #the Protocol an editor checks against; advancedUtilities names it when a user function
-            #has the wrong number of arguments (revision2026b step RG12.4.6, #2664)
+            #has the wrong number of arguments (#2664)
             entry.append([protocolName])
         userFunctionArgsDict[classType+itemType+','+userFunctionName] = entry
 
@@ -231,7 +231,7 @@ def ItemClasses(definition):
             tempPythonClass = ', ' + pythonName
             #a parameter that is a user function is annotated with its Protocol, which is what makes
             #an editor complete the function being written. The 0 is in the annotation because it is
-            #the value that means "no user function" (revision2026b step RG12.4, #2664)
+            #the value that means "no user function" (#2664)
             if member.get('userFunction') is not None:
                 tempPythonClass += (': Union[' + ProtocolName(className, pythonName) + ', int]')
             if len(defaultValueStr) != 0:
@@ -319,7 +319,7 @@ def EmitItemInterface(definitions):
     s += '\nuserFunctionArgsDict = ' + str(userFunctionArgsDict).replace(']],',']],\n       ') + '\n\n\n'
 
     #one Protocol per user function that is written as a Python def, before the classes that use it
-    #(revision2026b step RG12.4, #2664)
+    #(#2664)
     for definition in definitions:
         for member in definition['members']:
             if member.get('userFunction') is not None:

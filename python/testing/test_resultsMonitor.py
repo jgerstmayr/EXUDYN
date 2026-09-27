@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test file
 #
-# Details:  The results monitor waits for the file it is given (revision2026b step RG11.3.1, #2672).
+# Details:  The results monitor waits for the file it is given (#2672).
 #
 #           WHY THIS EXISTS: StartResultsMonitor starts a monitor BEFORE the solver, which is its
 #           whole purpose, and both examples that use it do exactly that. Until this step the caller

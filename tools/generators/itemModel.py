@@ -1,8 +1,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  Facts about items that more than one emitter needs, in one place (revision2026 step R4.3,
-#           part 2b): the type tables and type predicates the item generator used to define inline,
+# Details:  Facts about items that more than one emitter needs, in one place: the type tables and
+#           type predicates the item generator used to define inline,
 #           the user-function types, how a member of definitions/ renders to the strings of the old
 #           representation, and per-item accessors the emitters use instead of re-deriving them.
 #
@@ -431,7 +431,7 @@ def SymbolicUserFunctions(definition):
                            'pyUserFunctionType': TypeName(member),
                            'stdFunctionType': pyFunctionTypeConversion[TypeName(member)],
                            #the Python def of the definition file, where there is one: it is what
-                           #the arguments are really called (revision2026b step RG12.4, #2664)
+                           #the arguments are really called (#2664)
                            'userFunction': member.get('userFunction'),
                            })
     return result

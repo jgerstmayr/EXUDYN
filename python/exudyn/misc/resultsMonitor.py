@@ -84,7 +84,7 @@ def LoadSettings():
 
     The settings are the `resultsMonitor` section of the override settings, `~/.exudyn/config.json`,
     which `import exudyn` has already read - one file for everything Exudyn remembers between runs
-    (revision2026b step RG12.10, #2684).
+    (#2684).
 
     Note:
         Nothing here is an error: a section that is not there, or a key that is not known, leaves
@@ -388,10 +388,8 @@ class ResultsMonitor:
 
         Note:
             The file does not have to exist yet, which is the point of starting a monitor before the
-            solver: `StartResultsMonitor` does exactly that, and so do the two examples. Until
-            revision2026b step RG11.3.1 (#2672) the caller tested for the file and gave up before
-            this function was reached, so a monitor started first said "file not found" and exited -
-            while its own documentation promised it would wait.
+            solver: `StartResultsMonitor` does exactly that, and so do the two examples. Only
+            `--once` requires the file to be there, because it plots what exists and returns (#2672).
 
             What is waited for is announced, naming the file, because waiting without limit for a
             file that will never appear is what a typo in the name looks like.
@@ -1024,7 +1022,7 @@ def MonitorResults(fileName=None, xColumns=None, yColumns=None, updatePeriod=Non
 
     monitor = None
     while fileName != '':
-        #ONLY --once INSISTS THAT THE FILE IS THERE (revision2026b step RG11.3.1, #2672): it plots
+        #ONLY --once INSISTS THAT THE FILE IS THERE (#2672): it plots
         #what exists now and returns, so waiting would be waiting for nothing. Every other mode waits
         #in WaitForData, which is what a monitor started BEFORE the solver needs - and what the
         #documentation has promised all along
@@ -1128,7 +1126,7 @@ def StartResultsMonitor(fileName, xColumns=None, yColumns=None, updatePeriod=Non
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #spellings of the 2021 script; they are translated and a note is printed, so that scripts and
-#printed documentation keep working (revision2026: remove with the next major version)
+#printed documentation keep working; they go with the next major version
 _legacyArguments = {'-xcols': '--x-cols', '-ycols': '--y-cols', '-logx': '--log-x',
                     '-logy': '--log-y', '-colorVariations': '--color-variations',
                     '-variations': '--variations', '-addMarker': '--marker',

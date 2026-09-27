@@ -5,7 +5,7 @@
 #           structureDocsEmitter.py): type tables, predicates on classes and parameters, the
 #           sorted parameter list, typical paths and the old string records of every structure,
 #           rendered from definitions/ by definitionLoader. Moved out of
-#           src/pythonGenerator/pythonAutoGenerateSystemStructures.py (revision2026 step R4.3, part 2c).
+#           src/pythonGenerator/pythonAutoGenerateSystemStructures.py.
 #           The header and stub emitters read the members directly; only
 #           structureDocsEmitter.py still reads the string records, replaces it.
 #

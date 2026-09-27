@@ -22,7 +22,7 @@
 
 #include "Pymodules/PybindUtilities.h"
 #include "Pymodules/PyMatrixVector.h"
-#include "Graphics/BodyGraphicsDataPython.h" //revision2026b step RG9.1
+#include "Graphics/BodyGraphicsDataPython.h"
 
 
 //files for minimal compilation:

@@ -1,8 +1,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test file
 #
-# Details:  All user functions at once (#2671). Since revision2026b step RG12.4 (#2664) every user
-#           function is an ordinary Python def in definitions/, and FOUR things are generated from
+# Details:  All user functions at once (#2671). Since #2664 every user function is an ordinary
+#           Python def in definitions/, and FOUR things are generated from
 #           that one source:
 #
 #               the documentation block of the item page

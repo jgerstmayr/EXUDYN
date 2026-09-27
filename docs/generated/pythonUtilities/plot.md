@@ -40,7 +40,7 @@ Plot utility functions based on matplotlib, including plotting of sensors and FF
 
 - **function description**: Store where the plot windows are now, so that the next run opens them there.
 - **output**: the number of windows that were stored
-- **notes**: This is the answer to *"I have arranged my plots, keep them like this"*, and it can be called while the windows are open - which the automatic storing cannot, because it happens when a window closes, one window at a time, and only if `PlotSensorDefaults().storeWindowPositions` is on (revision2026b step RG12.23). The windows are stored **by their sequence**, the order `PlotSensor` made them, because plot windows have no unique title; `PlotSensor(..., closeAll=True)` starts that order over. A window that has been closed since is skipped and forgotten. The geometry goes into the `dialogs` section of `~/.exudyn/config.json`, the same place and the same rules as a dialog: the size comes back always, the position only if the window would still be reachable.
+- **notes**: This is the answer to *"I have arranged my plots, keep them like this"*, and it can be called while the windows are open - which the automatic storing cannot, because it happens when a window closes, one window at a time, and only if `PlotSensorDefaults().storeWindowPositions` is on. The windows are stored **by their sequence**, the order `PlotSensor` made them, because plot windows have no unique title; `PlotSensor(..., closeAll=True)` starts that order over. A window that has been closed since is skipped and forgotten. The geometry goes into the `dialogs` section of `~/.exudyn/config.json`, the same place and the same rules as a dialog: the size comes back always, the position only if the window would still be reachable.
 
 *example*:
 
@@ -57,7 +57,7 @@ Plot utility functions based on matplotlib, including plotting of sensors and FF
 
 [`__PlacePlotWindow(fig)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L148)
 
-- **function description**: put a new plot window where the window of the same sequence number was left The SIZE always and the POSITION only if it would still be reachable - the rule of revision2026b step RG6.2.11, and the same ~/.exudyn/config.json section the dialogs use. The size is the window's own, in pixels, and leaves `sizeInches` as what a figure gets when nothing is stored. Backend-dependent, so anything it cannot do it leaves alone.
+- **function description**: put a new plot window where the window of the same sequence number was left The SIZE always and the POSITION only if it would still be reachable - the rule and the ~/.exudyn/config.json section the dialogs use (#2608). The size is the window's own, in pixels, and leaves `sizeInches` as what a figure gets when nothing is stored. Backend-dependent, so anything it cannot do it leaves alone.
 
 
 (sec-plot-parseoutputfileheader)=

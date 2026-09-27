@@ -4,7 +4,7 @@
 # Details:  The reader of the docstrings (and @docmeta/@extends decorators) of the utility modules
 #           of python/exudyn/, and the text helpers shared by mainSystemExtensionDocsEmitter.py
 #           and utilityDocsEmitter.py. Moved out of src/pythonGenerator/utilitiesDocuGenerator.py
-#           (revision2026 step R4.3, part 2e); reads docstrings instead of #** comments
+#           ; reads docstrings instead of #** comments
 #
 # Usage:    import utilityDocsModel
 #
@@ -430,9 +430,8 @@ def ParsePythonFile(fileName):
 #convert tags of tagList in functionDict to latex and RST
 mycnt = 0
 def FunctionStub(functionDict):
-    """The .pyi overload of one MainSystem extension function: the stub half of what
-    WriteFunctionDescription2LatexRST built beside the LaTeX and the RST until revision2026 step
-    R7.1.7. The documentation half is FunctionDescription2Markdown below."""
+    """The .pyi overload of one MainSystem extension function: the stub half.
+    The documentation half is FunctionDescription2Markdown below."""
     argList = functionDict['argumentsList']
     argDefault = functionDict['defaultArgumentsList']
     functionName = functionDict['functionName'].replace(chr(92) + '_', '_')

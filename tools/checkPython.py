@@ -3,8 +3,8 @@
 #
 # Details:  Runs the ruff linter over the shipped Python package and judges the result against a
 #           baseline, so that the findings present when the check was introduced are tolerated
-#           while a NEW finding fails the check. Same idea as the pydoclint baseline of
-#           revision2026 step R4.8 - but ruff has no baseline of its own, so it is implemented here.
+#           while a NEW finding fails the check. Same idea as the pydoclint baseline
+#           - but ruff has no baseline of its own, so it is implemented here.
 #
 #           The rule set is not ruff's implicit default: it is written down in pyproject.toml as
 #           select = ["E4", "E7", "E9", "F"], because the implicit default is not stable across
@@ -52,7 +52,7 @@ repositoryRoot = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 baselineFile = os.path.join(repositoryRoot, 'tools', 'ci', 'ruffBaseline.txt')
 
 #what is linted; the generated stub files are excluded in pyproject.toml, they are checked
-#against the module itself instead (revision2026 step R5.5, half B)
+#against the module itself instead
 checkedPaths = ['python/exudyn']
 
 
@@ -146,8 +146,8 @@ def InstalledExudynVersion():
 
 
 def RefuseAStaleWheel():
-    """THE STUB CHECK READS THE INSTALLED PACKAGE, NOT THE SOURCE TREE (#2517, revision2026 step
-    R5.18.5). If the wheel in this environment is older than the working tree, stubtest compares
+    """THE STUB CHECK READS THE INSTALLED PACKAGE, NOT THE SOURCE TREE (#2517).
+    If the wheel in this environment is older than the working tree, stubtest compares
     the committed stubs against a module that does not contain what was just written - and reports
     OK. That happened: venvExuP313 held 1.11.173.dev1 while the sources were at 1.11.176.dev1, and
     the stub gate described a module without the nine new exception classes.

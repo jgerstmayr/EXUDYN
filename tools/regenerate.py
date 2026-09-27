@@ -34,7 +34,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'genera
 from autoGenerateHelper import IsEqualIgnoringDateStrings
 
 #the generators, their order and their inputs/outputs are declared in tools/generators/generate.py,
-#the single driver (revision2026 step R4.3, part 2f); this tool runs it and compares with the commit
+#the single driver; this tool runs it and compares with the commit
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'generators'))
 import generate
 
@@ -247,7 +247,7 @@ def Main():
         print('Generated files differ from the commit. If the change was intended, commit it;')
         print('if not, a generator or its input has changed unexpectedly.')
         print('If the difference is only a version string, the version was bumped after the last')
-        print('regeneration - see revision2026 fact 21, run this tool after ResolveIssue.')
+        print('regeneration - run this tool after ResolveIssue.')
         if args.check:
             return 1
     elif tier2Drift:

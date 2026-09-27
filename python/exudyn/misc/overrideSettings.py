@@ -39,7 +39,7 @@ __all__ = ['fileFormatVersion', 'sectionNames', 'plainTypes', 'structureDefaults
            'PositionIsReachable', 'Store']
 
 #THE VERSION OF THE FILE FORMAT, written into every file and required to match exactly
-#(revision2026b step RG12.13.2, #2690). It is a plain integer and it is bumped BY HAND, and only
+#(#2690). It is a plain integer and it is bumped BY HAND, and only
 #when both things are true: Exudyn has been released since the last bump, and the meaning of
 #something in this file has changed - so it will not move for a long time, at the earliest in the
 #release after the next one. It does not follow the Exudyn version, which moves on every resolved
@@ -51,8 +51,8 @@ __all__ = ['fileFormatVersion', 'sectionNames', 'plainTypes', 'structureDefaults
 #old one is a run that behaves differently for a reason nobody can see.
 fileFormatVersion = 1
 
-#the sections of the file. 'dialogs' is read by the dialogs themselves (revision2026b step
-#RG6.2.26) and is listed here so that this module does not warn about it
+#the sections of the file. 'dialogs' is read by the dialogs themselves and is listed here
+#so that this module does not warn about it
 sectionNames = ['config', 'visualizationSettings', 'dialogs', 'resultsMonitor',
                 'plotSensor']
 
@@ -63,8 +63,8 @@ plainTypes = (bool, int, float, str)
 _applied = []                   #[(path, value)] of what was applied in this process
 _ignored = []                   #[(path, reason)] of what was not
 
-#THE DEFAULTS OF A SETTINGS STRUCTURE, taken before its constructor was wrapped (revision2026b step
-#RG12.17, #2691). Since a stored visualizationSetting is applied by the CONSTRUCTOR of the class
+#THE DEFAULTS OF A SETTINGS STRUCTURE, taken before its constructor was wrapped (#2691). Since a
+#stored visualizationSetting is applied by the CONSTRUCTOR of the class
 #itself, constructing one no longer gives the defaults - so they are taken once, at import, while it
 #still does, exactly as the defaults of exudyn.config are (#2685). {className: dictionaryWithTypeInfo}
 #and empty when nothing is stored, which is the normal case.
@@ -301,7 +301,7 @@ def _IsPlain(value):
 
 def _Record(path, value, reason=None):
     #ONCE PER SETTING, not once per structure: the visualizationSettings are applied again for every
-    #structure that is created (revision2026b step RG12.10), and Print() listing the same setting
+    #structure that is created, and Print() listing the same setting
     #five times because five structures exist says nothing about what was stored
     if reason is None:
         if (path, value) not in _applied:
@@ -401,7 +401,7 @@ def ApplyVisualizationSettings(visualizationSettings, settings=None):
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the dialogs section: one entry per dialog, holding the size and the position it was left at
-#(revision2026b step RG12.5.3, from RG6.2.11 / #2608)
+#(#2608)
 def DialogKey(name):
     """the key a dialog is stored under: its title, without spaces and case
 
@@ -530,7 +530,7 @@ def Store(SC=None, config=None, replace=False):
 
     if config is not None:
         stored = {} if replace else dict(settings.get('config') or {})
-        #WHAT DIFFERS FROM THE DEFAULTS, and nothing else (revision2026b step RG12.11, #2685). This
+        #WHAT DIFFERS FROM THE DEFAULTS, and nothing else (#2685). This
         #used to store every value that was not '', 0 or False, because exudyn.config had no
         #defaults to compare with - a guess that stored settings a user never touched.
         #config.GetDefaults() is what Exudyn started with, taken while it still was

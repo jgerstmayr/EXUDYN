@@ -16,7 +16,7 @@
 #           Every command is looked up in the dictionary CommandTable() and imports what it
 #           needs when it is called, so an unused command costs nothing. A command's own
 #           arguments are parsed by the command, which keeps 'python -m exudyn <cmd> --help'
-#           working and makes the table extensible (revision2026 step R9.6, plugins).
+#           working and makes the table extensible.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-19 (created)
@@ -211,8 +211,8 @@ def _CommandDialogs(argumentList):
         return 0
 
     #a structure of its own, not a SystemContainer's: creating a container attaches it to the
-    #render engine (#2625), and there is no model here anyway. Since revision2026b step RG6.2.20
-    #this carries the same defaults a user really starts from
+    #render engine (#2625), and there is no model here anyway. It carries the
+    #same defaults a user really starts from (#2626)
     settings = exu.VisualizationSettings() if what == 'visualizationSettings' \
         else exu.SimulationSettings()
     gui.EditDictionaryWithTypeInfo(settings, exu, what)

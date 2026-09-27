@@ -54,7 +54,7 @@ __plotSensorDefaults.majorTicksX = 10
 __plotSensorDefaults.majorTicksY = 10
 __plotSensorDefaults.sizeInches=[6.4,4.8]
 
-#WHERE THE PLOT WINDOWS GO (revision2026b step RG12.12). Plot windows have no unique title - a script
+#WHERE THE PLOT WINDOWS GO. Plot windows have no unique title - a script
 #makes several - so they are remembered BY THEIR SEQUENCE, and the counter is reset by
 #PlotSensor(..., closeAll=True), which is the maintainer's decision and what a script says when it
 #starts over. Only the POSITION: the size of a plot is sizeInches above, which is already a default
@@ -64,8 +64,8 @@ __plotSensorDefaults.storeWindowPositions=False
 #the sequence number of the next plot window; PlotSensor(..., closeAll=True) starts over
 __plotWindowCount = [0]
 
-#THE PLOT WINDOWS THAT ARE OPEN, in the order PlotSensor made them (revision2026b step RG12.23,
-##2698): [(sequenceNumber, figure)]. It is cleared by PlotSensor(..., closeAll=True), which is what a
+#THE PLOT WINDOWS THAT ARE OPEN, in the order PlotSensor made them (#2698): [(sequenceNumber,
+#figure)]. It is cleared by PlotSensor(..., closeAll=True), which is what a
 #script says when it starts over, and a figure that has been closed is dropped the next time the list
 #is used - which is how StorePlotWindowGeometry knows which windows still exist.
 #
@@ -116,7 +116,7 @@ def StorePlotWindowGeometry():
         This is the answer to *"I have arranged my plots, keep them like this"*, and it can be called
         while the windows are open - which the automatic storing cannot, because it happens when a
         window closes, one window at a time, and only if
-        `PlotSensorDefaults().storeWindowPositions` is on (revision2026b step RG12.23).
+        `PlotSensorDefaults().storeWindowPositions` is on.
 
         The windows are stored **by their sequence**, the order `PlotSensor` made them, because plot
         windows have no unique title; `PlotSensor(..., closeAll=True)` starts that order over. A
@@ -148,8 +148,8 @@ def StorePlotWindowGeometry():
 def __PlacePlotWindow(fig):
     """put a new plot window where the window of the same sequence number was left
 
-    The SIZE always and the POSITION only if it would still be reachable - the rule of revision2026b
-    step RG6.2.11, and the same ~/.exudyn/config.json section the dialogs use. The size is the window's
+    The SIZE always and the POSITION only if it would still be reachable - the rule and the
+    ~/.exudyn/config.json section the dialogs use (#2608). The size is the window's
     own, in pixels, and leaves `sizeInches` as what a figure gets when nothing is stored.
     Backend-dependent, so anything it cannot do it leaves alone.
     """
@@ -201,7 +201,7 @@ def __PlacePlotWindow(fig):
         exudyn.Print('WARNING: PlotSensor could not place the window: ' + str(error))
 
 
-#WHAT THE OVERRIDE SETTINGS SAY (revision2026b step RG12.12): the `plotSensor` section of
+#WHAT THE OVERRIDE SETTINGS SAY: the `plotSensor` section of
 #~/.exudyn/config.json sets any of the defaults above, so that a user who always wants fontSize 12 or
 #a larger figure says it once. A name that is not a default is reported rather than invented. It is
 #read when this module is imported, which is after `import exudyn` has read the file.
@@ -438,7 +438,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel=None, yLabel=None, la
             and key!='logScaleX'  and key!='logScaleY'):
             raise ValueError('PlotSensor: invalid argument: '+key)
 
-    #NOT GIVEN MEANS None, and then the default is taken (revision2026b step RG12.12). It used to
+    #NOT GIVEN MEANS None, and then the default is taken. It used to
     #mean "equal to the original literal default", so passing that value ON PURPOSE could not be told
     #from not passing it - PlotSensorDefaults() says so itself: "BUT PlotSensor(..., fontSize=16) will
     #use fontSize=12, BECAUSE 16 is the original default value!!!". That is gone, and the mutable
@@ -507,7 +507,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel=None, yLabel=None, la
     if closeAll:
         plt.close('all')
         #the windows are remembered by their sequence, which starts over - and so does the list of
-        #the ones that are open (revision2026b step RG12.23)
+        #the ones that are open
         __plotWindowCount[0] = 0
         __plotWindowFigures.clear()
 

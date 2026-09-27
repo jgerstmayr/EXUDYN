@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN maintainer tool
 #
-# Details:  The single driver of the code generators (revision2026 step R4.3, part 2f). Every
+# Details:  The single driver of the code generators. Every
 #           stage declares the files or directories it reads and writes (repository-relative);
 #           the driver derives the order from these declarations - a stage runs after every
 #           stage that writes something it reads - and refuses a cycle. Before, the order lived
@@ -69,7 +69,6 @@ stages = [
     Stage('tools/generators/structureDocsEmitter.py', ['definitions'],
           ['docs/generated/structures']),   #Markdown
     #the *Ext fragments are inputs of pybindEmitter, not documentation of their own; Markdown
-    #since revision2026 step R7.1.6
     Stage('tools/generators/mainSystemExtensionDocsEmitter.py', ['python/exudyn/*.py'],
           [G + 'MainSystemExt.md', G + 'MainSystemCreateExt.md', G + 'stubAutoBindingsExt.pyi']),
     Stage('tools/generators/utilityDocsEmitter.py', ['python/exudyn/*.py'],
@@ -214,8 +213,8 @@ def RunStages(pythonExecutable=sys.executable, only=None, verbose=True):
                 print('    | ' + line)
             continue
 
-        #A STAGE THAT WRITES NOTHING IS A FAILURE, even though it exits 0 (#2526, revision2026 step
-        #R4.3.1). mainSystemExtensionDocsEmitter.py ended in the middle of main() for five days:
+        #A STAGE THAT WRITES NOTHING IS A FAILURE, even though it exits 0 (#2526).
+        #mainSystemExtensionDocsEmitter.py ended in the middle of main() for five days:
         #it ran, printed nothing, produced nothing, and the regeneration check could not see it,
         #because a generator that writes nothing always agrees with the commit. Five documentation
         #files were frozen at their committed content the whole time.

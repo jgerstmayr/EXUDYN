@@ -31,7 +31,7 @@ if platform.processor().find('arm') != -1:
 #the user settings of ~/.exudyn/config.json are IGNORED here, and this has to happen before exudyn
 #is imported. A maintainer who stores a setting - an output directory, a tolerance-sensitive
 #visualization flag - must not thereby change what a test computes; a child process inherits the
-#variable, so the workers of --parallel and of pytest are covered too (revision2026b step RG12.5)
+#variable, so the workers of --parallel and of pytest are covered too
 import os
 os.environ['EXUDYN_NO_USER_SETTINGS'] = '1'
 
@@ -290,7 +290,7 @@ if TSScope.runTestExamples:
     #the reference lists ARE the run manifest, so a model missing from them is never executed.
     #Check that against the folder before running anything, and report it in the log where the
     #next reader will see it.
-    #since revision2026 step R3.9 this directory holds test models and nothing else, so the
+    #this directory holds test models and nothing else, so the
     #check is simply 'every .py is either referenced or explicitly excluded' (#2513).
     #raytracerNOGLFWtest.py is added back because TestExamplesReferenceSolution() pops it on
     #macOS only - the file still exists there.
@@ -313,7 +313,7 @@ if TSScope.runTestExamples:
                 TSScope.testFileList.remove(name)
                 exu.Print('not the regular module: ' + name + ' skipped - ' + reason)
 
-    if TSScope.fastSubset: #revision2026 step R5.2
+    if TSScope.fastSubset:
         from runTestSuiteRefSol import SlowTests, OptionalPackageTests
         skipped = set(SlowTests()) | set(OptionalPackageTests())
         TSScope.testFileList = [f for f in TSScope.testFileList if f not in skipped]
@@ -432,8 +432,8 @@ if TSScope.runTestExamples:
                     exu.Print('  NOTE: this test is marked SENSITIVE (chaotic or unseeded);')
                     exu.Print('        it is reported but does not affect the exit code')
                 elif TSScope.file in TSScope.unresolvedTests:
-                    exu.Print('  NOTE: known unresolved Windows/Linux difference (revision plan')
-                    exu.Print('        revision2026 phase R10); reported but does not affect the exit code')
+                    exu.Print('  NOTE: known unresolved Windows/Linux difference, in')
+                    exu.Print('        UnresolvedOnLinux(); reported but does not affect the exit code')
                 exu.Print('******************************************')
                 testsFailed = testsFailed + [TSScope.testExamplesCnt]
                 TSScope.examplesFailedNames.add(TSScope.name)
@@ -475,7 +475,7 @@ if TSScope.runMiniExamples:
         exu.Print('  START MINI EXAMPLE ' + str(testExamplesCnt) + ' ("' + file + '"):')
         SC.Reset()
         testError = -1
-        exu.sys['testIsActive'] = True          #revision2026b step RG10.6.4
+        exu.sys['testIsActive'] = True
         exu.sys['testResult'] = TSScope.invalidResult
         exu.config.outputDirectory = TSScope.solutionDirectory + '/MiniExamples/' + file[:-3] #(#2418)
         fileDir = '../MiniExamples/'+file

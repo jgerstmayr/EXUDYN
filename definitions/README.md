@@ -201,7 +201,7 @@ not in the list below reaches the page as itself and is a defect.
   never instantiated and nothing inherits from it: it costs nothing at runtime.
 
   The user functions still written as a hand-made block in a description are being converted
-  item by item (revision2026b step RG12.4); a new one is written as a def.
+  item by item (#2664); a new one is written as a def.
 - **A figure** that belongs to an item is `\addExampleImage{RevoluteJointZ}`, which shows
   `docs/figures/RevoluteJointZ.png`.
 

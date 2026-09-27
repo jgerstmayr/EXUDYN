@@ -100,7 +100,7 @@ def testTheOldIdiomIsGoneEverywhere():
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#WHERE THE WINDOW IS (revision2026b step RG12.20, #2694). The render state carried the size of the
+#WHERE THE WINDOW IS (#2694). The render state carried the size of the
 #window and not its position, so nothing could say where a window had been - which is what storing
 #the geometry needs. The window itself cannot be opened by a test, so what is pinned is the state.
 def testTheRenderStateCarriesTheWindowPosition():

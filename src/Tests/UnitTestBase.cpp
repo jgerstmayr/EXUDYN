@@ -50,11 +50,11 @@ using namespace EXUmath;
     #include "AllMatrixUnitTests.h" 
     #include "TemplatedVectorArrayUnitTests.h" 
 	#include "AllBasicLinalgUnitTests.h"
-    #include "AVXVectorUnitTests.h"   //revision2026 step R5.4, #2465
-    #include "AllMatrixVariantsUnitTests.h" //revision2026 step R5.4.1, #2472
-    #include "RigidBodyMathUnitTests.h"     //revision2026 step R5.4.1, #2472
-    #include "SymbolicUnitTests.h"          //revision2026 step R5.4.2, #2479
-    #include "LinearSolverUnitTests.h"      //revision2026 step R5.4.3, #2479
+    #include "AVXVectorUnitTests.h"   //#2465
+    #include "AllMatrixVariantsUnitTests.h" //#2472
+    #include "RigidBodyMathUnitTests.h"     //#2472
+    #include "SymbolicUnitTests.h"          //#2479
+    #include "LinearSolverUnitTests.h"      //#2479
 #endif
 
 extern bool linalgPrintUsePythonFormat; //!< true: use python format for output of vectors and matrices; false: use matlab format

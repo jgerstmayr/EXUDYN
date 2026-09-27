@@ -1,8 +1,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test file
 #
-# Details:  The defaults of the ten raytracer materials and of the four lights. Until
-#           revision2026b step RG6.2.20 (#2626) they were set by C++ AFTER construction -
+# Details:  The defaults of the ten raytracer materials and of the four lights. Until #2626
+#           they were set by C++ AFTER construction -
 #           VisualizationSystemContainer() dimmed light1 to light3 and
 #           MainGraphicsMaterialList::Reset() filled the materials - so they were invisible to the
 #           generated reference, which printed the defaults of VSettingsLight and
@@ -80,7 +80,7 @@ def testTheLightDefaultsAreInTheStructure():
 
 def testTheRenderWindowPositionIsUnsetByDefaultOnEveryView():
     """(-1,-1) means "wherever the window manager puts it", which is what happened before the setting
-    existed (revision2026b step RG12.16, #2689)
+    existed (#2689)
 
     A window is placed only on purpose, by a script or by ~/.exudyn/config.json, and each of the four
     views has its own. The effect cannot be tested here - it needs a render window - so what is

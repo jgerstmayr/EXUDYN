@@ -4,8 +4,8 @@
 # Details:  tools/exudev, the maintainer driver, on the three platforms. It is needed on linux and
 #           macOS as well as on Windows (maintainer, 2026-09-24), and most of it was already
 #           portable - the conda lookup tries bin/conda, the wheel lookup carries no platform tag,
-#           the stale package copy is found through build/lib.*. Three places were not (#2644,
-#           revision2026b step RG10.8), and they are what this file pins: the build directories
+#           the stale package copy is found through build/lib.*. Three places were not (#2644),
+#           and they are what this file pins: the build directories
 #           that "clean" removes, the program that opens the documentation, and the shell that
 #           runs the manylinux container.
 #

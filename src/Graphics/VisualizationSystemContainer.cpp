@@ -22,7 +22,7 @@
 
 #include "Graphics/GlfwClient.h" //in order to link to graphics engine
 #include "Main/MainSystem.h" //for MainSystemBacklink
-#include "Graphics/BodyGraphicsDataPython.h" //revision2026b step RG9.1
+#include "Graphics/BodyGraphicsDataPython.h"
 
 //#ifdef USE_GLFW_GRAPHICS
 //#endif

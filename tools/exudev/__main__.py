@@ -2,8 +2,8 @@
 # This is an EXUDYN maintainer tool - the exudev driver, see tools/exudev/README.md
 #
 # Details:  The whole command-line surface: every option, every spelling, every help text, in one
-#           file. It replaces the sixteen batch files of tools/buildAndGenerate/ (issue #2503,
-#           revision2026 step R5.18), which could not print a --help, could not reject a wrong
+#           file. It replaces the sixteen batch files of tools/buildAndGenerate/ (#2503),
+#           which could not print a --help, could not reject a wrong
 #           option and could not pass on an option they did not know.
 #
 #           Usage:    exudev <command> [options]           (Windows: exudev.bat in the root)

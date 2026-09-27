@@ -3,7 +3,7 @@
 #
 # Details:  The three renderings of a default value - the C++ literal, the Python value and what a
 #           documentation table shows - which definitions/definitionTypes.py computes from the
-#           value and its declared type (revision2026b step RG3.24.3, #2682).
+#           value and its declared type (#2682).
 #
 #           WHY THESE TESTS EXIST: the renderings used to be reconstructed from the C++ literal by
 #           twenty str.replace() calls and three substring searches. The last of them stripped the

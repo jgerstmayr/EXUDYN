@@ -1701,8 +1701,8 @@ void GlfwRenderer::StopRenderer()
 //! Initializes and starts viewID=0, 1, 2, ...; HAS TO BE CALLED FROM GLFWClient THREAD
 namespace
 {
-	//! WHERE THE WINDOW WAS, written back into the settings of its view (revision2026b step
-	//! RG12.16.2, #2689), so that "store settings" in the visualization settings dialog - or
+	//! WHERE THE WINDOW WAS, written back into the settings of its view (#2689), so that
+	//! "store settings" in the visualization settings dialog - or
 	//! overrideSettings.Store(SC) - keeps a render window where the user left it.
 	//!
 	//! Nothing happens unless view*.window.storeRenderWindowGeometry is True, and it is False by
@@ -1721,8 +1721,8 @@ namespace
 		if (settings == nullptr || views == nullptr || !views->IsValidWindow(viewID)) { return; }
 		if (!GetSettingsView(viewID, *settings).window.storeRenderWindowGeometry) { return; }
 
-		//WHAT THE RENDER STATE SAYS, which is refreshed on every Render (revision2026b step
-		//RG12.20): one place knows where the window is, and this reads it
+		//WHAT THE RENDER STATE SAYS, which is refreshed on every Render: one place knows
+		//where the window is, and this reads it
 		const RenderState* state = views->State(viewID);
 		if (state == nullptr || state->currentWindowSize[0] <= 0 || state->currentWindowSize[1] <= 0)
 		{
@@ -1785,7 +1785,7 @@ bool GlfwRenderer::CreateViewWindow(Index viewID)
 		renderViews.State(viewID)->windowOpen = true;
 		renderViews.State(viewID)->viewEnabled = true;
 
-		//WHERE THE WINDOW GOES, if it was asked for (revision2026b step RG12.16, #2689). The
+		//WHERE THE WINDOW GOES, if it was asked for (#2689). The
 		//default is (-1,-1) and a negative coordinate means "wherever the window manager puts it",
 		//which is what happened before this setting existed - so a window is placed only on purpose,
 		//by a script or by ~/.exudyn/config.json, and every view has its own. The maintainer measured
@@ -2549,7 +2549,7 @@ void GlfwRenderer::SetRenderStateScreenSize(Index viewID, int screenWidth, int s
 	state->currentWindowSize[1] = screenHeight;
 }
 
-//! WHERE THE WINDOW IS, in the render state beside its size (revision2026b step RG12.20, #2694).
+//! WHERE THE WINDOW IS, in the render state beside its size (#2694).
 //! It is asked of GLFW wherever the size is - every Render - rather than through a window-move
 //! callback: the size is refreshed that way already, one glfwGetWindowPos costs nothing next to a
 //! redraw, and there is then one place where the state learns about the window instead of two.

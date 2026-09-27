@@ -22,8 +22,8 @@ __all__ = [
 
 #where a demo is allowed to leave files: a demo is run to see that Exudyn works, from whatever
 #directory the user happens to be in, and it used to create a solution/ directory there - inside
-#this repository that is an untracked directory beside the sources (revision2026b step RG11.2,
-##2620). tmp/ is what this repository ignores, and it says what the files are.
+#this repository that is an untracked directory beside the sources (#2620). tmp/ is what this
+#repository ignores, and it says what the files are.
 demoSolutionDirectory = 'tmp/solution'
 
 

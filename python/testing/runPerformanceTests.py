@@ -18,7 +18,7 @@ import sys, platform
 #the user settings of ~/.exudyn/config.json are IGNORED here, and this has to happen
 #before exudyn is imported. A maintainer who stores a setting must not thereby change
 #what a test computes; a child process inherits the variable, so the workers of
-#--parallel and of pytest are covered too (revision2026b step RG12.5)
+#--parallel and of pytest are covered too
 import os
 os.environ['EXUDYN_NO_USER_SETTINGS'] = '1'
 
@@ -39,11 +39,9 @@ import testRunnerTools
 #(#2512, #2513)
 testRunnerTools.WorkInModelsDirectory(testRunnerTools.performanceModelsDir)
 
-#--fast-module measures exudynCPPfast; without it, the regular module. Until revision2026 step
-#R5.11 this was decided by the INTERPRETER - the fast module was used if and only if Python was
-#3.10 - which silently coupled "which module" to "which version" and made the two logs of a
-#release impossible to ask for on purpose. The release procedure now runs both deliberately; see
-#docs/dev/WORKFLOW.md. Must happen before 'import exudyn' below (#2495).
+#--fast-module measures exudynCPPfast; without it, the regular module. Which module is measured is
+#asked for, and not decided by the Python version, so the release procedure can run both
+#deliberately; see docs/dev/WORKFLOW.md. Must happen before 'import exudyn' below (#2495).
 useFastModule = '--fast-module' in sys.argv
 if useFastModule:
     import os

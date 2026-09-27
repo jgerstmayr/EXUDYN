@@ -3,8 +3,8 @@
 #
 # Details:  The key bindings of the render window, which used to be written down three times:
 #           GlfwClient.cpp implements them, docs/manual/GUI.md tabulated them and the help dialog
-#           printed its own text. The two prose copies come from one table since revision2026b
-#           step RG6.2.6 (#2591); these tests are what keeps the THIRD copy - the implementation -
+#           printed its own text. The two prose copies come from one table since #2591; these
+#           tests are what keeps the THIRD copy - the implementation -
 #           in step with it, because that one cannot be generated.
 #
 #           The strong test is the last one: every binding the table documents must be handled in

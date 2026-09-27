@@ -2,8 +2,8 @@
 # This is an EXUDYN maintainer tool
 #
 # Details:  Emits python/MiniExamples/<Item>.py for every item that defines a
-#           miniExample, and miniExamplesFileList.py, from definitions/ (revision2026 step R4.3,
-#           part 2b). Moved out of src/pythonGenerator/pythonAutoGenerateObjects.py; byte-identical.
+#           miniExample, and miniExamplesFileList.py, from definitions/. Moved out of
+#           src/pythonGenerator/pythonAutoGenerateObjects.py; byte-identical.
 #
 # Usage:    python tools/generators/miniExampleEmitter.py [--output-dir DIR]
 #

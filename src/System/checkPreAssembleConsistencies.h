@@ -1,8 +1,7 @@
 /** ***********************************************************************************************
 * @brief        what the checkPreAssembleConsistencies*.cpp files share: the two tolerances and
-*               the IsInRange helper. Split out of checkPreAssembleConsistencies.cpp in
-*               revision2026 step R11.4.3 (#2554), where one file for all item kinds became one
-*               file per kind.
+*               the IsInRange helper. checkPreAssembleConsistencies.cpp is one file
+*               per item kind (#2554).
 *
 * @author       Gerstmayr Johannes
 * @date         2020-12-09 (generated)

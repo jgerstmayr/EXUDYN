@@ -72,7 +72,7 @@ typedef ObjectContainer<BodyGraphicsData> BodyGraphicsDataList;
 //};
 
 //the Python functions on BodyGraphicsData are in Graphics/BodyGraphicsDataPython.h
-//since revision2026b step RG9.1, so that this header - and with it every item
+//(#2622), so that this header - and with it every item
 //source that draws something - needs no pybind11
 
 
@@ -125,8 +125,8 @@ public:
 		settings.Init(&settings); //link all sub-structures
 		//light1 to light3 start from their own values - dimmed against
 		//overexposure, light2 and light3 off - which are in
-		//definitions/structureDefsVisualizationSettings.py since revision2026b
-		//step RG6.2.20, so that the documentation and the settings dialog see
+		//definitions/structureDefsVisualizationSettings.py (#2626),
+		//so that the documentation and the settings dialog see
 		//them too; VSettingsOpenGL() carries them now
 	}
 

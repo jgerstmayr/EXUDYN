@@ -81,8 +81,8 @@ public:
 	virtual void SetSuspendWriting(bool flag) { suspendWriting = flag; }
 };
 
-//! which Python exception an error becomes. Everything was a RuntimeError until revision2026 step
-//! R6.7; a wrong TYPE and a wrong VALUE are told apart since (#2432), and the Exudyn exception
+//! which Python exception an error becomes. A wrong TYPE and a wrong VALUE are told apart
+//! (#2432), and the Exudyn exception
 //! classes of #2516 are named here as well (#2521, step R6.3.3). The classes themselves are in
 //! ReleaseAssert.h; this enum exists because PyError and SysError are compiled functions and
 //! cannot be templated on the class the way the CHECKandTHROW macros are.
@@ -115,8 +115,8 @@ void StopRendererOnError(); //!< raise globalPyRuntimeErrorFlag, which shuts the
 
 void PyDeprecated(std::string message); //!< raises a Python DeprecationWarning: filterable, promotable with -W error::DeprecationWarning, and reported once per source location instead of on every call (#2522)
 
-//NOTE there is no PyError/SysError overload taking an ofstream any more (#2538, revision2026 step
-//R6.8): an error that ends a solver run is written to the solver file by CSolverBase::SolveSystem,
+//NOTE there is no PyError/SysError overload taking an ofstream any more (#2538): an error that
+//ends a solver run is written to the solver file by CSolverBase::SolveSystem,
 //which catches it where the file is known. That covers every helper, including the 1100+ macro
 //sites that could never pass a file. PyWarning keeps the overload, because a warning throws
 //nothing and that catch can never see it.

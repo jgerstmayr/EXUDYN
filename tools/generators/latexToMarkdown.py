@@ -5,8 +5,8 @@
 #
 # Called by the documentation emitters (autoGenerateHelper.LatexText2Markdown) on every
 # generation: an item description, a parameter, a function docstring and an equation block are
-# written in the project's LaTeX macros, and the documentation is Markdown since revision2026
-# step R7.1.6.
+# written in the project's LaTeX macros, and the documentation is
+# Markdown.
 #
 # It was tools/tex2md.py, the one-shot tool that converted the nine hand-written chapters in step
 # R7.1.5, and it kept the property that made it usable there: it knows the macros THIS
@@ -119,7 +119,7 @@ def StripMathComments(text):
 def StripComments(text):
     """remove the HTML comments; a comment-only line disappears entirely
 
-    A comment in a description is <!-- ... --> since revision2026b step RG3.17 (#2663). It is NOT a
+    A comment in a description is <!-- ... --> (#2663). It is NOT a
     LaTeX '%' any more, and that matters in both directions: this pass runs before the mathematics is
     protected, so a '%' it treated as a comment truncated whatever followed it on the line, whether
     that was a comment or the middle of a formula; and a '%' INSIDE mathematics is the engine's own
@@ -305,8 +305,7 @@ def ImagePath(image):
     extension (LaTeX picks one); the document needs a source-relative path WITH the extension
     that is actually on disk"""
     image = image.strip().lstrip('/')
-    #the definitions write an image by its bare name; the figures live in docs/figures/ since
-    #revision2026 step R7.1.7
+    #the definitions write an image by its bare name; the figures live in docs/figures/
     for prefix in ['docs/figures/', 'docs/']:
         if not os.path.exists(image) and (os.path.exists(prefix + image)
                                           or os.path.exists(prefix + image + '.png')):

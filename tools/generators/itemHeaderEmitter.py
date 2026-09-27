@@ -4,7 +4,7 @@
 # Details:  Emits the per-item C++ headers C<Item>.h, Main<Item>.h and Visu<Item>.h, and the two
 #           user-function headers PySymbolicUserFunctionSet.h / PythonUserFunctionsTemplates.h,
 #           and the item auto-registration objectFactoryAutoReg.h,
-#           from definitions/ (revision2026 step R4.3, part 2b). The code was MOVED out of
+#           from definitions/. The code was MOVED out of
 #           src/pythonGenerator/pythonAutoGenerateObjects.py; the output is byte-identical.
 #
 #           It reads the members of definitions/ directly through the predicates of itemModel

@@ -1,8 +1,8 @@
 /** ***********************************************************************************************
 * @brief        What the UpdateGraphics implementations share. They lived at the top of
 *               src/Objects/VisuNodePoint.cpp, the one file that held the UpdateGraphics of
-*               every item; revision2026 step R11.4.4 (#2555) moved each of those functions next
-*               to its own item, so what several of them use has to be a header.
+*               every item; each of those functions is next to its own item now (#2555), so
+*               what several of them use has to be a header.
 *
 * @author       Gerstmayr Johannes
 * @date         2026-09-20 (split off)

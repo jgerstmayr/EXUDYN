@@ -5506,3 +5506,45 @@ in the HTML.
 choice and stays #2697. This step only removed the drift that had already happened.
 
 **Gates**: the HTML and the PDF build (xelatex), 11/11 checks, the full suite, pytest.
+
+<a id="rg3-13-1"></a>
+### RG3.13.1 — the plan references in the code are gone (2026-09-27, #2649)
+
+**The count had grown.** RG3.13 left 235; measured again, `revision2026` stood **330 times in 177
+files** of `src/`, `tools/`, `python/` and `definitions/` - the issue records and the generated files
+excluded, where citing a step is the convention or the text is not written by hand. The work since
+RG3.13, this session's included, had kept writing `(revision2026b step RG12.23)` into comments. It is
+**0** now.
+
+**Three passes, and the lesson of RG3.13 decided their shape**: its third pass let a pattern cross a
+line break and merged prose into code. So nothing here touches a line of code:
+
+| pass | what | how many |
+|---|---|---|
+| 1 | a single line of a comment or a docstring, found with `tokenize` for Python and a small scanner for C++: a parenthetical keeps its issues and loses the step, a comment that was **only** a reference keeps its issue, a trailing clause goes | 202 in 142 files |
+| 2 | a reference wrapped across two **full-line** comments: the two lines are joined, the same rules applied, and wrapped again to their width - never a block, because joining a block merged two separate comments and a banner line in the first attempt, which was reverted | 37 pairs |
+| 3 | by hand, a sentence each, where the reference was part of what the sentence said | 85 edits |
+
+**What the hand pass decided**, as a rule: what a sentence said about the **history** of the code
+goes, what it says about the **code** stays, and an issue replaces a step where there is one -
+*"Until revision2026b step RG12.6 these were 325, 188 and 113 pixels, which is what they still are at
+the default width"* is *"At the default width of 1024 they are 325, 188 and 113 pixels (#2667)"*.
+Four references were to facts of the info document (`revision2026 fact 14`, `19`, `21`) or to a
+decision (`D14`); they went, because the sentence around them is true without them. Three printed
+messages changed with them: the note of `runTestSuite.py` on a known Windows/Linux difference names
+`UnresolvedOnLinux()` instead of *revision plan phase R10*, `regenerate.py` no longer cites a fact, and
+one reason string of `checkExtras.py`.
+
+**The proof that no code changed**, run over all 175 changed files: the Python AST with the docstrings
+blanked is identical before and after, and so are the C++ tokens with the comments removed. The
+exceptions were the strings named above - and two C++ files whose comments contain a quote, which the
+comment stripper does not remove and which were read by eye. Three comment lines that had been
+nothing but a reference had become blank lines inside comment blocks; they are removed.
+
+**What the measure did not see** (#2703, RG3.13.2): **88 bare step numbers in 39 files** -
+`step R6.3.8`, `the rule RG6.2.11 wrote down` - the same rule without the plan's name. RG3.13.1 counted
+the word `revision2026`, which is what RG3.13 had counted.
+
+**Gates**: the wheel, 11/11 checks (TIER 1 drift: a comment in `symbolic.pyi`), the full suite,
+pytest, the strict HTML build. Four generated pages of the Python utilities changed, because their
+docstrings carried the references and are published.

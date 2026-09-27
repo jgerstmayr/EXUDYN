@@ -39,8 +39,8 @@ import os
 #the format of the files; a reader that does not know this number must not guess
 schemaVersion = 1
 
-#the fields of an issue, in the order they are written. Names are camelCase since revision2026
-#step R8.5; the flat file had 'date raised', 'resolved author' and - for the title - 'issue'.
+#the fields of an issue, in the order they are written. Names are camelCase; the flat file of
+#the archive had 'date raised', 'resolved author' and - for the title - 'issue'.
 issueFields = [
     'number',           #int, the issue number and the file name
     'title',            #one line

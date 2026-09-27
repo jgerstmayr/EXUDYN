@@ -220,7 +220,7 @@ public:
 	}
 
 	//! THE CONTAINER THE RENDERER IS ATTACHED TO, or nullptr: GLFW can hold one at a time, so this
-	//! is module-wide (revision2026b step RG12.18, #2692). It used to be the dictionary entry
+	//! is module-wide (#2692). It used to be the dictionary entry
 	//! exu.sys['currentRendererSystemContainer'], which nothing could keep honest about its type -
 	//! and #2691 was exactly that: a Python subclass under the module's own name made an
 	//! isinstance() of the reader False and every dialog that needs the container stopped working.

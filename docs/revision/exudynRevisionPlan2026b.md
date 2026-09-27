@@ -493,13 +493,20 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 
 
 <a id="rg3-13-1"></a>
-**RG3.13.1** *(group RG3; from RG3.13, 2026-09-24)* **235 references to the plan are left in
-    comments, each inside a sentence** (#2649). 652 of the 887 were parentheticals or appended
+**RG3.13.1** *(group RG3; from RG3.13, 2026-09-24)* **DONE 2026-09-27** —
+    [log](exudynRevisionLog2026b.md#rg3-13-1) — **235 references to the plan are left in
+    comments, each inside a sentence** (#2649). By the time it was done they were 330 in 177 files -
+    the work since RG3.13 had added its own - and they are 0. 652 of the 887 were parentheticals or appended
     clauses and went by rule, keeping the issue number where there was one. The rest read like
     *"step R4.3 is moving outputs from the old generators to separate emitters"* - a sentence has
     to be written for each, which a pattern cannot do. **None is in a published page**: they are
     comments in `src/`, `tools/` and `python/`, so this is tidiness rather than a defect, and it
     is work for a session with nothing better to do.
+
+    - **RG3.13.2** *(sub-step; found in RG3.13.1)* **88 bare step numbers** (#2703): the same rule
+      broken without the plan's name - `step R6.3.8`, `the rule RG6.2.11 wrote down`, `dies with the
+      LaTeX branch in R7.1.7` - in 39 files. RG3.13.1 counted `revision2026` and did not see them. The
+      same three passes and the same proof apply.
 
 <a id="rg3-14"></a>
 **RG3.14** **DONE 2026-09-26** (#2655) **The item and settings descriptions are written
@@ -2471,7 +2478,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.3 | #2582 | a graphics regression suite |
 | RG2.3.2 | #2701 | PlotImage's 3D mode fails with every current matplotlib, and two coordinate slips |
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
-| RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
+| RG3.13.2 | #2703 | 88 bare step numbers in comments, the same rule as RG3.13.1 |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
 | RG4.6 | #2674 | a test hook for `forceQuitSimulation`, which nothing can reach |

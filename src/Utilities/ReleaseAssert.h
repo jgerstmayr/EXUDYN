@@ -113,8 +113,7 @@ public: using ExudynError::ExudynError;
 	//!linalg matrix/vector access functions, memory allocation, array classes and solvers will throw exceptions if the errors are not recoverable
 	//!this, as a consequence leads to a pybind exception translated to python; the message will be visible in python; for __FAST_EXUDYN_LINALG, no checks are performed
 
-	//The LAST argument is optional and names the exception class the check raises (#2521,
-	//revision2026 step R6.3.3):
+	//The LAST argument is optional and names the exception class the check raises (#2521):
 	//    CHECKandTHROW(index < n, "...")                       ExudynInternalError: an EXUDYN BUG
 	//    CHECKandTHROW(index < n, "...", ExudynIndexError)     a user's index mistake, IndexError in Python
 	//

@@ -59,7 +59,7 @@ def CheckGeneratedPages():
 
 def CheckStoredVersions():
     """The version every closed issue carries, against the version recomputed from the store
-    (revision2026 step R8.4(b), D14).
+    (the version of an issue is written when it closes).
 
     This is the check the version numbering did not have. The micro version is a running count,
     so a corrected date, a status changed by hand or a lost file renumbers versions that have

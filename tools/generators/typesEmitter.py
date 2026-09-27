@@ -56,7 +56,7 @@ def TypeNames(definition):
         if not os.path.isfile(parentHeader):
             #a definition WITHOUT a parent class has no header to read, which is normal; a
             #definition WITH one whose header is not found is a mistake that used to pass as an
-            #empty type list (revision2026 step R11.4.5 renamed the folder and this returned [])
+            #empty type list
             if definition.get('cParentClass', ''):
                 print('   WARNING: ' + definition['className'] + ' names the parent class '
                       + str(definition['cParentClass']) + ', whose header is not at '

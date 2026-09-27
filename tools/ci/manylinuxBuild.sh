@@ -12,7 +12,7 @@
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-09 (restructured); 2026-09-18 moved here from tools/buildAndGenerate/
-#           next to the buildManylinux.sh it calls (revision2026 step R5.18)
+#           next to the buildManylinux.sh it calls
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

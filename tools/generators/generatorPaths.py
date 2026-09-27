@@ -2,10 +2,8 @@
 # This is an EXUDYN maintainer tool
 #
 # Details:  The directories the generators read and write, derived from the location of this
-#           file rather than from the current working directory. Before revision2026 step R4.3
-#           every generator used '../../' paths and only worked when started from
-#           src/pythonGenerator/ (plan section 4.5); now they run from anywhere. Since revision2026 step R4.3 part
-#           2g this file lives in tools/generators/ with the emitters.
+#           file rather than from the current working directory, so the generators run from anywhere.
+#           It lives in tools/generators/ with the emitters.
 #
 #           All directory names end with '/', because the generators build file names by
 #           string concatenation.
@@ -33,14 +31,14 @@ pythonDir = repositoryRoot + 'python/'
 pythonPackageDir = pythonDir + 'exudyn/'
 testModelsDir = pythonDir + 'TestModels/'
 examplesDir = pythonDir + 'Examples/'
-#since revision2026 step R3.9 each of these holds one kind of file (#2513)
+#each of these holds one kind of file (#2513)
 miniExamplesDir = pythonDir + 'MiniExamples/'
 performanceModelsDir = pythonDir + 'PerformanceModels/'
 testingDir = pythonDir + 'testing/'
 toolsGeneratorsDir = repositoryRoot + 'tools/generators/'
 
-#Where the generated documentation points a reader at the source on GitHub (#2525, revision2026
-#step R7.6). Kept here because two generators build such links - the item pages ("Relevant Examples
+#Where the generated documentation points a reader at the source on GitHub (#2525). Kept here
+#because two generators build such links - the item pages ("Relevant Examples
 #and TestModels") and the utility documentation (one link per function) - and a prefix that lives
 #in two files is a prefix that will disagree with itself.
 #It said 'main/pythonDev/' until 2026-09-18, which was the layout before steps R3.1, R3.8 and R3.9

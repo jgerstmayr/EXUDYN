@@ -4,8 +4,8 @@
 # @author: Johannes Gerstmayr
 
 # Issue tracker: the rules. The FILES are issueStore.py - one JSON file per open or recently
-# closed issue in tools/issueTracker/issues/, one per year for the older ones (revision2026 step
-# R8.5). trackerlog.txt, a 723 KB file of comma-separated lines in which no text field could
+# closed issue in tools/issueTracker/issues/, one per year for the older ones. trackerlog.txt, a
+# 723 KB file of comma-separated lines in which no text field could
 # contain a comma, is gone.
 #
 # - the fields of an issue: issueStore.issueFields
@@ -48,12 +48,11 @@ def RepositoryPath(*parts):
 
 
 absolute_path = os.path.dirname(__file__)
-relative_path = '../generators'   #autoGenerateHelper moved to tools/generators (revision2026 step R4.3 part 2g)
+relative_path = '../generators'   #autoGenerateHelper moved to tools/generators
 helperPath = os.path.join(absolute_path, relative_path)
 sys.path.append(helperPath)
 
-#autoGenerateHelper is not needed any more: the tracker wrote LaTeX and RST until
-#revision2026 step R7.1.6 and writes Markdown now, which needs no conversion helper
+#the tracker writes Markdown, which needs no conversion helper
 
 #the issues themselves live in issues/ as JSON; issueStore owns the
 #files, this module owns the rules
@@ -121,7 +120,7 @@ def ReleaseOfClosedIndex(closedIndex):
 
 def VersionOfClosedIndex(closedIndex):
     """the version string the closedIndex-th closed issue produced, e.g. '1.10.160'. This is what
-    ResolveIssue and CloseIssue store in the issue (revision2026 step R8.4(b), D14), and what
+    ResolveIssue and CloseIssue store in the issue, and what
     tools/checkIssues.py recomputes and compares."""
     release = ReleaseOfClosedIndex(closedIndex)
     return release['version'] + '.' + str(closedIndex - release['baseline'])
@@ -169,8 +168,8 @@ issueTypes = {
 #CLOSED means EVERYTHING EXCEPT RESOLVED (maintainer 2026-09-21, D13): obsolete, won't fix,
 #duplicate of #n, superseded, no longer applies, not reproducible, abandoned. The kind is named
 #in the mandatory reason, NOT as a status of its own: the distinction is prose, and every extra
-#status is another branch in every converter. It was called ABANDONED between revision2026 steps
-#R8.7 and R8.3.4 - one reason standing for all of them, which is what made the name wrong.
+#status is another branch in every converter. A status such as ABANDONED
+#would be wrong: one reason cannot stand for all of them.
 issueStatuses = {
     'RAISED':   'open',
     'RESOLVED': 'done',
@@ -192,8 +191,8 @@ closedStatuses = ['RESOLVED', 'CLOSED']
 typesNotInReleaseNotes = ['IDEA']
 #+++++++++++++++++++++++++++++++++++++++++++++
 
-#THE EFFORT, in human working hours without AI assistance (revision2026 step R8.5.3, maintainer
-#2026-09-21). It is a CLASSIFICATION, not an estimate anyone is held to: what it buys is the
+#THE EFFORT, in human working hours without AI assistance. It is a CLASSIFICATION, not an
+#estimate anyone is held to: what it buys is the
 #question "which open FIX is LOW", which 270 open issues cannot answer otherwise. Empty means
 #not classified yet.
 issueEfforts = {
@@ -518,8 +517,8 @@ def UpdateDateAndVersion(updateVersion = True):
         file.close()
 
         #++++++++++++++++
-        #README.rst is the GitHub and PyPI landing page and is hand-written (revision2026 step
-        #R7.1.5); it used to be generated from gettingStarted.tex, and the only part of it that
+        #README.rst is the GitHub and PyPI landing page and is hand-written; it used to be
+        #generated from gettingStarted.tex, and the only part of it that
         #has to follow the version is this one line, so it is stamped here rather than by a
         #second mechanism. A README without that line is left alone.
         readmeVersionLine = '+  Exudyn version = '
@@ -634,14 +633,13 @@ def IssueBadges(issue):
     either - the pages say once that the author is omitted when it was Johannes Gerstmayr.
 
     The effort carries its word - `LOW EFF` - and the priority does not, because LOW and HIGH
-    are values of BOTH and two bare badges in one line cannot be told apart (revision2026b
-    step RG10.2, #2600, where the web view met the same problem)."""
+    are values of BOTH and two bare badges in one line cannot be told apart (#2600)."""
     badges = []
     kind = issue['type'].strip()
     if kind != '':
         badges.append(Colour('textred', '`BUG`') if kind == 'BUG' else '`' + kind + '`')
     if issue['priority'].strip() != '':
-        #an OPEN issue keeps the colour its priority had before revision2026b step RG3.10.1,
+        #an OPEN issue keeps the colour of its priority,
         #which is the only thing a reader of 270 open issues sorts them by
         badge = '`' + issue['priority'].strip() + '`'
         if issue['status'] == 'RAISED':
@@ -661,8 +659,7 @@ def IssueBadges(issue):
 def IssueDetails(issue):
     """what stands under the entry of an issue: its text and its dates, as the tracker page
     has always printed them. A CLOSED issue shows what its resolution says and an OPEN one
-    what the work on it knows so far; the two are different fields since revision2026 step
-    R8.5.3."""
+    what the work on it knows so far; the two are different fields."""
     details = '  - description: ' + ToMarkdown(issue['description']) + '\n'
     if issue['releaseNotes'].strip(' ') != '':
         details += '  - **notes:** ' + ToMarkdown(issue['releaseNotes']) + '\n'
@@ -768,8 +765,8 @@ def MarkdownText():
     vIssueRelease = 1 #for now
 
     for issue in reversed(issueListSorted):
-        #THE VERSION COMES FROM THE ISSUE (revision2026 step R8.4(b)). It was recomputed here on
-        #every run, which is what made a published number depend on a sort by dateResolved. The
+        #THE VERSION COMES FROM THE ISSUE. It was recomputed here on every run, which is what
+        #made a published number depend on a sort by dateResolved. The
         #recomputation is the fallback for an issue that carries no stamp yet, and
         #tools/checkIssues.py compares the two for every closed issue.
         stamped = str(issue.get('resolvedInVersion', '')).strip()
@@ -825,8 +822,8 @@ changelogFile = 'CHANGELOG.md'
 changelogDetailedReleases = 1   #how many releases are printed with the sub-list of an entry -
                                 #the description, the notes and the dates - and not the headline
                                 #alone
-changelogReleases = 1           #how many releases are printed AT ALL (revision2026b step RG3.10,
-                                ##2599): the earlier ones are on the tracker page in full, and
+changelogReleases = 1           #how many releases are printed AT ALL (#2599):
+                                #the earlier ones are on the tracker page in full, and
                                 #2370 of the 2440 lines of this file were a shorter rendering of
                                 #what that page says with the author, the description and both
                                 #dates. One list, in one place.
@@ -926,8 +923,8 @@ def WritePages():
 
 #%%******************************************************************************************************
 def CheckedEnumValue(fieldName, value, allowed):
-    """one spelling per value, or a message that lists the ones there are (revision2026 step
-    R8.5.3). An empty value is legal for every enum field of an issue and means "not classified";
+    """one spelling per value, or a message that lists the ones there are.
+    An empty value is legal for every enum field of an issue and means "not classified";
     saying so is better than a default nobody chose."""
     value = value.strip().upper()
     if value != '' and value not in allowed:
@@ -1078,8 +1075,7 @@ def ExtendIssue(issueNumber, text, author='JG'):
         raise ValueError('ExtendIssue: issue ' + str(issueNumber) + ' is ' + d['status']
                          + '; a closed issue is not extended - reopen it or raise a new one')
 
-    #the date says which part of the description is the later analysis; in the JSON format of
-    #revision2026 step R8.5 this becomes one entry of an "updates" list
+    #the date says which part of the description is the later analysis
     d['description'] = (d['description'].rstrip()
                         + ' [' + GetDateStr() + ', ' + author + ']: ' + text.strip())
 
@@ -1182,7 +1178,7 @@ def BumpRelease(kind=None, version=None, name=None):
 
     #A release that has closed nothing must not be left behind: its baseline and the new one would
     #be the same number, two releases would claim the same issue, and tools/checkIssues.py reports
-    #it as "the baselines are not strictly increasing" (found by the tests of revision2026b, at
+    #it as "the baselines are not strictly increasing" (found by the tests, at
     #the boundary right after the 1.12 bump).
     closed = issueStore.ClosedCount()
     if closed < current['baseline']:
@@ -1205,7 +1201,7 @@ def BumpRelease(kind=None, version=None, name=None):
 
 #%%******************************************************************************************************
 def StampVersion(issue):
-    """Write into the issue the version its closing produces (revision2026 step R8.4(b), D14).
+    """Write into the issue the version its closing produces.
 
     The micro version is a running count of closed issues, so every version number in the release
     notes was DERIVED on each run - from a sort by dateResolved - until this step. One corrected
@@ -1257,7 +1253,7 @@ def ResolveIssue(issueNumber, notes='', author='JG'): #raise a new issue into li
 #%%******************************************************************************************************
 #use this to close an issue that will NOT be done
 def CloseIssue(issueNumber, reason, author='JG'):
-    """Close an issue without doing it (revision2026 step R8.3.4; it was AbandonIssue before).
+    """Close an issue without doing it.
 
     CLOSED covers every way an issue ends except being resolved - obsolete, won't fix, duplicate
     of #n, superseded, no longer applies, not reproducible, abandoned - and the kind belongs in
@@ -1299,7 +1295,7 @@ def CloseIssue(issueNumber, reason, author='JG'):
 
 
 #%%******************************************************************************************************
-#the name this function had between revision2026 steps R8.7 and R8.3.4; scripts outside this
+#the older name of CloseIssue; scripts outside this
 #repository may still call it, and it costs one line to keep them working
 def AbandonIssue(issueNumber, reason, author='JG'):
     """deprecated spelling of CloseIssue"""

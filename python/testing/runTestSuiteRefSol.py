@@ -21,9 +21,8 @@ def TestExamplesReferenceSolution():
     #them by more than the 5e-14 tolerance - the AVX branches of Use_avx.h sum in a different
     #order. The previous (AVX2) values are in git history, one commit back.
     refSol = {
-        #the ten small tests that were functions in modelUnitTests.py until revision2026b
-        #step RG10.6.5. Each computes an ERROR against a reference value written into it in
-        #2019, so its result IS that error and the reference here is 0; each model states
+        #ten small tests that each compute an ERROR against a reference value written into them in
+        #2019, so each result IS that error and the reference here is 0; each model states
         #its own tolerance, exu.sys['testTolerance'] = 4e-13, which is what
         #RunAllModelUnitTests compared against
         'ANCFCable2DBendingTest.py': 0.,
@@ -254,7 +253,7 @@ def DeliberatelyNotRun():
         'ANCFBeamEigTest.py':
             'runs clean in 0.23s but its testError/testResult lines are commented out (line 232)',
         'LieGroupIntegrationUnitTests.py':
-            'ALL 10 of its tests pass since 2026-09-18 (revision2026 step R5.12.1 settled #2494: '
+            'ALL 10 of its tests pass since 2026-09-18 (#2494 settled it: '
             'the composition rule deliberately does not map into the principal range, and TEST 2 '
             'now checks that the composed vector is the IDENTITY rotation rather than comparing '
             'against the Matlab principal-range value). What still keeps it out of the suite is '

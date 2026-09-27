@@ -155,7 +155,7 @@ def BaseTolerance():
     """
     The tolerance a test result is compared against, before the per-test factor of
     TestExamplesToleranceFactors(). It depends on the platform, because the reference values were
-    computed on 64 bit Windows (revision2026 step R5.1: one definition for the suite and for pytest).
+    computed on 64 bit Windows.
 
     Returns:
         float: the base tolerance for this platform
@@ -315,7 +315,7 @@ def CheckTestCoverage(modelsDir, refSolNames, deliberatelyNotRun):
     runTestSuite.py builds its run list purely from the keys of TestExamplesReferenceSolution():
     there is no listdir anywhere in the suite. A model which exists but is in no list is
     therefore never executed, and is indistinguishable from a file which does not exist. That
-    is how 19 models came to be silently unrun (revision2026 fact 14).
+    is how models can be silently unrun, and why this check exists.
 
     modelsDir holds MODELS ONLY (#2513), so every .py in it is a
     test. The list of files which are not tests - needed while the runners and the performance
@@ -890,9 +890,9 @@ sys.path.insert(0, {testingDirectory!r})
 import matplotlib
 matplotlib.use('Agg')  #a worker must never open a window
 import exudyn as exu
-exu.special.userInterface.SuppressAll(True)  #revision2026 step R5.17
+exu.special.userInterface.SuppressAll(True)  #no window may wait for a human
 exu.config.outputDirectory = {outputDirectory!r}
-exu.sys['testIsActive'] = True          #revision2026b step RG10.6: the channel is exu.sys
+exu.sys['testIsActive'] = True          #the channel between model and runner is exu.sys
 exu.sys['testResult'] = {invalidResult!r}
 start = time.perf_counter()
 try:
@@ -930,8 +930,8 @@ def RunModelInProcess(fileName, solutionDirectory, invalidResult, timeout=1800,
     """
     import subprocess
 
-    #a model addressed through a sibling directory ('../MiniExamples/X.py' since revision2026
-    #step R3.9) must not write its output back into that directory (#2513)
+    #a model addressed through a sibling directory must not write its output back into that
+    #directory (#2513)
     outputName = fileName[:-3].replace(chr(92), '/').replace('../', '')
 
     source = runModelBootstrap.format(fileName=fileName,

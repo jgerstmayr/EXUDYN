@@ -7,7 +7,6 @@
 #           the class of bug users report as "it crashed with no message": a read past the end of
 #           a vector, a use after free, a signed overflow, a misaligned load. A normal build
 #           produces the wrong answer or a silent crash; this one prints the file and line.
-#           revision2026 step R5.6.
 #
 #           NO CHANGE TO setup.py IS NEEDED: the flags travel through EXUDYN_EXTRA_COMPILE_ARGS
 #           and EXUDYN_EXTRA_LINK_ARGS, which setup.py already appends to every extension
@@ -40,7 +39,7 @@
 #                                            while the backlog is being triaged)
 #
 # Author:   Johannes Gerstmayr
-# Date:     2026-09-18 (created; revision2026 step R5.6)
+# Date:     2026-09-18
 # Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

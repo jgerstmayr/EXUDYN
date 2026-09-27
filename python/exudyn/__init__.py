@@ -226,13 +226,12 @@ except Exception as e: #an environment that cannot be read must never stop 'impo
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the override settings of ~/.exudyn/config.json, read ONCE here and kept in
 #exudyn.special.overrideSettings, which is where both Python and the C++ core read them
-#(revision2026b steps RG12.5 and RG12.9, #2666 and #2679). A stored setting makes a run behave
+#(#2666, #2679). A stored setting makes a run behave
 #differently than it reads, so every one of them is named in one note here,
 #EXUDYN_NO_USER_SETTINGS=1 ignores the file, and exudyn.misc.overrideSettings.Applied() answers
 #"what is not in my script" afterwards. Nothing writes the file by itself.
 #the constructors are wrapped ONCE per process, and a reload may be what wraps them: a file that
-#had no visualizationSettings at import can have them after it was edited (revision2026b step
-#RG12.14, #2687)
+#had no visualizationSettings at import can have them after it was edited (#2687)
 _visualizationSettingsWrapped = False
 
 
@@ -256,12 +255,12 @@ def _ApplyUserSettings(reload=False):
 
     _settings.ApplyConfig(config, stored)
 
-    #A STORED visualizationSetting IS APPLIED WHENEVER SUCH A STRUCTURE IS CREATED (revision2026b
-    #step RG12.10, #2684), which is the two ways a user gets one: the structure a SystemContainer
+    #A STORED visualizationSetting IS APPLIED WHENEVER SUCH A STRUCTURE IS CREATED (#2684), which
+    #is the two ways a user gets one: the structure a SystemContainer
     #builds in its constructor, and exu.VisualizationSettings() - which got nothing before, so a
     #script that edited one before creating a container saw the defaults.
     #
-    #THE CONSTRUCTOR IS WRAPPED IN PLACE, NOT SUBCLASSED (revision2026b step RG12.17, #2691). A
+    #THE CONSTRUCTOR IS WRAPPED IN PLACE, NOT SUBCLASSED (#2691). A
     #Python subclass installed as exudyn.SystemContainer changes what that NAME is, and three things
     #broke on it in two days: DefaultSettingsDictionary constructed the subclass and reported the
     #overrides as the defaults, an isinstance() of mine in the settings dialog stopped recognising

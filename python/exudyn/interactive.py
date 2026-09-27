@@ -354,7 +354,7 @@ class InteractiveDialog:
             self.tkWindow.minsize(320,self.tkWindow.winfo_height())
         #self.tkWindow.minsize(280,50) #will create windows which are too small
 
-        #WHERE THIS DIALOG WAS LEFT (revision2026b step RG12.16.3, #2689). The SolutionViewer, the
+        #WHERE THIS DIALOG WAS LEFT (#2689). The SolutionViewer, the
         #mode shapes and an interactive simulation are all this window, so all of them remember
         #themselves, each under its own title. The size is only overridden if something IS stored -
         #otherwise the layout above decides, which is why width and height are not given - and the
@@ -384,7 +384,7 @@ class InteractiveDialog:
         self.simulationStopped = True
         self.RunButtonText.set('Stop')
         self.FinalizeSolver()
-        #where it was, before it is gone (revision2026b step RG12.16.3): the geometry cannot be read
+        #where it was, before it is gone: the geometry cannot be read
         #after the window is destroyed, which is what RememberWindowGeometry recorded it for
         try:
             from exudyn.misc.GUI import StoreWindowGeometry                  # noqa: PLC0415

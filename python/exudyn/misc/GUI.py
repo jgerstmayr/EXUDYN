@@ -63,9 +63,8 @@ boolDoubleClickDelay = 220 #ms a bool row waits before it opens its editor, so t
                         #click can cancel it and toggle instead
 textHeightFactor = 1.45 #this is the factor between font size and text height; larger values leading to more space between lines
 
-#the share of the dialog width the three fixed columns take; the description gets the rest. Until
-#revision2026b step RG12.6 these were 325, 188 and 113 pixels, which is what they still are at the
-#default width of 1024 (#2667)
+#the share of the dialog width the three fixed columns take; the description gets the rest. At the
+#default width of 1024 they are 325, 188 and 113 pixels (#2667)
 defaultColumnWidths = [0.31, 0.18, 0.11]
 
 treeEditDefaultWidth = 1024     #unscaled width of e.g. visualizationSettings
@@ -74,8 +73,7 @@ treeEditMaxInitialHeight = 1440 #larger height, if screen resolution admits
 dialogDefaultWidth = 800        #unscaled width of e.g. right mouse edit
 dialogDefaultHeight = 600       #unscaled height of e.g. right mouse edit
 #the folders that are open when a settings dialog is opened; a user sets this, and nothing
-#else writes it (revision2026b step RG6.2.7, #2591 - the dialog used to APPEND to it and remove
-#from it on every click, so that clicking in the dialog silently rewrote the configuration)
+#else writes it (#2591)
 treeEditOpenItems = ['bodies','connectors','nodes','general']
 #which folders were open when a dialog was last used in this process; None until one was, and
 #then it is what the next dialog opens with. This is the remembering the clicks used to do, with
@@ -115,7 +113,7 @@ def GetRendererSystemContainer():
         nothing being printed is how "the V key opens no dialog" became a reproduction rather than a
         message (#2691, maintainer 2026-09-26).
     """
-    #ASKED OF THE C++ SIDE, which holds the pointer (revision2026b step RG12.18, #2692). It used to
+    #ASKED OF THE C++ SIDE, which holds the pointer (#2692). It used to
     #be the dictionary entry exu.sys['currentRendererSystemContainer'], and a dictionary entry can
     #hold anything: #2691 was exactly that - a Python subclass under the module's own name made the
     #isinstance() that guarded it False, and every dialog that asks here found nothing, in silence.
@@ -274,7 +272,7 @@ def GetExudynDisplayScaling(root=None):
     """
     try:
         #GetRendererSystemContainer is the ONE place that knows how the link is found and that a
-        #container whose C++ object is gone must not be used (revision2026b step RG12.18)
+        #container whose C++ object is gone must not be used
         guiSC = GetRendererSystemContainer()
         if guiSC is not None: #None would mean that the renderer is detached
             rs = guiSC.renderer.GetState()
@@ -348,7 +346,7 @@ def SplitStoredFromChanged(changes, overriddenPaths, fileName):
         how many of them there are
 
     Note:
-        The maintainer decided this on 2026-09-26 (revision2026b step RG12.11): the difference is to
+        The maintainer decided this on 2026-09-26: the difference is to
         the REAL default, and what the file already covers is named separately with a comment
         between them, so that a user can see what they would be copying and decide. Comparing
         against default-plus-override instead would hide exactly the settings that file is about.
@@ -451,7 +449,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.dictionaryTypesT = dictionaryTypesT #as type
         self.updateOnChange = updateOnChange
         #the fractions of the dialog width the first three columns take; the description column
-        #takes what they leave (revision2026b step RG12.6, #2667)
+        #takes what they leave (#2667)
         self.columnWidths = list(columnWidths) if columnWidths is not None else defaultColumnWidths
         self.treeOpen = treeOpen
         self.textHeight = textHeight
@@ -538,7 +536,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                                 font=(None, DialogFontSize(fontFactor), 'bold'))
 
         #Ctrl and the wheel change the font size, on every platform's spelling of the event
-        #(revision2026b step RG12.7, #2668)
+        #(#2668)
         for widget in [self, self.tree]:
             widget.bind('<Control-MouseWheel>',
                         lambda event: self.ChangeFontSize(1.1 if event.delta > 0 else 1/1.1))
@@ -1047,8 +1045,8 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
             return set()      #a dialog that cannot open is worse than one that groups nothing
 
     def OnShowDiffToDefault(self):
-        #THE DIFFERENCE IS TO THE REAL DEFAULT (maintainer, 2026-09-26, revision2026b step
-        #RG12.11): a setting the override file stores IS a difference to the default and is listed
+        #THE DIFFERENCE IS TO THE REAL DEFAULT: a setting the override file stores IS a difference
+        #to the default and is listed
         #as one - comparing against default-plus-override would hide exactly the settings that file
         #is about. What the file already covers is named separately, so that a user can see what
         #they would be copying and decide.
@@ -1073,8 +1071,8 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         """write the settings that differ from the defaults to the override settings file - after
         showing exactly which ones
 
-        TWO BUTTONS, BECAUSE THEY ARE TWO DECISIONS (maintainer, 2026-09-26, revision2026b step
-        RG12.19): *I like this look* and *I like this window here*. This one is the look, and the
+        TWO BUTTONS, BECAUSE THEY ARE TWO DECISIONS (#2693):
+        *I like this look* and *I like this window here*. This one is the look, and the
         geometry of the RENDER window rides along in it - `view*.window.renderWindowSize` and
         `renderWindowPosition` are ordinary visualizationSettings, and the maintainer chose that on
         purpose: *"it is the straightforward way and becomes now natural, because it is only stored if
@@ -1284,7 +1282,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                   command=window.destroy).grid(row=2, column=1, pady=6)
         if confirm is not None:
             #the window is what asks: everything that writes outside this session shows what it
-            #will write first (revision2026b step RG12.11, #2685)
+            #will write first (#2685)
             def Confirm():
                 window.destroy()
                 confirm[1]()
@@ -1448,7 +1446,7 @@ def EditDictionaryWithTypeInfo(settingsStructure, exu=None, dictionaryName='edit
                          ' github issue')
 
     #the size and the position of the last time, if the user asked for them to be remembered
-    #(revision2026b step RG12.5.3, #2608)
+    #(#2608)
     RestoreWindowGeometry(tkWindow, dictionaryName, treeEditDefaultWidth, windowHeight)
     recordedGeometry = RememberWindowGeometry(tkWindow, dictionaryName, settingsStructure)
 
@@ -1781,7 +1779,7 @@ def StoreDialogPositions(settingsStructure=None):
     Note:
         This decides whether a dialog stores ITSELF on closing, and nothing else: a geometry that
         is already stored - by this flag, by the store button or by a script - is used whenever a
-        dialog opens, see `RestoreWindowGeometry` (revision2026b step RG12.13, #2686).
+        dialog opens, see `RestoreWindowGeometry` (#2686).
 
         The structure is asked before the renderer's SystemContainer because
         `python -m exudyn dialogs` has no container at all, and a script that has not started the
@@ -1815,12 +1813,12 @@ def RestoreWindowGeometry(tkWindow, name, width=None, height=None):
 
     Note:
         The **size** is restored always and the **position** only when the window would still be
-        reachable on the current screen (revision2026b step RG6.2.11 wrote that rule down). A
+        reachable on the current screen. A
         monitor that is gone, a resolution that changed, a laptop that was undocked: each of them
         would otherwise put the dialog where nobody can close it.
 
         A GEOMETRY THAT IS STORED IS USED, whatever `dialogs.storeDialogPositions` says
-        (revision2026b step RG12.13, #2686). That flag decides whether a dialog stores ITSELF when
+        (#2686). That flag decides whether a dialog stores ITSELF when
         it closes; this function only reads what is there, and it is there because the flag was on,
         or because the store button of the dialog wrote it, or because a script did. Asking the flag
         here is what made the store button of RG12.11 write something that nothing read back.
@@ -1899,7 +1897,7 @@ def StoreGeometryString(geometry, name):
     Note:
         This does NOT ask whether storeDialogPositions is on: the flag decides whether a dialog
         remembers itself on closing, and the store button of the settings dialog stores on request
-        (revision2026b step RG12.11, #2685). RememberWindowGeometry is where the flag is read.
+        (#2685). RememberWindowGeometry is where the flag is read.
     """
     from exudyn.misc import overrideSettings as userSettings
 

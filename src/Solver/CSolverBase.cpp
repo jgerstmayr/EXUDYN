@@ -546,8 +546,8 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 
 }
 
-//! THE ERROR THAT ENDS A RUN GOES INTO THE SOLVER FILE, WHATEVER RAISED IT (#2538, revision2026
-//! step R6.8). PyError and SysError used to take the file and write it themselves, which covered
+//! THE ERROR THAT ENDS A RUN GOES INTO THE SOLVER FILE, WHATEVER RAISED IT (#2538). PyError and
+//! SysError used to take the file and write it themselves, which covered
 //! twelve call sites and left the 1100+ CHECKandTHROW sites writing nothing at all - so the last
 //! message of a run could be missing from exactly the file someone opens to find out why it ended.
 //! It is written HERE, once, because SolveSystem is the only place that holds the file. The block

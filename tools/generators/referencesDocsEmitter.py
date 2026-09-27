@@ -6,7 +6,7 @@
 #           confHelperCitations.py (#2550).
 #
 #           WHY a generator and not a hand-written page: the .bib is the bibliography of the
-#           project and outlived the LaTeX build (revision2026 step R7.1.7 moved it to docs/).
+#           project and outlived the LaTeX build.
 #           The chapters cite with [Key2021] in the running text, which the LaTeX build resolved
 #           and nothing has resolved since - the keys were printed and pointed nowhere.
 #

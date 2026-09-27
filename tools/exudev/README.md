@@ -12,8 +12,7 @@ exudev -n <command>         print the commands it would run, and run nothing
 On Windows type `exudev` from anywhere in the tree (`exudev.bat` sits in the repository root);
 everywhere else — WSL, linux, macOS — type `python tools/exudev`.
 
-Every command plans the same steps on the three platforms since #2644 (revision2026b step
-RG10.8); what differs is the build directories `clean` removes, the program `docs --open` calls,
+Every command plans the same steps on the three platforms (#2644); what differs is the build directories `clean` removes, the program `docs --open` calls,
 and the shell that starts the manylinux container. `python/testing/test_exudev.py` pins those
 three from any platform.
 
@@ -80,9 +79,8 @@ wrong thing and report success.
 ## How a step is judged
 
 Every step is judged by its **exit code**; the driver adds `--exit-code` to all three runners and
-offers no way to turn that off. Until revision2026 step R5.18.1 that was not possible:
-`runTestExamples.py` and `runPerformanceTests.py` always returned 0, and the driver had to read the
-summary line out of the log they had just written. That guesswork is gone (#2504).
+offers no way to turn that off, so the driver never reads a summary line out of a log to decide
+whether a run failed (#2504).
 
 Two of the exit codes mean "nothing NEW broke", not "everything passed":
 

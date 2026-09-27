@@ -43,7 +43,7 @@ inline const VSettingsView& GetSettingsView(Index viewID, const VisualizationSet
 
 //! THE SAME, WRITABLE, and deliberately named differently rather than overloaded: the renderer
 //! writing INTO the settings is unusual - it happens once, when a window closes and the user asked
-//! for where it was to be remembered (revision2026b step RG12.16.2, #2689) - and a call that does
+//! for where it was to be remembered (#2689) - and a call that does
 //! that should not look like the ordinary read
 inline VSettingsView& GetSettingsViewWritable(Index viewID, VisualizationSettings& visualizationSettings)
 {
@@ -118,7 +118,7 @@ public:
 	float displayScaling;			//!< value as retrieved from GLFW glfwGetWindowContentScale
 
 	Index2 currentWindowSize;		//!< current window size in pixel; used to transform mouse movements to OpenGL coordinates; x=width, y=height
-	Index2 currentWindowPosition;	//!< current position of the top left corner of the window in pixel, as GLFW reports it - the OpenGL area, not the title bar (revision2026b step RG12.20)
+	Index2 currentWindowPosition;	//!< current position of the top left corner of the window in pixel, as GLFW reports it - the OpenGL area, not the title bar
 	Matrix4DF modelRotation;			//!< rotation used for incremental rotation with mouse / right mouse button
 	//DELETE Float16 openGLModelViewMatrix;	//!< modelview matrix as used in openGL
 	Matrix4DF projectionMatrix;		//!< projection matrix as used in openGL

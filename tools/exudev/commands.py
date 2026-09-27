@@ -404,8 +404,8 @@ def Complete(options):
                                              overwrite_log=True, machine_id=None, extra=[]))
 
         #and the fast module on the versions the release matrix names - the oldest and the second
-        #newest - plus one fast performance run for comparison (revision2026 step R5.11.1,
-        #docs/dev/WORKFLOW.md). Running it everywhere would double the time for no new information.
+        #newest - plus one fast performance run for comparison. Running it everywhere would double
+        #the time for no new information.
         if options.fast:
             for pythonTag in FastModuleVersions(versions):
                 steps += Test(OptionsWith(options, py=pythonTag, fast=True, subset=False,
@@ -713,8 +713,7 @@ def Performance(options):
 
 
 #%%******************************************************************************************************
-#where "sphinx -M latexpdf" puts the .tex and the .pdf; git-ignored, like _build/ (revision2026b
-#step RG3.3, #2586)
+#where "sphinx -M latexpdf" puts the .tex and the .pdf; git-ignored, like _build/ (#2586)
 pdfBuildDirectory = '_buildpdf'
 
 

@@ -5,7 +5,7 @@
 #
 # Details:  Reads a user function as the definitions write it: an ordinary Python def with real
 #           annotations and a real docstring, passed to the ItemParameter it belongs to
-#           (revision2026b step RG12.4, #2664). Everything else about a user function - the
+#           (#2664). Everything else about a user function - the
 #           documentation block, the argument table, the entries of userFunctionArgsDict and the
 #           consistency check against the std::function - is derived from what this module returns.
 #
@@ -16,7 +16,7 @@
 #           The SIZE of an argument is not part of its type. It belongs in the argument's line of
 #           the docstring, as a formula - maintainer, 2026-09-25 - because a formula renders there
 #           and does not render inside a code block. That is why the arguments can be a signature
-#           at all; see revision2026b step RG3.14.5.
+#           at all.
 #
 # Usage:    from userFunctionModel import ReadUserFunction
 #           python tools/generators/userFunctionModel.py     #read every user function and print it
@@ -156,8 +156,8 @@ def ReadUserFunction(function, name=None):
                         summary, details, argumentText, returnText, sizes, returnSize)
 
 
-#the Python annotation that a C++ type of a std::function accepts, one to one (revision2026b step
-#RG12.4, #2664). A FIXED size is part of the annotation - Vector3D is not Vector - because that is
+#the Python annotation that a C++ type of a std::function accepts, one to one (#2664). A FIXED
+#size is part of the annotation - Vector3D is not Vector - because that is
 #what the argument table of a user function says and what the C++ signature needs. A size that is not
 #fixed is a formula in the argument's description, which is where a formula renders. py::object says
 #nothing about what it carries, so it accepts the two things that are passed as one.
@@ -227,7 +227,7 @@ def CheckAgainstCpp(userFunction, stdFunction):
     This is the only place where the two halves of a user function meet, and until it existed
     nothing compared them: a signature was stated in five places and checked in none, so a
     disagreement was found by a user whose function was called with the wrong number of arguments
-    (revision2026b step RG12.4, #2664)."""
+    (#2664)."""
     (cppArguments, cppReturn) = CppSignatureTypes(stdFunction)
     findings = []
 

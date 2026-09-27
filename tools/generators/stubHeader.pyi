@@ -71,7 +71,7 @@ from exudyn import (ObjectIndex, NodeIndex, MarkerIndex, LoadIndex, SensorIndex,
                     VSettingsMaterial)
 
 
-#the exception classes Exudyn raises from C++ (revision2026 step R6.3.1, #2516). Each derives from
+#the exception classes Exudyn raises from C++ (#2516). Each derives from
 #ExudynError AND from the built-in that fits, so 'except exudyn.ExudynError' catches everything
 #Exudyn raises while an existing 'except RuntimeError' or 'except IndexError' keeps working.
 #Registered in src/Pymodules/PybindModule.cpp; the C++ classes are in src/Utilities/ReleaseAssert.h.

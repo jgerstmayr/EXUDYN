@@ -5,8 +5,8 @@
 #           conftest.py before the test modules beside it, which is the only place early enough.
 #
 #           The user settings of ~/.exudyn/config.json are ignored: a maintainer who stores a
-#           setting must not thereby change what a test computes (revision2026b step RG12.5,
-#           #2666). The runners do the same, and a child process inherits it.
+#           setting must not thereby change what a test computes (#2666). The runners do the
+#           same, and a child process inherits it.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-26

@@ -64,8 +64,8 @@ def testThereIsSomethingToTest(leaves):
 #working has to be taken out here, and a path that stops working is a new failure. It held five
 #entries when this test was written (#2597) - every enum value, because CheckType had no branch
 #for one, and every absolute path, because ':' was not a valid file name character - and
-#revision2026b step RG6.2.3 emptied it.
-#THE FOUR SETTINGS THE DIALOG CANNOT UNSET (revision2026b step RG12.16, #2689). A render window
+#all five work now.
+#THE FOUR SETTINGS THE DIALOG CANNOT UNSET (#2689). A render window
 #position of (-1,-1) means "wherever the window manager puts it", and the dialog's rule for an
 #IndexArray - the type it shares with renderWindowSize, so nothing can tell them apart - is that its
 #values are not negative. That rule is the only one there is, because the C++ side accepts a negative
@@ -358,8 +358,7 @@ def testASystemContainerInitialisesNothingBeyondTheDefaults(comboLists):
 
 
 def testTheRendererLinkIsAMemberOfTheCppSide():
-    """exudyn.special.currentRendererSystemContainer, not an entry of exudyn.sys (revision2026b step
-    RG12.18, #2692)
+    """exudyn.special.currentRendererSystemContainer, not an entry of exudyn.sys (#2692)
 
     A dictionary entry can hold anything, and #2691 was exactly that: a Python subclass under the
     module's own name made the isinstance() that guarded the entry False, and every dialog that needs
@@ -381,7 +380,7 @@ def testReadingTheDefaultsLeavesTheRendererItsContainer():
     from a throw-away one - so the settings dialog handed the renderer a different container: the
     redraw signal went to it, the dialog read its window settings from it, and once it was
     collected, touching it was an access violation (#2623). The link is
-    exudyn.special.currentRendererSystemContainer since revision2026b step RG12.18."""
+    exudyn.special.currentRendererSystemContainer (#2692)."""
     container = exudyn.SystemContainer()
     assert exudyn.special.currentRendererSystemContainer is container
 
@@ -560,7 +559,7 @@ def testTheProcessCanBeMadeDpiAware():
 def testTheDisplayScalingIsAskedOfTkinterWhenNoRendererCanBeAsked(monkeypatch):
     root = TkRootOrSkip()
     #another test in this file creates a container, and the renderer branch would win. The link
-    #belongs to the C++ side since revision2026b step RG12.18 and cannot be taken away from Python,
+    #belongs to the C++ side (#2692) and cannot be taken away from Python,
     #so what is replaced is the one function that reads it
     monkeypatch.setattr(gui, 'GetRendererSystemContainer', lambda: None)
     try:
@@ -602,7 +601,7 @@ def testTheModuleNamespaceIsNotTheModelNamespace():
     assert gui.ModelScope() is not vars(gui)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the columns are fractions of the dialog width (revision2026b step RG12.6, #2667) and Ctrl with the
+#the columns are fractions of the dialog width (#2667) and Ctrl with the
 #wheel changes the font size (RG12.7, #2668). Both are tested in a WITHDRAWN root: the widgets are
 #real, no window is ever mapped
 def testTheColumnFractionsAreWhatWasConfigured():
@@ -648,7 +647,7 @@ def tkRoot():
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#A STORED GEOMETRY IS USED (revision2026b step RG12.13, #2686). RestoreWindowGeometry asked
+#A STORED GEOMETRY IS USED (#2686). RestoreWindowGeometry asked
 #dialogs.storeDialogPositions first, so what the store button of RG12.11 wrote was never read back.
 #A withdrawn window reports 1x1+0+0 whatever it was given, so what is tested is what the function
 #ASKS the window manager for
@@ -734,7 +733,7 @@ def testAnUnreachablePositionIsStillRefused(storedGeometry):
 def testADialogWhoseSizeComesFromItsLayoutIsLeftAlone(storedGeometry):
     """RestoreWindowGeometry(window, name) without a size: the InteractiveDialog of the
     SolutionViewer computes its size from its widgets, so nothing may be imposed on it unless
-    something IS stored (revision2026b step RG12.16.3, #2689)"""
+    something IS stored (#2689)"""
     storedGeometry([600, 500], [40, 50])
 
     (requested, _) = RequestedGeometry('a dialog nobody stored', None, None)

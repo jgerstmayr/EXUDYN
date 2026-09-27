@@ -163,8 +163,8 @@ def MarkdownLabelName(s):
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the LaTeX of definitions/ and of the docstrings becomes Markdown with the same converter the
-#chapters were converted with; it moved to tools/generators/latexToMarkdown.py in revision2026
-#step R7.1.7, because it stopped being the one-shot tool it was written as
+#chapters were converted with; it is tools/generators/latexToMarkdown.py, a module of the generators
+#rather than the one-shot tool it was written as
 from latexToMarkdown import ConvertText as LatexText2Markdown                    # noqa: E402
 
 
@@ -705,7 +705,7 @@ def ExtractExamplesWithKeyword(keyword, dirPath, checkPreString=True):
     #sorted(): listdir() returns DIRECTORY order, which is alphabetical on NTFS but hash
     #order on ext4. Without this the generated output differs between Windows and Linux
     #for no real reason - found 2026-09-11 by the first CI run of tools/regenerate.py
-    #(revision2026 step R0.2, fact 18). key=str.lower reproduces the NTFS order the
+    #. key=str.lower reproduces the NTFS order the
     #committed output was generated in, so making this deterministic did not also
     #reshuffle every documentation file.
     fileNames = sorted([f for f in listdir(dirPath) if isfile(join(dirPath, f))],
@@ -735,8 +735,8 @@ def ExtractExamplesWithKeyword(keyword, dirPath, checkPreString=True):
 #based on a search through Examples and TestModels
 #if latex is false, formatting is clean to be used in RST
 #the keywords under which the examples of an item are searched; shared by the LaTeX/RST
-#writer below and by KeywordExamplesMarkdown, so that both find the same files (revision2026
-#step R7.1.6). A Create* function creates the item without naming it, so it is searched too.
+#writer below and by KeywordExamplesMarkdown, so that both find the same files. A Create*
+#function creates the item without naming it, so it is searched too.
 createFunctionOfItem = {
     'ObjectFFRF': 'AddObjectFFRF(',
     'ObjectFFRFreducedOrder': 'AddObjectFFRFreducedOrderWithUserFunctions(',

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 113 | 1.12.115 |
+| 1.12 | Metheney | 114 | 1.12.116 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.116** `DOCU` `LOW` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` 235 references to the revision plan are left in comments, each inside a sentence (#2649)
+  - description: What RG3.13 could not do mechanically. Of the 887 mentions of revision2026 outside docs/revision, 652 were parentheticals or appended clauses and could be removed by rule, keeping the issue number where there was one. The remaining 235 in 149 files are inside a sentence - 'step R4.3 is moving outputs from the old generators to separate emitters', 'the name the function had between steps R8.7 and R8.3.4' - and each needs a sentence written for it, which a pattern cannot do: an attempt that allowed the phrase to wrap across two comment lines matched from a code line into a comment and merged prose into code (tools/generators/generatorPaths.py:35), so that pass was withdrawn and every file rebuilt from its committed content with the line-based rules only. None of the 235 is in a published page; they are comments in src/, tools/ and python/, where the rule is the older one of CODING\_STYLE 6.1 - a comment cites the issue - so this is tidiness rather than a defect.
+  - **notes:** The comments and docstrings of the code say what the code does and cite an issue where they cite anything: 330 references to the revision plan in 177 files are gone, and the published pages of the Python utilities with them. Nothing but comments, docstrings and three printed messages changed, which was checked for every file.
+  - date resolved: **2026-09-27 11:37**, date raised: 2026-09-24
 - **1.12.115** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the PDF lacks the chapter on performance and errors, and orders its user manual differently from the HTML (#2702)
   - description: Measured for \#2697: revision2026b step RG3.15 (\#2657, \#2661) restructured the user manual in index.md - a new chapter performanceErrors, and the command line and the results monitor moved under Advanced topics - and pdfIndex.md was not changed with it. So the PDF has no chapter 'Performance, errors and solver failures', lists the command line and the results monitor as chapters of their own, and puts Advanced topics before the Tutorial. This is the part of \#2697 that is a defect rather than a decision: pdfIndex.md takes the user-manual order of index.md, and what remains different is what is meant to (README, the examples and test models, the front page). How to keep the two from drifting again stays \#2697. revision2026b step RG3.26.1.
   - **notes:** The PDF documentation has the chapter 'Performance, errors and solver failures' again, and its user manual is in the same order as the HTML one, with the command line and the results monitor under Advanced topics.

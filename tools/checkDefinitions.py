@@ -337,7 +337,7 @@ def CheckUserFunctions(root):
     This is the only comparison of the two. The findings are the ones of
     userFunctionModel.CheckAgainstCpp - the generator raises on them as well, because it cannot emit
     userFunctionArgsDict without them; here they carry the file and the line
-    (revision2026b step RG12.4, #2664)."""
+    (#2664)."""
     import inspect
     for directory in [os.path.join(root, 'tools', 'generators'),
                       os.path.join(root, 'definitions')]:
@@ -353,8 +353,8 @@ def CheckUserFunctions(root):
             for member in definition['members']:
                 function = member.get('userFunction')
                 if function is None:
-                    #every parameter that IS a user function carries its def since revision2026b
-                    #step RG12.4.5; a new one cannot be written as prose again (#2664)
+                    #every parameter that IS a user function carries its def, so a new one
+                    #cannot be written as prose again (#2664)
                     if IsInterfaceParameter(member) and 'PyFunction' in TypeName(member):
                         findings.append((inspect.getsourcefile(type(definition)) or moduleName, 0,
                                          definition['className'] + '.' + member['pythonName']

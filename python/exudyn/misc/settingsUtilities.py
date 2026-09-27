@@ -373,7 +373,7 @@ def CompiledSettingsClass(settingsStructure):
 
     A settings structure can be an instance of a Python subclass: `import exudyn` installs one for
     VisualizationSettings when ~/.exudyn/config.json holds any, so that a stored setting reaches
-    every structure that is created (revision2026b step RG12.10, #2684). Constructing that subclass
+    every structure that is created (#2684). Constructing that subclass
     to find the DEFAULTS would apply the overrides to it and report them as the defaults - measured
     on the first attempt: openGL.multiSampling came back with 4 as its own default - so everything
     that shows a difference has to construct the compiled class instead.
@@ -403,8 +403,8 @@ def DefaultSettingsDictionary(settingsStructure):
     initialises are listed in containerInitialisedSettings above, and RG6.2.20 moves them where
     this function can see them.
 
-    AND NOT BY CONSTRUCTING ANYTHING when the override settings are in use: since revision2026b
-    step RG12.17 the constructor of the compiled class itself applies a stored setting, so
+    AND NOT BY CONSTRUCTING ANYTHING when the override settings are in use: the constructor
+    of the compiled class itself applies a stored setting (#2691), so
     `exudyn.misc.overrideSettings.structureDefaults` holds what it produced BEFORE it was wrapped,
     and that is used when it is there.
 

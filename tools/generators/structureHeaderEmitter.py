@@ -2,8 +2,8 @@
 # This is an EXUDYN maintainer tool
 #
 # Details:  Emits the C++ structure headers (SimulationSettings.h, VisualizationSettings.h, ...),
-#           DictionariesGetSet.h and Pybind_modules.h from definitions/ (revision2026 step R4.3,
-#           part 2c). Moved out of src/pythonGenerator/pythonAutoGenerateSystemStructures.py. Reads the
+#           DictionariesGetSet.h and Pybind_modules.h from definitions/. Moved out of
+#           src/pythonGenerator/pythonAutoGenerateSystemStructures.py. Reads the
 #           members directly through the predicates of structureModel.py.
 #
 # Usage:    python tools/generators/structureHeaderEmitter.py
@@ -293,8 +293,8 @@ def StructureCppHeader(parseInfo):
     sDictGet += '    auto structureDict = py::dict();\n'
     sDictGet += '    auto d = py::dict(); //local dict\n'
     #WHAT THE STRUCTURE IS, not what one of its values is: the settings dialog shows this
-    #when the mouse is over a folder, where it had nothing to show at all (revision2026b
-    #step RG6.2.15, #2615). 'structureDescription' is reserved like 'itemIdentifier' below.
+    #when the mouse is over a folder, where it had nothing to show at all (#2615).
+    #'structureDescription' is reserved like 'itemIdentifier' below.
     classDescriptionStr = (str(Header(parseInfo, 'classDescription'))
                            .replace('\\_', '_')
                            .replace('\\', '\\\\')
@@ -329,8 +329,8 @@ def StructureCppHeader(parseInfo):
             deprecationWarning = ''
             if IDPNS:
                 lineBreakIDP = '\n    '
-                #a real Python DeprecationWarning, not a printed line (#2522, revision2026 step
-                #R6.3.4): the user can filter it, promote it with -W error::DeprecationWarning, and
+                #a real Python DeprecationWarning, not a printed line (#2522): the user can filter
+                #it, promote it with -W error::DeprecationWarning, and
                 #sees it once per source location instead of on every read of the setting
                 deprecationWarning = 'PyDeprecated("VisualizationSettings parameter '
                 deprecationWarning += ConvertClassName2member(Header(parseInfo, 'class'))+'.'+parameter['pythonName']
@@ -497,7 +497,7 @@ def StructureCppHeader(parseInfo):
                         sDictGetPure += valueStr + ';\n'
                         
                         #set functions:
-                        if parameter['type'] in convertedMemberTypes: #the same conversion and checks as the attribute (revision2026 step R4.4.3.5a, b)
+                        if parameter['type'] in convertedMemberTypes: #the same conversion and checks as the attribute
                             sDictSet += ('    EPyUtils::FromPython(d["' + parameter['pythonName'] + '"], data.' + parameter['cplusplusName'] + ', '
                                          + RangeArgument(parameter['type']) + '"' + Header(parseInfo, 'class') + '.' + parameter['pythonName'] + '");\n')
                         else:
@@ -667,7 +667,7 @@ def CreatePybindHeaders(parseInfo):
             if (len(Header(parseInfo, 'linkedClass')) != 0):
                 linkedClassStr = Header(parseInfo, 'linkedClass') + '.'
 
-            if IsDirectScalar(parameter): #revision2026 step R4.4.3.5a
+            if IsDirectScalar(parameter):
                 memberStr = '&' + Header(parseInfo, 'class') + '::' + linkedClassStr + parameter['cplusplusName']
                 s += (spaces2 + '.def_property("' + parameter['pythonName'] + '", EPyUtils::MemberGetter(' + memberStr + '), EPyUtils::MemberSetter('
                       + memberStr + ', ' + RangeArgument(parameter['type']) + '"' + Header(parseInfo, 'class') + '.' + parameter['pythonName'] + '")')

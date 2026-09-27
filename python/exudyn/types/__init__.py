@@ -6,7 +6,7 @@
 #           data (exudyn.types.items) is generated from definitions/; the rules here are the ones
 #           mbs.Assemble() checks in C++ (CSystem::CheckSystemIntegrity), so a query is a pre-check:
 #           the checks at assembly and in CheckPreAssembleConsistency stay authoritative.
-#           revision2026 step R4.10.4. Nothing here is imported by exudyn.utilities.
+#           Nothing here is imported by exudyn.utilities.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-15 (created)

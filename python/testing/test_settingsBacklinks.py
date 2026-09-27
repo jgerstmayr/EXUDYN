@@ -1,8 +1,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test file
 #
-# Details:  A settings structure that Python constructs itself must work. Until revision2026b
-#           step RG4.4 (#2603) two lines segfaulted the process:
+# Details:  A settings structure that Python constructs itself must work. Until #2603 two
+#           lines segfaulted the process:
 #
 #               import exudyn as exu
 #               exu.VisualizationSettings().general.drawWorldBasis     #exit code 139

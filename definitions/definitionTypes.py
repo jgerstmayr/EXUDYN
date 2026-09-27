@@ -461,7 +461,7 @@ TResizableVector                   = TypeSpec('ResizableVector')
 #--------------------------------------------------------------------- the types of a user function
 #A user function is written in a definition file as an ordinary Python function - a real def, with
 #real annotations and a real docstring - and passed to the ItemParameter it belongs to
-#(revision2026b step RG12.4, #2664). These names exist so that such a file stays ordinary Python:
+#(#2664). These names exist so that such a file stays ordinary Python:
 #importable, readable in an editor, and not a string that has to be escaped.
 #
 #They are NOT re-implementations. The real MainSystem is in the compiled module; this is a name for
@@ -691,7 +691,7 @@ def ItemParameter(type=Required, destination=Required, pythonName=Required,
                   fromParent=False, deprecated=None, userFunction=None, userFunctionExample=None):
     #userFunction: for a parameter that IS a user function, the Python def that says what its
     #arguments are called, what they are, and what they mean - see the header of
-    #tools/generators/userFunctionModel.py (revision2026b step RG12.4, #2664)
+    #tools/generators/userFunctionModel.py (#2664)
     #userFunctionExample: the Python code shown under the generated block, as text; it is a script
     #and not a function, so it cannot be a def, and it is fenced as python by the emitter
     return _member('ItemParameter', locals())

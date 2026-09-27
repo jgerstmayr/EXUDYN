@@ -209,7 +209,7 @@ bool MainSystemContainer::AttachToRenderEngine()
 	return renderer.Attach();
 }
 
-//! the container the renderer is attached to; see the declaration (revision2026b step RG12.18)
+//! the container the renderer is attached to; see the declaration
 MainSystemContainer* MainSystemContainer::currentRendererContainer = nullptr;
 
 //! this function links the VisualizationSystem to renderer; returns true if renderer exists/running
@@ -275,7 +275,7 @@ Index MainSystemContainer::AppendMainSystem(MainSystem& mainSystem)
 void MainSystemContainer::Reset()
 {
 	//pout << "MainSystemContainer::Reset()" << "\n";
-	//A DESTROYED CONTAINER MUST NOT BE FOUND BY A DIALOG (revision2026b step RG12.18): the
+	//A DESTROYED CONTAINER MUST NOT BE FOUND BY A DIALOG: the
 	//destructor calls Reset(), and the dictionary entry this replaces was never cleared here - so
 	//exu.sys still named a container whose C++ object was gone, and it was the first USE of it that
 	//raised, in whichever caller happened to be next (#2623, #2676)
@@ -341,8 +341,8 @@ void PrintRendererSuppressedNotice()
 //! start render engine
 namespace
 {
-	//! WHEN THE FILE AND THE SCRIPT DISAGREE ABOUT THE RENDER WINDOW (revision2026b step RG12.20,
-	//! #2694). The render window is the only window whose geometry lives in two places: the view
+	//! WHEN THE FILE AND THE SCRIPT DISAGREE ABOUT THE RENDER WINDOW (#2694). The render window
+	//! is the only window whose geometry lives in two places: the view
 	//! settings, and - because those are ordinary settings - the visualizationSettings section of
 	//! ~/.exudyn/config.json. They are applied at different moments, the file when the structure is
 	//! constructed and a script afterwards, so THE SCRIPT ALREADY WINS, which is what the maintainer
@@ -873,7 +873,7 @@ void MainRenderer::SetState(py::dict renderState, bool waitForRendererFullStartu
 			state.currentWindowSize[1] = (Index)windowSize[1];
 			GetSettingsView(viewID, VSC.GetVisualizationSettings()).window.renderWindowSize = state.currentWindowSize;
 		}
-		//the position, the same way and for the same reason (revision2026b step RG12.20, #2694): a
+		//the position, the same way and for the same reason (#2694): a
 		//stored render state puts the window back where it was, and the setting follows it, so that
 		//re-opening the renderer in this session uses what was just set rather than what the
 		//structure still said

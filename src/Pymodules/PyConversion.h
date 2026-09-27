@@ -11,8 +11,8 @@
 * 				- every error here names its Python exception type (#2432):
 * 				  TypeError when the object cannot be this parameter at all, ValueError when the
 * 				  kind is right and the value or the size is not
-* 				- revision2026 step R4.4.3: introduced in 34c2 with the behaviour of the helpers in
-* 				  PybindUtilities.h, which forward here; the generated code switches over in 34c4/34c5
+* 				- the helpers in PybindUtilities.h forward here, with the same behaviour
+* 				  they had
 * 				- deliberately independent of PybindUtilities.h, which is rewritten later
 *
 * @author		Gerstmayr Johannes, Claude-JG
@@ -240,8 +240,8 @@ namespace EPyUtils {
 		{
 			if (isList && !py::isinstance<py::list>(stdlist[i]))
 			{
-				//the row is not a list: a type problem, not a size one - the message said "size mismatch"
-				//until revision2026 step R6.7, where the distinction started to matter (#2432)
+				//the row is not a list: a type problem, not a size one, and the exception says which
+				//(#2432)
 				PyError("Matrix row " + EXUstd::ToString(i) + " is not a list; expected " + EXUstd::ToString(columns) + " columns",
 					PyErrorType::typeError);
 			}

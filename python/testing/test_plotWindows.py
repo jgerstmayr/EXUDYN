@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test file
 #
-# Details:  Where the plot windows of PlotSensor go (revision2026b steps RG12.12 and RG12.23).
+# Details:  Where the plot windows of PlotSensor go.
 #
 #           Plot windows have no unique title - a script makes several - so they are remembered by
 #           their SEQUENCE, and PlotSensor(..., closeAll=True) starts that order over.

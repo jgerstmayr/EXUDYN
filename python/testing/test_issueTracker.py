@@ -3,9 +3,8 @@
 #
 # Details:  The issue tracker escapes what issue authors write, so that no description can turn
 #           into markup of the document it is written into. This is the test that #2545 asks for:
-#           the LaTeX escaping of ToLatex broke the PDF build twice before it existed, and
-#           revision2026 step R7.1.6 moved the requirement to ToMarkdown, which writes
-#           docs/generated/trackerlog.md.
+#           the LaTeX escaping of ToLatex broke the PDF build twice before it existed; the
+#           requirement is ToMarkdown's now, which writes docs/generated/trackerlog.md.
 #
 # Usage:    pytest python/testing/test_issueTracker.py
 #
@@ -175,7 +174,7 @@ def testCloseAlsoClearsTheRemarks(tracker):
 
 
 def testAbandonIssueStillWorks(tracker):
-    """the name the function had between revision2026 steps R8.7 and R8.3.4; a script outside
+    """AbandonIssue is the older name of CloseIssue; a script outside
     this repository may still call it"""
     number = OpenIssueNumber(tracker)
     tracker.AbandonIssue(number, reason='no longer applies')
@@ -721,7 +720,7 @@ def testThePageSaysSoWhenARequestFails(server):
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the releases and the stored version (revision2026 step R8.4, D14). The micro version is a running
+#the releases and the stored version. The micro version is a running
 #count of closed issues, so a published number must not depend on a derivation that can be redone
 #differently tomorrow.
 
@@ -809,8 +808,8 @@ def testBumpingTheMinorReleaseRestartsTheMicroVersion(tracker):
 
 
 def testBumpingTheMajorReleaseGoesToTwoZero(tracker):
-    """what could not be expressed before revision2026 step R8.4: the major number was written as
-    1 in GetMajorMinorMicroVersion and the minor was the length of a list"""
+    """the major number comes from the stored releases, like the minor one, so a major bump
+    gives 2.0"""
     IntoTheRelease(tracker)
     tracker.BumpRelease(kind='major', name='Newborn')
 
@@ -1014,7 +1013,7 @@ def testTheChangelogLeavesOutWhatChangedNothing(tracker):
 
 
 def testTheChangelogHoldsTheCurrentReleaseOnly(tracker):
-    """revision2026b step RG3.10 (#2599): the earlier releases are on the tracker page, in
+    """the earlier releases are on the tracker page (#2599), in
     full, so the changelog is what somebody upgrading reads and nothing is printed twice"""
     IntoTheRelease(tracker)     #a release with no closed issue has no section, and rightly so
     text = tracker.ChangelogText()

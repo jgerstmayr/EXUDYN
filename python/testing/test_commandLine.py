@@ -65,7 +65,7 @@ def testTheAbbreviationsNameTheSameDialogs():
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#WHAT "info" MAY PRINT (revision2026b step RG12.21, #2695). The output exists to be pasted into an
+#WHAT "info" MAY PRINT (#2695). The output exists to be pasted into an
 #issue, so it must not carry the account name of whoever ran it
 def testInfoDoesNotPrintTheHomeDirectory(capsys):
     import os

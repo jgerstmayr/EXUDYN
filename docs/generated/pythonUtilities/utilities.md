@@ -4,8 +4,8 @@
 # Module: utilities
 
 The big import of Exudyn's Python utilities: 'from exudyn.utilities import *' makes the
-utility modules available at once. It defines no functions of its own (revision plan
-revision2026 step R4.22.2); they are in basicUtilities, advancedUtilities, rigidBodyUtilities,
+utility modules available at once. It defines no functions of its own;
+they are in basicUtilities, advancedUtilities, rigidBodyUtilities,
 graphicsDataUtilities, itemInterface, beams and mainSystemExtensions.
 
 - **Author**: Johannes Gerstmayr

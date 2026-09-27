@@ -3,8 +3,8 @@
 #
 # Details:  Emits the reference documentation of the utility modules from their docstrings:
 #           docs/theDoc/pythonUtilitiesDescription.tex, docs/RST/pythonUtilities/*.rst and
-#           docs/RST/confHelperPyUtilities.py. Moved out of utilitiesDocuGenerator.py (revision plan
-#           revision2026 step R4.3, part 2e); re-pointed at Google-style docstrings via griffe
+#           docs/RST/confHelperPyUtilities.py. Moved out of utilitiesDocuGenerator.py;
+#           re-pointed at Google-style docstrings via griffe
 #
 # Usage:    python tools/generators/utilityDocsEmitter.py
 #
@@ -31,7 +31,7 @@ from latexToMarkdown import NormalizeHeadings                                   
 def main():
     print('*****************************************')
     print('create documentation for exudyn utilities')
-    listMarkdown = []   #(moduleName, Markdown) - revision2026 step R7.1.6
+    listMarkdown = []   #(moduleName, Markdown)
 
     for fileName in filesParsed:
         sMarkdown = ''

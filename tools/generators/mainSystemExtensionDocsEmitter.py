@@ -5,7 +5,7 @@
 #           (@extends(exudyn.MainSystem)): MainSystemExt.md and MainSystemCreateExt.md in
 #           tools/generators/generated/ (read by pybindEmitter.py, so this runs first), and
 #           stubAutoBindingsExt.pyi (read by createStubFiles.py). Moved out of
-#           utilitiesDocuGenerator.py (revision plan revision2026 step R4.3, part 2e); the .tex
+#           utilitiesDocuGenerator.py; the .tex
 #           files went and the .rst ones in R7.1.7.
 #
 # Usage:    python tools/generators/mainSystemExtensionDocsEmitter.py

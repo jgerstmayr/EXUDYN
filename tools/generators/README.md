@@ -11,7 +11,7 @@ build reads, lives here. `doc2rst.py` and
 
 | file | what it does | used by |
 |---|---|---|
-| `definitionLoader.py` | imports `definitions/` and hands each class to the generators as `(parseInfo, parameterList)` - the form their old line parser produced - so their per-class code is unchanged. Removed once the generators read `definitions/` directly (revision2026 step R4.3, part 2) | `itemModel.LegacyItems()`, `structureModel.LegacyStructures()` |
+| `definitionLoader.py` | imports `definitions/` and hands each class to the generators as `(parseInfo, parameterList)` - the form their old line parser produced - so their per-class code is unchanged. Removed once the generators read `definitions/` directly | `itemModel.LegacyItems()`, `structureModel.LegacyStructures()` |
 | `typeModel.py` | one type model: `Render(typeName, destination, context)` spells a definition type for `cppStorage`, `cppExchange`, `dictType`, `stub` or `pyTyping`, for items or structures; rules plus a named exception table | the item and structure emitters, `definitionValidator.py` |
 | `itemModel.py` | facts about items shared by the emitters: type predicates, user-function types, member predicates for direct access (`IsOwnVariable`, `HasFlag`, `DefaultValue`, ...), how a `definitions/` member renders to the old string forms, per-item accessors | the item emitters, `definitionLoader.py` |
 | `itemInterfaceEmitter.py` | emits `python/exudyn/itemInterface.py` from `definitions/`; `--output` for another target | `tools/regenerate.py` |

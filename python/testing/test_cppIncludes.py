@@ -2,8 +2,8 @@
 # This is an EXUDYN test file
 #
 # Details:  What the item sources are allowed to include. The C++/Python split is an invariant of
-#           the project, but nothing enforced it on the include side: until revision2026b step
-#           RG9.1 (#2622) every one of the 52 sources in src/ImplObjects/ pulled in pybind11,
+#           the project, but nothing enforced it on the include side: until #2622 every one of
+#           the 52 sources in src/ImplObjects/ pulled in pybind11,
 #           most of them for no reason of their own - src/Graphics/VisualizationItemHelpers.h,
 #           which every item that draws includes, reached it through
 #           VisualizationSystemContainer.h.

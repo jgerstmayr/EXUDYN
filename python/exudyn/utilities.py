@@ -2,8 +2,8 @@
 # This is an EXUDYN python utility library
 #
 # Details:  The big import of Exudyn's Python utilities: 'from exudyn.utilities import *' makes the
-#           utility modules available at once. It defines no functions of its own (revision plan
-#           revision2026 step R4.22.2); they are in basicUtilities, advancedUtilities, rigidBodyUtilities,
+#           utility modules available at once. It defines no functions of its own;
+#           they are in basicUtilities, advancedUtilities, rigidBodyUtilities,
 #           graphicsDataUtilities, itemInterface, beams and mainSystemExtensions.
 #
 # Author:   Johannes Gerstmayr
@@ -28,7 +28,7 @@ from exudyn.itemInterface import * # noqa: F403, F401
 #for compatibility with older models:
 from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint,\
                          GenerateStraightBeam # noqa # pylint: disable=unused-import
-#MainSystem extensions that were defined here before revision2026 step R4.22.2:
+#MainSystem extensions, imported here so that 'from exudyn.utilities import *' still provides them:
 from exudyn.misc.mainSystemExtensions import CreateDistanceSensorGeometry, CreateDistanceSensor, DrawSystemGraph # noqa: F401
 
 #the exported names are those of the imported modules; helper imports such as np or sqrt

@@ -4,11 +4,10 @@
 # Details:  Emits the item reference manual from definitions/: docs/generated/items/*.md, one page
 #           per item plus an index per item type (Markdown, which
 #           replaced docs/theDoc/itemDefinition.tex and docs/RST/items/), and
-#           docs/RST/confHelperItems.py (revision2026 step R4.3, part 2b). This is what remained of src/pythonGenerator/
+#           docs/RST/confHelperItems.py. This is what remained of src/pythonGenerator/
 #           pythonAutoGenerateObjects.py once its C++ headers, itemInterface.py and mini examples
-#           had their own emitters; the code is unchanged apart from the moves. It reads the old
-#           string records (definitionLoader), which is acceptable here: revision2026 step R7.1 replaces the
-#           LaTeX/RST documentation pipeline as a whole.
+#           had their own emitters; the code is unchanged apart from the moves. It reads the
+#           string records of definitionLoader.
 #
 # Usage:    python tools/generators/itemDocsEmitter.py
 #
@@ -53,7 +52,7 @@ localListItemNames = [] #string list for highlighting
 # [sParamComp=0, sParamMain=1, sComp=2, sMain=3]
 # return -1 if no destination
 
-#the item type tables and predicates live in tools/generators/itemModel.py (revision2026 step R4.3, part 2b)
+#the item type tables and predicates live in tools/generators/itemModel.py
 from itemModel import possibleTypes, useNewUserFunctions, pyFunctionTypeConversion, pyFunctionTypeConversionUFtemplate, \
     IsASafelyVector, IsAVector, \
     IsASimpleMatrix, IsAMatrixVectorSpecial, IsAArrayIndex, IsASetSafelyParameter, \
@@ -108,7 +107,7 @@ def UserFunctionDocumentation(parameter):
 
     The block is generated from the Python def the parameter carries: the signature line from its
     arguments, the prose from its docstring, the table from the annotations and the Args:/Returns:
-    lines, and the example from userFunctionExample (revision2026b step RG12.4, #2664). The text
+    lines, and the example from userFunctionExample (#2664). The text
     returned is Markdown in the form definitions/README.md describes, so it goes through the same
     converter as a hand-written description and the same constructs work in it."""
     userFunction = ReadUserFunction(parameter['userFunction'], parameter['pythonName'])
@@ -118,7 +117,7 @@ def UserFunctionDocumentation(parameter):
     if userFunction.details != '':
         text += userFunction.details + '\n'
     #one space after the slash: 21 of the hand-written headers have two and three have one, and a
-    #generated header is the same everywhere (revision2026b step RG12.4.5, #2664)
+    #generated header is the same everywhere (#2664)
     text += '\n| arguments / return | type or size | description |\n|---|---|---|\n'
     for (name, annotation) in userFunction.arguments:
         text += ('| `' + name + '` | '
@@ -210,7 +209,7 @@ def WriteFile(parseInfo, parameterList):
                 parameterTypeStr = parameter['type']
                 parameterSizeStr = parameter['size']
                 #the C++ literal decides the layout, as it always has; what is SHOWN is the
-                #document rendering the definition carries (revision2026b step RG3.24.3, #2682)
+                #document rendering the definition carries (#2682)
                 parameterDefaultValueStr = parameter['defaultValueDocument']
                 if len(parameterTypeStr) > 35 or len(parameter['defaultValue']) > 17:
                     parameterDescription = '\\tabnewline ' + parameterDescription 
@@ -299,7 +298,7 @@ def WriteFile(parseInfo, parameterList):
             for outputVariables in dictOV.items(): 
                 #the name of an output variable is a NAME: Coordinates_t, not Coordinates\_t; the
                 #escape was LaTeX and a Markdown page shows it as the underscore it stands for,
-                #which is why it went unnoticed (revision2026b step RG3.14.14, #2677)
+                #which is why it went unnoticed (#2677)
                 oVariable = outputVariables[0]
                 description = outputVariables[1]
                 [description, mathSymbol] = ExtractMathSymbol(description)
@@ -314,13 +313,13 @@ def WriteFile(parseInfo, parameterList):
         #the equations. A %%RSTCOMPATIBLE marker used to say where the published part ended,
         #and it decided more than it said: this emission sat inside "if the marker is present",
         #so an item without one published no description at all. The whole text is published
-        #now and the markers are gone (revision2026b step RG3.14.7.5, #2655).
+        #now and the markers are gone (#2655).
         if len(parseInfo['equations']) != 0:
             writerAdd.sMarkdown += LatexText2Markdown(
                 RemoveIndentation2(parseInfo['equations'], removeAllSpaces=False)) + '\n\n'
 
         #the user functions of the item, in the order of the parameters; a parameter that carries a
-        #Python def has its block generated instead of written (revision2026b step RG12.4, #2664)
+        #Python def has its block generated instead of written (#2664)
         for parameter in parameterList:
             if 'userFunction' in parameter:
                 writerAdd.sMarkdown += LatexText2Markdown(
@@ -400,7 +399,7 @@ def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros,
             text = text.replace('](docs/figures/', '](/docs/figures/')
             #the page opened with "# ObjectGround" and then "## ObjectGround"; the second one
             #carried sec:item:<Item>, which every item reference points at, so the label moves to
-            #the title and the heading goes (revision2026b step RG3.18, #2660)
+            #the title and the heading goes (#2660)
             (label, body) = DropRepeatedTitle(text.strip(), className)
             Write(className + '.md',
                   NormalizeHeadings(MarkdownBanner(className, label) + body) + '\n')

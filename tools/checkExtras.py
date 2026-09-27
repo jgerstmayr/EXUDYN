@@ -97,8 +97,8 @@ exemptImports = {
                      'same test as definitionTypes above (#2682)',
     'pytest':        'a DEV tool, declared in [dependency-groups] lint/dev of pyproject.toml and '
                      'not in any extra: the test suite runs without it (runTestSuite.py), and '
-                     'test_testModels.py is the optional pytest collector of revision2026 step '
-                     'R5.1. This entry also has to exist because the tool must not be told about '
+                     'test_testModels.py is the optional pytest collector of the test models. '
+                     'This entry also has to exist because the tool must not be told about '
                      'it by the untracked scratch file python/pytest.py (#2508)',
     }
 
@@ -115,7 +115,7 @@ knownMissingLocalModules = {
 #therefore accepted everywhere without being required by [tests] or [all].
 #NOTE exudyn/artificialIntelligence.py imports stable_baselines3 at MODULE level with no guard,
 #and TestModels/allExudynModulesTest.py imports that module - so that one test cannot run in a
-#plain [tests] environment and is expected to skip. See revision2026 step R2.12.
+#plain [tests] environment and is expected to skip.
 optionalExtras = ['rl']
 
 
