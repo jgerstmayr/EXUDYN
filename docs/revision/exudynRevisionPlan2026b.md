@@ -2769,7 +2769,8 @@ What depends on it: the graphics regression test takes every item through its Mi
         the class, the docstring and the paragraph under the heading - and `equations` is
         `detailedDescription`, the full text after the generated part of the page. Items only; the
         structures keep `classDescription`.
-      - **RG13.5.0.2** the general section of each kind of item, in a new definitions file
+      - **RG13.5.0.2** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-0-2) - the
+        general section of each kind of item, in a new definitions file
         `definitions/itemKindDefinitions.py` (maintainer's decision), with an `overallDescription` -
         today's paragraph of the index page - and a `detailedDescription`, written by .1 to .5.
       - **RG13.5.0.3** the generated frame of every item page: *Interface* instead of *Additional

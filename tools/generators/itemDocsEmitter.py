@@ -387,9 +387,15 @@ def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros,
 
     written = 1
     for key in folderDict:
-        typeText = (MarkdownBanner(key)
-                    + LatexText2Markdown(itemIntros[typeConversion[key]]) + '\n\n'
-                    + '```{toctree}\n:maxdepth: 2\n\n')
+        kindEntry = itemIntros[typeConversion[key]]
+        typeText = MarkdownBanner(key) + LatexText2Markdown(kindEntry['overallDescription']) + '\n\n'
+        if kindEntry['detailedDescription'].strip() != '':
+            #the general section of the kind, and then the items under a heading of their own, so
+            #that the navigation does not put them under the last section of the general text
+            typeText += (LatexText2Markdown(RemoveIndentation2(kindEntry['detailedDescription'],
+                                                               removeAllSpaces=False))
+                         + '\n\n' + MarkdownHeading('Items', 1) + '\n\n')
+        typeText += '```{toctree}\n:maxdepth: 2\n\n'
 
         for (classType, className, text) in markdownItemList:
             if classType != key:
@@ -480,19 +486,9 @@ def main():
     sPythonGlobalNames = ['Node','Object','Marker','Load','Sensor']  #global python interface class types
     nObjectTypes = len(objectClassNames)
     
-    #... convert to dictionary, in or to be safe w.r.t. relation to globalPageNames
-    globalItemIntros={'Nodes':                   'Nodes provide coordinates for objects. Loads can be applied and Markers or Sensors can be attached to Nodes. The sorting of Nodes in the system (the order they are added to mbs) defines the order of system coordinates.',
-                            'Objects (Body)':          'A Body is a special Object, which has physical properties such as mass. A localPosition can be measured w.r.t.\\ the reference point of the body',
-                            'Objects (SuperElement)':  'A SuperElement is a special Object which acts on a set of nodes. Essentially, SuperElements can be linked with special SuperElement markers. SuperElements may represent complex flexible bodies, based on finite element formulations.',
-                            'Objects (FiniteElement)': 'A FiniteElement is a special Object and Body, which is used to define deformable bodies, such as beams or solid finite elements. FiniteElements are usually linked to two or more nodes.',
-                            'Objects (Joint)':         'A Joint is a special Object, Connector and Constraint, which is attached to position or rigid body markers. The joint results in special algebraic equations and requires implicit time integration. Joints represent special constraints, as described in multibody system dynamics literature.',
-                            'Objects (Connector)':     'A Connector is a special Object, which links two or more markers. A Connector which is not a Constraint, is a force element (e.g., spring-damper) or a penalty based joint.',
-                            'Objects (Constraint)':    'A Constraint is a special Object and Connector, which links two or more markers. A Constraint leads to algebraic equations, which exactly fulfill special constraints on the kinematic behavior of the multibody syste, such as a constraint on a coordinate or a distance constraint.',
-                            'Objects (Object)':        'A Object provides equations, using coordinates from Nodes. General objects lead to system equations, that do not represent physical Bodies or Connectors.',
-                            'Markers':                 'A Marker provides an interface BETWEEN a large variety of Nodes / Bodies / Objects AND Connectors / Loads. To understand which markers are needed, see first the requested \\texttt{Marker} type of the connector, constraint or joint. Hereafter, chose a \\texttt{Marker} -- attached to a node, body or object -- with the according properties. The \\texttt{Marker} may provide more information (e.g., position and orientation) than needed.',
-                            'Loads':                   'A Load applies a (usually constant) force, torque, mass-proportional or generalized load onto Nodes or Objects via Markers. The requested \\texttt{Marker} types need to be provided by the used \\text{Marker}. The marker may provide more types than requested. For non-constant loads, use either a \\texttt{load...UserFunction} or change the load in every step by means of a \\texttt{preStepUserFunction} in the \\texttt{MainSystem} (mbs).',
-                            'Sensors':                 'A Sensor is used to measure quantities during simulation. Sensors may be attached to Nodes, Objects, Markers or Loads. Sensor values may be directly read via mbs or can be continuously written to files or SensorRecorder during simulation. The exudyn.plot Python utility function PlotSensor(...) can be conveniently used to show Sensor values over time.',
-                            }
+    #what all items of a kind have in common - the page of the kind - is a definition like the items
+    #are, in definitions/itemKindDefinitions.py (#2725)
+    globalItemIntros = dict((entry['kind'], entry) for entry in __import__('itemKindDefinitions').definitions)
 
     globalPageNames = ['Nodes']
     objectClassDict = {} #convert objectType to objectClass number

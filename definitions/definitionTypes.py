@@ -871,6 +871,16 @@ def _ResolveFunctionReference(reference, className, classType, parentClass):
 
 
 #%%************************************************************************************************
+def ItemKindDefinition(kind, overallDescription, detailedDescription=''):
+    """Use site: what all items of one kind have in common - the page of the kind in the reference
+    manual (#2725). kind is the name of that page: 'Nodes', 'Objects (Body)', ..., 'Sensors';
+    overallDescription is the paragraph under its heading, detailedDescription the general section
+    that every item of the kind refers to"""
+    return {'kind': kind, 'overallDescription': overallDescription,
+            'detailedDescription': detailedDescription}
+
+
+#%%************************************************************************************************
 def ItemDefinition(className, members, **header):
     #a member written as ItemFunctionDef(...) is expanded here, where the class this member
     #belongs to is known - the library entry is found from its classType and cParentClass

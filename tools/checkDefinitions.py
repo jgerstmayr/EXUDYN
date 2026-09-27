@@ -75,6 +75,8 @@ RECURRING_HEADINGS = [
 #heading, a structure's introduction directly under the page title
 HEADING_LEVEL = {'sectionText': 2}
 DEFAULT_HEADING_LEVEL = 4
+#the general section of a kind of item stands on the page of the kind, under its title alone (#2725)
+FILE_HEADING_LEVEL = {('itemKindDefinitions.py', 'detailedDescription'): 2}
 
 #keywords whose value is Python, not prose - published as a code block, so a '#' is a comment
 CODE_KEYWORDS = set(['code', 'miniExample', 'example', 'userFunctionExample', 'implementation',
@@ -104,7 +106,8 @@ def CheckHeadings(paths):
         for (keyword, text, lineno) in Descriptions(path):
             if keyword in CODE_KEYWORDS:
                 continue                     #Python, not prose: a '#' there is a comment
-            wanted = HEADING_LEVEL.get(keyword, DEFAULT_HEADING_LEVEL)
+            wanted = FILE_HEADING_LEVEL.get((os.path.basename(path), keyword),
+                                            HEADING_LEVEL.get(keyword, DEFAULT_HEADING_LEVEL))
             inCode = False
             for (offset, line) in enumerate(text.split('\n')):
                 stripped = line.strip()

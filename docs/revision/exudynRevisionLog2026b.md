@@ -6121,3 +6121,22 @@ read with `zlib` alone (`WritePNG`, `ReadPNG` in `graphicsRegression.py`), so a 
 and the test needs nothing beyond numpy. Two images agree if at most 1 % of the pixels differ by
 more than 24 of 255 levels; that tolerance is a guess until the first run on linux. As in the other
 cases, a variant that stops changing the image fails.
+
+<a id="rg13-5-0-2"></a>
+### RG13.5.0.2 — the page of a kind of item is a definition (2026-09-28, #2725)
+
+The one text a kind of item had - a paragraph on the page `nodeIndex.md`, `sensorIndex.md`, ... -
+was a Python dict inside the generator, `globalItemIntros` in `itemDocsEmitter.py`, where no check of
+the descriptions reached it. It is `definitions/itemKindDefinitions.py` now, one
+`ItemKindDefinition(kind, overallDescription, detailedDescription)` per page of a kind (the helper is
+in `definitionTypes.py`), read by the emitter. The eleven paragraphs moved unchanged - the two
+`\texttt{Marker}` as backtick spans and `\text{Marker}` as the word, which is what the converter made
+of them - and **the regeneration is a no-op**. `checkDefinitions` reads the file with the others;
+since a general section stands on the page of the kind under its title alone, its headings are
+written with `##` there (`FILE_HEADING_LEVEL`), and `definitions/README.md` says so.
+
+The `detailedDescription` is empty everywhere until RG13.5.1, .4 and .5 write the general sections;
+where it is not, the page gets it after the paragraph and the list of items under a heading *Items*
+of its own, so that the navigation does not hang the items under the last section of the general
+text. The introduction of the whole chapter stays in the emitter: it is not a kind, and its
+`\mybold` and `\refSection` would need the converter's help that a definition is not given.
