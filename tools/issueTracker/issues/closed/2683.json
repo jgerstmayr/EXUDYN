@@ -2,13 +2,17 @@
   "number": 2683,
   "title": "a tab instead of a backslash puts \"exttt{...}\" on three pages of the Symbolic manual",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "Three descriptions of definitions/pybindSymbolic.py contain a TAB followed by 'exttt{...}' where 'texttt' was meant: someone wrote a backslash-t in a string that was not raw, and the tab is now in the source. The Symbolic page of the reference manual prints it as it is, on lines 11, 179 and 271 of docs/generated/cInterface/Symbolic.md: 'turing on recording by using <tab>exttt{exudyn.symbolic.SetRecording(True)}'. Inline code in a description is a backtick span (definitions/README.md, 'Writing a description'), so the fix is `exudyn.symbolic.SetRecording(True)`. Two typos are in the same sentences and in the paragraph above them: 'turing' for 'turning', three times, and 'veryfy' for 'verify'. Why no check caught it: checkDefinitions rejects a LaTeX command outside mathematics by looking for a backslash, and there is no backslash left - the tab ate it. A check for a raw tab inside a description would find this class of defect; that is the part worth deciding rather than just fixing the three lines.",
   "dateRaised": "2026-09-26",
   "deadline": "2027-03-25",
+  "dateResolved": "2026-09-27 11:14",
+  "resolvedAuthor": "Claude-JG",
   "file": "definitions/pybindSymbolic.py",
-  "line": "43"
+  "line": "43",
+  "releaseNotes": "The Symbolic page of the reference manual no longer shows 'exttt{exudyn.symbolic.SetRecording(True)}' in the introductions of Real, Vector and Matrix: it is a code span, and four typos in the same paragraphs are corrected. tools/checkDefinitions.py rejects a TAB in a description, which is what a backslash-t in a literal that was not raw turns into - and which the check for LaTeX commands cannot see, because the backslash is gone with it.",
+  "resolvedInVersion": "1.12.114"
 }

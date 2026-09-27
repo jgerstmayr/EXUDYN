@@ -20,6 +20,9 @@
 #     undefined reference, and only the PDF says so.
 #   - a literal whose value carries a backslash or mathematics is written r'...', so that
 #     Python does not read a backslash-t as a tab.
+#   - a description holds no TAB. That is what a backslash-t in a literal that was not raw became
+#     before the rule above existed, and the backslash is gone with it, so the LaTeX rule cannot
+#     see what is left: 'exttt{...}' reached three pages of the Symbolic manual that way (#2683).
 #   - a user function def agrees with the C++ user function it is called as: the number of its
 #     arguments, each argument's type, its return type, and that its docstring describes every
 #     argument. The signature used to be stated in five places and compared in none.
@@ -295,6 +298,39 @@ def CheckRawStrings(paths):
     return findings
 
 
+def CheckTabs(paths):
+    """a TAB in a description (#2683)
+
+    Python reads a backslash-t in a literal that is not raw as a TAB, and the backslash is gone: the
+    LaTeX command it started is left as plain letters, 'exttt{...}' from '\\texttt{...}', which
+    CheckNoLatex cannot find because it looks for the backslash. A TAB has no meaning in Markdown, so
+    any TAB in a description is this defect. C++ and Python are not descriptions: a value passed to
+    one of CODE_KEYWORDS, and the argument of pb.CppCode(...), may indent with a TAB."""
+    findings = []
+    for path in paths:
+        tree = ast.parse(io.open(path, encoding='utf-8').read())
+        cppCode = set()
+        for node in ast.walk(tree):
+            if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                    and node.func.attr == 'CppCode'):
+                cppCode.update(id(sub) for arg in node.args for sub in ast.walk(arg))
+        keywordOf = {}
+        for node in ast.walk(tree):
+            if isinstance(node, ast.keyword) and isinstance(node.value, ast.Constant):
+                keywordOf[id(node.value)] = node.arg
+        for node in ast.walk(tree):
+            if not (isinstance(node, ast.Constant) and isinstance(node.value, str)):
+                continue
+            if id(node) in cppCode or keywordOf.get(id(node), None) in CODE_KEYWORDS:
+                continue
+            index = node.value.find(chr(9))
+            if index != -1:
+                findings.append((path, node.lineno + node.value.count(chr(10), 0, index),
+                                 'a TAB in a description: a backslash-t in a literal that was not '
+                                 "raw, and the LaTeX command it started is left without its backslash"))
+    return findings
+
+
 def CheckUserFunctions(root):
     """a user function def that does not agree with the C++ user function it is called as
 
@@ -362,7 +398,7 @@ def main():
     known = BibliographyKeys(os.path.join(root, 'docs', 'bibliographyDoc.bib'))
     findings = (CheckAbbreviations(paths, declared) + CheckHeadings(paths)
                 + CheckCitations(paths, known) + CheckRawStrings(paths)
-                + CheckPercentComments(paths)
+                + CheckPercentComments(paths) + CheckTabs(paths)
                 + CheckEquationReferences(paths) + CheckNoLatex(paths)
                 + CheckUserFunctions(root))
 

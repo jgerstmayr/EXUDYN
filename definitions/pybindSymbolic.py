@@ -28,7 +28,7 @@ symbolicModule = PybindInterface()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 pb.CreateNewRSTfile('Symbolic')
 
-pb.AddDocu(r"""The Symbolic sub-module in `exudyn.symbolic` allows limited symbolic manipulations in Exudyn and is currently under development In particular, symbolic user functions can be created, which allow significant speedup of Python user functions. However, **always veryfy your symbolic expressions or user functions**, as behavior may be unexpected in some cases. """,
+pb.AddDocu(r"""The Symbolic sub-module in `exudyn.symbolic` allows limited symbolic manipulations in Exudyn and is currently under development In particular, symbolic user functions can be created, which allow significant speedup of Python user functions. However, **always verify your symbolic expressions or user functions**, as behavior may be unexpected in some cases. """,
             section='Symbolic', sectionLevel=1,sectionLabel='sec:cinterface:symbolic')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -40,7 +40,7 @@ classStr = 'Symbolic::SReal'
 
 symbolicModule.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 
-symbolicModule.AddDocu(r"""The symbolic Real type allows to replace Python's float by a symbolic quantity. The `symbolic.Real` may be directly set to a float and be evaluated as float. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
+symbolicModule.AddDocu(r"""The symbolic Real type allows to replace Python's float by a symbolic quantity. The `symbolic.Real` may be directly set to a float and be evaluated as float. However, turning on recording by using `exudyn.symbolic.SetRecording(True)` (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
             )
 
 symbolicModule.AddDocuCodeBlock(code="""
@@ -275,7 +275,7 @@ classStr = 'Symbolic::SymbolicRealVector'
 
 symbolicModule.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 
-symbolicModule.AddDocu(r"""A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressions. The `symbolic.Vector` may be directly set to a list of floats or (1D) numpy array and be evaluated as array. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
+symbolicModule.AddDocu(r"""A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressions. The `symbolic.Vector` may be directly set to a list of floats or (1D) numpy array and be evaluated as array. However, turning on recording by using `exudyn.symbolic.SetRecording(True)` (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
             )
 
 symbolicModule.AddDocuCodeBlock(code="""
@@ -420,7 +420,7 @@ classStr = 'Symbolic::SymbolicRealMatrix'
 
 symbolicModule.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 
-symbolicModule.AddDocu(r"""A symbolic Matrix type to replace Python's (2D) numpy array in symbolic expressions. The `symbolic.Matrix` may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
+symbolicModule.AddDocu(r"""A symbolic Matrix type to replace Python's (2D) numpy array in symbolic expressions. The `symbolic.Matrix` may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turning on recording by using `exudyn.symbolic.SetRecording(True)` (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
             )
 
 symbolicModule.AddDocuCodeBlock(code="""

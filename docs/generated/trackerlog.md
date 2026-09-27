@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.113.dev1
+- Exudyn version = 1.12.114.dev1
 - last change = 2026-09-27
 - Number of issues = 2702
-- Number of resolved issues = 2427 (113 in current version)
+- Number of resolved issues = 2428 (114 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7571,9 +7571,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` index.md and pdfIndex.md are two hand-written tables of contents that must agree (#2697)
   - description: The maintainer, 2026-09-27: 'index.md and pdfIndex.md: I see that there are two files, which have different structure. Maybe this is necessary, but it is really brittle and requires a clear indication to sync the toctrees. The main difference - if I remember correctly - are the examples/models/etc. not to be included in PDF, and a different front page. The rest should be practically identical, if possible.' Measured on 2026-09-27, and it is more than that: index.md has 25 toctree entries and pdfIndex.md has 23. Only in index.md: README, docs/manual/performanceErrors, docs/generated/examples/examplesIndex, docs/generated/testModels/testModelsIndex. Only in pdfIndex.md: docs/manual/commandLine, docs/manual/resultsMonitor - which in the HTML are nested under introductionAdvanced instead. And the ORDER of the entries they share is not the same. So the examples and the front page are the intended differences; performanceErrors missing from the PDF and the different nesting and order are not, and nothing tells anybody when they drift again. Options for the step: generate pdfIndex.md from index.md with a declared list of exclusions (then one file is the truth and the other is a build product, which also needs a rule for the front page); or keep both and add a check to tools/ that compares the two entry lists against a declared difference, which is cheap and catches drift on the next commit; or accept the difference and document it at the top of both files. revision2026b step RG3.26.
   - date raised: 2026-09-27
-- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` a tab instead of a backslash puts "exttt{...}" on three pages of the Symbolic manual (#2683)
-  - description: Three descriptions of definitions/pybindSymbolic.py contain a TAB followed by 'exttt{...}' where 'texttt' was meant: someone wrote a backslash-t in a string that was not raw, and the tab is now in the source. The Symbolic page of the reference manual prints it as it is, on lines 11, 179 and 271 of docs/generated/cInterface/Symbolic.md: 'turing on recording by using \<tab\>exttt{exudyn.symbolic.SetRecording(True)}'. Inline code in a description is a backtick span (definitions/README.md, 'Writing a description'), so the fix is \`exudyn.symbolic.SetRecording(True)\`. Two typos are in the same sentences and in the paragraph above them: 'turing' for 'turning', three times, and 'veryfy' for 'verify'. Why no check caught it: checkDefinitions rejects a LaTeX command outside mathematics by looking for a backslash, and there is no backslash left - the tab ate it. A check for a raw tab inside a description would find this class of defect; that is the part worth deciding rather than just fixing the three lines.
-  - date raised: 2026-09-26
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` A test hook for forceQuitSimulation, which nothing can reach (#2674)
   - description: \#2616 fixed the behaviour - quitting the renderer before a simulation starts raises where quitting during it does not - but no test can set forceQuitSimulation: it is set by the renderer thread from a key press or a closed window, and there is no binding for it. So the fix of \#2616 is checked by hand and stays checked by hand. Either a binding (mbs.systemData or the renderer) or a test-only hook is needed, and which of the two is the decision this step takes (revision2026b step RG4.5, raised 2026-09-26).
   - date raised: 2026-09-26

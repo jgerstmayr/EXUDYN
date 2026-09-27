@@ -5454,3 +5454,29 @@ half a second of simulation while their number stays, the export and `LoadImage`
 
 **Gates**: the wheel, 11/11 checks (TIER 1 drift, which is the new function and the four removed
 settings), the full suite, pytest, the strict HTML build.
+
+<a id="rg3-25"></a>
+### RG3.25 — the TAB that ate a backslash (2026-09-27, #2683)
+
+Three descriptions in `definitions/pybindSymbolic.py` - the Real, Vector and Matrix introductions -
+read `turing on recording by using <TAB>exttt{exudyn.symbolic.SetRecording(True)}`. Somebody wrote
+`\texttt` in a literal that was not raw, Python made the backslash-t a TAB, and the TAB survived the
+later conversion of the literal to `r"""..."""`. They are
+`` `exudyn.symbolic.SetRecording(True)` `` now, the three `turing` are `turning`, and `veryfy` in the
+paragraph above them is `verify`.
+
+**The check is the part worth keeping.** `CheckNoLatex` finds a LaTeX command by its backslash, and
+this defect is exactly a LaTeX command without one. `CheckTabs` rejects any TAB in a description -
+a TAB means nothing in Markdown - and exempts what is not prose: a value passed to one of
+`CODE_KEYWORDS`, and the argument of `pb.CppCode(...)`, which indents generated C++ with TABs in
+`pybindEnums.py`.
+
+**Measured before it was switched on**: every literal TAB in `definitions/` is one of the three
+defects, the two `CppCode` indents, or inside commented-out C++ in `pybindSymbolic.py`, which is a
+Python comment and not a string. So the check fired on exactly the three, before the fix, and on
+nothing after it. Four tests (`test_checkDefinitionsTabs.py`): a TAB in a description is found **on
+its own line** rather than the line the literal starts on, the two exemptions, and the definitions
+have none.
+
+**Gates**: the wheel, 11/11 checks, the full suite, pytest, the strict HTML build; the regeneration
+changed the three paragraphs of `Symbolic.md` and nothing else.

@@ -2,13 +2,13 @@
 (sec-cinterface-symbolic)=
 # Symbolic
 
-The Symbolic sub-module in `exudyn.symbolic` allows limited symbolic manipulations in Exudyn and is currently under development In particular, symbolic user functions can be created, which allow significant speedup of Python user functions. However, **always veryfy your symbolic expressions or user functions**, as behavior may be unexpected in some cases.
+The Symbolic sub-module in `exudyn.symbolic` allows limited symbolic manipulations in Exudyn and is currently under development In particular, symbolic user functions can be created, which allow significant speedup of Python user functions. However, **always verify your symbolic expressions or user functions**, as behavior may be unexpected in some cases.
 
 ## symbolic.Real
 
 
 
-The symbolic Real type allows to replace Python's float by a symbolic quantity. The `symbolic.Real` may be directly set to a float and be evaluated as float. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:
+The symbolic Real type allows to replace Python's float by a symbolic quantity. The `symbolic.Real` may be directly set to a float and be evaluated as float. However, turning on recording by using `exudyn.symbolic.SetRecording(True)` (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:
 
 ```python
 import exudyn as exu
@@ -176,7 +176,7 @@ The class **symbolic** has the following **functions and structures**:
 
 
 
-A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressions. The `symbolic.Vector` may be directly set to a list of floats or (1D) numpy array and be evaluated as array. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:
+A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressions. The `symbolic.Vector` may be directly set to a list of floats or (1D) numpy array and be evaluated as array. However, turning on recording by using `exudyn.symbolic.SetRecording(True)` (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:
 
 ```python
 import exudyn as exu
@@ -268,7 +268,7 @@ v *= SymReal(0.5)
 
 
 
-A symbolic Matrix type to replace Python's (2D) numpy array in symbolic expressions. The `symbolic.Matrix` may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turing on recording by using 	exttt{exudyn.symbolic.SetRecording(True)} (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:
+A symbolic Matrix type to replace Python's (2D) numpy array in symbolic expressions. The `symbolic.Matrix` may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turning on recording by using `exudyn.symbolic.SetRecording(True)` (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:
 
 ```python
 import exudyn as exu

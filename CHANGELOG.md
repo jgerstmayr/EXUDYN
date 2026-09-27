@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 111 | 1.12.113 |
+| 1.12 | Metheney | 112 | 1.12.114 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.114** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a tab instead of a backslash puts "exttt{...}" on three pages of the Symbolic manual (#2683)
+  - description: Three descriptions of definitions/pybindSymbolic.py contain a TAB followed by 'exttt{...}' where 'texttt' was meant: someone wrote a backslash-t in a string that was not raw, and the tab is now in the source. The Symbolic page of the reference manual prints it as it is, on lines 11, 179 and 271 of docs/generated/cInterface/Symbolic.md: 'turing on recording by using \<tab\>exttt{exudyn.symbolic.SetRecording(True)}'. Inline code in a description is a backtick span (definitions/README.md, 'Writing a description'), so the fix is \`exudyn.symbolic.SetRecording(True)\`. Two typos are in the same sentences and in the paragraph above them: 'turing' for 'turning', three times, and 'veryfy' for 'verify'. Why no check caught it: checkDefinitions rejects a LaTeX command outside mathematics by looking for a backslash, and there is no backslash left - the tab ate it. A check for a raw tab inside a description would find this class of defect; that is the part worth deciding rather than just fixing the three lines.
+  - **notes:** The Symbolic page of the reference manual no longer shows 'exttt{exudyn.symbolic.SetRecording(True)}' in the introductions of Real, Vector and Matrix: it is a code span, and four typos in the same paragraphs are corrected. tools/checkDefinitions.py rejects a TAB in a description, which is what a backslash-t in a literal that was not raw turns into - and which the check for LaTeX commands cannot see, because the backslash is gone with it.
+  - date resolved: **2026-09-27 11:14**, date raised: 2026-09-26
 - **1.12.113** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the graphics data can be read as a dictionary without a window, and the TXT image export is removed (#2700)
   - description: The maintainer, 2026-09-27: 'yes do that and totally remove the .txt graphics export'. SC.renderer.GetGraphicsData() returns the drawing elements of the scene - lines, spheres, circles, texts and triangles, each with the item that drew it - built with the renderer inactive, the path RedrawAndGetImage(True) already uses, so a test can ask for it with no window. It is the oracle of the graphics regression suite (RG2.3, \#2582): counts per item are exact, coordinates are compared with a tolerance. The TXT export of exportImages (saveImageFormat='TXT' and the four saveImageAsText\* settings) needed the running OpenGL renderer, dropped the item of every primitive, spheres and texts, and is removed together with its reader exudyn.plot.LoadImage. revision2026b step RG2.3.1.
   - **notes:** SC.renderer.GetGraphicsData() returns the drawing elements of the scene - lines, spheres, circles, texts and triangles - as numpy arrays, each with the item that drew it (system, item type, index), and needs no render window, so a test can check what a model looks like. exudyn.plot.PlotImage draws what it returns, e.g. PlotImage(SC.renderer.GetGraphicsData(), fileName='model.pdf'). The text export of an image is removed: saveImageFormat 'TXT', the four exportImages.saveImageAsText settings and exudyn.plot.LoadImage.

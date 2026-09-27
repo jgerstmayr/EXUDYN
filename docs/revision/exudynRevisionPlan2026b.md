@@ -2386,6 +2386,13 @@ package).
     and the session whether or not a window opens - and with no settings file it returns at once, which
     is every test run.
 
+<a id="rg3-25"></a>
+**RG3.25** *(group RG3; raised 2026-09-26)* **DONE 2026-09-27** (#2683) —
+    [log](exudynRevisionLog2026b.md#rg3-25) — **a TAB instead of a backslash put `exttt{...}` on three
+    pages of the Symbolic manual.** Three descriptions fixed to a backtick span, four typos with them,
+    and `checkDefinitions` rejects a TAB in a description, which is the part that was worth deciding:
+    the LaTeX rule looks for the backslash, and the TAB had eaten it.
+
 <a id="rg3-26"></a>
 **RG3.26** *(group RG3; maintainer 2026-09-27)* **`index.md` and `pdfIndex.md` are two hand-written
     tables of contents that must agree** (#2697). *"Maybe this is necessary, but it is really brittle
@@ -2459,7 +2466,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.3.2 | #2701 | PlotImage's 3D mode fails with every current matplotlib, and two coordinate slips |
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG3.13.1 | #2649 | write a sentence for the 235 plan references that are left in comments |
-| RG3.25 | #2683 | a tab instead of a backslash puts "exttt{...}" on three pages of the Symbolic manual |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
 | RG4.6 | #2674 | a test hook for `forceQuitSimulation`, which nothing can reach |
