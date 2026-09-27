@@ -2,7 +2,7 @@
 (sec-item-nodepointslope12)=
 # NodePointSlope12
 
-A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeX' and 'slopeY'); all coordinates lead to second order differential equations; the slopeX vector defines the directional derivative w.r.t the local axial (x) coordinate, etc.; in straight configuration aligned at the global x-axis, the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$.
+A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements, with 3 position and 2 $\times$ 3 slope coordinates, all {ref}`ODE2 <ODE2>`; the slope vectors are the derivatives of the position with respect to the two in-plane coordinates of the plate.
 
 ## Interface
 
@@ -50,3 +50,41 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Rotation | $[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$ | vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence |
 | AngularVelocity | $\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ | global 3D angular velocity vector of node |
 | AngularVelocityLocal | $\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ | local (body-fixed) 3D angular velocity vector of node |
+
+(description-nodepointslope12)=
+## Detailed description
+
+### Coordinates
+
+| index | symbol | kind | meaning | frame |
+|---|---|---|---|---|
+| 0, 1, 2 | $q_0,\,q_1,\,q_2$ | {ref}`ODE2 <ODE2>` | displacement of the node position $\rv$ | global |
+| 3, 4, 5 | $q_3,\,q_4,\,q_5$ | {ref}`ODE2 <ODE2>` | change of the slope vector $\rv_x^\prime$ | global |
+| 6, 7, 8 | $q_6,\,q_7,\,q_8$ | {ref}`ODE2 <ODE2>` | change of the slope vector $\rv_y^\prime$ | global |
+
+### Configuration
+
+$$
+\rv = \rv\cRef + [q_0,\,q_1,\,q_2]\tp, \quad
+\rv_x^\prime = \rv_{x,\mathrm{ref}}^\prime + [q_3,\,q_4,\,q_5]\tp, \quad
+\rv_y^\prime = \rv_{y,\mathrm{ref}}^\prime + [q_6,\,q_7,\,q_8]\tp .
+$$
+
+### The slope vectors
+
+The two slope vectors are the derivatives of the position of the mid-surface of a thin plate with
+respect to its two in-plane coordinates, $\rv_x^\prime = \partial \rv / \partial x$ and
+$\rv_y^\prime = \partial \rv / \partial y$. In a flat plate in the global $x$-$y$ plane they are
+$[1,\;0,\;0]\tp$ and $[0,\;1,\;0]\tp$. They span the tangent plane of the mid-surface, and their
+lengths and angle carry its in-plane strains. The default reference coordinates set both to
+$[1,\;0,\;0]\tp$, which is no plate: give them.
+
+### Frame and interpretation
+
+All nine coordinates are global (absolute nodal coordinates). The node is used by
+`ObjectANCFThinPlate`, whose element scales the slopes by `slopesScalingX` and `slopesScalingY`.
+
+### Action on the equations of motion
+
+The nine coordinates lead to nine {ref}`ODE2 <ODE2>` equations, which the element provides; a force at the
+node enters the first three.

@@ -43,21 +43,34 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 (description-node1d)=
 ## Detailed description
 
-**Detailed information:**
-The current position/rotation coordinate of the 1D node is computed from
+### Coordinates
+
+| index | symbol | kind | meaning | frame |
+|---|---|---|---|---|
+| 0 | $q_0$ | {ref}`ODE2 <ODE2>` | displacement or rotation, as the object reads it | the frame of the object |
+
+### Configuration
+
+The current position or rotation coordinate of the node is
 
 $$
-p_0 = {q_0}\cRef + {q_0}\cCur
+p_0 = {q_0}\cRef + {q_0}\cCur .
 $$
 
-The coordinate leads to one second order differential equation.
-The graphical representation and the (internal) position of the node is
+For drawing and for markers, the node has a position and a velocity in 3D,
+$\pv\cConfig = [{p_0}\cConfig,\,0,\,0]\tp$ and $[{\dot p_0}\cConfig,\,0,\,0]\tp$.
 
-$$
-p\cConfig= \vr{{p_0}\cConfig}{0}{0}
-$$
+### Frame and interpretation
 
-The (internal) velocity vector is $[{p_0}\cConfig,\,0,\,0]\tp$.
+What the coordinate means is the object's: `ObjectMass1D` reads it as a translation along the local
+$x$-axis of the frame of its `referencePosition` and `referenceRotation`, `ObjectRotationalMass1D` as a rotation about its local axis. That
+is what couples a 1D node to 2D or 3D bodies, and what distinguishes it from a `NodeGenericODE2` with
+one coordinate.
+
+### Action on the equations of motion
+
+The coordinate leads to one {ref}`ODE2 <ODE2>` equation, the residual of the force or the torque the object
+assigns to it.
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`lugreFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/lugreFrictionTest.py) (Ex), [`mpi4pyExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mpi4pyExample.py) (Ex), [`multiprocessingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/multiprocessingTest.py) (Ex), [`nMassOscillator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillator.py) (Ex), [`nMassOscillatorEigenmodes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorEigenmodes.py) (Ex), [`nMassOscillatorInteractive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorInteractive.py) (Ex), [`coordinateSpringDamperExt.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateSpringDamperExt.py) (TM), [`distanceSensor.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/distanceSensor.py) (TM), [`driveTrainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/driveTrainTest.py) (TM), [`mainSystemUserFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemUserFunctionsTest.py) (TM)

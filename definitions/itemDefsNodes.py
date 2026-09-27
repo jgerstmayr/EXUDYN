@@ -38,15 +38,39 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for ABRV:ODE2.""",
     classType=ClassTypeNode,
-    detailedDescription=r"""    **Detailed information:**
-    The node provides $n_c=3$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint, finite elements, ...).
-    Usually, the nodal coordinates are provided in the global frame. However, the coordinate system is defined by the object (e.g. MassPoint uses global coordinates, but floating frame of reference objects use local frames).
-    Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation.
+    detailedDescription=r"""    #### Coordinates
 
+    | index | symbol | kind | meaning | frame |
+    |---|---|---|---|---|
+    | 0, 1, 2 | $q_0,\,q_1,\,q_2$ | ABRV:ODE2 | displacement of the node in $x$, $y$ and $z$ | the frame of the object, usually global |
 
+    #### Configuration
 
-     **Example** for NodePoint: see ObjectMassPoint, [](#sec-item-objectmasspoint)
-""",
+    In any configuration, the position of the node is its reference position plus its displacement,
+
+    $$
+    \pv\cConfig = \pv\cRef + \uv\cConfig, \quad \uv\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp .
+    $$
+
+    The coordinates are the displacements themselves, and their time derivatives are the velocity and
+    the acceleration of the node.
+
+    #### Frame and interpretation
+
+    The node defines no frame; the object that uses it does. `ObjectMassPoint` reads the coordinates in
+    the global frame. `ObjectFFRF` uses points as the nodes of its finite element mesh and reads their
+    coordinates in the frame of its rigid body node (node 0): there, the global position of a mesh node
+    follows from the object, not from the node alone.
+
+    #### Action on the equations of motion
+
+    The three coordinates lead to three ABRV:ODE2 equations, which the object provides; for
+    `ObjectMassPoint` they are the residuals of the forces in the global frame. A force $\fv$ acting on
+    the node through `MarkerNodePosition` enters them with the position Jacobian
+    $\partial \pv / \partial \qv = \ImThree$, that is, as it is.
+
+    **Example**: see [](#sec-item-objectmasspoint)
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\pv\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp= \uv\cConfig + \pv\cRef$global 3D position vector of node; $\uv\cRef=0$"""),
@@ -130,17 +154,33 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for ABRV:ODE2.""",
     classType=ClassTypeNode,
-    detailedDescription=r"""    **Detailed information:**
-    The node provides $n_c=2$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint2D).
-    Coordinates are identical to the nodal displacements, except for the third coordinate $u_2$, which is zero, because $q_2$ does not exist.
+    detailedDescription=r"""    #### Coordinates
 
+    | index | symbol | kind | meaning | frame |
+    |---|---|---|---|---|
+    | 0, 1 | $q_0,\,q_1$ | ABRV:ODE2 | displacement of the node in $x$ and $y$ | global |
 
-    Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation.
+    #### Configuration
 
+    In any configuration, the position of the node is its reference position plus its displacement,
+    with a third component that is always zero,
 
-    
-     **Example** for NodePoint2D: see ObjectMassPoint2D, [](#sec-item-objectmasspoint2d)
-""",
+    $$
+    \pv\cConfig = \vr{r_{0}}{r_{1}}{0}\cRef + \vr{q_0}{q_1}{0}\cConfig .
+    $$
+
+    #### Frame and interpretation
+
+    The coordinates are displacements in the global $x$-$y$ plane; `ObjectMassPoint2D` is the object
+    that uses them.
+
+    #### Action on the equations of motion
+
+    The two coordinates lead to two ABRV:ODE2 equations, the residuals of the forces in $x$ and $y$; a
+    force of a load or connector enters them with its first two components.
+
+    **Example**: see [](#sec-item-objectmasspoint2d)
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\pv\cConfig = [p_0,\,p_1,\,0]\cConfig\tp= \uv\cConfig + \pv\cRef$global 3D position vector of node; $\uv\cRef=0$"""),
@@ -228,58 +268,75 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeRigidBody,
     overallDescription=r"""A 3D rigid body node based on Euler parameters for rigid bodies or beams. The node has 3 displacement coordinates (representing displacement of reference point $\LU{0}{\rv}$) and four rotation coordinates (Euler parameters = unit quaternions).""",
     classType=ClassTypeNode,
-    detailedDescription=r"""    **Detailed information:**
-    All coordinates $\cv\cConfig$ lead to second order differential equations.
-    The first 3 equations are residuals of translational forces in global coordinates,
-    while the last 4 equations are residual of local torques left-multiplied with $\LU{b}{\Gm\tp}$ or
-    global torques left-multiplied with $\LU{0}{\Gm\tp}$, see {eq}`eq-noderigidbodyep-gm`, compare the equations of motion of
-    the rigid body.
-    
-    There is one additional (algebraic) constraint equation for the quaternions.
-    The additional constraint equation, which needs to be provided by the object, reads
+    detailedDescription=r"""    #### Coordinates
 
+    | index | symbol | kind | meaning | frame |
+    |---|---|---|---|---|
+    | 0, 1, 2 | $q_0,\,q_1,\,q_2$ | ABRV:ODE2 | displacement of the reference point of the body | global |
+    | 3, 4, 5, 6 | $\psi_0,\,\psi_1,\,\psi_2,\,\psi_3$ | ABRV:ODE2 | change of the four Euler parameters (unit quaternion) against their reference values | - |
+    | - | $\lambda_\theta$ | ABRV:AE | the Lagrange multiplier of the Euler parameter constraint, if `addConstraintEquation = True` | - |
 
-    $$
-                        1 - \sum_{i=0}^{3} \theta_i^2 = 0.
-                        $$
+    #### Configuration
 
-    The rotation matrix $\LU{0b}{\Rot}\cConfig$ transforms a local (body-fixed) 3D position 
-    $\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp$ to global 3D positions,
-
+    The position of the reference point and the Euler parameters $\ttheta$ are the sums of reference and
+    current coordinates,
 
     $$
-                        \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
-                        $$
+    \pv\cConfig = \pv\cRef + \uv\cConfig, \quad \ttheta\cConfig = \tpsi\cRef + \tpsi\cConfig .
+    $$
 
-    Note that the Euler parameters $\ttheta\cCur$ are computed as sum of current coordinates plus reference coordinates,
-
+    The reference Euler parameters must be a unit quaternion - $[1,\,0,\,0,\,0]$ for no rotation; the
+    default of zeros is not one, which `CreateRigidBody` takes care of. The rotation matrix, as a
+    function of $\ttheta=[\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp$, transforms a local
+    (body-fixed) position $\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp$ into the global frame,
+    $\LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}$, with
 
     $$
-                        \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
-                        $$
-
-    The rotation matrix is defined as function of the rotation parameters $\ttheta=[\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp$
-
-
+    \LU{0b}{\Rot} = \mr{-2\theta_3^2 - 2\theta_2^2+1}{-2\theta_3\theta_0+2\theta_2\theta_1}{2\theta_3\theta_1+2\theta_2\theta_0}
+                       {2\theta_3\theta_0+2\theta_2\theta_1}{-2\theta_3^2-2\theta_1^2+1}{2\theta_3\theta_2-2\theta_1\theta_0}
+                       {-2\theta_2\theta_0+2\theta_3\theta_1}{2\theta_3\theta_2+2\theta_1\theta_0}{-2\theta_2^2-2\theta_1^2+1}
     $$
-                        \LU{0b}{\Rot} = \mr{-2\theta_3^2 - 2\theta_2^2+1}{-2\theta_3\theta_0+2\theta_2\theta_1}{2*\theta_3\theta_1+2*\theta_2\theta_0} 
-                                                 {2\theta_3\theta_0+2\theta_2\theta_1}{-2\theta_3^2-2\theta_1^2+1}{2\theta_3\theta_2-2\theta_1\theta_0}
-                                                 {-2\theta_2\theta_0+2\theta_3\theta_1}{2\theta_3\theta_2+2\theta_1\theta_0}{-2\theta_2^2-2\theta_1^2+1}
-                        $$
 
-    The derivatives of the angular velocity vectors w.r.t. the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2,\,\dot \theta_3]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
+    #### Frame and interpretation
 
+    The displacement is given in the global frame, and the Euler parameters describe the rotation of the
+    body frame $b$ against the global frame. Every object using the node reads it this way.
+
+    #### Action on the equations of motion
+
+    The velocity transformation relates the time derivatives of the Euler parameters to the angular
+    velocity, in the global or in the body frame,
 
     $$
     \begin{aligned}
     \LU{0}{\tomega} &= \LU{0}{\Gm} \dot \ttheta, \\
-          \LU{b}{\tomega} &= \LU{b}{\Gm} \dot \ttheta.
+    \LU{b}{\tomega} &= \LU{b}{\Gm} \dot \ttheta.
     \end{aligned}
     $$ (eq-noderigidbodyep-gm)
 
-    For creating a `NodeRigidBodyEP` together with a rigid body, there is a `rigidBodyUtilities` function `CreateRigidBody`, 
-    see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
-""",
+    All seven coordinates lead to ABRV:ODE2 equations, which the object provides. The first three are
+    the residuals of the forces in the global frame. The last four are the torque equations projected
+    with the transposed velocity transformation: a torque $\LU{b}{\ttau}$ in the body frame enters
+    them as $\LU{b}{\Gm\tp} \LU{b}{\ttau}$, a torque $\LU{0}{\ttau}$ in the global frame as
+    $\LU{0}{\Gm\tp} \LU{0}{\ttau}$, see {eq}`eq-noderigidbodyep-gm` and the equations of motion of
+    [](#sec-item-objectrigidbody).
+
+    #### Constraint of the Euler parameters
+
+    Four parameters for three rotations need one constraint. With `addConstraintEquation = True` the
+    node adds it itself, as one algebraic equation with the multiplier $\lambda_\theta$: on the position
+    level (index 3)
+
+    $$
+    \ttheta\tp \ttheta - 1 = 0,
+    $$
+
+    or on the velocity level (index 2) $2\,\ttheta\tp \dot\ttheta = 0$. With
+    `addConstraintEquation = False` it is left to the model, e.g. a `CoordinateVectorConstraint`.
+
+    For creating a `NodeRigidBodyEP` together with a rigid body, use `CreateRigidBody`, see
+    [](#sec-mainsystemextensions-createrigidbody).
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$"""),
@@ -402,47 +459,61 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeRigidBody,
     overallDescription=r"""A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams. All coordinates lead to second order differential equations; NOTE: this node has a singularity if the second rotation parameter reaches $\psi_1 = (2k-1) \pi/2$, with $k \in \Ncal$ or $-k \in \Ncal$.""",
     classType=ClassTypeNode,
-    detailedDescription=r"""    **Detailed information:**
-    The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and 3 rotation coordinates $[\psi_0,\,\psi_1,\,\psi_2]\tp$ for consecutive rotations around the 0, 1 and 2-axis ($x$, $y$ and $z$).
-    All coordinates $\cv\cConfig$ lead to second order differential equations.
-    The rotation matrix $\LU{0b}{\Rot}\cConfig$ transforms a local (body-fixed) 3D position 
-    $\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp$ to global 3D positions,
+    detailedDescription=r"""    #### Coordinates
 
+    | index | symbol | kind | meaning | frame |
+    |---|---|---|---|---|
+    | 0, 1, 2 | $q_0,\,q_1,\,q_2$ | ABRV:ODE2 | displacement of the reference point of the body | global |
+    | 3, 4, 5 | $\psi_0,\,\psi_1,\,\psi_2$ | ABRV:ODE2 | change of the Tait-Bryan angles against their reference values: consecutive rotations about the $x$-, $y$- and $z$-axis | - |
 
-    $$
-                        \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
-                        $$
+    #### Configuration
 
-    Note that the Euler angles $\ttheta\cCur$ are computed as sum of current coordinates plus reference coordinates,
-
+    The position of the reference point and the angles $\ttheta$ are the sums of reference and current
+    coordinates,
 
     $$
-                        \ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
-                        $$
+    \pv\cConfig = \pv\cRef + \uv\cConfig, \quad \ttheta\cConfig = \tpsi\cRef + \tpsi\cConfig ,
+    $$
 
-    The rotation matrix is defined as function of the rotation parameters $\ttheta=[\theta_0,\,\theta_1,\,\theta_2]\tp$
-
+    and the rotation matrix, which transforms a local (body-fixed) position $\pLocB$ into the global
+    frame, $\LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}$, is
 
     $$
-                        \LU{0b}{\Rot} = \LU{01}{\Rot_0}(\theta_0) \LU{12}{\Rot_1}(\theta_1) \LU{2b}{\Rot_2}(\theta_2)
-                        $$
+    \LU{0b}{\Rot} = \LU{01}{\Rot_0}(\theta_0) \LU{12}{\Rot_1}(\theta_1) \LU{2b}{\Rot_2}(\theta_2) ,
+    $$
 
-    see [](#sec-symbolsitems) for definition of rotation matrices $\Rot_0$, $\Rot_1$ and $\Rot_2$.
-    
-    The derivatives of the angular velocity vectors w.r.t. the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
+    see [](#sec-symbolsitems) for the elementary rotation matrices $\Rot_0$, $\Rot_1$ and $\Rot_2$.
 
+    #### Frame and interpretation
+
+    The displacement is given in the global frame, and the angles describe the rotation of the body
+    frame $b$ against the global frame.
+
+    #### Action on the equations of motion
+
+    The velocity transformation relates the time derivatives of the angles to the angular velocity,
 
     $$
-                        \begin{aligned}
-                        \LU{0}{\tomega} &= \LU{0}{\Gm} \dot \ttheta, \\
-                              \LU{b}{\tomega} &= \LU{b}{\Gm} \dot \ttheta.
-                        \end{aligned}
-                        $$
+    \begin{aligned}
+    \LU{0}{\tomega} &= \LU{0}{\Gm} \dot \ttheta, \\
+    \LU{b}{\tomega} &= \LU{b}{\Gm} \dot \ttheta.
+    \end{aligned}
+    $$
 
-    
-    For creating a `NodeRigidBodyRxyz` together with a rigid body, there is a `rigidBodyUtilities` function `CreateRigidBody`, 
-    see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
-""",
+    All six coordinates lead to ABRV:ODE2 equations: the first three are the residuals of the forces in
+    the global frame, the last three the torque equations projected with $\LU{b}{\Gm\tp}$ (body frame)
+    or $\LU{0}{\Gm\tp}$ (global frame), see the equations of motion of [](#sec-item-objectrigidbody).
+    There is no constraint.
+
+    #### Singularity
+
+    $\Gm$ is singular for $\theta_1 = \pm \pi/2$ (and every multiple of $\pi$ added): there the rotations
+    about the first and the third axis coincide, and the equations cannot be solved. Use the node only
+    for motions that stay away from it, or `NodeRigidBodyEP` or `NodeRigidBodyRotVecLG`.
+
+    For creating a `NodeRigidBodyRxyz` together with a rigid body, use `CreateRigidBody`, see
+    [](#sec-mainsystemextensions-createrigidbody).
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$"""),
@@ -549,48 +620,47 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeRigidBody,
     overallDescription=r'A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies. The node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods.',
     classType=ClassTypeNode,
-    detailedDescription=r"""    **Detailed information:**
-    For a detailed description on the rigid body dynamics formulation using this node, 
-    see Holzinger and Gerstmayr [CITE:HolzingerGerstmayr2020].
+    detailedDescription=r"""    #### Coordinates
 
-    The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and three rotation coordinates, which is the rotation vector 
+    | index | symbol | kind | meaning | frame |
+    |---|---|---|---|---|
+    | 0, 1, 2 | $q_0,\,q_1,\,q_2$ | ABRV:ODE2 | displacement of the reference point of the body | global |
+    | 3, 4, 5 | $\nu_0,\,\nu_1,\,\nu_2$ | ABRV:ODE2 | change of the rotation vector against its reference value | - |
 
+    #### Configuration
 
-    $$
-                        \tnu = \varphi \nv = \tnu\cConfig + \tnu\cRef,
-                        $$
-
-    with the rotation angle $\varphi$ and the rotation axis $\nv$.
-    All coordinates $\cv\cConfig$ lead to second order differential equations, 
-    However the rotation vector cannot be used as a conventional parameterization. 
-    It must be computed within a nonlinear update, using appropriate Lie group methods.
-    The first 3 equations are residuals of translational forces in global coordinates,
-    while the last 3 equations are residual of local (body-fixed) torques, 
-    compare the equations of motion of the rigid body.
-
-    The rotation matrix $\LU{0b}{\Rot(\tnu)}\cConfig$ transforms a local (body-fixed) 3D position 
-    $\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp$ to global 3D positions,
-
+    The rotation vector combines the rotation angle $\varphi$ and the axis $\nv$,
 
     $$
-                        \LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot(\tnu)}\cConfig \LU{b}{\pLoc}
-                        $$
+    \tnu = \varphi \nv = \tnu\cConfig + \tnu\cRef ,
+    $$
 
-    Note that $\Rot(\tnu)$ is defined in function ` RotationVector2RotationMatrix`, see [](#sec-rigidbodyutilities-rotationvector2rotationmatrix).
-    
-    A Lie group integrator must be used with this node, which is why the is used, the 
-    rotation parameter velocities are identical to the local angular velocity $\LU{b}{\tomega}$ and thus the 
-    matrix $ \LU{b}{\Gm}$ becomes the identity matrix.
-    
-    **Note**, that the node automatically switches to Lie group integration of its
-    rotational coordinates, both in explicit integration as well as for implicit time integration.
-    This node avoids typical singularities of rotations and is therefore perfectly suited
-    for arbitrary motion. Furthermore, nonlinearities are reduced, which may improve
-    implicit time integration performance.
-    
-    For creating a `NodeRigidBodyRotVecLG` together with a rigid body, there is a `rigidBodyUtilities` function `CreateRigidBody`, 
-    see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
-""",
+    and the rotation matrix $\LU{0b}{\Rot(\tnu)}$ transforms a local position into the global frame,
+    $\LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot(\tnu)}\cConfig \LU{b}{\pLoc}$; $\Rot(\tnu)$ is the function
+    `RotationVector2RotationMatrix`, see [](#sec-rigidbodyutilities-rotationvector2rotationmatrix).
+
+    #### Frame and interpretation
+
+    The displacement is given in the global frame. The rotation coordinates are not a conventional
+    parametrization: the node is meant for Lie group time integration, and it switches its rotation
+    coordinates to it by itself, in explicit and in implicit integrators. For the formulation see
+    Holzinger and Gerstmayr [CITE:HolzingerGerstmayr2020].
+
+    #### Action on the equations of motion
+
+    All six coordinates lead to ABRV:ODE2 equations: the first three are the residuals of the forces in
+    the global frame, the last three the residuals of the torques in the body frame. In the Lie group
+    update the rotation velocity coordinates are the local angular velocity $\LU{b}{\tomega}$, so that
+    $\LU{b}{\Gm}$ is the identity matrix. There is no constraint.
+
+    #### Singularity
+
+    None in the Lie group update, which is why the node suits arbitrary rotations; it also reduces the
+    nonlinearity of the equations, which can help implicit integration.
+
+    For creating a `NodeRigidBodyRotVecLG` together with a rigid body, use `CreateRigidBody`, see
+    [](#sec-mainsystemextensions-createrigidbody).
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,p_2]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$"""),
@@ -695,21 +765,34 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 2D rigid body node for rigid bodies or beams. The node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: $\psi_0$). All coordinates are ABRV:ODE2, used for second order differetial equations.""",
     classType=ClassTypeNode,
-    detailedDescription=r"""    **Detailed information:**
-    The node provides 2 displacement coordinates (displacement of ABRV:COM, ($q_0,q_1$) ) and 1 rotation parameter ($\theta_0$). According equations need to be provided by an according object (e.g., RigidBody2D).
-    The node leads to 3 ODE2 equations of motions, where the first 2 equations are
-    residuals of global translational forces, and the third equation is the residual of the
-    torque around the Z-axis (due to planar motion, local=global).
+    detailedDescription=r"""    #### Coordinates
 
-    Using the rotation parameter $\theta_{0\mathrm{config}} = \psi_{0ref} + \psi_{0\mathrm{config}}$, the rotation matrix is defined as
+    | index | symbol | kind | meaning | frame |
+    |---|---|---|---|---|
+    | 0, 1 | $q_0,\,q_1$ | ABRV:ODE2 | displacement of the reference point of the body in $x$ and $y$ | global |
+    | 2 | $\psi_0$ | ABRV:ODE2 | change of the rotation angle about the $z$-axis | - |
 
+    #### Configuration
+
+    With the rotation angle $\theta_{0} = \psi_{0}\cRef + \psi_{0}\cConfig$, the rotation matrix is
 
     $$
-                        \LU{0b}{\Rot}\cConfig = \mr{\cos(\theta_0)}{-\sin(\theta_0)}{0}{\sin(\theta_0)}{\cos(\theta_0)}{0}{0}{0}{1}\cConfig
-                        $$
+    \LU{0b}{\Rot}\cConfig = \mr{\cos(\theta_0)}{-\sin(\theta_0)}{0}{\sin(\theta_0)}{\cos(\theta_0)}{0}{0}{0}{1}\cConfig
+    $$
 
-     **Example** for NodeRigidBody2D: see ObjectRigidBody2D
-""",
+    #### Frame and interpretation
+
+    The displacement is given in the global $x$-$y$ plane and the angle about the global $z$-axis;
+    body frame and global frame share the $z$-axis.
+
+    #### Action on the equations of motion
+
+    The three coordinates lead to three ABRV:ODE2 equations: the residuals of the forces in $x$ and $y$,
+    and the residual of the torque about the $z$-axis, which is the same in the body and in the global
+    frame. The velocity transformation is the identity, $\omega_z = \dot\theta_0$.
+
+    **Example**: see [](#sec-item-objectrigidbody2d)
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\,p_1,\,0]}\cConfig\tp= \LU{0}{\uv}\cConfig + \LU{0}{\pv}\cRef$global 3D position vector of node; $\uv\cRef=0$"""),
@@ -800,24 +883,35 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A node with one ABRV:ODE2 coordinate for one dimensional (1D) problems. Use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.""",
     classType=ClassTypeNode,
-    detailedDescription=r"""    **Detailed information:**
-    The current position/rotation coordinate of the 1D node is computed from
+    detailedDescription=r"""    #### Coordinates
 
+    | index | symbol | kind | meaning | frame |
+    |---|---|---|---|---|
+    | 0 | $q_0$ | ABRV:ODE2 | displacement or rotation, as the object reads it | the frame of the object |
 
-    $$
-                        p_0 = {q_0}\cRef + {q_0}\cCur
-                        $$
+    #### Configuration
 
-    The coordinate leads to one second order differential equation.
-    The graphical representation and the (internal) position of the node is
-
+    The current position or rotation coordinate of the node is
 
     $$
-                        p\cConfig= \vr{{p_0}\cConfig}{0}{0}
-                        $$
+    p_0 = {q_0}\cRef + {q_0}\cCur .
+    $$
 
-    The (internal) velocity vector is $[{p_0}\cConfig,\,0,\,0]\tp$.
-""",
+    For drawing and for markers, the node has a position and a velocity in 3D,
+    $\pv\cConfig = [{p_0}\cConfig,\,0,\,0]\tp$ and $[{\dot p_0}\cConfig,\,0,\,0]\tp$.
+
+    #### Frame and interpretation
+
+    What the coordinate means is the object's: `ObjectMass1D` reads it as a translation along the local
+    $x$-axis of the frame of its `referencePosition` and `referenceRotation`, `ObjectRotationalMass1D` as a rotation about its local axis. That
+    is what couples a 1D node to 2D or 3D bodies, and what distinguishes it from a `NodeGenericODE2` with
+    one coordinate.
+
+    #### Action on the equations of motion
+
+    The coordinate leads to one ABRV:ODE2 equation, the residual of the force or the torque the object
+    assigns to it.
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
@@ -882,6 +976,44 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 4 displacement degrees of freedom (2 for displacement of point node and 2 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime]^T=[1\;\;0]^T$.""",
     classType=ClassTypeNode,
+    detailedDescription=r"""    #### Coordinates
+
+    | index | symbol | kind | meaning | frame |
+    |---|---|---|---|---|
+    | 0, 1 | $q_0,\,q_1$ | ABRV:ODE2 | displacement of the node position $\rv$ | global |
+    | 2, 3 | $q_2,\,q_3$ | ABRV:ODE2 | change of the slope vector $\rv^\prime$ | global |
+
+    #### Configuration
+
+    Position and slope vector are the sums of reference and current values,
+
+    $$
+    \rv = \rv\cRef + [q_0,\,q_1]\tp, \quad \rv^\prime = \rv^\prime\cRef + [q_2,\,q_3]\tp .
+    $$
+
+    #### The slope vector
+
+    The slope vector is the derivative of the position of the beam axis with respect to the axial
+    coordinate $x$ of the element in its reference configuration, $\rv^\prime = \partial \rv / \partial x$.
+    In a straight beam along the global $x$-axis it is $[1,\;0]\tp$, which is the default of the
+    reference coordinates. Its **direction** is the tangent of the beam axis, and so the rotation of the
+    cross section in a Bernoulli-Euler beam; its **length** is one plus the axial strain,
+    $\varepsilon = \|\rv^\prime\| - 1$, as `ObjectANCFCable2D` computes it. A reference slope of length
+    other than one therefore describes a pre-strained beam.
+
+    #### Frame and interpretation
+
+    All four coordinates are global, with no rotation parameters: this is the absolute nodal coordinate
+    formulation. The node is used by the planar ANCF cable elements, `ObjectANCFCable2D` and
+    `ObjectALEANCFCable2D`, which share the node between neighbouring elements; the beam utilities
+    (`exudyn.beams`) create them.
+
+    #### Action on the equations of motion
+
+    The four coordinates lead to four ABRV:ODE2 equations, which the element provides. A force at the
+    node enters the first two; `MarkerNodeRigid` sees the node as a position with the orientation of the
+    slope vector.
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = [p_0,\, p_1,\,0]\cConfig\tp$global 3D position vector of node (=displacement+reference position)"""),
@@ -963,8 +1095,40 @@ definitions.append(ItemDefinition(
     addPublicC=r"""    static constexpr Index nODE2coordinates = 6;//AUTO: number of coordinates, used for fixed-size templates
 """,
     cParentClass=ParentClassCNodeODE2,
-    overallDescription=r"""A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 6 displacement degrees of freedom (3 for displacement of point node and 3 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime\;\;r_z^\prime]^T=[1\;\;0]^T$.""",
+    overallDescription=r"""A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements, with 3 position and 3 slope coordinates, all ABRV:ODE2; the slope vector is the derivative of the position with respect to the axial coordinate, $[1,\;0,\;0]\tp$ for a straight beam along the global $x$-axis.""",
     classType=ClassTypeNode,
+    detailedDescription=r"""    #### Coordinates
+
+    | index | symbol | kind | meaning | frame |
+    |---|---|---|---|---|
+    | 0, 1, 2 | $q_0,\,q_1,\,q_2$ | ABRV:ODE2 | displacement of the node position $\rv$ | global |
+    | 3, 4, 5 | $q_3,\,q_4,\,q_5$ | ABRV:ODE2 | change of the slope vector $\rv^\prime$ | global |
+
+    #### Configuration
+
+    $$
+    \rv = \rv\cRef + [q_0,\,q_1,\,q_2]\tp, \quad \rv^\prime = \rv^\prime\cRef + [q_3,\,q_4,\,q_5]\tp .
+    $$
+
+    #### The slope vector
+
+    The slope vector is the derivative of the position of the beam axis with respect to the axial
+    coordinate $x$ of the element in its reference configuration, $\rv^\prime = \partial \rv / \partial x$.
+    In a straight beam along the global $x$-axis it is $[1,\;0,\;0]\tp$, the default of the reference
+    coordinates. Its direction is the tangent of the beam axis and its length one plus the axial
+    strain, $\varepsilon = \|\rv^\prime\| - 1$. A single slope vector carries no rotation about the beam
+    axis: the element that uses the node has no torsion.
+
+    #### Frame and interpretation
+
+    All six coordinates are global (absolute nodal coordinates). The node is used by the spatial ANCF
+    cable element `ObjectANCFCable`.
+
+    #### Action on the equations of motion
+
+    The six coordinates lead to six ABRV:ODE2 equations, which the element provides; a force at the node
+    enters the first three.
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = [p_0,\, p_1,\, p_2]\cConfig\tp$global 3D position vector of node (=displacement+reference position)"""),
@@ -1040,8 +1204,43 @@ definitions.append(ItemDefinition(
     addPublicC=r"""    static constexpr Index nODE2coordinates = 9;//AUTO: number of coordinates, used for fixed-size templates
 """,
     cParentClass=ParentClassCNodeODE2,
-    overallDescription=r"""A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeX' and 'slopeY'); all coordinates lead to second order differential equations; the slopeX vector defines the directional derivative w.r.t the local axial (x) coordinate, etc.; in straight configuration aligned at the global x-axis, the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$.""",
+    overallDescription=r"""A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements, with 3 position and 2 $\times$ 3 slope coordinates, all ABRV:ODE2; the slope vectors are the derivatives of the position with respect to the two in-plane coordinates of the plate.""",
     classType=ClassTypeNode,
+    detailedDescription=r"""    #### Coordinates
+
+    | index | symbol | kind | meaning | frame |
+    |---|---|---|---|---|
+    | 0, 1, 2 | $q_0,\,q_1,\,q_2$ | ABRV:ODE2 | displacement of the node position $\rv$ | global |
+    | 3, 4, 5 | $q_3,\,q_4,\,q_5$ | ABRV:ODE2 | change of the slope vector $\rv_x^\prime$ | global |
+    | 6, 7, 8 | $q_6,\,q_7,\,q_8$ | ABRV:ODE2 | change of the slope vector $\rv_y^\prime$ | global |
+
+    #### Configuration
+
+    $$
+    \rv = \rv\cRef + [q_0,\,q_1,\,q_2]\tp, \quad
+    \rv_x^\prime = \rv_{x,\mathrm{ref}}^\prime + [q_3,\,q_4,\,q_5]\tp, \quad
+    \rv_y^\prime = \rv_{y,\mathrm{ref}}^\prime + [q_6,\,q_7,\,q_8]\tp .
+    $$
+
+    #### The slope vectors
+
+    The two slope vectors are the derivatives of the position of the mid-surface of a thin plate with
+    respect to its two in-plane coordinates, $\rv_x^\prime = \partial \rv / \partial x$ and
+    $\rv_y^\prime = \partial \rv / \partial y$. In a flat plate in the global $x$-$y$ plane they are
+    $[1,\;0,\;0]\tp$ and $[0,\;1,\;0]\tp$. They span the tangent plane of the mid-surface, and their
+    lengths and angle carry its in-plane strains. The default reference coordinates set both to
+    $[1,\;0,\;0]\tp$, which is no plate: give them.
+
+    #### Frame and interpretation
+
+    All nine coordinates are global (absolute nodal coordinates). The node is used by
+    `ObjectANCFThinPlate`, whose element scales the slopes by `slopesScalingX` and `slopesScalingY`.
+
+    #### Action on the equations of motion
+
+    The nine coordinates lead to nine ABRV:ODE2 equations, which the element provides; a force at the
+    node enters the first three.
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp$global 3D position vector of node (=displacement+reference position)"""),
@@ -1128,8 +1327,45 @@ definitions.append(ItemDefinition(
     addPublicC=r"""    static constexpr Index nODE2coordinates = 9;//AUTO: number of coordinates, used for fixed-size templates
 """,
     cParentClass=ParentClassCNodeODE2,
-    overallDescription=r"""A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeY' and 'slopeZ'); all coordinates lead to second order differential equations; the slopeY vector defines the directional derivative w.r.t the local axial (y) coordinate, etc.; the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$ and slopeZ gets $\rv_z^\prime=[0\;\;0\;\;1]^T$.""",
+    overallDescription=r"""A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements, with 3 position and 2 $\times$ 3 slope coordinates, all ABRV:ODE2; the slope vectors are the derivatives of the position with respect to the two cross section coordinates $y$ and $z$.""",
     classType=ClassTypeNode,
+    detailedDescription=r"""    #### Coordinates
+
+    | index | symbol | kind | meaning | frame |
+    |---|---|---|---|---|
+    | 0, 1, 2 | $q_0,\,q_1,\,q_2$ | ABRV:ODE2 | displacement of the node position $\rv$ | global |
+    | 3, 4, 5 | $q_3,\,q_4,\,q_5$ | ABRV:ODE2 | change of the slope vector $\rv_y$ | global |
+    | 6, 7, 8 | $q_6,\,q_7,\,q_8$ | ABRV:ODE2 | change of the slope vector $\rv_z$ | global |
+
+    #### Configuration
+
+    $$
+    \rv = \rv\cRef + [q_0,\,q_1,\,q_2]\tp, \quad
+    \rv_y = \rv_{y,\mathrm{ref}} + [q_3,\,q_4,\,q_5]\tp, \quad
+    \rv_z = \rv_{z,\mathrm{ref}} + [q_6,\,q_7,\,q_8]\tp .
+    $$
+
+    #### The slope vectors
+
+    Unlike the slopes of the cable nodes, the two slope vectors of this node are **not** taken along the
+    beam axis: they are the derivatives of the position with respect to the two **cross section**
+    coordinates $y$ and $z$, $\rv_y = \partial \rv / \partial y$ and $\rv_z = \partial \rv / \partial z$,
+    so that a point of the cross section at $(y,\,z)$ is at $\rv + y\,\rv_y + z\,\rv_z$, as
+    `ObjectANCFBeam` computes it. The axial direction follows from the positions of the two nodes of the
+    element. In a beam along the global $x$-axis the slope vectors are $[0,\;1,\;0]\tp$ and
+    $[0,\;0,\;1]\tp$; they span the cross section, and their lengths and angle carry its deformation -
+    the element is shear and cross section deformable. The default reference coordinates set both to
+    $[1,\;0,\;0]\tp$, which is no cross section: give them.
+
+    #### Frame and interpretation
+
+    All nine coordinates are global (absolute nodal coordinates). The node is used by `ObjectANCFBeam`.
+
+    #### Action on the equations of motion
+
+    The nine coordinates lead to nine ABRV:ODE2 equations, which the element provides; a force at the
+    node enters the first three.
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig = \LU{0}{[p_0,\, p_1,\, p_2]}\cConfig\tp$global 3D position vector of node (=displacement+reference position)"""),
@@ -1216,6 +1452,19 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A node containing a number of ABRV:ODE2 variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(\_t) must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
+    detailedDescription=r"""    #### Coordinates
+
+    A number of ABRV:ODE2 coordinates, `numberOfODE2Coordinates`, whose meaning is **defined by the
+    object that uses the node**: the modal coordinates of `ObjectFFRFreducedOrder`, the joint
+    coordinates of `ObjectKinematicTree`, the coordinates of `ObjectGenericODE2`, or the axial motion of
+    `ObjectALEANCFCable2D`. The current value of a coordinate is its reference value plus its current
+    coordinate, $c_i = q_{i,\mathrm{ref}} + q_i$.
+
+    #### Action on the equations of motion
+
+    Each coordinate leads to one ABRV:ODE2 equation, which the object provides; the node itself adds
+    nothing.
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
@@ -1288,6 +1537,17 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE1,
     overallDescription=r"""A node containing a number of ABRV:ODE1 variables. Use this node e.g. for linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
+    detailedDescription=r"""    #### Coordinates
+
+    A number of ABRV:ODE1 coordinates, `numberOfODE1Coordinates`, whose meaning is **defined by the
+    object that uses the node**, such as the states of `ObjectGenericODE1`. The current value of a
+    coordinate is its reference value plus its current coordinate.
+
+    #### Action on the equations of motion
+
+    Each coordinate leads to one first order equation, which the object provides; a load acts on a
+    coordinate through `MarkerNodeODE1Coordinate`.
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVCoordinatesTotal, OVDCoordinatesTotalNode),
@@ -1344,6 +1604,16 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeAE,
     overallDescription=r"""A node containing a number of ABRV:AE variables. Use e.g. linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
+    detailedDescription=r"""    #### Coordinates
+
+    A number of ABRV:AE coordinates, `numberOfAECoordinates`, whose meaning is **defined by the object
+    that uses the node**; the number of algebraic equations may differ from the number of coordinates,
+    if other objects provide the equations.
+
+    #### Action on the equations of motion
+
+    The coordinates are algebraic variables: they add algebraic equations, which the objects provide.
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVCoordinates, r"""$\yv\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig$ABRV:AE coordinates vector of node"""),
@@ -1398,6 +1668,18 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeData,
     overallDescription=r'A node containing a number of data (history) variables. Use this node e.g. for contact (active set), friction or plasticity (history variables).',
     classType=ClassTypeNode,
+    detailedDescription=r"""    #### Coordinates
+
+    A number of data coordinates, `numberOfDataCoordinates`, whose meaning is **defined by the object
+    that uses the node**: the contact state of a contact object, the stick or slip state and the last
+    position of friction, plastic strains. Data coordinates are no unknowns of the equations of motion;
+    the object updates them between steps, in its post Newton step.
+
+    #### Action on the equations of motion
+
+    None directly: the data coordinates change the equations of the object that owns them, e.g. by
+    switching a contact on or off.
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVCoordinates, r"""$\xv\cConfig = [x_0,\,\ldots,\,x_{nc}]\tp\cConfig$data coordinates (history variables) vector of node"""),
@@ -1447,6 +1729,24 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 3D point node fixed to ground which is similar to NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' ABRV:ODE2 and ABRV:ODE1 coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.""",
     classType=ClassTypeNode,
+    detailedDescription=r"""    #### Coordinates
+
+    None: the node is fixed at its reference position $\pv\cRef$, and does not add a coordinate to the
+    system. It provides a position (and, formally, an orientation) so that markers can be attached to
+    it.
+
+    #### Frame and interpretation
+
+    The reference position is global. Forces applied to the node, and reaction forces of connectors or
+    constraints attached to it, have no effect.
+
+    #### Use
+
+    The node is the ground for coordinate markers: a `CoordinateSpringDamper` or a `CoordinateConstraint`
+    between a coordinate of a node and the ground needs a marker on both sides, and `MarkerNodeCoordinate`
+    on a `NodePointGround` is that side. `CreateCoordinateConstraint`
+    creates it when one side is the ground.
+    """,
     mainParentClass=MainParentClassMainNode,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\pv\cConfig = [p_0,\,p_1,\,p_2]\cConfig\tp = \pv\cRef$global 3D position vector of node (=reference position)"""),

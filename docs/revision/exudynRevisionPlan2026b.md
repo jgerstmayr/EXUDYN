@@ -2779,8 +2779,11 @@ What depends on it: the graphics regression test takes every item through its Mi
         line, headings of their own for parameters, output variables and the detailed description;
         `requestedNodeTypes` declared for the node markers. Generating the C++ check of the node
         markers from that declaration is #2727.
-    - **RG13.5.1** nodes - the table of coordinates, the frame and interpretation, the action on the
-      equations of motion, constraints, singularities; the slopes of the slope nodes.
+    - **RG13.5.1** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-1) - nodes - the
+      table of coordinates, the frame and interpretation, the action on the equations of motion,
+      constraints, singularities; the slopes of the slope nodes. Found on the way: the Euler parameter
+      constraint is the node's, not the object's, and the default slopes of two nodes are parallel
+      (#2728).
     - **RG13.5.2** objects - after `objectDefinitionsDev.md` is agreed.
     - **RG13.5.3** markers - after `markerDefinitionsDev.md` is agreed.
     - **RG13.5.4** loads - the load, its frame, the generalized forces with the transformation.

@@ -56,45 +56,46 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 (description-noderigidbodyrotveclg)=
 ## Detailed description
 
-**Detailed information:**
-For a detailed description on the rigid body dynamics formulation using this node,
-see Holzinger and Gerstmayr [HolzingerGerstmayr2020].
+### Coordinates
 
-The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and three rotation coordinates, which is the rotation vector
+| index | symbol | kind | meaning | frame |
+|---|---|---|---|---|
+| 0, 1, 2 | $q_0,\,q_1,\,q_2$ | {ref}`ODE2 <ODE2>` | displacement of the reference point of the body | global |
+| 3, 4, 5 | $\nu_0,\,\nu_1,\,\nu_2$ | {ref}`ODE2 <ODE2>` | change of the rotation vector against its reference value | - |
 
-$$
-\tnu = \varphi \nv = \tnu\cConfig + \tnu\cRef,
-$$
+### Configuration
 
-with the rotation angle $\varphi$ and the rotation axis $\nv$.
-All coordinates $\cv\cConfig$ lead to second order differential equations,
-However the rotation vector cannot be used as a conventional parameterization.
-It must be computed within a nonlinear update, using appropriate Lie group methods.
-The first 3 equations are residuals of translational forces in global coordinates,
-while the last 3 equations are residual of local (body-fixed) torques,
-compare the equations of motion of the rigid body.
-
-The rotation matrix $\LU{0b}{\Rot(\tnu)}\cConfig$ transforms a local (body-fixed) 3D position
-$\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp$ to global 3D positions,
+The rotation vector combines the rotation angle $\varphi$ and the axis $\nv$,
 
 $$
-\LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot(\tnu)}\cConfig \LU{b}{\pLoc}
+\tnu = \varphi \nv = \tnu\cConfig + \tnu\cRef ,
 $$
 
-Note that $\Rot(\tnu)$ is defined in function ` RotationVector2RotationMatrix`, see [](#sec-rigidbodyutilities-rotationvector2rotationmatrix).
+and the rotation matrix $\LU{0b}{\Rot(\tnu)}$ transforms a local position into the global frame,
+$\LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot(\tnu)}\cConfig \LU{b}{\pLoc}$; $\Rot(\tnu)$ is the function
+`RotationVector2RotationMatrix`, see [](#sec-rigidbodyutilities-rotationvector2rotationmatrix).
 
-A Lie group integrator must be used with this node, which is why the is used, the
-rotation parameter velocities are identical to the local angular velocity $\LU{b}{\tomega}$ and thus the
-matrix $ \LU{b}{\Gm}$ becomes the identity matrix.
+### Frame and interpretation
 
-**Note**, that the node automatically switches to Lie group integration of its
-rotational coordinates, both in explicit integration as well as for implicit time integration.
-This node avoids typical singularities of rotations and is therefore perfectly suited
-for arbitrary motion. Furthermore, nonlinearities are reduced, which may improve
-implicit time integration performance.
+The displacement is given in the global frame. The rotation coordinates are not a conventional
+parametrization: the node is meant for Lie group time integration, and it switches its rotation
+coordinates to it by itself, in explicit and in implicit integrators. For the formulation see
+Holzinger and Gerstmayr [HolzingerGerstmayr2020].
 
-For creating a `NodeRigidBodyRotVecLG` together with a rigid body, there is a `rigidBodyUtilities` function `CreateRigidBody`,
-see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
+### Action on the equations of motion
+
+All six coordinates lead to {ref}`ODE2 <ODE2>` equations: the first three are the residuals of the forces in
+the global frame, the last three the residuals of the torques in the body frame. In the Lie group
+update the rotation velocity coordinates are the local angular velocity $\LU{b}{\tomega}$, so that
+$\LU{b}{\Gm}$ is the identity matrix. There is no constraint.
+
+### Singularity
+
+None in the Lie group update, which is why the node suits arbitrary rotations; it also reduces the
+nonlinearity of the equations, which can help implicit integration.
+
+For creating a `NodeRigidBodyRotVecLG` together with a rigid body, use `CreateRigidBody`, see
+[](#sec-mainsystemextensions-createrigidbody).
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM)

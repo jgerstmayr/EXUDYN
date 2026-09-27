@@ -2,7 +2,7 @@
 (sec-item-nodepointslope23)=
 # NodePointSlope23
 
-A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements. The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 $\times$ 3 for the slope vectors 'slopeY' and 'slopeZ'); all coordinates lead to second order differential equations; the slopeY vector defines the directional derivative w.r.t the local axial (y) coordinate, etc.; the slopeY vector reads $\rv_y^\prime=[0\;\;1\;\;0]^T$ and slopeZ gets $\rv_z^\prime=[0\;\;0\;\;1]^T$.
+A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements, with 3 position and 2 $\times$ 3 slope coordinates, all {ref}`ODE2 <ODE2>`; the slope vectors are the derivatives of the position with respect to the two cross section coordinates $y$ and $z$.
 
 ## Interface
 
@@ -50,6 +50,46 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Rotation | $[\varphi_0,\,\varphi_1,\,\varphi_2]\tp\cConfig$ | vector with 3 components of the Euler / Tait-Bryan angles in xyz-sequence |
 | AngularVelocity | $\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ | global 3D angular velocity vector of node |
 | AngularVelocityLocal | $\LU{b}{\tomega}\cConfig = \LU{b}{[\omega_0,\,\omega_1,\,\omega_2]}\cConfig\tp$ | local (body-fixed) 3D angular velocity vector of node |
+
+(description-nodepointslope23)=
+## Detailed description
+
+### Coordinates
+
+| index | symbol | kind | meaning | frame |
+|---|---|---|---|---|
+| 0, 1, 2 | $q_0,\,q_1,\,q_2$ | {ref}`ODE2 <ODE2>` | displacement of the node position $\rv$ | global |
+| 3, 4, 5 | $q_3,\,q_4,\,q_5$ | {ref}`ODE2 <ODE2>` | change of the slope vector $\rv_y$ | global |
+| 6, 7, 8 | $q_6,\,q_7,\,q_8$ | {ref}`ODE2 <ODE2>` | change of the slope vector $\rv_z$ | global |
+
+### Configuration
+
+$$
+\rv = \rv\cRef + [q_0,\,q_1,\,q_2]\tp, \quad
+\rv_y = \rv_{y,\mathrm{ref}} + [q_3,\,q_4,\,q_5]\tp, \quad
+\rv_z = \rv_{z,\mathrm{ref}} + [q_6,\,q_7,\,q_8]\tp .
+$$
+
+### The slope vectors
+
+Unlike the slopes of the cable nodes, the two slope vectors of this node are **not** taken along the
+beam axis: they are the derivatives of the position with respect to the two **cross section**
+coordinates $y$ and $z$, $\rv_y = \partial \rv / \partial y$ and $\rv_z = \partial \rv / \partial z$,
+so that a point of the cross section at $(y,\,z)$ is at $\rv + y\,\rv_y + z\,\rv_z$, as
+`ObjectANCFBeam` computes it. The axial direction follows from the positions of the two nodes of the
+element. In a beam along the global $x$-axis the slope vectors are $[0,\;1,\;0]\tp$ and
+$[0,\;0,\;1]\tp$; they span the cross section, and their lengths and angle carry its deformation -
+the element is shear and cross section deformable. The default reference coordinates set both to
+$[1,\;0,\;0]\tp$, which is no cross section: give them.
+
+### Frame and interpretation
+
+All nine coordinates are global (absolute nodal coordinates). The node is used by `ObjectANCFBeam`.
+
+### Action on the equations of motion
+
+The nine coordinates lead to nine {ref}`ODE2 <ODE2>` equations, which the element provides; a force at the
+node enters the first three.
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`ANCFBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py) (TM), [`ANCFCableBeamDampingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py) (TM), [`geometricallyExactBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM)

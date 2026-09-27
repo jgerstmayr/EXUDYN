@@ -6177,3 +6177,34 @@ of the item classes still carry the old sentence (`itemInterfaceEmitter.py`), be
 links that a docstring cannot show.
 
 All 97 item pages and the eleven pages of kinds changed; HTML and PDF build without a warning.
+
+<a id="rg13-5-1"></a>
+### RG13.5.1 — the pages of the nodes (2026-09-28, #2725)
+
+All 16 nodes have a detailed description in the structure `nodeDefinitionsDev.md` proposed and the
+maintainer agreed: **Coordinates** - a table of index, symbol, kind, meaning and frame, the part the
+maintainer said was missing - **Configuration**, **Frame and interpretation**, **Action on the
+equations of motion**, and where they apply the constraint, the singularity and, for the slope
+nodes, **the slope vectors**. The four headings are recurring headings of `checkDefinitions` now. The
+page of the nodes has its general section, in `itemKindDefinitions.py`: what a node is, reference
+and current coordinates, the kinds of coordinates, frames, a table of the four rotation
+parametrizations, and which markers fit which node.
+
+Written from the C++, which corrected the pages in three places:
+
+- **The Euler parameter constraint is added by the node**, not by the object:
+  `CNodeRigidBodyEP::ComputeAlgebraicEquations` computes $\ttheta\tp\ttheta - 1$ (index 3) or
+  $2\,\ttheta\tp\dot\ttheta$ (index 2) since `useNodeAE`, and `ObjectRigidBody` adds none. The page
+  said *"needs to be provided by the object"*.
+- **The slopes of `NodePointSlope23` are not axial**: `ObjectANCFBeam` places a point of the cross
+  section at $\rv + y\,\rv_y + z\,\rv_z$, so the two slopes are derivatives with respect to the cross
+  section coordinates. The class description said *"w.r.t the local axial (y) coordinate"*; it says
+  what the element does now.
+- `NodePointSlope1` gave the slope of a straight 3D beam with two components; the class descriptions
+  of the three 3D slope nodes are short now, and the detail is on the page.
+
+Two further findings are raised, not changed: the default reference slopes of `NodePointSlope12`
+and `NodePointSlope23` are parallel - both $[1,\,0,\,0]$ - which is neither a plate nor a cross
+section (#2728); the pages tell the user to give them. The generic nodes get the one-sentence rule
+the maintainer agreed - their coordinates mean what the object says - with the objects named, and
+the Interface block of RG13.5.0.3 lists them as links.

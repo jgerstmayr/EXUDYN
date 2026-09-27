@@ -38,5 +38,19 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Coordinates | $\yv\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig$ | {ref}`ODE1 <ODE1>` coordinates vector of node |
 | Coordinates_t | $\dot \yv\cConfig = [\dot y_0,\,\ldots,\,\dot y_{nc}]\tp\cConfig$ | {ref}`ODE1 <ODE1>` velocity coordinates vector of node |
 
+(description-nodegenericode1)=
+## Detailed description
+
+### Coordinates
+
+A number of {ref}`ODE1 <ODE1>` coordinates, `numberOfODE1Coordinates`, whose meaning is **defined by the
+object that uses the node**, such as the states of `ObjectGenericODE1`. The current value of a
+coordinate is its reference value plus its current coordinate.
+
+### Action on the equations of motion
+
+Each coordinate leads to one first order equation, which the object provides; a load acts on a
+coordinate through `MarkerNodeODE1Coordinate`.
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`HydraulicActuator2Arms.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicActuator2Arms.py) (Ex), [`HydraulicActuatorStaticInitialization.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicActuatorStaticInitialization.py) (Ex), [`HydraulicsUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicsUserFunction.py) (Ex), [`lugreFrictionODE1.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/lugreFrictionODE1.py) (Ex), [`lugreFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/lugreFrictionTest.py) (Ex), [`hydraulicActuatorSimpleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/hydraulicActuatorSimpleTest.py) (TM), [`solverExplicitODE1ODE2test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/solverExplicitODE1ODE2test.py) (TM), [`taskmanagerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/taskmanagerTest.py) (TM)

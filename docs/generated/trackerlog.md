@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.135.dev1
 - last change = 2026-09-28
-- Number of issues = 2728
+- Number of issues = 2729
 - Number of resolved issues = 2449 (135 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -8387,6 +8387,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` NodePointSlope12 and NodePointSlope23: the default reference slopes are parallel, \[1,0,0\] for both (#2728)
+  - description: Found while writing the node pages of revision2026b step RG13.5.1, 2026-09-28: the default referenceCoordinates of NodePointSlope12 are \[0,0,0, 1,0,0, 1,0,0\] - slopeX and slopeY both along x - and of NodePointSlope23 \[0,0,0, 1,0,0, 1,0,0\] - slopey and slopez both along x. Neither spans a plate or a cross section; a flat plate in the x-y plane has slopes \[1,0,0\] and \[0,1,0\], a beam along x has cross section slopes \[0,1,0\] and \[0,0,1\]. Changing a default changes what a model without explicit reference coordinates computes, so it is raised, not changed; the node pages say to give them.
+  - date raised: 2026-09-28
 - <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` explicit integration costs O(N^2) per step with the default dense linear solver (#2398)
   - description: measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision2026 step R2.10
   - date raised: 2026-09-12

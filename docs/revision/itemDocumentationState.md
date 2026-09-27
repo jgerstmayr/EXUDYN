@@ -2,7 +2,7 @@
 
 | kind | items | no detailed description | no figure | no MiniExample | parameters without a real description | output variables without one | used in no script | ... nor in the package |
 |---|---|---|---|---|---|---|---|---|
-| Node | 16 | 9 | 16 | 16 | 0 of 101 | 0 of 137 | 3 | 2 |
+| Node | 16 | 0 | 16 | 16 | 0 of 101 | 0 of 137 | 3 | 2 |
 | Object (Body) | 7 | 0 | 6 | 2 | 0 of 46 | 0 of 59 | 0 | 0 |
 | Object (SuperElement) | 4 | 0 | 3 | 2 | 2 of 122 | 0 of 16 | 0 | 0 |
 | Object (Object) | 1 | 0 | 1 | 0 | 0 of 9 | 0 of 3 | 0 | 0 |
@@ -13,26 +13,26 @@
 | Marker | 18 | 10 | 17 | 17 | 1 of 81 | 0 of 0 | 1 | 1 |
 | Load | 4 | 0 | 4 | 3 | 0 of 22 | 0 of 0 | 0 | 0 |
 | Sensor | 8 | 7 | 8 | 8 | 0 of 60 | 0 of 0 | 0 | 0 |
-| **all** | 97 | 29 | 84 | 74 | 3 of 985 | 0 of 413 | 7 | 4 |
+| **all** | 97 | 20 | 84 | 74 | 3 of 985 | 0 of 413 | 7 | 4 |
 
 | item | kind | overall description (words) | detailed description (words, sections) | figure | parameters: without a real description | output variables (undescribed) | MiniExample | used in scripts | used in the package |
 |---|---|---|---|---|---|---|---|---|---|
-| NodePoint | Node | 18 | 88, 0 | - | 0 of 7 | 12 | - | 40 | 4 |
-| NodePoint2D | Node | 18 | 73, 0 | - | 0 of 7 | 12 | - | 19 | 3 |
-| NodeRigidBodyEP | Node | 30 | 165, 0 | - | 0 of 8 | 13 | - | 108 | 3 |
-| NodeRigidBodyRxyz | Node | 35 | 121, 0 | - | 0 of 7 | 13 | - | 6 | 1 |
-| NodeRigidBodyRotVecLG | Node | 36 | 236, 0 | - | 0 of 7 | 11 | - | 3 | 1 |
-| NodeRigidBody2D | Node | 33 | 77, 0 | - | 0 of 7 | 13 | - | 51 | 1 |
-| Node1D | Node | 58 | 38, 0 | - | 0 of 5 | 4 | - | 10 | 0 |
-| NodePoint2DSlope1 | Node | 66 | - | - | 0 of 7 | 8 | - | 18 | 0 |
-| NodePointSlope1 | Node | 66 | - | - | 0 of 7 | 8 | - | 0 | 0 |
-| NodePointSlope12 | Node | 65 | - | - | 0 of 7 | 12 | - | 0 | 1 |
-| NodePointSlope23 | Node | 65 | - | - | 0 of 7 | 12 | - | 5 | 0 |
-| NodeGenericODE2 | Node | 39 | - | - | 0 of 6 | 4 | - | 15 | 3 |
-| NodeGenericODE1 | Node | 27 | - | - | 0 of 5 | 3 | - | 8 | 0 |
-| NodeGenericAE | Node | 24 | - | - | 0 of 5 | 1 | - | 0 | 0 |
-| NodeGenericData | Node | 19 | - | - | 0 of 4 | 1 | - | 54 | 5 |
-| NodePointGround | Node | 49 | - | - | 0 of 5 | 10 | - | 129 | 3 |
+| NodePoint | Node | 18 | 173, 4 | - | 0 of 7 | 12 | - | 40 | 4 |
+| NodePoint2D | Node | 18 | 95, 4 | - | 0 of 7 | 12 | - | 19 | 3 |
+| NodeRigidBodyEP | Node | 30 | 297, 5 | - | 0 of 8 | 13 | - | 108 | 3 |
+| NodeRigidBodyRxyz | Node | 35 | 223, 5 | - | 0 of 7 | 13 | - | 6 | 1 |
+| NodeRigidBodyRotVecLG | Node | 36 | 216, 5 | - | 0 of 7 | 11 | - | 3 | 1 |
+| NodeRigidBody2D | Node | 33 | 118, 4 | - | 0 of 7 | 13 | - | 51 | 1 |
+| Node1D | Node | 58 | 123, 4 | - | 0 of 5 | 4 | - | 10 | 0 |
+| NodePoint2DSlope1 | Node | 66 | 212, 5 | - | 0 of 7 | 8 | - | 18 | 0 |
+| NodePointSlope1 | Node | 45 | 152, 5 | - | 0 of 7 | 8 | - | 0 | 0 |
+| NodePointSlope12 | Node | 41 | 155, 5 | - | 0 of 7 | 12 | - | 0 | 1 |
+| NodePointSlope23 | Node | 44 | 190, 5 | - | 0 of 7 | 12 | - | 5 | 0 |
+| NodeGenericODE2 | Node | 39 | 75, 2 | - | 0 of 6 | 4 | - | 15 | 3 |
+| NodeGenericODE1 | Node | 27 | 63, 2 | - | 0 of 5 | 3 | - | 8 | 0 |
+| NodeGenericAE | Node | 24 | 55, 2 | - | 0 of 5 | 1 | - | 0 | 0 |
+| NodeGenericData | Node | 19 | 83, 2 | - | 0 of 4 | 1 | - | 54 | 5 |
+| NodePointGround | Node | 49 | 99, 3 | - | 0 of 5 | 10 | - | 129 | 3 |
 | ObjectGround | Object (Body) | 27 | 93, 1 | - | 0 of 6 | 5 | - | 191 | 6 |
 | ObjectMassPoint | Object (Body) | 11 | 132, 2 | - | 0 of 5 | 8 | yes | 35 | 0 |
 | ObjectMassPoint2D | Object (Body) | 9 | 134, 2 | - | 0 of 5 | 8 | yes | 19 | 2 |

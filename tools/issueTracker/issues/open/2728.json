@@ -1,0 +1,12 @@
+{
+  "number": 2728,
+  "title": "NodePointSlope12 and NodePointSlope23: the default reference slopes are parallel, [1,0,0] for both",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "Found while writing the node pages of revision2026b step RG13.5.1, 2026-09-28: the default referenceCoordinates of NodePointSlope12 are [0,0,0, 1,0,0, 1,0,0] - slopeX and slopeY both along x - and of NodePointSlope23 [0,0,0, 1,0,0, 1,0,0] - slopey and slopez both along x. Neither spans a plate or a cross section; a flat plate in the x-y plane has slopes [1,0,0] and [0,1,0], a beam along x has cross section slopes [0,1,0] and [0,0,1]. Changing a default changes what a model without explicit reference coordinates computes, so it is raised, not changed; the node pages say to give them.",
+  "dateRaised": "2026-09-28",
+  "deadline": "2027-03-27",
+  "file": "definitions/itemDefsNodes.py"
+}

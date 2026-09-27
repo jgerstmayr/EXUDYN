@@ -2,7 +2,7 @@
 (sec-item-nodepointslope1)=
 # NodePointSlope1
 
-A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 6 displacement degrees of freedom (3 for displacement of point node and 3 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime\;\;r_z^\prime]^T=[1\;\;0]^T$.
+A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements, with 3 position and 3 slope coordinates, all {ref}`ODE2 <ODE2>`; the slope vector is the derivative of the position with respect to the axial coordinate, $[1,\;0,\;0]\tp$ for a straight beam along the global $x$-axis.
 
 ## Interface
 
@@ -46,3 +46,38 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Coordinates |  | coordinates vector of node (3 displacement coordinates + 3 slope vector coordinates) |
 | Coordinates_t |  | velocity coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates) |
 | Coordinates_tt |  | acceleration coordinates vector of node (derivative of the 3 displacement coordinates + 3 slope vector coordinates) |
+
+(description-nodepointslope1)=
+## Detailed description
+
+### Coordinates
+
+| index | symbol | kind | meaning | frame |
+|---|---|---|---|---|
+| 0, 1, 2 | $q_0,\,q_1,\,q_2$ | {ref}`ODE2 <ODE2>` | displacement of the node position $\rv$ | global |
+| 3, 4, 5 | $q_3,\,q_4,\,q_5$ | {ref}`ODE2 <ODE2>` | change of the slope vector $\rv^\prime$ | global |
+
+### Configuration
+
+$$
+\rv = \rv\cRef + [q_0,\,q_1,\,q_2]\tp, \quad \rv^\prime = \rv^\prime\cRef + [q_3,\,q_4,\,q_5]\tp .
+$$
+
+### The slope vector
+
+The slope vector is the derivative of the position of the beam axis with respect to the axial
+coordinate $x$ of the element in its reference configuration, $\rv^\prime = \partial \rv / \partial x$.
+In a straight beam along the global $x$-axis it is $[1,\;0,\;0]\tp$, the default of the reference
+coordinates. Its direction is the tangent of the beam axis and its length one plus the axial
+strain, $\varepsilon = \|\rv^\prime\| - 1$. A single slope vector carries no rotation about the beam
+axis: the element that uses the node has no torsion.
+
+### Frame and interpretation
+
+All six coordinates are global (absolute nodal coordinates). The node is used by the spatial ANCF
+cable element `ObjectANCFCable`.
+
+### Action on the equations of motion
+
+The six coordinates lead to six {ref}`ODE2 <ODE2>` equations, which the element provides; a force at the node
+enters the first three.

@@ -69,6 +69,10 @@ RECURRING_HEADINGS = [
     'Post Newton Step',
     'Super element output variables',
     'Additional output variables for superelement node access',
+    'Coordinates',                          #the headings of a node page (#2725)
+    'Configuration',
+    'Frame and interpretation',
+    'Action on the equations of motion',
     ]
 
 #the heading level a description is written at: an item's text sits under the item's DESCRIPTION

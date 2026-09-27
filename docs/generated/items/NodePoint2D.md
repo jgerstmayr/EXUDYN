@@ -55,13 +55,32 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 (description-nodepoint2d)=
 ## Detailed description
 
-**Detailed information:**
-The node provides $n_c=2$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint2D).
-Coordinates are identical to the nodal displacements, except for the third coordinate $u_2$, which is zero, because $q_2$ does not exist.
+### Coordinates
 
-Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation.
+| index | symbol | kind | meaning | frame |
+|---|---|---|---|---|
+| 0, 1 | $q_0,\,q_1$ | {ref}`ODE2 <ODE2>` | displacement of the node in $x$ and $y$ | global |
 
-**Example** for NodePoint2D: see ObjectMassPoint2D, [](#sec-item-objectmasspoint2d)
+### Configuration
+
+In any configuration, the position of the node is its reference position plus its displacement,
+with a third component that is always zero,
+
+$$
+\pv\cConfig = \vr{r_{0}}{r_{1}}{0}\cRef + \vr{q_0}{q_1}{0}\cConfig .
+$$
+
+### Frame and interpretation
+
+The coordinates are displacements in the global $x$-$y$ plane; `ObjectMassPoint2D` is the object
+that uses them.
+
+### Action on the equations of motion
+
+The two coordinates lead to two {ref}`ODE2 <ODE2>` equations, the residuals of the forces in $x$ and $y$; a
+force of a load or connector enters them with its first two components.
+
+**Example**: see [](#sec-item-objectmasspoint2d)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`myFirstExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/myFirstExample.py) (Ex), [`pendulum2Dconstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulum2Dconstraint.py) (Ex), [`pendulumIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumIftommBenchmark.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`SpringDamperMassUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SpringDamperMassUserFunction.py) (Ex), [`xExudynConfigSpecial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/xExudynConfigSpecial.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFslidingJoint2Drigid.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py) (Ex), [`geneticOptimizationSliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/geneticOptimizationSliderCrank.py) (Ex), [`SliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SliderCrank.py) (Ex), [`slidercrankWithMassSpring.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/slidercrankWithMassSpring.py) (Ex), [`switchingConstraintsPendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/switchingConstraintsPendulum.py) (Ex), [`sparseMatrixSpringDamperTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sparseMatrixSpringDamperTest.py) (TM), [`SpringDamperMesh.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/SpringDamperMesh.py) (TM), [`coordinateVectorConstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraint.py) (TM), ...

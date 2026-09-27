@@ -1660,9 +1660,7 @@ class VNodePointSlope1:
         return str(dict(self))
 
 class NodePointSlope1:
-    r"""A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements.
-    
-    The node has 6 displacement degrees of freedom (3 for displacement of point node and 3 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as :math:`()^\prime`; in straight configuration aligned at the global x-axis, the slope vector reads :math:`\rv^\prime=[r_x^\prime\;\;r_y^\prime\;\;r_z^\prime]^T=[1\;\;0]^T`.
+    r"""A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements, with 3 position and 3 slope coordinates, all ODE2; the slope vector is the derivative of the position with respect to the axial coordinate, :math:`[1,\;0,\;0]\tp` for a straight beam along the global :math:`x`-axis.
     
     Args:
         name: node's unique name; type: str
@@ -1724,9 +1722,7 @@ class VNodePointSlope12:
         return str(dict(self))
 
 class NodePointSlope12:
-    r"""A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements.
-    
-    The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 :math:`\times` 3 for the slope vectors 'slopeX' and 'slopeY'); all coordinates lead to second order differential equations; the slopeX vector defines the directional derivative w.r.t the local axial (x) coordinate, etc.; in straight configuration aligned at the global x-axis, the slopeY vector reads :math:`\rv_y^\prime=[0\;\;1\;\;0]^T`.
+    r"""A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements, with 3 position and 2 :math:`\times` 3 slope coordinates, all ODE2; the slope vectors are the derivatives of the position with respect to the two in-plane coordinates of the plate.
     
     Args:
         name: node's unique name; type: str
@@ -1788,9 +1784,7 @@ class VNodePointSlope23:
         return str(dict(self))
 
 class NodePointSlope23:
-    r"""A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements.
-    
-    The node has 9 ODE2 degrees of freedom (3 for displacement of point node and 2 :math:`\times` 3 for the slope vectors 'slopeY' and 'slopeZ'); all coordinates lead to second order differential equations; the slopeY vector defines the directional derivative w.r.t the local axial (y) coordinate, etc.; the slopeY vector reads :math:`\rv_y^\prime=[0\;\;1\;\;0]^T` and slopeZ gets :math:`\rv_z^\prime=[0\;\;0\;\;1]^T`.
+    r"""A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements, with 3 position and 2 :math:`\times` 3 slope coordinates, all ODE2; the slope vectors are the derivatives of the position with respect to the two cross section coordinates :math:`y` and :math:`z`.
     
     Args:
         name: node's unique name; type: str

@@ -35,3 +35,16 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | output variable | symbol | description |
 |---|---|---|
 | Coordinates | $\yv\cConfig = [y_0,\,\ldots,\,y_{nc}]\tp\cConfig$ | {ref}`AE <AE>` coordinates vector of node |
+
+(description-nodegenericae)=
+## Detailed description
+
+### Coordinates
+
+A number of {ref}`AE <AE>` coordinates, `numberOfAECoordinates`, whose meaning is **defined by the object
+that uses the node**; the number of algebraic equations may differ from the number of coordinates,
+if other objects provide the equations.
+
+### Action on the equations of motion
+
+The coordinates are algebraic variables: they add algebraic equations, which the objects provide.

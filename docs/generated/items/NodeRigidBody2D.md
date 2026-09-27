@@ -56,19 +56,33 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 (description-noderigidbody2d)=
 ## Detailed description
 
-**Detailed information:**
-The node provides 2 displacement coordinates (displacement of {ref}`COM <COM>`, ($q_0,q_1$) ) and 1 rotation parameter ($\theta_0$). According equations need to be provided by an according object (e.g., RigidBody2D).
-The node leads to 3 ODE2 equations of motions, where the first 2 equations are
-residuals of global translational forces, and the third equation is the residual of the
-torque around the Z-axis (due to planar motion, local=global).
+### Coordinates
 
-Using the rotation parameter $\theta_{0\mathrm{config}} = \psi_{0ref} + \psi_{0\mathrm{config}}$, the rotation matrix is defined as
+| index | symbol | kind | meaning | frame |
+|---|---|---|---|---|
+| 0, 1 | $q_0,\,q_1$ | {ref}`ODE2 <ODE2>` | displacement of the reference point of the body in $x$ and $y$ | global |
+| 2 | $\psi_0$ | {ref}`ODE2 <ODE2>` | change of the rotation angle about the $z$-axis | - |
+
+### Configuration
+
+With the rotation angle $\theta_{0} = \psi_{0}\cRef + \psi_{0}\cConfig$, the rotation matrix is
 
 $$
 \LU{0b}{\Rot}\cConfig = \mr{\cos(\theta_0)}{-\sin(\theta_0)}{0}{\sin(\theta_0)}{\cos(\theta_0)}{0}{0}{0}{1}\cConfig
 $$
 
-**Example** for NodeRigidBody2D: see ObjectRigidBody2D
+### Frame and interpretation
+
+The displacement is given in the global $x$-$y$ plane and the angle about the global $z$-axis;
+body frame and global frame share the $z$-axis.
+
+### Action on the equations of motion
+
+The three coordinates lead to three {ref}`ODE2 <ODE2>` equations: the residuals of the forces in $x$ and $y$,
+and the residual of the torque about the $z$-axis, which is the same in the body and in the global
+frame. The velocity transformation is the identity, $\omega_z = \dot\theta_0$.
+
+**Example**: see [](#sec-item-objectrigidbody2d)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex), [`beltDrivesComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py) (Ex), [`doublePendulum2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/doublePendulum2D.py) (Ex), [`pendulumGeomExactBeam2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2D.py) (Ex), [`reevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reevingSystem.py) (Ex), [`reevingSystemOpen.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reevingSystemOpen.py) (Ex), [`simple4linkPendulumBing.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/simple4linkPendulumBing.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFslidingJoint2Drigid.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py) (Ex), [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`ANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py) (TM), [`ANCFgeneralContactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFgeneralContactCircle.py) (TM), ...

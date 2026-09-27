@@ -56,31 +56,39 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 (description-noderigidbodyrxyz)=
 ## Detailed description
 
-**Detailed information:**
-The node has 3 displacement coordinates $[q_0,\,q_1,\,q_2]\tp$ and 3 rotation coordinates $[\psi_0,\,\psi_1,\,\psi_2]\tp$ for consecutive rotations around the 0, 1 and 2-axis ($x$, $y$ and $z$).
-All coordinates $\cv\cConfig$ lead to second order differential equations.
-The rotation matrix $\LU{0b}{\Rot}\cConfig$ transforms a local (body-fixed) 3D position
-$\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp$ to global 3D positions,
+### Coordinates
+
+| index | symbol | kind | meaning | frame |
+|---|---|---|---|---|
+| 0, 1, 2 | $q_0,\,q_1,\,q_2$ | {ref}`ODE2 <ODE2>` | displacement of the reference point of the body | global |
+| 3, 4, 5 | $\psi_0,\,\psi_1,\,\psi_2$ | {ref}`ODE2 <ODE2>` | change of the Tait-Bryan angles against their reference values: consecutive rotations about the $x$-, $y$- and $z$-axis | - |
+
+### Configuration
+
+The position of the reference point and the angles $\ttheta$ are the sums of reference and current
+coordinates,
 
 $$
-\LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
+\pv\cConfig = \pv\cRef + \uv\cConfig, \quad \ttheta\cConfig = \tpsi\cRef + \tpsi\cConfig ,
 $$
 
-Note that the Euler angles $\ttheta\cCur$ are computed as sum of current coordinates plus reference coordinates,
+and the rotation matrix, which transforms a local (body-fixed) position $\pLocB$ into the global
+frame, $\LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}$, is
 
 $$
-\ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
+\LU{0b}{\Rot} = \LU{01}{\Rot_0}(\theta_0) \LU{12}{\Rot_1}(\theta_1) \LU{2b}{\Rot_2}(\theta_2) ,
 $$
 
-The rotation matrix is defined as function of the rotation parameters $\ttheta=[\theta_0,\,\theta_1,\,\theta_2]\tp$
+see [](#sec-symbolsitems) for the elementary rotation matrices $\Rot_0$, $\Rot_1$ and $\Rot_2$.
 
-$$
-\LU{0b}{\Rot} = \LU{01}{\Rot_0}(\theta_0) \LU{12}{\Rot_1}(\theta_1) \LU{2b}{\Rot_2}(\theta_2)
-$$
+### Frame and interpretation
 
-see [](#sec-symbolsitems) for definition of rotation matrices $\Rot_0$, $\Rot_1$ and $\Rot_2$.
+The displacement is given in the global frame, and the angles describe the rotation of the body
+frame $b$ against the global frame.
 
-The derivatives of the angular velocity vectors w.r.t. the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
+### Action on the equations of motion
+
+The velocity transformation relates the time derivatives of the angles to the angular velocity,
 
 $$
 \begin{aligned}
@@ -89,8 +97,19 @@ $$
 \end{aligned}
 $$
 
-For creating a `NodeRigidBodyRxyz` together with a rigid body, there is a `rigidBodyUtilities` function `CreateRigidBody`,
-see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
+All six coordinates lead to {ref}`ODE2 <ODE2>` equations: the first three are the residuals of the forces in
+the global frame, the last three the torque equations projected with $\LU{b}{\Gm\tp}$ (body frame)
+or $\LU{0}{\Gm\tp}$ (global frame), see the equations of motion of [](#sec-item-objectrigidbody).
+There is no constraint.
+
+### Singularity
+
+$\Gm$ is singular for $\theta_1 = \pm \pi/2$ (and every multiple of $\pi$ added): there the rotations
+about the first and the third axis coincide, and the equations cannot be solved. Use the node only
+for motions that stay away from it, or `NodeRigidBodyEP` or `NodeRigidBodyRotVecLG`.
+
+For creating a `NodeRigidBodyRxyz` together with a rigid body, use `CreateRigidBody`, see
+[](#sec-mainsystemextensions-createrigidbody).
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`performanceMultiThreadingNG.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/performanceMultiThreadingNG.py) (Ex), [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM), [`heavyTop.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/heavyTop.py) (TM), [`connectorRigidBodySpringDamperTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorRigidBodySpringDamperTest.py) (TM)

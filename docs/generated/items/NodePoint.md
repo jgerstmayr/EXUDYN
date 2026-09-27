@@ -55,12 +55,38 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 (description-nodepoint)=
 ## Detailed description
 
-**Detailed information:**
-The node provides $n_c=3$ displacement coordinates. Equations of motion need to be provided by an according object (e.g., MassPoint, finite elements, ...).
-Usually, the nodal coordinates are provided in the global frame. However, the coordinate system is defined by the object (e.g. MassPoint uses global coordinates, but floating frame of reference objects use local frames).
-Note that for this very simple node, coordinates are identical to the nodal displacements, same for time derivatives. This is not the case, e.g. for nodes with orientation.
+### Coordinates
 
-**Example** for NodePoint: see ObjectMassPoint, [](#sec-item-objectmasspoint)
+| index | symbol | kind | meaning | frame |
+|---|---|---|---|---|
+| 0, 1, 2 | $q_0,\,q_1,\,q_2$ | {ref}`ODE2 <ODE2>` | displacement of the node in $x$, $y$ and $z$ | the frame of the object, usually global |
+
+### Configuration
+
+In any configuration, the position of the node is its reference position plus its displacement,
+
+$$
+\pv\cConfig = \pv\cRef + \uv\cConfig, \quad \uv\cConfig = [q_0,\,q_1,\,q_2]\cConfig\tp .
+$$
+
+The coordinates are the displacements themselves, and their time derivatives are the velocity and
+the acceleration of the node.
+
+### Frame and interpretation
+
+The node defines no frame; the object that uses it does. `ObjectMassPoint` reads the coordinates in
+the global frame. `ObjectFFRF` uses points as the nodes of its finite element mesh and reads their
+coordinates in the frame of its rigid body node (node 0): there, the global position of a mesh node
+follows from the object, not from the node alone.
+
+### Action on the equations of motion
+
+The three coordinates lead to three {ref}`ODE2 <ODE2>` equations, which the object provides; for
+`ObjectMassPoint` they are the residuals of the forces in the global frame. A force $\fv$ acting on
+the node through `MarkerNodePosition` enters them with the position Jacobian
+$\partial \pv / \partial \qv = \ImThree$, that is, as it is.
+
+**Example**: see [](#sec-item-objectmasspoint)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`interactiveTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/interactiveTutorial.py) (Ex), [`particlesSilo.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesSilo.py) (Ex), [`particlesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesTest.py) (Ex), [`particlesTest3D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesTest3D.py) (Ex), [`particlesTest3D2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesTest3D2.py) (Ex), [`plotSensorExamples.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/plotSensorExamples.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex), [`SpringWithConstraints.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SpringWithConstraints.py) (Ex), [`ComputeSensitivitiesExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ComputeSensitivitiesExample.py) (Ex), [`coordinateSpringDamper.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/coordinateSpringDamper.py) (Ex), [`massSpringFrictionInteractive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/massSpringFrictionInteractive.py) (Ex), [`minimizeExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/minimizeExample.py) (Ex), [`ACFtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py) (TM), [`connectorGravityTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorGravityTest.py) (TM), [`exceptionTypesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/exceptionTypesTest.py) (TM), ...

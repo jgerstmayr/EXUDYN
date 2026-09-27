@@ -28,6 +28,62 @@ definitions = []
 definitions.append(ItemKindDefinition(
     kind='Nodes',
     overallDescription=r"""Nodes provide coordinates for objects. Loads can be applied and Markers or Sensors can be attached to Nodes. The sorting of Nodes in the system (the order they are added to mbs) defines the order of system coordinates.""",
+    detailedDescription=r"""
+    ## What a node is
+
+    A node provides coordinates and nothing else: no mass, no stiffness, no equations. The object that
+    uses the node - a mass point, a rigid body, a finite element - provides the equations for its
+    coordinates, and a node that no object uses leaves the system without equations for them. Each
+    node page says, under **Action on the equations of motion**, which equations its coordinates get.
+
+    ## Reference, initial and current coordinates
+
+    Every node has `referenceCoordinates`, which define the reference configuration, and
+    `initialCoordinates` and `initialVelocities`, which are relative to them: a `NodePoint` starts at
+    `referenceCoordinates + initialCoordinates`. The coordinates of the system are the **current**
+    coordinates, without the reference values - displacements, or changes of rotation parameters; the
+    output variable `Coordinates` returns them and `CoordinatesTotal` adds the reference values. See
+    [](#sec-overview-items-coordinates) and [](#sec-referenceandcurrentcoordinates).
+
+    ## The kinds of coordinates
+
+    | kind | what the solver does with it | nodes |
+    |---|---|---|
+    | ABRV:ODE2 | second order differential equations: positions, rotations, slopes | the point, rigid body and slope nodes, `Node1D`, `NodeGenericODE2` |
+    | ABRV:ODE1 | first order differential equations: states | `NodeGenericODE1` |
+    | ABRV:AE | algebraic variables | `NodeGenericAE`; `NodeRigidBodyEP` adds one for its constraint |
+    | data | no unknowns: states an object updates between steps, such as contact or friction | `NodeGenericData` |
+
+    `NodePointGround` has no coordinates at all.
+
+    ## Frames
+
+    The coordinates of a node are global, unless the object that uses the node reads them otherwise:
+    `ObjectFFRF` reads the points of its mesh in the frame of its rigid body node. Every node page says
+    under **Frame and interpretation** which objects deviate.
+
+    ## Rotation parametrizations
+
+    A rigid body is a rigid body node and an `ObjectRigidBody`, and the node decides how the rotation is
+    parametrized; `CreateRigidBody(..., nodeType=...)` chooses it.
+
+    | node | rotation coordinates | constraint | singularity | suited for |
+    |---|---|---|---|---|
+    | `NodeRigidBodyEP` | 4 Euler parameters | one, $\ttheta\tp\ttheta = 1$, added by the node | none | general 3D motion, implicit integration |
+    | `NodeRigidBodyRxyz` | 3 Tait-Bryan angles | none | at $\theta_1 = \pm\pi/2$ | small or planar-like rotations, readable angles |
+    | `NodeRigidBodyRotVecLG` | rotation vector | none | none in the Lie group update | arbitrary rotations, explicit and implicit Lie group integration |
+    | `NodeRigidBody2D` | 1 angle about $z$ | none | none | planar motion |
+
+    In all of them, the torque equations are the torques projected with the transposed velocity
+    transformation $\Gm\tp$ of the node, $\tomega = \Gm \dot\ttheta$.
+
+    ## Markers on nodes
+
+    A node marker needs the node to provide what it measures: `MarkerNodePosition` a position,
+    `MarkerNodeRigid` a position and an orientation, `MarkerNodeRotationCoordinate` an orientation. The
+    **Interface** of each node lists the markers and the objects that fit. `MarkerNodeCoordinate` and
+    `MarkerNodeCoordinates` act on single coordinates and fit every node with ABRV:ODE2 coordinates.
+    """,
     ))
 
 definitions.append(ItemKindDefinition(

@@ -48,5 +48,46 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Coordinates_t |  | velocity coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates) |
 | Coordinates_tt |  | acceleration coordinates vector of node (derivative of the 2 displacement coordinates + 2 slope vector coordinates) |
 
+(description-nodepoint2dslope1)=
+## Detailed description
+
+### Coordinates
+
+| index | symbol | kind | meaning | frame |
+|---|---|---|---|---|
+| 0, 1 | $q_0,\,q_1$ | {ref}`ODE2 <ODE2>` | displacement of the node position $\rv$ | global |
+| 2, 3 | $q_2,\,q_3$ | {ref}`ODE2 <ODE2>` | change of the slope vector $\rv^\prime$ | global |
+
+### Configuration
+
+Position and slope vector are the sums of reference and current values,
+
+$$
+\rv = \rv\cRef + [q_0,\,q_1]\tp, \quad \rv^\prime = \rv^\prime\cRef + [q_2,\,q_3]\tp .
+$$
+
+### The slope vector
+
+The slope vector is the derivative of the position of the beam axis with respect to the axial
+coordinate $x$ of the element in its reference configuration, $\rv^\prime = \partial \rv / \partial x$.
+In a straight beam along the global $x$-axis it is $[1,\;0]\tp$, which is the default of the
+reference coordinates. Its **direction** is the tangent of the beam axis, and so the rotation of the
+cross section in a Bernoulli-Euler beam; its **length** is one plus the axial strain,
+$\varepsilon = \|\rv^\prime\| - 1$, as `ObjectANCFCable2D` computes it. A reference slope of length
+other than one therefore describes a pre-strained beam.
+
+### Frame and interpretation
+
+All four coordinates are global, with no rotation parameters: this is the absolute nodal coordinate
+formulation. The node is used by the planar ANCF cable elements, `ObjectANCFCable2D` and
+`ObjectALEANCFCable2D`, which share the node between neighbouring elements; the beam utilities
+(`exudyn.beams`) create them.
+
+### Action on the equations of motion
+
+The four coordinates lead to four {ref}`ODE2 <ODE2>` equations, which the element provides. A force at the
+node enters the first two; `MarkerNodeRigid` sees the node as a position with the orientation of the
+slope vector.
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ALEANCFpipe.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ALEANCFpipe.py) (Ex), [`ANCFcantileverTestDyn.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcantileverTestDyn.py) (Ex), [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFslidingJoint2Drigid.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py) (Ex), [`ANCFswitchingSlidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFswitchingSlidingJoint2D.py) (Ex), [`ANCFtestHalfcircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtestHalfcircle.py) (Ex), [`ANCFtests2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtests2.py) (Ex), [`sliderCrank3DwithANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive.py) (Ex), [`solverFunctionsTestEigenvalues.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/solverFunctionsTestEigenvalues.py) (Ex), [`ANCFCable2DBendingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCable2DBendingTest.py) (TM), [`ANCFcontactCircleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py) (TM), [`ANCFcontactFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactFrictionTest.py) (TM), ...

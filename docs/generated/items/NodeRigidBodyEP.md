@@ -57,42 +57,44 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 (description-noderigidbodyep)=
 ## Detailed description
 
-**Detailed information:**
-All coordinates $\cv\cConfig$ lead to second order differential equations.
-The first 3 equations are residuals of translational forces in global coordinates,
-while the last 4 equations are residual of local torques left-multiplied with $\LU{b}{\Gm\tp}$ or
-global torques left-multiplied with $\LU{0}{\Gm\tp}$, see {eq}`eq-noderigidbodyep-gm`, compare the equations of motion of
-the rigid body.
+### Coordinates
 
-There is one additional (algebraic) constraint equation for the quaternions.
-The additional constraint equation, which needs to be provided by the object, reads
+| index | symbol | kind | meaning | frame |
+|---|---|---|---|---|
+| 0, 1, 2 | $q_0,\,q_1,\,q_2$ | {ref}`ODE2 <ODE2>` | displacement of the reference point of the body | global |
+| 3, 4, 5, 6 | $\psi_0,\,\psi_1,\,\psi_2,\,\psi_3$ | {ref}`ODE2 <ODE2>` | change of the four Euler parameters (unit quaternion) against their reference values | - |
+| - | $\lambda_\theta$ | {ref}`AE <AE>` | the Lagrange multiplier of the Euler parameter constraint, if `addConstraintEquation = True` | - |
 
-$$
-1 - \sum_{i=0}^{3} \theta_i^2 = 0.
-$$
+### Configuration
 
-The rotation matrix $\LU{0b}{\Rot}\cConfig$ transforms a local (body-fixed) 3D position
-$\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp$ to global 3D positions,
+The position of the reference point and the Euler parameters $\ttheta$ are the sums of reference and
+current coordinates,
 
 $$
-\LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}
+\pv\cConfig = \pv\cRef + \uv\cConfig, \quad \ttheta\cConfig = \tpsi\cRef + \tpsi\cConfig .
 $$
 
-Note that the Euler parameters $\ttheta\cCur$ are computed as sum of current coordinates plus reference coordinates,
+The reference Euler parameters must be a unit quaternion - $[1,\,0,\,0,\,0]$ for no rotation; the
+default of zeros is not one, which `CreateRigidBody` takes care of. The rotation matrix, as a
+function of $\ttheta=[\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp$, transforms a local
+(body-fixed) position $\pLocB = \LU{b}{[b_0,\,b_1,\,b_2]}\tp$ into the global frame,
+$\LU{0}{\pLoc}\cConfig = \LU{0b}{\Rot}\cConfig \LU{b}{\pLoc}$, with
 
 $$
-\ttheta\cCur = \tpsi\cCur + \tpsi\cRef.
-$$
-
-The rotation matrix is defined as function of the rotation parameters $\ttheta=[\theta_0,\,\theta_1,\,\theta_2,\,\theta_3]\tp$
-
-$$
-\LU{0b}{\Rot} = \mr{-2\theta_3^2 - 2\theta_2^2+1}{-2\theta_3\theta_0+2\theta_2\theta_1}{2*\theta_3\theta_1+2*\theta_2\theta_0}
+\LU{0b}{\Rot} = \mr{-2\theta_3^2 - 2\theta_2^2+1}{-2\theta_3\theta_0+2\theta_2\theta_1}{2\theta_3\theta_1+2\theta_2\theta_0}
 {2\theta_3\theta_0+2\theta_2\theta_1}{-2\theta_3^2-2\theta_1^2+1}{2\theta_3\theta_2-2\theta_1\theta_0}
 {-2\theta_2\theta_0+2\theta_3\theta_1}{2\theta_3\theta_2+2\theta_1\theta_0}{-2\theta_2^2-2\theta_1^2+1}
 $$
 
-The derivatives of the angular velocity vectors w.r.t. the rotation velocity coordinates $\dot \ttheta=[\dot \theta_0,\,\dot \theta_1,\,\dot \theta_2,\,\dot \theta_3]\tp$ lead to the $\Gm$ matrices, as used in the equations of motion for rigid bodies,
+### Frame and interpretation
+
+The displacement is given in the global frame, and the Euler parameters describe the rotation of the
+body frame $b$ against the global frame. Every object using the node reads it this way.
+
+### Action on the equations of motion
+
+The velocity transformation relates the time derivatives of the Euler parameters to the angular
+velocity, in the global or in the body frame,
 
 $$
 \begin{aligned}
@@ -101,8 +103,28 @@ $$
 \end{aligned}
 $$ (eq-noderigidbodyep-gm)
 
-For creating a `NodeRigidBodyEP` together with a rigid body, there is a `rigidBodyUtilities` function `CreateRigidBody`,
-see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
+All seven coordinates lead to {ref}`ODE2 <ODE2>` equations, which the object provides. The first three are
+the residuals of the forces in the global frame. The last four are the torque equations projected
+with the transposed velocity transformation: a torque $\LU{b}{\ttau}$ in the body frame enters
+them as $\LU{b}{\Gm\tp} \LU{b}{\ttau}$, a torque $\LU{0}{\ttau}$ in the global frame as
+$\LU{0}{\Gm\tp} \LU{0}{\ttau}$, see {eq}`eq-noderigidbodyep-gm` and the equations of motion of
+[](#sec-item-objectrigidbody).
+
+### Constraint of the Euler parameters
+
+Four parameters for three rotations need one constraint. With `addConstraintEquation = True` the
+node adds it itself, as one algebraic equation with the multiplier $\lambda_\theta$: on the position
+level (index 3)
+
+$$
+\ttheta\tp \ttheta - 1 = 0,
+$$
+
+or on the velocity level (index 2) $2\,\ttheta\tp \dot\ttheta = 0$. With
+`addConstraintEquation = False` it is left to the model, e.g. a `CoordinateVectorConstraint`.
+
+For creating a `NodeRigidBodyEP` together with a rigid body, use `CreateRigidBody`, see
+[](#sec-mainsystemextensions-createrigidbody).
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigid3Dexample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigid3Dexample.py) (Ex), [`rigidBodyIMUtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyIMUtest.py) (Ex), [`rigidRotor3DbasicBehaviour.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3DbasicBehaviour.py) (Ex), [`rigidRotor3DFWBW.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3DFWBW.py) (Ex), [`rigidRotor3Dnutation.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3Dnutation.py) (Ex), [`rigidRotor3Drunup.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3Drunup.py) (Ex), [`addPrismaticJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py) (Ex), [`addRevoluteJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM), ...
