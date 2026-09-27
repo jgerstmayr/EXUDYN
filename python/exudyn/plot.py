@@ -1115,8 +1115,8 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
             z = np.zeros(nPoints)
             for j in range(nPoints):
                 x[j] = float(line[j*3+0]+p0[0])
-                y[j] = float(line[j*3+1]+p0[0])
-                z[j] = float(line[j*3+2]+p0[0])
+                y[j] = float(line[j*3+1]+p0[1])
+                z[j] = float(line[j*3+2]+p0[2])
                 
             for j in range(nPoints-1):
                 plotData += [[(x[j], y[j]), (x[j+1], y[j+1])]] #for plot
@@ -1133,7 +1133,7 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
             exudyn.Print('WARNING: PlotImage: triangles are ignored; they can only be plotted if plot3D=True')
             
     else: #plot in 3D
-        ax = fig.gca(projection='3d')
+        ax = fig.add_subplot(projection='3d') #fig.gca(projection=...) is gone since matplotlib 3.6 (#2701)
         plotData = []
         colors = []
         from mpl_toolkits.mplot3d.art3d import Line3DCollection
@@ -1152,7 +1152,7 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
                 z[j] = float(line[j*3+2]+p0[2])
                 
             for j in range(nPoints-1):
-                plotData += [[(x[j], y[j], z[j]), (x[j+1], y[j+1], z[j])]] #for plot
+                plotData += [[(x[j], y[j], z[j]), (x[j+1], y[j+1], z[j+1])]] #for plot
                 colors += [color]
 
         if plotData != []:
@@ -1183,7 +1183,7 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
             collTrigs._facecolors2d = ax._facecolor
             ax.add_collection(collTrigs)
 
-        ax.view_init(elev=0., azim=0.)
+        ax.view_init(elev=elev, azim=azim)
         if removeAxes:
             ax.set_axis_off()
         if orthogonalProjection:
@@ -1204,7 +1204,7 @@ def PlotImage(imageData, HT = np.eye(4), axesEqual=True, plot3D=False, lineWidth
 
     plt.tight_layout() #not needed
     #'agg' is the non-interactive backend, used when the figures are only saved (#2477)
-    if matplotlib.get_backend() != 'agg' and not UIWindowSuppressed('Plots', 'PlotSensor'):
+    if matplotlib.get_backend().lower() != 'agg' and not UIWindowSuppressed('Plots', 'PlotSensor'):
         plt.show()
     
     if fileName != '':

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 115 | 1.12.117 |
+| 1.12 | Metheney | 116 | 1.12.118 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.118** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` PlotImage(plot3D=True) fails with every current matplotlib, and its 2D and 3D coordinates are shifted wrongly (#2701)
+  - description: Found in revision2026b step RG2.3.1 (\#2700), measured with matplotlib 3.11.0: PlotImage(..., plot3D=True) raises TypeError: FigureBase.gca() got an unexpected keyword argument 'projection' - fig.gca(projection='3d') was removed in matplotlib 3.6, so the 3D mode, which is the only one that draws triangles, has not worked for years; both NGsolve examples that use it do so in an if False block. Two more defects in the same function: the 2D branch adds the translation p0\[0\] to y and z as well as to x, and the 3D branch ends every line segment at z\[j\] instead of z\[j+1\]. Neither shows with the default HT, which is why nobody saw them. Fix: fig.add\_subplot(projection='3d'), p0\[1\] and p0\[2\], z\[j+1\], and a test that draws in 3D. revision2026b step RG2.3.2.
+  - **notes:** exudyn.plot.PlotImage(..., plot3D=True) works with current matplotlib again and uses the azim and elev it is given; a translation in HT moves each coordinate by its own component; and a figure drawn with the non-interactive Agg backend is no longer shown.
+  - date resolved: **2026-09-27 13:46**, date raised: 2026-09-27
 - **1.12.117** `DOCU` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` index.md and pdfIndex.md are two hand-written tables of contents that must agree (#2697)
   - description: The maintainer, 2026-09-27: 'index.md and pdfIndex.md: I see that there are two files, which have different structure. Maybe this is necessary, but it is really brittle and requires a clear indication to sync the toctrees. The main difference - if I remember correctly - are the examples/models/etc. not to be included in PDF, and a different front page. The rest should be practically identical, if possible.' Measured on 2026-09-27, and it is more than that: index.md has 25 toctree entries and pdfIndex.md has 23. Only in index.md: README, docs/manual/performanceErrors, docs/generated/examples/examplesIndex, docs/generated/testModels/testModelsIndex. Only in pdfIndex.md: docs/manual/commandLine, docs/manual/resultsMonitor - which in the HTML are nested under introductionAdvanced instead. And the ORDER of the entries they share is not the same. So the examples and the front page are the intended differences; performanceErrors missing from the PDF and the different nesting and order are not, and nothing tells anybody when they drift again. Options for the step: generate pdfIndex.md from index.md with a declared list of exclusions (then one file is the truth and the other is a build product, which also needs a rule for the front page); or keep both and add a check to tools/ that compares the two entry lists against a declared difference, which is cheap and catches drift on the next commit; or accept the difference and document it at the top of both files. revision2026b step RG3.26.
   - **notes:** index.md and pdfIndex.md stay two hand-written files, and tools/checkTocs.py - part of exudev generate --all-checks - requires them to list the same pages in the same order, apart from the pages declared as HTML only (README, the examples and the test models). A page added to one and not the other fails the check.

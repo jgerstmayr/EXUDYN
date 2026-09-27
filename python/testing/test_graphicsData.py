@@ -143,3 +143,42 @@ def testPlotImageDrawsTheGraphicsData(tmp_path):
     PlotImage(SC.renderer.GetGraphicsData(), fileName=fileName, closeAll=True)
     import os
     assert os.path.getsize(fileName) > 0
+
+
+def testPlotImageDrawsIn3D(tmp_path):
+    """the 3D mode is the one that draws triangles; it failed with every matplotlib since 3.6 (#2701)"""
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from exudyn.plot import PlotImage
+    (SC, mbs, oGround, oBody) = Pendulum()
+    fileName = str(tmp_path / 'model3D.pdf')
+    PlotImage(SC.renderer.GetGraphicsData(), plot3D=True, trianglesAsLines=False, azim=30., elev=20.,
+              fileName=fileName, closeAll=True)
+    import os
+    assert os.path.getsize(fileName) > 0
+    ax = plt.gcf().axes[0]
+    assert (round(ax.azim), round(ax.elev)) == (30, 20)     #the angles that were asked for
+    plt.close('all')
+
+
+def testPlotImageTranslatesEachCoordinateByItsOwnComponent():
+    """the translation of HT moves x by its x, y by its y (#2701: y and z took the x component)"""
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from exudyn.plot import PlotImage
+    (SC, mbs, oGround, oBody) = Pendulum()
+    data = SC.renderer.GetGraphicsData()
+
+    def Extent(HT):
+        PlotImage(data, HT=HT, closeAll=True)
+        segments = np.concatenate(plt.gcf().axes[0].collections[0].get_segments())
+        plt.close('all')
+        return (segments[:, 0].min(), segments[:, 1].min())
+
+    HT = np.eye(4)
+    (x0, y0) = Extent(HT)
+    HT[0:3, 3] = [0., 5., 0.]
+    (x1, y1) = Extent(HT)
+    assert abs(x1 - x0) < 1e-6 and abs(y1 - y0 - 5.) < 1e-6

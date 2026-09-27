@@ -213,7 +213,8 @@ NOT cover, and about the testing that no suite can do.
       checksum of one model, removed from the reference set on macOS because the offscreen path
       crashes there since 1.11.0. A count per item is portable in a way a checksum of pixels is not.
 
-    - **RG2.3.2** *(sub-step of RG2.3; found in RG2.3.1)* **`PlotImage(plot3D=True)` fails with every
+    - **RG2.3.2** *(sub-step of RG2.3; found in RG2.3.1)* **DONE 2026-09-27** —
+      [log](exudynRevisionLog2026b.md#rg2-3-2) — **`PlotImage(plot3D=True)` fails with every
       current matplotlib** (#2701): `fig.gca(projection='3d')` was removed in matplotlib 3.6 -
       measured with 3.11.0, `TypeError` - and the 3D mode is the only one that draws triangles. Two
       slips in the same function: the 2D branch adds `p0[0]` to y and z, and the 3D branch ends a
@@ -2478,7 +2479,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582 | a graphics regression suite |
-| RG2.3.2 | #2701 | PlotImage's 3D mode fails with every current matplotlib, and two coordinate slips |
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG3.13.2 | #2703 | 88 bare step numbers in comments, the same rule as RG3.13.1 |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |

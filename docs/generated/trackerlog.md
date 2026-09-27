@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.117.dev1
+- Exudyn version = 1.12.118.dev1
 - last change = 2026-09-27
 - Number of issues = 2704
-- Number of resolved issues = 2431 (117 in current version)
+- Number of resolved issues = 2432 (118 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8365,9 +8365,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` PlotImage(plot3D=True) fails with every current matplotlib, and its 2D and 3D coordinates are shifted wrongly (#2701)
-  - description: Found in revision2026b step RG2.3.1 (\#2700), measured with matplotlib 3.11.0: PlotImage(..., plot3D=True) raises TypeError: FigureBase.gca() got an unexpected keyword argument 'projection' - fig.gca(projection='3d') was removed in matplotlib 3.6, so the 3D mode, which is the only one that draws triangles, has not worked for years; both NGsolve examples that use it do so in an if False block. Two more defects in the same function: the 2D branch adds the translation p0\[0\] to y and z as well as to x, and the 3D branch ends every line segment at z\[j\] instead of z\[j+1\]. Neither shows with the default HT, which is why nobody saw them. Fix: fig.add\_subplot(projection='3d'), p0\[1\] and p0\[2\], z\[j+1\], and a test that draws in 3D. revision2026b step RG2.3.2.
-  - date raised: 2026-09-27
 - <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` explicit integration costs O(N^2) per step with the default dense linear solver (#2398)
   - description: measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision2026 step R2.10
   - date raised: 2026-09-12

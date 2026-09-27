@@ -2,11 +2,15 @@
   "number": 2701,
   "title": "PlotImage(plot3D=True) fails with every current matplotlib, and its 2D and 3D coordinates are shifted wrongly",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
   "description": "Found in revision2026b step RG2.3.1 (#2700), measured with matplotlib 3.11.0: PlotImage(..., plot3D=True) raises TypeError: FigureBase.gca() got an unexpected keyword argument 'projection' - fig.gca(projection='3d') was removed in matplotlib 3.6, so the 3D mode, which is the only one that draws triangles, has not worked for years; both NGsolve examples that use it do so in an if False block. Two more defects in the same function: the 2D branch adds the translation p0[0] to y and z as well as to x, and the 3D branch ends every line segment at z[j] instead of z[j+1]. Neither shows with the default HT, which is why nobody saw them. Fix: fig.add_subplot(projection='3d'), p0[1] and p0[2], z[j+1], and a test that draws in 3D. revision2026b step RG2.3.2.",
   "dateRaised": "2026-09-27",
   "deadline": "2027-03-26",
-  "file": "python/exudyn/plot.py"
+  "dateResolved": "2026-09-27 13:46",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/plot.py",
+  "releaseNotes": "exudyn.plot.PlotImage(..., plot3D=True) works with current matplotlib again and uses the azim and elev it is given; a translation in HT moves each coordinate by its own component; and a figure drawn with the non-interactive Agg backend is no longer shown.",
+  "resolvedInVersion": "1.12.118"
 }

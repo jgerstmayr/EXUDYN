@@ -5567,3 +5567,25 @@ first toctree, which is where somebody adding a page is looking. Four tests
 (`test_checkTocs.py`), the first of them the drift that happened.
 
 **Gates**: 12/12 checks, the full suite, pytest, the strict HTML build.
+
+<a id="rg2-3-2"></a>
+### RG2.3.2 — PlotImage draws in 3D again (2026-09-27, #2701)
+
+Four lines of `exudyn.plot.PlotImage`, the three the issue named and one more found by the test:
+
+- `fig.gca(projection='3d')` is `fig.add_subplot(projection='3d')`; the keyword was removed in
+  matplotlib 3.6, so the 3D mode - the only one that draws triangles - raised `TypeError`;
+- the 2D branch translated y and z by the **x** component of `HT`, and now by their own;
+- the 3D branch ended every line segment at `z[j]`, and now at `z[j+1]`;
+- **`azim` and `elev` were documented and ignored**: `view_init(elev=0., azim=0.)` was hard-coded.
+  The test asked for 30 and 20 degrees and got 0 and 0.
+
+**And one outside the four**: `PlotImage` called `plt.show()` on the `Agg` backend, because it
+compared `get_backend()` with `'agg'` while matplotlib says `'Agg'` - the *FigureCanvasAgg is
+non-interactive* warning of the RG2.3.1 tests. The comparison is case-insensitive now.
+
+**Two tests** in `test_graphicsData.py`: the 3D mode writes a PDF and the axes have the angles that
+were asked for, and a translation of `HT` by `[0, 5, 0]` moves the drawn y by 5 and x by nothing - the
+slip that no default `HT` could show.
+
+**Gates**: the wheel, 12/12 checks, the full suite, pytest, the strict HTML build.
