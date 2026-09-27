@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 120 | 1.12.122 |
+| 1.12 | Metheney | 121 | 1.12.123 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.123** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the mass-spring-damper tutorial is the last tutorial in the documentation, and should be the first (#2708)
+  - description: The maintainer, 2026-09-27: 'The mass-spring-damper tutorial shall be the first tutorial in the docs, not the last one.' It is the section of docs/manual/tutorial.md itself, and the toctree of the other four tutorials stands above it, so it comes after them (4.5 of the PDF). It becomes a page of its own, tutorialSpringDamper.md, first in that toctree. revision2026b step RG3.27.
+  - **notes:** The mass-spring-damper tutorial is the first tutorial of the documentation, on a page of its own.
+  - date resolved: **2026-09-27 15:49**, date raised: 2026-09-27
 - **1.12.122** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the first page of the PDF shows the Exudyn logo twice (#2707)
   - description: The maintainer, 2026-09-27: 'The PDF docs has twice the exudyn logo on page 1. just remove the first one and make the second as wide as the piston engine image (the third image on page 1).' The second logo and the piston engine are one file, intro2.jpg, so they cannot have one width until they are two files. revision2026b step RG3.3.2.
   - **notes:** The first page of the PDF documentation shows the Exudyn logo once, as wide as the picture of the piston engine below it.

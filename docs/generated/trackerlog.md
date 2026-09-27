@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.122.dev1
+- Exudyn version = 1.12.123.dev1
 - last change = 2026-09-27
-- Number of issues = 2708
-- Number of resolved issues = 2436 (122 in current version)
+- Number of issues = 2711
+- Number of resolved issues = 2437 (123 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` evaluate the geometry of a curved triangle (or quad) and the features of a sphere for GraphicsData (#2710)
+  - description: The preliminary sub-step of RG6.7 (maintainer, 2026-09-27): which features the Sphere gets and - more important - what the underlying geometry of the curved triangle is. Ideally it represents curved geometry with smooth tangents not only at the nodes but also along the boundaries; quads are acceptable if they are better and work in the degenerated case. How many and which nodes it has is part of the decision. The result is a short comparison of candidates for the maintainer, with what each costs in the OpenGL renderer, the raytracer and GetGraphicsData(). revision2026b step RG6.7.1.
+  - date raised: 2026-09-27
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` GraphicsData gets a Sphere and a CurvedTriangleList (#2709)
+  - description: The maintainer, 2026-09-27: GraphicsData will be extended by two classes, Sphere and CurvedTriangleList. Bigger than it sounds: the GraphicsData dictionary, the OpenGL renderer and the raytracer have to be adapted (at least with temporary workarounds), the pybind interfaces, SC.renderer.GetGraphicsData(), the documentation - so even the minimal implementation takes time. Known limitation to resolve with it: the OpenGL renderer already treats spheres separately for nodes (large node numbers); the raytracer does not draw glSpheres at all, while GetGraphicsData() does return them. The graphics regression test (RG2.3.3, \#2704) is extended when this lands. revision2026b step RG6.7.
+  - date raised: 2026-09-27
 - `TESTING` `MEDIUM EFF` `raised by: Claude-JG` a graphics regression test on SC.renderer.GetGraphicsData(): counts per item, and metrics of positions and colors (#2704)
   - description: The maintainer, 2026-09-27: 'File graphicdata test as step. It could include also metrics for positions, colors - mean/min/max - so the content is also checked.' A set of models, each under several visualization settings, reduced to a fingerprint from SC.renderer.GetGraphicsData() (\#2700) and compared with a stored reference: the NUMBER of lines, spheres, circles, texts and triangles per item exactly, and the CONTENT through metrics - min, max and mean of the points per coordinate, of the colors per channel, of radii and normals - with a tolerance, because the data is float32 and must compare across compilers. Texts are compared as their strings. The fingerprint is small enough to be a readable JSON reference, so a change shows in git diff as 'ObjectRigidBody 3: 12 triangles -\> 10' or 'mean z of the triangles of object 0 moved by 0.2'. No window is opened. revision2026b step RG2.3.3.
   - date raised: 2026-09-27

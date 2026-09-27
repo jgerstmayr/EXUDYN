@@ -1,0 +1,16 @@
+{
+  "number": 2708,
+  "title": "the mass-spring-damper tutorial is the last tutorial in the documentation, and should be the first",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-27: 'The mass-spring-damper tutorial shall be the first tutorial in the docs, not the last one.' It is the section of docs/manual/tutorial.md itself, and the toctree of the other four tutorials stands above it, so it comes after them (4.5 of the PDF). It becomes a page of its own, tutorialSpringDamper.md, first in that toctree. revision2026b step RG3.27.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "dateResolved": "2026-09-27 15:49",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/manual/tutorial.md",
+  "releaseNotes": "The mass-spring-damper tutorial is the first tutorial of the documentation, on a page of its own.",
+  "resolvedInVersion": "1.12.123"
+}

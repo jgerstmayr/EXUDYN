@@ -5679,3 +5679,16 @@ width the engine had inside `intro2.jpg`. Checked in the built PDF.
 
 `intro2.jpg` is referenced by nothing now. It stays until the maintainer says whether it goes: deleting
 a tracked file is theirs to decide. `ExudynLOGO1.9.jpg` stays - `README.rst` uses it.
+
+<a id="rg3-27"></a>
+### RG3.27 — the mass-spring-damper tutorial comes first (2026-09-27, #2708)
+
+The maintainer: *"The mass-spring-damper tutorial shall be the first tutorial in the docs, not the
+last one."* It was the one section of `docs/manual/tutorial.md` itself, and the toctree of the other
+four tutorials stands at the top of that page - which it has to, since #2646, or they nest under the
+section - so it came after all four, as 4.5 of the PDF. It is a page of its own now,
+`tutorialSpringDamper.md` with the target `sec-tutorial-springdamper`, **first** in the toctree; the
+text is moved unchanged, and its heading is the page title.
+
+With it, on the maintainer's answer to RG3.3.2: `docs/figures/intro2.jpg` is deleted - the two
+pictures it held are `titleLogo.jpg` and `titleEngine.jpg` (#2707).

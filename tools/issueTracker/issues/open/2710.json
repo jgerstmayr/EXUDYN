@@ -1,0 +1,12 @@
+{
+  "number": 2710,
+  "title": "evaluate the geometry of a curved triangle (or quad) and the features of a sphere for GraphicsData",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IDEA",
+  "effort": "MEDIUM",
+  "description": "The preliminary sub-step of RG6.7 (maintainer, 2026-09-27): which features the Sphere gets and - more important - what the underlying geometry of the curved triangle is. Ideally it represents curved geometry with smooth tangents not only at the nodes but also along the boundaries; quads are acceptable if they are better and work in the degenerated case. How many and which nodes it has is part of the decision. The result is a short comparison of candidates for the maintainer, with what each costs in the OpenGL renderer, the raytracer and GetGraphicsData(). revision2026b step RG6.7.1.",
+  "dateRaised": "2026-09-27",
+  "deadline": "2027-03-26",
+  "file": "src/Graphics/GraphicsData.h"
+}

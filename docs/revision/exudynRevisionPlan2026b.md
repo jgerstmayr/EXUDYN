@@ -223,41 +223,59 @@ NOT cover, and about the testing that no suite can do.
 
     - **RG2.3.3** *(sub-step of RG2.3; maintainer 2026-09-27)* **The graphics regression test**
       (#2704). *"File graphicdata test as step. It could include also metrics for positions, colors -
-      mean/min/max - so the content is also checked."*
+      mean/min/max - so the content is also checked."* Built **in sub-steps, each of them a test that
+      runs**, so that whether the approach carries is seen after the first one and not after the last.
 
-      **What is compared**: each case - a model under one set of visualization settings - is reduced
-      to a **fingerprint** of `SC.renderer.GetGraphicsData()`, per kind of element and per item
-      (`[system, itemType, index]`):
+      **Decided (maintainer, 2026-09-27)**:
 
-      | part | compared |
+      | question | decision |
       |---|---|
-      | the number of lines, spheres, circles, texts, triangles | exactly |
-      | points: min, max, mean per coordinate | with a tolerance |
-      | colors: min, max, mean per channel (RGBA) | with a tolerance |
-      | radii of spheres and circles, normals of triangles: min, max, mean | with a tolerance |
-      | texts | the strings, exactly |
+      | tolerance of the metrics | **1e-5**, relative |
+      | granularity | **per item** for a model of up to 32 items, **per item type** (nodes, objects, markers, loads, sensors) above |
+      | references | `python/testing/graphicsReferences/`, one JSON file per case |
 
-      The counts say **what** changed and which item; the metrics say that the **content** is still
-      right - a brick that moved, a colour that changed, a normal that flipped - without storing every
-      coordinate. The tolerance is needed because the data is `float32` and has to agree across
-      compilers and platforms; per-item means are also far less sensitive to the order of the elements
-      than the raw arrays.
+      **The fingerprint** of a case, from `SC.renderer.GetGraphicsData()`, per item or item type and
+      per kind of element: the **number** of lines, spheres, circles, texts and triangles exactly; the
+      **min, max and mean** of points (per coordinate), colours (per channel), radii and normals with
+      the tolerance; texts as their strings. A change shows in `git diff` as *"object 3: triangles 12
+      -> 10"*. The references are written by the test when asked, as `parameterConversionTest.py`
+      does.
 
-      **The cases**, a first proposal: a pendulum (rigid body, joint, ground), a chain with springs and
-      markers and loads shown, an ANCF cable, a model with many triangles (an STL or an FFRF body), and
-      sensors with traces; each under two to four settings - defaults, nodes/markers/loads/sensors
-      shown, `showNumbers`, a different `circleTiling` or colour. Small models, so the whole test stays
-      well under a second per case.
+      **What it cannot see, measured 2026-09-27**: **sensor traces** are drawn by
+      `GlfwRenderer::RenderSensorTraces` directly in OpenGL and are not in the graphics data at all; and
+      the **raytracer does not draw `glSpheres`**, which `GetGraphicsData()` does return. Both are
+      recorded, not worked around.
 
-      **The reference**: one JSON file per case, written by the test itself when asked
-      (`recordReference`, as `parameterConversionTest.py` does), so a change of the drawing is one
-      reviewed diff - *"object 3: triangles 12 -> 10"*, *"mean z of the triangles of object 0: 0.00 ->
-      0.20"* - and not a new checksum.
+      - **RG2.3.3.1** **the machinery and the first cases** - the fingerprint, the comparison, the
+        references, and the `graphics.*` functions: one `ObjectGround` per function (Sphere,
+        Cylinder, Brick, Tube, Torus, Arrow, Basis, Frame, RigidLink, SolidOfRevolution,
+        SolidExtrusion, Quad, CheckerBoard, Circle, Lines, Text, the gear parts, FromPointsAndTrigs and
+        a small STL written by the test, and the transforms Move, Transform, MergeTriangleLists,
+        InvertTriangles, AddEdgesAndSmoothenNormals). No solver. **This is the feasibility test**:
+        size of the references, how stable the metrics are, how long it takes.
+      - **RG2.3.3.2** **the settings on one representative model** - not every setting on every model,
+        which grows too fast: one model carrying what the most used settings change - the basic edge
+        and face features, show/hide of nodes, markers, loads and sensors, `showNumbers`, the tilings.
+        `deformationScaleFactor` and the contour settings are **later**, they are special.
+      - **RG2.3.3.3** **special cases as manual examples** - graphics user functions, and whatever else
+        needs a model of its own; sensor traces only if they become part of the graphics data.
+      - **RG2.3.3.4** **the raytracer** - `RedrawAndGetImage(True)` at a very low resolution, about
+        100 x 100, which is the part that sees transparency, materials and lighting. Slower, so
+        probably **a small test set that always runs and a larger one that does not**; decided after
+        measuring the first results, not before.
+      - **RG2.3.3.5** **every item, through its MiniExample** - depends on the group the maintainer
+        announced on 2026-09-27: **a MiniExample for every item**, together with the missing
+        documentation and examples of all items (a revision group of its own, *"like RG13"* - not
+        written yet). The test takes each MiniExample, **injects** a small graphics into its bodies -
+        `SetObjectParameter(..., 'VgraphicsData', ...)` at the end and `Assemble()` again - so that
+        every item draws triangles, lines and a text with little data, and compares it at the initial
+        state and after a few steps (moving items must move, the ground must not). That covers the
+        items systematically and without a model per item written for the test, and **the same run can
+        write the image of each item** for its documentation page. Nodes without objects do not
+        simulate, so nodes, markers, loads and sensors are covered there as well, inside their
+        MiniExamples. It grows with that group, one item at a time.
 
-      **To decide with the maintainer**: the tolerance (a relative 1e-5 is the proposal), whether the
-      metrics are per item or per item type for larger models, and where the references live
-      (`python/testing/graphicsReferences/` is the proposal). The low-resolution images of RG2.3 - the
-      human half - stay a separate step.
+      When GraphicsData gets its sphere and curved triangles (RG6.7, #2709), the test grows with it.
 
     - **RG2.3.4** **DONE 2026-09-27** (#2706) — [log](exudynRevisionLog2026b.md#rg2-3-4) —
       **`PlotImage` in 3D shows the triangles**: its limits come from everything drawn, not from the
@@ -1453,6 +1471,26 @@ This group is that revision and what has to happen before it can start.
     dialog and calls back into Python. `GlfwRenderer::idleOperationDepth` counts the idle
     operations on the stack and only the outermost pumps; a nested one renders and returns.
 
+<a id="rg6-7"></a>
+**RG6.7** *(group RG6; maintainer 2026-09-27)* **GraphicsData gets a Sphere and a
+    CurvedTriangleList** (#2709). Bigger than it sounds, because every consumer of the graphics data
+    has to follow - even the minimal implementation with temporary workarounds: the GraphicsData
+    classes and their dictionary, the OpenGL renderer, the raytracer, the pybind interfaces,
+    `SC.renderer.GetGraphicsData()`, the documentation, and the graphics regression test (RG2.3.3).
+
+    **A limitation to resolve with it**: spheres are already special. The OpenGL renderer treats the
+    spheres of nodes separately, because there can be very many of them; the **raytracer does not draw
+    `glSpheres` at all**; `GetGraphicsData()` does return them (measured 2026-09-27). A Sphere that is
+    fully part of GraphicsData has to be drawn the same way by all three.
+
+    - **RG6.7.1** *(the preliminary sub-step)* **what the sphere can do, and what the curved triangle
+      is** (#2710). The geometry is the decision that matters: ideally a curved element that is smooth
+      with continuous tangents **not only at its nodes but along its boundaries**, so that a curved
+      surface made of many of them has no visible edges. Quads are acceptable if they are better and
+      also work degenerated to a triangle. How many and which nodes the element has belongs to the
+      decision. The deliverable is a short comparison of candidates for the maintainer, each with what
+      it costs in the OpenGL renderer, the raytracer and `GetGraphicsData()`.
+
 ## RG7 — Python user items
 
 Items whose behaviour is written in Python. Today that means user functions on existing items -
@@ -2485,6 +2523,10 @@ package).
       takes the user-manual order of `index.md`; what differs is what is meant to - `README`, the
       examples and test models, the front page - and **the choice among A, B and C is still open**.
 
+<a id="rg3-27"></a>
+**RG3.27** *(group RG3; maintainer 2026-09-27)* **DONE 2026-09-27** (#2708) —
+    [log](exudynRevisionLog2026b.md#rg3-27) — **The mass-spring-damper tutorial comes first.**
+
 <a id="rg12-21"></a>
 **RG12.21** **DONE 2026-09-27** (#2695) — [log](exudynRevisionLog2026b.md#rg12-21) — **`python -m exudyn info` prints the home directory** - and the command exists to be pasted into an issue, so it carries an account name with it.
     The home directory is shown as `%USERPROFILE%` or `~`, which is what a reader would type anyway, and
@@ -2532,7 +2574,13 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582 | a graphics regression suite |
-| RG2.3.3 | #2704 | the graphics regression test: counts per item, and min/max/mean of positions and colors |
+| RG2.3.3.1 | #2704 | graphics regression test: the machinery, and the graphics.* functions as the first cases |
+| RG2.3.3.2 | #2704 | graphics regression test: the most used settings on one representative model |
+| RG2.3.3.3 | #2704 | graphics regression test: special cases as manual examples |
+| RG2.3.3.4 | #2704 | graphics regression test: low-resolution raytracer images |
+| RG2.3.3.5 | #2704 | graphics regression test: every item through its MiniExample (needs the MiniExample group) |
+| RG6.7 | #2709 | GraphicsData gets a Sphere and a CurvedTriangleList |
+| RG6.7.1 | #2710 | evaluate the curved triangle (or quad) geometry and the sphere's features |
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
