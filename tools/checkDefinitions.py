@@ -73,6 +73,7 @@ RECURRING_HEADINGS = [
     'Configuration',
     'Frame and interpretation',
     'Action on the equations of motion',
+    'Marker interfaces',                    #the heading of a body page (#2725)
     ]
 
 #the heading level a description is written at: an item's text sits under the item's DESCRIPTION

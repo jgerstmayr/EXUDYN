@@ -6416,3 +6416,31 @@ What the generated table shows and a reader may find odd: the two relative-coord
 declare `Position` and `Orientation` besides `Coordinate`, so the table and their Interface list 28
 items that could use them. That is what their declared types say and what `Assemble()` accepts; it is
 listed among the open questions to the maintainer.
+
+<a id="rg13-5-2-1"></a>
+### RG13.5.2.1 — the pages of the bodies (2026-09-28, #2725)
+
+The first group of objects, as `objectDefinitionsDev.md` and the maintainer's corrections of
+2026-09-28 prescribe: the page of each body has *Definition of quantities*, *Equations of motion* and
+**Marker interfaces**, which holds only the body's own Jacobians; the general section of the bodies
+says the rest once - what a body is, the body frame and the reference point, **how the marker
+interfaces are computed** (the marker takes position, velocity, rotation and angular velocity as the
+body's output variables define them at its local position, and a force acts back through
+$\partial \LU{0}{\vv}(\pLocB) / \partial \dot\qv$ and $\partial \LU{0}{\tomega} / \partial \dot\qv$),
+and a table of the four access functions and which marker needs which.
+
+Written from the access functions in `src/ImplObjects`, which corrected the pages:
+
+- `ObjectMass1D` gave its position Jacobian as a row, $[1,0,0] \Rot_{b0}$ - the transpose of what it
+  is; it is the column $\LU{0b}{\Rot_{0}}[1,0,0]\tp$, and the rotation Jacobian is zero;
+- `ObjectRotationalMass1D` takes no force at all (its position Jacobian is zero), and a marker on it
+  must lie on its axis, $x = y = 0$, which the object checks and the page did not say;
+- `ObjectRigidBody` had no Jacobians on its page; they are there now,
+  $\left[\ImThree,\; -\LU{0b}{\Rot}\LU{b}{\tilde\pv}_{\mathrm{loc}}\LU{b}{\Gm}\right]$ and
+  $\left[\Null,\; \LU{0}{\Gm}\right]$, as `CObjectRigidBody::GetAccessFunctionBody` computes them;
+- the mass points state that they have no rotation Jacobian, which is why no `MarkerBodyRigid` fits
+  them - the Interface block says the same from the declared access functions.
+
+`Marker interfaces` is a recurring heading of `checkDefinitions` now. Decided the same day with the
+maintainer: RG13.2 is closed as done by RG13.4 and RG13.5 (#2716); the MiniExamples are the new step
+RG13.6 (#2732); the relative-coordinate markers are checked in RG4.9.

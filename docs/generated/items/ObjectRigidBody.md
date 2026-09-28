@@ -218,8 +218,24 @@ $$
 \fv_{\theta,\lambda} = \frac{\partial g_\theta}{\ttheta\tp} \lambda_\theta = [2\theta_0,\; 2\theta_1,\; 2\theta_2,\; 2\theta_3]\tp
 $$
 
-For creating a `ObjectRigidBody`, there is a `rigidBodyUtilities` function `CreateRigidBody`,
-see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
+### Marker interfaces
+
+A local position $\pLocB$ of the body moves with the velocity
+$\LU{0}{\vv} + \LU{0b}{\Rot} (\LU{b}{\tomega} \times \pLocB)$, which gives, with the velocity
+transformations of the node, the position and rotation Jacobians
+
+$$
+\LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}(\pLocB)}{\partial \dot\qv} = \left[ \ImThree ,\; -\LU{0b}{\Rot} \LU{b}{\tilde \pv}_{\mathrm{loc}} \LU{b}{\Gm} \right] , \quad
+\LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}}{\partial \dot\qv} = \left[ \Null ,\; \LU{0}{\Gm} \right] ,
+$$
+
+with $\LU{b}{\tilde \pv}_{\mathrm{loc}}$ the skew-symmetric matrix of $\pLocB$; a force at the local
+position then acts on the rotation coordinates with the moment it has about the reference point.
+The mass-weighted Jacobian of a mass-proportional load is $m$ times the position Jacobian of the
+center of mass.
+
+For creating a `ObjectRigidBody`, use `CreateRigidBody`, see
+[](#sec-mainsystemextensions-createrigidbody).
 
 **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
 A user function, which is called by the visualization thread in order to draw user-defined objects.

@@ -1118,6 +1118,12 @@ find its file and line, on every raise).
     `CheckPreAssembleConsistency` that says so, and whether `MarkerBodyBeamShape` - described as for
     *"a 3D beam finite element"* - should serve other beams than `ObjectANCFCable`.
 
+    **And the relative-coordinate markers** (maintainer, 2026-09-28): `MarkerBodiesRelativeTranslation-`
+    and `...RotationCoordinate` declare `Position` and `Orientation` besides `Coordinate`, so their
+    pages list 28 connectors, joints and loads that could use them, a spring-damper among them. To be
+    checked here whether such a combination computes anything meaningful; if not, they are declared as
+    coordinate markers only.
+
 <a id="rg4-2"></a>
 **RG4.2** **DONE 2026-09-26** (#2413) — [log](exudynRevisionLog2026b.md#rg4-2) —
     **`ObjectContactConvexRoll.pContact` is a computed value that Python reads**, which is what the
@@ -2700,7 +2706,8 @@ What depends on it: the graphics regression test takes every item through its Mi
     models that use it. The deliverable is the table, and what it says about the kinds of items.
 
 <a id="rg13-2"></a>
-**RG13.2** *(group RG13; maintainer 2026-09-27)* **What the ideal documentation of an item contains**
+**RG13.2** *(group RG13; maintainer 2026-09-27)* **CLOSED 2026-09-28** - done by RG13.4 and RG13.5
+    (maintainer's decision). **What the ideal documentation of an item contains**
     (#2716), per item type - node, object, marker, load, sensor - and per kind of object - body,
     connector, constraint, and the other object types. From that and the table of RG13.1: **a
     detailed plan that makes it work** for every item, as further steps of this group.
@@ -2825,8 +2832,9 @@ What depends on it: the graphics regression test takes every item through its Mi
       constraint is the node's, not the object's, and the default slopes of two nodes were parallel
       (#2728, corrected on the maintainer's decision the same day).
     - **RG13.5.2** objects, by group (maintainer 2026-09-28), bodies first:
-      - **RG13.5.2.1** bodies - rigid bodies, mass points, 1D masses, ground; with the general
-        section of the bodies: marker interfaces and the approach to the Jacobians.
+      - **RG13.5.2.1** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-1) - bodies -
+        rigid bodies, mass points, 1D masses, ground; with the general section of the bodies: marker
+        interfaces and the approach to the Jacobians.
       - **RG13.5.2.2** flexible bodies - the nonlinear finite elements; `ObjectBeamGeometricallyExact`
         after RG4.8.
       - **RG13.5.2.3** super elements - FFRF, reduced order FFRF, generic ODE2, kinematic tree.
@@ -2842,6 +2850,13 @@ What depends on it: the graphics regression test takes every item through its Mi
       load, its frame, the generalized forces with the transformation.
     - **RG13.5.5** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-5) - sensors - the
       general sensor section, and each sensor with what is its own.
+
+<a id="rg13-6"></a>
+**RG13.6** *(group RG13; maintainer 2026-09-28)* **A MiniExample for every item** (#2732) - the goal
+    RG13 was created with: the short script under *Mini example* on the page of every item, run by the
+    test suite. 74 of the 97 items have none (RG13.1). RG2.3.3.5 takes every item through its
+    MiniExample and waits for this. It starts with nodes, markers, loads and sensors, whose examples
+    are short, and follows the pages of RG13.5 kind by kind.
 
 ## Next steps recommended
 
@@ -2874,9 +2889,9 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
-| RG13.2 | #2716 | the ideal documentation per kind of item, and the plan that makes it work |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG13.4 | #2721 | the development documents per item type: objects and markers open; nodes, loads, sensors agreed |
+| RG13.6 | #2732 | a MiniExample for every item; nodes, markers, loads and sensors first |
 | RG13.5 | #2725 | the documentation of the items, by kind; .0 the frame, .1 nodes, .4 loads, .5 sensors first |
 
 ### Raised by the current work, and not yet a step

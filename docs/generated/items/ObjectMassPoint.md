@@ -56,32 +56,31 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 | intermediate variables | symbol | description |
 |---|---|---|
-| node position | $\LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef = \LU{0}{\pv}(n_0)\cConfig$ | position of mass point which is provided by node $n_0$ in any configuration |
-| node displacement | $\LU{0}{\uv}\cConfig = \LU{0}{\pRef}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$ | displacement of mass point which is provided by node $n_0$ in any configuration |
-| node velocity | $\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$ | velocity of mass point which is provided by node $n_0$ in any configuration |
-| transformation matrix | $\LU{0b}{\Rot} = \ImThree$ | transformation of local body ($b$) coordinates to global (0) coordinates; this is the constant unit matrix, because local = global coordinates for the mass point |
-| residual forces | $\LU{0}{\fv} = [f_0,\;f_1,\;f_2]\tp$ | residual of all forces on mass point |
-| applied forces | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | applied forces (loads, connectors, joint reaction forces, ...) |
+| node position | $\LU{0}{\pv}\cConfig = \LU{0}{\pRef}\cRef + \LU{0}{\uv}\cConfig = \LU{0}{\pv}(n_0)\cConfig$ | position of the mass point, provided by node $n_0$, in any configuration |
+| node displacement | $\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp$ | displacement of the mass point, the coordinates of node $n_0$ |
+| node velocity | $\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp$ | velocity of the mass point |
+| rotation matrix | $\LU{0b}{\Rot} = \ImThree$ | the body frame is the global frame |
+| applied forces | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | from loads, connectors and joint reaction forces |
 
 ### Equations of motion
 
 $$
-\mr{m}{0}{0} {0}{m}{0} {0}{0}{m} \vr{\ddot q_0}{\ddot q_1}{\ddot q_2} = \vr{f_0}{f_1}{f_2}.
+\mr{m}{0}{0} {0}{m}{0} {0}{0}{m} \vr{\ddot q_0}{\ddot q_1}{\ddot q_2} = \vr{f_0}{f_1}{f_2} .
 $$
 
-For example, a LoadCoordinate on coordinate 1 of the node would add a term in $f_1$ on the RHS.
+A `LoadCoordinate` on coordinate 1 of the node adds to $f_1$.
 
-Position-based markers can measure position $\pv\cConfig$. The **position jacobian**
+### Marker interfaces
 
-$$
-\Jm_{pos} = \partial \pv\cCur / \partial \cv\cCur = \mr{1}{0}{0} {0}{1}{0} {0}{0}{1}
-$$
-
-transforms the action of global applied forces $\LU{0}{\fv}_a$ of position-based markers on the coordinates $\cv$
+The position of a local point is $\LU{0}{\pv}\cConfig + \pLocB$, as the body frame is the global
+frame. The position Jacobian is the unit matrix,
 
 $$
-\Qm = \Jm_{pos}\tp \LU{0}{\fv}_a.
+\LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}}{\partial \dot\qv} = \mr{1}{0}{0} {0}{1}{0} {0}{0}{1} ,
 $$
+
+so a global force acts as it is, $\Qm = \LU{0}{\fv}_a$, and the mass-weighted Jacobian is $m$ times
+it. A mass point has no rotation: there is no rotation Jacobian, and no `MarkerBodyRigid` fits.
 
 (miniexample-objectmasspoint)=
 ## Mini example

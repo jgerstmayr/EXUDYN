@@ -63,63 +63,46 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 | intermediate variables | symbol | description |
 |---|---|---|
-| reference position | $\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$ | reference point, only equal to the position of {ref}`COM <COM>` if $\LU{b}{\bv_{COM}}=\Null$; provided by node $n_0$ in any configuration (except reference) |
-| reference point displacement | $\LU{0}{\uv}\cConfig =\pRefG\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$ | displacement of reference point which is provided by node $n_0$ in any configuration; NOTE that for configurations other than reference, it is follows that $\pRefG\cRef - \pRefG\cConfig$ |
-| reference point velocity | $\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$ | velocity of reference point which is provided by node $n_0$ in any configuration |
-| body rotation | $\LU{0}{\theta}_{0\mathrm{config}} = \theta_0(n_0)\cConfig = \psi_0(n_0)\cRef + \psi_0(n_0)\cConfig$ | rotation of body as provided by node $n_0$ in any configuration |
-| body rotation matrix | $\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}(n_0)\cConfig$ | rotation matrix which transforms local to global coordinates as given by node |
+| reference point | $\pRefG\cConfig = \LU{0}{\pv}(n_0)\cConfig$ | position of the reference point, provided by node $n_0$; the center of mass only if $\LU{b}{\bv_{COM}} = \Null$ |
+| displacement | $\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;0]\cConfig\tp$ | displacement of the reference point |
+| velocity | $\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp$ | velocity of the reference point |
+| rotation | $\theta_{0} = \psi_0(n_0)\cRef + \psi_0(n_0)\cConfig$ | rotation about the $z$-axis |
+| rotation matrix | $\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}(n_0)\cConfig$ | as given by the node |
 | local position | $\pLocB = [\LU{b}{b_0},\,\LU{b}{b_1},\,0]\tp$ | local position as used by markers or sensors |
-| body angular velocity | $\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0(n_0),\,0,\,0]}\cConfig\tp$ | rotation of body as provided by node $n_0$ in any configuration |
-| (generalized) coordinates | $\cv\cConfig = [q_0,q_1,\;\psi_0]\tp$ | generalized coordinates of body (= coordinates of node) |
-| generalized forces | $\LU{0}{\fv} = [f_0,\;f_1,\;\tau_2]\tp$ | generalized forces applied to body |
-| applied forces | $\LU{0}{\fv}_a = [f_0,\;f_1,\;0]\tp$ | applied forces (loads, connectors, joint reaction forces, ...) |
-| applied torques | $\LU{0}{\ttau}_a = [0,\;0,\;\tau_2]\tp$ | applied torques (loads, connectors, joint reaction forces, ...) |
+| angular velocity | $\LU{0}{\tomega}\cConfig = [0,\,0,\,\dot\theta_0]\tp$ | rotation velocity about $z$ |
+| applied forces and torques | $\LU{0}{\fv}_a = [f_0,\;f_1,\;0]\tp$, $\LU{0}{\ttau}_a = [0,\;0,\;\tau_2]\tp$ | from loads, connectors and joints |
 
 ### Equations of motion
 
-The equations of motion in case that `physicsCenterOfMass`=$\Null$ read:
+With `physicsCenterOfMass` $= \Null$:
 
 $$
-\mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = \fv.
+\mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = \fv .
 $$
 
-if `physicsCenterOfMass` is nonzero, we resort to (not that $J$ represents the moment of inertia related to the reference point!):
+With a center of mass $\vp{b_x}{b_y} = \LU{0}{\bv_{COM}}$ away from the reference point - $J$ is the
+moment of inertia about the reference point -
 
 $$
-\mr{m}{0}{G_x} {0}{m}{G_y} {G_x}{G_y}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{m \dot \psi_0^2 b_x }{m \dot \psi_0^2 b_y}{0} + \vr{f_0}{f_1}{\tau_2} = \fv.
+\mr{m}{0}{G_x} {0}{m}{G_y} {G_x}{G_y}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{m \dot \psi_0^2 b_x }{m \dot \psi_0^2 b_y}{0} + \vr{f_0}{f_1}{\tau_2} ,
+\quad \vp{G_x}{G_y} = m \vp{b_y}{-b_x} .
 $$
 
-where we use the relations caused by the non-zero center of mass
+A `LoadCoordinate` on coordinate 2 of the node adds a torque $\tau_2$.
+
+### Marker interfaces
+
+The position Jacobian depends on the local position,
 
 $$
-\vp{G_x}{G_y} = m \vp{b_y}{-b_x} \quad \mathrm{and} \quad \vp{b_x}{b_y} = \LU{0}{\bv_{COM}}
+\LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}(\pLocB)}{\partial \dot\qv} = \mr{1}{0}{-\sin(\theta_0)\LU{b}{b_0} - \cos(\theta_0)\LU{b}{b_1}}
+{0}{1}{\cos(\theta_0)\LU{b}{b_0}-\sin(\theta_0)\LU{b}{b_1}} {0}{0}{0} ,
 $$
 
-Position-based markers can measure position $\pv\cConfig(\pLocB)$ depending on the local position $\pLocB$.
-The **position jacobian** depends on the local position $\pLocB$ and is defined as,
+and the rotation Jacobian takes the $z$-component of a torque,
 
 $$
-\LU{0}{\Jm_{pos}} = \partial \LU{0}{\pv}\cConfig(\pLocB)\cCur / \partial \cv\cCur = \mr{1}{0}{-\sin(\theta)\LU{b}{b_0} - \cos(\theta)\LU{b}{b_1}}
-{0}{1}{\cos(\theta)\LU{b}{b_0}-\sin(\theta)\LU{b}{b_1}} {0}{0}{0}
-$$
-
-which transforms the action of global forces $\LU{0}{\fv}$ of position-based markers on the coordinates $\cv$,
-
-$$
-\Qm = \LU{0}{\Jm_{pos}\tp} \LU{0}{\fv}_a
-$$
-
-Note that a LoadCoordinate on coordinate 2 of the node would add a torque $\tau_2$ on the RHS.
-The **rotation jacobian**, which is computed from angular velocity, reads
-
-$$
-\LU{0}{\Jm_{rot}} = \partial \LU{0}{\tomega}\cCur / \partial \dot \cv\cCur = \mr{0}{0}{0} {0}{0}{0} {0}{0}{1}
-$$
-
-and transforms the action of global torques $\LU{0}{\ttau}$ of orientation-based markers on the coordinates $\cv$,
-
-$$
-\Qm = \LU{0}{\Jm_{rot}\tp} \, \LU{0}{\ttau}_a
+\LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}}{\partial \dot\qv} = \mr{0}{0}{0} {0}{0}{0} {0}{0}{1} .
 $$
 
 **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`

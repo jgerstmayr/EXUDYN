@@ -1,0 +1,12 @@
+{
+  "number": 2732,
+  "title": "RG13.6: a MiniExample for every item",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "effort": "HUGE",
+  "description": "The goal of revision2026b group RG13, from the maintainer's announcement of 2026-09-27: every item gets a MiniExample - the short script under 'Mini example' on its page, run by the test suite. Of 97 items, 74 have none (RG13.1). The graphics regression test of RG2.3.3.5 takes every item through its MiniExample, so it waits for this. Agreed on 2026-09-28: a step of its own, starting with nodes, markers, loads and sensors, whose examples are short. revision2026b step RG13.6.",
+  "dateRaised": "2026-09-28",
+  "deadline": "2027-03-27",
+  "file": "definitions"
+}

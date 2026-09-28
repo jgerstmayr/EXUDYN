@@ -50,19 +50,26 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 ### Equations
 
-ObjectGround has no equations, as it only provides a static object, at which joints and connectors can be attached.
-The object does not move (in general) and forces or torques do not have an effect.
-However, the reference position and rotation may be changed over time. This may prescribe
-motion, however, with the measured velocity still being zero at each time instant. Therefore,
-such manipulation of reference position or rotation shall be treated with care.
+`ObjectGround` has no coordinates and no equations: it is a fixed body to which joints, connectors
+and markers are attached. Forces and torques on it have no effect. Its reference position and
+rotation may be changed over time, which moves what is attached to it; its velocity is still zero at
+every instant, so such a prescribed motion is to be used with care.
 
-In combination with markers, the `localPosition` $\pLocB$ is transformed by the `ObjectGround` to
-a global point $\LU{0}{\pv}$ using the reference point $\pRefG$,
+### Kinematics
 
-$$
-\LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB \, .
+A local position $\pLocB$ is at the global point
 
 $$
+\LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB \, ,
+$$
+
+with the reference point $\pRefG$ = `referencePosition` and the rotation $\LU{0b}{\Rot}$ =
+`referenceRotation`.
+
+### Marker interfaces
+
+All Jacobians are empty: a marker on the ground gives its position and orientation to a joint or
+connector, and nothing acts back.
 
 **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
 A user function, which is called by the visualization thread in order to draw user-defined objects.

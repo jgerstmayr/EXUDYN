@@ -63,21 +63,27 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     detailedDescription=r"""    #### Equations
 
-    ObjectGround has no equations, as it only provides a static object, at which joints and connectors can be attached. 
-    The object does not move (in general) and forces or torques do not have an effect.
-    However, the reference position and rotation may be changed over time. This may prescribe
-    motion, however, with the measured velocity still being zero at each time instant. Therefore,
-    such manipulation of reference position or rotation shall be treated with care.
-    
-    In combination with markers, the `localPosition` $\pLocB$ is transformed by the `ObjectGround` to
-    a global point $\LU{0}{\pv}$ using the reference point $\pRefG$,
+    `ObjectGround` has no coordinates and no equations: it is a fixed body to which joints, connectors
+    and markers are attached. Forces and torques on it have no effect. Its reference position and
+    rotation may be changed over time, which moves what is attached to it; its velocity is still zero at
+    every instant, so such a prescribed motion is to be used with care.
+
+    #### Kinematics
+
+    A local position $\pLocB$ is at the global point
 
     $$
-                        \LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB \, .
-                              %\LU{0}{\pv} = \pRefG + \LU{0b}{\ImThree} \pLocB
-                        $$
+    \LU{0}{\pv} = \pRefG + \LU{0b}{\Rot} \pLocB \, ,
+    $$
 
-""",
+    with the reference point $\pRefG$ = `referencePosition` and the rotation $\LU{0b}{\Rot}$ =
+    `referenceRotation`.
+
+    #### Marker interfaces
+
+    All Jacobians are empty: a marker on the ground gives its position and orientation to a joint or
+    connector, and nothing acts back.
+    """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeBody,
     outputVariables=[
@@ -204,41 +210,34 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     detailedDescription=r"""    #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
-    | node position | $\LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef = \LU{0}{\pv}(n_0)\cConfig$ | position of mass point which is provided by node $n_0$ in any configuration |
-    | node displacement | $\LU{0}{\uv}\cConfig = \LU{0}{\pRef}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$ | displacement of mass point which is provided by node $n_0$ in any configuration |
-    | node velocity | $\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$ | velocity of mass point which is provided by node $n_0$ in any configuration |
-    | transformation matrix | $\LU{0b}{\Rot} = \ImThree$ | transformation of local body ($b$) coordinates to global (0) coordinates; this is the constant unit matrix, because local = global coordinates for the mass point |
-    | residual forces | $\LU{0}{\fv} = [f_0,\;f_1,\;f_2]\tp$ | residual of all forces on mass point |
-    | applied forces | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | applied forces (loads, connectors, joint reaction forces, ...) |
-
+    | node position | $\LU{0}{\pv}\cConfig = \LU{0}{\pRef}\cRef + \LU{0}{\uv}\cConfig = \LU{0}{\pv}(n_0)\cConfig$ | position of the mass point, provided by node $n_0$, in any configuration |
+    | node displacement | $\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;q_2]\cConfig\tp$ | displacement of the mass point, the coordinates of node $n_0$ |
+    | node velocity | $\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;\dot q_2]\cConfig\tp$ | velocity of the mass point |
+    | rotation matrix | $\LU{0b}{\Rot} = \ImThree$ | the body frame is the global frame |
+    | applied forces | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | from loads, connectors and joint reaction forces |
 
     #### Equations of motion
 
+    $$
+    \mr{m}{0}{0} {0}{m}{0} {0}{0}{m} \vr{\ddot q_0}{\ddot q_1}{\ddot q_2} = \vr{f_0}{f_1}{f_2} .
+    $$
 
+    A `LoadCoordinate` on coordinate 1 of the node adds to $f_1$.
+
+    #### Marker interfaces
+
+    The position of a local point is $\LU{0}{\pv}\cConfig + \pLocB$, as the body frame is the global
+    frame. The position Jacobian is the unit matrix,
 
     $$
-                        \mr{m}{0}{0} {0}{m}{0} {0}{0}{m} \vr{\ddot q_0}{\ddot q_1}{\ddot q_2} = \vr{f_0}{f_1}{f_2}.
-                        $$
-
-    For example, a LoadCoordinate on coordinate 1 of the node would add a term in $f_1$ on the RHS.
-    
-    Position-based markers can measure position $\pv\cConfig$. The **position jacobian**  
-
-
+    \LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}}{\partial \dot\qv} = \mr{1}{0}{0} {0}{1}{0} {0}{0}{1} ,
     $$
-                        \Jm_{pos} = \partial \pv\cCur / \partial \cv\cCur = \mr{1}{0}{0} {0}{1}{0} {0}{0}{1}
-                        $$
 
-    transforms the action of global applied forces $\LU{0}{\fv}_a$ of position-based markers on the coordinates $\cv$
-
-
-    $$
-                        \Qm = \Jm_{pos}\tp \LU{0}{\fv}_a.
-                        $$
-""",
+    so a global force acts as it is, $\Qm = \LU{0}{\fv}_a$, and the mass-weighted Jacobian is $m$ times
+    it. A mass point has no rotation: there is no rotation Jacobian, and no `MarkerBodyRigid` fits.
+    """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    node = mbs.AddNode(NodePoint(referenceCoordinates = [1,1,0], 
                                  initialCoordinates=[0.5,0,0],
@@ -339,45 +338,31 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     detailedDescription=r"""    #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
-    | node position | $\LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef = \LU{0}{\pv}(n_0)\cConfig$ | position of mass point which is provided by node $n_0$ in any configuration (except reference) |
-    | node displacement | $\LU{0}{\uv}\cConfig = \LU{0}{\pRef}\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$ | displacement of mass point which is provided by node $n_0$ in any configuration |
-    | node velocity | $\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$ | velocity of mass point which is provided by node $n_0$ in any configuration |
-    | transformation matrix | $\LU{0b}{\Rot} = \ImThree$ | transformation of local body ($b$) coordinates to global (0) coordinates; this is the constant unit matrix, because local = global coordinates for the mass point |
-    | residual forces | $\LU{0}{\fv} = [f_0,\;f_1]\tp$ | residual of all forces on mass point |
-    | applied forces | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | applied forces (loads, connectors, joint reaction forces, ...) |
-
-    <!-- -->
+    | node position | $\LU{0}{\pv}\cConfig = \LU{0}{\pRef}\cRef + \LU{0}{\uv}\cConfig = \LU{0}{\pv}(n_0)\cConfig$ | position of the mass point, provided by node $n_0$, in any configuration |
+    | node displacement | $\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;0]\cConfig\tp$ | displacement of the mass point in the $x$-$y$ plane |
+    | node velocity | $\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp$ | velocity of the mass point |
+    | rotation matrix | $\LU{0b}{\Rot} = \ImThree$ | the body frame is the global frame |
+    | applied forces | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | from loads, connectors and joint reaction forces; $f_2$ has no effect |
 
     #### Equations of motion
 
+    $$
+    \mp{m}{0} {0}{m} \vp{\ddot q_0}{\ddot q_1} = \vp{f_0}{f_1} .
+    $$
 
+    #### Marker interfaces
+
+    The position Jacobian takes the $x$ and $y$ components of a global force,
 
     $$
-                        \mp{m}{0} {0}{m} \vp{\ddot q_0}{\ddot q_1} = \vp{f_0}{f_1}.
-                        $$
-
-    For example, a LoadCoordinate on coordinate 1 of the node would add a term in $f_1$ on the RHS.
-    
-    Position-based markers can measure position $\pv\cConfig$. The **position jacobian**  
-
-
+    \LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}}{\partial \dot\qv} =
+    \left[\!\! \begin{array}{cc} 1 & 0 \\ 0 & 1 \\ 0 & 0 \end{array} \!\!\right] ,
     $$
-                        \Jm_{pos} = \partial \pv\cCur / \partial \cv\cCur = 
-                              \left[\!\! \begin{array}{ccc}
-                              1 & 0 & 0 \vspace{0.1cm}\\ 
-                              0 & 1 & 0 \end{array} \!\!\right]
-                        $$
 
-    transforms the action of global applied forces $\LU{0}{\fv}_a$ of position-based markers on the coordinates $\cv$
-
-
-    $$
-                        \Qm = \Jm_{pos}\tp \LU{0}{\fv}_a.
-                        $$
-""",
+    so $\Qm = \LU{0}{\Jm_{pos}}\tp \LU{0}{\fv}_a = [f_0,\;f_1]\tp$. There is no rotation Jacobian.
+    """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    node = mbs.AddNode(NodePoint2D(referenceCoordinates = [1,1], 
                                  initialCoordinates=[0.5,0],
@@ -476,47 +461,32 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     detailedDescription=r"""    #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
-    | position coordinate | ${p_0}\cConfig = {c_0}\cConfig + {c_0}\cRef$ | position coordinate of node (nodal coordinate $c_0$) in any configuration |
-    | displacement coordinate | ${u_0}\cConfig = {c_0}\cConfig$ | displacement coordinate of mass node in any configuration |
-    | velocity coordinate | ${u_0}\cConfig$ | velocity coordinate of mass node in any configuration |
-    | Position | $\LU{0}{\pv}\cConfig =\LU{0}{\pRef_0} + \LU{0b}{\Rot_{0}} \LU{b}{\vr{p_0}{0}{0}}\cConfig$ | (translational) position of mass object in any configuration |
-    | Displacement | $\LU{0}{\uv}\cConfig = \LU{0b}{\Rot_{0}} \LU{b}{\vr{q_0}{0}{0}}\cConfig$ | (translational) displacement of mass object in any configuration |
-    | Velocity | $\LU{0}{\vv}\cConfig = \LU{0b}{\Rot_{0}} \LU{b}{\vr{\dot q_0}{0}{0}}\cConfig$ | (translational) velocity of mass object in any configuration |
-    | residual force | $f$ | residual of all forces on mass object |
-    | applied force | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | 3D applied force (loads, connectors, joint reaction forces, ...) |
-    | applied torque | $\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$ | 3D applied torque (loads, connectors, joint reaction forces, ...) |
+    | position coordinate | ${p_0}\cConfig = {c_0}\cConfig + {c_0}\cRef$ | the coordinate $c_0$ of the node plus its reference value |
+    | Position | $\LU{0}{\pv}\cConfig = \LU{0}{\pRef_0} + \LU{0b}{\Rot_{0}} \LU{b}{\vr{p_0}{0}{0}}\cConfig$ | the mass moves along the local $x$-axis of the frame given by `referencePosition` $\LU{0}{\pRef_0}$ and `referenceRotation` $\LU{0b}{\Rot_{0}}$ |
+    | Velocity | $\LU{0}{\vv}\cConfig = \LU{0b}{\Rot_{0}} \LU{b}{\vr{\dot c_0}{0}{0}}\cConfig$ | velocity of the mass |
+    | applied force | $\LU{0}{\fv}_a$ | 3D force from loads, connectors and joints |
+    | residual force | $f$ | the component of the applied forces along the axis |
 
-    <!-- -->
-    A rigid body marker (e.g., MarkerBodyRigid) may be attached to this object and forces/torques can be applied. 
-    However, torques will have no effect and forces will only have effect in 'direction' of the coordinate.
+    The coordinate need not be a translation: the object is any scalar mass-spring-damper equation.
 
     #### Equations of motion
 
+    $$
+    m \cdot \ddot c_0 = f , \quad f = \LU{b}{[1,\,0,\,0]} \LU{b0}{\Rot_{0}} \LU{0}{\fv}_a .
+    $$
 
+    #### Marker interfaces
 
     $$
-                        m \cdot \ddot q_0 = f.
-                        $$
-
-    Note that $f$ is computed from all connectors and loads upon the object. E.g., a 3D force vector $\LU{0}{\fv}_a$ is 
-    transformed to $f$ as
-
-
+    \LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}}{\partial \dot c_0} = \LU{0b}{\Rot_{0}} \LU{b}{\vr{1}{0}{0}} ,
+    \quad \LU{0}{\Jm_{rot}} = \Null :
     $$
-                        f = \LU{b}{[1,\,0,\,0]} \LU{b0}{\Rot_{0}} \LU{0}{\fv}_a
-                        $$
 
-    Thus, the **position jacobian** reads 
-
-
-    $$
-                        \Jm_{pos} = \partial \pv\cCur / \partial {q_0}\cCur = 
-                               \LU{b}{[1,\,0,\,0]} \LU{b0}{\Rot_{0}}
-                        $$
-""",
+    a force acts with its component along the axis, a torque has no effect. The mass-weighted Jacobian is
+    $m$ times $\LU{0}{\Jm_{pos}}$.
+    """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    node = mbs.AddNode(Node1D(referenceCoordinates = [1], 
                               initialCoordinates=[0.5],
@@ -626,50 +596,32 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     detailedDescription=r"""    #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
-    | position coordinate | ${\theta_0}\cConfig = {c_0}\cConfig + {c_0}\cRef $ | total rotation coordinate of node (e.g., Node1D) in any configuration (nodal coordinate $c_0$) |
-    | displacement coordinate | ${\psi_0}\cConfig = {c_0}\cConfig$ | change of rotation coordinate of mass node (e.g., Node1D) in any configuration (nodal coordinate $c_0$) |
-    | velocity coordinate | ${\dot \psi_{0\cConfig}}$ | rotation velocity coordinate of mass node (e.g., Node1D) in any configuration |
-    | Position | $\LU{0}{\pv}\cConfig =\LU{0}{\pRef_0}$ | constant (translational) position of mass object in any configuration |
-    | Displacement | $\LU{0}{\uv}\cConfig = [0,0,0]\tp$ | (translational) displacement of mass object in any configuration |
-    | Velocity | $\LU{0}{\vv}\cConfig = [0,0,0]\tp$ | (translational) velocity of mass object in any configuration |
-    | AngularVelocity | $\LU{0}{\tomega}\cConfig = \LU{0i}{\Rot_{0}} \LU{i}{\vr{0}{0}{\dot \psi_0}}\tp$ |  |
-    | AngularVelocityLocal | $\LU{b}{\tomega}\cConfig = \LU{i}{\vr{0}{0}{\dot \psi_0}}\tp$ |  |
-    | RotationMatrix | $\LU{0b}{\Rot} = \LU{0i}{\Rot_{0}} \LU{ib}{\mr{\cos(\theta_0)}{-\sin(\theta_0)}{0} {\sin(\theta_0)}{\cos(\theta_0)}{0} {0}{0}{1}}$ | transformation of local body ($b$) coordinates to global (0) coordinates |
-    | residual force | $\tau$ | residual of all forces on mass object |
-    | applied force | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | 3D applied force (loads, connectors, joint reaction forces, ...) |
-    | applied torque | $\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$ | 3D applied torque (loads, connectors, joint reaction forces, ...) |
-
-    <!-- -->
-    A rigid body marker (e.g., MarkerBodyRigid) may be attached to this object and forces/torques can be applied. 
-    However, forces will have no effect and torques will only have effect in 'direction' of the coordinate.
+    | rotation | ${\theta_0}\cConfig = {c_0}\cConfig + {c_0}\cRef$ | the coordinate $c_0$ of the node plus its reference value |
+    | Position | $\LU{0}{\pv}\cConfig = \LU{0}{\pRef_0}$ | the constant `referencePosition` |
+    | RotationMatrix | $\LU{0b}{\Rot} = \LU{0i}{\Rot_{0}} \LU{ib}{\mr{\cos(\theta_0)}{-\sin(\theta_0)}{0} {\sin(\theta_0)}{\cos(\theta_0)}{0} {0}{0}{1}}$ | a rotation about the local $z$-axis of the frame given by `referenceRotation` $\LU{0i}{\Rot_{0}}$ |
+    | AngularVelocity | $\LU{0}{\tomega}\cConfig = \LU{0i}{\Rot_{0}} \LU{i}{\vr{0}{0}{\dot \theta_0}}$ | global angular velocity |
+    | applied torque | $\LU{0}{\ttau}_a$ | 3D torque from loads, connectors and joints |
+    | residual torque | $\tau$ | the component of the applied torques about the axis |
 
     #### Equations of motion
 
+    $$
+    J \cdot \ddot \theta_0 = \tau , \quad \tau = \LU{i}{[0,\,0,\,1]} \LU{i0}{\Rot_{0}} \LU{0}{\ttau}_a .
+    $$
 
+    #### Marker interfaces
 
     $$
-                        J \cdot \ddot \psi_0 = \tau.
-                        $$
-
-    Note that $\tau$ is computed from all connectors and loads upon the object. E.g., a 3D torque vector $\LU{0}{\ttau}_a$ is 
-    transformed to $\tau$ as
-
-
+    \LU{0}{\Jm_{pos}} = \Null , \quad
+    \LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}}{\partial \dot \theta_0} = \LU{0i}{\Rot_{0}} \LU{i}{\vr{0}{0}{1}} :
     $$
-                        \tau = \LU{b}{[0,\,0,\,1]}\LU{b0}{\Rot_{0}} \LU{0}{\ttau}_a
-                        $$
 
-    Thus, the **rotation jacobian** reads 
-
-
-    $$
-                        \Jm_{rot} = \partial \tomega\cCur / \partial \dot q_{0,cur} = 
-                               \LU{b}{[0,\,0,\,1]} \LU{b0}{\Rot_{0}}
-                        $$
-""",
+    a torque acts with its component about the axis, a force has no effect. A marker must lie on the
+    axis - a local position with $x = y = 0$ -, which the object checks; there is no mass-proportional
+    load on it.
+    """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    node = mbs.AddNode(Node1D(referenceCoordinates = [1], #\psi_0ref
                               initialCoordinates=[0.5],   #\psi_0ini
@@ -971,8 +923,24 @@ definitions.append(ItemDefinition(
                         \fv_{\theta,\lambda} = \frac{\partial g_\theta}{\ttheta\tp} \lambda_\theta = [2\theta_0,\; 2\theta_1,\; 2\theta_2,\; 2\theta_3]\tp
                         $$
 
-    For creating a `ObjectRigidBody`, there is a `rigidBodyUtilities` function `CreateRigidBody`, 
-    see [](#sec-mainsystemextensions-createrigidbody), which simplifies the setup of a rigid body significantely!
+    #### Marker interfaces
+
+    A local position $\pLocB$ of the body moves with the velocity
+    $\LU{0}{\vv} + \LU{0b}{\Rot} (\LU{b}{\tomega} \times \pLocB)$, which gives, with the velocity
+    transformations of the node, the position and rotation Jacobians
+
+    $$
+    \LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}(\pLocB)}{\partial \dot\qv} = \left[ \ImThree ,\; -\LU{0b}{\Rot} \LU{b}{\tilde \pv}_{\mathrm{loc}} \LU{b}{\Gm} \right] , \quad
+    \LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}}{\partial \dot\qv} = \left[ \Null ,\; \LU{0}{\Gm} \right] ,
+    $$
+
+    with $\LU{b}{\tilde \pv}_{\mathrm{loc}}$ the skew-symmetric matrix of $\pLocB$; a force at the local
+    position then acts on the rotation coordinates with the moment it has about the reference point.
+    The mass-weighted Jacobian of a mass-proportional load is $m$ times the position Jacobian of the
+    center of mass.
+
+    For creating a `ObjectRigidBody`, use `CreateRigidBody`, see
+    [](#sec-mainsystemextensions-createrigidbody).
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeBody,
@@ -1114,69 +1082,48 @@ definitions.append(ItemDefinition(
 
     | intermediate variables | symbol | description |
     |---|---|---|
-    | reference position | $\pRefG\cConfig + \pRefG\cRef = \LU{0}{\pv}(n_0)\cConfig$ | reference point, only equal to the position of ABRV:COM if $\LU{b}{\bv_{COM}}=\Null$; provided by node $n_0$ in any configuration (except reference) |
-    | reference point displacement | $\LU{0}{\uv}\cConfig =\pRefG\cConfig = [q_0,\;q_1,\;0]\cConfig\tp = \LU{0}{\uv}(n_0)\cConfig$ | displacement of reference point which is provided by node $n_0$ in any configuration; NOTE that for configurations other than reference, it is follows that $\pRefG\cRef - \pRefG\cConfig$ |
-    | reference point velocity | $\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp = \LU{0}{\vv}(n_0)\cConfig$ | velocity of reference point which is provided by node $n_0$ in any configuration |
-    | body rotation | $\LU{0}{\theta}_{0\mathrm{config}} = \theta_0(n_0)\cConfig = \psi_0(n_0)\cRef + \psi_0(n_0)\cConfig$ | rotation of body as provided by node $n_0$ in any configuration |
-    | body rotation matrix | $\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}(n_0)\cConfig$ | rotation matrix which transforms local to global coordinates as given by node |
+    | reference point | $\pRefG\cConfig = \LU{0}{\pv}(n_0)\cConfig$ | position of the reference point, provided by node $n_0$; the center of mass only if $\LU{b}{\bv_{COM}} = \Null$ |
+    | displacement | $\LU{0}{\uv}\cConfig = [q_0,\;q_1,\;0]\cConfig\tp$ | displacement of the reference point |
+    | velocity | $\LU{0}{\vv}\cConfig = [\dot q_0,\;\dot q_1,\;0]\cConfig\tp$ | velocity of the reference point |
+    | rotation | $\theta_{0} = \psi_0(n_0)\cRef + \psi_0(n_0)\cConfig$ | rotation about the $z$-axis |
+    | rotation matrix | $\LU{0b}{\Rot}\cConfig = \LU{0b}{\Rot}(n_0)\cConfig$ | as given by the node |
     | local position | $\pLocB = [\LU{b}{b_0},\,\LU{b}{b_1},\,0]\tp$ | local position as used by markers or sensors |
-    | body angular velocity | $\LU{0}{\tomega}\cConfig = \LU{0}{[\omega_0(n_0),\,0,\,0]}\cConfig\tp$ | rotation of body as provided by node $n_0$ in any configuration |
-    | (generalized) coordinates | $\cv\cConfig = [q_0,q_1,\;\psi_0]\tp$ | generalized coordinates of body (= coordinates of node) |
-    | generalized forces | $\LU{0}{\fv} = [f_0,\;f_1,\;\tau_2]\tp$ | generalized forces applied to body |
-    | applied forces | $\LU{0}{\fv}_a = [f_0,\;f_1,\;0]\tp$ | applied forces (loads, connectors, joint reaction forces, ...) |
-    | applied torques | $\LU{0}{\ttau}_a = [0,\;0,\;\tau_2]\tp$ | applied torques (loads, connectors, joint reaction forces, ...) |
-
-    <!-- -->
+    | angular velocity | $\LU{0}{\tomega}\cConfig = [0,\,0,\,\dot\theta_0]\tp$ | rotation velocity about $z$ |
+    | applied forces and torques | $\LU{0}{\fv}_a = [f_0,\;f_1,\;0]\tp$, $\LU{0}{\ttau}_a = [0,\;0,\;\tau_2]\tp$ | from loads, connectors and joints |
 
     #### Equations of motion
 
-    The equations of motion in case that `physicsCenterOfMass`=$\Null$ read:
+    With `physicsCenterOfMass` $= \Null$:
 
     $$
-                        \mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = \fv.
-                        $$
+    \mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = \fv .
+    $$
 
-    if `physicsCenterOfMass` is nonzero, we resort to (not that $J$ represents the moment of inertia related to the reference point!):
+    With a center of mass $\vp{b_x}{b_y} = \LU{0}{\bv_{COM}}$ away from the reference point - $J$ is the
+    moment of inertia about the reference point -
 
     $$
-                        \mr{m}{0}{G_x} {0}{m}{G_y} {G_x}{G_y}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{m \dot \psi_0^2 b_x }{m \dot \psi_0^2 b_y}{0} + \vr{f_0}{f_1}{\tau_2} = \fv.
-                        $$
+    \mr{m}{0}{G_x} {0}{m}{G_y} {G_x}{G_y}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{m \dot \psi_0^2 b_x }{m \dot \psi_0^2 b_y}{0} + \vr{f_0}{f_1}{\tau_2} ,
+    \quad \vp{G_x}{G_y} = m \vp{b_y}{-b_x} .
+    $$
 
-    where we use the relations caused by the non-zero center of mass
+    A `LoadCoordinate` on coordinate 2 of the node adds a torque $\tau_2$.
+
+    #### Marker interfaces
+
+    The position Jacobian depends on the local position,
 
     $$
-                        \vp{G_x}{G_y} = m \vp{b_y}{-b_x} \quad \mathrm{and} \quad \vp{b_x}{b_y} = \LU{0}{\bv_{COM}}
-                        $$
+    \LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}(\pLocB)}{\partial \dot\qv} = \mr{1}{0}{-\sin(\theta_0)\LU{b}{b_0} - \cos(\theta_0)\LU{b}{b_1}}
+                         {0}{1}{\cos(\theta_0)\LU{b}{b_0}-\sin(\theta_0)\LU{b}{b_1}} {0}{0}{0} ,
+    $$
 
-    
-    Position-based markers can measure position $\pv\cConfig(\pLocB)$ depending on the local position $\pLocB$. 
-    The **position jacobian** depends on the local position $\pLocB$ and is defined as,
+    and the rotation Jacobian takes the $z$-component of a torque,
 
     $$
-                        \LU{0}{\Jm_{pos}} = \partial \LU{0}{\pv}\cConfig(\pLocB)\cCur / \partial \cv\cCur = \mr{1}{0}{-\sin(\theta)\LU{b}{b_0} - \cos(\theta)\LU{b}{b_1}} 
-                                                                                     {0}{1}{\cos(\theta)\LU{b}{b_0}-\sin(\theta)\LU{b}{b_1}} {0}{0}{0}
-                        $$
-
-    which transforms the action of global forces $\LU{0}{\fv}$ of position-based markers on the coordinates $\cv$,
-
+    \LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}}{\partial \dot\qv} = \mr{0}{0}{0} {0}{0}{0} {0}{0}{1} .
     $$
-                        \Qm = \LU{0}{\Jm_{pos}\tp} \LU{0}{\fv}_a
-                        $$
-
-    Note that a LoadCoordinate on coordinate 2 of the node would add a torque $\tau_2$ on the RHS.
-    The **rotation jacobian**, which is computed from angular velocity, reads
-
-    $$
-                        \LU{0}{\Jm_{rot}} = \partial \LU{0}{\tomega}\cCur / \partial \dot \cv\cCur = \mr{0}{0}{0} {0}{0}{0} {0}{0}{1}
-                        $$
-
-    and transforms the action of global torques $\LU{0}{\ttau}$ of orientation-based markers on the coordinates $\cv$,
-
-    $$
-                        \Qm = \LU{0}{\Jm_{rot}\tp} \, \LU{0}{\ttau}_a
-                        $$
-
-""",
+    """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates = [1,1,0.25*np.pi], 
                                        initialCoordinates=[0.5,0,0],

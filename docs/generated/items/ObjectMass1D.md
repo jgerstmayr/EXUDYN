@@ -57,38 +57,29 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 | intermediate variables | symbol | description |
 |---|---|---|
-| position coordinate | ${p_0}\cConfig = {c_0}\cConfig + {c_0}\cRef$ | position coordinate of node (nodal coordinate $c_0$) in any configuration |
-| displacement coordinate | ${u_0}\cConfig = {c_0}\cConfig$ | displacement coordinate of mass node in any configuration |
-| velocity coordinate | ${u_0}\cConfig$ | velocity coordinate of mass node in any configuration |
-| Position | $\LU{0}{\pv}\cConfig =\LU{0}{\pRef_0} + \LU{0b}{\Rot_{0}} \LU{b}{\vr{p_0}{0}{0}}\cConfig$ | (translational) position of mass object in any configuration |
-| Displacement | $\LU{0}{\uv}\cConfig = \LU{0b}{\Rot_{0}} \LU{b}{\vr{q_0}{0}{0}}\cConfig$ | (translational) displacement of mass object in any configuration |
-| Velocity | $\LU{0}{\vv}\cConfig = \LU{0b}{\Rot_{0}} \LU{b}{\vr{\dot q_0}{0}{0}}\cConfig$ | (translational) velocity of mass object in any configuration |
-| residual force | $f$ | residual of all forces on mass object |
-| applied force | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | 3D applied force (loads, connectors, joint reaction forces, ...) |
-| applied torque | $\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$ | 3D applied torque (loads, connectors, joint reaction forces, ...) |
+| position coordinate | ${p_0}\cConfig = {c_0}\cConfig + {c_0}\cRef$ | the coordinate $c_0$ of the node plus its reference value |
+| Position | $\LU{0}{\pv}\cConfig = \LU{0}{\pRef_0} + \LU{0b}{\Rot_{0}} \LU{b}{\vr{p_0}{0}{0}}\cConfig$ | the mass moves along the local $x$-axis of the frame given by `referencePosition` $\LU{0}{\pRef_0}$ and `referenceRotation` $\LU{0b}{\Rot_{0}}$ |
+| Velocity | $\LU{0}{\vv}\cConfig = \LU{0b}{\Rot_{0}} \LU{b}{\vr{\dot c_0}{0}{0}}\cConfig$ | velocity of the mass |
+| applied force | $\LU{0}{\fv}_a$ | 3D force from loads, connectors and joints |
+| residual force | $f$ | the component of the applied forces along the axis |
 
-A rigid body marker (e.g., MarkerBodyRigid) may be attached to this object and forces/torques can be applied.
-However, torques will have no effect and forces will only have effect in 'direction' of the coordinate.
+The coordinate need not be a translation: the object is any scalar mass-spring-damper equation.
 
 ### Equations of motion
 
 $$
-m \cdot \ddot q_0 = f.
+m \cdot \ddot c_0 = f , \quad f = \LU{b}{[1,\,0,\,0]} \LU{b0}{\Rot_{0}} \LU{0}{\fv}_a .
 $$
 
-Note that $f$ is computed from all connectors and loads upon the object. E.g., a 3D force vector $\LU{0}{\fv}_a$ is
-transformed to $f$ as
+### Marker interfaces
 
 $$
-f = \LU{b}{[1,\,0,\,0]} \LU{b0}{\Rot_{0}} \LU{0}{\fv}_a
+\LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}}{\partial \dot c_0} = \LU{0b}{\Rot_{0}} \LU{b}{\vr{1}{0}{0}} ,
+\quad \LU{0}{\Jm_{rot}} = \Null :
 $$
 
-Thus, the **position jacobian** reads
-
-$$
-\Jm_{pos} = \partial \pv\cCur / \partial {q_0}\cCur =
-\LU{b}{[1,\,0,\,0]} \LU{b0}{\Rot_{0}}
-$$
+a force acts with its component along the axis, a torque has no effect. The mass-weighted Jacobian is
+$m$ times $\LU{0}{\Jm_{pos}}$.
 
 (miniexample-objectmass1d)=
 ## Mini example

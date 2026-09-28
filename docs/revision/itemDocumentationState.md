@@ -33,13 +33,13 @@
 | NodeGenericAE | Node | 24 | 55, 2 | - | 0 of 5 | 1 | - | 0 | 0 |
 | NodeGenericData | Node | 19 | 83, 2 | - | 0 of 4 | 1 | - | 54 | 5 |
 | NodePointGround | Node | 49 | 99, 3 | - | 0 of 5 | 10 | - | 129 | 3 |
-| ObjectGround | Object (Body) | 27 | 93, 1 | - | 0 of 6 | 5 | - | 191 | 6 |
-| ObjectMassPoint | Object (Body) | 11 | 132, 2 | - | 0 of 5 | 8 | yes | 35 | 0 |
-| ObjectMassPoint2D | Object (Body) | 9 | 134, 2 | - | 0 of 5 | 8 | yes | 19 | 2 |
-| ObjectMass1D | Object (Body) | 21 | 151, 2 | - | 0 of 7 | 7 | yes | 9 | 0 |
-| ObjectRotationalMass1D | Object (Body) | 8 | 172, 2 | - | 0 of 7 | 7 | yes | 3 | 0 |
-| ObjectRigidBody | Object (Body) | 101 | 850, 5 | yes | 0 of 8 | 12 | - | 109 | 4 |
-| ObjectRigidBody2D | Object (Body) | 20 | 272, 2 | - | 0 of 8 | 12 | yes | 46 | 1 |
+| ObjectGround | Object (Body) | 27 | 103, 3 | - | 0 of 6 | 5 | - | 191 | 6 |
+| ObjectMassPoint | Object (Body) | 11 | 119, 3 | - | 0 of 5 | 8 | yes | 35 | 0 |
+| ObjectMassPoint2D | Object (Body) | 9 | 79, 3 | - | 0 of 5 | 8 | yes | 19 | 2 |
+| ObjectMass1D | Object (Body) | 21 | 96, 3 | - | 0 of 7 | 7 | yes | 9 | 0 |
+| ObjectRotationalMass1D | Object (Body) | 8 | 94, 3 | - | 0 of 7 | 7 | yes | 3 | 0 |
+| ObjectRigidBody | Object (Body) | 101 | 908, 6 | yes | 0 of 8 | 12 | - | 109 | 4 |
+| ObjectRigidBody2D | Object (Body) | 20 | 121, 3 | - | 0 of 8 | 12 | yes | 46 | 1 |
 | ObjectGenericODE2 | Object (SuperElement) | 71 | 243, 3 | - | 0 of 18 | 5 | yes | 12 | 1 |
 | ObjectGenericODE1 | Object (Object) | 48 | 250, 2 | - | 0 of 9 | 3 | yes | 5 | 0 |
 | ObjectKinematicTree | Object (SuperElement) | 154 | 1090, 5 | - | 0 of 40 | 4 | yes | 5 | 2 |

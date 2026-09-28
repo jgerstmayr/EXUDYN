@@ -2,11 +2,15 @@
   "number": 2716,
   "title": "RG13: what the ideal documentation of an item contains, per kind of item",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "DOCU",
   "effort": "MEDIUM",
   "description": "The maintainer, 2026-09-27, the second step of RG13: find the ideal documentation that definitions/itemDefs*.py shall contain - per item type (node, object, marker, load, sensor) and per kind of object (body, connector, constraint, and the other object types) - and from it write a detailed plan that makes it work for every item. revision2026b step RG13.2.",
   "dateRaised": "2026-09-27",
   "deadline": "2027-03-26",
-  "file": "definitions"
+  "dateResolved": "2026-09-28 11:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions",
+  "releaseNotes": "superseded by #2721 and #2725: what the ideal documentation of an item contains was worked out per kind of item in the development documents of revision2026b step RG13.4 (#2721) and is written by RG13.5 (#2725); the maintainer agreed to close it on 2026-09-28",
+  "resolvedInVersion": "1.12.142"
 }

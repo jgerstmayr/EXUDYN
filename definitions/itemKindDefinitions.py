@@ -89,6 +89,55 @@ definitions.append(ItemKindDefinition(
 definitions.append(ItemKindDefinition(
     kind='Objects (Body)',
     overallDescription=r"""A Body is a special Object, which has physical properties such as mass. A localPosition can be measured w.r.t. the reference point of the body""",
+    detailedDescription=r"""
+    ## What a body is
+
+    A body is an object with mass: it owns one or more nodes, whose coordinates it gives its equations of
+    motion - a mass matrix, the forces that depend on its motion, and the forces that act on it. The
+    bodies of this group have one node or none (the ground); the flexible bodies and the super elements
+    have their own groups.
+
+    ## Frames and the reference point
+
+    A body has a **body frame** $b$ and a **reference point**, which is the position of its node. A
+    `localPosition` $\pLocB$ - of a marker, a sensor, a graphics - is given in the body frame and
+    measured from the reference point; the rotation matrix $\LU{0b}{\Rot}$ takes it into the global
+    frame. The reference point is the center of mass only where the page of the body says so: an
+    `ObjectRigidBody` has its center of mass at `physicsCenterOfMass` from it.
+
+    ## Marker interfaces
+
+    A marker on a body - `MarkerBodyPosition`, `MarkerBodyRigid`, `MarkerBodyMass` - gets from the body
+    what the body's **output variables** define at the marker's local position: the position
+    $\LU{0}{\pv}(\pLocB)$, the velocity $\LU{0}{\vv}(\pLocB)$, the rotation matrix and the angular
+    velocity. A force or torque acts back through the **Jacobians** of the body, the derivatives of
+    that velocity and angular velocity with respect to the velocity coordinates $\dot\qv$ of the body,
+
+    $$
+    \LU{0}{\Jm_{pos}}(\pLocB) = \frac{\partial \LU{0}{\vv}(\pLocB)}{\partial \dot\qv} , \quad
+    \LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}}{\partial \dot\qv} ,
+    $$
+
+    which give the generalized forces $\Qm = \LU{0}{\Jm_{pos}}\tp \LU{0}{\fv} + \LU{0}{\Jm_{rot}}\tp
+    \LU{0}{\ttau}$. As the velocities are linear in $\dot\qv$, these are also the derivatives of the
+    position and of the rotation parameters with respect to the coordinates. A body provides them as
+    **access functions**, and a marker needs the ones for its types:
+
+    | access function | what it is | needed by |
+    |---|---|---|
+    | `TranslationalVelocity_qt` | $\LU{0}{\Jm_{pos}}(\pLocB)$ | a marker with `Position` |
+    | `AngularVelocity_qt` | $\LU{0}{\Jm_{rot}}$ | a marker with `Orientation` |
+    | `DisplacementMassIntegral_q` | $\int_V \rho\, \LU{0}{\Jm_{pos}}\, dV$ | `MarkerBodyMass`, for a load per mass |
+    | `JacobianTtimesVector_q` | $\partial (\Jm\tp \fv) / \partial \qv$ for a constant $\fv$ | the Jacobians of connectors in implicit solvers |
+
+    The page of each body gives only its own Jacobians, under **Marker interfaces**; its **Interface**
+    lists the body markers its access functions allow.
+
+    ## Creating bodies
+
+    `mbs.CreateGround`, `mbs.CreateMassPoint` and `mbs.CreateRigidBody` add a body with its node - and
+    with a `gravity` argument a `MarkerBodyMass` with a `LoadMassProportional`.
+    """,
     ))
 
 definitions.append(ItemKindDefinition(

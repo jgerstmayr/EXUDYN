@@ -57,41 +57,29 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 | intermediate variables | symbol | description |
 |---|---|---|
-| position coordinate | ${\theta_0}\cConfig = {c_0}\cConfig + {c_0}\cRef $ | total rotation coordinate of node (e.g., Node1D) in any configuration (nodal coordinate $c_0$) |
-| displacement coordinate | ${\psi_0}\cConfig = {c_0}\cConfig$ | change of rotation coordinate of mass node (e.g., Node1D) in any configuration (nodal coordinate $c_0$) |
-| velocity coordinate | ${\dot \psi_{0\cConfig}}$ | rotation velocity coordinate of mass node (e.g., Node1D) in any configuration |
-| Position | $\LU{0}{\pv}\cConfig =\LU{0}{\pRef_0}$ | constant (translational) position of mass object in any configuration |
-| Displacement | $\LU{0}{\uv}\cConfig = [0,0,0]\tp$ | (translational) displacement of mass object in any configuration |
-| Velocity | $\LU{0}{\vv}\cConfig = [0,0,0]\tp$ | (translational) velocity of mass object in any configuration |
-| AngularVelocity | $\LU{0}{\tomega}\cConfig = \LU{0i}{\Rot_{0}} \LU{i}{\vr{0}{0}{\dot \psi_0}}\tp$ |  |
-| AngularVelocityLocal | $\LU{b}{\tomega}\cConfig = \LU{i}{\vr{0}{0}{\dot \psi_0}}\tp$ |  |
-| RotationMatrix | $\LU{0b}{\Rot} = \LU{0i}{\Rot_{0}} \LU{ib}{\mr{\cos(\theta_0)}{-\sin(\theta_0)}{0} {\sin(\theta_0)}{\cos(\theta_0)}{0} {0}{0}{1}}$ | transformation of local body ($b$) coordinates to global (0) coordinates |
-| residual force | $\tau$ | residual of all forces on mass object |
-| applied force | $\LU{0}{\fv}_a = [f_0,\;f_1,\;f_2]\tp$ | 3D applied force (loads, connectors, joint reaction forces, ...) |
-| applied torque | $\LU{0}{\ttau}_a = [\tau_0,\;\tau_1,\;\tau_2]\tp$ | 3D applied torque (loads, connectors, joint reaction forces, ...) |
-
-A rigid body marker (e.g., MarkerBodyRigid) may be attached to this object and forces/torques can be applied.
-However, forces will have no effect and torques will only have effect in 'direction' of the coordinate.
+| rotation | ${\theta_0}\cConfig = {c_0}\cConfig + {c_0}\cRef$ | the coordinate $c_0$ of the node plus its reference value |
+| Position | $\LU{0}{\pv}\cConfig = \LU{0}{\pRef_0}$ | the constant `referencePosition` |
+| RotationMatrix | $\LU{0b}{\Rot} = \LU{0i}{\Rot_{0}} \LU{ib}{\mr{\cos(\theta_0)}{-\sin(\theta_0)}{0} {\sin(\theta_0)}{\cos(\theta_0)}{0} {0}{0}{1}}$ | a rotation about the local $z$-axis of the frame given by `referenceRotation` $\LU{0i}{\Rot_{0}}$ |
+| AngularVelocity | $\LU{0}{\tomega}\cConfig = \LU{0i}{\Rot_{0}} \LU{i}{\vr{0}{0}{\dot \theta_0}}$ | global angular velocity |
+| applied torque | $\LU{0}{\ttau}_a$ | 3D torque from loads, connectors and joints |
+| residual torque | $\tau$ | the component of the applied torques about the axis |
 
 ### Equations of motion
 
 $$
-J \cdot \ddot \psi_0 = \tau.
+J \cdot \ddot \theta_0 = \tau , \quad \tau = \LU{i}{[0,\,0,\,1]} \LU{i0}{\Rot_{0}} \LU{0}{\ttau}_a .
 $$
 
-Note that $\tau$ is computed from all connectors and loads upon the object. E.g., a 3D torque vector $\LU{0}{\ttau}_a$ is
-transformed to $\tau$ as
+### Marker interfaces
 
 $$
-\tau = \LU{b}{[0,\,0,\,1]}\LU{b0}{\Rot_{0}} \LU{0}{\ttau}_a
+\LU{0}{\Jm_{pos}} = \Null , \quad
+\LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}}{\partial \dot \theta_0} = \LU{0i}{\Rot_{0}} \LU{i}{\vr{0}{0}{1}} :
 $$
 
-Thus, the **rotation jacobian** reads
-
-$$
-\Jm_{rot} = \partial \tomega\cCur / \partial \dot q_{0,cur} =
-\LU{b}{[0,\,0,\,1]} \LU{b0}{\Rot_{0}}
-$$
+a torque acts with its component about the axis, a force has no effect. A marker must lie on the
+axis - a local position with $x = y = 0$ -, which the object checks; there is no mass-proportional
+load on it.
 
 (miniexample-objectrotationalmass1d)=
 ## Mini example
