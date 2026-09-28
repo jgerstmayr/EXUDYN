@@ -127,6 +127,10 @@ public:
 	//! detach render engine from SystemContainer
 	bool Detach();
 
+	//! what closing the render window does to a simulation, callable from Python (#2674): stop the
+	//! running one, and with forceQuit also one that starts later
+	void StopSimulation(bool forceQuit = true);
+
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//functions that previously existed in MainSystemContainer
 	//! generic function to wait for continue, stop or just process tasks

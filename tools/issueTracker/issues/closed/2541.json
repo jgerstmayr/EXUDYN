@@ -2,13 +2,17 @@
   "number": 2541,
   "title": "exudyn.config and exudyn.special are in no stub file",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "exudyn.config is the run-time settings object (outputDirectory, printToConsole, suppressWarnings, precision) and exudyn.special holds the rarely needed corners; neither the objects nor their C++ classes Config and Special appear in python/exudyn/__init__.pyi, so no IDE completes exudyn.config.outputDirectory. The gap is older than this issue - stubtest simply did not check them while they arrived through a star import, and step R6.2 made them plain package attributes, which exposed it. Both are in the stubtest backlog with this number. The fix is generator work: emit Config and Special like the other bound structures.",
   "dateRaised": "2026-09-19",
   "deadline": "2027-03-18",
+  "dateResolved": "2026-09-28 06:45",
+  "resolvedAuthor": "Claude-JG",
   "file": "tools/generators/createStubFiles.py",
-  "line": "37"
+  "line": "37",
+  "releaseNotes": "exudyn.config, exudyn.special and exudyn.experimental are in the stub file, with their parts and members, so an editor completes exudyn.config.outputDirectory and a type checker knows it; six members that were bound but undocumented are documented.",
+  "resolvedInVersion": "1.12.136"
 }

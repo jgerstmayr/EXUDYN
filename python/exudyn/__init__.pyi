@@ -142,6 +142,12 @@ def InvalidIndex() -> int:
     ...
 __version__:str
 """contains the current version of the Exudyn package."""
+config:Config
+"""global config settings, like precision, print behavior, warnings, etc."""
+experimental:Experimental
+"""Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental"""
+special:Special
+"""special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial"""
 variables:dict
 """this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables['myvar'] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed."""
 sys:dict
@@ -3762,6 +3768,16 @@ class Renderer:
         """DEPRECATED; Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed."""
         ...
     @overload
+    def StopSimulation(self, forceQuit: bool=True) -> None: 
+        """Stop the simulation as closing the render window does: a running simulation ends after its current step, quietly and without an error, as if the user had stopped it; with forceQuit=True (default) a simulation that starts later ends before its first step as well, until mbs.SetRenderEngineStopFlag(False) resets it - which is what pressing Escape or closing the window does.
+        
+        Works without an open renderer, e.g. from a user function, another thread or a test
+        
+        Examples:
+            SC.renderer.StopSimulation()
+        """
+        ...
+    @overload
     def DoIdleTasks(self, waitSeconds: float=-1., printPauseMessage: bool=True) -> bool: 
         """Interrupt further computation until user input (Space, 'Q', Escape-key), representing a PAUSE function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; replaces former SC.WaitForRenderEngineStopFlag() and mbs.WaitForUserToContinue(); call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g., waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed; NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive).
         
@@ -3949,3 +3965,112 @@ class SystemContainer:
     visualizationSettings:VisualizationSettings
     """Structure representing the settings for renderer; for details of visualizationSettings see Section Structures and Settings."""
 
+
+class SpecialSolver:
+    """special solver attributes and functions; not intended for regular users; for available features, see the C++ code class PySpecialSolver"""
+    timeout:float
+    """if >= 0, the solver stops after reaching accoring CPU time specified with timeout; makes sense for parameter variation, automatic testing or for long-running simulations; default=-1 (no timeout)."""
+    throwErrorWithCtrlC:bool
+    """if True, pressing CTRL-C during a simulation raises an error in Python; if False (default), the solver stops and returns; the error works in a console, the default also in Spyder."""
+    multiThreadingLoadBalancing:bool
+    """if True (=default), multithreaded code parts (in particular solver and raytracing) use load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform significantly better without load balancing."""
+
+class SpecialExceptions:
+    """special flags for exceptions and checks; not intended for regular users; for available features, see the C++ code class PySpecialExceptions"""
+    dictionaryVersionMismatch:bool
+    """if True (=default), SetDictionary(...) of a settings structure warns if the dictionary comes from another version of Exudyn."""
+    dictionaryNonCopyable:bool
+    """if True (=default), GetDictionary(...) raises an error if a value cannot be copied into the dictionary."""
+    parameterRangeChecks:bool
+    """if True (=default), writing an item or settings parameter outside its range (e.g. a negative mass or a non-positive number of steps) raises an error, on every write path (item classes, dictionaries, SetObjectParameter, ...); set False to accept any value, e.g. if a range limit turns out to be wrong."""
+
+class SpecialUserInterface:
+    """flags that stop Exudyn from opening windows; meant for automated runs (test runners, CI, AI-assisted development), where a window that waits for a human stops everything; not intended for regular users; for available features, see the C++ code class PySpecialUserInterface"""
+    suppressRenderer:bool
+    """if True, SC.renderer.Start() returns immediately without opening a window, IsActive() is False - so that a 'while SC.renderer.IsActive()' loop ends at once - and DoIdleTasks() does nothing; default=False."""
+    suppressSolutionViewer:bool
+    """if True, mbs.SolutionViewer(...) and AnimateModes(...) return immediately instead of opening the viewer; default=False."""
+    suppressPlots:bool
+    """if True, PlotSensor and the other plotting helpers do not show a plot window; figures are still drawn and a figure given a file name is still saved; setting the environment variable EXUDYN_SUPPRESS_UI_WINDOW_OPEN additionally switches matplotlib to the non-interactive Agg backend, which also silences a plt.show() written in a script; default=False."""
+    suppressDialogs:bool
+    """if True, InteractiveDialog and the other tkinter dialogs return their defaults instead of opening a window; default=False."""
+    @overload
+    def SuppressAll(self, flag: bool=True) -> None: 
+        """Set all four suppress flags at once; a run either wants windows or does not."""
+        ...
+
+class Config:
+    """global config settings, like precision, print behavior, warnings, etc."""
+    suppressWarnings:int
+    """flag to suppress all warnings (default=False)."""
+    outputDirectory:str
+    """directory which is prepended to all files written by the solver: the coordinates solution file, the solver information file, sensor files and exported images; default='' (files are written exactly as given). An absolute file name together with a non-empty outputDirectory raises an error when the file is opened. NOTE: this setting is global and stays active as long as the exudyn module is loaded, so running two models one after the other in the same process will put both outputs into the same directory; normally you should specify the output folder directly in the file names and use this setting only for a test runner or a batch script. The rule is: everything WRITTEN as output of a run follows the setting, while a file is READ from there only if its name comes from Exudyn itself. Writing: the coordinates solution file, the solver information file, sensor files, exported images, the exudyn.Print log (SetWriteToFile), the figure saved by PlotSensor and the results file of ParameterVariation/GeneticOptimization. Reading: SolutionViewer (name taken from the simulation settings) and PlotSensor for a sensor given by its number (name taken from the sensor). NOT affected: a file name you pass yourself, e.g. to LoadSolutionFile, LoadBinarySolutionFile, RecoverSolutionFile, InitializeFromRestartFile or PlotSensor as a string, and all model data such as mesh import, FEMinterface/ObjectFFRFreducedOrderInterface SaveToFile/LoadFromFile and SaveDictToHDF5/LoadDictFromHDF5; use exudyn.basicUtilities.OutputFilePath(fileName, callerInfo) in your script if you want those in the output directory as well."""
+    outputPrecision:int
+    """change precision (number of digits) in C++ and Python output."""
+    linalgOutputFormatPython:int
+    """True (default): use Python format for output of vectors and matrices; False: use Matlab format."""
+    printDelayMilliSeconds:int
+    """add some delay (in milliSeconds) to printing to console (exudyn.Print), in order to let console (e.g., Spyder) process the output; default = 0."""
+    printFlushAlways:bool
+    """flush always buffers when using exudyn.Print(...) to write to file or console; this is needed if you are streaming text or showing counters in parameter variation; default=False."""
+    printToConsole:bool
+    """enables or disables writing to console with exudyn.Print(...); default=True."""
+    @property
+    def printToFile(self) -> bool:
+        """flag that shows if writing to file with exudyn.Print(...) is enabled; flag is readonly."""
+        ...
+    @property
+    def printFileName(self) -> str:
+        """file name for writing to file with exudyn.Print(...), as resolved when the file was opened: it is relative to config.outputDirectory, which is prepended by SetWriteToFile(...); flag is readonly."""
+        ...
+    @property
+    def printToFileAppend(self) -> bool:
+        """flag that shows if append mode is used for writing to file with exudyn.Print(...); flag is readonly."""
+        ...
+    @overload
+    def Version(self, addDetails=False) -> str: 
+        """Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.; the Python micro version may differ from that you are working with; AVX2 shows that you are running a AVX2 compiled version)."""
+        ...
+    @overload
+    def GetDictionary(self) -> dict: 
+        """All settings of `exudyn.config` as a dictionary, the way a settings structure gives them; `printToFile`, `printFileName` and `printToFileAppend` are in it but only report what the output is doing."""
+        ...
+    @overload
+    def SetDictionary(self, values) -> None: 
+        """Set the settings named in the dictionary and leave the others; a name that `exudyn.config` does not have, and one of the three that only report, is ignored."""
+        ...
+    @overload
+    def GetDefaults(self) -> dict: 
+        """The defaults of `exudyn.config`: what Exudyn started with, taken while the module was imported and before a script, an override setting or an environment variable could change one.
+        
+        This is what tells a setting somebody chose from one nobody touched, which is how `overrideSettings.Store(config=...)` knows what to store. They cannot be constructed - `exudyn.config` reads global state, so a second one reports the current values - so they are taken once
+        """
+        ...
+
+class Experimental:
+    """Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental"""
+    eigenFullPivotLUsolverDebugLevel:int
+    """debug output of the EigenDense solver with full pivoting: 0 (default) = none, 1 = rank and information, 2 = also the matrices."""
+    markerSuperElementRigidTexpSO3:int
+    """if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters."""
+
+class Special:
+    """special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial"""
+    @overload
+    def InfoStat(self, writeOutput=True) -> List[int]: 
+        """Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag."""
+        ...
+    solver:SpecialSolver
+    """special solver attributes and functions; not intended for regular users; for available features, see the C++ code class PySpecialSolver."""
+    exceptions:SpecialExceptions
+    """special flags for exceptions and checks; not intended for regular users; for available features, see the C++ code class PySpecialExceptions."""
+    userInterface:SpecialUserInterface
+    """flags that stop Exudyn from opening windows; meant for automated runs (test runners, CI, AI-assisted development), where a window that waits for a human stops everything; not intended for regular users; for available features, see the C++ code class PySpecialUserInterface."""
+    @property
+    def currentRendererSystemContainer(self) -> Any:
+        """the ``SystemContainer`` the renderer is attached to, or ``None``; the render engine can hold one at a time, which is why this is module-wide. It is set when a container attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of ``exudyn.misc.GUI`` ask for; not intended for regular users."""
+        ...
+    @property
+    def overrideSettings(self) -> dict:
+        """the settings that persist between runs, read once by ``import exudyn`` from ``~/.exudyn/config.json``: a dictionary with one key per section, ``config``, ``visualizationSettings``, ``dialogs`` and ``resultsMonitor``; it is empty unless something was stored, and both Python and the C++ side read it. See Section sec-overridesettings."""
+        ...

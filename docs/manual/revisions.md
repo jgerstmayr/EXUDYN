@@ -115,6 +115,11 @@ arranged. Everything goes into `~/.exudyn/config.json`, after showing what will 
 triangle the renderer would draw, each with the item that drew it, and needs no window - for a test
 that checks what a model looks like, or for a figure drawn with matplotlib.
 
+**Stopping a simulation from a script**: `SC.renderer.StopSimulation()` does what closing the
+render window does - the running simulation ends after its step, a later one before its first, and
+neither is reported as a solver failure - from a user function, another thread or a test;
+`mbs.SetRenderEngineStopFlag(False)` lets the next one run again.
+
 **`exudyn.types`** answers questions about items from Python: which markers an object accepts,
 which item types exist.
 

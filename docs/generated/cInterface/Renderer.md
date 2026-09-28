@@ -29,6 +29,14 @@ The class **MainRenderer** has the following **functions and structures**:
 - **`IsActive()`**: returns True if GLFW renderer is available and running; otherwise False
 - **`Attach()`**: Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked)
 - **`Detach()`**: DEPRECATED; Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed
+- **`StopSimulation(forceQuit = True)`**: Stop the simulation as closing the render window does: a running simulation ends after its current step, quietly and without an error, as if the user had stopped it; with forceQuit=True (default) a simulation that starts later ends before its first step as well, until mbs.SetRenderEngineStopFlag(False) resets it - which is what pressing Escape or closing the window does. Works without an open renderer, e.g. from a user function, another thread or a test
+
+  *Example*:
+
+  ```python
+  SC.renderer.StopSimulation()
+  ```
+
 - **`DoIdleTasks(waitSeconds = -1., printPauseMessage = True)`**: Interrupt further computation until user input (Space, 'Q', Escape-key), representing a PAUSE function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; replaces former SC.WaitForRenderEngineStopFlag() and mbs.WaitForUserToContinue(); call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g., waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed; NOTE: may also first initialize renderState from visualizationSettings (if renderer is inactive)
 
   *Example*:

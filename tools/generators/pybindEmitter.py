@@ -43,15 +43,63 @@ from autoGenerateHelper import localListFunctionNames, localListClassNames, loca
 from pybindTypes import declarationCalls                                                # noqa: E402
 
 
+def ModuleObjectStubs(entries):
+    """THE OBJECTS OF THE MODULE - exudyn.config, exudyn.special and its parts, exudyn.experimental -
+    as stub classes (#2541). They are declared in definitions/pybindModule.py by dotted names,
+    'special.solver.timeout', which the general stub emission cannot place; here an entry whose type
+    is a class of its own opens that class, and the dotted entries below it become its members.
+    entries: [(call, args, kwargs)] of DefDataAccess and DefPyFunctionAccess, in declaration order"""
+    classOf = {}            #'special.solver' -> 'SpecialSolver'
+    descriptionOf = {}
+    for (call, args, kwargs) in entries:
+        if call == 'DefDataAccess':
+            name = args[0]
+            dataType = kwargs.get('dataType', '')
+            if dataType != '' and dataType[0].isupper() and dataType not in ['SystemContainer', 'Any'] \
+                    and (name.count('.') == 0 or name.rsplit('.', 1)[0] in classOf):
+                classOf[name] = dataType
+                descriptionOf[name] = args[1]
+    members = dict((path, []) for path in classOf)
+    for (call, args, kwargs) in entries:
+        name = args[0] if call == 'DefDataAccess' else kwargs.get('pyName', '')
+        if '.' not in name:
+            continue
+        (parent, member) = name.rsplit('.', 1)
+        if parent not in members:
+            continue
+        memberWriter = DeclarationWriter()
+        if call == 'DefDataAccess':
+            memberWriter.DefDataAccess(member, args[1], dataType=kwargs.get('dataType', ''), isTopLevel=False,
+                                       readOnly=kwargs.get('readOnly', False))
+        else:
+            memberKwargs = dict(kwargs, cClass=classOf[parent], pyName=member)
+            memberWriter.DefPyFunctionAccess(**memberKwargs)
+        members[parent].append(memberWriter.sPyi)
+    stub = ''
+    #the parts before the objects that hold them, so that a reader meets them in that order
+    for path in sorted(classOf, key=lambda path: -path.count('.')):
+        stub += 'class ' + classOf[path] + ':\n'
+        stub += '    """' + descriptionOf[path].replace(chr(34)*3, chr(39)*3) + '"""\n'
+        stub += ''.join(members[path]) if members[path] else '    ...\n'
+    for path in classOf:
+        if '.' not in path:
+            stub += path + ':' + classOf[path] + '\n'
+            stub += '"""' + descriptionOf[path].replace(chr(34)*3, chr(39)*3) + '"""\n'
+    return stub
+
+
 class Replay:
     """replays recorded declaration calls into a DeclarationWriter; keeps the stub sections"""
     def __init__(self):
         self.stubSections = ''  #closed stub sections, latest first
         self.savedCpp = None
         self.savedStub = None
+        self.noStubEntries = None   #the declarations of a NoStub section, see ModuleObjectStubs
 
     def __call__(self, calls, writer):
         for name, args, kwargs in calls:
+            if self.noStubEntries is not None and name in ['DefDataAccess', 'DefPyFunctionAccess']:
+                self.noStubEntries.append((name, args, kwargs))
             if name in declarationCalls:
                 getattr(writer, name)(*args, **kwargs)
             elif name == 'CppCode':
@@ -69,9 +117,11 @@ class Replay:
             elif name == 'BeginNoStub':
                 assert self.savedStub is None, 'BeginNoStub is not closed'
                 self.savedStub = writer.sPyi
+                self.noStubEntries = []
             elif name == 'EndNoStub':
-                writer.sPyi = self.savedStub
+                writer.sPyi = self.savedStub + ModuleObjectStubs(self.noStubEntries)
                 self.savedStub = None
+                self.noStubEntries = None
             elif name == 'EndStubSection':
                 self.stubSections = writer.sPyi + self.stubSections
                 writer.sPyi = ''

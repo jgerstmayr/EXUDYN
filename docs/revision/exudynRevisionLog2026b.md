@@ -6261,3 +6261,53 @@ Written from the code, which corrected three statements:
   unavailable output variable is an error of `Assemble()` (`checkPreAssembleConsistenciesSensors`),
   as the general section says. `SensorLoad` measures the load as its item computes it, in the frame it
   is given in and without the static load factor (`CSensorLoad::GetSensorValues`).
+
+<a id="rg4-6"></a>
+### RG4.6 — stopping a simulation from Python, and the test #2616 was missing (2026-09-28, #2674)
+
+#2616 made a user who quits the renderer before a simulation starts a quiet end instead of a
+`SolverError`, and nothing could test it: `forceQuitSimulation` is set by the renderer thread, from
+Escape or a closed window. The step's decision was a test-only hook or a binding a user can use;
+it is **the binding**, because the thing it does is useful beyond the test - a stop button of an own
+dialog, a user function that decides the run is over, another thread:
+
+`SC.renderer.StopSimulation(forceQuit=True)` does to the simulations of the container what closing
+the render window does - `VisualizationSystemContainer::StopSimulation()`, which ends a running
+simulation after its step, and with `forceQuit` `ForceQuitSimulation()`, which ends one that starts
+later before its first step, until `mbs.SetRenderEngineStopFlag(False)` resets it. It needs no
+renderer. `python/testing/test_stopSimulation.py` has the four cases: a quit before the start
+computes nothing and raises nothing (the fix of #2616), the reset lets the next simulation run, a
+stop from a pre-step user function ends the run after the step and without an error, and a stop
+without `forceQuit` does not reach the next simulation, because the solver resets that flag when it
+starts. `revisions.md` has one paragraph.
+
+(RG11.3.1, next in the maintainer's list, was done on 2026-09-27 as #2672; its row in the table of
+open steps had stayed behind and is removed.)
+
+<a id="rg10-11"></a>
+### RG10.11 — `exudyn.config` and `exudyn.special` in the stub (2026-09-28, #2541)
+
+The objects of the module are declared in `definitions/pybindModule.py` by dotted names -
+`config.outputDirectory`, `special.solver.timeout` - inside a `BeginNoStub` section, because the
+general stub emission writes every declaration as `name: type` at one level and cannot place a
+dotted one. The pybind emitter now collects the declarations of such a section and writes them as
+what they are (`ModuleObjectStubs`): an entry whose type is a class opens that class, the entries
+below it become its members, and the module gets `config: Config`, `special: Special` and
+`experimental: Experimental`, with `SpecialSolver`, `SpecialExceptions` and `SpecialUserInterface`
+as the parts of `special`. A member that can only be read is a `@property` in the stub
+(`DefDataAccess(..., readOnly=True)`).
+
+Three things in the declarations had to be right for that, and were not:
+
+- the members of `config` carried the type `Config` - the object's, not theirs - which nothing read
+  while there was no stub; they have the types the module returns (`suppressWarnings` and
+  `linalgOutputFormatPython` are `int` at run time, which the stub says);
+- **six members were bound in C++ and declared nowhere**: `special.solver.throwErrorWithCtrlC`,
+  `special.exceptions.dictionaryVersionMismatch` and `dictionaryNonCopyable`,
+  `special.userInterface.SuppressAll()`, and the two members of `experimental`; they are declared and
+  documented now, with the meaning the C++ comments give them;
+- `currentRendererSystemContainer` is `Any`, because it is `None` without a renderer.
+
+stubtest agrees with the stub apart from the metaclass of the six pybind classes, which it reports
+for every pybind class and which is in the backlog like theirs; `exudyn.config` and
+`exudyn.special` left the backlog.

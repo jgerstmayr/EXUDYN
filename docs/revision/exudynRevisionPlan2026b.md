@@ -1080,7 +1080,10 @@ find its file and line, on every raise).
       general question.
 
 <a id="rg4-6"></a>
-**RG4.6** *(group RG4; from RG4.5, 2026-09-26)* **A test hook for `forceQuitSimulation`** (#2674).
+**RG4.6** *(group RG4; from RG4.5, 2026-09-26)* **DONE 2026-09-28** —
+    [log](exudynRevisionLog2026b.md#rg4-6) — decided for **a binding a user can use as well**,
+    `SC.renderer.StopSimulation(forceQuit=True)`, which does what closing the render window does.
+    **A test hook for `forceQuitSimulation`** (#2674).
     #2616 fixed the behaviour - quitting the renderer **before** a simulation starts raised where
     quitting **during** it did not - and nothing can test it: the flag is set by the renderer thread
     from a key press or a closed window, and there is no binding for it. The fix is therefore checked
@@ -1793,7 +1796,8 @@ file, so an editor cannot complete them).
 
 <a id="rg10-11"></a>
 **RG10.11** *(group RG10; from #2541; numbered RG10.2 by mistake until 2026-09-27, when that number
-    was already taken)* **`exudyn.config` and `exudyn.special` reach a stub file.**
+    was already taken)* **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg10-11) —
+    **`exudyn.config` and `exudyn.special` reach a stub file.**
     `exudyn.config` is the run-time settings object - `outputDirectory`, `printToConsole`,
     `suppressWarnings`, `precision` - and `exudyn.special` holds the rarely needed corners. Neither
     the objects nor their C++ classes appear in `python/exudyn/__init__.pyi`, so no editor completes
@@ -2815,14 +2819,11 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG4.1 | - | resolve the Windows/linux differences in contact and friction |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
-| RG4.6 | #2674 | a test hook for `forceQuitSimulation`, which nothing can reach |
 | RG4.7 | #2423 | every C++ user error inspects the Python source for its file and line |
 | RG5.1 | #2397 | build a micro-benchmark that is maintained, not written once |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
-| RG10.11 | #2541 | `exudyn.config` and `exudyn.special` reach a stub file |
-| RG11.3.1 | #2672 | the results monitor waits for a file that does not exist yet |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |

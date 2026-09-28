@@ -243,25 +243,25 @@ pb.BeginCppWrittenByHand() #remaining config pybindings added only in C++
 pb.DefDataAccess('config','global config settings, like precision, print behavior, warnings, etc.',
                        dataType='Config', isTopLevel = True)
 pb.DefDataAccess('config.suppressWarnings','flag to suppress all warnings (default=False)',
-                        dataType='Config', isTopLevel = True)
+                        dataType='int', isTopLevel = True)
 pb.DefDataAccess('config.outputDirectory','directory which is prepended to all files written by the solver: the coordinates solution file, the solver information file, sensor files and exported images; default="" (files are written exactly as given). An absolute file name together with a non-empty outputDirectory raises an error when the file is opened. NOTE: this setting is global and stays active as long as the exudyn module is loaded, so running two models one after the other in the same process will put both outputs into the same directory; normally you should specify the output folder directly in the file names and use this setting only for a test runner or a batch script. The rule is: everything WRITTEN as output of a run follows the setting, while a file is READ from there only if its name comes from Exudyn itself. Writing: the coordinates solution file, the solver information file, sensor files, exported images, the exudyn.Print log (SetWriteToFile), the figure saved by PlotSensor and the results file of ParameterVariation/GeneticOptimization. Reading: SolutionViewer (name taken from the simulation settings) and PlotSensor for a sensor given by its number (name taken from the sensor). NOT affected: a file name you pass yourself, e.g. to LoadSolutionFile, LoadBinarySolutionFile, RecoverSolutionFile, InitializeFromRestartFile or PlotSensor as a string, and all model data such as mesh import, FEMinterface/ObjectFFRFreducedOrderInterface SaveToFile/LoadFromFile and SaveDictToHDF5/LoadDictFromHDF5; use exudyn.basicUtilities.OutputFilePath(fileName, callerInfo) in your script if you want those in the output directory as well',
-                        dataType='Config', isTopLevel = True)
+                        dataType='str', isTopLevel = True)
 pb.DefDataAccess('config.outputPrecision','change precision (number of digits) in C++ and Python output',
-                        dataType='Config', isTopLevel = True)
+                        dataType='int', isTopLevel = True)
 pb.DefDataAccess('config.linalgOutputFormatPython','True (default): use Python format for output of vectors and matrices; False: use Matlab format',
-                        dataType='Config', isTopLevel = True)
+                        dataType='int', isTopLevel = True)
 pb.DefDataAccess('config.printDelayMilliSeconds','add some delay (in milliSeconds) to printing to console (exudyn.Print), in order to let console (e.g., Spyder) process the output; default = 0',
-                        dataType='Config', isTopLevel = True)
+                        dataType='int', isTopLevel = True)
 pb.DefDataAccess('config.printFlushAlways','flush always buffers when using exudyn.Print(...) to write to file or console; this is needed if you are streaming text or showing counters in parameter variation; default=False',
-                        dataType='Config', isTopLevel = True)
+                        dataType='bool', isTopLevel = True)
 pb.DefDataAccess('config.printToConsole','enables or disables writing to console with exudyn.Print(...); default=True',
-                        dataType='Config', isTopLevel = True)
+                        dataType='bool', isTopLevel = True)
 pb.DefDataAccess('config.printToFile','flag that shows if writing to file with exudyn.Print(...) is enabled; flag is readonly',
-                        dataType='Config', isTopLevel = True)
+                        dataType='bool', isTopLevel = True, readOnly = True)
 pb.DefDataAccess('config.printFileName','file name for writing to file with exudyn.Print(...), as resolved when the file was opened: it is relative to config.outputDirectory, which is prepended by SetWriteToFile(...); flag is readonly',
-                        dataType='Config', isTopLevel = True)
+                        dataType='str', isTopLevel = True, readOnly = True)
 pb.DefDataAccess('config.printToFileAppend','flag that shows if append mode is used for writing to file with exudyn.Print(...); flag is readonly',
-                        dataType='Config', isTopLevel = True)
+                        dataType='bool', isTopLevel = True, readOnly = True)
 
 
 pb.DefPyFunctionAccess(cClass='', pyName='config.Version', cName='unused', 
@@ -290,6 +290,11 @@ pb.CppCode('        m.attr("experimental") = py::cast(&pyExperimental);\n')
 pb.DefDataAccess('experimental','Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental',
                        dataType='Experimental', isTopLevel = True)
 
+pb.DefDataAccess('experimental.eigenFullPivotLUsolverDebugLevel','debug output of the EigenDense solver with full pivoting: 0 (default) = none, 1 = rank and information, 2 = also the matrices',
+                       dataType='int', isTopLevel = True)
+pb.DefDataAccess('experimental.markerSuperElementRigidTexpSO3','if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters',
+                       dataType='int', isTopLevel = True)
+
 pb.CppCode('        m.attr("special") = py::cast(&pySpecial);\n') 
 pb.DefDataAccess('special','special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial',
                         dataType='Special', isTopLevel = True)
@@ -309,11 +314,17 @@ pb.DefDataAccess('special.solver','special solver attributes and functions; not 
 
 pb.DefDataAccess('special.solver.timeout','if >= 0, the solver stops after reaching accoring CPU time specified with timeout; makes sense for parameter variation, automatic testing or for long-running simulations; default=-1 (no timeout)',
                         dataType='float', isTopLevel = True)
+pb.DefDataAccess('special.solver.throwErrorWithCtrlC','if True, pressing CTRL-C during a simulation raises an error in Python; if False (default), the solver stops and returns; the error works in a console, the default also in Spyder',
+                        dataType='bool', isTopLevel = True)
 pb.DefDataAccess('special.solver.multiThreadingLoadBalancing','if True (=default), multithreaded code parts (in particular solver and raytracing) use load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform significantly better without load balancing',
                         dataType='bool', isTopLevel = True)
 
 pb.DefDataAccess('special.exceptions','special flags for exceptions and checks; not intended for regular users; for available features, see the C++ code class PySpecialExceptions',
                         dataType='SpecialExceptions', isTopLevel = True)
+pb.DefDataAccess('special.exceptions.dictionaryVersionMismatch','if True (=default), SetDictionary(...) of a settings structure warns if the dictionary comes from another version of Exudyn',
+                        dataType='bool', isTopLevel = True)
+pb.DefDataAccess('special.exceptions.dictionaryNonCopyable','if True (=default), GetDictionary(...) raises an error if a value cannot be copied into the dictionary',
+                        dataType='bool', isTopLevel = True)
 pb.DefDataAccess('special.exceptions.parameterRangeChecks','if True (=default), writing an item or settings parameter outside its range (e.g. a negative mass or a non-positive number of steps) raises an error, on every write path (item classes, dictionaries, SetObjectParameter, ...); set False to accept any value, e.g. if a range limit turns out to be wrong',
                         dataType='bool', isTopLevel = True)
 
@@ -328,11 +339,21 @@ pb.DefDataAccess('special.userInterface.suppressPlots','if True, PlotSensor and 
 pb.DefDataAccess('special.userInterface.suppressDialogs','if True, InteractiveDialog and the other tkinter dialogs return their defaults instead of opening a window; default=False',
                         dataType='bool', isTopLevel = True)
 
+pb.BeginCppWrittenByHand() #bound in Pybind_manual_classes.cpp
+pb.DefPyFunctionAccess(cClass='', pyName='special.userInterface.SuppressAll', cName='unused',
+                        description='set all four suppress flags at once; a run either wants windows or does not',
+                        argList=['flag'],
+                        defaultArgs=['True'],
+                        argTypes=['bool'],
+                        returnType='None',
+                        )
+pb.EndCppWrittenByHand()
+
 pb.DefDataAccess('special.currentRendererSystemContainer',r'the `SystemContainer` the renderer is attached to, or `None`; the render engine can hold one at a time, which is why this is module-wide. It is set when a container attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of `exudyn.misc.GUI` ask for; not intended for regular users',
-                        dataType='SystemContainer', isTopLevel = True)
+                        dataType='Any', isTopLevel = True, readOnly = True)
 
 pb.DefDataAccess('special.overrideSettings',r'the settings that persist between runs, read once by `import exudyn` from `~/.exudyn/config.json`: a dictionary with one key per section, `config`, `visualizationSettings`, `dialogs` and `resultsMonitor`; it is empty unless something was stored, and both Python and the C++ side read it. See Section [](#sec-overridesettings)',
-                        dataType='dict', isTopLevel = True)
+                        dataType='dict', isTopLevel = True, readOnly = True)
 
 pb.EndNoStub()
 

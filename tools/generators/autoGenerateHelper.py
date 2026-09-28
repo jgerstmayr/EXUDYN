@@ -385,13 +385,21 @@ class DeclarationWriter:
         self.sMarkdown += '\n'
 
     #one data member of a class
-    def DefDataAccess(self, name, description, dataType = '', isTopLevel = False):
+    def DefDataAccess(self, name, description, dataType = '', isTopLevel = False, readOnly = False):
         self.sMarkdown += self.MarkdownEntry(name, description)
 
         if dataType != '':
             pyiIndent = ''
             if not isTopLevel:
                 pyiIndent = ' '*4
+            if readOnly and not isTopLevel:
+                #a member that can be read and not written is a property, and the stub says so (#2541)
+                self.sPyi += pyiIndent + '@property\n'
+                self.sPyi += pyiIndent + 'def ' + name + '(self) -> ' + dataType + ':\n'
+                if ADD_DOCSTRINGS:
+                    self.sPyi += pyiIndent + ' '*4 + DocStringGoogleFromPlainText(description,addSpaces='',multiline=False)
+                self.sPyi += pyiIndent + ' '*4 + '...\n'
+                return
             self.sPyi += pyiIndent + name + ':' + dataType+'\n'
             if ADD_DOCSTRINGS:
                 self.sPyi += pyiIndent + DocStringGoogleFromPlainText(description,addSpaces='',multiline=False)

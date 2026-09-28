@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 132 | 1.12.135 |
+| 1.12 | Metheney | 134 | 1.12.137 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.137** `TESTING` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A test hook for forceQuitSimulation, which nothing can reach (#2674)
+  - description: \#2616 fixed the behaviour - quitting the renderer before a simulation starts raises where quitting during it does not - but no test can set forceQuitSimulation: it is set by the renderer thread from a key press or a closed window, and there is no binding for it. So the fix of \#2616 is checked by hand and stays checked by hand. Either a binding (mbs.systemData or the renderer) or a test-only hook is needed, and which of the two is the decision this step takes (revision2026b step RG4.5, raised 2026-09-26).
+  - **notes:** SC.renderer.StopSimulation(forceQuit=True) stops a simulation from Python as closing the render window does - a running one after its step, and with forceQuit also one that starts later, until mbs.SetRenderEngineStopFlag(False); quitting before or during a simulation is tested.
+  - date resolved: **2026-09-28 06:45**, date raised: 2026-09-26
+- **1.12.136** `DOCU` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.config and exudyn.special are in no stub file (#2541)
+  - description: exudyn.config is the run-time settings object (outputDirectory, printToConsole, suppressWarnings, precision) and exudyn.special holds the rarely needed corners; neither the objects nor their C++ classes Config and Special appear in python/exudyn/\_\_init\_\_.pyi, so no IDE completes exudyn.config.outputDirectory. The gap is older than this issue - stubtest simply did not check them while they arrived through a star import, and step R6.2 made them plain package attributes, which exposed it. Both are in the stubtest backlog with this number. The fix is generator work: emit Config and Special like the other bound structures.
+  - **notes:** exudyn.config, exudyn.special and exudyn.experimental are in the stub file, with their parts and members, so an editor completes exudyn.config.outputDirectory and a type checker knows it; six members that were bound but undocumented are documented.
+  - date resolved: **2026-09-28 06:45**, date raised: 2026-09-19
 - **1.12.135** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics drawn by a graphicsDataUserFunction carry the object number where an item ID belongs, so they are attributed to a wrong system and item (#2726)
   - description: Found by the graphics regression test of revision2026b step RG2.3.3.3, 2026-09-27: the triangles returned by the graphicsDataUserFunction of ObjectGround, ObjectRigidBody, ObjectRigidBody2D and ObjectGenericODE2 appear in SC.renderer.GetGraphicsData() as 'system 1, type None, index 0' for object 1. CallUserFunction passes itemNumber to EXUvis::AddBodyGraphicsData, which expects the item ID that UpdateGraphics computes with Index2ItemID(itemNumber, ItemType::Object, systemID); the object number is decoded as a system number. The same ID is what mouse selection shows, so selecting a user-function body reported a wrong item.
   - **notes:** What a graphicsDataUserFunction draws (ObjectGround, ObjectRigidBody, ObjectRigidBody2D, ObjectGenericODE2) belongs to its object: mouse selection and SC.renderer.GetGraphicsData() name the object; before, the object number was decoded as a system number.

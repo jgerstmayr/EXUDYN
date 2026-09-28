@@ -714,6 +714,15 @@ void MainRenderer::DisableView(Index viewID)
 }
 
 //! send zoom all request for next scene redraw:
+//! what closing the render window or pressing Escape does to a simulation (#2674): works without a
+//! renderer, on every system of the container
+void MainRenderer::StopSimulation(bool forceQuit)
+{
+	VisualizationSystemContainer& VSC = mainSystemContainer->GetVisualizationSystemContainer();
+	VSC.StopSimulation();
+	if (forceQuit) { VSC.ForceQuitSimulation(); }
+}
+
 void MainRenderer::ZoomAll(bool computeMaxScene, Index viewID)
 {
 	ViewDisabledError(viewID, "ZoomAll");
