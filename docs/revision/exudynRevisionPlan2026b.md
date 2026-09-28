@@ -2087,7 +2087,8 @@ package).
       and lists of them; anything else is refused with a message), **who reads it** (Python, in
       `__init__.py`, so the C++ core is untouched and the values are in place before a script can
       look at them) and **when a script can ask** (`Applied()`, `Ignored()`, `Print()`).
-    - **RG12.5.2** *(open)* — **the types that are not plain.** An enum - `OutputVariableType`,
+    - **RG12.5.2** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg12-5-2) — **the types
+      that are not plain.** An enum - `OutputVariableType`,
       `ItemType` - is stored honestly as its name, and `settingsUtilities` already converts between
       the two (`ConvertString2Value`, `EnumFullName`). 2 of the 466 visualization settings are
       enums, which is why they were left out of .1 rather than guessed at.
@@ -2783,6 +2784,13 @@ What depends on it: the graphics regression test takes every item through its Mi
         line, headings of their own for parameters, output variables and the detailed description;
         `requestedNodeTypes` declared for the node markers. Generating the C++ check of the node
         markers from that declaration is #2727.
+      - **RG13.5.0.4** **DONE 2026-09-28** (#2727) — [log](exudynRevisionLog2026b.md#rg13-5-0-4) -
+        **the declared node types and the C++ check agree, and a test says so.** Every node marker
+        with a declaration is attached to every node; what `Assemble()` accepts must be what
+        `requestedNodeTypes` says (48 combinations, all agree), and a node marker that measures a
+        position or an orientation without a declaration fails. The C++ check is not generated
+        from the declaration: it is one rule on the marker type bits for all markers, not one per
+        marker, and the test is what keeps the two from drifting apart.
     - **RG13.5.1** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-1) - nodes - the
       table of coordinates, the frame and interpretation, the action on the equations of motion,
       constraints, singularities; the slopes of the slope nodes. Found on the way: the Euler parameter
@@ -2826,7 +2834,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
-| RG12.5.2 | #2666 | the enum types of the override settings; .1, .3 and .4 are done |
 | RG13.2 | #2716 | the ideal documentation per kind of item, and the plan that makes it work |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG13.4 | #2721 | the development documents per item type: objects and markers open; nodes, loads, sensors agreed |

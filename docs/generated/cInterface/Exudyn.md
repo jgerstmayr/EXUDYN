@@ -175,7 +175,9 @@ A stored `visualizationSetting` is **not** a new default: `exu.VisualizationSett
 and the defaults the settings dialog compares against are still the defaults of Exudyn, so *diff to
 default* shows a stored setting as a difference. That is the point - it is what the file changed.
 
-**What may be stored are plain values**: a number, a flag, a string, or a list of numbers. A setting
+**What may be stored are plain values**: a number, a flag, a string, or a list of numbers - and an
+enum setting, `contour.outputVariable`, as the name of its value, `"StressLocal"`, which is read back
+by that name; `interactive.highlightItemType` is the state of a highlight and is not stored. A setting
 that holds graphics data, a user function or a matrix container is refused with a message and
 changes nothing - such a value cannot be carried honestly by a JSON file. A key that names no
 setting, a section nobody reads, a file that is not valid JSON: each of them is reported and none of

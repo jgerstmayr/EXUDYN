@@ -637,3 +637,46 @@ def testTheFileCanSwitchTheNoteOff(tmp_path):
 def testTheShownFileNameHidesTheHomeDirectory(monkeypatch):
     monkeypatch.delenv('EXUDYN_CONFIG_FILE', raising=False)
     assert settings.ShownFileName() == '~/.exudyn/config.json'
+
+
+def test_anEnumSettingIsStoredAsTheNameOfItsValue(settingsFile, capsys):
+    """contour.outputVariable was dropped by Store without a word (#2666); it is the name now"""
+    settingsFile({})
+    SC = exu.SystemContainer()
+    SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.StressLocal
+    SC.visualizationSettings.interactive.highlightItemType = exu.ItemType.Object
+    stored = settings.Store(SC)['visualizationSettings']
+    assert stored['contour.outputVariable'] == 'StressLocal'
+    #the state of an interactive highlight is no preference: left out, and said so
+    assert 'interactive.highlightItemType' not in stored
+    assert 'not stored: visualizationSettings.interactive.highlightItemType' in capsys.readouterr().out
+    with open(settings.FileName(), encoding='utf-8') as file:
+        assert json.load(file)['visualizationSettings']['contour.outputVariable'] == 'StressLocal'
+
+
+def test_anEnumSettingIsReadBackByItsName(settingsFile):
+    settingsFile({'visualizationSettings': {'contour.outputVariable': 'StressLocal'}})
+    SC = exu.SystemContainer()
+    assert settings.ApplyVisualizationSettings(SC.visualizationSettings) == 1
+    assert SC.visualizationSettings.contour.outputVariable == exu.OutputVariableType.StressLocal
+    assert ('visualizationSettings.contour.outputVariable', 'StressLocal') in settings.Applied()
+
+
+def test_anUnknownEnumNameIsReportedAndChangesNothing(settingsFile):
+    settingsFile({'visualizationSettings': {'contour.outputVariable': 'StressLocale',
+                                            'interactive.highlightItemType': 'Object'}})
+    SC = exu.SystemContainer()
+    assert settings.ApplyVisualizationSettings(SC.visualizationSettings) == 0
+    assert SC.visualizationSettings.contour.outputVariable == exu.OutputVariableType._None
+    reasons = dict(settings.Ignored())
+    assert 'is no value of OutputVariableType' in reasons['visualizationSettings.contour.outputVariable']
+    assert 'not a preference' in reasons['visualizationSettings.interactive.highlightItemType']
+
+
+def test_theStorableValueIsWhatTheFileCarries():
+    """the one conversion Store and the settings dialog both use"""
+    assert settings.StorableValue('contour.outputVariable', exu.OutputVariableType.Position) == ('Position', '')
+    assert settings.StorableValue('nodes.defaultColor', (0.1, 0.2, 0.3, 1.)) == ([0.1, 0.2, 0.3, 1.], '')
+    assert settings.StorableValue('interactive.highlightItemType', exu.ItemType.Node)[0] is None
+    (value, reason) = settings.StorableValue('some.thing', object())
+    assert value is None and 'cannot carry' in reason

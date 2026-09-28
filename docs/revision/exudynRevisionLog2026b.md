@@ -6311,3 +6311,45 @@ Three things in the declarations had to be right for that, and were not:
 stubtest agrees with the stub apart from the metaclass of the six pybind classes, which it reports
 for every pybind class and which is in the backlog like theirs; `exudyn.config` and
 `exudyn.special` left the backlog.
+
+<a id="rg12-5-2"></a>
+### RG12.5.2 — an enum in the settings file (2026-09-28, #2666)
+
+As measured on 2026-09-27 and decided by the maintainer (*"this is a good way to go"*): an enum
+setting is stored as **the name of its value** and read back by that name.
+
+- `overrideSettings.StorableValue(path, value)` is the one conversion to what the file carries: a
+  plain value as it is, a list for a list, an enum value as its `.name` - `"StressLocal"` - and for
+  anything else `None` with the reason. `Store(SC)` and the **store settings** button of the dialog
+  both use it, and both now **say what they leave out** (`NOTE: not stored: ...`). Before,
+  `Store(SC)` dropped `contour.outputVariable` without a word, and the dialog handed the enum object
+  to `json.dump`, which failed - the whole store, caught and reported as *"could not store the
+  settings"*.
+- `ApplyVisualizationSettings` reads a name through the enum type the setting has
+  (`type(current).__members__`); a name that is no value of it is reported by `Ignored()` - *"'StressLocale'
+  is no value of OutputVariableType"* - and changes nothing.
+- `interactive.highlightItemType` is the state of an interactive highlight and not a preference:
+  `notStoredSettings` keeps it out of the file in both directions, with that reason.
+
+Four tests in `test_userSettings.py`: stored as its name (and in the file), read back, an unknown
+name and the highlight refused, and the conversion itself. The documentation of the override
+settings names the enum case. With it RG12.5 has no open sub-step.
+
+<a id="rg13-5-0-4"></a>
+### RG13.5.0.4 — the declared node types agree with the C++ check (2026-09-28, #2727)
+
+RG13.5.0.3 declared, as `requestedNodeTypes`, which nodes a node marker needs, and the item pages
+list from it which nodes and markers fit. The check that decides is C++, so the two could drift.
+`python/testing/test_itemCompatibility.py` attaches every declared node marker -
+`MarkerNodePosition`, `MarkerNodeRigid`, `MarkerNodeRotationCoordinate` - to every one of the 16
+nodes and requires that `Assemble()` accepts exactly the combinations the declaration accepts: 48
+combinations, and all agreed on the first run. A declaration changed on purpose - `MarkerNodeRigid`
+without its orientation - was caught, naming `NodePoint` and `NodePoint2D`. A second test requires
+a declaration from every node marker that measures a position or an orientation, so that a new one
+cannot be added without saying which nodes it fits.
+
+Generating the C++ check from the declaration, which #2727 offered as the alternative, was not done:
+the C++ check is **one** rule on the type bits of all markers (`Position` needs a node with
+`Position` or `Position2D`, `Orientation` one with `Orientation` or `Orientation2D`), not a check
+per marker, and generating it would turn one line into three. The coordinate markers stay
+undeclared: they fit any node with coordinates of their kind, which is no rule on node types.

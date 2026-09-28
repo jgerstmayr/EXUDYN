@@ -95,6 +95,9 @@ exemptImports = {
                      'that directory on sys.path and imports it by name (#2682)',
     'definitionLoader': 'a module of tools/generators/, imported by name the same way and for the '
                      'same test as definitionTypes above (#2682)',
+    'itemCompatibility': 'a module of tools/generators/, imported by name by '
+                     'python/testing/test_itemCompatibility.py, which checks its rules against '
+                     'the C++ (#2727)',
     'pytest':        'a DEV tool, declared in [dependency-groups] lint/dev of pyproject.toml and '
                      'not in any extra: the test suite runs without it (runTestSuite.py), and '
                      'test_testModels.py is the optional pytest collector of the test models. '

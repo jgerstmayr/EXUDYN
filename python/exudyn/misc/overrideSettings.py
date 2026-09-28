@@ -36,8 +36,9 @@ import os
 __all__ = [
     'fileFormatVersion', 'sectionNames', 'flagNames', 'plainTypes', 'structureDefaults', 'FileName',
     'ShownFileName', 'NoteSuppressed', 'Ignoring', 'Settings', 'Load', 'Save', 'Clear', 'Reload',
-    'StoreSection', 'Applied', 'Ignored', 'Print', 'ApplyConfig', 'ApplyVisualizationSettings',
-    'DialogKey', 'DialogGeometry', 'StoreDialogGeometry', 'PositionIsReachable', 'Store',
+    'StoreSection', 'Applied', 'Ignored', 'Print', 'notStoredSettings', 'StorableValue',
+    'ApplyConfig', 'ApplyVisualizationSettings', 'DialogKey', 'DialogGeometry',
+    'StoreDialogGeometry', 'PositionIsReachable', 'Store',
     ]
 
 #THE VERSION OF THE FILE FORMAT, written into every file and required to match exactly
@@ -330,6 +331,49 @@ def _IsPlain(value):
     return False
 
 
+#AN ENUM is stored as the name of its value, "StressLocal", and read back through the enum type the
+#setting has (#2666); the name is what a user reads in the dialog and in a script
+def _IsEnum(value):
+    """a pybind enum value: its type knows its members and the value its name"""
+    return hasattr(type(value), '__members__') and hasattr(value, 'name')
+
+
+#settings that are the state of an interaction and not a preference: never stored, never applied
+notStoredSettings = {'interactive.highlightItemType':
+                     'the state of an interactive highlight, not a preference'}
+
+
+def _EnumValue(current, value):
+    """(the enum value of the name value, or None, and the reason it is None)"""
+    if not isinstance(value, str):
+        return (None, 'the setting is a ' + type(current).__name__ + ', stored as the name of its value, '
+                'not as a ' + type(value).__name__)
+    member = type(current).__members__.get(value)
+    if member is None:
+        return (None, "'" + value + "' is no value of " + type(current).__name__)
+    return (member, '')
+
+
+def StorableValue(path, value):
+    """The value of a visualization setting as the settings file carries it.
+
+    Args:
+        path: the path of the setting, e.g. 'contour.outputVariable'
+        value: its value
+
+    Returns:
+        (value, '') - a plain value, a list for a list, the name of an enum value - or
+        (None, the reason it is left out)
+    """
+    if path in notStoredSettings:
+        return (None, notStoredSettings[path])
+    if _IsEnum(value):
+        return (value.name, '')
+    if _IsPlain(value):
+        return (list(value) if isinstance(value, (list, tuple)) else value, '')
+    return (None, 'a ' + type(value).__name__ + ', which a settings file cannot carry')
+
+
 def _Record(path, value, reason=None):
     #ONCE PER SETTING, not once per structure: the visualizationSettings are applied again for every
     #structure that is created, and Print() listing the same setting
@@ -411,6 +455,18 @@ def ApplyVisualizationSettings(visualizationSettings, settings=None):
             current = getattr(structure, parts[-1])
         except AttributeError:
             _Record(full, value, 'no such setting')
+            continue
+        if path in notStoredSettings:
+            _Record(full, value, notStoredSettings[path])
+            continue
+        if _IsEnum(current):
+            (member, reason) = _EnumValue(current, value)
+            if member is None:
+                _Record(full, value, reason)
+                continue
+            setattr(structure, parts[-1], member)
+            _Record(full, value)
+            applied += 1
             continue
         if not _IsPlain(current):
             _Record(full, value, 'the setting holds a ' + type(current).__name__
@@ -549,14 +605,19 @@ def Store(SC=None, config=None, replace=False):
     if SC is not None:
         from exudyn.misc.settingsUtilities import ChangedSettings
         stored = {} if replace else dict(settings.get('visualizationSettings') or {})
+        leftOut = []        #and said so: a setting dropped without a word was the fault of #2666
         for (path, line) in ChangedSettings(SC.visualizationSettings):
             structure = SC.visualizationSettings
             parts = path.split('.')
             for part in parts[:-1]:
                 structure = getattr(structure, part)
-            value = getattr(structure, parts[-1])
-            if _IsPlain(value):
-                stored[path] = list(value) if isinstance(value, (list, tuple)) else value
+            (storable, reason) = StorableValue(path, getattr(structure, parts[-1]))
+            if storable is None:
+                leftOut.append((path, reason))
+            else:
+                stored[path] = storable
+        for (path, reason) in leftOut:
+            print('NOTE: not stored: visualizationSettings.' + path + ' - ' + reason)
         settings['visualizationSettings'] = stored
 
     if config is not None:

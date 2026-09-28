@@ -1097,8 +1097,12 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                     parts = path.split('.')
                     for part in parts[:-1]:
                         structure = getattr(structure, part)
-                    value = getattr(structure, parts[-1])
-                    values[path] = list(value) if isinstance(value, (list, tuple)) else value
+                    #an enum as the name of its value, and what a file cannot carry named (#2666)
+                    (storable, reason) = overrideSettings.StorableValue(path, getattr(structure, parts[-1]))
+                    if storable is None:
+                        exudyn.Print('NOTE: not stored: visualizationSettings.' + path + ' - ' + reason)
+                    else:
+                        values[path] = storable
                 overrideSettings.StoreSection('visualizationSettings', values)
                 exudyn.Print('stored ' + str(len(values)) + ' setting(s) in ' + fileName)
             except Exception as exception:                                   # noqa: BLE001

@@ -234,7 +234,8 @@ definitions.append(ItemDefinition(
     className='MarkerNodePosition',
     cParentClass=ParentClassCMarker,
     #the node types it needs, as CSystem::CheckSystemIntegrity checks them (src/Main/CSystem.cpp); each
-    #entry is a list of alternatives, and the page of the marker and of the nodes say it (#2725)
+    #entry is a list of alternatives, and the page of the marker and of the nodes say it (#2725);
+    #python/testing/test_itemCompatibility.py keeps the declaration and the C++ in agreement (#2727)
     requestedNodeTypes=[['Position', 'Position2D']],
     overallDescription=r'A node-Marker attached to a position-based node. It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerNodeRigid.',
     classType=ClassTypeMarker,
