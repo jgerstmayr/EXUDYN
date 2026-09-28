@@ -809,14 +809,17 @@ def ItemTypes(kind, types, description):
     return member
 
 
-def ItemAccessFunctionTypes(types, description=None):
+def ItemAccessFunctionTypes(types, description=None, bodyMarkers=True):
     """Use site: the access functions an object provides for markers and loads (GetAccessFunctionTypes),
     as a declared list of AccessFunctionType value names; a marker with
-    Position (Orientation) needs TranslationalVelocity_qt (AngularVelocity_qt)"""
+    Position (Orientation) needs TranslationalVelocity_qt (AngularVelocity_qt).
+    bodyMarkers=False: the types serve the object's own markers (super element, kinematic tree) and the
+    general body markers do not work on it, although the types would admit them (#2734)"""
     member = ItemFunctionDef('GetAccessFunctionTypes',
                              implementation=_TypeSumImplementation('AccessFunctionType', types),
                              description=description)
     member['accessFunctionTypes'] = list(types)
+    member['bodyMarkers'] = bodyMarkers
     return member
 
 
@@ -863,7 +866,7 @@ def _ResolveFunctionReference(reference, className, classType, parentClass):
     if reference['description'] is not None:
         member['description'] = reference['description']
     member['cplusplusName'] = reference['cplusplusName'] or reference['pythonName']
-    for key in ('requestedTypes', 'conditionalTypes', 'accessFunctionTypes'): #declared lists
+    for key in ('requestedTypes', 'conditionalTypes', 'accessFunctionTypes', 'bodyMarkers'): #declared lists
         if key in reference:
             member[key] = reference[key]
 

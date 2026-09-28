@@ -6481,3 +6481,29 @@ declaration no longer carries it; `Assemble()` now refuses such a marker with th
 message. A comparison of all bodies' declared access functions against the implemented ones found
 this one among the finite elements; `ObjectGenericODE2` and `ObjectKinematicTree` reach theirs
 through the super element functions and are looked at in RG13.5.2.3.
+
+<a id="rg13-5-2-3"></a>
+### RG13.5.2.3 — the pages of the super elements (2026-09-28, #2725, #2734)
+
+The four super elements have the longest texts of all items (350 to 2100 words), and the group's rule
+for them is only that the fixed headings are used where they apply. What they lacked was the one this
+group adds for every body: **Marker interfaces**. `ObjectGenericODE2`, `ObjectKinematicTree` and
+`ObjectFFRF` got the section; in `ObjectFFRFreducedOrder` it was there as *Joints and Loads* and is
+renamed. The page of the group has a general section: a table of the four and what each is for, the
+**mesh nodes** - numbered within the object, real nodes or computed from the modes, with output
+variables of their own -, and which markers act on a super element.
+
+Written from the access functions of each, which showed two things:
+
+- **the general body markers do not work on `ObjectGenericODE2` and `ObjectKinematicTree`**: their
+  `GetAccessFunctionBody` raises *"not available"*, while their declared access function types -
+  needed by their own markers to pass the integrity check - admit `MarkerBodyPosition`,
+  `MarkerBodyRigid` and `MarkerBodyMass`. `Assemble()` accepts such a marker, the simulation fails.
+  The declaration gets `bodyMarkers=False` (`ItemAccessFunctionTypes`, carried through the function
+  library), which `itemCompatibility` uses, so the Interface of the two pages lists only their own
+  markers; making the integrity check use it is RG4.10 (#2734), by the maintainer's rule for defects
+  found while documenting;
+- **`MarkerBodyMass` on `ObjectFFRF` acts on the reference frame only**: the mass-integral access
+  function is $m$ times the Jacobian of the center of mass of the rigid frame, so a gravity load moves
+  the frame and gives the flexible coordinates no share - said on the page, as the page of the reduced
+  order object already said for `MarkerBodyPosition` and `MarkerBodyRigid`.

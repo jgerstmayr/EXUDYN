@@ -320,7 +320,7 @@ $$
 
 which is used in `MarkerSuperElementRigid`.
 
-### Joints and Loads
+### Marker interfaces
 
 Use special `MarkerSuperElementPosition` to apply forces, SpringDampers or spherical joints. This marker can be attached to a single node of the underlying
 mesh or to a set of nodes, which is then averaged, see the according marker description.

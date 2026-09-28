@@ -10,7 +10,7 @@ A system of $n$ second order ordinary differential equations ({ref}`ODE2 <ODE2>`
 
 ## Interface
 
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid)
+- Body markers that can be placed on it: [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid)
 - Nodes: see the detailed description
 
 ## Parameters
@@ -120,6 +120,15 @@ $$ (eq-objectgenericode2-jac)
 For clarification also see the **example** in `TestModels/linearFEMgenericODE2.py`.
 
 CoordinateLoads are added for the respective {ref}`ODE2 <ODE2>` coordinate on the RHS of the latter equation.
+
+### Marker interfaces
+
+The mesh nodes of the object are its nodes: mesh node $i$ is node $n_i$ of `nodeNumbers`, at the
+position of that node. `MarkerSuperElementPosition` and `MarkerSuperElementRigid` act on them, with
+the Jacobians of the nodes and the weights of the marker; a load or constraint on single coordinates
+uses `MarkerObjectODE2Coordinates` or the coordinate markers of the nodes. The general body markers -
+`MarkerBodyPosition`, `MarkerBodyRigid`, `MarkerBodyMass` - do **not** work on this object: its body
+access functions are not available (#2734).
 
 **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.

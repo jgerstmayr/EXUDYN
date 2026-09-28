@@ -12,7 +12,7 @@ A special object to represent open kinematic trees using minimal coordinate form
 
 - Python names: `ObjectKinematicTree` or `KinematicTree`, and `VKinematicTree` for its visualization
 - Nodes it takes: [](#sec-item-node1d), [](#sec-item-nodegenericode2), [](#sec-item-nodepointground)
-- Body markers that can be placed on it: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markerkinematictreerigid)
+- Body markers that can be placed on it: [](#sec-item-markerkinematictreerigid)
 
 ## Parameters
 
@@ -258,6 +258,15 @@ differentiation.
 
 More detailed equations will be added later on. Follow exactly the description (and coordinate systems) of the object parameters,
 especially for describing the kinematic chain as well as the inertial parameters.
+
+### Marker interfaces
+
+The tree has one marker of its own, `MarkerKinematicTreeRigid`: a link $n_l$ and a local position in
+the frame of that link, with position, orientation and their Jacobians with respect to the joint
+coordinates. Loads and connectors act on the tree through it; forces and torques on the joints
+themselves are the object's own parameters. A joint coordinate can also be reached with
+`MarkerNodeCoordinate` on the `NodeGenericODE2` of the tree. The general body markers and the super
+element markers do **not** work on this object (#2734).
 
 **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a force vector applied to the joint coordinates depending on current time and states of object.

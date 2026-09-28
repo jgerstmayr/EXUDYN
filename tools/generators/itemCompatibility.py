@@ -49,7 +49,10 @@ class Item:
         self.requestedMarker = _List(requestedMarker, 'requestedTypes')
         self.conditionalMarker = _List(requestedMarker, 'conditionalTypes')
         self.requestedNode = _List(_Member(definition, 'GetRequestedNodeType'), 'requestedTypes')
-        self.access = _List(_Member(definition, 'GetAccessFunctionTypes'), 'accessFunctionTypes')
+        accessMember = _Member(definition, 'GetAccessFunctionTypes')
+        self.access = _List(accessMember, 'accessFunctionTypes')
+        #False where the types serve the object's own markers only (#2734)
+        self.bodyMarkers = True if accessMember is None else accessMember.get('bodyMarkers', True)
         #node markers: a list of requirements, each a list of alternatives
         self.requestedNodeTypes = [list(alternatives) for alternatives in
                                    (definition.get('requestedNodeTypes') or [])]
@@ -89,8 +92,9 @@ class Item:
     def CarriesMarker(self, marker):
         """marker can be placed on this body"""
         needs = marker.BodyMarkerNeeds()
+        ownMarker = 'SuperElement' in marker.provided or 'KinematicTree' in marker.provided
         return (self.kind == 'Object' and needs is not None and self.access != []
-                and all(n in self.access for n in needs))
+                and all(n in self.access for n in needs) and (self.bodyMarkers or ownMarker))
 
 
 def LoadItems():

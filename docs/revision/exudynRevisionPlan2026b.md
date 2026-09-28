@@ -1124,6 +1124,15 @@ find its file and line, on every raise).
     checked here whether such a combination computes anything meaningful; if not, they are declared as
     coordinate markers only.
 
+<a id="rg4-10"></a>
+**RG4.10** *(group RG4; from RG13.5.2.3, 2026-09-28)* **`ObjectGenericODE2` and `ObjectKinematicTree`
+    admit the general body markers, which then fail** (#2734). Both declare `TranslationalVelocity_qt`
+    and `AngularVelocity_qt` so that their own markers pass `CSystem::CheckSystemIntegrity`; the same
+    declaration admits `MarkerBodyPosition`, `MarkerBodyRigid` and `MarkerBodyMass`, whose computation
+    calls `GetAccessFunctionBody`, which raises *"not available"* for both. The declaration carries
+    `bodyMarkers=False` since RG13.5.2.3, which the item pages use; the step lets the integrity check use
+    it as well, so that `Assemble()` refuses the combination.
+
 <a id="rg4-2"></a>
 **RG4.2** **DONE 2026-09-26** (#2413) — [log](exudynRevisionLog2026b.md#rg4-2) —
     **`ObjectContactConvexRoll.pContact` is a computed value that Python reads**, which is what the
@@ -2838,7 +2847,9 @@ What depends on it: the graphics regression test takes every item through its Mi
       - **RG13.5.2.2** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-2) - flexible
         bodies - the nonlinear finite elements; `ObjectBeamGeometricallyExact` after RG4.8. Found on
         the way: `ObjectANCFCable` declared an angular velocity it does not have (#2733, corrected).
-      - **RG13.5.2.3** super elements - FFRF, reduced order FFRF, generic ODE2, kinematic tree.
+      - **RG13.5.2.3** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-3) - super
+        elements - FFRF, reduced order FFRF, generic ODE2, kinematic tree. Found on the way: two of them
+        admit body markers that fail (RG4.10, #2734).
       - **RG13.5.2.4** connectors - spring-dampers, contact, penalty joints.
       - **RG13.5.2.5** constraints and joints.
       - **RG13.5.2.6** the general objects - `ObjectGenericODE1`.

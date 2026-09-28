@@ -11,7 +11,7 @@ A marker attached to the body mass; use this marker to apply a body-load (e.g. g
 ## Interface
 
 - Provides: `BodyMass`
-- Bodies it can be placed on: [](#sec-item-objectground), [](#sec-item-objectmasspoint), [](#sec-item-objectmasspoint2d), [](#sec-item-objectmass1d), [](#sec-item-objectrigidbody), [](#sec-item-objectrigidbody2d), [](#sec-item-objectgenericode2), [](#sec-item-objectffrf), [](#sec-item-objectffrfreducedorder), [](#sec-item-objectancfcable), [](#sec-item-objectancfcable2d), [](#sec-item-objectaleancfcable2d), [](#sec-item-objectancfbeam), [](#sec-item-objectbeamgeometricallyexact2d), [](#sec-item-objectbeamgeometricallyexact), [](#sec-item-objectancfthinplate)
+- Bodies it can be placed on: [](#sec-item-objectground), [](#sec-item-objectmasspoint), [](#sec-item-objectmasspoint2d), [](#sec-item-objectmass1d), [](#sec-item-objectrigidbody), [](#sec-item-objectrigidbody2d), [](#sec-item-objectffrf), [](#sec-item-objectffrfreducedorder), [](#sec-item-objectancfcable), [](#sec-item-objectancfcable2d), [](#sec-item-objectaleancfcable2d), [](#sec-item-objectancfbeam), [](#sec-item-objectbeamgeometricallyexact2d), [](#sec-item-objectbeamgeometricallyexact), [](#sec-item-objectancfthinplate)
 - Connectors, constraints and loads that can use it: [](#sec-item-loadmassproportional)
 
 ## Parameters

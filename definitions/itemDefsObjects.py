@@ -1388,6 +1388,16 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     CoordinateLoads are added for the respective ABRV:ODE2 coordinate on the RHS of the latter equation.
 
+
+    #### Marker interfaces
+
+    The mesh nodes of the object are its nodes: mesh node $i$ is node $n_i$ of `nodeNumbers`, at the
+    position of that node. `MarkerSuperElementPosition` and `MarkerSuperElementRigid` act on them, with
+    the Jacobians of the nodes and the weights of the marker; a load or constraint on single coordinates
+    uses `MarkerObjectODE2Coordinates` or the coordinate markers of the nodes. The general body markers -
+    `MarkerBodyPosition`, `MarkerBodyRigid`, `MarkerBodyMass` - do **not** work on this object: its body
+    access functions are not available (#2734).
+
 """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    #set up a mechanical system with two nodes; it has the structure: |~~M0~~M1
@@ -1494,7 +1504,10 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('ComputeJacobianODE2_ODE2'),
         ItemFunctionDef('GetAvailableJacobians'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'SuperElement']),
+        #the types serve MarkerSuperElementPosition/Rigid; GetAccessFunctionBody raises, so the general
+        #body markers do not work although CheckSystemIntegrity admits them (#2734)
+        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'SuperElement'],
+                                bodyMarkers=False),
         ItemFunctionDef('GetAccessFunctionBody'),
         ItemFunctionDef('GetOutputVariableBody'),
         ItemFunctionDef('GetPosition'),
@@ -2073,6 +2086,16 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     More detailed equations will be added later on. Follow exactly the description (and coordinate systems) of the object parameters,
     especially for describing the kinematic chain as well as the inertial parameters.
 
+
+    #### Marker interfaces
+
+    The tree has one marker of its own, `MarkerKinematicTreeRigid`: a link $n_l$ and a local position in
+    the frame of that link, with position, orientation and their Jacobians with respect to the joint
+    coordinates. Loads and connectors act on the tree through it; forces and torques on the joints
+    themselves are the object's own parameters. A joint coordinate can also be reached with
+    `MarkerNodeCoordinate` on the `NodeGenericODE2` of the tree. The general body markers and the super
+    element markers do **not** work on this object (#2734).
+
 """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    #build 1R mechanism (pendulum)
@@ -2256,7 +2279,10 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemFunctionDef('ComputeMassMatrix'),
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'KinematicTree']),
+        #the types serve MarkerKinematicTreeRigid; GetAccessFunctionBody raises, so the general
+        #body markers do not work although CheckSystemIntegrity admits them (#2734)
+        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'KinematicTree'],
+                                bodyMarkers=False),
         ItemFunctionDef('GetAccessFunctionBody'),
         ItemFunctionDef('GetOutputVariableBody'),
         ItemFunctionDef('GetPosition'),
@@ -2700,6 +2726,17 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     $$
                         \tilde\xv_{f}\tp \LU{b}{\Mm} \qv\indf = 0
                         $$
+
+
+    #### Marker interfaces
+
+    `MarkerSuperElementPosition` and `MarkerSuperElementRigid` act on the **mesh nodes** - the nodes of
+    the finite element mesh, moved with the reference frame -, averaged with the weights of the marker;
+    they are the markers for forces, connectors and joints on the flexible body. The general body markers
+    `MarkerBodyPosition` and `MarkerBodyRigid` act on the **reference frame** only, the rigid body node 0,
+    and not on the deformation. `MarkerBodyMass` applies a load proportional to the total mass at the
+    center of mass `physicsCenterOfMass`, through the coordinates of the reference frame only: the
+    flexible coordinates get no share of it.
 
 """,
     mainParentClass=MainParentClassMainObjectBody,
@@ -3251,7 +3288,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     +++++++++++++++++++++++++
     -->
 
-    #### Joints and Loads
+    #### Marker interfaces
 
     Use special `MarkerSuperElementPosition` to apply forces, SpringDampers or spherical joints. This marker can be attached to a single node of the underlying
     mesh or to a set of nodes, which is then averaged, see the according marker description.

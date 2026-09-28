@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.143.dev1
 - last change = 2026-09-28
-- Number of issues = 2734
+- Number of issues = 2735
 - Number of resolved issues = 2457 (143 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -8374,6 +8374,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectGenericODE2 and ObjectKinematicTree admit the general body markers, which fail during the simulation (#2734)
+  - description: Found while documenting the super elements, revision2026b step RG13.5.2.3, 2026-09-28: both objects declare the access function types TranslationalVelocity\_qt and AngularVelocity\_qt (and GenericODE2 DisplacementMassIntegral\_q), which their own markers need - MarkerSuperElementPosition/Rigid, MarkerKinematicTreeRigid - to pass CSystem::CheckSystemIntegrity. The same types admit MarkerBodyPosition, MarkerBodyRigid and MarkerBodyMass, whose computation calls GetAccessFunctionBody, and that raises 'not available' for both objects. The declaration now carries bodyMarkers=False, which the item pages use; the analysis: let the integrity check use it too, so that Assemble() refuses the combination. revision2026b step RG4.10.
+  - date raised: 2026-09-28
 - <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` the cable and beam shape markers accept any body: on a wrong one they cast it to an ANCF cable (#2731)
   - description: Found while documenting the markers, revision2026b step RG13.5.3, 2026-09-28: MarkerBodyCable2DShape, MarkerBodyCable2DCoordinates and MarkerBodyBeamShape have no consistency check of the body they are attached to. Assemble() accepts them on a rigid body, and ComputeMarkerData then casts the body to CObjectANCFCable2DBase or CObjectANCFCable: with range checks this ends in 'InternalError: call to ConstSizeVectorBase::SetNumberOfItems with newNumberOfItems \> dataSize', in the fast module (no range checks) it is undefined behaviour. The analysis: which bodies each of the three markers can serve (ANCFCable2D and ALEANCFCable2D; ANCFCable), a CheckPreAssembleConsistency that says so, and whether MarkerBodyBeamShape, described as for 'a 3D beam finite element', should serve other beams. revision2026b step RG4.9 (maintainer's rule: a larger defect found while documenting gets an RG4 step).
   - date raised: 2026-09-28

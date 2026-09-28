@@ -40,11 +40,11 @@
 | ObjectRotationalMass1D | Object (Body) | 8 | 94, 3 | - | 0 of 7 | 7 | yes | 3 | 0 |
 | ObjectRigidBody | Object (Body) | 101 | 908, 6 | yes | 0 of 8 | 12 | - | 109 | 4 |
 | ObjectRigidBody2D | Object (Body) | 20 | 121, 3 | - | 0 of 8 | 12 | yes | 46 | 1 |
-| ObjectGenericODE2 | Object (SuperElement) | 71 | 243, 3 | - | 0 of 18 | 5 | yes | 12 | 1 |
+| ObjectGenericODE2 | Object (SuperElement) | 71 | 320, 4 | - | 0 of 18 | 5 | yes | 12 | 1 |
 | ObjectGenericODE1 | Object (Object) | 48 | 250, 2 | - | 0 of 9 | 3 | yes | 5 | 0 |
-| ObjectKinematicTree | Object (SuperElement) | 154 | 1090, 5 | - | 0 of 40 | 4 | yes | 5 | 2 |
-| ObjectFFRF | Object (SuperElement) | 63 | 849, 6 | - | 2 of 27: `tempVector`, `tempMatrix` | 4 | - | 2 | 1 |
-| ObjectFFRFreducedOrder | Object (SuperElement) | 88 | 1224, 6 | yes | 0 of 37 | 3 | - | 6 | 2 |
+| ObjectKinematicTree | Object (SuperElement) | 154 | 1173, 6 | - | 0 of 40 | 4 | yes | 5 | 2 |
+| ObjectFFRF | Object (SuperElement) | 63 | 943, 7 | - | 2 of 27: `tempVector`, `tempMatrix` | 4 | - | 2 | 1 |
+| ObjectFFRFreducedOrder | Object (SuperElement) | 88 | 1223, 6 | yes | 0 of 37 | 3 | - | 6 | 2 |
 | ObjectANCFCable | Object (FiniteElement) | 64 | 258, 7 | - | 0 of 14 | 9 | yes | 0 | 0 |
 | ObjectANCFCable2D | Object (FiniteElement) | 39 | 1029, 7 | - | 0 of 17 | 13 | yes | 22 | 0 |
 | ObjectALEANCFCable2D | Object (FiniteElement) | 66 | 225, 0 | - | 0 of 18 | 10 | - | 5 | 0 |

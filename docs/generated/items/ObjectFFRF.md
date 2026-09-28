@@ -303,6 +303,16 @@ $$
 \tilde\xv_{f}\tp \LU{b}{\Mm} \qv\indf = 0
 $$
 
+### Marker interfaces
+
+`MarkerSuperElementPosition` and `MarkerSuperElementRigid` act on the **mesh nodes** - the nodes of
+the finite element mesh, moved with the reference frame -, averaged with the weights of the marker;
+they are the markers for forces, connectors and joints on the flexible body. The general body markers
+`MarkerBodyPosition` and `MarkerBodyRigid` act on the **reference frame** only, the rigid body node 0,
+and not on the deformation. `MarkerBodyMass` applies a load proportional to the total mass at the
+center of mass `physicsCenterOfMass`, through the coordinates of the reference frame only: the
+flexible coordinates get no share of it.
+
 **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
 
