@@ -1739,7 +1739,7 @@ class NodePointSlope12:
         Node has/provides the following types: ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,1.,0.,0.,1.,0.,0.], initialCoordinates = [0.,0.,0.,0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,1.,0.,0.,0.,1.,0.], initialCoordinates = [0.,0.,0.,0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
@@ -1801,7 +1801,7 @@ class NodePointSlope23:
         Node has/provides the following types: ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,1.,0.,0.,1.,0.,0.], initialCoordinates = [0.,0.,0.,0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', referenceCoordinates = [0.,0.,0.,0.,1.,0.,0.,0.,1.], initialCoordinates = [0.,0.,0.,0.,0.,0.,0.,0.,0.], initialVelocities = [0.,0.,0.,0.,0.,0.,0.,0.,0.], visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)

@@ -1228,8 +1228,8 @@ definitions.append(ItemDefinition(
     respect to its two in-plane coordinates, $\rv_x^\prime = \partial \rv / \partial x$ and
     $\rv_y^\prime = \partial \rv / \partial y$. In a flat plate in the global $x$-$y$ plane they are
     $[1,\;0,\;0]\tp$ and $[0,\;1,\;0]\tp$. They span the tangent plane of the mid-surface, and their
-    lengths and angle carry its in-plane strains. The default reference coordinates set both to
-    $[1,\;0,\;0]\tp$, which is no plate: give them.
+    lengths and angle carry its in-plane strains. The default reference coordinates are those of a
+    flat plate in the global $x$-$y$ plane; a model gives the reference coordinates of every node.
 
     #### Frame and interpretation
 
@@ -1264,7 +1264,7 @@ definitions.append(ItemDefinition(
             description=r"node's unique name"),
         ItemParameter(type=TVectorND(9), destination=DestComp+DestParam,
             pythonName='referenceCoordinates',
-            defaultValue='Vector9D({0.,0.,0.,1.,0.,0.,1.,0.,0.})',
+            defaultValue='Vector9D({0.,0.,0.,1.,0.,0.,0.,1.,0.})',
             description=r'reference coordinates (x-pos,y-pos,z-pos; x-slopeX, y-slopeX, z-slopeX; x-slopeY, y-slopeY, z-slopeY) of node; global position of node without displacement'),
         ItemParameter(type=TVectorND(9), destination=DestMain+DestParam,
             pythonName='initialCoordinates',
@@ -1354,8 +1354,8 @@ definitions.append(ItemDefinition(
     `ObjectANCFBeam` computes it. The axial direction follows from the positions of the two nodes of the
     element. In a beam along the global $x$-axis the slope vectors are $[0,\;1,\;0]\tp$ and
     $[0,\;0,\;1]\tp$; they span the cross section, and their lengths and angle carry its deformation -
-    the element is shear and cross section deformable. The default reference coordinates set both to
-    $[1,\;0,\;0]\tp$, which is no cross section: give them.
+    the element is shear and cross section deformable. The default reference coordinates are those
+    of a beam along the global $x$-axis; a model gives the reference coordinates of every node.
 
     #### Frame and interpretation
 
@@ -1389,7 +1389,7 @@ definitions.append(ItemDefinition(
             description=r"node's unique name"),
         ItemParameter(type=TVectorND(9), destination=DestComp+DestParam,
             pythonName='referenceCoordinates',
-            defaultValue='Vector9D({0.,0.,0.,1.,0.,0.,1.,0.,0.})',
+            defaultValue='Vector9D({0.,0.,0.,0.,1.,0.,0.,0.,1.})',
             description=r'reference coordinates (x-pos,y-pos,z-pos; x-slopey, y-slopey, z-slopey; x-slopez, y-slopez, z-slopez) of node; global position of node without displacement'),
         ItemParameter(type=TVectorND(9), destination=DestMain+DestParam,
             pythonName='initialCoordinates',

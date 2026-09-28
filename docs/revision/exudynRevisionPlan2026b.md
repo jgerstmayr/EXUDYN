@@ -2791,11 +2791,14 @@ What depends on it: the graphics regression test takes every item through its Mi
         position or an orientation without a declaration fails. The C++ check is not generated
         from the declaration: it is one rule on the marker type bits for all markers, not one per
         marker, and the test is what keeps the two from drifting apart.
+      - **RG13.5.0.5** **DONE 2026-09-28** (#2729) — [log](exudynRevisionLog2026b.md#rg13-5-0-5) -
+        **every item on a new page of the PDF** (maintainer): a raw LaTeX `\clearpage` opens every
+        generated item page; the HTML build ignores it.
     - **RG13.5.1** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-1) - nodes - the
       table of coordinates, the frame and interpretation, the action on the equations of motion,
       constraints, singularities; the slopes of the slope nodes. Found on the way: the Euler parameter
-      constraint is the node's, not the object's, and the default slopes of two nodes are parallel
-      (#2728).
+      constraint is the node's, not the object's, and the default slopes of two nodes were parallel
+      (#2728, corrected on the maintainer's decision the same day).
     - **RG13.5.2** objects - after `objectDefinitionsDev.md` is agreed.
     - **RG13.5.3** markers - after `markerDefinitionsDev.md` is agreed.
     - **RG13.5.4** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-4) - loads - the

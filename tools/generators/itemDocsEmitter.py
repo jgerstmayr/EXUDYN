@@ -420,8 +420,11 @@ def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros,
             #carried sec:item:<Item>, which every item reference points at, so the label moves to
             #the title and the heading goes (#2660)
             (label, body) = DropRepeatedTitle(text.strip(), className)
-            Write(className + '.md',
-                  NormalizeHeadings(MarkdownBanner(className, label) + body) + '\n')
+            page = NormalizeHeadings(MarkdownBanner(className, label) + body) + '\n'
+            #EVERY ITEM ON A NEW PAGE of the PDF, which is how a reference manual is read (#2729);
+            #the HTML build ignores a raw LaTeX block
+            (banner, rest) = page.split('\n', 1)
+            Write(className + '.md', banner + '\n```{raw} latex\n\\clearpage\n```\n\n' + rest)
             written += 1
             typeText += className + '\n'
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-28  00:22:26 (last modified)
+* @date         2026-09-28  07:38:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,7 +31,7 @@ public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     CNodePointSlope12Parameters()
     {
-        referenceCoordinates = Vector9D({0.,0.,0.,1.,0.,0.,1.,0.,0.});
+        referenceCoordinates = Vector9D({0.,0.,0.,1.,0.,0.,0.,1.,0.});
     };
 };
 

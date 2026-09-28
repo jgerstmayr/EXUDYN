@@ -1,0 +1,16 @@
+{
+  "number": 2729,
+  "title": "the PDF starts every item of the items reference manual on a new page",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-28: 'the PDF docs should add a new page before every item in the items reference manual. This improves readability.' Every generated item page opens with a raw LaTeX \\clearpage, which the HTML build ignores. revision2026b step RG13.5.0.5.",
+  "dateRaised": "2026-09-28",
+  "deadline": "2027-03-27",
+  "dateResolved": "2026-09-28 07:45",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/itemDocsEmitter.py",
+  "releaseNotes": "In the PDF documentation every item of the items reference manual starts on a new page.",
+  "resolvedInVersion": "1.12.141"
+}

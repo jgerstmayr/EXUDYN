@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 134 | 1.12.137 |
+| 1.12 | Metheney | 136 | 1.12.141 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.141** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the PDF starts every item of the items reference manual on a new page (#2729)
+  - description: The maintainer, 2026-09-28: 'the PDF docs should add a new page before every item in the items reference manual. This improves readability.' Every generated item page opens with a raw LaTeX \\clearpage, which the HTML build ignores. revision2026b step RG13.5.0.5.
+  - **notes:** In the PDF documentation every item of the items reference manual starts on a new page.
+  - date resolved: **2026-09-28 07:45**, date raised: 2026-09-28
+- **1.12.140** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` NodePointSlope12 and NodePointSlope23: the default reference slopes are parallel, \[1,0,0\] for both (#2728)
+  - description: Found while writing the node pages of revision2026b step RG13.5.1, 2026-09-28: the default referenceCoordinates of NodePointSlope12 are \[0,0,0, 1,0,0, 1,0,0\] - slopeX and slopeY both along x - and of NodePointSlope23 \[0,0,0, 1,0,0, 1,0,0\] - slopey and slopez both along x. Neither spans a plate or a cross section; a flat plate in the x-y plane has slopes \[1,0,0\] and \[0,1,0\], a beam along x has cross section slopes \[0,1,0\] and \[0,0,1\]. Changing a default changes what a model without explicit reference coordinates computes, so it is raised, not changed; the node pages say to give them.
+  - **notes:** The default reference coordinates of NodePointSlope12 are those of a flat plate in the x-y plane, \[0,0,0, 1,0,0, 0,1,0\], and of NodePointSlope23 those of the cross section of a beam along x, \[0,0,0, 0,1,0, 0,0,1\]; before, both slope vectors of each node were \[1,0,0\]. A model gives the reference coordinates of every node, so this changes what the defaults show.
+  - date resolved: **2026-09-28 07:45**, date raised: 2026-09-28
 - **1.12.137** `TESTING` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` A test hook for forceQuitSimulation, which nothing can reach (#2674)
   - description: \#2616 fixed the behaviour - quitting the renderer before a simulation starts raises where quitting during it does not - but no test can set forceQuitSimulation: it is set by the renderer thread from a key press or a closed window, and there is no binding for it. So the fix of \#2616 is checked by hand and stays checked by hand. Either a binding (mbs.systemData or the renderer) or a test-only hook is needed, and which of the two is the decision this step takes (revision2026b step RG4.5, raised 2026-09-26).
   - **notes:** SC.renderer.StopSimulation(forceQuit=True) stops a simulation from Python as closing the render window does - a running one after its step, and with forceQuit also one that starts later, until mbs.SetRenderEngineStopFlag(False); quitting before or during a simulation is tested.

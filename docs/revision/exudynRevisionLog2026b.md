@@ -6353,3 +6353,30 @@ the C++ check is **one** rule on the type bits of all markers (`Position` needs 
 `Position` or `Position2D`, `Orientation` one with `Orientation` or `Orientation2D`), not a check
 per marker, and generating it would turn one line into three. The coordinate markers stay
 undeclared: they fit any node with coordinates of their kind, which is no rule on node types.
+
+<a id="rg13-5-0-5"></a>
+### RG13.5.0.5 — every item on a new page of the PDF; the default slopes (2026-09-28, #2729, #2728)
+
+**The page break** (maintainer: *"the PDF docs should add a new page before every item in the items
+reference manual. This improves readability"*): `itemDocsEmitter.py` opens every item page with a
+raw LaTeX block, `\clearpage`, right after the generated-file comment and before the target and the
+title; the HTML build ignores a raw LaTeX block. In the LaTeX of the PDF there are 98 now - 97
+items and the one there was - each directly before the `\subsubsection` of an item.
+
+**The default slopes (#2728)**, raised in RG13.5.1 and not changed then because a default changes
+what a model computes. The maintainer decided otherwise: *"The reference values have to be set for
+any usage, but the user should see how these values could look like - so correcting is important
+... there is no problem with existing user scripts, as this should have always been overwritten."*
+So `NodePointSlope12` has `[0,0,0, 1,0,0, 0,1,0]` - a flat plate in the $x$-$y$ plane - and
+`NodePointSlope23` `[0,0,0, 0,1,0, 0,0,1]` - the cross section of a beam along $x$ -, and their
+pages say that the defaults are those, and that a model gives the reference coordinates of every
+node. `NodePointSlope1`, whose default `[0,0,0, 1,0,0]` was right, and whose class description had
+the two-component slope, is unchanged since RG13.5.1.
+
+**A correction to the report of RG13.5.4**: the static load factor rule - it does not apply to a
+load with a user function - was **not** wrong in the documentation. The description of
+`loadVectorUserFunction` of `LoadForceVector` said it (*"NOTE that in static computations, the
+loadFactor is always 1 for forces computed by user functions"*), and the other loads refer to it.
+What had it the other way round was `loadDefinitionsDev.md`, the development document written in
+RG13.4, and that is what the log of RG13.5.0.1 corrected; the summary given to the maintainer
+listed it among the errors of the existing documentation, which it was not.

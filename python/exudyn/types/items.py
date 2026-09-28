@@ -163,7 +163,7 @@ items = {
     'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "node's unique name"},
-      'referenceCoordinates': {'type': 'Vector9D', 'size': '9', 'range': '', 'default': '[0.,0.,0.,1.,0.,0.,1.,0.,0.]', 'mustBeGiven': False, 'description': 'reference coordinates (x-pos,y-pos,z-pos; x-slopeX, y-slopeX, z-slopeX; x-slopeY, y-slopeY, z-slopeY) of node; global position of node without displacement'},
+      'referenceCoordinates': {'type': 'Vector9D', 'size': '9', 'range': '', 'default': '[0.,0.,0.,1.,0.,0.,0.,1.,0.]', 'mustBeGiven': False, 'description': 'reference coordinates (x-pos,y-pos,z-pos; x-slopeX, y-slopeX, z-slopeX; x-slopeY, y-slopeY, z-slopeY) of node; global position of node without displacement'},
       'initialCoordinates': {'type': 'Vector9D', 'size': '9', 'range': '', 'default': '[0.,0.,0.,0.,0.,0.,0.,0.,0.]', 'mustBeGiven': False, 'description': 'initial displacement coordinates relative to reference coordinates'},
       'initialVelocities': {'type': 'Vector9D', 'size': '9', 'range': '', 'default': '[0.,0.,0.,0.,0.,0.,0.,0.,0.]', 'mustBeGiven': False, 'description': 'initial velocity coordinates'},
     },
@@ -179,7 +179,7 @@ items = {
     'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "node's unique name"},
-      'referenceCoordinates': {'type': 'Vector9D', 'size': '9', 'range': '', 'default': '[0.,0.,0.,1.,0.,0.,1.,0.,0.]', 'mustBeGiven': False, 'description': 'reference coordinates (x-pos,y-pos,z-pos; x-slopey, y-slopey, z-slopey; x-slopez, y-slopez, z-slopez) of node; global position of node without displacement'},
+      'referenceCoordinates': {'type': 'Vector9D', 'size': '9', 'range': '', 'default': '[0.,0.,0.,0.,1.,0.,0.,0.,1.]', 'mustBeGiven': False, 'description': 'reference coordinates (x-pos,y-pos,z-pos; x-slopey, y-slopey, z-slopey; x-slopez, y-slopez, z-slopez) of node; global position of node without displacement'},
       'initialCoordinates': {'type': 'Vector9D', 'size': '9', 'range': '', 'default': '[0.,0.,0.,0.,0.,0.,0.,0.,0.]', 'mustBeGiven': False, 'description': 'initial displacement coordinates relative to reference coordinates'},
       'initialVelocities': {'type': 'Vector9D', 'size': '9', 'range': '', 'default': '[0.,0.,0.,0.,0.,0.,0.,0.,0.]', 'mustBeGiven': False, 'description': 'initial velocity coordinates'},
     },
