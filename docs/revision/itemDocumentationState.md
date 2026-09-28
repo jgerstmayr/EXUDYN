@@ -7,13 +7,13 @@
 | Object (SuperElement) | 4 | 0 | 3 | 2 | 2 of 122 | 0 of 16 | 0 | 0 |
 | Object (Object) | 1 | 0 | 1 | 0 | 0 of 9 | 0 of 3 | 0 | 0 |
 | Object (FiniteElement) | 7 | 0 | 7 | 4 | 0 of 104 | 0 of 66 | 2 | 1 |
-| Object (Connector) | 19 | 1 | 14 | 12 | 0 of 309 | 0 of 74 | 1 | 0 |
+| Object (Connector) | 19 | 0 | 14 | 12 | 0 of 309 | 0 of 74 | 1 | 0 |
 | Object (Constraint) | 3 | 0 | 3 | 1 | 0 of 31 | 0 of 12 | 0 | 0 |
 | Object (Joint) | 10 | 1 | 5 | 9 | 0 of 100 | 0 of 46 | 0 | 0 |
 | Marker | 18 | 0 | 17 | 17 | 1 of 81 | 0 of 0 | 1 | 1 |
 | Load | 4 | 0 | 4 | 3 | 0 of 22 | 0 of 0 | 0 | 0 |
 | Sensor | 8 | 0 | 8 | 8 | 0 of 60 | 0 of 0 | 0 | 0 |
-| **all** | 97 | 2 | 84 | 74 | 3 of 985 | 0 of 413 | 7 | 4 |
+| **all** | 97 | 1 | 84 | 74 | 3 of 985 | 0 of 413 | 7 | 4 |
 
 | item | kind | overall description (words) | detailed description (words, sections) | figure | parameters: without a real description | output variables (undescribed) | MiniExample | used in scripts | used in the package |
 |---|---|---|---|---|---|---|---|---|---|
@@ -67,13 +67,13 @@
 | ObjectConnectorCoordinateVector | Object (Constraint) | 33 | 429, 3 | - | 0 of 13 | 4 | - | 3 | 0 |
 | ObjectConnectorRollingDiscPenalty | Object (Connector) | 90 | 544, 4 | yes | 0 of 18 | 5 | - | 12 | 2 |
 | ObjectContactConvexRoll | Object (Connector) | 71 | 550, 2 | yes | 0 of 19 | 4 | - | 1 | 0 |
-| ObjectContactCoordinate | Object (Connector) | 48 | - | - | 0 of 10 | 0 | - | 4 | 0 |
-| ObjectContactCircleCable2D | Object (Connector) | 88 | 24, 1 | - | 0 of 13 | 0 | - | 7 | 0 |
+| ObjectContactCoordinate | Object (Connector) | 48 | 135, 3 | - | 0 of 10 | 0 | - | 4 | 0 |
+| ObjectContactCircleCable2D | Object (Connector) | 88 | 157, 3 | - | 0 of 13 | 0 | - | 7 | 0 |
 | ObjectContactFrictionCircleCable2D | Object (Connector) | 89 | 2057, 7 | yes | 0 of 16 | 3 | - | 8 | 0 |
 | ObjectContactSphereSphere | Object (Connector) | 55 | 1040, 2 | yes | 0 of 20 | 7 | - | 7 | 1 |
-| ObjectContactSphereTorus | Object (Connector) | 29 | 107, 2 | - | 0 of 18 | 8 | - | 0 | 1 |
-| ObjectContactSphereTriangle | Object (Connector) | 28 | 107, 2 | - | 0 of 17 | 6 | - | 2 | 1 |
-| ObjectContactCurveCircles | Object (Connector) | 38 | 58, 2 | - | 0 of 19 | 3 | - | 5 | 0 |
+| ObjectContactSphereTorus | Object (Connector) | 29 | 277, 3 | - | 0 of 18 | 8 | - | 0 | 1 |
+| ObjectContactSphereTriangle | Object (Connector) | 28 | 249, 3 | - | 0 of 17 | 6 | - | 2 | 1 |
+| ObjectContactCurveCircles | Object (Connector) | 38 | 221, 3 | - | 0 of 19 | 3 | - | 5 | 0 |
 | ObjectJointGeneric | Object (Joint) | 43 | 370, 2 | yes | 0 of 14 | 8 | - | 61 | 3 |
 | ObjectJointRevoluteZ | Object (Joint) | 85 | 246, 2 | yes | 0 of 9 | 8 | yes | 25 | 2 |
 | ObjectJointPrismaticX | Object (Joint) | 80 | 240, 2 | yes | 0 of 9 | 8 | - | 1 | 2 |

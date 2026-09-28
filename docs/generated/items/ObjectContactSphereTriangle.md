@@ -67,19 +67,38 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 | intermediate variables | symbol | description |
 |---|---|---|
-| marker m0 position | $\LU{0}{\pv}_{m0}$ | global position of torus 0 center as provided by marker m0 |
-| marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
-| marker m1 position | $\LU{0}{\pv}_{m1}$ | global position of sphere 1 center as provided by marker m1 |
-| marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
-| data coordinates | $\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$ | hold the current gap (0), the (norm of the) tangential velocity (1), the impact velocity (2), and (3) which is undefined |
-| marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
-| marker m1 velocity | $\LU{0}{\vv}_{m1}$ | current global velocity which is provided by marker m1 |
-| marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 |
-| marker m1 angular velocity | $\LU{0}{\tomega}_{m1}$ | current angular velocity vector provided by marker m1 |
+| marker m0 position | $\LU{0}{\pv}_{m0}$ | center of the sphere, provided by marker m0 |
+| marker m1 position | $\LU{0}{\pv}_{m1}$ | reference point of the triangle, provided by marker m1 |
+| marker m1 orientation | $\LU{0,m1}{\Rot}$ | rotation of the triangle, provided by marker m1 |
+| triangle points | $\LU{0}{\pv}_{i} = \LU{0}{\pv}_{m1} + \LU{0,m1}{\Rot}\, \LU{m1}{\pv}_i$ | the three `trianglePoints` in the global frame |
+| marker velocities | $\LU{0}{\vv}_{m0}$, $\LU{0}{\vv}_{m1}$ | global velocities |
+| data coordinates | $\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$ | the gap (0), the norm of the tangential velocity (1), the impact velocity (2); (3) is unused |
+
+### Geometric relations
+
+The point $\LU{0}{\pv}_T$ of the triangle closest to the sphere center is found - inside the triangle or
+on one of its edges -, and with $\Delta\pv = \LU{0}{\pv}_T - \LU{0}{\pv}_{m0}$
+
+$$
+g = \Vert \Delta\pv \Vert - r_S , \quad \LU{0}{\nv} = \frac{\Delta\pv}{\Vert \Delta\pv \Vert} .
+$$
+
+A contact on an edge counts only if `includeEdges` contains that edge (bit 1: edge 0 from point 0 to
+1, bit 2: edge 1, bit 4: edge 2). The velocity of the contact point on the triangle includes the
+rotation of marker 1; that of the sphere includes its rotation only if friction is used, because
+only then does marker 0 need an orientation.
 
 ### Connector forces
 
-TBD
+The normal force - from the penetration $\delta = -g$, with `contactStiffness` $k_c$, the exponent
+$n_\mathrm{exp}$, `contactDamping` $d_c$ and the impact model `impactModel` with the restitution
+coefficient - and the regularized dry friction with $\mu_d$ and `frictionProportionalZone` are
+computed exactly as for `ObjectContactSphereSphere`, see [](#sec-item-objectcontactspheresphere),
+with the normal $\LU{0}{\nv}$ and the relative velocity at the contact point of this contact. The force
+on marker 1 is $\LU{0}{\fv}$, the force on marker 0 is $-\LU{0}{\fv}$; the friction force also gives a
+torque about the centers. The data coordinates hold the gap, the tangential velocity and the impact
+velocity of the last post Newton step, which decide on contact and on the friction regime during the
+Newton iterations (active set).
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`sphereTriangleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest.py) (TM), [`sphereTriangleTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest2.py) (TM)

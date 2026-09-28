@@ -70,16 +70,43 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 | intermediate variables | symbol | description |
 |---|---|---|
-| marker m0 position | $\LU{0}{\pv}_{m0}$ | global position of torus 0 center as provided by marker m0 |
-| marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
-| marker m1 position | $\LU{0}{\pv}_{m1}$ | global position of sphere 1 center as provided by marker m1 |
-| marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
-| data coordinates | $\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$ | hold the current gap (0), the (norm of the) tangential velocity (1), the impact velocity (2), and (3) which is undefined |
-| marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
-| marker m1 velocity | $\LU{0}{\vv}_{m1}$ | current global velocity which is provided by marker m1 |
-| marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 |
-| marker m1 angular velocity | $\LU{0}{\tomega}_{m1}$ | current angular velocity vector provided by marker m1 |
+| marker m0 position | $\LU{0}{\pv}_{m0}$ | center of the sphere, provided by marker m0 |
+| marker m1 position | $\LU{0}{\pv}_{m1}$ | center of the torus, provided by marker m1 |
+| marker m1 orientation | $\LU{0,m1}{\Rot}$ | rotation of the torus, provided by marker m1 |
+| marker velocities | $\LU{0}{\vv}_{m0}$, $\LU{0}{\vv}_{m1}$ | global velocities of the two centers |
+| marker angular velocities | $\LU{0}{\tomega}_{m0}$, $\LU{0}{\tomega}_{m1}$ | global angular velocities of sphere and torus |
+| torus axis | $\LU{0}{\av} = \LU{0,m1}{\Rot}\, \vv_{axis}$ | the axis `torusAxis` in the global frame |
+| data coordinates | $\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$ | the gap (0), the norm of the tangential velocity (1), the impact velocity (2); (3) is unused |
+
+### Geometric relations
+
+The sphere lies **inside** the torus - in its tube -, which is the case of a ball in the groove of a
+bearing ring; outer contact is not implemented. The sphere center is projected into the plane of the
+torus through $\LU{0}{\pv}_{m1}$ normal to $\LU{0}{\av}$, and the center of the tube circle next to it is
+
+$$
+\LU{0}{\pv}_{c} = \LU{0}{\pv}_{m1} + r_M \frac{\pv_{proj} - \LU{0}{\pv}_{m1}}{\Vert \pv_{proj} - \LU{0}{\pv}_{m1} \Vert} ,
+$$
+
+which fails if the sphere center is on the axis. With $\Delta\pv = \LU{0}{\pv}_{m0} - \LU{0}{\pv}_{c}$, the
+gap and the normal are
+
+$$
+g = r_m - r_S - \Vert \Delta\pv \Vert , \quad \LU{0}{\nv} = \frac{\Delta\pv}{\Vert \Delta\pv \Vert} ,
+$$
+
+with the minor radius $r_m$ and the sphere radius $r_S$; the contact point is at
+$\LU{0}{\pv}_{m0} + (r_S + g/2)\LU{0}{\nv}$, and the relative velocity there includes the rotations of both
+bodies.
 
 ### Connector forces
 
-TBD
+The normal force - from the penetration $\delta = -g$, with `contactStiffness` $k_c$, the exponent
+$n_\mathrm{exp}$, `contactDamping` $d_c$ and the impact model `impactModel` with the restitution
+coefficient - and the regularized dry friction with $\mu_d$ and `frictionProportionalZone` are
+computed exactly as for `ObjectContactSphereSphere`, see [](#sec-item-objectcontactspheresphere),
+with the normal $\LU{0}{\nv}$ and the relative velocity at the contact point of this contact. The force
+on marker 1 is $\LU{0}{\fv}$, the force on marker 0 is $-\LU{0}{\fv}$; the friction force also gives a
+torque about the centers. The data coordinates hold the gap, the tangential velocity and the impact
+velocity of the last post Newton step, which decide on contact and on the friction regime during the
+Newton iterations (active set).

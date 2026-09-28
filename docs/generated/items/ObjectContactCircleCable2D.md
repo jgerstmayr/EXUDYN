@@ -43,10 +43,26 @@ The parameters of `VObjectContactCircleCable2D`, given as `visualization`:
 (description-objectcontactcirclecable2d)=
 ## Detailed description
 
-### Connector equations
+### Markers
 
-Geometry and equations are very similar to `ObjectContactFrictionCircleCable2D`, while friction is not used and no torque
-is transferred to the circle object.
+Marker 0 is the center of the circle, any marker with a position; marker 1 is a
+`MarkerBodyCable2DShape` on an ANCF cable element, with the same `numberOfContactSegments` as the
+connector.
+
+### Geometric relations
+
+The cable is divided into `numberOfContactSegments` straight segments between the points of the shape
+marker; for each segment the gap is the distance of the circle center from the segment minus
+`circleRadius` and `offset`, and the penetration is integrated, piecewise linear, along the segment.
+
+### Connector forces
+
+Per segment in contact, a force per length $f_N = k_c\, g + d_c\, \dot g$ in the normal direction of the
+contact, with `contactStiffness` and `contactDamping` per segment; the forces act on the cable through
+the shape functions of the marker and on the circle center. There is **no friction and no torque** on
+the circle: otherwise geometry and equations are those of `ObjectContactFrictionCircleCable2D`, see
+[](#sec-item-objectcontactfrictioncirclecable2d). The data coordinates, one per segment, hold the gap of
+the last post Newton step and decide on contact (active set).
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFcontactCircleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py) (TM), [`ANCFmovingRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py) (TM), [`ANCFslidingAndALEjointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFslidingAndALEjointTest.py) (TM)

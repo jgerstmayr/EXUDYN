@@ -9543,6 +9543,39 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A penalty-based contact condition for one coordinate; the contact gap $g$ is defined as $g=marker.value[1]- marker.value[0] - offset$; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.""",
     classType=ClassTypeObject,
+    detailedDescription=r"""    #### Definition of quantities
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker values | $c_{m0}$, $c_{m1}$ | the coordinates the two coordinate markers provide |
+    | data coordinate | $x_0$ | the gap of the last post Newton step, which decides on contact |
+
+    #### Geometric relations
+
+    The gap and its velocity are
+
+    $$
+    g = c_{m1} - c_{m0} - \mathrm{offset} , \quad \dot g = \dot c_{m1} - \dot c_{m0} ;
+    $$
+
+    $g > 0$ is no contact, $g \le 0$ penetration.
+
+    #### Connector forces
+
+    With the contact state from the data coordinate - contact if $x_0 \le 0$ -
+
+    $$
+    f_c = \begin{cases} k_c\, g + d_c\, \dot g & \mathrm{contact} \\ 0 & \mathrm{else} \end{cases}
+    $$
+
+    acts on the coordinate of marker 1 with $+f_c$ and on that of marker 0 with $-f_c$, through the
+    Jacobians of the coordinate markers. The data coordinate is updated to the current gap in the post
+    Newton step, and a change of the contact state repeats the step (active set strategy); the step size
+    recommended for the next step is the time to reach $g = 0$ with the current gap velocity.
+
+    `activeConnector` has no effect on this connector, and the output variable `Distance` it declares is
+    not available (#2735).
+    """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
     visuParentClass=VisuParentClassVisualizationObject,
@@ -9647,12 +9680,27 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.""",
     classType=ClassTypeObject,
-    detailedDescription=r"""    #### Connector equations
+    detailedDescription=r"""    #### Markers
 
-    Geometry and equations are very similar to `ObjectContactFrictionCircleCable2D`, while friction is not used and no torque
-    is transferred to the circle object.
-<!-- -->
-""",
+    Marker 0 is the center of the circle, any marker with a position; marker 1 is a
+    `MarkerBodyCable2DShape` on an ANCF cable element, with the same `numberOfContactSegments` as the
+    connector.
+
+    #### Geometric relations
+
+    The cable is divided into `numberOfContactSegments` straight segments between the points of the shape
+    marker; for each segment the gap is the distance of the circle center from the segment minus
+    `circleRadius` and `offset`, and the penetration is integrated, piecewise linear, along the segment.
+
+    #### Connector forces
+
+    Per segment in contact, a force per length $f_N = k_c\, g + d_c\, \dot g$ in the normal direction of the
+    contact, with `contactStiffness` and `contactDamping` per segment; the forces act on the cable through
+    the shape functions of the marker and on the circle center. There is **no friction and no torque** on
+    the circle: otherwise geometry and equations are those of `ObjectContactFrictionCircleCable2D`, see
+    [](#sec-item-objectcontactfrictioncirclecable2d). The data coordinates, one per segment, hold the gap of
+    the last post Newton step and decide on contact (active set).
+    """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
     visuParentClass=VisuParentClassVisualizationObject,
@@ -10721,24 +10769,49 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     detailedDescription=r"""    #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
-    | marker m0 position | $\LU{0}{\pv}_{m0}$ | global position of torus 0 center as provided by marker m0 |
-    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
-    | marker m1 position | $\LU{0}{\pv}_{m1}$ | global position of sphere 1 center as provided by marker m1 |
-    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
-    | data coordinates | $\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$ | hold the current gap (0), the (norm of the) tangential velocity (1), the impact velocity (2), and (3) which is undefined |
-    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
-    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | current global velocity which is provided by marker m1 |
-    | marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 |
-    | marker m1 angular velocity | $\LU{0}{\tomega}_{m1}$ | current angular velocity vector provided by marker m1 |
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | center of the sphere, provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | center of the torus, provided by marker m1 |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | rotation of the torus, provided by marker m1 |
+    | marker velocities | $\LU{0}{\vv}_{m0}$, $\LU{0}{\vv}_{m1}$ | global velocities of the two centers |
+    | marker angular velocities | $\LU{0}{\tomega}_{m0}$, $\LU{0}{\tomega}_{m1}$ | global angular velocities of sphere and torus |
+    | torus axis | $\LU{0}{\av} = \LU{0,m1}{\Rot}\, \vv_{axis}$ | the axis `torusAxis` in the global frame |
+    | data coordinates | $\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$ | the gap (0), the norm of the tangential velocity (1), the impact velocity (2); (3) is unused |
 
+    #### Geometric relations
+
+    The sphere lies **inside** the torus - in its tube -, which is the case of a ball in the groove of a
+    bearing ring; outer contact is not implemented. The sphere center is projected into the plane of the
+    torus through $\LU{0}{\pv}_{m1}$ normal to $\LU{0}{\av}$, and the center of the tube circle next to it is
+
+    $$
+    \LU{0}{\pv}_{c} = \LU{0}{\pv}_{m1} + r_M \frac{\pv_{proj} - \LU{0}{\pv}_{m1}}{\Vert \pv_{proj} - \LU{0}{\pv}_{m1} \Vert} ,
+    $$
+
+    which fails if the sphere center is on the axis. With $\Delta\pv = \LU{0}{\pv}_{m0} - \LU{0}{\pv}_{c}$, the
+    gap and the normal are
+
+    $$
+    g = r_m - r_S - \Vert \Delta\pv \Vert , \quad \LU{0}{\nv} = \frac{\Delta\pv}{\Vert \Delta\pv \Vert} ,
+    $$
+
+    with the minor radius $r_m$ and the sphere radius $r_S$; the contact point is at
+    $\LU{0}{\pv}_{m0} + (r_S + g/2)\LU{0}{\nv}$, and the relative velocity there includes the rotations of both
+    bodies.
 
     #### Connector forces
 
-    TBD
-""",
+    The normal force - from the penetration $\delta = -g$, with `contactStiffness` $k_c$, the exponent
+    $n_\mathrm{exp}$, `contactDamping` $d_c$ and the impact model `impactModel` with the restitution
+    coefficient - and the regularized dry friction with $\mu_d$ and `frictionProportionalZone` are
+    computed exactly as for `ObjectContactSphereSphere`, see [](#sec-item-objectcontactspheresphere),
+    with the normal $\LU{0}{\nv}$ and the relative velocity at the contact point of this contact. The force
+    on marker 1 is $\LU{0}{\fv}$, the force on marker 0 is $-\LU{0}{\fv}$; the friction force also gives a
+    torque about the centers. The data coordinates hold the gap, the tangential velocity and the impact
+    velocity of the last post Newton step, which decide on contact and on the friction regime during the
+    Newton iterations (active set).
+    """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
     outputVariables=[
@@ -10894,24 +10967,41 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     detailedDescription=r"""    #### Definition of quantities
 
-
     | intermediate variables | symbol | description |
     |---|---|---|
-    | marker m0 position | $\LU{0}{\pv}_{m0}$ | global position of torus 0 center as provided by marker m0 |
-    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
-    | marker m1 position | $\LU{0}{\pv}_{m1}$ | global position of sphere 1 center as provided by marker m1 |
-    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | current rotation matrix provided by marker m1 |
-    | data coordinates | $\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$ | hold the current gap (0), the (norm of the) tangential velocity (1), the impact velocity (2), and (3) which is undefined |
-    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
-    | marker m1 velocity | $\LU{0}{\vv}_{m1}$ | current global velocity which is provided by marker m1 |
-    | marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 |
-    | marker m1 angular velocity | $\LU{0}{\tomega}_{m1}$ | current angular velocity vector provided by marker m1 |
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | center of the sphere, provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | reference point of the triangle, provided by marker m1 |
+    | marker m1 orientation | $\LU{0,m1}{\Rot}$ | rotation of the triangle, provided by marker m1 |
+    | triangle points | $\LU{0}{\pv}_{i} = \LU{0}{\pv}_{m1} + \LU{0,m1}{\Rot}\, \LU{m1}{\pv}_i$ | the three `trianglePoints` in the global frame |
+    | marker velocities | $\LU{0}{\vv}_{m0}$, $\LU{0}{\vv}_{m1}$ | global velocities |
+    | data coordinates | $\xv=[x_0,\,x_1,\,x_2,\,x_3]\tp$ | the gap (0), the norm of the tangential velocity (1), the impact velocity (2); (3) is unused |
 
+    #### Geometric relations
+
+    The point $\LU{0}{\pv}_T$ of the triangle closest to the sphere center is found - inside the triangle or
+    on one of its edges -, and with $\Delta\pv = \LU{0}{\pv}_T - \LU{0}{\pv}_{m0}$
+
+    $$
+    g = \Vert \Delta\pv \Vert - r_S , \quad \LU{0}{\nv} = \frac{\Delta\pv}{\Vert \Delta\pv \Vert} .
+    $$
+
+    A contact on an edge counts only if `includeEdges` contains that edge (bit 1: edge 0 from point 0 to
+    1, bit 2: edge 1, bit 4: edge 2). The velocity of the contact point on the triangle includes the
+    rotation of marker 1; that of the sphere includes its rotation only if friction is used, because
+    only then does marker 0 need an orientation.
 
     #### Connector forces
 
-    TBD
-""",
+    The normal force - from the penetration $\delta = -g$, with `contactStiffness` $k_c$, the exponent
+    $n_\mathrm{exp}$, `contactDamping` $d_c$ and the impact model `impactModel` with the restitution
+    coefficient - and the regularized dry friction with $\mu_d$ and `frictionProportionalZone` are
+    computed exactly as for `ObjectContactSphereSphere`, see [](#sec-item-objectcontactspheresphere),
+    with the normal $\LU{0}{\nv}$ and the relative velocity at the contact point of this contact. The force
+    on marker 1 is $\LU{0}{\fv}$, the force on marker 0 is $-\LU{0}{\fv}$; the friction force also gives a
+    torque about the centers. The data coordinates hold the gap, the tangential velocity and the impact
+    velocity of the last post Newton step, which decide on contact and on the friction regime during the
+    Newton iterations (active set).
+    """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
     outputVariables=[
@@ -11060,24 +11150,33 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING; friction not yet available]',
     classType=ClassTypeObject,
-    detailedDescription=r"""    #### Definition of quantities
+    detailedDescription=r"""    **Further testing is required, and friction is not available yet**, as the class description says.
 
+    #### Definition of quantities
 
     | intermediate variables | symbol | description |
     |---|---|---|
-    | marker m0 position | $\LU{0}{\pv}_{m0}$ | global position of sphere 0 center as provided by marker m0 |
-    | marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
-    | marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
-    | marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 |
-    | data coordinates | $\xv=[x_0,\,x_1,\, \ldots]\tp$ | data coordinates per number of circle markers |
-
-    <!-- -->
+    | marker m0 position, orientation | $\LU{0}{\pv}_{m0}$, $\LU{0,m0}{\Rot}$ | the frame carrying the curve; `rotationMarker0` turns it so that the curve lies in its $x$-$y$ plane |
+    | circle markers | $\LU{0}{\pv}_{c_i}$ | centers of the $n_c$ circles with radii `circlesRadii` |
+    | segments | $\Dm$ | `segmentsData`: one straight segment per row, two planar points in the curve frame |
+    | polynomials | $\Pm$ | `polynomialData`: optional coefficients that bend each segment |
+    | data coordinates | $\xv$ | per segment, the state of the last post Newton step |
 
     #### Geometric relations
 
-    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    tbd
-""",
+    The circle centers are transformed into the frame of the curve and projected into its plane. For each
+    segment and each circle, the gap is the distance of the circle center from the segment minus the
+    radius; a segment takes the circle with the largest penetration. The penetration is integrated along
+    the part of the segment in contact, so that the contact stiffness does not depend on how finely the
+    curve is divided.
+
+    #### Connector forces
+
+    Per segment in contact, the normal force follows from `contactStiffness`, `contactDamping` and the
+    integrated penetration, as `contactModel` selects; it acts in the plane of the curve on the circle
+    center and, with opposite sign, on marker 0 with the torque of its lever arm. A segment must be short
+    enough that only one circle touches it at a time, which the connector warns about.
+    """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
     outputVariables=[

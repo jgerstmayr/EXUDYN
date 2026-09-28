@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.143.dev1
 - last change = 2026-09-28
-- Number of issues = 2735
+- Number of issues = 2736
 - Number of resolved issues = 2457 (143 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -8374,6 +8374,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` ObjectContactCoordinate ignores activeConnector, and its output variable Distance raises (#2735)
+  - description: Found while documenting the connectors, revision2026b step RG13.5.2.4, 2026-09-28: CObjectContactCoordinate::ComputeODE2LHS computes the contact force without looking at parameters.activeConnector, so the connector cannot be switched off as its parameter says; and GetOutputVariableTypes declares Distance while GetOutputVariableConnector raises 'not implemented', so a SensorObject asking for it passes Assemble() and fails during the simulation. Small, but found by the maintainer's rule it becomes an RG4 step: revision2026b step RG4.11.
+  - date raised: 2026-09-28
 - <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectGenericODE2 and ObjectKinematicTree admit the general body markers, which fail during the simulation (#2734)
   - description: Found while documenting the super elements, revision2026b step RG13.5.2.3, 2026-09-28: both objects declare the access function types TranslationalVelocity\_qt and AngularVelocity\_qt (and GenericODE2 DisplacementMassIntegral\_q), which their own markers need - MarkerSuperElementPosition/Rigid, MarkerKinematicTreeRigid - to pass CSystem::CheckSystemIntegrity. The same types admit MarkerBodyPosition, MarkerBodyRigid and MarkerBodyMass, whose computation calls GetAccessFunctionBody, and that raises 'not available' for both objects. The declaration now carries bodyMarkers=False, which the item pages use; the analysis: let the integrity check use it too, so that Assemble() refuses the combination. revision2026b step RG4.10.
   - date raised: 2026-09-28

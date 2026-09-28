@@ -38,5 +38,41 @@ The parameters of `VObjectContactCoordinate`, given as `visualization`:
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+(description-objectcontactcoordinate)=
+## Detailed description
+
+### Definition of quantities
+
+| intermediate variables | symbol | description |
+|---|---|---|
+| marker values | $c_{m0}$, $c_{m1}$ | the coordinates the two coordinate markers provide |
+| data coordinate | $x_0$ | the gap of the last post Newton step, which decides on contact |
+
+### Geometric relations
+
+The gap and its velocity are
+
+$$
+g = c_{m1} - c_{m0} - \mathrm{offset} , \quad \dot g = \dot c_{m1} - \dot c_{m0} ;
+$$
+
+$g > 0$ is no contact, $g \le 0$ penetration.
+
+### Connector forces
+
+With the contact state from the data coordinate - contact if $x_0 \le 0$ -
+
+$$
+f_c = \begin{cases} k_c\, g + d_c\, \dot g & \mathrm{contact} \\ 0 & \mathrm{else} \end{cases}
+$$
+
+acts on the coordinate of marker 1 with $+f_c$ and on that of marker 0 with $-f_c$, through the
+Jacobians of the coordinate markers. The data coordinate is updated to the current gap in the post
+Newton step, and a change of the contact state repeats the step (active set strategy); the step size
+recommended for the next step is the time to reach $g = 0$ with the current gap velocity.
+
+`activeConnector` has no effect on this connector, and the output variable `Distance` it declares is
+not available (#2735).
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFcontactCircleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py) (TM), [`contactCoordinateTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactCoordinateTest.py) (TM)

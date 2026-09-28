@@ -1,0 +1,12 @@
+{
+  "number": 2735,
+  "title": "ObjectContactCoordinate ignores activeConnector, and its output variable Distance raises",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "Found while documenting the connectors, revision2026b step RG13.5.2.4, 2026-09-28: CObjectContactCoordinate::ComputeODE2LHS computes the contact force without looking at parameters.activeConnector, so the connector cannot be switched off as its parameter says; and GetOutputVariableTypes declares Distance while GetOutputVariableConnector raises 'not implemented', so a SensorObject asking for it passes Assemble() and fails during the simulation. Small, but found by the maintainer's rule it becomes an RG4 step: revision2026b step RG4.11.",
+  "dateRaised": "2026-09-28",
+  "deadline": "2027-03-27",
+  "file": "src/ImplObjects/CObjectContactCoordinate.cpp"
+}

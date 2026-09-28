@@ -61,19 +61,32 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 (description-objectcontactcurvecircles)=
 ## Detailed description
 
+**Further testing is required, and friction is not available yet**, as the class description says.
+
 ### Definition of quantities
 
 | intermediate variables | symbol | description |
 |---|---|---|
-| marker m0 position | $\LU{0}{\pv}_{m0}$ | global position of sphere 0 center as provided by marker m0 |
-| marker m0 orientation | $\LU{0,m0}{\Rot}$ | current rotation matrix provided by marker m0 |
-| marker m0 velocity | $\LU{0}{\vv}_{m0}$ | current global velocity which is provided by marker m0 |
-| marker m0 angular velocity | $\LU{0}{\tomega}_{m0}$ | current angular velocity vector provided by marker m0 |
-| data coordinates | $\xv=[x_0,\,x_1,\, \ldots]\tp$ | data coordinates per number of circle markers |
+| marker m0 position, orientation | $\LU{0}{\pv}_{m0}$, $\LU{0,m0}{\Rot}$ | the frame carrying the curve; `rotationMarker0` turns it so that the curve lies in its $x$-$y$ plane |
+| circle markers | $\LU{0}{\pv}_{c_i}$ | centers of the $n_c$ circles with radii `circlesRadii` |
+| segments | $\Dm$ | `segmentsData`: one straight segment per row, two planar points in the curve frame |
+| polynomials | $\Pm$ | `polynomialData`: optional coefficients that bend each segment |
+| data coordinates | $\xv$ | per segment, the state of the last post Newton step |
 
 ### Geometric relations
 
-tbd
+The circle centers are transformed into the frame of the curve and projected into its plane. For each
+segment and each circle, the gap is the distance of the circle center from the segment minus the
+radius; a segment takes the circle with the largest penetration. The penetration is integrated along
+the part of the segment in contact, so that the contact stiffness does not depend on how finely the
+curve is divided.
+
+### Connector forces
+
+Per segment in contact, the normal force follows from `contactStiffness`, `contactDamping` and the
+integrated penetration, as `contactModel` selects; it acts in the plane of the curve on the circle
+center and, with opposite sign, on marker 0 with the torque of its lever arm. A segment must be short
+enough that only one circle touches it at a time, which the connector warns about.
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`camFollowerExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py) (Ex), [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`contactCurvePolynomial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurvePolynomial.py) (Ex), [`contactCurveWithLongCurve.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurveWithLongCurve.py) (Ex), [`contactCurveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactCurveExample.py) (TM)

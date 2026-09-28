@@ -6507,3 +6507,31 @@ Written from the access functions of each, which showed two things:
   function is $m$ times the Jacobian of the center of mass of the rigid frame, so a gravity load moves
   the frame and gives the flexible coordinates no share - said on the page, as the page of the reduced
   order object already said for `MarkerBodyPosition` and `MarkerBodyRigid`.
+
+<a id="rg13-5-2-4"></a>
+### RG13.5.2.4 — the pages of the connectors (2026-09-28, #2725, #2735)
+
+Most of the 19 connectors had the structure already - *Definition of quantities* (17) and *Connector
+forces* (14) -, so the work was the general section and the five that had little or nothing:
+
+- **the general connector section**: the principle all connectors follow - the markers provide, the
+  connector computes a force from them, the force goes back through the markers' Jacobians, with the
+  virtual work once -, the headings of a page, `activeConnector`, what `Force` and `ForceLocal` mean,
+  and the contact connectors with their data node and the active set strategy;
+- **`ObjectContactCoordinate`** (no text before): the gap $g = c_{m1} - c_{m0} - \mathrm{offset}$, the
+  force $k_c g + d_c \dot g$ while the data coordinate says contact, the post Newton step that updates it
+  and recommends the step size;
+- **`ObjectContactCircleCable2D`** (24 words): markers, the gap per segment, the force per segment,
+  and what differs from the friction version - no friction, no torque;
+- **`ObjectContactSphereTorus`** and **`ObjectContactSphereTriangle`** (*"Connector forces: TBD"*): the
+  geometry of each - the projection into the plane of the torus and the tube circle next to the
+  sphere; the closest point of the triangle and the edge bits of `includeEdges` - and the force, which
+  is computed **as for `ObjectContactSphereSphere`**, so the page refers to it. Their quantity tables had
+  marker 0 as the torus and marker 1 as the sphere - the other way round from the parameter
+  `markerNumbers` and the code; corrected;
+- **`ObjectContactCurveCircles`** (*"tbd"*): quantities, the gap per segment and circle, the force per
+  segment; *"further testing required"* stays on the page.
+
+**Two defects of `ObjectContactCoordinate`**, raised for RG4 (RG4.11, #2735): `activeConnector` is not
+used by the force computation, and the declared output variable `Distance` raises *"not
+implemented"*. The page says both as they are.
