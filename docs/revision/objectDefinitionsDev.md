@@ -72,7 +72,7 @@ same thing in the same place on every page of the group.
 | **Kinematics** | position and velocity of a local point $\pLocB$, rotation matrix - in terms of the node's coordinates, with frames |
 | **Definition of quantities** | the table: symbol, meaning, frame, from which parameter or node |
 | **Equations of motion** | mass matrix, quadratic velocity vector, applied forces; the form they take for the node's coordinates (refers to the node page for the rotation parametrization) |
-| **Markers and loads** | the position Jacobian and rotation Jacobian through which a marker applies a force or torque |
+| **Marker interfaces** | only what the general body section does not give: the Jacobians of this body - position Jacobian and rotation Jacobian, as the derivatives of its velocity and angular velocity with respect to the velocity coordinates. *(Maintainer, 2026-09-28: the interfaces of a body are markers only; connectors, constraints and loads are what acts through them, so "Markers and loads" was misleading.)* |
 
 ### Flexible bodies (beams, cables, plates, shells - nonlinear finite elements)
 
@@ -123,7 +123,12 @@ Before the first object of each group (the index pages `objectBodyIndex`, `objec
 `objectJointIndex`, ... already exist, with one paragraph each):
 
 - **Bodies**: what a body is to the solver (it owns nodes, provides mass matrix and forces); local
-  and global frames; how a marker on a body gets position and Jacobian.
+  and global frames; and **how the marker interfaces of a body are computed** (maintainer,
+  2026-09-28): a marker takes position, orientation, velocity and angular velocity **as the output
+  variables of the body define them**, at its local position, and the action of a force or torque
+  depends on the Jacobians of the body, computed from expressions like
+  $\partial \LU{0}{\vv} / \partial \dot\qv$ and $\partial \LU{0}{\tomega} / \partial \dot\qv$. The general
+  approach to the Jacobians is described once, here; a body page gives only its own.
 - **Connectors**: the principle every connector follows - *the markers provide positions,
   orientations and Jacobians; the connector computes a force from them; the force goes back through
   $\Jm\tp$* - once, with the virtual work, so that each connector page only gives its force law;
@@ -133,10 +138,13 @@ Before the first object of each group (the index pages `objectBodyIndex`, `objec
 - **Finite elements**: the conventions of all elements - reference configuration, the axial
   coordinate, how elements share nodes, how to build a mesh (`exudyn.beams`).
 
-## 5. Open for the maintainer
+## 5. Decided (maintainer, 2026-09-28)
 
-- The **finite elements** first? They have the largest gap and the equations are the maintainer's
-  own work (ANCF, geometrically exact beams) - an authoring step that needs the maintainer more than
-  any other.
-- Fixed headings as a **check**: `checkDefinitions` could warn about an object whose equations text
-  lacks the headings of its group - after the pages have them, not before.
+- **The order**: RG13.5.2 gets a sub-step per group of objects - bodies, flexible bodies, super
+  elements, connectors, constraints and joints, the general object - and starts with the **bodies**.
+- **No check of the headings**: `checkDefinitions` does not enforce the headings of a group; it would
+  make implementing a new element too complicated. The developer documentation at the end of RG13
+  says what a page needs, and it is checked by hand.
+- **`ObjectBeamGeometricallyExact` (3D) has defects and is under development**: its page stays open,
+  and the analysis of the implementation is a step of RG4. An item found with a larger defect while
+  it is documented gets an RG4 step for a deeper analysis rather than a fix inside RG13.

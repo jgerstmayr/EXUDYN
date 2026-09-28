@@ -83,7 +83,9 @@ Before the first marker, replacing today's paragraph of the index page:
 - **Markers in sensors**: `SensorMarker` measures what the marker provides, in the current
   configuration only.
 
-## 5. Open for the maintainer
+## 5. Decided
 
-- The general section's table generated from the types, or written once? Generated needs the
-  declared node requirement (itemDefinitionsDev §3); written is ready today and can drift.
+- The document is agreed (maintainer, 2026-09-28).
+- The table of all markers in the general section is **generated** from the declared types, like
+  the Interface block of every page (RG13.5.0.3), which needs the declared node requirement - done
+  in RG13.5.0.3 and tested in RG13.5.0.4.

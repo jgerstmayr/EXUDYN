@@ -113,6 +113,7 @@ In this order; *generated* means the author writes nothing:
 
 - The Create function scan (§1.1) at generation time needs the module importable - run as part of
   `generate`, or as a separate step that writes a JSON file the emitter reads?
-- `requestedNodeTypes` for node markers (§3): declare it, and generate the C++ check from it?
-- Should the frame text change (§2) come as one step before the authoring, so that every page
-  written in RG13 is written into the new frame?
+- ~~`requestedNodeTypes` for node markers (§3)~~ - declared in RG13.5.0.3, tested against the C++
+  in RG13.5.0.4 instead of generating the check (#2727).
+- ~~Should the frame text change (§2) come first~~ - yes, RG13.5.0.3.
+- The order of the examples (§2): the five plainest first - still open.

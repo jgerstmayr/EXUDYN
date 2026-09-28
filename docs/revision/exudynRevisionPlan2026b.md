@@ -1100,6 +1100,15 @@ find its file and line, on every raise).
     measurement that found it. A raised error is not a hot path, but a *probe* is, and the test model
     that probes every parameter of every item is the one place both meet.
 
+<a id="rg4-8"></a>
+**RG4.8** *(group RG4; maintainer 2026-09-28)* **`ObjectBeamGeometricallyExact` (3D): analyse the
+    implementation** (#2730). *"The 3D GeometricallyExactBeam has some defects and is still under
+    development. So, you would find some errors in the implementation - so keep this item open and
+    add a step and issue to RG4."* The analysis says what the element computes, where it departs from
+    the formulation, and what is missing; its reference page (RG13.5.2) waits for it. **The rule this
+    sets**: an item found with a larger defect while RG13 documents it gets an RG4 step for a deeper
+    analysis, not a fix inside RG13.
+
 <a id="rg4-2"></a>
 **RG4.2** **DONE 2026-09-26** (#2413) — [log](exudynRevisionLog2026b.md#rg4-2) —
     **`ObjectContactConvexRoll.pContact` is a computed value that Python reads**, which is what the
@@ -2748,8 +2757,15 @@ What depends on it: the graphics regression test takes every item through its Mi
       maintainer: *"the table with the coordinates is exactly what I was missing"*; the one-sentence
       rule is right for the generic nodes; for the slope nodes, the interpretation of the slopes
       belongs in the detailed description of each node.
-    - **RG13.4.2** **STARTED 2026-09-27** - [objectDefinitionsDev.md](objectDefinitionsDev.md).
-    - **RG13.4.3** **STARTED 2026-09-27** - [markerDefinitionsDev.md](markerDefinitionsDev.md).
+    - **RG13.4.2** **DONE 2026-09-28** - [objectDefinitionsDev.md](objectDefinitionsDev.md). The
+      maintainer: *"Marker interfaces"* instead of *"Markers and loads"* - a body's interfaces are
+      markers, and connectors, constraints and loads act through them - holding only the Jacobians;
+      the general body section says how the marker interfaces are computed from the output variables
+      and the Jacobians $\partial \vv / \partial \dot\qv$; no check of the headings - the developer
+      documentation says what a page needs, checked by hand; the groups become sub-steps of RG13.5.2,
+      bodies first; `ObjectBeamGeometricallyExact` waits for RG4.8.
+    - **RG13.4.3** **DONE 2026-09-28** - [markerDefinitionsDev.md](markerDefinitionsDev.md) - *"good
+      to go"*.
     - **RG13.4.4** **DONE 2026-09-27** - [loadDefinitionsDev.md](loadDefinitionsDev.md). The
       maintainer: the generalized forces must not lose their frames - a load is given in local or
       global coordinates, so the transformation is part of the equation; added from
@@ -2799,7 +2815,15 @@ What depends on it: the graphics regression test takes every item through its Mi
       constraints, singularities; the slopes of the slope nodes. Found on the way: the Euler parameter
       constraint is the node's, not the object's, and the default slopes of two nodes were parallel
       (#2728, corrected on the maintainer's decision the same day).
-    - **RG13.5.2** objects - after `objectDefinitionsDev.md` is agreed.
+    - **RG13.5.2** objects, by group (maintainer 2026-09-28), bodies first:
+      - **RG13.5.2.1** bodies - rigid bodies, mass points, 1D masses, ground; with the general
+        section of the bodies: marker interfaces and the approach to the Jacobians.
+      - **RG13.5.2.2** flexible bodies - the nonlinear finite elements; `ObjectBeamGeometricallyExact`
+        after RG4.8.
+      - **RG13.5.2.3** super elements - FFRF, reduced order FFRF, generic ODE2, kinematic tree.
+      - **RG13.5.2.4** connectors - spring-dampers, contact, penalty joints.
+      - **RG13.5.2.5** constraints and joints.
+      - **RG13.5.2.6** the general objects - `ObjectGenericODE1`.
     - **RG13.5.3** markers - after `markerDefinitionsDev.md` is agreed.
     - **RG13.5.4** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-4) - loads - the
       load, its frame, the generalized forces with the transformation.
