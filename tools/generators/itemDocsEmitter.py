@@ -406,8 +406,13 @@ def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros,
             #the general section of the kind, and then the items under a heading of their own, so
             #that the navigation does not put them under the last section of the general text
             typeText += (LatexText2Markdown(RemoveIndentation2(kindEntry['detailedDescription'],
-                                                               removeAllSpaces=False))
-                         + '\n\n' + MarkdownHeading('Items', 1) + '\n\n')
+                                                               removeAllSpaces=False)) + '\n\n')
+            if typeConversion[key] == 'Markers':
+                #the table of all markers, generated from their declared types like the Interface
+                #block of every page (#2725)
+                typeText += (MarkdownHeading('All markers', 1) + '\n\n'
+                             + itemCompatibility.MarkerTable(compatibilityItems) + '\n')
+            typeText += MarkdownHeading('Items', 1) + '\n\n'
         typeText += '```{toctree}\n:maxdepth: 1\n\n'
 
         for (classType, className, text) in markdownItemList:

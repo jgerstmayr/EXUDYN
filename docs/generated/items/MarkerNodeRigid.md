@@ -35,32 +35,25 @@ The parameters of `VMarkerNodeRigid`, given as `visualization`:
 (description-markernoderigid)=
 ## Detailed description
 
-The node rigid body marker provides an interface to a node which contains a position and an orientation
-(`NodeRigidBodyEP`, `NodeRigidBody2D`, ...)
-and provides access to kinematic quantities such as **position**, **velocity**, **orientation** (rotation matrix),
-**angular velocity**. It also provides the **position jacobian** and the **rotation jacobian**.
-The kinematic quantities are computed according to the definition of output variables in the respective nodes.
+### Marker quantities
 
-The position jacobian represents the derivative of the node position $\pv_\mathrm{n}$ with all nodal coordinates,
+| quantity | symbol | as computed |
+|---|---|---|
+| position | $\LU{0}{\pv}_m$ | the position of the node |
+| velocity | $\LU{0}{\vv}_m$ | the velocity of the node |
+| rotation matrix | $\LU{0m}{\Rot}$ | the rotation matrix of the node |
+| angular velocity | $\LU{m}{\tomega}$ | the angular velocity of the node, in the node frame |
 
-$$
-\LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
-$$
-
-and it is usually computed as the derivative of the (global) translational velocity w.r.t. velocity coordinates,
+### Jacobians
 
 $$
-\LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\vv_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
+\LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\pv}}{\partial \qv} , \quad
+\LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}}{\partial \dot\qv} ,
 $$
 
-The rotation jacobian is computed as the derivative of the (global) angular velocity w.r.t. velocity coordinates,
-
-$$
-\LU{0}{\Jm_\mathrm{rot}} = \frac{\partial \LU{0}{\tomega_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
-$$
-
-This usually results in the velocity transformation matrix.
-For details, see the respective definition of the node and the C++ implementation.
+with respect to the coordinates of the node; for a rigid body node $\LU{0}{\Jm_{rot}}$ is the
+velocity transformation $\LU{0}{\Gm}$ of its rotation parameters in the rotation columns, see the
+page of the node. For a slope node the orientation is that of its slope vector(s).
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFtestHalfcircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtestHalfcircle.py) (Ex), [`ANCFtests2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtests2.py) (Ex), [`beamTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beamTutorial.py) (Ex), [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex), [`beltDrivesComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py) (Ex), [`CMSexampleCourse.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/CMSexampleCourse.py) (Ex), [`newtonsCradle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/newtonsCradle.py) (Ex), [`abaqusImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/abaqusImportTest.py) (TM), [`ANCFBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py) (TM), [`ANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py) (TM), ...

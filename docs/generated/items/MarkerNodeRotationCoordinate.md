@@ -33,5 +33,25 @@ The parameters of `VMarkerNodeRotationCoordinate`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
+(description-markernoderotationcoordinate)=
+## Detailed description
+
+### Marker quantities
+
+| quantity | symbol | as computed |
+|---|---|---|
+| rotation | $\varphi_i$ | the Tait-Bryan angle $i$ = `rotationCoordinate` (0: about $x$, 1: $y$, 2: $z$), computed from the rotation matrix of the node |
+| its velocity | $\omega_i$ | component $i$ of the global angular velocity of the node |
+
+The angle is **recomputed from the rotation matrix**, whatever the rotation parameters of the node
+are, so it lies in $(-\pi,\,\pi]$ and jumps after a full turn; and $\omega_i$ is the time derivative
+of $\varphi_i$ only while the rotations about the other two axes are small. Use the marker for
+rotations that stay in that range - a spring about one axis of a nearly planar motion - and a
+`MarkerBodiesRelativeRotationCoordinate` or an Euler angle coordinate otherwise.
+
+### Jacobians
+
+Row $i$ of the rotation Jacobian of the node, $\Jm = \partial \omega_i / \partial \dot\qv$.
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pistonEngine.py) (Ex), [`rigidRotor3DbasicBehaviour.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3DbasicBehaviour.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`driveTrainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/driveTrainTest.py) (TM), [`sliderCrank3Dbenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrank3Dbenchmark.py) (TM)

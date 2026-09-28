@@ -124,6 +124,59 @@ definitions.append(ItemKindDefinition(
 definitions.append(ItemKindDefinition(
     kind='Markers',
     overallDescription=r"""A Marker provides an interface BETWEEN a large variety of Nodes / Bodies / Objects AND Connectors / Loads. To understand which markers are needed, see first the requested `Marker` type of the connector, constraint or joint. Hereafter, chose a `Marker` -- attached to a node, body or object -- with the according properties. The `Marker` may provide more information (e.g., position and orientation) than needed.""",
+    detailedDescription=r"""
+    ## What a marker is
+
+    A marker is the interface between the items that have coordinates - nodes and bodies - and the items
+    that act on them - connectors, constraints, joints and loads. A joint does not need to know whether
+    it is attached to a node or to a point of a body: it asks its markers for what it needs. The
+    **Interface** of every connector and load names the marker types it requests, and the Interface of
+    every marker the items that can use it; the table below lists all markers.
+
+    ## What a marker provides
+
+    A marker computes, in the current configuration, the **marker quantities** its types promise:
+
+    | type | quantities |
+    |---|---|
+    | `Position` | the global position $\LU{0}{\pv}_m$ and velocity $\LU{0}{\vv}_m$ |
+    | `Orientation` | the rotation matrix $\LU{0m}{\Rot}$ and the local angular velocity $\LU{m}{\tomega}$ |
+    | `Coordinate`, `Coordinates` | one or several coordinates and their time derivatives |
+    | `BodyMass` | only a Jacobian, for a load proportional to the mass |
+
+    and the **Jacobians** through which a force acts: the position Jacobian
+    $\LU{0}{\Jm_{pos}} = \partial \LU{0}{\vv}_m / \partial \dot\qv$, the rotation Jacobian
+    $\LU{0}{\Jm_{rot}} = \partial \LU{0}{\tomega}_m / \partial \dot\qv$, or for a coordinate a row of the
+    unit matrix. A marker on a **body** takes position, orientation, velocity and angular velocity as the
+    output variables of the body define them, at its local position, and the Jacobians from the body; a
+    marker on a **node** takes them from the node.
+
+    ## How a force reaches the coordinates
+
+    The virtual work of a force $\LU{0}{\fv}$ at the marker, $\delta W = \delta \LU{0}{\pv}_m\tp
+    \LU{0}{\fv}$, gives the generalized forces
+
+    $$
+    \Qm = \LU{0}{\Jm_{pos}}\tp\, \LU{0}{\fv} ,
+    $$
+
+    and a torque $\LU{0}{\ttau}$ gives $\Qm = \LU{0}{\Jm_{rot}}\tp\, \LU{0}{\ttau}$; a force $f$ on a
+    coordinate marker gives $\Qm = \Jm\tp f$. A marker on the ground - a `NodePointGround`, an
+    `ObjectGround` - has an empty Jacobian, and nothing acts there.
+
+    ## With or without reference values
+
+    `MarkerNodeCoordinate` and `MarkerNodeODE1Coordinate` give the **current** coordinate, without its
+    reference value; `MarkerNodeCoordinates`, `MarkerObjectODE2Coordinates` and the cable and beam
+    markers give the coordinates **including** the reference values. A coordinate constraint between two
+    markers therefore means something different with the one and with the other.
+
+    ## Markers in sensors, and markers that are created
+
+    `SensorMarker` measures the marker quantities, in the current configuration. Most markers of a model
+    are added by the Create functions: `CreateRevoluteJoint` adds two `MarkerBodyRigid`, `CreateForce` a
+    `MarkerBodyPosition` or `MarkerBodyRigid`, `CreateRigidBody` with gravity a `MarkerBodyMass`.
+    """,
     ))
 
 definitions.append(ItemKindDefinition(

@@ -33,5 +33,26 @@ The parameters of `VMarkerBodyCable2DShape`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
+(description-markerbodycable2dshape)=
+## Detailed description
+
+### Attached to
+
+A planar ANCF cable element, `ObjectANCFCable2D` or `ObjectALEANCFCable2D`; the marker is made for
+the contact of a circle with the cable (`ObjectContactCircleCable2D`,
+`ObjectContactFrictionCircleCable2D`), which divides the element into `numberOfSegments` segments.
+Nothing checks the body it is attached to (#2731).
+
+### Marker quantities
+
+The positions and velocities of the `numberOfSegments`+1 equidistant points of the element, at the
+distance `verticalOffset` from the axis in the local $y$-direction, as pairs $(x,\,y)$; and the
+length of the element and, for the ALE element, its axial coordinate, which the contact needs.
+
+### Jacobians
+
+For each point, the two rows of the shape functions of the element, $\partial \LU{0}{\pv}_j /
+\partial \qv$: a force at a segment point acts on the element's coordinates through them.
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex), [`beltDrivesComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py) (Ex), [`sliderCrank3DwithANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`ANCFcontactCircleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py) (TM), [`ANCFcontactFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactFrictionTest.py) (TM), [`ANCFmovingRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py) (TM), [`ANCFslidingAndALEjointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFslidingAndALEjointTest.py) (TM)

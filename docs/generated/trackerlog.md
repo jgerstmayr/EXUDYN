@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.141.dev1
 - last change = 2026-09-28
-- Number of issues = 2731
+- Number of issues = 2732
 - Number of resolved issues = 2455 (141 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -8374,6 +8374,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` the cable and beam shape markers accept any body: on a wrong one they cast it to an ANCF cable (#2731)
+  - description: Found while documenting the markers, revision2026b step RG13.5.3, 2026-09-28: MarkerBodyCable2DShape, MarkerBodyCable2DCoordinates and MarkerBodyBeamShape have no consistency check of the body they are attached to. Assemble() accepts them on a rigid body, and ComputeMarkerData then casts the body to CObjectANCFCable2DBase or CObjectANCFCable: with range checks this ends in 'InternalError: call to ConstSizeVectorBase::SetNumberOfItems with newNumberOfItems \> dataSize', in the fast module (no range checks) it is undefined behaviour. The analysis: which bodies each of the three markers can serve (ANCFCable2D and ALEANCFCable2D; ANCFCable), a CheckPreAssembleConsistency that says so, and whether MarkerBodyBeamShape, described as for 'a 3D beam finite element', should serve other beams. revision2026b step RG4.9 (maintainer's rule: a larger defect found while documenting gets an RG4 step).
+  - date raised: 2026-09-28
 - <span class="textred">`BUG`</span> `HIGH EFF` `raised by: Claude-JG` ObjectBeamGeometricallyExact (3D) has defects and is under development: analyse the implementation (#2730)
   - description: The maintainer, 2026-09-28: 'The 3D GeometricallyExactBeam has some defects and is still under development. So, you would find some errors in the implementation - so keep this item open and add a step and issue to RG4.' Its reference page (4 words of description) stays open in RG13.5.2 until the analysis says what the element does and what it does not; an item found with a larger defect while it is documented gets an RG4 step like this one rather than a fix inside RG13. revision2026b step RG4.8.
   - date raised: 2026-09-28

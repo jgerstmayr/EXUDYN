@@ -6380,3 +6380,39 @@ loadFactor is always 1 for forces computed by user functions"*), and the other l
 What had it the other way round was `loadDefinitionsDev.md`, the development document written in
 RG13.4, and that is what the log of RG13.5.0.1 corrected; the summary given to the maintainer
 listed it among the errors of the existing documentation, which it was not.
+
+<a id="rg13-5-3"></a>
+### RG13.5.3 — the pages of the markers (2026-09-28, #2725)
+
+`markerDefinitionsDev.md` agreed (maintainer, 2026-09-28), and written as it proposes:
+
+- **the general marker section** on the page of the markers: what a marker is, what it provides -
+  a table of the quantities per type, and the Jacobians $\partial \vv_m / \partial \dot\qv$ and
+  $\partial \tomega_m / \partial \dot\qv$ - how a force reaches the coordinates, with or without
+  reference values, sensors and the Create functions that add markers;
+- **the table of all markers, generated** (`itemCompatibility.MarkerTable`): what each sits on, what it
+  provides, how many items can use it - from the declared types, like the Interface block;
+- **each marker page**: *Marker quantities* - a table of what the marker computes, as the code
+  computes it - and *Jacobians*; for the three shape markers first *Attached to*, because the
+  element they need is written nowhere else.
+
+Written from `src/ImplMarkers`, which showed what the pages did not say: a **body marker takes its
+quantities from the body's output variables** at its local position (`CObjectBody::
+ComputeRigidBodyMarkerData`, which `ObjectRigidBody` overrides with a direct computation from its
+node), which is the maintainer's description of the marker interfaces; `MarkerNodeCoordinate` gives
+the current coordinate **without** its reference value, `MarkerNodeCoordinates` and
+`MarkerObjectODE2Coordinates` **with** it - now in a section of their own, because a coordinate
+constraint means different things with the one and the other; `MarkerNodeRotationCoordinate`
+recomputes a Tait-Bryan angle from the rotation matrix, so its value lies in $(-\pi, \pi]$ and its
+velocity - a component of the global angular velocity - is the angle's derivative only while the
+other two rotations are small: said on its page as its range of use.
+
+**One defect**, raised for RG4 by the maintainer's rule (RG4.9, #2731): the cable and beam shape
+markers have no check of the body they sit on; on a rigid body `Assemble()` accepts them and the
+marker data then treats the body as an ANCF cable - `InternalError` with range checks, undefined
+behaviour without.
+
+What the generated table shows and a reader may find odd: the two relative-coordinate markers
+declare `Position` and `Orientation` besides `Coordinate`, so the table and their Interface list 28
+items that could use them. That is what their declared types say and what `Assemble()` accepts; it is
+listed among the open questions to the maintainer.

@@ -31,5 +31,20 @@ The parameters of `VMarkerObjectODE2Coordinates`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
+(description-markerobjectode2coordinates)=
+## Detailed description
+
+### Marker quantities
+
+| quantity | symbol | as computed |
+|---|---|---|
+| coordinates | $\cv = \qv\cRef + \qv$ | all {ref}`ODE2 <ODE2>` coordinates of the body, node after node in the order of its nodes, **including** their reference values |
+| their velocities | $\dot\cv$ | the time derivatives |
+
+### Jacobians
+
+The unit matrix of the size of the body's coordinates. On a body without coordinates (ground) the
+values and the Jacobian are empty.
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`coordinateVectorConstraintGenericODE2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py) (TM)

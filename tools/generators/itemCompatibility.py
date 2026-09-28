@@ -53,6 +53,8 @@ class Item:
         #node markers: a list of requirements, each a list of alternatives
         self.requestedNodeTypes = [list(alternatives) for alternatives in
                                    (definition.get('requestedNodeTypes') or [])]
+        objects = _Member(definition, 'GetNumberOfObjects')
+        self.numberOfObjects = 2 if objects is not None and 'return 2' in (objects.get('implementation') or '') else 1
 
     def Link(self):
         return '[](#sec-item-' + self.name.lower() + ')'
@@ -142,3 +144,30 @@ def InterfaceLines(item, items):
         if users:
             lines.append('Connectors, constraints and loads that can use it: ' + _Names(users))
     return lines
+
+
+def AttachedTo(marker):
+    """what a marker sits on, in words"""
+    if 'KinematicTree' in marker.provided:
+        return 'a link of a kinematic tree'
+    if 'SuperElement' in marker.provided:
+        return 'mesh nodes of a super element'
+    if 'Body' in marker.provided:
+        return 'two bodies' if marker.numberOfObjects == 2 else 'a body'
+    if marker.requestedNodeTypes:
+        return 'a node with ' + ' and '.join(' or '.join('`' + t + '`' for t in alternatives)
+                                             for alternatives in marker.requestedNodeTypes)
+    return 'a node'
+
+
+def MarkerTable(items):
+    """the table of all markers for the page of the markers: what each sits on, what it provides and
+    how many connectors, constraints and loads can use it - generated, like the Interface block"""
+    lines = ['| marker | attached to | provides | usable by |', '|---|---|---|---|']
+    for marker in [item for item in items if item.kind == 'Marker']:
+        shown = [t for t in marker.provided if t in markerTypesShown]
+        users = [u for u in items if u.AcceptsMarker(marker)]
+        lines.append('| ' + marker.Link() + ' | ' + AttachedTo(marker) + ' | '
+                     + (', '.join('`' + t + '`' for t in shown) or '-') + ' | '
+                     + (str(len(users)) + (' items' if len(users) > 1 else ' item') if users else 'the items that name it') + ' |')
+    return '\n'.join(lines) + '\n'

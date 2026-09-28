@@ -33,5 +33,32 @@ The parameters of `VMarkerBodyRigid`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
+(description-markerbodyrigid)=
+## Detailed description
+
+### Marker quantities
+
+| quantity | symbol | as computed |
+|---|---|---|
+| position | $\LU{0}{\pv}_m$ | the output variable `Position` of the body at the local position $\pLocB$ |
+| velocity | $\LU{0}{\vv}_m$ | the output variable `Velocity` of the body at $\pLocB$ |
+| rotation matrix | $\LU{0m}{\Rot}$ | the rotation of the body at $\pLocB$; for a rigid body the rotation of the body |
+| angular velocity | $\LU{m}{\tomega}$ | the angular velocity of the body at $\pLocB$, in the marker (body) frame |
+
+Position, velocity and rotation matrix are global quantities; the angular velocity is local.
+$\pLocB$ is given in the body frame, from the reference point of the body.
+
+### Jacobians
+
+$$
+\LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}_m}{\partial \dot\qv} , \quad
+\LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}_m}{\partial \dot\qv} ,
+$$
+
+the derivatives of the global velocity and angular velocity with respect to the velocity
+coordinates of the body (its access functions `TranslationalVelocity_qt` and
+`AngularVelocity_qt`). For `ObjectRigidBody` they are computed from its node directly, with the
+velocity transformation $\LU{0}{\Gm}$ of the rotation parameters in $\LU{0}{\Jm_{rot}}$.
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismaticJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py) (Ex), [`addRevoluteJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py) (Ex), [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFtestHalfcircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtestHalfcircle.py) (Ex), [`ANCFtests2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtests2.py) (Ex), [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`beamTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beamTutorial.py) (Ex), [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`abaqusImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/abaqusImportTest.py) (TM), [`ACFtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py) (TM), [`ANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py) (TM), ...

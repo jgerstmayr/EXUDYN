@@ -30,5 +30,23 @@ The parameters of `VMarkerBodyBeamShape`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
+(description-markerbodybeamshape)=
+## Detailed description
+
+### Attached to
+
+A spatial ANCF cable element, `ObjectANCFCable`; the marker is made for `ObjectJointSliding`, which
+evaluates the shape functions itself. The implementation reads the element as an `ObjectANCFCable`;
+nothing checks the body it is attached to (#2731).
+
+### Marker quantities
+
+The coordinates of the element - position and slope of both nodes, **including** their reference
+values - and their velocities, and the length of the element.
+
+### Jacobians
+
+The unit matrix of the element's coordinates: the joint computes the action on each coordinate.
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`NGsolveFFRFSlidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py) (Ex)

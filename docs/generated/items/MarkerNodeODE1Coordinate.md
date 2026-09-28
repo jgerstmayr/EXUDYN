@@ -31,3 +31,19 @@ The parameters of `VMarkerNodeODE1Coordinate`, given as `visualization`:
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | False | currently not available; set true, if item is shown in visualization and false if it is not shown |
+
+(description-markernodeode1coordinate)=
+## Detailed description
+
+### Marker quantities
+
+| quantity | symbol | as computed |
+|---|---|---|
+| coordinate | $c = y_i$ | the **current** {ref}`ODE1 <ODE1>` coordinate `coordinate` $= i$ of the node |
+
+There is no velocity: an {ref}`ODE1 <ODE1>` coordinate has no time derivative of its own in the solver.
+
+### Jacobians
+
+$\Jm = \ev_i\tp$, a row of the unit matrix. On a node without {ref}`ODE1 <ODE1>` coordinates the value is zero
+and the Jacobian empty.

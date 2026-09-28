@@ -31,5 +31,23 @@ The parameters of `VMarkerBodyCable2DCoordinates`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
+(description-markerbodycable2dcoordinates)=
+## Detailed description
+
+### Attached to
+
+A planar ANCF cable element, `ObjectANCFCable2D` or `ObjectALEANCFCable2D`; the marker is made for
+the joints that slide along a cable, `ObjectJointSliding2D` and `ObjectJointALEMoving2D`, which
+evaluate the shape functions themselves. Nothing checks the body it is attached to (#2731).
+
+### Marker quantities
+
+The 8 nodal coordinates of the element - position and slope of both nodes, **including** their
+reference values - and their velocities, and the length of the element.
+
+### Jacobians
+
+The unit matrix of the 8 coordinates: the joint computes the action on each coordinate.
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFslidingJoint2Drigid.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py) (Ex), [`ANCFswitchingSlidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFswitchingSlidingJoint2D.py) (Ex), [`ANCFmovingRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py) (TM), [`SlidingJoint2DTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/SlidingJoint2DTest.py) (TM)

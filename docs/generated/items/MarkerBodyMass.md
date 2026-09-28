@@ -32,5 +32,25 @@ The parameters of `VMarkerBodyMass`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
+(description-markerbodymass)=
+## Detailed description
+
+### Marker quantities
+
+None that a connector reads: the marker exists to take a load proportional to the mass of the body,
+`LoadMassProportional`, and provides only its Jacobian.
+
+### Jacobians
+
+The mass-weighted integral of the position Jacobian over the body,
+
+$$
+\Jm_{m} = \int_V \rho\, \frac{\partial \LU{0}{\pv}}{\partial \qv}\, dV ,
+$$
+
+which the body computes (its access function `DisplacementMassIntegral_q`); a load vector
+$\LU{0}{\bv}$ per unit mass gives $\Qm = \Jm_{m}\tp \LU{0}{\bv}$. For a rigid body it is the mass
+times the position Jacobian of the center of mass.
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ALEANCFpipe.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ALEANCFpipe.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFslidingJoint2Drigid.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py) (Ex), [`ANCFswitchingSlidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFswitchingSlidingJoint2D.py) (Ex), [`CMSexampleCourse.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/CMSexampleCourse.py) (Ex), [`finiteSegmentMethod.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/finiteSegmentMethod.py) (Ex), [`NGsolveCMStutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCMStutorial.py) (Ex), [`NGsolvePostProcessingStresses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePostProcessingStresses.py) (Ex), [`ObjectFFRFconvergenceTestBeam.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ObjectFFRFconvergenceTestBeam.py) (Ex), [`ObjectFFRFconvergenceTestHinge.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ObjectFFRFconvergenceTestHinge.py) (Ex), [`pendulumGeomExactBeam2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2D.py) (Ex), [`ANCFThinPlateTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py) (TM), [`fourBarMechanismIftomm.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/fourBarMechanismIftomm.py) (TM), [`genericJointUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericJointUserFunctionTest.py) (TM), ...

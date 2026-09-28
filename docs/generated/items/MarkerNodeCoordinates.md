@@ -31,5 +31,23 @@ The parameters of `VMarkerNodeCoordinates`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
+(description-markernodecoordinates)=
+## Detailed description
+
+### Marker quantities
+
+| quantity | symbol | as computed |
+|---|---|---|
+| coordinates | $\cv = \qv\cRef + \qv$ | **all** {ref}`ODE2 <ODE2>` coordinates of the node, **including** their reference values |
+| their velocities | $\dot\cv = \dot\qv$ | the time derivatives |
+
+Unlike `MarkerNodeCoordinate`, the values include the reference values.
+
+### Jacobians
+
+The unit matrix of the size of the node's coordinates: a vector of forces acts on the coordinates
+one by one. On a node without {ref}`ODE2 <ODE2>` coordinates the values and the Jacobian are
+empty.
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`coordinateVectorConstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraint.py) (TM), [`coordinateVectorConstraintGenericODE2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM)

@@ -38,6 +38,23 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A marker attached to the body mass; use this marker to apply a body-load (e.g. gravitational force).',
     classType=ClassTypeMarker,
+    detailedDescription=r"""    #### Marker quantities
+
+    None that a connector reads: the marker exists to take a load proportional to the mass of the body,
+    `LoadMassProportional`, and provides only its Jacobian.
+
+    #### Jacobians
+
+    The mass-weighted integral of the position Jacobian over the body,
+
+    $$
+    \Jm_{m} = \int_V \rho\, \frac{\partial \LU{0}{\pv}}{\partial \qv}\, dV ,
+    $$
+
+    which the body computes (its access function `DisplacementMassIntegral_q`); a load vector
+    $\LU{0}{\bv}$ per unit mass gives $\Qm = \Jm_{m}\tp \LU{0}{\bv}$. For a rigid body it is the mass
+    times the position Jacobian of the center of mass.
+    """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[
@@ -83,53 +100,27 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r"""A position body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position information as well as the according derivatives (=velocity and derivative of position w.r.t. body coordinates). It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerBodyRigid.""",
     classType=ClassTypeMarker,
-    detailedDescription=r"""    The body position marker provides an interface to a object of type body 
-    (`ObjectGround`, `ObjectMassPoint`, `ObjectRigidBody`, ...)
-    and provides access to kinematic quantities such as **position** and **velocity** 
-    and to the **position jacobian**, using a `localPosition` $\pLocB$ which is defined within the 
-    local coordinates of the body ($b$).
-    The kinematic quantities are computed according to the definition of output variables in the respective bodies.
-    
-    The position jacobian represents the derivative of the node position $\pv_\mathrm{n}$ with all nodal coordinates,
+    detailedDescription=r"""    #### Marker quantities
 
+    | quantity | symbol | as computed |
+    |---|---|---|
+    | position | $\LU{0}{\pv}_m$ | the output variable `Position` of the body at the local position $\pLocB$ |
+    | velocity | $\LU{0}{\vv}_m$ | the output variable `Velocity` of the body at $\pLocB$ |
 
-    $$
-                        \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
-                        $$
+    Both are global. $\pLocB$ is given in the body frame, from the reference point of the body.
 
-    and it is usually computed as the derivative of the (global) translational velocity w.r.t. velocity coordinates,
+    #### Jacobians
 
+    The position Jacobian is the derivative of the velocity of the point with respect to the velocity
+    coordinates of the body,
 
     $$
-                        \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\vv_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
-                        $$
-
-
-    As an example of the `ObjectRigidBody2D`, see [](#sec-item-objectrigidbody2d), the position and velocity are computed as
-
-
+    \LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}_m}{\partial \dot\qv} ,
     $$
-                        \LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB \, ,
-                        $$
 
-
-
-    $$
-                        \LU{0}{\vv}\cConfig(\pLocB) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \pLocB\cConfig) \, .
-                        $$
-
-    Thus, the position jacobian for `ObjectRigidBody2D` reads
-
-
-    $$
-                        \LU{0}{\Jm_\mathrm{pos}^{\mathrm{NodeRigidBody2D}}} = \mr{1}{0}{-\sin\theta_0 \LU{b}{b_0} - \cos\theta_0 \LU{b}{b_1}} 
-                              {0}{1}{\cos\theta_0 \LU{b}{b_0} - \sin\theta_0 \LU{b}{b_1}} 
-                              {0}{0}{0}
-                        $$
-
-    <!-- -->
-    For details, see the respective definition of the body and the C++ implementation.
-""",
+    which the body computes (its access function `TranslationalVelocity_qt`). For a rigid body it
+    contains the rotation of the local position, see the page of the body.
+    """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[
@@ -180,6 +171,30 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r"""A rigid-body (position+orientation) body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.""",
     classType=ClassTypeMarker,
+    detailedDescription=r"""    #### Marker quantities
+
+    | quantity | symbol | as computed |
+    |---|---|---|
+    | position | $\LU{0}{\pv}_m$ | the output variable `Position` of the body at the local position $\pLocB$ |
+    | velocity | $\LU{0}{\vv}_m$ | the output variable `Velocity` of the body at $\pLocB$ |
+    | rotation matrix | $\LU{0m}{\Rot}$ | the rotation of the body at $\pLocB$; for a rigid body the rotation of the body |
+    | angular velocity | $\LU{m}{\tomega}$ | the angular velocity of the body at $\pLocB$, in the marker (body) frame |
+
+    Position, velocity and rotation matrix are global quantities; the angular velocity is local.
+    $\pLocB$ is given in the body frame, from the reference point of the body.
+
+    #### Jacobians
+
+    $$
+    \LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}_m}{\partial \dot\qv} , \quad
+    \LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}_m}{\partial \dot\qv} ,
+    $$
+
+    the derivatives of the global velocity and angular velocity with respect to the velocity
+    coordinates of the body (its access functions `TranslationalVelocity_qt` and
+    `AngularVelocity_qt`). For `ObjectRigidBody` they are computed from its node directly, with the
+    velocity transformation $\LU{0}{\Gm}$ of the rotation parameters in $\LU{0}{\Jm_{rot}}$.
+    """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[
@@ -239,29 +254,21 @@ definitions.append(ItemDefinition(
     requestedNodeTypes=[['Position', 'Position2D']],
     overallDescription=r'A node-Marker attached to a position-based node. It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerNodeRigid.',
     classType=ClassTypeMarker,
-    detailedDescription=r"""    The node position marker provides an interface to a node which contains a position
-    (`NodePoint`, `NodePoint2D`, `NodeRigidBodyEP`, `NodePointSlope`, ...)
-    and accesses **position**, **velocity** and the **position jacobian**.
-    The position and velocity are computed according to the definition of output variables in the respective nodes.
-    
-    The position jacobian represents the derivative of the node position $\pv_\mathrm{n}$ with all nodal coordinates,
+    detailedDescription=r"""    #### Marker quantities
 
+    | quantity | symbol | as computed |
+    |---|---|---|
+    | position | $\LU{0}{\pv}_m$ | the position of the node, as its output variable `Position` |
+    | velocity | $\LU{0}{\vv}_m$ | the velocity of the node, as its output variable `Velocity` |
 
-    $$
-                        \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
-                        $$
+    Both are global, or in the frame the object reads the node in (see the page of the node).
 
-    For details, see the respective definition of the node and the C++ implementation.
-    
-    In examplary case of a `NodeRigidBody2D`,  see [](#sec-item-noderigidbody2d), its coordinates are 
-    $\qv_\mathrm{n}=[q_0,\;q_1,\;\psi_0,\;]\tp$, where $q_0$ represents the $x$-displacement 
-    and $q_1$ represents the $y$-displacement, such that the jacobian for the 3D position vector reads
+    #### Jacobians
 
-
-    $$
-                        \LU{0}{\Jm_\mathrm{pos}^{\mathrm{NodeRigidBody2D}}} = \mr{1}{0}{0} {0}{1}{0} {0}{0}{0}
-                        $$
-""",
+    The position Jacobian of the node, $\LU{0}{\Jm_{pos}} = \partial \LU{0}{\pv} / \partial \qv$ with
+    respect to the node's coordinates: the unit matrix for `NodePoint`, the first three columns for a
+    rigid body node, and for a 2D node the $x$ and $y$ rows.
+    """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[
@@ -307,36 +314,26 @@ definitions.append(ItemDefinition(
     requestedNodeTypes=[['Position', 'Position2D'], ['Orientation', 'Orientation2D']],
     overallDescription=r'A rigid-body (position+orientation) node-marker attached to a rigid-body node. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.',
     classType=ClassTypeMarker,
-    detailedDescription=r"""    The node rigid body marker provides an interface to a node which contains a position and an orientation
-    (`NodeRigidBodyEP`, `NodeRigidBody2D`, ...)
-    and provides access to kinematic quantities such as **position**, **velocity**, **orientation** (rotation matrix),
-    **angular velocity**. It also provides the **position jacobian** and the **rotation jacobian**.
-    The kinematic quantities are computed according to the definition of output variables in the respective nodes.
-    
-    The position jacobian represents the derivative of the node position $\pv_\mathrm{n}$ with all nodal coordinates,
+    detailedDescription=r"""    #### Marker quantities
 
+    | quantity | symbol | as computed |
+    |---|---|---|
+    | position | $\LU{0}{\pv}_m$ | the position of the node |
+    | velocity | $\LU{0}{\vv}_m$ | the velocity of the node |
+    | rotation matrix | $\LU{0m}{\Rot}$ | the rotation matrix of the node |
+    | angular velocity | $\LU{m}{\tomega}$ | the angular velocity of the node, in the node frame |
 
-    $$
-                        \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
-                        $$
-
-    and it is usually computed as the derivative of the (global) translational velocity w.r.t. velocity coordinates,
-
+    #### Jacobians
 
     $$
-                        \LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\vv_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
-                        $$
-
-    The rotation jacobian is computed as the derivative of the (global) angular velocity w.r.t. velocity coordinates,
-
-
+    \LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\pv}}{\partial \qv} , \quad
+    \LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}}{\partial \dot\qv} ,
     $$
-                        \LU{0}{\Jm_\mathrm{rot}} = \frac{\partial \LU{0}{\tomega_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
-                        $$
 
-    This usually results in the velocity transformation matrix.
-    For details, see the respective definition of the node and the C++ implementation.
-""",
+    with respect to the coordinates of the node; for a rigid body node $\LU{0}{\Jm_{rot}}$ is the
+    velocity transformation $\LU{0}{\Gm}$ of its rotation parameters in the rotation columns, see the
+    page of the node. For a slope node the orientation is that of its slope vector(s).
+    """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[
@@ -386,6 +383,21 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r"""A node-Marker attached to a ABRV:ODE2 coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinate`.""",
     classType=ClassTypeMarker,
+    detailedDescription=r"""    #### Marker quantities
+
+    | quantity | symbol | as computed |
+    |---|---|---|
+    | coordinate | $c = q_i$ | the **current** ABRV:ODE2 coordinate `coordinate` $= i$ of the node, **without** its reference value |
+    | its velocity | $\dot c = \dot q_i$ | the time derivative of that coordinate |
+
+    #### Jacobians
+
+    $\Jm = \ev_i\tp$, a row of the unit matrix: a force $f$ acts on coordinate $i$ only, $Q_i = f$.
+
+    On a node without ABRV:ODE2 coordinates - `NodePointGround` - the coordinate is zero and the
+    Jacobian empty, so nothing acts: this is the ground side of a `CoordinateSpringDamper` or a
+    `CoordinateConstraint`.
+    """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[
@@ -436,6 +448,21 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r"""A node-Marker attached to all ABRV:ODE2 coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinates`.""",
     classType=ClassTypeMarker,
+    detailedDescription=r"""    #### Marker quantities
+
+    | quantity | symbol | as computed |
+    |---|---|---|
+    | coordinates | $\cv = \qv\cRef + \qv$ | **all** ABRV:ODE2 coordinates of the node, **including** their reference values |
+    | their velocities | $\dot\cv = \dot\qv$ | the time derivatives |
+
+    Unlike `MarkerNodeCoordinate`, the values include the reference values.
+
+    #### Jacobians
+
+    The unit matrix of the size of the node's coordinates: a vector of forces acts on the coordinates
+    one by one. On a node without ABRV:ODE2 coordinates the values and the Jacobian are
+    empty.
+    """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[
@@ -480,6 +507,19 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A node-Marker attached to a ABRV:ODE1 coordinate of a node.',
     classType=ClassTypeMarker,
+    detailedDescription=r"""    #### Marker quantities
+
+    | quantity | symbol | as computed |
+    |---|---|---|
+    | coordinate | $c = y_i$ | the **current** ABRV:ODE1 coordinate `coordinate` $= i$ of the node |
+
+    There is no velocity: an ABRV:ODE1 coordinate has no time derivative of its own in the solver.
+
+    #### Jacobians
+
+    $\Jm = \ev_i\tp$, a row of the unit matrix. On a node without ABRV:ODE1 coordinates the value is zero
+    and the Jacobian empty.
+    """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[
@@ -532,6 +572,23 @@ definitions.append(ItemDefinition(
     requestedNodeTypes=[['Orientation']],
     overallDescription=r'A node-Marker attached to a a node containing rotation; the Marker measures a rotation coordinate (Tait-Bryan angles) or angular velocities on the velocity level.',
     classType=ClassTypeMarker,
+    detailedDescription=r"""    #### Marker quantities
+
+    | quantity | symbol | as computed |
+    |---|---|---|
+    | rotation | $\varphi_i$ | the Tait-Bryan angle $i$ = `rotationCoordinate` (0: about $x$, 1: $y$, 2: $z$), computed from the rotation matrix of the node |
+    | its velocity | $\omega_i$ | component $i$ of the global angular velocity of the node |
+
+    The angle is **recomputed from the rotation matrix**, whatever the rotation parameters of the node
+    are, so it lies in $(-\pi,\,\pi]$ and jumps after a full turn; and $\omega_i$ is the time derivative
+    of $\varphi_i$ only while the rotations about the other two axes are small. Use the marker for
+    rotations that stay in that range - a spring about one axis of a nearly planar motion - and a
+    `MarkerBodiesRelativeRotationCoordinate` or an Euler angle coordinate otherwise.
+
+    #### Jacobians
+
+    Row $i$ of the rotation Jacobian of the node, $\Jm = \partial \omega_i / \partial \dot\qv$.
+    """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[
@@ -1356,6 +1413,18 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A Marker attached to all coordinates of an object (currently only body is possible), e.g. to apply special constraints or loads on all coordinates. The measured coordinates INCLUDE reference + current coordinates.',
     classType=ClassTypeMarker,
+    detailedDescription=r"""    #### Marker quantities
+
+    | quantity | symbol | as computed |
+    |---|---|---|
+    | coordinates | $\cv = \qv\cRef + \qv$ | all ABRV:ODE2 coordinates of the body, node after node in the order of its nodes, **including** their reference values |
+    | their velocities | $\dot\cv$ | the time derivatives |
+
+    #### Jacobians
+
+    The unit matrix of the size of the body's coordinates. On a body without coordinates (ground) the
+    values and the Jacobian are empty.
+    """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[
@@ -1409,6 +1478,24 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A special Marker attached to a 2D ANCF beam finite element with cubic interpolation and 8 coordinates.',
     classType=ClassTypeMarker,
+    detailedDescription=r"""    #### Attached to
+
+    A planar ANCF cable element, `ObjectANCFCable2D` or `ObjectALEANCFCable2D`; the marker is made for
+    the contact of a circle with the cable (`ObjectContactCircleCable2D`,
+    `ObjectContactFrictionCircleCable2D`), which divides the element into `numberOfSegments` segments.
+    Nothing checks the body it is attached to (#2731).
+
+    #### Marker quantities
+
+    The positions and velocities of the `numberOfSegments`+1 equidistant points of the element, at the
+    distance `verticalOffset` from the axis in the local $y$-direction, as pairs $(x,\,y)$; and the
+    length of the element and, for the ALE element, its axial coordinate, which the contact needs.
+
+    #### Jacobians
+
+    For each point, the two rows of the shape functions of the element, $\partial \LU{0}{\pv}_j /
+    \partial \qv$: a force at a segment point acts on the element's coordinates through them.
+    """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[
@@ -1463,6 +1550,21 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A special Marker attached to the coordinates of a 2D ANCF beam finite element with cubic interpolation.',
     classType=ClassTypeMarker,
+    detailedDescription=r"""    #### Attached to
+
+    A planar ANCF cable element, `ObjectANCFCable2D` or `ObjectALEANCFCable2D`; the marker is made for
+    the joints that slide along a cable, `ObjectJointSliding2D` and `ObjectJointALEMoving2D`, which
+    evaluate the shape functions themselves. Nothing checks the body it is attached to (#2731).
+
+    #### Marker quantities
+
+    The 8 nodal coordinates of the element - position and slope of both nodes, **including** their
+    reference values - and their velocities, and the length of the element.
+
+    #### Jacobians
+
+    The unit matrix of the 8 coordinates: the joint computes the action on each coordinate.
+    """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[
@@ -1509,6 +1611,21 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A special Marker attached to a 3D beam finite element which provides at least position and tangent to the beam axis.',
     classType=ClassTypeMarker,
+    detailedDescription=r"""    #### Attached to
+
+    A spatial ANCF cable element, `ObjectANCFCable`; the marker is made for `ObjectJointSliding`, which
+    evaluates the shape functions itself. The implementation reads the element as an `ObjectANCFCable`;
+    nothing checks the body it is attached to (#2731).
+
+    #### Marker quantities
+
+    The coordinates of the element - position and slope of both nodes, **including** their reference
+    values - and their velocities, and the length of the element.
+
+    #### Jacobians
+
+    The unit matrix of the element's coordinates: the joint computes the action on each coordinate.
+    """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[

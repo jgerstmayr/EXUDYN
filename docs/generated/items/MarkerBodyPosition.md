@@ -36,44 +36,26 @@ The parameters of `VMarkerBodyPosition`, given as `visualization`:
 (description-markerbodyposition)=
 ## Detailed description
 
-The body position marker provides an interface to a object of type body
-(`ObjectGround`, `ObjectMassPoint`, `ObjectRigidBody`, ...)
-and provides access to kinematic quantities such as **position** and **velocity**
-and to the **position jacobian**, using a `localPosition` $\pLocB$ which is defined within the
-local coordinates of the body ($b$).
-The kinematic quantities are computed according to the definition of output variables in the respective bodies.
+### Marker quantities
 
-The position jacobian represents the derivative of the node position $\pv_\mathrm{n}$ with all nodal coordinates,
+| quantity | symbol | as computed |
+|---|---|---|
+| position | $\LU{0}{\pv}_m$ | the output variable `Position` of the body at the local position $\pLocB$ |
+| velocity | $\LU{0}{\vv}_m$ | the output variable `Velocity` of the body at $\pLocB$ |
 
-$$
-\LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
-$$
+Both are global. $\pLocB$ is given in the body frame, from the reference point of the body.
 
-and it is usually computed as the derivative of the (global) translational velocity w.r.t. velocity coordinates,
+### Jacobians
 
-$$
-\LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\vv_\mathrm{n}}}{\partial \dot \qv_\mathrm{n}}
-$$
-
-As an example of the `ObjectRigidBody2D`, see [](#sec-item-objectrigidbody2d), the position and velocity are computed as
+The position Jacobian is the derivative of the velocity of the point with respect to the velocity
+coordinates of the body,
 
 $$
-\LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB \, ,
+\LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}_m}{\partial \dot\qv} ,
 $$
 
-$$
-\LU{0}{\vv}\cConfig(\pLocB) = \LU{0}{\dot\uv}\cConfig + \LU{0b}{\Rot}(\LU{b}{\tomega} \times \pLocB\cConfig) \, .
-$$
-
-Thus, the position jacobian for `ObjectRigidBody2D` reads
-
-$$
-\LU{0}{\Jm_\mathrm{pos}^{\mathrm{NodeRigidBody2D}}} = \mr{1}{0}{-\sin\theta_0 \LU{b}{b_0} - \cos\theta_0 \LU{b}{b_1}}
-{0}{1}{\cos\theta_0 \LU{b}{b_0} - \sin\theta_0 \LU{b}{b_1}}
-{0}{0}{0}
-$$
-
-For details, see the respective definition of the body and the C++ implementation.
+which the body computes (its access function `TranslationalVelocity_qt`). For a rigid body it
+contains the rotation of the local position, see the page of the body.
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFslidingJoint2Drigid.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py) (Ex), [`ANCFswitchingSlidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFswitchingSlidingJoint2D.py) (Ex), [`beltDrivesComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py) (Ex), [`bungeeJump.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bungeeJump.py) (Ex), [`coordinateSpringDamper.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/coordinateSpringDamper.py) (Ex), [`finiteSegmentMethod.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/finiteSegmentMethod.py) (Ex), [`flexibleRotor3Dtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/flexibleRotor3Dtest.py) (Ex), [`geneticOptimizationSliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/geneticOptimizationSliderCrank.py) (Ex), [`ANCFcontactCircleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py) (TM), [`ANCFcontactFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactFrictionTest.py) (TM), [`ANCFmovingRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py) (TM), ...

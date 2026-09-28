@@ -10,10 +10,10 @@
 | Object (Connector) | 19 | 1 | 14 | 12 | 0 of 309 | 0 of 74 | 1 | 0 |
 | Object (Constraint) | 3 | 0 | 3 | 1 | 0 of 31 | 0 of 12 | 0 | 0 |
 | Object (Joint) | 10 | 1 | 5 | 9 | 0 of 100 | 0 of 46 | 0 | 0 |
-| Marker | 18 | 10 | 17 | 17 | 1 of 81 | 0 of 0 | 1 | 1 |
+| Marker | 18 | 0 | 17 | 17 | 1 of 81 | 0 of 0 | 1 | 1 |
 | Load | 4 | 0 | 4 | 3 | 0 of 22 | 0 of 0 | 0 | 0 |
 | Sensor | 8 | 0 | 8 | 8 | 0 of 60 | 0 of 0 | 0 | 0 |
-| **all** | 97 | 13 | 84 | 74 | 3 of 985 | 0 of 413 | 7 | 4 |
+| **all** | 97 | 3 | 84 | 74 | 3 of 985 | 0 of 413 | 7 | 4 |
 
 | item | kind | overall description (words) | detailed description (words, sections) | figure | parameters: without a real description | output variables (undescribed) | MiniExample | used in scripts | used in the package |
 |---|---|---|---|---|---|---|---|---|---|
@@ -26,8 +26,8 @@
 | Node1D | Node | 58 | 123, 4 | - | 0 of 5 | 4 | - | 10 | 0 |
 | NodePoint2DSlope1 | Node | 66 | 212, 5 | - | 0 of 7 | 8 | - | 18 | 0 |
 | NodePointSlope1 | Node | 45 | 152, 5 | - | 0 of 7 | 8 | - | 0 | 0 |
-| NodePointSlope12 | Node | 41 | 155, 5 | - | 0 of 7 | 12 | - | 0 | 1 |
-| NodePointSlope23 | Node | 44 | 190, 5 | - | 0 of 7 | 12 | - | 5 | 0 |
+| NodePointSlope12 | Node | 41 | 163, 5 | - | 0 of 7 | 12 | - | 0 | 1 |
+| NodePointSlope23 | Node | 44 | 196, 5 | - | 0 of 7 | 12 | - | 5 | 0 |
 | NodeGenericODE2 | Node | 39 | 75, 2 | - | 0 of 6 | 4 | - | 15 | 3 |
 | NodeGenericODE1 | Node | 27 | 63, 2 | - | 0 of 5 | 3 | - | 8 | 0 |
 | NodeGenericAE | Node | 24 | 55, 2 | - | 0 of 5 | 1 | - | 0 | 0 |
@@ -84,24 +84,24 @@
 | ObjectJointSliding | Object (Joint) | 38 | 585, 4 | - | 0 of 12 | 4 | - | 2 | 0 |
 | ObjectJointSliding2D | Object (Joint) | 37 | 655, 5 | - | 0 of 12 | 4 | - | 5 | 1 |
 | ObjectJointALEMoving2D | Object (Joint) | 43 | 540, 4 | yes | 0 of 12 | 6 | - | 2 | 1 |
-| MarkerBodyMass | Marker | 15 | - | - | 0 of 3 | 0 | - | 23 | 5 |
-| MarkerBodyPosition | Marker | 52 | 124, 0 | - | 0 of 4 | 0 | - | 82 | 5 |
-| MarkerBodyRigid | Marker | 49 | - | - | 0 of 4 | 0 | - | 127 | 7 |
-| MarkerNodePosition | Marker | 28 | 96, 0 | - | 0 of 3 | 0 | - | 60 | 3 |
-| MarkerNodeRigid | Marker | 43 | 123, 0 | - | 0 of 3 | 0 | - | 57 | 1 |
-| MarkerNodeCoordinate | Marker | 31 | - | - | 0 of 4 | 0 | - | 111 | 2 |
-| MarkerNodeCoordinates | Marker | 28 | - | - | 0 of 3 | 0 | - | 3 | 1 |
-| MarkerNodeODE1Coordinate | Marker | 9 | - | - | 0 of 4 | 0 | - | 0 | 0 |
-| MarkerNodeRotationCoordinate | Marker | 22 | - | - | 1 of 4: `rotationCoordinate` | 0 | - | 5 | 0 |
+| MarkerBodyMass | Marker | 15 | 67, 2 | - | 0 of 3 | 0 | - | 23 | 5 |
+| MarkerBodyPosition | Marker | 52 | 91, 2 | - | 0 of 4 | 0 | - | 82 | 5 |
+| MarkerBodyRigid | Marker | 49 | 128, 2 | - | 0 of 4 | 0 | - | 127 | 7 |
+| MarkerNodePosition | Marker | 28 | 79, 2 | - | 0 of 3 | 0 | - | 60 | 3 |
+| MarkerNodeRigid | Marker | 43 | 80, 2 | - | 0 of 3 | 0 | - | 57 | 1 |
+| MarkerNodeCoordinate | Marker | 31 | 66, 2 | - | 0 of 4 | 0 | - | 111 | 2 |
+| MarkerNodeCoordinates | Marker | 28 | 65, 2 | - | 0 of 3 | 0 | - | 3 | 1 |
+| MarkerNodeODE1Coordinate | Marker | 9 | 54, 2 | - | 0 of 4 | 0 | - | 0 | 0 |
+| MarkerNodeRotationCoordinate | Marker | 22 | 109, 2 | - | 1 of 4: `rotationCoordinate` | 0 | - | 5 | 0 |
 | MarkerBodiesRelativeTranslationCoordinate | Marker | 80 | 107, 0 | - | 0 of 7 | 0 | - | 2 | 0 |
 | MarkerBodiesRelativeRotationCoordinate | Marker | 80 | 156, 0 | - | 0 of 8 | 0 | - | 2 | 0 |
 | MarkerSuperElementPosition | Marker | 41 | 140, 1 | - | 0 of 6 | 0 | yes | 10 | 0 |
 | MarkerSuperElementRigid | Marker | 78 | 1100, 4 | yes | 0 of 9 | 0 | - | 16 | 1 |
 | MarkerKinematicTreeRigid | Marker | 103 | 148, 1 | - | 0 of 5 | 0 | - | 6 | 1 |
-| MarkerObjectODE2Coordinates | Marker | 29 | - | - | 0 of 3 | 0 | - | 1 | 1 |
-| MarkerBodyCable2DShape | Marker | 13 | - | - | 0 of 5 | 0 | - | 13 | 0 |
-| MarkerBodyCable2DCoordinates | Marker | 14 | - | - | 0 of 3 | 0 | - | 6 | 1 |
-| MarkerBodyBeamShape | Marker | 18 | - | - | 0 of 3 | 0 | - | 2 | 0 |
+| MarkerObjectODE2Coordinates | Marker | 29 | 55, 2 | - | 0 of 3 | 0 | - | 1 | 1 |
+| MarkerBodyCable2DShape | Marker | 13 | 108, 3 | - | 0 of 5 | 0 | - | 13 | 0 |
+| MarkerBodyCable2DCoordinates | Marker | 14 | 79, 3 | - | 0 of 3 | 0 | - | 6 | 1 |
+| MarkerBodyBeamShape | Marker | 18 | 77, 3 | - | 0 of 3 | 0 | - | 2 | 0 |
 | LoadForceVector | Load | 9 | 111, 2 | - | 0 of 6 | 0 | - | 109 | 2 |
 | LoadTorqueVector | Load | 9 | 126, 2 | - | 0 of 6 | 0 | - | 51 | 2 |
 | LoadMassProportional | Load | 21 | 98, 2 | - | 0 of 5 | 0 | yes | 23 | 3 |

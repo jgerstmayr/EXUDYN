@@ -35,26 +35,20 @@ The parameters of `VMarkerNodePosition`, given as `visualization`:
 (description-markernodeposition)=
 ## Detailed description
 
-The node position marker provides an interface to a node which contains a position
-(`NodePoint`, `NodePoint2D`, `NodeRigidBodyEP`, `NodePointSlope`, ...)
-and accesses **position**, **velocity** and the **position jacobian**.
-The position and velocity are computed according to the definition of output variables in the respective nodes.
+### Marker quantities
 
-The position jacobian represents the derivative of the node position $\pv_\mathrm{n}$ with all nodal coordinates,
+| quantity | symbol | as computed |
+|---|---|---|
+| position | $\LU{0}{\pv}_m$ | the position of the node, as its output variable `Position` |
+| velocity | $\LU{0}{\vv}_m$ | the velocity of the node, as its output variable `Velocity` |
 
-$$
-\LU{0}{\Jm_\mathrm{pos}} = \frac{\partial \LU{0}{\pv_\mathrm{n}}}{\partial \qv_\mathrm{n}}
-$$
+Both are global, or in the frame the object reads the node in (see the page of the node).
 
-For details, see the respective definition of the node and the C++ implementation.
+### Jacobians
 
-In examplary case of a `NodeRigidBody2D`,  see [](#sec-item-noderigidbody2d), its coordinates are
-$\qv_\mathrm{n}=[q_0,\;q_1,\;\psi_0,\;]\tp$, where $q_0$ represents the $x$-displacement
-and $q_1$ represents the $y$-displacement, such that the jacobian for the 3D position vector reads
-
-$$
-\LU{0}{\Jm_\mathrm{pos}^{\mathrm{NodeRigidBody2D}}} = \mr{1}{0}{0} {0}{1}{0} {0}{0}{0}
-$$
+The position Jacobian of the node, $\LU{0}{\Jm_{pos}} = \partial \LU{0}{\pv} / \partial \qv$ with
+respect to the node's coordinates: the unit matrix for `NodePoint`, the first three columns for a
+rigid body node, and for a 2D node the $x$ and $y$ rows.
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ALEANCFpipe.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ALEANCFpipe.py) (Ex), [`ANCFcantileverTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcantileverTest.py) (Ex), [`ANCFcantileverTestDyn.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcantileverTestDyn.py) (Ex), [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFslidingJoint2Drigid.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py) (Ex), [`ANCFtestHalfcircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtestHalfcircle.py) (Ex), [`ANCFtests2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtests2.py) (Ex), [`bungeeJump.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bungeeJump.py) (Ex), [`doublePendulum2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/doublePendulum2D.py) (Ex), [`flexibleRotor3Dtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/flexibleRotor3Dtest.py) (Ex), [`ACFtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py) (TM), [`ANCFCable2DBendingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCable2DBendingTest.py) (TM), [`ANCFCableBeamDampingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py) (TM), ...

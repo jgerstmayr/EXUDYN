@@ -1109,6 +1109,15 @@ find its file and line, on every raise).
     sets**: an item found with a larger defect while RG13 documents it gets an RG4 step for a deeper
     analysis, not a fix inside RG13.
 
+<a id="rg4-9"></a>
+**RG4.9** *(group RG4; from RG13.5.3, 2026-09-28)* **The cable and beam shape markers accept any
+    body** (#2731). `MarkerBodyCable2DShape`, `MarkerBodyCable2DCoordinates` and `MarkerBodyBeamShape`
+    have no consistency check of their body; `Assemble()` accepts them on a rigid body, and computing
+    the marker data then treats it as an ANCF cable - an `InternalError` with range checks, undefined
+    behaviour in the fast module. The analysis: which bodies each marker can serve, a
+    `CheckPreAssembleConsistency` that says so, and whether `MarkerBodyBeamShape` - described as for
+    *"a 3D beam finite element"* - should serve other beams than `ObjectANCFCable`.
+
 <a id="rg4-2"></a>
 **RG4.2** **DONE 2026-09-26** (#2413) — [log](exudynRevisionLog2026b.md#rg4-2) —
     **`ObjectContactConvexRoll.pContact` is a computed value that Python reads**, which is what the
@@ -2824,7 +2833,11 @@ What depends on it: the graphics regression test takes every item through its Mi
       - **RG13.5.2.4** connectors - spring-dampers, contact, penalty joints.
       - **RG13.5.2.5** constraints and joints.
       - **RG13.5.2.6** the general objects - `ObjectGenericODE1`.
-    - **RG13.5.3** markers - after `markerDefinitionsDev.md` is agreed.
+    - **RG13.5.3** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-3) - markers - the
+      general marker section with the generated table of all markers, and **Marker quantities** and
+      **Jacobians** for the 13 markers that had little or no text; the five with long texts of their
+      own (the two relative-coordinate markers, the two superelement markers, the kinematic tree
+      marker) keep them. Found on the way: the shape markers accept any body (RG4.9, #2731).
     - **RG13.5.4** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-4) - loads - the
       load, its frame, the generalized forces with the transformation.
     - **RG13.5.5** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-5) - sensors - the
