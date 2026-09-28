@@ -6535,3 +6535,35 @@ forces* (14) -, so the work was the general section and the five that had little
 **Two defects of `ObjectContactCoordinate`**, raised for RG4 (RG4.11, #2735): `activeConnector` is not
 used by the force computation, and the declared output variable `Distance` raises *"not
 implemented"*. The page says both as they are.
+
+<a id="rg13-5-2-5"></a>
+### RG13.5.2.5 and RG13.5.2.6 — constraints, joints and the general object (2026-09-28, #2725, #2735)
+
+**Constraints and joints**: 11 of the 13 had *Definition of quantities* and *Connector constraint
+equations* already. Written:
+
+- **the general section of the constraints**: algebraic equations and Lagrange multipliers as the
+  reaction forces, index 3 and index 2 (`generalizedAlpha.useIndex2Constraints`), which solvers handle
+  them - the explicit integrators only eliminate coordinate constraints to the ground
+  (`explicitIntegration.eliminateConstraints`) -, `activeConnector` (the equations become
+  $\tlambda = \Null$), and redundant constraints with `ComputeSystemDegreeOfFreedom`;
+- **the general section of the joints**, which refers to it and adds the joint frames
+  (`rotationMarker0/1`, the Create functions that compute them) and where the reaction forces are -
+  `ForceLocal`/`TorqueLocal` in the frame $J0$, `Force` global for the spherical joint;
+- **`ObjectJointRevolute2D`** (no text before): the two position equations, their velocity form, the
+  multipliers as the joint force;
+- **`ObjectJointPrismatic2D`** (89 words): quantities, the two equations and what each constrains,
+  `constrainRotation = False` as $\lambda_1 = 0$;
+- `ObjectConnectorDistance`: its heading *Connector forces constraint equations* is the recurring
+  *Connector constraint equations*.
+
+**The general object**: `ObjectGenericODE1` had two headings *Equations of motion*; the first, which is
+about its coordinates, is *Coordinates*, and a section *Marker interfaces* says that it is no body and
+markers act on its coordinates only.
+
+**#2735 extended**: `ObjectJointRevolute2D` declares `Displacement` and `Rotation`, and its
+`GetOutputVariableConnector` raises *"not implemented"* - as `ObjectContactCoordinate` did. A scan of
+all objects for that pattern found four: the two contact connectors (`Distance`) and the two planar
+joints. The issue and RG4.11 cover all four, and each page says it.
+
+With these, RG13.5.2 is complete except `ObjectBeamGeometricallyExact`, which waits for RG4.8.

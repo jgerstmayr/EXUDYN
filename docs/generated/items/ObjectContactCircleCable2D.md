@@ -64,5 +64,7 @@ the circle: otherwise geometry and equations are those of `ObjectContactFriction
 [](#sec-item-objectcontactfrictioncirclecable2d). The data coordinates, one per segment, hold the gap of
 the last post Newton step and decide on contact (active set).
 
+The output variable `Distance` the connector declares is not available (#2735).
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFcontactCircleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py) (TM), [`ANCFmovingRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py) (TM), [`ANCFslidingAndALEjointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFslidingAndALEjointTest.py) (TM)

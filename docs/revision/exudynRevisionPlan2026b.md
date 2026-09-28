@@ -1135,7 +1135,11 @@ find its file and line, on every raise).
 
 <a id="rg4-11"></a>
 **RG4.11** *(group RG4; from RG13.5.2.4, 2026-09-28)* **`ObjectContactCoordinate` ignores
-    `activeConnector`, and its output variable `Distance` raises** (#2735). `ComputeODE2LHS` computes the
+    `activeConnector`, and its output variable `Distance` raises** (#2735). **Extended in RG13.5.2.5**:
+    four objects declare output variables whose `GetOutputVariableConnector` raises *"not implemented"* -
+    `ObjectContactCoordinate` and `ObjectContactCircleCable2D` (`Distance`), `ObjectJointRevolute2D`
+    (`Displacement`, `Rotation`), `ObjectJointPrismatic2D` (`Distance`, `Rotation`); implement them or
+    declare none. `ComputeODE2LHS` computes the
     contact force without looking at `activeConnector`; `GetOutputVariableTypes` declares `Distance`
     while `GetOutputVariableConnector` raises *"not implemented"*, so a sensor asking for it passes
     `Assemble()` and fails in the simulation. Small; an RG4 step by the maintainer's rule for defects
@@ -2861,8 +2865,10 @@ What depends on it: the graphics regression test takes every item through its Mi
       - **RG13.5.2.4** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-4) - connectors -
         spring-dampers, contact, penalty joints. Found on the way: two defects of
         `ObjectContactCoordinate` (RG4.11, #2735).
-      - **RG13.5.2.5** constraints and joints.
-      - **RG13.5.2.6** the general objects - `ObjectGenericODE1`.
+      - **RG13.5.2.5** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-5) - constraints
+        and joints.
+      - **RG13.5.2.6** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-5) - the general
+        objects - `ObjectGenericODE1`.
     - **RG13.5.3** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-3) - markers - the
       general marker section with the generated table of all markers, and **Marker quantities** and
       **Jacobians** for the 13 markers that had little or no text; the five with long texts of their

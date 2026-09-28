@@ -61,7 +61,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | relative velocity | $\LU{0}{\Delta\vv}$ | $\LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ |
 | algebraicVariable | $\lambda_0$ | Lagrange multiplier = force in constraint |
 
-### Connector forces constraint equations
+### Connector constraint equations
 
 If `activeConnector = True`, the index 3 algebraic equation reads
 

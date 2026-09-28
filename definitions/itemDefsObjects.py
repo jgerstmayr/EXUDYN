@@ -1667,7 +1667,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     cParentClass=ParentClassCObject,
     overallDescription=r"""A system of $n$ ABRV:ODE1, having a system matrix, a rhs vector, but mostly it will use a user function to describe special ABRV:ODE1 systems. It is based on NodeGenericODE1 nodes. NOTE that all matrices, vectors, etc. must have the same dimensions $n$ or $(n \times n)$, or they must be empty $(0 \times 0)$, using [] in Python.""",
     classType=ClassTypeObject,
-    detailedDescription=r"""    #### Equations of motion
+    detailedDescription=r"""    #### Coordinates
 
     An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, the total number of equations (=coordinates) of the object is
 
@@ -1687,6 +1687,12 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     Note that the user function $\fv_{user}(mbs, t, i_N, \qv)$ may be empty (=0), and that `iN` represents the itemNumber (=objectNumber). 
 
     CoordinateLoads are added for the respective ABRV:ODE1 coordinate on the RHS of the latter equation.
+
+    #### Marker interfaces
+
+    The object is no body: markers act on its coordinates only, `MarkerNodeODE1Coordinate` on a
+    coordinate of one of its nodes, e.g. for a `LoadCoordinate` - which adds to the right-hand side of
+    that coordinate's equation - or a coupling to a mechanical system in a user function.
 
     <!--
     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -8273,7 +8279,7 @@ definitions.append(ItemDefinition(
     | algebraicVariable | $\lambda_0$ | Lagrange multiplier = force in constraint |
 
 
-    #### Connector forces constraint equations
+    #### Connector constraint equations
 
     If `activeConnector = True`, the index 3 algebraic equation reads
 
@@ -9700,6 +9706,8 @@ definitions.append(ItemDefinition(
     the circle: otherwise geometry and equations are those of `ObjectContactFrictionCircleCable2D`, see
     [](#sec-item-objectcontactfrictioncirclecable2d). The data coordinates, one per segment, hold the gap of
     the last post Newton step and decide on contact (active set).
+
+    The output variable `Distance` the connector declares is not available (#2735).
     """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
@@ -12414,6 +12422,30 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers',
     classType=ClassTypeObject,
+    detailedDescription=r"""    #### Definition of quantities
+
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker m0 position | $\LU{0}{\pv}_{m0}$ | global position provided by marker m0 |
+    | marker m1 position | $\LU{0}{\pv}_{m1}$ | global position provided by marker m1 |
+    | marker velocities | $\LU{0}{\vv}_{m0}$, $\LU{0}{\vv}_{m1}$ | global velocities of the two markers |
+    | Lagrange multipliers | $\tlambda = [\lambda_0,\,\lambda_1]\tp$ | the joint force in $x$ and $y$ |
+
+    #### Connector constraint equations
+
+    The two points coincide in the $x$-$y$ plane; the rotation about $z$ is free. On the position level
+    (index 3)
+
+    $$
+    \vp{p_{m1,x} - p_{m0,x}}{p_{m1,y} - p_{m0,y}} = \Null ,
+    $$
+
+    and on the velocity level (index 2) the same with the velocities. The multipliers act on the markers
+    with the $x$ and $y$ rows of the position Jacobians, $\pm\LU{0}{\Jm_{pos}}\tp\tlambda$. With
+    `activeConnector = False` the equations become $\tlambda = \Null$.
+
+    The output variables `Displacement` and `Rotation` the joint declares are not available (#2735).
+    """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeJoint,
     pythonShortName='RevoluteJoint2D',
@@ -12484,27 +12516,38 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers.',
     classType=ClassTypeObject,
-    detailedDescription=r"""    #### Geometric relations
+    detailedDescription=r"""    #### Definition of quantities
 
-    The vector $\tv_0$ = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis.
-    The vector $\mathbf{n}_1$ = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis.
-    Using the global position vector $\pv_0$ and rotation matrix $\Am_0$ of marker0 and 
-    the global position vector $\pv_1$ rotation matrix $\Am_1$ of marker1, the equations for the prismatic joint follow as 
+    | intermediate variables | symbol | description |
+    |---|---|---|
+    | marker positions | $\pv_0$, $\pv_1$ | global positions provided by marker m0 and m1 |
+    | marker rotations | $\Am_0$, $\Am_1$ | rotation matrices provided by the two rigid markers |
+    | prismatic axis | $\tv_0$ = `axisMarker0` | the axis, in the frame of marker m0 |
+    | normal | $\mathbf{n}_1$ = `normalMarker1` | the normal to the axis, in the frame of marker m1 |
+    | Lagrange multipliers | $[\lambda_0,\,\lambda_1]$ | the transverse force and the torque in the joint |
 
+    #### Geometric relations
+
+    The axis and the normal in the global frame are $\Am_0 \tv_0$ and $\Am_1 \mathbf{n}_1$; marker m1 may
+    move along the axis, but not across it.
+
+    #### Connector constraint equations
+
+    On the position level (index 3)
 
     $$
-                        (\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbf{n}_1 = 0
-                        $$
-  
-
-
+    (\pv_1-\pv_0)\tp \Am_1 \mathbf{n}_1 = 0 , \quad (\Am_0 \tv_0)\tp \Am_1 \mathbf{n}_1 = 0 ,
     $$
-                        (\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbf{n}_1 = 0
-                        $$
- 
-    The Lagrange multipliers follow for these two equations $[\lambda_0,\lambda_1]$, 
-    in which $\lambda_0$ is the transverse force and $\lambda_1$ is the torque in the joint.
-""",
+
+    the first keeping the relative position on the axis, the second keeping the axis normal to
+    $\mathbf{n}_1$, which forbids the relative rotation. On the velocity level (index 2) their time
+    derivatives, with the time derivatives of the rotated vectors from the angular velocities of the
+    markers. With `constrainRotation = False` the second equation becomes $\lambda_1 = 0$ and the bodies
+    may rotate relative to each other; with `activeConnector = False` both equations become
+    $\lambda_i = 0$.
+
+    The output variables `Distance` and `Rotation` the joint declares are not available (#2735).
+    """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeJoint,
     pythonShortName='PrismaticJoint2D',

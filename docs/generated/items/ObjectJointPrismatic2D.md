@@ -40,23 +40,37 @@ The parameters of `VObjectJointPrismatic2D`, given as `visualization`:
 (description-objectjointprismatic2d)=
 ## Detailed description
 
+### Definition of quantities
+
+| intermediate variables | symbol | description |
+|---|---|---|
+| marker positions | $\pv_0$, $\pv_1$ | global positions provided by marker m0 and m1 |
+| marker rotations | $\Am_0$, $\Am_1$ | rotation matrices provided by the two rigid markers |
+| prismatic axis | $\tv_0$ = `axisMarker0` | the axis, in the frame of marker m0 |
+| normal | $\mathbf{n}_1$ = `normalMarker1` | the normal to the axis, in the frame of marker m1 |
+| Lagrange multipliers | $[\lambda_0,\,\lambda_1]$ | the transverse force and the torque in the joint |
+
 ### Geometric relations
 
-The vector $\tv_0$ = axisMarker0 is given in local coordinates of the first marker's (body) frame and defines the prismatic axis.
-The vector $\mathbf{n}_1$ = normalMarker1 is given in the second marker's (body) frame and is the normal vector to the prismatic axis.
-Using the global position vector $\pv_0$ and rotation matrix $\Am_0$ of marker0 and
-the global position vector $\pv_1$ rotation matrix $\Am_1$ of marker1, the equations for the prismatic joint follow as
+The axis and the normal in the global frame are $\Am_0 \tv_0$ and $\Am_1 \mathbf{n}_1$; marker m1 may
+move along the axis, but not across it.
+
+### Connector constraint equations
+
+On the position level (index 3)
 
 $$
-(\pv_1-\pv_0)^T\cdot \Am_1 \cdot \mathbf{n}_1 = 0
+(\pv_1-\pv_0)\tp \Am_1 \mathbf{n}_1 = 0 , \quad (\Am_0 \tv_0)\tp \Am_1 \mathbf{n}_1 = 0 ,
 $$
 
-$$
-(\Am_0 \cdot \tv_0)^T \cdot \Am_1 \cdot \mathbf{n}_1 = 0
-$$
+the first keeping the relative position on the axis, the second keeping the axis normal to
+$\mathbf{n}_1$, which forbids the relative rotation. On the velocity level (index 2) their time
+derivatives, with the time derivatives of the rotated vectors from the angular velocities of the
+markers. With `constrainRotation = False` the second equation becomes $\lambda_1 = 0$ and the bodies
+may rotate relative to each other; with `activeConnector = False` both equations become
+$\lambda_i = 0$.
 
-The Lagrange multipliers follow for these two equations $[\lambda_0,\lambda_1]$,
-in which $\lambda_0$ is the transverse force and $\lambda_1$ is the torque in the joint.
+The output variables `Distance` and `Rotation` the joint declares are not available (#2735).
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`geneticOptimizationSliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/geneticOptimizationSliderCrank.py) (Ex), [`PARTS_ATEs_moving.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/PARTS_ATEs_moving.py) (TM), [`scissorPrismaticRevolute2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/scissorPrismaticRevolute2D.py) (TM), [`sliderCrankFloatingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrankFloatingTest.py) (TM)

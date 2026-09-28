@@ -49,7 +49,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 (description-objectgenericode1)=
 ## Detailed description
 
-### Equations of motion
+### Coordinates
 
 An object with node numbers $[n_0,\,\ldots,\,n_n]$ and according numbers of nodal coordinates $[n_{c_0},\,\ldots,\,n_{c_n}]$, the total number of equations (=coordinates) of the object is
 
@@ -68,6 +68,12 @@ $$ (eq-objectgenericode1-eom)
 Note that the user function $\fv_{user}(mbs, t, i_N, \qv)$ may be empty (=0), and that `iN` represents the itemNumber (=objectNumber).
 
 CoordinateLoads are added for the respective {ref}`ODE1 <ODE1>` coordinate on the RHS of the latter equation.
+
+### Marker interfaces
+
+The object is no body: markers act on its coordinates only, `MarkerNodeODE1Coordinate` on a
+coordinate of one of its nodes, e.g. for a `LoadCoordinate` - which adds to the right-hand side of
+that coordinate's equation - or a coupling to a mechanical system in a user function.
 
 *Example*:
 

@@ -34,5 +34,32 @@ The parameters of `VObjectJointRevolute2D`, given as `visualization`:
 | **drawSize** | float |  | -1. | drawing size = radius of revolute joint; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+(description-objectjointrevolute2d)=
+## Detailed description
+
+### Definition of quantities
+
+| intermediate variables | symbol | description |
+|---|---|---|
+| marker m0 position | $\LU{0}{\pv}_{m0}$ | global position provided by marker m0 |
+| marker m1 position | $\LU{0}{\pv}_{m1}$ | global position provided by marker m1 |
+| marker velocities | $\LU{0}{\vv}_{m0}$, $\LU{0}{\vv}_{m1}$ | global velocities of the two markers |
+| Lagrange multipliers | $\tlambda = [\lambda_0,\,\lambda_1]\tp$ | the joint force in $x$ and $y$ |
+
+### Connector constraint equations
+
+The two points coincide in the $x$-$y$ plane; the rotation about $z$ is free. On the position level
+(index 3)
+
+$$
+\vp{p_{m1,x} - p_{m0,x}}{p_{m1,y} - p_{m0,y}} = \Null ,
+$$
+
+and on the velocity level (index 2) the same with the velocities. The multipliers act on the markers
+with the $x$ and $y$ rows of the position Jacobians, $\pm\LU{0}{\Jm_{pos}}\tp\tlambda$. With
+`activeConnector = False` the equations become $\tlambda = \Null$.
+
+The output variables `Displacement` and `Rotation` the joint declares are not available (#2735).
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pendulumGeomExactBeam2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2D.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFslidingJoint2Drigid.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py) (Ex), [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex), [`beltDrivesComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py) (Ex), [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`doublePendulum2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/doublePendulum2D.py) (Ex), [`finiteSegmentMethod.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/finiteSegmentMethod.py) (Ex), [`geneticOptimizationSliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/geneticOptimizationSliderCrank.py) (Ex), [`ANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py) (TM), [`ANCFgeneralContactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFgeneralContactCircle.py) (TM), [`ANCFoutputTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFoutputTest.py) (TM), ...

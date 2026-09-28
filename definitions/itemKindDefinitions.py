@@ -224,6 +224,29 @@ definitions.append(ItemKindDefinition(
 definitions.append(ItemKindDefinition(
     kind='Objects (Joint)',
     overallDescription=r"""A Joint is a special Object, Connector and Constraint, which is attached to position or rigid body markers. The joint results in special algebraic equations and requires implicit time integration. Joints represent special constraints, as described in multibody system dynamics literature.""",
+    detailedDescription=r"""
+    ## What a joint is
+
+    A joint is a constraint between two rigid markers - `MarkerBodyRigid`, `MarkerNodeRigid`, a super
+    element or kinematic tree marker - which fixes some of the relative motions of the two frames and
+    leaves the others free: the revolute joint the rotation about one axis, the prismatic joint the
+    translation along one axis. Everything the page of the constraints says - Lagrange multipliers,
+    index 3 and index 2, `activeConnector`, redundant constraints - holds for the joints.
+
+    ## Joint frames
+
+    The free axes are those of a **joint frame** in each marker: `rotationMarker0` and
+    `rotationMarker1` rotate the marker frames into the joint frames, and `ObjectJointRevoluteZ`, for
+    example, turns about the local $z$-axis of the joint frame. `mbs.CreateRevoluteJoint`,
+    `CreatePrismaticJoint`, `CreateSphericalJoint` and `CreateGenericJoint` take a global position and
+    axis and compute the markers and the joint frames.
+
+    ## Reaction forces
+
+    The multipliers of a joint are its reaction forces and torques; the output variables give them -
+    `ForceLocal` and `TorqueLocal` in the joint frame $J0$ of marker 0 for most joints, `Force` in the
+    global frame for the spherical joint -, as the page of each joint lists them.
+    """,
     ))
 
 definitions.append(ItemKindDefinition(
@@ -278,6 +301,39 @@ definitions.append(ItemKindDefinition(
 definitions.append(ItemKindDefinition(
     kind='Objects (Constraint)',
     overallDescription=r"""A Constraint is a special Object and Connector, which links two or more markers. A Constraint leads to algebraic equations, which exactly fulfill special constraints on the kinematic behavior of the multibody syste, such as a constraint on a coordinate or a distance constraint.""",
+    detailedDescription=r"""
+    ## What a constraint is
+
+    A constraint prescribes a relation between the coordinates of the bodies or nodes its markers sit
+    on - two points coincide, a distance is fixed, a coordinate follows another - as **algebraic
+    equations** $\gv(\qv, t) = \Null$. Each equation gets a **Lagrange multiplier** $\lambda$, an
+    algebraic unknown of the system, and acts on the equations of motion with the transposed Jacobian of
+    the constraint, $\left(\partial \gv / \partial \qv\right)\tp \tlambda$: the multipliers are the
+    reaction forces and torques of the constraint, in the directions the page of each constraint says.
+    This page holds for the joints as well.
+
+    ## Index 3 and index 2
+
+    A constraint is written on the **position level** (index 3), $\gv(\qv,t) = \Null$, or on the
+    **velocity level** (index 2), $\dot\gv = \Null$; which one the solver uses is
+    `timeIntegration.generalizedAlpha.useIndex2Constraints` and the like. On the velocity level the
+    position may drift over long simulations, which the output variables of some joints show.
+    Constraints need an **implicit** time integration (generalized-alpha, trapezoidal) or the static
+    solver; the explicit integrators do not solve algebraic equations - they can only eliminate
+    `ObjectConnectorCoordinate` constraints to the ground, such as fixed nodes (`explicitIntegration.eliminateConstraints`).
+
+    ## `activeConnector`
+
+    With `activeConnector = False` a constraint replaces its equations by $\tlambda = \Null$: it
+    remains in the system with its multipliers, which are zero, and can be switched on again.
+
+    ## Redundant constraints
+
+    Constraints that fix the same motion twice - two revolute joints on one axis, a closed loop of
+    planar joints in 3D - make the Jacobian of the constraints singular, and the solver fails.
+    `mbs.ComputeSystemDegreeOfFreedom()` counts the redundant constraints; the `EigenDense` linear solver
+    with `linearSolverSettings.ignoreSingularJacobian` can handle some of them.
+    """,
     ))
 
 definitions.append(ItemKindDefinition(
