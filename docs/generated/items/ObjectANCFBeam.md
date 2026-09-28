@@ -57,7 +57,56 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 (description-objectancfbeam)=
 ## Detailed description
 
-Detailed description coming later.
+**This element is under development**, as its class description says: what follows is what the
+implementation computes, not a finished formulation.
+
+### Nodes and coordinates
+
+Two nodes of type `NodePointSlope23`, each with a position $\rv_i$ and two cross section slopes
+$\rv_{y,i}$, $\rv_{z,i}$; 18 coordinates, taken as the sum of reference and current coordinates.
+The local axial coordinate is $x \in [-L/2,\, L/2]$.
+
+### Kinematics and interpolation
+
+Position and cross section vectors are interpolated **linearly**, and a point of the cross section
+at $(y,\,z)$ is at
+
+$$
+\rv(x,y,z) = S_0(x)\left(\rv_0 + y\,\rv_{y,0} + z\,\rv_{z,0}\right) + S_1(x)\left(\rv_1 + y\,\rv_{y,1} + z\,\rv_{z,1}\right) ,
+\quad S_0 = \frac{1}{2} - \frac{x}{L} , \;\; S_1 = \frac{1}{2} + \frac{x}{L} .
+$$
+
+### Strains
+
+From the cross section vectors $\rv_y$, $\rv_z$ the element builds an orthonormal basis
+$\tv_1,\, \tv_2,\, \tv_3$ of the cross section ($\tv_3 \parallel \rv_z$, $\tv_1 \perp \rv_y,\,\rv_z$),
+and measures
+
+| strain | definition | stiffness |
+|---|---|---|
+| axial and shear | $\gamma_1 = \tv_1\tp\rv' - 1$, $\gamma_2 = \tv_2\tp\rv'$, $\gamma_3 = \tv_3\tp\rv'$ | $[EA,\; GA_y,\; GA_z]$ = `physicsAxialShearStiffness` |
+| twist and curvature | $\kv = \frac{1}{2}\sum_i \ev_i \times \ev_i'$ in the local basis | $[GJ_x,\; EI_y,\; EI_z]$ = `physicsTorsionalBendingStiffness` |
+| cross section deformation | $\frac{1}{2}(\rv_y\tp\rv_y - 1)$, $\frac{1}{2}(\rv_z\tp\rv_z - 1)$, $\frac{1}{2}\rv_y\tp\rv_z$ | penalty $[f_{yy} EA,\; f_{zz} EA,\; f_{yz}(GA_y+GA_z)]$ with `crossSectionPenaltyFactor` |
+
+each with a viscous damping of the same form. The strains are measured against a **straight,
+undeformed** reference: there are no reference strains or curvatures, so a curved reference
+configuration is not stress-free.
+
+### Mass matrix and integration
+
+The mass matrix is constant and integrated with a Gauss rule of order 3. The elastic forces are
+integrated with **one** point - reduced integration against locking of the linear element - for
+the curvature and the axial and shear terms, and with a Lobatto rule for the cross section penalty.
+
+### Marker interfaces
+
+The position Jacobian is the interpolation above at the local position, so a force may act at any
+point of the cross section. The element provides no rotation Jacobian.
+
+### Limitations
+
+Linear element, many elements needed for bending; no reference strains; under development and not
+fully tested.
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`ANCFBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py) (TM), [`ANCFCableBeamDampingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py) (TM), [`geometricallyExactBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM)

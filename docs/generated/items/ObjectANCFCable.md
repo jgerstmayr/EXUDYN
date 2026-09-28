@@ -12,7 +12,7 @@ A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPositi
 
 - Python names: `ObjectANCFCable` or `Cable`, and `VCable` for its visualization
 - Nodes it takes: [](#sec-item-nodepointslope1)
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition)
 
 ## Parameters
 
@@ -58,6 +58,72 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | ForceLocal | $N$ | (local) section normal force (scalar, including reference strains) (at $y$=$z$=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint |
 | TorqueLocal | $M$ | (local) bending moment (scalar) (at $y$=$z$=0), which are bending moments as there is no torque |
 | Acceleration | $\LU{0}{\av(x,0,0)} = \LU{0}{\ddot \rv(x)}$ | global acceleration vector of local position |
+
+(description-objectancfcable)=
+## Detailed description
+
+### Nodes and coordinates
+
+Two nodes of type `NodePointSlope1`, each with a position $\rv_i$ and a slope $\rv'_i$; the element
+coordinates are
+
+$$
+\qv = \left[\, \rv_0\tp\;\; \rv_0^{\prime T}\;\; \rv_1\tp\;\; \rv_1^{\prime T}\, \right]\tp \in \Rcal^{12} ,
+$$
+
+taken as the sum of reference and current coordinates, as for `ObjectANCFCable2D`.
+
+### Kinematics and interpolation
+
+The element is the spatial version of `ObjectANCFCable2D`: the position and slope of the axis at
+the axial coordinate $x \in [0,\,L]$ are interpolated with the same cubic shape functions
+{eq}`eq-cable2d-shapefunctions`, now for three components,
+
+$$
+\rv(x) = \Sm(x)\, \qv , \quad \Sm(x) = \left[\, S_1(x)\,\ImThree\;\; S_2(x)\,\ImThree\;\; S_3(x)\,\ImThree\;\; S_4(x)\,\ImThree\, \right] .
+$$
+
+### Strains
+
+The axial strain is $\varepsilon = \Vert \rv' \Vert - 1$, as in 2D. The bending strain is the vector
+of the material measure of curvature,
+
+$$
+\kv = \frac{\rv' \times \rv''}{\Vert \rv' \Vert^2} ,
+$$
+
+and the virtual work of the elastic forces is
+
+$$
+\delta W_e = \int_0^L \left( EA\, (\varepsilon - \varepsilon_0)\, \delta\varepsilon + EI\, \kv\tp \delta\kv \right) dx
+$$
+
+with the damping terms $d_\varepsilon \dot\varepsilon$ and $d_K \dot\kv$ added in the same way. The
+bending stiffness is the same in all directions, and there is **no torsion**: a single slope
+vector carries no rotation of the cross section about the axis. With `strainIsRelativeToReference`
+$f\cRef$, the strain and curvature of the reference configuration, times $f\cRef$, are subtracted,
+so that a curved reference can be stress-free; a reference curvature parameter, which the 2D
+element has, does not exist.
+
+### Mass matrix
+
+Constant, $\Mm = \int_0^L \rho A\, \Sm\tp \Sm\, dx$, computed once, as in 2D.
+
+### Elastic forces and integration
+
+As in `ObjectANCFCable2D`, with the same three choices of `useReducedOrderIntegration` for the axial
+and the bending terms.
+
+### Marker interfaces
+
+Markers act on the **axis only**: a local position must have $y = z = 0$, which the element checks.
+The position Jacobian is the shape function matrix, $\LU{0}{\Jm_{pos}}(x) = \Sm(x)$, and the
+mass-weighted Jacobian its integral $\int_0^L \rho A\, \Sm\, dx$. There is no rotation Jacobian and
+no orientation, so `MarkerBodyRigid` does not fit and no torque can be applied.
+
+### Limitations
+
+No torsion and no orientation of the cross section; loads and constraints only on the axis.
 
 (miniexample-objectancfcable)=
 ## Mini example

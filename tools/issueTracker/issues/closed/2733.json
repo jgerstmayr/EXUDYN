@@ -1,0 +1,16 @@
+{
+  "number": 2733,
+  "title": "ObjectANCFCable declares an angular velocity access function it does not implement",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "Found while documenting the finite elements, revision2026b step RG13.5.2.2, 2026-09-28: ObjectANCFCable declares ItemAccessFunctionTypes TranslationalVelocity_qt, AngularVelocity_qt and DisplacementMassIntegral_q, but GetAccessFunctionBody has no case for AngularVelocity_qt (it is commented out) and GetAngularVelocity throws 'not implemented' - a single slope vector carries no orientation. So CheckSystemIntegrity accepted a MarkerBodyRigid on the cable, which then failed during the simulation, and the item page listed MarkerBodyRigid as fitting. The declaration drops AngularVelocity_qt; Assemble() now refuses such a marker with the check's own message.",
+  "dateRaised": "2026-09-28",
+  "deadline": "2027-03-27",
+  "dateResolved": "2026-09-28 14:20",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/itemDefsObjects.py",
+  "releaseNotes": "ObjectANCFCable no longer declares an angular velocity access function it does not implement: Assemble() refuses a MarkerBodyRigid on the 3D cable with a clear message, where the simulation failed before, and the item page no longer lists that marker as fitting.",
+  "resolvedInVersion": "1.12.143"
+}

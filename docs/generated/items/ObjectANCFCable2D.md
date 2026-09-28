@@ -152,6 +152,12 @@ $$
 \frac{\partial \rv}{\partial t} = \dot \rv = \Sm \dot \qv.
 $$
 
+### Strains and limitations
+
+Axial strain and bending (the material measure of curvature) of a Bernoulli-Euler beam: no shear
+deformation and no deformation of the cross section, which has no geometry of its own except for
+drawing and contact.
+
 ### Mass matrix
 
 The mass matrix is constant and therefore precomputed at the first time it is needed (e.g., during computation of initial accelerations).
@@ -315,7 +321,7 @@ There are 3 different options for integration rules depending on the flag `useRe
 
 Note that the Jacobian of elastic forces is computed using automatic differentiation.
 
-### Access functions
+### Marker interfaces
 
 For application of forces and constraints at any local beam position $\pLocB=[x,\, y,\, 0]\tp$, the position / velocity Jacobian reads
 

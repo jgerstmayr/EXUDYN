@@ -6444,3 +6444,40 @@ Written from the access functions in `src/ImplObjects`, which corrected the page
 `Marker interfaces` is a recurring heading of `checkDefinitions` now. Decided the same day with the
 maintainer: RG13.2 is closed as done by RG13.4 and RG13.5 (#2716); the MiniExamples are the new step
 RG13.6 (#2732); the relative-coordinate markers are checked in RG4.9.
+
+<a id="rg13-5-2-2"></a>
+### RG13.5.2.2 — the pages of the finite elements (2026-09-28, #2725, #2733)
+
+Six of the seven finite elements have a page in the order the group prescribes - nodes and
+coordinates, kinematics and interpolation, strains, elastic forces and integration, mass matrix,
+**marker interfaces**, limitations -, and the page of the group a general section with a table of
+all seven: nodes, theory, which deformations. `ObjectANCFCable2D` was the template and keeps its text;
+its *Access functions* are its *Marker interfaces*, and a short section says what the element does
+not model. `ObjectBeamGeometricallyExact` (3D) waits for RG4.8.
+
+Written from `src/ImplObjects`, not from the literature:
+
+- **`ObjectANCFCable`** (3D, no text before): the 2D element in three components; the curvature is the
+  vector $\kv = \rv' \times \rv'' / \Vert\rv'\Vert^2$ with one bending stiffness for all directions;
+  no torsion; markers only on the axis, $y = z = 0$, which the element checks; no reference curvature
+  parameter, unlike the 2D element.
+- **`ObjectANCFBeam`** (4 words before, *"under development"*): linear interpolation of position and
+  cross section vectors; an orthonormal cross section basis from $\rv_y$ and $\rv_z$; axial and shear
+  strains, twist and curvature $\frac{1}{2}\sum_i \ev_i \times \ev_i'$, and a penalty on the
+  deformation of the cross section; one integration point against locking. Its strains are measured
+  against a **straight** reference - no reference strains -, which the page says as a limitation.
+- **`ObjectBeamGeometricallyExact2D`** (11 words before): 2 or 3 nodes, Lagrange interpolation of
+  position and rotation, $\gamma_1 = \tv\tp\rv' - 1$, $\gamma_2 = \nv\tp\rv'$,
+  $\kappa = \theta' - \kappa_0$, reduced integration (one point for the linear, the order-3 rule for the
+  quadratic element).
+- **`ObjectALEANCFCable2D`** and **`ObjectANCFThinPlate`**: sections around what they had; the plate
+  stays *"under construction"*.
+
+**One declaration was wrong (#2733)**: `ObjectANCFCable` declared the access function
+`AngularVelocity_qt`, which its `GetAccessFunctionBody` does not have and its `GetAngularVelocity`
+throws on - a single slope carries no orientation. `Assemble()` accepted a `MarkerBodyRigid` on the
+cable, which then failed during the simulation, and the page listed the marker as fitting. The
+declaration no longer carries it; `Assemble()` now refuses such a marker with the integrity check's
+message. A comparison of all bodies' declared access functions against the implemented ones found
+this one among the finite elements; `ObjectGenericODE2` and `ObjectKinematicTree` reach theirs
+through the super element functions and are looked at in RG13.5.2.3.

@@ -6,14 +6,14 @@
 | Object (Body) | 7 | 0 | 6 | 2 | 0 of 46 | 0 of 59 | 0 | 0 |
 | Object (SuperElement) | 4 | 0 | 3 | 2 | 2 of 122 | 0 of 16 | 0 | 0 |
 | Object (Object) | 1 | 0 | 1 | 0 | 0 of 9 | 0 of 3 | 0 | 0 |
-| Object (FiniteElement) | 7 | 1 | 7 | 4 | 0 of 104 | 0 of 66 | 2 | 1 |
+| Object (FiniteElement) | 7 | 0 | 7 | 4 | 0 of 104 | 0 of 66 | 2 | 1 |
 | Object (Connector) | 19 | 1 | 14 | 12 | 0 of 309 | 0 of 74 | 1 | 0 |
 | Object (Constraint) | 3 | 0 | 3 | 1 | 0 of 31 | 0 of 12 | 0 | 0 |
 | Object (Joint) | 10 | 1 | 5 | 9 | 0 of 100 | 0 of 46 | 0 | 0 |
 | Marker | 18 | 0 | 17 | 17 | 1 of 81 | 0 of 0 | 1 | 1 |
 | Load | 4 | 0 | 4 | 3 | 0 of 22 | 0 of 0 | 0 | 0 |
 | Sensor | 8 | 0 | 8 | 8 | 0 of 60 | 0 of 0 | 0 | 0 |
-| **all** | 97 | 3 | 84 | 74 | 3 of 985 | 0 of 413 | 7 | 4 |
+| **all** | 97 | 2 | 84 | 74 | 3 of 985 | 0 of 413 | 7 | 4 |
 
 | item | kind | overall description (words) | detailed description (words, sections) | figure | parameters: without a real description | output variables (undescribed) | MiniExample | used in scripts | used in the package |
 |---|---|---|---|---|---|---|---|---|---|
@@ -45,13 +45,13 @@
 | ObjectKinematicTree | Object (SuperElement) | 154 | 1090, 5 | - | 0 of 40 | 4 | yes | 5 | 2 |
 | ObjectFFRF | Object (SuperElement) | 63 | 849, 6 | - | 2 of 27: `tempVector`, `tempMatrix` | 4 | - | 2 | 1 |
 | ObjectFFRFreducedOrder | Object (SuperElement) | 88 | 1224, 6 | yes | 0 of 37 | 3 | - | 6 | 2 |
-| ObjectANCFCable | Object (FiniteElement) | 64 | - | - | 0 of 14 | 9 | yes | 0 | 0 |
-| ObjectANCFCable2D | Object (FiniteElement) | 39 | 991, 6 | - | 0 of 17 | 13 | yes | 22 | 0 |
+| ObjectANCFCable | Object (FiniteElement) | 64 | 258, 7 | - | 0 of 14 | 9 | yes | 0 | 0 |
+| ObjectANCFCable2D | Object (FiniteElement) | 39 | 1029, 7 | - | 0 of 17 | 13 | yes | 22 | 0 |
 | ObjectALEANCFCable2D | Object (FiniteElement) | 66 | 225, 0 | - | 0 of 18 | 10 | - | 5 | 0 |
-| ObjectANCFBeam | Object (FiniteElement) | 57 | 4, 0 | - | 0 of 15 | 9 | - | 5 | 0 |
-| ObjectBeamGeometricallyExact2D | Object (FiniteElement) | 107 | 11, 0 | - | 0 of 16 | 8 | - | 5 | 1 |
+| ObjectANCFBeam | Object (FiniteElement) | 57 | 238, 6 | - | 0 of 15 | 9 | - | 5 | 0 |
+| ObjectBeamGeometricallyExact2D | Object (FiniteElement) | 107 | 228, 6 | - | 0 of 16 | 8 | - | 5 | 1 |
 | ObjectBeamGeometricallyExact | Object (FiniteElement) | 44 | 4, 0 | - | 0 of 11 | 6 | - | 2 | 0 |
-| ObjectANCFThinPlate | Object (FiniteElement) | 57 | 15, 0 | - | 0 of 13 | 11 | yes | 0 | 1 |
+| ObjectANCFThinPlate | Object (FiniteElement) | 57 | 169, 5 | - | 0 of 13 | 11 | yes | 0 | 1 |
 | ObjectConnectorSpringDamper | Object (Connector) | 13 | 329, 3 | - | 0 of 12 | 5 | yes | 27 | 2 |
 | ObjectConnectorCartesianSpringDamper | Object (Connector) | 21 | 292, 2 | - | 0 of 10 | 4 | yes | 48 | 2 |
 | ObjectConnectorRigidBodySpringDamper | Object (Connector) | 28 | 204, 2 | - | 0 of 15 | 6 | yes | 9 | 1 |

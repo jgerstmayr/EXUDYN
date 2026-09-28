@@ -3531,8 +3531,69 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     overallDescription=r"""A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.""",
     classType=ClassTypeObject,
-    detailedDescription=r"""
-""",
+    detailedDescription=r"""    #### Nodes and coordinates
+
+    Two nodes of type `NodePointSlope1`, each with a position $\rv_i$ and a slope $\rv'_i$; the element
+    coordinates are
+
+    $$
+    \qv = \left[\, \rv_0\tp\;\; \rv_0^{\prime T}\;\; \rv_1\tp\;\; \rv_1^{\prime T}\, \right]\tp \in \Rcal^{12} ,
+    $$
+
+    taken as the sum of reference and current coordinates, as for `ObjectANCFCable2D`.
+
+    #### Kinematics and interpolation
+
+    The element is the spatial version of `ObjectANCFCable2D`: the position and slope of the axis at
+    the axial coordinate $x \in [0,\,L]$ are interpolated with the same cubic shape functions
+    {eq}`eq-cable2d-shapefunctions`, now for three components,
+
+    $$
+    \rv(x) = \Sm(x)\, \qv , \quad \Sm(x) = \left[\, S_1(x)\,\ImThree\;\; S_2(x)\,\ImThree\;\; S_3(x)\,\ImThree\;\; S_4(x)\,\ImThree\, \right] .
+    $$
+
+    #### Strains
+
+    The axial strain is $\varepsilon = \Vert \rv' \Vert - 1$, as in 2D. The bending strain is the vector
+    of the material measure of curvature,
+
+    $$
+    \kv = \frac{\rv' \times \rv''}{\Vert \rv' \Vert^2} ,
+    $$
+
+    and the virtual work of the elastic forces is
+
+    $$
+    \delta W_e = \int_0^L \left( EA\, (\varepsilon - \varepsilon_0)\, \delta\varepsilon + EI\, \kv\tp \delta\kv \right) dx
+    $$
+
+    with the damping terms $d_\varepsilon \dot\varepsilon$ and $d_K \dot\kv$ added in the same way. The
+    bending stiffness is the same in all directions, and there is **no torsion**: a single slope
+    vector carries no rotation of the cross section about the axis. With `strainIsRelativeToReference`
+    $f\cRef$, the strain and curvature of the reference configuration, times $f\cRef$, are subtracted,
+    so that a curved reference can be stress-free; a reference curvature parameter, which the 2D
+    element has, does not exist.
+
+    #### Mass matrix
+
+    Constant, $\Mm = \int_0^L \rho A\, \Sm\tp \Sm\, dx$, computed once, as in 2D.
+
+    #### Elastic forces and integration
+
+    As in `ObjectANCFCable2D`, with the same three choices of `useReducedOrderIntegration` for the axial
+    and the bending terms.
+
+    #### Marker interfaces
+
+    Markers act on the **axis only**: a local position must have $y = z = 0$, which the element checks.
+    The position Jacobian is the shape function matrix, $\LU{0}{\Jm_{pos}}(x) = \Sm(x)$, and the
+    mass-weighted Jacobian its integral $\int_0^L \rho A\, \Sm\, dx$. There is no rotation Jacobian and
+    no orientation, so `MarkerBodyRigid` does not fit and no torque can be applied.
+
+    #### Limitations
+
+    No torsion and no orientation of the cross section; loads and constraints only on the axis.
+    """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable
     rhoA = 78.
@@ -3631,7 +3692,7 @@ definitions.append(ItemDefinition(
             description=r"Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'"),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q']),
+        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'DisplacementMassIntegral_q']), #no rotation: a single slope carries no orientation (#2733)
         ItemFunctionDef('GetAccessFunctionBody'),
         ItemFunctionDef('GetOutputVariableBody'),
         ItemFunctionDef('GetPosition'),
@@ -3925,6 +3986,12 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     <!-- -->
 
+    #### Strains and limitations
+
+    Axial strain and bending (the material measure of curvature) of a Bernoulli-Euler beam: no shear
+    deformation and no deformation of the cross section, which has no geometry of its own except for
+    drawing and contact.
+
     #### Mass matrix
 
     The mass matrix is constant and therefore precomputed at the first time it is needed (e.g., during computation of initial accelerations).
@@ -4092,7 +4159,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
     Note that the Jacobian of elastic forces is computed using automatic differentiation.
     
-    #### Access functions
+    #### Marker interfaces
 
     For application of forces and constraints at any local beam position $\pLocB=[x,\, y,\, 0]\tp$, the position / velocity Jacobian reads
 
@@ -4495,8 +4562,57 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     overallDescription=r"""A 3D beam finite element based on the absolute nodal coordinate formulation, using two nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes; assuming dimensions $w_y$ and $w_z$ in cross section, the local position range is $\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]$. NOTE: Requires further development and tests!""",
     classType=ClassTypeObject,
-    detailedDescription=r"""    Detailed description coming later.
-""",
+    detailedDescription=r"""    **This element is under development**, as its class description says: what follows is what the
+    implementation computes, not a finished formulation.
+
+    #### Nodes and coordinates
+
+    Two nodes of type `NodePointSlope23`, each with a position $\rv_i$ and two cross section slopes
+    $\rv_{y,i}$, $\rv_{z,i}$; 18 coordinates, taken as the sum of reference and current coordinates.
+    The local axial coordinate is $x \in [-L/2,\, L/2]$.
+
+    #### Kinematics and interpolation
+
+    Position and cross section vectors are interpolated **linearly**, and a point of the cross section
+    at $(y,\,z)$ is at
+
+    $$
+    \rv(x,y,z) = S_0(x)\left(\rv_0 + y\,\rv_{y,0} + z\,\rv_{z,0}\right) + S_1(x)\left(\rv_1 + y\,\rv_{y,1} + z\,\rv_{z,1}\right) ,
+    \quad S_0 = \frac{1}{2} - \frac{x}{L} , \;\; S_1 = \frac{1}{2} + \frac{x}{L} .
+    $$
+
+    #### Strains
+
+    From the cross section vectors $\rv_y$, $\rv_z$ the element builds an orthonormal basis
+    $\tv_1,\, \tv_2,\, \tv_3$ of the cross section ($\tv_3 \parallel \rv_z$, $\tv_1 \perp \rv_y,\,\rv_z$),
+    and measures
+
+    | strain | definition | stiffness |
+    |---|---|---|
+    | axial and shear | $\gamma_1 = \tv_1\tp\rv' - 1$, $\gamma_2 = \tv_2\tp\rv'$, $\gamma_3 = \tv_3\tp\rv'$ | $[EA,\; GA_y,\; GA_z]$ = `physicsAxialShearStiffness` |
+    | twist and curvature | $\kv = \frac{1}{2}\sum_i \ev_i \times \ev_i'$ in the local basis | $[GJ_x,\; EI_y,\; EI_z]$ = `physicsTorsionalBendingStiffness` |
+    | cross section deformation | $\frac{1}{2}(\rv_y\tp\rv_y - 1)$, $\frac{1}{2}(\rv_z\tp\rv_z - 1)$, $\frac{1}{2}\rv_y\tp\rv_z$ | penalty $[f_{yy} EA,\; f_{zz} EA,\; f_{yz}(GA_y+GA_z)]$ with `crossSectionPenaltyFactor` |
+
+    each with a viscous damping of the same form. The strains are measured against a **straight,
+    undeformed** reference: there are no reference strains or curvatures, so a curved reference
+    configuration is not stress-free.
+
+    #### Mass matrix and integration
+
+    The mass matrix is constant and integrated with a Gauss rule of order 3. The elastic forces are
+    integrated with **one** point - reduced integration against locking of the linear element - for
+    the curvature and the axial and shear terms, and with a Lobatto rule for the cross section penalty.
+
+    #### Marker interfaces
+
+    The position Jacobian is the interpolation above at the local position, so a force may act at any
+    point of the cross section. The element provides no rotation Jacobian.
+
+    #### Limitations
+
+    Linear element, many elements needed for bending; no reference strains; under development and not
+    fully tested.
+    """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeFiniteElement,
     outputVariables=[
@@ -4697,9 +4813,64 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     overallDescription=r"""A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
-    detailedDescription=r"""    See paper of Simo and Vu-Quoc (1986).
-    Detailed description coming later.
-""",
+    detailedDescription=r"""    A shear deformable beam after Simo and Vu-Quoc (1986): the positions and the rotations of the cross
+    section are interpolated independently.
+
+    #### Nodes and coordinates
+
+    Two nodes (linear element) or three nodes (quadratic element) of type `NodeRigidBody2D`, each with
+    the position $[r_{x},\, r_{y}]$ of the axis and the rotation $\theta$ of the cross section; 6 or 9
+    coordinates. The local axial coordinate is $x \in [-L/2,\, L/2]$.
+
+    #### Kinematics and interpolation
+
+    Position and rotation are interpolated with Lagrange shape functions - linear, $S_0 = (L/2 - x)/L$,
+    $S_1 = (L/2 + x)/L$, or quadratic in $\xi = 2x/L$ -
+
+    $$
+    \rv(x) = \sum_i S_i(x)\, \rv_i , \quad \theta(x) = \sum_i S_i(x)\, \theta_i .
+    $$
+
+    With `includeReferenceRotations = False` (default) the rotation of the cross section is measured
+    from the direction of the reference axis, $\mathrm{atan2}(r'_{y,\mathrm{ref}},\, r'_{x,\mathrm{ref}})$; with
+    `True` the reference rotations of the nodes are used.
+
+    #### Strains
+
+    With the tangent $\tv = [\cos\theta,\, \sin\theta]\tp$ and the normal $\nv = [-\sin\theta,\, \cos\theta]\tp$
+    of the cross section,
+
+    $$
+    \gamma_1 = \tv\tp \rv' - 1 , \quad \gamma_2 = \nv\tp \rv' , \quad \kappa = \theta' - \kappa_0 ,
+    $$
+
+    the axial strain, the shear strain and the curvature, with the reference curvature $\kappa_0$ =
+    `physicsReferenceCurvature`. The virtual work of the elastic forces is
+
+    $$
+    \delta W_e = \int_{-L/2}^{L/2} \left( EA\,\gamma_1\,\delta\gamma_1 + GA\,\gamma_2\,\delta\gamma_2 + EI\,\kappa\,\delta\kappa \right) dx ,
+    $$
+
+    with the damping terms $d_\varepsilon \dot\gamma_1$, $d_\gamma \dot\gamma_2$ and $d_K \dot\kappa$ added in
+    the same way.
+
+    #### Mass matrix and integration
+
+    The mass matrix is constant: $\rho A$ for the positions and $\rho J$ for the rotations, integrated with
+    Gauss rules of order 3 (linear) or 5 (quadratic). The elastic forces are integrated with **reduced**
+    integration against shear locking: one point for the linear element, the rule of order 3 for the
+    quadratic element.
+
+    #### Marker interfaces
+
+    The position and rotation Jacobians follow from the interpolation above; a marker at a local
+    position $(x,\, y)$ moves with the cross section.
+
+    #### Limitations
+
+    Planar; the output variables `StrainLocal` and `ForceLocal` give $\gamma_1$ and $\gamma_2$ and the
+    forces $EA\gamma_1$, $GA\gamma_2$.
+    """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeFiniteElement,
     outputVariables=[
@@ -5007,8 +5178,36 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     overallDescription=r'OBJECT UNDER CONSTRUCTION: A 3D thin Kirchhoff plate finite element based on the absolute nodal coordinate formulation, using 4 nodes of type NodePointSlope12. The geometry as well as (deformed and distorted) reference configuration is given by the nodes. The localPosition follows unit-coordinates in the range [-1,1] for X, Y and Z coordinates; the thickness of the plate is h; This element is under construction.',
     classType=ClassTypeObject,
-    detailedDescription=r"""    Note: For output variables, the localPosition is defined in $[-1,-1,-1] ... [1,1,1]$, where $[-1,-1,0]$ is the position of node 0.
-""",
+    detailedDescription=r"""    **This element is under construction**, as its class description says.
+
+    #### Nodes and coordinates
+
+    Four nodes of type `NodePointSlope12`, each with a position and the two in-plane slopes; 36
+    coordinates. The local coordinates $(\xi,\,\eta) \in [-1,1]^2$ place node 0 at $(-1,-1)$, node 1 at
+    $(1,-1)$, node 2 at $(1,1)$ and node 3 at $(-1,1)$; the thickness coordinate is in $[-1,1]$ as well.
+
+    #### Kinematics and interpolation
+
+    The position of the mid-surface is interpolated with 12 shape functions of the
+    Adini-Clough-Melosh type - cubic Hermite in each direction, from the positions and slopes of the
+    four nodes -, and the slopes of a node are scaled by `slopesScalingX` and `slopesScalingY`, half
+    the side length of a flat element by default.
+
+    #### Strains and elastic forces
+
+    Kirchhoff plate: the in-plane strains of the mid-surface and the curvatures from the second
+    derivatives of the position, relative to the reference configuration with `strainIsRelativeToReference`,
+    with the stiffness coefficients $\Dm_\varepsilon$ = `physicsStrainCoefficients` and $\Dm_\kappa$ =
+    `physicsCurvatureCoefficients`, integrated over the thickness.
+
+    #### Mass matrix and damping
+
+    Constant; the damping is proportional to the mass matrix, $\fv_d = \alpha \Mm \dot\qv$.
+
+    #### Limitations
+
+    Under construction; for output variables, the local position is given in $[-1,1]^3$.
+    """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    #to be done
 

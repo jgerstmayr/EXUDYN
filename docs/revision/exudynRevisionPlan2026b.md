@@ -2835,8 +2835,9 @@ What depends on it: the graphics regression test takes every item through its Mi
       - **RG13.5.2.1** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-1) - bodies -
         rigid bodies, mass points, 1D masses, ground; with the general section of the bodies: marker
         interfaces and the approach to the Jacobians.
-      - **RG13.5.2.2** flexible bodies - the nonlinear finite elements; `ObjectBeamGeometricallyExact`
-        after RG4.8.
+      - **RG13.5.2.2** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-2) - flexible
+        bodies - the nonlinear finite elements; `ObjectBeamGeometricallyExact` after RG4.8. Found on
+        the way: `ObjectANCFCable` declared an angular velocity it does not have (#2733, corrected).
       - **RG13.5.2.3** super elements - FFRF, reduced order FFRF, generic ODE2, kinematic tree.
       - **RG13.5.2.4** connectors - spring-dampers, contact, penalty joints.
       - **RG13.5.2.5** constraints and joints.

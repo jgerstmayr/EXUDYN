@@ -148,6 +148,46 @@ definitions.append(ItemKindDefinition(
 definitions.append(ItemKindDefinition(
     kind='Objects (FiniteElement)',
     overallDescription=r"""A FiniteElement is a special Object and Body, which is used to define deformable bodies, such as beams or solid finite elements. FiniteElements are usually linked to two or more nodes.""",
+    detailedDescription=r"""
+    ## What the finite elements have in common
+
+    A finite element is a body with two or more nodes, whose coordinates it interpolates to describe a
+    deformable body - a cable, a beam, a plate. It is a body in every other respect: the general
+    section of the bodies describes its marker interfaces and Jacobians, and each element page gives
+    only its own.
+
+    | element | nodes | theory | deformation |
+    |---|---|---|---|
+    | `ObjectANCFCable2D` | 2 `NodePoint2DSlope1` | ANCF, Bernoulli-Euler | axial, bending |
+    | `ObjectALEANCFCable2D` | 2 `NodePoint2DSlope1` + `NodeGenericODE2` | the same, with axially moving mass | axial, bending |
+    | `ObjectANCFCable` | 2 `NodePointSlope1` | ANCF, Bernoulli-Euler, 3D | axial, bending; no torsion |
+    | `ObjectANCFBeam` | 2 `NodePointSlope23` | ANCF, shear deformable (under development) | axial, shear, torsion, bending, cross section |
+    | `ObjectBeamGeometricallyExact2D` | 2 or 3 `NodeRigidBody2D` | geometrically exact (Simo-Reissner) | axial, shear, bending |
+    | `ObjectBeamGeometricallyExact` | 2 rigid body nodes | geometrically exact, 3D (under development) | |
+    | `ObjectANCFThinPlate` | 4 `NodePointSlope12` | ANCF, Kirchhoff plate (under construction) | in-plane, bending |
+
+    ## The page of an element
+
+    Each element page follows the same order: **nodes and coordinates**, **kinematics and
+    interpolation** - the shape functions and the position of a point -, **strains** and **elastic
+    forces** with their integration rule, the **mass matrix**, **marker interfaces**, and
+    **limitations**.
+
+    ## Reference configuration and the local coordinates
+
+    The reference configuration is given by the reference coordinates of the nodes, and the element
+    coordinates are the sum of reference and current coordinates. Whether a curved or stretched
+    reference is stress-free depends on the element: the ANCF cables subtract the reference strains
+    with `strainIsRelativeToReference`, the geometrically exact beam has a reference curvature. The
+    local axial coordinate runs over $[0,\,L]$ for the ANCF cables and over $[-L/2,\,L/2]$ for the other
+    beams; `physicsLength` is the length of the element in its reference configuration.
+
+    ## Meshes
+
+    The elements share their nodes, and a beam is a chain of elements. `exudyn.beams` creates such
+    chains, e.g. `GenerateStraightLineANCFCable2D` and `GenerateStraightLineANCFCable`, and the markers
+    on a node of the chain connect it to the rest of the model.
+    """,
     ))
 
 definitions.append(ItemKindDefinition(

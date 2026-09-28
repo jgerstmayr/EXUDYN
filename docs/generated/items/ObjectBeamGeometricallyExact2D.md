@@ -63,8 +63,63 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 (description-objectbeamgeometricallyexact2d)=
 ## Detailed description
 
-See paper of Simo and Vu-Quoc (1986).
-Detailed description coming later.
+A shear deformable beam after Simo and Vu-Quoc (1986): the positions and the rotations of the cross
+section are interpolated independently.
+
+### Nodes and coordinates
+
+Two nodes (linear element) or three nodes (quadratic element) of type `NodeRigidBody2D`, each with
+the position $[r_{x},\, r_{y}]$ of the axis and the rotation $\theta$ of the cross section; 6 or 9
+coordinates. The local axial coordinate is $x \in [-L/2,\, L/2]$.
+
+### Kinematics and interpolation
+
+Position and rotation are interpolated with Lagrange shape functions - linear, $S_0 = (L/2 - x)/L$,
+$S_1 = (L/2 + x)/L$, or quadratic in $\xi = 2x/L$ -
+
+$$
+\rv(x) = \sum_i S_i(x)\, \rv_i , \quad \theta(x) = \sum_i S_i(x)\, \theta_i .
+$$
+
+With `includeReferenceRotations = False` (default) the rotation of the cross section is measured
+from the direction of the reference axis, $\mathrm{atan2}(r'_{y,\mathrm{ref}},\, r'_{x,\mathrm{ref}})$; with
+`True` the reference rotations of the nodes are used.
+
+### Strains
+
+With the tangent $\tv = [\cos\theta,\, \sin\theta]\tp$ and the normal $\nv = [-\sin\theta,\, \cos\theta]\tp$
+of the cross section,
+
+$$
+\gamma_1 = \tv\tp \rv' - 1 , \quad \gamma_2 = \nv\tp \rv' , \quad \kappa = \theta' - \kappa_0 ,
+$$
+
+the axial strain, the shear strain and the curvature, with the reference curvature $\kappa_0$ =
+`physicsReferenceCurvature`. The virtual work of the elastic forces is
+
+$$
+\delta W_e = \int_{-L/2}^{L/2} \left( EA\,\gamma_1\,\delta\gamma_1 + GA\,\gamma_2\,\delta\gamma_2 + EI\,\kappa\,\delta\kappa \right) dx ,
+$$
+
+with the damping terms $d_\varepsilon \dot\gamma_1$, $d_\gamma \dot\gamma_2$ and $d_K \dot\kappa$ added in
+the same way.
+
+### Mass matrix and integration
+
+The mass matrix is constant: $\rho A$ for the positions and $\rho J$ for the rotations, integrated with
+Gauss rules of order 3 (linear) or 5 (quadratic). The elastic forces are integrated with **reduced**
+integration against shear locking: one point for the linear element, the rule of order 3 for the
+quadratic element.
+
+### Marker interfaces
+
+The position and rotation Jacobians follow from the interpolation above; a marker at a local
+position $(x,\, y)$ moves with the cross section.
+
+### Limitations
+
+Planar; the output variables `StrainLocal` and `ForceLocal` give $\gamma_1$ and $\gamma_2$ and the
+forces $EA\gamma_1$, $GA\gamma_2$.
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pendulumGeomExactBeam2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2D.py) (Ex), [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`geometricallyExactBeam2Dtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeam2Dtest.py) (TM), [`gridGeomExactBeam2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/gridGeomExactBeam2D.py) (TM), [`LShapeGeomExactBeam2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/LShapeGeomExactBeam2D.py) (TM)

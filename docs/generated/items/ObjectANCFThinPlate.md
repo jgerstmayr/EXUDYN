@@ -62,7 +62,35 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 (description-objectancfthinplate)=
 ## Detailed description
 
-Note: For output variables, the localPosition is defined in $[-1,-1,-1] ... [1,1,1]$, where $[-1,-1,0]$ is the position of node 0.
+**This element is under construction**, as its class description says.
+
+### Nodes and coordinates
+
+Four nodes of type `NodePointSlope12`, each with a position and the two in-plane slopes; 36
+coordinates. The local coordinates $(\xi,\,\eta) \in [-1,1]^2$ place node 0 at $(-1,-1)$, node 1 at
+$(1,-1)$, node 2 at $(1,1)$ and node 3 at $(-1,1)$; the thickness coordinate is in $[-1,1]$ as well.
+
+### Kinematics and interpolation
+
+The position of the mid-surface is interpolated with 12 shape functions of the
+Adini-Clough-Melosh type - cubic Hermite in each direction, from the positions and slopes of the
+four nodes -, and the slopes of a node are scaled by `slopesScalingX` and `slopesScalingY`, half
+the side length of a flat element by default.
+
+### Strains and elastic forces
+
+Kirchhoff plate: the in-plane strains of the mid-surface and the curvatures from the second
+derivatives of the position, relative to the reference configuration with `strainIsRelativeToReference`,
+with the stiffness coefficients $\Dm_\varepsilon$ = `physicsStrainCoefficients` and $\Dm_\kappa$ =
+`physicsCurvatureCoefficients`, integrated over the thickness.
+
+### Mass matrix and damping
+
+Constant; the damping is proportional to the mass matrix, $\fv_d = \alpha \Mm \dot\qv$.
+
+### Limitations
+
+Under construction; for output variables, the local position is given in $[-1,1]^3$.
 
 (miniexample-objectancfthinplate)=
 ## Mini example

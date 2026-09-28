@@ -525,7 +525,7 @@ items = {
     'kind': 'Object',
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position', 'PointSlope1'],
-    'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q'],
+    'accessFunctionTypes': ['TranslationalVelocity_qt', 'DisplacementMassIntegral_q'],
     'outputVariables': ['Position', 'Displacement', 'Velocity', 'Director1', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'Acceleration'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},

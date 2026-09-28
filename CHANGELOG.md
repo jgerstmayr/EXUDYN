@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 136 | 1.12.141 |
+| 1.12 | Metheney | 137 | 1.12.143 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.143** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectANCFCable declares an angular velocity access function it does not implement (#2733)
+  - description: Found while documenting the finite elements, revision2026b step RG13.5.2.2, 2026-09-28: ObjectANCFCable declares ItemAccessFunctionTypes TranslationalVelocity\_qt, AngularVelocity\_qt and DisplacementMassIntegral\_q, but GetAccessFunctionBody has no case for AngularVelocity\_qt (it is commented out) and GetAngularVelocity throws 'not implemented' - a single slope vector carries no orientation. So CheckSystemIntegrity accepted a MarkerBodyRigid on the cable, which then failed during the simulation, and the item page listed MarkerBodyRigid as fitting. The declaration drops AngularVelocity\_qt; Assemble() now refuses such a marker with the check's own message.
+  - **notes:** ObjectANCFCable no longer declares an angular velocity access function it does not implement: Assemble() refuses a MarkerBodyRigid on the 3D cable with a clear message, where the simulation failed before, and the item page no longer lists that marker as fitting.
+  - date resolved: **2026-09-28 14:20**, date raised: 2026-09-28
 - **1.12.141** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the PDF starts every item of the items reference manual on a new page (#2729)
   - description: The maintainer, 2026-09-28: 'the PDF docs should add a new page before every item in the items reference manual. This improves readability.' Every generated item page opens with a raw LaTeX \\clearpage, which the HTML build ignores. revision2026b step RG13.5.0.5.
   - **notes:** In the PDF documentation every item of the items reference manual starts on a new page.
