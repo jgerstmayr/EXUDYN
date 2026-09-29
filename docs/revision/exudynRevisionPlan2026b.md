@@ -1161,7 +1161,7 @@ The steps are numbered in the order they were raised and stand here in the order
     that probes every parameter of every item is the one place both meet.
 
 <a id="rg4-8"></a>
-**RG4.8** *(group RG4; maintainer 2026-09-28)* **`ObjectBeamGeometricallyExact` (3D): analyse the
+**RG4.8** *(group RG4; maintainer 2026-09-28)* **DONE 2026-09-30** — **`ObjectBeamGeometricallyExact` (3D): analyse the
     implementation** (#2730). *"The 3D GeometricallyExactBeam has some defects and is still under
     development. So, you would find some errors in the implementation - so keep this item open and
     add a step and issue to RG4."* The analysis says what the element computes, where it departs from
@@ -1217,7 +1217,8 @@ The steps are numbered in the order they were raised and stand here in the order
       loads with their nodal torques and a velocity field consistent with the position;
     - **RG4.8.8** **CLOSED 2026-09-29** - #736 (*"include GeomExactBeam3D as provided by Jan Tomec"*) is
       superseded by this element (maintainer);
-    - **RG4.8.9** then the reference page (RG13.5.2) and the MiniExample (RG13.6);
+    - **RG4.8.9** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-8-9) - the reference page
+      (RG13.5.2) and the MiniExample (RG13.6);
     - **RG4.8.10** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-8-10) - the output variables
       (#2753): `Rotation`, `StrainLocal` and `CurvatureLocal` were declared and not computed; added with
       `RotationMatrix`, `AngularVelocity`, `AngularVelocityLocal` and the section forces and moments
@@ -2996,8 +2997,8 @@ What depends on it: the graphics regression test takes every item through its Mi
 
 <a id="rg13-5"></a>
 **RG13.5** *(group RG13; maintainer 2026-09-27)* **The documentation of the items, written by the
-    documents of RG13.4** (#2725) - **DONE 2026-09-28 except `ObjectBeamGeometricallyExact`, which
-    waits for RG4.8**. *"start a new step RG13.5, which adds according documentation for
+    documents of RG13.4** (#2725) - **DONE 2026-09-28**, `ObjectBeamGeometricallyExact` on 2026-09-30 by
+    RG4.8.9. *"start a new step RG13.5, which adds according documentation for
     these types, again adding 13.5.1 for nodes, .2 for objects, ..."*. A kind is written when its
     document of RG13.4 is agreed: nodes, loads and sensors now, objects and markers after them.
 
@@ -3051,7 +3052,7 @@ What depends on it: the graphics regression test takes every item through its Mi
         rigid bodies, mass points, 1D masses, ground; with the general section of the bodies: marker
         interfaces and the approach to the Jacobians.
       - **RG13.5.2.2** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-2) - flexible
-        bodies - the nonlinear finite elements; `ObjectBeamGeometricallyExact` after RG4.8. Found on
+        bodies - the nonlinear finite elements; `ObjectBeamGeometricallyExact` by RG4.8.9. Found on
         the way: `ObjectANCFCable` declared an angular velocity it does not have (#2733, corrected).
       - **RG13.5.2.3** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-3) - super
         elements - FFRF, reduced order FFRF, generic ODE2, kinematic tree. Found on the way: two of them
@@ -3096,8 +3097,8 @@ What depends on it: the graphics regression test takes every item through its Mi
     - **RG13.6.6** *(maintainer 2026-09-29: later)* `ObjectFFRF` and `ObjectFFRFreducedOrder` get their
       MiniExamples when tetrahedral finite elements are part of Exudyn itself; until then a mesh comes from
       a file or from NGsolve, and their pages name a complete model instead (`NGsolveFFRF.py`,
-      `NGsolveCMStutorial.py`, `objectFFRFreducedOrderTest.py`). `ObjectBeamGeometricallyExact` waits for
-      RG4.8.
+      `NGsolveCMStutorial.py`, `objectFFRFreducedOrderTest.py`). `ObjectBeamGeometricallyExact` has its
+      MiniExample since RG4.8.9.
 
 <a id="rg13-7"></a>
 **RG13.7** *(group RG13; maintainer 2026-09-29)* **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-7) —
@@ -3172,7 +3173,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
-| RG4.8 | #2730, #736, #1100, #1273, #1494, #1499, #1550 | `ObjectBeamGeometricallyExact` (3D): the comparison reproduced, 2D and 3D tests, mass matrix, gyroscopic terms, Jacobian, reference configuration |
 | RG4.14 | #2208 | `ObjectBeamGeometricallyExact2D`: a test of the 3-node element |
 | RG2.4 | #2748 | the manual GUI check, per release and platform (list and model done) |
 | RG4.12 | #2736 | `NodeGenericAE`: **on hold** - the future owner of a constraint's Lagrange multipliers and of the unknowns of algebraic equations |
@@ -3192,7 +3192,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG14.1 | #2745 | evaluation: connectors and loads compute their marker values themselves |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
-| RG13.5.2 | #2725 | the page of `ObjectBeamGeometricallyExact`, after RG4.8 |
 | RG13.6.6 | #2732 | MiniExamples of `ObjectFFRF` and `ObjectFFRFreducedOrder`, once tetrahedral elements are part of Exudyn |
 
 Open in the tracker without a step: #2498 (nothing checks that an item type provides the member

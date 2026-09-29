@@ -428,6 +428,7 @@ def MiniExamplesReferenceSolution():
         'ObjectRigidBody.py':1.0949978647619167,
         'ObjectANCFBeam.py':-0.3381249577076517,
         'ObjectBeamGeometricallyExact2D.py':-0.3381249616596102,
+        'ObjectBeamGeometricallyExact.py':-0.33812496093079464,
         'ObjectANCFThinPlate.py':-0.06987553667440825,
         'ObjectALEANCFCable2D.py':0.2500092950450501,
         'ObjectJointALEMoving2D.py':0.7249978133196032,

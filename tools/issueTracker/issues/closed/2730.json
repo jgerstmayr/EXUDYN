@@ -2,11 +2,15 @@
   "number": 2730,
   "title": "ObjectBeamGeometricallyExact (3D) has defects and is under development: analyse the implementation",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "HIGH",
   "description": "The maintainer, 2026-09-28: 'The 3D GeometricallyExactBeam has some defects and is still under development. So, you would find some errors in the implementation - so keep this item open and add a step and issue to RG4.' Its reference page (4 words of description) stays open in RG13.5.2 until the analysis says what the element does and what it does not; an item found with a larger defect while it is documented gets an RG4 step like this one rather than a fix inside RG13. revision2026b step RG4.8.",
   "dateRaised": "2026-09-28",
   "deadline": "2027-03-27",
-  "file": "src/ImplObjects/CObjectBeamGeometricallyExact.cpp"
+  "dateResolved": "2026-09-30 01:43",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectBeamGeometricallyExact.cpp",
+  "releaseNotes": "ObjectBeamGeometricallyExact is analysed and completed: body markers and output variables (section forces, strains, rotations) are available, the Jacobian is complete, the element is stress-free in the reference configuration of its nodes (curved and twisted beams), the mass matrix is element-consistent, and the element is tested against the literature (45-degree bend, right-angle frame buckling, dynamic right-angle cantilever); its reference page and MiniExample describe it",
+  "resolvedInVersion": "1.12.177"
 }

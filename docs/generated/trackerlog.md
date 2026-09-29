@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.176.dev1
+- Exudyn version = 1.12.177.dev1
 - last change = 2026-09-30
 - Number of issues = 2754
-- Number of resolved issues = 2490 (176 in current version)
+- Number of resolved issues = 2491 (177 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8364,9 +8364,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: Found while writing the MiniExamples (\#2732, revision2026b step RG13.6.1): NodeGenericAE provides only the type GenericAE, and no object requests it, no node marker can be attached to it, and no example, test model or module of the package uses it. A node with algebraic coordinates and no object that writes their equations leaves those coordinates without an equation. Either an object takes it - the description names linear state space systems - or the node is deprecated. revision2026b step RG4.12.
   - **remarks:** ON HOLD (maintainer 2026-09-29): not deprecated; the future owner of the Lagrange multipliers of a constraint (optional node, automatic allocation stays the default) and of the unknowns of purely algebraic equations; design in revision2026b step RG4.12
   - date raised: 2026-09-29
-- <span class="textred">`BUG`</span> `HIGH EFF` `raised by: Claude-JG` ObjectBeamGeometricallyExact (3D) has defects and is under development: analyse the implementation (#2730)
-  - description: The maintainer, 2026-09-28: 'The 3D GeometricallyExactBeam has some defects and is still under development. So, you would find some errors in the implementation - so keep this item open and add a step and issue to RG4.' Its reference page (4 words of description) stays open in RG13.5.2 until the analysis says what the element does and what it does not; an item found with a larger defect while it is documented gets an RG4 step like this one rather than a fix inside RG13. revision2026b step RG4.8.
-  - date raised: 2026-09-28
 - <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` explicit integration costs O(N^2) per step with the default dense linear solver (#2398)
   - description: measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision2026 step R2.10
   - date raised: 2026-09-12

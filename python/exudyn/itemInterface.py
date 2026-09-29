@@ -3617,9 +3617,9 @@ class VObjectBeamGeometricallyExact:
         return str(dict(self))
 
 class ObjectBeamGeometricallyExact:
-    r"""A 3D geometrically exact beam finite element, currently using two 3D rigid body nodes.
+    r"""A 3D geometrically exact (shear deformable) beam finite element with two 3D rigid body nodes, interpolated on SE(3).
     
-    The localPosition :math:`x` of the beam ranges from :math:`-L/2` (at node 0) to :math:`L/2` (at node 1). The axial coordinate is :math:`x` (first coordinate) and the cross section is spanned by local :math:`y`/:math:`z` axes. NOTE: Requires further development and tests!
+    The localPosition :math:`x` of the beam ranges from :math:`-L/2` (at node 0) to :math:`L/2` (at node 1); the axial coordinate is :math:`x` (first coordinate) and the cross section is spanned by the local :math:`y`- and :math:`z`-axes.
     
     Args:
         name: objects's unique name; type: str

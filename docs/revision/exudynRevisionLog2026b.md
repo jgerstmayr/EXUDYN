@@ -7394,3 +7394,19 @@ has been seen on the maintainer's models.
 References moved: `flexiblePendulumBeamComparison.py` (-1.5235597679330848), `geometricallyExactBeamMarkerTest.py`
 (0.22853106396053813), `geometricallyExactBeamElbowCantilever.py` (-5.57992601861755, header values updated).
 New test model `geometricallyExactBeamMassTest.py`, the two rigid-motion checks, 2.9942070791403967.
+
+<a id="rg4-8-9"></a>
+### RG4.8.9 — the page and the MiniExample of the 3D geometrically exact beam (2026-09-30, #2730)
+
+The detailed description of `ObjectBeamGeometricallyExact` says what the element computes after RG4.8.3 to
+RG4.8.11: nodes and coordinates, the SE(3) interpolation of the relative motion, the strains relative to the
+reference configuration and the elastic forces with their complete Jacobian, the element-consistent mass
+matrix with the switch, the marker interfaces, the constant section outputs, and the limitations (only the
+diagonal of the section stiffness, no damping, no coordinate derivatives of the inertia terms) with the test
+models that check it. The brief description lost its *"NOTE: Requires further development and tests!"*.
+
+MiniExample: the cantilever of the planar element's MiniExample, with four 3D elements on Euler parameter
+nodes, clamped by a `GenericJoint`: tip displacement -0.33812496093079464e-3, the planar element's value to
+eight digits (-0.3381249616596102e-3) - the Timoshenko value -0.3433e-3 is approached with more elements.
+
+With this the RG4.8 analysis (#2730) is complete: all eleven sub-steps are done or closed.
