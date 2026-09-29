@@ -44,7 +44,7 @@ The parameters of `VMarkerBodyCable2DCoordinates`, given as `visualization`:
 
 A planar ANCF cable element, `ObjectANCFCable2D` or `ObjectALEANCFCable2D`; the marker is made for
 the joints that slide along a cable, `ObjectJointSliding2D` and `ObjectJointALEMoving2D`, which
-evaluate the shape functions themselves. Nothing checks the body it is attached to (#2731).
+evaluate the shape functions themselves. `Assemble()` refuses it on any other body.
 
 ### Marker quantities
 

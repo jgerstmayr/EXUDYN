@@ -1110,7 +1110,8 @@ find its file and line, on every raise).
     analysis, not a fix inside RG13.
 
 <a id="rg4-9"></a>
-**RG4.9** *(group RG4; from RG13.5.3, 2026-09-28)* **The cable and beam shape markers accept any
+**RG4.9** *(group RG4; from RG13.5.3, 2026-09-28)* **DONE 2026-09-29** —
+    [log](exudynRevisionLog2026b.md#rg4-9) — **The cable and beam shape markers accept any
     body** (#2731). `MarkerBodyCable2DShape`, `MarkerBodyCable2DCoordinates` and `MarkerBodyBeamShape`
     have no consistency check of their body; `Assemble()` accepts them on a rigid body, and computing
     the marker data then treats it as an ANCF cable - an `InternalError` with range checks, undefined
@@ -2913,7 +2914,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
 | RG4.7 | #2423 | every C++ user error inspects the Python source for its file and line |
 | RG4.8 | #2730 | `ObjectBeamGeometricallyExact` (3D): analyse the defects of the implementation |
-| RG4.9 | #2731 | the cable and beam shape markers, and the relative-coordinate markers, accept any body |
 | RG4.12 | #2736 | `NodeGenericAE` cannot be used: no object, marker or script takes it - **deprecate, or an object for it?** |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |

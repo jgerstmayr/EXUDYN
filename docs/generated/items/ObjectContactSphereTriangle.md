@@ -15,7 +15,7 @@ Author: Gerstmayr Johannes
 ## Interface
 
 - Nodes it takes: [](#sec-item-nodegenericdata)
-- Markers it acts on: those providing `Position` (and `Orientation` if `dynamicFriction` is not zero): [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+- Markers it acts on: those providing `Position` (and `Orientation` if `dynamicFriction` is not zero): [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
 
 ## Parameters
 

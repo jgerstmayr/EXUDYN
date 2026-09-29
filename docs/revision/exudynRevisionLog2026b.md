@@ -6905,3 +6905,33 @@ mechanism, and an object for it is new work.
 
 **RG13.6.6** (maintainer): the FFRF MiniExamples come with native tetrahedral elements; until then their
 pages name a complete model.
+
+<a id="rg4-9"></a>
+### RG4.9 — the shape markers and the relative coordinate markers check their bodies (2026-09-29, #2731)
+
+**The shape markers.** `MarkerBodyCable2DShape`, `MarkerBodyCable2DCoordinates` and `MarkerBodyBeamShape`
+cast their body to the cable class they compute with. Each has a `CheckPreAssembleConsistency` now,
+by the type name of the body: the two planar ones take `ObjectANCFCable2D` and `ObjectALEANCFCable2D`,
+the beam shape marker `ObjectANCFCable` only. The answer to the step's question: `MarkerBodyBeamShape`
+evaluates the shape functions of `ObjectANCFCable` (`CObjectANCFCable::ComputeShapeFunctions`, its
+nodal coordinates), so it serves no other beam; a marker for the geometrically exact beams would be a
+new one.
+
+**The relative coordinate markers.** Their `Position` and `Orientation` bits were there so that
+`CSystem::CheckSystemIntegrity` checked the access functions of their bodies; they also admitted them to
+28 position connectors, joints and loads. Such a combination computes nothing meaningful:
+`ComputeMarkerData` leaves the position and orientation of body 1 and the Jacobian of body 1 alone in
+the marker data, while the connector's coordinates are those of both bodies. They are **coordinate
+markers** now (`Body`, `Object`, `Coordinate`), used by the coordinate connectors, coordinate constraints
+and `LoadCoordinate`; the check of their bodies moved into their `CheckPreAssembleConsistency` - body 0
+position and orientation, body 1 position (translation) or both orientation (rotation), and no object that
+serves its own markers only (RG4.10). The special case for their sensor output in
+`CMarker::GetOutputVariableTypes` matched them by those bits and is gone; the general coordinate case
+gives the same output variables. The test model `relativeRotationTranslationMechanism.py` and the
+example `involuteGearGraphics.py` run unchanged.
+
+`test_itemCompatibility.py`: each shape marker on a rigid body and on both cables, and the relative
+markers with a position connector and on a mass point as body 0 or 1.
+
+Still declared, not changed here: the two planar cable markers provide `Coordinate`, so their pages list
+coordinate connectors that have no use for a segment shape.

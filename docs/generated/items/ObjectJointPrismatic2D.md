@@ -11,7 +11,7 @@ A prismatic joint in 2D; allows the relative motion of two bodies, using two Rig
 ## Interface
 
 - Python names: `ObjectJointPrismatic2D` or `PrismaticJoint2D`, and `VPrismaticJoint2D` for its visualization
-- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
 
 ## Parameters
 

@@ -13,7 +13,7 @@ A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0
 ## Interface
 
 - Python names: `ObjectJointRollingDisc` or `RollingDiscJoint`, and `VRollingDiscJoint` for its visualization
-- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
 
 ## Parameters
 

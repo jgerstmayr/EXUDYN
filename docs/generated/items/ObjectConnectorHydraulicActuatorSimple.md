@@ -11,7 +11,7 @@ A basic hydraulic actuator with pressure build up equations. The actuator follow
 ## Interface
 
 - Python names: `ObjectConnectorHydraulicActuatorSimple` or `HydraulicActuatorSimple`, and `VHydraulicActuatorSimple` for its visualization
-- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+- Markers it acts on: those providing `Position`: [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid), [](#sec-item-markernodeposition), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementposition), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
 - Nodes: see the detailed description
 
 ## Parameters

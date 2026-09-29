@@ -174,13 +174,7 @@ bool CMarker::GetOutputVariable(const CSystemData& cSystemData, OutputVariableTy
 OutputVariableType CMarker::GetOutputVariableTypes() const
 {
 	Index64 ovt = 0;
-	if (EXUstd::IsOfType(GetType(), (Marker::Type)(Marker::Body + Marker::Object + Marker::Coordinate + Marker::Position + Marker::Orientation)) )
-	{
-		//a MarkerBodiesRelativeRotationCoordinate or MarkerBodiesRelativeTranslationCoordinate
-		ovt = (Index64)OutputVariableType::Coordinates + (Index64)OutputVariableType::Coordinates_t;
-		return (OutputVariableType)ovt;
-	}
-
+	//the relative coordinate markers are coordinate markers only (#2731), handled below
 	if (EXUstd::IsOfType(GetType(), Marker::Position))
 	{
 		ovt += (Index64)OutputVariableType::Displacement + (Index64)OutputVariableType::Position + (Index64)OutputVariableType::Velocity;

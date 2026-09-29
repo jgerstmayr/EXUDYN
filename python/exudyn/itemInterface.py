@@ -7292,7 +7292,7 @@ class MarkerBodiesRelativeTranslationCoordinate:
         visualization: visualization data, see VMarkerBodiesRelativeTranslationCoordinate
 
     Notes:
-        Marker has/provides the following types: ``Object``, ``Body``, ``Position``, ``Orientation``, ``Coordinate``
+        Marker has/provides the following types: ``Object``, ``Body``, ``Coordinate``
 
     """
     def __init__(self, name = '', bodyNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], axis0 = [1.,0.,0.], offset = 0., visualization = {'show': True}):
@@ -7356,7 +7356,7 @@ class MarkerBodiesRelativeRotationCoordinate:
         visualization: visualization data, see VMarkerBodiesRelativeRotationCoordinate
 
     Notes:
-        Marker has/provides the following types: ``Node``, ``Object``, ``Body``, ``Position``, ``Orientation``, ``Coordinate``
+        Marker has/provides the following types: ``Node``, ``Object``, ``Body``, ``Coordinate``
 
     """
     def __init__(self, name = '', bodyNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], axis0 = [1.,0.,0.], offset = 0., visualization = {'show': True}):

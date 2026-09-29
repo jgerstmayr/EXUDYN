@@ -17,7 +17,7 @@ A generic joint in 3D; constrains components of the absolute position and rotati
 ## Interface
 
 - Python names: `ObjectJointGeneric` or `GenericJoint`, and `VGenericJoint` for its visualization
-- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
 
 ## Parameters
 

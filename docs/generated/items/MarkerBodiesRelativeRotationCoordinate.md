@@ -10,8 +10,8 @@ A coordinate-based Marker attached to two rigid bodies or beams which computes t
 
 ## Interface
 
-- Provides: `Coordinate`, `Position`, `Orientation`
-- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorspringdamper), [](#sec-item-objectconnectorcartesianspringdamper), [](#sec-item-objectconnectorrigidbodyspringdamper), [](#sec-item-objectconnectorlinearspringdamper), [](#sec-item-objectconnectortorsionalspringdamper), [](#sec-item-objectconnectorcoordinatespringdamper), [](#sec-item-objectconnectorcoordinatespringdamperext), [](#sec-item-objectconnectorgravity), [](#sec-item-objectconnectorhydraulicactuatorsimple), [](#sec-item-objectconnectordistance), [](#sec-item-objectconnectorcoordinate), [](#sec-item-objectconnectorrollingdiscpenalty), [](#sec-item-objectcontactconvexroll), [](#sec-item-objectcontactcoordinate), [](#sec-item-objectcontactspheresphere), [](#sec-item-objectcontactspheretorus), [](#sec-item-objectcontactspheretriangle), [](#sec-item-objectcontactcurvecircles), [](#sec-item-objectjointgeneric), [](#sec-item-objectjointrevolutez), [](#sec-item-objectjointprismaticx), [](#sec-item-objectjointspherical), [](#sec-item-objectjointrollingdisc), [](#sec-item-objectjointrevolute2d), [](#sec-item-objectjointprismatic2d), [](#sec-item-loadforcevector), [](#sec-item-loadtorquevector), [](#sec-item-loadcoordinate)
+- Provides: `Coordinate`
+- Connectors, constraints and loads that can use it: [](#sec-item-objectconnectorcoordinatespringdamper), [](#sec-item-objectconnectorcoordinatespringdamperext), [](#sec-item-objectconnectorcoordinate), [](#sec-item-objectcontactcoordinate), [](#sec-item-loadcoordinate)
 
 ## Parameters
 
@@ -89,6 +89,10 @@ $$
 Jacobians are computed according to the relative rotation velocity.
 Using this approach, coordinate constraints can be added to mechanisms to purely add internal drives, not affecting global momenta.
 Furthermore, coupling to a relative translation can be used to create advanced mechanisms and gears.
+
+It is a coordinate marker: coordinate connectors, coordinate constraints and `LoadCoordinate` use it.
+Both bodies must provide position and orientation at a local point, as a rigid body does; `Assemble()`
+refuses other bodies.
 
 (miniexample-markerbodiesrelativerotationcoordinate)=
 ## Mini example

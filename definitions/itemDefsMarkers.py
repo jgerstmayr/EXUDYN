@@ -826,6 +826,10 @@ definitions.append(ItemDefinition(
     Using this approach, coordinate constraints can be added to mechanisms to purely add internal drives, not affecting global momenta.
     Furthermore, coupling to a relative rotation marker MarkerBodiesRelativeRotationCoordinate can be used to 
     create advanced mechanisms and gears.
+
+    It is a coordinate marker: coordinate connectors, coordinate constraints and `LoadCoordinate` use it.
+    Body 0 must provide position and orientation, body 1 a position, both at a local point - a rigid body,
+    and for body 1 also a mass point; `Assemble()` refuses other bodies.
 """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -861,7 +865,7 @@ definitions.append(ItemDefinition(
             implementation='parameters.bodyNumbers[localIndex] = objectNumber;'),
         ItemFunctionDef('GetNumberOfObjects',
             implementation='return 2;'),
-        ItemTypes('Marker', ['Body', 'Object', 'Coordinate', 'Position', 'Orientation'],
+        ItemTypes('Marker', ['Body', 'Object', 'Coordinate'],
             description=r'return marker type (for body treatment in computation)'),
         ItemFunctionDef('GetDimension',
             implementation='return 1;'),
@@ -964,6 +968,10 @@ definitions.append(ItemDefinition(
     Jacobians are computed according to the relative rotation velocity.
     Using this approach, coordinate constraints can be added to mechanisms to purely add internal drives, not affecting global momenta.
     Furthermore, coupling to a relative translation can be used to create advanced mechanisms and gears.
+
+    It is a coordinate marker: coordinate connectors, coordinate constraints and `LoadCoordinate` use it.
+    Both bodies must provide position and orientation at a local point, as a rigid body does; `Assemble()`
+    refuses other bodies.
 """,
     mainParentClass=MainParentClassMainMarker,
     visuParentClass=VisuParentClassVisualizationMarker,
@@ -1007,7 +1015,7 @@ definitions.append(ItemDefinition(
             implementation='return parameters.nodeNumber;'),
         ItemFunctionDef('SetNodeNumber',
             implementation='parameters.nodeNumber = nodeNumber;'),
-        ItemTypes('Marker', ['Body', 'Object', 'Node', 'Coordinate', 'Position', 'Orientation', 'HasPostNewton'],
+        ItemTypes('Marker', ['Body', 'Object', 'Node', 'Coordinate', 'HasPostNewton'],
             description=r'return marker type (for body treatment in computation)'),
         ItemFunctionDef('GetDimension',
             implementation='return 1;'),
@@ -1704,7 +1712,7 @@ definitions.append(ItemDefinition(
     A planar ANCF cable element, `ObjectANCFCable2D` or `ObjectALEANCFCable2D`; the marker is made for
     the contact of a circle with the cable (`ObjectContactCircleCable2D`,
     `ObjectContactFrictionCircleCable2D`), which divides the element into `numberOfSegments` segments.
-    Nothing checks the body it is attached to (#2731).
+    `Assemble()` refuses it on any other body.
 
     #### Marker quantities
 
@@ -1759,6 +1767,7 @@ definitions.append(ItemDefinition(
             pythonName='show',
             defaultValue=True,
             description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunctionDef('UpdateGraphics'),
         ],
     ))
@@ -1797,7 +1806,7 @@ definitions.append(ItemDefinition(
 
     A planar ANCF cable element, `ObjectANCFCable2D` or `ObjectALEANCFCable2D`; the marker is made for
     the joints that slide along a cable, `ObjectJointSliding2D` and `ObjectJointALEMoving2D`, which
-    evaluate the shape functions themselves. Nothing checks the body it is attached to (#2731).
+    evaluate the shape functions themselves. `Assemble()` refuses it on any other body.
 
     #### Marker quantities
 
@@ -1842,6 +1851,7 @@ definitions.append(ItemDefinition(
             pythonName='show',
             defaultValue=True,
             description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunctionDef('UpdateGraphics'),
         ],
     ))
@@ -1880,8 +1890,8 @@ definitions.append(ItemDefinition(
     detailedDescription=r"""    #### Attached to
 
     A spatial ANCF cable element, `ObjectANCFCable`; the marker is made for `ObjectJointSliding`, which
-    evaluates the shape functions itself. The implementation reads the element as an `ObjectANCFCable`;
-    nothing checks the body it is attached to (#2731).
+    evaluates the shape functions itself, and it serves no other beam: the implementation evaluates the
+    shape functions of `ObjectANCFCable`. `Assemble()` refuses it on any other body.
 
     #### Marker quantities
 
@@ -1932,6 +1942,7 @@ definitions.append(ItemDefinition(
             pythonName='show',
             defaultValue=True,
             description=r'set true, if item is shown in visualization and false if it is not shown'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunctionDef('UpdateGraphics'),
         ],
     ))

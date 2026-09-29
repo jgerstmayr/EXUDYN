@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  22:48:27 (last modified)
+* @date         2026-09-29  18:30:26 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,7 +113,7 @@ public: // AUTO:
     //! AUTO:  return marker type (for body treatment in computation)
     virtual Marker::Type GetType() const override
     {
-        return (Marker::Type)((Index)Marker::Body + (Index)Marker::Object + (Index)Marker::Node + (Index)Marker::Coordinate + (Index)Marker::Position + (Index)Marker::Orientation + (Index)Marker::HasPostNewton);
+        return (Marker::Type)((Index)Marker::Body + (Index)Marker::Object + (Index)Marker::Node + (Index)Marker::Coordinate + (Index)Marker::HasPostNewton);
     }
 
     //! AUTO:  return dimension of connector, which an attached connector would have; for coordinate markers, it gives the number of coordinates used by the marker

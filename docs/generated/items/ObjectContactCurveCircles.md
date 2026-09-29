@@ -12,7 +12,7 @@ A contact model between a curve defined by piecewise segments and a set of circl
 
 - Python names: `ObjectContactCurveCircles` or `CamFollowerContactPlanar`, and `VCamFollowerContactPlanar` for its visualization
 - Nodes it takes: [](#sec-item-nodegenericdata)
-- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
 
 ## Parameters
 

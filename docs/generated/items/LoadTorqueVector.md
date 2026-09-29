@@ -13,7 +13,7 @@ Load with (3D) torque vector; attached to rigidbody-based marker.
 ## Interface
 
 - Python names: `LoadTorqueVector` or `Torque`, and `VTorque` for its visualization
-- Markers it acts on: those providing `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+- Markers it acts on: those providing `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
 
 ## Parameters
 

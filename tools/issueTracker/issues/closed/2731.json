@@ -2,11 +2,15 @@
   "number": 2731,
   "title": "the cable and beam shape markers accept any body: on a wrong one they cast it to an ANCF cable",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "MEDIUM",
   "description": "Found while documenting the markers, revision2026b step RG13.5.3, 2026-09-28: MarkerBodyCable2DShape, MarkerBodyCable2DCoordinates and MarkerBodyBeamShape have no consistency check of the body they are attached to. Assemble() accepts them on a rigid body, and ComputeMarkerData then casts the body to CObjectANCFCable2DBase or CObjectANCFCable: with range checks this ends in 'InternalError: call to ConstSizeVectorBase::SetNumberOfItems with newNumberOfItems > dataSize', in the fast module (no range checks) it is undefined behaviour. The analysis: which bodies each of the three markers can serve (ANCFCable2D and ALEANCFCable2D; ANCFCable), a CheckPreAssembleConsistency that says so, and whether MarkerBodyBeamShape, described as for 'a 3D beam finite element', should serve other beams. revision2026b step RG4.9 (maintainer's rule: a larger defect found while documenting gets an RG4 step).",
   "dateRaised": "2026-09-28",
   "deadline": "2027-03-27",
-  "file": "src/ImplMarkers"
+  "dateResolved": "2026-09-29 18:38",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplMarkers",
+  "releaseNotes": "Assemble() refuses MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates on anything but ObjectANCFCable2D or ObjectALEANCFCable2D, and MarkerBodyBeamShape on anything but ObjectANCFCable - they cast the body to a cable before. MarkerBodiesRelativeTranslationCoordinate and MarkerBodiesRelativeRotationCoordinate are coordinate markers only; position connectors and loads no longer accept them, and Assemble() refuses bodies without the position or orientation they need.",
+  "resolvedInVersion": "1.12.152"
 }

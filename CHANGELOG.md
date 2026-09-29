@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 145 | 1.12.151 |
+| 1.12 | Metheney | 146 | 1.12.152 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.152** <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the cable and beam shape markers accept any body: on a wrong one they cast it to an ANCF cable (#2731)
+  - description: Found while documenting the markers, revision2026b step RG13.5.3, 2026-09-28: MarkerBodyCable2DShape, MarkerBodyCable2DCoordinates and MarkerBodyBeamShape have no consistency check of the body they are attached to. Assemble() accepts them on a rigid body, and ComputeMarkerData then casts the body to CObjectANCFCable2DBase or CObjectANCFCable: with range checks this ends in 'InternalError: call to ConstSizeVectorBase::SetNumberOfItems with newNumberOfItems \> dataSize', in the fast module (no range checks) it is undefined behaviour. The analysis: which bodies each of the three markers can serve (ANCFCable2D and ALEANCFCable2D; ANCFCable), a CheckPreAssembleConsistency that says so, and whether MarkerBodyBeamShape, described as for 'a 3D beam finite element', should serve other beams. revision2026b step RG4.9 (maintainer's rule: a larger defect found while documenting gets an RG4 step).
+  - **notes:** Assemble() refuses MarkerBodyCable2DShape and MarkerBodyCable2DCoordinates on anything but ObjectANCFCable2D or ObjectALEANCFCable2D, and MarkerBodyBeamShape on anything but ObjectANCFCable - they cast the body to a cable before. MarkerBodiesRelativeTranslationCoordinate and MarkerBodiesRelativeRotationCoordinate are coordinate markers only; position connectors and loads no longer accept them, and Assemble() refuses bodies without the position or orientation they need.
+  - date resolved: **2026-09-29 18:38**, date raised: 2026-09-28
 - **1.12.151** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactCoordinate ignores activeConnector, and its output variable Distance raises (#2735)
   - description: Found while documenting the connectors, revision2026b step RG13.5.2.4, 2026-09-28: CObjectContactCoordinate::ComputeODE2LHS computes the contact force without looking at parameters.activeConnector, so the connector cannot be switched off as its parameter says; and GetOutputVariableTypes declares Distance while GetOutputVariableConnector raises 'not implemented', so a SensorObject asking for it passes Assemble() and fails during the simulation. Small, but found by the maintainer's rule it becomes an RG4 step: revision2026b step RG4.11. \[2026-09-28, Claude-JG\]: Extended in RG13.5.2.5, 2026-09-28: a scan of all objects for GetOutputVariableConnector that raises 'not implemented' while GetOutputVariableTypes declares types found four: ObjectContactCoordinate (Distance), ObjectContactCircleCable2D (Distance), ObjectJointRevolute2D (Displacement, Rotation) and ObjectJointPrismatic2D (Distance, Rotation). A sensor asking for one of them passes Assemble() and fails during the simulation. Either implement the output variables or declare none.
   - **notes:** Output variables of four connectors: ObjectContactCoordinate gives Distance (the gap) and adds no force with activeConnector=False; ObjectJointRevolute2D gives Displacement; ObjectJointPrismatic2D gives Distance along the axis and the relative Rotation; ObjectContactCircleCable2D declares none. They raised 'not implemented' during the simulation before.

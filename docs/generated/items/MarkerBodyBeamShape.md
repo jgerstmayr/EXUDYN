@@ -42,8 +42,8 @@ The parameters of `VMarkerBodyBeamShape`, given as `visualization`:
 ### Attached to
 
 A spatial ANCF cable element, `ObjectANCFCable`; the marker is made for `ObjectJointSliding`, which
-evaluates the shape functions itself. The implementation reads the element as an `ObjectANCFCable`;
-nothing checks the body it is attached to (#2731).
+evaluates the shape functions itself, and it serves no other beam: the implementation evaluates the
+shape functions of `ObjectANCFCable`. `Assemble()` refuses it on any other body.
 
 ### Marker quantities
 

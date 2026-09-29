@@ -14,7 +14,7 @@ An torsional spring-damper element acting on relative rotations around Z-axis of
 
 - Python names: `ObjectConnectorTorsionalSpringDamper` or `TorsionalSpringDamper`, and `VTorsionalSpringDamper` for its visualization
 - Nodes it takes: [](#sec-item-nodegenericdata)
-- Markers it acts on: those providing `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+- Markers it acts on: those providing `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
 
 ## Parameters
 

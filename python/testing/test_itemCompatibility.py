@@ -122,3 +122,54 @@ def test_theBodyMarkersAssembleAcceptsAreTheDeclaredOnes(objectName):
             disagree.append(markerName + ': Assemble ' + ('accepts' if accepted else 'refuses')
                             + ', the declaration ' + ('accepts' if declared else 'refuses'))
     assert disagree == [], objectName + '\n' + '\n'.join(disagree)
+
+
+def _Assembles(build):
+    """True if the model build(mbs, bodies) adds passes Assemble()"""
+    ii = exu.itemInterface
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    nRigid = mbs.AddNode(ii.NodeRigidBody2D(referenceCoordinates=[0, 0, 0]))
+    nPoint = mbs.AddNode(ii.NodePoint(referenceCoordinates=[0, 0, 0]))
+    from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateStraightLineANCFCable
+    bodies = {'ObjectRigidBody2D': mbs.AddObject(ii.ObjectRigidBody2D(nodeNumber=nRigid, physicsMass=1, physicsInertia=1)),
+              'ObjectMassPoint': mbs.AddObject(ii.ObjectMassPoint(nodeNumber=nPoint, physicsMass=1)),
+              'ObjectANCFCable2D': GenerateStraightLineANCFCable2D(mbs, [0, 0, 0], [1, 0, 0], 1,
+                  ii.ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=1, physicsAxialStiffness=1))[1][0],
+              'ObjectANCFCable': GenerateStraightLineANCFCable(mbs, [0, 0, 0], [1, 0, 0], 1,
+                  ii.ObjectANCFCable(physicsMassPerLength=1, physicsBendingStiffness=1, physicsAxialStiffness=1))[1][0],
+              'ObjectGround': mbs.AddObject(ii.ObjectGround())}
+    try:
+        build(mbs, bodies)
+        mbs.Assemble()
+    except Exception:                                                       # noqa: BLE001
+        return False
+    return True
+
+
+@pytest.mark.parametrize('markerName, bodies', [('MarkerBodyCable2DShape', ['ObjectANCFCable2D']),
+                                                ('MarkerBodyCable2DCoordinates', ['ObjectANCFCable2D']),
+                                                ('MarkerBodyBeamShape', ['ObjectANCFCable'])])
+def test_theShapeMarkersTakeTheirCablesOnly(markerName, bodies):
+    """a shape marker computes with the shape functions of its cable element; on another body Assemble()
+    refuses it (#2731) - it cast the body to a cable before"""
+    for body in ['ObjectRigidBody2D', 'ObjectANCFCable2D', 'ObjectANCFCable']:
+        accepted = _Assembles(lambda mbs, b: mbs.AddMarker({'markerType': markerName[len('Marker'):], 'bodyNumber': b[body]}))
+        assert accepted == (body in bodies), markerName + ' on ' + body
+
+
+def test_theRelativeMarkersAreCoordinateMarkersOnRigidBodies():
+    """the relative coordinate markers feed coordinate connectors; a position connector refuses them, and
+    they refuse a body without orientation where they need one (#2731)"""
+    ii = exu.itemInterface
+    translation = lambda b0, b1: {'markerType': 'BodiesRelativeTranslationCoordinate', 'bodyNumbers': [b0, b1]}
+    def WithConnector(connector, b0='ObjectGround', b1='ObjectRigidBody2D'):
+        def Build(mbs, b):
+            m = mbs.AddMarker(translation(b[b0], b[b1]))
+            mGround = mbs.AddMarker(ii.MarkerBodyPosition(bodyNumber=b['ObjectGround']))
+            mbs.AddObject(connector(mGround, m))
+        return Build
+    assert not _Assembles(WithConnector(lambda m0, m1: ii.ObjectConnectorSpringDamper(markerNumbers=[m0, m1], stiffness=1)))
+    #body 0 needs an orientation: a mass point as body 0 is refused, as body 1 accepted
+    assert not _Assembles(lambda mbs, b: mbs.AddMarker(translation(b['ObjectMassPoint'], b['ObjectRigidBody2D'])))
+    assert _Assembles(lambda mbs, b: mbs.AddMarker(translation(b['ObjectRigidBody2D'], b['ObjectMassPoint'])))

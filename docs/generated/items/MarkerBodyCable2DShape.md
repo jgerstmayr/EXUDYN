@@ -47,7 +47,7 @@ The parameters of `VMarkerBodyCable2DShape`, given as `visualization`:
 A planar ANCF cable element, `ObjectANCFCable2D` or `ObjectALEANCFCable2D`; the marker is made for
 the contact of a circle with the cable (`ObjectContactCircleCable2D`,
 `ObjectContactFrictionCircleCable2D`), which divides the element into `numberOfSegments` segments.
-Nothing checks the body it is attached to (#2731).
+`Assemble()` refuses it on any other body.
 
 ### Marker quantities
 

@@ -72,8 +72,8 @@ are added by the Create functions: `CreateRevoluteJoint` adds two `MarkerBodyRig
 | [](#sec-item-markernodecoordinates) | a node | `Coordinates` | 1 item |
 | [](#sec-item-markernodeode1coordinate) | a node | `Coordinate` | 5 items |
 | [](#sec-item-markernoderotationcoordinate) | a node with `Orientation` | `Coordinate` | 5 items |
-| [](#sec-item-markerbodiesrelativetranslationcoordinate) | two bodies | `Coordinate`, `Position`, `Orientation` | 28 items |
-| [](#sec-item-markerbodiesrelativerotationcoordinate) | two bodies | `Coordinate`, `Position`, `Orientation` | 28 items |
+| [](#sec-item-markerbodiesrelativetranslationcoordinate) | two bodies | `Coordinate` | 5 items |
+| [](#sec-item-markerbodiesrelativerotationcoordinate) | two bodies | `Coordinate` | 5 items |
 | [](#sec-item-markersuperelementposition) | mesh nodes of a super element | `Position` | 10 items |
 | [](#sec-item-markersuperelementrigid) | mesh nodes of a super element | `Position`, `Orientation` | 23 items |
 | [](#sec-item-markerkinematictreerigid) | a link of a kinematic tree | `Position`, `Orientation` | 23 items |

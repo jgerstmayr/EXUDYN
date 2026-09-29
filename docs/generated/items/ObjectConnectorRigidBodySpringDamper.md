@@ -14,7 +14,7 @@ An 3D spring-damper element acting on relative displacements and relative rotati
 
 - Python names: `ObjectConnectorRigidBodySpringDamper` or `RigidBodySpringDamper`, and `VRigidBodySpringDamper` for its visualization
 - Nodes it takes: [](#sec-item-nodegenericdata)
-- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
 
 ## Parameters
 

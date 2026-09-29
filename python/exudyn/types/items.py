@@ -1576,7 +1576,7 @@ items = {
   },
   'MarkerBodiesRelativeTranslationCoordinate': {
     'kind': 'Marker',
-    'types': ['Body', 'Object', 'Coordinate', 'Position', 'Orientation'],
+    'types': ['Body', 'Object', 'Coordinate'],
     'outputVariables': [],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "marker's unique name"},
@@ -1592,7 +1592,7 @@ items = {
   },
   'MarkerBodiesRelativeRotationCoordinate': {
     'kind': 'Marker',
-    'types': ['Body', 'Object', 'Node', 'Coordinate', 'Position', 'Orientation', 'HasPostNewton'],
+    'types': ['Body', 'Object', 'Node', 'Coordinate', 'HasPostNewton'],
     'outputVariables': [],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "marker's unique name"},

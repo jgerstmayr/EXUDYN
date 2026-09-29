@@ -14,7 +14,7 @@ A (flexible) connector representing a rolling rigid disc (marker 1) on a flat su
 
 - Python names: `ObjectConnectorRollingDiscPenalty` or `RollingDiscPenalty`, and `VRollingDiscPenalty` for its visualization
 - Nodes it takes: [](#sec-item-nodegenericdata)
-- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markerbodiesrelativetranslationcoordinate), [](#sec-item-markerbodiesrelativerotationcoordinate), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
+- Markers it acts on: those providing `Position` and `Orientation`: [](#sec-item-markerbodyrigid), [](#sec-item-markernoderigid), [](#sec-item-markersuperelementrigid), [](#sec-item-markerkinematictreerigid)
 
 ## Parameters
 
