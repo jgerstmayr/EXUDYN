@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.148.dev1
+- Exudyn version = 1.12.149.dev1
 - last change = 2026-09-29
 - Number of issues = 2742
-- Number of resolved issues = 2462 (148 in current version)
+- Number of resolved issues = 2463 (149 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8371,9 +8371,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> <span class="textred">`HIGH`</span> `LOW EFF` `raised by: Claude-JG` ObjectKinematicTree: the position Jacobian of a prismatic joint rotates the axis twice (#2740)
-  - description: Found while writing the page of MarkerKinematicTreeRigid (\#2738, revision2026b step RG13.5.3.1). CObjectKinematicTree::ComputeJacobian computes axis = rotJoint\*localAxis, which is the global joint axis, and for a prismatic joint then sets positionJacobian column = rotJoint\*axis - the rotation applied twice. It is right only while the joint frame leaves the axis unchanged. Measured: link 0 RevoluteZ held at q0, link 1 PrismaticX on it, a LoadForceVector of 1 N along the prismatic axis on a MarkerKinematicTreeRigid of link 1, mass 2: after 1 s q1 = 0.25 for q0 = 0, and q1 = 0 for q0 = pi/2 (the column is -e\_x instead of e\_y). Every marker, load and connector on a link at or behind a rotated prismatic joint gets wrong generalized forces. The fix is one line (positionJacobian column = axis) and a test model with the case above. revision2026b step RG4.13.
-  - date raised: 2026-09-29
 - <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` NodeGenericAE cannot be used: no object, marker or script takes it (#2736)
   - description: Found while writing the MiniExamples (\#2732, revision2026b step RG13.6.1): NodeGenericAE provides only the type GenericAE, and no object requests it, no node marker can be attached to it, and no example, test model or module of the package uses it. A node with algebraic coordinates and no object that writes their equations leaves those coordinates without an equation. Either an object takes it - the description names linear state space systems - or the node is deprecated. revision2026b step RG4.12.
   - date raised: 2026-09-29

@@ -6808,3 +6808,19 @@ is narrow; and in the PDF, long descriptions squeeze name, type and default valu
   0.3 / 0.3 / 0.2 / 0.2. Checked in the PDF (`LoadForceVector`): name, type and default value readable,
   the description wraps. A type name longer than its column - the user function types such as
   `PyFunctionVector3DmbsScalarVector3D` - is cut; those have their own section below the table.
+
+<a id="rg4-13"></a>
+### RG4.13 — the prismatic Jacobian of ObjectKinematicTree (2026-09-29, #2740)
+
+`CObjectKinematicTree::ComputeJacobian` sets the column of a prismatic joint to `axis`, the global
+axis, instead of `rotJoint*axis`. It is the one place the tree builds the Jacobians of a marker
+(`ComputeRigidBodyMarkerDataKT`); the equations of motion of the tree use their own recursion and were
+right.
+
+New test model `kinematicTreePrismaticJacobianTest.py`: a prismatic link behind a revolute link held at
+$q_0$, its joint frame rotated by $\alpha$ about $z$, 1 N along the prismatic axis on a
+`MarkerKinematicTreeRigid`, mass 2 kg - $q_1 = 0.25$ after 1 s in all five cases
+($(q_0,\alpha)$ = (0,0), ($\pi/4$,0), ($\pi/2$,0), (0,$\pi/2$), ($\pi/2$,$\pi/4$)); result 1.25. Before
+the fix only the first case gives 0.25: the column was the axis rotated twice, e.g. $q_1 = 0$ at
+$q_0 = \pi/2$, as measured in RG13.5.3.1. No other test model
+changed its result. The page of `MarkerKinematicTreeRigid` no longer carries the note.

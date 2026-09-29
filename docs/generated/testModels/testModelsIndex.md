@@ -78,6 +78,7 @@ hydraulicActuatorSimpleTest
 jointArgsTest
 kinematicTreeAndMBStest
 kinematicTreeConstraintTest
+kinematicTreePrismaticJacobianTest
 kinematicTreeTest
 laserScannerTest
 linearFEMgenericODE2

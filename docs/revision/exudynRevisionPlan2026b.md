@@ -1153,7 +1153,8 @@ find its file and line, on every raise).
     space systems) or it is deprecated. Its page has no MiniExample until then.
 
 <a id="rg4-13"></a>
-**RG4.13** *(group RG4; from RG13.5.3.1, 2026-09-29)* **`ObjectKinematicTree`: the position Jacobian of
+**RG4.13** *(group RG4; from RG13.5.3.1, 2026-09-29)* **DONE 2026-09-29** —
+    [log](exudynRevisionLog2026b.md#rg4-13) — **`ObjectKinematicTree`: the position Jacobian of
     a prismatic joint rotates the axis twice** (#2740). `CObjectKinematicTree::ComputeJacobian` sets the
     column to `rotJoint*axis` where `axis` is already global. Measured: a force along a prismatic axis
     behind a revolute joint at 90 degrees moves nothing. Wrong generalized forces for every marker,
@@ -2904,7 +2905,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.10 | #2734 | body markers on `ObjectGenericODE2` and `ObjectKinematicTree` pass the check and fail |
 | RG4.11 | #2735 | four objects declare output variables that raise; `ObjectContactCoordinate` ignores `activeConnector` |
 | RG4.12 | #2736 | `NodeGenericAE` cannot be used: no object, marker or script takes it |
-| RG4.13 | #2740 | **`ObjectKinematicTree`: wrong Jacobian of a prismatic joint in a rotated frame** |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.7 | #2709, #2710 | GraphicsData gets a Sphere and a curved triangle list; RG6.7.1 evaluates the geometry first |

@@ -101,6 +101,7 @@ def TestExamplesReferenceSolution():
                                                                  #number; it states exu.sys['testTolerance'] = 5e-7 instead,
                                                                  #which is the same comparison. Until then: 2.6388120463802584e-05
         'kinematicTreeConstraintTest.py':1.8135975384620298 ,
+        'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164064,
         'laserScannerTest.py':2.695064443768281 ,                   #new 2024-04-29
         'linearFEMgenericODE2.py': 0.38767197129755937,              #new 2024-10-06 for jacobianUserFunction in GenericODE2

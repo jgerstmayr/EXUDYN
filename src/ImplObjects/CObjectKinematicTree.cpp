@@ -791,7 +791,7 @@ void CObjectKinematicTree::ComputeJacobian(Index linkNumber, const Vector3D& pos
 		}
 		else if (Joint::IsPrismatic(parameters.jointTypes[i]))
 		{
-			positionJacobian.SetColumnVector(rotJoint*axis, i);
+			positionJacobian.SetColumnVector(axis, i); //axis is already global (#2740)
 		}
 		else { CHECKandTHROWstring("CObjectKinematicTree::ComputeJacobian: illegal jointType"); }
 

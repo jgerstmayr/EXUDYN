@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 142 | 1.12.148 |
+| 1.12 | Metheney | 143 | 1.12.149 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.149** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectKinematicTree: the position Jacobian of a prismatic joint rotates the axis twice (#2740)
+  - description: Found while writing the page of MarkerKinematicTreeRigid (\#2738, revision2026b step RG13.5.3.1). CObjectKinematicTree::ComputeJacobian computes axis = rotJoint\*localAxis, which is the global joint axis, and for a prismatic joint then sets positionJacobian column = rotJoint\*axis - the rotation applied twice. It is right only while the joint frame leaves the axis unchanged. Measured: link 0 RevoluteZ held at q0, link 1 PrismaticX on it, a LoadForceVector of 1 N along the prismatic axis on a MarkerKinematicTreeRigid of link 1, mass 2: after 1 s q1 = 0.25 for q0 = 0, and q1 = 0 for q0 = pi/2 (the column is -e\_x instead of e\_y). Every marker, load and connector on a link at or behind a rotated prismatic joint gets wrong generalized forces. The fix is one line (positionJacobian column = axis) and a test model with the case above. revision2026b step RG4.13.
+  - **notes:** ObjectKinematicTree: a force, torque or connector on a MarkerKinematicTreeRigid behind a prismatic joint whose axis is rotated - by a parent link or by its joint transformation - acts in the right direction; the Jacobian rotated the prismatic axis twice, which gave wrong generalized forces, e.g. none at all behind a revolute joint at 90 degrees.
+  - date resolved: **2026-09-29 14:44**, date raised: 2026-09-29
 - **1.12.148** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` parameter tables: the symbol in the name column, and columns squeezed in the PDF (#2741)
   - description: The maintainer, 2026-09-29: (1) the symbol of a parameter, e.g. the force f of LoadForceVector, is appended to the name in the parameter tables; it belongs at the very beginning of the description, '(symbol: f) ', where it stays visible when a column is added or the name column is narrow. (2) In the PDF, a table with long descriptions gets name, type and default value columns of a few letters, because LaTeX sizes the columns by content; the parameter tables and the similar ones need minimum widths in the PDF. revision2026b step RG13.5.0.8.
   - **notes:** In the parameter tables of the reference manual the symbol of a parameter opens its description, '(symbol: f)'; in the PDF the columns of these tables have fixed widths, so that a long description no longer squeezes the name, type and default value.
