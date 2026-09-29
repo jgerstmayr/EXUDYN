@@ -6689,3 +6689,25 @@ pipeline**, **raytracing** and the **`GraphicsData` reference** with its six sub
 **Every heading is sentence case** (#2662): *"This is a heading"*. About fifteen are Title Case
 today, and two of them are chapter titles the table of contents above already spells the new way -
 *Installation and getting started*, *Exudyn basics*.
+
+<a id="rg13-6-1"></a>
+### RG13.6.1 — a MiniExample for every node (2026-09-29, #2732, #2736)
+
+15 of the 16 nodes have one now; none had before. Each shows the node's coordinates in their typical
+use and checks a result the comment states:
+
+- free motion from reference, initial displacement and initial velocity (`NodePoint`,
+  `NodePoint2D`, `NodeRigidBody2D`, `Node1D`); a body spinning about $z$ for the three 3D rigid body
+  nodes - $\pi/2$ after one second, the Euler parameters to $8\cdot10^{-6}$ with generalized-alpha,
+  the rotation vector node with RK44;
+- cantilevers for the slope nodes: one ANCF cable element, 2D and 3D, is exact for a tip load
+  ($-1/3$ in units of $10^{-3}$); four ANCF beam elements for `NodePointSlope23` (one element gives
+  $-0.26$, four $-0.338$, the limit with shear is $-0.343$); a plate from `ShellMesh` for
+  `NodePointSlope12`;
+- `NodeGenericODE2`/`ODE1` with their generic objects, `NodeGenericData` as the state of a limit stop,
+  `NodePointGround` as the anchor of a spring.
+
+**`NodeGenericAE` has none**: no object requests `GenericAE`, no marker attaches to it, nothing uses
+it (#2736, RG4.12).
+
+The reference values are in `runTestSuiteRefSol.py`; the suite runs 38 mini examples.

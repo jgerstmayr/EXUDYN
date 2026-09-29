@@ -61,5 +61,24 @@ coordinate, $c_i = q_{i,\mathrm{ref}} + q_i$.
 Each coordinate leads to one {ref}`ODE2 <ODE2>` equation, which the object provides; the node itself adds
 nothing.
 
+(miniexample-nodegenericode2)=
+## Mini example
+
+
+```python
+#two coordinates of a user-defined second-order system: a mass on a spring and a free mass
+node = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=2, referenceCoordinates=[0,0],
+                                   initialCoordinates=[0.1,0], initialCoordinates_t=[0,1]))
+M = np.diag([1,1])
+K = np.diag([(2*np.pi)**2, 0]) #eigenfrequency 1 Hz for the first coordinate
+mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node], massMatrix=M, stiffnessMatrix=K))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#after one period, q0 = 0.1 again; q1 = 1*t
+exu.sys['testResult'] = sum(mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)) #1.1
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ALEANCFpipe.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ALEANCFpipe.py) (Ex), [`ANCFALEtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`craneReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/craneReevingSystem.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`nMassOscillator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillator.py) (Ex), [`nMassOscillatorInteractive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/nMassOscillatorInteractive.py) (Ex), [`reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py) (Ex), [`simulateInteractively.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/simulateInteractively.py) (Ex), [`stiffFlyballGovernorKT.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py) (Ex), [`ANCFmovingRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py) (TM), [`ANCFslidingAndALEjointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFslidingAndALEjointTest.py) (TM), [`kinematicTreeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeTest.py) (TM), [`solverExplicitODE1ODE2test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/solverExplicitODE1ODE2test.py) (TM)

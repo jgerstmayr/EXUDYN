@@ -38,6 +38,18 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for ABRV:ODE2.""",
     classType=ClassTypeNode,
+    miniExample=r"""    #a point mass moving freely: reference position, initial displacement and initial velocity
+    node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0],
+                                 initialCoordinates=[0,0.5,0],   #displacement from the reference
+                                 initialVelocities=[2,0,0]))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+
+    mbs.Assemble()
+    mbs.SolveDynamic() #default: 1 second
+
+    #position = reference + displacement: [1+0+2*1, 0.5, 0]
+    exu.sys['testResult'] = sum(mbs.GetNodeOutput(node, exu.OutputVariableType.Position)) #3.5
+    """,
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -154,6 +166,18 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for ABRV:ODE2.""",
     classType=ClassTypeNode,
+    miniExample=r"""    #a planar point mass under gravity, thrown with an initial velocity
+    node = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0], initialVelocities=[1,2]))
+    oMass = mbs.AddObject(ObjectMassPoint2D(nodeNumber=node, physicsMass=1))
+    mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
+    mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[0,-9.81,0]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #y = v0*t - g/2*t^2 at t=1
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #2-4.905=-2.905
+    """,
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -268,6 +292,21 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeRigidBody,
     overallDescription=r"""A 3D rigid body node based on Euler parameters for rigid bodies or beams. The node has 3 displacement coordinates (representing displacement of reference point $\LU{0}{\rv}$) and four rotation coordinates (Euler parameters = unit quaternions).""",
     classType=ClassTypeNode,
+    miniExample=r"""    #a rigid body spinning about its z-axis; the velocity coordinates are the time derivatives of the Euler parameters
+    omega = [0,0,0.5*np.pi]
+    ep0 = eulerParameters0
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+ep0,
+                                       initialVelocities=[0,0,0]+list(AngularVelocity2EulerParameters_t(omega, ep0))))
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+    mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                  physicsInertia=inertia.GetInertia6D()))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the node adds the constraint of the Euler parameters itself; the angle about z after 1 second:
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2] #pi/2, to the accuracy of the time integration
+    """,
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -459,6 +498,19 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeRigidBody,
     overallDescription=r"""A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams. All coordinates lead to second order differential equations; NOTE: this node has a singularity if the second rotation parameter reaches $\psi_1 = (2k-1) \pi/2$, with $k \in \Ncal$ or $-k \in \Ncal$.""",
     classType=ClassTypeNode,
+    miniExample=r"""    #a rigid body spinning about its z-axis; the rotation coordinates are Tait-Bryan angles
+    node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0],
+                                         initialVelocities=[0,0,0, 0,0,0.5*np.pi])) #angle rates
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+    mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                  physicsInertia=inertia.GetInertia6D()))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the third rotation coordinate after 1 second:
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[5] #pi/2
+    """,
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -620,6 +672,21 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeRigidBody,
     overallDescription=r'A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies. The node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods.',
     classType=ClassTypeNode,
+    miniExample=r"""    #a rigid body spinning about its z-axis, integrated with the Lie group integrator of the explicit solver
+    node = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=[0,0,0, 0,0,0],
+                                             initialVelocities=[0,0,0, 0,0,0.5*np.pi])) #angular velocity
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+    mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                  physicsInertia=inertia.GetInertia6D()))
+
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 100
+    mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44)
+
+    #the rotation vector after 1 second:
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2] #pi/2
+    """,
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -765,6 +832,16 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 2D rigid body node for rigid bodies or beams. The node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: $\psi_0$). All coordinates are ABRV:ODE2, used for second order differetial equations.""",
     classType=ClassTypeNode,
+    miniExample=r"""    #a planar rigid body: x, y and the rotation angle, thrown with a spin
+    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0], initialVelocities=[1,0,2]))
+    mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #x = 1*t, angle = 2*t at t=1
+    exu.sys['testResult'] = sum(mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)) #3
+    """,
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -883,6 +960,18 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A node with one ABRV:ODE2 coordinate for one dimensional (1D) problems. Use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.""",
     classType=ClassTypeNode,
+    miniExample=r"""    #one coordinate, here the displacement of a 1D mass, pulled by a constant force
+    node = mbs.AddNode(Node1D(referenceCoordinates=[0], initialVelocities=[1]))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=2))
+    mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+    mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=4))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #q = v0*t + F/(2m)*t^2 at t=1
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #2 (a scalar for one coordinate)
+    """,
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -976,6 +1065,25 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 4 displacement degrees of freedom (2 for displacement of point node and 2 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime]^T=[1\;\;0]^T$.""",
     classType=ClassTypeNode,
+    miniExample=r"""    #a cantilever of one ANCF cable element: position and slope (r_x) at each node
+    L = 1; EI = 100; F = -0.1
+    n0 = mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[0,0, 1,0])) #position, slope = axis
+    n1 = mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[L,0, 1,0]))
+    mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[n0,n1], physicsLength=L, physicsMassPerLength=1,
+                                    physicsBendingStiffness=EI, physicsAxialStiffness=1e5))
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    for i in [0,1,3]: #clamped: x, y and the y-component of the slope
+        mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))
+        mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mCoord]))
+    mTip = mbs.AddMarker(MarkerNodePosition(nodeNumber=n1))
+    mbs.AddLoad(LoadForceVector(markerNumber=mTip, loadVector=[0,F,0]))
+
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #the cubic element is exact for a tip load: F*L^3/(3*EI) = -1/3000
+    exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)[1]*1000 #-1/3
+    """,
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -1097,6 +1205,25 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 3D point/slope vector node for spatial Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements, with 3 position and 3 slope coordinates, all ABRV:ODE2; the slope vector is the derivative of the position with respect to the axial coordinate, $[1,\;0,\;0]\tp$ for a straight beam along the global $x$-axis.""",
     classType=ClassTypeNode,
+    miniExample=r"""    #a cantilever of one 3D ANCF cable element: position and slope (r_x) at each node
+    L = 1; EI = 100; F = -0.1
+    n0 = mbs.AddNode(NodePointSlope1(referenceCoordinates=[0,0,0, 1,0,0])) #position, slope = axis
+    n1 = mbs.AddNode(NodePointSlope1(referenceCoordinates=[L,0,0, 1,0,0]))
+    mbs.AddObject(ObjectANCFCable(nodeNumbers=[n0,n1], physicsLength=L, physicsMassPerLength=1,
+                                  physicsBendingStiffness=EI, physicsAxialStiffness=1e5))
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    for i in [0,1,2,4,5]: #clamped: the position and the transverse components of the slope
+        mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))
+        mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mCoord]))
+    mTip = mbs.AddMarker(MarkerNodePosition(nodeNumber=n1))
+    mbs.AddLoad(LoadForceVector(markerNumber=mTip, loadVector=[0,0,F]))
+
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #the cubic element is exact for a tip load: F*L^3/(3*EI) = -1/3000
+    exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)[2]*1000 #-1/3
+    """,
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -1206,6 +1333,25 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulation) plate elements, with 3 position and 2 $\times$ 3 slope coordinates, all ABRV:ODE2; the slope vectors are the derivatives of the position with respect to the two in-plane coordinates of the plate.""",
     classType=ClassTypeNode,
+    miniExample=r"""    #a square plate clamped at one edge, from ANCF thin plate elements with position and slopes r_x, r_y
+    from exudyn.shells import ShellMesh
+    plate = ShellMesh(vertices=[[0,0,0],[1,0,0],[1,1,0],[0,1,0]], numberOfElementsX=2, numberOfElementsY=2,
+                      youngsModulus=2e9, poissonsRatio=0, density=1000, thickness=0.01)
+    plate.CreateANCFThinPlateElements(mbs) #adds a NodePointSlope12 per mesh point
+    for node in plate.boundaryNodeNumbers['left']:
+        mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))
+        mbs.CreateGenericJoint(bodyNumbers=[oGround, mNode]) #clamped: position and orientation
+    for element in plate.elementNumbers:
+        mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=element)),
+                                         loadVector=[0,0,-9.81]))
+
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #a corner of the free edge; compare q*L^4/(8*D) = 0.0736 of a cantilever strip, D = E*h^3/12
+    corner = plate.vertexNodeNumbers[1]
+    exu.sys['testResult'] = mbs.GetNodeOutput(corner, exu.OutputVariableType.Displacement)[2]
+    """,
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -1329,6 +1475,30 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 3D point/slope vector node for spatial, shear and cross-section deformable ANCF (absolute nodal coordinate formulation) beam elements, with 3 position and 2 $\times$ 3 slope coordinates, all ABRV:ODE2; the slope vectors are the derivatives of the position with respect to the two cross section coordinates $y$ and $z$.""",
     classType=ClassTypeNode,
+    miniExample=r"""    #a cantilever of four ANCF beam elements: position and the slopes r_y, r_z of the cross section
+    L = 1; nElements = 4; F = -0.1
+    section = exu.BeamSection()
+    section.stiffnessMatrix = np.diag([1e5, 1e4, 1e4, 100, 100, 100]) #EA, GA_y, GA_z, GJ, EI_y, EI_z
+    section.massPerLength = 1
+    section.inertia = 0.01*np.eye(3)
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    n0 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[0,0,0, 0,1,0, 0,0,1]))
+    for i in range(9): #clamped: position and both slopes
+        mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround,
+                      mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))]))
+    for k in range(nElements):
+        n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[L*(k+1)/nElements,0,0, 0,1,0, 0,0,1]))
+        mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength=L/nElements, sectionData=section))
+        n0 = n1
+    mTip = mbs.AddMarker(MarkerNodeRigid(nodeNumber=n1))
+    mbs.AddLoad(LoadForceVector(markerNumber=mTip, loadVector=[0,F,0]))
+
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #converges to F*L^3/(3*EI_z) + F*L/GA_y = -0.3433e-3 as the number of elements grows
+    exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)[1]*1000 #-0.338
+    """,
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -1452,6 +1622,19 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A node containing a number of ABRV:ODE2 variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(\_t) must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
+    miniExample=r"""    #two coordinates of a user-defined second-order system: a mass on a spring and a free mass
+    node = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=2, referenceCoordinates=[0,0],
+                                       initialCoordinates=[0.1,0], initialCoordinates_t=[0,1]))
+    M = np.diag([1,1])
+    K = np.diag([(2*np.pi)**2, 0]) #eigenfrequency 1 Hz for the first coordinate
+    mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node], massMatrix=M, stiffnessMatrix=K))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #after one period, q0 = 0.1 again; q1 = 1*t
+    exu.sys['testResult'] = sum(mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)) #1.1
+    """,
     detailedDescription=r"""    #### Coordinates
 
     A number of ABRV:ODE2 coordinates, `numberOfODE2Coordinates`, whose meaning is **defined by the
@@ -1537,6 +1720,18 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE1,
     overallDescription=r"""A node containing a number of ABRV:ODE1 variables. Use this node e.g. for linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
+    miniExample=r"""    #a first-order system q_t = A q, here an exponential decay
+    node = mbs.AddNode(NodeGenericODE1(numberOfODE1Coordinates=1, referenceCoordinates=[0],
+                                       initialCoordinates=[1]))
+    mbs.AddObject(ObjectGenericODE1(nodeNumbers=[node], systemMatrix=[[-1]]))
+
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44)
+
+    #q(1) = exp(-1)
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.3679
+    """,
     detailedDescription=r"""    #### Coordinates
 
     A number of ABRV:ODE1 coordinates, `numberOfODE1Coordinates`, whose meaning is **defined by the
@@ -1668,6 +1863,24 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeData,
     overallDescription=r'A node containing a number of data (history) variables. Use this node e.g. for contact (active set), friction or plasticity (history variables).',
     classType=ClassTypeNode,
+    miniExample=r"""    #data coordinates hold a state that is no degree of freedom and that the object updates after each step:
+    #here the limit stop of a connector, which a mass is pushed against
+    node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mMass = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[0,0,0]))
+    mbs.AddObject(ObjectConnectorCoordinateSpringDamperExt(markerNumbers=[mGround, mMass], nodeNumber=nData,
+                  damping=20, useLimitStops=True, limitStopsLower=-1, limitStopsUpper=0.05,
+                  limitStopsStiffness=1e4, limitStopsDamping=100))
+    mbs.AddLoad(LoadCoordinate(markerNumber=mMass, load=10))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the mass rests at the stop, pressed into it by F/k_limits
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.05+0.001
+    """,
     detailedDescription=r"""    #### Coordinates
 
     A number of data coordinates, `numberOfDataCoordinates`, whose meaning is **defined by the object
@@ -1729,6 +1942,22 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 3D point node fixed to ground which is similar to NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' ABRV:ODE2 and ABRV:ODE1 coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.""",
     classType=ClassTypeNode,
+    miniExample=r"""    #a ground node: a fixed point that markers and connectors can use, without coordinates
+    node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+    mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
+    nFixed = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
+    mFixed = mbs.AddMarker(MarkerNodePosition(nodeNumber=nFixed))
+    mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mFixed, mNode], stiffness=[100,100,100],
+                                                       offset=[1,0,0]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mNode, loadVector=[10,0,0]))
+
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #the spring is stretched by F/k
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[0] #0.1
+    """,
     detailedDescription=r"""    #### Coordinates
 
     None: the node is fixed at its reference position $\pv\cRef$, and does not add a coordinate to the

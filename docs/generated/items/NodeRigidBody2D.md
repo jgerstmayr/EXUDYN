@@ -88,5 +88,21 @@ frame. The velocity transformation is the identity, $\omega_z = \dot\theta_0$.
 
 **Example**: see [](#sec-item-objectrigidbody2d)
 
+(miniexample-noderigidbody2d)=
+## Mini example
+
+
+```python
+#a planar rigid body: x, y and the rotation angle, thrown with a spin
+node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0], initialVelocities=[1,0,2]))
+mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#x = 1*t, angle = 2*t at t=1
+exu.sys['testResult'] = sum(mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)) #3
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex), [`beltDrivesComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py) (Ex), [`doublePendulum2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/doublePendulum2D.py) (Ex), [`pendulumGeomExactBeam2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2D.py) (Ex), [`reevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reevingSystem.py) (Ex), [`reevingSystemOpen.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reevingSystemOpen.py) (Ex), [`simple4linkPendulumBing.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/simple4linkPendulumBing.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFslidingJoint2Drigid.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py) (Ex), [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`ANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py) (TM), [`ANCFgeneralContactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFgeneralContactCircle.py) (TM), ...

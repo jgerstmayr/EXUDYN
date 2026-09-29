@@ -101,5 +101,26 @@ nonlinearity of the equations, which can help implicit integration.
 For creating a `NodeRigidBodyRotVecLG` together with a rigid body, use `CreateRigidBody`, see
 [](#sec-mainsystemextensions-createrigidbody).
 
+(miniexample-noderigidbodyrotveclg)=
+## Mini example
+
+
+```python
+#a rigid body spinning about its z-axis, integrated with the Lie group integrator of the explicit solver
+node = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=[0,0,0, 0,0,0],
+                                         initialVelocities=[0,0,0, 0,0,0.5*np.pi])) #angular velocity
+inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                              physicsInertia=inertia.GetInertia6D()))
+
+mbs.Assemble()
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 100
+mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44)
+
+#the rotation vector after 1 second:
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2] #pi/2
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM)

@@ -115,5 +115,24 @@ for motions that stay away from it, or `NodeRigidBodyEP` or `NodeRigidBodyRotVec
 For creating a `NodeRigidBodyRxyz` together with a rigid body, use `CreateRigidBody`, see
 [](#sec-mainsystemextensions-createrigidbody).
 
+(miniexample-noderigidbodyrxyz)=
+## Mini example
+
+
+```python
+#a rigid body spinning about its z-axis; the rotation coordinates are Tait-Bryan angles
+node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0],
+                                     initialVelocities=[0,0,0, 0,0,0.5*np.pi])) #angle rates
+inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                              physicsInertia=inertia.GetInertia6D()))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#the third rotation coordinate after 1 second:
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[5] #pi/2
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`performanceMultiThreadingNG.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/performanceMultiThreadingNG.py) (Ex), [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM), [`heavyTop.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/heavyTop.py) (TM), [`connectorRigidBodySpringDamperTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorRigidBodySpringDamperTest.py) (TM)

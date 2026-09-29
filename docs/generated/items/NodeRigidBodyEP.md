@@ -130,5 +130,26 @@ or on the velocity level (index 2) $2\,\ttheta\tp \dot\ttheta = 0$. With
 For creating a `NodeRigidBodyEP` together with a rigid body, use `CreateRigidBody`, see
 [](#sec-mainsystemextensions-createrigidbody).
 
+(miniexample-noderigidbodyep)=
+## Mini example
+
+
+```python
+#a rigid body spinning about its z-axis; the velocity coordinates are the time derivatives of the Euler parameters
+omega = [0,0,0.5*np.pi]
+ep0 = eulerParameters0
+node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+ep0,
+                                   initialVelocities=[0,0,0]+list(AngularVelocity2EulerParameters_t(omega, ep0))))
+inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                              physicsInertia=inertia.GetInertia6D()))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#the node adds the constraint of the Euler parameters itself; the angle about z after 1 second:
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2] #pi/2, to the accuracy of the time integration
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigid3Dexample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigid3Dexample.py) (Ex), [`rigidBodyIMUtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyIMUtest.py) (Ex), [`rigidRotor3DbasicBehaviour.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3DbasicBehaviour.py) (Ex), [`rigidRotor3DFWBW.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3DFWBW.py) (Ex), [`rigidRotor3Dnutation.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3Dnutation.py) (Ex), [`rigidRotor3Drunup.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3Drunup.py) (Ex), [`addPrismaticJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py) (Ex), [`addRevoluteJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM), ...

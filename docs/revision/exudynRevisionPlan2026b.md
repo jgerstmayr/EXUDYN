@@ -1145,6 +1145,13 @@ find its file and line, on every raise).
     `Assemble()` and fails in the simulation. Small; an RG4 step by the maintainer's rule for defects
     found while documenting.
 
+<a id="rg4-12"></a>
+**RG4.12** *(group RG4; from RG13.6.1, 2026-09-29)* **`NodeGenericAE` cannot be used** (#2736): it
+    provides only `GenericAE`, no object requests that type, no node marker attaches to it, and no
+    example, test model or module of the package uses it - a node with algebraic coordinates and no
+    object to write their equations. Either an object takes it (its description names linear state
+    space systems) or it is deprecated. Its page has no MiniExample until then.
+
 <a id="rg4-2"></a>
 **RG4.2** **DONE 2026-09-26** (#2413) — [log](exudynRevisionLog2026b.md#rg4-2) —
     **`ObjectContactConvexRoll.pContact` is a computed value that Python reads**, which is what the
@@ -2845,6 +2852,20 @@ What depends on it: the graphics regression test takes every item through its Mi
     MiniExample and waits for this. It starts with nodes, markers, loads and sensors, whose examples
     are short, and follows the pages of RG13.5 kind by kind.
 
+    **What a MiniExample is**: the shortest model that shows the item in its typical use, 5 to 25
+    lines after the environment the generator puts in front of it (`SC`, `mbs`, `oGround`, `nGround`);
+    the item and what it is combined with are created by their class names, so that the reader sees
+    what the item takes; it solves, and its last line sets `exu.sys['testResult']` to a value whose
+    **expected result is stated in the comment** - an analytical one wherever the model has one. The
+    reference values are in `runTestSuiteRefSol.MiniExamplesReferenceSolution`.
+
+    - **RG13.6.1** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-6-1) - nodes (15 of
+      16; `NodeGenericAE` waits for RG4.12, #2736).
+    - **RG13.6.2** markers.
+    - **RG13.6.3** loads.
+    - **RG13.6.4** sensors.
+    - **RG13.6.5** objects, by the groups of RG13.5.2.
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where
@@ -2871,6 +2892,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.9 | #2731 | the cable and beam shape markers, and the relative-coordinate markers, accept any body |
 | RG4.10 | #2734 | body markers on `ObjectGenericODE2` and `ObjectKinematicTree` pass the check and fail |
 | RG4.11 | #2735 | four objects declare output variables that raise; `ObjectContactCoordinate` ignores `activeConnector` |
+| RG4.12 | #2736 | `NodeGenericAE` cannot be used: no object, marker or script takes it |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.7 | #2709, #2710 | GraphicsData gets a Sphere and a curved triangle list; RG6.7.1 evaluates the geometry first |

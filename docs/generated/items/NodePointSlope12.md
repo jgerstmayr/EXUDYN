@@ -92,3 +92,28 @@ All nine coordinates are global (absolute nodal coordinates). The node is used b
 
 The nine coordinates lead to nine {ref}`ODE2 <ODE2>` equations, which the element provides; a force at the
 node enters the first three.
+
+(miniexample-nodepointslope12)=
+## Mini example
+
+
+```python
+#a square plate clamped at one edge, from ANCF thin plate elements with position and slopes r_x, r_y
+from exudyn.shells import ShellMesh
+plate = ShellMesh(vertices=[[0,0,0],[1,0,0],[1,1,0],[0,1,0]], numberOfElementsX=2, numberOfElementsY=2,
+                  youngsModulus=2e9, poissonsRatio=0, density=1000, thickness=0.01)
+plate.CreateANCFThinPlateElements(mbs) #adds a NodePointSlope12 per mesh point
+for node in plate.boundaryNodeNumbers['left']:
+    mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))
+    mbs.CreateGenericJoint(bodyNumbers=[oGround, mNode]) #clamped: position and orientation
+for element in plate.elementNumbers:
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=element)),
+                                     loadVector=[0,0,-9.81]))
+
+mbs.Assemble()
+mbs.SolveStatic()
+
+#a corner of the free edge; compare q*L^4/(8*D) = 0.0736 of a cantilever strip, D = E*h^3/12
+corner = plate.vertexNodeNumbers[1]
+exu.sys['testResult'] = mbs.GetNodeOutput(corner, exu.OutputVariableType.Displacement)[2]
+```

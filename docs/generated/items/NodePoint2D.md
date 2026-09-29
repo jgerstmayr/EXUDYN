@@ -86,5 +86,23 @@ force of a load or connector enters them with its first two components.
 
 **Example**: see [](#sec-item-objectmasspoint2d)
 
+(miniexample-nodepoint2d)=
+## Mini example
+
+
+```python
+#a planar point mass under gravity, thrown with an initial velocity
+node = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0], initialVelocities=[1,2]))
+oMass = mbs.AddObject(ObjectMassPoint2D(nodeNumber=node, physicsMass=1))
+mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
+mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[0,-9.81,0]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#y = v0*t - g/2*t^2 at t=1
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #2-4.905=-2.905
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`myFirstExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/myFirstExample.py) (Ex), [`pendulum2Dconstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulum2Dconstraint.py) (Ex), [`pendulumIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumIftommBenchmark.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`SpringDamperMassUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SpringDamperMassUserFunction.py) (Ex), [`xExudynConfigSpecial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/xExudynConfigSpecial.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFslidingJoint2Drigid.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2Drigid.py) (Ex), [`geneticOptimizationSliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/geneticOptimizationSliderCrank.py) (Ex), [`SliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SliderCrank.py) (Ex), [`slidercrankWithMassSpring.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/slidercrankWithMassSpring.py) (Ex), [`switchingConstraintsPendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/switchingConstraintsPendulum.py) (Ex), [`sparseMatrixSpringDamperTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sparseMatrixSpringDamperTest.py) (TM), [`SpringDamperMesh.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/SpringDamperMesh.py) (TM), [`coordinateVectorConstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraint.py) (TM), ...

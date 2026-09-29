@@ -9,8 +9,8 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 General information on current version:
 
 - Exudyn version = 1.12.143.dev1
-- last change = 2026-09-28
-- Number of issues = 2736
+- last change = 2026-09-29
+- Number of issues = 2737
 - Number of resolved issues = 2457 (143 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -8374,6 +8374,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` NodeGenericAE cannot be used: no object, marker or script takes it (#2736)
+  - description: Found while writing the MiniExamples (\#2732, revision2026b step RG13.6.1): NodeGenericAE provides only the type GenericAE, and no object requests it, no node marker can be attached to it, and no example, test model or module of the package uses it. A node with algebraic coordinates and no object that writes their equations leaves those coordinates without an equation. Either an object takes it - the description names linear state space systems - or the node is deprecated. revision2026b step RG4.12.
+  - date raised: 2026-09-29
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` ObjectContactCoordinate ignores activeConnector, and its output variable Distance raises (#2735)
   - description: Found while documenting the connectors, revision2026b step RG13.5.2.4, 2026-09-28: CObjectContactCoordinate::ComputeODE2LHS computes the contact force without looking at parameters.activeConnector, so the connector cannot be switched off as its parameter says; and GetOutputVariableTypes declares Distance while GetOutputVariableConnector raises 'not implemented', so a SensorObject asking for it passes Assemble() and fails during the simulation. Small, but found by the maintainer's rule it becomes an RG4 step: revision2026b step RG4.11. \[2026-09-28, Claude-JG\]: Extended in RG13.5.2.5, 2026-09-28: a scan of all objects for GetOutputVariableConnector that raises 'not implemented' while GetOutputVariableTypes declares types found four: ObjectContactCoordinate (Distance), ObjectContactCircleCable2D (Distance), ObjectJointRevolute2D (Displacement, Rotation) and ObjectJointPrismatic2D (Distance, Rotation). A sensor asking for one of them passes Assemble() and fails during the simulation. Either implement the output variables or declare none.
   - date raised: 2026-09-28

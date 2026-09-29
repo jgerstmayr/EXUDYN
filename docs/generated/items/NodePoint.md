@@ -92,5 +92,23 @@ $\partial \pv / \partial \qv = \ImThree$, that is, as it is.
 
 **Example**: see [](#sec-item-objectmasspoint)
 
+(miniexample-nodepoint)=
+## Mini example
+
+
+```python
+#a point mass moving freely: reference position, initial displacement and initial velocity
+node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0],
+                             initialCoordinates=[0,0.5,0],   #displacement from the reference
+                             initialVelocities=[2,0,0]))
+mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+
+mbs.Assemble()
+mbs.SolveDynamic() #default: 1 second
+
+#position = reference + displacement: [1+0+2*1, 0.5, 0]
+exu.sys['testResult'] = sum(mbs.GetNodeOutput(node, exu.OutputVariableType.Position)) #3.5
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`interactiveTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/interactiveTutorial.py) (Ex), [`particlesSilo.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesSilo.py) (Ex), [`particlesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesTest.py) (Ex), [`particlesTest3D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesTest3D.py) (Ex), [`particlesTest3D2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesTest3D2.py) (Ex), [`plotSensorExamples.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/plotSensorExamples.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex), [`SpringWithConstraints.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SpringWithConstraints.py) (Ex), [`ComputeSensitivitiesExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ComputeSensitivitiesExample.py) (Ex), [`coordinateSpringDamper.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/coordinateSpringDamper.py) (Ex), [`massSpringFrictionInteractive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/massSpringFrictionInteractive.py) (Ex), [`minimizeExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/minimizeExample.py) (Ex), [`ACFtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py) (TM), [`connectorGravityTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorGravityTest.py) (TM), [`exceptionTypesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/exceptionTypesTest.py) (TM), ...

@@ -413,6 +413,22 @@ def MiniExamplesReferenceSolution():
         'ObjectMassPoint2D.py':2.0,
         'ObjectRigidBody2D.py':4.356194490192344,
         'ObjectRotationalMass1D.py':2.0,
+        #the nodes (#2732)
+        'Node1D.py':1.99999999999999,
+        'NodeGenericData.py':0.051,
+        'NodeGenericODE1.py':0.36787944120235555,
+        'NodeGenericODE2.py':1.0999997699320834,
+        'NodePoint.py':3.5,
+        'NodePoint2D.py':-2.9049999999999967,
+        'NodePoint2DSlope1.py':-0.3333332497979799,
+        'NodePointGround.py':0.10000000000000009,
+        'NodePointSlope1.py':-0.3333332497979799,
+        'NodePointSlope12.py':-0.06987553667440825,
+        'NodePointSlope23.py':-0.3381249577076517,
+        'NodeRigidBody2D.py':3.0,
+        'NodeRigidBodyEP.py':1.5707880511179813,
+        'NodeRigidBodyRotVecLG.py':1.5707963267949456,
+        'NodeRigidBodyRxyz.py':1.5707963267948934,
         }
     import exudyn as exu
 

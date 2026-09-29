@@ -56,5 +56,23 @@ coordinate is its reference value plus its current coordinate.
 Each coordinate leads to one first order equation, which the object provides; a load acts on a
 coordinate through `MarkerNodeODE1Coordinate`.
 
+(miniexample-nodegenericode1)=
+## Mini example
+
+
+```python
+#a first-order system q_t = A q, here an exponential decay
+node = mbs.AddNode(NodeGenericODE1(numberOfODE1Coordinates=1, referenceCoordinates=[0],
+                                   initialCoordinates=[1]))
+mbs.AddObject(ObjectGenericODE1(nodeNumbers=[node], systemMatrix=[[-1]]))
+
+mbs.Assemble()
+simulationSettings = exu.SimulationSettings()
+mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44)
+
+#q(1) = exp(-1)
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.3679
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`HydraulicActuator2Arms.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicActuator2Arms.py) (Ex), [`HydraulicActuatorStaticInitialization.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicActuatorStaticInitialization.py) (Ex), [`HydraulicsUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicsUserFunction.py) (Ex), [`lugreFrictionODE1.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/lugreFrictionODE1.py) (Ex), [`lugreFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/lugreFrictionTest.py) (Ex), [`hydraulicActuatorSimpleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/hydraulicActuatorSimpleTest.py) (TM), [`solverExplicitODE1ODE2test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/solverExplicitODE1ODE2test.py) (TM), [`taskmanagerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/taskmanagerTest.py) (TM)
