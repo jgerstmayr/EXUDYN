@@ -127,7 +127,7 @@ def IssueParser(subParsers, globalParser):
     what it would do and changes nothing - which matters here, because resolving an issue bumps
     the version of the package."""
     issue = subParsers.add_parser('issue', parents=[globalParser],
-        help='the issue tracker: raise, extend, remark, resolve, close, show, list, serve, bump',
+        help='the issue tracker: raise, extend, remark, resolve, close, show, list, plot, serve, bump',
         description='The issue tracker of tools/issueTracker/. It also owns the version: the micro '
                     'number is the count of closed issues, so "resolve" and "close" rewrite '
                     'version.txt, versionCpp.cpp, the version line of README.rst and the tracker '
@@ -208,6 +208,12 @@ def IssueParser(subParsers, globalParser):
     modify.add_argument('--force', action='store_true',
                         help='also change a CLOSED issue - it has been published, and its text '
                              'stands in the release notes of a released version')
+
+    plot = verbs.add_parser('plot', parents=[globalParser],
+        help='the issues over time as a matplotlib figure',
+        description='Total, closed and open issues on the left axis, bugs and fixes (total and open) '
+                    'on the right axis, one step per day (#2752).')
+    plot.add_argument('--save', metavar='FILE', help='write the figure to FILE (png, pdf, svg) instead of showing it')
 
     verbs.add_parser('triage', parents=[globalParser],
         help='the open issues by type and effort',

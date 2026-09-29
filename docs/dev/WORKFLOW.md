@@ -99,6 +99,7 @@ exudev issue remark 2566 "duplicate of #2134, check before starting"
 exudev issue resolve 2566 "what was done" --author Claude-JG     #bumps the micro version
 exudev issue close 2566 "duplicate of #2134" | "superseded by ..." | "won't fix, because ..."
 exudev issue triage                                #the open issues by type and effort
+exudev issue plot                                  #the issues over time: total, closed, open; bugs and fixes
 exudev issue bump --minor | --major | --to 2.0     #start a RELEASE (maintainer decision)
 exudev issue serve                                 #the same in a browser, read AND write
 exudev issue mode --release | --dev                              #fact 26

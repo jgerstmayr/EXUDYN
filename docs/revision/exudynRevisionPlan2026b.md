@@ -2009,6 +2009,11 @@ file, so an editor cannot complete them).
     fixed, the deliberate `DOC108` of the typed user function parameters in the baseline, and
     `pydoclint` a stage of `exudev generate --all-checks`.
 
+<a id="rg10-13"></a>
+**RG10.13** *(group RG10; maintainer 2026-09-29)* **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg10-13) —
+    **`exudev issue plot`** (#2752): the issues over time as a matplotlib figure - total, closed, open on
+    the left axis, bugs and fixes (total and open) on the right, with a legend; `--save FILE` writes it.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.

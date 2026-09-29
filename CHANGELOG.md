@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 156 | 1.12.168 |
+| 1.12 | Metheney | 157 | 1.12.169 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.169** `EXTENSION` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev issue plot: the issues over time as a matplotlib figure (#2752)
+  - description: The maintainer, 2026-09-29: 'exudev issue plot' opens a matplotlib figure with the issues over time - total, closed and open - and, on a second scale, total and open bugs and fixes, with a legend. revision2026b step RG10.13.
+  - **notes:** exudev issue plot shows the issues over time - total, closed, open, and the bugs and fixes on a second axis; --save FILE writes the figure.
+  - date resolved: **2026-09-29 21:41**, date raised: 2026-09-29
 - **1.12.168** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactCoordinate gets the contact law of ObjectContactSphereSphere: stiffness exponent, restitution and impact models (#2750)
   - description: The maintainer, 2026-09-29: ObjectContactCoordinate should get the contact law of ObjectContactSphereSphere - contactStiffnessExponent, restitutionCoefficient, impactModel, minimumImpactVelocity (Hunt-Crossley and Gonthier/Carvalho-Martins); the comparison test of the three contact objects (RG4.15.1) extends to these laws. revision2026b step RG4.15.2.
   - **notes:** ObjectContactCoordinate has the contact law of ObjectContactSphereSphere: contactStiffnessExponent, restitutionCoefficient, minimumImpactVelocity and impactModel (Hunt-Crossley, Gonthier et al. / Carvalho-Martins); with an impact model its data node has a second coordinate.

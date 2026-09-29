@@ -1,0 +1,17 @@
+{
+  "number": 2752,
+  "title": "exudev issue plot: the issues over time as a matplotlib figure",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-29: 'exudev issue plot' opens a matplotlib figure with the issues over time - total, closed and open - and, on a second scale, total and open bugs and fixes, with a legend. revision2026b step RG10.13.",
+  "dateRaised": "2026-09-29",
+  "deadline": "2027-03-28",
+  "dateResolved": "2026-09-29 21:41",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/issueTracker/issuePlot.py",
+  "releaseNotes": "exudev issue plot shows the issues over time - total, closed, open, and the bugs and fixes on a second axis; --save FILE writes the figure.",
+  "resolvedInVersion": "1.12.169"
+}

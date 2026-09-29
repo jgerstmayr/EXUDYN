@@ -1405,6 +1405,17 @@ def Issue(options):
                                 options.value, force=getattr(options, 'force', False))
             return 0
 
+    elif verb == 'plot':
+        note = 'plot the issues over time' + (' into ' + options.save if options.save else '')
+
+        def Action():
+            import issuePlot                            #next to issueTracker.py, on sys.path since IssueTracker()
+            counts = issuePlot.Plot(tracker.GetIssues(), fileName=options.save)
+            print('issues: ' + str(counts['total'][-1]) + ' raised, ' + str(counts['closed'][-1]) + ' closed, '
+                  + str(counts['open'][-1]) + ' open; open bugs ' + str(counts['openBugs'][-1])
+                  + ', open fixes ' + str(counts['openFixes'][-1]))
+            return 0
+
     elif verb == 'triage':
         note = 'report the open issues by type and effort'
 

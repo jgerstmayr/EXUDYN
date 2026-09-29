@@ -7125,3 +7125,14 @@ known - it does not reproduce here. The cross-section inertia hardly matters (th
 **Consequence for RG4.8.4**: a consistent mass matrix is an accuracy improvement at coarse meshes, not
 the correction of a wrong result; its priority is lower than the Jacobian (RG4.8.5), the reference
 configuration (RG4.8.6) and the body markers (RG4.8.7), which are missing functions.
+
+<a id="rg10-13"></a>
+### RG10.13 — the issues over time (2026-09-29, #2752)
+
+`exudev issue plot` (`tools/issueTracker/issuePlot.py`): one step per day on which an issue was raised
+or closed; total, closed and open issues on the left axis, total and open bugs and fixes on a second axis
+on the right - their counts (tens to a few hundred) would vanish on the scale of the 2752 issues, and a
+second axis reads more directly than a logarithmic one. An issue counts as raised on `dateRaised` and as
+closed on `dateResolved`; 77 resolved issues of the early years carry no `dateResolved` and count as
+closed on `dateRaised`. `--save FILE` writes the figure without a window (matplotlib's Agg backend),
+which is how it was checked here. Today: 2752 raised, 270 open, 6 open bugs, 17 open fixes.
