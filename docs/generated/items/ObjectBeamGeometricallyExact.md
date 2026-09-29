@@ -54,9 +54,14 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Position |  | global position vector of local axis (1) and cross section (2) position |
 | Displacement |  | global displacement vector of local axis (1) and cross section (2) position |
 | Velocity |  | global velocity vector of local axis (1) and cross section (2) position |
-| Rotation |  | 3D Tait-Bryan rotation components, containing rotation around $z$-axis only |
-| StrainLocal |  | 6 strain components, containing only axial ($xx$) and shear strain ($xy$) |
-| CurvatureLocal |  | 3D vector of curvature, containing only curvature w.r.t. $z$-axis |
+| Rotation |  | Tait-Bryan angles of the frame of the cross section at the local position |
+| RotationMatrix |  | rotation matrix of the frame of the cross section at the local position, in vector form (stored in row-major order) |
+| AngularVelocity |  | global angular velocity of the cross section at the local position, interpolated linearly between the nodes |
+| AngularVelocityLocal |  | angular velocity of the cross section at the local position, in the frame of the cross section |
+| StrainLocal |  | 6 strain components $[\varepsilon_{xx}, 0, 0, 0, \gamma_{xz}, \gamma_{xy}]\tp$ of the beam axis, axial strain and the two shear strains; constant in the element |
+| CurvatureLocal |  | local curvature vector $[\kappa_x, \kappa_y, \kappa_z]\tp$, torsion and the two bending curvatures, relative to the reference configuration; constant in the element |
+| ForceLocal |  | local section force $[N, Q_y, Q_z]\tp$, the normal force and the two shear forces; constant in the element |
+| TorqueLocal |  | local section moment $[M_x, M_y, M_z]\tp$, the torsional moment and the two bending moments; constant in the element |
 
 (description-objectbeamgeometricallyexact)=
 ## Detailed description
@@ -64,4 +69,4 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 Detailed description coming later.
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`flexiblePendulumBeamComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/flexiblePendulumBeamComparison.py) (TM), [`geometricallyExactBeamCurvedTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamCurvedTest.py) (TM), [`geometricallyExactBeamJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamJacobianTest.py) (TM), [`geometricallyExactBeamMarkerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamMarkerTest.py) (TM), [`geometricallyExactBeamRightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamRightAngleFrame.py) (TM), [`geometricallyExactBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`flexiblePendulumBeamComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/flexiblePendulumBeamComparison.py) (TM), [`geometricallyExactBeamCurvedTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamCurvedTest.py) (TM), [`geometricallyExactBeamJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamJacobianTest.py) (TM), [`geometricallyExactBeamMarkerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamMarkerTest.py) (TM), [`geometricallyExactBeamOutputTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamOutputTest.py) (TM), [`geometricallyExactBeamRightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamRightAngleFrame.py) (TM), [`geometricallyExactBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM)

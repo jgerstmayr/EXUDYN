@@ -120,15 +120,15 @@ Vector3D CObjectBeamGeometricallyExact::MapVectors(const Vector2D& SV, const Vec
 }
 
 
-//! the relative motion h of node 1 to node 0 in the current configuration, and h0, the one of the stress-free configuration,
+//! the relative motion h of node 1 to node 0 in the given configuration, and h0, the one of the stress-free configuration,
 //! which is the reference configuration of the nodes: a pre-curved or pre-twisted element is stress-free there (#1494)
-void CObjectBeamGeometricallyExact::ComputeIncrementalMotion(Vector6D& h, Vector6D& h0) const
+void CObjectBeamGeometricallyExact::ComputeIncrementalMotion(Vector6D& h, Vector6D& h0, ConfigurationType configuration) const
 {
 	const CNodeRigidBody* node0 = (CNodeRigidBody*)GetCNode(0);
 	const CNodeRigidBody* node1 = (CNodeRigidBody*)GetCNode(1);
 	Vector3D incDisp;
 	Vector3D incRot;
-	ConfigurationType configurations[2] = { ConfigurationType::Current, ConfigurationType::Reference };
+	ConfigurationType configurations[2] = { configuration, ConfigurationType::Reference };
 	for (Index k = 0; k < 2; k++)
 	{
 		HomogeneousTransformation HT0(node0->GetRotationMatrix(configurations[k]), node0->GetPosition(configurations[k]));
@@ -599,6 +599,38 @@ void CObjectBeamGeometricallyExact::GetOutputVariableBody(OutputVariableType var
 	case OutputVariableType::Position:	value.CopyFrom(GetPosition(localPosition, configuration)); break;
 	case OutputVariableType::Displacement:	value.CopyFrom(GetPosition(localPosition, configuration) - GetPosition(localPosition, ConfigurationType::Reference)); break;
 	case OutputVariableType::Velocity:	value.CopyFrom(GetVelocity(localPosition, configuration)); break;
+	case OutputVariableType::Rotation:	value.CopyFrom(RigidBodyMath::RotationMatrix2RotXYZ(GetRotationMatrix(localPosition, configuration))); break;
+	case OutputVariableType::RotationMatrix:
+	{
+		Matrix3D rotationMatrix = GetRotationMatrix(localPosition, configuration);
+		value.SetVector(9, rotationMatrix.GetDataPointer());
+		break;
+	}
+	case OutputVariableType::AngularVelocity:	value.CopyFrom(GetAngularVelocity(localPosition, configuration)); break;
+	case OutputVariableType::AngularVelocityLocal:	value.CopyFrom(GetAngularVelocityLocal(localPosition, configuration)); break;
+	case OutputVariableType::StrainLocal:
+	case OutputVariableType::CurvatureLocal:
+	case OutputVariableType::ForceLocal:
+	case OutputVariableType::TorqueLocal:
+	{
+		//the strains (h-h0)/L are constant in the element, the section forces and moments K*(h-h0)/L (#2753)
+		Vector6D h;
+		Vector6D h0;
+		ComputeIncrementalMotion(h, h0, configuration);
+		Real L = parameters.physicsLength;
+		Vector6D strain;
+		for (Index k = 0; k < 6; k++) { strain[k] = (h[k] - h0[k]) / L; }
+		const Vector3D& kAS = parameters.physicsAxialShearStiffness;
+		const Vector3D& kTB = parameters.physicsTorsionalBendingStiffness;
+		switch (variableType)
+		{
+		case OutputVariableType::StrainLocal:		value.SetVector({ strain[0], 0., 0., 0., strain[2], strain[1] }); break;
+		case OutputVariableType::CurvatureLocal:	value.SetVector({ strain[3], strain[4], strain[5] }); break;
+		case OutputVariableType::ForceLocal:		value.SetVector({ kAS[0] * strain[0], kAS[1] * strain[1], kAS[2] * strain[2] }); break;
+		default:									value.SetVector({ kTB[0] * strain[3], kTB[1] * strain[4], kTB[2] * strain[5] }); break; //TorqueLocal
+		}
+		break;
+	}
 	default:
 		SysError("CObjectBeamGeometricallyExact::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

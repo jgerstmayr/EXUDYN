@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-29  23:50:43 (last modified)
+* @date         2026-09-30  00:07:48 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -182,8 +182,8 @@ public: // AUTO:
     //! AUTO:  get compressed shape function vector \f$\Sm_v\f$, depending local position \f$x \in [0,L]\f$
     Vector2D ComputeShapeFunctions(Real x) const;
 
-    //! AUTO:  the relative motion h of node 1 to node 0 in the current configuration, and h0, the one of the stress-free configuration, which is the reference configuration of the nodes
-    void ComputeIncrementalMotion(Vector6D& h, Vector6D& h0) const;
+    //! AUTO:  the relative motion h of node 1 to node 0 in the given configuration, and h0, the one of the stress-free configuration, which is the reference configuration of the nodes
+    void ComputeIncrementalMotion(Vector6D& h, Vector6D& h0, ConfigurationType configuration = ConfigurationType::Current) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
@@ -192,8 +192,13 @@ public: // AUTO:
             (Index64)OutputVariableType::Displacement +
             (Index64)OutputVariableType::Velocity +
             (Index64)OutputVariableType::Rotation +
+            (Index64)OutputVariableType::RotationMatrix +
+            (Index64)OutputVariableType::AngularVelocity +
+            (Index64)OutputVariableType::AngularVelocityLocal +
             (Index64)OutputVariableType::StrainLocal +
-            (Index64)OutputVariableType::CurvatureLocal );
+            (Index64)OutputVariableType::CurvatureLocal +
+            (Index64)OutputVariableType::ForceLocal +
+            (Index64)OutputVariableType::TorqueLocal );
     }
 
 };

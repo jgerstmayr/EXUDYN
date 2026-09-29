@@ -655,7 +655,7 @@ items = {
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position', 'Orientation'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Rotation', 'StrainLocal', 'CurvatureLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Rotation', 'RotationMatrix', 'AngularVelocity', 'AngularVelocityLocal', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'nodeNumbers': {'type': 'NodeIndex2', 'size': '2', 'range': '', 'default': '[exudyn.InvalidIndex(), exudyn.InvalidIndex()]', 'mustBeGiven': False, 'description': 'two node numbers for beam element'},

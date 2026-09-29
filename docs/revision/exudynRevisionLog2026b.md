@@ -7281,3 +7281,25 @@ load steps, 0.8 s): 1 mm at 1.0812 N, 5 mm at 1.0880 N, 10 mm at 1.0917 N; refer
 The existing `rightAngleFrame.py` (2023, ANCF and this element; its header: *"no convergence for
 GeometricallyExactBeam"*) is excluded from the suite; run with its own settings it now passes 90 of 100
 load steps and stops at the buckling load. Revising or removing it is left to the maintainer.
+
+<a id="rg4-8-10"></a>
+### RG4.8.10 — the output variables of the 3D geometrically exact beam (2026-09-30, #2753)
+
+The definition declared `Rotation`, `StrainLocal` and `CurvatureLocal`; `GetOutputVariableBody` computed
+`Position`, `Displacement` and `Velocity` only, so a sensor on the others stopped with an internal error
+(found in RG4.8.5). The maintainer added `ForceLocal` and `TorqueLocal`. Now the element has, at a local
+position: `Rotation` (Tait-Bryan angles), `RotationMatrix`, `AngularVelocity`, `AngularVelocityLocal` of the
+SE(3)-interpolated frame, and per element the strains $\varepsilonv = (\hv - \hv_0)/L$ - `StrainLocal`
+$[\varepsilon_{xx}, 0, 0, 0, \gamma_{xz}, \gamma_{xy}]$ in the order of the planar element, `CurvatureLocal`
+$[\kappa_x, \kappa_y, \kappa_z]$ - and the section forces and moments $\Km\varepsilonv$, `ForceLocal` $[N, Q_y, Q_z]$ and
+`TorqueLocal` $[M_x, M_y, M_z]$. `ComputeIncrementalMotion` takes the configuration for them.
+
+The strains and section forces are **constant in an element**: the element's mean of a field that varies
+along it. Measured with new test model `geometricallyExactBeamOutputTest.py`, a large-deflection
+cantilever: a pure bending moment or a pure torsional moment is reproduced in every element to
+$3\cdot10^{-15}$, the curvature is the moment divided by the stiffness; for a tip force of 4.7, the section
+force rotated by the frame at the middle of each element differs from it by $5.6\cdot10^{-3}$ with 8 elements
+and $3.9\cdot10^{-4}$ with 32 - second order. A bending and a torsional moment together are not constant
+along the beam in the local frame unless the two stiffnesses are equal, which is mechanics, not the
+element. Position, rotation and angular velocity at the element ends equal those of the nodes
+($2\cdot10^{-16}$). Reference -6.079487513916353.

@@ -1216,11 +1216,10 @@ The steps are numbered in the order they were raised and stand here in the order
     - **RG4.8.8** **CLOSED 2026-09-29** - #736 (*"include GeomExactBeam3D as provided by Jan Tomec"*) is
       superseded by this element (maintainer);
     - **RG4.8.9** then the reference page (RG13.5.2) and the MiniExample (RG13.6);
-    - **RG4.8.10** the output variables: the definition declares `Rotation`, `StrainLocal` and
-      `CurvatureLocal`, and `GetOutputVariableBody` computes only `Position`, `Displacement` and
-      `Velocity` - asking for the others stops with an internal error (found in RG4.8.5); and the section
-      forces and moments are missing: `ForceLocal` and `TorqueLocal` at a local position, from
-      $\Km(\hv - \hv_0)/L$ (maintainer, 2026-09-29).
+    - **RG4.8.10** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-8-10) - the output variables
+      (#2753): `Rotation`, `StrainLocal` and `CurvatureLocal` were declared and not computed; added with
+      `RotationMatrix`, `AngularVelocity`, `AngularVelocityLocal` and the section forces and moments
+      `ForceLocal` and `TorqueLocal` (maintainer, 2026-09-29); test model `geometricallyExactBeamOutputTest.py`.
 
 <a id="rg4-9"></a>
 **RG4.9** *(group RG4; from RG13.5.3, 2026-09-28)* **DONE 2026-09-29** —

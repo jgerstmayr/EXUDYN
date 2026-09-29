@@ -1,0 +1,15 @@
+{
+  "number": 2753,
+  "title": "ObjectBeamGeometricallyExact: output variables",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "the definition declares the output variables Rotation, StrainLocal and CurvatureLocal, which GetOutputVariableBody does not compute - asking for them stops with an internal error; ForceLocal and TorqueLocal, the section forces and moments, are missing (maintainer); planned as revision2026b step RG4.8.10",
+  "dateRaised": "2026-09-30",
+  "deadline": "2027-03-29",
+  "dateResolved": "2026-09-30 00:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectBeamGeometricallyExact: the output variables Rotation, RotationMatrix, AngularVelocity, AngularVelocityLocal, StrainLocal, CurvatureLocal, ForceLocal and TorqueLocal are available; strains and section forces are constant in an element; Rotation, StrainLocal and CurvatureLocal were declared before but stopped with an internal error",
+  "resolvedInVersion": "1.12.175"
+}

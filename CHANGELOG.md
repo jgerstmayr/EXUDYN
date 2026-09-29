@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 161 | 1.12.174 |
+| 1.12 | Metheney | 162 | 1.12.175 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.175** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectBeamGeometricallyExact: output variables (#2753)
+  - description: the definition declares the output variables Rotation, StrainLocal and CurvatureLocal, which GetOutputVariableBody does not compute - asking for them stops with an internal error; ForceLocal and TorqueLocal, the section forces and moments, are missing (maintainer); planned as revision2026b step RG4.8.10
+  - **notes:** ObjectBeamGeometricallyExact: the output variables Rotation, RotationMatrix, AngularVelocity, AngularVelocityLocal, StrainLocal, CurvatureLocal, ForceLocal and TorqueLocal are available; strains and section forces are constant in an element; Rotation, StrainLocal and CurvatureLocal were declared before but stopped with an internal error
+  - date resolved: **2026-09-30 00:16**, date raised: 2026-09-30
 - **1.12.174** `TESTING` `NORMAL` `MEDIUM EFF` `resolved by: Claude-JG` GeometricallyExactBeam (#1499)
   - description: check for advanced right-angle frame
   - **notes:** ObjectBeamGeometricallyExact: tested with the lateral buckling of the right-angle frame, which buckles at the published critical load of 1.088 N (test model geometricallyExactBeamRightAngleFrame.py)
