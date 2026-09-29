@@ -12,6 +12,9 @@ Data structure for definition of 2D and 3D beam (cross) section mechanical prope
 
 PyBeamSection has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `dampingMatrix` | Matrix6D | 36 | np.zeros((6,6)) | $\LU{c}{\Dm} \in \Rcal^{6 \times 6}\,$ [SI:Nsm$^2$, Nsm and Ns (mixed)] sectional linear damping matrix related to $\vp{\LU{c}{\nv}}{\LU{c}{\mv}} = \LU{c}{\Dm} \vp{\LU{c}{\tepsDot}}{\LU{c}{\tkappaDot}}$; note that this damping models is highly simplified and usually, it cannot be derived from material parameters; however, it can be used to adjust model damping to observed damping behavior. Set with list of lists or numpy array. |

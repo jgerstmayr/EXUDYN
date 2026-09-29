@@ -16,18 +16,21 @@ A very specialized penalty-based contact/friction condition between a 2D circle 
 
 The parameters of the item; in a dictionary, its type is 'ContactFrictionCircleCable2D':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | a marker $m0$ with position and orientation and a marker $m1$ of type BodyCable2DShape; together defining the contact geometry |
-| **nodeNumber** $n_g$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with 3 $\times n_{cs}$ dataCoordinates (used for active set strategy $\ra$ hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*$n_{cs}$+[-2]*$n_{cs}$+[0.]*$n_{cs}$, meaning that there is no initial contact with undefined slip/stick |
-| **numberOfContactSegments** $n_{cs}$ | PInt |  | 3 | number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker |
-| **contactStiffness** $k_c$ | UReal |  | 0. | contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_n$ act in contact normal direction only upon penetration |
-| **contactDamping** $d_c$ | UReal |  | 0. | contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration |
-| **frictionVelocityPenalty** $\mu_v$ | UReal |  | 0. | tangential velocity dependent penalty coefficient for friction [SI:N/(m s)/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential velocities in the contact area |
-| **frictionStiffness** $\mu_k$ | UReal |  | 0. | tangential displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area |
-| **frictionCoefficient** $\mu$ | UReal |  | 0. | friction coefficient [SI: 1]; tangential specific friction forces (per length) $f_t$ must fulfill the condition $f_t \le \mu f_n$ |
-| **circleRadius** $r$ | UReal |  | 0. | radius [SI:m] of contact circle |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) a marker $m0$ with position and orientation and a marker $m1$ of type BodyCable2DShape; together defining the contact geometry |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_g$) node number of a NodeGenericData with 3 $\times n_{cs}$ dataCoordinates (used for active set strategy $\ra$ hold the gap of the last discontinuous iteration, friction state (+-1=slip, 0=stick, -2=undefined) and the last sticking position; initialize coordinates with list [0.1]*$n_{cs}$+[-2]*$n_{cs}$+[0.]*$n_{cs}$, meaning that there is no initial contact with undefined slip/stick |
+| **numberOfContactSegments** | PInt |  | 3 | (symbol: $n_{cs}$) number of linear contact segments to determine contact; each segment is a line and is associated to a data (history) variable; must be same as in according marker |
+| **contactStiffness** | UReal |  | 0. | (symbol: $k_c$) contact (penalty) stiffness [SI:N/m/(contact segment)]; the stiffness is per contact segment; specific contact forces (per length) $f_n$ act in contact normal direction only upon penetration |
+| **contactDamping** | UReal |  | 0. | (symbol: $d_c$) contact damping [SI:N/(m s)/(contact segment)]; the damping is per contact segment; acts in contact normal direction only upon penetration |
+| **frictionVelocityPenalty** | UReal |  | 0. | (symbol: $\mu_v$) tangential velocity dependent penalty coefficient for friction [SI:N/(m s)/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential velocities in the contact area |
+| **frictionStiffness** | UReal |  | 0. | (symbol: $\mu_k$) tangential displacement dependent penalty/stiffness coefficient for friction [SI:N/m/(contact segment)]; the coefficient causes tangential (contact) forces against relative tangential displacements in the contact area |
+| **frictionCoefficient** | UReal |  | 0. | (symbol: $\mu$) friction coefficient [SI: 1]; tangential specific friction forces (per length) $f_t$ must fulfill the condition $f_t \le \mu f_n$ |
+| **circleRadius** | UReal |  | 0. | (symbol: $r$) radius [SI:m] of contact circle |
 | **useSegmentNormals** | Bool |  | True | True: use normal and tangent according to linear segment; this is appropriate for very long (compared to circle) segments; False: use normals at segment points according to vector to circle center; this is more consistent for short segments, as forces are only applied in beam tangent and normal direction |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactFrictionCircleCable2D |  |  | parameters for visualization of item |
@@ -35,6 +38,9 @@ The parameters of the item; in a dictionary, its type is 'ContactFrictionCircleC
 ## Visualization parameters
 
 The parameters of `VObjectContactFrictionCircleCable2D`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -46,6 +52,9 @@ The parameters of `VObjectContactFrictionCircleCable2D`, given as `visualization
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

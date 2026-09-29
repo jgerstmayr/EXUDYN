@@ -59,6 +59,8 @@ are added by the Create functions: `CreateRevoluteJoint` adds two `MarkerBodyRig
 
 ## All markers
 
+```{tabularcolumns} |\Y{0.3}|\Y{0.3}|\Y{0.2}|\Y{0.2}|
+```
 | marker | attached to | provides | usable by |
 |---|---|---|---|
 | [](#sec-item-markerbodymass) | a body | `BodyMass` | 1 item |

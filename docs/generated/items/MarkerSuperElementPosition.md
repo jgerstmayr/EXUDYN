@@ -18,17 +18,23 @@ A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericO
 
 The parameters of the item; in a dictionary, its type is 'SuperElementPosition':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
-| **bodyNumber** $n_b$ | ObjectIndex |  | invalid (-1) | body number to which marker is attached to |
-| **meshNodeNumbers** $[k_0,\,\ldots,\,k_{n_m-1}]\tp$ | ArrayIndex |  | [] | a list of $n_m$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers |
-| **weightingFactors** $[w_{0},\,\ldots,\,w_{n_m-1}]\tp$ | Vector |  | [] | a list of $n_m$ weighting factors per node to compute the final local position; the sum of these weights shall be 1, such that a summation of all nodal positions times weights gives the average position of the marker |
+| **bodyNumber** | ObjectIndex |  | invalid (-1) | (symbol: $n_b$) body number to which marker is attached to |
+| **meshNodeNumbers** | ArrayIndex |  | [] | (symbol: $[k_0,\,\ldots,\,k_{n_m-1}]\tp$) a list of $n_m$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers |
+| **weightingFactors** | Vector |  | [] | (symbol: $[w_{0},\,\ldots,\,w_{n_m-1}]\tp$) a list of $n_m$ weighting factors per node to compute the final local position; the sum of these weights shall be 1, such that a summation of all nodal positions times weights gives the average position of the marker |
 | **visualization** | VMarkerSuperElementPosition |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VMarkerSuperElementPosition`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

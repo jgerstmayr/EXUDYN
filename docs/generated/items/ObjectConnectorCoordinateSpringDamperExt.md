@@ -18,36 +18,42 @@ A 1D (scalar) spring-damper element acting on single {ref}`ODE2 <ODE2>` coordina
 
 The parameters of the item; in a dictionary, its type is 'ConnectorCoordinateSpringDamperExt':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number of a NodeGenericData for 3 data coordinates (friction mode, last sticking position, limit stop state), see description for details; must exist in case of bristle friction model or limit stops |
-| **stiffness** $k$ | Real |  | 0. | stiffness [SI:N/m] of spring; acts against relative value of coordinates |
-| **damping** $d$ | Real |  | 0. | damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates |
-| **offset** $x_\mathrm{off}$ | Real |  | 0. | offset between two coordinates (reference length of springs), see equation; it can be used to represent the pre-scribed drive coordinate |
-| **velocityOffset** $v_\mathrm{off}$ | Real |  | 0. | offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity |
-| **factor0** $f_0$ | Real |  | 1. | marker 0 coordinate is multiplied with factor0 |
-| **factor1** $f_1$ | Real |  | 1. | marker 1 coordinate is multiplied with factor1 |
-| **fDynamicFriction** $f_{\mu,\mathrm{d}}$ | UReal |  | 0. | dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$ |
-| **fStaticFrictionOffset** $f_{\mu,\mathrm{so}}$ | UReal |  | 0. | static (dry) friction offset force [SI:N]; assuming a normal force $f_N$, the friction force is limited by $f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}$ |
-| **stickingStiffness** $k_\mu$ | UReal |  | 0. | stiffness of bristles in sticking case [SI:N/m] |
-| **stickingDamping** $d_\mu$ | UReal |  | 0. | damping of bristles in sticking case [SI:N/(m/s)] |
-| **exponentialDecayStatic** $v_\mathrm{exp}$ | PReal |  | 0.001 | relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at $\Delta v = v_\mathrm{exp}$, the static friction offset force is reduced to 36.8% |
-| **fViscousFriction** $f_{\mu,\mathrm{v}}$ | Real |  | 0. | viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case |
-| **frictionProportionalZone** $v_\mathrm{reg}$ | UReal |  | 0. | if non-zero, a regularized Stribeck model is used, regularizing friction force around zero velocity - leading to zero friction force in case of zero velocity; this does not require a data node at all; if zero, the bristle model is used, which requires a data node which contains previous friction state and last sticking position |
-| **limitStopsUpper** $s_\mathrm{upper}$ | Real |  | 0. | upper (maximum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates |
-| **limitStopsLower** $s_\mathrm{lower}$ | Real |  | 0. | lower (minimum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates |
-| **limitStopsStiffness** $k_\mathrm{limits}$ | UReal |  | 0. | stiffness [SI:N/m] of limit stop (contact stiffness); following a linear contact model |
-| **limitStopsDamping** $d_\mathrm{limits}$ | UReal |  | 0. | damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model |
+| **stiffness** | Real |  | 0. | (symbol: $k$) stiffness [SI:N/m] of spring; acts against relative value of coordinates |
+| **damping** | Real |  | 0. | (symbol: $d$) damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates |
+| **offset** | Real |  | 0. | (symbol: $x_\mathrm{off}$) offset between two coordinates (reference length of springs), see equation; it can be used to represent the pre-scribed drive coordinate |
+| **velocityOffset** | Real |  | 0. | (symbol: $v_\mathrm{off}$) offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity |
+| **factor0** | Real |  | 1. | (symbol: $f_0$) marker 0 coordinate is multiplied with factor0 |
+| **factor1** | Real |  | 1. | (symbol: $f_1$) marker 1 coordinate is multiplied with factor1 |
+| **fDynamicFriction** | UReal |  | 0. | (symbol: $f_{\mu,\mathrm{d}}$) dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$ |
+| **fStaticFrictionOffset** | UReal |  | 0. | (symbol: $f_{\mu,\mathrm{so}}$) static (dry) friction offset force [SI:N]; assuming a normal force $f_N$, the friction force is limited by $f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}$ |
+| **stickingStiffness** | UReal |  | 0. | (symbol: $k_\mu$) stiffness of bristles in sticking case [SI:N/m] |
+| **stickingDamping** | UReal |  | 0. | (symbol: $d_\mu$) damping of bristles in sticking case [SI:N/(m/s)] |
+| **exponentialDecayStatic** | PReal |  | 0.001 | (symbol: $v_\mathrm{exp}$) relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at $\Delta v = v_\mathrm{exp}$, the static friction offset force is reduced to 36.8% |
+| **fViscousFriction** | Real |  | 0. | (symbol: $f_{\mu,\mathrm{v}}$) viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case |
+| **frictionProportionalZone** | UReal |  | 0. | (symbol: $v_\mathrm{reg}$) if non-zero, a regularized Stribeck model is used, regularizing friction force around zero velocity - leading to zero friction force in case of zero velocity; this does not require a data node at all; if zero, the bristle model is used, which requires a data node which contains previous friction state and last sticking position |
+| **limitStopsUpper** | Real |  | 0. | (symbol: $s_\mathrm{upper}$) upper (maximum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates |
+| **limitStopsLower** | Real |  | 0. | (symbol: $s_\mathrm{lower}$) lower (minimum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates |
+| **limitStopsStiffness** | UReal |  | 0. | (symbol: $k_\mathrm{limits}$) stiffness [SI:N/m] of limit stop (contact stiffness); following a linear contact model |
+| **limitStopsDamping** | UReal |  | 0. | (symbol: $d_\mathrm{limits}$) damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model |
 | **useLimitStops** | bool |  | False | if True, limit stops are considered and parameters must be set accordingly; furthermore, the NodeGenericData must have 3 data coordinates |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
-| **springForceUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalarIndexScalar11 |  | 0 | A Python function which defines the spring force with 8 parameters, see equations section / see description below |
+| **springForceUserFunction** | PyFunctionMbsScalarIndexScalar11 |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the spring force with 8 parameters, see equations section / see description below |
 | **visualization** | VObjectConnectorCoordinateSpringDamperExt |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectConnectorCoordinateSpringDamperExt`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -58,6 +64,9 @@ The parameters of `VObjectConnectorCoordinateSpringDamperExt`, given as `visuali
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

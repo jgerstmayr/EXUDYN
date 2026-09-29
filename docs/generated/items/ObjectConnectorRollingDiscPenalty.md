@@ -20,21 +20,24 @@ A (flexible) connector representing a rolling rigid disc (marker 1) on a flat su
 
 The parameters of the item; in a dictionary, its type is 'ConnectorRollingDiscPenalty':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | list of markers used in connector; $m0$ represents a point at the plane surface (normal of surface plane defined by planeNormal); the ground can also be a moving rigid body; $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point |
-| **nodeNumber** $n_d$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact) |
+| **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector; $m0$ represents a point at the plane surface (normal of surface plane defined by planeNormal); the ground can also be a moving rigid body; $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact) |
 | **discRadius** | PReal |  | 0. | defines the disc radius; **must be given**: the default is only a placeholder |
-| **discAxis** $\LU{m1}{\wv_{1}}, \;\; |\LU{m1}{\wv_{1}}| = 1$ | Vector3D | 3 | [1,0,0] | axis of disc defined in marker $m1$ frame |
-| **planeNormal** $\LU{m0}{\vv_{PN}}, \;\; |\LU{m0}{\vv_{PN}}| = 1$ | Vector3D | 3 | [0,0,1] | normal to the contact / rolling plane (ground); note that the plane reference point can be arbitrarily chosen by the location of the marker $m0$ |
-| **dryFrictionAngle** $\alpha_t$ | Real |  | 0. | angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle |
-| **contactStiffness** $k_c$ | UReal |  | 0. | normal contact stiffness [SI:N/m] |
-| **contactDamping** $d_c$ | UReal |  | 0. | normal contact damping [SI:N/(m s)] |
-| **dryFriction** $[\mu_x,\mu_y]\tp$ | Vector2D | 2 | [0,0] | dry friction coefficients [SI:1] in local marker 1 joint $J1$ coordinates; if $\alpha_t==0$, lateral direction $l=x$ and forward direction $f=y$; assuming a normal force $f_n$, the local friction force can be computed as $\LU{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}$ |
-| **dryFrictionProportionalZone** $v_\mu$ | Real |  | 0. | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations) |
-| **viscousFriction** $[d_x, d_y]\tp$ | Vector2D | 2 | [0,0] | viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint $J1$ coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity |
-| **rollingFrictionViscous** $\mu_r$ | Real |  | 0. | rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground! |
+| **discAxis** | Vector3D | 3 | [1,0,0] | (symbol: $\LU{m1}{\wv_{1}}, \;\; |\LU{m1}{\wv_{1}}| = 1$) axis of disc defined in marker $m1$ frame |
+| **planeNormal** | Vector3D | 3 | [0,0,1] | (symbol: $\LU{m0}{\vv_{PN}}, \;\; |\LU{m0}{\vv_{PN}}| = 1$) normal to the contact / rolling plane (ground); note that the plane reference point can be arbitrarily chosen by the location of the marker $m0$ |
+| **dryFrictionAngle** | Real |  | 0. | (symbol: $\alpha_t$) angle [SI:1 (rad)] which defines a rotation of the local tangential coordinates dry friction; this allows to model Mecanum wheels with specified roll angle |
+| **contactStiffness** | UReal |  | 0. | (symbol: $k_c$) normal contact stiffness [SI:N/m] |
+| **contactDamping** | UReal |  | 0. | (symbol: $d_c$) normal contact damping [SI:N/(m s)] |
+| **dryFriction** | Vector2D | 2 | [0,0] | (symbol: $[\mu_x,\mu_y]\tp$) dry friction coefficients [SI:1] in local marker 1 joint $J1$ coordinates; if $\alpha_t==0$, lateral direction $l=x$ and forward direction $f=y$; assuming a normal force $f_n$, the local friction force can be computed as $\LU{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}$ |
+| **dryFrictionProportionalZone** | Real |  | 0. | (symbol: $v_\mu$) limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations) |
+| **viscousFriction** | Vector2D | 2 | [0,0] | (symbol: $[d_x, d_y]\tp$) viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint $J1$ coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity |
+| **rollingFrictionViscous** | Real |  | 0. | (symbol: $\mu_r$) rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground! |
 | **useLinearProportionalZone** | Bool |  | False | if True, a linear proportional zone is used; the linear zone performs better in implicit time integration as the Jacobian has a constant tangent in the sticking case |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorRollingDiscPenalty |  |  | parameters for visualization of item |
@@ -42,6 +45,9 @@ The parameters of the item; in a dictionary, its type is 'ConnectorRollingDiscPe
 ## Visualization parameters
 
 The parameters of `VObjectConnectorRollingDiscPenalty`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -52,6 +58,9 @@ The parameters of `VObjectConnectorRollingDiscPenalty`, given as `visualization`
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

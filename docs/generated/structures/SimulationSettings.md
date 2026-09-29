@@ -13,6 +13,9 @@ General settings for exporting the solution (results) of a simulation.
 
 SolutionSettings has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `appendToFile`<br>`simulationSettings.solutionSettings.appendToFile` | bool |  | False | flag (true/false); if true, solution and solverInformation is appended to existing file (otherwise created); in BINARY mode, files are always replaced and this parameter is ineffective! |
@@ -52,6 +55,9 @@ Settings for numerical differentiation of a function (needed for computation of 
 
 NumericalDifferentiationSettings has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `addReferenceCoordinatesToEpsilon`<br>`simulationSettings.timeIntegration.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon`<br>`simulationSettings.staticSolver.newton.numericalDifferentiation.addReferenceCoordinatesToEpsilon` | bool |  | False | True: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}_i$ is added to {ref}`ODE2 <ODE2>` coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter |
@@ -72,6 +78,9 @@ Settings for discontinuous iterations, as in contact, friction, plasticity and g
 
 DiscontinuousSettings has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `ignoreMaxIterations`<br>`simulationSettings.timeIntegration.discontinuous.ignoreMaxIterations`<br>`simulationSettings.staticSolver.discontinuous.ignoreMaxIterations` | bool |  | True | continue solver if maximum number of discontinuous (post Newton) iterations is reached (ignore tolerance) |
@@ -87,6 +96,9 @@ DiscontinuousSettings has the following items:
 Settings for Newton method used in static or dynamic simulation.
 
 NewtonSettings has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -114,6 +126,9 @@ Settings for generalized-alpha, implicit trapezoidal or Newmark time integration
 
 GeneralizedAlphaSettings has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `computeInitialAccelerations`<br>`simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations` | bool |  | True | True: compute initial accelerations from system EOM in acceleration form; NOTE that initial accelerations that are following from user functions in constraints are not considered for now! False: use zero accelerations |
@@ -136,6 +151,9 @@ Settings for explicit solvers, like Explicit Euler, RK44, ODE23, DOPRI5 and othe
 
 ExplicitIntegrationSettings has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `computeEndOfStepAccelerations`<br>`simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations` | bool |  | True | accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different |
@@ -152,6 +170,9 @@ ExplicitIntegrationSettings has the following items:
 General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha.
 
 TimeIntegrationSettings has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -192,6 +213,9 @@ Settings for static solver linear or nonlinear (Newton).
 
 StaticSolverSettings has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `discontinuous`<br>`simulationSettings.staticSolver.discontinuous` | DiscontinuousSettings |  |  | parameters for treatment of discontinuities |
@@ -224,6 +248,9 @@ Settings for linear solver, both dense and sparse (Eigen).
 
 LinearSolverSettings has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `ignoreSingularJacobian`<br>`simulationSettings.linearSolverSettings.ignoreSingularJacobian` | bool |  | False | [ONLY implemented for dense, Eigen matrix mode] False: standard way, fails if jacobian is singular; True: use Eigen's FullPivLU (thus only works with LinearSolverType.EigenDense) which handles over- and underdetermined systems; can often resolve redundant constraints, but MAY ALSO LEAD TO ERRONEOUS RESULTS! |
@@ -239,6 +266,9 @@ LinearSolverSettings has the following items:
 Settings for linear solver, both dense and sparse (Eigen).
 
 Parallel has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -259,6 +289,9 @@ Parallel has the following items:
 General Settings for simulation; according settings for solution and solvers are given in subitems of this structure.
 
 SimulationSettings has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|

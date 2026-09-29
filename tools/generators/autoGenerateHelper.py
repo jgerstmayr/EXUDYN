@@ -58,6 +58,17 @@ def FileNameLower(fileName):
 
 #************************************************
 #convert string to doxygen readable comment --> for formulas in comments and class descriptions
+#the columns of a parameter table in the PDF: name, type, size, default value, description
+parameterTableWidths = [0.2, 0.14, 0.06, 0.15, 0.45]
+
+
+def PdfColumnWidths(widths):
+    """the widths of the columns of the next table in the PDF, as fractions of the line; without it
+    LaTeX sizes the columns by their content, and a long description squeezes the others to a few
+    letters (#2741). The HTML ignores it."""
+    return '```{tabularcolumns} |' + '|'.join('\\Y{' + str(w) + '}' for w in widths) + '|\n```\n\n'
+
+
 def Str2Doxygen(s, isDefaultValue=False): #replace _ and other symbols to fit into latex code
 
     s = s.replace('$','\\f$') #$ must be written as \f$ in doxygen
@@ -301,12 +312,14 @@ class DeclarationWriter:
 
     #a three column table, e.g. for output variables
     def DefStartTable3(self, headers=[]):
-        self.sMarkdown += ('\n| ' + ' | '.join([MarkdownCell(h) for h in headers[:3]])
+        self.sMarkdown += '\n' + PdfColumnWidths([0.25, 0.25, 0.5])
+        self.sMarkdown += ('| ' + ' | '.join([MarkdownCell(h) for h in headers[:3]])
                            + ' |\n|---|---|---|\n')
 
     #the parameter table of one item
     def DefItemStartTable(self, classStr=''):
-        self.sMarkdown += ('\n| Name | type | size | default value | description |\n'
+        self.sMarkdown += '\n' + PdfColumnWidths(parameterTableWidths)
+        self.sMarkdown += ('| Name | type | size | default value | description |\n'
                            + '|---|---|---|---|---|\n')
 
     def DefFinishTable(self):
@@ -608,11 +621,12 @@ class DeclarationWriter:
         def Cell(content):
             return MarkdownCell(LatexText2Markdown(content.replace('\\tabnewline', ' ')))
 
-        nameCell = '**' + pythonName + '**'
+        #the symbol opens the description, where it stays visible however narrow the name column is (#2741)
+        descriptionCell = Cell(description)
         if sSymbol.strip() != '':
-            nameCell += ' $' + sSymbol.strip().strip('$') + '$'
-        self.sMarkdown += ('| ' + nameCell + ' | ' + Cell(typeName) + ' | ' + Cell(sSize)
-                           + ' | ' + Cell(sDefaultVal) + ' | ' + Cell(description) + ' |\n')
+            descriptionCell = '(symbol: $' + sSymbol.strip().strip('$') + '$) ' + descriptionCell
+        self.sMarkdown += ('| **' + pythonName + '** | ' + Cell(typeName) + ' | ' + Cell(sSize)
+                           + ' | ' + Cell(sDefaultVal) + ' | ' + descriptionCell + ' |\n')
 
     #one row for a three column table, e.g. for output variables
     def Table3WriteRow(self, cols=['','',''], typeList=['','',''], nameLiteral=True):

@@ -17,17 +17,23 @@ A node with one {ref}`ODE2 <ODE2>` coordinate for one dimensional (1D) problems.
 
 The parameters of the item; in a dictionary, its type is '1D':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
-| **referenceCoordinates** $[q_0]\tp\cRef$ | Vector |  | [0.] | reference coordinate of node (in vector form) |
-| **initialCoordinates** $[q_0]\tp\cIni$ | Vector |  | [0.] | initial displacement coordinate (in vector form) |
-| **initialVelocities** $[\dot q_0]\tp\cIni$ | Vector |  | [0.] | initial velocity coordinate (in vector form) |
+| **referenceCoordinates** | Vector |  | [0.] | (symbol: $[q_0]\tp\cRef$) reference coordinate of node (in vector form) |
+| **initialCoordinates** | Vector |  | [0.] | (symbol: $[q_0]\tp\cIni$) initial displacement coordinate (in vector form) |
+| **initialVelocities** | Vector |  | [0.] | (symbol: $[\dot q_0]\tp\cIni$) initial velocity coordinate (in vector form) |
 | **visualization** | VNode1D |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VNode1D`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -36,6 +42,9 @@ The parameters of `VNode1D`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

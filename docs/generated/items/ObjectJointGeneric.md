@@ -23,23 +23,29 @@ A generic joint in 3D; constrains components of the absolute position and rotati
 
 The parameters of the item; in a dictionary, its type is 'JointGeneric':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
-| **constrainedAxes** $\jv=[j_0,\,\ldots,\,j_5]$ | ArrayIndex | 6 | [1,1,1,1,1,1] | flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis |
-| **rotationMarker0** $\LU{m0,J0}{\Rot}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0 |
-| **rotationMarker1** $\LU{m1,J1}{\Rot}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1 |
+| **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
+| **constrainedAxes** | ArrayIndex | 6 | [1,1,1,1,1,1] | (symbol: $\jv=[j_0,\,\ldots,\,j_5]$) flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis |
+| **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{m0,J0}{\Rot}$) local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0 |
+| **rotationMarker1** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{m1,J1}{\Rot}$) local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1 |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
-| **offsetUserFunctionParameters** $\pv_{par}$ | Vector6D | 6 | [0.,0.,0.,0.,0.,0.] | vector of 6 parameters for joint's offsetUserFunction |
-| **offsetUserFunction** $\mathrm{UF} \in \Rcal^6$ | PyFunctionVector6DmbsScalarIndexVector6D |  | 0 | A Python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters) |
-| **offsetUserFunction_t** $\mathrm{UF} \in \Rcal^6$ | PyFunctionVector6DmbsScalarIndexVector6D |  | 0 | (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters |
+| **offsetUserFunctionParameters** | Vector6D | 6 | [0.,0.,0.,0.,0.,0.] | (symbol: $\pv_{par}$) vector of 6 parameters for joint's offsetUserFunction |
+| **offsetUserFunction** | PyFunctionVector6DmbsScalarIndexVector6D |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^6$) A Python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters) |
+| **offsetUserFunction_t** | PyFunctionVector6DmbsScalarIndexVector6D |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^6$) (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters |
 | **alternativeConstraints** | Bool |  | False | this is an experimental flag, may change in future: if uses alternative contraint equations for rotations, currently in case of 3 locked rotations: $\LU{0}{\tv}_{x0}\tp (\LU{0}{\tv}_{y1} \times \LU{0}{\tv}_{z0})$, $\LU{0}{\tv}_{y0}\tp (\LU{0}{\tv}_{z1} \times \LU{0}{\tv}_{x0})$, $\LU{0}{\tv}_{z0}\tp (\LU{0}{\tv}_{x1} \times \LU{0}{\tv}_{y0})$; this avoids 180° flips of the standard configuration in static computations, but leads to different values in Lagrange multipliers |
 | **visualization** | VObjectJointGeneric |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectJointGeneric`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -51,6 +57,9 @@ The parameters of `VObjectJointGeneric`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

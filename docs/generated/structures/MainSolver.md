@@ -12,6 +12,9 @@ and hereafter you can access all data and functions via 'solver'.
 
 MainSolverStatic has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `conv` | SolverConvergenceData |  |  | all information about tolerances, errors and residua |
@@ -82,6 +85,9 @@ and hereafter you can access all data and functions via 'solver'.
 In this solver, user functions are possible to extend the solver at certain parts, while keeping the overal C++ performance. User functions, which are added with SetUserFunction...(...), have the arguments (MainSolver, MainSystem, simulationSettings), except for ComputeNewtonUpdate which adds the initial flag as an additional argument and ComputeNewtonResidual, which returns the scalar residual.
 
 MainSolverImplicitSecondOrder has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -171,6 +177,9 @@ and hereafter you can access all data and functions via 'solver'.
 In this solver, no user functions are possible, but you can use SolverImplicitSecondOrder instead (turning off Newton gives explicit scheme ...).
 
 MainSolverExplicit has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 140 | 1.12.146 |
+| 1.12 | Metheney | 142 | 1.12.148 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.148** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` parameter tables: the symbol in the name column, and columns squeezed in the PDF (#2741)
+  - description: The maintainer, 2026-09-29: (1) the symbol of a parameter, e.g. the force f of LoadForceVector, is appended to the name in the parameter tables; it belongs at the very beginning of the description, '(symbol: f) ', where it stays visible when a column is added or the name column is narrow. (2) In the PDF, a table with long descriptions gets name, type and default value columns of a few letters, because LaTeX sizes the columns by content; the parameter tables and the similar ones need minimum widths in the PDF. revision2026b step RG13.5.0.8.
+  - **notes:** In the parameter tables of the reference manual the symbol of a parameter opens its description, '(symbol: f)'; in the PDF the columns of these tables have fixed widths, so that a long description no longer squeezes the name, type and default value.
+  - date resolved: **2026-09-29 14:26**, date raised: 2026-09-29
+- **1.12.147** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` MarkerSuperElementRigid and MarkerKinematicTreeRigid keep text in HTML comments (#2738)
+  - description: The detailed descriptions of MarkerSuperElementRigid and MarkerKinematicTreeRigid carry tables and equations inside HTML comments (\<!-- ... --\>, remains of the LaTeX conversion), which are in the definition and on no page. Each part is either restored as Markdown, checked against the C++, or deleted. Left open by revision2026b step RG13.4 (\#2721); revision2026b step RG13.5.3.1.
+  - **notes:** MarkerKinematicTreeRigid has a full description - its quantities from the link frame, the Jacobians of revolute and prismatic joints and the generalized forces -, and MarkerSuperElementRigid says how rotationsExponentialMap changes its rotation matrix and angular velocity.
+  - date resolved: **2026-09-29 14:26**, date raised: 2026-09-29
 - **1.12.146** `DOCU` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` item pages: which Create functions add the item, and the plainest examples first (#2737)
   - description: Left open by the development documents of revision2026b step RG13.4 (\#2721), folded into definitions/README.md in RG13.4.6: (1) each item page names the Create functions that add it, and each Create function names the items it adds - measured by running each Create function on a small model, because a static scan misses what an argument selects (CreateRigidBody makes one of four nodes, CreateForce one of two markers); open whether it runs inside generate or writes a JSON file the emitter reads; (2) the examples and test models of a page, today up to 129 links in file order, with the five plainest (shortest) first. revision2026b step RG13.5.0.6.
   - **notes:** The page of an object or load that a Create function adds says so before its parameters - 'Simpler: mbs.CreateRigidBody adds this item, with what it needs, in one call' -, and the pages of the point mass and rigid body items and of all sensors list a few plain examples, tutorials first, instead of every script that names the item.

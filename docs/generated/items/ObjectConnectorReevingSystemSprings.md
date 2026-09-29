@@ -16,26 +16,32 @@ A rD reeving system defined by a list of torque-free and friction-free sheaves o
 
 The parameters of the item; in a dictionary, its type is 'ConnectorReevingSystemSprings':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** $[m_0, \, m_1, \, \ldots, \, m_{nr-1},\, m_{c0}, \, m_{c1}]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of position or rigid body markers used in reeving system and optional two coordinate markers ($m_{c0}, \, m_{c1}$); the first marker $m_0$ and the last rigid body marker $m_{nr-1}$ represent the ends of the rope and are directly connected to a position; the markers $m_1, \, \ldots, \, m_{nr-2}$ can be connected to sheaves, for which a radius and an axis can be prescribed. The coordinate markers are optional and represent prescribed length at the rope ends (marker $m_{c0}$ is added length at start, marker $m_{c1}$ is added length at end of the rope in the reeving system) |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[m_0, \, m_1, \, \ldots, \, m_{nr-1},\, m_{c0}, \, m_{c1}]\tp$) list of position or rigid body markers used in reeving system and optional two coordinate markers ($m_{c0}, \, m_{c1}$); the first marker $m_0$ and the last rigid body marker $m_{nr-1}$ represent the ends of the rope and are directly connected to a position; the markers $m_1, \, \ldots, \, m_{nr-2}$ can be connected to sheaves, for which a radius and an axis can be prescribed. The coordinate markers are optional and represent prescribed length at the rope ends (marker $m_{c0}$ is added length at start, marker $m_{c1}$ is added length at end of the rope in the reeving system) |
 | **hasCoordinateMarkers** | Bool |  | False | flag, which determines, the list of markers (markerNumbers) contains two coordinate markers at the end of the list, representing the prescribed change of length at both ends |
-| **coordinateFactors** $[f_0,\, f_1]\tp$ | Vector2D | 2 | [1,1] | factors which are multiplied with the values of coordinate markers; this can be used, e.g., to change directions or to transform rotations (revolutions of a sheave) into change of length |
-| **stiffnessPerLength** $EA$ | UReal |  | 0. | stiffness per length [SI:N/m/m] of rope; in case of cross section $A$ and Young's modulus $E$, this parameter results in $E\cdot A$; the effective stiffness of the reeving system is computed as $EA/L$ in which $L$ is the current length of the rope |
-| **dampingPerLength** $DA$ | UReal |  | 0. | axial damping per length [SI:N/(m/s)/m] of rope; the effective damping coefficient of the reeving system is computed as $DA/L$ in which $L$ is the current length of the rope |
-| **dampingTorsional** $DT$ | UReal |  | 0. | torsional damping [SI:Nms] between sheaves; this effect can damp rotations around the rope axis, pairwise between sheaves; this parameter is experimental |
-| **dampingShear** $DS$ | UReal |  | 0. | damping of shear motion [SI:Ns] between sheaves; this effect can damp motion perpendicular to the rope between each pair of sheaves; this parameter is experimental |
-| **regularizationForce** $F_{reg}$ | Real |  | 0.1 | small regularization force [SI:N] in order to avoid large compressive forces; this regularization force can either be $<0$ (using a linear tension/compression spring model) or $>0$, which restricts forces in the rope to be always $\ge -F_{reg}$. Note that smaller forces lead to problems in implicit integrators and smaller time steps. For explicit integrators, this force can be chosen close to zero. |
-| **referenceLength** $L_{ref}$ | Real |  | 0. | reference length for computation of roped force |
-| **sheavesAxes** $\lv_a = [\LU{m0}{\av_0},\, \LU{m1}{\av_1},\, \ldots ] in [\Rcal^{3}, ...]$ | Vector3DList |  | [] | list of local vectors axes of sheaves; vectors refer to rigid body markers given in list of markerNumbers; first and last axes are ignored, as they represent the attachment of the rope ends |
-| **sheavesRadii** $\lv_r = [r_0,\, r_1,\, \ldots]\tp \in \Rcal^{n}$ | Vector |  | [] | radius for each sheave, related to list of markerNumbers and list of sheaveAxes; first and last radii must always be zero. |
+| **coordinateFactors** | Vector2D | 2 | [1,1] | (symbol: $[f_0,\, f_1]\tp$) factors which are multiplied with the values of coordinate markers; this can be used, e.g., to change directions or to transform rotations (revolutions of a sheave) into change of length |
+| **stiffnessPerLength** | UReal |  | 0. | (symbol: $EA$) stiffness per length [SI:N/m/m] of rope; in case of cross section $A$ and Young's modulus $E$, this parameter results in $E\cdot A$; the effective stiffness of the reeving system is computed as $EA/L$ in which $L$ is the current length of the rope |
+| **dampingPerLength** | UReal |  | 0. | (symbol: $DA$) axial damping per length [SI:N/(m/s)/m] of rope; the effective damping coefficient of the reeving system is computed as $DA/L$ in which $L$ is the current length of the rope |
+| **dampingTorsional** | UReal |  | 0. | (symbol: $DT$) torsional damping [SI:Nms] between sheaves; this effect can damp rotations around the rope axis, pairwise between sheaves; this parameter is experimental |
+| **dampingShear** | UReal |  | 0. | (symbol: $DS$) damping of shear motion [SI:Ns] between sheaves; this effect can damp motion perpendicular to the rope between each pair of sheaves; this parameter is experimental |
+| **regularizationForce** | Real |  | 0.1 | (symbol: $F_{reg}$) small regularization force [SI:N] in order to avoid large compressive forces; this regularization force can either be $<0$ (using a linear tension/compression spring model) or $>0$, which restricts forces in the rope to be always $\ge -F_{reg}$. Note that smaller forces lead to problems in implicit integrators and smaller time steps. For explicit integrators, this force can be chosen close to zero. |
+| **referenceLength** | Real |  | 0. | (symbol: $L_{ref}$) reference length for computation of roped force |
+| **sheavesAxes** | Vector3DList |  | [] | (symbol: $\lv_a = [\LU{m0}{\av_0},\, \LU{m1}{\av_1},\, \ldots ] in [\Rcal^{3}, ...]$) list of local vectors axes of sheaves; vectors refer to rigid body markers given in list of markerNumbers; first and last axes are ignored, as they represent the attachment of the rope ends |
+| **sheavesRadii** | Vector |  | [] | (symbol: $\lv_r = [r_0,\, r_1,\, \ldots]\tp \in \Rcal^{n}$) radius for each sheave, related to list of markerNumbers and list of sheaveAxes; first and last radii must always be zero. |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorReevingSystemSprings |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectConnectorReevingSystemSprings`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -46,6 +52,9 @@ The parameters of `VObjectConnectorReevingSystemSprings`, given as `visualizatio
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

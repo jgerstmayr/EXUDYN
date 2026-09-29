@@ -23,17 +23,23 @@ A spherical joint, which constrains the relative translation between two positio
 
 The parameters of the item; in a dictionary, its type is 'JointSpherical':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | list of markers used in connector; $m1$ is the moving coin rigid body and $m0$ is the marker for the ground body, which use the localPosition=[0,0,0] for this marker! |
-| **constrainedAxes** $\jv=[j_0,\,\ldots,\,j_2]$ | ArrayIndex | 3 | [1,1,1] | flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis |
+| **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector; $m1$ is the moving coin rigid body and $m0$ is the marker for the ground body, which use the localPosition=[0,0,0] for this marker! |
+| **constrainedAxes** | ArrayIndex | 3 | [1,1,1] | (symbol: $\jv=[j_0,\,\ldots,\,j_2]$) flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectJointSpherical |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectJointSpherical`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -44,6 +50,9 @@ The parameters of `VObjectJointSpherical`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

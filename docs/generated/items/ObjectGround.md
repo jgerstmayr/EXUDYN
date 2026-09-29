@@ -18,16 +18,22 @@ A ground object behaving like a rigid body, but having no degrees of freedom. Us
 
 The parameters of the item; in a dictionary, its type is 'Ground':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **referencePosition** $\pRefG$ | Vector3D | 3 | [0.,0.,0.] | reference point = reference position for ground object; local position is added on top of reference position for a ground object |
-| **referenceRotation** $\LU{0b}{\Rot} \in \Rcal^{3 \times 3}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates |
+| **referencePosition** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\pRefG$) reference point = reference position for ground object; local position is added on top of reference position for a ground object |
+| **referenceRotation** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{0b}{\Rot} \in \Rcal^{3 \times 3}$) the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates |
 | **visualization** | VObjectGround |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectGround`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -38,6 +44,9 @@ The parameters of `VObjectGround`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

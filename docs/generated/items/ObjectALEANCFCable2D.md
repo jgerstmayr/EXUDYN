@@ -18,28 +18,34 @@ A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially 
 
 The parameters of the item; in a dictionary, its type is 'ALEANCFCable2D':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsLength** $L$ | UReal |  | 0. | [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
-| **physicsMassPerLength** $\rho A$ | UReal |  | 0. | [SI:kg/m] total mass per length of beam (including axially moving parts / fluid) |
+| **physicsLength** | UReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
+| **physicsMassPerLength** | UReal |  | 0. | (symbol: $\rho A$) [SI:kg/m] total mass per length of beam (including axially moving parts / fluid) |
 | **physicsMovingMassFactor** | UReal |  | 1. | this factor denotes the amount of $\rho A$ which is moving; physicsMovingMassFactor=1 means, that all mass is moving; physicsMovingMassFactor=0 means, that no mass is moving; factor can be used to simulate e.g. pipe conveying fluid, in which $\rho A$ is the mass of the pipe+fluid, while $physicsMovingMassFactor \cdot \rho A$ is the mass per unit length of the fluid |
-| **physicsBendingStiffness** $EI$ | UReal |  | 0. | [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature |
-| **physicsAxialStiffness** $EA$ | UReal |  | 0. | [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = \|\rv^\prime\|-1$ is the axial strain |
-| **physicsBendingDamping** $d_{K}$ | UReal |  | 0. | [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$ |
-| **physicsAxialDamping** $d_{\varepsilon}$ | UReal |  | 0. | [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$ |
-| **physicsReferenceAxialStrain** $\varepsilon_0$ | Real |  | 0. | [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value |
-| **physicsReferenceCurvature** $\kappa_0$ | Real |  | 0. | [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value |
+| **physicsBendingStiffness** | UReal |  | 0. | (symbol: $EI$) [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature |
+| **physicsAxialStiffness** | UReal |  | 0. | (symbol: $EA$) [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = \|\rv^\prime\|-1$ is the axial strain |
+| **physicsBendingDamping** | UReal |  | 0. | (symbol: $d_{K}$) [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$ |
+| **physicsAxialDamping** | UReal |  | 0. | (symbol: $d_{\varepsilon}$) [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$ |
+| **physicsReferenceAxialStrain** | Real |  | 0. | (symbol: $\varepsilon_0$) [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value |
+| **physicsReferenceCurvature** | Real |  | 0. | (symbol: $\kappa_0$) [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value |
 | **physicsUseCouplingTerms** | Bool |  | True | true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then) |
 | **physicsAddALEvariation** | Bool |  | True | true: correct case, where additional terms related to variation of strain and curvature are added |
 | **nodeNumbers** | NodeIndex3 | 3 | [invalid (-1), invalid (-1), invalid (-1)] | two node numbers ANCF cable element, third node=ALE GenericODE2 node |
 | **useReducedOrderIntegration** | Index |  | 0 | 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments |
-| **strainIsRelativeToReference** $f\cRef$ | Real |  | 0. | if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1. |
+| **strainIsRelativeToReference** | Real |  | 0. | (symbol: $f\cRef$) if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1. |
 | **visualization** | VObjectALEANCFCable2D |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectALEANCFCable2D`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -50,6 +56,9 @@ The parameters of `VObjectALEANCFCable2D`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

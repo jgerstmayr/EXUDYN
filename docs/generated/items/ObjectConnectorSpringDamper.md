@@ -19,22 +19,28 @@ An simple spring-damper element with additional force, connecting to position-ba
 
 The parameters of the item; in a dictionary, its type is 'ConnectorSpringDamper':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
-| **referenceLength** $L_0$ | UReal |  | 0. | reference length [SI:m] of spring |
-| **stiffness** $k$ | UReal |  | 0. | stiffness [SI:N/m] of spring; force acts against (length-initialLength) |
-| **damping** $d$ | UReal |  | 0. | damping [SI:N/(m s)] of damper; force acts against d/dt(length) |
-| **force** $f_{a}$ | Real |  | 0. | added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression; can be used to model actuator force |
-| **velocityOffset** $\dot L_0$ | Real |  | 0. | velocity offset [SI:m/s] of damper, being equivalent to time change of reference length |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
+| **referenceLength** | UReal |  | 0. | (symbol: $L_0$) reference length [SI:m] of spring |
+| **stiffness** | UReal |  | 0. | (symbol: $k$) stiffness [SI:N/m] of spring; force acts against (length-initialLength) |
+| **damping** | UReal |  | 0. | (symbol: $d$) damping [SI:N/(m s)] of damper; force acts against d/dt(length) |
+| **force** | Real |  | 0. | (symbol: $f_{a}$) added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression; can be used to model actuator force |
+| **velocityOffset** | Real |  | 0. | (symbol: $\dot L_0$) velocity offset [SI:m/s] of damper, being equivalent to time change of reference length |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
-| **springForceUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalarIndexScalar5 |  | 0 | A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below |
+| **springForceUserFunction** | PyFunctionMbsScalarIndexScalar5 |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below |
 | **visualization** | VObjectConnectorSpringDamper |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectConnectorSpringDamper`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -45,6 +51,9 @@ The parameters of `VObjectConnectorSpringDamper`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

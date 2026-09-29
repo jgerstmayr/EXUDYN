@@ -17,24 +17,30 @@ A constraint which constrains the coordinate vectors of two markers Marker[Node|
 
 The parameters of the item; in a dictionary, its type is 'ConnectorCoordinateVector':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
-| **scalingMarker0** $\Xm_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$ | NumpyMatrix |  | [] | linear scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format |
-| **scalingMarker1** $\Xm_{m1} \in \Rcal^{n_{ae} \times n_{q_{m1}}}$ | NumpyMatrix |  | [] | linear scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format |
-| **quadraticTermMarker0** $\Ym_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$ | NumpyMatrix |  | [] | quadratic scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format |
-| **quadraticTermMarker1** $\Ym_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$ | NumpyMatrix |  | [] | quadratic scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format |
-| **offset** $\vv_\mathrm{off} \in \Rcal^{n_{ae}}$ | NumpyVector |  | [] | offset added to constraint equation; only active, if no userFunction is defined |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
+| **scalingMarker0** | NumpyMatrix |  | [] | (symbol: $\Xm_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$) linear scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format |
+| **scalingMarker1** | NumpyMatrix |  | [] | (symbol: $\Xm_{m1} \in \Rcal^{n_{ae} \times n_{q_{m1}}}$) linear scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format |
+| **quadraticTermMarker0** | NumpyMatrix |  | [] | (symbol: $\Ym_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$) quadratic scaling matrix for coordinate vector of marker 0; matrix provided in Python numpy format |
+| **quadraticTermMarker1** | NumpyMatrix |  | [] | (symbol: $\Ym_{m0} \in \Rcal^{n_{ae} \times n_{q_{m0}}}$) quadratic scaling matrix for coordinate vector of marker 1; matrix provided in Python numpy format |
+| **offset** | NumpyVector |  | [] | (symbol: $\vv_\mathrm{off} \in \Rcal^{n_{ae}}$) offset added to constraint equation; only active, if no userFunction is defined |
 | **velocityLevel** | Bool |  | False | If true: connector constrains velocities (only works for {ref}`ODE2 <ODE2>` coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored |
-| **constraintUserFunction** $\cv_{user} \in \Rcal^{n_{ae}}$ | PyFunctionVectorMbsScalarIndex2VectorBool |  | 0 | A Python user function which computes the constraint equations; to define the number of algebraic equations, set scalingMarker0 as a numpy.zeros((nAE,1)) array with nAE being the number algebraic equations; see description below |
-| **jacobianUserFunction** $\Jm_{user} \in \Rcal^{(n_{q_{m0}}+n_{q_{m1}}) \times n_{ae}}$ | PyFunctionMatrixContainerMbsScalarIndex2VectorBool |  | 0 | A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times $f_{ODE2}$) and w.r.t. the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below |
+| **constraintUserFunction** | PyFunctionVectorMbsScalarIndex2VectorBool |  | 0 | (symbol: $\cv_{user} \in \Rcal^{n_{ae}}$) A Python user function which computes the constraint equations; to define the number of algebraic equations, set scalingMarker0 as a numpy.zeros((nAE,1)) array with nAE being the number algebraic equations; see description below |
+| **jacobianUserFunction** | PyFunctionMatrixContainerMbsScalarIndex2VectorBool |  | 0 | (symbol: $\Jm_{user} \in \Rcal^{(n_{q_{m0}}+n_{q_{m1}}) \times n_{ae}}$) A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times $f_{ODE2}$) and w.r.t. the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorCoordinateVector |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectConnectorCoordinateVector`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -44,6 +50,9 @@ The parameters of `VObjectConnectorCoordinateVector`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

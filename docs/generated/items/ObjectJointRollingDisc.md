@@ -19,20 +19,26 @@ A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0
 
 The parameters of the item; in a dictionary, its type is 'JointRollingDisc':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | list of markers used in connector; $m0$ represents the ground and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point |
-| **constrainedAxes** $\jv=[j_0,\,\ldots,\,j_2]$ | ArrayIndex | 3 | [1,1,1] | flags, which determine which constraints are active, in which $j_0$ represents lateral motion, $j_1$ longitudinal (forward/backward) motion and $j_2$ represents the normal (contact) direction |
+| **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector; $m0$ represents the ground and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point |
+| **constrainedAxes** | ArrayIndex | 3 | [1,1,1] | (symbol: $\jv=[j_0,\,\ldots,\,j_2]$) flags, which determine which constraints are active, in which $j_0$ represents lateral motion, $j_1$ longitudinal (forward/backward) motion and $j_2$ represents the normal (contact) direction |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **discRadius** | PReal |  | 0 | defines the disc radius; **must be given**: the default is only a placeholder |
-| **discAxis** $\LU{m1}{\wv_{1}}, \;\; |\LU{m1}{\wv_{1}}| = 1$ | Vector3D | 3 | [1,0,0] | axis of disc defined in marker $m1$ frame |
-| **planeNormal** $\LU{m0}{\vv_{PN}}$ | Vector3D | 3 | [0,0,1] | normal to the contact / rolling plane defined in marker $m0$ coordinates |
+| **discAxis** | Vector3D | 3 | [1,0,0] | (symbol: $\LU{m1}{\wv_{1}}, \;\; |\LU{m1}{\wv_{1}}| = 1$) axis of disc defined in marker $m1$ frame |
+| **planeNormal** | Vector3D | 3 | [0,0,1] | (symbol: $\LU{m0}{\vv_{PN}}$) normal to the contact / rolling plane defined in marker $m0$ coordinates |
 | **visualization** | VObjectJointRollingDisc |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectJointRollingDisc`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -43,6 +49,9 @@ The parameters of `VObjectJointRollingDisc`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

@@ -17,23 +17,29 @@ An linear spring-damper element acting on relative translations along given axis
 
 The parameters of the item; in a dictionary, its type is 'ConnectorLinearSpringDamper':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** $[m0,\, m1]$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
-| **stiffness** $k$ | Real |  | 0. | torsional stiffness [SI:Nm/rad] against relative rotation |
-| **damping** $d$ | Real |  | 0. | torsional damping [SI:Nm/(rad/s)] |
-| **axisMarker0** $\LU{m0}{\dv}$ | Vector3D | 3 | [1,0,0] | local axis of spring-damper in marker 0 coordinates; this axis will co-move with marker $m0$; if marker m0 is attached to ground, the spring-damper represents linear equations |
-| **offset** $x_\mathrm{off}$ | Real |  | 0. | translational offset considered in the spring force calculation (this can be used as position control input!) |
-| **velocityOffset** $v_\mathrm{off}$ | Real |  | 0. | velocity offset considered in the damper force calculation (this can be used as velocity control input!) |
-| **force** $f_c$ | Real |  | 0. | additional constant force [SI:Nm] added to spring-damper; this can be used to prescribe a force between the two attached bodies (e.g., for actuation and control) |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,\, m1]$) list of markers used in connector |
+| **stiffness** | Real |  | 0. | (symbol: $k$) torsional stiffness [SI:Nm/rad] against relative rotation |
+| **damping** | Real |  | 0. | (symbol: $d$) torsional damping [SI:Nm/(rad/s)] |
+| **axisMarker0** | Vector3D | 3 | [1,0,0] | (symbol: $\LU{m0}{\dv}$) local axis of spring-damper in marker 0 coordinates; this axis will co-move with marker $m0$; if marker m0 is attached to ground, the spring-damper represents linear equations |
+| **offset** | Real |  | 0. | (symbol: $x_\mathrm{off}$) translational offset considered in the spring force calculation (this can be used as position control input!) |
+| **velocityOffset** | Real |  | 0. | (symbol: $v_\mathrm{off}$) velocity offset considered in the damper force calculation (this can be used as velocity control input!) |
+| **force** | Real |  | 0. | (symbol: $f_c$) additional constant force [SI:Nm] added to spring-damper; this can be used to prescribe a force between the two attached bodies (e.g., for actuation and control) |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
-| **springForceUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalarIndexScalar5 |  | 0 | A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in $m0$ coordinates, if activeConnector=True; see description below |
+| **springForceUserFunction** | PyFunctionMbsScalarIndexScalar5 |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in $m0$ coordinates, if activeConnector=True; see description below |
 | **visualization** | VObjectConnectorLinearSpringDamper |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectConnectorLinearSpringDamper`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -45,6 +51,9 @@ The parameters of `VObjectConnectorLinearSpringDamper`, given as `visualization`
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

@@ -17,6 +17,9 @@ A Marker attached to all coordinates of an object (currently only body is possib
 
 The parameters of the item; in a dictionary, its type is 'ObjectODE2Coordinates':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
@@ -26,6 +29,9 @@ The parameters of the item; in a dictionary, its type is 'ObjectODE2Coordinates'
 ## Visualization parameters
 
 The parameters of `VMarkerObjectODE2Coordinates`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

@@ -19,20 +19,26 @@ An 3D spring-damper element, providing springs and dampers in three (global) dir
 
 The parameters of the item; in a dictionary, its type is 'ConnectorCartesianSpringDamper':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
-| **stiffness** $\kv$ | Vector3D | 3 | [0.,0.,0.] | stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction |
-| **damping** $\dv$ | Vector3D | 3 | [0.,0.,0.] | damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction |
-| **offset** $\vv_{\mathrm{off}}$ | Vector3D | 3 | [0.,0.,0.] | offset between two springs |
-| **springForceUserFunction** $\mathrm{UF} \in \Rcal^3$ | PyFunctionVector3DmbsScalarIndexScalar4Vector3D |  | 0 | A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
+| **stiffness** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\kv$) stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction |
+| **damping** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\dv$) damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction |
+| **offset** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\vv_{\mathrm{off}}$) offset between two springs |
+| **springForceUserFunction** | PyFunctionVector3DmbsScalarIndexScalar4Vector3D |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^3$) A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorCartesianSpringDamper |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectConnectorCartesianSpringDamper`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -43,6 +49,9 @@ The parameters of `VObjectConnectorCartesianSpringDamper`, given as `visualizati
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

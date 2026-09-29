@@ -17,15 +17,18 @@ OBJECT UNDER CONSTRUCTION: A 3D thin Kirchhoff plate finite element based on the
 
 The parameters of the item; in a dictionary, its type is 'ANCFThinPlate':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsThickness** $h$ | NumpyVector |  | [] | [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients |
-| **physicsDensity** $\rho$ | UReal |  | 0. | [SI:kg/m$^3$] density of the plate, possibly averaged over thickness |
+| **physicsThickness** | NumpyVector |  | [] | (symbol: $h$) [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients |
+| **physicsDensity** | UReal |  | 0. | (symbol: $\rho$) [SI:kg/m$^3$] density of the plate, possibly averaged over thickness |
 | **physicsMassProportionalDamping** | Real |  | 0. | mass-proportional damping coefficient $\alpha$ [SI:1/s]; adds massmatrix proportional damping forces $\fv_d = \alpha \Mm \dot{\qv}$ |
-| **physicsStrainCoefficients** $\Dm_\varepsilon$ | Matrix3DList |  | [] | [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients |
-| **physicsCurvatureCoefficients** $\Dm_\kappa$ | Matrix3DList |  | [] | [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients |
-| **strainIsRelativeToReference** $f\cRef$ | Real |  | 1. | if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation |
+| **physicsStrainCoefficients** | Matrix3DList |  | [] | (symbol: $\Dm_\varepsilon$) [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients |
+| **physicsCurvatureCoefficients** | Matrix3DList |  | [] | (symbol: $\Dm_\kappa$) [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients |
+| **strainIsRelativeToReference** | Real |  | 1. | (symbol: $f\cRef$) if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation |
 | **slopesScalingX** | Vector4D | 4 | [-1.,-1.,-1.,-1.] | scaling of x-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances. |
 | **slopesScalingY** | Vector4D | 4 | [-1.,-1.,-1.,-1.] | scaling of y-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances. |
 | **nodeNumbers** | NodeIndex4 | 4 | [invalid (-1), invalid (-1), invalid (-1), invalid (-1)] | 4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)] |
@@ -36,6 +39,9 @@ The parameters of the item; in a dictionary, its type is 'ANCFThinPlate':
 
 The parameters of `VObjectANCFThinPlate`, given as `visualization`:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section |
@@ -44,6 +50,9 @@ The parameters of `VObjectANCFThinPlate`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

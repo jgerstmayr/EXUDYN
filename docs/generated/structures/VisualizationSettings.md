@@ -13,6 +13,9 @@ General settings for visualization that influence all windows, default values, a
 
 VSettingsGeneral has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `autoFitScene`<br>`SC.visualizationSettings.general.autoFitScene` | bool |  | True | automatically fit scene within startup after SC.renderer.Start() |
@@ -58,6 +61,9 @@ Advanced settings for contour plots.
 
 VSettingsContourAdvanced has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `colorBarPrecision`<br>`SC.visualizationSettings.contour.advanced.colorBarPrecision` | PInt |  | 4 | precision of floating point values shown in color bar; total number of digits used (max. 16) |
@@ -79,6 +85,9 @@ VSettingsContourAdvanced has the following items:
 Settings for contour plots; use these options to visualize field data, such as displacements, stresses, strains, etc. for bodies, nodes and finite elements.
 
 VSettingsContour has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -102,6 +111,9 @@ Visualization settings for nodes.
 
 VSettingsNodes has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `basisSize`<br>`SC.visualizationSettings.nodes.basisSize` | float |  | 0.2 | size of basis for nodes |
@@ -122,6 +134,9 @@ VSettingsNodes has the following items:
 Visualization settings for beam finite elements.
 
 VSettingsBeams has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -145,6 +160,9 @@ Visualization settings for plate/shell finite elements.
 
 VSettingsShells has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `drawSolid`<br>`SC.visualizationSettings.bodies.shells.drawSolid` | bool |  | True | if true: to draw plates/shells as 3D objects; false: only the element surface is drawn; equivalent to crossSectionFilled in beams |
@@ -158,6 +176,9 @@ VSettingsShells has the following items:
 Visualization settings for kinematic trees.
 
 VSettingsKinematicTree has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -174,6 +195,9 @@ VSettingsKinematicTree has the following items:
 Visualization settings for bodies.
 
 VSettingsBodies has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -194,6 +218,9 @@ VSettingsBodies has the following items:
 Visualization settings for connectors.
 
 VSettingsConnectors has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -217,6 +244,9 @@ Visualization settings for markers.
 
 VSettingsMarkers has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `defaultColor`<br>`SC.visualizationSettings.markers.defaultColor` | Float4 | 4 | [0.1,0.5,0.1,1.] | default RGBA color for markers; 4th value is alpha-transparency |
@@ -233,6 +263,9 @@ VSettingsMarkers has the following items:
 Visualization settings for loads.
 
 VSettingsLoads has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -254,6 +287,9 @@ VSettingsLoads has the following items:
 Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics.
 
 VSettingsTraces has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -285,6 +321,9 @@ Visualization settings for sensors.
 
 VSettingsSensors has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `traces`<br>`SC.visualizationSettings.sensors.traces` | VSettingsTraces |  |  | settings for showing (position/triad) sensor traces and vector plots in the render window |
@@ -302,6 +341,9 @@ VSettingsSensors has the following items:
 Global visualization settings for GeneralContact. This allows to easily switch on/off during visualization; also used for contact objects, such as ObjectContactSphereSphere or ObjectContactSphereTriangle.
 
 VSettingsContact has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -332,6 +374,9 @@ Settings for camera like perspective, marker tracking, clipping plane, etc. Note
 
 VSettingsCamera has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `cameraPosition`<br>`SC.visualizationSettings.view0.camera.cameraPosition`<br>`SC.visualizationSettings.view1.camera.cameraPosition`<br>`SC.visualizationSettings.view2.camera.cameraPosition`<br>`SC.visualizationSettings.view3.camera.cameraPosition` | Float3 | 3 | [0.,0.,0.] | if modelCentricView=True: offset to camera position in model view (and, if used, relative to tracked marker - instead of a tracked marker position, you could also just change the camera position in camera-centric views); camera rotation follows modelRotation in renderState |
@@ -355,6 +400,9 @@ Settings change scene representation (show edges, show faces, global transparenc
 
 VSettingsScene has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `drawCoordinateSystem`<br>`SC.visualizationSettings.view0.scene.drawCoordinateSystem`<br>`SC.visualizationSettings.view1.scene.drawCoordinateSystem`<br>`SC.visualizationSettings.view2.scene.drawCoordinateSystem`<br>`SC.visualizationSettings.view3.scene.drawCoordinateSystem` | UInt |  | 2 | 0 = no coordinate system shown, 1 = draw lines with text, 2 = draw arrows, 3 = draw arrows with text |
@@ -375,6 +423,9 @@ VSettingsScene has the following items:
 Settings for window that are individual to each view; in particular initial size, and behavior. Note that some of the settings are only used during creation of the window.
 
 VSettingsWindow has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -398,6 +449,9 @@ VSettingsWindow has the following items:
 Settings for view including camera, scene, window, and advanced options to setup a view or view window.
 
 VSettingsView has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -425,6 +479,9 @@ Settings related to dialogs (e.g., visualization settings dialog).
 
 VSettingsDialogs has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `alphaTransparency`<br>`SC.visualizationSettings.dialogs.alphaTransparency` | UFloat |  | 0.94 | alpha-transparency of dialogs; recommended range 0.7 (very transparent) - 1 (not transparent at all) |
@@ -446,6 +503,9 @@ Settings for rendering materials, in particular for the Raytracer (may be availa
 
 VSettingsMaterial has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `alpha`<br>`SC.visualizationSettings.raytracer.material.alpha` | UFloat |  | 1. | alpha-transparency, same as in alpha channel in RGBA colors; 1=opaque, 0=fully transparent; leads to extra rendering costs per transparent pixel |
@@ -466,6 +526,9 @@ Advanced settings for raytracer.
 
 VSettingsRaytracerAdvanced has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `backgroundColorReflections`<br>`SC.visualizationSettings.raytracer.advanced.backgroundColorReflections` | Float4 | 4 | [0.4,0.4,0.4,1.] | scene RGBA color for background that is hit by reflection material; while openGL.backgroundColor is used for rays that do not hit an object, this background may - if black or white - not be a suitable color for computing reflections; this is generally needed, as our scenes are usually not inside a closed geometry (like inside a room); this color is also used if maxReflectionDepth is reached |
@@ -484,6 +547,9 @@ VSettingsRaytracerAdvanced has the following items:
 Settings for raytracer (software renderer) which can be used as alternative to classic OpenGL rendering; this option may be erased in future in favor of a modern GPU rendering. To activate the raytracer, simply switch the enable flag to True. The raytracer uses CPU-based rendering and is therefore comparably slow (may take seconds to render one frame). Thus, take care with the window dimension (start with small window size like 400 x 300) and use openGL.multiSampling=1. Note that many parameters are used from openGL settings, like backgroundColor, lineWidth, multiSampling, shadow (only on/off), and lights. See the options to improve appearance and performance.
 
 VSettingsRaytracer has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -518,6 +584,9 @@ Advanced settings for openGL.
 
 VSettingsOpenGLAdvanced has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `clippingPlaneColor`<br>`SC.visualizationSettings.openGL.advanced.clippingPlaneColor` | Float4 | 4 | [0.7,0.5,0.5,0.] | RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object); see also view.camera for clipping plane options |
@@ -548,6 +617,9 @@ Settings for lights.
 
 VSettingsLight has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `constantAttenuation`<br>`SC.visualizationSettings.openGL.light.constantAttenuation` | float |  | 1. | constant attenuation coefficient of this light, this is a constant factor that attenuates the light source; attenuation factor = 1/(kc +kl*d + kq*d*d); (kc,kl,kq)=(1,0,0) means no attenuation; only used for lights, where last component of light position is 1 |
@@ -569,6 +641,9 @@ VSettingsLight has the following items:
 OpenGL settings for 2D and 3D rendering - with many settings also used for raytracer. For further details and backgrounds also see OpenGL 1.3 functionality on the web.
 
 VSettingsOpenGL has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -598,6 +673,9 @@ Functionality to export images of view0 to files (PNG or TGA format) which can b
 
 VSettingsExportImages has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `heightAlignment`<br>`SC.visualizationSettings.exportImages.heightAlignment` | PInt |  | 2 | alignment of exported image height; using a value of 2 helps to reduce problems with video conversion (additional horizontal lines are lost) |
@@ -616,6 +694,9 @@ VSettingsExportImages has the following items:
 Advanced settings for interactive.
 
 VSettingsInteractiveAdvanced has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
@@ -643,6 +724,9 @@ Functionality to interact with render window; includes special rotation and zoom
 
 VSettingsInteractive has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `advanced`<br>`SC.visualizationSettings.interactive.advanced` | VSettingsInteractiveAdvanced |  |  | advanced interactive visualization settings |
@@ -664,6 +748,9 @@ VSettingsInteractive has the following items:
 Top structure for all visualization settings in Exudyn.
 
 VisualizationSettings has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|

@@ -18,26 +18,32 @@ A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRig
 
 The parameters of the item; in a dictionary, its type is 'BeamGeometricallyExact2D':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** | ArrayNodeIndex |  | [] | two node numbers for beam element |
-| **physicsLength** $L$ | UReal |  | 0. | [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
-| **physicsMassPerLength** $\rho A$ | UReal |  | 0. | [SI:kg/m] mass per length of beam |
-| **physicsCrossSectionInertia** $\rho J$ | UReal |  | 0. | [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section |
-| **physicsBendingStiffness** $EI$ | UReal |  | 0. | [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature |
-| **physicsAxialStiffness** $EA$ | UReal |  | 0. | [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon$ is the axial strain |
-| **physicsShearStiffness** $GA$ | UReal |  | 0. | [SI:N] effective shear stiffness of beam, including stiffness correction |
-| **physicsBendingDamping** $d_{K}$ | UReal |  | 0. | [SI:Nm$^2$/s] viscous damping of bending deformation; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$ |
-| **physicsAxialDamping** $d_{\varepsilon}$ | UReal |  | 0. | [SI:N/s] viscous damping of axial deformation |
-| **physicsShearDamping** $d_{\gamma}$ | UReal |  | 0. | [SI:N/s] viscous damping of shear deformation |
-| **physicsReferenceCurvature** $\kappa_0$ | Real |  | 0. | [SI:1/m] reference curvature of beam (pre-deformation) of beam |
+| **physicsLength** | UReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
+| **physicsMassPerLength** | UReal |  | 0. | (symbol: $\rho A$) [SI:kg/m] mass per length of beam |
+| **physicsCrossSectionInertia** | UReal |  | 0. | (symbol: $\rho J$) [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section |
+| **physicsBendingStiffness** | UReal |  | 0. | (symbol: $EI$) [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature |
+| **physicsAxialStiffness** | UReal |  | 0. | (symbol: $EA$) [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon$ is the axial strain |
+| **physicsShearStiffness** | UReal |  | 0. | (symbol: $GA$) [SI:N] effective shear stiffness of beam, including stiffness correction |
+| **physicsBendingDamping** | UReal |  | 0. | (symbol: $d_{K}$) [SI:Nm$^2$/s] viscous damping of bending deformation; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$ |
+| **physicsAxialDamping** | UReal |  | 0. | (symbol: $d_{\varepsilon}$) [SI:N/s] viscous damping of axial deformation |
+| **physicsShearDamping** | UReal |  | 0. | (symbol: $d_{\gamma}$) [SI:N/s] viscous damping of shear deformation |
+| **physicsReferenceCurvature** | Real |  | 0. | (symbol: $\kappa_0$) [SI:1/m] reference curvature of beam (pre-deformation) of beam |
 | **includeReferenceRotations** | bool |  | False | if True, rotation of the cross section at the nodes includes node reference rotations (within referenceCoordinates of NodeRigidBody2D), which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the reference slope vector. This allows to easily share nodes among several beams with different reference cross section orientation (i.e., only the change of rotation counts). |
 | **visualization** | VObjectBeamGeometricallyExact2D |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectBeamGeometricallyExact2D`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -48,6 +54,9 @@ The parameters of `VObjectBeamGeometricallyExact2D`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

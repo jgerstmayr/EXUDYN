@@ -27,18 +27,24 @@ A revolute joint in 3D; constrains the position of two rigid body markers and th
 
 The parameters of the item; in a dictionary, its type is 'JointRevoluteZ':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
-| **rotationMarker0** $\LU{m0,J0}{\Rot}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0 |
-| **rotationMarker1** $\LU{m1,J1}{\Rot}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1 |
+| **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
+| **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{m0,J0}{\Rot}$) local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0 |
+| **rotationMarker1** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{m1,J1}{\Rot}$) local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1 |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectJointRevoluteZ |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectJointRevoluteZ`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -50,6 +56,9 @@ The parameters of `VObjectJointRevoluteZ`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

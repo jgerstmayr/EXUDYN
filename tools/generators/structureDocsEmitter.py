@@ -25,6 +25,7 @@ import io                                                               # noqa: 
 
 from structureModel import *                                            # noqa: E402,F403
 from autoGenerateHelper import LatexText2Markdown                      # noqa: E402
+from autoGenerateHelper import PdfColumnWidths, parameterTableWidths   # noqa: E402
 from latexToMarkdown import NormalizeHeadings                                    # noqa: E402
 
 
@@ -95,7 +96,8 @@ def StructureDocs(parseInfo, parameterList):
         #which looks for a tbody that is not there (#2592). So the
         #position is remembered and the header is taken back again if no row followed.
         tableStart = len(writer.sMarkdown)
-        writer.sMarkdown += ('\n| Name | type / function return type | size | default value / function '
+        writer.sMarkdown += '\n' + PdfColumnWidths(parameterTableWidths)
+        writer.sMarkdown += ('| Name | type / function return type | size | default value / function '
                           'args | description |\n|---|---|---|---|---|\n')
         headerEnd = len(writer.sMarkdown)
 

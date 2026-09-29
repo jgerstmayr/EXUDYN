@@ -18,6 +18,9 @@ A marker attached to the body mass; use this marker to apply a body-load (e.g. g
 
 The parameters of the item; in a dictionary, its type is 'BodyMass':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
@@ -27,6 +30,9 @@ The parameters of the item; in a dictionary, its type is 'BodyMass':
 ## Visualization parameters
 
 The parameters of `VMarkerBodyMass`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

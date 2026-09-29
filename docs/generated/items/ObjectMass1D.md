@@ -18,18 +18,24 @@ A 1D (translational) mass which is attached to Node1D. Note, that the mass does 
 
 The parameters of the item; in a dictionary, its type is 'Mass1D':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsMass** $m$ | UReal |  | 0. | mass [SI:kg] of mass |
-| **nodeNumber** $n0$ | NodeIndex |  | invalid (-1) | node number (type NodeIndex) for Node1D |
-| **referencePosition** $\LU{0}{\pRef_0}$ | Vector3D | 3 | [0.,0.,0.] | a reference position, used to transform the 1D coordinate to a position |
-| **referenceRotation** $\LU{0b}{\Rot_{0}} \in \Rcal^{3 \times 3}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates |
+| **physicsMass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of mass |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n0$) node number (type NodeIndex) for Node1D |
+| **referencePosition** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{0}{\pRef_0}$) a reference position, used to transform the 1D coordinate to a position |
+| **referenceRotation** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{0b}{\Rot_{0}} \in \Rcal^{3 \times 3}$) the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates |
 | **visualization** | VObjectMass1D |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectMass1D`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -39,6 +45,9 @@ The parameters of `VObjectMass1D`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

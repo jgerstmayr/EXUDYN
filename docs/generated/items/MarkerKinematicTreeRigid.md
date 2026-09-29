@@ -18,17 +18,23 @@ A position and orientation (rigid-body) marker attached to a kinematic tree. The
 
 The parameters of the item; in a dictionary, its type is 'KinematicTreeRigid':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
-| **objectNumber** $n_b$ | ObjectIndex |  | invalid (-1) | body number to which marker is attached to |
-| **linkNumber** $n_l$ | UInt |  | invalid (-1) | number of link in KinematicTree to which marker is attached to; **must be given**: the default is only a placeholder |
-| **localPosition** $\LU{l}{\bv}$ | Vector3D | 3 | [0.,0.,0.] | local (link-fixed) position of marker at link $n_l$, using the link ($n_l$) coordinate system |
+| **objectNumber** | ObjectIndex |  | invalid (-1) | (symbol: $n_b$) body number to which marker is attached to |
+| **linkNumber** | UInt |  | invalid (-1) | (symbol: $n_l$) number of link in KinematicTree to which marker is attached to; **must be given**: the default is only a placeholder |
+| **localPosition** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{l}{\bv}$) local (link-fixed) position of marker at link $n_l$, using the link ($n_l$) coordinate system |
 | **visualization** | VMarkerKinematicTreeRigid |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VMarkerKinematicTreeRigid`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -39,7 +45,38 @@ The parameters of `VMarkerKinematicTreeRigid`, given as `visualization`:
 
 ### Marker quantities
 
-More information will be added later. The marker computes jacobians according to `Jacobian` in `class Robot`.
+The link frame of link $n_l$ - its position $\LU{0}{\pv}_{l}$, rotation $\LU{0l}{\Rot}$, velocity
+$\LU{l}{\vv}_{l}$ and angular velocity $\LU{l}{\tomega}_{l}$ in link coordinates - comes from the joint
+transformations of `ObjectKinematicTree`, evaluated from the base to the link.
+
+| marker quantity | symbol | description |
+|---|---|---|
+| marker position | $\LU{0}{\pv}_{m} = \LU{0}{\pv}_{l} + \LU{0l}{\Rot} \LU{l}{\bv}$ | global position of the local position $\LU{l}{\bv}$ on link $n_l$ |
+| marker velocity | $\LU{0}{\vv}_{m} = \LU{0l}{\Rot} \left(\LU{l}{\vv}_{l} + \LU{l}{\tomega}_{l} \times \LU{l}{\bv} \right)$ | global velocity |
+| marker rotation matrix | $\LU{0l}{\Rot}$ | the rotation of the link frame; the local position does not rotate the marker |
+| marker angular velocity | $\LU{0}{\tomega}_{m} = \LU{0l}{\Rot} \LU{l}{\tomega}_{l}$ | global; the local angular velocity is $\LU{l}{\tomega}_{l}$ |
+
+### Jacobians
+
+The Jacobians have one column per link of the tree, $\qv$ being the joint coordinates. Only the link
+$n_l$ and its parents down to the base have non-zero columns; for such a link $j$, with its joint axis
+$\av_j$ and the origin $\LU{0}{\pv}_j$ of its joint frame, both global,
+
+$$
+\text{revolute:} \quad \Jm_{pos,j} = \av_j \times \left(\LU{0}{\pv}_{m} - \LU{0}{\pv}_j\right) , \quad \Jm_{rot,j} = \av_j ;
+\qquad
+\text{prismatic:} \quad \Jm_{pos,j} = \av_j , \quad \Jm_{rot,j} = \Null .
+$$
+
+A force and a torque on the marker act on the joint coordinates as
+$\Qm = \Jm_{pos}\tp \LU{0}{\fv} + \Jm_{rot}\tp \LU{0}{\ttau}$.
+
+The implementation gives a prismatic joint the column $\LU{0j}{\Rot}\av_j$ instead of $\av_j$ - the axis
+rotated twice -, which is wrong unless the joint frame leaves the axis unchanged (#2740).
+
+The derivative of the Jacobians is not implemented: a connector that needs it raises an error with this
+marker; `newton.numericalDifferentiation.forODE2connectors = True` computes the connector's Jacobian
+numerically instead.
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex), [`stiffFlyballGovernorKT.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py) (Ex), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM)

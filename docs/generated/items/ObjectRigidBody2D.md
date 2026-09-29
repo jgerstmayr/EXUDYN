@@ -20,18 +20,24 @@ A 2D rigid body which is attached to a rigid body 2D node. The body obtains coor
 
 The parameters of the item; in a dictionary, its type is 'RigidBody2D':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsMass** $m$ | UReal |  | 0. | mass [SI:kg] of rigid body |
-| **physicsInertia** $J$ | UReal |  | 0. | inertia [SI:kgm$^2$] of rigid body w.r.t. reference point; this is equal to the center of mass, if physicsCenterOfMass = 0 |
-| **physicsCenterOfMass** $\LU{b}{\bv_{COM}}$ | Vector2D | 2 | [0.,0.] | local position of {ref}`COM <COM>` relative to the body's reference point; if the vector of the {ref}`COM <COM>` is [0,0], the computation will not consider additional terms for the {ref}`COM <COM>` and it is faster |
-| **nodeNumber** $n_0$ | NodeIndex |  | invalid (-1) | node number (type NodeIndex) for 2D rigid body node |
+| **physicsMass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of rigid body |
+| **physicsInertia** | UReal |  | 0. | (symbol: $J$) inertia [SI:kgm$^2$] of rigid body w.r.t. reference point; this is equal to the center of mass, if physicsCenterOfMass = 0 |
+| **physicsCenterOfMass** | Vector2D | 2 | [0.,0.] | (symbol: $\LU{b}{\bv_{COM}}$) local position of {ref}`COM <COM>` relative to the body's reference point; if the vector of the {ref}`COM <COM>` is [0,0], the computation will not consider additional terms for the {ref}`COM <COM>` and it is faster |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_0$) node number (type NodeIndex) for 2D rigid body node |
 | **visualization** | VObjectRigidBody2D |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectRigidBody2D`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -42,6 +48,9 @@ The parameters of `VObjectRigidBody2D`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

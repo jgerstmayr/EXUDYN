@@ -19,17 +19,23 @@ A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beam
 
 The parameters of the item; in a dictionary, its type is 'RigidBodyRxyz':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
-| **referenceCoordinates** $\qv\cRef = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2]\tp\cRef = [\pv\tp\cRef,\,\tpsi\tp\cRef]\tp$ | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | reference coordinates (3 position and 3 xyz Euler angles) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints) |
-| **initialCoordinates** $\qv\cIni = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2]\tp\cIni = [\uv\tp\cIni,\,\tpsi\tp\cIni]\tp$ | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | initial displacement coordinates: ux,uy,uz and 3 Euler angles (xyz) relative to reference coordinates |
-| **initialVelocities** $\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tpsi\tp\cIni]\tp$ | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | initial velocity coordinate: time derivatives of ux,uy,uz and of 3 Euler angles (xyz) |
+| **referenceCoordinates** | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | (symbol: $\qv\cRef = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2]\tp\cRef = [\pv\tp\cRef,\,\tpsi\tp\cRef]\tp$) reference coordinates (3 position and 3 xyz Euler angles) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints) |
+| **initialCoordinates** | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | (symbol: $\qv\cIni = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2]\tp\cIni = [\uv\tp\cIni,\,\tpsi\tp\cIni]\tp$) initial displacement coordinates: ux,uy,uz and 3 Euler angles (xyz) relative to reference coordinates |
+| **initialVelocities** | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | (symbol: $\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tpsi\tp\cIni]\tp$) initial velocity coordinate: time derivatives of ux,uy,uz and of 3 Euler angles (xyz) |
 | **visualization** | VNodeRigidBodyRxyz |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VNodeRigidBodyRxyz`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -40,6 +46,9 @@ The parameters of `VNodeRigidBodyRxyz`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

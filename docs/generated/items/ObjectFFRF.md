@@ -19,34 +19,40 @@ Authors: Gerstmayr Johannes, Zwölfer Andreas
 
 The parameters of the item; in a dictionary, its type is 'FFRF':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **nodeNumbers** $\mathbf{n}\indf = [n_0,\,\ldots,\,n_{n_\mathrm{nf}}]\tp$ | ArrayNodeIndex |  | [] | node numbers which provide the coordinates for the object (consecutively as provided in this list); the $(n_\mathrm{nf}+1)$ nodes represent the nodes of the FE mesh (except for node 0); the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame |
-| **massMatrixFF** $\LU{b}{\Mm} \in \Rcal^{n\indf \times n\indf}$ | PyMatrixContainer |  | [] | body-fixed and ONLY flexible coordinates part of mass matrix of object given in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format |
-| **stiffnessMatrixFF** $\LU{b}{\Km} \in \Rcal^{n\indf \times n\indf}$ | PyMatrixContainer |  | [] | body-fixed and ONLY flexible coordinates part of stiffness matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format |
-| **dampingMatrixFF** $\LU{b}{\Dm} \in \Rcal^{n\indf \times n\indf}$ | PyMatrixContainer |  | [] | body-fixed and ONLY flexible coordinates part of damping matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format |
-| **forceVector** $\LU{0}{\fv} = [\LU{0}{\fv\indr},\; \LU{0}{\fv\indf}]\tp \in \Rcal^{n_c}$ | NumpyVector |  | [] | generalized, force vector added to RHS; the rigid body part $\fv_r$ is directly applied to rigid body coordinates while the flexible part $\fv\indf$ is transformed from global to local coordinates; note that this force vector only allows to add gravity forces for bodies with {ref}`COM <COM>` at the origin of the reference frame |
-| **forceUserFunction** $\fv_{user} =  [\LU{0}{\fv_{\mathrm{r},user}},\; \LU{b}{\fv_{\mathrm{f},user}}]\tp \in \Rcal^{n_c}$ | PyFunctionVectorMbsScalarIndex2Vector |  | 0 | A Python user function which computes the generalized user force vector for the {ref}`ODE2 <ODE2>` equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q_t; see description below |
-| **massMatrixUserFunction** $\Mm_{user} \in \Rcal^{n_c\times n_c}$ | PyFunctionMatrixMbsScalarIndex2Vector |  | 0 | A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the {ref}`FFRF <FFRF>` mass matrix; see description below |
+| **nodeNumbers** | ArrayNodeIndex |  | [] | (symbol: $\mathbf{n}\indf = [n_0,\,\ldots,\,n_{n_\mathrm{nf}}]\tp$) node numbers which provide the coordinates for the object (consecutively as provided in this list); the $(n_\mathrm{nf}+1)$ nodes represent the nodes of the FE mesh (except for node 0); the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame |
+| **massMatrixFF** | PyMatrixContainer |  | [] | (symbol: $\LU{b}{\Mm} \in \Rcal^{n\indf \times n\indf}$) body-fixed and ONLY flexible coordinates part of mass matrix of object given in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format |
+| **stiffnessMatrixFF** | PyMatrixContainer |  | [] | (symbol: $\LU{b}{\Km} \in \Rcal^{n\indf \times n\indf}$) body-fixed and ONLY flexible coordinates part of stiffness matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format |
+| **dampingMatrixFF** | PyMatrixContainer |  | [] | (symbol: $\LU{b}{\Dm} \in \Rcal^{n\indf \times n\indf}$) body-fixed and ONLY flexible coordinates part of damping matrix of object in Python numpy format (sparse (CSR) or dense, converted to sparse matrix); internally data is stored in triplet format |
+| **forceVector** | NumpyVector |  | [] | (symbol: $\LU{0}{\fv} = [\LU{0}{\fv\indr},\; \LU{0}{\fv\indf}]\tp \in \Rcal^{n_c}$) generalized, force vector added to RHS; the rigid body part $\fv_r$ is directly applied to rigid body coordinates while the flexible part $\fv\indf$ is transformed from global to local coordinates; note that this force vector only allows to add gravity forces for bodies with {ref}`COM <COM>` at the origin of the reference frame |
+| **forceUserFunction** | PyFunctionVectorMbsScalarIndex2Vector |  | 0 | (symbol: $\fv_{user} =  [\LU{0}{\fv_{\mathrm{r},user}},\; \LU{b}{\fv_{\mathrm{f},user}}]\tp \in \Rcal^{n_c}$) A Python user function which computes the generalized user force vector for the {ref}`ODE2 <ODE2>` equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q_t; see description below |
+| **massMatrixUserFunction** | PyFunctionMatrixMbsScalarIndex2Vector |  | 0 | (symbol: $\Mm_{user} \in \Rcal^{n_c\times n_c}$) A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the {ref}`FFRF <FFRF>` mass matrix; see description below |
 | **computeFFRFterms** | Bool |  | True | flag decides whether the standard {ref}`FFRF <FFRF>` terms are computed; use this flag for user-defined definition of {ref}`FFRF <FFRF>` terms in mass matrix and quadratic velocity vector |
 | **coordinateIndexPerNode** | ArrayIndex |  | [] | this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed |
 | **objectIsInitialized** | Bool |  | False | ALWAYS set to False! flag used to correctly initialize all {ref}`FFRF <FFRF>` matrices; as soon as this flag is False, internal (constant) {ref}`FFRF <FFRF>` matrices are recomputed during Assemble() |
-| **physicsMass** $m$ | UReal |  | 0. | total mass [SI:kg] of {ref}`FFRF <FFRF>` object, auto-computed from mass matrix $\LU{b}{\Mm}$ |
-| **physicsInertia** $J_r \in \Rcal^{3 \times 3}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix $\LU{b}{\Mm}$ |
-| **physicsCenterOfMass** $\LU{b}{\bv}_{COM}$ | Vector3D | 3 | [0.,0.,0.] | local position of center of mass ({ref}`COM <COM>`); auto-computed from mass matrix $\LU{b}{\Mm}$ |
-| **PHItTM** $\tPhi\indt\tp \in \Rcal^{n\indf \times 3}$ | NumpyMatrix |  | [] | projector matrix; may be removed in future |
-| **referencePositions** $\xv\cRef \in \Rcal^{n\indf}$ | NumpyVector |  | [] | vector containing the reference positions of all flexible nodes |
-| **tempVector** $\vv_{temp} \in \Rcal^{n\indf}$ | NumpyVector |  | [] | temporary vector |
-| **tempCoordinates** $\cv_{temp} \in \Rcal^{n\indf}$ | NumpyVector |  | [] | temporary vector containing coordinates |
-| **tempCoordinates_t** $\dot \cv_{temp} \in \Rcal^{n\indf}$ | NumpyVector |  | [] | temporary vector containing velocity coordinates |
-| **tempRefPosSkew** $\tilde\pv\indf \in \Rcal^{n\indf \times 3}$ | NumpyMatrix |  | [] | temporary matrix with skew symmetric local (deformed) node positions |
-| **tempVelSkew** $\dot{\tilde\cv}\indf \in \Rcal^{n\indf \times 3}$ | NumpyMatrix |  | [] | temporary matrix with skew symmetric local node velocities |
+| **physicsMass** | UReal |  | 0. | (symbol: $m$) total mass [SI:kg] of {ref}`FFRF <FFRF>` object, auto-computed from mass matrix $\LU{b}{\Mm}$ |
+| **physicsInertia** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $J_r \in \Rcal^{3 \times 3}$) inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix $\LU{b}{\Mm}$ |
+| **physicsCenterOfMass** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{b}{\bv}_{COM}$) local position of center of mass ({ref}`COM <COM>`); auto-computed from mass matrix $\LU{b}{\Mm}$ |
+| **PHItTM** | NumpyMatrix |  | [] | (symbol: $\tPhi\indt\tp \in \Rcal^{n\indf \times 3}$) projector matrix; may be removed in future |
+| **referencePositions** | NumpyVector |  | [] | (symbol: $\xv\cRef \in \Rcal^{n\indf}$) vector containing the reference positions of all flexible nodes |
+| **tempVector** | NumpyVector |  | [] | (symbol: $\vv_{temp} \in \Rcal^{n\indf}$) temporary vector |
+| **tempCoordinates** | NumpyVector |  | [] | (symbol: $\cv_{temp} \in \Rcal^{n\indf}$) temporary vector containing coordinates |
+| **tempCoordinates_t** | NumpyVector |  | [] | (symbol: $\dot \cv_{temp} \in \Rcal^{n\indf}$) temporary vector containing velocity coordinates |
+| **tempRefPosSkew** | NumpyMatrix |  | [] | (symbol: $\tilde\pv\indf \in \Rcal^{n\indf \times 3}$) temporary matrix with skew symmetric local (deformed) node positions |
+| **tempVelSkew** | NumpyMatrix |  | [] | (symbol: $\dot{\tilde\cv}\indf \in \Rcal^{n\indf \times 3}$) temporary matrix with skew symmetric local node velocities |
 | **visualization** | VObjectFFRF |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectFFRF`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -58,6 +64,9 @@ The parameters of `VObjectFFRF`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

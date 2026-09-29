@@ -12,12 +12,15 @@ A sensor attached to a link $n_l$ of an ObjectKinematicTree at a local position 
 
 The parameters of the item; in a dictionary, its type is 'KinematicTree':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | sensor's unique name |
 | **objectNumber** | ObjectIndex |  | invalid (-1) | object number of KinematicTree to which sensor is attached to |
-| **linkNumber** $n_l$ | UInt |  | invalid (-1) | number of link in KinematicTree to measure quantities; **must be given**: the default is only a placeholder |
-| **localPosition** $\LU{l}{\bv}$ | Vector3D | 3 | [0.,0.,0.] | local (link-fixed) position of sensor, defined in link ($n_l$) coordinate system |
+| **linkNumber** | UInt |  | invalid (-1) | (symbol: $n_l$) number of link in KinematicTree to measure quantities; **must be given**: the default is only a placeholder |
+| **localPosition** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{l}{\bv}$) local (link-fixed) position of sensor, defined in link ($n_l$) coordinate system |
 | **writeToFile** | Bool |  | True | True: write sensor output to file; flag is ignored (interpreted as False), if fileName='' |
 | **fileName** | String |  | '' | directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist |
 | **outputVariableType** | OutputVariableType |  | OutputVariableType::_None | OutputVariableType for sensor |
@@ -27,6 +30,9 @@ The parameters of the item; in a dictionary, its type is 'KinematicTree':
 ## Visualization parameters
 
 The parameters of `VSensorKinematicTree`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

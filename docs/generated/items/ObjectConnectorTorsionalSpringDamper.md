@@ -20,25 +20,31 @@ An torsional spring-damper element acting on relative rotations around Z-axis of
 
 The parameters of the item; in a dictionary, its type is 'ConnectorTorsionalSpringDamper':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
-| **nodeNumber** $n_d$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with 1 dataCoordinate for continuous rotation reconstruction; if this node is left to invalid index, it will not be used |
-| **stiffness** $k$ | Real |  | 0. | torsional stiffness [SI:Nm/rad] against relative rotation |
-| **damping** $d$ | Real |  | 0. | torsional damping [SI:Nm/(rad/s)] |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData with 1 dataCoordinate for continuous rotation reconstruction; if this node is left to invalid index, it will not be used |
+| **stiffness** | Real |  | 0. | (symbol: $k$) torsional stiffness [SI:Nm/rad] against relative rotation |
+| **damping** | Real |  | 0. | (symbol: $d$) torsional damping [SI:Nm/(rad/s)] |
 | **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 0; transforms joint into marker coordinates |
 | **rotationMarker1** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 1; transforms joint into marker coordinates |
-| **offset** $\theta_\mathrm{off}$ | Real |  | 0. | rotational offset considered in the spring torque calculation (this can be used as rotation control input!) |
-| **velocityOffset** $\omega_\mathrm{off}$ | Real |  | 0. | angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!) |
-| **torque** $\tau_c$ | Real |  | 0. | additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control) |
+| **offset** | Real |  | 0. | (symbol: $\theta_\mathrm{off}$) rotational offset considered in the spring torque calculation (this can be used as rotation control input!) |
+| **velocityOffset** | Real |  | 0. | (symbol: $\omega_\mathrm{off}$) angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!) |
+| **torque** | Real |  | 0. | (symbol: $\tau_c$) additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control) |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
-| **springTorqueUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalarIndexScalar5 |  | 0 | A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below |
+| **springTorqueUserFunction** | PyFunctionMbsScalarIndexScalar5 |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below |
 | **visualization** | VObjectConnectorTorsionalSpringDamper |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectConnectorTorsionalSpringDamper`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -49,6 +55,9 @@ The parameters of `VObjectConnectorTorsionalSpringDamper`, given as `visualizati
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

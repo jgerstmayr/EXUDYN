@@ -19,18 +19,24 @@ Load with (3D) force vector; attached to position-based marker.
 
 The parameters of the item; in a dictionary, its type is 'ForceVector':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | load's unique name |
 | **markerNumber** | MarkerIndex |  | invalid (-1) | marker's number to which load is applied |
-| **loadVector** $\fv$ | Vector3D | 3 | [0.,0.,0.] | vector-valued load [SI:N]; in case of a user function, this vector is ignored |
+| **loadVector** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\fv$) vector-valued load [SI:N]; in case of a user function, this vector is ignored |
 | **bodyFixed** | Bool |  | False | if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used |
-| **loadVectorUserFunction** $\mathrm{UF} \in \Rcal^3$ | PyFunctionVector3DmbsScalarVector3D |  | 0 | A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object |
+| **loadVectorUserFunction** | PyFunctionVector3DmbsScalarVector3D |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^3$) A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object |
 | **visualization** | VLoadForceVector |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VLoadForceVector`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

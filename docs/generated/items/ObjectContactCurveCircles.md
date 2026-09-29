@@ -18,20 +18,23 @@ A contact model between a curve defined by piecewise segments and a set of circl
 
 The parameters of the item; in a dictionary, its type is 'ContactCurveCircles':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m_{c0},m_{c1},\ldots]\tp$ | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | list of $n_c+1$ markers; marker $m0$ represents the marker carrying the curve; all other markers represent centers of $n_c$ circles, used in connector |
-| **nodeNumber** $n_d$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with nDataVariablesPerSegment dataCoordinates per segment, needed for discontinuous iteration; data variables contain values from last PostNewton iteration: data[0+3*i] is the circle number, data[1+3*i] is the gap, data[2+3*i] is the tangential velocity (and thus contains information if it is stick or slip) |
-| **circlesRadii** $[r_{c0},r_{c1}, \ldots]\tp \in \Rcal^{n_c}$ | NumpyVector |  | [] | Vector containing radii of $n_c$ circles [SI:m]; number according to size of markerNumbers-1 |
-| **segmentsData** $\Dm \in \Rcal^{n_s \times 4}$ | PyMatrixContainer |  | [] | matrix containing a set of two planar point coordinates in each row, representing segments attached to marker $m0$ and undergoing contact with the circles; for segment $s0$ row 0 reads $[p_{0x,s0},\,p_{0y,s0},\,p_{1x,s0},\,p_{1y,s0}]$; note that the segments must be ordered such that going from $\pv_0$ to $\pv_1$, the exterior lies on the right (positive) side. MatrixContainer has to be provided in dense mode! |
-| **polynomialData** $\Pm \in \Rcal^{n_s \times n_p}$ | PyMatrixContainer |  | [] | matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode! |
+| **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m_{c0},m_{c1},\ldots]\tp$) list of $n_c+1$ markers; marker $m0$ represents the marker carrying the curve; all other markers represent centers of $n_c$ circles, used in connector |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData with nDataVariablesPerSegment dataCoordinates per segment, needed for discontinuous iteration; data variables contain values from last PostNewton iteration: data[0+3*i] is the circle number, data[1+3*i] is the gap, data[2+3*i] is the tangential velocity (and thus contains information if it is stick or slip) |
+| **circlesRadii** | NumpyVector |  | [] | (symbol: $[r_{c0},r_{c1}, \ldots]\tp \in \Rcal^{n_c}$) Vector containing radii of $n_c$ circles [SI:m]; number according to size of markerNumbers-1 |
+| **segmentsData** | PyMatrixContainer |  | [] | (symbol: $\Dm \in \Rcal^{n_s \times 4}$) matrix containing a set of two planar point coordinates in each row, representing segments attached to marker $m0$ and undergoing contact with the circles; for segment $s0$ row 0 reads $[p_{0x,s0},\,p_{0y,s0},\,p_{1x,s0},\,p_{1y,s0}]$; note that the segments must be ordered such that going from $\pv_0$ to $\pv_1$, the exterior lies on the right (positive) side. MatrixContainer has to be provided in dense mode! |
+| **polynomialData** | PyMatrixContainer |  | [] | (symbol: $\Pm \in \Rcal^{n_s \times n_p}$) matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode! |
 | **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the $x-y$-plane |
-| **dynamicFriction** $\mu_d$ | UReal |  | 0. | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
-| **frictionProportionalZone** $v_{reg}$ | UReal |  | 0.001 | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
-| **contactStiffness** $k_c$ | Real |  | 0. | normal contact stiffness [SI:N/(m*m)] |
-| **contactDamping** $d_c$ | Real |  | 0. | linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care. |
-| **contactModel** $m_\mathrm{contact}$ | UInt |  | 0 | number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; contact force is computed from $l_\mathrm{seg}\left(p \cdot \cdot k_c + \dot p \cdot d_c \right)$ as long as $p>0$; while this is numerically more stable, it gives jumps in forces when sliding over contact geometry 1) contact force proportional to integral over penetration area of circle with segments, giving a smoother contact force when sliding over geometry; |
+| **dynamicFriction** | UReal |  | 0. | (symbol: $\mu_d$) dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
+| **frictionProportionalZone** | UReal |  | 0.001 | (symbol: $v_{reg}$) limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
+| **contactStiffness** | Real |  | 0. | (symbol: $k_c$) normal contact stiffness [SI:N/(m*m)] |
+| **contactDamping** | Real |  | 0. | (symbol: $d_c$) linear normal contact damping [SI:N/(m s)]; this damping is a simplification of real contact dissipation and should be used with care. |
+| **contactModel** | UInt |  | 0 | (symbol: $m_\mathrm{contact}$) number of contact model: 0) linear model for stiffness and damping, only proportional to penetration; contact force is computed from $l_\mathrm{seg}\left(p \cdot \cdot k_c + \dot p \cdot d_c \right)$ as long as $p>0$; while this is numerically more stable, it gives jumps in forces when sliding over contact geometry 1) contact force proportional to integral over penetration area of circle with segments, giving a smoother contact force when sliding over geometry; |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **gapPerSegment** | NumpyVector |  | [] | temporary vector for computed gap |
 | **gapPerSegment_t** | NumpyVector |  | [] | temporary vector for computed gap velocity |
@@ -43,6 +46,9 @@ The parameters of the item; in a dictionary, its type is 'ContactCurveCircles':
 
 The parameters of `VObjectContactCurveCircles`, given as `visualization`:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; draws curve and circles with given radii; uses visualizationSettings circleTiling for circles and circleTiling/2 for tiling of non-straight segments |
@@ -51,6 +57,9 @@ The parameters of `VObjectContactCurveCircles`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

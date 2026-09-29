@@ -1152,6 +1152,13 @@ find its file and line, on every raise).
     object to write their equations. Either an object takes it (its description names linear state
     space systems) or it is deprecated. Its page has no MiniExample until then.
 
+<a id="rg4-13"></a>
+**RG4.13** *(group RG4; from RG13.5.3.1, 2026-09-29)* **`ObjectKinematicTree`: the position Jacobian of
+    a prismatic joint rotates the axis twice** (#2740). `CObjectKinematicTree::ComputeJacobian` sets the
+    column to `rotJoint*axis` where `axis` is already global. Measured: a force along a prismatic axis
+    behind a revolute joint at 90 degrees moves nothing. Wrong generalized forces for every marker,
+    load and connector behind a rotated prismatic joint. One line and a test model; **high priority**.
+
 <a id="rg4-2"></a>
 **RG4.2** **DONE 2026-09-26** (#2413) — [log](exudynRevisionLog2026b.md#rg4-2) —
     **`ObjectContactConvexRoll.pContact` is a computed value that Python reads**, which is what the
@@ -2808,6 +2815,10 @@ What depends on it: the graphics regression test takes every item through its Mi
         **the general section of a kind is a page of its own** (maintainer): *Node* -> *General info
         for all nodes* with its sub-sections -> `NodePoint`, `NodePoint2D`, ... as siblings; no
         *Items* heading.
+      - **RG13.5.0.8** **DONE 2026-09-29** (#2741) — [log](exudynRevisionLog2026b.md#rg13-5-0-8) -
+        **parameter tables** (maintainer): the symbol opens the description, `(symbol: $\fv$)`, instead
+        of following the name; the columns of the parameter, output variable and marker tables have
+        fixed widths in the PDF.
       - **RG13.5.0.6** **DONE 2026-09-29** (#2737) — [log](exudynRevisionLog2026b.md#rg13-5-0-6) -
         **the Create functions and the examples of a page, declared** (maintainer): a line
         **Simpler** before the parameters names the Create functions that add an object or load
@@ -2840,9 +2851,10 @@ What depends on it: the graphics regression test takes every item through its Mi
       **Jacobians** for the 13 markers that had little or no text; the five with long texts of their
       own (the two relative-coordinate markers, the two superelement markers, the kinematic tree
       marker) keep them. Found on the way: the shape markers accept any body (RG4.9, #2731).
-      - **RG13.5.3.1** (#2738) - `MarkerSuperElementRigid` and `MarkerKinematicTreeRigid` keep tables
-        and equations in HTML comments, on no page: restore them as Markdown, checked against the C++,
-        or delete them.
+      - **RG13.5.3.1** **DONE 2026-09-29** (#2738) — [log](exudynRevisionLog2026b.md#rg13-5-3-1) -
+        the HTML comments of `MarkerSuperElementRigid` removed, what was valid of them restored as
+        text; `MarkerKinematicTreeRigid` written from the C++. Found on the way: the prismatic joint
+        Jacobian of `ObjectKinematicTree` (RG4.13, #2740).
     - **RG13.5.4** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-4) - loads - the
       load, its frame, the generalized forces with the transformation.
     - **RG13.5.5** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-5) - sensors - the
@@ -2892,6 +2904,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.10 | #2734 | body markers on `ObjectGenericODE2` and `ObjectKinematicTree` pass the check and fail |
 | RG4.11 | #2735 | four objects declare output variables that raise; `ObjectContactCoordinate` ignores `activeConnector` |
 | RG4.12 | #2736 | `NodeGenericAE` cannot be used: no object, marker or script takes it |
+| RG4.13 | #2740 | **`ObjectKinematicTree`: wrong Jacobian of a prismatic joint in a rotated frame** |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.7 | #2709, #2710 | GraphicsData gets a Sphere and a curved triangle list; RG6.7.1 evaluates the geometry first |
@@ -2901,7 +2914,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
-| RG13.5.3.1 | #2738 | two markers keep text in HTML comments |
 | RG13.5.2 | #2725 | the page of `ObjectBeamGeometricallyExact`, after RG4.8 |
 | RG13.6 | #2732 | a MiniExample for every item; nodes, markers, loads and sensors first |
 

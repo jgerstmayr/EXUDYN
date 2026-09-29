@@ -1,0 +1,17 @@
+{
+  "number": 2741,
+  "title": "parameter tables: the symbol in the name column, and columns squeezed in the PDF",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-29: (1) the symbol of a parameter, e.g. the force f of LoadForceVector, is appended to the name in the parameter tables; it belongs at the very beginning of the description, '(symbol: f) ', where it stays visible when a column is added or the name column is narrow. (2) In the PDF, a table with long descriptions gets name, type and default value columns of a few letters, because LaTeX sizes the columns by content; the parameter tables and the similar ones need minimum widths in the PDF. revision2026b step RG13.5.0.8.",
+  "dateRaised": "2026-09-29",
+  "deadline": "2027-03-28",
+  "dateResolved": "2026-09-29 14:26",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/autoGenerateHelper.py",
+  "releaseNotes": "In the parameter tables of the reference manual the symbol of a parameter opens its description, '(symbol: f)'; in the PDF the columns of these tables have fixed widths, so that a long description no longer squeezes the name, type and default value.",
+  "resolvedInVersion": "1.12.148"
+}

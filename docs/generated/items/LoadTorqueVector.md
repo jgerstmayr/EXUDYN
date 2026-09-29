@@ -19,18 +19,24 @@ Load with (3D) torque vector; attached to rigidbody-based marker.
 
 The parameters of the item; in a dictionary, its type is 'TorqueVector':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | load's unique name |
 | **markerNumber** | MarkerIndex |  | invalid (-1) | marker's number to which load is applied |
-| **loadVector** $\ttau$ | Vector3D | 3 | [0.,0.,0.] | vector-valued load [SI:N]; in case of a user function, this vector is ignored |
+| **loadVector** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\ttau$) vector-valued load [SI:N]; in case of a user function, this vector is ignored |
 | **bodyFixed** | Bool |  | False | if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower torque; if false: global coordinates are used |
-| **loadVectorUserFunction** $\mathrm{UF} \in \Rcal^3$ | PyFunctionVector3DmbsScalarVector3D |  | 0 | A Python function which defines the time-dependent load and replaces loadVector; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0] |
+| **loadVectorUserFunction** | PyFunctionVector3DmbsScalarVector3D |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^3$) A Python function which defines the time-dependent load and replaces loadVector; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0] |
 | **visualization** | VLoadTorqueVector |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VLoadTorqueVector`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

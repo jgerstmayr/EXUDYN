@@ -14,6 +14,9 @@ Structure for timing in solver. Each Real variable is used to measure the CPU ti
 
 CSolverTimer has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `AERHS` | Real |  | 0. | time for residual evaluation of algebraic equations right-hand-side |
@@ -53,6 +56,9 @@ Solver internal structure for counters, steps, step size, time, etc.; solution v
 
 SolverIterationData has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `adaptiveStep` | bool |  | True | True: the step size may be reduced if step fails; no automatic stepsize control |
@@ -87,6 +93,9 @@ Solver internal structure for convergence information: residua, iteration loop e
 
 SolverConvergenceData has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `contractivity` | Real |  | 0. | Newton contractivity = geometric decay of error in every step |
@@ -113,6 +122,9 @@ SolverConvergenceData has the following items:
 Solver internal structure for output modes, output timers and counters.
 
 SolverOutputData has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|

@@ -12,6 +12,9 @@ A sensor attached to a mesh node of a superelement, which measures one of the ou
 
 The parameters of the item; in a dictionary, its type is 'SuperElement':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | sensor's unique name |
@@ -26,6 +29,9 @@ The parameters of the item; in a dictionary, its type is 'SuperElement':
 ## Visualization parameters
 
 The parameters of `VSensorSuperElement`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

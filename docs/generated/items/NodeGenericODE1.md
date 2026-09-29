@@ -16,17 +16,23 @@ A node containing a number of {ref}`ODE1 <ODE1>` variables. Use this node e.g. f
 
 The parameters of the item; in a dictionary, its type is 'GenericODE1':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
-| **referenceCoordinates** $\yv\cRef = [y_0,\,\ldots,\,y_{nc}]\tp\cRef$ | Vector |  | [] | generic reference coordinates of node; must be consistent with numberOfODE1Coordinates |
-| **initialCoordinates** $\yv\cIni = [y_0,\,\ldots,\,y_{nc}]\tp\cIni$ | Vector |  | [] | initial displacement coordinates; must be consistent with numberOfODE1Coordinates |
-| **numberOfODE1Coordinates** $n_c$ | PInt |  | 0 | number of generic {ref}`ODE1 <ODE1>` coordinates; **must be given**: the default is only a placeholder |
+| **referenceCoordinates** | Vector |  | [] | (symbol: $\yv\cRef = [y_0,\,\ldots,\,y_{nc}]\tp\cRef$) generic reference coordinates of node; must be consistent with numberOfODE1Coordinates |
+| **initialCoordinates** | Vector |  | [] | (symbol: $\yv\cIni = [y_0,\,\ldots,\,y_{nc}]\tp\cIni$) initial displacement coordinates; must be consistent with numberOfODE1Coordinates |
+| **numberOfODE1Coordinates** | PInt |  | 0 | (symbol: $n_c$) number of generic {ref}`ODE1 <ODE1>` coordinates; **must be given**: the default is only a placeholder |
 | **visualization** | VNodeGenericODE1 |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VNodeGenericODE1`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -35,6 +41,9 @@ The parameters of `VNodeGenericODE1`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

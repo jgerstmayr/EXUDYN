@@ -12,6 +12,9 @@ A sensor attached to a node, which measures one of the output variables of the n
 
 The parameters of the item; in a dictionary, its type is 'Node':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | sensor's unique name |
@@ -25,6 +28,9 @@ The parameters of the item; in a dictionary, its type is 'Node':
 ## Visualization parameters
 
 The parameters of `VSensorNode`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

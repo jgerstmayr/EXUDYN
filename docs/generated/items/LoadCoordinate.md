@@ -16,17 +16,23 @@ Load with scalar value, which is attached to a coordinate-based marker; the load
 
 The parameters of the item; in a dictionary, its type is 'Coordinate':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | load's unique name |
 | **markerNumber** | MarkerIndex |  | invalid (-1) | marker's number to which load is applied |
-| **load** $f$ | Real |  | 0. | scalar load [SI:N]; in case of a user function, this value is ignored |
-| **loadUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalar2 |  | 0 | A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector! |
+| **load** | Real |  | 0. | (symbol: $f$) scalar load [SI:N]; in case of a user function, this value is ignored |
+| **loadUserFunction** | PyFunctionMbsScalar2 |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector! |
 | **visualization** | VLoadCoordinate |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VLoadCoordinate`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

@@ -21,17 +21,23 @@ Authors: Gerstmayr Johannes, Holzinger Stefan
 
 The parameters of the item; in a dictionary, its type is 'RigidBodyRotVecLG':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
-| **referenceCoordinates** $\qv\cRef = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cRef = [\pv\tp\cRef,\,\tnu\tp\cRef]\tp$ | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | reference coordinates (position and rotation vector $\tnu$) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints) |
-| **initialCoordinates** $\qv\cIni = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cIni = [\uv\tp\cIni,\,\tnu\tp\cIni]\tp$ | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | initial displacement coordinates $\uv$ and rotation vector $\tnu$ relative to reference coordinates |
-| **initialVelocities** $\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tnu\tp\cIni]\tp$ | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | initial velocity coordinate: time derivatives of displacement and angular velocity vector |
+| **referenceCoordinates** | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | (symbol: $\qv\cRef = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cRef = [\pv\tp\cRef,\,\tnu\tp\cRef]\tp$) reference coordinates (position and rotation vector $\tnu$) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints) |
+| **initialCoordinates** | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | (symbol: $\qv\cIni = [q_0,\,q_1,\,q_2,\,\nu_0,\,\nu_1,\,\nu_2]\tp\cIni = [\uv\tp\cIni,\,\tnu\tp\cIni]\tp$) initial displacement coordinates $\uv$ and rotation vector $\tnu$ relative to reference coordinates |
+| **initialVelocities** | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | (symbol: $\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \nu_0,\,\dot \nu_1,\,\dot \nu_2]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tnu\tp\cIni]\tp$) initial velocity coordinate: time derivatives of displacement and angular velocity vector |
 | **visualization** | VNodeRigidBodyRotVecLG |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VNodeRigidBodyRotVecLG`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -42,6 +48,9 @@ The parameters of `VNodeRigidBodyRotVecLG`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

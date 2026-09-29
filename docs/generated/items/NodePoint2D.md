@@ -19,17 +19,23 @@ A 2D point node for point masses or solid finite elements which has 2 displaceme
 
 The parameters of the item; in a dictionary, its type is 'Point2D':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
-| **referenceCoordinates** $\qv\cRef = [q_0,\,q_1]\tp\cRef = \pv\cRef = [r_0,\,r_1]\tp$ | Vector2D | 2 | [0.,0.] | reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement |
-| **initialCoordinates** $\qv\cIni = [q_0,\,q_1]\cIni\tp = [u_0,\,u_1]\cIni\tp$ | Vector2D | 2 | [0.,0.] | initial displacement coordinate |
-| **initialVelocities** $\dot\qv\cIni = \vv\cIni = [\dot q_0,\,\dot q_1]\cIni\tp$ | Vector2D | 2 | [0.,0.] | initial velocity coordinate |
+| **referenceCoordinates** | Vector2D | 2 | [0.,0.] | (symbol: $\qv\cRef = [q_0,\,q_1]\tp\cRef = \pv\cRef = [r_0,\,r_1]\tp$) reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement |
+| **initialCoordinates** | Vector2D | 2 | [0.,0.] | (symbol: $\qv\cIni = [q_0,\,q_1]\cIni\tp = [u_0,\,u_1]\cIni\tp$) initial displacement coordinate |
+| **initialVelocities** | Vector2D | 2 | [0.,0.] | (symbol: $\dot\qv\cIni = \vv\cIni = [\dot q_0,\,\dot q_1]\cIni\tp$) initial velocity coordinate |
 | **visualization** | VNodePoint2D |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VNodePoint2D`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -40,6 +46,9 @@ The parameters of `VNodePoint2D`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

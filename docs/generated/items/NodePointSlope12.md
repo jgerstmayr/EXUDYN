@@ -18,6 +18,9 @@ A 3D point/slope vector node for thin ANCF (absolute nodal coordinate formulatio
 
 The parameters of the item; in a dictionary, its type is 'PointSlope12':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
@@ -30,6 +33,9 @@ The parameters of the item; in a dictionary, its type is 'PointSlope12':
 
 The parameters of `VNodePointSlope12`, given as `visualization`:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
@@ -39,6 +45,9 @@ The parameters of `VNodePointSlope12`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

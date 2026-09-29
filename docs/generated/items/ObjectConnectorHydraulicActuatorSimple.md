@@ -18,26 +18,29 @@ A basic hydraulic actuator with pressure build up equations. The actuator follow
 
 The parameters of the item; in a dictionary, its type is 'ConnectorHydraulicActuatorSimple':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
-| **nodeNumbers** $\mathbf{n}_n = [n_{ODE1}]\tp$ | ArrayNodeIndex |  | [] | currently a list with one node number of NodeGenericODE1 for 2 hydraulic pressures (reference values for this node must be zero); data node may be added in future for switching |
-| **offsetLength** $L_o$ | UReal |  | 0. | offset length [SI:m] of cylinder, representing minimal distance between the two bushings at stroke=0 |
-| **strokeLength** $L_s$ | PReal |  | 0. | stroke length [SI:m] of cylinder, representing maximum extension relative to $L_o$; the measured distance between the markers is $L_s+L_o$; **must be given**: the default is only a placeholder |
-| **chamberCrossSection0** $A_0$ | PReal |  | 0. | cross section [SI:m$^2$] of chamber (inner cylinder) at piston head (nut) side (0); **must be given**: the default is only a placeholder |
-| **chamberCrossSection1** $A_1$ | PReal |  | 0. | cross section [SI:m$^2$] of chamber at piston rod side (1); usually smaller than chamberCrossSection0; **must be given**: the default is only a placeholder |
-| **hoseVolume0** $V_{h,0}$ | PReal |  | 0. | hose volume [SI:m$^3$] at piston head (nut) side (0); as the effective bulk modulus would go to infinity at stroke length zero, the hose volume must be greater than zero; **must be given**: the default is only a placeholder |
-| **hoseVolume1** $V_{h,1}$ | PReal |  | 0. | hose volume [SI:m$^3$] at piston rod side (1); as the effective bulk modulus would go to infinity at max. stroke length, the hose volume must be greater than zero; **must be given**: the default is only a placeholder |
-| **valveOpening0** $A_{v,0}$ | Real |  | 0. | relative opening of valve $[-1 \ldots 1]$ [SI:1] at piston head (nut) side (0); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve |
-| **valveOpening1** $A_{v,1}$ | Real |  | 0. | relative opening of valve $[-1 \ldots 1]$ [SI:1] at piston rod side (1); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve |
-| **actuatorDamping** $d_{HA}$ | UReal |  | 0. | damping [SI:N/(m$\,$s)] of hydraulic actuator (against actuator axial velocity) |
-| **oilBulkModulus** $K_{oil}$ | PReal |  | 0. | bulk modulus of oil [SI:N/(m$^2$)]; **must be given**: the default is only a placeholder |
-| **cylinderBulkModulus** $K_{cyl}$ | UReal |  | 0. | bulk modulus of cylinder [SI:N/(m$^2$)]; in fact, this is value represents the effect of the cylinder stiffness on the effective bulk modulus |
-| **hoseBulkModulus** $K_{hose}$ | UReal |  | 0. | bulk modulus of hose [SI:N/(m$^2$)]; in fact, this is value represents the effect of the hose stiffness on the effective bulk modulus |
-| **nominalFlow** $Q_n$ | PReal |  | 0. | nominal flow of oil through valve [SI:m$^3$/s]; **must be given**: the default is only a placeholder |
-| **systemPressure** $p_s$ | Real |  | 0. | system pressure [SI:N/(m$^2$)] |
-| **tankPressure** $p_t$ | Real |  | 0. | tank pressure [SI:N/(m$^2$)] |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
+| **nodeNumbers** | ArrayNodeIndex |  | [] | (symbol: $\mathbf{n}_n = [n_{ODE1}]\tp$) currently a list with one node number of NodeGenericODE1 for 2 hydraulic pressures (reference values for this node must be zero); data node may be added in future for switching |
+| **offsetLength** | UReal |  | 0. | (symbol: $L_o$) offset length [SI:m] of cylinder, representing minimal distance between the two bushings at stroke=0 |
+| **strokeLength** | PReal |  | 0. | (symbol: $L_s$) stroke length [SI:m] of cylinder, representing maximum extension relative to $L_o$; the measured distance between the markers is $L_s+L_o$; **must be given**: the default is only a placeholder |
+| **chamberCrossSection0** | PReal |  | 0. | (symbol: $A_0$) cross section [SI:m$^2$] of chamber (inner cylinder) at piston head (nut) side (0); **must be given**: the default is only a placeholder |
+| **chamberCrossSection1** | PReal |  | 0. | (symbol: $A_1$) cross section [SI:m$^2$] of chamber at piston rod side (1); usually smaller than chamberCrossSection0; **must be given**: the default is only a placeholder |
+| **hoseVolume0** | PReal |  | 0. | (symbol: $V_{h,0}$) hose volume [SI:m$^3$] at piston head (nut) side (0); as the effective bulk modulus would go to infinity at stroke length zero, the hose volume must be greater than zero; **must be given**: the default is only a placeholder |
+| **hoseVolume1** | PReal |  | 0. | (symbol: $V_{h,1}$) hose volume [SI:m$^3$] at piston rod side (1); as the effective bulk modulus would go to infinity at max. stroke length, the hose volume must be greater than zero; **must be given**: the default is only a placeholder |
+| **valveOpening0** | Real |  | 0. | (symbol: $A_{v,0}$) relative opening of valve $[-1 \ldots 1]$ [SI:1] at piston head (nut) side (0); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve |
+| **valveOpening1** | Real |  | 0. | (symbol: $A_{v,1}$) relative opening of valve $[-1 \ldots 1]$ [SI:1] at piston rod side (1); positive value is valve opening towards system pressure, negative value is valve opening towards tank pressure; zero means closed valve |
+| **actuatorDamping** | UReal |  | 0. | (symbol: $d_{HA}$) damping [SI:N/(m$\,$s)] of hydraulic actuator (against actuator axial velocity) |
+| **oilBulkModulus** | PReal |  | 0. | (symbol: $K_{oil}$) bulk modulus of oil [SI:N/(m$^2$)]; **must be given**: the default is only a placeholder |
+| **cylinderBulkModulus** | UReal |  | 0. | (symbol: $K_{cyl}$) bulk modulus of cylinder [SI:N/(m$^2$)]; in fact, this is value represents the effect of the cylinder stiffness on the effective bulk modulus |
+| **hoseBulkModulus** | UReal |  | 0. | (symbol: $K_{hose}$) bulk modulus of hose [SI:N/(m$^2$)]; in fact, this is value represents the effect of the hose stiffness on the effective bulk modulus |
+| **nominalFlow** | PReal |  | 0. | (symbol: $Q_n$) nominal flow of oil through valve [SI:m$^3$/s]; **must be given**: the default is only a placeholder |
+| **systemPressure** | Real |  | 0. | (symbol: $p_s$) system pressure [SI:N/(m$^2$)] |
+| **tankPressure** | Real |  | 0. | (symbol: $p_t$) tank pressure [SI:N/(m$^2$)] |
 | **useChamberVolumeChange** | Bool |  | False | if True, the pressure build up equations include the change of oil stiffness due to change of chamber volume |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorHydraulicActuatorSimple |  |  | parameters for visualization of item |
@@ -45,6 +48,9 @@ The parameters of the item; in a dictionary, its type is 'ConnectorHydraulicActu
 ## Visualization parameters
 
 The parameters of `VObjectConnectorHydraulicActuatorSimple`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -62,6 +68,9 @@ The parameters of `VObjectConnectorHydraulicActuatorSimple`, given as `visualiza
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

@@ -21,28 +21,34 @@ Author: Gerstmayr Johannes
 
 The parameters of the item; in a dictionary, its type is 'ContactSphereTriangle':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | list of markers representing the center of the sphere (marker 0) and the reference point of the triangle (marker 1), where triangle nodal positions are defined in the local coordinates of marker 1. |
-| **nodeNumber** $n_d$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused. |
-| **radiusSphere** $r_S$ | PReal |  | 0. | radius of sphere [SI:m]; **must be given**: the default is only a placeholder |
-| **trianglePoints** $[\LU{m_1}{\pv}_0,\LU{m_1}{\pv}_1,\LU{m_1}{\pv}_2]$ | Vector3DList |  | [] | triangle points, defined in marker 1 local coordinates |
+| **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers representing the center of the sphere (marker 0) and the reference point of the triangle (marker 1), where triangle nodal positions are defined in the local coordinates of marker 1. |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused. |
+| **radiusSphere** | PReal |  | 0. | (symbol: $r_S$) radius of sphere [SI:m]; **must be given**: the default is only a placeholder |
+| **trianglePoints** | Vector3DList |  | [] | (symbol: $[\LU{m_1}{\pv}_0,\LU{m_1}{\pv}_1,\LU{m_1}{\pv}_2]$) triangle points, defined in marker 1 local coordinates |
 | **includeEdges** | UInt |  | 7 | Binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1 |
-| **dynamicFriction** $\mu_d$ | UReal |  | 0. | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
-| **frictionProportionalZone** $v_{reg}$ | UReal |  | 0.001 | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
-| **contactStiffness** $k_c$ | UReal |  | 0. | normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$) |
-| **contactDamping** $d_c$ | UReal |  | 0. | linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior. |
-| **contactStiffnessExponent** $n_\mathrm{exp}$ | PReal |  | 1. | exponent in normal contact model [SI:1] |
-| **restitutionCoefficient** $e_\mathrm{res}$ | PReal |  | 1. | coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems) |
-| **minimumImpactVelocity** $\dot\delta_\mathrm{-,min}$ | UReal |  | 0. | minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact) |
-| **impactModel** $m_\mathrm{impact}$ | UInt |  | 0 | number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero! |
+| **dynamicFriction** | UReal |  | 0. | (symbol: $\mu_d$) dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
+| **frictionProportionalZone** | UReal |  | 0.001 | (symbol: $v_{reg}$) limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
+| **contactStiffness** | UReal |  | 0. | (symbol: $k_c$) normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$) |
+| **contactDamping** | UReal |  | 0. | (symbol: $d_c$) linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior. |
+| **contactStiffnessExponent** | PReal |  | 1. | (symbol: $n_\mathrm{exp}$) exponent in normal contact model [SI:1] |
+| **restitutionCoefficient** | PReal |  | 1. | (symbol: $e_\mathrm{res}$) coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems) |
+| **minimumImpactVelocity** | UReal |  | 0. | (symbol: $\dot\delta_\mathrm{-,min}$) minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact) |
+| **impactModel** | UInt |  | 0 | (symbol: $m_\mathrm{impact}$) number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero! |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactSphereTriangle |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectContactSphereTriangle`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -52,6 +58,9 @@ The parameters of `VObjectContactSphereTriangle`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

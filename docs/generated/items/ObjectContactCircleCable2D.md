@@ -16,6 +16,9 @@ A very specialized penalty-based contact condition between a 2D circle (=marker0
 
 The parameters of the item; in a dictionary, its type is 'ContactCircleCable2D':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
@@ -32,6 +35,9 @@ The parameters of the item; in a dictionary, its type is 'ContactCircleCable2D':
 ## Visualization parameters
 
 The parameters of `VObjectContactCircleCable2D`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

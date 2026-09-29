@@ -17,16 +17,22 @@ A node containing a number of data (history) variables. Use this node e.g. for c
 
 The parameters of the item; in a dictionary, its type is 'GenericData':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
-| **initialCoordinates** $\xv\cIni = [x_0,\,\ldots,\,x_{n_c}]\tp\cIni$ | Vector |  | [] | initial data coordinates |
-| **numberOfDataCoordinates** $n_c$ | UInt |  | 0 | number of generic data coordinates (history variables) |
+| **initialCoordinates** | Vector |  | [] | (symbol: $\xv\cIni = [x_0,\,\ldots,\,x_{n_c}]\tp\cIni$) initial data coordinates |
+| **numberOfDataCoordinates** | UInt |  | 0 | (symbol: $n_c$) number of generic data coordinates (history variables) |
 | **visualization** | VNodeGenericData |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VNodeGenericData`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -35,6 +41,9 @@ The parameters of `VNodeGenericData`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

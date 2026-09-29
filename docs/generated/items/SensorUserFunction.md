@@ -12,11 +12,14 @@ A sensor defined by a user function. The sensor is intended to collect sensor va
 
 The parameters of the item; in a dictionary, its type is 'UserFunction':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | sensor's unique name |
-| **sensorNumbers** $\mathbf{n}_s = [s_0,\,\ldots,\,s_n]\tp$ | ArraySensorIndex |  | [] | optional list of $n$ sensor numbers for use in user function |
-| **factors** $\mathbf{f}_s = [f_0,\,\ldots,\,f_m]\tp$ | Vector |  | [] | optional list of $m$ factors which can be used, e.g., for weighting sensor values |
+| **sensorNumbers** | ArraySensorIndex |  | [] | (symbol: $\mathbf{n}_s = [s_0,\,\ldots,\,s_n]\tp$) optional list of $n$ sensor numbers for use in user function |
+| **factors** | Vector |  | [] | (symbol: $\mathbf{f}_s = [f_0,\,\ldots,\,f_m]\tp$) optional list of $m$ factors which can be used, e.g., for weighting sensor values |
 | **writeToFile** | Bool |  | True | True: write sensor output to file; flag is ignored (interpreted as False), if fileName='' |
 | **fileName** | String |  | '' | directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist |
 | **sensorUserFunction** | PyFunctionVectorMbsScalarArrayIndexVectorConfiguration |  | 0 | A Python function which defines the time-dependent user function, which usually evaluates one or several sensors and computes a new sensor value, see example |
@@ -26,6 +29,9 @@ The parameters of the item; in a dictionary, its type is 'UserFunction':
 ## Visualization parameters
 
 The parameters of `VSensorUserFunction`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

@@ -6769,3 +6769,42 @@ suitable ones, and the search by name stays for the others.
 
 Running the Create functions to record what they add, as RG13.4 proposed, is not needed: the
 declaration is short and checked.
+
+<a id="rg13-5-3-1"></a>
+### RG13.5.3.1 — the two markers with text in HTML comments (2026-09-29, #2738, #2740)
+
+**`MarkerSuperElementRigid`**: 14 HTML comments, all LaTeX remains or separators. What they held is
+older than the text around it - a velocity without the offset, the linearized rotation matrix as the only
+one, the position Jacobian of `ObjectFFRFreducedOrder` copied. They are removed. What was still true of
+them, checked against `CMarkerSuperElementRigid.cpp`, is one paragraph under the table: the rotation
+matrix is linearized for `rotationsExponentialMap = 0`, the exponential map for 1 and 2, and with 2, the
+default, the angular velocity is transformed by the tangent operator. The empty separators of
+`MarkerSuperElementPosition` went with them.
+
+**`MarkerKinematicTreeRigid`** had one sentence (*"More information will be added later"*) and a
+commented copy of the super element's table. Written from `CMarkerKinematicTreeRigid.cpp` and
+`CObjectKinematicTree::ComputeRigidBodyMarkerDataKT` / `ComputeJacobian`: the marker quantities from the
+link frame and the local position, the Jacobian columns of a revolute and a prismatic joint for the link
+and its parents, the generalized forces, and that the Jacobian derivative is not implemented
+(`ComputeMarkerDataJacobianDerivative` raises).
+
+**Found: the prismatic column is wrong** (#2740, RG4.13). `ComputeJacobian` computes the global axis
+`axis = rotJoint*localAxis` and then writes `rotJoint*axis` for a prismatic joint. Measured with link 0
+`RevoluteZ` held at $q_0$, link 1 `PrismaticX` on it and 1 N along the prismatic axis on the marker, mass
+2, after 1 s: $q_1 = 0.25$ for $q_0 = 0$, and $q_1 = 0$ for $q_0 = \pi/2$. The page states it; the fix is
+one line, and an RG4 step by the maintainer's rule.
+
+<a id="rg13-5-0-8"></a>
+### RG13.5.0.8 — the symbol of a parameter, and the column widths in the PDF (2026-09-29, #2741)
+
+The maintainer: the symbol written after the name disappears when a column is added or the name column
+is narrow; and in the PDF, long descriptions squeeze name, type and default value to a few letters.
+
+- `ItemInterfaceWriteRow` writes the symbol at the start of the description, *(symbol: $\fv$)*, and the
+  name alone in its column.
+- `PdfColumnWidths` writes a `tabularcolumns` directive before a table - fractions of the line, `\Y{...}`
+  - which the LaTeX builder uses and the HTML ignores: parameter tables of items and structures
+  0.2 / 0.14 / 0.06 / 0.15 / 0.45, output variables 0.25 / 0.25 / 0.5, the table of all markers
+  0.3 / 0.3 / 0.2 / 0.2. Checked in the PDF (`LoadForceVector`): name, type and default value readable,
+  the description wraps. A type name longer than its column - the user function types such as
+  `PyFunctionVector3DmbsScalarVector3D` - is cut; those have their own section below the table.

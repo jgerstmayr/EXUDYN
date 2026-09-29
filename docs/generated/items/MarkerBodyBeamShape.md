@@ -16,6 +16,9 @@ A special Marker attached to a 3D beam finite element which provides at least po
 
 The parameters of the item; in a dictionary, its type is 'BodyBeamShape':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
@@ -25,6 +28,9 @@ The parameters of the item; in a dictionary, its type is 'BodyBeamShape':
 ## Visualization parameters
 
 The parameters of `VMarkerBodyBeamShape`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

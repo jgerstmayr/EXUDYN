@@ -17,6 +17,9 @@ A revolute joint in 2D; constrains the absolute 2D position of two points given 
 
 The parameters of the item; in a dictionary, its type is 'JointRevolute2D':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
@@ -27,6 +30,9 @@ The parameters of the item; in a dictionary, its type is 'JointRevolute2D':
 ## Visualization parameters
 
 The parameters of `VObjectJointRevolute2D`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

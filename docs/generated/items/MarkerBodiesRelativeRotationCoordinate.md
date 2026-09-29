@@ -17,20 +17,26 @@ A coordinate-based Marker attached to two rigid bodies or beams which computes t
 
 The parameters of the item; in a dictionary, its type is 'BodiesRelativeRotationCoordinate':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
-| **bodyNumbers** $[b_0,b_1]\tp$ | ArrayObjectIndex |  | [ invalid (-1), invalid (-1) ] | list of body numbers for which relative coordinate is computed |
+| **bodyNumbers** | ArrayObjectIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[b_0,b_1]\tp$) list of body numbers for which relative coordinate is computed |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number of NodeGenericData with 1 coordinate which contains previous angle for continuation of angles (initialize accordingly if needed); if node is not supplied, angles will have jump outside $\pm \pi$ |
-| **localPosition0** $\LU{m_0}{\pv}_0$ | Vector3D | 3 | [0.,0.,0.] | local position on body 0; i.e. local (body-fixed) position where position is measured and force is applied to |
-| **localPosition1** $\LU{m_1}{\pv}_1$ | Vector3D | 3 | [0.,0.,0.] | local position on body 1; i.e. local (body-fixed) position where position is measured and force is applied to |
-| **axis0** $\LU{m_0}{\av}_0$ | Vector3D | 3 | [1.,0.,0.] | axis defined in body 0, along which the relative rotation is measured |
-| **offset** $x_\mathrm{off}$ | Real |  | 0. | rotation offset [SI:1] subtracted from the measured rotation; can be used to change the zero rotation |
+| **localPosition0** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{m_0}{\pv}_0$) local position on body 0; i.e. local (body-fixed) position where position is measured and force is applied to |
+| **localPosition1** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{m_1}{\pv}_1$) local position on body 1; i.e. local (body-fixed) position where position is measured and force is applied to |
+| **axis0** | Vector3D | 3 | [1.,0.,0.] | (symbol: $\LU{m_0}{\av}_0$) axis defined in body 0, along which the relative rotation is measured |
+| **offset** | Real |  | 0. | (symbol: $x_\mathrm{off}$) rotation offset [SI:1] subtracted from the measured rotation; can be used to change the zero rotation |
 | **visualization** | VMarkerBodiesRelativeRotationCoordinate |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VMarkerBodiesRelativeRotationCoordinate`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

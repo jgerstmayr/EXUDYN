@@ -21,31 +21,37 @@ Authors: Gerstmayr Johannes, Weyrer Sebastian
 
 The parameters of the item; in a dictionary, its type is 'ContactSphereSphere':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | list of markers representing centers of spheres, used in connector |
-| **nodeNumber** $n_d$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is the plastic overlap of the Edinburgh Adhesive Elasto-Plastic Model, initialized usually with 0 and set back to 0 in case that spheres have been separated. |
-| **spheresRadii** $[r_0,r_1]\tp$ | Vector2D | 2 | [-1.,-1.] | list containing radius of sphere 0 and radius of sphere 1 [SI:m]. |
+| **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers representing centers of spheres, used in connector |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is the plastic overlap of the Edinburgh Adhesive Elasto-Plastic Model, initialized usually with 0 and set back to 0 in case that spheres have been separated. |
+| **spheresRadii** | Vector2D | 2 | [-1.,-1.] | (symbol: $[r_0,r_1]\tp$) list containing radius of sphere 0 and radius of sphere 1 [SI:m]. |
 | **isHollowSphere1** | Bool |  | False | flag, which determines, if sphere attached to marker 1 (radius 1) is a hollow sphere. |
-| **dynamicFriction** $\mu_d$ | UReal |  | 0. | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
-| **frictionProportionalZone** $v_{reg}$ | UReal |  | 0.001 | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
-| **contactStiffness** $k_c$ | UReal |  | 0. | normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$) |
-| **contactDamping** $d_c$ | UReal |  | 0. | linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior. |
-| **contactStiffnessExponent** $n_\mathrm{exp}$ | PReal |  | 1. | exponent in normal contact model [SI:1] |
-| **constantPullOffForce** $f_\mathrm{adh}$ | UReal |  | 0. | constant adhesion force [SI:N]; Edinburgh Adhesive Elasto-Plastic Model |
-| **contactPlasticityRatio** $\lambda_\mathrm{P}$ | UReal |  | 0. | ratio of contact stiffness for first loading and unloading/reloading [SI:1]; Edinburgh Adhesive Elasto-Plastic Model; $\lambda_\mathrm{P}=1-k_c/K2$, which gives the contact stiffness for unloading/reloading $K2 = k_c/(1-\lambda_\mathrm{P})$; set to 0 in order to fully deactivate Edinburgh Adhesive Elasto-Plastic Model model |
-| **adhesionCoefficient** $k_\mathrm{adh}$ | UReal |  | 0. | coefficient for adhesion [SI:N/m] (units in case that $n_\mathrm{adh}=1$); Edinburgh Adhesive Elasto-Plastic Model; set to 0 to deactivate adhesion model |
-| **adhesionExponent** $n_\mathrm{adh}$ | UReal |  | 1. | exponent for adhesion coefficient [SI:1]; Edinburgh Adhesive Elasto-Plastic Model |
-| **restitutionCoefficient** $e_\mathrm{res}$ | PReal |  | 1. | coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems) |
-| **minimumImpactVelocity** $\dot\delta_\mathrm{-,min}$ | UReal |  | 0. | minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact) |
-| **impactModel** $m_\mathrm{impact}$ | UInt |  | 0 | number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero! |
+| **dynamicFriction** | UReal |  | 0. | (symbol: $\mu_d$) dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
+| **frictionProportionalZone** | UReal |  | 0.001 | (symbol: $v_{reg}$) limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
+| **contactStiffness** | UReal |  | 0. | (symbol: $k_c$) normal contact stiffness [SI:N/m] (units in case that $n_\mathrm{exp}=1$) |
+| **contactDamping** | UReal |  | 0. | (symbol: $d_c$) linear normal contact damping [SI:N/(m s)]; this damping should be used (!=0) if the restitution coefficient is < 1, as it changes its behavior. |
+| **contactStiffnessExponent** | PReal |  | 1. | (symbol: $n_\mathrm{exp}$) exponent in normal contact model [SI:1] |
+| **constantPullOffForce** | UReal |  | 0. | (symbol: $f_\mathrm{adh}$) constant adhesion force [SI:N]; Edinburgh Adhesive Elasto-Plastic Model |
+| **contactPlasticityRatio** | UReal |  | 0. | (symbol: $\lambda_\mathrm{P}$) ratio of contact stiffness for first loading and unloading/reloading [SI:1]; Edinburgh Adhesive Elasto-Plastic Model; $\lambda_\mathrm{P}=1-k_c/K2$, which gives the contact stiffness for unloading/reloading $K2 = k_c/(1-\lambda_\mathrm{P})$; set to 0 in order to fully deactivate Edinburgh Adhesive Elasto-Plastic Model model |
+| **adhesionCoefficient** | UReal |  | 0. | (symbol: $k_\mathrm{adh}$) coefficient for adhesion [SI:N/m] (units in case that $n_\mathrm{adh}=1$); Edinburgh Adhesive Elasto-Plastic Model; set to 0 to deactivate adhesion model |
+| **adhesionExponent** | UReal |  | 1. | (symbol: $n_\mathrm{adh}$) exponent for adhesion coefficient [SI:1]; Edinburgh Adhesive Elasto-Plastic Model |
+| **restitutionCoefficient** | PReal |  | 1. | (symbol: $e_\mathrm{res}$) coefficient of restitution [SI:1]; used in particular for impact mechanics; different models available within parameter impactModel; the coefficient must be > 0, but can become arbitrarily small to emulate plastic impact (however very small values may lead to numerical problems) |
+| **minimumImpactVelocity** | UReal |  | 0. | (symbol: $\dot\delta_\mathrm{-,min}$) minimal impact velocity for coefficient of restitution [SI:1]; this value adds a lower bound for impact velocities for calculation of viscous impact force; it can be used to apply a larger damping behavior for low impact velocities (or permanent contact) |
+| **impactModel** | UInt |  | 0 | (symbol: $m_\mathrm{impact}$) number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero! |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactSphereSphere |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectContactSphereSphere`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -55,6 +61,9 @@ The parameters of `VObjectContactSphereSphere`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

@@ -17,18 +17,24 @@ A node containing a number of {ref}`ODE2 <ODE2>` variables. Use this node e.g. f
 
 The parameters of the item; in a dictionary, its type is 'GenericODE2':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
-| **referenceCoordinates** $\qv\cRef = [q_0,\,\ldots,\,q_{nc}]\tp\cRef$ | Vector |  | [] | generic reference coordinates of node; must be consistent with numberOfODE2Coordinates |
-| **initialCoordinates** $\qv\cIni = [q_0,\,\ldots,\,q_{nc}]\tp\cIni$ | Vector |  | [] | initial displacement coordinates; must be consistent with numberOfODE2Coordinates |
-| **initialCoordinates_t** $\dot \qv\cIni = [\dot q_0,\,\ldots,\,\dot q_{n_c}]\tp\cIni$ | Vector |  | [] | initial velocity coordinates; must be consistent with numberOfODE2Coordinates |
-| **numberOfODE2Coordinates** $n_c$ | PInt |  | 0 | number of generic {ref}`ODE2 <ODE2>` coordinates; **must be given**: the default is only a placeholder |
+| **referenceCoordinates** | Vector |  | [] | (symbol: $\qv\cRef = [q_0,\,\ldots,\,q_{nc}]\tp\cRef$) generic reference coordinates of node; must be consistent with numberOfODE2Coordinates |
+| **initialCoordinates** | Vector |  | [] | (symbol: $\qv\cIni = [q_0,\,\ldots,\,q_{nc}]\tp\cIni$) initial displacement coordinates; must be consistent with numberOfODE2Coordinates |
+| **initialCoordinates_t** | Vector |  | [] | (symbol: $\dot \qv\cIni = [\dot q_0,\,\ldots,\,\dot q_{n_c}]\tp\cIni$) initial velocity coordinates; must be consistent with numberOfODE2Coordinates |
+| **numberOfODE2Coordinates** | PInt |  | 0 | (symbol: $n_c$) number of generic {ref}`ODE2 <ODE2>` coordinates; **must be given**: the default is only a placeholder |
 | **visualization** | VNodeGenericODE2 |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VNodeGenericODE2`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -37,6 +43,9 @@ The parameters of `VNodeGenericODE2`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

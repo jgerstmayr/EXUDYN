@@ -24,18 +24,24 @@ A 3D rigid body which is attached to a 3D rigid body node. The rotation parametr
 
 The parameters of the item; in a dictionary, its type is 'RigidBody':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsMass** $m$ | UReal |  | 0. | mass [SI:kg] of rigid body |
-| **physicsInertia** $\LU{b}{\jv_6}$ | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to {ref}`COM <COM>`; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, {ref}`COM <COM>` and mass |
-| **physicsCenterOfMass** $\LU{b}{\bv_{COM}}$ | Vector3D | 3 | [0.,0.,0.] | local position of {ref}`COM <COM>` relative to the body's reference point; if the vector of the {ref}`COM <COM>` is [0,0,0], the computation will not consider additional terms for the {ref}`COM <COM>` and it is faster |
-| **nodeNumber** $n0$ | NodeIndex |  | invalid (-1) | node number (type NodeIndex) for rigid body node |
+| **physicsMass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of rigid body |
+| **physicsInertia** | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | (symbol: $\LU{b}{\jv_6}$) inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to {ref}`COM <COM>`; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, {ref}`COM <COM>` and mass |
+| **physicsCenterOfMass** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{b}{\bv_{COM}}$) local position of {ref}`COM <COM>` relative to the body's reference point; if the vector of the {ref}`COM <COM>` is [0,0,0], the computation will not consider additional terms for the {ref}`COM <COM>` and it is faster |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n0$) node number (type NodeIndex) for rigid body node |
 | **visualization** | VObjectRigidBody |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectRigidBody`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -46,6 +52,9 @@ The parameters of `VObjectRigidBody`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

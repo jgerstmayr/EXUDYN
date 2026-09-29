@@ -17,20 +17,26 @@ A 1D (scalar) spring-damper element acting on single {ref}`ODE2 <ODE2>` coordina
 
 The parameters of the item; in a dictionary, its type is 'ConnectorCoordinateSpringDamper':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
-| **stiffness** $k$ | Real |  | 0. | stiffness [SI:N/m] of spring; acts against relative value of coordinates |
-| **damping** $d$ | Real |  | 0. | damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates |
-| **offset** $l_\mathrm{off}$ | Real |  | 0. | offset between two coordinates (reference length of springs), see equation |
+| **stiffness** | Real |  | 0. | (symbol: $k$) stiffness [SI:N/m] of spring; acts against relative value of coordinates |
+| **damping** | Real |  | 0. | (symbol: $d$) damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates |
+| **offset** | Real |  | 0. | (symbol: $l_\mathrm{off}$) offset between two coordinates (reference length of springs), see equation |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
-| **springForceUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalarIndexScalar5 |  | 0 | A Python function which defines the spring force with 8 parameters, see equations section / see description below |
+| **springForceUserFunction** | PyFunctionMbsScalarIndexScalar5 |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the spring force with 8 parameters, see equations section / see description below |
 | **visualization** | VObjectConnectorCoordinateSpringDamper |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectConnectorCoordinateSpringDamper`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -41,6 +47,9 @@ The parameters of `VObjectConnectorCoordinateSpringDamper`, given as `visualizat
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

@@ -19,21 +19,27 @@ A coordinate constraint which constrains two (scalar) coordinates of Marker[Node
 
 The parameters of the item; in a dictionary, its type is 'ConnectorCoordinate':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
-| **offset** $l_\mathrm{off}$ | Real |  | 0. | An offset between the two values |
-| **factorValue1** $k_{m1}$ | Real |  | 1. | An additional factor multiplied with value1 used in algebraic equation |
+| **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
+| **offset** | Real |  | 0. | (symbol: $l_\mathrm{off}$) An offset between the two values |
+| **factorValue1** | Real |  | 1. | (symbol: $k_{m1}$) An additional factor multiplied with value1 used in algebraic equation |
 | **velocityLevel** | Bool |  | False | If true: connector constrains velocities (only works for {ref}`ODE2 <ODE2>` coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored |
-| **offsetUserFunction** $\mathrm{UF} \in \Rcal$ | PyFunctionMbsScalarIndexScalar |  | 0 | A Python function which defines the time-dependent offset; see description below |
-| **offsetUserFunction_t** $\mathrm{UF}_t \in \Rcal$ | PyFunctionMbsScalarIndexScalar |  | 0 | time derivative of offsetUserFunction; needed for velocity level constraints; see description below |
+| **offsetUserFunction** | PyFunctionMbsScalarIndexScalar |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the time-dependent offset; see description below |
+| **offsetUserFunction_t** | PyFunctionMbsScalarIndexScalar |  | 0 | (symbol: $\mathrm{UF}_t \in \Rcal$) time derivative of offsetUserFunction; needed for velocity level constraints; see description below |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorCoordinate |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectConnectorCoordinate`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -44,6 +50,9 @@ The parameters of `VObjectConnectorCoordinate`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

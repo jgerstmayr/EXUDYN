@@ -20,11 +20,14 @@ An 3D spring-damper element acting on relative displacements and relative rotati
 
 The parameters of the item; in a dictionary, its type is 'ConnectorRigidBodySpringDamper':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | list of markers used in connector |
-| **nodeNumber** $n_d$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData (size depends on application) for dataCoordinates for user functions (e.g., implementing contact/friction user function) |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData (size depends on application) for dataCoordinates for user functions (e.g., implementing contact/friction user function) |
 | **stiffness** | Matrix6D | 36 | np.zeros((6,6)) | stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles); in the simplest case, the first 3 diagonal values correspond to the local stiffness in x,y,z direction and the last 3 diagonal values correspond to the rotational stiffness around x,y and z axis |
 | **damping** | Matrix6D | 36 | np.zeros((6,6)) | damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector |
 | **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0 |
@@ -32,13 +35,16 @@ The parameters of the item; in a dictionary, its type is 'ConnectorRigidBodySpri
 | **offset** | Vector6D | 6 | [0.,0.,0.,0.,0.,0.] | translational and rotational offset considered in the spring force calculation |
 | **intrinsicFormulation** | Bool |  | False | if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
-| **springForceTorqueUserFunction** $\mathrm{UF} \in \Rcal^6$ | PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D |  | 0 | A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below |
-| **postNewtonStepUserFunction** $\mathrm{UF}_{PN} \in \Rcal$ | PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D |  | 0 | A Python function which computes the error of the PostNewtonStep; see description below |
+| **springForceTorqueUserFunction** | PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^6$) A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below |
+| **postNewtonStepUserFunction** | PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D |  | 0 | (symbol: $\mathrm{UF}_{PN} \in \Rcal$) A Python function which computes the error of the PostNewtonStep; see description below |
 | **visualization** | VObjectConnectorRigidBodySpringDamper |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectConnectorRigidBodySpringDamper`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -49,6 +55,9 @@ The parameters of `VObjectConnectorRigidBodySpringDamper`, given as `visualizati
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

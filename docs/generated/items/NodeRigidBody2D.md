@@ -19,17 +19,23 @@ A 2D rigid body node for rigid bodies or beams. The node has 2 displacement degr
 
 The parameters of the item; in a dictionary, its type is 'RigidBody2D':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
-| **referenceCoordinates** $\qv\cRef = [q_0,\,q_1,\,\psi_0]\tp\cRef$ | Vector3D | 3 | [0.,0.,0.] | reference coordinates (x-pos,y-pos and rotation) of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement |
-| **initialCoordinates** $\qv\cIni = [q_0,\,q_1,\,\psi_0]\tp\cIni$ | Vector3D | 3 | [0.,0.,0.] | initial displacement coordinates and angle (relative to reference coordinates) |
-| **initialVelocities** $\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cIni =  [v_0,\,v_1,\,\omega_2]\tp\cIni$ | Vector3D | 3 | [0.,0.,0.] | initial velocity coordinates |
+| **referenceCoordinates** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\qv\cRef = [q_0,\,q_1,\,\psi_0]\tp\cRef$) reference coordinates (x-pos,y-pos and rotation) of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement |
+| **initialCoordinates** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\qv\cIni = [q_0,\,q_1,\,\psi_0]\tp\cIni$) initial displacement coordinates and angle (relative to reference coordinates) |
+| **initialVelocities** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot \psi_0]\tp\cIni =  [v_0,\,v_1,\,\omega_2]\tp\cIni$) initial velocity coordinates |
 | **visualization** | VNodeRigidBody2D |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VNodeRigidBody2D`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -40,6 +46,9 @@ The parameters of `VNodeRigidBody2D`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

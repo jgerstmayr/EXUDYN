@@ -1,0 +1,13 @@
+{
+  "number": 2740,
+  "title": "ObjectKinematicTree: the position Jacobian of a prismatic joint rotates the axis twice",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "Found while writing the page of MarkerKinematicTreeRigid (#2738, revision2026b step RG13.5.3.1). CObjectKinematicTree::ComputeJacobian computes axis = rotJoint*localAxis, which is the global joint axis, and for a prismatic joint then sets positionJacobian column = rotJoint*axis - the rotation applied twice. It is right only while the joint frame leaves the axis unchanged. Measured: link 0 RevoluteZ held at q0, link 1 PrismaticX on it, a LoadForceVector of 1 N along the prismatic axis on a MarkerKinematicTreeRigid of link 1, mass 2: after 1 s q1 = 0.25 for q0 = 0, and q1 = 0 for q0 = pi/2 (the column is -e_x instead of e_y). Every marker, load and connector on a link at or behind a rotated prismatic joint gets wrong generalized forces. The fix is one line (positionJacobian column = axis) and a test model with the case above. revision2026b step RG4.13.",
+  "dateRaised": "2026-09-29",
+  "deadline": "2027-03-28",
+  "file": "src/ImplObjects/CObjectKinematicTree.cpp"
+}

@@ -19,21 +19,24 @@ Author: Manzl Peter
 
 The parameters of the item; in a dictionary, its type is 'ContactConvexRoll':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
-| **markerNumbers** $[m0,m1]\tp$ | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | list of markers used in connector; $m0$ represents the ground, which can undergo translations but not rotations, and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the roll's center point |
-| **nodeNumber** $n_d$ | NodeIndex |  | invalid (-1) | node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact) |
-| **contactStiffness** $k_c$ | Real |  | 0. | normal contact stiffness [SI:N/m] |
-| **contactDamping** $d_c$ | Real |  | 0. | normal contact damping [SI:N/(m s)] |
-| **dynamicFriction** $\mu_d$ | UReal |  | 0. | dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
-| **staticFrictionOffset** $\mu_{s_off}$ | UReal |  | 0. | static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
-| **viscousFriction** $\mu_v$ | UReal |  | 0. | viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
-| **exponentialDecayStatic** $v_{exp}$ | PReal |  | 0.001 | exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), [](#sec-module-physics) |
-| **frictionProportionalZone** $v_{reg}$ | UReal |  | 0.001 | limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
-| **rollLength** $L$ | UReal |  | 0. | roll length [m], symmetric w.r.t. centerpoint |
-| **coefficientsHull** $\kv \in \Rcal^{n_p}$ | NumpyVector |  | [] | a vector of polynomial coefficients, which provides the polynomial of the CONVEX hull of the roll; $\mathrm{hull}(x) = k_0 x^{n_p-1} + k x^{n_p-2} + \ldots + k_{n_p-2} x + k_{n_p-1}$ |
-| **coefficientsHullDerivative** $\kv^\prime \in \Rcal^{n_p}$ | NumpyVector |  | [] | polynomial coefficients of the polynomial $\mathrm{hull}^\prime(x)$ |
+| **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector; $m0$ represents the ground, which can undergo translations but not rotations, and $m1$ represents the rolling body, which has its reference point (=local position [0,0,0]) at the roll's center point |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData (size=3) for 3 dataCoordinates, needed for discontinuous iteration (friction and contact) |
+| **contactStiffness** | Real |  | 0. | (symbol: $k_c$) normal contact stiffness [SI:N/m] |
+| **contactDamping** | Real |  | 0. | (symbol: $d_c$) normal contact damping [SI:N/(m s)] |
+| **dynamicFriction** | UReal |  | 0. | (symbol: $\mu_d$) dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
+| **staticFrictionOffset** | UReal |  | 0. | (symbol: $\mu_{s_off}$) static friction offset for friction model (static friction = dynamic friction + static offset), see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
+| **viscousFriction** | UReal |  | 0. | (symbol: $\mu_v$) viscous friction coefficient (velocity dependent part) for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
+| **exponentialDecayStatic** | PReal |  | 0.001 | (symbol: $v_{exp}$) exponential decay of static friction offset (must not be zero!), see StribeckFunction in exudyn.physics (named expVel there!), [](#sec-module-physics) |
+| **frictionProportionalZone** | UReal |  | 0.001 | (symbol: $v_{reg}$) limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
+| **rollLength** | UReal |  | 0. | (symbol: $L$) roll length [m], symmetric w.r.t. centerpoint |
+| **coefficientsHull** | NumpyVector |  | [] | (symbol: $\kv \in \Rcal^{n_p}$) a vector of polynomial coefficients, which provides the polynomial of the CONVEX hull of the roll; $\mathrm{hull}(x) = k_0 x^{n_p-1} + k x^{n_p-2} + \ldots + k_{n_p-2} x + k_{n_p-1}$ |
+| **coefficientsHullDerivative** | NumpyVector |  | [] | (symbol: $\kv^\prime \in \Rcal^{n_p}$) polynomial coefficients of the polynomial $\mathrm{hull}^\prime(x)$ |
 | **coefficientsHullDDerivative** | NumpyVector |  | [] | second derivative of the hull polynomial. |
 | **rBoundingSphere** | UReal |  | 0 | radius of the bounding sphere for the contact pre-check; **computed** from `coefficientsHull` whenever the parameters change, and therefore read-only |
 | **pContact** | Vector3D | 3 | [0,0,0] | the current potential contact point; **computed** in every contact evaluation and therefore read-only. Contact occurs if `pContact[2]` $< 0$ |
@@ -44,6 +47,9 @@ The parameters of the item; in a dictionary, its type is 'ContactConvexRoll':
 
 The parameters of `VObjectContactConvexRoll`, given as `visualization`:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
@@ -52,6 +58,9 @@ The parameters of `VObjectContactConvexRoll`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

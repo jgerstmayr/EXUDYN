@@ -167,7 +167,9 @@ def AttachedTo(marker):
 def MarkerTable(items):
     """the table of all markers for the page of the markers: what each sits on, what it provides and
     how many connectors, constraints and loads can use it - generated, like the Interface block"""
-    lines = ['| marker | attached to | provides | usable by |', '|---|---|---|---|']
+    from autoGenerateHelper import PdfColumnWidths
+    lines = [PdfColumnWidths([0.3, 0.3, 0.2, 0.2]).rstrip('\n'),
+             '| marker | attached to | provides | usable by |', '|---|---|---|---|']
     for marker in [item for item in items if item.kind == 'Marker']:
         shown = [t for t in marker.provided if t in markerTypesShown]
         users = [u for u in items if u.AcceptsMarker(marker)]

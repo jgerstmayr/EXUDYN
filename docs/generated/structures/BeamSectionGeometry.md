@@ -8,6 +8,9 @@ Data structure for definition of 2D and 3D beam (cross) section geometrical prop
 
 BeamSectionGeometry has the following items:
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `crossSectionRadiusY` | UReal |  | 0. | $c_Y\,$ [SI:m] $Y$ radius for circular cross section |

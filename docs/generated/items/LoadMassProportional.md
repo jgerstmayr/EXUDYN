@@ -19,17 +19,23 @@ Load attached to MarkerBodyMass marker, applying a 3D vector load (e.g. the vect
 
 The parameters of the item; in a dictionary, its type is 'MassProportional':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | load's unique name |
 | **markerNumber** | MarkerIndex |  | invalid (-1) | marker's number to which load is applied |
-| **loadVector** $\bv$ | Vector3D | 3 | [0.,0.,0.] | vector-valued load [SI:N/kg = m/s$^2$]; typically, this will be the gravity vector in global coordinates; in case of a user function, this v is ignored |
-| **loadVectorUserFunction** $\mathrm{UF} \in \Rcal^3$ | PyFunctionVector3DmbsScalarVector3D |  | 0 | A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector! |
+| **loadVector** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\bv$) vector-valued load [SI:N/kg = m/s$^2$]; typically, this will be the gravity vector in global coordinates; in case of a user function, this v is ignored |
+| **loadVectorUserFunction** | PyFunctionVector3DmbsScalarVector3D |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^3$) A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector! |
 | **visualization** | VLoadMassProportional |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VLoadMassProportional`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

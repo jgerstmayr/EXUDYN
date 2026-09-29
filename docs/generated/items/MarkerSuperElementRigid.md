@@ -18,13 +18,16 @@ A position and orientation (rigid-body) marker attached to a SuperElement, such 
 
 The parameters of the item; in a dictionary, its type is 'SuperElementRigid':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
-| **bodyNumber** $n_b$ | ObjectIndex |  | invalid (-1) | body number to which marker is attached to |
-| **offset** $\LU{r}{\ov_{ref}}$ | Vector3D | 3 | [0.,0.,0.] | local marker SuperElement reference position offset used to correct the center point of the marker, which is computed from the weighted average of reference node positions (which may have some offset to the desired joint position). Note that this offset shall be small and larger offsets can cause instability in simulation models (better to have symmetric meshes at joints). |
-| **meshNodeNumbers** $[k_0,\,\ldots,\,k_{n_m-1}]\tp$ | ArrayIndex |  | [] | a list of $n_m$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position and orientation; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers |
-| **weightingFactors** $[w_{0},\,\ldots,\,w_{n_m-1}]\tp$ | Vector |  | [] | a list of $n_m$ weighting factors per node to compute the final local position and orientation; these factors could be based on surface integrals of the constrained mesh faces |
+| **bodyNumber** | ObjectIndex |  | invalid (-1) | (symbol: $n_b$) body number to which marker is attached to |
+| **offset** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{r}{\ov_{ref}}$) local marker SuperElement reference position offset used to correct the center point of the marker, which is computed from the weighted average of reference node positions (which may have some offset to the desired joint position). Note that this offset shall be small and larger offsets can cause instability in simulation models (better to have symmetric meshes at joints). |
+| **meshNodeNumbers** | ArrayIndex |  | [] | (symbol: $[k_0,\,\ldots,\,k_{n_m-1}]\tp$) a list of $n_m$ mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position and orientation; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers |
+| **weightingFactors** | Vector |  | [] | (symbol: $[w_{0},\,\ldots,\,w_{n_m-1}]\tp$) a list of $n_m$ weighting factors per node to compute the final local position and orientation; these factors could be based on surface integrals of the constrained mesh faces |
 | **useAlternativeApproach** | Bool |  | True | this flag switches between two versions for the computation of the rotation and angular velocity of the marker; alternative approach uses skew symmetric matrix of reference position; follows the inertia concept |
 | **rotationsExponentialMap** | Index |  | 2 | Experimental flag (2 is the correct value and will be used in future, removing this flag): This value switches different behavior for computation of rotations and angular velocities: 0 uses linearized rotations and angular velocities, 1 uses the exponential map for rotations but linear angular velocities, 2 uses the exponential map for rotations and the according tangent map for angular velocities |
 | **visualization** | VMarkerSuperElementRigid |  |  | parameters for visualization of item |
@@ -32,6 +35,9 @@ The parameters of the item; in a dictionary, its type is 'SuperElementRigid':
 ## Visualization parameters
 
 The parameters of `VMarkerSuperElementRigid`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -62,6 +68,11 @@ The parameters of `VMarkerSuperElementRigid`, given as `visualization`:
 | marker local rotation | $\LU{r}{\ttheta}_{m}$ | current local linearized rotations (rotation vector); for the computation, see below for the standard and alternative approach |
 | marker local angular velocity | $\LU{r}{\tomega}_{m}$ | local angular velocity due to mesh node velocity only; for the computation, see below for the standard and alternative approach |
 | marker global angular velocity | $\LU{0}{\tomega}_{m} = \LU{0}{\tomega_{r}} + \LU{0r}{\Rot} \LU{r}{\tomega}_{m}$ | current global angular velocity |
+
+The rotation matrix and the angular velocity depend on `rotationsExponentialMap`: with 0,
+$\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} (\Im + \LU{r}{\tilde \ttheta}_{m})$, linearized; with 1 and 2 the
+exponential map of the table; with 2 (the default) the local angular velocity is also transformed by the
+tangent operator of the exponential map, $\mathbf{T}_{\exp}(\LU{r}{\ttheta}_{m}) \LU{r}{\tomega}_{m}$.
 
 ### Marker background
 
@@ -123,7 +134,6 @@ $$
 
 Note that $\pv_{ref}^{(i)}$ is not the reference position in the `ObjectFFRFreducedOrder` object, but it is relative to the midpoint reference position
 all marker nodes, given in $\LU{r}{\xv^\mathrm{avg}\cRef}$.
-
 Accordingly, the marker local angular velocity can be calculated as
 
 $$

@@ -12,11 +12,14 @@ A sensor attached to a body at a local position $\pLocB$, which measures one of 
 
 The parameters of the item; in a dictionary, its type is 'Body':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | sensor's unique name |
 | **bodyNumber** | ObjectIndex |  | invalid (-1) | body (=object) number to which sensor is attached to |
-| **localPosition** $\pLocB$ | Vector3D | 3 | [0.,0.,0.] | local (body-fixed) body position of sensor |
+| **localPosition** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\pLocB$) local (body-fixed) body position of sensor |
 | **writeToFile** | Bool |  | True | True: write sensor output to file; flag is ignored (interpreted as False), if fileName='' |
 | **fileName** | String |  | '' | directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist |
 | **outputVariableType** | OutputVariableType |  | OutputVariableType::_None | OutputVariableType for sensor |
@@ -26,6 +29,9 @@ The parameters of the item; in a dictionary, its type is 'Body':
 ## Visualization parameters
 
 The parameters of `VSensorBody`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

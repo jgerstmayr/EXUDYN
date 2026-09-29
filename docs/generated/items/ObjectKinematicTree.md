@@ -20,32 +20,38 @@ A special object to represent open kinematic trees using minimal coordinate form
 
 The parameters of the item; in a dictionary, its type is 'KinematicTree':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **nodeNumber** $n_0 \in \Ncal^n$ | NodeIndex |  | invalid (-1) | node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; $n$ being the number of minimal coordinates |
-| **gravity** $\LU{0}{\gv} \in \Rcal^{3}$ | Vector3D | 3 | [0.,0.,0.] | gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree |
-| **baseOffset** $\LU{0}{\pv_b} \in \Rcal^{3}$ | Vector3D | 3 | [0.,0.,0.] | offset vector for base, in global coordinates |
-| **jointTypes** $\jv_T \in \Ncal^{n}$ | JointTypeList |  | [] | joint types of kinematic Tree joints, using exu.JointType, like exu.JointType.RevoluteZ; must be always set |
-| **linkParents** $\iv_p = [p_0,\, p_1,\, \ldots] \in \Ncal^{n}$ | ArrayIndex |  | [] | index of parent joint/link; if no parent exists, the value is $-1$; by default, $p_0=-1$ because the $i$th parent index must always fulfill $p_i<i$; must be always set |
-| **jointTransformations** $\Tm = [\LU{p_0,j_0}{\Tm_0},\, \LU{p_1,j_1}{\Tm_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]$ | Matrix3DList |  | [] | list of constant joint transformations from parent joint coordinates $p_0$ to this joint coordinates $j_0$; this allows to adjust the orientation of the joint axes (but it does not affect the joint offset); if no parent exists ($-1$), the base coordinate system $0$ is used; must be always set |
-| **jointOffsets** $\Vm = [\LU{p_0}{o_0},\, \LU{p_1}{o_1},\, \ldots ] \in [\Rcal^{3}, ...]$ | Vector3DList |  | [] | list of constant joint offsets from parent joint to this joint; $p_0$, $p_1$, $\ldots$ denote the parent coordinate systems; this means that the joint offset is added prior to performing the joint transformation; if no parent exists ($-1$), the base coordinate system $0$ is used; must be always set |
-| **linkInertiasCOM** $\Jm_{COM} = [\LU{j_0}{\Jm_0},\, \LU{j_1}{\Jm_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]$ | Matrix3DList |  | [] | list of link inertia tensors w.r.t. {ref}`COM <COM>` in joint/link $j_i$ coordinates; must be always set |
-| **linkCOMs** $\Cm = [\LU{j_0}{\cv_0},\, \LU{j_1}{\cv_1},\, \ldots ] \in [\Rcal^{3}, ...]$ | Vector3DList |  | [] | list of vectors for center of mass (COM) in joint/link $j_i$ coordinates; must be always set |
-| **linkMasses** $\mv \in \Rcal^{n}$ | Vector |  | [] | masses of links; must be always set |
-| **linkForces** $\LU{0}{\Fm} \in [\Rcal^{3}, ...]$ | Vector3DList |  | [] | list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list $[]$, adding no forces |
-| **linkTorques** $\LU{0}{\Fm_\tau} \in [\Rcal^{3}, ...]$ | Vector3DList |  | [] | list of 3D torque vectors per link in global coordinates; defaults to empty list $[]$, adding no torques |
-| **jointForceVector** $\fv \in \Rcal^{n}$ | Vector |  | [] | generalized force vector per coordinate added to RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint $i$, the torque $f[i]$ acts positive (w.r.t. rotation axis) on link $i$ and negative on parent link $p_i$; must be either empty list/array $[]$ (default) or have size $n$ |
-| **jointPositionOffsetVector** $\uv_o \in \Rcal^{n}$ | Vector |  | [] | offset for joint coordinates used in P(D) control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array $[]$ (default) or have size $n$ |
-| **jointVelocityOffsetVector** $\vv_o \in \Rcal^{n}$ | Vector |  | [] | velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array $[]$ (default) or have size $n$ |
-| **jointPControlVector** $\Pm \in \Rcal^{n}$ | Vector |  | [] | proportional (P) control values per joint (multiplied with position error between joint value and offset $\uv_o$); note that more complicated control laws must be implemented with user functions; must be either empty list/array $[]$ (default) or have size $n$ |
-| **jointDControlVector** $\Dm \in \Rcal^{n}$ | Vector |  | [] | derivative (D) control values per joint (multiplied with velocity error between joint velocity and velocity offset $\vv_o$); note that more complicated control laws must be implemented with user functions; must be either empty list/array $[]$ (default) or have size $n$ |
-| **forceUserFunction** $\fv_{user} \in \Rcal^{n}$ | PyFunctionVectorMbsScalarIndex2Vector |  | 0 | A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_0 \in \Ncal^n$) node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; $n$ being the number of minimal coordinates |
+| **gravity** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{0}{\gv} \in \Rcal^{3}$) gravity vector in inertial coordinates; used to simply apply gravity as LoadMassProportional is not available for KinematicTree |
+| **baseOffset** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{0}{\pv_b} \in \Rcal^{3}$) offset vector for base, in global coordinates |
+| **jointTypes** | JointTypeList |  | [] | (symbol: $\jv_T \in \Ncal^{n}$) joint types of kinematic Tree joints, using exu.JointType, like exu.JointType.RevoluteZ; must be always set |
+| **linkParents** | ArrayIndex |  | [] | (symbol: $\iv_p = [p_0,\, p_1,\, \ldots] \in \Ncal^{n}$) index of parent joint/link; if no parent exists, the value is $-1$; by default, $p_0=-1$ because the $i$th parent index must always fulfill $p_i<i$; must be always set |
+| **jointTransformations** | Matrix3DList |  | [] | (symbol: $\Tm = [\LU{p_0,j_0}{\Tm_0},\, \LU{p_1,j_1}{\Tm_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]$) list of constant joint transformations from parent joint coordinates $p_0$ to this joint coordinates $j_0$; this allows to adjust the orientation of the joint axes (but it does not affect the joint offset); if no parent exists ($-1$), the base coordinate system $0$ is used; must be always set |
+| **jointOffsets** | Vector3DList |  | [] | (symbol: $\Vm = [\LU{p_0}{o_0},\, \LU{p_1}{o_1},\, \ldots ] \in [\Rcal^{3}, ...]$) list of constant joint offsets from parent joint to this joint; $p_0$, $p_1$, $\ldots$ denote the parent coordinate systems; this means that the joint offset is added prior to performing the joint transformation; if no parent exists ($-1$), the base coordinate system $0$ is used; must be always set |
+| **linkInertiasCOM** | Matrix3DList |  | [] | (symbol: $\Jm_{COM} = [\LU{j_0}{\Jm_0},\, \LU{j_1}{\Jm_1},\, \ldots ] \in [\Rcal^{3 \times 3}, ...]$) list of link inertia tensors w.r.t. {ref}`COM <COM>` in joint/link $j_i$ coordinates; must be always set |
+| **linkCOMs** | Vector3DList |  | [] | (symbol: $\Cm = [\LU{j_0}{\cv_0},\, \LU{j_1}{\cv_1},\, \ldots ] \in [\Rcal^{3}, ...]$) list of vectors for center of mass (COM) in joint/link $j_i$ coordinates; must be always set |
+| **linkMasses** | Vector |  | [] | (symbol: $\mv \in \Rcal^{n}$) masses of links; must be always set |
+| **linkForces** | Vector3DList |  | [] | (symbol: $\LU{0}{\Fm} \in [\Rcal^{3}, ...]$) list of 3D force vectors per link in global coordinates acting on joint frame origin; use force-torque couple to realize off-origin forces; defaults to empty list $[]$, adding no forces |
+| **linkTorques** | Vector3DList |  | [] | (symbol: $\LU{0}{\Fm_\tau} \in [\Rcal^{3}, ...]$) list of 3D torque vectors per link in global coordinates; defaults to empty list $[]$, adding no torques |
+| **jointForceVector** | Vector |  | [] | (symbol: $\fv \in \Rcal^{n}$) generalized force vector per coordinate added to RHS of EOM; represents a torque around the axis of rotation in revolute joints and a force in prismatic joints; for a revolute joint $i$, the torque $f[i]$ acts positive (w.r.t. rotation axis) on link $i$ and negative on parent link $p_i$; must be either empty list/array $[]$ (default) or have size $n$ |
+| **jointPositionOffsetVector** | Vector |  | [] | (symbol: $\uv_o \in \Rcal^{n}$) offset for joint coordinates used in P(D) control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array $[]$ (default) or have size $n$ |
+| **jointVelocityOffsetVector** | Vector |  | [] | (symbol: $\vv_o \in \Rcal^{n}$) velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array $[]$ (default) or have size $n$ |
+| **jointPControlVector** | Vector |  | [] | (symbol: $\Pm \in \Rcal^{n}$) proportional (P) control values per joint (multiplied with position error between joint value and offset $\uv_o$); note that more complicated control laws must be implemented with user functions; must be either empty list/array $[]$ (default) or have size $n$ |
+| **jointDControlVector** | Vector |  | [] | (symbol: $\Dm \in \Rcal^{n}$) derivative (D) control values per joint (multiplied with velocity error between joint velocity and velocity offset $\vv_o$); note that more complicated control laws must be implemented with user functions; must be either empty list/array $[]$ (default) or have size $n$ |
+| **forceUserFunction** | PyFunctionVectorMbsScalarIndex2Vector |  | 0 | (symbol: $\fv_{user} \in \Rcal^{n}$) A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below |
 | **visualization** | VObjectKinematicTree |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectKinematicTree`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -58,6 +64,9 @@ The parameters of `VObjectKinematicTree`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

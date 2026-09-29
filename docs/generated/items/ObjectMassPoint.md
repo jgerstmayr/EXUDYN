@@ -20,16 +20,22 @@ A 3D mass point which is attached to a position-based node, usually NodePoint.
 
 The parameters of the item; in a dictionary, its type is 'MassPoint':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsMass** $m$ | UReal |  | 0. | mass [SI:kg] of mass point |
-| **nodeNumber** $n0$ | NodeIndex |  | invalid (-1) | node number (type NodeIndex) for mass point |
+| **physicsMass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of mass point |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n0$) node number (type NodeIndex) for mass point |
 | **visualization** | VObjectMassPoint |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectMassPoint`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -39,6 +45,9 @@ The parameters of `VObjectMassPoint`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

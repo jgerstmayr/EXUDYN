@@ -17,26 +17,32 @@ A system of $n$ second order ordinary differential equations ({ref}`ODE2 <ODE2>`
 
 The parameters of the item; in a dictionary, its type is 'GenericODE2':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **nodeNumbers** $\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$ | ArrayNodeIndex |  | [] | node numbers which provide the coordinates for the object (consecutively as provided in this list) |
-| **massMatrix** $\Mm \in \Rcal^{n \times n}$ | PyMatrixContainer |  | [] | mass matrix of object as MatrixContainer (or numpy array / list of lists) |
-| **stiffnessMatrix** $\Km \in \Rcal^{n \times n}$ | PyMatrixContainer |  | [] | stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction |
-| **dampingMatrix** $\Dm \in \Rcal^{n \times n}$ | PyMatrixContainer |  | [] | damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction |
-| **forceVector** $\fv \in \Rcal^{n}$ | NumpyVector |  | [] | generalized force vector added to RHS |
-| **forceUserFunction** $\fv_{user} \in \Rcal^{n}$ | PyFunctionVectorMbsScalarIndex2Vector |  | 0 | A Python user function which computes the generalized user force vector for the {ref}`ODE2 <ODE2>` equations; see description below |
-| **massMatrixUserFunction** $\Mm_{user} \in \Rcal^{n\times n}$ | PyFunctionMatrixContainerMbsScalarIndex2Vector |  | 0 | A Python user function which computes the mass matrix instead of the constant mass matrix given in $\Mm$; return numpy array or MatrixContainer; see description below |
-| **jacobianUserFunction** $\Jm_{user} \in \Rcal^{n\times n}$ | PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar |  | 0 | A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times $f_{ODE2}$) and w.r.t. the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below |
+| **nodeNumbers** | ArrayNodeIndex |  | [] | (symbol: $\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$) node numbers which provide the coordinates for the object (consecutively as provided in this list) |
+| **massMatrix** | PyMatrixContainer |  | [] | (symbol: $\Mm \in \Rcal^{n \times n}$) mass matrix of object as MatrixContainer (or numpy array / list of lists) |
+| **stiffnessMatrix** | PyMatrixContainer |  | [] | (symbol: $\Km \in \Rcal^{n \times n}$) stiffness matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with dampingMatrix and jacobianUserFunction |
+| **dampingMatrix** | PyMatrixContainer |  | [] | (symbol: $\Dm \in \Rcal^{n \times n}$) damping matrix of object as MatrixContainer (or numpy array / list of lists); NOTE that (dense/sparse triplets) format must agree with stiffnessMatrix and jacobianUserFunction |
+| **forceVector** | NumpyVector |  | [] | (symbol: $\fv \in \Rcal^{n}$) generalized force vector added to RHS |
+| **forceUserFunction** | PyFunctionVectorMbsScalarIndex2Vector |  | 0 | (symbol: $\fv_{user} \in \Rcal^{n}$) A Python user function which computes the generalized user force vector for the {ref}`ODE2 <ODE2>` equations; see description below |
+| **massMatrixUserFunction** | PyFunctionMatrixContainerMbsScalarIndex2Vector |  | 0 | (symbol: $\Mm_{user} \in \Rcal^{n\times n}$) A Python user function which computes the mass matrix instead of the constant mass matrix given in $\Mm$; return numpy array or MatrixContainer; see description below |
+| **jacobianUserFunction** | PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar |  | 0 | (symbol: $\Jm_{user} \in \Rcal^{n\times n}$) A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times $f_{ODE2}$) and w.r.t. the velocities (times $f_{ODE2_t}$). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below |
 | **coordinateIndexPerNode** | ArrayIndex |  | [] | this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed |
-| **tempCoordinates** $\cv_{temp} \in \Rcal^{n}$ | NumpyVector |  | [] | temporary vector containing coordinates |
-| **tempCoordinates_t** $\dot \cv_{temp} \in \Rcal^{n}$ | NumpyVector |  | [] | temporary vector containing velocity coordinates |
-| **tempCoordinates_tt** $\ddot \cv_{temp} \in \Rcal^{n}$ | NumpyVector |  | [] | temporary vector containing acceleration coordinates |
+| **tempCoordinates** | NumpyVector |  | [] | (symbol: $\cv_{temp} \in \Rcal^{n}$) temporary vector containing coordinates |
+| **tempCoordinates_t** | NumpyVector |  | [] | (symbol: $\dot \cv_{temp} \in \Rcal^{n}$) temporary vector containing velocity coordinates |
+| **tempCoordinates_tt** | NumpyVector |  | [] | (symbol: $\ddot \cv_{temp} \in \Rcal^{n}$) temporary vector containing acceleration coordinates |
 | **visualization** | VObjectGenericODE2 |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectGenericODE2`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -49,6 +55,9 @@ The parameters of `VObjectGenericODE2`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

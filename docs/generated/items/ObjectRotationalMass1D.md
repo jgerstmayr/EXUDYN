@@ -18,18 +18,24 @@ A 1D rotational inertia (mass) which is attached to Node1D.
 
 The parameters of the item; in a dictionary, its type is 'RotationalMass1D':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsInertia** $J$ | UReal |  | 0. | inertia components [SI:kgm$^2$] of rotor / rotational mass |
-| **nodeNumber** $n0$ | NodeIndex |  | invalid (-1) | node number (type NodeIndex) of Node1D, providing rotation coordinate $\psi_0 = c_0$ |
-| **referencePosition** $\LU{0}{\pRef_0}$ | Vector3D | 3 | [0.,0.,0.] | a constant reference position = reference point, used to assign joint constraints accordingly and for drawing |
-| **referenceRotation** $\LU{0i}{\Rot_{0}} \in \Rcal^{3 \times 3}$ | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description |
+| **physicsInertia** | UReal |  | 0. | (symbol: $J$) inertia components [SI:kgm$^2$] of rotor / rotational mass |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n0$) node number (type NodeIndex) of Node1D, providing rotation coordinate $\psi_0 = c_0$ |
+| **referencePosition** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{0}{\pRef_0}$) a constant reference position = reference point, used to assign joint constraints accordingly and for drawing |
+| **referenceRotation** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{0i}{\Rot_{0}} \in \Rcal^{3 \times 3}$) an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description |
 | **visualization** | VObjectRotationalMass1D |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectRotationalMass1D`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -39,6 +45,9 @@ The parameters of `VObjectRotationalMass1D`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

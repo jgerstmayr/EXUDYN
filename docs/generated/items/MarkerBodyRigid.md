@@ -18,16 +18,22 @@ A rigid-body (position+orientation) body-marker attached to a local (body-fixed)
 
 The parameters of the item; in a dictionary, its type is 'BodyRigid':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
 | **bodyNumber** | ObjectIndex |  | invalid (-1) | body number to which marker is attached to |
-| **localPosition** $\pLocB$ | Vector3D | 3 | [0.,0.,0.] | local body position of marker; e.g. local (body-fixed) position where force is applied to |
+| **localPosition** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\pLocB$) local body position of marker; e.g. local (body-fixed) position where force is applied to |
 | **visualization** | VMarkerBodyRigid |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VMarkerBodyRigid`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|

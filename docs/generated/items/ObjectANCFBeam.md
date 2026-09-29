@@ -18,19 +18,25 @@ A 3D beam finite element based on the absolute nodal coordinate formulation, usi
 
 The parameters of the item; in a dictionary, its type is 'ANCFBeam':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** | NodeIndex2 | 2 | [invalid (-1), invalid (-1)] | two node numbers for beam element |
-| **physicsLength** $L$ | PReal |  | 0. | [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive; **must be given**: the default is only a placeholder |
+| **physicsLength** | PReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive; **must be given**: the default is only a placeholder |
 | **sectionData** | BeamSection |  | BeamSection() | data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section. |
-| **crossSectionPenaltyFactor** $k_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp$ | Vector3D | 3 | [1.,1.,1.] | [SI:1] additional penalty factors for cross section deformation, which are in total $k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp$ |
-| **crossSectionDamping** $d_{cs} = [d_{fyy},\,d_{fzz},\,d_{fyz}]\tp$ | Vector3D | 3 | [0.,0.,0.] | [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read $d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp$ |
+| **crossSectionPenaltyFactor** | Vector3D | 3 | [1.,1.,1.] | (symbol: $k_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp$) [SI:1] additional penalty factors for cross section deformation, which are in total $k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp$ |
+| **crossSectionDamping** | Vector3D | 3 | [0.,0.,0.] | (symbol: $d_{cs} = [d_{fyy},\,d_{fzz},\,d_{fyz}]\tp$) [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read $d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp$ |
 | **visualization** | VObjectANCFBeam |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VObjectANCFBeam`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -41,6 +47,9 @@ The parameters of `VObjectANCFBeam`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|

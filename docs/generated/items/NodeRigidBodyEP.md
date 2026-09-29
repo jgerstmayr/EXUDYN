@@ -19,18 +19,24 @@ A 3D rigid body node based on Euler parameters for rigid bodies or beams. The no
 
 The parameters of the item; in a dictionary, its type is 'RigidBodyEP':
 
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | node's unique name |
-| **referenceCoordinates** $\qv\cRef = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cRef = [\pv\tp\cRef,\,\tpsi\tp\cRef]\tp$ | Vector7D | 7 | [0.,0.,0., 0.,0.,0.,0.] | reference coordinates (3 position coordinates and 4 Euler parameters) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints) |
-| **initialCoordinates** $\qv\cIni = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cIni = [\uv\tp\cIni,\,\tpsi\tp\cIni]\tp$ | Vector7D | 7 | [0.,0.,0., 0.,0.,0.,0.] | initial displacement coordinates and 4 Euler parameters relative to reference coordinates |
-| **initialVelocities** $\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2,\,\dot \psi_3]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tpsi\tp\cIni]\tp$ | Vector7D | 7 | [0.,0.,0., 0.,0.,0.,0.] | initial velocity coordinates: time derivatives of initial displacements and Euler parameters |
+| **referenceCoordinates** | Vector7D | 7 | [0.,0.,0., 0.,0.,0.,0.] | (symbol: $\qv\cRef = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cRef = [\pv\tp\cRef,\,\tpsi\tp\cRef]\tp$) reference coordinates (3 position coordinates and 4 Euler parameters) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints) |
+| **initialCoordinates** | Vector7D | 7 | [0.,0.,0., 0.,0.,0.,0.] | (symbol: $\qv\cIni = [q_0,\,q_1,\,q_2,\,\psi_0,\,\psi_1,\,\psi_2,\,\psi_3]\tp\cIni = [\uv\tp\cIni,\,\tpsi\tp\cIni]\tp$) initial displacement coordinates and 4 Euler parameters relative to reference coordinates |
+| **initialVelocities** | Vector7D | 7 | [0.,0.,0., 0.,0.,0.,0.] | (symbol: $\dot \qv\cIni = [\dot q_0,\,\dot q_1,\,\dot q_2,\,\dot \psi_0,\,\dot \psi_1,\,\dot \psi_2,\,\dot \psi_3]\tp\cIni = [\dot \uv\tp\cIni,\,\dot \tpsi\tp\cIni]\tp$) initial velocity coordinates: time derivatives of initial displacements and Euler parameters |
 | **addConstraintEquation** | Bool |  | True | True: automatically add Euler parameter constraint for node; False: Euler parameter constraint is not added, must be done manually (e.g., with CoordinateVectorConstraint) |
 | **visualization** | VNodeRigidBodyEP |  |  | parameters for visualization of item |
 
 ## Visualization parameters
 
 The parameters of `VNodeRigidBodyEP`, given as `visualization`:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
@@ -41,6 +47,9 @@ The parameters of `VNodeRigidBodyEP`, given as `visualization`:
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
+
+```{tabularcolumns} |\Y{0.25}|\Y{0.25}|\Y{0.5}|
+```
 
 | output variable | symbol | description |
 |---|---|---|
