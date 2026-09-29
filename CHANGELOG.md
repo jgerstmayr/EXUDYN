@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 137 | 1.12.143 |
+| 1.12 | Metheney | 138 | 1.12.144 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.144** `DOCU` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` RG13: the development documents per item type - what the documentation of a node, object, marker, load and sensor must contain (#2721)
+  - description: The maintainer, 2026-09-27: evaluate on a textual level, from representative examples - the tutorials, and the Create functions that hide the items behind them - what a reader needs to know about a node, marker, load, object and sensor and how they relate; check the text the generator writes around the generated information (e.g. 'This Node has/provides the following types = Position', which could say which markers it allows, and could be generated); make the interpretation of node coordinates systematic; group the objects - rigid bodies, flexible bodies (nonlinear finite elements), connectors acting on two or more markers; a general section per kind, above all for sensors, loads and markers. Written first as temporary documents docs/revision/\<itemType\>DefinitionsDev.md, which are folded into the developer documentation - what documentation an item needs, what it contains and how it is structured - and then removed. revision2026b step RG13.4.
+  - **notes:** What documentation an item needs, what of its page is generated and what is written, the headings of the detailed description per kind and what a mini example is: definitions/README.md, section 'The page of an item'.
+  - date resolved: **2026-09-29 13:18**, date raised: 2026-09-27
 - **1.12.143** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectANCFCable declares an angular velocity access function it does not implement (#2733)
   - description: Found while documenting the finite elements, revision2026b step RG13.5.2.2, 2026-09-28: ObjectANCFCable declares ItemAccessFunctionTypes TranslationalVelocity\_qt, AngularVelocity\_qt and DisplacementMassIntegral\_q, but GetAccessFunctionBody has no case for AngularVelocity\_qt (it is commented out) and GetAngularVelocity throws 'not implemented' - a single slope vector carries no orientation. So CheckSystemIntegrity accepted a MarkerBodyRigid on the cable, which then failed during the simulation, and the item page listed MarkerBodyRigid as fitting. The declaration drops AngularVelocity\_qt; Assemble() now refuses such a marker with the check's own message.
   - **notes:** ObjectANCFCable no longer declares an angular velocity access function it does not implement: Assemble() refuses a MarkerBodyRigid on the 3D cable with a clear message, where the simulation failed before, and the item page no longer lists that marker as fitting.

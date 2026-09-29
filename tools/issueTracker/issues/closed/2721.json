@@ -2,11 +2,15 @@
   "number": 2721,
   "title": "RG13: the development documents per item type - what the documentation of a node, object, marker, load and sensor must contain",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "effort": "HIGH",
   "description": "The maintainer, 2026-09-27: evaluate on a textual level, from representative examples - the tutorials, and the Create functions that hide the items behind them - what a reader needs to know about a node, marker, load, object and sensor and how they relate; check the text the generator writes around the generated information (e.g. 'This Node has/provides the following types = Position', which could say which markers it allows, and could be generated); make the interpretation of node coordinates systematic; group the objects - rigid bodies, flexible bodies (nonlinear finite elements), connectors acting on two or more markers; a general section per kind, above all for sensors, loads and markers. Written first as temporary documents docs/revision/<itemType>DefinitionsDev.md, which are folded into the developer documentation - what documentation an item needs, what it contains and how it is structured - and then removed. revision2026b step RG13.4.",
   "dateRaised": "2026-09-27",
   "deadline": "2027-03-26",
-  "file": "docs/revision"
+  "dateResolved": "2026-09-29 13:18",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/revision",
+  "releaseNotes": "What documentation an item needs, what of its page is generated and what is written, the headings of the detailed description per kind and what a mini example is: definitions/README.md, section 'The page of an item'.",
+  "resolvedInVersion": "1.12.144"
 }

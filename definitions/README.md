@@ -226,3 +226,55 @@ exudev docs                                 # the HTML, strict: a reference to n
 Then read the page: `docs/generated/items/<Item>.md` for an item, `docs/generated/structures/` for
 a structure, `docs/generated/cInterface/` for a `pybind*` text. A macro that is none of the above is
 carried through silently, so the page is the only place a mistake shows.
+
+## The page of an item
+
+What a reference page of an item contains, and who writes it. Say only what is the item's own: what
+all items of a kind share is the general section of the kind in `itemKindDefinitions.py`, published
+on the index page of the kind in the [items reference manual](#sec-item-reference-manual) - link it,
+do not repeat it.
+
+| part | source |
+|---|---|
+| title and `overallDescription` | written: one or two sentences, what it is and what it is for |
+| **Interface** | generated from the declared types: `itemTypes`, `requestedTypes`, `accessFunctionTypes`, and `requestedNodeTypes` of a node marker (`test_itemCompatibility.py` keeps that one equal to the C++ check) |
+| **Parameters**, **Visualization parameters**, **Output variables** | generated from the `description` of each member |
+| **Detailed description** | written, `detailedDescription`, headings by kind (below) |
+| user functions | generated from the `def` (#2664) |
+| **Mini example** | written, `miniExample` (below) |
+| examples, test models | generated |
+
+### The detailed description, by kind
+
+A heading used on several pages is spelled as in `RECURRING_HEADINGS` of `tools/checkDefinitions.py`;
+the headings are not enforced, a page of an unusual item may deviate.
+
+| kind | headings |
+|---|---|
+| node | *Coordinates* (table: index, symbol, kind, meaning, frame), *Configuration*, *Frame and interpretation* (which objects read the node differently), *Action on the equations of motion*; constraints and singularities where there are any. A generic node: one sentence - the object defines the meaning |
+| body | *Definition of quantities*, *Equations of motion*, *Marker interfaces* - the Jacobians of this body only |
+| finite element | *Nodes and coordinates*, *Kinematics and interpolation*, *Strains*, *Mass matrix*, *Elastic forces*, *Limitations*, *Marker interfaces*; `ObjectANCFCable2D` is the model page |
+| super element | *Definition of quantities*, *Equations of motion*, *Marker interfaces*, where they apply |
+| connector | *Definition of quantities*, *Geometric relations*, *Connector forces*; the step to the generalized forces is in the general section |
+| constraint, joint | *Definition of quantities*, *Geometric relations*, *Connector constraint equations* (index 3, and index 2 where there is one), *Post Newton Step* where there is one; what the multipliers are, in which frame |
+| marker | *Marker quantities* (table, with frames), *Jacobians* |
+| load | *Generalized forces*: the load, its frame, $\Qm = \Jm\tp\fv$ with the transformation |
+| sensor | *Measures*, and details only where there are any; no equations |
+
+Rules:
+
+- **Every vector has its frame** (`notation.md`: $\LU{0}{\pv}$, $\LU{b}{\pv}$).
+- **The equations are those of the C++** (`src/Impl<Kind>s/C<Item>.cpp`), read, not recalled.
+- **A defect found while writing** is said on the page with its issue number, and raised as an issue;
+  it is not fixed as part of the text.
+
+### The mini example
+
+- the shortest model that shows the item in its typical use - 5 to 25 lines;
+- runs after the lines the generator puts in front of it: `SC`, `mbs`, `oGround`, `nGround`
+  (`tools/generators/miniExampleEmitter.py`);
+- the item and what it is combined with are created by their class names, not by Create functions;
+- it solves, and sets `exu.sys['testResult']`; the comment states the expected value - an analytical
+  one where the model has one;
+- the reference value goes into `MiniExamplesReferenceSolution` of `python/testing/runTestSuiteRefSol.py`;
+  `runTestSuite.py` runs every mini example.

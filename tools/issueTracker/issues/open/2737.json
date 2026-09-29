@@ -1,0 +1,13 @@
+{
+  "number": 2737,
+  "title": "item pages: which Create functions add the item, and the plainest examples first",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "Left open by the development documents of revision2026b step RG13.4 (#2721), folded into definitions/README.md in RG13.4.6: (1) each item page names the Create functions that add it, and each Create function names the items it adds - measured by running each Create function on a small model, because a static scan misses what an argument selects (CreateRigidBody makes one of four nodes, CreateForce one of two markers); open whether it runs inside generate or writes a JSON file the emitter reads; (2) the examples and test models of a page, today up to 129 links in file order, with the five plainest (shortest) first. revision2026b step RG13.5.0.6.",
+  "dateRaised": "2026-09-29",
+  "deadline": "2027-03-28",
+  "file": "tools/generators/itemDocsEmitter.py"
+}

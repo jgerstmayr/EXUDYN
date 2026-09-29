@@ -6711,3 +6711,22 @@ use and checks a result the comment states:
 it (#2736, RG4.12).
 
 The reference values are in `runTestSuiteRefSol.py`; the suite runs 38 mini examples.
+
+<a id="rg13-4-6"></a>
+### RG13.4.6 — the development documents of the items, folded into the developer documentation (2026-09-29, #2721, #2737, #2738)
+
+The six `docs/revision/*DefinitionsDev.md` (6576 words) had done their work: the frame of the pages
+(RG13.5.0), the general section of every kind and the pages themselves (RG13.5) are built from them.
+What a developer still needs from them is **one section of `definitions/README.md`, *The page of an
+item*, about 50 lines**: which part of a page is generated and from what, the headings of the
+detailed description per kind (as the pages use them, spelled as `RECURRING_HEADINGS`), three rules -
+frames, equations read from the C++, a defect found is an issue - and what a mini example is. It
+refers to the general sections in `itemKindDefinitions.py` and repeats none of them.
+
+The general sections were compared with the documents: nothing they asked for is missing. The
+measurements and findings of the documents are in the log of RG13.4 and RG13.5; the documents
+themselves are removed, and remain in the history.
+
+Three questions of the documents were still open and are issues now: the Create functions on each
+page and the order of the examples (#2737, RG13.5.0.6), and the text two markers keep in HTML
+comments (#2738, RG13.5.3.1).

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.143.dev1
+- Exudyn version = 1.12.144.dev1
 - last change = 2026-09-29
-- Number of issues = 2737
-- Number of resolved issues = 2457 (143 in current version)
+- Number of issues = 2739
+- Number of resolved issues = 2458 (144 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,14 +7568,17 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` MarkerSuperElementRigid and MarkerKinematicTreeRigid keep text in HTML comments (#2738)
+  - description: The detailed descriptions of MarkerSuperElementRigid and MarkerKinematicTreeRigid carry tables and equations inside HTML comments (\<!-- ... --\>, remains of the LaTeX conversion), which are in the definition and on no page. Each part is either restored as Markdown, checked against the C++, or deleted. Left open by revision2026b step RG13.4 (\#2721); revision2026b step RG13.5.3.1.
+  - date raised: 2026-09-29
+- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` item pages: which Create functions add the item, and the plainest examples first (#2737)
+  - description: Left open by the development documents of revision2026b step RG13.4 (\#2721), folded into definitions/README.md in RG13.4.6: (1) each item page names the Create functions that add it, and each Create function names the items it adds - measured by running each Create function on a small model, because a static scan misses what an argument selects (CreateRigidBody makes one of four nodes, CreateForce one of two markers); open whether it runs inside generate or writes a JSON file the emitter reads; (2) the examples and test models of a page, today up to 129 links in file order, with the five plainest (shortest) first. revision2026b step RG13.5.0.6.
+  - date raised: 2026-09-29
 - `DOCU` `HUGE EFF` `raised by: Claude-JG` RG13.6: a MiniExample for every item (#2732)
   - description: The goal of revision2026b group RG13, from the maintainer's announcement of 2026-09-27: every item gets a MiniExample - the short script under 'Mini example' on its page, run by the test suite. Of 97 items, 74 have none (RG13.1). The graphics regression test of RG2.3.3.5 takes every item through its MiniExample, so it waits for this. Agreed on 2026-09-28: a step of its own, starting with nodes, markers, loads and sensors, whose examples are short. revision2026b step RG13.6.
   - date raised: 2026-09-28
 - `DOCU` `HUGE EFF` `raised by: Claude-JG` RG13.5: the documentation of the items, written by the development documents of RG13.4 - nodes, objects, markers, loads, sensors (#2725)
   - description: The maintainer, 2026-09-27, after reading the node, load and sensor documents of RG13.4: those three are complete; 'start a new step RG13.5, which adds according documentation for these types, again adding 13.5.1 for nodes, .2 for objects, ...'. For loads the generalized forces keep their frames: a load is given in global or local coordinates, and the transformation belongs in the equation. For the slope nodes, the interpretation of the slopes goes into the detailed description of each node. RG13.5.0 is the generated frame and the general section per kind (definitions/itemKindDefinitions.py), before the pages are written. revision2026b step RG13.5.
-  - date raised: 2026-09-27
-- `DOCU` `HIGH EFF` `raised by: Claude-JG` RG13: the development documents per item type - what the documentation of a node, object, marker, load and sensor must contain (#2721)
-  - description: The maintainer, 2026-09-27: evaluate on a textual level, from representative examples - the tutorials, and the Create functions that hide the items behind them - what a reader needs to know about a node, marker, load, object and sensor and how they relate; check the text the generator writes around the generated information (e.g. 'This Node has/provides the following types = Position', which could say which markers it allows, and could be generated); make the interpretation of node coordinates systematic; group the objects - rigid bodies, flexible bodies (nonlinear finite elements), connectors acting on two or more markers; a general section per kind, above all for sensors, loads and markers. Written first as temporary documents docs/revision/\<itemType\>DefinitionsDev.md, which are folded into the developer documentation - what documentation an item needs, what it contains and how it is structured - and then removed. revision2026b step RG13.4.
   - date raised: 2026-09-27
 - `DOCU` `HIGH EFF` `raised by: Claude-JG` RG13: each item's description is synchronized once with its implementation, and the definition records that it was (#2717)
   - description: The maintainer, 2026-09-27: each item's description needs to be one-time manually synched with the implementation; then it gets a 'checked' in the definitions file, or a better way for that. Proposal for the better way: the mark records not only who and when, but a fingerprint of the implementation it was checked against - the C++ source of the item (src/Impl\<Kind\>s/C\<Item\>.cpp and the generated header in src/Autogenerated/) - so that checkDefinitions can report a description whose implementation has changed since it was checked, instead of a checked flag that stays true forever. revision2026b step RG13.3.

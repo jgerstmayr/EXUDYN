@@ -2746,7 +2746,7 @@ What depends on it: the graphics regression test takes every item through its Mi
     one: one command, not a hand edit of a hash.
 
 <a id="rg13-4"></a>
-**RG13.4** *(group RG13; maintainer 2026-09-27)* **.0 to .5 DONE 2026-09-28, RG13.4.6 open** —
+**RG13.4** *(group RG13; maintainer 2026-09-27)* **DONE 2026-09-29** —
     [log](exudynRevisionLog2026b.md#rg13-4) — **The development documents per item type** (#2721)
     - *what the documentation of a node, object, marker, load and sensor must contain*, evaluated on
     the text: from the tutorials and the Create functions - *"most model scripts now use Create
@@ -2764,20 +2764,11 @@ What depends on it: the graphics regression test takes every item through its Mi
     documentation an item needs, what it contains and how it is structured, and are removed. They
     are the input of RG13.2's plan.
 
-    - **RG13.4.0** **DONE 2026-09-28**, carried out by RG13.5.0 - [itemDefinitionsDev.md](itemDefinitionsDev.md): what is
-      common - how a reader meets an item (through Create functions), the frame text of the
-      generator, the types and what they should say, the order of every page.
-    - **RG13.4.1** **DONE 2026-09-27** - [nodeDefinitionsDev.md](nodeDefinitionsDev.md).
-    - **RG13.4.2** **DONE 2026-09-28** - [objectDefinitionsDev.md](objectDefinitionsDev.md).
-    - **RG13.4.3** **DONE 2026-09-28** - [markerDefinitionsDev.md](markerDefinitionsDev.md).
-    - **RG13.4.4** **DONE 2026-09-27** - [loadDefinitionsDev.md](loadDefinitionsDev.md).
-    - **RG13.4.5** **DONE 2026-09-27** - [sensorDefinitionsDev.md](sensorDefinitionsDev.md).
-
-      The maintainer's approval of each, with what it changed, is in the
+    - **RG13.4.0** to **RG13.4.5** **DONE 2026-09-28** - the documents on what is common, and on
+      nodes, objects, markers, loads and sensors; the maintainer's approval of each is in the
       [log](exudynRevisionLog2026b.md#decisions-2026-09-29).
-    - **RG13.4.6** the documents, once agreed, folded into `docs/dev/` and removed.
-
-    Each document ends with the questions it leaves to the maintainer.
+    - **RG13.4.6** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-4-6) - folded into
+      [definitions/README.md](../../definitions/README.md) §*The page of an item*, and removed.
 
 <a id="rg13-5"></a>
 **RG13.5** *(group RG13; maintainer 2026-09-27)* **The documentation of the items, written by the
@@ -2813,6 +2804,9 @@ What depends on it: the graphics regression test takes every item through its Mi
       - **RG13.5.0.5** **DONE 2026-09-28** (#2729) — [log](exudynRevisionLog2026b.md#rg13-5-0-5) -
         **every item on a new page of the PDF** (maintainer): a raw LaTeX `\clearpage` opens every
         generated item page; the HTML build ignores it.
+      - **RG13.5.0.6** (#2737) - **the two parts of the frame left open by RG13.4**: each page names
+        the Create functions that add the item, recorded by running them (a static scan misses what an
+        argument selects), and the five plainest examples come first.
     - **RG13.5.1** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-1) - nodes - the
       table of coordinates, the frame and interpretation, the action on the equations of motion,
       constraints, singularities; the slopes of the slope nodes. Found on the way: the Euler parameter
@@ -2840,6 +2834,9 @@ What depends on it: the graphics regression test takes every item through its Mi
       **Jacobians** for the 13 markers that had little or no text; the five with long texts of their
       own (the two relative-coordinate markers, the two superelement markers, the kinematic tree
       marker) keep them. Found on the way: the shape markers accept any body (RG4.9, #2731).
+      - **RG13.5.3.1** (#2738) - `MarkerSuperElementRigid` and `MarkerKinematicTreeRigid` keep tables
+        and equations in HTML comments, on no page: restore them as Markdown, checked against the C++,
+        or delete them.
     - **RG13.5.4** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-4) - loads - the
       load, its frame, the generalized forces with the transformation.
     - **RG13.5.5** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-5) - sensors - the
@@ -2852,12 +2849,8 @@ What depends on it: the graphics regression test takes every item through its Mi
     MiniExample and waits for this. It starts with nodes, markers, loads and sensors, whose examples
     are short, and follows the pages of RG13.5 kind by kind.
 
-    **What a MiniExample is**: the shortest model that shows the item in its typical use, 5 to 25
-    lines after the environment the generator puts in front of it (`SC`, `mbs`, `oGround`, `nGround`);
-    the item and what it is combined with are created by their class names, so that the reader sees
-    what the item takes; it solves, and its last line sets `exu.sys['testResult']` to a value whose
-    **expected result is stated in the comment** - an analytical one wherever the model has one. The
-    reference values are in `runTestSuiteRefSol.MiniExamplesReferenceSolution`.
+    **What a MiniExample is**: [definitions/README.md](../../definitions/README.md) §*The mini
+    example*.
 
     - **RG13.6.1** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-6-1) - nodes (15 of
       16; `NodeGenericAE` waits for RG4.12, #2736).
@@ -2902,7 +2895,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
-| RG13.4.6 | #2721 | the development documents of the items folded into `docs/dev/` and removed |
+| RG13.5.0.6 | #2737 | item pages: the Create functions that add the item; the plainest examples first |
+| RG13.5.3.1 | #2738 | two markers keep text in HTML comments |
 | RG13.5.2 | #2725 | the page of `ObjectBeamGeometricallyExact`, after RG4.8 |
 | RG13.6 | #2732 | a MiniExample for every item; nodes, markers, loads and sensors first |
 

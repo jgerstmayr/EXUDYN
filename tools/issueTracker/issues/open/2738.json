@@ -1,0 +1,13 @@
+{
+  "number": 2738,
+  "title": "MarkerSuperElementRigid and MarkerKinematicTreeRigid keep text in HTML comments",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The detailed descriptions of MarkerSuperElementRigid and MarkerKinematicTreeRigid carry tables and equations inside HTML comments (<!-- ... -->, remains of the LaTeX conversion), which are in the definition and on no page. Each part is either restored as Markdown, checked against the C++, or deleted. Left open by revision2026b step RG13.4 (#2721); revision2026b step RG13.5.3.1.",
+  "dateRaised": "2026-09-29",
+  "deadline": "2027-03-28",
+  "file": "definitions/itemDefsMarkers.py"
+}
