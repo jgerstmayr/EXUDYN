@@ -251,5 +251,30 @@ $$
 
 It can be seen that the torque due to the connector is the same for both spheres, if $r_0=r_1$ applies.
 
+(miniexample-objectcontactspheresphere)=
+## Mini example
+
+
+```python
+#a ball dropped onto a large fixed sphere: penalty contact with its state in a data node
+inertia = InertiaSphere(mass=1, radius=0.1)
+node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,1.2]+eulerParameters0))
+ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=ball)), loadVector=[0,0,-9.81]))
+mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))
+nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0,0,0,0]))
+mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[mGround, mBall], nodeNumber=nData, spheresRadii=[1, 0.1],
+                                        contactStiffness=1e5, contactDamping=1e3))
+
+mbs.Assemble()
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 1000
+mbs.SolveDynamic(simulationSettings)
+
+#at rest on top: 1.1 - m*g/k
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2] #1.0999
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`newtonsCradle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/newtonsCradle.py) (Ex), [`rollerBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rollerBearningModel.py) (Ex), [`contactSphereSphereTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactSphereSphereTest.py) (TM), [`contactSphereSphereTestEAPM.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactSphereSphereTestEAPM.py) (TM), [`createSphereQuadContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereQuadContact.py) (TM), [`createSphereTriangleContact.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createSphereTriangleContact.py) (TM), [`sphereTriangleTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest2.py) (TM)

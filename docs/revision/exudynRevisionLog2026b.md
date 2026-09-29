@@ -6847,3 +6847,27 @@ What writing them showed, all as the code has it:
 - `GenerateStraightLineANCFCable` is not in `exudyn.utilities`, unlike the 2D one; the example imports it
   from `exudyn.beams`;
 - `GetNodeOutput` and `GetSensorValues` return a scalar for a single value.
+
+<a id="rg13-6-5"></a>
+### RG13.6.5 — a MiniExample for the objects (2026-09-29, #2732)
+
+27 MiniExamples, 26 new and the placeholder of `ObjectANCFThinPlate` (*"to be done"*, result 0)
+replaced; 48 of the 51 objects have one, and the suite runs 92.
+
+Analytical where the model has one: the ground as the anchor of a spring, a thrown and spinning rigid
+body, cantilevers of ANCF beam and geometrically exact 2D elements (four elements, converging to the
+Timoshenko value), the ALE cable whose material is pulled through clamped nodes
+($F/(2m)\,t^2$, and with a mass carried by `ObjectJointALEMoving2D`, $F/(2(m_c + m))\,t^2$), a coordinate
+spring with a limit stop, contact stops of a coordinate, a sphere on a sphere, on a triangle and in a
+torus groove, a circle on a curve (all at rest at $mg/k$ or $F/k$ penetration), a disc rolling on with
+its initial velocity (penalty and ideal), prismatic joints along turned axes, a rope as a spring, a
+hydraulic cylinder whose closed chambers hold a weight. The pendulums (`ObjectJointGeneric`,
+`ObjectJointSpherical`, `ObjectJointRevolute2D`) and the cable on a circle are numerical; the generic
+joint's pendulum is the one of `ObjectKinematicTree`'s MiniExample and gives the same angle to 2e-6.
+
+Found while writing them, as the code has it: `ObjectContactSphereTriangle` takes the **sphere as marker
+0** and the triangle as marker 1; `ObjectContactFrictionCircleCable2D` needs a rigid marker for the
+circle, where `ObjectContactCircleCable2D` takes a position marker.
+
+**Not yet**: `ObjectFFRF` and `ObjectFFRFreducedOrder` need a finite element mesh, which the scripts
+read from files or build with NGsolve - RG13.6.6; `ObjectBeamGeometricallyExact` waits for RG4.8.

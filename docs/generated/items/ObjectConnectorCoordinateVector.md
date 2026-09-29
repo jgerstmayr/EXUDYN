@@ -162,5 +162,29 @@ The returned matrix of `jacobianUserFunction` must have `nAE` rows and `len(q)` 
 | `velocityLevel` | Bool | velocityLevel as currently stored in connector |
 | **return value** | MatrixContainer $\in \Rcal^{(n_{q_{m0}}+n_{q_{m1}})\times n_{ae}}$ | returns special jacobian for connector, as exu.MatrixContainer, numpy array or list of lists; use MatrixContainer sparse format for larger matrices to speed up computations; sparse triplets MAY NOT contain zero values! |
 
+(miniexample-objectconnectorcoordinatevector)=
+## Mini example
+
+
+```python
+#all coordinates of two nodes, tied by a coordinate vector constraint X1 qB - X0 qA = offset; the
+#coordinates INCLUDE the reference values, so qB - qA = [1,0,0] keeps the two points where they are
+nA = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
+nB = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nA, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nB, physicsMass=1))
+mA = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nA))
+mB = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nB))
+mbs.AddObject(ObjectConnectorCoordinateVector(markerNumbers=[mA, mB], scalingMarker0=np.eye(3),
+                                             scalingMarker1=np.eye(3), offset=[1,0,0]))
+mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=nA)), loadVector=[2,0,0]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#both masses move together: a = F/(2m) = 1, x = a/2*t^2 at t=1
+exu.sys['testResult'] = mbs.GetNodeOutput(nB, exu.OutputVariableType.Displacement)[0] #0.5
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`coordinateVectorConstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraint.py) (TM), [`coordinateVectorConstraintGenericODE2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM)

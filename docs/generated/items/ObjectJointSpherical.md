@@ -140,5 +140,28 @@ and  $\LU{0}{\Jm_\mathrm{pos,1}}$.
 The position jacobians are added to the system jacobian at rows according to the global indices of the constraint equations
 and the columns are determined by the coordinate indices of the bodies' coordinates.
 
+(miniexample-objectjointspherical)=
+## Mini example
+
+
+```python
+#a point of a rigid body held at a ground point, free to rotate: a spherical pendulum
+inertia = InertiaCuboid(density=1000, sideLengths=[1,0.1,0.1])
+node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0,0]+eulerParameters0))
+body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0,0,-9.81]))
+mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
+mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[-0.5,0,0]))
+oJoint = mbs.AddObject(ObjectJointSpherical(markerNumbers=[mGround, mBody]))
+
+mbs.Assemble()
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 1000
+mbs.SolveDynamic(simulationSettings)
+
+#the joint point stays at the origin; the height of the center after 1 second (numerical)
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`sphericalJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphericalJointTest.py) (TM), [`genericJointUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericJointUserFunctionTest.py) (TM), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM)

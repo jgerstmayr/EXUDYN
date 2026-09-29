@@ -260,5 +260,28 @@ For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-obj
 | `itemNumber` | Index | integer number of the object in mbs, allowing easy access |
 | **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata) |
 
+(miniexample-objectrigidbody)=
+## Mini example
+
+
+```python
+#a rigid body thrown with a spin about a principal axis, under gravity
+inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0,
+                                   initialVelocities=[0,0,5]+list(AngularVelocity2EulerParameters_t([0,0,1], eulerParameters0))))
+body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                     physicsInertia=inertia.GetInertia6D()))
+mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
+mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,0,-9.81]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#z = v0*t - g/2*t^2, and the angle about z is omega*t, at t=1
+p = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
+angle = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2]
+exu.sys['testResult'] = p[2] + angle #0.095 + 1
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`rigidBodyTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial.py) (Ex), [`rigidBodyTutorial2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial2.py) (Ex), [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`rigidBodyTutorial3withMarkers.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3withMarkers.py) (Ex), [`fourBarMechanism3D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py) (Ex)

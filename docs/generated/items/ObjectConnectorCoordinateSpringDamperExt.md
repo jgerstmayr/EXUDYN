@@ -242,5 +242,28 @@ def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStatic
     return k*(u-offset) + d*v
 ```
 
+(miniexample-objectconnectorcoordinatespringdamperext)=
+## Mini example
+
+
+```python
+#a coordinate spring with a limit stop; the stop's state is kept in a data node
+node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
+mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[0,0,0]))
+mbs.AddObject(ObjectConnectorCoordinateSpringDamperExt(markerNumbers=[mGround, mCoord], nodeNumber=nData,
+              stiffness=100, damping=20, useLimitStops=True, limitStopsLower=-1, limitStopsUpper=0.05,
+              limitStopsStiffness=1e4, limitStopsDamping=100))
+mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=10))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#spring and stop share the load: 100*q + 1e4*(q - 0.05) = 10
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.050495
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`coordinateSpringDamper.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/coordinateSpringDamper.py) (Ex), [`involuteGearGraphics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py) (Ex), [`lugreFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/lugreFrictionTest.py) (Ex), [`massSpringFrictionInteractive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/massSpringFrictionInteractive.py) (Ex), [`coordinateSpringDamperExt.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateSpringDamperExt.py) (TM)

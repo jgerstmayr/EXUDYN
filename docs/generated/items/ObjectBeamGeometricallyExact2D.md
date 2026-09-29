@@ -130,5 +130,32 @@ position $(x,\, y)$ moves with the cross section.
 Planar; the output variables `StrainLocal` and `ForceLocal` give $\gamma_1$ and $\gamma_2$ and the
 forces $EA\gamma_1$, $GA\gamma_2$.
 
+(miniexample-objectbeamgeometricallyexact2d)=
+## Mini example
+
+
+```python
+#a cantilever of four planar geometrically exact beam elements on rigid body nodes, loaded at the tip
+L = 1; nElements = 4; EI = 100; GA = 1e4; F = -0.1
+mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+n0 = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0]))
+for i in range(3): #clamped: x, y, rotation
+    mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround,
+                  mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))]))
+for k in range(nElements):
+    n1 = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[L*(k+1)/nElements,0,0]))
+    mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[n0,n1], physicsLength=L/nElements,
+                  physicsMassPerLength=1, physicsCrossSectionInertia=0.01, physicsBendingStiffness=EI,
+                  physicsAxialStiffness=1e5, physicsShearStiffness=GA))
+    n0 = n1
+mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n1)), loadVector=[0,F,0]))
+
+mbs.Assemble()
+mbs.SolveStatic()
+
+#Timoshenko beam: F*L^3/(3*EI) + F*L/GA = -0.3433e-3, approached with more elements
+exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)[1]*1000
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pendulumGeomExactBeam2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2D.py) (Ex), [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`geometricallyExactBeam2Dtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeam2Dtest.py) (TM), [`gridGeomExactBeam2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/gridGeomExactBeam2D.py) (TM), [`LShapeGeomExactBeam2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/LShapeGeomExactBeam2D.py) (TM)

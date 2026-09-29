@@ -233,5 +233,29 @@ def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters):
     return [offsetUserFunctionParameters[0]*(1 - cos(t*10*2*pi)), 0,0,0,0,0]
 ```
 
+(miniexample-objectjointgeneric)=
+## Mini example
+
+
+```python
+#a joint whose constrained axes are chosen: here all but the rotation about z - a revolute joint -
+#holding a rigid body pendulum at its end
+inertia = InertiaCuboid(density=1000, sideLengths=[1,0.1,0.1])
+node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0,0]+eulerParameters0))
+body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0,-9.81,0]))
+mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[-0.5,0,0]))
+mbs.AddObject(ObjectJointGeneric(markerNumbers=[mGround, mBody], constrainedAxes=[1,1,1, 1,1,0]))
+
+mbs.Assemble()
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 1000
+mbs.SolveDynamic(simulationSettings)
+
+#the pendulum falls from horizontal; the angle after 1 second (numerical)
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2]
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`rigidBodyTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial.py) (Ex), [`rigidBodyTutorial2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial2.py) (Ex), [`rigidBodyTutorial3withMarkers.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3withMarkers.py) (Ex), [`fourBarMechanism3D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py) (Ex), [`genericJointUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericJointUserFunctionTest.py) (TM)

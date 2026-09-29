@@ -67,5 +67,27 @@ with the $x$ and $y$ rows of the position Jacobians, $\pm\LU{0}{\Jm_{pos}}\tp\tl
 
 The output variables `Displacement` and `Rotation` the joint declares are not available (#2735).
 
+(miniexample-objectjointrevolute2d)=
+## Mini example
+
+
+```python
+#a planar rigid body pendulum held at its end by a planar revolute joint
+node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0,0]))
+body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=1/12))
+mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=body)), loadVector=[0,-9.81,0]))
+mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
+mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[-0.5,0,0]))
+mbs.AddObject(ObjectJointRevolute2D(markerNumbers=[mGround, mBody]))
+
+mbs.Assemble()
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 1000
+mbs.SolveDynamic(simulationSettings)
+
+#the pendulum falls from horizontal; the angle after 1 second (numerical)
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[2]
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`rigidPendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidPendulum.py) (Ex), [`doublePendulum2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/doublePendulum2D.py) (Ex), [`SliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SliderCrank.py) (Ex), [`simple4linkPendulumBing.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/simple4linkPendulumBing.py) (Ex), [`slidercrankWithMassSpring.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/slidercrankWithMassSpring.py) (Ex)

@@ -97,5 +97,29 @@ integrated penetration, as `contactModel` selects; it acts in the plane of the c
 center and, with opposite sign, on marker 0 with the torque of its lever arm. A segment must be short
 enough that only one circle touches it at a time, which the connector warns about.
 
+(miniexample-objectcontactcurvecircles)=
+## Mini example
+
+
+```python
+#a planar body with a circle of radius 0.1 resting on a curve of line segments (the ground line y=0)
+node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0.1,0]))
+body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=0.01))
+mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=body)), loadVector=[0,-10,0]))
+mCurve = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+mCircle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+segments = np.array([[1,0, -1,0]]) #one segment [x0,y0, x1,y1]; the contact side is to the left of 1->0
+nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[-1,0,0]))
+mbs.AddObject(ObjectContactCurveCircles(markerNumbers=[mCurve, mCircle], nodeNumber=nData, circlesRadii=[0.1],
+                                        segmentsData=exu.MatrixContainer(segments),
+                                        contactStiffness=1e4, contactDamping=100))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#at rest: 0.1 - F/k
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #0.099
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`camFollowerExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py) (Ex), [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`contactCurvePolynomial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurvePolynomial.py) (Ex), [`contactCurveWithLongCurve.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/contactCurveWithLongCurve.py) (Ex), [`contactCurveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactCurveExample.py) (TM)

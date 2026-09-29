@@ -211,5 +211,34 @@ $$
 \dot p_1 = \frac{K_{1,eff}}{V_{1,cur}} \left(  A_1 \cdot \dot s + A_{v,1} \cdot Q_n \cdot \mathrm{sqrts}(p_1 - p_t)  \right)  \quad \mathrm{if} \quad \mathrm A_{v,1} < 0
 $$
 
+(miniexample-objectconnectorhydraulicactuatorsimple)=
+## Mini example
+
+
+```python
+#a hydraulic cylinder between the ground and a mass, both valves closed: the oil in the two chambers
+#is a spring; chamber pressures p0, p1 (a NodeGenericODE1) balance the weight
+m = 100; A = 0.01; p1 = 1e5
+p0 = (m*9.81 + p1*A)/A #the pressure that holds the weight
+nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0,1,0]))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=m))
+mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
+mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[0,-m*9.81,0]))
+mBase = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
+nPressures = mbs.AddNode(NodeGenericODE1(numberOfODE1Coordinates=2, referenceCoordinates=[0,0],
+                                         initialCoordinates=[p0,p1]))
+oCylinder = mbs.AddObject(ObjectConnectorHydraulicActuatorSimple(markerNumbers=[mBase, mMass],
+              nodeNumbers=[nPressures], offsetLength=0.5, strokeLength=1,
+              chamberCrossSection0=A, chamberCrossSection1=A, hoseVolume0=1e-3, hoseVolume1=1e-3,
+              valveOpening0=0, valveOpening1=0, actuatorDamping=1e4, oilBulkModulus=1e9,
+              nominalFlow=1e-4, systemPressure=2e7, tankPressure=0))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#the mass stays where it is
+exu.sys['testResult'] = mbs.GetObjectOutput(oCylinder, exu.OutputVariableType.Distance) #1
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`HydraulicActuator2Arms.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicActuator2Arms.py) (Ex), [`HydraulicActuatorStaticInitialization.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicActuatorStaticInitialization.py) (Ex), [`hydraulicActuatorSimpleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/hydraulicActuatorSimpleTest.py) (TM)

@@ -180,5 +180,34 @@ $$
 x_{data1} \;+\!\!= s.
 $$
 
+(miniexample-objectjointsliding)=
+## Mini example
+
+
+```python
+#the shape of 3D ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
+from exudyn.beams import GenerateStraightLineANCFCable
+cable = ObjectANCFCable(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
+[nodes, elements, *_] = GenerateStraightLineANCFCable(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+                        numberOfElements=4, cableTemplate=cable,
+                        fixedConstraintsNode0=[1,1,1, 1,1,1], fixedConstraintsNode1=[1,1,1, 1,1,1])
+nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0.6,0,0]))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=1))
+mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
+mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[1,0,0]))
+
+cableMarkers = [mbs.AddMarker(MarkerBodyBeamShape(bodyNumber=e)) for e in elements]
+offsets = [0.5*i for i in range(4)] #the element length is 0.5
+nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=2, initialCoordinates=[1, 0.6])) #element 1, sliding coordinate
+mbs.AddObject(ObjectJointSliding(markerNumbers=[mMass, cableMarkers[1]], slidingMarkerNumbers=cableMarkers,
+                                 slidingMarkerOffsets=offsets, nodeNumber=nData, constrainRotations=[0,0,0]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#the mass slides: x = 0.6 + F/(2m)*t^2 at t=1, the stiff cable deflects little
+exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] #1.1
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`NGsolveFFRFSlidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py) (Ex)

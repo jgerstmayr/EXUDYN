@@ -94,5 +94,28 @@ In contrast to the latter, the ObjectJointALEMoving2D and the MarkerBodyMass are
 A detailed paper on this element is yet under submission, but a similar formulation can be found in [PechsteinGerstmayr2013ale] and
 the underlying beam element is identical to ObjectANCFCable2D.
 
+(miniexample-objectaleancfcable2d)=
+## Mini example
+
+
+```python
+#an axially moving cable: the material slides through clamped nodes, described by one ALE coordinate
+nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
+                                   initialCoordinates=[0], initialCoordinates_t=[0]))
+cable = ObjectALEANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4)
+cable.nodeNumbers[2] = nALE #the ALE node of every element
+[nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+                        numberOfElements=4, cableTemplate=cable,
+                        fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
+mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nALE, coordinate=0))
+mbs.AddLoad(LoadCoordinate(markerNumber=mALE, load=1)) #pulls the material along the cable
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#the material of mass 2 is accelerated by 1 N: s = F/(2m)*t^2 at t=1
+exu.sys['testResult'] = mbs.GetNodeOutput(nALE, exu.OutputVariableType.Coordinates) #0.25
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ALEANCFpipe.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ALEANCFpipe.py) (Ex), [`ANCFALEtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`flexiblePendulumANCF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/flexiblePendulumANCF.py) (Ex), [`ANCFoutputTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFoutputTest.py) (TM)

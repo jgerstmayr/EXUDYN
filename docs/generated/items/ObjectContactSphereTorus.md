@@ -119,3 +119,30 @@ on marker 1 is $\LU{0}{\fv}$, the force on marker 0 is $-\LU{0}{\fv}$; the frict
 torque about the centers. The data coordinates hold the gap, the tangential velocity and the impact
 velocity of the last post Newton step, which decide on contact and on the friction regime during the
 Newton iterations (active set).
+
+(miniexample-objectcontactspheretorus)=
+## Mini example
+
+
+```python
+#a ball in the groove of a torus, as in a ball bearing: pushed radially into the groove by a spring
+inertia = InertiaSphere(mass=0.1, radius=0.01)
+node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.1,0,0]+eulerParameters0))
+ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+mRing = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))
+nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0,0,0,0]))
+#groove of an outer ring: torus about z with major radius 0.1 and groove radius 0.011
+mbs.AddObject(ObjectContactSphereTorus(markerNumbers=[mBall, mRing], nodeNumber=nData, radiusSphere=0.01,
+                                       torusMajorRadius=0.1, torusMinorRadius=0.011, torusAxis=[0,0,1],
+                                       contactStiffness=1e6, contactDamping=1e3))
+mbs.AddLoad(LoadForceVector(markerNumber=mBall, loadVector=[10,0,0])) #pushes outwards
+
+mbs.Assemble()
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 1000
+mbs.SolveDynamic(simulationSettings)
+
+#the ball rests in the groove: outwards by the play 0.001 and F/k
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0] #0.10101
+```

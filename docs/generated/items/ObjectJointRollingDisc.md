@@ -154,5 +154,29 @@ $$
 Note that since version 1.8.27 the constraints can be turned on/off separately with `constrainedAxes=[b0,b1,b2]`, in which
 `b0` represents the flag for lateral motion, `b1` switches the constraint for forward motion and `b2` for motion in plane normal direction.
 
+(miniexample-objectjointrollingdisc)=
+## Mini example
+
+
+```python
+#a disc rolling without slip on the ground plane: the constraint of ideal rolling
+r = 0.2
+inertia = InertiaCylinder(density=1000, length=0.05, outerRadius=r, axis=0)
+node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,r]+eulerParameters0,
+                   initialVelocities=[0,-2,0]+list(AngularVelocity2EulerParameters_t([2/r,0,0], eulerParameters0))))
+disc = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=disc)), loadVector=[0,0,-9.81]))
+mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+mDisc = mbs.AddMarker(MarkerBodyRigid(bodyNumber=disc, localPosition=[0,0,0]))
+mbs.AddObject(ObjectJointRollingDisc(markerNumbers=[mGround, mDisc], discRadius=r, discAxis=[1,0,0],
+                                     planeNormal=[0,0,1]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#it rolls on with the initial velocity: y = -2*t at t=1
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #-2
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py) (Ex), [`rollingCoinTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rollingCoinTest.py) (TM), [`rollingDiscTangentialForces.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rollingDiscTangentialForces.py) (TM), [`rotatingTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rotatingTableTest.py) (TM), [`createFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py) (TM), [`createRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createRollingDiscTest.py) (TM)

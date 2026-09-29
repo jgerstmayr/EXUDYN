@@ -72,5 +72,32 @@ the last post Newton step and decide on contact (active set).
 
 The output variable `Distance` the connector declares is not available (#2735).
 
+(miniexample-objectcontactcirclecable2d)=
+## Mini example
+
+
+```python
+#the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
+cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4,
+                          physicsBendingDamping=0.1)
+[nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
+                        numberOfElements=4, cableTemplate=cable, massProportionalLoad=[0,-9.81,0],
+                        fixedConstraintsNode0=[1,1,0,1])
+mCircle = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0.8,-0.2,0]))
+nSegments = 4
+for e in elements:
+    mShape = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=e, numberOfSegments=nSegments))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=nSegments, initialCoordinates=[0.1]*nSegments))
+    mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mCircle, mShape], nodeNumber=nData,
+                                             numberOfContactSegments=nSegments, circleRadius=0.1,
+                                             contactStiffness=1e4))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#the tip rests beyond the circle, whose top is at y=-0.1
+exu.sys['testResult'] = mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)[1]
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFmovingRigidbody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFmovingRigidbody.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFcontactCircleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py) (TM), [`ANCFmovingRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py) (TM), [`ANCFslidingAndALEjointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFslidingAndALEjointTest.py) (TM)

@@ -127,5 +127,27 @@ mbs.SolveDynamic(sims)
 SC.renderer.Stop()
 ```
 
+(miniexample-objectground)=
+## Mini example
+
+
+```python
+#a ground object at a reference position: a fixed point for markers and connectors
+oFixed = mbs.AddObject(ObjectGround(referencePosition=[0,2,0]))
+mFixed = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oFixed, localPosition=[0,0,0]))
+node = mbs.AddNode(NodePoint(referenceCoordinates=[0,1,0]))
+mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
+mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mFixed, mNode], stiffness=[100,100,100],
+                                                   offset=[0,-1,0]))
+mbs.AddLoad(LoadForceVector(markerNumber=mNode, loadVector=[0,-9.81,0]))
+
+mbs.Assemble()
+mbs.SolveStatic()
+
+#the mass hangs 1 below the ground point, lowered by m*g/k
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[1] #-0.0981
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`basicTutorial2024.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/basicTutorial2024.py) (Ex), [`springDamperTutorialNew.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/springDamperTutorialNew.py) (Ex), [`rigidBodyTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial.py) (Ex), [`rigidBodyTutorial2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial2.py) (Ex), [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex)

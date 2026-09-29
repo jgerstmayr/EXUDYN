@@ -206,5 +206,29 @@ be helpful to damp undesired oscillatory shearing motion, however, it may also d
 
 Further details are given in the implementation and examples are provided in the `Examples` and `TestModels` folders.
 
+(miniexample-objectconnectorreevingsystemsprings)=
+## Mini example
+
+
+```python
+#a rope from a fixed point over no sheave to a hanging body: the rope as one spring along its length
+inertia = InertiaCuboid(density=1000, sideLengths=[0.1,0.1,0.1])
+node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,-1,0]+eulerParameters0))
+body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0,-9.81,0]))
+mTop = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+EA = 1e4
+mbs.AddObject(ObjectConnectorReevingSystemSprings(markerNumbers=[mTop, mBody], stiffnessPerLength=EA,
+              dampingPerLength=100, referenceLength=1, sheavesAxes=exu.Vector3DList([[0,0,1],[0,0,1]]),
+              sheavesRadii=[0,0]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#the rope is stretched by m*g*L/EA (damped to rest)
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[1]/(inertia.Mass()*9.81/EA) #-1
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`craneReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/craneReevingSystem.py) (Ex), [`reevingSystemSpringsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/reevingSystemSpringsTest.py) (TM)

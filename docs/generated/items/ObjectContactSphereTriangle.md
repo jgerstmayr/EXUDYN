@@ -111,5 +111,31 @@ torque about the centers. The data coordinates hold the gap, the tangential velo
 velocity of the last post Newton step, which decide on contact and on the friction regime during the
 Newton iterations (active set).
 
+(miniexample-objectcontactspheretriangle)=
+## Mini example
+
+
+```python
+#a ball dropped onto a triangle fixed to the ground
+inertia = InertiaSphere(mass=1, radius=0.1)
+node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2,0.2,0.2]+eulerParameters0))
+ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=ball)), loadVector=[0,0,-9.81]))
+mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))
+nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0,0,0,0]))
+mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, radiusSphere=0.1,
+                                          trianglePoints=exu.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]),
+                                          contactStiffness=1e5, contactDamping=1e3))
+
+mbs.Assemble()
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 1000
+mbs.SolveDynamic(simulationSettings)
+
+#at rest on the triangle: 0.1 - m*g/k
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2] #0.0999
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`sphereTriangleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest.py) (TM), [`sphereTriangleTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest2.py) (TM)

@@ -61,6 +61,22 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     overallDescription='A ground object behaving like a rigid body, but having no degrees of freedom. Used to attach body-connectors without an action. For examples see spring dampers and joints.',
     classType=ClassTypeObject,
+    miniExample=r"""    #a ground object at a reference position: a fixed point for markers and connectors
+    oFixed = mbs.AddObject(ObjectGround(referencePosition=[0,2,0]))
+    mFixed = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oFixed, localPosition=[0,0,0]))
+    node = mbs.AddNode(NodePoint(referenceCoordinates=[0,1,0]))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+    mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
+    mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mFixed, mNode], stiffness=[100,100,100],
+                                                       offset=[0,-1,0]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mNode, loadVector=[0,-9.81,0]))
+
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #the mass hangs 1 below the ground point, lowered by m*g/k
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[1] #-0.0981
+    """,
     createFunctions=['CreateGround'],
     examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py'],
     detailedDescription=r"""    #### Equations
@@ -762,6 +778,23 @@ definitions.append(ItemDefinition(
 ```
 """,
     classType=ClassTypeObject,
+    miniExample=r"""    #a rigid body thrown with a spin about a principal axis, under gravity
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0,
+                                       initialVelocities=[0,0,5]+list(AngularVelocity2EulerParameters_t([0,0,1], eulerParameters0))))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                         physicsInertia=inertia.GetInertia6D()))
+    mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,0,-9.81]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #z = v0*t - g/2*t^2, and the angle about z is omega*t, at t=1
+    p = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
+    angle = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2]
+    exu.sys['testResult'] = p[2] + angle #0.095 + 1
+    """,
     createFunctions=['CreateRigidBody'],
     examples=['Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py'],
     detailedDescription=r"""    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -4442,6 +4475,23 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectANCFCable2DBase,
     overallDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2, which adds additional (redundant) motion in axial direction of the beam. This allows modeling pipes but also axially moving beams. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
+    miniExample=r"""    #an axially moving cable: the material slides through clamped nodes, described by one ALE coordinate
+    nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
+                                       initialCoordinates=[0], initialCoordinates_t=[0]))
+    cable = ObjectALEANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4)
+    cable.nodeNumbers[2] = nALE #the ALE node of every element
+    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+                            numberOfElements=4, cableTemplate=cable,
+                            fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
+    mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nALE, coordinate=0))
+    mbs.AddLoad(LoadCoordinate(markerNumber=mALE, load=1)) #pulls the material along the cable
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the material of mass 2 is accelerated by 1 N: s = F/(2m)*t^2 at t=1
+    exu.sys['testResult'] = mbs.GetNodeOutput(nALE, exu.OutputVariableType.Coordinates) #0.25
+    """,
     detailedDescription=r"""    A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and an axially moving coordinate of type NodeGenericODE2.
     The element has 8+1 coordinates and uses cubic polynomials for position interpolation.
     In addition to ANCFCable2D the element adds an Eulerian axial velocity by the GenericODE2 coordiante.
@@ -4613,6 +4663,29 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     overallDescription=r"""A 3D beam finite element based on the absolute nodal coordinate formulation, using two nodes. The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1). The axial coordinate is $x$ (first coordinate) and the cross section is spanned by local $y$/$z$ axes; assuming dimensions $w_y$ and $w_z$ in cross section, the local position range is $\in [[-L/2,L/2],\, [-wy/2,wy/2],\, [-wz/2,wz/2] ]$. NOTE: Requires further development and tests!""",
     classType=ClassTypeObject,
+    miniExample=r"""    #a cantilever of four 3D ANCF beam elements with cross-section deformation, loaded at the tip
+    L = 1; nElements = 4; F = -0.1
+    section = exu.BeamSection()
+    section.stiffnessMatrix = np.diag([1e5, 1e4, 1e4, 100, 100, 100]) #EA, GA_y, GA_z, GJ, EI_y, EI_z
+    section.massPerLength = 1
+    section.inertia = 0.01*np.eye(3)
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    n0 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[0,0,0, 0,1,0, 0,0,1]))
+    for i in range(9): #clamped: position and both slopes
+        mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround,
+                      mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))]))
+    for k in range(nElements):
+        n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[L*(k+1)/nElements,0,0, 0,1,0, 0,0,1]))
+        mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength=L/nElements, sectionData=section))
+        n0 = n1
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n1)), loadVector=[0,0,F]))
+
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #bending about y; converges to F*L^3/(3*EI_y) + F*L/GA_z = -0.3433e-3 with more elements
+    exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)[2]*1000
+    """,
     detailedDescription=r"""    **This element is under development**, as its class description says: what follows is what the
     implementation computes, not a finished formulation.
 
@@ -4864,6 +4937,27 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     overallDescription=r"""A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
+    miniExample=r"""    #a cantilever of four planar geometrically exact beam elements on rigid body nodes, loaded at the tip
+    L = 1; nElements = 4; EI = 100; GA = 1e4; F = -0.1
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    n0 = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0]))
+    for i in range(3): #clamped: x, y, rotation
+        mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround,
+                      mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))]))
+    for k in range(nElements):
+        n1 = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[L*(k+1)/nElements,0,0]))
+        mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[n0,n1], physicsLength=L/nElements,
+                      physicsMassPerLength=1, physicsCrossSectionInertia=0.01, physicsBendingStiffness=EI,
+                      physicsAxialStiffness=1e5, physicsShearStiffness=GA))
+        n0 = n1
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n1)), loadVector=[0,F,0]))
+
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #Timoshenko beam: F*L^3/(3*EI) + F*L/GA = -0.3433e-3, approached with more elements
+    exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)[1]*1000
+    """,
     detailedDescription=r"""    A shear deformable beam after Simo and Vu-Quoc (1986): the positions and the rotations of the cross
     section are interpolated independently.
 
@@ -5260,11 +5354,26 @@ definitions.append(ItemDefinition(
     Under construction; for output variables, the local position is given in $[-1,1]^3$.
     """,
     mainParentClass=MainParentClassMainObjectBody,
-    miniExample=r"""    #to be done
+    miniExample=r"""    #a square plate of 2x2 ANCF thin plate elements, clamped at one edge, under its own weight
+    from exudyn.shells import ShellMesh
+    plate = ShellMesh(vertices=[[0,0,0],[1,0,0],[1,1,0],[0,1,0]], numberOfElementsX=2, numberOfElementsY=2,
+                      youngsModulus=2e9, poissonsRatio=0, density=1000, thickness=0.01)
+    plate.CreateANCFThinPlateElements(mbs) #adds ObjectANCFThinPlate elements on NodePointSlope12 nodes
+    for node in plate.boundaryNodeNumbers['left']:
+        mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))
+        mbs.AddObject(ObjectJointGeneric(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround,
+                      localPosition=mbs.GetNodeOutput(node, exu.OutputVariableType.Position, exu.ConfigurationType.Reference))),
+                      mNode]))
+    for element in plate.elementNumbers:
+        mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=element)),
+                                         loadVector=[0,0,-9.81]))
 
-    #check result
-    exu.sys['testResult'] = 0
-""",
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #a corner of the free edge; compare q*L^4/(8*D) = 0.0736 of a cantilever strip, D = E*h^3/12
+    exu.sys['testResult'] = mbs.GetNodeOutput(plate.vertexNodeNumbers[1], exu.OutputVariableType.Displacement)[2]
+    """,
     objectType=ObjectTypeFiniteElement,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv\cConfig(x,y,z)}$global position vector of local position $[x,y,z]$"""),
@@ -7114,6 +7223,23 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A 1D (scalar) spring-damper element acting on single ABRV:ODE2 coordinates, same as ObjectConnectorCoordinateSpringDamper but with extended features, such as limit stop and improved friction. It has different user function interface and additional data node as compared to ObjectConnectorCoordinateSpringDamper, but otherwise behaves very similar. The CoordinateSpringDamperExt is very useful for a single axis of a robot or similar machine modelled with a KinematicTree, as it can add friction and limits based on physical properties. It is highly recommended, to use the bristle model for friction with frictionProportionalZone=0 in case of implicit integrators (GeneralizedAlpha) as it converges better.""",
     classType=ClassTypeObject,
+    miniExample=r"""    #a coordinate spring with a limit stop; the stop's state is kept in a data node
+    node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[0,0,0]))
+    mbs.AddObject(ObjectConnectorCoordinateSpringDamperExt(markerNumbers=[mGround, mCoord], nodeNumber=nData,
+                  stiffness=100, damping=20, useLimitStops=True, limitStopsLower=-1, limitStopsUpper=0.05,
+                  limitStopsStiffness=1e4, limitStopsDamping=100))
+    mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=10))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #spring and stop share the load: 100*q + 1e4*(q - 0.05) = 10
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.050495
+    """,
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -7651,6 +7777,29 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A basic hydraulic actuator with pressure build up equations. The actuator follows a valve input value, which results in a in- or outflow of fluid depending on the pressure difference. Valve values can be prescribed by user functions (not yet available) or with the `MainSystem` `PreStepUserFunction(...)`.""",
     classType=ClassTypeObject,
+    miniExample=r"""    #a hydraulic cylinder between the ground and a mass, both valves closed: the oil in the two chambers
+    #is a spring; chamber pressures p0, p1 (a NodeGenericODE1) balance the weight
+    m = 100; A = 0.01; p1 = 1e5
+    p0 = (m*9.81 + p1*A)/A #the pressure that holds the weight
+    nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0,1,0]))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=m))
+    mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
+    mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[0,-m*9.81,0]))
+    mBase = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
+    nPressures = mbs.AddNode(NodeGenericODE1(numberOfODE1Coordinates=2, referenceCoordinates=[0,0],
+                                             initialCoordinates=[p0,p1]))
+    oCylinder = mbs.AddObject(ObjectConnectorHydraulicActuatorSimple(markerNumbers=[mBase, mMass],
+                  nodeNumbers=[nPressures], offsetLength=0.5, strokeLength=1,
+                  chamberCrossSection0=A, chamberCrossSection1=A, hoseVolume0=1e-3, hoseVolume1=1e-3,
+                  valveOpening0=0, valveOpening1=0, actuatorDamping=1e4, oilBulkModulus=1e9,
+                  nominalFlow=1e-4, systemPressure=2e7, tankPressure=0))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the mass stays where it is
+    exu.sys['testResult'] = mbs.GetObjectOutput(oCylinder, exu.OutputVariableType.Distance) #1
+    """,
     detailedDescription=r"""    #### Definition of quantities
 
 
@@ -7998,6 +8147,24 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by $nr$ rigid body markers $[m_0, \, m_1, \, \ldots, \, m_{nr-1}]$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by $m_{c0}$ and $m_{c1}$ .""",
     classType=ClassTypeObject,
+    miniExample=r"""    #a rope from a fixed point over no sheave to a hanging body: the rope as one spring along its length
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.1,0.1,0.1])
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,-1,0]+eulerParameters0))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0,-9.81,0]))
+    mTop = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+    EA = 1e4
+    mbs.AddObject(ObjectConnectorReevingSystemSprings(markerNumbers=[mTop, mBody], stiffnessPerLength=EA,
+                  dampingPerLength=100, referenceLength=1, sheavesAxes=exu.Vector3DList([[0,0,1],[0,0,1]]),
+                  sheavesRadii=[0,0]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the rope is stretched by m*g*L/EA (damped to rest)
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[1]/(inertia.Mass()*9.81/EA) #-1
+    """,
     detailedDescription=r"""    <!--
     #### Definition of quantities
     \startTable{input parameter}{symbol}{description}
@@ -8727,6 +8894,24 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r"""A constraint which constrains the coordinate vectors of two markers Marker[Node|Object|Body]Coordinates attached to nodes or bodies. The marker uses the objects ABRV:LTG-lists to build the according coordinate mappings.""",
     classType=ClassTypeObject,
+    miniExample=r"""    #all coordinates of two nodes, tied by a coordinate vector constraint X1 qB - X0 qA = offset; the
+    #coordinates INCLUDE the reference values, so qB - qA = [1,0,0] keeps the two points where they are
+    nA = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
+    nB = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nA, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nB, physicsMass=1))
+    mA = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nA))
+    mB = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nB))
+    mbs.AddObject(ObjectConnectorCoordinateVector(markerNumbers=[mA, mB], scalingMarker0=np.eye(3),
+                                                 scalingMarker1=np.eye(3), offset=[1,0,0]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=nA)), loadVector=[2,0,0]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #both masses move together: a = F/(2m) = 1, x = a/2*t^2 at t=1
+    exu.sys['testResult'] = mbs.GetNodeOutput(nB, exu.OutputVariableType.Displacement)[0] #0.5
+    """,
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -8930,6 +9115,26 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation for the arbitrary disc axis is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.',
     classType=ClassTypeObject,
+    miniExample=r"""    #a disc rolling on the ground plane with penalty contact and friction
+    r = 0.2
+    inertia = InertiaCylinder(density=1000, length=0.05, outerRadius=r, axis=0)
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,r]+eulerParameters0,
+                       initialVelocities=[0,-2,0]+list(AngularVelocity2EulerParameters_t([2/r,0,0], eulerParameters0))))
+    disc = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=disc)), loadVector=[0,0,-9.81]))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+    mDisc = mbs.AddMarker(MarkerBodyRigid(bodyNumber=disc, localPosition=[0,0,0]))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[0,0,0]))
+    mbs.AddObject(ObjectConnectorRollingDiscPenalty(markerNumbers=[mGround, mDisc], nodeNumber=nData, discRadius=r,
+                                                    discAxis=[1,0,0], planeNormal=[0,0,1], dryFriction=[0.5,0.5],
+                                                    dryFrictionProportionalZone=1e-2, contactStiffness=1e5, contactDamping=1e3))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #it rolls on with the initial velocity: y = -2*t at t=1
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #-2
+    """,
     createFunctions=['CreateRollingDiscPenalty'],
     detailedDescription=r"""    #### Definition of quantities
 
@@ -9570,6 +9775,22 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A penalty-based contact condition for one coordinate; the contact gap $g$ is defined as $g=marker.value[1]- marker.value[0] - offset$; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.""",
     classType=ClassTypeObject,
+    miniExample=r"""    #a coordinate that contacts a stop: a 1D mass falls onto the ground coordinate (gap = q1 - q0 - offset)
+    node = mbs.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[0.1]))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[0.1])) #the gap
+    mbs.AddObject(ObjectContactCoordinate(markerNumbers=[mGround, mCoord], nodeNumber=nData,
+                                          contactStiffness=1e4, contactDamping=100))
+    mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=-10))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #at rest on the stop, pressed in by F/k
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #-0.001
+    """,
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -9707,6 +9928,27 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.""",
     classType=ClassTypeObject,
+    miniExample=r"""    #the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
+    cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4,
+                              physicsBendingDamping=0.1)
+    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
+                            numberOfElements=4, cableTemplate=cable, massProportionalLoad=[0,-9.81,0],
+                            fixedConstraintsNode0=[1,1,0,1])
+    mCircle = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0.8,-0.2,0]))
+    nSegments = 4
+    for e in elements:
+        mShape = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=e, numberOfSegments=nSegments))
+        nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=nSegments, initialCoordinates=[0.1]*nSegments))
+        mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mCircle, mShape], nodeNumber=nData,
+                                                 numberOfContactSegments=nSegments, circleRadius=0.1,
+                                                 contactStiffness=1e4))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the tip rests beyond the circle, whose top is at y=-0.1
+    exu.sys['testResult'] = mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)[1]
+    """,
     detailedDescription=r"""    #### Markers
 
     Marker 0 is the center of the circle, any marker with a position; marker 1 is a
@@ -9854,6 +10096,29 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a RigidBody Marker, from node or object) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with 3$\times$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]. The connector works with Cable2D and ALECable2D, HOWEVER, due to conceptual differences the (tangential) frictionStiffness cannot be used with ALECable2D; if using, it gives wrong tangential stresses, even though it may work in general.""",
     classType=ClassTypeObject,
+    miniExample=r"""    #contact with friction between a circle and an ANCF cable: a cantilever falls onto a circle
+    cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4,
+                              physicsBendingDamping=0.1)
+    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
+                            numberOfElements=4, cableTemplate=cable, massProportionalLoad=[0,-9.81,0],
+                            fixedConstraintsNode0=[1,1,0,1])
+    mCircle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0.8,-0.2,0]))
+    nSegments = 4
+    for e in elements:
+        mShape = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=e, numberOfSegments=nSegments))
+        nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3*nSegments,
+                                        initialCoordinates=[0.1]*nSegments+[0]*2*nSegments)) #gaps, friction states
+        mbs.AddObject(ObjectContactFrictionCircleCable2D(markerNumbers=[mCircle, mShape], nodeNumber=nData,
+                                                 numberOfContactSegments=nSegments, circleRadius=0.1,
+                                                 contactStiffness=1e4, contactDamping=10,
+                                                 frictionVelocityPenalty=100, frictionCoefficient=0.5))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the tip rests beyond the circle, whose top is at y=-0.1
+    exu.sys['testResult'] = mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)[1]
+    """,
     detailedDescription=r"""    #### Definition of quantities
 
     <!--\rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{} -->
@@ -10436,6 +10701,25 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'A simple contact connector between two spheres, using various contact models and the option for contact of sphere inside hollow sphere (marker1). The connector implements at least the same functionality as in GeneralContact and is intended for simple setups and for testing, while GeneralContact is much more efficient due to parallelization approaches and efficient contact search.',
     classType=ClassTypeObject,
+    miniExample=r"""    #a ball dropped onto a large fixed sphere: penalty contact with its state in a data node
+    inertia = InertiaSphere(mass=1, radius=0.1)
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,1.2]+eulerParameters0))
+    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=ball)), loadVector=[0,0,-9.81]))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+    mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0,0,0,0]))
+    mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[mGround, mBall], nodeNumber=nData, spheresRadii=[1, 0.1],
+                                            contactStiffness=1e5, contactDamping=1e3))
+
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 1000
+    mbs.SolveDynamic(simulationSettings)
+
+    #at rest on top: 1.1 - m*g/k
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2] #1.0999
+    """,
     createFunctions=['CreateSphereSphereContact'],
     detailedDescription=r"""    #### Definition of quantities
 
@@ -10797,6 +11081,27 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'A simple contact connector between a sphere (marker0) and a torus (marker1). The sphere is assumed to be placed inside of the torus (outer contact of sphere with torus currently not implemented!).',
     classType=ClassTypeObject,
+    miniExample=r"""    #a ball in the groove of a torus, as in a ball bearing: pushed radially into the groove by a spring
+    inertia = InertiaSphere(mass=0.1, radius=0.01)
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.1,0,0]+eulerParameters0))
+    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    mRing = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+    mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0,0,0,0]))
+    #groove of an outer ring: torus about z with major radius 0.1 and groove radius 0.011
+    mbs.AddObject(ObjectContactSphereTorus(markerNumbers=[mBall, mRing], nodeNumber=nData, radiusSphere=0.01,
+                                           torusMajorRadius=0.1, torusMinorRadius=0.011, torusAxis=[0,0,1],
+                                           contactStiffness=1e6, contactDamping=1e3))
+    mbs.AddLoad(LoadForceVector(markerNumber=mBall, loadVector=[10,0,0])) #pushes outwards
+
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 1000
+    mbs.SolveDynamic(simulationSettings)
+
+    #the ball rests in the groove: outwards by the play 0.001 and F/k
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0] #0.10101
+    """,
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -10995,6 +11300,26 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'A simple contact connector between a sphere (marker0) and a triangle (marker1). Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired.',
     classType=ClassTypeObject,
+    miniExample=r"""    #a ball dropped onto a triangle fixed to the ground
+    inertia = InertiaSphere(mass=1, radius=0.1)
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2,0.2,0.2]+eulerParameters0))
+    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=ball)), loadVector=[0,0,-9.81]))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+    mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0,0,0,0]))
+    mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, radiusSphere=0.1,
+                                              trianglePoints=exu.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]),
+                                              contactStiffness=1e5, contactDamping=1e3))
+
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 1000
+    mbs.SolveDynamic(simulationSettings)
+
+    #at rest on the triangle: 0.1 - m*g/k
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2] #0.0999
+    """,
     createFunctions=['CreateSphereTriangleContact', 'CreateSphereQuadContact'],
     detailedDescription=r"""    #### Definition of quantities
 
@@ -11181,6 +11506,24 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'A contact model between a curve defined by piecewise segments and a set of circles. The 2D curve may corotate in 3D with the underlying marker and also defines the plane of action for the circles. [REQUIRES FURTHER TESTING; friction not yet available]',
     classType=ClassTypeObject,
+    miniExample=r"""    #a planar body with a circle of radius 0.1 resting on a curve of line segments (the ground line y=0)
+    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0.1,0]))
+    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=0.01))
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=body)), loadVector=[0,-10,0]))
+    mCurve = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+    mCircle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+    segments = np.array([[1,0, -1,0]]) #one segment [x0,y0, x1,y1]; the contact side is to the left of 1->0
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[-1,0,0]))
+    mbs.AddObject(ObjectContactCurveCircles(markerNumbers=[mCurve, mCircle], nodeNumber=nData, circlesRadii=[0.1],
+                                            segmentsData=exu.MatrixContainer(segments),
+                                            contactStiffness=1e4, contactDamping=100))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #at rest: 0.1 - F/k
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #0.099
+    """,
     detailedDescription=r"""    **Further testing is required, and friction is not available yet**, as the class description says.
 
     #### Definition of quantities
@@ -11424,6 +11767,24 @@ definitions.append(ItemDefinition(
 ```
 """,
     classType=ClassTypeObject,
+    miniExample=r"""    #a joint whose constrained axes are chosen: here all but the rotation about z - a revolute joint -
+    #holding a rigid body pendulum at its end
+    inertia = InertiaCuboid(density=1000, sideLengths=[1,0.1,0.1])
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0,0]+eulerParameters0))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0,-9.81,0]))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[-0.5,0,0]))
+    mbs.AddObject(ObjectJointGeneric(markerNumbers=[mGround, mBody], constrainedAxes=[1,1,1, 1,1,0]))
+
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 1000
+    mbs.SolveDynamic(simulationSettings)
+
+    #the pendulum falls from horizontal; the angle after 1 second (numerical)
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2]
+    """,
     createFunctions=['CreateGenericJoint'],
     examples=['Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py', 'TestModels/genericJointUserFunctionTest.py'],
     detailedDescription=r"""    (sec-objectjointgeneric-definitionofquantities)=
@@ -11890,6 +12251,22 @@ definitions.append(ItemDefinition(
 ```
 """,
     classType=ClassTypeObject,
+    miniExample=r"""    #a body that may only slide along the x-axis of the joint frame, here turned to the global y-axis
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.1,0.1,0.1])
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+    mbs.AddObject(ObjectJointPrismaticX(markerNumbers=[mGround, mBody], rotationMarker0=RotationMatrixZ(0.5*np.pi),
+                                        rotationMarker1=RotationMatrixZ(0.5*np.pi)))
+    mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[1,1,1])) #only the y-part moves the body
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #y = F_y/(2m)*t^2 at t=1, x and z stay 0
+    exu.sys['testResult'] = sum(mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement))*2*inertia.Mass() #1
+    """,
     createFunctions=['CreatePrismaticJoint'],
     examples=['TestModels/revoluteJointPrismaticJointTest.py'],
     detailedDescription=r"""    (sec-objectjointprismaticx-definitionofquantities)=
@@ -12077,6 +12454,23 @@ definitions.append(ItemDefinition(
 ```
 """,
     classType=ClassTypeObject,
+    miniExample=r"""    #a point of a rigid body held at a ground point, free to rotate: a spherical pendulum
+    inertia = InertiaCuboid(density=1000, sideLengths=[1,0.1,0.1])
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0,0]+eulerParameters0))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0,0,-9.81]))
+    mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
+    mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[-0.5,0,0]))
+    oJoint = mbs.AddObject(ObjectJointSpherical(markerNumbers=[mGround, mBody]))
+
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 1000
+    mbs.SolveDynamic(simulationSettings)
+
+    #the joint point stays at the origin; the height of the center after 1 second (numerical)
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
+    """,
     createFunctions=['CreateSphericalJoint'],
     examples=['TestModels/sphericalJointTest.py', 'TestModels/genericJointUserFunctionTest.py', 'TestModels/kinematicTreeConstraintTest.py'],
     detailedDescription=r"""    #### Definition of quantities
@@ -12251,6 +12645,24 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly). The ground body can be a rigid body which is moving. In this case, the flat surface is assumed to be in the $x$-$y$-plane at $z=0$. Note that the rolling body must have the reference point at the center of the disc. NOTE: the cases of normal other than $z$-direction, wheel axis other than $x$-axis and moving ground body needs to be tested further, check your results!',
     classType=ClassTypeObject,
+    miniExample=r"""    #a disc rolling without slip on the ground plane: the constraint of ideal rolling
+    r = 0.2
+    inertia = InertiaCylinder(density=1000, length=0.05, outerRadius=r, axis=0)
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,r]+eulerParameters0,
+                       initialVelocities=[0,-2,0]+list(AngularVelocity2EulerParameters_t([2/r,0,0], eulerParameters0))))
+    disc = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=disc)), loadVector=[0,0,-9.81]))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+    mDisc = mbs.AddMarker(MarkerBodyRigid(bodyNumber=disc, localPosition=[0,0,0]))
+    mbs.AddObject(ObjectJointRollingDisc(markerNumbers=[mGround, mDisc], discRadius=r, discAxis=[1,0,0],
+                                         planeNormal=[0,0,1]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #it rolls on with the initial velocity: y = -2*t at t=1
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #-2
+    """,
     createFunctions=['CreateRollingDisc'],
     detailedDescription=r"""    #### Definition of quantities
 
@@ -12454,6 +12866,22 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers',
     classType=ClassTypeObject,
+    miniExample=r"""    #a planar rigid body pendulum held at its end by a planar revolute joint
+    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0,0]))
+    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=1/12))
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=body)), loadVector=[0,-9.81,0]))
+    mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
+    mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[-0.5,0,0]))
+    mbs.AddObject(ObjectJointRevolute2D(markerNumbers=[mGround, mBody]))
+
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 1000
+    mbs.SolveDynamic(simulationSettings)
+
+    #the pendulum falls from horizontal; the angle after 1 second (numerical)
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[2]
+    """,
     examples=['Examples/rigidPendulum.py', 'Examples/doublePendulum2D.py', 'Examples/SliderCrank.py', 'Examples/simple4linkPendulumBing.py', 'Examples/slidercrankWithMassSpring.py'],
     detailedDescription=r"""    #### Definition of quantities
 
@@ -12549,6 +12977,20 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers.',
     classType=ClassTypeObject,
+    miniExample=r"""    #a planar rigid body sliding along an axis of the ground: the axis in marker 0, the normal in marker 1
+    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0]))
+    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+    mbs.AddObject(ObjectJointPrismatic2D(markerNumbers=[mGround, mBody], axisMarker0=[1,1,0], normalMarker1=[-1,1,0]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[2,0,0])) #its part along the axis moves the body
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #along the 45 degree axis: s = (F/sqrt(2))/(2m)*t^2, so x = s/sqrt(2) = F/(4m) at t=1
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[0] #0.25
+    """,
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -12667,6 +13109,29 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A specialized 3D sliding joint between a list of beam elements (updated marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.',
     classType=ClassTypeObject,
+    miniExample=r"""    #the shape of 3D ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
+    from exudyn.beams import GenerateStraightLineANCFCable
+    cable = ObjectANCFCable(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
+    [nodes, elements, *_] = GenerateStraightLineANCFCable(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+                            numberOfElements=4, cableTemplate=cable,
+                            fixedConstraintsNode0=[1,1,1, 1,1,1], fixedConstraintsNode1=[1,1,1, 1,1,1])
+    nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0.6,0,0]))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=1))
+    mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
+    mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[1,0,0]))
+
+    cableMarkers = [mbs.AddMarker(MarkerBodyBeamShape(bodyNumber=e)) for e in elements]
+    offsets = [0.5*i for i in range(4)] #the element length is 0.5
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=2, initialCoordinates=[1, 0.6])) #element 1, sliding coordinate
+    mbs.AddObject(ObjectJointSliding(markerNumbers=[mMass, cableMarkers[1]], slidingMarkerNumbers=cableMarkers,
+                                     slidingMarkerOffsets=offsets, nodeNumber=nData, constrainRotations=[0,0,0]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the mass slides: x = 0.6 + F/(2m)*t^2 at t=1, the stiff cable deflects little
+    exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] #1.1
+    """,
     detailedDescription=r"""    #### Definition of quantities
 
     <!--
@@ -12958,6 +13423,28 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.',
     classType=ClassTypeObject,
+    miniExample=r"""    #the coordinates of ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
+    cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
+    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+                            numberOfElements=4, cableTemplate=cable,
+                            fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
+    nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0.6,0]))
+    mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, physicsMass=1))
+    mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
+    mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[1,0,0]))
+
+    cableMarkers = [mbs.AddMarker(MarkerBodyCable2DCoordinates(bodyNumber=e)) for e in elements]
+    offsets = [0.5*i for i in range(4)] #the element length is 0.5
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=2, initialCoordinates=[1, 0.6])) #element 1, sliding coordinate
+    mbs.AddObject(ObjectJointSliding2D(markerNumbers=[mMass, cableMarkers[1]], slidingMarkerNumbers=cableMarkers,
+                                       slidingMarkerOffsets=offsets, nodeNumber=nData))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the mass slides: x = 0.6 + F/(2m)*t^2 at t=1, the stiff cable deflects little
+    exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] #1.1
+    """,
     detailedDescription=r"""    #### Definition of quantities
 
     <!-- -->
@@ -13265,6 +13752,30 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r"""A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the ABRV:ODE2 coordinate q[0] provides the (given) moving coordinate in the cable element.""",
     classType=ClassTypeObject,
+    miniExample=r"""    #a mass point carried by the material of an axially moving cable
+    nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
+                                       initialCoordinates=[0], initialCoordinates_t=[0]))
+    cable = ObjectALEANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4)
+    cable.nodeNumbers[2] = nALE
+    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+                            numberOfElements=4, cableTemplate=cable,
+                            fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
+    mbs.AddLoad(LoadCoordinate(markerNumber=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nALE, coordinate=0)), load=1))
+
+    nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0.6,0]))
+    mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, physicsMass=2))
+    cableMarkers = [mbs.AddMarker(MarkerBodyCable2DCoordinates(bodyNumber=e)) for e in elements]
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[1])) #element 1
+    mbs.AddObject(ObjectJointALEMoving2D(markerNumbers=[mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass)), cableMarkers[1]],
+                                         slidingMarkerNumbers=cableMarkers, slidingMarkerOffsets=[0.5*i for i in range(4)],
+                                         slidingOffset=0.6, nodeNumbers=[nData, nALE]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #cable material (mass 2) and mass point (2) move together: x = 0.6 + F/(2*4)*t^2 at t=1
+    exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] #0.725
+    """,
     detailedDescription=r"""    #### Definition of quantities
 
     <!--

@@ -2875,7 +2875,11 @@ What depends on it: the graphics regression test takes every item through its Mi
       16; `NodeGenericAE` waits for RG4.12, #2736).
     - **RG13.6.2** to **RG13.6.4** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-6-2) -
       markers, loads, sensors: every one has a MiniExample.
-    - **RG13.6.5** objects, by the groups of RG13.5.2.
+    - **RG13.6.5** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-6-5) - objects: all but
+      three have a MiniExample.
+    - **RG13.6.6** `ObjectFFRF` and `ObjectFFRFreducedOrder`: they need a finite element mesh, which
+      today comes from a file or from NGsolve; a MiniExample needs a small mesh built in the script
+      (or a helper of `exudyn.FEM` that builds one). `ObjectBeamGeometricallyExact` waits for RG4.8.
 
 ## Next steps recommended
 

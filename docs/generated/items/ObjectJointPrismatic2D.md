@@ -78,5 +78,25 @@ $\lambda_i = 0$.
 
 The output variables `Distance` and `Rotation` the joint declares are not available (#2735).
 
+(miniexample-objectjointprismatic2d)=
+## Mini example
+
+
+```python
+#a planar rigid body sliding along an axis of the ground: the axis in marker 0, the normal in marker 1
+node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0]))
+body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+mbs.AddObject(ObjectJointPrismatic2D(markerNumbers=[mGround, mBody], axisMarker0=[1,1,0], normalMarker1=[-1,1,0]))
+mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[2,0,0])) #its part along the axis moves the body
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#along the 45 degree axis: s = (F/sqrt(2))/(2m)*t^2, so x = s/sqrt(2) = F/(4m) at t=1
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[0] #0.25
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`geneticOptimizationSliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/geneticOptimizationSliderCrank.py) (Ex), [`PARTS_ATEs_moving.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/PARTS_ATEs_moving.py) (TM), [`scissorPrismaticRevolute2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/scissorPrismaticRevolute2D.py) (TM), [`sliderCrankFloatingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrankFloatingTest.py) (TM)

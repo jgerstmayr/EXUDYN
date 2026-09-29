@@ -80,5 +80,27 @@ recommended for the next step is the time to reach $g = 0$ with the current gap 
 `activeConnector` has no effect on this connector, and the output variable `Distance` it declares is
 not available (#2735).
 
+(miniexample-objectcontactcoordinate)=
+## Mini example
+
+
+```python
+#a coordinate that contacts a stop: a 1D mass falls onto the ground coordinate (gap = q1 - q0 - offset)
+node = mbs.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[0.1]))
+mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[0.1])) #the gap
+mbs.AddObject(ObjectContactCoordinate(markerNumbers=[mGround, mCoord], nodeNumber=nData,
+                                      contactStiffness=1e4, contactDamping=100))
+mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=-10))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#at rest on the stop, pressed in by F/k
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #-0.001
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFcontactCircleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactCircleTest.py) (TM), [`contactCoordinateTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactCoordinateTest.py) (TM)
