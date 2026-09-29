@@ -10,6 +10,7 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 | [CODING_STYLE.md](CODING_STYLE.md) | naming, abbreviations, file headers, how to report an error from C++ (§10), what is deprecated |
 | [WORKFLOW.md](WORKFLOW.md) | issue tracker, versioning, the four commit gates |
 | [NEW_ITEM.md](NEW_ITEM.md) | how to set up a new item: the definition, what is generated, the C++, what to run |
+| [GUI_MANUAL_CHECK.md](GUI_MANUAL_CHECK.md) | the manual check of the render window and the dialogs before a release, per platform |
 | [../../definitions/README.md](../../definitions/README.md) | the item and structure definitions as Python, and the function declaration library |
 | [../../tools/generators/README.md](../../tools/generators/README.md) | the new generator code and how to re-emit the definitions |
 | [exudynRevisionInfo2026.md](https://github.com/jgerstmayr/EXUDYN/blob/master/docs/revision/exudynRevisionInfo2026.md) | general information on the v1.11.0 → v2.0 restructuring: rules, facts, decisions |
@@ -30,6 +31,7 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 /docs/dev/CODING_STYLE
 /docs/dev/WORKFLOW
 /docs/dev/NEW_ITEM
+/docs/dev/GUI_MANUAL_CHECK
 /definitions/README
 /tools/generators/README
 /tools/exudev/README

@@ -1,0 +1,17 @@
+{
+  "number": 2748,
+  "title": "a manual check of the render window and the dialogs before a release, on each platform",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-29 (tmp/ManualGraphicsCheck): nothing automatic checks that a human can use the render window and the dialogs - keys, mouse, tkinter windows, focus, fonts, window placement. A check list for one person and one hour per platform (Windows, Ubuntu, macOS) before each release, with a model that has an item of every kind: the list into the developer documentation, the model into python/testing. revision2026b step RG2.4; RG1.4 waits for it.",
+  "dateRaised": "2026-09-29",
+  "deadline": "2027-03-28",
+  "dateResolved": "2026-09-29 19:58",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/GUI_MANUAL_CHECK.md",
+  "releaseNotes": "The developer documentation has a check list of the render window and the dialogs, for a person on each platform before a release, with a model that has an item of every kind (python/testing/guiManualCheckModel.py).",
+  "resolvedInVersion": "1.12.158"
+}

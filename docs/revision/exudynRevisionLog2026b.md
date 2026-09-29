@@ -6996,3 +6996,22 @@ pydoclint 0.9.1:
 The baseline regenerated (one fixed entry dropped); `pydoclint` reports *no violations*. **Why the
 CI saw it first**: no local gate ran pydoclint. It is now a stage of `exudev generate --all-checks`,
 next to ruff and stubtest, so the job fails only if the local checks were skipped.
+
+<a id="rg2-4"></a>
+### RG2.4 — the manual GUI check (2026-09-29, #2748)
+
+From the maintainer's draft (`tmp/ManualGraphicsCheck`): the check list is
+`docs/dev/GUI_MANUAL_CHECK.md` - preparation, render window mouse and view keys, item and simulation
+keys, the dialogs from the render window, SolutionViewer and PlotSensor, AnimateModes, quitting,
+optional checks, the report, platform notes; the introduction shortened to four points, the plan step
+references replaced by issue numbers. The model is `python/testing/guiManualCheckModel.py` (mass point
+with spring-damper and force, a 3D double pendulum, sensors with a trace; it waits for SPACE and goes on
+with the SolutionViewer and PlotSensor); no runner runs it. Checked here: it assembles - 7 objects, 3
+loads, 2 sensors - and it was not run with its windows (rule 11). The checks themselves belong to each
+release (RG1.4).
+
+**Planned the same day**: RG4.8 gets nine sub-steps from a colleague's comparison of the element with
+an SE(3) beam after Sonneville et al. (`tmp/beam_element_comparison_vs_exudyn.pdf`) and the six open
+issues of the 3D element (#736, #1100, #1273, #1494, #1499, #1550); the source still carries the
+*MISSING* Jacobian terms and *"h0 must contain the reference configuration"*, so none of them is solved
+yet. The planar element's issue (#2208) is RG4.14.

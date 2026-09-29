@@ -8,5 +8,6 @@
   "effort": "MEDIUM",
   "description": "add reference configuration to residual and jacobian",
   "dateRaised": "2023-04-06",
-  "deadline": "2023-10-03"
+  "deadline": "2023-10-03",
+  "workingRemarks": "planned as revision2026b step RG4.8.6 (2026-09-29), inspected first: it may be solved already"
 }

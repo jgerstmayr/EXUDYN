@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 149 | 1.12.157 |
+| 1.12 | Metheney | 150 | 1.12.158 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.158** `TESTING` `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a manual check of the render window and the dialogs before a release, on each platform (#2748)
+  - description: The maintainer, 2026-09-29 (tmp/ManualGraphicsCheck): nothing automatic checks that a human can use the render window and the dialogs - keys, mouse, tkinter windows, focus, fonts, window placement. A check list for one person and one hour per platform (Windows, Ubuntu, macOS) before each release, with a model that has an item of every kind: the list into the developer documentation, the model into python/testing. revision2026b step RG2.4; RG1.4 waits for it.
+  - **notes:** The developer documentation has a check list of the render window and the dialogs, for a person on each platform before a release, with a model that has an item of every kind (python/testing/guiManualCheckModel.py).
+  - date resolved: **2026-09-29 19:58**, date raised: 2026-09-29
 - **1.12.157** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the GitLab job check\_docstrings fails, and no local gate runs pydoclint (#2747)
   - description: The maintainer, 2026-09-29, tmp/gitLabRunsFailed/check\_docstrings.txt: pydoclint reports 29 findings outside its baseline - 25 DOC108 in the generated itemInterface.py (the user function parameters carry their Protocol type since \#2664, and the configuration says no type hints in signatures), three DOC202 (a Returns: None section without a return: GUI.ApplyColumnWidths, GUI.StoreWindowGeometry, overrideSettings.StoreDialogGeometry) and one DOC104 (argument order in resultsMonitor.MonitorResults). No local gate runs pydoclint, so the CI job is the first to see it. Fix the four, record the deliberate DOC108 in the baseline, and add pydoclint to exudev generate --all-checks. revision2026b step RG10.12.
   - **notes:** The docstring check of the CI passes again, and exudev generate --all-checks runs it locally.

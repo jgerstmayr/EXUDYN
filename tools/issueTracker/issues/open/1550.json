@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "add F_Lie*Glocal_q term for Jacobian to improve convergence",
   "dateRaised": "2023-05-02",
-  "deadline": "2023-10-29"
+  "deadline": "2023-10-29",
+  "workingRemarks": "planned as revision2026b step RG4.8.5 (2026-09-29), inspected first: it may be solved already"
 }

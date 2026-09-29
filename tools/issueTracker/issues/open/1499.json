@@ -8,5 +8,6 @@
   "effort": "MEDIUM",
   "description": "check for advanced right-angle frame",
   "dateRaised": "2023-04-08",
-  "deadline": "2023-10-05"
+  "deadline": "2023-10-05",
+  "workingRemarks": "planned as revision2026b step RG4.8.3 (2026-09-29), inspected first: it may be solved already"
 }

@@ -93,6 +93,8 @@ internal GitLab meanwhile.
       fixed or recorded as an issue with a decision;
     - **macOS wheels** exist and pass - the machine is expected around 2026-10-20;
     - the documentation has been **read by somebody who did not write it**;
+    - the **manual GUI check** (RG2.4, `docs/dev/GUI_MANUAL_CHECK.md`) is done on Windows, Ubuntu and
+      macOS;
     - `exudev release` runs clean: its readiness step (revision2026 step R8.2) checks the issue
       store, the published pages, a clean working tree and a free tag, and `--tag` writes the
       annotated tag with `dist/RELEASE_NOTES.md` as its message.
@@ -136,6 +138,15 @@ NOT cover, and about the testing that no suite can do.
     Every finding becomes an issue (`exudev issue raise`), so that the round leaves a record
     rather than a memory. The round is what RG1.4 waits for.
 
+
+<a id="rg2-4"></a>
+**RG2.4** *(group RG2; maintainer 2026-09-29)* **A manual check of the render window and the dialogs
+    before a release** (#2748). The tests check what the renderer draws; nothing checks that a person can
+    use the window and the dialogs - keys, mouse, tkinter windows, focus, fonts, placement. The check
+    list is [docs/dev/GUI_MANUAL_CHECK.md](../dev/GUI_MANUAL_CHECK.md), about one hour per platform, with
+    `python/testing/guiManualCheckModel.py`, which has an item of every kind and waits for the person.
+    **The list and the model DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg2-4); **the checks
+    themselves** are done once per release on Windows, Ubuntu and macOS, and RG1.4 waits for them.
 
 <a id="rg2-3"></a>
 **RG2.3** *(group RG2; maintainer 2026-09-22)* **A graphics regression suite** (#2582). RG2.1
@@ -1118,6 +1129,47 @@ find its file and line, on every raise).
     the formulation, and what is missing; its reference page (RG13.5.2) waits for it. **The rule this
     sets**: an item found with a larger defect while RG13 documents it gets an RG4 step for a deeper
     analysis, not a fix inside RG13.
+
+    **The material** (maintainer, 2026-09-29): a colleague's comparison of the element with an own
+    SE(3) beam after Sonneville, Cardona & Brüls (2014), done with Claude (`tmp/beam_element_comparison_vs_exudyn.pdf`,
+    the code not included). Its findings, from the source and from runs:
+    - the same as the literature: the SE(3) interpolation; `TExpSE3`/`TExpSE3Inv` (the active form after
+      Hante 2022 equals Sonneville's to machine precision; the commented-out one loses accuracy at small
+      angles); the elastic forces and their Jacobian, checked against the running element;
+    - different: the **mass matrix** - lumped, block-diagonal per node, the rotational block from each
+      node's `G_local` - where Sonneville's Eq. (81) is consistent and couples the nodes; the
+      **gyroscopic terms** per node, $\tomega \times (\Jm \tomega)$, not integrated over the element
+      (Eq. 78-82); **no Jacobian of the mass matrix and the gyroscopic terms**, and the elastic Jacobian
+      misses the $\Gm_{local,q}$ and $\Rot\tp_q$ chain rule terms (marked *MISSING* in the source);
+      **gravity** by midpoint shape functions, without the nodal torques; the **velocity** of a point
+      interpolated linearly (*"not consistent with position"*); **no body markers**
+      (`GetAccessFunctionBody` not implemented);
+    - measured: static large deformation agrees to $5\cdot10^{-9}$ m; a flexible pendulum of 10 elements
+      released from horizontal follows `ObjectBeamGeometricallyExact2D` and the SE(3) reference, while
+      the 3D element departs visibly after $t = 0.5$ s.
+
+    The open issues of the element are sub-steps here, each **inspected first** - some may be solved:
+    - **RG4.8.1** reproduce the comparison with a script of our own: the element fixed at both nodes at a
+      prescribed configuration, forces and Jacobian from the joint reactions; kept in `tmp/`;
+    - **RG4.8.2** a planar dynamic test: the flexible pendulum of the comparison with
+      `ObjectBeamGeometricallyExact2D`, the 3D element and `ObjectANCFCable2D` - the test model that shows
+      the dynamic difference;
+    - **RG4.8.3** a 3D test against the literature: the right-angle frame (L-shape) with its published
+      response (#1499);
+    - **RG4.8.4** the mass matrix and the gyroscopic (quadratic velocity) terms - consistent after
+      Sonneville Eq. (78)-(82), or lumped with the correct terms (#1273);
+    - **RG4.8.5** the Jacobian: the missing $\Gm_{local,q}$ and $\Rot\tp_q$ terms, and the Jacobian of
+      the mass and gyroscopic terms (#1550, #1100);
+    - **RG4.8.6** the reference configuration in the residual and the Jacobian - a pre-curved element,
+      *"h0 must contain the reference configuration"* in the source (#1494);
+    - **RG4.8.7** distributed loads with their nodal torques, a consistent velocity field, body markers;
+    - **RG4.8.8** whether #736 (*"include GeomExactBeam3D as provided by Jan Tomec"*) is this element
+      or superseded by it;
+    - **RG4.8.9** then the reference page (RG13.5.2) and the MiniExample (RG13.6).
+
+<a id="rg4-14"></a>
+**RG4.14** *(group RG4; 2026-09-29)* **`ObjectBeamGeometricallyExact2D`: a test of the 3-node element**
+    (#2208) - the only open issue of the planar element.
 
 <a id="rg4-9"></a>
 **RG4.9** *(group RG4; from RG13.5.3, 2026-09-28)* **DONE 2026-09-29** —
@@ -2985,7 +3037,9 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
-| RG4.8 | #2730 | `ObjectBeamGeometricallyExact` (3D): analyse the defects of the implementation |
+| RG4.8 | #2730, #736, #1100, #1273, #1494, #1499, #1550 | `ObjectBeamGeometricallyExact` (3D): the comparison reproduced, 2D and 3D tests, mass matrix, gyroscopic terms, Jacobian, reference configuration |
+| RG4.14 | #2208 | `ObjectBeamGeometricallyExact2D`: a test of the 3-node element |
+| RG2.4 | #2748 | the manual GUI check, per release and platform (list and model done) |
 | RG4.12 | #2736 | `NodeGenericAE` cannot be used: no object, marker or script takes it - **deprecate, or an object for it?** |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |

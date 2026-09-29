@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.157.dev1
+- Exudyn version = 1.12.158.dev1
 - last change = 2026-09-29
-- Number of issues = 2748
-- Number of resolved issues = 2471 (157 in current version)
+- Number of issues = 2749
+- Number of resolved issues = 2472 (158 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7737,6 +7737,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-01-13
 - `EXTENSION` `LOW EFF` GeometricallyExactBeam2D (#2208)
   - description: add test for 3-node element
+  - **remarks:** planned as revision2026b step RG4.14 (2026-09-29), inspected first: it may be solved already
   - date raised: 2026-01-08
 - `CHECK` `LOW EFF` perspective (#2205)
   - description: test moving along a scene when changing the centerPoint
@@ -7977,6 +7978,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2023-05-14
 - `FIX` `MEDIUM EFF` GeometricallyExactBeam (#1550)
   - description: add F\_Lie\*Glocal\_q term for Jacobian to improve convergence
+  - **remarks:** planned as revision2026b step RG4.8.5 (2026-09-29), inspected first: it may be solved already
   - date raised: 2023-05-02
 - `EXTENSION` `HIGH EFF` KinematicTree (#1549)
   - description: consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body?
@@ -7995,9 +7997,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2023-04-08
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` GeometricallyExactBeam (#1499)
   - description: check for advanced right-angle frame
+  - **remarks:** planned as revision2026b step RG4.8.3 (2026-09-29), inspected first: it may be solved already
   - date raised: 2023-04-08
 - `FIX` <span class="textred">`HIGH`</span> `MEDIUM EFF` GeometricallyExactBeam (#1494)
   - description: add reference configuration to residual and jacobian
+  - **remarks:** planned as revision2026b step RG4.8.6 (2026-09-29), inspected first: it may be solved already
   - date raised: 2023-04-06
 - `CHANGE` `LOW EFF` StaticSolver (#1493)
   - description: add exception in case that Lie group nodes are used with static solver, which cannot work
@@ -8037,6 +8041,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2022-11-05
 - `CHECK` `MEDIUM EFF` GeometricallyExactBeam (#1273)
   - description: check quadratic velocity terms
+  - **remarks:** planned as revision2026b step RG4.8.4 (2026-09-29), inspected first: it may be solved already
   - date raised: 2022-09-24
 - `CHECK` `HIGH EFF` UserFunctions (#1247)
   - description: check whether optimization of user functions with numba/JIT removes C-\>Python-\>C roundtrip overhead using pybind11 f.target approach from tests/test\_callbacks.cpp; this would enable to retrieve the original c-function pointer
@@ -8076,6 +8081,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2022-05-23
 - `EXTENSION` `HIGH EFF` GeometricallyExactBeam3D (#1100)
   - description: finalize implementation and fix jacobian computation
+  - **remarks:** planned as revision2026b step RG4.8.5 (2026-09-29), inspected first: it may be solved already
   - date raised: 2022-05-23
 - `EXTENSION` `HIGH EFF` ANCFBeam3D (#1087)
   - description: complete implementation of all functions (rigid marker, etc.)
@@ -8232,6 +8238,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2021-08-13
 - `EXTENSION` `HIGH EFF` include GeomExactBeam3D (#736)
   - description: as provided by Jan Tomec
+  - **remarks:** planned as revision2026b step RG4.8.8 (2026-09-29), inspected first: it may be solved already
   - date raised: 2021-08-12
 - `IMPROVEMENT` `MEDIUM EFF` optimize CollectCurrentNodeMarkerData (#728)
   - description: optimize function for CNodeRigidBodyRotVecLG
