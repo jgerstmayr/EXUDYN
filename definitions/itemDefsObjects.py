@@ -1435,8 +1435,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     position of that node. `MarkerSuperElementPosition` and `MarkerSuperElementRigid` act on them, with
     the Jacobians of the nodes and the weights of the marker; a load or constraint on single coordinates
     uses `MarkerObjectODE2Coordinates` or the coordinate markers of the nodes. The general body markers -
-    `MarkerBodyPosition`, `MarkerBodyRigid`, `MarkerBodyMass` - do **not** work on this object: its body
-    access functions are not available (#2734).
+    `MarkerBodyPosition`, `MarkerBodyRigid`, `MarkerBodyMass` - do **not** work on this object, whose body
+    access functions are not available: `Assemble()` refuses them.
 
 """,
     mainParentClass=MainParentClassMainObjectBody,
@@ -1545,7 +1545,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemFunctionDef('ComputeJacobianODE2_ODE2'),
         ItemFunctionDef('GetAvailableJacobians'),
         #the types serve MarkerSuperElementPosition/Rigid; GetAccessFunctionBody raises, so the general
-        #body markers do not work although CheckSystemIntegrity admits them (#2734)
+        #body markers are refused at Assemble() (#2734)
         ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'SuperElement'],
                                 bodyMarkers=False),
         ItemFunctionDef('GetAccessFunctionBody'),
@@ -2141,7 +2141,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     coordinates. Loads and connectors act on the tree through it; forces and torques on the joints
     themselves are the object's own parameters. A joint coordinate can also be reached with
     `MarkerNodeCoordinate` on the `NodeGenericODE2` of the tree. The general body markers and the super
-    element markers do **not** work on this object (#2734).
+    element markers do **not** work on this object: `Assemble()` refuses them.
 
 """,
     mainParentClass=MainParentClassMainObjectBody,
@@ -2327,7 +2327,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians'),
         #the types serve MarkerKinematicTreeRigid; GetAccessFunctionBody raises, so the general
-        #body markers do not work although CheckSystemIntegrity admits them (#2734)
+        #body markers are refused at Assemble() (#2734)
         ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'KinematicTree'],
                                 bodyMarkers=False),
         ItemFunctionDef('GetAccessFunctionBody'),
@@ -2785,6 +2785,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     center of mass `physicsCenterOfMass`, through the coordinates of the reference frame only: the
     flexible coordinates get no share of it.
 
+
+    This object has no MiniExample, because it needs a finite element mesh; a complete model is
+    [](#examples-ngsolveffrf), with the mesh from NGsolve.
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeSuperElement,
@@ -3351,6 +3354,10 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
     CoordinateLoads are added for each ABRV:ODE2 coordinate on the RHS of the equations of motion. 
 
+
+    This object has no MiniExample, because it needs a finite element mesh and its modes; complete
+    models are [](#examples-ngsolvecmstutorial), with NGsolve, and [](#testmodels-objectffrfreducedordertest),
+    with a mesh and matrices from Abaqus files.
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeSuperElement,
@@ -9821,8 +9828,7 @@ definitions.append(ItemDefinition(
     Newton step, and a change of the contact state repeats the step (active set strategy); the step size
     recommended for the next step is the time to reach $g = 0$ with the current gap velocity.
 
-    `activeConnector` has no effect on this connector, and the output variable `Distance` it declares is
-    not available (#2735).
+    With `activeConnector = False` the force is zero. The output variable `Distance` is the gap $g$.
     """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
@@ -9969,8 +9975,6 @@ definitions.append(ItemDefinition(
     the circle: otherwise geometry and equations are those of `ObjectContactFrictionCircleCable2D`, see
     [](#sec-item-objectcontactfrictioncirclecable2d). The data coordinates, one per segment, hold the gap of
     the last post Newton step and decide on contact (active set).
-
-    The output variable `Distance` the connector declares is not available (#2735).
     """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeConnector,
@@ -12905,7 +12909,8 @@ definitions.append(ItemDefinition(
     with the $x$ and $y$ rows of the position Jacobians, $\pm\LU{0}{\Jm_{pos}}\tp\tlambda$. With
     `activeConnector = False` the equations become $\tlambda = \Null$.
 
-    The output variables `Displacement` and `Rotation` the joint declares are not available (#2735).
+    The output variable `Displacement` is $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$, zero up to the drift of the
+    position on the velocity level.
     """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeJoint,
@@ -13021,7 +13026,9 @@ definitions.append(ItemDefinition(
     may rotate relative to each other; with `activeConnector = False` both equations become
     $\lambda_i = 0$.
 
-    The output variables `Distance` and `Rotation` the joint declares are not available (#2735).
+    The output variable `Distance` is the position of marker m1 along the axis,
+    $(\pv_1-\pv_0)\tp \Am_0 \tv_0 / |\tv_0|$, and `Rotation` the angle of marker m1 relative to marker m0
+    about $z$, from $\Am_0\tp \Am_1$.
     """,
     mainParentClass=MainParentClassMainObjectConnector,
     objectType=ObjectTypeJoint,

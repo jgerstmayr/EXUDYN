@@ -345,6 +345,10 @@ results depend strongly on the choice of the reference frame (or the underlying 
 
 CoordinateLoads are added for each {ref}`ODE2 <ODE2>` coordinate on the RHS of the equations of motion.
 
+This object has no MiniExample, because it needs a finite element mesh and its modes; complete
+models are [](#examples-ngsolvecmstutorial), with NGsolve, and [](#testmodels-objectffrfreducedordertest),
+with a mesh and matrices from Abaqus files.
+
 **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
 Note that itemNumber represents the index of the ObjectFFRFreducedOrder object in mbs, which can be used to retrieve additional data from the object through

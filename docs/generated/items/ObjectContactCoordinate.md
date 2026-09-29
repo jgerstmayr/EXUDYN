@@ -77,8 +77,7 @@ Jacobians of the coordinate markers. The data coordinate is updated to the curre
 Newton step, and a change of the contact state repeats the step (active set strategy); the step size
 recommended for the next step is the time to reach $g = 0$ with the current gap velocity.
 
-`activeConnector` has no effect on this connector, and the output variable `Distance` it declares is
-not available (#2735).
+With `activeConnector = False` the force is zero. The output variable `Distance` is the gap $g$.
 
 (miniexample-objectcontactcoordinate)=
 ## Mini example

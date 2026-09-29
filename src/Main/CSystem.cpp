@@ -355,6 +355,24 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 							systemIsInteger = false;
 						}
 					}
+					//a super element or kinematic tree marker needs its kind of object, and an object that serves
+					//only such markers refuses the general body markers, whose access functions it lacks (#2734)
+					bool superElementMarker = EXUstd::IsOfType(markerType, Marker::SuperElement);
+					bool kinematicTreeMarker = EXUstd::IsOfType(markerType, Marker::KinematicTree);
+					if ((superElementMarker && !EXUstd::IsOfType(afType, AccessFunctionType::SuperElement)) ||
+						(kinematicTreeMarker && !EXUstd::IsOfType(afType, AccessFunctionType::KinematicTree)))
+					{
+						PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
+							" requires " + (superElementMarker ? "a super element" : "a kinematic tree") + ", but object number " + EXUstd::ToString(objectIndex) + " is none", PyErrorType::modelError);
+						systemIsInteger = false;
+					}
+					else if (!superElementMarker && !kinematicTreeMarker && EXUstd::IsOfType(afType, AccessFunctionType::OwnMarkersOnly) &&
+						(EXUstd::IsOfType(markerType, Marker::Position) || EXUstd::IsOfType(markerType, Marker::Orientation) || EXUstd::IsOfType(markerType, Marker::BodyMass)))
+					{
+						PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
+							" cannot be attached to object number " + EXUstd::ToString(objectIndex) + ", which provides access only for its own markers (MarkerSuperElementPosition, MarkerSuperElementRigid, MarkerKinematicTreeRigid, MarkerObjectODE2Coordinates)", PyErrorType::modelError);
+						systemIsInteger = false;
+					}
 				}
 			}
 		}

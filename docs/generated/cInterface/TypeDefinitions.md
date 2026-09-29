@@ -195,6 +195,7 @@ The class **AccessFunctionType** has the following **functions and structures**:
 - **`DisplacementSurfaceNormalIntegral_q`**: for surface loads; pressure acts normal to the surface
 - **`SuperElement`**: for super elements, using TranslationalVelocity_qt and AngularVelocity_qt
 - **`KinematicTree`**: for KinematicTree, using TranslationalVelocity_qt and AngularVelocity_qt
+- **`OwnMarkersOnly`**: the access functions serve only the object's own markers (super element or kinematic tree markers); the general body markers are refused
 - **`JacobianTtimesVector_q`**: derivative of jacobian^T times vector (provided in markerData.vectorValue)
 - **`SuperElementAlternativeRotationMode`**: for super elements, alternative rotation mode
 

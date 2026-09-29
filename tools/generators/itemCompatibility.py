@@ -92,9 +92,11 @@ class Item:
     def CarriesMarker(self, marker):
         """marker can be placed on this body"""
         needs = marker.BodyMarkerNeeds()
-        ownMarker = 'SuperElement' in marker.provided or 'KinematicTree' in marker.provided
+        ownMarker = [t for t in ('SuperElement', 'KinematicTree') if t in marker.provided]
+        #a super element or kinematic tree marker needs its kind of object (#2734)
         return (self.kind == 'Object' and needs is not None and self.access != []
-                and all(n in self.access for n in needs) and (self.bodyMarkers or ownMarker))
+                and all(n in self.access for n in needs + ownMarker)
+                and (self.bodyMarkers or ownMarker != []))
 
 
 def LoadItems():

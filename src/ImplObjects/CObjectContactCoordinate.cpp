@@ -49,6 +49,7 @@ void CObjectContactCoordinate::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataS
 
 	//as gap is negative in case of contact, the force needs to act in opposite direction
 	Real fContact = hasContact*(gap * parameters.contactStiffness + gap_t * parameters.contactDamping);
+	if (!parameters.activeConnector) { fContact = 0.; } //an inactive connector adds no force (#2735)
 
 	////link separate vectors to result (ode2Lhs) vector
 	//ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
@@ -87,7 +88,12 @@ OutputVariableType CObjectContactCoordinate::GetOutputVariableTypes() const
 //! provide according output variable in "value"
 void CObjectContactCoordinate::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
-	PyError("CObjectContactCoordinate::GetOutputVariableConnector not implemented", PyErrorType::notImplementedError);
+	switch (variableType)
+	{
+		case OutputVariableType::Distance: value = Vector({ ComputeGap(markerData) }); break; //the gap (#2735)
+		default:
+			SysError("CObjectContactCoordinate::GetOutputVariable failed"); //error should not occur, because types are checked!
+	}
 }
 
 

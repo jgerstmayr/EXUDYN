@@ -1125,7 +1125,8 @@ find its file and line, on every raise).
     coordinate markers only.
 
 <a id="rg4-10"></a>
-**RG4.10** *(group RG4; from RG13.5.2.3, 2026-09-28)* **`ObjectGenericODE2` and `ObjectKinematicTree`
+**RG4.10** *(group RG4; from RG13.5.2.3, 2026-09-28)* **DONE 2026-09-29** —
+    [log](exudynRevisionLog2026b.md#rg4-10) — **`ObjectGenericODE2` and `ObjectKinematicTree`
     admit the general body markers, which then fail** (#2734). Both declare `TranslationalVelocity_qt`
     and `AngularVelocity_qt` so that their own markers pass `CSystem::CheckSystemIntegrity`; the same
     declaration admits `MarkerBodyPosition`, `MarkerBodyRigid` and `MarkerBodyMass`, whose computation
@@ -1134,7 +1135,8 @@ find its file and line, on every raise).
     it as well, so that `Assemble()` refuses the combination.
 
 <a id="rg4-11"></a>
-**RG4.11** *(group RG4; from RG13.5.2.4, 2026-09-28)* **`ObjectContactCoordinate` ignores
+**RG4.11** *(group RG4; from RG13.5.2.4, 2026-09-28)* **DONE 2026-09-29** —
+    [log](exudynRevisionLog2026b.md#rg4-10) — **`ObjectContactCoordinate` ignores
     `activeConnector`, and its output variable `Distance` raises** (#2735). **Extended in RG13.5.2.5**:
     four objects declare output variables whose `GetOutputVariableConnector` raises *"not implemented"* -
     `ObjectContactCoordinate` and `ObjectContactCircleCable2D` (`Distance`), `ObjectJointRevolute2D`
@@ -1151,6 +1153,11 @@ find its file and line, on every raise).
     example, test model or module of the package uses it - a node with algebraic coordinates and no
     object to write their equations. Either an object takes it (its description names linear state
     space systems) or it is deprecated. Its page has no MiniExample until then.
+
+    **Needs the maintainer's decision** (2026-09-29): there is no mechanism to deprecate an item class
+    (RG12.2 is for parameters), and making it usable needs an object that writes algebraic equations for
+    its coordinates - e.g. a generic algebraic object with a residual user function, or an extension of
+    `ObjectGenericODE1`/`ObjectGenericODE2` that takes an AE node. Neither is a fix.
 
 <a id="rg4-13"></a>
 **RG4.13** *(group RG4; from RG13.5.3.1, 2026-09-29)* **DONE 2026-09-29** —
@@ -2877,9 +2884,11 @@ What depends on it: the graphics regression test takes every item through its Mi
       markers, loads, sensors: every one has a MiniExample.
     - **RG13.6.5** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-6-5) - objects: all but
       three have a MiniExample.
-    - **RG13.6.6** `ObjectFFRF` and `ObjectFFRFreducedOrder`: they need a finite element mesh, which
-      today comes from a file or from NGsolve; a MiniExample needs a small mesh built in the script
-      (or a helper of `exudyn.FEM` that builds one). `ObjectBeamGeometricallyExact` waits for RG4.8.
+    - **RG13.6.6** *(maintainer 2026-09-29: later)* `ObjectFFRF` and `ObjectFFRFreducedOrder` get their
+      MiniExamples when tetrahedral finite elements are part of Exudyn itself; until then a mesh comes from
+      a file or from NGsolve, and their pages name a complete model instead (`NGsolveFFRF.py`,
+      `NGsolveCMStutorial.py`, `objectFFRFreducedOrderTest.py`). `ObjectBeamGeometricallyExact` waits for
+      RG4.8.
 
 ## Next steps recommended
 
@@ -2905,9 +2914,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.7 | #2423 | every C++ user error inspects the Python source for its file and line |
 | RG4.8 | #2730 | `ObjectBeamGeometricallyExact` (3D): analyse the defects of the implementation |
 | RG4.9 | #2731 | the cable and beam shape markers, and the relative-coordinate markers, accept any body |
-| RG4.10 | #2734 | body markers on `ObjectGenericODE2` and `ObjectKinematicTree` pass the check and fail |
-| RG4.11 | #2735 | four objects declare output variables that raise; `ObjectContactCoordinate` ignores `activeConnector` |
-| RG4.12 | #2736 | `NodeGenericAE` cannot be used: no object, marker or script takes it |
+| RG4.12 | #2736 | `NodeGenericAE` cannot be used: no object, marker or script takes it - **deprecate, or an object for it?** |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.7 | #2709, #2710 | GraphicsData gets a Sphere and a curved triangle list; RG6.7.1 evaluates the geometry first |
@@ -2918,7 +2925,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG13.5.2 | #2725 | the page of `ObjectBeamGeometricallyExact`, after RG4.8 |
-| RG13.6.6 | #2732 | MiniExamples of `ObjectFFRF` and `ObjectFFRFreducedOrder` (a small mesh in the script); all other items but `ObjectBeamGeometricallyExact` have one |
+| RG13.6.6 | #2732 | MiniExamples of `ObjectFFRF` and `ObjectFFRFreducedOrder`, once tetrahedral elements are part of Exudyn |
 
 Open in the tracker without a step: #2498 (nothing checks that an item type provides the member
 functions it must) and #2511 (the ROS examples were last run in 2023), both named in RG2.

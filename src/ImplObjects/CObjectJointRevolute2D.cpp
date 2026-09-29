@@ -95,13 +95,19 @@ JacobianType::Type CObjectJointRevolute2D::GetAvailableJacobians() const
 //! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
 OutputVariableType CObjectJointRevolute2D::GetOutputVariableTypes() const
 {
-	return (OutputVariableType)((Index64)OutputVariableType::Displacement + (Index64)OutputVariableType::Rotation); //Displacement represents drift in index2 case
+	//Displacement represents drift in index2 case; no Rotation, as the markers provide positions only (#2735)
+	return OutputVariableType::Displacement;
 }
 
 //! provide according output variable in "value"
 void CObjectJointRevolute2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
-	PyError("CObjectJointRevolute2D::GetOutputVariableConnector not implemented", PyErrorType::notImplementedError);
+	switch (variableType)
+	{
+		case OutputVariableType::Displacement: value.CopyFrom(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); break;
+		default:
+			SysError("CObjectJointRevolute2D::GetOutputVariable failed"); //error should not occur, because types are checked!
+	}
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

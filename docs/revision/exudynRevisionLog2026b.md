@@ -6871,3 +6871,37 @@ circle, where `ObjectContactCircleCable2D` takes a position marker.
 
 **Not yet**: `ObjectFFRF` and `ObjectFFRFreducedOrder` need a finite element mesh, which the scripts
 read from files or build with NGsolve - RG13.6.6; `ObjectBeamGeometricallyExact` waits for RG4.8.
+
+<a id="rg4-10"></a>
+### RG4.10 and RG4.11 — markers the objects cannot serve, and output variables that raised (2026-09-29, #2734, #2735)
+
+**RG4.10**: `ObjectGenericODE2` and `ObjectKinematicTree` declared the access functions their own markers
+need, and `CSystem::CheckSystemIntegrity` let every marker through that needs the same - so
+`MarkerBodyPosition`, `MarkerBodyRigid`, `MarkerBodyMass` passed `Assemble()` and raised in the
+simulation. The declaration `bodyMarkers=False` now reaches the C++: a new `AccessFunctionType`
+`OwnMarkersOnly` (bit 29), added by the generator for such a declaration, and the check refuses a
+general body marker - one with position, orientation or mass and without the super element or kinematic
+tree bit - on an object that has it, naming the markers it takes. The same check now also refuses a
+super element marker on an object without `SuperElement` and a kinematic tree marker on one without
+`KinematicTree` - `MarkerSuperElementPosition` on a kinematic tree passed before. `itemCompatibility`
+says the same for the pages (the kinematic tree page no longer lists the super element markers), and
+`test_itemCompatibility.py` places each of the five body markers on both objects and compares what
+`Assemble()` accepts with what the declarations say.
+
+**RG4.11**: the four connectors declared output variables that raised *"not implemented"*.
+- `ObjectContactCoordinate`: `Distance` is the gap; with `activeConnector = False` the contact force
+  is zero (it was computed regardless);
+- `ObjectJointRevolute2D`: `Displacement` $\pv_{m1} - \pv_{m0}$; `Rotation` is no longer declared - its
+  markers provide positions only;
+- `ObjectJointPrismatic2D`: `Distance` along the normalized axis of marker 0, `Rotation` of marker 1
+  relative to marker 0;
+- `ObjectContactCircleCable2D` declares none: a gap per segment is no single distance.
+
+`test_connectorOutputVariables.py` reads each, and checks the inactive contact. The pages say what each
+output is instead of *"not available"*.
+
+**RG4.12 is not resolved**: `NodeGenericAE` needs a decision - deprecating an item class has no
+mechanism, and an object for it is new work.
+
+**RG13.6.6** (maintainer): the FFRF MiniExamples come with native tetrahedral elements; until then their
+pages name a complete model.

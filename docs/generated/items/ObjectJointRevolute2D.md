@@ -65,7 +65,8 @@ and on the velocity level (index 2) the same with the velocities. The multiplier
 with the $x$ and $y$ rows of the position Jacobians, $\pm\LU{0}{\Jm_{pos}}\tp\tlambda$. With
 `activeConnector = False` the equations become $\tlambda = \Null$.
 
-The output variables `Displacement` and `Rotation` the joint declares are not available (#2735).
+The output variable `Displacement` is $\LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$, zero up to the drift of the
+position on the velocity level.
 
 (miniexample-objectjointrevolute2d)=
 ## Mini example

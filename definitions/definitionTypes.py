@@ -813,10 +813,11 @@ def ItemAccessFunctionTypes(types, description=None, bodyMarkers=True):
     """Use site: the access functions an object provides for markers and loads (GetAccessFunctionTypes),
     as a declared list of AccessFunctionType value names; a marker with
     Position (Orientation) needs TranslationalVelocity_qt (AngularVelocity_qt).
-    bodyMarkers=False: the types serve the object's own markers (super element, kinematic tree) and the
-    general body markers do not work on it, although the types would admit them (#2734)"""
+    bodyMarkers=False: the types serve the object's own markers (super element, kinematic tree) only; the
+    object adds OwnMarkersOnly, with which CSystem::CheckSystemIntegrity refuses the general body markers (#2734)"""
     member = ItemFunctionDef('GetAccessFunctionTypes',
-                             implementation=_TypeSumImplementation('AccessFunctionType', types),
+                             implementation=_TypeSumImplementation('AccessFunctionType',
+                                                                   list(types) + ([] if bodyMarkers else ['OwnMarkersOnly'])),
                              description=description)
     member['accessFunctionTypes'] = list(types)
     member['bodyMarkers'] = bodyMarkers

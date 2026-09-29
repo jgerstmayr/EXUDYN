@@ -74,3 +74,51 @@ def test_theDeclaredNodeTypesAreWhatAssembleAccepts(marker):
             disagree.append(node.name + ': Assemble ' + ('accepts' if accepted else 'refuses')
                             + ', the declaration ' + ('accepts' if marker.AcceptsNode(node) else 'refuses'))
     assert disagree == [], marker.name + '\n' + '\n'.join(disagree)
+
+
+def _SuperElementAndTree(mbs):
+    """an ObjectGenericODE2 on two points and an ObjectKinematicTree with one link"""
+    nodes = [mbs.AddNode(exu.itemInterface.NodePoint(referenceCoordinates=[i, 0, 0])) for i in range(2)]
+    oSuper = mbs.AddObject(exu.itemInterface.ObjectGenericODE2(nodeNumbers=nodes, massMatrix=[[float(i == j) for j in range(6)] for i in range(6)]))
+    nTree = mbs.AddNode(exu.itemInterface.NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
+                                                          initialCoordinates=[0], initialCoordinates_t=[0]))
+    oTree = mbs.AddObject(exu.itemInterface.ObjectKinematicTree(nodeNumber=nTree, jointTypes=[exu.JointType.RevoluteZ],
+                          linkParents=[-1], jointTransformations=exu.Matrix3DList([[[1, 0, 0], [0, 1, 0], [0, 0, 1]]]),
+                          jointOffsets=exu.Vector3DList([[0, 0, 0]]),
+                          linkInertiasCOM=exu.Matrix3DList([[[1, 0, 0], [0, 1, 0], [0, 0, 1]]]),
+                          linkCOMs=exu.Vector3DList([[0, 0, 0]]), linkMasses=[1.]))
+    return {'ObjectGenericODE2': oSuper, 'ObjectKinematicTree': oTree}
+
+
+#the markers placed on bodies, with what they need besides the body
+bodyMarkerArguments = {
+    'MarkerBodyPosition': lambda o: {'bodyNumber': o},
+    'MarkerBodyRigid': lambda o: {'bodyNumber': o},
+    'MarkerBodyMass': lambda o: {'bodyNumber': o},
+    'MarkerSuperElementPosition': lambda o: {'bodyNumber': o, 'meshNodeNumbers': [0], 'weightingFactors': [1]},
+    'MarkerKinematicTreeRigid': lambda o: {'objectNumber': o, 'linkNumber': 0},
+    }
+
+
+@pytest.mark.parametrize('objectName', ['ObjectGenericODE2', 'ObjectKinematicTree'])
+def test_theBodyMarkersAssembleAcceptsAreTheDeclaredOnes(objectName):
+    """ObjectGenericODE2 and ObjectKinematicTree serve only their own markers; Assemble() refuses the
+    general body markers, which their access functions do not provide, and the marker of the other
+    kind (#2734) - as the declarations, and so the pages, say"""
+    byName = dict((item.name, item) for item in items)
+    disagree = []
+    for (markerName, arguments) in bodyMarkerArguments.items():
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem()
+        objectNumber = _SuperElementAndTree(mbs)[objectName]
+        accepted = True
+        try:
+            mbs.AddMarker(dict({'markerType': markerName[len('Marker'):]}, **arguments(objectNumber)))
+            mbs.Assemble()
+        except Exception:                                                   # noqa: BLE001
+            accepted = False
+        declared = byName[objectName].CarriesMarker(byName[markerName])
+        if accepted != declared:
+            disagree.append(markerName + ': Assemble ' + ('accepts' if accepted else 'refuses')
+                            + ', the declaration ' + ('accepts' if declared else 'refuses'))
+    assert disagree == [], objectName + '\n' + '\n'.join(disagree)

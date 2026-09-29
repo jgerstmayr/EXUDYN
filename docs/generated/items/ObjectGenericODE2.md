@@ -136,8 +136,8 @@ The mesh nodes of the object are its nodes: mesh node $i$ is node $n_i$ of `node
 position of that node. `MarkerSuperElementPosition` and `MarkerSuperElementRigid` act on them, with
 the Jacobians of the nodes and the weights of the marker; a load or constraint on single coordinates
 uses `MarkerObjectODE2Coordinates` or the coordinate markers of the nodes. The general body markers -
-`MarkerBodyPosition`, `MarkerBodyRigid`, `MarkerBodyMass` - do **not** work on this object: its body
-access functions are not available (#2734).
+`MarkerBodyPosition`, `MarkerBodyRigid`, `MarkerBodyMass` - do **not** work on this object, whose body
+access functions are not available: `Assemble()` refuses them.
 
 **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.

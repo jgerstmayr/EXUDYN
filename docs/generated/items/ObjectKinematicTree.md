@@ -277,7 +277,7 @@ the frame of that link, with position, orientation and their Jacobians with resp
 coordinates. Loads and connectors act on the tree through it; forces and torques on the joints
 themselves are the object's own parameters. A joint coordinate can also be reached with
 `MarkerNodeCoordinate` on the `NodeGenericODE2` of the tree. The general body markers and the super
-element markers do **not** work on this object (#2734).
+element markers do **not** work on this object: `Assemble()` refuses them.
 
 **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a force vector applied to the joint coordinates depending on current time and states of object.

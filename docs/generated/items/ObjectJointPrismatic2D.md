@@ -76,7 +76,9 @@ markers. With `constrainRotation = False` the second equation becomes $\lambda_1
 may rotate relative to each other; with `activeConnector = False` both equations become
 $\lambda_i = 0$.
 
-The output variables `Distance` and `Rotation` the joint declares are not available (#2735).
+The output variable `Distance` is the position of marker m1 along the axis,
+$(\pv_1-\pv_0)\tp \Am_0 \tv_0 / |\tv_0|$, and `Rotation` the angle of marker m1 relative to marker m0
+about $z$, from $\Am_0\tp \Am_1$.
 
 (miniexample-objectjointprismatic2d)=
 ## Mini example

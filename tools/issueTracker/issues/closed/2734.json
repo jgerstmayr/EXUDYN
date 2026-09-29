@@ -2,11 +2,15 @@
   "number": 2734,
   "title": "ObjectGenericODE2 and ObjectKinematicTree admit the general body markers, which fail during the simulation",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "MEDIUM",
   "description": "Found while documenting the super elements, revision2026b step RG13.5.2.3, 2026-09-28: both objects declare the access function types TranslationalVelocity_qt and AngularVelocity_qt (and GenericODE2 DisplacementMassIntegral_q), which their own markers need - MarkerSuperElementPosition/Rigid, MarkerKinematicTreeRigid - to pass CSystem::CheckSystemIntegrity. The same types admit MarkerBodyPosition, MarkerBodyRigid and MarkerBodyMass, whose computation calls GetAccessFunctionBody, and that raises 'not available' for both objects. The declaration now carries bodyMarkers=False, which the item pages use; the analysis: let the integrity check use it too, so that Assemble() refuses the combination. revision2026b step RG4.10.",
   "dateRaised": "2026-09-28",
   "deadline": "2027-03-27",
-  "file": "src/Main/CSystem.cpp"
+  "dateResolved": "2026-09-29 18:09",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Main/CSystem.cpp",
+  "releaseNotes": "Assemble() refuses MarkerBodyPosition, MarkerBodyRigid and MarkerBodyMass on ObjectGenericODE2 and ObjectKinematicTree, which provide access only for their own markers - they raised during the simulation before; a super element marker needs a super element and a kinematic tree marker a kinematic tree.",
+  "resolvedInVersion": "1.12.150"
 }

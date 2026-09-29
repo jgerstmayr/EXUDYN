@@ -153,7 +153,7 @@ void CObjectContactCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDa
 //! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
 OutputVariableType CObjectContactCircleCable2D::GetOutputVariableTypes() const
 {
-	return OutputVariableType::Distance;
+	return OutputVariableType::_None; //a gap per segment is no single distance (#2735)
 }
 
 //! provide according output variable in "value"

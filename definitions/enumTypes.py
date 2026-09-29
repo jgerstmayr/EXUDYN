@@ -164,6 +164,7 @@ enumTypes = [
               EnumValue('DisplacementSurfaceNormalIntegral_q', '(Index)Marker::BodySurfaceNormal', 'for surface loads; pressure acts normal to the surface'),
               EnumValue('SuperElement', '(Index)Marker::SuperElement', 'for super elements, using TranslationalVelocity_qt and AngularVelocity_qt'),
               EnumValue('KinematicTree', '(Index)Marker::KinematicTree', 'for KinematicTree, using TranslationalVelocity_qt and AngularVelocity_qt'),
+              EnumValue('OwnMarkersOnly', '(1 << 29)', 'the access functions serve only the object\'s own markers (super element or kinematic tree markers); the general body markers are refused'),
               EnumValue('JacobianTtimesVector_q', '(1 << 30)', 'derivative of jacobian^T times vector (provided in markerData.vectorValue)'),
               EnumValue('SuperElementAlternativeRotationMode', '(1 << 31)', 'for super elements, alternative rotation mode'),
               ],

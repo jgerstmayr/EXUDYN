@@ -165,7 +165,27 @@ OutputVariableType CObjectJointPrismatic2D::GetOutputVariableTypes() const
 //! provide according output variable in "value"
 void CObjectJointPrismatic2D::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {
-	PyError("CObjectJointPrismatic2D::GetOutputVariableConnector not implemented", PyErrorType::notImplementedError);
+	const Matrix3D& A0 = markerData.GetMarkerData(0).orientation;
+	const Matrix3D& A1 = markerData.GetMarkerData(1).orientation;
+	switch (variableType)
+	{
+		case OutputVariableType::Distance: //the position of marker 1 along the (normalized) prismatic axis (#2735)
+		{
+			Vector3D t0 = A0 * parameters.axisMarker0;
+			Real axisLength = t0.GetL2Norm();
+			CHECKandTHROW(axisLength != 0., "CObjectJointPrismatic2D: axisMarker0 must not be zero");
+			value = Vector({ (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position) * t0 / axisLength });
+			break;
+		}
+		case OutputVariableType::Rotation: //the rotation of marker 1 relative to marker 0 about z (#2735)
+		{
+			Matrix3D A01 = A0.GetTransposed() * A1;
+			value = Vector({ atan2(A01(1, 0), A01(0, 0)) });
+			break;
+		}
+		default:
+			SysError("CObjectJointPrismatic2D::GetOutputVariable failed"); //error should not occur, because types are checked!
+	}
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

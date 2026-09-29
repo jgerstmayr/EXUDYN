@@ -172,7 +172,8 @@ definitions.append(ItemKindDefinition(
     `MarkerSuperElementRigid` also a rotation, from mesh nodes that can represent a rigid body motion;
     the kinematic tree has `MarkerKinematicTreeRigid` at a link. Their Jacobians are those of the mesh
     nodes, weighted. The general body markers act on the FFRF objects' **reference frame** only, and not
-    at all on `ObjectGenericODE2` and `ObjectKinematicTree` (#2734); the page of each object says which.
+    at all on `ObjectGenericODE2` and `ObjectKinematicTree`, where `Assemble()` refuses them; the page of
+    each object says which.
     """,
     ))
 

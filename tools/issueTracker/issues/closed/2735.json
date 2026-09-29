@@ -2,11 +2,15 @@
   "number": 2735,
   "title": "ObjectContactCoordinate ignores activeConnector, and its output variable Distance raises",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
   "description": "Found while documenting the connectors, revision2026b step RG13.5.2.4, 2026-09-28: CObjectContactCoordinate::ComputeODE2LHS computes the contact force without looking at parameters.activeConnector, so the connector cannot be switched off as its parameter says; and GetOutputVariableTypes declares Distance while GetOutputVariableConnector raises 'not implemented', so a SensorObject asking for it passes Assemble() and fails during the simulation. Small, but found by the maintainer's rule it becomes an RG4 step: revision2026b step RG4.11. [2026-09-28, Claude-JG]: Extended in RG13.5.2.5, 2026-09-28: a scan of all objects for GetOutputVariableConnector that raises 'not implemented' while GetOutputVariableTypes declares types found four: ObjectContactCoordinate (Distance), ObjectContactCircleCable2D (Distance), ObjectJointRevolute2D (Displacement, Rotation) and ObjectJointPrismatic2D (Distance, Rotation). A sensor asking for one of them passes Assemble() and fails during the simulation. Either implement the output variables or declare none.",
   "dateRaised": "2026-09-28",
   "deadline": "2027-03-27",
-  "file": "src/ImplObjects/CObjectContactCoordinate.cpp"
+  "dateResolved": "2026-09-29 18:09",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectContactCoordinate.cpp",
+  "releaseNotes": "Output variables of four connectors: ObjectContactCoordinate gives Distance (the gap) and adds no force with activeConnector=False; ObjectJointRevolute2D gives Displacement; ObjectJointPrismatic2D gives Distance along the axis and the relative Rotation; ObjectContactCircleCable2D declares none. They raised 'not implemented' during the simulation before.",
+  "resolvedInVersion": "1.12.151"
 }

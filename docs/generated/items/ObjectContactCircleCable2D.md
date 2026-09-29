@@ -70,8 +70,6 @@ the circle: otherwise geometry and equations are those of `ObjectContactFriction
 [](#sec-item-objectcontactfrictioncirclecable2d). The data coordinates, one per segment, hold the gap of
 the last post Newton step and decide on contact (active set).
 
-The output variable `Distance` the connector declares is not available (#2735).
-
 (miniexample-objectcontactcirclecable2d)=
 ## Mini example
 

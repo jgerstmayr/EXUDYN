@@ -322,6 +322,9 @@ and not on the deformation. `MarkerBodyMass` applies a load proportional to the 
 center of mass `physicsCenterOfMass`, through the coordinates of the reference frame only: the
 flexible coordinates get no share of it.
 
+This object has no MiniExample, because it needs a finite element mesh; a complete model is
+[](#examples-ngsolveffrf), with the mesh from NGsolve.
+
 **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
 
