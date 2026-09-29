@@ -103,6 +103,7 @@ def TestExamplesReferenceSolution():
         'kinematicTreeConstraintTest.py':1.8135975384620298 ,
         'symbolicUserFunctionCopyTest.py':0.38643688092501255, #a copy through Get/SetDictionary stays symbolic (#1888)
         'flexiblePendulumBeamComparison.py':-1.508742102788566, #three beam elements, one pendulum (#2730)
+        'geometricallyExactBeamMarkerTest.py':0.2277706534235741, #body markers on the 3D beam = loads on its nodes (#2730)
         'contactComparisonTest.py':1.200040705928356, #deepest points and end heights, three contact objects, two laws (#2749, #2750)
         'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164064,

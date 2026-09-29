@@ -1164,9 +1164,10 @@ find its file and line, on every raise).
       the mass and gyroscopic terms (#1550, #1100);
     - **RG4.8.6** the reference configuration in the residual and the Jacobian - a pre-curved element,
       *"h0 must contain the reference configuration"* in the source (#1494);
-    - **RG4.8.7** distributed loads with their nodal torques, a consistent velocity field, body markers -
-      `GetAccessFunctionBody` throws before its switch, while the element declares four access functions
-      (found in RG9.3.1);
+    - **RG4.8.7** **DONE 2026-09-29, the body markers** — [log](exudynRevisionLog2026b.md#rg4-8-7) -
+      `MarkerBodyPosition`, `MarkerBodyRigid`, `MarkerBodyMass` work on the element; found and fixed on the
+      way: positions along the element were interpolated from the wrong end. Left for RG4.8.4: distributed
+      loads with their nodal torques and a velocity field consistent with the position;
     - **RG4.8.8** whether #736 (*"include GeomExactBeam3D as provided by Jan Tomec"*) is this element
       or superseded by it;
     - **RG4.8.9** then the reference page (RG13.5.2) and the MiniExample (RG13.6).

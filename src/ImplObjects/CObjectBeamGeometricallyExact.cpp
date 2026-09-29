@@ -420,71 +420,87 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 //! provide Jacobian at localPosition in 'value' according to object access
 void CObjectBeamGeometricallyExact::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
 {
-	//Real L = parameters.physicsLength;
-	CHECKandTHROWstring("CObjectBeamGeometricallyExact::GetAccessFunctionBody (for MarkerBody): NOT implemented yet; Markers can be only attached to nodes!", ExudynNotImplementedError);
+	//the Jacobians of the velocities as GetVelocity and GetAngularVelocity compute them: the nodal velocities and
+	//angular velocities interpolated linearly along the axis, x = localPosition[0] in [-L/2, L/2] (#2730, RG4.8.7);
+	//node i has 3 displacement coordinates, followed by its rotation parameters
+	const Index nDim3D = 3;
+	Vector2D SV = ComputeShapeFunctions(localPosition[0]);
+	Index nCoordinates[2] = { GetCNode(0)->GetNumberOfODE2Coordinates(), GetCNode(1)->GetNumberOfODE2Coordinates() };
+	Index offset[2] = { 0, nCoordinates[0] };
 
 	switch (accessType)
 	{
 	case AccessFunctionType::TranslationalVelocity_qt:
 	{
-		//const Index dim = 2;  //2D finite element
-		//const Index ns = 2;   //number of shape functions
-
-		Real x = localPosition[0]; //only x-coordinate
-		Vector2D SV = ComputeShapeFunctions(x);
-		value.SetNumberOfRowsAndColumns(3, GetODE2Size()); //3D velocity, 6 coordinates qt
-
+		value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
 		value.SetAll(0.);
-		value(0, 0) = SV[0];
-		value(1, 1) = SV[0];
-		value(0, 3) = SV[1];
-		value(1, 4) = SV[1];
-
-		CHECKandTHROW(localPosition[1] == 0, "CObjectBeamGeometricallyExact::GetAccessFunctionBody (for MarkerBody): only implemented if localPosition[1]==0");
-
+		for (Index i = 0; i < 2; i++)
+		{
+			for (Index k = 0; k < nDim3D; k++) { value(k, offset[i] + k) = SV[i]; }
+		}
+		//a point off the axis: v += R(x) * (omegaLocal(x) x pCS), omegaLocal interpolated from Glocal*theta_t of the nodes
+		Vector3D pCS({ 0., localPosition[1], localPosition[2] });
+		if (pCS[1] != 0. || pCS[2] != 0.)
+		{
+			Matrix3D A = GetLocalPositionFrame(localPosition, ConfigurationType::Current).GetRotation();
+			ConstSizeMatrix<9> pTilde = RigidBodyMath::Vector2SkewMatrix(-pCS); //omega x p = -pTilde*omega
+			ConstSizeMatrix<9> ApTilde;
+			EXUmath::MultMatrixMatrix(A, pTilde, ApTilde);
+			for (Index i = 0; i < 2; i++)
+			{
+				ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * 3> Glocal;
+				((CNodeRigidBody*)GetCNode(i))->GetGlocal(Glocal);
+				for (Index k = 0; k < nDim3D; k++)
+				{
+					for (Index j = 0; j < Glocal.NumberOfColumns(); j++)
+					{
+						Real sum = 0.;
+						for (Index m = 0; m < nDim3D; m++) { sum += ApTilde(k, m) * Glocal(m, j); }
+						value(k, offset[i] + nDim3D + j) += SV[i] * sum;
+					}
+				}
+			}
+		}
 		break;
 	}
 	case AccessFunctionType::AngularVelocity_qt:
 	{
-		//const Index ns = 2;   //number of shape functions
-
-		Real x = localPosition[0]; //only x-coordinate
-
-		value.SetNumberOfRowsAndColumns(3, GetODE2Size()); //3D velocity, 6 coordinates qt
-		value.SetAll(0.); //last row not necessary to set to zero ... 
-		
-		Vector2D SV = ComputeShapeFunctions(x);
-		value(2, 2) = SV[0];
-		value(2, 5) = SV[1];
-
+		value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
+		value.SetAll(0.);
+		for (Index i = 0; i < 2; i++)
+		{
+			ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * 3> G;
+			((CNodeRigidBody*)GetCNode(i))->GetG(G);
+			for (Index k = 0; k < nDim3D; k++)
+			{
+				for (Index j = 0; j < G.NumberOfColumns(); j++) { value(k, offset[i] + nDim3D + j) = SV[i] * G(k, j); }
+			}
+		}
 		break;
 	}
-	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation!!!
+	case AccessFunctionType::JacobianTtimesVector_q:
 	{
-		CHECKandTHROW(localPosition[1] == 0, "CObjectBeamGeometricallyExact::GetAccessFunctionBody [JacobianTtimesVector_q] (for MarkerBody): only implemented if localPosition[1]==0");
+		//the derivative of the Jacobians is not computed: taken as zero, which is exact for the position
+		//part on the axis and an approximation for rotation parameters with a configuration dependent G
 		value.SetNumberOfRowsAndColumns(0, 0); //indicates that all entries are zero
 		break;
 	}
 	case AccessFunctionType::DisplacementMassIntegral_q:
 	{
-		value.SetNumberOfRowsAndColumns(3, GetODE2Size()); //3D velocity, 6 coordinates qt
+		//the mass of the element at its two nodes, half each, as the lumped mass matrix: a distributed
+		//load gives no nodal torques
+		value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
 		value.SetAll(0.);
-
-		Real L = parameters.physicsLength;
-		Real rhoA = parameters.physicsMassPerLength;
-
-		Vector2D SV = rhoA * L * ComputeShapeFunctions(0.); //0=midpoint at axis
-
-		value(0, 0) = SV[0];
-		value(1, 1) = SV[0];
-		value(0, 3) = SV[1];
-		value(1, 4) = SV[1];
+		Real halfMass = 0.5 * parameters.physicsMassPerLength * parameters.physicsLength;
+		for (Index i = 0; i < 2; i++)
+		{
+			for (Index k = 0; k < nDim3D; k++) { value(k, offset[i] + k) = halfMass; }
+		}
 		break;
 	}
 	default:
 		SysError("CObjectBeamGeometricallyExact:GetAccessFunctionBody illegal accessType");
 	}
-
 }
 
 //! provide according output variable in 'value'
@@ -506,7 +522,7 @@ void CObjectBeamGeometricallyExact::GetOutputVariableBody(OutputVariableType var
 HomogeneousTransformation CObjectBeamGeometricallyExact::GetLocalPositionFrame(const Vector3D& localPosition, 
 	ConfigurationType configuration) const
 {
-	Vector2D SV = ComputeShapeFunctions(localPosition[0]); //SV[0] goes from 0 to 1
+	Vector2D SV = ComputeShapeFunctions(localPosition[0]); //SV[1] goes from 0 at node 0 (x=-L/2) to 1 at node 1 (x=L/2)
 
 	const CNodeRigidBody* node0 = (CNodeRigidBody*)GetCNode(0);
 	const CNodeRigidBody* node1 = (CNodeRigidBody*)GetCNode(1);
@@ -518,8 +534,9 @@ HomogeneousTransformation CObjectBeamGeometricallyExact::GetLocalPositionFrame(c
 	HT0.GetRelativeMotionTo(HT1, incDisp, incRot);
 
 	//compute incremental rotation/displacement at some intermediate position:
-	incDisp *= SV[0];
-	incRot *= SV[0];
+	//the fraction of the way from node 0 to node 1 (#2730)
+	incDisp *= SV[1];
+	incRot *= SV[1];
 
 	//HT at local position x:
 	return HT0 * EXUlie::ExpSE3(incDisp, incRot);
@@ -552,7 +569,7 @@ Vector3D CObjectBeamGeometricallyExact::GetDisplacement(const Vector3D& localPos
 //! return the (global) velocity of 'localPosition' according to configuration type
 Vector3D CObjectBeamGeometricallyExact::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	Vector2D SV = ComputeShapeFunctions(localPosition[0]); //SV[0] goes from 0 to 1
+	Vector2D SV = ComputeShapeFunctions(localPosition[0]); //SV[0] weights node 0, SV[1] node 1
 
 	//Matrix3D A[2];
 	Vector3D vel[2];
@@ -583,7 +600,7 @@ Matrix3D CObjectBeamGeometricallyExact::GetRotationMatrix(const Vector3D& localP
 //! return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
 Vector3D CObjectBeamGeometricallyExact::GetAngularVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	Vector2D SV = ComputeShapeFunctions(localPosition[0]); //SV[0] goes from 0 to 1
+	Vector2D SV = ComputeShapeFunctions(localPosition[0]); //SV[0] weights node 0, SV[1] node 1
 
 	Vector3D omegaLoc[2];
 	for (Index i = 0; i < 2; i++)
@@ -592,6 +609,12 @@ Vector3D CObjectBeamGeometricallyExact::GetAngularVelocity(const Vector3D& local
 	}
 
 	return MapVectors(SV, omegaLoc[0], omegaLoc[1]); //interpolated
+}
+
+//! the angular velocity in the frame of the cross section at localPosition, as MarkerBodyRigid needs it (#2730)
+Vector3D CObjectBeamGeometricallyExact::GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration) const
+{
+	return GetLocalPositionFrame(localPosition, configuration).GetRotation().GetTransposed() * GetAngularVelocity(localPosition, configuration);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

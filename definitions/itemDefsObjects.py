@@ -5263,6 +5263,7 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('GetRotationMatrix',
             description='return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect'),
         ItemFunctionDef('GetAngularVelocity'),
+        ItemFunctionDef('GetAngularVelocityLocal'),
         ItemFunctionDef('GetLocalCenterOfMass',
             implementation='return Vector3D({0.,0.,0.});'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,

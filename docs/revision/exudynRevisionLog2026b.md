@@ -7136,3 +7136,34 @@ second axis reads more directly than a logarithmic one. An issue counts as raise
 closed on `dateResolved`; 77 resolved issues of the early years carry no `dateResolved` and count as
 closed on `dateRaised`. `--save FILE` writes the figure without a window (matplotlib's Agg backend),
 which is how it was checked here. Today: 2752 raised, 270 open, 6 open bugs, 17 open fixes.
+
+<a id="rg4-8-7"></a>
+### RG4.8.7 — body markers on the 3D geometrically exact beam (2026-09-29, #2730)
+
+`GetAccessFunctionBody` threw before its switch, and the cases behind it were a copy of the planar element
+- coordinate indices of 3 per node, where a 3D rigid body node has 6 or 7. Rewritten for the 3D element, as
+the Jacobians of what `GetVelocity` and `GetAngularVelocity` compute - the nodal velocities and angular
+velocities interpolated linearly along the axis:
+
+- `TranslationalVelocity_qt`: $SV_i\,\Im$ on the displacements of node $i$; a point off the axis adds
+  $\Rot(x)\,(-\tilde\pv_{CS})\,SV_i\,\Gm_{local,i}$ on its rotation parameters;
+- `AngularVelocity_qt`: $SV_i\,\Gm_i$ on the rotation parameters of node $i$;
+- `DisplacementMassIntegral_q`: half the mass of the element at each node, as the lumped mass matrix, no
+  nodal torques;
+- `JacobianTtimesVector_q`: taken as zero.
+
+`MarkerBodyRigid` also needed `GetAngularVelocityLocal`, which the element did not have (*"illegal call to
+CObjectBody::GetAngularVelocityLocal"*); added.
+
+**Found and fixed on the way: the position along an element came from the wrong end.**
+`GetLocalPositionFrame` scaled the relative motion from node 0 to node 1 with `SV[0]`, which is 1 at node 0 -
+so $x = -L/2$ gave node 1 and $x = +L/2$ node 0, while `GetVelocity` weighted the nodes the right way round.
+Every position at a local position - body markers, `SensorBody`, output variables, the drawing between the
+nodes - was mirrored within the element; node markers and node sensors, which all earlier tests used, did not
+see it. Now `SV[1]`.
+
+New test model `geometricallyExactBeamMarkerTest.py`: the loads through the element markers against the
+same loads on the nodes - a pendulum under `LoadMassProportional` against nodal gravity ($10^{-15}$), a
+cantilever with tip force and tip torque on `MarkerBodyRigid` at the end of the last element against the
+last node (0), a force at the middle of an element against half of it on each node (0). Reference
+0.2277706534235741.

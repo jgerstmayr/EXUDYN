@@ -80,6 +80,7 @@ kinematicTreeAndMBStest
 kinematicTreeConstraintTest
 symbolicUserFunctionCopyTest
 flexiblePendulumBeamComparison
+geometricallyExactBeamMarkerTest
 contactComparisonTest
 kinematicTreePrismaticJacobianTest
 kinematicTreeTest
