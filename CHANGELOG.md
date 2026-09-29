@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 159 | 1.12.172 |
+| 1.12 | Metheney | 160 | 1.12.173 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.173** `FIX` `HIGH` `MEDIUM EFF` `resolved by: Claude-JG` GeometricallyExactBeam (#1494)
+  - description: add reference configuration to residual and jacobian
+  - **notes:** ObjectBeamGeometricallyExact: the element is stress-free in the reference configuration of its nodes, so a curved or twisted beam is modelled by placing and orienting its nodes; before, every element was stress-free only when straight along its local x axis
+  - date resolved: **2026-09-29 23:54**, date raised: 2023-04-06
 - **1.12.172** `FIX` `MEDIUM EFF` `resolved by: Claude-JG` GeometricallyExactBeam (#1550)
   - description: add F\_Lie\*Glocal\_q term for Jacobian to improve convergence
   - **notes:** ObjectBeamGeometricallyExact: the Jacobian contains the terms of the derivative of Glocal and of the rotation matrix; see \#1100

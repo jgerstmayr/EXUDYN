@@ -82,6 +82,7 @@ symbolicUserFunctionCopyTest
 flexiblePendulumBeamComparison
 geometricallyExactBeamMarkerTest
 geometricallyExactBeamJacobianTest
+geometricallyExactBeamCurvedTest
 contactComparisonTest
 kinematicTreePrismaticJacobianTest
 kinematicTreeTest

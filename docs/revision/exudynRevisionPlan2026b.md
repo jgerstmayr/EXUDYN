@@ -1203,8 +1203,10 @@ The steps are numbered in the order they were raised and stand here in the order
       with Tait-Bryan nodes that the static solver could not solve converges (#1550, #1100); the Tait-Bryan
       quadratic velocity term had the inertia of the whole cross section per unit length instead of half
       the element (#1273, part of RG4.8.4); test model `geometricallyExactBeamJacobianTest.py`;
-    - **RG4.8.6** the reference configuration in the residual and the Jacobian - a pre-curved element,
-      *"h0 must contain the reference configuration"* in the source (#1494);
+    - **RG4.8.6** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg4-8-6) - the element is
+      stress-free in the reference configuration of its nodes, so a curved or twisted beam can be modelled;
+      test model `geometricallyExactBeamCurvedTest.py`, the 45-degree bend, within 0.5 % of Simo and
+      Vu-Quoc (#1494);
     - **RG4.8.7** **DONE 2026-09-29, the body markers** — [log](exudynRevisionLog2026b.md#rg4-8-7) -
       `MarkerBodyPosition`, `MarkerBodyRigid`, `MarkerBodyMass` work on the element; found and fixed on the
       way: positions along the element were interpolated from the wrong end. Left for RG4.8.4: distributed

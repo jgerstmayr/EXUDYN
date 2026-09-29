@@ -1,0 +1,16 @@
+{
+  "number": 1494,
+  "title": "GeometricallyExactBeam",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "HIGH",
+  "effort": "MEDIUM",
+  "description": "add reference configuration to residual and jacobian",
+  "dateRaised": "2023-04-06",
+  "deadline": "2023-10-03",
+  "dateResolved": "2026-09-29 23:54",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectBeamGeometricallyExact: the element is stress-free in the reference configuration of its nodes, so a curved or twisted beam is modelled by placing and orienting its nodes; before, every element was stress-free only when straight along its local x axis",
+  "resolvedInVersion": "1.12.173"
+}

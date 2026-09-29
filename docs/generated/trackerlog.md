@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.172.dev1
+- Exudyn version = 1.12.173.dev1
 - last change = 2026-09-29
 - Number of issues = 2753
-- Number of resolved issues = 2486 (172 in current version)
+- Number of resolved issues = 2487 (173 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7995,10 +7995,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: check for advanced right-angle frame
   - **remarks:** planned as revision2026b step RG4.8.3 (2026-09-29), inspected first: it may be solved already
   - date raised: 2023-04-08
-- `FIX` <span class="textred">`HIGH`</span> `MEDIUM EFF` GeometricallyExactBeam (#1494)
-  - description: add reference configuration to residual and jacobian
-  - **remarks:** planned as revision2026b step RG4.8.6 (2026-09-29), inspected first: it may be solved already
-  - date raised: 2023-04-06
 - `CHANGE` `LOW EFF` StaticSolver (#1493)
   - description: add exception in case that Lie group nodes are used with static solver, which cannot work
   - date raised: 2023-04-06

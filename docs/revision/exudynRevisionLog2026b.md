@@ -7222,3 +7222,31 @@ cases use tolerances down to $10^{-4}$) and $3\cdot10^{-10}$ (`flexiblePendulumB
 
 Found, not fixed: the definition declares the output variables `Rotation`, `StrainLocal` and
 `CurvatureLocal`, which `GetOutputVariableBody` does not compute - RG4.8.10.
+
+<a id="rg4-8-6"></a>
+### RG4.8.6 — the reference configuration of the 3D geometrically exact beam (2026-09-29, #1494)
+
+The strain measure was $(\hv - \hv_0)/L$ with a fixed $\hv_0 = (L, 0, 0, 0, 0, 0)$: every element was stress-free
+only when straight along its local $x$ axis. A curved reference geometry was pulled straight - an unloaded
+eighth of a circle ended as a straight rod along $x$, tip (78.54, 0, 0) instead of (70.71, 29.29, 0).
+
+Now `ComputeIncrementalMotion` returns $\hv_0$ as the relative motion of the nodes in their **reference
+configuration**, the same SE(3) logarithm as $\hv$; residual and Jacobian both take it from there, and the
+Jacobian needs nothing else, as $\hv_0$ is constant. `physicsLength` stays the length that scales the strain
+and the mass - the arc length for a curved element. A model whose nodes are placed straight along $x$ at
+the distance `physicsLength` is unchanged: all test models give their references.
+
+New test model `geometricallyExactBeamCurvedTest.py`, the 45-degree bend of Bathe and Bolourchi (1979):
+radius 100, $EA = 10^7$, $EI = 833\,333$, $GJ = 705\,000$, tip force $P$ out of the plane, 8 elements.
+
+| $P$ | tip, now | Simo and Vu-Quoc (1986), 8 elements | now, 32 elements |
+|---|---|---|---|
+| 0 | (70.71, 29.29, 0) | - | - |
+| 300 | (58.60, 22.14, 40.36) | (58.84, 22.33, 40.08) | (58.54, 22.12, 40.47) |
+| 450 | (52.05, 18.40, 48.57) | (52.32, 18.62, 48.39) | (51.98, 18.37, 48.69) |
+| 600 | (46.98, 15.59, 53.46) | (47.23, 15.79, 53.37) | (46.90, 15.56, 53.60) |
+
+The difference is 0.5 % and of the size by which the published solutions of this benchmark differ from
+each other. Euler parameters and Tait-Bryan nodes give the same positions; the static solver needs
+about 100 Newton steps for 20 load steps with Tait-Bryan nodes and 150-200 with Euler parameters. Reference
+4.561491685469841.

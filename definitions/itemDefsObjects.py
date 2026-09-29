@@ -5302,7 +5302,7 @@ definitions.append(ItemDefinition(
                 ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='ComputeIncrementalMotion',
             args='Vector6D& h, Vector6D& h0',
-            description=r'the relative motion h of node 1 to node 0 in the current configuration, and h0, the one of the stress-free configuration'),
+            description=r'the relative motion h of node 1 to node 0 in the current configuration, and h0, the one of the stress-free configuration, which is the reference configuration of the nodes'),
         ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
             pythonName='show',
             defaultValue=True,

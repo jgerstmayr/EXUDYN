@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-29  23:24:23 (last modified)
+* @date         2026-09-29  23:50:43 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -182,7 +182,7 @@ public: // AUTO:
     //! AUTO:  get compressed shape function vector \f$\Sm_v\f$, depending local position \f$x \in [0,L]\f$
     Vector2D ComputeShapeFunctions(Real x) const;
 
-    //! AUTO:  the relative motion h of node 1 to node 0 in the current configuration, and h0, the one of the stress-free configuration
+    //! AUTO:  the relative motion h of node 1 to node 0 in the current configuration, and h0, the one of the stress-free configuration, which is the reference configuration of the nodes
     void ComputeIncrementalMotion(Vector6D& h, Vector6D& h0) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override

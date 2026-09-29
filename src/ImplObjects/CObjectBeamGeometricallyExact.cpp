@@ -120,21 +120,23 @@ Vector3D CObjectBeamGeometricallyExact::MapVectors(const Vector2D& SV, const Vec
 }
 
 
-//! the relative motion h of node 1 to node 0 in the current configuration, and h0, the one of the stress-free configuration
+//! the relative motion h of node 1 to node 0 in the current configuration, and h0, the one of the stress-free configuration,
+//! which is the reference configuration of the nodes: a pre-curved or pre-twisted element is stress-free there (#1494)
 void CObjectBeamGeometricallyExact::ComputeIncrementalMotion(Vector6D& h, Vector6D& h0) const
 {
 	const CNodeRigidBody* node0 = (CNodeRigidBody*)GetCNode(0);
 	const CNodeRigidBody* node1 = (CNodeRigidBody*)GetCNode(1);
-	HomogeneousTransformation HT0(node0->GetRotationMatrix(), node0->GetPosition());
-	HomogeneousTransformation HT1(node1->GetRotationMatrix(), node1->GetPosition());
-
 	Vector3D incDisp;
 	Vector3D incRot;
-	HT0.GetRelativeMotionTo(HT1, incDisp, incRot);
-	h = Vector6D({ incDisp[0], incDisp[1], incDisp[2], incRot[0], incRot[1], incRot[2] });
-
-	h0.SetAll(0.);
-	h0[0] = parameters.physicsLength;
+	ConfigurationType configurations[2] = { ConfigurationType::Current, ConfigurationType::Reference };
+	for (Index k = 0; k < 2; k++)
+	{
+		HomogeneousTransformation HT0(node0->GetRotationMatrix(configurations[k]), node0->GetPosition(configurations[k]));
+		HomogeneousTransformation HT1(node1->GetRotationMatrix(configurations[k]), node1->GetPosition(configurations[k]));
+		HT0.GetRelativeMotionTo(HT1, incDisp, incRot);
+		Vector6D& hk = (k == 0) ? h : h0;
+		hk = Vector6D({ incDisp[0], incDisp[1], incDisp[2], incRot[0], incRot[1], incRot[2] });
+	}
 }
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

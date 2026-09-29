@@ -105,6 +105,7 @@ def TestExamplesReferenceSolution():
         'flexiblePendulumBeamComparison.py':-1.508742103106691, #three beam elements, one pendulum (#2730)
         'geometricallyExactBeamMarkerTest.py':0.22777065315326317, #body markers on the 3D beam = loads on its nodes (#2730)
         'geometricallyExactBeamJacobianTest.py':4.282489188464191, #analytic against numerical Jacobian of the 3D beam (#1550)
+        'geometricallyExactBeamCurvedTest.py':4.561491685469841, #the 45-degree bend, stress-free in its curved reference configuration (#1494)
         'contactComparisonTest.py':1.200040705928356, #deepest points and end heights, three contact objects, two laws (#2749, #2750)
         'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164064,
