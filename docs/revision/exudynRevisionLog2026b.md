@@ -7015,3 +7015,24 @@ an SE(3) beam after Sonneville et al. (`tmp/beam_element_comparison_vs_exudyn.pd
 issues of the 3D element (#736, #1100, #1273, #1494, #1499, #1550); the source still carries the
 *MISSING* Jacobian terms and *"h0 must contain the reference configuration"*, so none of them is solved
 yet. The planar element's issue (#2208) is RG4.14.
+
+<a id="rg9-3-1"></a>
+### RG9.3.1, RG14.1 and RG15.1 — three evaluations, outside the repository (2026-09-29, #2744, #2745, #2746)
+
+The maintainer asked for the evaluations as working documents in `tmp/`, not kept in the repository:
+`tmp/evalRG9_3_accessFunctions.md`, `tmp/evalRG14_1_markerData.md`, `tmp/evalRG15_1_objectCoordinates.md`.
+What they propose, for the maintainer's decision:
+
+- **access functions**: one virtual function per access type in `CObjectBody` with an interface that
+  says what it takes (the 6D vector of `JacobianTtimesVector_q` travels in the output matrix today), and
+  the flags derived from the functions a definition declares - measured, the declared flags and the
+  implemented cases disagree in four objects;
+- **marker data**: connectors and loads call marker functions with a compact temporary, after RG9.3,
+  loads first; GeneralContact keeps its per-marker precomputation, where one marker serves many pairs;
+- **object coordinates**: the pattern five finite elements already have - gather the coordinates, a
+  templated `ComputeODE2LHS`, the Jacobian by automatic differentiation - as the standard; the rigid
+  bodies need their rotation parametrizations as templated functions first; RG14 and RG15 decided as
+  one interface for "body kinematics as a function of its coordinates".
+
+Found on the way: `ObjectBeamGeometricallyExact` declares four access functions and throws in all
+(added to RG4.8.7).

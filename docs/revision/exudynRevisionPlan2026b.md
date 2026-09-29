@@ -1162,7 +1162,9 @@ find its file and line, on every raise).
       the mass and gyroscopic terms (#1550, #1100);
     - **RG4.8.6** the reference configuration in the residual and the Jacobian - a pre-curved element,
       *"h0 must contain the reference configuration"* in the source (#1494);
-    - **RG4.8.7** distributed loads with their nodal torques, a consistent velocity field, body markers;
+    - **RG4.8.7** distributed loads with their nodal torques, a consistent velocity field, body markers -
+      `GetAccessFunctionBody` throws before its switch, while the element declares four access functions
+      (found in RG9.3.1);
     - **RG4.8.8** whether #736 (*"include GeomExactBeam3D as provided by Jan Tomec"*) is this element
       or superseded by it;
     - **RG4.8.9** then the reference page (RG13.5.2) and the MiniExample (RG13.6).
@@ -1769,8 +1771,11 @@ revision (info document D15).
     `JacobianTtimesVector_q` travels in the output matrix, `OwnMarkersOnly` (RG4.10) says what a
     declaration cannot. Single functions per access type, with interfaces that say what they take and
     return, avoid them.
-    - **RG9.3.1** the evaluation: which objects provide which access functions today, which markers and
-      loads call them, and what the best interface is for each;
+    - **RG9.3.1** **DONE 2026-09-29, for the maintainer's decision** — the evaluation, in
+      `tmp/evalRG9_3_accessFunctions.md` (not kept in the repository): which objects provide which
+      access functions today, which markers and loads call them, and what the best interface is for each.
+      Proposed: one virtual function per access type, and the flags derived from the functions a
+      definition declares (with RG9.3.2); before RG14;
     - **RG9.3.2** a check that the access function flags an object declares (`ItemAccessFunctionTypes`)
       and the functions its definition declares agree - possibly by deriving the flags from the
       functions;
@@ -2988,7 +2993,10 @@ how future items and the user elements (RG7, RG8) are written, so it is decided 
 done.
 
 <a id="rg14-1"></a>
-**RG14.1** *(group RG14; maintainer 2026-09-29)* **The evaluation** (#2745): what `MarkerData` holds
+**RG14.1** *(group RG14; maintainer 2026-09-29)* **DONE 2026-09-29, for the maintainer's decision** —
+    in `tmp/evalRG14_1_markerData.md` (not kept in the repository). Proposed: connectors and loads call
+    marker functions with a compact temporary, after RG9.3, loads first; GeneralContact keeps its
+    precomputation; the AD benefit needs the body side of RG15. **The evaluation** (#2745): what `MarkerData` holds
     and costs today, who computes and who reads which part of it (connectors, constraints, loads,
     `GeneralContact`), and the options - a smaller temporary per marker, marker functions a connector
     calls, what automatic differentiation needs from them. The result is a proposal for the maintainer:
@@ -3010,7 +3018,11 @@ this is **a real performance question** with more cases: objects with one node (
 objects would get their coordinates from the interface.
 
 <a id="rg15-1"></a>
-**RG15.1** *(group RG15; maintainer 2026-09-29)* **The evaluation** (#2746): how the objects read their
+**RG15.1** *(group RG15; maintainer 2026-09-29)* **DONE 2026-09-29, for the maintainer's decision** —
+    in `tmp/evalRG15_1_objectCoordinates.md` (not kept in the repository). Found: five finite elements
+    already gather their coordinates and use automatic differentiation for the Jacobian. Proposed: that
+    pattern as the standard, the rotation parametrizations as templated functions for the rigid bodies,
+    decided together with RG14. **The evaluation** (#2746): how the objects read their
     coordinates today, what passing them would cost (measured, RG5), which kinds of objects there are -
     one node with linked data, several nodes, super elements, the kinematic tree -, and what automatic
     differentiation needs. The result is a proposal for the maintainer, including whether RG14 and RG15
