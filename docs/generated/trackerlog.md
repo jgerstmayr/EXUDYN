@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.166.dev1
+- Exudyn version = 1.12.168.dev1
 - last change = 2026-09-29
 - Number of issues = 2752
-- Number of resolved issues = 2480 (166 in current version)
+- Number of resolved issues = 2482 (168 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7571,9 +7571,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` graphics regression test: every item through its MiniExample (#2751)
   - description: The last part of \#2704 (resolved 2026-09-29 with RG2.3.3.1 to RG2.3.3.4): take every item through its MiniExample - which every item but three has since RG13.6 (\#2732) - and store the graphics fingerprint of each (SC.renderer.GetGraphicsData(), counts and metrics) as a reference. revision2026b step RG2.3.3.5.
   - date raised: 2026-09-29
-- `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectContactCoordinate gets the contact law of ObjectContactSphereSphere: stiffness exponent, restitution and impact models (#2750)
-  - description: The maintainer, 2026-09-29: ObjectContactCoordinate should get the contact law of ObjectContactSphereSphere - contactStiffnessExponent, restitutionCoefficient, impactModel, minimumImpactVelocity (Hunt-Crossley and Gonthier/Carvalho-Martins); the comparison test of the three contact objects (RG4.15.1) extends to these laws. revision2026b step RG4.15.2.
-  - date raised: 2026-09-29
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
   - date raised: 2026-09-29
@@ -7881,10 +7878,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` Load/Save HDF5 (#1892)
   - description: Add Data structures like MatrixContainer, Vector3DList, etc.
   - date raised: 2024-10-13
-- `FIX` `MEDIUM EFF` mbs.GetDictionary (#1888)
-  - description: does not work for symbolic userfunctions
-  - **remarks:** checked 2026-09-29: mbs.GetDictionary() works with a symbolic user function; mbs.SetDictionary() of that dictionary fails with 'Unable to cast Python instance of type symbolic.UserFunction'. revision2026b step RG4.15.6
-  - date raised: 2024-10-11
 - `EXTENSION` `HIGH EFF` MatrixContainer (#1864)
   - description: consider functionality to link to dense numpy matrix; possibly by using the allocatedSize in ResizableMatrix to indicate linking rather than allocation
   - date raised: 2024-10-02

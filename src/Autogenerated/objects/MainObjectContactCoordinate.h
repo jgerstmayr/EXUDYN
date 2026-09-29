@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-09-29  21:13:53 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectContactCoordinate
-* @brief        A penalty-based contact condition for one coordinate; the contact gap \f$g\f$ is defined as \f$g=marker.value[1]- marker.value[0] - offset\f$; the contact force \f$f_c\f$ is zero for \f$gap>0\f$ and otherwise computed from \f$f_c = g*contactStiffness + \dot g*contactDamping\f$; during Newton iterations, the contact force is actived only, if \f$dataCoordinate[0] <= 0\f$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+* @brief        A penalty-based contact condition for one coordinate: a force upon penetration of the gap between the coordinates of two markers, with the contact law of ObjectContactSphereSphere - linear by default, with a stiffness exponent and impact models; the contact state is kept in a data node (active set strategy).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -118,6 +118,10 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactCoordinate->GetParameters().nodeNumber); }
         if (EPyUtils::DictItemExists(d, "contactStiffness")) { EPyUtils::FromPython(d["contactStiffness"], cObjectContactCoordinate->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactCoordinate.contactStiffness"); }
         if (EPyUtils::DictItemExists(d, "contactDamping")) { EPyUtils::FromPython(d["contactDamping"], cObjectContactCoordinate->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactCoordinate.contactDamping"); }
+        if (EPyUtils::DictItemExists(d, "contactStiffnessExponent")) { EPyUtils::FromPython(d["contactStiffnessExponent"], cObjectContactCoordinate->GetParameters().contactStiffnessExponent, EPyUtils::RangeCheck::positive, "ObjectContactCoordinate.contactStiffnessExponent"); }
+        if (EPyUtils::DictItemExists(d, "restitutionCoefficient")) { EPyUtils::FromPython(d["restitutionCoefficient"], cObjectContactCoordinate->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactCoordinate.restitutionCoefficient"); }
+        if (EPyUtils::DictItemExists(d, "minimumImpactVelocity")) { EPyUtils::FromPython(d["minimumImpactVelocity"], cObjectContactCoordinate->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactCoordinate.minimumImpactVelocity"); }
+        if (EPyUtils::DictItemExists(d, "impactModel")) { EPyUtils::FromPython(d["impactModel"], cObjectContactCoordinate->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactCoordinate.impactModel"); }
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cObjectContactCoordinate->GetParameters().offset, "ObjectContactCoordinate.offset"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectContactCoordinate->GetParameters().activeConnector, "ObjectContactCoordinate.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
@@ -136,6 +140,10 @@ public: // AUTO:
         d["nodeNumber"] = (NodeIndex)cObjectContactCoordinate->GetParameters().nodeNumber;
         d["contactStiffness"] = (Real)cObjectContactCoordinate->GetParameters().contactStiffness;
         d["contactDamping"] = (Real)cObjectContactCoordinate->GetParameters().contactDamping;
+        d["contactStiffnessExponent"] = (Real)cObjectContactCoordinate->GetParameters().contactStiffnessExponent;
+        d["restitutionCoefficient"] = (Real)cObjectContactCoordinate->GetParameters().restitutionCoefficient;
+        d["minimumImpactVelocity"] = (Real)cObjectContactCoordinate->GetParameters().minimumImpactVelocity;
+        d["impactModel"] = (Index)cObjectContactCoordinate->GetParameters().impactModel;
         d["offset"] = (Real)cObjectContactCoordinate->GetParameters().offset;
         d["activeConnector"] = (bool)cObjectContactCoordinate->GetParameters().activeConnector;
         d["name"] = (std::string)name;
@@ -153,6 +161,10 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectContactCoordinate->GetParameters().nodeNumber); } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { return py::cast((Real)cObjectContactCoordinate->GetParameters().contactStiffness); } //! AUTO: get parameter
         else if (parameterName.compare("contactDamping") == 0) { return py::cast((Real)cObjectContactCoordinate->GetParameters().contactDamping); } //! AUTO: get parameter
+        else if (parameterName.compare("contactStiffnessExponent") == 0) { return py::cast((Real)cObjectContactCoordinate->GetParameters().contactStiffnessExponent); } //! AUTO: get parameter
+        else if (parameterName.compare("restitutionCoefficient") == 0) { return py::cast((Real)cObjectContactCoordinate->GetParameters().restitutionCoefficient); } //! AUTO: get parameter
+        else if (parameterName.compare("minimumImpactVelocity") == 0) { return py::cast((Real)cObjectContactCoordinate->GetParameters().minimumImpactVelocity); } //! AUTO: get parameter
+        else if (parameterName.compare("impactModel") == 0) { return py::cast((Index)cObjectContactCoordinate->GetParameters().impactModel); } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return py::cast((Real)cObjectContactCoordinate->GetParameters().offset); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectContactCoordinate->GetParameters().activeConnector); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectContactCoordinate->GetShow()); } //! AUTO: get parameter
@@ -171,6 +183,10 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectContactCoordinate->GetParameters().nodeNumber); } //! AUTO: set parameter
         else if (parameterName.compare("contactStiffness") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().contactStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectContactCoordinate.contactStiffness"); } //! AUTO: set parameter
         else if (parameterName.compare("contactDamping") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().contactDamping, EPyUtils::RangeCheck::nonNegative, "ObjectContactCoordinate.contactDamping"); } //! AUTO: set parameter
+        else if (parameterName.compare("contactStiffnessExponent") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().contactStiffnessExponent, EPyUtils::RangeCheck::positive, "ObjectContactCoordinate.contactStiffnessExponent"); } //! AUTO: set parameter
+        else if (parameterName.compare("restitutionCoefficient") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().restitutionCoefficient, EPyUtils::RangeCheck::positive, "ObjectContactCoordinate.restitutionCoefficient"); } //! AUTO: set parameter
+        else if (parameterName.compare("minimumImpactVelocity") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().minimumImpactVelocity, EPyUtils::RangeCheck::nonNegative, "ObjectContactCoordinate.minimumImpactVelocity"); } //! AUTO: set parameter
+        else if (parameterName.compare("impactModel") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().impactModel, EPyUtils::RangeCheck::nonNegative, "ObjectContactCoordinate.impactModel"); } //! AUTO: set parameter
         else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().offset, "ObjectContactCoordinate.offset"); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectContactCoordinate->GetParameters().activeConnector, "ObjectContactCoordinate.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectContactCoordinate->GetShow(), "ObjectContactCoordinate.Vshow"); } //! AUTO: set parameter

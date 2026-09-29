@@ -6,7 +6,7 @@
 (sec-item-objectcontactcoordinate)=
 # ObjectContactCoordinate
 
-A penalty-based contact condition for one coordinate; the contact gap $g$ is defined as $g=marker.value[1]- marker.value[0] - offset$; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+A penalty-based contact condition for one coordinate: a force upon penetration of the gap between the coordinates of two markers, with the contact law of ObjectContactSphereSphere - linear by default, with a stiffness exponent and impact models; the contact state is kept in a data node (active set strategy).
 
 ## Interface
 
@@ -24,9 +24,13 @@ The parameters of the item; in a dictionary, its type is 'ContactCoordinate':
 |---|---|---|---|---|
 | **name** | String |  | '' | connector's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | markers define contact gap |
-| **nodeNumber** | NodeIndex |  | invalid (-1) | node number of a NodeGenericData for 1 dataCoordinate (used for active set strategy ==> holds the gap of the last discontinuous iteration) |
+| **nodeNumber** | NodeIndex |  | invalid (-1) | node number of a NodeGenericData with 1 data coordinate, the gap of the last discontinuous iteration (active set strategy), and a second one, the last impact velocity, if impactModel is not 0 |
 | **contactStiffness** | UReal |  | 0. | contact (penalty) stiffness [SI:N/m]; acts only upon penetration |
 | **contactDamping** | UReal |  | 0. | contact damping [SI:N/(m s)]; acts only upon penetration |
+| **contactStiffnessExponent** | PReal |  | 1. | (symbol: $n_\mathrm{exp}$) exponent in the contact law [SI:1], as in ObjectContactSphereSphere; 1 is linear |
+| **restitutionCoefficient** | PReal |  | 1. | (symbol: $e_\mathrm{res}$) coefficient of restitution [SI:1], used by impactModel 1 and 2; must be > 0 |
+| **minimumImpactVelocity** | UReal |  | 0. | (symbol: $\dot g_\mathrm{-,min}$) lower bound [SI:m/s] of the impact velocity in the impact models; a larger damping at low impact velocities and in permanent contact |
+| **impactModel** | UInt |  | 0 | (symbol: $m_\mathrm{impact}$) impact model, as in ObjectContactSphereSphere: 0) linear damping only; 1) Hunt-Crossley; 2) Gonthier et al. / Carvalho-Martins; contactDamping is added in all of them |
 | **offset** | Real |  | 0. | offset [SI:m] of contact |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactCoordinate |  |  | parameters for visualization of item |
@@ -66,10 +70,22 @@ $g > 0$ is no contact, $g \le 0$ penetration.
 
 ### Connector forces
 
-With the contact state from the data coordinate - contact if $x_0 \le 0$ -
+With the contact state from the data coordinate - contact if $x_0 \le 0$ - and the penetration
+$\delta = -g$, the law is the one of `ObjectContactSphereSphere`:
 
 $$
-f_c = \begin{cases} k_c\, g + d_c\, \dot g & \mathrm{contact} \\ 0 & \mathrm{else} \end{cases}
+f_c = \begin{cases} -\left(k_c\, \delta^{n_\mathrm{exp}} - d_c\, \dot g + \lambda\, \delta^{n_\mathrm{exp}} \dot g \right) & \mathrm{contact} \\ 0 & \mathrm{else} \end{cases}
+$$
+
+with $\delta^{n_\mathrm{exp}}$ keeping the sign of $\delta$. For `impactModel = 0` it is $\lambda = 0$,
+and for $n_\mathrm{exp} = 1$ the linear law $f_c = k_c\, g + d_c\, \dot g$. For the impact models,
+with the impact velocity $v_-$ - the gap velocity when the contact began, bounded below by
+`minimumImpactVelocity`, kept in the second data coordinate -
+
+$$
+\lambda = \frac{k_c}{v_-} \cdot \begin{cases} \frac{3}{2}(e_\mathrm{res} - 1) & \mathrm{Hunt\text{-}Crossley} \\
+\frac{3}{2}(e_\mathrm{res} - 1)\frac{11 - e_\mathrm{res}}{1 + 9 e_\mathrm{res}} \; (e_\mathrm{res} > \frac{1}{3}), \quad
+\frac{e_\mathrm{res}^2 - 1}{e_\mathrm{res}} \; (\mathrm{else}) & \mathrm{Gonthier / Carvalho\text{-}Martins} \end{cases}
 $$
 
 acts on the coordinate of marker 1 with $+f_c$ and on that of marker 0 with $-f_c$, through the

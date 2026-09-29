@@ -1,0 +1,15 @@
+{
+  "number": 1888,
+  "title": "mbs.GetDictionary",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "MEDIUM",
+  "description": "does not work for symbolic userfunctions",
+  "dateRaised": "2024-10-11",
+  "deadline": "2025-04-09",
+  "dateResolved": "2026-09-29 21:27",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "mbs.SetDictionary() accepts the dictionary of a model with a symbolic user function, as mbs.GetDictionary() writes it; the copy keeps the function symbolic.",
+  "resolvedInVersion": "1.12.167"
+}

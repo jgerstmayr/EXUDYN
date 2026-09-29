@@ -1,10 +1,10 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectContactCoordinate
-* @brief        A penalty-based contact condition for one coordinate; the contact gap \f$g\f$ is defined as \f$g=marker.value[1]- marker.value[0] - offset\f$; the contact force \f$f_c\f$ is zero for \f$gap>0\f$ and otherwise computed from \f$f_c = g*contactStiffness + \dot g*contactDamping\f$; during Newton iterations, the contact force is actived only, if \f$dataCoordinate[0] <= 0\f$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+* @brief        A penalty-based contact condition for one coordinate: a force upon penetration of the gap between the coordinates of two markers, with the contact law of ObjectContactSphereSphere - linear by default, with a stiffness exponent and impact models; the contact state is kept in a data node (active set strategy).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-09-29  21:13:53 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

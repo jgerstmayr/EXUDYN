@@ -7066,3 +7066,30 @@ steps) - its post Newton step recommends a different step size at the release. W
 `python/TestModels/contactComparisonTest.py` (moved from `python/testing/test_contactComparison.py`): it
 prints the three differences and reports one number, the deepest points and the end heights of the
 three drops summed (0.6378453061998115), so that a change in any of the three moves it; 0.6 s.
+
+<a id="rg4-15-2"></a>
+### RG4.15.2 and RG4.15.6 — the contact law of ObjectContactCoordinate, and a symbolic user function copied (2026-09-29, #2750, #1888)
+
+**RG4.15.2** (#2750): `ObjectContactCoordinate` has the contact law of `ObjectContactSphereSphere` -
+`contactStiffnessExponent`, `restitutionCoefficient`, `minimumImpactVelocity`, `impactModel` (0 linear
+damping, 1 Hunt-Crossley, 2 Gonthier et al. / Carvalho-Martins), the formulas taken from
+`CObjectContactSphereSphere::ComputeContactForces`. With an impact model the data node has a second
+coordinate, the gap velocity when the contact began, written in the post Newton step as the sphere contact
+does; `GetDataVariablesSize` and the consistency check follow `impactModel`. The defaults give the linear
+law as before: the suite is unchanged, except `parameterConversionTest.py`, whose reference now holds the
+four new parameters (only `ObjectContactCoordinate` lines changed). The page states the law.
+
+The test model `contactComparisonTest.py` drops the ball a second time with $n_\mathrm{exp} = 1.5$,
+`impactModel = 2`, $e = 0.5$ and no linear damping: the three contact objects agree to $3\cdot10^{-14}$
+over the whole drop, the release included. The rebound ratio measured from the rebound height is 0.42 for
+$e = 0.5$ (0.59 for the linear law) - gravity acts during the contact and lowers it; that is the law of
+the sphere contact, not a difference of the coordinate contact. Reference 1.200040705928356.
+
+**RG4.15.6** (#1888): `mbs.GetDictionary()` writes a user function as `{'function': ..., 'type': ...}`,
+and for a symbolic one `SetPythonObject` stored the symbolic object as if it were a Python function -
+*"Unable to cast ... symbolic.UserFunction"*. A symbolic function in that dictionary is now set as symbolic
+again (`SetPythonUserFunction`). New test model `symbolicUserFunctionCopyTest.py`: a load with a symbolic
+user function, copied into a second system through the dictionary - the copy is symbolic and computes the
+same motion (difference 0).
+
+The maintainer's "RG4.14.2" was read as RG4.15.2 - RG4.14 has no sub-steps.

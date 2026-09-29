@@ -47,8 +47,30 @@ void CObjectContactCoordinate::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataS
 	Real hasContact = 0; //1 for contact, 0 else
 	if (GetCNode(0)->GetCurrentCoordinate(0) <= 0) { hasContact = 1; }; //this is the contact state: 1=contact/use contact force, 0=no contact
 
+	//the contact law of ObjectContactSphereSphere (#2750): penetration delta = -gap, exponent, impact models;
 	//as gap is negative in case of contact, the force needs to act in opposite direction
-	Real fContact = hasContact*(gap * parameters.contactStiffness + gap_t * parameters.contactDamping);
+	Real fContact = 0.;
+	if (hasContact)
+	{
+		const Real& k = parameters.contactStiffness;
+		Real deltaExp = -gap;
+		if (parameters.contactStiffnessExponent != 1.) { deltaExp = EXUstd::SignReal(deltaExp) * pow(fabs(deltaExp), parameters.contactStiffnessExponent); }
+		Real fNormal = k * deltaExp - parameters.contactDamping * gap_t;
+		if (parameters.impactModel != 0)
+		{
+			Real impactVelocity = EXUstd::Maximum(parameters.minimumImpactVelocity, GetCNode(0)->GetCurrentCoordinate(dataIndexImpactVelocity));
+			if (impactVelocity > 0)
+			{
+				const Real& e = parameters.restitutionCoefficient;
+				Real lambda = k / impactVelocity;
+				if (parameters.impactModel == 1) { lambda *= 3. / 2. * (e - 1.); } //Hunt-Crossley
+				else if (e > 1. / 3.) { lambda *= 3. / 2. * (e - 1.) * (11. - e) / (1. + 9. * e); } //Gonthier et al. / Carvalho-Martins
+				else { lambda *= (e * e - 1.) / e; }
+				fNormal += lambda * deltaExp * gap_t;
+			}
+		}
+		fContact = -fNormal;
+	}
 	if (!parameters.activeConnector) { fContact = 0.; } //an inactive connector adds no force (#2735)
 
 	////link separate vectors to result (ode2Lhs) vector
@@ -142,6 +164,14 @@ Real CObjectContactCoordinate::PostNewtonStep(const MarkerDataStructure& markerD
 
 
 	currentState = currentGap;
+
+	//the gap velocity when the contact began, for the impact models; unchanged during the discontinuous iterations (#2750)
+	if (parameters.impactModel != 0)
+	{
+		Real startOfStepImpactVelocity = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::StartOfStep)[dataIndexImpactVelocity];
+		Real& impactVelocity = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[dataIndexImpactVelocity];
+		impactVelocity = (startofStepState > 0 && currentGap <= 0) ? -vGap : startOfStepImpactVelocity;
+	}
 
 	//pout << "PNS: currentGap=" << currentGap << ", previousState=" << previousState << ", currentState=" << currentState << ", error=" << discontinuousError << "\n";
 	return discontinuousError;

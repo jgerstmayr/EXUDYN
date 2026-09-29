@@ -111,6 +111,13 @@ void PythonUserFunctionBase<UFT>::SetPythonObject(const PyUFobject& pyObjectInit
 
 		STDstring typeString = py::cast<STDstring>(pyDict["type"]);
 
+		//the dictionary of a symbolic user function, as GetDictionary writes it, sets it as symbolic again (#1888)
+		if (typeString == "Symbolic" && py::isinstance<Symbolic::PySymbolicUserFunction>(pyDict["function"]))
+		{
+			SetPythonUserFunction(pyDict["function"]);
+			return;
+		}
+
 		*pyObject = pyDict["function"];
 		if (typeString == "Python") { ufType = UserFunctionType::Python; }
 		else if (typeString == "Symbolic")

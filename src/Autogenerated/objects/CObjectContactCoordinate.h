@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  19:35:47 (last modified)
+* @date         2026-09-29  21:13:53 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,9 +28,13 @@ class CObjectContactCoordinateParameters // AUTO:
 {
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: markers define contact gap
-    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData for 1 dataCoordinate (used for active set strategy ==> holds the gap of the last discontinuous iteration)
+    Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with 1 data coordinate, the gap of the last discontinuous iteration (active set strategy), and a second one, the last impact velocity, if impactModel is not 0
     Real contactStiffness;                        //!< AUTO: must be >= 0; contact (penalty) stiffness [SI:N/m]; acts only upon penetration
     Real contactDamping;                          //!< AUTO: must be >= 0; contact damping [SI:N/(m s)]; acts only upon penetration
+    Real contactStiffnessExponent;                //!< AUTO: must be > 0; exponent in the contact law [SI:1], as in ObjectContactSphereSphere; 1 is linear
+    Real restitutionCoefficient;                  //!< AUTO: must be > 0; coefficient of restitution [SI:1], used by impactModel 1 and 2; must be > 0
+    Real minimumImpactVelocity;                   //!< AUTO: must be >= 0; lower bound [SI:m/s] of the impact velocity in the impact models; a larger damping at low impact velocities and in permanent contact
+    Index impactModel;                            //!< AUTO: must be >= 0;  impact model, as in ObjectContactSphereSphere: 0) linear damping only; 1) Hunt-Crossley; 2) Gonthier et al. / Carvalho-Martins; contactDamping is added in all of them
     Real offset;                                  //!< AUTO: offset [SI:m] of contact
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
@@ -40,6 +44,10 @@ public: // AUTO:
         nodeNumber = EXUstd::InvalidIndex;
         contactStiffness = 0.;
         contactDamping = 0.;
+        contactStiffnessExponent = 1.;
+        restitutionCoefficient = 1.;
+        minimumImpactVelocity = 0.;
+        impactModel = 0;
         offset = 0.;
         activeConnector = true;
     };
@@ -48,7 +56,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectContactCoordinate
-* @brief        A penalty-based contact condition for one coordinate; the contact gap \f$g\f$ is defined as \f$g=marker.value[1]- marker.value[0] - offset\f$; the contact force \f$f_c\f$ is zero for \f$gap>0\f$ and otherwise computed from \f$f_c = g*contactStiffness + \dot g*contactDamping\f$; during Newton iterations, the contact force is actived only, if \f$dataCoordinate[0] <= 0\f$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+* @brief        A penalty-based contact condition for one coordinate: a force upon penetration of the gap between the coordinates of two markers, with the contact law of ObjectContactSphereSphere - linear by default, with a stiffness exponent and impact models; the contact state is kept in a data node (active set strategy).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -73,6 +81,7 @@ protected: // AUTO:
     CObjectContactCoordinateParameters parameters; //! AUTO: contains all parameters for CObjectContactCoordinate
 
 public: // AUTO:
+    static constexpr Index dataIndexImpactVelocity = 1; //!< index in the data node of the last impact velocity (#2750)
 
     // AUTO: access functions
     //! AUTO: Write (Reference) access to parameters
@@ -114,7 +123,7 @@ public: // AUTO:
     //! AUTO:  needed in order to create ltg-lists for data variable of connector
     virtual Index GetDataVariablesSize() const override
     {
-        return 1;
+        return (parameters.impactModel != 0) ? 2 : 1;
     }
 
     //! AUTO:  return if connector is active-->speeds up computation

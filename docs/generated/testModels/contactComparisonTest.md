@@ -19,6 +19,8 @@ You can view and download this file on Github: [contactComparisonTest.py](https:
 #           leaves the ground, the deepest point 0.0963898 against 0.0963927 of an independent RK4
 #           integration of the same law; after the release the coordinate contact differs by 4e-5,
 #           of first order in the step size, because its post Newton step recommends another step.
+#           The same for a nonlinear law with the impact model of Gonthier et al. / Carvalho-Martins,
+#           which ObjectContactCoordinate has since #2750.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-29
@@ -44,8 +46,10 @@ tEnd = 0.3      #one contact and the rebound
 nSteps = 20000
 
 
-def Drop(kind):
-    """the height of the ball's center over time, for one of the three contact objects"""
+def Drop(kind, law):
+    """the height of the ball's center over time, for one of the three contact objects and a contact law
+    (a dict of the law's parameters)"""
+    nImpact = 1 if law.get('impactModel', 0) != 0 else 0
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     oGround = mbs.AddObject(ObjectGround())
@@ -55,9 +59,9 @@ def Drop(kind):
         mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=m))
         mBall = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
         mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
-        nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[z0 - r]))
+        nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1+nImpact, initialCoordinates=[z0 - r]+[0]*nImpact))
         mbs.AddObject(ObjectContactCoordinate(markerNumbers=[mGround, mBall], nodeNumber=nData,
-                                              contactStiffness=k, contactDamping=d, offset=r))
+                                              offset=r, **law))
         mbs.AddLoad(LoadCoordinate(markerNumber=mBall, load=-m*g))
         sensor = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=exu.OutputVariableType.Coordinates,
                                           storeInternal=True, writeToFile=False))
@@ -73,13 +77,13 @@ def Drop(kind):
             R = 1   #a ground sphere whose top is at z=0, right below the ball
             mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0.1, 0.1, -R]))
             mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[mGround, mBall], nodeNumber=nData,
-                                                    spheresRadii=[R, r], contactStiffness=k, contactDamping=d))
+                                                    spheresRadii=[R, r], **law))
         else:
             #the sphere is marker 0, the triangle marker 1
             mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
             mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, radiusSphere=r,
                                                       trianglePoints=exu.Vector3DList([[-1, -1, 0], [1, -1, 0], [0, 1, 0]]),
-                                                      contactStiffness=k, contactDamping=d))
+                                                      **law))
         sensor = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=exu.OutputVariableType.Position,
                                           storeInternal=True, writeToFile=False))
         component = 3
@@ -96,18 +100,25 @@ def Drop(kind):
     return np.interp(np.linspace(0, tEnd, nSteps+1), data[:, 0], data[:, component])
 
 
-z = dict((kind, Drop(kind)) for kind in ['coordinate', 'sphere', 'triangle'])
+#the linear law, and a nonlinear law with the impact model of Gonthier et al. / Carvalho-Martins (#2750)
+laws = {'linear': {'contactStiffness': k, 'contactDamping': d},
+        'impact': {'contactStiffness': k, 'contactDamping': 0, 'contactStiffnessExponent': 1.5,
+                   'impactModel': 2, 'restitutionCoefficient': 0.5}}
 t = np.linspace(0, tEnd, nSteps+1)
-release = np.argmax((t > 0.14) & (z['coordinate'] > r))    #the ball leaves the ground again
+testResult = 0
+for (lawName, law) in laws.items():
+    z = dict((kind, Drop(kind, law)) for kind in ['coordinate', 'sphere', 'triangle'])
+    release = np.argmax((t > 0.14) & (z['coordinate'] > r))    #the ball leaves the ground again
+    exu.Print(lawName + ':')
+    exu.Print('  deepest point   :', z['coordinate'].min(), z['sphere'].min(), z['triangle'].min())
+    exu.Print('  sphere-triangle :', np.abs(z['sphere'] - z['triangle']).max())
+    exu.Print('  until release   :', np.abs(z['coordinate'][:release] - z['sphere'][:release]).max())
+    exu.Print('  after release   :', np.abs(z['coordinate'] - z['sphere']).max())
+    #the ratio of the velocities leaving and hitting the ground, from the rebound height; gravity acts during the contact
+    exu.Print('  rebound ratio   :', np.sqrt(2*g*(z['sphere'][release:].max() - r))/np.sqrt(2*g*(z0 - r)))
+    #the deepest points of the three and the heights at the end - moves if any of the three changes
+    testResult += sum(z[kind].min() + z[kind][-1] for kind in z)
 
-exu.Print('deepest point   :', z['coordinate'].min(), z['sphere'].min(), z['triangle'].min(), '(RK4 of the same law: 0.0963927)')
-exu.Print('sphere-triangle :', np.abs(z['sphere'] - z['triangle']).max())
-exu.Print('until release   :', np.abs(z['coordinate'][:release] - z['sphere'][:release]).max())
-exu.Print('after release   :', np.abs(z['coordinate'] - z['sphere']).max())
-
-#the deepest points of the three and the heights at the end - one number that moves if any of the
-#three changes
-testResult = sum(z[kind].min() + z[kind][-1] for kind in z)
 exu.Print('solution of contactComparisonTest=', testResult)
 exu.sys['testResult'] = testResult
 ```

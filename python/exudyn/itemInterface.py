@@ -5300,18 +5300,26 @@ class VObjectContactCoordinate:
         return str(dict(self))
 
 class ObjectContactCoordinate:
-    r"""A penalty-based contact condition for one coordinate; the contact gap :math:`g` is defined as :math:`g=marker.value[1]- marker.value[0] - offset`; the contact force :math:`f_c` is zero for :math:`gap>0` and otherwise computed from :math:`f_c = g*contactStiffness + \dot g*contactDamping`; during Newton iterations, the contact force is actived only, if :math:`dataCoordinate[0] <= 0`; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.
+    """A penalty-based contact condition for one coordinate: a force upon penetration of the gap between the coordinates of two markers, with the contact law of ObjectContactSphereSphere - linear by default, with a stiffness exponent and impact models; the contact state is kept in a data node (active set strategy).
     
     Args:
         name: connector's unique name; type: str
 
         markerNumbers: markers define contact gap; type: ArrayMarkerIndex
 
-        nodeNumber: node number of a NodeGenericData for 1 dataCoordinate (used for active set strategy ==> holds the gap of the last discontinuous iteration); type: NodeIndex
+        nodeNumber: node number of a NodeGenericData with 1 data coordinate, the gap of the last discontinuous iteration (active set strategy), and a second one, the last impact velocity, if impactModel is not 0; type: NodeIndex
 
         contactStiffness: contact (penalty) stiffness [SI:N/m]; acts only upon penetration; type: float
 
         contactDamping: contact damping [SI:N/(m s)]; acts only upon penetration; type: float
+
+        contactStiffnessExponent: exponent in the contact law [SI:1], as in ObjectContactSphereSphere; 1 is linear; type: float
+
+        restitutionCoefficient: coefficient of restitution [SI:1], used by impactModel 1 and 2; must be > 0; type: float
+
+        minimumImpactVelocity: lower bound [SI:m/s] of the impact velocity in the impact models; a larger damping at low impact velocities and in permanent contact; type: float
+
+        impactModel: impact model, as in ObjectContactSphereSphere: 0) linear damping only; 1) Hunt-Crossley; 2) Gonthier et al. / Carvalho-Martins; contactDamping is added in all of them; type: int
 
         offset: offset [SI:m] of contact; type: float
 
@@ -5327,12 +5335,16 @@ class ObjectContactCoordinate:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, offset = 0., activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
         self.contactStiffness = contactStiffness
         self.contactDamping = contactDamping
+        self.contactStiffnessExponent = contactStiffnessExponent
+        self.restitutionCoefficient = restitutionCoefficient
+        self.minimumImpactVelocity = minimumImpactVelocity
+        self.impactModel = impactModel
         self.offset = offset
         self.activeConnector = activeConnector
         self.visualization = CopyDictLevel1(visualization)
@@ -5344,6 +5356,10 @@ class ObjectContactCoordinate:
         yield 'nodeNumber', self.nodeNumber
         yield 'contactStiffness', self.contactStiffness
         yield 'contactDamping', self.contactDamping
+        yield 'contactStiffnessExponent', self.contactStiffnessExponent
+        yield 'restitutionCoefficient', self.restitutionCoefficient
+        yield 'minimumImpactVelocity', self.minimumImpactVelocity
+        yield 'impactModel', self.impactModel
         yield 'offset', self.offset
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]

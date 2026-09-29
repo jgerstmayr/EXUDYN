@@ -652,9 +652,15 @@ bool MainObjectContactCoordinate::CheckPreAssembleConsistency(const MainSystem& 
 	}
 
 	Index nc = ((const CNodeGenericData&)(cObject->GetCSystemData()->GetCNode(node))).GetNumberOfDataCoordinates();
-	if (nc != 1)
+	if (nc != cObject->GetDataVariablesSize())
 	{
-		errorString = STDstring("ObjectContactCoordinate: NodeGenericData must have 1 coordinate (found: ") + EXUstd::ToString(nc) + ")";
+		errorString = STDstring("ObjectContactCoordinate: NodeGenericData must have ") + EXUstd::ToString(cObject->GetDataVariablesSize()) +
+			" coordinate(s), 2 with an impactModel (found: " + EXUstd::ToString(nc) + ")";
+		return false;
+	}
+	if (cObject->GetParameters().impactModel > 2)
+	{
+		errorString = "ObjectContactCoordinate: impactModel must be 0, 1 or 2";
 		return false;
 	}
 	return true;

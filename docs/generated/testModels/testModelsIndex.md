@@ -78,6 +78,7 @@ hydraulicActuatorSimpleTest
 jointArgsTest
 kinematicTreeAndMBStest
 kinematicTreeConstraintTest
+symbolicUserFunctionCopyTest
 contactComparisonTest
 kinematicTreePrismaticJacobianTest
 kinematicTreeTest

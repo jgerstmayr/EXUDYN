@@ -1182,7 +1182,7 @@ find its file and line, on every raise).
     The graphics ones are RG6.8. What remains, in the order proposed:
     - **RG4.15.1** **DONE 2026-09-29** (#2749) — one drop, three contact objects:
       the test model `contactComparisonTest.py`, the check in compensation for #738;
-    - **RG4.15.2** (#2750) `ObjectContactCoordinate` gets the contact law of `ObjectContactSphereSphere` -
+    - **RG4.15.2** **DONE 2026-09-29** (#2750) — [log](exudynRevisionLog2026b.md#rg4-15-2) — `ObjectContactCoordinate` gets the contact law of `ObjectContactSphereSphere` -
       `contactStiffnessExponent`, `restitutionCoefficient`, `impactModel`, `minimumImpactVelocity` -, and the
       comparison test extends to them; its release step size is also the one difference the test found;
     - **RG4.15.3** (#830) the explicit solvers do no post Newton step - contact and switching items are
@@ -1192,7 +1192,7 @@ find its file and line, on every raise).
       the sum of the torques on both bodies must vanish;
     - **RG4.15.5** (#1639) a repeated `mbs.SolveDynamic` with `ObjectFFRFreducedOrder` diverges -
       reproduced by solving `objectFFRFreducedOrderTest.py` twice;
-    - **RG4.15.6** (#1888) `mbs.GetDictionary()` works with a symbolic user function, but
+    - **RG4.15.6** **DONE 2026-09-29** (#1888) — [log](exudynRevisionLog2026b.md#rg4-15-2) — `mbs.GetDictionary()` works with a symbolic user function, but
       `mbs.SetDictionary()` of that dictionary fails (*"Unable to cast ... symbolic.UserFunction"*);
     - **RG4.15.7** (#1424) the numerical ODE1 Jacobian with a connector whose two markers are on the same
       object - the duplicate coordinates, as for ODE2 (`CSystem.cpp` says *"ODE1 needs to be checked as
@@ -3105,7 +3105,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.12 | #2736 | `NodeGenericAE` cannot be used: no object, marker or script takes it - **deprecate, or an object for it?** |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
-| RG4.15 | #2750, #830, #2127, #1639, #1888, #1424, #1848, #1947 | the open bugs and fixes before 1.13 |
+| RG4.15 | #830, #2127, #1639, #1424, #1848, #1947 | the open bugs and fixes before 1.13 |
 | RG6.8 | #1813, #2309, #2321, #2308, #2140, #2236, #2237, #2350 | the graphics fixes before 1.13, each with a test |
 | RG6.7 | #2709, #2710 | GraphicsData gets a Sphere and a curved triangle list; RG6.7.1 evaluates the geometry first |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
