@@ -1,0 +1,16 @@
+{
+  "number": 1499,
+  "title": "GeometricallyExactBeam",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "check for advanced right-angle frame",
+  "dateRaised": "2023-04-08",
+  "deadline": "2023-10-05",
+  "dateResolved": "2026-09-30 00:04",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectBeamGeometricallyExact: tested with the lateral buckling of the right-angle frame, which buckles at the published critical load of 1.088 N (test model geometricallyExactBeamRightAngleFrame.py)",
+  "resolvedInVersion": "1.12.174"
+}

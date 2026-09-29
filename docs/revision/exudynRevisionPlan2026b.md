@@ -1194,8 +1194,10 @@ The steps are numbered in the order they were raised and stand here in the order
     - **RG4.8.2** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg4-8-1) - the flexible
       pendulum with `ObjectBeamGeometricallyExact2D`, the 3D element and `ObjectANCFCable2D`, test model
       `flexiblePendulumBeamComparison.py`: the 3D element converges with the mesh;
-    - **RG4.8.3** a 3D test against the literature: the right-angle frame (L-shape) with its published
-      response (#1499);
+    - **RG4.8.3** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-8-3) - the right-angle frame
+      buckles at the published 1.088 N; test model `geometricallyExactBeamRightAngleFrame.py` (#1499). The
+      older `rightAngleFrame.py` (ANCF and this element, not run by the suite) still stops near the
+      buckling load with its own settings - to be revised or removed, the maintainer's call;
     - **RG4.8.4** the mass matrix and the gyroscopic (quadratic velocity) terms - consistent after
       Sonneville Eq. (78)-(82), or lumped with the correct terms (#1273);
     - **RG4.8.5** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg4-8-5) - the Jacobian of the

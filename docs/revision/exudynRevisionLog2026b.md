@@ -7250,3 +7250,34 @@ The difference is 0.5 % and of the size by which the published solutions of this
 each other. Euler parameters and Tait-Bryan nodes give the same positions; the static solver needs
 about 100 Newton steps for 20 load steps with Tait-Bryan nodes and 150-200 with Euler parameters. Reference
 4.561491685469841.
+
+<a id="rg4-8-3"></a>
+### RG4.8.3 — the right-angle frame against the literature (2026-09-30, #1499)
+
+The lateral buckling of the right-angle frame (Argyris et al. 1979, Simo and Vu-Quoc 1986): two arms of
+0.24 m, cross section 30 x 0.6 mm, $E = 7.124\cdot10^{10}$, $\nu = 0.31$, clamped at one end, an in-plane force
+$P$ at the other along the first arm; published critical load **1.088 N**. With an out-of-plane
+imperfection $10^{-4}P$, Tait-Bryan nodes, the load at which the out-of-plane tip displacement reaches:
+
+| elements per arm | 1 mm | 2 mm | 5 mm | 10 mm |
+|---|---|---|---|---|
+| 8 | 1.0837 | 1.0862 | 1.0902 | 1.0939 |
+| 16 | 1.0812 | 1.0853 | 1.0880 | 1.0917 |
+| 32 | 1.0807 | 1.0845 | 1.0872 | 1.0911 |
+
+The knee lies at the published load; with an imperfection of $10^{-3}P$ it is rounded off and starts
+lower (1 mm at 1.016 N), with $10^{-5}P$ the solver stays on the unbuckled path for 16 and 32 elements, as
+it should. Euler parameters give the same curve. A Southwell plot of the pre-buckling range gives 1.40 N
+and is not usable here - the out-of-plane response before buckling is not dominated by the buckling mode.
+
+**What stopped it first**: with Euler parameters the unloaded frame did not converge at all - not the
+element: the initial residual is round-off, $2\cdot10^{-10}$, above the default absolute Newton tolerance
+$10^{-10}$, in a model whose forces are of the order of 1 N and stiffnesses of $5\cdot10^6$. An absolute
+tolerance of $10^{-7}$ fixes it. The same frame with Tait-Bryan nodes has a smaller round-off and
+converged with the default.
+
+New test model `geometricallyExactBeamRightAngleFrame.py` (16 elements per arm, Euler parameters, 240
+load steps, 0.8 s): 1 mm at 1.0812 N, 5 mm at 1.0880 N, 10 mm at 1.0917 N; reference 3.306181714013268.
+The existing `rightAngleFrame.py` (2023, ANCF and this element; its header: *"no convergence for
+GeometricallyExactBeam"*) is excluded from the suite; run with its own settings it now passes 90 of 100
+load steps and stops at the buckling load. Revising or removing it is left to the maintainer.
