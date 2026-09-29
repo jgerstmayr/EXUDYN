@@ -1,0 +1,15 @@
+{
+  "number": 1550,
+  "title": "GeometricallyExactBeam",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "MEDIUM",
+  "description": "add F_Lie*Glocal_q term for Jacobian to improve convergence",
+  "dateRaised": "2023-05-02",
+  "deadline": "2023-10-29",
+  "dateResolved": "2026-09-29 23:46",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectBeamGeometricallyExact: the Jacobian contains the terms of the derivative of Glocal and of the rotation matrix; see #1100",
+  "resolvedInVersion": "1.12.172"
+}

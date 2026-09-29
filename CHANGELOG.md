@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 157 | 1.12.169 |
+| 1.12 | Metheney | 159 | 1.12.172 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.172** `FIX` `MEDIUM EFF` `resolved by: Claude-JG` GeometricallyExactBeam (#1550)
+  - description: add F\_Lie\*Glocal\_q term for Jacobian to improve convergence
+  - **notes:** ObjectBeamGeometricallyExact: the Jacobian contains the terms of the derivative of Glocal and of the rotation matrix; see \#1100
+  - date resolved: **2026-09-29 23:46**, date raised: 2023-05-02
+- **1.12.171** `EXTENSION` `HIGH EFF` `resolved by: Claude-JG` GeometricallyExactBeam3D (#1100)
+  - description: finalize implementation and fix jacobian computation
+  - **notes:** ObjectBeamGeometricallyExact: the Jacobian is complete - the derivatives of the rotation matrices, of the G matrices and of the SE(3) tangent operator are included, and the derivative of the quadratic velocity vector with respect to the velocities; large deformations with Tait-Bryan nodes converge in the static solver, which failed before
+  - date resolved: **2026-09-29 23:46**, date raised: 2022-05-23
 - **1.12.169** `EXTENSION` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev issue plot: the issues over time as a matplotlib figure (#2752)
   - description: The maintainer, 2026-09-29: 'exudev issue plot' opens a matplotlib figure with the issues over time - total, closed and open - and, on a second scale, total and open bugs and fixes, with a legend. revision2026b step RG10.13.
   - **notes:** exudev issue plot shows the issues over time - total, closed, open, and the bugs and fixes on a second axis; --save FILE writes the figure.

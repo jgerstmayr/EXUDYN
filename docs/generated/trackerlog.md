@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.169.dev1
+- Exudyn version = 1.12.172.dev1
 - last change = 2026-09-29
 - Number of issues = 2753
-- Number of resolved issues = 2483 (169 in current version)
+- Number of resolved issues = 2486 (172 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7976,10 +7976,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `FIX` `MEDIUM EFF` utilities InitializeFromRestartFile (#1565)
   - description: finalize C++ functionality and Python function
   - date raised: 2023-05-14
-- `FIX` `MEDIUM EFF` GeometricallyExactBeam (#1550)
-  - description: add F\_Lie\*Glocal\_q term for Jacobian to improve convergence
-  - **remarks:** planned as revision2026b step RG4.8.5 (2026-09-29), inspected first: it may be solved already
-  - date raised: 2023-05-02
 - `EXTENSION` `HIGH EFF` KinematicTree (#1549)
   - description: consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body?
   - date raised: 2023-05-02
@@ -8079,10 +8075,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2022-06-12
 - `EXTENSION` `HUGE EFF` GenericObject (#1104)
   - description: add most general generic object containing ODE1, ODE2 and AE equations + unknowns; jacobianAE as user functions
-  - date raised: 2022-05-23
-- `EXTENSION` `HIGH EFF` GeometricallyExactBeam3D (#1100)
-  - description: finalize implementation and fix jacobian computation
-  - **remarks:** planned as revision2026b step RG4.8.5 (2026-09-29), inspected first: it may be solved already
   - date raised: 2022-05-23
 - `EXTENSION` `HIGH EFF` ANCFBeam3D (#1087)
   - description: complete implementation of all functions (rigid marker, etc.)
@@ -8237,10 +8229,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` ContactCoordinate (#737)
   - description: check if is very close to switching, perform switching for end of step and set error very small; if immediate swichting after beginning of step, do not set stepRecommendation to avoid step reduction; repeat step; time integration: if recommended step is set, reduction is performed in first iteration, otherwise iterate
   - date raised: 2021-08-13
-- `EXTENSION` `HIGH EFF` include GeomExactBeam3D (#736)
-  - description: as provided by Jan Tomec
-  - **remarks:** planned as revision2026b step RG4.8.8 (2026-09-29), inspected first: it may be solved already
-  - date raised: 2021-08-12
 - `IMPROVEMENT` `MEDIUM EFF` optimize CollectCurrentNodeMarkerData (#728)
   - description: optimize function for CNodeRigidBodyRotVecLG
   - date raised: 2021-07-31
@@ -8384,6 +8372,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` NodeGenericAE cannot be used: no object, marker or script takes it (#2736)
   - description: Found while writing the MiniExamples (\#2732, revision2026b step RG13.6.1): NodeGenericAE provides only the type GenericAE, and no object requests it, no node marker can be attached to it, and no example, test model or module of the package uses it. A node with algebraic coordinates and no object that writes their equations leaves those coordinates without an equation. Either an object takes it - the description names linear state space systems - or the node is deprecated. revision2026b step RG4.12.
+  - **remarks:** ON HOLD (maintainer 2026-09-29): not deprecated; the future owner of the Lagrange multipliers of a constraint (optional node, automatic allocation stays the default) and of the unknowns of purely algebraic equations; design in revision2026b step RG4.12
   - date raised: 2026-09-29
 - <span class="textred">`BUG`</span> `HIGH EFF` `raised by: Claude-JG` ObjectBeamGeometricallyExact (3D) has defects and is under development: analyse the implementation (#2730)
   - description: The maintainer, 2026-09-28: 'The 3D GeometricallyExactBeam has some defects and is still under development. So, you would find some errors in the implementation - so keep this item open and add a step and issue to RG4.' Its reference page (4 words of description) stays open in RG13.5.2 until the analysis says what the element does and what it does not; an item found with a larger defect while it is documented gets an RG4 step like this one rather than a fix inside RG13. revision2026b step RG4.8.

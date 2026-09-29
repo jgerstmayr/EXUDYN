@@ -1,0 +1,15 @@
+{
+  "number": 736,
+  "title": "include GeomExactBeam3D",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "as provided by Jan Tomec",
+  "dateRaised": "2021-08-12",
+  "deadline": "2021-10-11",
+  "dateResolved": "2026-09-29 23:19",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded: ObjectBeamGeometricallyExact is the 3D geometrically exact beam, implemented after the formulation provided by Jan Tomec; its remaining work is #2730 (maintainer, 2026-09-29)",
+  "resolvedInVersion": "1.12.170"
+}

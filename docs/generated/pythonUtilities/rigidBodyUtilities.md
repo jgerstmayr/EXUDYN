@@ -120,7 +120,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 - **output**: vector of 4 eulerParameters as np.array
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex), [`stiffFlyballGovernor2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py) (Ex), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM), [`stiffFlyballGovernor.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stiffFlyballGovernor.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex), [`stiffFlyballGovernor2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py) (Ex), [`geometricallyExactBeamJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamJacobianTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM), [`stiffFlyballGovernor.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stiffFlyballGovernor.py) (TM)
 
 
 (sec-rigidbodyutilities-angularvelocity2eulerparameters-t)=
@@ -222,7 +222,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKine
 - **notes**: due to gimbal lock / singularity at rot[1] = pi/2, -pi/2, ... the reconstruction of `RotationMatrix2RotXYZ( RotXYZ2RotationMatrix(rot) )` may fail, but `RotXYZ2RotationMatrix( RotationMatrix2RotXYZ( RotXYZ2RotationMatrix(rot) ) )` works always
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py) (Ex), [`geometricallyExactBeamJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamJacobianTest.py) (TM)
 
 
 (sec-rigidbodyutilities-rotxyz2g)=
@@ -281,7 +281,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 - **output**: time derivative of vector of Tait-Bryan rotation parameters [X,Y,Z] (in radiant) as np.array
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM), [`heavyTop.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/heavyTop.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM), [`geometricallyExactBeamJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamJacobianTest.py) (TM), [`heavyTop.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/heavyTop.py) (TM)
 
 
 (sec-rigidbodyutilities-rotxyz2eulerparameters)=

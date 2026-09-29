@@ -7167,3 +7167,58 @@ same loads on the nodes - a pendulum under `LoadMassProportional` against nodal 
 cantilever with tip force and tip torque on `MarkerBodyRigid` at the end of the last element against the
 last node (0), a force at the middle of an element against half of it on each node (0). Reference
 0.2277706534235741.
+
+<a id="rg4-8-5"></a>
+### RG4.8.5 — the Jacobian of the 3D geometrically exact beam (2026-09-29, #1100, #1550)
+
+**Measured first**, one element, the analytic Jacobian against the numerical one of the implicit solver
+(`forODE2=True`): exact for the straight element (relative difference $7\cdot10^{-8}$), 0.4-0.9 % off when
+stretched, 4.5 % (Tait-Bryan) and 12 % (Euler parameters) off when bent; the velocity Jacobian was not there.
+The elastic forces of node $i$ are $\Qm_i = \Bm_i\tp \rv_i$, $\rv_i = \Tm_i\tp \sv$, $\sv = \Km(\hv - \hv_0)/L$, with
+$\hv$ the relative motion of the nodes, $\Tm_i$ the inverse SE(3) tangent operator and
+$\Bm_i = \mathrm{diag}(\Rot_i\tp, \Gm_{local,i})$; the old Jacobian was $\Pm\tp \Km \Pm / L$ only, $\Pm = \partial\hv/\partial\qv$.
+Now the element computes the full derivative:
+
+- $\Bm_i\tp\,\big(\Tm_i\tp \Km/L + \partial(\Tm_i\tp \sv)/\partial\hv\big)\,\Pm$ - the second term by central differences
+  of the closed-form `TExpSE3Inv` in the six components of $\hv$, twelve evaluations of a 6x6 formula;
+- $\partial(\Bm_i\tp \rv_i)/\partial\qv_i$ with $\rv_i$ fixed: $-\Rot_i \tilde\rv_{pos} \Gm_{local,i}$ for the position rows, and the
+  node's `GetGlocalTv_q` for the rotation rows - the $\Rot\tp_q$ and $\Gm_{local,q}$ terms of #1550;
+- with `factorODE2_t`: the derivative of the quadratic velocity vector with respect to the velocities,
+  $\tfrac{L}{2}\Gm_{local}\tp(\tilde\omegav \Jm - \widetilde{\Jm\omegav})\Gm_{local}$, and for Tait-Bryan nodes the one of
+  $\Jm\,\dot\Gm_{local}\dot\thetav$ (its $\dot\thetav$-derivative is $\dot\Gm_{local} + [\dot\Gm_{local}(\thetav, \ev_j)\,\dot\thetav]_j$, since
+  $\dot\Gm_{local}$ is linear in $\dot\thetav$). Its derivative with respect to the coordinates is neglected, as the
+  one of the mass matrix.
+
+Result, on the tangent space of the Euler parameters: $3\cdot10^{-7}$ (Euler parameters) and $2\cdot10^{-7}$
+(Tait-Bryan) for the coordinates, $10^{-7}$ and $2\cdot10^{-7}$ for the velocities - the accuracy of the numerical
+Jacobian. For Euler parameters the analytic Jacobian differs from the numerical one in the direction
+normal to the unit sphere, which the norm constraint fixes.
+
+**Newton iterations**, cantilever of 8 elements, tip force and torque, 5 load steps, and the same beam
+falling under gravity, 200 steps:
+
+| | Tait-Bryan, static | Euler parameters, static | Tait-Bryan, dynamic | Euler parameters, dynamic |
+|---|---|---|---|---|
+| analytic, before | **no convergence** (5.4 million steps, wrong result) | 225 | 2877 | 4294 |
+| analytic, now | 66 | 148 | 980 | 2330 |
+| numerical | 237 | 213 | 981 | 1419 |
+
+For Euler parameters in dynamics the numerical Jacobian still needs fewer iterations, 2.0 against 2.75
+per step in the first 0.1 s - the normal direction, which the numerical Jacobian takes from the
+implementation of the rotation matrix off the unit sphere; not pursued. The two dynamic solutions part
+after 0.5 s by up to 3 mm while they agree to all printed digits until 0.1 s: the motion is sensitive,
+not the convergence (checked with the Newton tolerance at $10^{-12}$).
+
+**Found on the way (#1273, part of RG4.8.4)**: for Tait-Bryan nodes the quadratic velocity term
+$\Gm_{local}\tp \Jm \dot\Gm_{local}\dot\thetav$ used the inertia per unit length $\Jm$, not $\tfrac{L}{2}\Jm$ as the mass
+matrix and the other gyroscopic term do; fixed. Euler parameters and the rotation vector do not have
+this term.
+
+`h` and `h0` come from one new function `ComputeIncrementalMotion`, which RG4.8.6 changes. New test model
+`geometricallyExactBeamJacobianTest.py`: the four comparisons and the Tait-Bryan cantilever; reference
+4.282489188464191. Three references moved by $3\cdot10^{-7}$ (`geometricallyExactBeamTest.py`, whose
+cases use tolerances down to $10^{-4}$) and $3\cdot10^{-10}$ (`flexiblePendulumBeamComparison.py`,
+`geometricallyExactBeamMarkerTest.py`) - the Newton iterations end elsewhere within the tolerance.
+
+Found, not fixed: the definition declares the output variables `Rotation`, `StrainLocal` and
+`CurvatureLocal`, which `GetOutputVariableBody` does not compute - RG4.8.10.

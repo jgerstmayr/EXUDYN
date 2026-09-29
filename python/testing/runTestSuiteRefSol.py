@@ -91,7 +91,7 @@ def TestExamplesReferenceSolution():
         'genericODE2test.py':0.03604546349894506,                  #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.036045463498793825,
         'geneticOptimizationTest.py':0.10117518366826603,           #before 2022-02-20 (accuracy of internal sensors is higher); 0.10117518367051619, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.10117518366934351,
         'geometricallyExactBeam2Dtest.py':-2.211502835379855,       #2026-01-09 update due to autodifferentiation
-        'geometricallyExactBeamTest.py':1.012820942859896,         #before 2023-01-29: 1.012822053539261; before 2023-05-05: 1.0128218992948643 (changed Texp function); new 2023-04-06 may still include small errors in implementation
+        'geometricallyExactBeamTest.py':1.012821233280551,         #before 2026-09-29: 1.012820942859896 (full Jacobian, #1550); before 2023-01-29: 1.012822053539261; before 2023-05-05: 1.0128218992948643 (changed Texp function); new 2023-04-06 may still include small errors in implementation
         'gridGeomExactBeam2D.py':-1.5827965743262553,                #new 2024-01-28
         'heavyTop.py':33.423125751743804,                            #new 2022-07-11 (CState Parallel); 
         'hydraulicActuatorSimpleTest.py':7.130440021870289,
@@ -102,8 +102,9 @@ def TestExamplesReferenceSolution():
                                                                  #which is the same comparison. Until then: 2.6388120463802584e-05
         'kinematicTreeConstraintTest.py':1.8135975384620298 ,
         'symbolicUserFunctionCopyTest.py':0.38643688092501255, #a copy through Get/SetDictionary stays symbolic (#1888)
-        'flexiblePendulumBeamComparison.py':-1.508742102788566, #three beam elements, one pendulum (#2730)
-        'geometricallyExactBeamMarkerTest.py':0.2277706534235741, #body markers on the 3D beam = loads on its nodes (#2730)
+        'flexiblePendulumBeamComparison.py':-1.508742103106691, #three beam elements, one pendulum (#2730)
+        'geometricallyExactBeamMarkerTest.py':0.22777065315326317, #body markers on the 3D beam = loads on its nodes (#2730)
+        'geometricallyExactBeamJacobianTest.py':4.282489188464191, #analytic against numerical Jacobian of the 3D beam (#1550)
         'contactComparisonTest.py':1.200040705928356, #deepest points and end heights, three contact objects, two laws (#2749, #2750)
         'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164064,

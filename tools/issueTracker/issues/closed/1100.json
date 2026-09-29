@@ -1,0 +1,15 @@
+{
+  "number": 1100,
+  "title": "GeometricallyExactBeam3D",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "finalize implementation and fix jacobian computation",
+  "dateRaised": "2022-05-23",
+  "deadline": "2022-07-22",
+  "dateResolved": "2026-09-29 23:46",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectBeamGeometricallyExact: the Jacobian is complete - the derivatives of the rotation matrices, of the G matrices and of the SE(3) tangent operator are included, and the derivative of the quadratic velocity vector with respect to the velocities; large deformations with Tait-Bryan nodes converge in the static solver, which failed before",
+  "resolvedInVersion": "1.12.171"
+}

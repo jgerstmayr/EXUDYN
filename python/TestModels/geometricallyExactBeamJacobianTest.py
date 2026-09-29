@@ -1,0 +1,109 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The Jacobian of ObjectBeamGeometricallyExact against a numerical Jacobian (#1100, #1550): one
+#           element in a bent and rotating configuration, with Euler parameter nodes and with Tait-Bryan
+#           nodes. The stiffness part is compared on the tangent space of the Euler parameters (the part
+#           normal to the unit sphere is fixed by the norm constraint), the velocity part - the quadratic
+#           velocity vector - with a thick cross section. Then a cantilever with Tait-Bryan nodes under a
+#           large tip force and torque, solved statically with the analytic Jacobian. The result is the
+#           tip position plus the number of Jacobian comparisons that pass.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-09-29
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+E = 1e8; rho = 1000; h = 0.002; b = 0.01; nu = 0.3
+A = b*h; Izz = b*h**3/12; Iyy = h*b**3/12; G = E/(2*(1+nu))
+
+
+def Section(inertiaFactor=1):
+    section = exu.BeamSection()
+    section.stiffnessMatrix = np.diag([E*A, G*A, G*A, G*(Iyy+Izz), E*Iyy, E*Izz])
+    section.inertia = inertiaFactor*np.diag([rho*(Iyy+Izz), rho*Iyy, rho*Izz])
+    section.massPerLength = rho*A
+    return section
+
+
+def Node(nodeType, p, R, omega):
+    if nodeType == 'EP':
+        ep = RotationMatrix2EulerParameters(R)
+        return NodeRigidBodyEP(referenceCoordinates=list(p)+list(ep),
+                               initialVelocities=[0, 0, 0]+list(AngularVelocity2EulerParameters_t(omega, ep)))
+    rot = RotationMatrix2RotXYZ(R)
+    return NodeRigidBodyRxyz(referenceCoordinates=list(p)+list(rot),
+                             initialVelocities=[0, 0, 0]+list(AngularVelocity2RotXYZ_t(omega, rot)))
+
+
+def Jacobian(nodeType, numerical, velocity, inertiaFactor):
+    """the ODE2 Jacobian of one bent, rotating element: of the coordinates, or of the velocities"""
+    SC = exu.SystemContainer(); mbs = SC.AddSystem()
+    L = 0.5
+    n0 = mbs.AddNode(Node(nodeType, [0, 0, 0], RotationMatrixY(0.1) @ RotationMatrixZ(0.2), [1, 2, 3]))
+    n1 = mbs.AddNode(Node(nodeType, [0.98*L, 0.05, -0.03], RotationMatrixZ(0.5) @ RotationMatrixX(0.3), [-2, 1, 4]))
+    mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[n0, n1], physicsLength=L, sectionData=Section(inertiaFactor)))
+    mbs.Assemble()
+    s = exu.SimulationSettings()
+    s.timeIntegration.newton.numericalDifferentiation.forODE2 = numerical
+    s.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-6 if velocity else 1e-7
+    s.linearSolverType = exu.LinearSolverType.EXUdense
+    solver = exu.MainSolverImplicitSecondOrder()
+    solver.InitializeSolver(mbs, s)
+    n = mbs.systemData.ODE2Size()
+    solver.ComputeJacobianODE2RHS(mbs, scalarFactor_ODE2=0 if velocity else 1, scalarFactor_ODE2_t=1 if velocity else 0,
+                                  scalarFactor_ODE1=0)
+    J = solver.GetSystemJacobian()[:n, :n]
+    #tangent space: remove the direction of the Euler parameters themselves
+    T = np.eye(n)
+    if nodeType == 'EP':
+        for (node, i0) in [(n0, 3), (n1, 10)]:
+            ep = np.array(mbs.GetNodeParameter(node, 'referenceCoordinates')[3:])
+            T[i0:i0+4, i0:i0+4] -= np.outer(ep, ep)
+    return T @ J @ T
+
+
+passed = 0
+for nodeType in ['EP', 'Rxyz']:
+    for (velocity, inertiaFactor) in [(False, 1), (True, 1e6)]:
+        JAnalytic = Jacobian(nodeType, False, velocity, inertiaFactor)
+        JNumerical = Jacobian(nodeType, True, velocity, inertiaFactor)
+        difference = np.linalg.norm(JAnalytic-JNumerical)/np.linalg.norm(JNumerical)
+        exu.Print(nodeType, 'velocities' if velocity else 'coordinates', ': relative difference analytic - numerical Jacobian', difference)
+        passed += difference < 1e-5
+
+
+#a cantilever with Tait-Bryan nodes, large tip force and torque, static
+SC = exu.SystemContainer(); mbs = SC.AddSystem()
+L = 1; nElements = 8; lElement = L/nElements
+nodes = [mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[i*lElement, 0, 0, 0, 0, 0])) for i in range(nElements+1)]
+for i in range(nElements):
+    mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=lElement, sectionData=Section()))
+mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
+for i in range(6):
+    mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[0], coordinate=i))]))
+mTip = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodes[-1]))
+mbs.AddLoad(LoadForceVector(markerNumber=mTip, loadVector=[0, -2*E*Izz/L**2, 0.01*E*Iyy/L**2]))
+mbs.AddLoad(LoadTorqueVector(markerNumber=mTip, loadVector=[0.3*G*(Iyy+Izz)/L, 0, 0]))
+mbs.Assemble()
+s = exu.SimulationSettings()
+s.linearSolverType = exu.LinearSolverType.EigenSparse
+s.staticSolver.numberOfLoadSteps = 5
+s.staticSolver.newton.relativeTolerance = 1e-10
+solver = exu.MainSolverStatic()
+solver.SolveSystem(mbs, s)
+pTip = mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)
+exu.Print('cantilever: tip', pTip.round(8), ', Newton steps', solver.it.newtonStepsCount)
+
+testResult = passed + sum(pTip)
+exu.Print('solution of geometricallyExactBeamJacobianTest=', testResult)
+exu.sys['testResult'] = testResult

@@ -967,16 +967,6 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     the layout block of `docs/dev/README.md` and a how-to note; the layout block also lost its
     hand-kept counts.
 
-## RG4 — Implementation problems and bugs
-
-Problems that are real, reproducible, and too deep to fix in passing. They are recorded here
-rather than worked around silently, so the debt stays visible and each item can be closed on
-evidence. An ordinary bug goes into the issue tracker and is fixed; a step appears here when the
-fix needs a plan of its own.
-
-Open in the tracker for this group: **#2423** (every C++ user error inspects the Python source to
-find its file and line, on every raise).
-
 <a id="rg3-21"></a>
 **RG3.21** *(group RG3; maintainer 2026-09-24, clarified on their request 2026-09-27)* **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg3-21) — **The pages that
     still describe the state before a step that is done** (#2673). The list was made by measurement -
@@ -1017,7 +1007,7 @@ find its file and line, on every raise).
     opens, with no model and no renderer, and it is the fastest way to answer "what is this setting
     called" - two sentences and a line of code in `docs/manual/` where the section is.
 
-<a id="rg4-1"></a>
+<a id="rg3-19"></a>
 **RG3.19** *(group RG3; maintainer 2026-09-26)* **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-19) - **the arguments of
     a documented function are one per line, with the name in code** (#2665). The `Args:` block of a
     docstring was joined into one paragraph by `utilityDocsModel.Tags2Markdown`, so a function of ten
@@ -1026,6 +1016,17 @@ find its file and line, on every raise).
     in the PDF, because both are built from the same Markdown. The maintainer reported it with a
     screenshot of the old RST pages, which had it right.
 
+
+## RG4 — Implementation problems and bugs
+
+Problems that are real, reproducible, and too deep to fix in passing. They are recorded here
+rather than worked around silently, so the debt stays visible and each item can be closed on
+evidence. An ordinary bug goes into the issue tracker and is fixed; a step appears here when the
+fix needs a plan of its own.
+
+The steps are numbered in the order they were raised and stand here in the order of their numbers.
+
+<a id="rg4-1"></a>
 **RG4.1** *(group RG4; revision2026 step R10.1)* **Resolve the Windows/Linux differences in contact and friction models.** Measured 2026-09-10
     on manylinux_2_28 / cp313 / numpy 2.4.6, against the Windows reference values (Linux tolerance
     `3e-11`), relative error:
@@ -1099,6 +1100,43 @@ find its file and line, on every raise).
       Linux at all. Worth one look at whether they share a mechanism before being folded into the
       general question.
 
+<a id="rg4-2"></a>
+**RG4.2** **DONE 2026-09-26** (#2413) — [log](exudynRevisionLog2026b.md#rg4-2) —
+    **`ObjectContactConvexRoll.pContact` is a computed value that Python reads**, which is what the
+    maintainer decided on 2026-09-26: *"make pContact same as the variables in FFRF that are computed
+    internally and can be read by the Python interface"* - and **not** a data variable, which is what
+    this step said from revision2026 step R10.2 until then. The step closes with the measurement that
+    `pContact` already was one, and with `rBoundingSphere` beside it, which was not.
+
+<a id="rg4-3"></a>
+**RG4.3** *(group RG4; revision2026 step R10.3)* **Explicit integration cost** (#2398, #2400). With the default dense linear solver
+    an explicit step on a chain of point masses costs O(N^2) (168 ms per step at N=2000; 400 times
+    faster with `EigenSparse`), and `computeMassMatrixInversePerBody` changes nothing unless a
+    sparse solver is selected as well. At least warn at large N; better, avoid the global solve
+    in explicit integration where the flag makes it unnecessary.
+
+<a id="rg4-4"></a>
+**RG4.4** **DONE 2026-09-23** (#2603) — [log](exudynRevisionLog2026b.md#rg4-4) —
+    **Two lines of Python segfault the process.** The top settings class calls `Init(this)` in
+    its constructor, so a structure Python builds links itself; it defines a copy constructor and
+    a copy assignment that re-link the **copy**, which is the answer to the question the step
+    left open; and every deprecated forwarding checks its backlink and raises instead of
+    dereferencing `nullptr`. All 93 deprecated members of a standalone
+    `exu.VisualizationSettings()` are read and written in a test.
+
+<a id="rg4-5"></a>
+**RG4.5** **DONE 2026-09-23** (#2616) — [log](exudynRevisionLog2026b.md#rg4-5) —
+    **Quitting the renderer before a simulation started raised, quitting during it did
+    not.** `CSolverBase::SolveSystem` returned `false` when `forceQuitSimulation` was
+    already set, and `SolveDynamic` reads `false` as a failure, so a user who closed the
+    render window while the script waited got *DYNAMIC SOLVER FAILED* and a traceback. It
+    returns `true` now.
+
+    **Left open deliberately**: `forceQuitSimulation` is set by `GlfwClient.cpp` alone and
+    has no Python binding, so the path cannot be reached without a window and has no test.
+    A binding or a test hook would make "stopped" against "failed" testable; it is worth a
+    step of its own if the maintainer wants it.
+
 <a id="rg4-6"></a>
 **RG4.6** *(group RG4; from RG4.5, 2026-09-26)* **DONE 2026-09-28** —
     [log](exudynRevisionLog2026b.md#rg4-6) — decided for **a binding a user can use as well**,
@@ -1160,51 +1198,25 @@ find its file and line, on every raise).
       response (#1499);
     - **RG4.8.4** the mass matrix and the gyroscopic (quadratic velocity) terms - consistent after
       Sonneville Eq. (78)-(82), or lumped with the correct terms (#1273);
-    - **RG4.8.5** the Jacobian: the missing $\Gm_{local,q}$ and $\Rot\tp_q$ terms, and the Jacobian of
-      the mass and gyroscopic terms (#1550, #1100);
+    - **RG4.8.5** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg4-8-5) - the Jacobian of the
+      elastic forces is complete, the velocity Jacobian of the quadratic velocity vector added; a cantilever
+      with Tait-Bryan nodes that the static solver could not solve converges (#1550, #1100); the Tait-Bryan
+      quadratic velocity term had the inertia of the whole cross section per unit length instead of half
+      the element (#1273, part of RG4.8.4); test model `geometricallyExactBeamJacobianTest.py`;
     - **RG4.8.6** the reference configuration in the residual and the Jacobian - a pre-curved element,
       *"h0 must contain the reference configuration"* in the source (#1494);
     - **RG4.8.7** **DONE 2026-09-29, the body markers** — [log](exudynRevisionLog2026b.md#rg4-8-7) -
       `MarkerBodyPosition`, `MarkerBodyRigid`, `MarkerBodyMass` work on the element; found and fixed on the
       way: positions along the element were interpolated from the wrong end. Left for RG4.8.4: distributed
       loads with their nodal torques and a velocity field consistent with the position;
-    - **RG4.8.8** whether #736 (*"include GeomExactBeam3D as provided by Jan Tomec"*) is this element
-      or superseded by it;
-    - **RG4.8.9** then the reference page (RG13.5.2) and the MiniExample (RG13.6).
-
-<a id="rg4-14"></a>
-**RG4.14** *(group RG4; 2026-09-29)* **`ObjectBeamGeometricallyExact2D`: a test of the 3-node element**
-    (#2208) - the only open issue of the planar element.
-
-<a id="rg4-15"></a>
-**RG4.15** *(group RG4; maintainer 2026-09-29)* **The open bugs and fixes before 1.13.** The maintainer: *"Before
-    the upcoming release, we definitely should try to resolve the open BUGs"*, and the urgent FIX issues.
-    Checked 2026-09-29, each against the code or with a run - see the [log](exudynRevisionLog2026b.md#rg4-15).
-    Closed as resolved or no longer applying: #738, #1048, #1772, #1846 (duplicate of #1845), #1889.
-    The graphics ones are RG6.8. What remains, in the order proposed:
-    - **RG4.15.1** **DONE 2026-09-29** (#2749) — one drop, three contact objects:
-      the test model `contactComparisonTest.py`, the check in compensation for #738;
-    - **RG4.15.2** **DONE 2026-09-29** (#2750) — [log](exudynRevisionLog2026b.md#rg4-15-2) — `ObjectContactCoordinate` gets the contact law of `ObjectContactSphereSphere` -
-      `contactStiffnessExponent`, `restitutionCoefficient`, `impactModel`, `minimumImpactVelocity` -, and the
-      comparison test extends to them; its release step size is also the one difference the test found;
-    - **RG4.15.3** (#830) the explicit solvers do no post Newton step - contact and switching items are
-      not updated: a warning at the start of an explicit solve with such items, or the update after each
-      step;
-    - **RG4.15.4** (#2127) `ObjectContactSphereTorus`: momentum conservation - a free ball in a free ring,
-      the sum of the torques on both bodies must vanish;
-    - **RG4.15.5** (#1639) a repeated `mbs.SolveDynamic` with `ObjectFFRFreducedOrder` diverges -
-      reproduced by solving `objectFFRFreducedOrderTest.py` twice;
-    - **RG4.15.6** **DONE 2026-09-29** (#1888) — [log](exudynRevisionLog2026b.md#rg4-15-2) — `mbs.GetDictionary()` works with a symbolic user function, but
-      `mbs.SetDictionary()` of that dictionary fails (*"Unable to cast ... symbolic.UserFunction"*);
-    - **RG4.15.7** (#1424) the numerical ODE1 Jacobian with a connector whose two markers are on the same
-      object - the duplicate coordinates, as for ODE2 (`CSystem.cpp` says *"ODE1 needs to be checked as
-      well"*);
-    - **RG4.15.8** (#1848, #1947) `GeneralContact`: implicit sphere-triangle contact and its friction against
-      `ObjectContactSphereSphere` - the drop of RG4.15.1 as a fourth case.
-
-    After 1.13, not urgent: #1845 (`ComputePostProcessingModes` with threads), #1565
-    (`InitializeFromRestartFile`), #2109 (DOPRI5 step size at discontinuities), #2326 (the slider crank
-    benchmark after the revised IFToMM model).
+    - **RG4.8.8** **CLOSED 2026-09-29** - #736 (*"include GeomExactBeam3D as provided by Jan Tomec"*) is
+      superseded by this element (maintainer);
+    - **RG4.8.9** then the reference page (RG13.5.2) and the MiniExample (RG13.6);
+    - **RG4.8.10** the output variables: the definition declares `Rotation`, `StrainLocal` and
+      `CurvatureLocal`, and `GetOutputVariableBody` computes only `Position`, `Displacement` and
+      `Velocity` - asking for the others stops with an internal error (found in RG4.8.5); and the section
+      forces and moments are missing: `ForceLocal` and `TorqueLocal` at a local position, from
+      $\Km(\hv - \hv_0)/L$ (maintainer, 2026-09-29).
 
 <a id="rg4-9"></a>
 **RG4.9** *(group RG4; from RG13.5.3, 2026-09-28)* **DONE 2026-09-29** —
@@ -1252,10 +1264,26 @@ find its file and line, on every raise).
     object to write their equations. Either an object takes it (its description names linear state
     space systems) or it is deprecated. Its page has no MiniExample until then.
 
-    **Needs the maintainer's decision** (2026-09-29): there is no mechanism to deprecate an item class
-    (RG12.2 is for parameters), and making it usable needs an object that writes algebraic equations for
-    its coordinates - e.g. a generic algebraic object with a residual user function, or an extension of
-    `ObjectGenericODE1`/`ObjectGenericODE2` that takes an AE node. Neither is a fix.
+    **ON HOLD** (maintainer, 2026-09-29): the node stays, not deprecated - *"It will be used in the
+    future"*. What it is for, as the maintainer describes it and as it would be built:
+    - **(a) the owner of the Lagrange multipliers of a constraint.** Today a constraint's multipliers are
+      AE coordinates allocated automatically, owned by no node, and nothing but the solver can address
+      them. A constraint or joint gets an **optional** `NodeGenericAE` with as many coordinates as it has
+      algebraic equations; if one is given, the object's AE coordinates are the node's, otherwise they are
+      allocated as today - so every existing model stays as it is. The multipliers then become usable
+      like any node coordinate: a sensor reads them, and another object can write a relation for them -
+      the same as `ObjectJointGeneric` leaving a direction free, but said as $\lambda_2 = 0$;
+    - **(b) the unknowns of purely algebraic equations** that an object writes for them: an implicit
+      function, e.g. the geometry of a sliding joint on a complicated element, solved together with the
+      system instead of in a local iteration. This needs an object that writes the residuals - a C++
+      element with internal unknowns, or a generic algebraic object with a residual user function and a
+      numerical Jacobian.
+
+    Before either: the assembly must map a constraint's AE equations onto a node's coordinates (today it
+    allocates them per object), a marker and a sensor must reach AE coordinates, and each solver must be
+    checked for AE coordinates owned by a node (the explicit solvers do not take AE equations at all).
+    (a) comes first: it has a test with a known answer - a joint gives the same result with and without
+    the node. Its page has no MiniExample until then.
 
 <a id="rg4-13"></a>
 **RG4.13** *(group RG4; from RG13.5.3.1, 2026-09-29)* **DONE 2026-09-29** —
@@ -1265,43 +1293,40 @@ find its file and line, on every raise).
     behind a revolute joint at 90 degrees moves nothing. Wrong generalized forces for every marker,
     load and connector behind a rotated prismatic joint. One line and a test model; **high priority**.
 
-<a id="rg4-2"></a>
-**RG4.2** **DONE 2026-09-26** (#2413) — [log](exudynRevisionLog2026b.md#rg4-2) —
-    **`ObjectContactConvexRoll.pContact` is a computed value that Python reads**, which is what the
-    maintainer decided on 2026-09-26: *"make pContact same as the variables in FFRF that are computed
-    internally and can be read by the Python interface"* - and **not** a data variable, which is what
-    this step said from revision2026 step R10.2 until then. The step closes with the measurement that
-    `pContact` already was one, and with `rBoundingSphere` beside it, which was not.
+<a id="rg4-14"></a>
+**RG4.14** *(group RG4; 2026-09-29)* **`ObjectBeamGeometricallyExact2D`: a test of the 3-node element**
+    (#2208) - the only open issue of the planar element.
 
-<a id="rg4-3"></a>
-**RG4.3** *(group RG4; revision2026 step R10.3)* **Explicit integration cost** (#2398, #2400). With the default dense linear solver
-    an explicit step on a chain of point masses costs O(N^2) (168 ms per step at N=2000; 400 times
-    faster with `EigenSparse`), and `computeMassMatrixInversePerBody` changes nothing unless a
-    sparse solver is selected as well. At least warn at large N; better, avoid the global solve
-    in explicit integration where the flag makes it unnecessary.
+<a id="rg4-15"></a>
+**RG4.15** *(group RG4; maintainer 2026-09-29)* **The open bugs and fixes before 1.13.** The maintainer: *"Before
+    the upcoming release, we definitely should try to resolve the open BUGs"*, and the urgent FIX issues.
+    Checked 2026-09-29, each against the code or with a run - see the [log](exudynRevisionLog2026b.md#rg4-15).
+    Closed as resolved or no longer applying: #738, #1048, #1772, #1846 (duplicate of #1845), #1889.
+    The graphics ones are RG6.8. What remains, in the order proposed:
+    - **RG4.15.1** **DONE 2026-09-29** (#2749) — one drop, three contact objects:
+      the test model `contactComparisonTest.py`, the check in compensation for #738;
+    - **RG4.15.2** **DONE 2026-09-29** (#2750) — [log](exudynRevisionLog2026b.md#rg4-15-2) — `ObjectContactCoordinate` gets the contact law of `ObjectContactSphereSphere` -
+      `contactStiffnessExponent`, `restitutionCoefficient`, `impactModel`, `minimumImpactVelocity` -, and the
+      comparison test extends to them; its release step size is also the one difference the test found;
+    - **RG4.15.3** (#830) the explicit solvers do no post Newton step - contact and switching items are
+      not updated: a warning at the start of an explicit solve with such items, or the update after each
+      step;
+    - **RG4.15.4** (#2127) `ObjectContactSphereTorus`: momentum conservation - a free ball in a free ring,
+      the sum of the torques on both bodies must vanish;
+    - **RG4.15.5** (#1639) a repeated `mbs.SolveDynamic` with `ObjectFFRFreducedOrder` diverges -
+      reproduced by solving `objectFFRFreducedOrderTest.py` twice;
+    - **RG4.15.6** **DONE 2026-09-29** (#1888) — [log](exudynRevisionLog2026b.md#rg4-15-2) — `mbs.GetDictionary()` works with a symbolic user function, but
+      `mbs.SetDictionary()` of that dictionary fails (*"Unable to cast ... symbolic.UserFunction"*);
+    - **RG4.15.7** (#1424) the numerical ODE1 Jacobian with a connector whose two markers are on the same
+      object - the duplicate coordinates, as for ODE2 (`CSystem.cpp` says *"ODE1 needs to be checked as
+      well"*);
+    - **RG4.15.8** (#1848, #1947) `GeneralContact`: implicit sphere-triangle contact and its friction against
+      `ObjectContactSphereSphere` - the drop of RG4.15.1 as a fourth case.
 
+    After 1.13, not urgent: #1845 (`ComputePostProcessingModes` with threads), #1565
+    (`InitializeFromRestartFile`), #2109 (DOPRI5 step size at discontinuities), #2326 (the slider crank
+    benchmark after the revised IFToMM model).
 
-<a id="rg4-4"></a>
-**RG4.4** **DONE 2026-09-23** (#2603) — [log](exudynRevisionLog2026b.md#rg4-4) —
-    **Two lines of Python segfault the process.** The top settings class calls `Init(this)` in
-    its constructor, so a structure Python builds links itself; it defines a copy constructor and
-    a copy assignment that re-link the **copy**, which is the answer to the question the step
-    left open; and every deprecated forwarding checks its backlink and raises instead of
-    dereferencing `nullptr`. All 93 deprecated members of a standalone
-    `exu.VisualizationSettings()` are read and written in a test.
-
-<a id="rg4-5"></a>
-**RG4.5** **DONE 2026-09-23** (#2616) — [log](exudynRevisionLog2026b.md#rg4-5) —
-    **Quitting the renderer before a simulation started raised, quitting during it did
-    not.** `CSolverBase::SolveSystem` returned `false` when `forceQuitSimulation` was
-    already set, and `SolveDynamic` reads `false` as a failure, so a user who closed the
-    render window while the script waited got *DYNAMIC SOLVER FAILED* and a traceback. It
-    returns `true` now.
-
-    **Left open deliberately**: `forceQuitSimulation` is set by `GlfwClient.cpp` alone and
-    has no Python binding, so the path cannot be reached without a window and has no test.
-    A binding or a test hook would make "stopped" against "failed" testable; it is worth a
-    step of its own if the maintainer wants it.
 
 ## RG5 — Performance
 
@@ -3109,7 +3134,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.8 | #2730, #736, #1100, #1273, #1494, #1499, #1550 | `ObjectBeamGeometricallyExact` (3D): the comparison reproduced, 2D and 3D tests, mass matrix, gyroscopic terms, Jacobian, reference configuration |
 | RG4.14 | #2208 | `ObjectBeamGeometricallyExact2D`: a test of the 3-node element |
 | RG2.4 | #2748 | the manual GUI check, per release and platform (list and model done) |
-| RG4.12 | #2736 | `NodeGenericAE` cannot be used: no object, marker or script takes it - **deprecate, or an object for it?** |
+| RG4.12 | #2736 | `NodeGenericAE`: **on hold** - the future owner of a constraint's Lagrange multipliers and of the unknowns of algebraic equations |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG4.15 | #830, #2127, #1639, #1424, #1848, #1947 | the open bugs and fixes before 1.13 |
