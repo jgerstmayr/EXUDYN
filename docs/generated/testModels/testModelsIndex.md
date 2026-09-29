@@ -78,6 +78,7 @@ hydraulicActuatorSimpleTest
 jointArgsTest
 kinematicTreeAndMBStest
 kinematicTreeConstraintTest
+contactComparisonTest
 kinematicTreePrismaticJacobianTest
 kinematicTreeTest
 laserScannerTest

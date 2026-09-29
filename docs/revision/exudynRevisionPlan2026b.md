@@ -1181,7 +1181,7 @@ find its file and line, on every raise).
     Closed as resolved or no longer applying: #738, #1048, #1772, #1846 (duplicate of #1845), #1889.
     The graphics ones are RG6.8. What remains, in the order proposed:
     - **RG4.15.1** **DONE 2026-09-29** (#2749) — one drop, three contact objects:
-      `test_contactComparison.py`, the check in compensation for #738;
+      the test model `contactComparisonTest.py`, the check in compensation for #738;
     - **RG4.15.2** (#2750) `ObjectContactCoordinate` gets the contact law of `ObjectContactSphereSphere` -
       `contactStiffnessExponent`, `restitutionCoefficient`, `impactModel`, `minimumImpactVelocity` -, and the
       comparison test extends to them; its release step size is also the one difference the test found;

@@ -7061,3 +7061,8 @@ release of the first contact, the deepest point 0.0963898 against 0.0963927 of a
 same law; after the release the coordinate contact differs by $3.8\cdot10^{-5}$ ($6\cdot10^{-4}$ at 5000
 steps) - its post Newton step recommends a different step size at the release. With a fixed step size
 (adaptive step off) all three fail at the first contact alike, so that is no defect of one of them.
+
+*Note 2026-09-29 to RG4.15.1*: the maintainer - *"this should be a testmodel"*. The comparison is
+`python/TestModels/contactComparisonTest.py` (moved from `python/testing/test_contactComparison.py`): it
+prints the three differences and reports one number, the deepest points and the end heights of the
+three drops summed (0.6378453061998115), so that a change in any of the three moves it; 0.6 s.
