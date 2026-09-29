@@ -294,6 +294,8 @@ pb.DefDataAccess('experimental.eigenFullPivotLUsolverDebugLevel','debug output o
                        dataType='int', isTopLevel = True)
 pb.DefDataAccess('experimental.markerSuperElementRigidTexpSO3','if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters',
                        dataType='int', isTopLevel = True)
+pb.DefDataAccess('experimental.beamGeometricallyExactConsistentMass','if nonzero (default), ObjectBeamGeometricallyExact uses the element-consistent mass matrix and quadratic velocity vector; 0 uses the lumped ones, for comparison',
+                       dataType='int', isTopLevel = True)
 
 pb.CppCode('        m.attr("special") = py::cast(&pySpecial);\n') 
 pb.DefDataAccess('special','special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial',

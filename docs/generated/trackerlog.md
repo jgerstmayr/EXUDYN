@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.175.dev1
+- Exudyn version = 1.12.176.dev1
 - last change = 2026-09-30
 - Number of issues = 2754
-- Number of resolved issues = 2489 (175 in current version)
+- Number of resolved issues = 2490 (176 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8030,10 +8030,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `CHECK` `MEDIUM EFF` ContactFrictionCircleCable2D (#1290)
   - description: shows tangential forces in case of all friction stiffness and damping values are zero; may be caused by specific projection
   - date raised: 2022-11-05
-- `CHECK` `MEDIUM EFF` GeometricallyExactBeam (#1273)
-  - description: check quadratic velocity terms
-  - **remarks:** planned as revision2026b step RG4.8.4 (2026-09-29), inspected first: it may be solved already
-  - date raised: 2022-09-24
 - `CHECK` `HIGH EFF` UserFunctions (#1247)
   - description: check whether optimization of user functions with numba/JIT removes C-\>Python-\>C roundtrip overhead using pybind11 f.target approach from tests/test\_callbacks.cpp; this would enable to retrieve the original c-function pointer
   - date raised: 2022-09-02

@@ -1,0 +1,15 @@
+{
+  "number": 1273,
+  "title": "GeometricallyExactBeam",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "check quadratic velocity terms",
+  "dateRaised": "2022-09-24",
+  "deadline": "2023-03-23",
+  "dateResolved": "2026-09-30 01:32",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectBeamGeometricallyExact: element-consistent mass matrix and quadratic velocity vector, for the linearly interpolated velocity field of the element; a rigid motion is represented exactly at any mesh (the lumped mass of the nodes gave e.g. a 22 % too long period for a one-element pendulum); dynamic results change; exu.experimental.beamGeometricallyExactConsistentMass=0 switches back to the lumped mass for comparison",
+  "resolvedInVersion": "1.12.176"
+}

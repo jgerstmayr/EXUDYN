@@ -16,9 +16,10 @@ You can view and download this file on Github: [geometricallyExactBeamElbowCanti
 #           z at the elbow rises from 0 to 50 at t = 1 and falls back to 0 at t = 2; then the cantilever
 #           oscillates freely in combined bending and torsion with amplitudes of the order of the leg length.
 #           The literature gives this benchmark as curves only (Simo and Vu-Quoc 1988, Fig. 8). Measured with
-#           10 elements per leg and step 0.05 until t = 30: out-of-plane displacement of the tip 8.21 at
-#           t = 7.45 and -9.72 at t = 15.90, of the elbow -4.07 at t = 10.90 - the extrema of the published
-#           curves; 20 elements with step 0.01 give 8.24, -9.73 and -4.06 at the same times.
+#           10 elements per leg and step 0.05 until t = 30: out-of-plane displacement of the tip 8.24 at
+#           t = 7.40 and -9.75 at t = 15.85, of the elbow -4.07 at t = 10.85 - the extrema of the published
+#           curves; 40 elements with step 0.005 give 8.25 at 7.44, -9.73 at 15.87 and -4.06 at 10.87, and
+#           differ from the test by at most 0.24 (tip) and 0.14 (elbow) over the whole time.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-30

@@ -3,13 +3,12 @@
 #
 # Details:  A highly flexible pendulum, released from horizontal under gravity, modelled three times
 #           with 10 elements: ObjectBeamGeometricallyExact2D, ObjectBeamGeometricallyExact (3D, moving in
-#           the x-y plane) and ObjectANCFCable2D (RG4.8.2 of revision2026b, #2730). Gravity acts as
-#           nodal forces, half the weight of an element at each of its nodes, the same for all three.
-#           Measured (2026-09-29): with 10 elements the three differ from a 40-element solution by
-#           9 mm (GE2D), 11 mm (GE3D) and 5 mm (ANCF2D) in the tip position; with 40 elements they
-#           agree to 1.5 mm - the lumped per-node mass matrix of the 3D element (#1273) costs accuracy
-#           at a coarse mesh, and converges. The result is the sum of the tip positions at the end,
-#           so that a change of any of the three moves it.
+#           the x-y plane) and ObjectANCFCable2D (#2730). Gravity acts as nodal forces, half the weight
+#           of an element at each of its nodes, the same for all three. Measured: with 10 elements the
+#           three differ from a 40-element GE2D solution by 9 mm (GE2D), 11 mm (GE3D) and 5 mm (ANCF2D)
+#           in the tip position; with 40 elements GE3D agrees with GE2D to 0.1 mm and ANCF2D to 0.7 mm.
+#           The result is the sum of the tip positions at the end, so that a change of any of the three
+#           moves it.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-29

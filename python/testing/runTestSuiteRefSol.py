@@ -102,13 +102,14 @@ def TestExamplesReferenceSolution():
                                                                  #which is the same comparison. Until then: 2.6388120463802584e-05
         'kinematicTreeConstraintTest.py':1.8135975384620298 ,
         'symbolicUserFunctionCopyTest.py':0.38643688092501255, #a copy through Get/SetDictionary stays symbolic (#1888)
-        'flexiblePendulumBeamComparison.py':-1.508742103106691, #three beam elements, one pendulum (#2730)
-        'geometricallyExactBeamMarkerTest.py':0.22777065315326317, #body markers on the 3D beam = loads on its nodes (#2730)
+        'flexiblePendulumBeamComparison.py':-1.5235597679330848, #2026-09-30: consistent mass matrix (#1273); before -1.508742103106691 #three beam elements, one pendulum (#2730)
+        'geometricallyExactBeamMarkerTest.py':0.22853106396053813, #2026-09-30: consistent mass matrix (#1273); #body markers on the 3D beam = loads on its nodes (#2730)
         'geometricallyExactBeamJacobianTest.py':4.282489188464191, #analytic against numerical Jacobian of the 3D beam (#1550)
         'geometricallyExactBeamCurvedTest.py':4.561491685469841, #the 45-degree bend, stress-free in its curved reference configuration (#1494)
         'geometricallyExactBeamRightAngleFrame.py':3.306181714013268, #lateral buckling of the right-angle frame at 1.088 N (#1499)
         'geometricallyExactBeamOutputTest.py':-6.079487513916353, #section forces, moments and strains of the 3D beam (#2753)
-        'geometricallyExactBeamElbowCantilever.py':-5.574079152898194, #right-angle cantilever of Simo and Vu-Quoc 1988, free oscillations (#2730)
+        'geometricallyExactBeamElbowCantilever.py':-5.57992601861755, #2026-09-30: consistent mass matrix (#1273); #right-angle cantilever of Simo and Vu-Quoc 1988, free oscillations (#2730)
+        'geometricallyExactBeamMassTest.py':2.9942070791403967, #consistent mass matrix of the 3D beam: rigid motion exact (#1273)
         'contactComparisonTest.py':1.200040705928356, #deepest points and end heights, three contact objects, two laws (#2749, #2750)
         'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164064,

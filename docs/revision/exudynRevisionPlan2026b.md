@@ -1198,8 +1198,10 @@ The steps are numbered in the order they were raised and stand here in the order
       buckles at the published 1.088 N; test model `geometricallyExactBeamRightAngleFrame.py` (#1499). The
       older `rightAngleFrame.py` (ANCF and this element, not run by the suite) still stops near the
       buckling load with its own settings - to be revised or removed, the maintainer's call;
-    - **RG4.8.4** the mass matrix and the gyroscopic (quadratic velocity) terms - consistent after
-      Sonneville Eq. (78)-(82), or lumped with the correct terms (#1273);
+    - **RG4.8.4** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-8-4) - the element-consistent
+      mass matrix and quadratic velocity vector, the default; `exu.experimental.beamGeometricallyExactConsistentMass
+      = 0` switches back to the lumped ones for comparison, and the switch goes when the choice has settled
+      (#1273). Rigid motion is exact at any mesh; test model `geometricallyExactBeamMassTest.py`;
     - **RG4.8.5** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg4-8-5) - the Jacobian of the
       elastic forces is complete, the velocity Jacobian of the quadratic velocity vector added; a cantilever
       with Tait-Bryan nodes that the static solver could not solve converges (#1550, #1100); the Tait-Bryan

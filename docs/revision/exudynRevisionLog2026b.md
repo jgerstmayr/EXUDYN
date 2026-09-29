@@ -7340,3 +7340,57 @@ off at t = 2, free oscillation until t = 30, no numerical damping. Out-of-plane 
 The converged curves have the shape and the extrema of Fig. 8 of the paper as far as it can be read; the
 paper itself shows its 2- and 10-element curves apart by a similar amount as ours. 0.7 s. Reference
 -5.574079152898194.
+
+<a id="rg4-8-4"></a>
+### RG4.8.4 — the element-consistent mass matrix of the 3D geometrically exact beam (2026-09-30, #1273)
+
+The maintainer: an element-consistent mass matrix, behind a switch for the first tests, used if it does not
+cost too much; dynamic values may move.
+
+**The formulation.** The velocity field of the element is the one it reports to markers and sensors: the
+nodal velocities and angular velocities interpolated linearly (`GetVelocity`, `GetAngularVelocity`). Its
+kinetic energy gives
+
+- translation: $\rho A L\,[1/3,\ 1/6;\ 1/6,\ 1/3]$ per coordinate direction - constant;
+- rotation: $\Gm_i\tp \big(\int S_i S_j\,\Rot(x)\Jm\Rot(x)\tp dx\big)\,\Gm_j$, two Gauss points, with the SE(3)-interpolated
+  frame $\Rot(x)$ of the element;
+- the quadratic velocity vector $\Gm_i\tp \int S_i\,(\tilde\omegav\,\Theta\omegav + \Theta\,\dot\Gm\dot\thetav)\,dx$ with
+  $\Theta = \Rot\Jm\Rot\tp$ and $\omegav$ interpolated, and its derivative with respect to the velocities in the
+  Jacobian (exact for Euler parameters and Tait-Bryan nodes, checked by `geometricallyExactBeamJacobianTest.py`:
+  $5\cdot10^{-8}$ and $1.5\cdot10^{-7}$).
+
+The frame rotates with the true angular velocity of $\Rot(x)$, which the interpolated $\omegav$ approximates -
+the same approximation the element's velocity output makes. A distributed load through `MarkerBodyMass`
+stays half on each node without nodal torques: that is the consistent load for this velocity field. The
+earlier sub-step text asked for a velocity field consistent with the SE(3) position; that would be
+Sonneville's formulation, with a mass matrix depending on the deformation - not needed for what follows.
+
+**Rigid motion is exact at any mesh**, which the lumped mass is not - the property a multibody model
+relies on when a beam of one or two elements stands for a nearly rigid link:
+
+| | consistent | lumped |
+|---|---|---|
+| kinetic energy of one element in rigid rotation (exact 1.356) | 1.356 | 3.056 |
+| period of a stiff one-element pendulum (rigid rod 1.638) | 1.638 | 2.006 (1 el.), 1.738 (2), 1.664 (4) |
+
+**Convergence** - both converge to the same solution, at the same order, and **for the two flexible
+benchmarks the lumped mass is the more accurate at coarse meshes** (error cancellation between the lumped
+mass and the stiffness of a linear element, the classical observation for frequencies):
+
+| | 2 elements | 4 | 8 | 20 |
+|---|---|---|---|---|
+| elbow cantilever, tip error, consistent | 4.96 | 1.59 | 0.44 | 0.05 |
+| elbow cantilever, tip error, lumped | 2.30 | 0.74 | 0.19 | 0.03 |
+
+(against 40 elements and step 0.005, which differ between the two by 0.016). The flexible pendulum: with
+10 elements 11.1 mm (consistent) and 10.4 mm (lumped) from the fine solution; with 80 elements the two differ
+by 0.4 mm, and **the consistent 3D element with 40 elements agrees with `ObjectBeamGeometricallyExact2D` to
+0.1 mm** (lumped: 1.5 mm).
+
+**Cost**: 35 % more time for the pendulum (two SE(3) frames and the rotational blocks per element and
+step). Decided: consistent is the default, for the exact rigid motion; the switch stays until the choice
+has been seen on the maintainer's models.
+
+References moved: `flexiblePendulumBeamComparison.py` (-1.5235597679330848), `geometricallyExactBeamMarkerTest.py`
+(0.22853106396053813), `geometricallyExactBeamElbowCantilever.py` (-5.57992601861755, header values updated).
+New test model `geometricallyExactBeamMassTest.py`, the two rigid-motion checks, 2.9942070791403967.

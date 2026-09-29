@@ -31,6 +31,7 @@ class PyExperimental
 public: 
     Index eigenFullPivotLUsolverDebugLevel; //!< debug: 0=off, 1=print rank and info, 2=print matrices
     Index markerSuperElementRigidTexpSO3; //!< True: use additional TexpSO3 for FFRF
+    Index beamGeometricallyExactConsistentMass; //!< True: ObjectBeamGeometricallyExact uses the element-consistent mass matrix (#1273)
 
     PyExperimental()
     {
@@ -41,6 +42,7 @@ public:
     {
         eigenFullPivotLUsolverDebugLevel = 0;
         markerSuperElementRigidTexpSO3 = true;
+        beamGeometricallyExactConsistentMass = true;
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -49,6 +51,7 @@ public:
     {
         os << "  eigenFullPivotLUsolverDebugLevel = " << eigenFullPivotLUsolverDebugLevel << "\n";
         os << "  markerSuperElementRigidTexpSO3 = " << markerSuperElementRigidTexpSO3 << "\n";
+        os << "  beamGeometricallyExactConsistentMass = " << beamGeometricallyExactConsistentMass << "\n";
         os << "\n";
     }
 
