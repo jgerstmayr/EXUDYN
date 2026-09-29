@@ -3,54 +3,10 @@
 
 A Connector is a special Object, which links two or more markers. A Connector which is not a Constraint, is a force element (e.g., spring-damper) or a penalty based joint.
 
-## The principle every connector follows
-
-A connector has no coordinates of its own. Its markers give it positions, orientations, velocities,
-coordinates - whatever its types request -, it computes a force from them, and the force goes back
-to the coordinates through the Jacobians of the markers: for a force $\LU{0}{\fv}$ at marker 1 and
-$-\LU{0}{\fv}$ at marker 0, the virtual work
-
-$$
-\delta W = \left(\delta\LU{0}{\pv}_{m1} - \delta\LU{0}{\pv}_{m0}\right)\tp \LU{0}{\fv}
-$$
-
-gives the generalized forces $\LU{0}{\Jm_{pos,m1}}\tp\LU{0}{\fv}$ and $-\LU{0}{\Jm_{pos,m0}}\tp\LU{0}{\fv}$
-on the coordinates of the two bodies or nodes, and a torque the same with the rotation Jacobians.
-This is the same for all connectors, so each page gives only its **force law**: how the force
-follows from the marker quantities. The connector adds its forces to the left-hand side of the
-equations of motion, and so to the Jacobian of the solver.
-
-## Headings of a connector page
-
-**Definition of quantities** - the marker quantities and the intermediate variables -,
-**geometric relations** - distance, relative rotation, contact geometry -, and **connector forces**
-- the force law, and a user function where there is one.
-
-## `activeConnector`
-
-A connector with `activeConnector = False` computes its kinematic quantities but no force; it can
-be switched on and off during a simulation, e.g. in a `preStepUserFunction`.
-
-## Output variables
-
-`Force` is the force vector, usually on marker 1 and in the global frame; `ForceLocal` a force in
-the frame of the connector, or a scalar force; `Distance`, `Displacement` and `Velocity` the
-kinematic quantities the force law uses. The page of each connector says which it has and in which
-frame.
-
-## Contact connectors
-
-The contact connectors - `ObjectContact...`, `ObjectConnectorRollingDiscPenalty` - are penalty
-formulations with a discontinuous contact state. They need a `NodeGenericData`, whose data
-coordinates hold the state of the last post Newton step - gap, friction regime, impact velocity -,
-and the solver repeats a step when the state changes (active set strategy). `mbs.CreateSphereSphereContact`
-and its relatives add the node, the markers and the connector.
-
-## Items
-
 ```{toctree}
 :maxdepth: 1
 
+objectConnectorGeneral
 ObjectConnectorSpringDamper
 ObjectConnectorCartesianSpringDamper
 ObjectConnectorRigidBodySpringDamper

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 138 | 1.12.144 |
+| 1.12 | Metheney | 139 | 1.12.145 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.145** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` items reference manual: the general section of a kind is a page of its own, next to the items (#2739)
+  - description: The maintainer, 2026-09-29: the page of a kind (Node, Object (Body), ...) holds its general section and then the items under a heading 'Items', so the items sit one level deeper than the general text in the navigation. Wanted: Node -\> 'General info for all nodes' (with its sub-sections) -\> NodePoint, NodePoint2D, ... as siblings, without an 'Items' heading. The emitter writes the general section as a page of its own, \<kind\>General.md, first in the toctree of the kind. revision2026b step RG13.5.0.7.
+  - **notes:** The items reference manual lists under each kind of item first a page 'General info for all nodes' (bodies, connectors, markers, ...) with the sections that hold for every item of the kind, and then the items, side by side.
+  - date resolved: **2026-09-29 13:33**, date raised: 2026-09-29
 - **1.12.144** `DOCU` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` RG13: the development documents per item type - what the documentation of a node, object, marker, load and sensor must contain (#2721)
   - description: The maintainer, 2026-09-27: evaluate on a textual level, from representative examples - the tutorials, and the Create functions that hide the items behind them - what a reader needs to know about a node, marker, load, object and sensor and how they relate; check the text the generator writes around the generated information (e.g. 'This Node has/provides the following types = Position', which could say which markers it allows, and could be generated); make the interpretation of node coordinates systematic; group the objects - rigid bodies, flexible bodies (nonlinear finite elements), connectors acting on two or more markers; a general section per kind, above all for sensors, loads and markers. Written first as temporary documents docs/revision/\<itemType\>DefinitionsDev.md, which are folded into the developer documentation - what documentation an item needs, what it contains and how it is structured - and then removed. revision2026b step RG13.4.
   - **notes:** What documentation an item needs, what of its page is generated and what is written, the headings of the detailed description per kind and what a mini example is: definitions/README.md, section 'The page of an item'.

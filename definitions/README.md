@@ -81,7 +81,7 @@ These are the fields that are descriptions, and all of them are converted the sa
 |---|---|---|
 | `overallDescription` | `ItemDefinition` | the brief description of an item: the paragraph under its heading, the docstring of its Python class and the comment of its C++ classes |
 | `detailedDescription` | `ItemDefinition` | the full description of an item, after the generated part of its page - the long text, with its own headings |
-| `overallDescription`, `detailedDescription` | `ItemKindDefinition` | the paragraph and the general section of the page of a kind of item; a heading there is written with `##` |
+| `overallDescription`, `detailedDescription` | `ItemKindDefinition` | the paragraph of the page of a kind of item, and its page *General info for all ...*; a heading there is written with `##` |
 | `classDescription` | `StructureDefinition` | the paragraph under the structure's heading |
 | `description` | `ItemParameter`, `ItemFunction`, `StructureParameter`, `StructureFunction` | one cell of the parameter table |
 | `description` | the `pb....(...)` calls of the `pybind*.py` files | the text of the Python-C++ interface pages, and the docstring of the function |
@@ -231,8 +231,8 @@ carried through silently, so the page is the only place a mistake shows.
 
 What a reference page of an item contains, and who writes it. Say only what is the item's own: what
 all items of a kind share is the general section of the kind in `itemKindDefinitions.py`, published
-on the index page of the kind in the [items reference manual](#sec-item-reference-manual) - link it,
-do not repeat it.
+on the page *General info for all ...* of the kind in the [items reference manual](#sec-item-reference-manual) -
+link it, do not repeat it.
 
 | part | source |
 |---|---|

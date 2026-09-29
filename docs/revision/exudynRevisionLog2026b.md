@@ -6730,3 +6730,17 @@ themselves are removed, and remain in the history.
 Three questions of the documents were still open and are issues now: the Create functions on each
 page and the order of the examples (#2737, RG13.5.0.6), and the text two markers keep in HTML
 comments (#2738, RG13.5.3.1).
+
+<a id="rg13-5-0-7"></a>
+### RG13.5.0.7 — the general section of a kind is a page of its own (2026-09-29, #2739)
+
+The maintainer asked for the navigation *Node -> General info for all nodes (What a node is, ...) ->
+NodePoint, NodePoint2D, ...*. The page of a kind held the general section and then the items under a
+heading *Items*, so an item was one level deeper than the general text.
+
+`itemDocsEmitter.py` writes the general section as `<kind>General.md` - `nodeGeneral.md`,
+`objectBodyGeneral.md`, ... - titled *General info for all <kind>*, with the `##` headings of
+`itemKindDefinitions.py` as its sections, a new PDF page like every item, and for the markers the
+generated table of all markers. The page of the kind keeps its title and paragraph, and its toctree
+lists the general page first and then the items. 10 general pages; *Objects (Object)* has no general
+section and gets none. The definitions are unchanged, and no page linked the old sections.

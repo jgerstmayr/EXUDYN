@@ -3,58 +3,10 @@
 
 A Load applies a (usually constant) force, torque, mass-proportional or generalized load onto Nodes or Objects via Markers. The requested `Marker` types need to be provided by the used Marker. The marker may provide more types than requested. For non-constant loads, use either a `load...UserFunction` or change the load in every step by means of a `preStepUserFunction` in the `MainSystem` (mbs).
 
-## How a load acts
-
-A load acts through a marker: the marker locates it - a point of a body, a node, a coordinate - and
-provides the Jacobian that takes the load to the coordinates of the body or node. For a force
-$\LU{0}{\fv}$ at a position marker this is the virtual work $\delta W = \delta \LU{0}{\pv}\tp
-\LU{0}{\fv}$, which gives the generalized forces
-
-$$
-\Qm = \LU{0}{\Jm_{pos}}\tp\, \LU{0}{\fv}, \quad \LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\pv}}{\partial \qv} ;
-$$
-
-a torque uses the rotation Jacobian $\LU{0}{\Jm_{rot}} = \partial \LU{0}{\tomega} / \partial
-\dot\qv$ the same way. The Jacobians are global, so a load given in a local frame is transformed
-into the global frame first. Each load page gives its formula.
-
-## Global and body-fixed loads
-
-A force or a torque is given in the global frame, or with `bodyFixed = True` in the frame of its
-marker, where it turns with the body or node - a follower load. A body-fixed load needs a marker
-with an orientation: `MarkerBodyRigid` on a body, `MarkerNodeRigid` on a node; a point node has no
-orientation and takes only global loads.
-
-## Loads that change in time
-
-A load is constant, unless
-
-- a user function gives it: `loadVectorUserFunction(mbs, t, loadVector)` or
-`loadUserFunction(mbs, t, load)`, called at every evaluation with the current time, replaces the
-value of the load;
-- a `preStepUserFunction` of `mbs` changes it before every step, with `mbs.SetLoadParameter`.
-
-## Loads in static computations
-
-The static solver increases the loads over its load steps (`staticSolver.numberOfLoadSteps`):
-every load is multiplied by the **load factor** of the current step, which reaches one in the last
-step. A load with a user function is **not** multiplied: its value is used as the function returns
-it, and the function gets the quasi-time of the load step (`staticSolver.loadStepDuration`), which
-it has to use itself to increase the load.
-
-## Creating loads
-
-`mbs.CreateForce` and `mbs.CreateTorque` add the marker and the load in one call - for a force a
-`MarkerBodyPosition`, or a `MarkerBodyRigid` if it is body-fixed; for a torque a `MarkerBodyRigid` -
-unless a marker is given instead of a body; and the
-`gravity` argument of `CreateMassPoint` and `CreateRigidBody` adds a `MarkerBodyMass` with a
-`LoadMassProportional`.
-
-## Items
-
 ```{toctree}
 :maxdepth: 1
 
+loadGeneral
 LoadForceVector
 LoadTorqueVector
 LoadMassProportional

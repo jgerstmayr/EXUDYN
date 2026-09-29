@@ -377,6 +377,13 @@ def ItemTypeFileName(key):
     return FileNameLower(key.replace('(', '').replace(')', '').replace(' ', '')) + 'Index'
 
 
+#the title of the general page of a kind is "General info for all <plural>" (#2739)
+kindPlural = {'Nodes': 'nodes', 'Objects (Body)': 'bodies', 'Objects (SuperElement)': 'super elements',
+              'Objects (Object)': 'objects', 'Objects (FiniteElement)': 'finite elements',
+              'Objects (Connector)': 'connectors', 'Objects (Constraint)': 'constraints',
+              'Objects (Joint)': 'joints', 'Markers': 'markers', 'Loads': 'loads', 'Sensors': 'sensors'}
+
+
 def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros, intro):
     markdownDir = os.path.join(paths.repositoryRoot, 'docs', 'generated', 'items')
     os.makedirs(markdownDir, exist_ok=True)
@@ -402,18 +409,24 @@ def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros,
     for key in folderDict:
         kindEntry = itemIntros[typeConversion[key]]
         typeText = MarkdownBanner(key) + LatexText2Markdown(kindEntry['overallDescription']) + '\n\n'
+        typeText += '```{toctree}\n:maxdepth: 1\n\n'
         if kindEntry['detailedDescription'].strip() != '':
-            #the general section of the kind, and then the items under a heading of their own, so
-            #that the navigation does not put them under the last section of the general text
-            typeText += (LatexText2Markdown(RemoveIndentation2(kindEntry['detailedDescription'],
-                                                               removeAllSpaces=False)) + '\n\n')
+            #the general section of the kind is a page of its own and the first entry of the kind,
+            #so that it and every item are siblings in the navigation (#2739)
+            generalName = ItemTypeFileName(key)[:-len('Index')] + 'General'
+            generalText = (LatexText2Markdown(RemoveIndentation2(kindEntry['detailedDescription'],
+                                                                 removeAllSpaces=False)) + '\n\n')
             if typeConversion[key] == 'Markers':
                 #the table of all markers, generated from their declared types like the Interface
                 #block of every page (#2725)
-                typeText += (MarkdownHeading('All markers', 1) + '\n\n'
-                             + itemCompatibility.MarkerTable(compatibilityItems) + '\n')
-            typeText += MarkdownHeading('Items', 1) + '\n\n'
-        typeText += '```{toctree}\n:maxdepth: 1\n\n'
+                generalText += (MarkdownHeading('All markers', 1) + '\n\n'
+                                + itemCompatibility.MarkerTable(compatibilityItems) + '\n')
+            (banner, rest) = MarkdownBanner('General info for all '
+                                            + kindPlural[typeConversion[key]]).split('\n', 1)
+            Write(generalName + '.md', banner + '\n```{raw} latex\n\\clearpage\n```\n\n' + rest
+                  + generalText.rstrip('\n') + '\n')
+            written += 1
+            typeText += generalName + '\n'
 
         for (classType, className, text) in markdownItemList:
             if classType != key:

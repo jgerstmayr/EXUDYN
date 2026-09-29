@@ -878,7 +878,8 @@ def ItemKindDefinition(kind, overallDescription, detailedDescription=''):
     """Use site: what all items of one kind have in common - the page of the kind in the reference
     manual (#2725). kind is the name of that page: 'Nodes', 'Objects (Body)', ..., 'Sensors';
     overallDescription is the paragraph under its heading, detailedDescription the general section
-    that every item of the kind refers to"""
+    that every item of the kind refers to - a page of its own, 'General info for all nodes', the
+    first entry of the kind (#2739)"""
     return {'kind': kind, 'overallDescription': overallDescription,
             'detailedDescription': detailedDescription}
 

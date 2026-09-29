@@ -3,33 +3,10 @@
 
 A Joint is a special Object, Connector and Constraint, which is attached to position or rigid body markers. The joint results in special algebraic equations and requires implicit time integration. Joints represent special constraints, as described in multibody system dynamics literature.
 
-## What a joint is
-
-A joint is a constraint between two rigid markers - `MarkerBodyRigid`, `MarkerNodeRigid`, a super
-element or kinematic tree marker - which fixes some of the relative motions of the two frames and
-leaves the others free: the revolute joint the rotation about one axis, the prismatic joint the
-translation along one axis. Everything the page of the constraints says - Lagrange multipliers,
-index 3 and index 2, `activeConnector`, redundant constraints - holds for the joints.
-
-## Joint frames
-
-The free axes are those of a **joint frame** in each marker: `rotationMarker0` and
-`rotationMarker1` rotate the marker frames into the joint frames, and `ObjectJointRevoluteZ`, for
-example, turns about the local $z$-axis of the joint frame. `mbs.CreateRevoluteJoint`,
-`CreatePrismaticJoint`, `CreateSphericalJoint` and `CreateGenericJoint` take a global position and
-axis and compute the markers and the joint frames.
-
-## Reaction forces
-
-The multipliers of a joint are its reaction forces and torques; the output variables give them -
-`ForceLocal` and `TorqueLocal` in the joint frame $J0$ of marker 0 for most joints, `Force` in the
-global frame for the spherical joint -, as the page of each joint lists them.
-
-## Items
-
 ```{toctree}
 :maxdepth: 1
 
+objectJointGeneral
 ObjectJointGeneric
 ObjectJointRevoluteZ
 ObjectJointPrismaticX

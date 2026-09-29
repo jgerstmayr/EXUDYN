@@ -1,0 +1,17 @@
+{
+  "number": 2739,
+  "title": "items reference manual: the general section of a kind is a page of its own, next to the items",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-29: the page of a kind (Node, Object (Body), ...) holds its general section and then the items under a heading 'Items', so the items sit one level deeper than the general text in the navigation. Wanted: Node -> 'General info for all nodes' (with its sub-sections) -> NodePoint, NodePoint2D, ... as siblings, without an 'Items' heading. The emitter writes the general section as a page of its own, <kind>General.md, first in the toctree of the kind. revision2026b step RG13.5.0.7.",
+  "dateRaised": "2026-09-29",
+  "deadline": "2027-03-28",
+  "dateResolved": "2026-09-29 13:33",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/itemDocsEmitter.py",
+  "releaseNotes": "The items reference manual lists under each kind of item first a page 'General info for all nodes' (bodies, connectors, markers, ...) with the sections that hold for every item of the kind, and then the items, side by side.",
+  "resolvedInVersion": "1.12.145"
+}

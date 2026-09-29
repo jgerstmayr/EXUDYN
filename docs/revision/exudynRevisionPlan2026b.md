@@ -2804,6 +2804,10 @@ What depends on it: the graphics regression test takes every item through its Mi
       - **RG13.5.0.5** **DONE 2026-09-28** (#2729) — [log](exudynRevisionLog2026b.md#rg13-5-0-5) -
         **every item on a new page of the PDF** (maintainer): a raw LaTeX `\clearpage` opens every
         generated item page; the HTML build ignores it.
+      - **RG13.5.0.7** **DONE 2026-09-29** (#2739) — [log](exudynRevisionLog2026b.md#rg13-5-0-7) -
+        **the general section of a kind is a page of its own** (maintainer): *Node* -> *General info
+        for all nodes* with its sub-sections -> `NodePoint`, `NodePoint2D`, ... as siblings; no
+        *Items* heading.
       - **RG13.5.0.6** (#2737) - **the two parts of the frame left open by RG13.4**: each page names
         the Create functions that add the item, recorded by running them (a static scan misses what an
         argument selects), and the five plainest examples come first.
