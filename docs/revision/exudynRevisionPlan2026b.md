@@ -1220,6 +1220,11 @@ The steps are numbered in the order they were raised and stand here in the order
       (#2753): `Rotation`, `StrainLocal` and `CurvatureLocal` were declared and not computed; added with
       `RotationMatrix`, `AngularVelocity`, `AngularVelocityLocal` and the section forces and moments
       `ForceLocal` and `TorqueLocal` (maintainer, 2026-09-29); test model `geometricallyExactBeamOutputTest.py`.
+    - **RG4.8.11** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-8-11) - the dynamic
+      right-angle cantilever of Simo and Vu-Quoc (1988) against the published curves, test model
+      `geometricallyExactBeamElbowCantilever.py`; literature values of the benchmarks retrieved (maintainer:
+      *"it has plenty of uses"*). Open from it: the energy of the element as an output, to check the
+      conservation in free oscillation, as Meier et al. (2016) do.
 
 <a id="rg4-9"></a>
 **RG4.9** *(group RG4; from RG13.5.3, 2026-09-28)* **DONE 2026-09-29** —

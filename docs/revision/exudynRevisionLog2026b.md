@@ -7303,3 +7303,40 @@ and $3.9\cdot10^{-4}$ with 32 - second order. A bending and a torsional moment t
 along the beam in the local frame unless the two stiffnesses are equal, which is mechanics, not the
 element. Position, rotation and angular velocity at the element ends equal those of the nodes
 ($2\cdot10^{-16}$). Reference -6.079487513916353.
+
+<a id="rg4-8-11"></a>
+### RG4.8.11 — the dynamic right-angle cantilever, and the literature values (2026-09-30, #2730)
+
+The maintainer put three papers into `tmp/geometricallyExact/` (Simo and Vu-Quoc 1986 and 1988, Nachbagauer
+and Gerstmayr 2013) and asked for reference values from the internet. What there is:
+
+- **Right-angle frame, lateral buckling** (RG4.8.3): $F_{cr}$ = 1.088 N (Argyris et al. 1979, beam elements),
+  1.1453 N (triangular plates), 1.09 N (Simo and Vu-Quoc 1986); under two end moments $M_{cr}$ = 0.62477 Nm
+  (10 beam elements per arm), 0.61875 Nm (plates) - Nachbagauer and Gerstmayr 2013. The buckling test gives
+  1.088.
+- **45-degree bend, tip displacement at P = 600**, 8 elements (table in Bali et al., arXiv 2109.02951):
+  Bathe and Bolourchi (23.5, 13.4, 53.4), Simo and Vu-Quoc (23.48, 13.50, 53.37), Cardona and Geradin
+  (23.67, 13.73, 53.50), Crisfield (23.87, 13.63, 53.71), Ibrahimbegovic (23.697, 13.668, 53.498), all as
+  magnitudes. Ours with 8 elements (RG4.8.6): (23.73, 13.70, 53.46) - within the spread of the published
+  solutions, closest to Cardona and Geradin and Ibrahimbegovic.
+- **Rigid-flexible double pendulum** (Nachbagauer and Gerstmayr 2013, Table 1): tip position at t = 1.2,
+  converged with 128 ANCF elements (-1.345909, 0.025496, -0.514524) - a dynamic reference with digits, not
+  yet modelled here.
+- **Right-angle cantilever under an out-of-plane pulse** (Simo and Vu-Quoc 1988, Example 5.2; the Berkeley
+  report ERL-86-11 of 1986 has the same): **curves only**, no numbers, and none of the later papers found
+  (Meier, Popp and Wall 2016, arXiv 1609.00119; the others searched) tabulate it - Meier et al. check the
+  energy conservation instead.
+
+**The cantilever**, new test model `geometricallyExactBeamElbowCantilever.py`: legs of 10, $EA = GA = 10^6$,
+$GJ = EI = 10^3$, $\rho A = 1$, $\rho\Im = \mathrm{diag}(20, 10, 10)$, a force at the elbow rising to 50 at t = 1 and
+off at t = 2, free oscillation until t = 30, no numerical damping. Out-of-plane displacement:
+
+| | tip maximum | tip minimum | elbow minimum |
+|---|---|---|---|
+| 2 elements per leg, step 0.25 (the paper's mesh size) | 7.2 at 7.5 | -9.0 at 15.75 | -4.13 at 11.0 |
+| 10 elements, step 0.05 (the test) | 8.21 at 7.45 | -9.72 at 15.90 | -4.07 at 10.90 |
+| 20 elements, step 0.01 | 8.24 at 7.44 | -9.73 at 15.88 | -4.06 at 10.87 |
+
+The converged curves have the shape and the extrema of Fig. 8 of the paper as far as it can be read; the
+paper itself shows its 2- and 10-element curves apart by a similar amount as ours. 0.7 s. Reference
+-5.574079152898194.
