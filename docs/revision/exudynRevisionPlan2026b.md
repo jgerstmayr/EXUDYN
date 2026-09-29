@@ -2918,7 +2918,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG13.5.2 | #2725 | the page of `ObjectBeamGeometricallyExact`, after RG4.8 |
-| RG13.6 | #2732 | a MiniExample for every item; nodes, markers, loads and sensors first |
+| RG13.6.6 | #2732 | MiniExamples of `ObjectFFRF` and `ObjectFFRFreducedOrder` (a small mesh in the script); all other items but `ObjectBeamGeometricallyExact` have one |
 
 Open in the tracker without a step: #2498 (nothing checks that an item type provides the member
 functions it must) and #2511 (the ROS examples were last run in 2023), both named in RG2.
