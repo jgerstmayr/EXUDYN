@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 147 | 1.12.153 |
+| 1.12 | Metheney | 148 | 1.12.156 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.156** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` developer documentation names paths of the old main/ directory (#2743)
+  - description: Found in revision2026b step RG13.7: docs/dev/WORKFLOW.md and docs/dev/README.md name main/setup.py, main/obj/cppsrc.vcxproj, main/sources.json and main/pyproject.toml; the files are setup.py, msvc/cppsrc.vcxproj, sources.json and pyproject.toml at the repository root. The layout block of the README also carries hand-kept counts that are wrong (24 mini examples, 139 test models) and a src/ listing without the Impl\* directories. revision2026b step RG3.28.
+  - **notes:** The developer documentation names the build files where they are: setup.py, pyproject.toml and sources.json at the repository root, the project file in msvc/.
+  - date resolved: **2026-09-29 19:10**, date raised: 2026-09-29
 - **1.12.153** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` developer documentation: how to set up a new item (#2742)
   - description: The maintainer, 2026-09-29: a section 'How to set up a new item in Exudyn' - the definitions and how they work, how to add a simple item, with focus on the descriptions, parameter and function descriptions, miniExample and outputVariables; what to run; which files the generator writes for a new className (C/Main/Visu headers, object factory registration, Python interface, stubs, docs, MiniExample), and what is written by hand (the .cpp with the computation and UpdateGraphics, CheckPreAssembleConsistency in checkPreAssembleConsistencies\<Kind\>.cpp, the project file). The parts exist in CODING\_STYLE.md section 9, ARCHITECTURE.md and definitions/README.md, scattered; one page brings them together and refers to the rest. revision2026b step RG13.7.
   - **notes:** The developer documentation has a page on how to set up a new item: the definition, which files the generator writes, the C++ to write for each kind of item, and what to run.

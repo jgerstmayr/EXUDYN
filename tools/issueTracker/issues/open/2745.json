@@ -1,0 +1,13 @@
+{
+  "number": 2745,
+  "title": "connectors and loads compute their marker values themselves instead of precomputed MarkerData",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "HUGE",
+  "description": "The maintainer, 2026-09-29: compute marker values inside the connector (joint, constraint) and load functions, no precomputation of MarkerData; a new temporary data with smaller footprint per marker; check GeneralContact. Migration: a function in CObjectConnector / CLoad that does what the precomputation does today, then each connector and load changed. Advantage: automatic differentiation becomes much simpler. First an evaluation step - what is there now, what are the best options - since it shapes future items and the user elements. revision2026b group RG14.",
+  "dateRaised": "2026-09-29",
+  "deadline": "2027-03-28",
+  "file": "src/Main/MarkerData.h"
+}

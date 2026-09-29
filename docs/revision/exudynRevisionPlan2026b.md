@@ -58,6 +58,8 @@ hand-maintained one is wrong the next day (the rule of RG3.9).
 | **RG11** Misc | what has no group yet; three of a kind become a group |
 | **RG12** Python interface | the shape of the Python API itself: deprecation, settings, what a script sees |
 | **RG13** Item documentation | a full documentation and a MiniExample for every item |
+| **RG14** Marker values computed where they are used | connectors, constraints and loads compute their marker values themselves; for automatic differentiation |
+| **RG15** Objects computing from given coordinates | bodies and finite elements take their coordinates as arguments; for automatic differentiation |
 
 ## RG1 — Release and publication
 
@@ -947,6 +949,12 @@ gaps it names are the first candidates. The maintainer's own findings go here as
     it, which is exactly what the table of contents needed.
 
 
+<a id="rg3-28"></a>
+**RG3.28** *(group RG3; from RG13.7, 2026-09-29)* **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg3-28) —
+    **The developer documentation named paths of the old `main/` directory** (#2743): `WORKFLOW.md`,
+    the layout block of `docs/dev/README.md` and a how-to note; the layout block also lost its
+    hand-kept counts.
+
 ## RG4 — Implementation problems and bugs
 
 Problems that are real, reproducible, and too deep to fix in passing. They are recorded here
@@ -1092,7 +1100,9 @@ find its file and line, on every raise).
     for the test.
 
 <a id="rg4-7"></a>
-**RG4.7** *(group RG4; from #2423)* **Every C++ user error inspects the Python source for its file
+**RG4.7** *(group RG4; from #2423)* **CLOSED 2026-09-29, done by revision2026 step R6.3.5** (a49d501f):
+    `PyGetCurrentFileInformation` reads `f_code.co_filename` and `f_lineno` of the frame and no longer
+    calls `inspect.getframeinfo`. **Every C++ user error inspects the Python source for its file
     and line.** `PyError` and `PyWarning` call `PyGetCurrentFileInformation`
     (`src/Main/Stdoutput.cpp:259`), which calls `inspect.getframeinfo`: that resolves the module by
     scanning `sys.modules` and then reads the source file. The cost grows with the number of
@@ -1681,8 +1691,6 @@ A step appears here when one of them has been thought through far enough to be p
 also where **2.0** comes from: the major number is reserved for this work, not for the 2026
 revision (info document D15).
 
-*No steps yet.*
-
 
 <a id="rg9-1"></a>
 **RG9.1** **DONE 2026-09-23** (#2622) — [log](exudynRevisionLog2026b.md#rg9-1) —
@@ -1701,6 +1709,20 @@ revision (info document D15).
     did not move. The build then found what the include had hidden - 24 generated headers
     free-riding on it for the `namespace py` alias - and a second defect (#2629):
     `itemHeaderEmitter.py` wrote generated headers in the **locale** encoding.
+
+<a id="rg9-3"></a>
+**RG9.3** *(group RG9; maintainer 2026-09-29)* **Access functions as single functions of the objects**
+    (#2744). `GetAccessFunctionBody(AccessFunctionType, localPosition, Matrix& value)` serves every access
+    type through one function and a switch, and carries workarounds - the vector of
+    `JacobianTtimesVector_q` travels in the output matrix, `OwnMarkersOnly` (RG4.10) says what a
+    declaration cannot. Single functions per access type, with interfaces that say what they take and
+    return, avoid them.
+    - **RG9.3.1** the evaluation: which objects provide which access functions today, which markers and
+      loads call them, and what the best interface is for each;
+    - **RG9.3.2** a check that the access function flags an object declares (`ItemAccessFunctionTypes`)
+      and the functions its definition declares agree - possibly by deriving the flags from the
+      functions;
+    - **RG9.3.3** the migration, object by object.
 
 ## RG10 — Tooling and process
 
@@ -2897,6 +2919,45 @@ What depends on it: the graphics regression test takes every item through its Mi
     which files the generator writes for a new class name, the C++ to write by kind, the checks, what to
     run; it refers to `definitions/README.md`, `ARCHITECTURE.md` and `WORKFLOW.md` for the details.
 
+## RG14 — Marker values computed where they are used
+
+*(Group created by the maintainer, 2026-09-29.)* Today every connector, joint, constraint and load gets
+a `MarkerData` for each of its markers, computed before it is called - positions, orientations,
+velocities and full Jacobians, whether it needs them or not. The alternative: the connector or load
+computes the marker values itself, with a small temporary per marker. **The big advantage is automatic
+differentiation**, which then sees the whole computation from the coordinates to the force. It shapes
+how future items and the user elements (RG7, RG8) are written, so it is decided first, even if it is not
+done.
+
+<a id="rg14-1"></a>
+**RG14.1** *(group RG14; maintainer 2026-09-29)* **The evaluation** (#2745): what `MarkerData` holds
+    and costs today, who computes and who reads which part of it (connectors, constraints, loads,
+    `GeneralContact`), and the options - a smaller temporary per marker, marker functions a connector
+    calls, what automatic differentiation needs from them. The result is a proposal for the maintainer:
+    whether, and which option.
+
+<a id="rg14-2"></a>
+**RG14.2** *(group RG14; after RG14.1 is decided)* **The migration**: a function in `CObjectConnector`
+    and `CLoad` that does what the precomputation does today, so that nothing changes; then each
+    connector and load changed to compute its marker values itself, one at a time, the test suite
+    unchanged after each.
+
+## RG15 — Objects computing from given coordinates
+
+*(Group created by the maintainer, 2026-09-29.)* A body or finite element reads its coordinates from its
+nodes inside `ComputeODE2LHS` and the mass matrix. If it got the coordinates - displacements and
+velocities - as arguments instead, automatic differentiation of an object would be simple. Unlike RG14
+this is **a real performance question** with more cases: objects with one node (`ObjectMassPoint`,
+`ObjectRigidBody`, ...) can keep linked data without copying, while finite elements and other multi-node
+objects would get their coordinates from the interface.
+
+<a id="rg15-1"></a>
+**RG15.1** *(group RG15; maintainer 2026-09-29)* **The evaluation** (#2746): how the objects read their
+    coordinates today, what passing them would cost (measured, RG5), which kinds of objects there are -
+    one node with linked data, several nodes, super elements, the kinematic tree -, and what automatic
+    differentiation needs. The result is a proposal for the maintainer, including whether RG14 and RG15
+    are one interface.
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where
@@ -2918,17 +2979,19 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
-| RG4.7 | #2423 | every C++ user error inspects the Python source for its file and line |
 | RG4.8 | #2730 | `ObjectBeamGeometricallyExact` (3D): analyse the defects of the implementation |
 | RG4.12 | #2736 | `NodeGenericAE` cannot be used: no object, marker or script takes it - **deprecate, or an object for it?** |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.7 | #2709, #2710 | GraphicsData gets a Sphere and a curved triangle list; RG6.7.1 evaluates the geometry first |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
+| RG9.3 | #2744 | access functions as single functions of the objects; evaluation first |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
+| RG14.1 | #2745 | evaluation: connectors and loads compute their marker values themselves |
+| RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG13.5.2 | #2725 | the page of `ObjectBeamGeometricallyExact`, after RG4.8 |
 | RG13.6.6 | #2732 | MiniExamples of `ObjectFFRF` and `ObjectFFRFreducedOrder`, once tetrahedral elements are part of Exudyn |

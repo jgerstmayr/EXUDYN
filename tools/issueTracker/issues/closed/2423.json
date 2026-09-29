@@ -2,12 +2,16 @@
   "number": 2423,
   "title": "every C++ user error inspects the Python source for its file and line",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "PyError and PyWarning call PyGetCurrentFileInformation (src/Main/Stdoutput.cpp:259); which calls inspect.getframeinfo - that resolves the module by scanning sys.modules and reads the source file. The cost grows with the number of imported modules: the ~38000 probe errors of parameterConversionTest.py (revision2026 step R4.4.3.1) took 1 s standalone and 9 s inside runTestSuite.py after scipy; matplotlib and ngsolve were imported. It matters wherever errors are caught in a loop (parameter studies; try/except in user code). The frame alone (f_code.co_filename; f_lineno) gives the same information without the scan. revision2026 step R6.6.",
   "dateRaised": "2026-09-14",
   "deadline": "2027-03-13",
+  "dateResolved": "2026-09-29 19:03",
+  "resolvedAuthor": "Claude-JG",
   "file": "src/Main/Stdoutput.cpp",
-  "line": "259"
+  "line": "259",
+  "releaseNotes": "no longer applies: done by revision2026 step R6.3.5 (a49d501f, #2527) - PyGetCurrentFileInformation reads f_code.co_filename and f_lineno of the frame and no longer calls inspect.getframeinfo (checked 2026-09-29); revision2026b step RG4.7",
+  "resolvedInVersion": "1.12.155"
 }

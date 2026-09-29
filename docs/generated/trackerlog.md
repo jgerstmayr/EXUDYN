@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.153.dev1
+- Exudyn version = 1.12.156.dev1
 - last change = 2026-09-29
-- Number of issues = 2743
-- Number of resolved issues = 2467 (153 in current version)
+- Number of issues = 2747
+- Number of resolved issues = 2470 (156 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,15 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
+  - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
+  - date raised: 2026-09-29
+- `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` connectors and loads compute their marker values themselves instead of precomputed MarkerData (#2745)
+  - description: The maintainer, 2026-09-29: compute marker values inside the connector (joint, constraint) and load functions, no precomputation of MarkerData; a new temporary data with smaller footprint per marker; check GeneralContact. Migration: a function in CObjectConnector / CLoad that does what the precomputation does today, then each connector and load changed. Advantage: automatic differentiation becomes much simpler. First an evaluation step - what is there now, what are the best options - since it shapes future items and the user elements. revision2026b group RG14.
+  - date raised: 2026-09-29
+- `CHANGE` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` access functions: single functions per access type in the objects, with precise interfaces (#2744)
+  - description: The maintainer, 2026-09-29: GetAccessFunctionBody(AccessFunctionType, localPosition, Matrix& value) serves every access type through one function and a switch, with workarounds (e.g. the vector for JacobianTtimesVector\_q passed in the output matrix). Revise into single functions per access type in the objects, with interfaces that say what they take and return. First: which objects need which access functions and what would be best for them. Then possibly a check that the declared access function flags (ItemAccessFunctionTypes) and the functions a definition declares agree. revision2026b step RG9.3.
+  - date raised: 2026-09-29
 - `DOCU` `HUGE EFF` `raised by: Claude-JG` RG13.6: a MiniExample for every item (#2732)
   - description: The goal of revision2026b group RG13, from the maintainer's announcement of 2026-09-27: every item gets a MiniExample - the short script under 'Mini example' on its page, run by the test suite. Of 97 items, 74 have none (RG13.1). The graphics regression test of RG2.3.3.5 takes every item through its MiniExample, so it waits for this. Agreed on 2026-09-28: a step of its own, starting with nodes, markers, loads and sensors, whose examples are short. revision2026b step RG13.6.
   - date raised: 2026-09-28
@@ -7612,9 +7621,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `TESTING` <span class="textblue">`LOW`</span> `HIGH EFF` `raised by: Claude-JG` no test checks the member functions an item type must provide (#2498)
   - description: Successor of \#1142. What that issue asked for is now covered for PARAMETERS - parameterConversionTest.py writes a fixed set of probe values into every parameter of every item and compares the outcome with a reference (revision2026 step R4.4.3.1) - and for the linear algebra classes by the lest unit tests of src/Tests/ (step R5.4). What is still not tested per item type is its FUNCTIONS: that every object implements what its type requires (ComputeODE2LHS; GetOutputVariable; GetAccessFunctionTypes; ...) and that the output variables it advertises can actually be read. That needs the definitions database as its source of truth; like the parameter test does.
   - date raised: 2026-09-17
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` every C++ user error inspects the Python source for its file and line (#2423)
-  - description: PyError and PyWarning call PyGetCurrentFileInformation (src/Main/Stdoutput.cpp:259); which calls inspect.getframeinfo - that resolves the module by scanning sys.modules and reads the source file. The cost grows with the number of imported modules: the ~38000 probe errors of parameterConversionTest.py (revision2026 step R4.4.3.1) took 1 s standalone and 9 s inside runTestSuite.py after scipy; matplotlib and ngsolve were imported. It matters wherever errors are caught in a loop (parameter studies; try/except in user code). The frame alone (f\_code.co\_filename; f\_lineno) gives the same information without the scan. revision2026 step R6.6.
-  - date raised: 2026-09-14
 - `CHECK` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected (#2400)
   - description: the flag is documented as computing the inverse of the mass matrix per body so that explicit integration does not need a global solve; and it is the intended answer to the O(N^2) cost of issue 2398 (it cannot be the default; because it gives wrong results when bodies share nodes - a beam or an FEM body - as its own documentation and the maintainer both state). Measured 2026-09-12 on a chain of independent point masses; with the flag value read back from the settings to confirm it was applied: with the DEFAULT DENSE solver the flag changes nothing. At nMasses=1000 and 200 steps: ExplicitEuler 8.43 s off against 8.57 s on, RK44 20.5 against 20.4, DOPRI5 33.0 against 32.7 - all within noise. Selecting EigenSparse is what removes the cost (0.070 s); and only then is the flag worth a further 10 to 15 percent (0.058 s). So on its own the flag does not do what it promises; the user still has to know to change the linear solver. Either the flag should bypass the solver path; or its documentation should say that it must be combined with a sparse solver. Found while building the large system performance test for revision2026 step R2.10
   - date raised: 2026-09-12
@@ -8101,9 +8107,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `TESTING` `MEDIUM EFF` ContactFrictionCircleCable2D (#973)
   - description: adapt old tests and create new beltdrive test
   - date raised: 2022-03-09
-- `EXTENSION` `HIGH EFF` Renderer (#971)
-  - description: add mechanisms to catch exceptions inside renderer thread; try detaching renderer thread
-  - date raised: 2022-03-06
 - `EXTENSION` `MEDIUM EFF` JointRevolute2D (#957)
   - description: add OutputVariables in C++ and in DOCU; check other objects with missing OutputVariables
   - date raised: 2022-02-28

@@ -6955,3 +6955,23 @@ sensors in `CSensor.cpp`). `CODING_STYLE.md` §9 points to the page; the procedu
 
 Found on the way, not changed: `WORKFLOW.md` names `main/obj/cppsrc.vcxproj` and `main/sources.json`,
 paths of the layout before the repository root moved; they are `msvc/cppsrc.vcxproj` and `sources.json`.
+
+<a id="rg3-28"></a>
+### RG3.28 — paths of the old `main/` directory (2026-09-29, #2743)
+
+`WORKFLOW.md` named `main/setup.py`, `main/obj/cppsrc.vcxproj`, `main/sources.json` and
+`main/pyproject.toml`; `docs/dev/README.md` the first two in its layout block, and
+`docs/howTo/condaEnvironments.md` a `main/dist/` path. They are at the repository root, the project
+file in `msvc/`. The layout block also listed `src/Objects` instead of the three `Impl*` directories and
+carried counts kept by hand - 24 mini examples (92 today), 139 test models -, which are gone.
+
+**Checked the same day, and closed as done by earlier work**: #971 (exceptions in the renderer thread,
+detaching the thread) - `InitCreateWindow`, `RunLoop` and `VisualizationSystem::UpdateGraphicsData`
+catch them, `RunLoop` releases the semaphores and locks and closes the renderer, and the thread is
+joinable on purpose with a `detachGLFWthread` switch; #2423 (RG4.7) - done by revision2026 step R6.3.5,
+`PyGetCurrentFileInformation` reads the frame and no longer calls `inspect.getframeinfo`.
+
+**Planned the same day** (maintainer): RG9.3 (#2744) - access functions as single functions of the
+objects; and two new groups, each opened by an evaluation, because they shape future items and the user
+elements: RG14 (#2745) - connectors and loads compute their marker values themselves -, RG15 (#2746) -
+objects compute from coordinates passed in. Both for automatic differentiation.

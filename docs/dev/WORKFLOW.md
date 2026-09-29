@@ -564,7 +564,7 @@ Run in this order; stop at the first failure.
 
 ### 1. The build succeeds
 
-Required for any change to C++, `main/setup.py`, or `main/obj/cppsrc.vcxproj`. VS2022
+Required for any change to C++, `setup.py`, or `msvc/cppsrc.vcxproj`. VS2022
 `Debug|x64` or `Release|x64` from `exudyn.sln` (created by `tools/setupLocalWorkspace.py`), or
 `exudev build` (add `--fast` for the `exudynCPPfast` module, which is opt-in).
 
@@ -607,7 +607,7 @@ If your change added an `import` of a third-party package anywhere in `exudyn/`,
 python tools/checkExtras.py --check
 ```
 
-It compares the `[project.optional-dependencies]` extras in `main/pyproject.toml` against the
+It compares the `[project.optional-dependencies]` extras in `pyproject.toml` against the
 imports actually present in the code and fails if something is installed by no extra — so
 `pip install exudyn[tests]` and `pip install exudyn[all]` cannot quietly stop being sufficient.
 A fresh environment is set up with those extras rather than a hand-written package list; see
@@ -646,16 +646,16 @@ stub) and `tools/ci/stubtestBaseline.txt` is the generated backlog, regenerated 
 > A change under `python/exudyn/` therefore proves nothing until the package is installed — a
 > passing gate on an uninstalled change is a gate that tested the previous version.
 
-If you **added, removed or renamed a `.cpp` file**, do it in `main/obj/cppsrc.vcxproj` — the
+If you **added, removed or renamed a `.cpp` file**, do it in `msvc/cppsrc.vcxproj` — the
 Visual Studio project is the source of truth for the compile list — and then regenerate the list
 `setup.py` actually builds from:
 
 ```bash
-python tools/gen_sources.py          # rewrites main/sources.json
+python tools/gen_sources.py          # rewrites sources.json
 python tools/gen_sources.py --check  # CI mode: fails on any disagreement
 ```
 
-It compares the vcxproj, `main/sources.json` and the files on disk **case-exactly**, because
+It compares the vcxproj, `sources.json` and the files on disk **case-exactly**, because
 `src/tests/X.cpp` and `src/Tests/X.cpp` are the same file on Windows and two different ones on
 Linux. Commit `sources.json` with the change; an sdist without it cannot build. The `minimal`
 list in that file is *not* derived — `--minimal` also defines `EXUDYN_MINIMAL_COMPILATION`, so it

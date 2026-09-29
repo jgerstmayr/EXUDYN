@@ -149,6 +149,6 @@ Now normally done with Docker; kept here for reference.
 ```bash
 pip install auditwheel patchelf
 
-auditwheel repair /mnt/c/DATA/cpp/Exudyn_git/main/dist/exudyn-1.10.19.dev1-cp314-cp314-linux_x86_64.whl
+auditwheel repair /mnt/c/DATA/cpp/Exudyn_git/dist/exudyn-1.10.19.dev1-cp314-cp314-linux_x86_64.whl
 # produces e.g. exudyn-1.10.19.dev1-cp314-cp314-manylinux_2_34_x86_64.whl
 ```
