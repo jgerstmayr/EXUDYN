@@ -1895,6 +1895,12 @@ file, so an editor cannot complete them).
     (`tools/checkPython.py --stubs`), so this is a question of what the generator is told about the
     two members rather than of writing a stub by hand.
 
+<a id="rg10-12"></a>
+**RG10.12** *(group RG10; maintainer 2026-09-29)* **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg10-12) —
+    **The GitLab job `check_docstrings` passes, and the gates run pydoclint** (#2747): four docstrings
+    fixed, the deliberate `DOC108` of the typed user function parameters in the baseline, and
+    `pydoclint` a stage of `exudev generate --all-checks`.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.

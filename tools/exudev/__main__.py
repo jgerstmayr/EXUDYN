@@ -285,8 +285,8 @@ def BuildParsers():
     generate.add_argument('--no-run', action='store_true',
                           help='do not run the generators, only check the tree for drift')
     generate.add_argument('--all-checks', action='store_true',
-                          help='also run checkAll, checkExtras, checkPython, checkPython --stubs '
-                               'and gen_sources, each with --check')
+                          help='also run checkAll, checkExtras, checkPython, checkPython --stubs, '
+                               'pydoclint and gen_sources, each with --check')
     generate.set_defaults(function=commands.Generate)
 
     BuildParser(subParsers, [globalParser, versionParser, fastParser])

@@ -6975,3 +6975,24 @@ joinable on purpose with a `detachGLFWthread` switch; #2423 (RG4.7) - done by re
 objects; and two new groups, each opened by an evaluation, because they shape future items and the user
 elements: RG14 (#2745) - connectors and loads compute their marker values themselves -, RG15 (#2746) -
 objects compute from coordinates passed in. Both for automatic differentiation.
+
+<a id="rg10-12"></a>
+### RG10.12 — the docstring check, green and local (2026-09-29, #2747)
+
+The maintainer's GitLab log (commit 4ec17943): `pydoclint --config=pyproject.toml python/exudyn`
+reported 29 findings outside its baseline, and the job failed. Reproduced locally with the same pinned
+pydoclint 0.9.1:
+
+- **25 × DOC108** in the generated `itemInterface.py`: *"type hints in the signature"* while the
+  configuration says none. They are the user function parameters, which carry their `Protocol` type
+  since #2664 - deliberate, and what an editor completes from. pydoclint honours no `noqa`, and
+  `arg-type-hints-in-signature = true` would demand hints everywhere; so they are in the baseline, and
+  `pyproject.toml` says why.
+- **3 × DOC202** - a `Returns: None` section in functions without a return: `ApplyColumnWidths` and
+  `StoreWindowGeometry` (`misc/GUI.py`), `StoreDialogGeometry` (`misc/overrideSettings.py`); removed.
+- **1 × DOC104** - `alwaysOnTop` documented after `searchDirectories` in `MonitorResults`; moved to its
+  place.
+
+The baseline regenerated (one fixed entry dropped); `pydoclint` reports *no violations*. **Why the
+CI saw it first**: no local gate ran pydoclint. It is now a stage of `exudev generate --all-checks`,
+next to ruff and stubtest, so the job fails only if the local checks were skipped.

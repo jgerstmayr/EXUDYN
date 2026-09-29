@@ -1,0 +1,17 @@
+{
+  "number": 2747,
+  "title": "the GitLab job check_docstrings fails, and no local gate runs pydoclint",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-29, tmp/gitLabRunsFailed/check_docstrings.txt: pydoclint reports 29 findings outside its baseline - 25 DOC108 in the generated itemInterface.py (the user function parameters carry their Protocol type since #2664, and the configuration says no type hints in signatures), three DOC202 (a Returns: None section without a return: GUI.ApplyColumnWidths, GUI.StoreWindowGeometry, overrideSettings.StoreDialogGeometry) and one DOC104 (argument order in resultsMonitor.MonitorResults). No local gate runs pydoclint, so the CI job is the first to see it. Fix the four, record the deliberate DOC108 in the baseline, and add pydoclint to exudev generate --all-checks. revision2026b step RG10.12.",
+  "dateRaised": "2026-09-29",
+  "deadline": "2027-03-28",
+  "dateResolved": "2026-09-29 19:52",
+  "resolvedAuthor": "Claude-JG",
+  "file": "pyproject.toml",
+  "releaseNotes": "The docstring check of the CI passes again, and exudev generate --all-checks runs it locally.",
+  "resolvedInVersion": "1.12.157"
+}

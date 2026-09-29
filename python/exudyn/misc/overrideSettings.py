@@ -529,9 +529,6 @@ def StoreDialogGeometry(name, size, position):
         size: `[width, height]` in pixels
         position: `[x, y]` of the top left corner, in pixels
 
-    Returns:
-        None
-
     Note:
         This is called by the dialogs themselves when
         `visualizationSettings.dialogs.storeDialogPositions` is True. Nothing else writes the

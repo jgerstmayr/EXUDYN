@@ -205,6 +205,8 @@ markers = [
 #Findings present when the check was introduced are listed in the baseline, so only new ones fail;
 #fixed ones are removed with 'pydoclint --config=pyproject.toml --generate-baseline=True python/exudyn'.
 #itemInterface.py is generated and checked too (revision2026 step R4.23); its docstrings come from itemInterfaceEmitter.py.
+#Its DOC108 findings are deliberate and in the baseline: a user function parameter carries its Protocol type (#2664).
+#'exudev generate --all-checks' runs this check locally as well (#2747).
 [tool.pydoclint]
 style = 'google'
 arg-type-hints-in-signature = false

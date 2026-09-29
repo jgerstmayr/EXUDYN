@@ -130,6 +130,33 @@ python/exudyn/interactive.py
     DOC104: Function `AnimateModes`: Arguments are the same in the docstring and the function signature, but are in a different order.
     DOC202: Function `ConvertImages2Video` has a return section in docstring, but there are no return statements or annotations
 --------------------
+python/exudyn/itemInterface.py
+    DOC108: Method `VObjectGround.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `VObjectRigidBody.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `VObjectRigidBody2D.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `VObjectGenericODE2.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectGenericODE2.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectGenericODE1.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectKinematicTree.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectFFRF.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectFFRFreducedOrder.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectANCFCable2D.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectConnectorSpringDamper.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectConnectorCartesianSpringDamper.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectConnectorRigidBodySpringDamper.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectConnectorLinearSpringDamper.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectConnectorTorsionalSpringDamper.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectConnectorCoordinateSpringDamper.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectConnectorCoordinateSpringDamperExt.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectConnectorCoordinate.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectConnectorCoordinateVector.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `ObjectJointGeneric.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `LoadForceVector.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `LoadTorqueVector.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `LoadMassProportional.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `LoadCoordinate.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+    DOC108: Method `SensorUserFunction.__init__`: The option `--arg-type-hints-in-signature` is `False` but there are argument type hints in the signature
+--------------------
 python/exudyn/kinematicTree.py
     DOC101: Function `Inertia2T66`: Docstring contains fewer arguments than in function signature.
     DOC103: Function `Inertia2T66`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [inertia: ].
@@ -192,7 +219,6 @@ python/exudyn/plot.py
     DOC102: Function `PlotSensor`: Docstring contains more arguments than in function signature.
     DOC103: Function `PlotSensor`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the docstring but not in the function signature: [[*kwargs]: ].
     DOC202: Function `FileStripSpaces` has a return section in docstring, but there are no return statements or annotations
-    DOC001: Function/method `LoadImage`: Potential formatting errors in docstring. Error message: Expected a colon in 'fileName includes directory'. (Note: DOC001 could trigger other unrelated violations under this function/method too. Please fix the docstring formatting first.)
     DOC101: Function `PlotImage`: Docstring contains fewer arguments than in function signature.
     DOC103: Function `PlotImage`: Docstring arguments are different from function arguments. (Or could be other formatting issues: https://jsh9.github.io/pydoclint/violation_codes.html#notes-on-doc103 ). Arguments in the function signature but not in the docstring: [azim: , elev: ]. Arguments in the docstring but not in the function signature: [azim, elev: ].
 --------------------

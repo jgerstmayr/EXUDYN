@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 148 | 1.12.156 |
+| 1.12 | Metheney | 149 | 1.12.157 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.157** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the GitLab job check\_docstrings fails, and no local gate runs pydoclint (#2747)
+  - description: The maintainer, 2026-09-29, tmp/gitLabRunsFailed/check\_docstrings.txt: pydoclint reports 29 findings outside its baseline - 25 DOC108 in the generated itemInterface.py (the user function parameters carry their Protocol type since \#2664, and the configuration says no type hints in signatures), three DOC202 (a Returns: None section without a return: GUI.ApplyColumnWidths, GUI.StoreWindowGeometry, overrideSettings.StoreDialogGeometry) and one DOC104 (argument order in resultsMonitor.MonitorResults). No local gate runs pydoclint, so the CI job is the first to see it. Fix the four, record the deliberate DOC108 in the baseline, and add pydoclint to exudev generate --all-checks. revision2026b step RG10.12.
+  - **notes:** The docstring check of the CI passes again, and exudev generate --all-checks runs it locally.
+  - date resolved: **2026-09-29 19:52**, date raised: 2026-09-29
 - **1.12.156** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` developer documentation names paths of the old main/ directory (#2743)
   - description: Found in revision2026b step RG13.7: docs/dev/WORKFLOW.md and docs/dev/README.md name main/setup.py, main/obj/cppsrc.vcxproj, main/sources.json and main/pyproject.toml; the files are setup.py, msvc/cppsrc.vcxproj, sources.json and pyproject.toml at the repository root. The layout block of the README also carries hand-kept counts that are wrong (24 mini examples, 139 test models) and a src/ listing without the Impl\* directories. revision2026b step RG3.28.
   - **notes:** The developer documentation names the build files where they are: setup.py, pyproject.toml and sources.json at the repository root, the project file in msvc/.

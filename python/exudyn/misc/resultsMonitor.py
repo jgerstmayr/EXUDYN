@@ -964,14 +964,14 @@ def MonitorResults(fileName=None, xColumns=None, yColumns=None, updatePeriod=Non
         lineStyle: matplotlib line style of the curves, e.g. `'-'`
         title: name of the figure window; default: 'results monitor: <file>'
         showPanel: show the control panel next to the plot (default True); needs tkinter
+        alwaysOnTop: True keeps the plot window above other windows; it does NOT take the
+            keyboard focus either way, see the note below
         once: draw the current contents once and return, instead of updating; this is what makes
               the monitor usable in a test or a script that only wants the figure
         saveFigure: if not empty, write the figure to this file (png, pdf or svg)
         waitTimeout: seconds to wait for the file to appear and for its first data row; 0 (the
             default) waits without limit, which is what a monitor started before the solver needs
         searchDirectories: where to look for results files if `fileName` is None
-        alwaysOnTop: True keeps the plot window above other windows; it does NOT take the
-            keyboard focus either way, see the note below
         useSettingsFile: read and write the `resultsMonitor` section of
             `~/.exudyn/config.json`; False keeps the
                          defaults and changes nothing on disk

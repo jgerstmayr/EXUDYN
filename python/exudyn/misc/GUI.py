@@ -859,9 +859,6 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
     def ApplyColumnWidths(self):
         """Give the three fixed columns their share of the dialog, and the description the rest.
 
-        Returns:
-            None
-
         Note:
             The widths are fractions of the width of the dialog
             (`visualizationSettings.dialogs.columnWidthName` and its two neighbours), so a long
@@ -1963,9 +1960,6 @@ def StoreWindowGeometry(recorded, name):
     Args:
         recorded: what `RememberWindowGeometry` returned
         name: the title of the dialog
-
-    Returns:
-        None
     """
     StoreGeometryString(recorded.get('geometry', ''), name)
 

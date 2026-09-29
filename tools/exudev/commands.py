@@ -202,6 +202,7 @@ def Generate(options):
                   (['python', 'tools/checkIssues.py', '--check'],           'checkIssues'),
                   (['python', 'tools/checkPython.py', '--check'],             'checkPython (ruff)'),
                   (['python', 'tools/checkPython.py', '--stubs', '--check'],  'checkPython (stubs)'),
+                  (['pydoclint', '--config=pyproject.toml', 'python/exudyn'],  'pydoclint'),   #the CI job check_docstrings (#2747)
                   (['python', 'tools/gen_sources.py', '--check'],             'gen_sources'),
                   ]
         for (argv, label) in checks:
