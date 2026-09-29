@@ -58,5 +58,23 @@ which the body computes (its access function `DisplacementMassIntegral_q`); a lo
 $\LU{0}{\bv}$ per unit mass gives $\Qm = \Jm_{m}\tp \LU{0}{\bv}$. For a rigid body it is the mass
 times the position Jacobian of the center of mass.
 
+(miniexample-markerbodymass)=
+## Mini example
+
+
+```python
+#gravity on a planar rigid body: the load acts on the mass of the whole body
+node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0]))
+body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
+mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,-9.81,0]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#free fall: y = -g/2*t^2 at t=1, independent of the mass
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #-4.905
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`basicTutorial2024.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/basicTutorial2024.py) (Ex), [`springDamperTutorialNew.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/springDamperTutorialNew.py) (Ex), [`rigidBodyTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial.py) (Ex), [`rigidBodyTutorial2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial2.py) (Ex), [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex)

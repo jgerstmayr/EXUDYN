@@ -56,5 +56,28 @@ The position Jacobian of the node, $\LU{0}{\Jm_{pos}} = \partial \LU{0}{\pv} / \
 respect to the node's coordinates: the unit matrix for `NodePoint`, the first three columns for a
 rigid body node, and for a 2D node the $x$ and $y$ rows.
 
+(miniexample-markernodeposition)=
+## Mini example
+
+
+```python
+#the position of a node: a mass hanging on a spring from a ground node, released at rest
+nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,-1]))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=1))
+mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
+mFixed = mbs.AddMarker(MarkerNodePosition(nodeNumber=nGround))
+k = (2*np.pi)**2 #1 Hz
+mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[mFixed, mMass], stiffness=k, referenceLength=1))
+mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[0,0,-9.81]))
+
+mbs.Assemble()
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.endTime = 0.5 #half a period
+mbs.SolveDynamic(simulationSettings)
+
+#lowest point: twice the static deflection, -2*g/k
+exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[2] #-0.497
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`doublePendulum2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/doublePendulum2D.py) (Ex), [`pendulum2Dconstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulum2Dconstraint.py) (Ex), [`interactiveTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/interactiveTutorial.py) (Ex), [`simple4linkPendulumBing.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/simple4linkPendulumBing.py) (Ex), [`connectorGravityTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorGravityTest.py) (TM)

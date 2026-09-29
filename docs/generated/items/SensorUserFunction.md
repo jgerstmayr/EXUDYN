@@ -95,5 +95,31 @@ if False:
     PlotSensor(mbs, [sNode, sNode, sUser], [0, 1, 0])
 ```
 
+(miniexample-sensoruserfunction)=
+## Mini example
+
+
+```python
+#a value computed from other sensors: the distance between two mass points
+nA = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0], initialVelocities=[-1,0,0]))
+nB = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0], initialVelocities=[0,1,0]))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nA, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nB, physicsMass=1))
+sA = mbs.AddSensor(SensorNode(nodeNumber=nA, outputVariableType=exu.OutputVariableType.Position, writeToFile=False))
+sB = mbs.AddSensor(SensorNode(nodeNumber=nB, outputVariableType=exu.OutputVariableType.Position, writeToFile=False))
+def UFdistance(mbs, t, sensorNumbers, factors, configuration):
+    pA = mbs.GetSensorValues(sensorNumbers[0], configuration)
+    pB = mbs.GetSensorValues(sensorNumbers[1], configuration)
+    return [np.linalg.norm(np.array(pB) - np.array(pA))]
+sDistance = mbs.AddSensor(SensorUserFunction(sensorNumbers=[sA, sB], sensorUserFunction=UFdistance,
+                                             storeInternal=True, writeToFile=False))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#at t=1: pA = [-1,0,0], pB = [1,1,0]
+exu.sys['testResult'] = mbs.GetSensorValues(sDistance) #sqrt(5), a scalar for one value
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`sensorUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sensorUserFunctionTest.py) (TM)

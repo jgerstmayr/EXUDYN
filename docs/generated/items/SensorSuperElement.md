@@ -53,5 +53,26 @@ coordinates (`ObjectFFRFreducedOrder`).
 its page lists them - the section on superelement output variables of `ObjectFFRFreducedOrder`, e.g.
 the displacement or position of the mesh node in the local or global frame.
 
+(miniexample-sensorsuperelement)=
+## Mini example
+
+
+```python
+#a mesh node of a super element, here of a ObjectGenericODE2 of two free mass points
+n0 = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
+n1 = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+oSuper = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[n0,n1], massMatrix=np.eye(6)))
+mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n1)), loadVector=[1,0,0]))
+sMesh = mbs.AddSensor(SensorSuperElement(bodyNumber=oSuper, meshNodeNumber=1,
+                                         outputVariableType=exu.OutputVariableType.Displacement,
+                                         storeInternal=True, writeToFile=False))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#mesh node 1: x = F/(2m)*t^2 at t=1
+exu.sys['testResult'] = mbs.GetSensorValues(sMesh)[0] #0.5
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleCourse.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/CMSexampleCourse.py) (Ex), [`NGsolveCraigBampton.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py) (Ex), [`NGsolvePostProcessingStresses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePostProcessingStresses.py) (Ex), [`ObjectFFRFconvergenceTestBeam.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ObjectFFRFconvergenceTestBeam.py) (Ex), [`objectFFRFreducedOrderNetgen.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/objectFFRFreducedOrderNetgen.py) (Ex), [`pendulumVerify.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumVerify.py) (Ex), [`abaqusImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/abaqusImportTest.py) (TM), [`NGsolveCMStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/NGsolveCMStest.py) (TM), [`objectFFRFreducedOrderAccelerations.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderAccelerations.py) (TM), [`objectFFRFreducedOrderStressModesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderStressModesTest.py) (TM), [`objectFFRFreducedOrderTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderTest.py) (TM), [`objectFFRFTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py) (TM), [`objectFFRFTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest2.py) (TM), [`objectGenericODE2Test.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectGenericODE2Test.py) (TM), [`superElementRigidJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/superElementRigidJointTest.py) (TM)

@@ -50,5 +50,24 @@ The node `nodeNumber`: every node, with {ref}`ODE2 <ODE2>`, {ref}`ODE1 <ODE1>` o
 `RotationMatrix`, `AngularVelocity` and the like. The frame is the one the node page gives for the
 variable.
 
+(miniexample-sensornode)=
+## Mini example
+
+
+```python
+#the position of a node, stored during the simulation
+node = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0], initialVelocities=[1,0,0]))
+mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+sNode = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=exu.OutputVariableType.Position,
+                                 storeInternal=True, writeToFile=False))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#rows [t, x, y, z]; the last row at t=1
+data = mbs.GetSensorStoredData(sNode)
+exu.sys['testResult'] = data[-1,0] + data[-1,1] #1+1
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`plotSensorExamples.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/plotSensorExamples.py) (Ex), [`sensorUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sensorUserFunctionTest.py) (TM), [`springDamperUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/springDamperUserFunctionTest.py) (TM), [`rigidBodyCOMtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyCOMtest.py) (TM), [`plotSensorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/plotSensorTest.py) (TM)

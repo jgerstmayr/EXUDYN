@@ -50,5 +50,29 @@ not at a point.
 **Output variables** - for a spring-damper e.g. `Force` and `Distance`, for a joint the reaction
 forces and torques in the frame its page gives.
 
+(miniexample-sensorobject)=
+## Mini example
+
+
+```python
+#the force in a spring-damper, measured at the object
+node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
+mFixed = mbs.AddMarker(MarkerNodePosition(nodeNumber=nGround))
+oSpring = mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[mFixed, mNode], stiffness=100, referenceLength=1))
+mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mFixed, mNode], stiffness=[0,100,100],
+                                                   offset=[1,0,0])) #holds y and z
+mbs.AddLoad(LoadForceVector(markerNumber=mNode, loadVector=[10,0,0]))
+sForce = mbs.AddSensor(SensorObject(objectNumber=oSpring, outputVariableType=exu.OutputVariableType.Force,
+                                    storeInternal=True, writeToFile=False))
+
+mbs.Assemble()
+mbs.SolveStatic()
+
+#the spring force equals the load
+exu.sys['testResult'] = mbs.GetSensorValues(sForce)[0] #10
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`springDamperTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/springDamperTutorial.py) (Ex), [`springDamperTutorialNew.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/springDamperTutorialNew.py) (Ex), [`pendulum2Dconstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulum2Dconstraint.py) (Ex), [`plotSensorExamples.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/plotSensorExamples.py) (Ex)

@@ -38,6 +38,18 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A marker attached to the body mass; use this marker to apply a body-load (e.g. gravitational force).',
     classType=ClassTypeMarker,
+    miniExample=r"""    #gravity on a planar rigid body: the load acts on the mass of the whole body
+    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0]))
+    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+    mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,-9.81,0]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #free fall: y = -g/2*t^2 at t=1, independent of the mass
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #-4.905
+    """,
     examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py'],
     detailedDescription=r"""    #### Marker quantities
 
@@ -101,6 +113,20 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r"""A position body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position information as well as the according derivatives (=velocity and derivative of position w.r.t. body coordinates). It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerBodyRigid.""",
     classType=ClassTypeMarker,
+    miniExample=r"""    #a point of a body - here of the ground, at a local position - connected to a mass point by a spring
+    node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+    body = mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+    mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[0,0,0]))
+    mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[1,0,0]))
+    mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mGround, mBody], stiffness=[100,100,100]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[0,0,-10]))
+
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #the spring is stretched by F/k
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[2] #-0.1
+    """,
     examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidPendulum.py', 'Examples/pendulum2Dconstraint.py', 'Examples/cartesianSpringDamper.py'],
     detailedDescription=r"""    #### Marker quantities
 
@@ -173,6 +199,24 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r"""A rigid-body (position+orientation) body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.""",
     classType=ClassTypeMarker,
+    miniExample=r"""    #position and orientation of a rigid body: a torque on it, held by a rigid body spring-damper
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[1,0,0]+eulerParameters0))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                         physicsInertia=inertia.GetInertia6D()))
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[1,0,0]))
+    mbs.AddObject(ObjectConnectorRigidBodySpringDamper(markerNumbers=[mGround, mBody],
+                                                       stiffness=np.diag([1e4,1e4,1e4, 100,100,100]),
+                                                       damping=np.zeros((6,6))))
+    mbs.AddLoad(LoadTorqueVector(markerNumber=mBody, loadVector=[0,0,1]))
+
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #rotation about z: M/k_rot, for the small angle
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2] #0.01
+    """,
     examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py'],
     detailedDescription=r"""    #### Marker quantities
 
@@ -257,6 +301,23 @@ definitions.append(ItemDefinition(
     requestedNodeTypes=[['Position', 'Position2D']],
     overallDescription=r'A node-Marker attached to a position-based node. It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerNodeRigid.',
     classType=ClassTypeMarker,
+    miniExample=r"""    #the position of a node: a mass hanging on a spring from a ground node, released at rest
+    nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,-1]))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=1))
+    mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
+    mFixed = mbs.AddMarker(MarkerNodePosition(nodeNumber=nGround))
+    k = (2*np.pi)**2 #1 Hz
+    mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[mFixed, mMass], stiffness=k, referenceLength=1))
+    mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[0,0,-9.81]))
+
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.endTime = 0.5 #half a period
+    mbs.SolveDynamic(simulationSettings)
+
+    #lowest point: twice the static deflection, -2*g/k
+    exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[2] #-0.497
+    """,
     examples=['Examples/doublePendulum2D.py', 'Examples/pendulum2Dconstraint.py', 'Examples/interactiveTutorial.py', 'Examples/simple4linkPendulumBing.py', 'TestModels/connectorGravityTest.py'],
     detailedDescription=r"""    #### Marker quantities
 
@@ -318,6 +379,21 @@ definitions.append(ItemDefinition(
     requestedNodeTypes=[['Position', 'Position2D'], ['Orientation', 'Orientation2D']],
     overallDescription=r'A rigid-body (position+orientation) node-marker attached to a rigid-body node. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.',
     classType=ClassTypeMarker,
+    miniExample=r"""    #position and orientation of a rigid body node: a torque spins the body up
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+    node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0]))
+    mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                  physicsInertia=inertia.GetInertia6D()))
+    mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))
+    mbs.AddLoad(LoadTorqueVector(markerNumber=mNode, loadVector=[0,0,1]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #angle = M/(2*J_zz)*t^2 at t=1
+    Jzz = inertia.GetInertia6D()[2]
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2]*2*Jzz #1
+    """,
     examples=['TestModels/connectorRigidBodySpringDamperTest.py'],
     detailedDescription=r"""    #### Marker quantities
 
@@ -388,6 +464,20 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r"""A node-Marker attached to a ABRV:ODE2 coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinate`.""",
     classType=ClassTypeMarker,
+    miniExample=r"""    #one coordinate of a node: a coordinate spring between the ground node and a 1D mass
+    node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    mbs.AddObject(ObjectConnectorCoordinateSpringDamper(markerNumbers=[mGround, mCoord], stiffness=100))
+    mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=10))
+
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #the spring is stretched by F/k
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.1
+    """,
     examples=['Examples/springDamperTutorial.py', 'Examples/coordinateSpringDamper.py', 'Examples/SliderCrank.py', 'Examples/plotSensorExamples.py', 'Examples/SpringDamperMassUserFunction.py'],
     detailedDescription=r"""    #### Marker quantities
 
@@ -454,6 +544,24 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r"""A node-Marker attached to all ABRV:ODE2 coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinates`.""",
     classType=ClassTypeMarker,
+    miniExample=r"""    #all coordinates of two nodes, tied by a coordinate vector constraint X1 qB - X0 qA = offset; the
+    #coordinates INCLUDE the reference values, so qB - qA = [1,0,0] keeps the two points where they are
+    nA = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
+    nB = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nA, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nB, physicsMass=1))
+    mA = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nA))
+    mB = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nB))
+    mbs.AddObject(ObjectConnectorCoordinateVector(markerNumbers=[mA, mB], scalingMarker0=np.eye(3),
+                                                 scalingMarker1=np.eye(3), offset=[1,0,0]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=nA)), loadVector=[2,0,0]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #both masses move together: a = F/(2m) = 1, x = a/2*t^2 at t=1
+    exu.sys['testResult'] = mbs.GetNodeOutput(nB, exu.OutputVariableType.Displacement)[0] #0.5
+    """,
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -513,6 +621,19 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A node-Marker attached to a ABRV:ODE1 coordinate of a node.',
     classType=ClassTypeMarker,
+    miniExample=r"""    #a coordinate of a first-order system: a constant input to q_t = -q + f
+    node = mbs.AddNode(NodeGenericODE1(numberOfODE1Coordinates=1, referenceCoordinates=[0],
+                                       initialCoordinates=[0]))
+    mbs.AddObject(ObjectGenericODE1(nodeNumbers=[node], systemMatrix=[[-1]]))
+    mCoord = mbs.AddMarker(MarkerNodeODE1Coordinate(nodeNumber=node, coordinate=0))
+    mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=1))
+
+    mbs.Assemble()
+    mbs.SolveDynamic(solverType=exu.DynamicSolverType.RK44)
+
+    #q(1) = 1 - exp(-1)
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.632
+    """,
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -578,6 +699,22 @@ definitions.append(ItemDefinition(
     requestedNodeTypes=[['Orientation']],
     overallDescription=r'A node-Marker attached to a a node containing rotation; the Marker measures a rotation coordinate (Tait-Bryan angles) or angular velocities on the velocity level.',
     classType=ClassTypeMarker,
+    miniExample=r"""    #a rotation coordinate of a rigid body node, held by a coordinate constraint
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+    node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0]))
+    mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                  physicsInertia=inertia.GetInertia6D()))
+    mRotZ = mbs.AddMarker(MarkerNodeRotationCoordinate(nodeNumber=node, rotationCoordinate=2))
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    oHold = mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mRotZ]))
+    mbs.AddLoad(LoadTorqueVector(markerNumber=mbs.AddMarker(MarkerNodeRigid(nodeNumber=node)), loadVector=[0,0,2]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the constraint holds the rotation about z against the torque: its force is the reaction torque
+    exu.sys['testResult'] = mbs.GetObjectOutput(oHold, exu.OutputVariableType.Force) #2
+    """,
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -646,6 +783,21 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A coordinate-based Marker attached to two rigid bodies or beams which computes the relative translation between the bodies according to the given axis. This marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). NOTE: it is assumed that the two bodies can only move along the given axis (e.g., constrained by a prismatic joint) -- otherwise results may be unexpected. NOTE: this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body.',
     classType=ClassTypeMarker,
+    miniExample=r"""    #the translation of body 1 relative to body 0 along an axis of body 0, held by a coordinate constraint
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+    node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0]))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                         physicsInertia=inertia.GetInertia6D()))
+    mRel = mbs.AddMarker(MarkerBodiesRelativeTranslationCoordinate(bodyNumbers=[oGround, body], axis0=[1,0,0]))
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mRel], offset=0.3))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the body is held 0.3 along x of the ground
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0] #0.3
+    """,
     detailedDescription=r"""    The marker consists of two bodies, body $b_0$ and body $b_1$ with respective global marker positions $\LU{0}{\pv}_{m0}$ and $\LU{0}{\pv}_{m1}$,
     depending on local positions $\LU{m_0}{\pv}_0$ and $\LU{m_1}{\pv}_1$, 
     and marker orientations $\LU{0,m_0}{\Rot}_{m0}$ and $\LU{0,m_1}{\Rot}_{m1}$.
@@ -743,6 +895,25 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A coordinate-based Marker attached to two rigid bodies or beams which computes the relative rotation between the bodies according to the given axis; this marker can be used together with coordinate-based constraints and connectors (e.g., CoordinateSpringDamper and CoordinateConstraint). NOTE: it is assumed that the two bodies can only rotate about the given axis (e.g., constrained by a revolute joint) -- otherwise results may be unexpected. NOTE: this approach is not compatible with FFRF-based flexible bodies and currently requires and intermediate rigid body.',
     classType=ClassTypeMarker,
+    miniExample=r"""    #the rotation of body 1 relative to body 0 about an axis of body 0, held by a coordinate constraint;
+    #the data node continues the angle beyond +-pi
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+    node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0]))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                         physicsInertia=inertia.GetInertia6D()))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[0]))
+    mRel = mbs.AddMarker(MarkerBodiesRelativeRotationCoordinate(bodyNumbers=[oGround, body], axis0=[0,0,1],
+                                                               nodeNumber=nData))
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    oHold = mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mRel]))
+    mbs.AddLoad(LoadTorqueVector(markerNumber=mbs.AddMarker(MarkerNodeRigid(nodeNumber=node)), loadVector=[0,0,2]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the constraint holds the relative rotation about z against the torque: its force is the reaction torque
+    exu.sys['testResult'] = mbs.GetObjectOutput(oHold, exu.OutputVariableType.Force) #2
+    """,
     detailedDescription=r"""    The marker consists of two bodies, body $b_0$ and body $b_1$ with respective global marker positions $\LU{0}{\pv}_{m0}$ and $\LU{0}{\pv}_{m1}$,
     depending on local positions $\LU{m_0}{\pv}_0$ and $\LU{m_1}{\pv}_1$, 
     and marker orientations $\LU{0,m_0}{\Rot}_{m0}$ and $\LU{0,m_1}{\Rot}_{m1}$.
@@ -1001,6 +1172,20 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.',
     classType=ClassTypeMarker,
+    miniExample=r"""    #a rigid body marker on four mesh nodes of a super element, here four free mass points of a
+    #ObjectGenericODE2; the marker averages their motion, a force on it is shared by the weights
+    nodes = [mbs.AddNode(NodePoint(referenceCoordinates=p)) for p in [[0,0,0],[1,0,0],[1,1,0],[0,1,0]]]
+    oSuper = mbs.AddObject(ObjectGenericODE2(nodeNumbers=nodes, massMatrix=np.eye(12)))
+    mSuper = mbs.AddMarker(MarkerSuperElementRigid(bodyNumber=oSuper, meshNodeNumbers=[0,1,2,3],
+                                                   weightingFactors=[0.25]*4))
+    mbs.AddLoad(LoadForceVector(markerNumber=mSuper, loadVector=[4,0,0]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #each node gets F/4: x = F/(4m)/2*t^2 at t=1
+    exu.sys['testResult'] = mbs.GetNodeOutput(nodes[0], exu.OutputVariableType.Displacement)[0] #0.5
+    """,
     detailedDescription=r"""    **Definition of marker quantities**:
 
     | intermediate variables | symbol | description |
@@ -1302,6 +1487,23 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A position and orientation (rigid-body) marker attached to a kinematic tree. The marker is attached to the ObjectKinematicTree object and additionally needs a link number as well as a local position, similar to the SensorKinematicTree. The marker allows to attach loads (LoadForceVector and LoadTorqueVector) at arbitrary links or position. It also allows to attach connectors (e.g., spring dampers or actuators) to the kinematic tree. Finally, joint constraints can be attached, which allows for realization of closed loop structures. NOTE, however, that it is less efficient to attach many markers to a kinematic tree, therefor for forces or joint control use the structures available in kinematic tree whenever possible.',
     classType=ClassTypeMarker,
+    miniExample=r"""    #a rigid body marker on link 0 of a kinematic tree with one prismatic joint along x
+    nTree = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0.], initialCoordinates=[0.],
+                                        initialCoordinates_t=[0.], numberOfODE2Coordinates=1))
+    oTree = mbs.AddObject(ObjectKinematicTree(nodeNumber=nTree, jointTypes=[exu.JointType.PrismaticX], linkParents=[-1],
+                                              jointTransformations=exu.Matrix3DList([np.eye(3)]),
+                                              jointOffsets=exu.Vector3DList([[0,0,0]]),
+                                              linkInertiasCOM=exu.Matrix3DList([np.eye(3)]),
+                                              linkCOMs=exu.Vector3DList([[0,0,0]]), linkMasses=[2.]))
+    mLink = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber=oTree, linkNumber=0, localPosition=[0.5,0,0]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mLink, loadVector=[1,0,0]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #q = F/(2m)*t^2 at t=1
+    exu.sys['testResult'] = mbs.GetNodeOutput(nTree, exu.OutputVariableType.Coordinates) #0.25
+    """,
     detailedDescription=r"""    #### Marker quantities
 
     The link frame of link $n_l$ - its position $\LU{0}{\pv}_{l}$, rotation $\LU{0l}{\Rot}$, velocity
@@ -1394,6 +1596,23 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A Marker attached to all coordinates of an object (currently only body is possible), e.g. to apply special constraints or loads on all coordinates. The measured coordinates INCLUDE reference + current coordinates.',
     classType=ClassTypeMarker,
+    miniExample=r"""    #all coordinates of an object, here of a ObjectGenericODE2 with two free coordinates, tied by a
+    #coordinate vector constraint X1 q - X0 q_ground = offset, which is q0 - q1 = 0
+    node = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=2, referenceCoordinates=[0,0],
+                                       initialCoordinates=[0,0], initialCoordinates_t=[0,0]))
+    oGeneric = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node], massMatrix=np.eye(2)))
+    mAll = mbs.AddMarker(MarkerObjectODE2Coordinates(objectNumber=oGeneric))
+    mNone = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nGround)) #the ground node has no coordinates
+    mbs.AddObject(ObjectConnectorCoordinateVector(markerNumbers=[mNone, mAll], scalingMarker0=np.zeros((1,0)),
+                                                 scalingMarker1=[[1,-1]], offset=[0]))
+    mbs.AddLoad(LoadCoordinate(markerNumber=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0)), load=2))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #both coordinates move together: a = F/2 = 1, q1 = a/2*t^2 at t=1
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[1] #0.5
+    """,
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -1459,6 +1678,27 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A special Marker attached to a 2D ANCF beam finite element with cubic interpolation and 8 coordinates.',
     classType=ClassTypeMarker,
+    miniExample=r"""    #the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
+    cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4,
+                              physicsBendingDamping=0.1)
+    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
+                            numberOfElements=4, cableTemplate=cable, massProportionalLoad=[0,-9.81,0],
+                            fixedConstraintsNode0=[1,1,0,1])
+    mCircle = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0.8,-0.2,0]))
+    nSegments = 4
+    for e in elements:
+        mShape = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=e, numberOfSegments=nSegments))
+        nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=nSegments, initialCoordinates=[0.1]*nSegments))
+        mbs.AddObject(ObjectContactCircleCable2D(markerNumbers=[mCircle, mShape], nodeNumber=nData,
+                                                 numberOfContactSegments=nSegments, circleRadius=0.1,
+                                                 contactStiffness=1e4))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the tip rests beyond the circle, whose top is at y=-0.1
+    exu.sys['testResult'] = mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)[1]
+    """,
     detailedDescription=r"""    #### Attached to
 
     A planar ANCF cable element, `ObjectANCFCable2D` or `ObjectALEANCFCable2D`; the marker is made for
@@ -1531,6 +1771,28 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A special Marker attached to the coordinates of a 2D ANCF beam finite element with cubic interpolation.',
     classType=ClassTypeMarker,
+    miniExample=r"""    #the coordinates of ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
+    cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
+    [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+                            numberOfElements=4, cableTemplate=cable,
+                            fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
+    nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0.6,0]))
+    mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, physicsMass=1))
+    mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
+    mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[1,0,0]))
+
+    cableMarkers = [mbs.AddMarker(MarkerBodyCable2DCoordinates(bodyNumber=e)) for e in elements]
+    offsets = [0.5*i for i in range(4)] #the element length is 0.5
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=2, initialCoordinates=[1, 0.6])) #element 1, sliding coordinate
+    mbs.AddObject(ObjectJointSliding2D(markerNumbers=[mMass, cableMarkers[1]], slidingMarkerNumbers=cableMarkers,
+                                       slidingMarkerOffsets=offsets, nodeNumber=nData))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the mass slides: x = 0.6 + F/(2m)*t^2 at t=1, the stiff cable deflects little
+    exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] #1.1
+    """,
     detailedDescription=r"""    #### Attached to
 
     A planar ANCF cable element, `ObjectANCFCable2D` or `ObjectALEANCFCable2D`; the marker is made for
@@ -1592,6 +1854,29 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A special Marker attached to a 3D beam finite element which provides at least position and tangent to the beam axis.',
     classType=ClassTypeMarker,
+    miniExample=r"""    #the shape of 3D ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
+    from exudyn.beams import GenerateStraightLineANCFCable
+    cable = ObjectANCFCable(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
+    [nodes, elements, *_] = GenerateStraightLineANCFCable(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
+                            numberOfElements=4, cableTemplate=cable,
+                            fixedConstraintsNode0=[1,1,1, 1,1,1], fixedConstraintsNode1=[1,1,1, 1,1,1])
+    nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0.6,0,0]))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=1))
+    mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
+    mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[1,0,0]))
+
+    cableMarkers = [mbs.AddMarker(MarkerBodyBeamShape(bodyNumber=e)) for e in elements]
+    offsets = [0.5*i for i in range(4)] #the element length is 0.5
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=2, initialCoordinates=[1, 0.6])) #element 1, sliding coordinate
+    mbs.AddObject(ObjectJointSliding(markerNumbers=[mMass, cableMarkers[1]], slidingMarkerNumbers=cableMarkers,
+                                     slidingMarkerOffsets=offsets, nodeNumber=nData, constrainRotations=[0,0,0]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the mass slides: x = 0.6 + F/(2m)*t^2 at t=1, the stiff cable deflects little
+    exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] #1.1
+    """,
     detailedDescription=r"""    #### Attached to
 
     A spatial ANCF cable element, `ObjectANCFCable`; the marker is made for `ObjectJointSliding`, which

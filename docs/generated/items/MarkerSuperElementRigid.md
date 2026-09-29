@@ -234,5 +234,25 @@ see also the descriptions given after {eq}`eq-markersuperelementrigid-jacrotstan
 
 For detailed examples, see `TestModels`.
 
+(miniexample-markersuperelementrigid)=
+## Mini example
+
+
+```python
+#a rigid body marker on four mesh nodes of a super element, here four free mass points of a
+#ObjectGenericODE2; the marker averages their motion, a force on it is shared by the weights
+nodes = [mbs.AddNode(NodePoint(referenceCoordinates=p)) for p in [[0,0,0],[1,0,0],[1,1,0],[0,1,0]]]
+oSuper = mbs.AddObject(ObjectGenericODE2(nodeNumbers=nodes, massMatrix=np.eye(12)))
+mSuper = mbs.AddMarker(MarkerSuperElementRigid(bodyNumber=oSuper, meshNodeNumbers=[0,1,2,3],
+                                               weightingFactors=[0.25]*4))
+mbs.AddLoad(LoadForceVector(markerNumber=mSuper, loadVector=[4,0,0]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#each node gets F/4: x = F/(4m)/2*t^2 at t=1
+exu.sys['testResult'] = mbs.GetNodeOutput(nodes[0], exu.OutputVariableType.Displacement)[0] #0.5
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleCourse.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/CMSexampleCourse.py) (Ex), [`netgenSTLtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/netgenSTLtest.py) (Ex), [`NGsolveCMStutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCMStutorial.py) (Ex), [`NGsolveCraigBampton.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py) (Ex), [`NGsolveFFRF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRF.py) (Ex), [`NGsolveLinearFEM.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveLinearFEM.py) (Ex), [`NGsolveModalAnalysis.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveModalAnalysis.py) (Ex), [`ObjectFFRFconvergenceTestBeam.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ObjectFFRFconvergenceTestBeam.py) (Ex), [`ObjectFFRFconvergenceTestHinge.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ObjectFFRFconvergenceTestHinge.py) (Ex), [`pendulumVerify.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumVerify.py) (Ex), [`serialRobotFlexible.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py) (Ex), [`abaqusImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/abaqusImportTest.py) (TM), [`ACFtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py) (TM), [`linearFEMgenericODE2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/linearFEMgenericODE2.py) (TM), [`NGsolveCMStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/NGsolveCMStest.py) (TM), ...

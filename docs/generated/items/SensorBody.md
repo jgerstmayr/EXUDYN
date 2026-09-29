@@ -53,5 +53,24 @@ is `referencePosition` in `CreateRigidBody`. The center of mass of an `ObjectRig
 lists them under **Output variables** - e.g. `Position`, `Velocity`, `Displacement`,
 `AngularVelocity`; for a flexible body also strains or forces along its axis.
 
+(miniexample-sensorbody)=
+## Mini example
+
+
+```python
+#a point of a body given by its local position: a planar rigid body spinning about its center
+node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0], initialVelocities=[0,0,0.5*np.pi]))
+body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=0.1))
+sPoint = mbs.AddSensor(SensorBody(bodyNumber=body, localPosition=[0.5,0,0],
+                                  outputVariableType=exu.OutputVariableType.Position,
+                                  storeInternal=True, writeToFile=False))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#after a quarter turn the point [0.5,0,0] is at [0,0.5,0]
+exu.sys['testResult'] = mbs.GetSensorValues(sPoint)[1] #0.5
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`springDamperTutorialNew.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/springDamperTutorialNew.py) (Ex), [`rigidBodyTutorial2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial2.py) (Ex), [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`rigidBodyTutorial3withMarkers.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3withMarkers.py) (Ex), [`fourBarMechanism3D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py) (Ex)

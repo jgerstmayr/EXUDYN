@@ -66,5 +66,29 @@ coordinates of the body (its access functions `TranslationalVelocity_qt` and
 `AngularVelocity_qt`). For `ObjectRigidBody` they are computed from its node directly, with the
 velocity transformation $\LU{0}{\Gm}$ of the rotation parameters in $\LU{0}{\Jm_{rot}}$.
 
+(miniexample-markerbodyrigid)=
+## Mini example
+
+
+```python
+#position and orientation of a rigid body: a torque on it, held by a rigid body spring-damper
+inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[1,0,0]+eulerParameters0))
+body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                     physicsInertia=inertia.GetInertia6D()))
+mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[1,0,0]))
+mbs.AddObject(ObjectConnectorRigidBodySpringDamper(markerNumbers=[mGround, mBody],
+                                                   stiffness=np.diag([1e4,1e4,1e4, 100,100,100]),
+                                                   damping=np.zeros((6,6))))
+mbs.AddLoad(LoadTorqueVector(markerNumber=mBody, loadVector=[0,0,1]))
+
+mbs.Assemble()
+mbs.SolveStatic()
+
+#rotation about z: M/k_rot, for the small angle
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2] #0.01
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`springDamperTutorialNew.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/springDamperTutorialNew.py) (Ex), [`rigidBodyTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial.py) (Ex), [`rigidBodyTutorial2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial2.py) (Ex), [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`rigidBodyTutorial3withMarkers.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3withMarkers.py) (Ex)

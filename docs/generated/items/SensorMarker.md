@@ -56,5 +56,25 @@ What the marker provides, which depends on its types, and only in the **current*
 
 Markers have no output variables of their own, which is why this sensor lists them here.
 
+(miniexample-sensormarker)=
+## Mini example
+
+
+```python
+#what a marker provides, here the velocity of a point of a body
+node = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0], initialVelocities=[0,2,0]))
+body = mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[0,0,0]))
+mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[0,-1,0]))
+sVelocity = mbs.AddSensor(SensorMarker(markerNumber=mBody, outputVariableType=exu.OutputVariableType.Velocity,
+                                       storeInternal=True, writeToFile=False))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#v = v0 + F/m*t at t=1
+exu.sys['testResult'] = mbs.GetSensorValues(sVelocity)[1] #1
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`plotSensorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/plotSensorTest.py) (TM), [`pendulumFriction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/pendulumFriction.py) (TM)

@@ -49,5 +49,26 @@ from `loadVector` or `load`, or from its user function - and in the frame it is 
 the body frame for a load with `bodyFixed = True`. The load factor of a static computation is not
 included. There is no `outputVariableType`.
 
+(miniexample-sensorload)=
+## Mini example
+
+
+```python
+#the value of a load, here of a load with a user function, which the load vector does not show
+node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
+mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+def UFload(mbs, t, load):
+    return load*np.cos(np.pi*t)
+lCoord = mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=2, loadUserFunction=UFload))
+sLoad = mbs.AddSensor(SensorLoad(loadNumber=lCoord, storeInternal=True, writeToFile=False))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#the load at t=1: 2*cos(pi)
+exu.sys['testResult'] = mbs.GetSensorValues(sLoad) #-2
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`springDamperUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/springDamperUserFunctionTest.py) (TM), [`plotSensorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/plotSensorTest.py) (TM)

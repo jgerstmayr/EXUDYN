@@ -63,5 +63,25 @@ $$
 which the body computes (its access function `TranslationalVelocity_qt`). For a rigid body it
 contains the rotation of the local position, see the page of the body.
 
+(miniexample-markerbodyposition)=
+## Mini example
+
+
+```python
+#a point of a body - here of the ground, at a local position - connected to a mass point by a spring
+node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+body = mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[0,0,0]))
+mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[1,0,0]))
+mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mGround, mBody], stiffness=[100,100,100]))
+mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[0,0,-10]))
+
+mbs.Assemble()
+mbs.SolveStatic()
+
+#the spring is stretched by F/k
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[2] #-0.1
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`springDamperTutorialNew.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/springDamperTutorialNew.py) (Ex), [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`rigidPendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidPendulum.py) (Ex), [`pendulum2Dconstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulum2Dconstraint.py) (Ex), [`cartesianSpringDamper.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamper.py) (Ex)

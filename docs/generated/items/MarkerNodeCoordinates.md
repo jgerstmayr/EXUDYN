@@ -55,5 +55,29 @@ The unit matrix of the size of the node's coordinates: a vector of forces acts o
 one by one. On a node without {ref}`ODE2 <ODE2>` coordinates the values and the Jacobian are
 empty.
 
+(miniexample-markernodecoordinates)=
+## Mini example
+
+
+```python
+#all coordinates of two nodes, tied by a coordinate vector constraint X1 qB - X0 qA = offset; the
+#coordinates INCLUDE the reference values, so qB - qA = [1,0,0] keeps the two points where they are
+nA = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
+nB = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nA, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nB, physicsMass=1))
+mA = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nA))
+mB = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nB))
+mbs.AddObject(ObjectConnectorCoordinateVector(markerNumbers=[mA, mB], scalingMarker0=np.eye(3),
+                                             scalingMarker1=np.eye(3), offset=[1,0,0]))
+mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=nA)), loadVector=[2,0,0]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#both masses move together: a = F/(2m) = 1, x = a/2*t^2 at t=1
+exu.sys['testResult'] = mbs.GetNodeOutput(nB, exu.OutputVariableType.Displacement)[0] #0.5
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`coordinateVectorConstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraint.py) (TM), [`coordinateVectorConstraintGenericODE2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM)

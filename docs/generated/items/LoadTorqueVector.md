@@ -89,5 +89,26 @@ def UFforce(mbs, t, loadVector):
     return [loadVector[0]*sin(t*10*2*pi),0,0]
 ```
 
+(miniexample-loadtorquevector)=
+## Mini example
+
+
+```python
+#a torque about z spins a rigid body up
+inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0))
+body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                     physicsInertia=inertia.GetInertia6D()))
+mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+mbs.AddLoad(LoadTorqueVector(markerNumber=mBody, loadVector=[0,0,1]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#angular velocity = M/J_zz*t at t=1
+Jzz = inertia.GetInertia6D()[2]
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.AngularVelocity)[2]*Jzz #1, to the accuracy of the time integration
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`SliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SliderCrank.py) (Ex), [`rigidBodyIMUtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyIMUtest.py) (Ex)

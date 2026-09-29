@@ -59,5 +59,27 @@ rotations that stay in that range - a spring about one axis of a nearly planar m
 
 Row $i$ of the rotation Jacobian of the node, $\Jm = \partial \omega_i / \partial \dot\qv$.
 
+(miniexample-markernoderotationcoordinate)=
+## Mini example
+
+
+```python
+#a rotation coordinate of a rigid body node, held by a coordinate constraint
+inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0]))
+mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                              physicsInertia=inertia.GetInertia6D()))
+mRotZ = mbs.AddMarker(MarkerNodeRotationCoordinate(nodeNumber=node, rotationCoordinate=2))
+mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+oHold = mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mRotZ]))
+mbs.AddLoad(LoadTorqueVector(markerNumber=mbs.AddMarker(MarkerNodeRigid(nodeNumber=node)), loadVector=[0,0,2]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#the constraint holds the rotation about z against the torque: its force is the reaction torque
+exu.sys['testResult'] = mbs.GetObjectOutput(oHold, exu.OutputVariableType.Force) #2
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pistonEngine.py) (Ex), [`rigidRotor3DbasicBehaviour.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidRotor3DbasicBehaviour.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`driveTrainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/driveTrainTest.py) (TM), [`sliderCrank3Dbenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sliderCrank3Dbenchmark.py) (TM)

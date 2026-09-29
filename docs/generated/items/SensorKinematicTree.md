@@ -52,5 +52,31 @@ The `ObjectKinematicTree` `objectNumber`, at its link `linkNumber` $n_l$ and the
 page lists them under the output variables of `SensorKinematicTree` - e.g. the position, velocity or
 rotation of that point of the link.
 
+(miniexample-sensorkinematictree)=
+## Mini example
+
+
+```python
+#a point of a link of a kinematic tree: one prismatic link along x, pulled by a force
+nTree = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0.], initialCoordinates=[0.],
+                                    initialCoordinates_t=[0.], numberOfODE2Coordinates=1))
+oTree = mbs.AddObject(ObjectKinematicTree(nodeNumber=nTree, jointTypes=[exu.JointType.PrismaticX], linkParents=[-1],
+                                          jointTransformations=exu.Matrix3DList([np.eye(3)]),
+                                          jointOffsets=exu.Vector3DList([[0,0,0]]),
+                                          linkInertiasCOM=exu.Matrix3DList([np.eye(3)]),
+                                          linkCOMs=exu.Vector3DList([[0,0,0]]), linkMasses=[2.]))
+mLink = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber=oTree, linkNumber=0, localPosition=[0,0,0]))
+mbs.AddLoad(LoadForceVector(markerNumber=mLink, loadVector=[1,0,0]))
+sLink = mbs.AddSensor(SensorKinematicTree(objectNumber=oTree, linkNumber=0, localPosition=[0.5,0,0],
+                                          outputVariableType=exu.OutputVariableType.Position,
+                                          storeInternal=True, writeToFile=False))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#local position 0.5 plus the joint coordinate F/(2m)*t^2 at t=1
+exu.sys['testResult'] = mbs.GetSensorValues(sLink)[0] #0.75
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM)

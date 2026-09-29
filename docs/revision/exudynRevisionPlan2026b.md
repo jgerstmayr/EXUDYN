@@ -2873,9 +2873,8 @@ What depends on it: the graphics regression test takes every item through its Mi
 
     - **RG13.6.1** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-6-1) - nodes (15 of
       16; `NodeGenericAE` waits for RG4.12, #2736).
-    - **RG13.6.2** markers.
-    - **RG13.6.3** loads.
-    - **RG13.6.4** sensors.
+    - **RG13.6.2** to **RG13.6.4** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-6-2) -
+      markers, loads, sensors: every one has a MiniExample.
     - **RG13.6.5** objects, by the groups of RG13.5.2.
 
 ## Next steps recommended

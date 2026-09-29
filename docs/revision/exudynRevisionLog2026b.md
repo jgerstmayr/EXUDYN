@@ -6824,3 +6824,26 @@ $q_0$, its joint frame rotated by $\alpha$ about $z$, 1 N along the prismatic ax
 the fix only the first case gives 0.25: the column was the axis rotated twice, e.g. $q_1 = 0$ at
 $q_0 = \pi/2$, as measured in RG13.5.3.1. No other test model
 changed its result. The page of `MarkerKinematicTreeRigid` no longer carries the note.
+
+<a id="rg13-6-2"></a>
+### RG13.6.2 to RG13.6.4 — a MiniExample for every marker, load and sensor (2026-09-29, #2732)
+
+28 new MiniExamples - 17 markers, 3 loads, 8 sensors -, so that every marker, load and sensor has one;
+the suite runs 66. Each checks a value its comment states, analytical wherever the model has one:
+F/k of a spring, free fall, $M/(2J)\,t^2$ of a spin-up, $1 - e^{-1}$ of a first-order system, the
+reaction of a constraint that holds a rotation against a torque, a mass sliding along a clamped cable
+($x_0 + F/(2m)\,t^2$, for the 2D and the 3D sliding joint), the position of a point of a turning body,
+the distance of two points from a `SensorUserFunction`. The cable on a circle
+(`MarkerBodyCable2DShape`) has no analytical value.
+
+What writing them showed, all as the code has it:
+
+- `ObjectConnectorCoordinateVector` computes $\Xm_{m1}\qv_{m1} - \Xm_{m0}\qv_{m0} - \vv_\mathrm{off}$:
+  the first attempt with $\Xm_{m1} = -\Im$ constrained the sum. Its page says so already.
+- a coordinate constraint whose offset is not met at $t=0$ is a jump the index-3 integrator turns into
+  a large velocity for a rotation coordinate - the examples hold a rotation at its initial value and
+  measure the reaction instead of driving it to an offset;
+- `ObjectContactCircleCable2D` refuses `contactDamping` (*not yet implemented*);
+- `GenerateStraightLineANCFCable` is not in `exudyn.utilities`, unlike the 2D one; the example imports it
+  from `exudyn.beams`;
+- `GetNodeOutput` and `GetSensorValues` return a scalar for a single value.

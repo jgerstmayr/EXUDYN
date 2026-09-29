@@ -38,6 +38,19 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to a node, which measures one of the output variables of the node.""",
     classType=ClassTypeSensor,
+    miniExample=r"""    #the position of a node, stored during the simulation
+    node = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0], initialVelocities=[1,0,0]))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+    sNode = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=exu.OutputVariableType.Position,
+                                     storeInternal=True, writeToFile=False))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #rows [t, x, y, z]; the last row at t=1
+    data = mbs.GetSensorStoredData(sNode)
+    exu.sys['testResult'] = data[-1,0] + data[-1,1] #1+1
+    """,
     examples=['Examples/plotSensorExamples.py', 'TestModels/sensorUserFunctionTest.py', 'TestModels/springDamperUserFunctionTest.py', 'TestModels/rigidBodyCOMtest.py', 'TestModels/plotSensorTest.py'],
     detailedDescription=r"""    #### Attached to
 
@@ -115,6 +128,24 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to an object other than a body - a connector, a constraint, a joint - which measures one of the output variables of the object; a body is measured at a point, with SensorBody.""",
     classType=ClassTypeSensor,
+    miniExample=r"""    #the force in a spring-damper, measured at the object
+    node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+    mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
+    mFixed = mbs.AddMarker(MarkerNodePosition(nodeNumber=nGround))
+    oSpring = mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[mFixed, mNode], stiffness=100, referenceLength=1))
+    mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mFixed, mNode], stiffness=[0,100,100],
+                                                       offset=[1,0,0])) #holds y and z
+    mbs.AddLoad(LoadForceVector(markerNumber=mNode, loadVector=[10,0,0]))
+    sForce = mbs.AddSensor(SensorObject(objectNumber=oSpring, outputVariableType=exu.OutputVariableType.Force,
+                                        storeInternal=True, writeToFile=False))
+
+    mbs.Assemble()
+    mbs.SolveStatic()
+
+    #the spring force equals the load
+    exu.sys['testResult'] = mbs.GetSensorValues(sForce)[0] #10
+    """,
     examples=['Examples/springDamperTutorial.py', 'Examples/springDamperTutorialNew.py', 'Examples/pendulum2Dconstraint.py', 'Examples/plotSensorExamples.py'],
     detailedDescription=r"""    #### Attached to
 
@@ -193,6 +224,19 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to a body at a local position $\pLocB$, which measures one of the output variables of the body at that point.""",
     classType=ClassTypeSensor,
+    miniExample=r"""    #a point of a body given by its local position: a planar rigid body spinning about its center
+    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0], initialVelocities=[0,0,0.5*np.pi]))
+    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=0.1))
+    sPoint = mbs.AddSensor(SensorBody(bodyNumber=body, localPosition=[0.5,0,0],
+                                      outputVariableType=exu.OutputVariableType.Position,
+                                      storeInternal=True, writeToFile=False))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #after a quarter turn the point [0.5,0,0] is at [0,0.5,0]
+    exu.sys['testResult'] = mbs.GetSensorValues(sPoint)[1] #0.5
+    """,
     examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py'],
     detailedDescription=r"""    #### Attached to
 
@@ -281,6 +325,21 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to a mesh node of a superelement, which measures one of the output variables of the superelement at that mesh node.""",
     classType=ClassTypeSensor,
+    miniExample=r"""    #a mesh node of a super element, here of a ObjectGenericODE2 of two free mass points
+    n0 = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
+    n1 = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
+    oSuper = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[n0,n1], massMatrix=np.eye(6)))
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n1)), loadVector=[1,0,0]))
+    sMesh = mbs.AddSensor(SensorSuperElement(bodyNumber=oSuper, meshNodeNumber=1,
+                                             outputVariableType=exu.OutputVariableType.Displacement,
+                                             storeInternal=True, writeToFile=False))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #mesh node 1: x = F/(2m)*t^2 at t=1
+    exu.sys['testResult'] = mbs.GetSensorValues(sMesh)[0] #0.5
+    """,
     detailedDescription=r"""    #### Attached to
 
     The superelement `bodyNumber` - `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectGenericODE2` - at its
@@ -368,6 +427,26 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to a link $n_l$ of an ObjectKinematicTree at a local position $\pLocB$ in the frame of the link, which measures one of the output variables of the kinematic tree at that point.""",
     classType=ClassTypeSensor,
+    miniExample=r"""    #a point of a link of a kinematic tree: one prismatic link along x, pulled by a force
+    nTree = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0.], initialCoordinates=[0.],
+                                        initialCoordinates_t=[0.], numberOfODE2Coordinates=1))
+    oTree = mbs.AddObject(ObjectKinematicTree(nodeNumber=nTree, jointTypes=[exu.JointType.PrismaticX], linkParents=[-1],
+                                              jointTransformations=exu.Matrix3DList([np.eye(3)]),
+                                              jointOffsets=exu.Vector3DList([[0,0,0]]),
+                                              linkInertiasCOM=exu.Matrix3DList([np.eye(3)]),
+                                              linkCOMs=exu.Vector3DList([[0,0,0]]), linkMasses=[2.]))
+    mLink = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber=oTree, linkNumber=0, localPosition=[0,0,0]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mLink, loadVector=[1,0,0]))
+    sLink = mbs.AddSensor(SensorKinematicTree(objectNumber=oTree, linkNumber=0, localPosition=[0.5,0,0],
+                                              outputVariableType=exu.OutputVariableType.Position,
+                                              storeInternal=True, writeToFile=False))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #local position 0.5 plus the joint coordinate F/(2m)*t^2 at t=1
+    exu.sys['testResult'] = mbs.GetSensorValues(sLink)[0] #0.75
+    """,
     examples=['TestModels/kinematicTreeConstraintTest.py'],
     detailedDescription=r"""    #### Attached to
 
@@ -462,6 +541,20 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to a marker, which measures what the marker provides, in the current configuration.""",
     classType=ClassTypeSensor,
+    miniExample=r"""    #what a marker provides, here the velocity of a point of a body
+    node = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0], initialVelocities=[0,2,0]))
+    body = mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+    mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[0,0,0]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[0,-1,0]))
+    sVelocity = mbs.AddSensor(SensorMarker(markerNumber=mBody, outputVariableType=exu.OutputVariableType.Velocity,
+                                           storeInternal=True, writeToFile=False))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #v = v0 + F/m*t at t=1
+    exu.sys['testResult'] = mbs.GetSensorValues(sVelocity)[1] #1
+    """,
     examples=['TestModels/plotSensorTest.py', 'TestModels/pendulumFriction.py'],
     detailedDescription=r"""    #### Attached to
 
@@ -546,6 +639,21 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to a load, which measures the value of the load.""",
     classType=ClassTypeSensor,
+    miniExample=r"""    #the value of a load, here of a load with a user function, which the load vector does not show
+    node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+    def UFload(mbs, t, load):
+        return load*np.cos(np.pi*t)
+    lCoord = mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=2, loadUserFunction=UFload))
+    sLoad = mbs.AddSensor(SensorLoad(loadNumber=lCoord, storeInternal=True, writeToFile=False))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #the load at t=1: 2*cos(pi)
+    exu.sys['testResult'] = mbs.GetSensorValues(sLoad) #-2
+    """,
     examples=['TestModels/springDamperUserFunctionTest.py', 'TestModels/plotSensorTest.py'],
     detailedDescription=r"""    #### Attached to
 
@@ -638,6 +746,26 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r'A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors and recombine the output into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.',
     classType=ClassTypeSensor,
+    miniExample=r"""    #a value computed from other sensors: the distance between two mass points
+    nA = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0], initialVelocities=[-1,0,0]))
+    nB = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0], initialVelocities=[0,1,0]))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nA, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nB, physicsMass=1))
+    sA = mbs.AddSensor(SensorNode(nodeNumber=nA, outputVariableType=exu.OutputVariableType.Position, writeToFile=False))
+    sB = mbs.AddSensor(SensorNode(nodeNumber=nB, outputVariableType=exu.OutputVariableType.Position, writeToFile=False))
+    def UFdistance(mbs, t, sensorNumbers, factors, configuration):
+        pA = mbs.GetSensorValues(sensorNumbers[0], configuration)
+        pB = mbs.GetSensorValues(sensorNumbers[1], configuration)
+        return [np.linalg.norm(np.array(pB) - np.array(pA))]
+    sDistance = mbs.AddSensor(SensorUserFunction(sensorNumbers=[sA, sB], sensorUserFunction=UFdistance,
+                                                 storeInternal=True, writeToFile=False))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #at t=1: pA = [-1,0,0], pB = [1,1,0]
+    exu.sys['testResult'] = mbs.GetSensorValues(sDistance) #sqrt(5), a scalar for one value
+    """,
     examples=['TestModels/sensorUserFunctionTest.py'],
     detailedDescription=r"""    The sensor collects data via a user function, which completely describes the output itself.
     Note that the sensorNumbers and factors need to be consistent. 

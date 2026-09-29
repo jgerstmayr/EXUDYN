@@ -87,5 +87,23 @@ def UFforce(mbs, t, loadVector):
     return [loadVector[0]*sin(t*10*2*pi),0,0]
 ```
 
+(miniexample-loadforcevector)=
+## Mini example
+
+
+```python
+#a body-fixed force on a planar rigid body turned by 90 degrees: the local x-direction is global y
+node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0.5*np.pi]))
+body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[1,0,0], bodyFixed=True))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#y = F/(2m)*t^2 at t=1; x stays 0
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[1] #0.25
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`springDamperTutorialNew.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/springDamperTutorialNew.py) (Ex), [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`rigidPendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidPendulum.py) (Ex), [`doublePendulum2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/doublePendulum2D.py) (Ex), [`pendulum2Dconstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulum2Dconstraint.py) (Ex)

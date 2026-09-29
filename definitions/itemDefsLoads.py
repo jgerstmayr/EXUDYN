@@ -52,6 +52,18 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCLoad,
     overallDescription=r'Load with (3D) force vector; attached to position-based marker.',
     classType=ClassTypeLoad,
+    miniExample=r"""    #a body-fixed force on a planar rigid body turned by 90 degrees: the local x-direction is global y
+    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0.5*np.pi]))
+    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[1,0,0], bodyFixed=True))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #y = F/(2m)*t^2 at t=1; x stays 0
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[1] #0.25
+    """,
     createFunctions=['CreateForce'],
     examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidPendulum.py', 'Examples/doublePendulum2D.py', 'Examples/pendulum2Dconstraint.py'],
     detailedDescription=r"""    #### Load and its frame
@@ -158,6 +170,21 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCLoad,
     overallDescription=r'Load with (3D) torque vector; attached to rigidbody-based marker.',
     classType=ClassTypeLoad,
+    miniExample=r"""    #a torque about z spins a rigid body up
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                         physicsInertia=inertia.GetInertia6D()))
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
+    mbs.AddLoad(LoadTorqueVector(markerNumber=mBody, loadVector=[0,0,1]))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #angular velocity = M/J_zz*t at t=1
+    Jzz = inertia.GetInertia6D()[2]
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.AngularVelocity)[2]*Jzz #1, to the accuracy of the time integration
+    """,
     createFunctions=['CreateTorque'],
     examples=['Examples/rigidBodyTutorial3.py', 'Examples/SliderCrank.py', 'Examples/rigidBodyIMUtest.py'],
     detailedDescription=r"""    #### Load and its frame
@@ -373,6 +400,20 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCLoad,
     overallDescription=r'Load with scalar value, which is attached to a coordinate-based marker; the load can be used e.g. to apply a force to a single axis of a body, a nodal coordinate of a finite element  or a torque to the rotatory DOF of a rigid body.',
     classType=ClassTypeLoad,
+    miniExample=r"""    #a load on one coordinate, growing in time through its user function
+    node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+    def UFload(mbs, t, load):
+        return load*t
+    mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=1, loadUserFunction=UFload))
+
+    mbs.Assemble()
+    mbs.SolveDynamic()
+
+    #q = t^3/6 at t=1
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.1667
+    """,
     examples=['Examples/springDamperTutorial.py', 'Examples/coordinateSpringDamper.py', 'Examples/plotSensorExamples.py', 'Examples/slidercrankWithMassSpring.py', 'TestModels/CoordinateSpringDamperTest.py'],
     detailedDescription=r"""    #### Load and its frame
 

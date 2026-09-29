@@ -90,5 +90,30 @@ Jacobians are computed according to the relative rotation velocity.
 Using this approach, coordinate constraints can be added to mechanisms to purely add internal drives, not affecting global momenta.
 Furthermore, coupling to a relative translation can be used to create advanced mechanisms and gears.
 
+(miniexample-markerbodiesrelativerotationcoordinate)=
+## Mini example
+
+
+```python
+#the rotation of body 1 relative to body 0 about an axis of body 0, held by a coordinate constraint;
+#the data node continues the angle beyond +-pi
+inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0]))
+body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                                     physicsInertia=inertia.GetInertia6D()))
+nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[0]))
+mRel = mbs.AddMarker(MarkerBodiesRelativeRotationCoordinate(bodyNumbers=[oGround, body], axis0=[0,0,1],
+                                                           nodeNumber=nData))
+mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+oHold = mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mRel]))
+mbs.AddLoad(LoadTorqueVector(markerNumber=mbs.AddMarker(MarkerNodeRigid(nodeNumber=node)), loadVector=[0,0,2]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#the constraint holds the relative rotation about z against the torque: its force is the reaction torque
+exu.sys['testResult'] = mbs.GetObjectOutput(oHold, exu.OutputVariableType.Force) #2
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`involuteGearGraphics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py) (Ex), [`relativeRotationTranslationMechanism.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/relativeRotationTranslationMechanism.py) (TM)

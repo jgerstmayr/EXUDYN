@@ -56,5 +56,25 @@ On a node without {ref}`ODE2 <ODE2>` coordinates - `NodePointGround` - the coord
 Jacobian empty, so nothing acts: this is the ground side of a `CoordinateSpringDamper` or a
 `CoordinateConstraint`.
 
+(miniexample-markernodecoordinate)=
+## Mini example
+
+
+```python
+#one coordinate of a node: a coordinate spring between the ground node and a 1D mass
+node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
+mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+mbs.AddObject(ObjectConnectorCoordinateSpringDamper(markerNumbers=[mGround, mCoord], stiffness=100))
+mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=10))
+
+mbs.Assemble()
+mbs.SolveStatic()
+
+#the spring is stretched by F/k
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.1
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`springDamperTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/springDamperTutorial.py) (Ex), [`coordinateSpringDamper.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/coordinateSpringDamper.py) (Ex), [`SliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SliderCrank.py) (Ex), [`plotSensorExamples.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/plotSensorExamples.py) (Ex), [`SpringDamperMassUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SpringDamperMassUserFunction.py) (Ex)

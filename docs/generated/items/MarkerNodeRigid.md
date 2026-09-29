@@ -61,5 +61,26 @@ with respect to the coordinates of the node; for a rigid body node $\LU{0}{\Jm_{
 velocity transformation $\LU{0}{\Gm}$ of its rotation parameters in the rotation columns, see the
 page of the node. For a slope node the orientation is that of its slope vector(s).
 
+(miniexample-markernoderigid)=
+## Mini example
+
+
+```python
+#position and orientation of a rigid body node: a torque spins the body up
+inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
+node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0]))
+mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
+                              physicsInertia=inertia.GetInertia6D()))
+mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))
+mbs.AddLoad(LoadTorqueVector(markerNumber=mNode, loadVector=[0,0,1]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#angle = M/(2*J_zz)*t^2 at t=1
+Jzz = inertia.GetInertia6D()[2]
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2]*2*Jzz #1
+```
+
 
 Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`connectorRigidBodySpringDamperTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorRigidBodySpringDamperTest.py) (TM)

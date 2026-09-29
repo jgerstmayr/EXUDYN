@@ -52,5 +52,28 @@ The parameters of `VMarkerObjectODE2Coordinates`, given as `visualization`:
 The unit matrix of the size of the body's coordinates. On a body without coordinates (ground) the
 values and the Jacobian are empty.
 
+(miniexample-markerobjectode2coordinates)=
+## Mini example
+
+
+```python
+#all coordinates of an object, here of a ObjectGenericODE2 with two free coordinates, tied by a
+#coordinate vector constraint X1 q - X0 q_ground = offset, which is q0 - q1 = 0
+node = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=2, referenceCoordinates=[0,0],
+                                   initialCoordinates=[0,0], initialCoordinates_t=[0,0]))
+oGeneric = mbs.AddObject(ObjectGenericODE2(nodeNumbers=[node], massMatrix=np.eye(2)))
+mAll = mbs.AddMarker(MarkerObjectODE2Coordinates(objectNumber=oGeneric))
+mNone = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nGround)) #the ground node has no coordinates
+mbs.AddObject(ObjectConnectorCoordinateVector(markerNumbers=[mNone, mAll], scalingMarker0=np.zeros((1,0)),
+                                             scalingMarker1=[[1,-1]], offset=[0]))
+mbs.AddLoad(LoadCoordinate(markerNumber=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0)), load=2))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#both coordinates move together: a = F/2 = 1, q1 = a/2*t^2 at t=1
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[1] #0.5
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`coordinateVectorConstraintGenericODE2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py) (TM)

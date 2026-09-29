@@ -75,5 +75,28 @@ The derivative of the Jacobians is not implemented: a connector that needs it ra
 marker; `newton.numericalDifferentiation.forODE2connectors = True` computes the connector's Jacobian
 numerically instead.
 
+(miniexample-markerkinematictreerigid)=
+## Mini example
+
+
+```python
+#a rigid body marker on link 0 of a kinematic tree with one prismatic joint along x
+nTree = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0.], initialCoordinates=[0.],
+                                    initialCoordinates_t=[0.], numberOfODE2Coordinates=1))
+oTree = mbs.AddObject(ObjectKinematicTree(nodeNumber=nTree, jointTypes=[exu.JointType.PrismaticX], linkParents=[-1],
+                                          jointTransformations=exu.Matrix3DList([np.eye(3)]),
+                                          jointOffsets=exu.Vector3DList([[0,0,0]]),
+                                          linkInertiasCOM=exu.Matrix3DList([np.eye(3)]),
+                                          linkCOMs=exu.Vector3DList([[0,0,0]]), linkMasses=[2.]))
+mLink = mbs.AddMarker(MarkerKinematicTreeRigid(objectNumber=oTree, linkNumber=0, localPosition=[0.5,0,0]))
+mbs.AddLoad(LoadForceVector(markerNumber=mLink, loadVector=[1,0,0]))
+
+mbs.Assemble()
+mbs.SolveDynamic()
+
+#q = F/(2m)*t^2 at t=1
+exu.sys['testResult'] = mbs.GetNodeOutput(nTree, exu.OutputVariableType.Coordinates) #0.25
+```
+
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`reinforcementLearningRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reinforcementLearningRobot.py) (Ex), [`serialRobotKinematicTreeDigging.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTreeDigging.py) (Ex), [`stiffFlyballGovernorKT.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernorKT.py) (Ex), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM), [`kinematicTreePrismaticJacobianTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreePrismaticJacobianTest.py) (TM)

@@ -53,3 +53,22 @@ There is no velocity: an {ref}`ODE1 <ODE1>` coordinate has no time derivative of
 
 $\Jm = \ev_i\tp$, a row of the unit matrix. On a node without {ref}`ODE1 <ODE1>` coordinates the value is zero
 and the Jacobian empty.
+
+(miniexample-markernodeode1coordinate)=
+## Mini example
+
+
+```python
+#a coordinate of a first-order system: a constant input to q_t = -q + f
+node = mbs.AddNode(NodeGenericODE1(numberOfODE1Coordinates=1, referenceCoordinates=[0],
+                                   initialCoordinates=[0]))
+mbs.AddObject(ObjectGenericODE1(nodeNumbers=[node], systemMatrix=[[-1]]))
+mCoord = mbs.AddMarker(MarkerNodeODE1Coordinate(nodeNumber=node, coordinate=0))
+mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=1))
+
+mbs.Assemble()
+mbs.SolveDynamic(solverType=exu.DynamicSolverType.RK44)
+
+#q(1) = 1 - exp(-1)
+exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.632
+```
