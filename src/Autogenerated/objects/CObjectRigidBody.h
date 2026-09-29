@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  20:44:07 (last modified)
+* @date         2026-09-29  13:50:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -31,7 +31,7 @@ class CObjectRigidBodyParameters // AUTO:
 {
 public: // AUTO:
     Real physicsMass;                             //!< AUTO: must be >= 0; mass [SI:kg] of rigid body
-    Vector6D physicsInertia;                      //!< AUTO: inertia components [SI:kgm\f$^2\f$]: \f$[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]\f$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to ABRV:COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py and CreateRigidBody(...) of MainSystem to handle inertia, ABRV:COM and mass
+    Vector6D physicsInertia;                      //!< AUTO: inertia components [SI:kgm\f$^2\f$]: \f$[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]\f$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to ABRV:COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, ABRV:COM and mass
     Vector3D physicsCenterOfMass;                 //!< AUTO: local position of ABRV:COM relative to the body's reference point; if the vector of the ABRV:COM is [0,0,0], the computation will not consider additional terms for the ABRV:COM and it is faster
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) for rigid body node
     //! AUTO: default constructor with parameter initialization
@@ -47,7 +47,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectRigidBody
-* @brief        A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about \f$x\f$ or \f$z\f$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class `RigidBodyInertia`, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) and `CreateRigidBody(...)`, see [](#sec-mainsystemextensions-createrigidbody), of `exudyn.rigidBodyUtilities` to handle inertia, ABRV:COM and mass.
+* @brief        A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about \f$x\f$ or \f$z\f$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class `RigidBodyInertia`, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) of `exudyn.rigidBodyUtilities` to handle inertia, ABRV:COM and mass.
 
 ```{image} /docs/figures/ObjectRigidBody.png
 :width: 400

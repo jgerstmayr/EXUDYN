@@ -8,6 +8,8 @@
 
 A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation for the arbitrary disc axis is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.
 
+**Simpler**: [`mbs.CreateRollingDiscPenalty`](#sec-mainsystemextensions-createrollingdiscpenalty) adds this item, with what it needs, in one call.
+
 ## Interface
 
 - Python names: `ObjectConnectorRollingDiscPenalty` or `RollingDiscPenalty`, and `VRollingDiscPenalty` for its visualization

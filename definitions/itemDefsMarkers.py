@@ -38,6 +38,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A marker attached to the body mass; use this marker to apply a body-load (e.g. gravitational force).',
     classType=ClassTypeMarker,
+    examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py'],
     detailedDescription=r"""    #### Marker quantities
 
     None that a connector reads: the marker exists to take a load proportional to the mass of the body,
@@ -100,6 +101,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r"""A position body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position information as well as the according derivatives (=velocity and derivative of position w.r.t. body coordinates). It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerBodyRigid.""",
     classType=ClassTypeMarker,
+    examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidPendulum.py', 'Examples/pendulum2Dconstraint.py', 'Examples/cartesianSpringDamper.py'],
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -171,6 +173,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r"""A rigid-body (position+orientation) body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.""",
     classType=ClassTypeMarker,
+    examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py'],
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -254,6 +257,7 @@ definitions.append(ItemDefinition(
     requestedNodeTypes=[['Position', 'Position2D']],
     overallDescription=r'A node-Marker attached to a position-based node. It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerNodeRigid.',
     classType=ClassTypeMarker,
+    examples=['Examples/doublePendulum2D.py', 'Examples/pendulum2Dconstraint.py', 'Examples/interactiveTutorial.py', 'Examples/simple4linkPendulumBing.py', 'TestModels/connectorGravityTest.py'],
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -314,6 +318,7 @@ definitions.append(ItemDefinition(
     requestedNodeTypes=[['Position', 'Position2D'], ['Orientation', 'Orientation2D']],
     overallDescription=r'A rigid-body (position+orientation) node-marker attached to a rigid-body node. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.',
     classType=ClassTypeMarker,
+    examples=['TestModels/connectorRigidBodySpringDamperTest.py'],
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -383,6 +388,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r"""A node-Marker attached to a ABRV:ODE2 coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinate`.""",
     classType=ClassTypeMarker,
+    examples=['Examples/springDamperTutorial.py', 'Examples/coordinateSpringDamper.py', 'Examples/SliderCrank.py', 'Examples/plotSensorExamples.py', 'Examples/SpringDamperMassUserFunction.py'],
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |

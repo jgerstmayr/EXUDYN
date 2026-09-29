@@ -16,6 +16,8 @@ A revolute joint in 3D; constrains the position of two rigid body markers and th
 :width: 400
 ```
 
+**Simpler**: [`mbs.CreateRevoluteJoint`](#sec-mainsystemextensions-createrevolutejoint) adds this item, with what it needs, in one call.
+
 ## Interface
 
 - Python names: `ObjectJointRevoluteZ` or `RevoluteJointZ`, and `VRevoluteJointZ` for its visualization
@@ -152,4 +154,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addRevoluteJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py) (Ex), [`rigidBodyTutorial3withMarkers.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3withMarkers.py) (Ex), [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`chatGPTupdate.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py) (Ex), [`chatGPTupdate2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py) (Ex), [`involuteGearGraphics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py) (Ex), [`multiMbsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/multiMbsTest.py) (Ex), [`pistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pistonEngine.py) (Ex), [`pymeshlabFileImport.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pymeshlabFileImport.py) (Ex), [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`rollerBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rollerBearningModel.py) (Ex), [`solutionViewerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/solutionViewerTest.py) (Ex), [`plotSensorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/plotSensorTest.py) (TM), [`revoluteJointPrismaticJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/revoluteJointPrismaticJointTest.py) (TM), [`bricardMechanism.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py) (TM), ...
+Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`rigidBodyTutorial3withMarkers.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3withMarkers.py) (Ex)

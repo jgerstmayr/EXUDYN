@@ -8,6 +8,8 @@
 
 Load with (3D) force vector; attached to position-based marker.
 
+**Simpler**: [`mbs.CreateForce`](#sec-mainsystemextensions-createforce) adds this item, with what it needs, in one call.
+
 ## Interface
 
 - Python names: `LoadForceVector` or `Force`, and `VForce` for its visualization
@@ -80,4 +82,4 @@ def UFforce(mbs, t, loadVector):
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`interactiveTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/interactiveTutorial.py) (Ex), [`NGsolveFFRFSlidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py) (Ex), [`NGsolveModalAnalysis.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveModalAnalysis.py) (Ex), [`pendulumVerify.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumVerify.py) (Ex), [`ROSMassPoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMassPoint.py) (Ex), [`solutionViewerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/solutionViewerTest.py) (Ex), [`SpringDamperMassUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SpringDamperMassUserFunction.py) (Ex), [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`cartesianSpringDamper.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamper.py) (Ex), [`cartesianSpringDamperUserFunction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/cartesianSpringDamperUserFunction.py) (Ex), [`chatGPTupdate.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py) (Ex), [`chatGPTupdate2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py) (Ex), [`ANCFCableBeamDampingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py) (TM), [`plotSensorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/plotSensorTest.py) (TM), [`revoluteJointPrismaticJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/revoluteJointPrismaticJointTest.py) (TM), ...
+Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`springDamperTutorialNew.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/springDamperTutorialNew.py) (Ex), [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`rigidPendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidPendulum.py) (Ex), [`doublePendulum2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/doublePendulum2D.py) (Ex), [`pendulum2Dconstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulum2Dconstraint.py) (Ex)

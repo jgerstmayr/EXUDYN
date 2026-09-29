@@ -8,6 +8,8 @@
 
 Connector which enforces constant or prescribed distance between two bodies/nodes.
 
+**Simpler**: [`mbs.CreateDistanceConstraint`](#sec-mainsystemextensions-createdistanceconstraint) adds this item, with what it needs, in one call.
+
 ## Interface
 
 - Python names: `ObjectConnectorDistance` or `DistanceConstraint`, and `VDistanceConstraint` for its visualization
@@ -115,4 +117,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chatGPTupdate.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py) (Ex), [`chatGPTupdate2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py) (Ex), [`newtonsCradle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/newtonsCradle.py) (Ex), [`HydraulicActuatorStaticInitialization.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/HydraulicActuatorStaticInitialization.py) (Ex), [`pendulum2Dconstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulum2Dconstraint.py) (Ex), [`pendulumIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumIftommBenchmark.py) (Ex), [`fourBarMechanismTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/fourBarMechanismTest.py) (TM), [`createFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py) (TM), [`deleteItemsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/deleteItemsTest.py) (TM), [`mainSystemExtensionsTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py) (TM), [`taskmanagerTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/taskmanagerTest.py) (TM), [`coordinateVectorConstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraint.py) (TM), [`coordinateVectorConstraintGenericODE2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateVectorConstraintGenericODE2.py) (TM), [`MathematicalPendulumTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/MathematicalPendulumTest.py) (TM), [`PARTS_ATEs_moving.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/PARTS_ATEs_moving.py) (TM)
+Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`pendulum2Dconstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulum2Dconstraint.py) (Ex), [`MathematicalPendulumTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/MathematicalPendulumTest.py) (TM), [`fourBarMechanismTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/fourBarMechanismTest.py) (TM)

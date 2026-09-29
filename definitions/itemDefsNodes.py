@@ -38,6 +38,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 3D point node for point masses or solid finite elements which has 3 displacement degrees of freedom for ABRV:ODE2.""",
     classType=ClassTypeNode,
+    examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorial.py', 'Examples/springDamperTutorialNew.py', 'Examples/cartesianSpringDamper.py', 'Examples/coordinateSpringDamper.py'],
     miniExample=r"""    #a point mass moving freely: reference position, initial displacement and initial velocity
     node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0],
                                  initialCoordinates=[0,0.5,0],   #displacement from the reference
@@ -166,6 +167,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 2D point node for point masses or solid finite elements which has 2 displacement degrees of freedom for ABRV:ODE2.""",
     classType=ClassTypeNode,
+    examples=['Examples/pendulum2Dconstraint.py', 'Examples/SliderCrank.py', 'Examples/SpringDamperMassUserFunction.py', 'Examples/slidercrankWithMassSpring.py'],
     miniExample=r"""    #a planar point mass under gravity, thrown with an initial velocity
     node = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0], initialVelocities=[1,2]))
     oMass = mbs.AddObject(ObjectMassPoint2D(nodeNumber=node, physicsMass=1))
@@ -292,6 +294,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeRigidBody,
     overallDescription=r"""A 3D rigid body node based on Euler parameters for rigid bodies or beams. The node has 3 displacement coordinates (representing displacement of reference point $\LU{0}{\rv}$) and four rotation coordinates (Euler parameters = unit quaternions).""",
     classType=ClassTypeNode,
+    examples=['Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py'],
     miniExample=r"""    #a rigid body spinning about its z-axis; the velocity coordinates are the time derivatives of the Euler parameters
     omega = [0,0,0.5*np.pi]
     ep0 = eulerParameters0
@@ -498,6 +501,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeRigidBody,
     overallDescription=r"""A 3D rigid body node based on Euler / Tait-Bryan angles for rigid bodies or beams. All coordinates lead to second order differential equations; NOTE: this node has a singularity if the second rotation parameter reaches $\psi_1 = (2k-1) \pi/2$, with $k \in \Ncal$ or $-k \in \Ncal$.""",
     classType=ClassTypeNode,
+    examples=['TestModels/connectorRigidBodySpringDamperTest.py', 'TestModels/heavyTop.py'],
     miniExample=r"""    #a rigid body spinning about its z-axis; the rotation coordinates are Tait-Bryan angles
     node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0],
                                          initialVelocities=[0,0,0, 0,0,0.5*np.pi])) #angle rates
@@ -832,6 +836,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 2D rigid body node for rigid bodies or beams. The node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: $\psi_0$). All coordinates are ABRV:ODE2, used for second order differetial equations.""",
     classType=ClassTypeNode,
+    examples=['Examples/rigidPendulum.py', 'Examples/doublePendulum2D.py', 'Examples/SliderCrank.py', 'Examples/simple4linkPendulumBing.py', 'Examples/slidercrankWithMassSpring.py'],
     miniExample=r"""    #a planar rigid body: x, y and the rotation angle, thrown with a spin
     node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0], initialVelocities=[1,0,2]))
     mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
@@ -1942,6 +1947,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 3D point node fixed to ground which is similar to NodePoint, but it does not generate coordinates. Applied or reaction forces do not have any effect. This node can be used for 'blind' or 'dummy' ABRV:ODE2 and ABRV:ODE1 coordinates to which CoordinateSpringDamper or CoordinateConstraint objects are attached to.""",
     classType=ClassTypeNode,
+    examples=['Examples/springDamperTutorial.py', 'Examples/coordinateSpringDamper.py', 'Examples/SliderCrank.py', 'Examples/plotSensorExamples.py', 'Examples/SpringDamperMassUserFunction.py'],
     miniExample=r"""    #a ground node: a fixed point that markers and connectors can use, without coordinates
     node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
     mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))

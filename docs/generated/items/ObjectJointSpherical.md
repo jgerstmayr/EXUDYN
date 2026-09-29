@@ -12,6 +12,8 @@ A spherical joint, which constrains the relative translation between two positio
 :width: 400
 ```
 
+**Simpler**: [`mbs.CreateSphericalJoint`](#sec-mainsystemextensions-createsphericaljoint) adds this item, with what it needs, in one call.
+
 ## Interface
 
 - Python names: `ObjectJointSpherical` or `SphericalJoint`, and `VSphericalJoint` for its visualization
@@ -130,4 +132,4 @@ The position jacobians are added to the system jacobian at rows according to the
 and the columns are determined by the coordinate indices of the bodies' coordinates.
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveLinearFEM.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveLinearFEM.py) (Ex), [`newtonsCradle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/newtonsCradle.py) (Ex), [`NGsolveCreateFFRFreducedOrder.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCreateFFRFreducedOrder.py) (Ex), [`bungeeJump.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bungeeJump.py) (Ex), [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`NGsolveFFRFSlidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py) (Ex), [`NGsolvePostProcessingStresses.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePostProcessingStresses.py) (Ex), [`objectFFRFreducedOrderNetgen.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/objectFFRFreducedOrderNetgen.py) (Ex), [`sliderCrank3DwithANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive.py) (Ex), [`ACFtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ACFtest.py) (TM), [`ANCFThinPlateTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py) (TM), [`createFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/createFunctionsTest.py) (TM), [`driveTrainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/driveTrainTest.py) (TM), [`mainSystemExtensionsTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/mainSystemExtensionsTests.py) (TM), ...
+Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`sphericalJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphericalJointTest.py) (TM), [`genericJointUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericJointUserFunctionTest.py) (TM), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM)

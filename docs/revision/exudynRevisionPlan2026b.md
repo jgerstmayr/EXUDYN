@@ -2808,9 +2808,11 @@ What depends on it: the graphics regression test takes every item through its Mi
         **the general section of a kind is a page of its own** (maintainer): *Node* -> *General info
         for all nodes* with its sub-sections -> `NodePoint`, `NodePoint2D`, ... as siblings; no
         *Items* heading.
-      - **RG13.5.0.6** (#2737) - **the two parts of the frame left open by RG13.4**: each page names
-        the Create functions that add the item, recorded by running them (a static scan misses what an
-        argument selects), and the five plainest examples come first.
+      - **RG13.5.0.6** **DONE 2026-09-29** (#2737) — [log](exudynRevisionLog2026b.md#rg13-5-0-6) -
+        **the Create functions and the examples of a page, declared** (maintainer): a line
+        **Simpler** before the parameters names the Create functions that add an object or load
+        (`createFunctions`), and mentions of them in the texts are kept to that line; the basic items
+        and all sensors name their examples (`examples`), the others keep the search by name.
     - **RG13.5.1** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-1) - nodes - the
       table of coordinates, the frame and interpretation, the action on the equations of motion,
       constraints, singularities; the slopes of the slope nodes. Found on the way: the Euler parameter
@@ -2899,7 +2901,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
-| RG13.5.0.6 | #2737 | item pages: the Create functions that add the item; the plainest examples first |
 | RG13.5.3.1 | #2738 | two markers keep text in HTML comments |
 | RG13.5.2 | #2725 | the page of `ObjectBeamGeometricallyExact`, after RG4.8 |
 | RG13.6 | #2732 | a MiniExample for every item; nodes, markers, loads and sensors first |

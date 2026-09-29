@@ -2434,7 +2434,7 @@ class VObjectRigidBody:
 class ObjectRigidBody:
     """A 3D rigid body which is attached to a 3D rigid body node.
     
-    The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about :math:`x` or :math:`z` axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class ``RigidBodyInertia``, see sec-rigidbodyutilities-rigidbodyinertia---init-- and ``CreateRigidBody(...)``, see sec-mainsystemextensions-createrigidbody, of ``exudyn.rigidBodyUtilities`` to handle inertia, COM and mass.
+    The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about :math:`x` or :math:`z` axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class ``RigidBodyInertia``, see sec-rigidbodyutilities-rigidbodyinertia---init-- of ``exudyn.rigidBodyUtilities`` to handle inertia, COM and mass.
     
     ```{image} /docs/figures/ObjectRigidBody.png
     :width: 400
@@ -2445,7 +2445,7 @@ class ObjectRigidBody:
 
         physicsMass: mass [SI:kg] of rigid body; type: float
 
-        physicsInertia: inertia components [SI:kgm:math:`^2`]: :math:`[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]` in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py and CreateRigidBody(...) of MainSystem to handle inertia, COM and mass; type: array_like
+        physicsInertia: inertia components [SI:kgm:math:`^2`]: :math:`[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]` in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, COM and mass; type: array_like
 
         physicsCenterOfMass: local position of COM relative to the body's reference point; if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster; type: [float,float,float]
 

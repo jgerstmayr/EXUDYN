@@ -6744,3 +6744,28 @@ heading *Items*, so an item was one level deeper than the general text.
 generated table of all markers. The page of the kind keeps its title and paragraph, and its toctree
 lists the general page first and then the items. 10 general pages; *Objects (Object)* has no general
 section and gets none. The definitions are unchanged, and no page linked the old sections.
+
+<a id="rg13-5-0-6"></a>
+### RG13.5.0.6 — the Create functions and the examples of an item page (2026-09-29, #2737)
+
+Decided by the maintainer: the hint to the Create functions stands **before the parameters**, brief,
+so that a reader learns early that there is a simpler way - and the texts mention them no more than
+necessary; the examples of the basic items are **chosen in the definition**, because no rule finds
+suitable ones, and the search by name stays for the others.
+
+- `createFunctions=['CreateRigidBody']` in 20 objects and 3 loads - every `mbs.Create...` function and
+  the object or load it exists for; `LoadMassProportional` names `CreateMassPoint` and
+  `CreateRigidBody` (their `gravity`). The page shows **Simpler**: *`mbs.CreateRigidBody` adds this
+  item, with what it needs, in one call*, linked, under the class description. The emitter fails on a
+  name that is no function of `mainSystemExtensions.py`. `ObjectRigidBody` named `CreateRigidBody`
+  three times - class description, `physicsInertia`, the end of its text -; now the line only.
+- `examples=[...]` in 39 items - point mass and rigid body nodes, objects, joints and connectors, their
+  markers, the loads, the sensors: up to five, tutorials first, from 21 plain examples and the 60
+  shortest test models that name the item or its Create function; test models that test something else
+  (type information, pickling, deleting, sparse matrices) left out. The proposal was computed once and
+  written into the definitions, where it is edited by hand from now on. The emitter fails on a file
+  that does not exist. 7 basic items had no match and keep the search by name
+  (`NodeRigidBodyRotVecLG`, `Node1D`, the two 1D masses, `ObjectConnectorTorsionalSpringDamper`, `ObjectJointPrismatic2D`, `SensorSuperElement`).
+
+Running the Create functions to record what they add, as RG13.4 proposed, is not needed: the
+declaration is short and checked.

@@ -38,6 +38,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to a node, which measures one of the output variables of the node.""",
     classType=ClassTypeSensor,
+    examples=['Examples/plotSensorExamples.py', 'TestModels/sensorUserFunctionTest.py', 'TestModels/springDamperUserFunctionTest.py', 'TestModels/rigidBodyCOMtest.py', 'TestModels/plotSensorTest.py'],
     detailedDescription=r"""    #### Attached to
 
     The node `nodeNumber`: every node, with ABRV:ODE2, ABRV:ODE1 or other coordinates.
@@ -114,6 +115,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to an object other than a body - a connector, a constraint, a joint - which measures one of the output variables of the object; a body is measured at a point, with SensorBody.""",
     classType=ClassTypeSensor,
+    examples=['Examples/springDamperTutorial.py', 'Examples/springDamperTutorialNew.py', 'Examples/pendulum2Dconstraint.py', 'Examples/plotSensorExamples.py'],
     detailedDescription=r"""    #### Attached to
 
     The object `objectNumber`, usually a connector, constraint or joint, which is measured as a whole and
@@ -191,6 +193,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to a body at a local position $\pLocB$, which measures one of the output variables of the body at that point.""",
     classType=ClassTypeSensor,
+    examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py'],
     detailedDescription=r"""    #### Attached to
 
     The body `bodyNumber`, at the point `localPosition` $\pLocB$. The local position is given in the
@@ -365,6 +368,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to a link $n_l$ of an ObjectKinematicTree at a local position $\pLocB$ in the frame of the link, which measures one of the output variables of the kinematic tree at that point.""",
     classType=ClassTypeSensor,
+    examples=['TestModels/kinematicTreeConstraintTest.py'],
     detailedDescription=r"""    #### Attached to
 
     The `ObjectKinematicTree` `objectNumber`, at its link `linkNumber` $n_l$ and the point
@@ -458,6 +462,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to a marker, which measures what the marker provides, in the current configuration.""",
     classType=ClassTypeSensor,
+    examples=['TestModels/plotSensorTest.py', 'TestModels/pendulumFriction.py'],
     detailedDescription=r"""    #### Attached to
 
     The marker `markerNumber`, any kind of marker.
@@ -541,6 +546,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to a load, which measures the value of the load.""",
     classType=ClassTypeSensor,
+    examples=['TestModels/springDamperUserFunctionTest.py', 'TestModels/plotSensorTest.py'],
     detailedDescription=r"""    #### Attached to
 
     The load `loadNumber`.
@@ -632,6 +638,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCSensor,
     overallDescription=r'A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors and recombine the output into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.',
     classType=ClassTypeSensor,
+    examples=['TestModels/sensorUserFunctionTest.py'],
     detailedDescription=r"""    The sensor collects data via a user function, which completely describes the output itself.
     Note that the sensorNumbers and factors need to be consistent. 
     The return value of the user function is a list of `float` numbers which cast to a `std::vector` in pybind.

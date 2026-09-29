@@ -6,11 +6,13 @@
 (sec-item-objectrigidbody)=
 # ObjectRigidBody
 
-A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class `RigidBodyInertia`, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) and `CreateRigidBody(...)`, see [](#sec-mainsystemextensions-createrigidbody), of `exudyn.rigidBodyUtilities` to handle inertia, {ref}`COM <COM>` and mass.
+A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class `RigidBodyInertia`, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) of `exudyn.rigidBodyUtilities` to handle inertia, {ref}`COM <COM>` and mass.
 
 ```{image} /docs/figures/ObjectRigidBody.png
 :width: 400
 ```
+
+**Simpler**: [`mbs.CreateRigidBody`](#sec-mainsystemextensions-createrigidbody) adds this item, with what it needs, in one call.
 
 ## Interface
 
@@ -26,7 +28,7 @@ The parameters of the item; in a dictionary, its type is 'RigidBody':
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **physicsMass** $m$ | UReal |  | 0. | mass [SI:kg] of rigid body |
-| **physicsInertia** $\LU{b}{\jv_6}$ | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to {ref}`COM <COM>`; use the class RigidBodyInertia of exudynRigidBodyUtilities.py and CreateRigidBody(...) of MainSystem to handle inertia, {ref}`COM <COM>` and mass |
+| **physicsInertia** $\LU{b}{\jv_6}$ | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to {ref}`COM <COM>`; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, {ref}`COM <COM>` and mass |
 | **physicsCenterOfMass** $\LU{b}{\bv_{COM}}$ | Vector3D | 3 | [0.,0.,0.] | local position of {ref}`COM <COM>` relative to the body's reference point; if the vector of the {ref}`COM <COM>` is [0,0,0], the computation will not consider additional terms for the {ref}`COM <COM>` and it is faster |
 | **nodeNumber** $n0$ | NodeIndex |  | invalid (-1) | node number (type NodeIndex) for rigid body node |
 | **visualization** | VObjectRigidBody |  |  | parameters for visualization of item |
@@ -234,9 +236,6 @@ position then acts on the rotation coordinates with the moment it has about the 
 The mass-weighted Jacobian of a mass-proportional load is $m$ times the position Jacobian of the
 center of mass.
 
-For creating a `ObjectRigidBody`, use `CreateRigidBody`, see
-[](#sec-mainsystemextensions-createrigidbody).
-
 **Userfunction**: `graphicsDataUserFunction(mbs, itemNumber)`
 A user function, which is called by the visualization thread in order to draw user-defined objects.
 The function can be used to generate any `BodyGraphicsData`, see Section [](#sec-graphicsdata).
@@ -253,4 +252,4 @@ For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-obj
 | **return value** | BodyGraphicsData | list of `GraphicsData` dictionaries, see Section [](#sec-graphicsdata) |
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigid3Dexample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigid3Dexample.py) (Ex), [`rigidBodyIMUtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyIMUtest.py) (Ex), [`addPrismaticJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addPrismaticJoint.py) (Ex), [`addRevoluteJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/addRevoluteJoint.py) (Ex), [`ANCFrotatingCable2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFrotatingCable2D.py) (Ex), [`ANCFslidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint.py) (Ex), [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`bungeeJump.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bungeeJump.py) (Ex), [`camFollowerExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/camFollowerExample.py) (Ex), [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`chatGPTupdate.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py) (Ex), [`explicitLieGroupIntegratorPythonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorPythonTest.py) (TM), [`explicitLieGroupIntegratorTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupIntegratorTest.py) (TM), [`explicitLieGroupMBSTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/explicitLieGroupMBSTest.py) (TM), ...
+Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`rigidBodyTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial.py) (Ex), [`rigidBodyTutorial2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial2.py) (Ex), [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`rigidBodyTutorial3withMarkers.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3withMarkers.py) (Ex), [`fourBarMechanism3D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/fourBarMechanism3D.py) (Ex)

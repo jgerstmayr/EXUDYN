@@ -10,6 +10,8 @@ A simple contact connector between two spheres, using various contact models and
 
 Authors: Gerstmayr Johannes, Weyrer Sebastian
 
+**Simpler**: [`mbs.CreateSphereSphereContact`](#sec-mainsystemextensions-createspherespherecontact) adds this item, with what it needs, in one call.
+
 ## Interface
 
 - Nodes it takes: [](#sec-item-nodegenericdata)

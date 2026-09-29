@@ -782,10 +782,16 @@ def ExampleKeywords(itemType, itemName, itemShortName=''):
     return keywords
 
 
-def KeywordExamplesMarkdown(itemType, itemName, itemShortName=''):
+def KeywordExamplesMarkdown(itemType, itemName, itemShortName='', examples=None):
     """The examples and test models that use this item or function, as a Markdown line of links.
     It stops after a fixed number of files - an item that appears in fifty examples would otherwise
-    push its own description off the page."""
+    push its own description off the page. examples, paths relative to python/, replaces the search
+    by the ones the definition chose (#2737)."""
+    if examples is not None:
+        links = ['[`' + name.split('/')[-1] + '`](' + paths.githubSourceURL + name + ')'
+                 + (' (Ex)' if name.startswith('Examples/') else ' (TM)') for name in examples]
+        return ('\nExamples (Ex) and TestModels (TM) that show this item, with weblink to github: '
+                + ', '.join(links) + '\n\n') if len(links) != 0 else ''
     keywords = ExampleKeywords(itemType, itemName, itemShortName)
     maxExamples = 5 if itemType == 'UtilityFunction' else 12
 

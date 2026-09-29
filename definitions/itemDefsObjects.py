@@ -61,6 +61,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     overallDescription='A ground object behaving like a rigid body, but having no degrees of freedom. Used to attach body-connectors without an action. For examples see spring dampers and joints.',
     classType=ClassTypeObject,
+    createFunctions=['CreateGround'],
+    examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py'],
     detailedDescription=r"""    #### Equations
 
     `ObjectGround` has no coordinates and no equations: it is a fixed body to which joints, connectors
@@ -208,6 +210,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     overallDescription=r'A 3D mass point which is attached to a position-based node, usually NodePoint.',
     classType=ClassTypeObject,
+    createFunctions=['CreateMassPoint'],
+    examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorial.py', 'Examples/springDamperTutorialNew.py', 'Examples/cartesianSpringDamper.py', 'Examples/coordinateSpringDamper.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -336,6 +340,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     overallDescription=r'A 2D mass point which is attached to a position-based 2D node.',
     classType=ClassTypeObject,
+    createFunctions=['CreateMassPoint'],
+    examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/pendulum2Dconstraint.py', 'Examples/cartesianSpringDamper.py', 'Examples/SliderCrank.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -749,13 +755,15 @@ definitions.append(ItemDefinition(
     static constexpr Index nDisplacementCoordinates = 3; //code currently implemented for 3 displacemnet coordinates; this constant used to change this in future implementation
 """,
     cParentClass=ParentClassCObjectBody,
-    overallDescription=r"""A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class `RigidBodyInertia`, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) and `CreateRigidBody(...)`, see [](#sec-mainsystemextensions-createrigidbody), of `exudyn.rigidBodyUtilities` to handle inertia, ABRV:COM and mass. 
+    overallDescription=r"""A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class `RigidBodyInertia`, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) of `exudyn.rigidBodyUtilities` to handle inertia, ABRV:COM and mass. 
 
 ```{image} /docs/figures/ObjectRigidBody.png
 :width: 400
 ```
 """,
     classType=ClassTypeObject,
+    createFunctions=['CreateRigidBody'],
+    examples=['Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py'],
     detailedDescription=r"""    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
     #### Definition of quantities
@@ -938,9 +946,6 @@ definitions.append(ItemDefinition(
     position then acts on the rotation coordinates with the moment it has about the reference point.
     The mass-weighted Jacobian of a mass-proportional load is $m$ times the position Jacobian of the
     center of mass.
-
-    For creating a `ObjectRigidBody`, use `CreateRigidBody`, see
-    [](#sec-mainsystemextensions-createrigidbody).
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeBody,
@@ -972,7 +977,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TVectorND(6), destination=DestComp+DestParam,
             pythonName='physicsInertia',
             defaultValue='Vector6D({0.,0.,0., 0.,0.,0.})',
-            description=r"""$\LU{b}{\jv_6}$inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to ABRV:COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py and CreateRigidBody(...) of MainSystem to handle inertia, ABRV:COM and mass"""),
+            description=r"""$\LU{b}{\jv_6}$inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to ABRV:COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, ABRV:COM and mass"""),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
             pythonName='physicsCenterOfMass',
             defaultValue=DVZeroVector3D,
@@ -1078,6 +1083,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectBody,
     overallDescription=r'A 2D rigid body which is attached to a rigid body 2D node. The body obtains coordinates, position, velocity, etc. from the underlying 2D node.',
     classType=ClassTypeObject,
+    createFunctions=['CreateRigidBody'],
+    examples=['Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/rigidPendulum.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -1888,6 +1895,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     cParentClass=ParentClassCObjectSuperElement,
     overallDescription=r"""A special object to represent open kinematic trees using minimal coordinate formulation. The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc. per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl. translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.""",
     classType=ClassTypeObject,
+    createFunctions=['CreateKinematicTree'],
     detailedDescription=r"""    <!-- -->
 
     (sec-kinematictree-additionaloutput)=
@@ -5487,6 +5495,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'An simple spring-damper element with additional force, connecting to position-based markers.',
     classType=ClassTypeObject,
+    createFunctions=['CreateSpringDamper'],
+    examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/SpringDamperMassUserFunction.py', 'TestModels/loadUserFunctionTest.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -5840,6 +5850,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'An 3D spring-damper element, providing springs and dampers in three (global) directions (x,y,z); the connector can be attached to position-based markers.',
     classType=ClassTypeObject,
+    createFunctions=['CreateCartesianSpringDamper'],
+    examples=['Examples/cartesianSpringDamper.py', 'TestModels/CartesianSpringDamperTest.py', 'TestModels/sphericalJointTest.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -6148,6 +6160,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers. It represents a penalty-based rigid joint (or prismatic, revolute, etc.)',
     classType=ClassTypeObject,
+    createFunctions=['CreateRigidBodySpringDamper'],
+    examples=['TestModels/connectorRigidBodySpringDamperTest.py', 'TestModels/rigidBodySpringDamperIntrinsic.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | input parameter | symbol | description |
@@ -6636,6 +6650,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""An torsional spring-damper element acting on relative rotations around Z-axis of local joint0 coordinate system. It connects to orientation-based markers; if other rotation axis than the local joint0 Z axis shall be used, the joint rotationMarker0 / rotationMarker1 may be used. The joint perfectly extends a RevoluteJoint with a spring-damper, which can also be used to represent feedback control in an elegant and efficient way, by chosing appropriate user functions. It also allows to measure continuous / infinite rotations by making use of a NodeGeneric which compensates $\pm \pi$ jumps in the measured rotation (`OutputVariableType.Rotation`).""",
     classType=ClassTypeObject,
+    createFunctions=['CreateTorsionalSpringDamper'],
     detailedDescription=r"""    #### Definition of quantities
 
     | input parameter | symbol | description |
@@ -6873,6 +6888,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A 1D (scalar) spring-damper element acting on single ABRV:ODE2 coordinates and connecting to coordinate-based markers. NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.""",
     classType=ClassTypeObject,
+    examples=['Examples/springDamperTutorial.py', 'Examples/coordinateSpringDamper.py', 'Examples/plotSensorExamples.py', 'Examples/slidercrankWithMassSpring.py', 'TestModels/CoordinateSpringDamperTest.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -8265,6 +8281,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'Connector which enforces constant or prescribed distance between two bodies/nodes.',
     classType=ClassTypeObject,
+    createFunctions=['CreateDistanceConstraint'],
+    examples=['Examples/pendulum2Dconstraint.py', 'TestModels/MathematicalPendulumTest.py', 'TestModels/fourBarMechanismTest.py'],
     detailedDescription=r"""    #### Definition of quantities
 
 
@@ -8457,6 +8475,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A coordinate constraint which constrains two (scalar) coordinates of Marker[Node|Body]Coordinates attached to nodes or bodies. The constraint acts directly on coordinates, but does not include reference values, e.g., of nodal values. This constraint is computationally efficient and should be used to constrain nodal coordinates.',
     classType=ClassTypeObject,
+    createFunctions=['CreateCoordinateConstraint'],
+    examples=['Examples/SliderCrank.py', 'Examples/SpringDamperMassUserFunction.py', 'Examples/slidercrankWithMassSpring.py', 'TestModels/SwitchingConstraintsTest.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -8910,6 +8930,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'A (flexible) connector representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body, not moving) in global $x$-$y$ plane. The connector is based on a penalty formulation and adds friction and slipping. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. Parameters may need to be adjusted for better convergence (e.g., dryFrictionProportionalZone). The formulation for the arbitrary disc axis is still under development and needs further testing. Note that the rolling body must have the reference point at the center of the disc.',
     classType=ClassTypeObject,
+    createFunctions=['CreateRollingDiscPenalty'],
     detailedDescription=r"""    #### Definition of quantities
 
     <!--
@@ -10415,6 +10436,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'A simple contact connector between two spheres, using various contact models and the option for contact of sphere inside hollow sphere (marker1). The connector implements at least the same functionality as in GeneralContact and is intended for simple setups and for testing, while GeneralContact is much more efficient due to parallelization approaches and efficient contact search.',
     classType=ClassTypeObject,
+    createFunctions=['CreateSphereSphereContact'],
     detailedDescription=r"""    #### Definition of quantities
 
 
@@ -10973,6 +10995,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'A simple contact connector between a sphere (marker0) and a triangle (marker1). Penalty-based contact is computed from penetration of the sphere with the triangle, including contact with edges if desired.',
     classType=ClassTypeObject,
+    createFunctions=['CreateSphereTriangleContact', 'CreateSphereQuadContact'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -11401,6 +11424,8 @@ definitions.append(ItemDefinition(
 ```
 """,
     classType=ClassTypeObject,
+    createFunctions=['CreateGenericJoint'],
+    examples=['Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py', 'TestModels/genericJointUserFunctionTest.py'],
     detailedDescription=r"""    (sec-objectjointgeneric-definitionofquantities)=
     #### Definition of quantities
 
@@ -11662,6 +11687,8 @@ definitions.append(ItemDefinition(
 ```
 """,
     classType=ClassTypeObject,
+    createFunctions=['CreateRevoluteJoint'],
+    examples=['Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py'],
     detailedDescription=r"""    (sec-objectjointrevolutez-definitionofquantities)=
     #### Definition of quantities
 
@@ -11863,6 +11890,8 @@ definitions.append(ItemDefinition(
 ```
 """,
     classType=ClassTypeObject,
+    createFunctions=['CreatePrismaticJoint'],
+    examples=['TestModels/revoluteJointPrismaticJointTest.py'],
     detailedDescription=r"""    (sec-objectjointprismaticx-definitionofquantities)=
     #### Definition of quantities
 
@@ -12048,6 +12077,8 @@ definitions.append(ItemDefinition(
 ```
 """,
     classType=ClassTypeObject,
+    createFunctions=['CreateSphericalJoint'],
+    examples=['TestModels/sphericalJointTest.py', 'TestModels/genericJointUserFunctionTest.py', 'TestModels/kinematicTreeConstraintTest.py'],
     detailedDescription=r"""    #### Definition of quantities
 
 
@@ -12220,6 +12251,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly). The ground body can be a rigid body which is moving. In this case, the flat surface is assumed to be in the $x$-$y$-plane at $z=0$. Note that the rolling body must have the reference point at the center of the disc. NOTE: the cases of normal other than $z$-direction, wheel axis other than $x$-axis and moving ground body needs to be tested further, check your results!',
     classType=ClassTypeObject,
+    createFunctions=['CreateRollingDisc'],
     detailedDescription=r"""    #### Definition of quantities
 
 
@@ -12422,6 +12454,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers',
     classType=ClassTypeObject,
+    examples=['Examples/rigidPendulum.py', 'Examples/doublePendulum2D.py', 'Examples/SliderCrank.py', 'Examples/simple4linkPendulumBing.py', 'Examples/slidercrankWithMassSpring.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |

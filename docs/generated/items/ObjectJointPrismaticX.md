@@ -12,6 +12,8 @@ A prismatic joint in 3D; constrains the relative rotation of two rigid body mark
 :width: 400
 ```
 
+**Simpler**: [`mbs.CreatePrismaticJoint`](#sec-mainsystemextensions-createprismaticjoint) adds this item, with what it needs, in one call.
+
 ## Interface
 
 - Python names: `ObjectJointPrismaticX` or `PrismaticJointX`, and `VPrismaticJointX` for its visualization
@@ -128,4 +130,4 @@ $$
 $$
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`revoluteJointPrismaticJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/revoluteJointPrismaticJointTest.py) (TM)
+Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`revoluteJointPrismaticJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/revoluteJointPrismaticJointTest.py) (TM)

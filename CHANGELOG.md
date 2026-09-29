@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 139 | 1.12.145 |
+| 1.12 | Metheney | 140 | 1.12.146 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.146** `DOCU` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` item pages: which Create functions add the item, and the plainest examples first (#2737)
+  - description: Left open by the development documents of revision2026b step RG13.4 (\#2721), folded into definitions/README.md in RG13.4.6: (1) each item page names the Create functions that add it, and each Create function names the items it adds - measured by running each Create function on a small model, because a static scan misses what an argument selects (CreateRigidBody makes one of four nodes, CreateForce one of two markers); open whether it runs inside generate or writes a JSON file the emitter reads; (2) the examples and test models of a page, today up to 129 links in file order, with the five plainest (shortest) first. revision2026b step RG13.5.0.6.
+  - **notes:** The page of an object or load that a Create function adds says so before its parameters - 'Simpler: mbs.CreateRigidBody adds this item, with what it needs, in one call' -, and the pages of the point mass and rigid body items and of all sensors list a few plain examples, tutorials first, instead of every script that names the item.
+  - date resolved: **2026-09-29 13:56**, date raised: 2026-09-29
 - **1.12.145** `DOCU` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` items reference manual: the general section of a kind is a page of its own, next to the items (#2739)
   - description: The maintainer, 2026-09-29: the page of a kind (Node, Object (Body), ...) holds its general section and then the items under a heading 'Items', so the items sit one level deeper than the general text in the navigation. Wanted: Node -\> 'General info for all nodes' (with its sub-sections) -\> NodePoint, NodePoint2D, ... as siblings, without an 'Items' heading. The emitter writes the general section as a page of its own, \<kind\>General.md, first in the toctree of the kind. revision2026b step RG13.5.0.7.
   - **notes:** The items reference manual lists under each kind of item first a page 'General info for all nodes' (bodies, connectors, markers, ...) with the sections that hold for every item of the kind, and then the items, side by side.

@@ -8,6 +8,8 @@
 
 Load with (3D) torque vector; attached to rigidbody-based marker.
 
+**Simpler**: [`mbs.CreateTorque`](#sec-mainsystemextensions-createtorque) adds this item, with what it needs, in one call.
+
 ## Interface
 
 - Python names: `LoadTorqueVector` or `Torque`, and `VTorque` for its visualization
@@ -82,4 +84,4 @@ def UFforce(mbs, t, loadVector):
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`leggedRobot.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/leggedRobot.py) (Ex), [`reevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/reevingSystem.py) (Ex), [`sliderCrank3DwithANCFbeltDrive2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/sliderCrank3DwithANCFbeltDrive2.py) (Ex), [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`chatGPTupdate.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate.py) (Ex), [`chatGPTupdate2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chatGPTupdate2.py) (Ex), [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`ANCFcontactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle.py) (Ex), [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFslidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFslidingJoint2D.py) (Ex), [`ANCFtestHalfcircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtestHalfcircle.py) (Ex), [`ANCFtests2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFtests2.py) (Ex), [`ANCFbeltDrive.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFbeltDrive.py) (TM), [`ANCFgeneralContactCircle.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFgeneralContactCircle.py) (TM), [`ballBearingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ballBearingTest.py) (TM), ...
+Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`SliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SliderCrank.py) (Ex), [`rigidBodyIMUtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyIMUtest.py) (Ex)

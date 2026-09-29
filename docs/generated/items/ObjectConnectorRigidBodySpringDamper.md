@@ -8,6 +8,8 @@
 
 An 3D spring-damper element acting on relative displacements and relative rotations of two rigid body (position+orientation) markers. It represents a penalty-based rigid joint (or prismatic, revolute, etc.)
 
+**Simpler**: [`mbs.CreateRigidBodySpringDamper`](#sec-mainsystemextensions-createrigidbodyspringdamper) adds this item, with what it needs, in one call.
+
 ## Interface
 
 - Python names: `ObjectConnectorRigidBodySpringDamper` or `RigidBodySpringDamper`, and `VRigidBodySpringDamper` for its visualization
@@ -210,4 +212,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displace
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMassPoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMassPoint.py) (Ex), [`ROSMobileManipulator.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ROSMobileManipulator.py) (Ex), [`stiffFlyballGovernor2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/stiffFlyballGovernor2.py) (Ex), [`bricardMechanism.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/bricardMechanism.py) (TM), [`rigidBodySpringDamperIntrinsic.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodySpringDamperIntrinsic.py) (TM), [`connectorRigidBodySpringDamperTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorRigidBodySpringDamperTest.py) (TM), [`rotatingTableTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rotatingTableTest.py) (TM), [`stiffFlyballGovernor.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/stiffFlyballGovernor.py) (TM), [`superElementRigidJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/superElementRigidJointTest.py) (TM)
+Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`connectorRigidBodySpringDamperTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorRigidBodySpringDamperTest.py) (TM), [`rigidBodySpringDamperIntrinsic.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodySpringDamperIntrinsic.py) (TM)

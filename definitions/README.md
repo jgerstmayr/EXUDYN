@@ -237,12 +237,13 @@ link it, do not repeat it.
 | part | source |
 |---|---|
 | title and `overallDescription` | written: one or two sentences, what it is and what it is for |
+| **Simpler**: the Create functions that add the item | `createFunctions=['CreateRigidBody']`, objects and loads; the one place a page names them |
 | **Interface** | generated from the declared types: `itemTypes`, `requestedTypes`, `accessFunctionTypes`, and `requestedNodeTypes` of a node marker (`test_itemCompatibility.py` keeps that one equal to the C++ check) |
 | **Parameters**, **Visualization parameters**, **Output variables** | generated from the `description` of each member |
 | **Detailed description** | written, `detailedDescription`, headings by kind (below) |
 | user functions | generated from the `def` (#2664) |
 | **Mini example** | written, `miniExample` (below) |
-| examples, test models | generated |
+| examples, test models | `examples=['Examples/rigidBodyTutorial3.py', ...]`, relative to `python/`, chosen for the basic items and all sensors; without it, every script that names the item |
 
 ### The detailed description, by kind
 

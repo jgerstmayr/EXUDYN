@@ -8,6 +8,8 @@
 
 A joint representing a rolling rigid disc (marker 1) on a flat surface (marker 0, ground body) in global $x$-$y$ plane. The contraint is based on an idealized rolling formulation with no slip. The contraints works for discs as long as the disc axis and the plane normal vector are not parallel. It must be assured that the disc has contact to ground in the initial configuration (adjust z-position of body accordingly). The ground body can be a rigid body which is moving. In this case, the flat surface is assumed to be in the $x$-$y$-plane at $z=0$. Note that the rolling body must have the reference point at the center of the disc. NOTE: the cases of normal other than $z$-direction, wheel axis other than $x$-axis and moving ground body needs to be tested further, check your results!
 
+**Simpler**: [`mbs.CreateRollingDisc`](#sec-mainsystemextensions-createrollingdisc) adds this item, with what it needs, in one call.
+
 ## Interface
 
 - Python names: `ObjectJointRollingDisc` or `RollingDiscJoint`, and `VRollingDiscJoint` for its visualization

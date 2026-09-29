@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.145.dev1
+- Exudyn version = 1.12.146.dev1
 - last change = 2026-09-29
 - Number of issues = 2740
-- Number of resolved issues = 2459 (145 in current version)
+- Number of resolved issues = 2460 (146 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7570,9 +7570,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - `DOCU` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` MarkerSuperElementRigid and MarkerKinematicTreeRigid keep text in HTML comments (#2738)
   - description: The detailed descriptions of MarkerSuperElementRigid and MarkerKinematicTreeRigid carry tables and equations inside HTML comments (\<!-- ... --\>, remains of the LaTeX conversion), which are in the definition and on no page. Each part is either restored as Markdown, checked against the C++, or deleted. Left open by revision2026b step RG13.4 (\#2721); revision2026b step RG13.5.3.1.
-  - date raised: 2026-09-29
-- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` item pages: which Create functions add the item, and the plainest examples first (#2737)
-  - description: Left open by the development documents of revision2026b step RG13.4 (\#2721), folded into definitions/README.md in RG13.4.6: (1) each item page names the Create functions that add it, and each Create function names the items it adds - measured by running each Create function on a small model, because a static scan misses what an argument selects (CreateRigidBody makes one of four nodes, CreateForce one of two markers); open whether it runs inside generate or writes a JSON file the emitter reads; (2) the examples and test models of a page, today up to 129 links in file order, with the five plainest (shortest) first. revision2026b step RG13.5.0.6.
   - date raised: 2026-09-29
 - `DOCU` `HUGE EFF` `raised by: Claude-JG` RG13.6: a MiniExample for every item (#2732)
   - description: The goal of revision2026b group RG13, from the maintainer's announcement of 2026-09-27: every item gets a MiniExample - the short script under 'Mini example' on its page, run by the test suite. Of 97 items, 74 have none (RG13.1). The graphics regression test of RG2.3.3.5 takes every item through its MiniExample, so it waits for this. Agreed on 2026-09-28: a step of its own, starting with nodes, markers, loads and sensors, whose examples are short. revision2026b step RG13.6.

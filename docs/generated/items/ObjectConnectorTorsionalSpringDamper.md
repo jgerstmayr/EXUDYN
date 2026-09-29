@@ -8,6 +8,8 @@
 
 An torsional spring-damper element acting on relative rotations around Z-axis of local joint0 coordinate system. It connects to orientation-based markers; if other rotation axis than the local joint0 Z axis shall be used, the joint rotationMarker0 / rotationMarker1 may be used. The joint perfectly extends a RevoluteJoint with a spring-damper, which can also be used to represent feedback control in an elegant and efficient way, by chosing appropriate user functions. It also allows to measure continuous / infinite rotations by making use of a NodeGeneric which compensates $\pm \pi$ jumps in the measured rotation (`OutputVariableType.Rotation`).
 
+**Simpler**: [`mbs.CreateTorsionalSpringDamper`](#sec-mainsystemextensions-createtorsionalspringdamper) adds this item, with what it needs, in one call.
+
 ## Interface
 
 - Python names: `ObjectConnectorTorsionalSpringDamper` or `TorsionalSpringDamper`, and `VTorsionalSpringDamper` for its visualization

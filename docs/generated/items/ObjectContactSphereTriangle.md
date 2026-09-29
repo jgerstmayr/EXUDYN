@@ -10,6 +10,8 @@ A simple contact connector between a sphere (marker0) and a triangle (marker1). 
 
 Author: Gerstmayr Johannes
 
+**Simpler**: [`mbs.CreateSphereTriangleContact`](#sec-mainsystemextensions-createspheretrianglecontact) or [`mbs.CreateSphereQuadContact`](#sec-mainsystemextensions-createspherequadcontact) add this item, with what it needs, in one call.
+
 ## Interface
 
 - Nodes it takes: [](#sec-item-nodegenericdata)
