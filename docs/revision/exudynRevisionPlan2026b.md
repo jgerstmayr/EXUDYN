@@ -1866,6 +1866,25 @@ revision (info document D15).
       functions;
     - **RG9.3.3** the migration, object by object.
 
+<a id="rg9-4"></a>
+**RG9.4** *(group RG9; maintainer 2026-09-30)* **Kinetic and potential energy as output variables**
+    (#2202). `OutputVariableType.KineticEnergy` and `PotentialEnergy` exist (bits 32 and 33) and no item
+    provides them. They are added where they make sense - rigid bodies, flexible bodies, superelements
+    and connectors - and nowhere else; a test then checks the conservation of energy of a free
+    oscillation, as the literature does for the beam benchmarks (RG4.8.11). One step per object type:
+    - **RG9.4.1** the convention - what `PotentialEnergy` contains (elastic
+      energy only; gravity and other loads are not part of an item), the reference (zero in the
+      reference configuration), and whether an object with a user function reports it;
+    - **RG9.4.2** rigid bodies and mass points: `ObjectRigidBody`, `ObjectRigidBody2D`, `ObjectMassPoint`,
+      `ObjectMassPoint2D`, `ObjectMass1D`, `ObjectRotationalMass1D` - kinetic energy;
+    - **RG9.4.3** flexible bodies: the ANCF cables and beams, `ObjectBeamGeometricallyExact(2D)`,
+      the ALE cable - kinetic and elastic energy;
+    - **RG9.4.4** superelements: `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectGenericODE2`,
+      `ObjectKinematicTree` - kinetic energy from the mass matrix, elastic energy from the stiffness
+      matrix where the object has one;
+    - **RG9.4.5** connectors: the spring-dampers (coordinate, Cartesian, rigid body, torsional, linear,
+      the generic spring-damper where its law is linear) - the elastic energy of the spring.
+
 ## RG10 — Tooling and process
 
 The machinery a maintainer uses: `exudev` (revision2026 step R5.18), the issue tracker and its
@@ -2887,6 +2906,18 @@ package).
     `sizeInches` no longer resizes a window that was given its stored size; a `sizeInches` given in
     the script still wins.
 
+<a id="rg12-29"></a>
+**RG12.29** *(group RG12; maintainer 2026-09-30)* **What an item provides, asked from Python** (#2203).
+    There is no way to ask an item which output variables it has, which node or marker types it
+    requests or provides, or which access functions it offers: `mbs.GetObject()` returns the parameters
+    and the type name, and a request for an output variable the item lacks answers with an error that
+    names only the one asked for (checked 2026-09-30). The information exists in C++
+    (`GetOutputVariableTypes`, `GetRequestedNodeType`, `GetRequestedMarkerType`, `GetType`,
+    `GetAccessFunctionTypes`). #2203 proposes `mbs.Inspect(itemIndex, what, ...)`; a test could then
+    loop over the output variables an object declares instead of a hand-kept list, and the generated
+    item pages (RG13.5.0.3) show the same. Not implemented yet - the interface first: one function
+    with a `what` argument or one function per question.
+
 ## RG13 — Item documentation
 
 *(Group created by the maintainer, 2026-09-27.)* **Every item gets a full documentation and a
@@ -3150,9 +3181,11 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.7 | #2709, #2710 | GraphicsData gets a Sphere and a curved triangle list; RG6.7.1 evaluates the geometry first |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG9.3 | #2744 | access functions as single functions of the objects; evaluation first |
+| RG9.4 | #2202 | kinetic and potential energy as output variables, per object type |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
+| RG12.29 | #2203 | ask an item from Python which output variables and types it provides |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
 | RG14.1 | #2745 | evaluation: connectors and loads compute their marker values themselves |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |

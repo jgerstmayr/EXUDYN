@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "add function MainSystem.Inspect(itemIndex, what, optArgs) which retrieves additional info on items like available output variables, node/marker types, etc.",
   "dateRaised": "2026-01-07",
-  "deadline": "2026-07-06"
+  "deadline": "2026-07-06",
+  "workingRemarks": "planned as revision2026b step RG12.29 (maintainer 2026-09-30)"
 }

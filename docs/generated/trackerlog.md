@@ -7749,9 +7749,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-01-08
 - `EXTENSION` `MEDIUM EFF` MainSystem.Inspect (#2203)
   - description: add function MainSystem.Inspect(itemIndex, what, optArgs) which retrieves additional info on items like available output variables, node/marker types, etc.
+  - **remarks:** planned as revision2026b step RG12.29 (maintainer 2026-09-30)
   - date raised: 2026-01-07
 - `EXTENSION` `MEDIUM EFF` OutputVariable (#2202)
   - description: add kinetic and potential energy
+  - **remarks:** planned as revision2026b step RG9.4 (maintainer 2026-09-30)
   - date raised: 2026-01-07
 - `EXTENSION` `LOW EFF` ANCFThinPlate (#2200)
   - description: add test model
