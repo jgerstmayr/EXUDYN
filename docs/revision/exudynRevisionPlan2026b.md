@@ -2891,6 +2891,12 @@ What depends on it: the graphics regression test takes every item through its Mi
       `NGsolveCMStutorial.py`, `objectFFRFreducedOrderTest.py`). `ObjectBeamGeometricallyExact` waits for
       RG4.8.
 
+<a id="rg13-7"></a>
+**RG13.7** *(group RG13; maintainer 2026-09-29)* **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-7) —
+    **How to set up a new item** (#2742): one developer page, `docs/dev/NEW_ITEM.md` - the definition,
+    which files the generator writes for a new class name, the C++ to write by kind, the checks, what to
+    run; it refers to `definitions/README.md`, `ARCHITECTURE.md` and `WORKFLOW.md` for the details.
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where

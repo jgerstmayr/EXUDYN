@@ -6935,3 +6935,23 @@ markers with a position connector and on a mass point as body 0 or 1.
 
 Still declared, not changed here: the two planar cable markers provide `Coordinate`, so their pages list
 coordinate connectors that have no use for a segment shape.
+
+<a id="rg13-7"></a>
+### RG13.7 — how to set up a new item (2026-09-29, #2742)
+
+The maintainer asked for a section *How to set up a new item in Exudyn*, if it does not exist. It existed
+in parts: `CODING_STYLE.md` §9 (the procedure in one paragraph, the functions of a body and a connector),
+`ARCHITECTURE.md` (the object factory), `definitions/README.md` (the members, the descriptions, the page
+of an item, the mini example). `docs/dev/NEW_ITEM.md` brings the order together and refers to the rest:
+Python first; a table of what is written for a new class name and by whom - the three generated headers,
+the factory registration, the Python class and stub, the page, the MiniExample file; the `.cpp`, the
+checks in `checkPreAssembleConsistencies<Kind>.cpp`, the project file and `gen_sources.py`, the
+reference value - ; the parts of the definition with the descriptions, `outputVariables` and
+`miniExample`; what to run; the functions to implement per kind, the drawing included.
+
+What the request named and the code no longer has: the drawing of an item is not in a
+`Visu<ItemType>.cpp` - `UpdateGraphics` is in the item's own `.cpp` since #2555 (loads in `CLoad.cpp`,
+sensors in `CSensor.cpp`). `CODING_STYLE.md` §9 points to the page; the procedure is in one place.
+
+Found on the way, not changed: `WORKFLOW.md` names `main/obj/cppsrc.vcxproj` and `main/sources.json`,
+paths of the layout before the repository root moved; they are `msvc/cppsrc.vcxproj` and `sources.json`.

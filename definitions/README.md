@@ -4,6 +4,8 @@
 binding is defined here as Python, and `tools/regenerate.py` writes the C++, the Python interface
 and the reference manual from it.
 
+A new item, step by step: [docs/dev/NEW_ITEM.md](../docs/dev/NEW_ITEM.md).
+
 To change an item or a structure, edit the file here and run `python tools/regenerate.py --check`
 (in `venvExuP313`): it validates the definitions and regenerates everything. The generators read
 these files through `tools/generators/definitionLoader.py`; the `pybind*.py` files are replayed

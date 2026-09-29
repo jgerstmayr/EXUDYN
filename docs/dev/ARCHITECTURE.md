@@ -182,7 +182,7 @@ which is exactly the wrong conclusion.
 |---|---|
 | see how the module is created | `src/Pymodules/PybindModule.cpp` |
 | follow `mbs.AddObject` into C++ | `src/Main/MainObjectFactory.cpp` |
-| add a new item | [CODING_STYLE.md §9](CODING_STYLE.md#9-adding-a-new-item-node-object-marker-load-sensor) — edit `definitions/`, never the generated header |
+| add a new item | [NEW_ITEM.md](NEW_ITEM.md) — edit `definitions/`, never the generated header |
 | understand the time loop | `src/Solver/CSolverImplicitSecondOrder.cpp` |
 | debug Python→C++ | VS2022, `Debug|x64`, breakpoint in a `ComputeODE2LHS` |
 

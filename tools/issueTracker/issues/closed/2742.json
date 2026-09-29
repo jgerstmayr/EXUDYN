@@ -1,0 +1,17 @@
+{
+  "number": 2742,
+  "title": "developer documentation: how to set up a new item",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-29: a section 'How to set up a new item in Exudyn' - the definitions and how they work, how to add a simple item, with focus on the descriptions, parameter and function descriptions, miniExample and outputVariables; what to run; which files the generator writes for a new className (C/Main/Visu headers, object factory registration, Python interface, stubs, docs, MiniExample), and what is written by hand (the .cpp with the computation and UpdateGraphics, CheckPreAssembleConsistency in checkPreAssembleConsistencies<Kind>.cpp, the project file). The parts exist in CODING_STYLE.md section 9, ARCHITECTURE.md and definitions/README.md, scattered; one page brings them together and refers to the rest. revision2026b step RG13.7.",
+  "dateRaised": "2026-09-29",
+  "deadline": "2027-03-28",
+  "dateResolved": "2026-09-29 18:54",
+  "resolvedAuthor": "Claude-JG",
+  "file": "docs/dev/NEW_ITEM.md",
+  "releaseNotes": "The developer documentation has a page on how to set up a new item: the definition, which files the generator writes, the C++ to write for each kind of item, and what to run.",
+  "resolvedInVersion": "1.12.153"
+}
