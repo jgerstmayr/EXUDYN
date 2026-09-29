@@ -79,6 +79,7 @@ jointArgsTest
 kinematicTreeAndMBStest
 kinematicTreeConstraintTest
 symbolicUserFunctionCopyTest
+flexiblePendulumBeamComparison
 contactComparisonTest
 kinematicTreePrismaticJacobianTest
 kinematicTreeTest

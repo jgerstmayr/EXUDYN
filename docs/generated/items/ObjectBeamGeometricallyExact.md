@@ -64,4 +64,4 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 Detailed description coming later.
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`geometricallyExactBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`flexiblePendulumBeamComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/flexiblePendulumBeamComparison.py) (TM), [`geometricallyExactBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM)

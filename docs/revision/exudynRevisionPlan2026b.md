@@ -1150,11 +1150,12 @@ find its file and line, on every raise).
       the 3D element departs visibly after $t = 0.5$ s.
 
     The open issues of the element are sub-steps here, each **inspected first** - some may be solved:
-    - **RG4.8.1** reproduce the comparison with a script of our own: the element fixed at both nodes at a
-      prescribed configuration, forces and Jacobian from the joint reactions; kept in `tmp/`;
-    - **RG4.8.2** a planar dynamic test: the flexible pendulum of the comparison with
-      `ObjectBeamGeometricallyExact2D`, the 3D element and `ObjectANCFCable2D` - the test model that shows
-      the dynamic difference;
+    - **RG4.8.1** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg4-8-1) - the elastic part
+      checked statically against the planar element and an exact solution (`tmp/rg4_8_1_staticComparison.py`,
+      not kept): the 3D element is exact for a pure moment;
+    - **RG4.8.2** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg4-8-1) - the flexible
+      pendulum with `ObjectBeamGeometricallyExact2D`, the 3D element and `ObjectANCFCable2D`, test model
+      `flexiblePendulumBeamComparison.py`: the 3D element converges with the mesh;
     - **RG4.8.3** a 3D test against the literature: the right-angle frame (L-shape) with its published
       response (#1499);
     - **RG4.8.4** the mass matrix and the gyroscopic (quadratic velocity) terms - consistent after

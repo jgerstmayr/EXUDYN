@@ -7093,3 +7093,35 @@ user function, copied into a second system through the dictionary - the copy is 
 same motion (difference 0).
 
 The maintainer's "RG4.14.2" was read as RG4.15.2 - RG4.14 has no sub-steps.
+
+<a id="rg4-8-1"></a>
+### RG4.8.1 and RG4.8.2 — the 3D geometrically exact beam, statically and in a pendulum (2026-09-29, #2730)
+
+**RG4.8.1, statics** (`tmp/rg4_8_1_staticComparison.py`, not kept): a cantilever of 8 elements, $L = 1$,
+clamped (position and $e_1..e_3$; $e_0$ follows from the norm), as `ObjectBeamGeometricallyExact` and
+`ObjectBeamGeometricallyExact2D`:
+
+| load | tip, planar element | tip, 3D element | difference |
+|---|---|---|---|
+| $F = 0.1\,EI/L^2$ | (0.999341, 0.033168) | (0.999339, 0.033168) | $2\cdot10^{-6}$ |
+| $F = 2\,EI/L^2$ | (0.840344, 0.492521) | (0.840070, 0.492043) | $5.5\cdot10^{-4}$ |
+| $M = \pi EI/L$ (a half circle) | (0, 0.640729) | (0, **0.636620**) | $4.1\cdot10^{-3}$ |
+
+For the pure moment the exact tip is $y = 2L/\pi = 0.63661977$: **the 3D element is exact to eight digits**
+- the SE(3) interpolation represents a constant curvature exactly -, while the planar element with 8
+elements is off by 0.6 %. The elastic part of the 3D element is right, which is the colleague's finding
+too; a clamped node with all four Euler parameters constrained is redundant with the norm constraint and
+the static solver fails - $e_0$ is left free.
+
+**RG4.8.2, dynamics** - new test model `flexiblePendulumBeamComparison.py`: the colleague's flexible
+pendulum ($L = 0.5$, $E = 10^8$, $h = 2$ mm, released from horizontal, 10 elements, step 2.5 ms), gravity as
+nodal forces for all three elements. With 10 elements the tip differs from a 40-element planar solution by
+9 mm (planar GE), 11 mm (3D GE) and 5 mm (ANCF); **with 40 elements all three agree to 1.5 mm**. The lumped
+per-node mass matrix of the 3D element costs accuracy at a coarse mesh and converges; the difference is
+far smaller than the 9 cm of the colleague's plot, whose setup (node type, how gravity was applied) is not
+known - it does not reproduce here. The cross-section inertia hardly matters (three variants within
+0.3 mm). The test takes 0.5 s; reference $-1.508742102788566$, the sum of the three tip positions at 1 s.
+
+**Consequence for RG4.8.4**: a consistent mass matrix is an accuracy improvement at coarse meshes, not
+the correction of a wrong result; its priority is lower than the Jacobian (RG4.8.5), the reference
+configuration (RG4.8.6) and the body markers (RG4.8.7), which are missing functions.
