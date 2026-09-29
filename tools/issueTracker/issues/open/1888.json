@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "does not work for symbolic userfunctions",
   "dateRaised": "2024-10-11",
-  "deadline": "2025-04-09"
+  "deadline": "2025-04-09",
+  "workingRemarks": "checked 2026-09-29: mbs.GetDictionary() works with a symbolic user function; mbs.SetDictionary() of that dictionary fails with 'Unable to cast Python instance of type symbolic.UserFunction'. revision2026b step RG4.15.6"
 }

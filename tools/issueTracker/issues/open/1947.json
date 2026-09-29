@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "check difference of friction force computation of SphereSphereContact (see notes in .cpp file) and GeneralContact",
   "dateRaised": "2025-02-03",
-  "deadline": "2025-08-02"
+  "deadline": "2025-08-02",
+  "workingRemarks": "planned before 1.13 as revision2026b step RG4.15.8 (2026-09-29)"
 }

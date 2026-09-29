@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "PostNewton missing in explicit solvers; add warning or add after single steps (but exclude in contact computation!)",
   "dateRaised": "2021-12-15",
-  "deadline": "2022-02-13"
+  "deadline": "2022-02-13",
+  "workingRemarks": "planned before 1.13 as revision2026b step RG4.15.3 (2026-09-29)"
 }

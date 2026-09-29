@@ -2,10 +2,14 @@
   "number": 1889,
   "title": "symbolic",
   "author": "JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "BUG",
   "effort": "MEDIUM",
   "description": "GetLoad and similar functions do not work with symbolic user functions and raise TypeError: Object of type 'exudyn.exudynCPP.symbolic.UserFunction' is not an instance of 'function'; see also issue with mbs.GetDictionary()",
   "dateRaised": "2024-10-11",
-  "deadline": "2025-04-09"
+  "deadline": "2025-04-09",
+  "dateResolved": "2026-09-29 20:15",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "not reproducible: mbs.GetLoad and mbs.GetLoadParameter return the symbolic user function (checked 2026-09-29)",
+  "resolvedInVersion": "1.12.163"
 }

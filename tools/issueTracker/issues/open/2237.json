@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "Check Spyder-issues and crashes with PlotSensor on MacOS systems",
   "dateRaised": "2026-01-26",
-  "deadline": "2026-07-25"
+  "deadline": "2026-07-25",
+  "workingRemarks": "planned before 1.13 as revision2026b step RG6.8.6 (2026-09-29)"
 }

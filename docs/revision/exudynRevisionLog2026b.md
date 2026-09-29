@@ -7036,3 +7036,28 @@ What they propose, for the maintainer's decision:
 
 Found on the way: `ObjectBeamGeometricallyExact` declares four access functions and throws in all
 (added to RG4.8.7).
+
+<a id="rg4-15"></a>
+### RG4.15 — the open bugs and fixes, checked (2026-09-29, #2749)
+
+The maintainer named #2725, #2494 and #2704 as probably done, #738 as resolved, and asked for every open
+BUG and the urgent FIX issues to be checked and planned before 1.13.
+
+**Resolved or closed**: #2725 (RG13.5, done but for the 3D beam, which RG4.8.9 carries); #2704 (the
+graphics regression test RG2.3.3.1 to .4; the last part, every item through its MiniExample, is #2751);
+#738 (the maintainer); #2494 was closed already. Checked and closed: **#1048** - `sse2neon.h` is
+included only with `use_AVX2`, which only the compiler flag `__AVX2__` sets, never on arm64; **#1772**
+and **#1889** - an item dictionary, `mbs.GetLoad` and `mbs.GetLoadParameter` with a symbolic user function
+work (run 2026-09-29); **#1846** - a duplicate of #1845. Checked and **open**: #1888 - `GetDictionary` works,
+`SetDictionary` of it fails; #830 - explicit solvers switch the post Newton step off; #1424 - the
+duplicate check is ODE2 only; #1565 - `InitializeFromRestartFile` raises *"not fully implemented"*;
+#2350 - the macOS exclusion is in `runTestSuiteRefSol.py`.
+
+**RG4.15.1, the comparison test** (#2749): a ball of radius 0.1 dropped from 0.2 onto the ground, linear
+penalty law $k = 10^5$, $d = 100$, 20000 steps, as `ObjectContactCoordinate` (one coordinate),
+`ObjectContactSphereSphere` (a ground sphere of radius 1) and `ObjectContactSphereTriangle` (a ground
+triangle). Measured: sphere and triangle agree to $10^{-13}$; all three agree to $10^{-10}$ up to the
+release of the first contact, the deepest point 0.0963898 against 0.0963927 of an independent RK4 of the
+same law; after the release the coordinate contact differs by $3.8\cdot10^{-5}$ ($6\cdot10^{-4}$ at 5000
+steps) - its post Newton step recommends a different step size at the release. With a fixed step size
+(adaptive step off) all three fail at the first contact alike, so that is no defect of one of them.

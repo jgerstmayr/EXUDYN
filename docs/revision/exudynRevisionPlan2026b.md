@@ -291,7 +291,8 @@ NOT cover, and about the testing that no suite can do.
         set, always run: the representative model with the default, transparent faces, face edges
         and no faces, as PNG references of 0.2 to 1.1 KB. The tolerance across platforms is a guess
         until the first linux run.
-      - **RG2.3.3.5** **every item, through its MiniExample** - depends on the group the maintainer
+      - **RG2.3.3.5** (#2751; #2704 resolved with .1 to .4) **every item, through its MiniExample** - the
+        MiniExamples exist since RG13.6. It depended on the group the maintainer
         announced on 2026-09-27: **a MiniExample for every item**, together with the missing
         documentation and examples of all items (a revision group of its own, *"like RG13"* - not
         written yet). The test takes each MiniExample, **injects** a small graphics into its bodies -
@@ -1173,6 +1174,36 @@ find its file and line, on every raise).
 **RG4.14** *(group RG4; 2026-09-29)* **`ObjectBeamGeometricallyExact2D`: a test of the 3-node element**
     (#2208) - the only open issue of the planar element.
 
+<a id="rg4-15"></a>
+**RG4.15** *(group RG4; maintainer 2026-09-29)* **The open bugs and fixes before 1.13.** The maintainer: *"Before
+    the upcoming release, we definitely should try to resolve the open BUGs"*, and the urgent FIX issues.
+    Checked 2026-09-29, each against the code or with a run - see the [log](exudynRevisionLog2026b.md#rg4-15).
+    Closed as resolved or no longer applying: #738, #1048, #1772, #1846 (duplicate of #1845), #1889.
+    The graphics ones are RG6.8. What remains, in the order proposed:
+    - **RG4.15.1** **DONE 2026-09-29** (#2749) — one drop, three contact objects:
+      `test_contactComparison.py`, the check in compensation for #738;
+    - **RG4.15.2** (#2750) `ObjectContactCoordinate` gets the contact law of `ObjectContactSphereSphere` -
+      `contactStiffnessExponent`, `restitutionCoefficient`, `impactModel`, `minimumImpactVelocity` -, and the
+      comparison test extends to them; its release step size is also the one difference the test found;
+    - **RG4.15.3** (#830) the explicit solvers do no post Newton step - contact and switching items are
+      not updated: a warning at the start of an explicit solve with such items, or the update after each
+      step;
+    - **RG4.15.4** (#2127) `ObjectContactSphereTorus`: momentum conservation - a free ball in a free ring,
+      the sum of the torques on both bodies must vanish;
+    - **RG4.15.5** (#1639) a repeated `mbs.SolveDynamic` with `ObjectFFRFreducedOrder` diverges -
+      reproduced by solving `objectFFRFreducedOrderTest.py` twice;
+    - **RG4.15.6** (#1888) `mbs.GetDictionary()` works with a symbolic user function, but
+      `mbs.SetDictionary()` of that dictionary fails (*"Unable to cast ... symbolic.UserFunction"*);
+    - **RG4.15.7** (#1424) the numerical ODE1 Jacobian with a connector whose two markers are on the same
+      object - the duplicate coordinates, as for ODE2 (`CSystem.cpp` says *"ODE1 needs to be checked as
+      well"*);
+    - **RG4.15.8** (#1848, #1947) `GeneralContact`: implicit sphere-triangle contact and its friction against
+      `ObjectContactSphereSphere` - the drop of RG4.15.1 as a fourth case.
+
+    After 1.13, not urgent: #1845 (`ComputePostProcessingModes` with threads), #1565
+    (`InitializeFromRestartFile`), #2109 (DOPRI5 step size at discontinuities), #2326 (the slider crank
+    benchmark after the revised IFToMM model).
+
 <a id="rg4-9"></a>
 **RG4.9** *(group RG4; from RG13.5.3, 2026-09-28)* **DONE 2026-09-29** —
     [log](exudynRevisionLog2026b.md#rg4-9) — **The cable and beam shape markers accept any
@@ -1653,6 +1684,25 @@ This group is that revision and what has to happen before it can start.
       also work degenerated to a triangle. How many and which nodes the element has belongs to the
       decision. The deliverable is a short comparison of candidates for the maintainer, each with what
       it costs in the OpenGL renderer, the raytracer and `GetGraphicsData()`.
+
+<a id="rg6-8"></a>
+**RG6.8** *(group RG6; maintainer 2026-09-29)* **The graphics fixes before 1.13** - *"many are graphics
+    related; still, some may be solvable or you could suggest a simple test"*. With the test each can
+    have:
+    - **RG6.8.1** (#1813) marker positions in `AnimateModes` with deformation scaling 0 - **headless**:
+      the marker positions in `SC.renderer.GetGraphicsData()` against the reference positions;
+    - **RG6.8.2** (#2309) `ZoomAll` ignores a `trackMarker` - **headless**: the render state after
+      `ZoomAll` with a moving tracked marker, the marker in the view;
+    - **RG6.8.3** (#2321) meshes from NGsolve give triangles of the wrong orientation - with ngsolve
+      (optional package): the normals of `fem.GetSurfaceTriangles()` against the outward normals;
+    - **RG6.8.4** (#2308) erratic shadows with `modelCentricView=False` and lights in the camera frame -
+      a small raytracer image against a reference, as in RG2.3.3.4;
+    - **RG6.8.5** (#2140, #2236) Linux: crashes when the renderer closes and with the SolutionViewer; the
+      time in the renderer initialized wrong - the manual check (RG2.4) S7, Q1, Q2 on Ubuntu, plus a
+      script that starts and stops the renderer twenty times;
+    - **RG6.8.6** (#2237, #2350) macOS: PlotSensor in Spyder; `raytracerNOGLFWtest.py`, excluded on macOS
+      since 1.11.0 because offscreen `RedrawAndGetImage` crashes - when the macOS machine is there
+      (around 2026-10-20), the manual check P1 in Spyder and the test model without its exclusion.
 
 ## RG7 — Python user items
 
@@ -3045,7 +3095,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG1.4 | - | **the 1.13 release** - the first public one after the revision |
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
-| RG2.3.3.5 | #2582, #2704 | the graphics regression test: every item through its MiniExample - the last open part of RG2.3, waits for RG13.6 |
+| RG2.3.3.5 | #2582, #2751 | the graphics regression test: every item through its MiniExample - the last open part of RG2.3, waits for RG13.6 |
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
@@ -3055,6 +3105,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.12 | #2736 | `NodeGenericAE` cannot be used: no object, marker or script takes it - **deprecate, or an object for it?** |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
+| RG4.15 | #2750, #830, #2127, #1639, #1888, #1424, #1848, #1947 | the open bugs and fixes before 1.13 |
+| RG6.8 | #1813, #2309, #2321, #2308, #2140, #2236, #2237, #2350 | the graphics fixes before 1.13, each with a test |
 | RG6.7 | #2709, #2710 | GraphicsData gets a Sphere and a curved triangle list; RG6.7.1 evaluates the geometry first |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG9.3 | #2744 | access functions as single functions of the objects; evaluation first |

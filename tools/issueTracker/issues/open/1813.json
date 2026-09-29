@@ -7,5 +7,6 @@
   "effort": "LOW",
   "description": "wrong representation of marker positions in AnimateModes for deformation scaling=0",
   "dateRaised": "2024-04-08",
-  "deadline": "2024-10-05"
+  "deadline": "2024-10-05",
+  "workingRemarks": "planned before 1.13 as revision2026b step RG6.8.1 (2026-09-29)"
 }

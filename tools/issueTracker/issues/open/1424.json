@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "add case for duplicated ODE1 coordinates if connector has two markers for the same object, same as ltgODE2numDiff",
   "dateRaised": "2023-02-08",
-  "deadline": "2023-08-07"
+  "deadline": "2023-08-07",
+  "workingRemarks": "planned before 1.13 as revision2026b step RG4.15.7 (2026-09-29)"
 }

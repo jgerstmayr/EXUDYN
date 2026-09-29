@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 150 | 1.12.158 |
+| 1.12 | Metheney | 154 | 1.12.166 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.166** `TESTING` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` one drop, three contact objects: ObjectContactCoordinate, ObjectContactSphereSphere, ObjectContactSphereTriangle give the same motion (#2749)
+  - description: The maintainer, 2026-09-29, as a check in compensation for \#738: a ball hitting the ground computed with ObjectContactCoordinate (one coordinate), ObjectContactSphereSphere (a large ground sphere) and ObjectContactSphereTriangle (a ground triangle), with the same linear penalty law, must give the same motion; all together in one test. revision2026b step RG4.15.1.
+  - **notes:** A test drops a ball on the ground with ObjectContactCoordinate, ObjectContactSphereSphere and ObjectContactSphereTriangle and checks that the three give the same motion.
+  - date resolved: **2026-09-29 20:15**, date raised: 2026-09-29
+- **1.12.165** `DOCU` `HUGE EFF` `raised by: Claude-JG` `resolved by: Claude-JG` RG13.5: the documentation of the items, written by the development documents of RG13.4 - nodes, objects, markers, loads, sensors (#2725)
+  - description: The maintainer, 2026-09-27, after reading the node, load and sensor documents of RG13.4: those three are complete; 'start a new step RG13.5, which adds according documentation for these types, again adding 13.5.1 for nodes, .2 for objects, ...'. For loads the generalized forces keep their frames: a load is given in global or local coordinates, and the transformation belongs in the equation. For the slope nodes, the interpretation of the slopes goes into the detailed description of each node. RG13.5.0 is the generated frame and the general section per kind (definitions/itemKindDefinitions.py), before the pages are written. revision2026b step RG13.5.
+  - **notes:** The reference manual describes every item - nodes, objects, markers, loads, sensors - with a general section per kind of item, and each item with what is its own.
+  - date resolved: **2026-09-29 20:15**, date raised: 2026-09-27
+- **1.12.164** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a graphics regression test on SC.renderer.GetGraphicsData(): counts per item, and metrics of positions and colors (#2704)
+  - description: The maintainer, 2026-09-27: 'File graphicdata test as step. It could include also metrics for positions, colors - mean/min/max - so the content is also checked.' A set of models, each under several visualization settings, reduced to a fingerprint from SC.renderer.GetGraphicsData() (\#2700) and compared with a stored reference: the NUMBER of lines, spheres, circles, texts and triangles per item exactly, and the CONTENT through metrics - min, max and mean of the points per coordinate, of the colors per channel, of radii and normals - with a tolerance, because the data is float32 and must compare across compilers. Texts are compared as their strings. The fingerprint is small enough to be a readable JSON reference, so a change shows in git diff as 'ObjectRigidBody 3: 12 triangles -\> 10' or 'mean z of the triangles of object 0 moved by 0.2'. No window is opened. revision2026b step RG2.3.3.
+  - **notes:** A graphics regression test compares what the renderer draws - counts and metrics of the graphics data per item under the most used settings and with graphics user functions - and low-resolution raytracer images with stored references.
+  - date resolved: **2026-09-29 20:15**, date raised: 2026-09-27
+- **1.12.159** <span class="textred">`BUG`</span> `MEDIUM EFF` `resolved by: Claude-JG` ObjectContactCoordinate (#738)
+  - description: modified Newton does not work, no Jacobian update computed when switching
+  - **notes:** ObjectContactCoordinate switches its contact with a Jacobian update; a test compares it with the sphere-sphere and sphere-triangle contact on the same drop (\#2749).
+  - date resolved: **2026-09-29 20:15**, date raised: 2021-08-13
 - **1.12.158** `TESTING` `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a manual check of the render window and the dialogs before a release, on each platform (#2748)
   - description: The maintainer, 2026-09-29 (tmp/ManualGraphicsCheck): nothing automatic checks that a human can use the render window and the dialogs - keys, mouse, tkinter windows, focus, fonts, window placement. A check list for one person and one hour per platform (Windows, Ubuntu, macOS) before each release, with a model that has an item of every kind: the list into the developer documentation, the model into python/testing. revision2026b step RG2.4; RG1.4 waits for it.
   - **notes:** The developer documentation has a check list of the render window and the dialogs, for a person on each platform before a release, with a model that has an item of every kind (python/testing/guiManualCheckModel.py).

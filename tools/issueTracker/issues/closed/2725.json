@@ -2,11 +2,15 @@
   "number": 2725,
   "title": "RG13.5: the documentation of the items, written by the development documents of RG13.4 - nodes, objects, markers, loads, sensors",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "effort": "HUGE",
   "description": "The maintainer, 2026-09-27, after reading the node, load and sensor documents of RG13.4: those three are complete; 'start a new step RG13.5, which adds according documentation for these types, again adding 13.5.1 for nodes, .2 for objects, ...'. For loads the generalized forces keep their frames: a load is given in global or local coordinates, and the transformation belongs in the equation. For the slope nodes, the interpretation of the slopes goes into the detailed description of each node. RG13.5.0 is the generated frame and the general section per kind (definitions/itemKindDefinitions.py), before the pages are written. revision2026b step RG13.5.",
   "dateRaised": "2026-09-27",
   "deadline": "2027-03-26",
-  "file": "definitions"
+  "dateResolved": "2026-09-29 20:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions",
+  "releaseNotes": "The reference manual describes every item - nodes, objects, markers, loads, sensors - with a general section per kind of item, and each item with what is its own.",
+  "resolvedInVersion": "1.12.165"
 }

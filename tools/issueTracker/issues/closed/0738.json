@@ -1,0 +1,15 @@
+{
+  "number": 738,
+  "title": "ObjectContactCoordinate",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "MEDIUM",
+  "description": "modified Newton does not work, no Jacobian update computed when switching",
+  "dateRaised": "2021-08-13",
+  "deadline": "2021-10-12",
+  "dateResolved": "2026-09-29 20:15",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectContactCoordinate switches its contact with a Jacobian update; a test compares it with the sphere-sphere and sphere-triangle contact on the same drop (#2749).",
+  "resolvedInVersion": "1.12.159"
+}

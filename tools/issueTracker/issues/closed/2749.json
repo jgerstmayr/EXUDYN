@@ -1,0 +1,17 @@
+{
+  "number": 2749,
+  "title": "one drop, three contact objects: ObjectContactCoordinate, ObjectContactSphereSphere, ObjectContactSphereTriangle give the same motion",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-09-29, as a check in compensation for #738: a ball hitting the ground computed with ObjectContactCoordinate (one coordinate), ObjectContactSphereSphere (a large ground sphere) and ObjectContactSphereTriangle (a ground triangle), with the same linear penalty law, must give the same motion; all together in one test. revision2026b step RG4.15.1.",
+  "dateRaised": "2026-09-29",
+  "deadline": "2027-03-28",
+  "dateResolved": "2026-09-29 20:15",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/test_contactComparison.py",
+  "releaseNotes": "A test drops a ball on the ground with ObjectContactCoordinate, ObjectContactSphereSphere and ObjectContactSphereTriangle and checks that the three give the same motion.",
+  "resolvedInVersion": "1.12.166"
+}

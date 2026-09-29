@@ -1,0 +1,15 @@
+{
+  "number": 1772,
+  "title": "item.GetDictionary",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "BUG",
+  "effort": "MEDIUM",
+  "description": "item.GetDictionary not working for new user function interface with symbolic user function",
+  "dateRaised": "2024-02-04",
+  "deadline": "2024-08-02",
+  "dateResolved": "2026-09-29 20:15",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "not reproducible: the dictionary of an item with a symbolic user function, mbs.GetLoad and mbs.GetLoadParameter work (checked 2026-09-29)",
+  "resolvedInVersion": "1.12.161"
+}

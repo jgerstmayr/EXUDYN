@@ -2,10 +2,14 @@
   "number": 1048,
   "title": "sse2neon.h",
   "author": "JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "BUG",
   "effort": "MEDIUM",
   "description": "on Apple, sse2neon.h is missing (include from github) and compilation fails; check if this only happens on M1 and change include modes of sse2neon.h; add this file to python setup.py for other cases",
   "dateRaised": "2022-04-25",
-  "deadline": "2022-06-24"
+  "deadline": "2022-06-24",
+  "dateResolved": "2026-09-29 20:15",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "no longer applies: sse2neon.h is included only with use_AVX2, which only the compiler flag __AVX2__ sets - never on arm64 (checked 2026-09-29)",
+  "resolvedInVersion": "1.12.160"
 }

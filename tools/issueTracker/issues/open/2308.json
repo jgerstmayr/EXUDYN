@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "in case modelCentricView=False, lights with useCameraFrame=True have erratic shadows  in OpenGL mode",
   "dateRaised": "2026-02-19",
-  "deadline": "2026-08-18"
+  "deadline": "2026-08-18",
+  "workingRemarks": "planned before 1.13 as revision2026b step RG6.8.4 (2026-09-29)"
 }

@@ -2,10 +2,14 @@
   "number": 1846,
   "title": "ComputePostProcessingModes",
   "author": "JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "FIX",
   "effort": "MEDIUM",
   "description": "numberOfThreads> 1 not working: no modes computed",
   "dateRaised": "2024-05-29",
-  "deadline": "2024-11-25"
+  "deadline": "2024-11-25",
+  "dateResolved": "2026-09-29 20:15",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "duplicate of #1845",
+  "resolvedInVersion": "1.12.162"
 }
