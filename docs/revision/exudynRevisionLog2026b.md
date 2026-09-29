@@ -6567,3 +6567,125 @@ all objects for that pattern found four: the two contact connectors (`Distance`)
 joints. The issue and RG4.11 cover all four, and each page says it.
 
 With these, RG13.5.2 is complete except `ObjectBeamGeometricallyExact`, which waits for RG4.8.
+
+<a id="decisions-2026-09-29"></a>
+### Decisions of finished steps, moved from the plan (2026-09-29)
+
+The plan keeps what is open; these decisions were taken for steps that are finished and stood in
+the plan until today. They are recorded here as they were written.
+
+**RG13.2** (#2716, closed 2026-09-28, done by RG13.4 and RG13.5): the direction the item
+documentation followed.
+
+**The maintainer's direction (2026-09-27)**, from the table of RG13.1 - the item documentation is
+incomplete, and the priorities differ by kind:
+
+| kind | what "equations" means for it |
+|---|---|
+| **objects** | the most important; they really need their equations |
+| **nodes** | the coordinates, and how the node acts on the equations of motion - for Euler parameters, the equations are the global ones, projected with the velocity transformation |
+| **markers, loads** | short equations |
+| **sensors** | none; the equations text is a more detailed description where one is needed |
+
+**And a general section per kind of item**, which every item of that kind can refer to - above all
+for sensors and markers, where all items of a kind behave alike and the page of each should say
+only what is its own.
+
+*Also from the maintainer*: an item that no script uses may be used by the **package** -
+ObjectContactSphereTorus is part of the bearings. The report counts the package separately since:
+of the 7 items no example or test model uses, 3 are used by the package, and 4 by nothing.
+
+**RG13.4.1 to RG13.4.5** (#2721): the maintainer's approval of each development document.
+
+- **RG13.4.1** **DONE 2026-09-27** - [nodeDefinitionsDev.md](nodeDefinitionsDev.md). The
+  maintainer: *"the table with the coordinates is exactly what I was missing"*; the one-sentence
+  rule is right for the generic nodes; for the slope nodes, the interpretation of the slopes
+  belongs in the detailed description of each node.
+- **RG13.4.2** **DONE 2026-09-28** - [objectDefinitionsDev.md](objectDefinitionsDev.md). The
+  maintainer: *"Marker interfaces"* instead of *"Markers and loads"* - a body's interfaces are
+  markers, and connectors, constraints and loads act through them - holding only the Jacobians;
+  the general body section says how the marker interfaces are computed from the output variables
+  and the Jacobians $\partial \vv / \partial \dot\qv$; no check of the headings - the developer
+  documentation says what a page needs, checked by hand; the groups become sub-steps of RG13.5.2,
+  bodies first; `ObjectBeamGeometricallyExact` waits for RG4.8.
+- **RG13.4.3** **DONE 2026-09-28** - [markerDefinitionsDev.md](markerDefinitionsDev.md) - *"good
+  to go"*.
+- **RG13.4.4** **DONE 2026-09-27** - [loadDefinitionsDev.md](loadDefinitionsDev.md). The
+  maintainer: the generalized forces must not lose their frames - a load is given in local or
+  global coordinates, so the transformation is part of the equation; added from
+  `CSystem::ComputeODE2SingleLoad`, which also corrected the document on the static load factor
+  (it does not apply to a load with a user function, #603).
+- **RG13.4.5** **DONE 2026-09-27** - [sensorDefinitionsDev.md](sensorDefinitionsDev.md) - *"good
+  to go"*.
+
+**RG12.5.2** (#2666, done 2026-09-28): the measurement the decision was taken on.
+
+**Measured 2026-09-27, on the maintainer's question**: the two are
+`contour.outputVariable` (`OutputVariableType`) and `interactive.highlightItemType`
+(`ItemType`). **What does not work**: `Store(SC)` with `contour.outputVariable = StressLocal`
+writes the other changed settings and **drops the enum without a word** - `Ignored()` is empty;
+and a file that holds it by name, `"contour.outputVariable": "StressLocal"`, is refused at
+import with *"the setting holds a OutputVariableType, which a settings file cannot carry"*.
+**The solution**: write an enum as the name of its value (`"StressLocal"`), read it back
+through `ConvertString2Value`, report an unknown name as not applied, and name everything
+`Store` leaves out. `interactive.highlightItemType` is the state of an interactive highlight
+rather than a preference, so it is proposed to stay out of the file altogether - the only enum
+a user would store is `contour.outputVariable`.
+
+**Decided (maintainer, 2026-09-27)**: *"this is a good way to go"*. The conversions between an
+enum and its name exist already, because the settings dialog needs them; the same will be
+needed wherever a settings structure is written and read, for example the HDF5 load and save,
+which is for later.
+
+**The chapters of the user manual** (#2657, #2662; carried out by RG3.15 and RG3.16, see
+[RG3.15](#rg3-15)):
+
+*The maintainer's table of contents, 2026-09-25, answering a proposal of the plan. Measured the same
+day: **eleven** visualization sections sit in `introductionBasics.md`, five in `GUI.md` and one in
+`introductionAdvanced.md`.*
+
+```
+Exudyn
+Installation and getting started
+Overview on Exudyn
+Exudyn basics
+Renderer, graphics and visualization
+    The renderer window
+    The model view
+    Images, animations and the solution viewer
+    How to add graphics
+Performance, errors and solver failures
+    Errors: what Exudyn raises, and what to do about it
+    Removing convergence problems and solver failures
+    Performance and ways to speed up computations
+Advanced topics
+    ...
+Notation
+Theory
+Solver
+Python-C++ command interface
+```
+
+**Renderer, graphics and visualization** is `docs/manual/GUI.md`, in four sections built from what is
+spread over three chapters today:
+
+| section | gathers |
+|---|---|
+| **The renderer window** | starting and stopping it, mouse input (with the 6D mouse), keyboard input, the visualization settings dialog, the command and help windows - and a link to *Advanced topics* for the raytracer, which draws offline |
+| **The model view** | the render state, storing and restoring a view, a camera that follows an object (today in *Advanced topics*) |
+| **Images, animations and the solution viewer** | the solution viewer, saving images, software rendering, making an animation |
+| **How to add graphics** | graphics user functions, colour, RGBA and transparency, character encoding - and a link to *Advanced topics* for the `GraphicsData` reference |
+
+**Performance, errors and solver failures** is a chapter of its own, out of *Exudyn basics*: the
+three sections are already written and already belong together, and none of them is a basic.
+
+**`introductionBasics.md`** keeps one visualization section, *Seeing the model*: the lines that start
+the renderer, and a link.
+
+**`introductionAdvanced.md`** takes what is internals or reference rather than use - the **graphics
+pipeline**, **raytracing** and the **`GraphicsData` reference** with its six sub-sections - and, with
+#2661, *the command line* and *the results monitor*.
+
+**Every heading is sentence case** (#2662): *"This is a heading"*. About fifteen are Title Case
+today, and two of them are chapter titles the table of contents above already spells the new way -
+*Installation and getting started*, *Exudyn basics*.

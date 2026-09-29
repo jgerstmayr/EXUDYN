@@ -1938,7 +1938,8 @@ Open in the tracker for this group: **#2497** (59 bare `except:` remain in the s
 package).
 
 <a id="rg12-4"></a>
-**RG12.4** *(group RG12; maintainer 2026-09-25)* **A user function is one typed Python function, and
+**RG12.4** *(group RG12; maintainer 2026-09-25)* **DONE 2026-09-26 except RG12.4.7** (#2664, resolved) —
+    **A user function is one typed Python function, and
     everything else is generated from it** (#2664). **After RG3.14** - the descriptions have to be
     Markdown first, because this step makes the documentation block an output rather than a text.
 
@@ -2015,7 +2016,7 @@ package).
       the item class annotated with it - `Union[ObjectGroundGraphicsDataUserFunction, int]`,
       because 0 is the value that means no user function. Without the annotation an editor has
       nothing to complete at the place where a user writes the function.
-    - **RG12.4.5** — the remaining signatures, in the order of the item files; **23 distinct
+    - **RG12.4.5** **DONE 2026-09-26** — the remaining signatures, in the order of the item files; **23 distinct
       signatures under 17 names in 35 blocks**, so two thirds of the work is naming arguments that
       are already written down in the prose. A block is converted by a script that refuses what it
       does not recognise; what it refuses is done by hand.
@@ -2037,9 +2038,6 @@ package).
       redundant: the argument table is generated for every user function, the `\_` escapes are
       gone with RG3.14, and `advancedUtilities`' hand-built `F(...)` message now also names the
       generated `Protocol`, which is carried in `userFunctionArgsDict` as a fourth entry.
-    - **RG12.4.6** — what becomes redundant then: the argument table in the prose (generated), the
-      `\_` escapes (gone with RG3.14.5), and the question whether `advancedUtilities`' hand-built
-      `F(...)` string can be replaced by the generated `Protocol`.
     - **RG12.4.7** *(maintainer, 2026-09-25)* — **the `TPyFunction...` group type disappears from a
       definition**. *"Can the types like `TPyFunctionMbsScalarIndexScalar5` then also be eliminated?
       They are common interfaces also for the C++-side, but if the automatic mechanisms allow to also
@@ -2087,7 +2085,7 @@ package).
 
 
 <a id="rg12-5"></a>
-**RG12.5** *(group RG12; maintainer 2026-09-26)* **User settings that persist between runs: one
+**RG12.5** *(group RG12; maintainer 2026-09-26)* **DONE 2026-09-28** (#2666) — **User settings that persist between runs: one
     `~/.exudyn` file, and what may be in it** (#2666). The results monitor introduced
     `~/.exudyn/resultsMonitor.json` (`resultsMonitor.SettingsFileName`) without a decision about what
     such a directory is *for*. The maintainer: *"this is basically good and could be used for other
@@ -2138,22 +2136,8 @@ package).
       the two (`ConvertString2Value`, `EnumFullName`). 2 of the 466 visualization settings are
       enums, which is why they were left out of .1 rather than guessed at.
 
-      **Measured 2026-09-27, on the maintainer's question**: the two are
-      `contour.outputVariable` (`OutputVariableType`) and `interactive.highlightItemType`
-      (`ItemType`). **What does not work**: `Store(SC)` with `contour.outputVariable = StressLocal`
-      writes the other changed settings and **drops the enum without a word** - `Ignored()` is empty;
-      and a file that holds it by name, `"contour.outputVariable": "StressLocal"`, is refused at
-      import with *"the setting holds a OutputVariableType, which a settings file cannot carry"*.
-      **The solution**: write an enum as the name of its value (`"StressLocal"`), read it back
-      through `ConvertString2Value`, report an unknown name as not applied, and name everything
-      `Store` leaves out. `interactive.highlightItemType` is the state of an interactive highlight
-      rather than a preference, so it is proposed to stay out of the file altogether - the only enum
-      a user would store is `contour.outputVariable`.
-
-      **Decided (maintainer, 2026-09-27)**: *"this is a good way to go"*. The conversions between an
-      enum and its name exist already, because the settings dialog needs them; the same will be
-      needed wherever a settings structure is written and read, for example the HDF5 load and save,
-      which is for later.
+      The measurement and the decision are in the
+      [log](exudynRevisionLog2026b.md#decisions-2026-09-29).
     - **RG12.5.3** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-5-3) - the dialogs
       section, which is **RG6.2.29** (#2675) built: `visualizationSettings.dialogs.
       storeDialogPositions` (new, default False), the `"dialogs"` section of the file, and the rule
@@ -2536,7 +2520,7 @@ package).
     **The render window and the SolutionViewer remember their size and position**, as the settings
     dialogs do since RG12.5.3.
 
-    - **RG12.16.1** **the render window can be placed.** `view*.window.renderWindowPosition` and
+    - **RG12.16.1** **DONE 2026-09-26** **the render window can be placed.** `view*.window.renderWindowPosition` and
       `view*.window.useRenderWindowPosition`, ordinary settings, so the settings file, `Store(SC)` and
       the store button carry them with nothing added, one set per view. `GlfwClient.cpp` calls
       `glfwSetWindowPos` when the flag is on - it never called it at all.
@@ -2555,12 +2539,12 @@ package).
       title bar, so a value below about 50 hides part of the title bar and 0 hides it completely -
       *"this works, as there is still the escape button"* - which is a way to have a view without one.
       The description says so.
-    - **RG12.16.2** **it remembers where it was.** `view*.window.storeRenderWindowGeometry`, off by
+    - **RG12.16.2** **DONE 2026-09-26** **it remembers where it was.** `view*.window.storeRenderWindowGeometry`, off by
       default, writes the size and the position back into the settings when the window closes, so that
       storing the settings keeps a render window where it was left. Off by default for the reason
       `dialogs.storeDialogPositions` exists: a settings structure that changes by itself would make
       *diff to default* report a window position after every run.
-    - **RG12.16.3** **the SolutionViewer, and two more for free.** Its window is an
+    - **RG12.16.3** **DONE 2026-09-26** **the SolutionViewer, and two more for free.** Its window is an
       `InteractiveDialog` - and so are the mode shapes and an interactive simulation - so all three
       restore and store themselves under their own title, through the same
       `RestoreWindowGeometry`/`StoreWindowGeometry` and the same `dialogs` section as the settings
@@ -2733,23 +2717,8 @@ What depends on it: the graphics regression test takes every item through its Mi
     connector, constraint, and the other object types. From that and the table of RG13.1: **a
     detailed plan that makes it work** for every item, as further steps of this group.
 
-    **The maintainer's direction (2026-09-27)**, from the table of RG13.1 - the item documentation is
-    incomplete, and the priorities differ by kind:
-
-    | kind | what "equations" means for it |
-    |---|---|
-    | **objects** | the most important; they really need their equations |
-    | **nodes** | the coordinates, and how the node acts on the equations of motion - for Euler parameters, the equations are the global ones, projected with the velocity transformation |
-    | **markers, loads** | short equations |
-    | **sensors** | none; the equations text is a more detailed description where one is needed |
-
-    **And a general section per kind of item**, which every item of that kind can refer to - above all
-    for sensors and markers, where all items of a kind behave alike and the page of each should say
-    only what is its own.
-
-    *Also from the maintainer*: an item that no script uses may be used by the **package** -
-    ObjectContactSphereTorus is part of the bearings. The report counts the package separately since:
-    of the 7 items no example or test model uses, 3 are used by the package, and 4 by nothing.
+    The maintainer's direction - what *equations* means per kind, and a general section per kind -
+    is in the [log](exudynRevisionLog2026b.md#decisions-2026-09-29).
 
 <a id="rg13-3"></a>
 **RG13.3** *(group RG13; maintainer 2026-09-27)* **Each description synchronized once with its
@@ -2770,7 +2739,8 @@ What depends on it: the graphics regression test takes every item through its Mi
     one: one command, not a hand edit of a hash.
 
 <a id="rg13-4"></a>
-**RG13.4** *(group RG13; maintainer 2026-09-27)* **The development documents per item type** (#2721)
+**RG13.4** *(group RG13; maintainer 2026-09-27)* **.0 to .5 DONE 2026-09-28, RG13.4.6 open** —
+    [log](exudynRevisionLog2026b.md#rg13-4) — **The development documents per item type** (#2721)
     - *what the documentation of a node, object, marker, load and sensor must contain*, evaluated on
     the text: from the tutorials and the Create functions - *"most model scripts now use Create
     functions, so the core functionality is hidden, which means that one has to build a combined view
@@ -2787,36 +2757,25 @@ What depends on it: the graphics regression test takes every item through its Mi
     documentation an item needs, what it contains and how it is structured, and are removed. They
     are the input of RG13.2's plan.
 
-    - **RG13.4.0** **STARTED 2026-09-27** - [itemDefinitionsDev.md](itemDefinitionsDev.md): what is
+    - **RG13.4.0** **DONE 2026-09-28**, carried out by RG13.5.0 - [itemDefinitionsDev.md](itemDefinitionsDev.md): what is
       common - how a reader meets an item (through Create functions), the frame text of the
       generator, the types and what they should say, the order of every page.
-    - **RG13.4.1** **DONE 2026-09-27** - [nodeDefinitionsDev.md](nodeDefinitionsDev.md). The
-      maintainer: *"the table with the coordinates is exactly what I was missing"*; the one-sentence
-      rule is right for the generic nodes; for the slope nodes, the interpretation of the slopes
-      belongs in the detailed description of each node.
-    - **RG13.4.2** **DONE 2026-09-28** - [objectDefinitionsDev.md](objectDefinitionsDev.md). The
-      maintainer: *"Marker interfaces"* instead of *"Markers and loads"* - a body's interfaces are
-      markers, and connectors, constraints and loads act through them - holding only the Jacobians;
-      the general body section says how the marker interfaces are computed from the output variables
-      and the Jacobians $\partial \vv / \partial \dot\qv$; no check of the headings - the developer
-      documentation says what a page needs, checked by hand; the groups become sub-steps of RG13.5.2,
-      bodies first; `ObjectBeamGeometricallyExact` waits for RG4.8.
-    - **RG13.4.3** **DONE 2026-09-28** - [markerDefinitionsDev.md](markerDefinitionsDev.md) - *"good
-      to go"*.
-    - **RG13.4.4** **DONE 2026-09-27** - [loadDefinitionsDev.md](loadDefinitionsDev.md). The
-      maintainer: the generalized forces must not lose their frames - a load is given in local or
-      global coordinates, so the transformation is part of the equation; added from
-      `CSystem::ComputeODE2SingleLoad`, which also corrected the document on the static load factor
-      (it does not apply to a load with a user function, #603).
-    - **RG13.4.5** **DONE 2026-09-27** - [sensorDefinitionsDev.md](sensorDefinitionsDev.md) - *"good
-      to go"*.
+    - **RG13.4.1** **DONE 2026-09-27** - [nodeDefinitionsDev.md](nodeDefinitionsDev.md).
+    - **RG13.4.2** **DONE 2026-09-28** - [objectDefinitionsDev.md](objectDefinitionsDev.md).
+    - **RG13.4.3** **DONE 2026-09-28** - [markerDefinitionsDev.md](markerDefinitionsDev.md).
+    - **RG13.4.4** **DONE 2026-09-27** - [loadDefinitionsDev.md](loadDefinitionsDev.md).
+    - **RG13.4.5** **DONE 2026-09-27** - [sensorDefinitionsDev.md](sensorDefinitionsDev.md).
+
+      The maintainer's approval of each, with what it changed, is in the
+      [log](exudynRevisionLog2026b.md#decisions-2026-09-29).
     - **RG13.4.6** the documents, once agreed, folded into `docs/dev/` and removed.
 
     Each document ends with the questions it leaves to the maintainer.
 
 <a id="rg13-5"></a>
 **RG13.5** *(group RG13; maintainer 2026-09-27)* **The documentation of the items, written by the
-    documents of RG13.4** (#2725) - *"start a new step RG13.5, which adds according documentation for
+    documents of RG13.4** (#2725) - **DONE 2026-09-28 except `ObjectBeamGeometricallyExact`, which
+    waits for RG4.8**. *"start a new step RG13.5, which adds according documentation for
     these types, again adding 13.5.1 for nodes, .2 for objects, ..."*. A kind is written when its
     document of RG13.4 is agreed: nodes, loads and sensors now, objects and markers after them.
 
@@ -2903,24 +2862,30 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG1.4 | - | **the 1.13 release** - the first public one after the revision |
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
-| RG2.3 | #2582 | a graphics regression suite |
-| RG2.3.3.5 | #2704 | graphics regression test: every item through its MiniExample (needs the MiniExample group) |
-| RG6.7 | #2709 | GraphicsData gets a Sphere and a CurvedTriangleList |
-| RG6.7.1 | #2710 | evaluate the curved triangle (or quad) geometry and the sphere's features |
+| RG2.3.3.5 | #2582, #2704 | the graphics regression test: every item through its MiniExample - the last open part of RG2.3, waits for RG13.6 |
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
-| RG4.1 | - | resolve the Windows/linux differences in contact and friction |
+| RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
 | RG4.7 | #2423 | every C++ user error inspects the Python source for its file and line |
-| RG5.1 | #2397 | build a micro-benchmark that is maintained, not written once |
+| RG4.8 | #2730 | `ObjectBeamGeometricallyExact` (3D): analyse the defects of the implementation |
+| RG4.9 | #2731 | the cable and beam shape markers, and the relative-coordinate markers, accept any body |
+| RG4.10 | #2734 | body markers on `ObjectGenericODE2` and `ObjectKinematicTree` pass the check and fail |
+| RG4.11 | #2735 | four objects declare output variables that raise; `ObjectContactCoordinate` ignores `activeConnector` |
+| RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
+| RG6.7 | #2709, #2710 | GraphicsData gets a Sphere and a curved triangle list; RG6.7.1 evaluates the geometry first |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
+| RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
-| RG13.4 | #2721 | the development documents per item type: objects and markers open; nodes, loads, sensors agreed |
+| RG13.4.6 | #2721 | the development documents of the items folded into `docs/dev/` and removed |
+| RG13.5.2 | #2725 | the page of `ObjectBeamGeometricallyExact`, after RG4.8 |
 | RG13.6 | #2732 | a MiniExample for every item; nodes, markers, loads and sensors first |
-| RG13.5 | #2725 | the documentation of the items, by kind; .0 the frame, .1 nodes, .4 loads, .5 sensors first |
+
+Open in the tracker without a step: #2498 (nothing checks that an item type provides the member
+functions it must) and #2511 (the ROS examples were last run in 2023), both named in RG2.
 
 ### Raised by the current work, and not yet a step
 
@@ -2929,63 +2894,10 @@ whether it becomes a step.
 
 | where | issue | what it is |
 |---|---|---|
-| RG6.2.11 | #2608 | **remember the window** - the how is suggested in RG6.2.26; RG12.5 decides it with the rest of the settings file |
 
-*Emptied on 2026-09-26: the maintainer asked for the entries to become steps, and they are RG3.21,
-RG3.22, RG4.6, RG4.7 and RG10.2 above. #2497 and #2652 were closed the same day - both had been done
-by other work - and #2616 is resolved, with only its test hook left, which is RG4.6.*
-
-### The chapters of the user manual, as decided for #2657 and #2662
-
-*The maintainer's table of contents, 2026-09-25, answering the proposal above it. Measured the same
-day: **eleven** visualization sections sit in `introductionBasics.md`, five in `GUI.md` and one in
-`introductionAdvanced.md`.*
-
-```
-Exudyn
-Installation and getting started
-Overview on Exudyn
-Exudyn basics
-Renderer, graphics and visualization
-    The renderer window
-    The model view
-    Images, animations and the solution viewer
-    How to add graphics
-Performance, errors and solver failures
-    Errors: what Exudyn raises, and what to do about it
-    Removing convergence problems and solver failures
-    Performance and ways to speed up computations
-Advanced topics
-    ...
-Notation
-Theory
-Solver
-Python-C++ command interface
-```
-
-**Renderer, graphics and visualization** is `docs/manual/GUI.md`, in four sections built from what is
-spread over three chapters today:
-
-| section | gathers |
-|---|---|
-| **The renderer window** | starting and stopping it, mouse input (with the 6D mouse), keyboard input, the visualization settings dialog, the command and help windows - and a link to *Advanced topics* for the raytracer, which draws offline |
-| **The model view** | the render state, storing and restoring a view, a camera that follows an object (today in *Advanced topics*) |
-| **Images, animations and the solution viewer** | the solution viewer, saving images, software rendering, making an animation |
-| **How to add graphics** | graphics user functions, colour, RGBA and transparency, character encoding - and a link to *Advanced topics* for the `GraphicsData` reference |
-
-**Performance, errors and solver failures** is a chapter of its own, out of *Exudyn basics*: the
-three sections are already written and already belong together, and none of them is a basic.
-
-**`introductionBasics.md`** keeps one visualization section, *Seeing the model*: the lines that start
-the renderer, and a link.
-
-**`introductionAdvanced.md`** takes what is internals or reference rather than use - the **graphics
-pipeline**, **raytracing** and the **`GraphicsData` reference** with its six sub-sections - and, with
-#2661, *the command line* and *the results monitor*.
-
-**Every heading is sentence case** (#2662): *"This is a heading"*. About fifteen are Title Case
-today, and two of them are chapter titles the table of contents above already spells the new way -
-*Installation and getting started*, *Exudyn basics*.
+*Empty since 2026-09-29: #2608 was done by RG6.2.11. The decision on the chapters of the user manual
+(#2657, #2662), which stood below, is carried out and is in the
+[log](exudynRevisionLog2026b.md#decisions-2026-09-29).*
 
 ### Recommended next
 
@@ -2994,13 +2906,12 @@ The title of each says what the step **does**; the sentence after it says why it
 1. **Run the integration round of the institute, then release 1.13** (RG2.2, RG1.4). It is
    the only item on this page that needs **other people's time**, so it starts before the
    rest is ready, not after.
-2. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
+2. **Write a MiniExample for every item** (RG13.6, #2732). The goal RG13 was created for, and
+   the graphics regression test of every item (RG2.3.3.5) waits for it.
+3. **Resolve the item defects the documentation found** (RG4.8 to RG4.11). They are on the pages
+   of the items now, which is where users meet them; the 3D geometrically exact beam has no page
+   until RG4.8 is done.
+4. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
-3. **Build the graphics regression suite, with the headless renderer calls it needs**
-   (RG2.3 with RG6.3, #2582 and #2583). They are one piece of work: the suite needs the call
-   that updates the graphics data and returns counts, and that call has no other user.
-4. **Place or drop the figures that no page references** (RG3.8, #2594). Small, and it is
+5. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
    published documentation that is visibly wrong.
-5. **Write the checker for user scripts after the 1.12 API changes** (RG10.1). The 1.13
-   release is when users meet those changes, so it is worth having before RG1.4 lands.
-
