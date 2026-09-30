@@ -21,6 +21,7 @@ You can view and download this file on Github: [distanceSensor.py](https://githu
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.beams import GenerateStraightLineANCFCable2D
 import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)

@@ -3,8 +3,9 @@
 #
 # Details:  The big import of Exudyn's Python utilities: 'from exudyn.utilities import *' makes the
 #           utility modules available at once. It defines no functions of its own;
-#           they are in basicUtilities, advancedUtilities, rigidBodyUtilities,
-#           graphicsDataUtilities, itemInterface, beams and mainSystemExtensions.
+#           they are in basicUtilities, advancedUtilities, rigidBodyUtilities and itemInterface.
+#           The beam generators are imported from exudyn.beams, the old graphics helpers and colors
+#           from exudyn.graphicsDataUtilities; the MainSystem extensions are functions of mbs (#2756).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2019-07-26 (created)
@@ -17,24 +18,13 @@
 import exudyn.basicUtilities as _basicUtilities
 import exudyn.advancedUtilities as _advancedUtilities
 import exudyn.rigidBodyUtilities as _rigidBodyUtilities
-import exudyn.graphicsDataUtilities as _graphicsDataUtilities
 import exudyn.itemInterface as _itemInterface
 from exudyn.basicUtilities import * # noqa: F403, F401
 from exudyn.advancedUtilities import * # noqa: F403, F401
 from exudyn.rigidBodyUtilities import * # noqa: F403, F401
-from exudyn.graphicsDataUtilities import * # noqa: F403, F401
 from exudyn.itemInterface import * # noqa: F403, F401
-
-#for compatibility with older models:
-from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint,\
-                         GenerateStraightBeam # noqa # pylint: disable=unused-import
-#MainSystem extensions, imported here so that 'from exudyn.utilities import *' still provides them:
-from exudyn.misc.mainSystemExtensions import CreateDistanceSensorGeometry, CreateDistanceSensor, DrawSystemGraph # noqa: F401
 
 #the exported names are those of the imported modules; helper imports such as np or sqrt
 #are not part of it - import them explicitly
 __all__ = (_basicUtilities.__all__ + _advancedUtilities.__all__ + _rigidBodyUtilities.__all__
-           + _graphicsDataUtilities.__all__ + _itemInterface.__all__
-           + ['GenerateStraightLineANCFCable2D', 'GenerateSlidingJoint', 'GenerateAleSlidingJoint',
-              'GenerateStraightBeam', 'CreateDistanceSensorGeometry', 'CreateDistanceSensor',
-              'DrawSystemGraph'])
+           + _itemInterface.__all__)

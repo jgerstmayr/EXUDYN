@@ -168,6 +168,7 @@ $$
 
 
 ```python
+from exudyn.beams import GenerateStraightLineANCFCable2D
 #a mass point carried by the material of an axially moving cable
 nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
                                    initialCoordinates=[0], initialCoordinates_t=[0]))

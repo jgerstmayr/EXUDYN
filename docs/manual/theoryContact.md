@@ -42,7 +42,7 @@ In addition, all mesh vertices are added as spheres with markers using
 
 - `AddSphereWithMarker(...)`
 
-However, as we need a certain finite radius of the spheres, the mesh must be shrinked for this purpuse (and it needs to have according thickness). Shrinking of the (consistent) triangular mesh can be done by the utility function
+However, as we need a certain finite radius of the spheres, the mesh must be shrinked for this purpuse (and it needs to have according thickness). Shrinking of the (consistent) triangular mesh can be done by the utility function of `exudyn.graphicsDataUtilities`
 
 - ` ShrinkMeshNormalToSurface(...)`;
 - in order to reduce artifacts at object edges, it is recommended to refine the mesh, using the utility function `RefineMesh(...)`

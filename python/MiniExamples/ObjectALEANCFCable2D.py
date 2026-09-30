@@ -20,6 +20,7 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
+from exudyn.beams import GenerateStraightLineANCFCable2D
 #an axially moving cable: the material slides through clamped nodes, described by one ALE coordinate
 nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
                                    initialCoordinates=[0], initialCoordinates_t=[0]))

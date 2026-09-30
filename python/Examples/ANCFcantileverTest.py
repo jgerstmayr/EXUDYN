@@ -17,6 +17,7 @@
 ## import exudyn and utilities
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.beams import GenerateStraightLineANCFCable2D
 import exudyn.graphics as graphics
 
 ## create container and main system to work with

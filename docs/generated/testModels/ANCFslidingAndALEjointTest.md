@@ -21,6 +21,8 @@ You can view and download this file on Github: [ANCFslidingAndALEjointTest.py](h
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.beams import GenerateAleSlidingJoint, GenerateSlidingJoint, GenerateStraightLineANCFCable2D
+from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)

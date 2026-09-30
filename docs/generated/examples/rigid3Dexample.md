@@ -22,6 +22,7 @@ You can view and download this file on Github: [rigid3Dexample.py](https://githu
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.graphicsDataUtilities import GraphicsDataOrthoCubeLines
 import exudyn.graphics as graphics
 
 SC = exu.SystemContainer()

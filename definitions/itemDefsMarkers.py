@@ -1701,7 +1701,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A special Marker attached to a 2D ANCF beam finite element with cubic interpolation and 8 coordinates.',
     classType=ClassTypeMarker,
-    miniExample=r"""    #the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
+    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    #the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
     cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4,
                               physicsBendingDamping=0.1)
     [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
@@ -1796,7 +1797,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCMarker,
     overallDescription=r'A special Marker attached to the coordinates of a 2D ANCF beam finite element with cubic interpolation.',
     classType=ClassTypeMarker,
-    miniExample=r"""    #the coordinates of ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
+    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    #the coordinates of ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
     cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
     [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
                             numberOfElements=4, cableTemplate=cable,

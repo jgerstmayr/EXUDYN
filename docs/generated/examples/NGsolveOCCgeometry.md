@@ -77,7 +77,7 @@ if True:
                                                                    meshOrder=2,
                                                                    addNormals=True,
                                                                    )
-color = color4steelblue
+color = graphics.color.steelblue
 meshColor=graphics.color.lawngreen[0:3]+[graphics.material.indexChrome]
                                      
 gMesh = graphics.FromPointsAndTrigs(points, triangles, normals=normals,

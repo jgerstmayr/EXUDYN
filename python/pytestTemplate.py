@@ -14,6 +14,7 @@
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
+from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()

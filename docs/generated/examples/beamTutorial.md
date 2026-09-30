@@ -27,6 +27,7 @@ You can view and download this file on Github: [beamTutorial.py](https://github.
 ## import libaries
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.beams import GenerateStraightBeam
 import exudyn.graphics as graphics
 
 import numpy as np

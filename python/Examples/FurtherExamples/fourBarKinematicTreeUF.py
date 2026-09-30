@@ -40,7 +40,7 @@ gravity = [0, -9.81, 0]  # Schwerkraft
 torque = 1
 
 
-graphicsBaseList = [graphics.Brick(size=[0.75*w, 0.75*w, 0.75*w], color=color4grey)] #rail
+graphicsBaseList = [graphics.Brick(size=[0.75*w, 0.75*w, 0.75*w], color=graphics.color.grey)] #rail
 
 linkSystem = Robot(gravity=gravity,
               base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
@@ -64,7 +64,7 @@ preHT = HT0()
 link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                  jointType='Rz', preHT=preHT, 
                  #PDcontrol=(pControl*0, dControl*0),
-                 visualization=VRobotLink(linkColor=color4blue))
+                 visualization=VRobotLink(linkColor=graphics.color.blue))
 linkSystem.AddLink(link)
 linksList += [copy(link)]
 
@@ -78,7 +78,7 @@ preHT = HTtranslateY(L1)
 link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                  jointType='Rz', preHT=preHT, 
                  #PDcontrol=(pControl*0, dControl*0),
-                 visualization=VRobotLink(linkColor=color4blue))
+                 visualization=VRobotLink(linkColor=graphics.color.blue))
 linkSystem.AddLink(link)
 linksList += [copy(link)]
 
@@ -92,7 +92,7 @@ preHT = HTtranslateY(L2)
 link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                  jointType='Rz', preHT=preHT, 
                  #PDcontrol=(pControl*0, dControl*0),
-                 visualization=VRobotLink(linkColor=color4blue))
+                 visualization=VRobotLink(linkColor=graphics.color.blue))
 linkSystem.AddLink(link)
 linksList += [copy(link)]
 
@@ -106,7 +106,7 @@ preHT = HTtranslateY(L3)
 link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                   jointType='Rz', preHT=preHT, 
                   #PDcontrol=(pControl*0, dControl*0),
-                  visualization=VRobotLink(linkColor=color4blue))
+                  visualization=VRobotLink(linkColor=graphics.color.blue))
 linkSystem.AddLink(link)
 linksList += [copy(link)]
 

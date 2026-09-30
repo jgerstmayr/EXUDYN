@@ -20,6 +20,7 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
+from exudyn.beams import GenerateStraightLineANCFCable2D
 #contact with friction between a circle and an ANCF cable: a cantilever falls onto a circle
 cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4,
                           physicsBendingDamping=0.1)

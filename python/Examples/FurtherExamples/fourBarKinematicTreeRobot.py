@@ -69,12 +69,12 @@ torque = 1 # Nm Antriebsmoment am ersten Link
 
 
 gravity3D = [0,-9.81*0,0]
-graphicsBaseList = [graphics.Brick(size=[L, 0.8*w, 0.8*w], color=color4grey)]
+graphicsBaseList = [graphics.Brick(size=[L, 0.8*w, 0.8*w], color=graphics.color.grey)]
 
 newRobot = Robot(gravity=gravity3D,
               base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
               tool = RobotTool(HT=HTtranslate([0,0.5*Lengths[-1],0]), visualization=VRobotTool(graphicsData=[
-                  graphics.Brick(size=[w, Lengths[-1], w], color=color4orange)])),
+                  graphics.Brick(size=[w, Lengths[-1], w], color=graphics.color.orange)])),
               referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
 
@@ -93,11 +93,11 @@ for i in range(nChainLinks):
     if i == 0:
         link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                         jointType='Rz', preHT=preHT, 
-                        visualization=VRobotLink(linkColor=color4red))
+                        visualization=VRobotLink(linkColor=graphics.color.red))
     else:
         link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                         jointType='Rz', preHT=preHT, 
-                        visualization=VRobotLink(linkColor=color4blue))
+                        visualization=VRobotLink(linkColor=graphics.color.blue))
     
     newRobot.AddLink(link)
     linksList += [copy(link)]

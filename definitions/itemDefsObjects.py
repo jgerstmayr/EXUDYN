@@ -4285,7 +4285,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
 """,
     mainParentClass=MainParentClassMainObjectBody,
-    miniExample=r"""    rhoA = 78.
+    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    rhoA = 78.
     EA = 1000000.
     EI = 833.3333333333333
     cable = Cable2D(physicsMassPerLength=rhoA, 
@@ -4494,7 +4495,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectANCFCable2DBase,
     overallDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2, which adds additional (redundant) motion in axial direction of the beam. This allows modeling pipes but also axially moving beams. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
-    miniExample=r"""    #an axially moving cable: the material slides through clamped nodes, described by one ALE coordinate
+    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    #an axially moving cable: the material slides through clamped nodes, described by one ALE coordinate
     nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
                                        initialCoordinates=[0], initialCoordinates_t=[0]))
     cable = ObjectALEANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4)
@@ -10090,7 +10092,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A very specialized penalty-based contact condition between a 2D circle (=marker0, any Position-marker) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with the number of cordinates according to the number of contact segments; the contact gap $g$ is integrated (piecewise linear) along the cable and circle; the contact force $f_c$ is zero for $gap>0$ and otherwise computed from $f_c = g*contactStiffness + \dot g*contactDamping$; during Newton iterations, the contact force is actived only, if $dataCoordinate[0] <= 0$; dataCoordinate is set equal to gap in nonlinear iterations, but not modified in Newton iterations.""",
     classType=ClassTypeObject,
-    miniExample=r"""    #the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
+    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    #the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
     cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4,
                               physicsBendingDamping=0.1)
     [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
@@ -10257,7 +10260,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A very specialized penalty-based contact/friction condition between a 2D circle in the local x/y plane (=marker0, a RigidBody Marker, from node or object) on a body and an ANCFCable2DShape (=marker1, Marker: BodyCable2DShape), in xy-plane. A node NodeGenericData is required with 3$\times$(number of contact segments) -- containing per segment: [contact gap, stick/slip (stick=0, slip=+-1, undefined=-2), last friction position]. The connector works with Cable2D and ALECable2D, HOWEVER, due to conceptual differences the (tangential) frictionStiffness cannot be used with ALECable2D; if using, it gives wrong tangential stresses, even though it may work in general.""",
     classType=ClassTypeObject,
-    miniExample=r"""    #contact with friction between a circle and an ANCF cable: a cantilever falls onto a circle
+    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    #contact with friction between a circle and an ANCF cable: a cantilever falls onto a circle
     cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4,
                               physicsBendingDamping=0.1)
     [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
@@ -13600,7 +13604,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.',
     classType=ClassTypeObject,
-    miniExample=r"""    #the coordinates of ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
+    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    #the coordinates of ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
     cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
     [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
                             numberOfElements=4, cableTemplate=cable,
@@ -13930,7 +13935,8 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r"""A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the ABRV:ODE2 coordinate q[0] provides the (given) moving coordinate in the cable element.""",
     classType=ClassTypeObject,
-    miniExample=r"""    #a mass point carried by the material of an axially moving cable
+    miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
+    #a mass point carried by the material of an axially moving cable
     nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
                                        initialCoordinates=[0], initialCoordinates_t=[0]))
     cable = ObjectALEANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4)

@@ -19,6 +19,7 @@ You can view and download this file on Github: [ANCFCableBeamDampingTest.py](htt
 import exudyn as exu
 import numpy as np
 from exudyn.utilities import *
+from exudyn.beams import GenerateStraightLineANCFCable2D
 import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)

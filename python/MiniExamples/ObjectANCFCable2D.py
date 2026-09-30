@@ -20,6 +20,7 @@ mbs = SC.AddSystem()
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
+from exudyn.beams import GenerateStraightLineANCFCable2D
 rhoA = 78.
 EA = 1000000.
 EI = 833.3333333333333

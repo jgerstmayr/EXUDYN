@@ -21,6 +21,7 @@ You can view and download this file on Github: [rigidBodyCOMtest.py](https://git
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.graphicsDataUtilities import GraphicsDataOrthoCubeLines, GraphicsDataRectangle
 import exudyn.graphics as graphics
 from exudyn.FEM import *
 

@@ -59,8 +59,8 @@ for i in range(n):
         v = np.array([0,0,0])
         
         #graphics
-        gLink1 =  graphics.Brick(centerPoint= [0.5*L1,0,0], size= [L1,w,w], color=color4dodgerblue)
-        gJoint1 = graphics.Cylinder([0,0,-1.25*w], [0,0,2.5*w], 0.4*w, color=color4grey)
+        gLink1 =  graphics.Brick(centerPoint= [0.5*L1,0,0], size= [L1,w,w], color=graphics.color.dodgerblue)
+        gJoint1 = graphics.Cylinder([0,0,-1.25*w], [0,0,2.5*w], 0.4*w, color=graphics.color.grey)
         
         linkMasses += [J1.Mass()]
         linkCOMs.Append(J1.COM())
@@ -71,8 +71,8 @@ for i in range(n):
         v = np.array([L1,0,0])
         
         #graphics
-        gLink2 =  graphics.Brick(centerPoint= [0.5*L2,0,0], size= [L2,w,w], color=color4dodgerblue)
-        gJoint2 = graphics.Cylinder([0,0,-1.25*w], [0,0,2.5*w], 0.4*w, color=color4grey)
+        gLink2 =  graphics.Brick(centerPoint= [0.5*L2,0,0], size= [L2,w,w], color=graphics.color.dodgerblue)
+        gJoint2 = graphics.Cylinder([0,0,-1.25*w], [0,0,2.5*w], 0.4*w, color=graphics.color.grey)
         
         linkMasses += [J2.Mass()]
         linkCOMs.Append(J2.COM())
@@ -83,10 +83,10 @@ for i in range(n):
         v = np.array([L2,0,0])
         
         #graphics
-        gLink3 =  graphics.Brick(centerPoint= [0.5*L3,0,0], size= [L3,w,w], color=color4dodgerblue)
-        gJoint3 = graphics.Cylinder([0,0,-1.25*w], [0,0,2.5*w], 0.4*w, color=color4grey)
-        # gLink4 =  graphics.Brick(centerPoint= [0,0,0], size= [0,0,0], color=color4dodgerblue) # nur für Joint4
-        # gJoint4 = graphics.Cylinder([0,0,-1.25*w], [0,0,2.5*w], 0.4*w, color=color4grey)
+        gLink3 =  graphics.Brick(centerPoint= [0.5*L3,0,0], size= [L3,w,w], color=graphics.color.dodgerblue)
+        gJoint3 = graphics.Cylinder([0,0,-1.25*w], [0,0,2.5*w], 0.4*w, color=graphics.color.grey)
+        # gLink4 =  graphics.Brick(centerPoint= [0,0,0], size= [0,0,0], color=graphics.color.dodgerblue) # nur für Joint4
+        # gJoint4 = graphics.Cylinder([0,0,-1.25*w], [0,0,2.5*w], 0.4*w, color=graphics.color.grey)
         
         linkMasses += [J3.Mass()]
         linkCOMs.Append(J3.COM())

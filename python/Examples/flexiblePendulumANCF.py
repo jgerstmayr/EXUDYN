@@ -14,6 +14,7 @@ import sys
 sys.exudynFast = True
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.beams import GenerateStraightLineANCFCable2D
 import exudyn
 import exudyn.graphics as graphics
 

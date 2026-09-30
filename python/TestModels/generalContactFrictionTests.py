@@ -12,6 +12,7 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.graphicsDataUtilities import RefineMesh, ShrinkMeshNormalToSurface
 import exudyn.graphics as graphics
 
 import numpy as np

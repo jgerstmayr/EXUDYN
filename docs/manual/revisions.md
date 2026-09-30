@@ -41,6 +41,21 @@ from math import sin, cos, sqrt
 import exudyn.graphics as graphics
 ```
 
+**`from exudyn.utilities import *` provides less** (#2756): no longer the beam generators, the
+MainSystem extensions and the old graphics helpers, which each have their own place. A script that
+used them without importing them gets a `NameError`, and the fix is one line:
+
+| name | write instead |
+|---|---|
+| `GenerateStraightLineANCFCable2D`, `GenerateSlidingJoint`, `GenerateAleSlidingJoint`, `GenerateStraightBeam` | `from exudyn.beams import GenerateStraightBeam` (the one used) |
+| `CreateDistanceSensorGeometry`, `CreateDistanceSensor`, `DrawSystemGraph` | `mbs.CreateDistanceSensor(...)`, `mbs.DrawSystemGraph(...)` |
+| `color4red`, `color4steelblue`, ... | `graphics.color.red`, `graphics.color.steelblue`, ... |
+| `GraphicsDataRectangle`, `RefineMesh`, ... - the rest of `exudyn.graphicsDataUtilities` | `from exudyn.graphicsDataUtilities import *` |
+
+`GraphicsDataRectangle` and `GraphicsDataOrthoCubeLines` are deprecated: `graphics.Lines` and
+`graphics.BrickXYZ(..., addFaces=False, addEdges=True)` draw the same. `exudev scripts <folder>` names
+every such line of a script.
+
 **Names that are gone.** Eleven small vector helpers were removed from `exudyn.basicUtilities`
 — numpy does all of them, faster and in one call; what they did is in the
 [`basicUtilities.py` of Exudyn 1.11.0](https://github.com/jgerstmayr/EXUDYN/blob/e44aca1b4fe3e5f4d820ff407fb3fd30b6581c1c/main/pythonDev/exudyn/basicUtilities.py).

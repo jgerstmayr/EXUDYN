@@ -15,6 +15,7 @@ import exudyn as exu
 if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 import numpy as np

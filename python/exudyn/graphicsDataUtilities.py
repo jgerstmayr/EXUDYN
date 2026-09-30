@@ -466,7 +466,8 @@ def GraphicsDataRectangle(xMin, yMin, xMax, yMax, color=[0.,0.,0.,1.]):
         graphicsData dictionary, to be used in visualization of EXUDYN objects
 
     Note:
-        DEPRECATED
+        DEPRECATED: use graphics.Lines with the five corner points,
+        graphics.Lines([[xMin,yMin,0],[xMax,yMin,0],[xMax,yMax,0],[xMin,yMax,0],[xMin,yMin,0]], color)
     """
 
     rect = [xMin, yMin,xMax,yMax]
@@ -485,7 +486,8 @@ def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,
         graphicsData dictionary, to be used in visualization of EXUDYN objects
 
     Note:
-        DEPRECATED
+        DEPRECATED: use graphics.BrickXYZ(xMin, yMin, zMin, xMax, yMax, zMax, addFaces=False, addEdges=True,
+        edgeColor=color)
     """
 
     dataRect = {'type':'Line', 'color': list(color), 'data':[xMin,yMin,zMin, xMin,yMax,zMin, xMin,yMin,zMin, xMax,yMin,zMin, xMax,yMax,zMin, xMax,yMin,zMin, 

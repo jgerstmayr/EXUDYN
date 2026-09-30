@@ -2936,46 +2936,22 @@ package).
     the script still wins.
 
 <a id="rg12-30"></a>
-**RG12.30** *(group RG12; maintainer 2026-09-30)* **`exudyn.utilities` imports less** (#2756). After the
-    `__all__` of RG12 it still hands out, through `from exudyn.utilities import *`, the four beam generators
-    (`GenerateStraightLineANCFCable2D`, `GenerateSlidingJoint`, `GenerateAleSlidingJoint`,
-    `GenerateStraightBeam`, which belong to `exudyn.beams`), three MainSystem extensions
-    (`CreateDistanceSensorGeometry`, `CreateDistanceSensor`, `DrawSystemGraph`, which are `mbs.Create...` and
-    `mbs.Draw...`) and all 37 names of `exudyn.graphicsDataUtilities` - among them the old colors
-    `color4red`, ... which `graphics.color` replaces and which shall not be promoted. Both imports go. A
-    further break for scripts, accepted for the cleaner future (maintainer).
-    - **RG12.30.1** the evaluation: what breaks, what has no replacement yet, how much is manual. First
-      findings (2026-09-30): the generators are called as free functions without their own import in 9
-      examples, 6 test models and 8 MiniExamples (`GenerateStraightLineANCFCable2D` mostly),
-      `DrawSystemGraph` in one test model, `GenerateStraightBeam` in the tutorial of the flexible beams;
-      names of `graphicsDataUtilities` without their own import in 16 examples and 25 test models -
-      `GraphicsDataRectangle` (57 uses), `RefineMesh` (14), `GraphicsDataOrthoCubeLines` (5), eight
-      `color4...` and `ShrinkMeshNormalToSurface` - and in `docs/manual/theoryContact.md`. **Without a
-      replacement in `exudyn.graphics`**: `GraphicsDataRectangle`, `GraphicsDataOrthoCubeLines` and the mesh
-      functions (`RefineMesh`, `ShrinkMeshNormalToSurface`, `ComputeTriangularMesh`, ...) - a script would
-      import them from `exudyn.graphicsDataUtilities`, the module that is not to be promoted; whether they
-      get a name in `exudyn.graphics` first is the maintainer's decision. Still to check: the generated
-      documentation pages that list the contents of `exudyn.utilities`, the package's own modules
-      (`robotics/*` import `graphicsDataUtilities` themselves and are unaffected, `FEM.py` too), the
-      `publications/` examples, and the user scripts of the institute (RG2.2). **The one larger risk**:
-      users' own models - `color4...` through `exudyn.utilities` is in many old scripts and tutorials, and
-      a star import cannot be caught with a deprecation warning, only by `exudev scripts` and the revisions
-      page;
-    - **RG12.30.2** **DECIDED 2026-09-30** (maintainer): nothing new in `exudyn.graphics`;
-      `GraphicsDataRectangle` and `GraphicsDataOrthoCubeLines` are to be replaced by the functions of
-      `exudyn.graphics` and are **marked deprecated**; scripts import them - and the mesh functions - from
-      `exudyn.graphicsDataUtilities`;
-    - **RG12.30.3** `utilities.py`: the two imports and the seven names removed from `__all__`;
-    - **RG12.30.4** the scripts under `python/` (examples, test models, the MiniExamples through their
-      definitions): the imports they need written in - `from exudyn.beams import ...`, `mbs.CreateDistanceSensor`,
-      `graphics.color.red` for `color4red`, `exudyn.graphics` for the rest; mechanically, by a script, and
-      the test suite, the examples run and the MiniExamples unchanged in their results;
-    - **RG12.30.5** `exudev scripts` (`tools/checkUserScripts.py`): the removed names in `formerStarNames`,
-      each with its replacement, so that it names them in a user's script;
-    - **RG12.30.6** the documentation: `docs/manual/revisions.md` (*What can break a script*, with the
-      workaround in one line: `from exudyn.beams import ...`, `graphics.color.red`, or
-      `from exudyn.graphicsDataUtilities import *` for the rest), the tutorial and the theory chapter that use
-      the names, the generated pages.
+**RG12.30** *(group RG12; maintainer 2026-09-30)* **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg12-30) —
+    **`exudyn.utilities` imports less** (#2756): no longer the beam generators (`exudyn.beams`), the
+    MainSystem extensions (`mbs.Create...`, `mbs.DrawSystemGraph`) and `exudyn.graphicsDataUtilities` (the
+    old colors `color4...` are `graphics.color....`). A further break for scripts, accepted for the cleaner
+    future (maintainer).
+    - **RG12.30.1** **DONE** - the evaluation: no blocker in the repository; about 55 scripts need an
+      import, which a script writes; the larger risk is users' own models (`color4...`), which only
+      `exudev scripts` and the revisions page catch;
+    - **RG12.30.2** **DECIDED** (maintainer): nothing new in `exudyn.graphics`; `GraphicsDataRectangle` and
+      `GraphicsDataOrthoCubeLines` deprecated, their docstrings name the replacement;
+    - **RG12.30.3** **DONE** - `utilities.py`: the imports and the seven names out of `__all__`;
+    - **RG12.30.4** **DONE** - 46 scripts under `python/` and 8 MiniExamples (through their definitions) import
+      what they use; colors as `graphics.color...`;
+    - **RG12.30.5** **DONE** - `exudev scripts` names every such line with its replacement;
+    - **RG12.30.6** **DONE** - `revisions.md` (a table with the one-line fixes), the flexible-beam tutorial,
+      the contact theory chapter; the generated pages regenerated.
 
 <a id="rg12-29"></a>
 **RG12.29** *(group RG12; maintainer 2026-09-30)* **What an item provides, asked from Python** (#2203).
@@ -3287,7 +3263,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.29 | #2203 | ask an item from Python which output variables and types it provides |
-| RG12.30 | #2756 | `exudyn.utilities` imports less: the beam generators, MainSystem extensions and `graphicsDataUtilities` out; evaluation first |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
 | RG14.2 | #2745 | connectors compute from small marker structures: the performance baseline first (RG14.2.1), the interface to decide (RG14.2.2) |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |

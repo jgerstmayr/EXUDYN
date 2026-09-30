@@ -24,6 +24,7 @@ import exudyn as exu
 #a local run must not open a plot window when windows are suppressed (#2477)
 if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 from exudyn.lieGroupBasics import *
 from exudyn.lieGroupIntegration import *

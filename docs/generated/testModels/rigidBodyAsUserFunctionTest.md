@@ -23,6 +23,7 @@ You can view and download this file on Github: [rigidBodyAsUserFunctionTest.py](
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 import numpy as np

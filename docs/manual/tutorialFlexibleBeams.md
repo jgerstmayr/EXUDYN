@@ -16,6 +16,7 @@ The shear deformable beam is rigidly attached to ground and the cable is rigidly
 ```python
   import exudyn as exu
   from exudyn.utilities import *
+  from exudyn.beams import GenerateStraightBeam
   import numpy as np
 
   SC = exu.SystemContainer()

@@ -16,6 +16,7 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 from exudyn.FEM import *
 

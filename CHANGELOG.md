@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 169 | 1.12.183 |
+| 1.12 | Metheney | 170 | 1.12.184 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.184** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.utilities imports less (#2756)
+  - description: Maintainer 2026-09-30: remove from exudyn.utilities the imports of the beam generators (GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint, GenerateStraightBeam - in exudyn.beams), of CreateDistanceSensorGeometry, CreateDistanceSensor, DrawSystemGraph (mbs.Create..., mbs.Draw...) and of graphicsDataUtilities (the old colors color4red, ... shall not be promoted); update the exudev scripts checker, all models under python/, and the documentation with the workarounds. Planned as revision2026b step RG12.30.
+  - **notes:** from exudyn.utilities import \* no longer provides the beam generators (import them from exudyn.beams), the MainSystem extensions CreateDistanceSensor..., DrawSystemGraph (use mbs.CreateDistanceSensor(...), mbs.DrawSystemGraph(...)) and the names of exudyn.graphicsDataUtilities (the colors color4red... are graphics.color.red...; import the rest from exudyn.graphicsDataUtilities); GraphicsDataRectangle and GraphicsDataOrthoCubeLines are deprecated; exudev scripts names every affected line
+  - date resolved: **2026-09-30 13:53**, date raised: 2026-09-30
 - **1.12.183** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` explicit solvers: the warning about the PostNewton step is wrong (#2755)
   - description: The warning added for \#830 (revision2026b RG4.15.3) says that explicit solvers do not perform the PostNewton step; they do, after every step, through the discontinuous iteration of CSolverBase. The warning is removed; found in revision2026b step RG4.16.1.
   - **notes:** the warning at the start of an explicit solve about objects with a PostNewton step is removed: it was wrong - explicit solvers perform the PostNewton step after every step, like the implicit solvers

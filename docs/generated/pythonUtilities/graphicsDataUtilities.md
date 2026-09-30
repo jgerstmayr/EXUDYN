@@ -144,7 +144,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`generalCont
 - **function description**: generate graphics data for 2D rectangle
 - **input**: minimal and maximal cartesian coordinates in (x/y) plane; color provided as list of 4 RGBA values
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
-- **notes**: DEPRECATED
+- **notes**: DEPRECATED: use graphics.Lines with the five corner points, graphics.Lines([[xMin,yMin,0],[xMax,yMin,0],[xMax,yMax,0],[xMin,yMax,0],[xMin,yMin,0]], color)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFswitchingSlidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFswitchingSlidingJoint2D.py) (Ex), [`lavalRotor2Dtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/lavalRotor2Dtest.py) (Ex), [`particleClusters.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particleClusters.py) (Ex), [`particlesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesTest.py) (Ex), [`ANCFcontactFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactFrictionTest.py) (TM), [`ANCFmovingRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py) (TM), [`ANCFslidingAndALEjointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFslidingAndALEjointTest.py) (TM), ...
@@ -153,12 +153,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontact
 (sec-graphicsdatautilities-graphicsdataorthocubelines)=
 ## Function: GraphicsDataOrthoCubeLines
 
-[`GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color = [0.,0.,0.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L478)
+[`GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color = [0.,0.,0.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L479)
 
 - **function description**: generate graphics data for orthogonal block drawn with lines
 - **input**: minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
-- **notes**: DEPRECATED
+- **notes**: DEPRECATED: use graphics.BrickXYZ(xMin, yMin, zMin, xMax, yMax, zMax, addFaces=False, addEdges=True, edgeColor=color)
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigid3Dexample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigid3Dexample.py) (Ex), [`genericJointUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/genericJointUserFunctionTest.py) (TM), [`rigidBodyCOMtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyCOMtest.py) (TM), [`sphericalJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphericalJointTest.py) (TM)

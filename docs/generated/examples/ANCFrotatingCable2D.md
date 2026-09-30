@@ -21,6 +21,7 @@ You can view and download this file on Github: [ANCFrotatingCable2D.py](https://
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.beams import GenerateStraightLineANCFCable2D
 from math import sin
 import exudyn.graphics as graphics
 

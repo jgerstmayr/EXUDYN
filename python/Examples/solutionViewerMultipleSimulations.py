@@ -13,6 +13,7 @@
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+from exudyn.beams import GenerateStraightLineANCFCable2D
 import exudyn.graphics as graphics
 
 SC = exu.SystemContainer()

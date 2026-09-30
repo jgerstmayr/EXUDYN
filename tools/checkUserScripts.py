@@ -57,6 +57,23 @@ formerStarNames = {
     'docmeta':  'from exudyn.misc.docmeta import docmeta',
     }
 
+#WHAT 'from exudyn.utilities import *' NO LONGER PROVIDES (#2756): name -> (the module that provides it,
+#what to write). Reported only when the script does not star-import that module itself
+utilitiesNames = {}
+for name in ['GenerateStraightLineANCFCable2D', 'GenerateSlidingJoint', 'GenerateAleSlidingJoint', 'GenerateStraightBeam']:
+    utilitiesNames[name] = ('exudyn.beams', 'from exudyn.beams import ' + name)
+for name in ['CreateDistanceSensorGeometry', 'CreateDistanceSensor', 'DrawSystemGraph']:
+    utilitiesNames[name] = ('exudyn.misc.mainSystemExtensions', 'mbs.' + name + '(...), a function of the MainSystem')
+for name in ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'orange', 'pink', 'lawngreen', 'springgreen',
+             'violet', 'dodgerblue', 'lightred', 'lightgreen', 'steelblue', 'brown', 'black', 'darkgrey',
+             'darkgrey2', 'grey', 'lightgrey', 'lightgrey2', 'white', 'default']:
+    utilitiesNames['color4' + name] = ('exudyn.graphicsDataUtilities', 'graphics.color.' + name
+                                       + ' with import exudyn.graphics as graphics')
+for name in ['color4list', 'color4listSize', 'SwitchTripletOrder', 'ComputeTriangleNormal', 'ComputeTriangleArea',
+             'Compute6NodeTrigsNormals', 'RefineMesh', 'ShrinkMeshNormalToSurface', 'ComputeTriangularMesh',
+             'SegmentsFromPoints', 'CirclePointsAndSegments', 'GraphicsDataRectangle', 'GraphicsDataOrthoCubeLines']:
+    utilitiesNames[name] = ('exudyn.graphicsDataUtilities', 'from exudyn.graphicsDataUtilities import ' + name)
+
 #NAMES THAT ARE GONE, with what to write instead: the vector helpers removed from basicUtilities
 #(#2442) and the GraphicsData... aliases removed from exudyn.utilities (#2443)
 removedNames = {
@@ -361,6 +378,10 @@ def CheckTree(tree, tables):
             if starImport and node.id in formerStarNames:
                 Report(node.lineno, ('star', node.id), "'" + node.id + "' no longer comes with "
                        "'from " + starModules[0] + " import *'; add: " + formerStarNames[node.id])
+            elif ('exudyn.utilities' in starModules and node.id in utilitiesNames
+                  and utilitiesNames[node.id][0] not in starModules):
+                Report(node.lineno, ('utilities', node.id), "'" + node.id + "' no longer comes with "
+                       "'from exudyn.utilities import *'; use: " + utilitiesNames[node.id][1])
             elif node.id in removedNames:
                 Report(node.lineno, ('removed', node.id), "'" + node.id + "' is removed; use "
                        + removedNames[node.id])

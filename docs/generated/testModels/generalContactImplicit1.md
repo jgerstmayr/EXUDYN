@@ -66,7 +66,7 @@ gContact.SetSearchTreeCellSize(numberOfCells=[4,4,4])
 p0 = np.array([0,0,-0.5*t])
 color4wall = [0.9,0.9,0.7,0.5]
 addNormals = False
-gFloor = graphics.Brick(p0,[L,L,t],color4steelblue,addNormals)
+gFloor = graphics.Brick(p0,[L,L,t],graphics.color.steelblue,addNormals)
 
 gDataList = [gFloor]
 
@@ -88,7 +88,7 @@ if True: #looses color
 evalNodes = [] #collect nodes that are evaluated for test
 #%%++++++++++++++++++++++++++++++++++++++++++++
 #free rolling sphere:
-gList = [graphics.Sphere(point=[0,0,0], radius=r, color= color4red, nTiles=24)]
+gList = [graphics.Sphere(point=[0,0,0], radius=r, color= graphics.color.red, nTiles=24)]
 gList += [graphics.Basis(length=2*r)]
 
 omega0 = -0.*np.array([5,1.,0.])

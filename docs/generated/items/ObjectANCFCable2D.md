@@ -442,6 +442,7 @@ cable = ObjectANCFCable2D(physicsMassPerLength=rhoA,
 
 
 ```python
+from exudyn.beams import GenerateStraightLineANCFCable2D
 rhoA = 78.
 EA = 1000000.
 EI = 833.3333333333333

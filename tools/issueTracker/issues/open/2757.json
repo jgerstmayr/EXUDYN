@@ -1,0 +1,11 @@
+{
+  "number": 2757,
+  "title": "examples in subfolders are not run, and two of them fail",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "runTestExamples.py runs python/Examples/*.py only; the subfolders (FurtherExamples, publications, ...) are not run. Found 2026-09-30 (revision2026b RG12.30.4) by running six of them: FurtherExamples/fourBarKinematicTreeUF.py fails with 'module object is not callable' (copy), publications/CND2022PieberNtarladimaGerstmayr/fixedFixedANCFALEdiscreteMasses.py with 'exudyn.basicUtilities has no attribute pi' - both from earlier import cleanups, not from RG12.30.",
+  "dateRaised": "2026-09-30",
+  "deadline": "2027-03-29"
+}

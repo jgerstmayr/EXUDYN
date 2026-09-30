@@ -30,6 +30,7 @@ from exudyn.itemInterface import *
 from exudyn.FEM import *
 from exudyn.graphicsDataUtilities import *
 from exudyn.utilities import *
+from exudyn.beams import GenerateAleSlidingJoint, GenerateStraightLineANCFCable2D
 import exudyn.graphics as graphics
 
 import numpy as np

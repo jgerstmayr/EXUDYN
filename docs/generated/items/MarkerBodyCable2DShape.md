@@ -65,6 +65,7 @@ For each point, the two rows of the shape functions of the element, $\partial \L
 
 
 ```python
+from exudyn.beams import GenerateStraightLineANCFCable2D
 #the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
 cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4,
                           physicsBendingDamping=0.1)

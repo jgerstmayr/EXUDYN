@@ -7591,3 +7591,30 @@ the next steps compare against it with `--compare`.
 - **RG14.2.2**: one global experimental switch as the fallback; loads not before the rigid-marker
   connectors; automatic differentiation later, not in the first migration. Questions (a), (b) and (e)
   answered in `tmp/evalRG14_2_connectorInterface.md`, section 10.
+
+<a id="rg12-30"></a>
+### RG12.30 — `exudyn.utilities` imports less (2026-09-30, #2756)
+
+`from exudyn.utilities import *` hands out the names of `basicUtilities`, `advancedUtilities`,
+`rigidBodyUtilities` and `itemInterface` - and no longer the four beam generators, `CreateDistanceSensorGeometry`,
+`CreateDistanceSensor`, `DrawSystemGraph` and the 37 names of `graphicsDataUtilities`.
+
+**The scripts under `python/`**, written by a script that parses each file (`ast`) and adds the import only
+where a name is used and not bound otherwise: 24 examples, 21 test models and `pytestTemplate.py`; the 8
+MiniExamples that use `GenerateStraightLineANCFCable2D` get `from exudyn.beams import ...` as their first line
+in the definition. The colors became `graphics.color.<name>` (the same values, checked); `GraphicsDataRectangle`
+(the most used, 57 times), `GraphicsDataOrthoCubeLines`, `RefineMesh` and `ShrinkMeshNormalToSurface` are imported
+from `exudyn.graphicsDataUtilities`. No script called the three MainSystem extensions as free functions.
+
+**Deprecated** (RG12.30.2): `GraphicsDataRectangle` - `graphics.Lines` with the five corners - and
+`GraphicsDataOrthoCubeLines` - `graphics.BrickXYZ(..., addFaces=False, addEdges=True)`; the docstrings say so.
+No runtime warning: the repository's own 57 uses would fill the logs, and the maintainer decided that scripts
+import them.
+
+**`exudev scripts`** (`tools/checkUserScripts.py`): a table `utilitiesNames` - name, the module that provides
+it, what to write - reported when a script star-imports `exudyn.utilities` and not that module; checked on a
+sample script (all four kinds found) and on the 334 scripts of the repository (none left).
+
+**Checks**: the test suite and pytest pass, all MiniExamples; the examples run passes (`runTestExamples.py`:
+170 examples, 29 skipped for missing packages, one known failure); the examples in subfolders are not part of it - six of them run by hand: four fine, two fail for
+reasons older than this step (`copy` not callable, `basicUtilities.pi`) - raised as #2757.
