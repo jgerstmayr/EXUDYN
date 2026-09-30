@@ -1322,7 +1322,7 @@ The steps are numbered in the order they were raised and stand here in the order
       comparison test extends to them; its release step size is also the one difference the test found;
     - **RG4.15.3** **DONE 2026-09-30** (#830) — [log](exudynRevisionLog2026b.md#rg4-15-3) — the explicit
       solvers do no post Newton step: a warning at the start of an explicit solve names the objects that are
-      not updated; the update after each step is left open (it would move results);
+      not updated - **wrong, and removed by RG4.16.1** (#2755): the explicit solvers do the step;
     - **RG4.15.4** **DONE 2026-09-30** (#2127) — [log](exudynRevisionLog2026b.md#rg4-15-3) —
       `ObjectContactSphereTorus`: momentum conservation - the torque of the normal force on the ring was
       missing without friction; test model `contactSphereTorusMomentumTest.py`;
