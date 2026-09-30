@@ -50,11 +50,13 @@ used them without importing them gets a `NameError`, and the fix is one line:
 | `GenerateStraightLineANCFCable2D`, `GenerateSlidingJoint`, `GenerateAleSlidingJoint`, `GenerateStraightBeam` | `from exudyn.beams import GenerateStraightBeam` (the one used) |
 | `CreateDistanceSensorGeometry`, `CreateDistanceSensor`, `DrawSystemGraph` | `mbs.CreateDistanceSensor(...)`, `mbs.DrawSystemGraph(...)` |
 | `color4red`, `color4steelblue`, ... | `graphics.color.red`, `graphics.color.steelblue`, ... |
-| `GraphicsDataRectangle`, `RefineMesh`, ... - the rest of `exudyn.graphicsDataUtilities` | `from exudyn.graphicsDataUtilities import *` |
+| `GraphicsDataRectangle(x0, y0, x1, y1, color)` | `graphics.Lines([[x0,y0,0], [x1,y0,0], [x1,y1,0], [x0,y1,0], [x0,y0,0]], color=color)` |
+| `GraphicsDataOrthoCubeLines(x0, y0, z0, x1, y1, z1, color)` | `graphics.BrickXYZ(x0, y0, z0, x1, y1, z1, addFaces=False, addEdges=True, edgeColor=color)` |
+| `RefineMesh`, `ShrinkMeshNormalToSurface`, ... - the mesh functions of `exudyn.graphicsDataUtilities` | `from exudyn.graphicsDataUtilities import RefineMesh` (the one used) |
 
-`GraphicsDataRectangle` and `GraphicsDataOrthoCubeLines` are deprecated: `graphics.Lines` and
-`graphics.BrickXYZ(..., addFaces=False, addEdges=True)` draw the same. `exudev scripts <folder>` names
-every such line of a script.
+`GraphicsDataRectangle`, `GraphicsDataOrthoCubeLines` and the `color4...` names are deprecated; the
+scripts of the repository use `exudyn.graphics` for them. `exudev scripts <folder>` names every such
+line of a script.
 
 **Names that are gone.** Eleven small vector helpers were removed from `exudyn.basicUtilities`
 — numpy does all of them, faster and in one call; what they did is in the

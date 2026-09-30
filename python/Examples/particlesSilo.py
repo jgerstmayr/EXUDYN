@@ -13,7 +13,6 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
-from exudyn.graphicsDataUtilities import *
 
 import numpy as np
 

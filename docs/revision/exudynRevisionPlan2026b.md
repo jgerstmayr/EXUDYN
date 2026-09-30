@@ -2962,6 +2962,12 @@ package).
     - **RG12.30.5** **DONE** - `exudev scripts` names every such line with its replacement;
     - **RG12.30.6** **DONE** - `revisions.md` (a table with the one-line fixes), the flexible-beam tutorial,
       the contact theory chapter; the generated pages regenerated.
+    - **RG12.30.7** *(maintainer 2026-09-30: RG12.30.4 was a misunderstanding - the scripts are to be
+      adapted, not given an import)* **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg12-30-7) (#2759) -
+      every script and module under `python/` uses `exudyn.graphics` where it has the replacement:
+      `graphics.Lines` for `GraphicsDataRectangle`, `graphics.BrickXYZ(..., addFaces=False, addEdges=True)`
+      for `GraphicsDataOrthoCubeLines`, `graphics.color...` for `color4...`; 66 files, the 41 star imports of
+      `exudyn.graphicsDataUtilities` gone; only the mesh functions without a replacement keep an explicit import.
 
 <a id="rg12-29"></a>
 **RG12.29** *(group RG12; maintainer 2026-09-30)* **What an item provides, asked from Python** (#2203).

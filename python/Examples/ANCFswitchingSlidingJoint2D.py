@@ -13,7 +13,6 @@
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 SC = exu.SystemContainer()
@@ -27,7 +26,7 @@ print('EXUDYN version='+exu.config.Version())
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-background = GraphicsDataRectangle(-0.1,-1.5,2.5,0.25, color=[0.9,0.9,0.9,1.])
+background = graphics.Lines([[-0.1,-1.5,0], [2.5,-1.5,0], [2.5,0.25,0], [-0.1,0.25,0], [-0.1,-1.5,0]], color=[0.9,0.9,0.9,1.])
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [background])))
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #cable:

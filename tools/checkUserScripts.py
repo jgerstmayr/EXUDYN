@@ -71,8 +71,12 @@ for name in ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'orange', 'pin
                                        + ' with import exudyn.graphics as graphics')
 for name in ['color4list', 'color4listSize', 'SwitchTripletOrder', 'ComputeTriangleNormal', 'ComputeTriangleArea',
              'Compute6NodeTrigsNormals', 'RefineMesh', 'ShrinkMeshNormalToSurface', 'ComputeTriangularMesh',
-             'SegmentsFromPoints', 'CirclePointsAndSegments', 'GraphicsDataRectangle', 'GraphicsDataOrthoCubeLines']:
+             'SegmentsFromPoints', 'CirclePointsAndSegments']:
     utilitiesNames[name] = ('exudyn.graphicsDataUtilities', 'from exudyn.graphicsDataUtilities import ' + name)
+utilitiesNames['GraphicsDataRectangle'] = ('exudyn.graphicsDataUtilities', 'graphics.Lines([[x0,y0,0], [x1,y0,0], '
+                                           '[x1,y1,0], [x0,y1,0], [x0,y0,0]], color=color)')
+utilitiesNames['GraphicsDataOrthoCubeLines'] = ('exudyn.graphicsDataUtilities', 'graphics.BrickXYZ(x0, y0, z0, x1, y1, '
+                                                'z1, addFaces=False, addEdges=True, edgeColor=color)')
 
 #NAMES THAT ARE GONE, with what to write instead: the vector helpers removed from basicUtilities
 #(#2442) and the GraphicsData... aliases removed from exudyn.utilities (#2443)

@@ -15,7 +15,6 @@ import exudyn as exu
 if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 import numpy as np
@@ -33,7 +32,7 @@ mbs = SC.AddSystem()
 #++++++++++++++++++++++++++++++++
 #ground object/node:
 
-background = GraphicsDataRectangle(-1, -2, 3, 2, color=[0.9,0.9,0.9,1.])
+background = graphics.Lines([[-1,-2,0], [3,-2,0], [3,2,0], [-1,2,0], [-1,-2,0]], color=[0.9,0.9,0.9,1.])
 
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [background])))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #ground node for coordinate constraint
@@ -46,13 +45,13 @@ a0 = 0.25     #half x-dim of body
 b0 = 0.05    #half y-dim of body
 massRigid0 = 2
 inertiaRigid0 = massRigid0/12*(2*a0)**2
-graphics0 = GraphicsDataRectangle(-a0,-b0,a0,b0)
+graphics0 = graphics.Lines([[-a0,-b0,0], [a0,-b0,0], [a0,b0,0], [-a0,b0,0], [-a0,-b0,0]])
 
 a1 = 0.5     #half x-dim of body
 b1 = 0.05    #half y-dim of body
 massRigid1 = 4
 inertiaRigid1 = massRigid1/12*(2*a1)**2
-graphics1 = GraphicsDataRectangle(-a1,-b1,a1,b1)
+graphics1 = graphics.Lines([[-a1,-b1,0], [a1,-b1,0], [a1,b1,0], [-a1,b1,0], [-a1,-b1,0]])
 
 nRigid0 = mbs.AddNode(Rigid2D(referenceCoordinates=[a0,0,0], 
                               initialVelocities=[0,0,0]));
@@ -66,7 +65,7 @@ oRigid1 = mbs.AddObject(RigidBody2D(physicsMass=massRigid1, physicsInertia=inert
 
 c=0.05 #dimension of mass
 sliderMass = 1
-graphics2 = GraphicsDataRectangle(-c,-c,c,c)
+graphics2 = graphics.Lines([[-c,-c,0], [c,-c,0], [c,c,0], [-c,c,0], [-c,-c,0]])
 
 nMass = mbs.AddNode(Point2D(referenceCoordinates=[2*a0+2*a1,0]))
 oMass = mbs.AddObject(MassPoint2D(physicsMass=sliderMass, nodeNumber=nMass,visualization=VObjectRigidBody2D(graphicsData= [graphics2])))

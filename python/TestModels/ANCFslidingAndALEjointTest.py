@@ -13,7 +13,6 @@
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.beams import GenerateAleSlidingJoint, GenerateSlidingJoint, GenerateStraightLineANCFCable2D
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)
@@ -30,7 +29,7 @@ def AddBodyWithSlidingJoints(mbs,xPositionOfFirstNodes=0,referencePositionOfBody
     massRigid = 5000 #moving mass
     inertiaRigid = massRigid/12*(2*a)**2
     #rigid body which slides:
-    graphicsRigid1 = GraphicsDataRectangle(-b,-a,b,a) #drawing of rigid body
+    graphicsRigid1 = graphics.Lines([[-b,-a,0], [b,-a,0], [b,a,0], [-b,a,0], [-b,-a,0]]) #drawing of rigid body
     yCOM = a    #COM distance to attachment point on suspension rope; in vertical direction      
     
     nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[xPositionOfFirstNodes+referencePositionOfBodyAlongCable,-yCOM,0]));

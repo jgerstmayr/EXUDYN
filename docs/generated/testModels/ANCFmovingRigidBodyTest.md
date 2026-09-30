@@ -22,7 +22,6 @@ You can view and download this file on Github: [ANCFmovingRigidBodyTest.py](http
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 from exudyn.beams import GenerateStraightLineANCFCable2D
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)
@@ -136,8 +135,8 @@ refPos = [0,offset,0]
 #    refPos = [fieldData['stationData'][0]['referencePointCoordinates'][1][0],fieldData['maxVerticalPositionSuspensionRopeShoes'][0],0]
 
 #rigid body which slides:
-graphicsRigid1 = GraphicsDataRectangle(-b,0,b,a) #drawing of rigid body
-graphicsRigid2 = GraphicsDataRectangle(-a,-a,a,0) #drawing of rigid body
+graphicsRigid1 = graphics.Lines([[-b,0,0], [b,0,0], [b,a,0], [-b,a,0], [-b,0,0]]) #drawing of rigid body
+graphicsRigid2 = graphics.Lines([[-a,-a,0], [a,-a,0], [a,0,0], [-a,0,0], [-a,-a,0]]) #drawing of rigid body
 
 nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[refPos[0],refPos[1]-yCOM,0], initialVelocities=[vALE,0,0]));
 oRigid = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid,visualization=VObjectRigidBody2D(graphicsData= [graphicsRigid1,graphicsRigid2])))

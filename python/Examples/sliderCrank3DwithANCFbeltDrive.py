@@ -18,7 +18,6 @@ import exudyn as exu
 if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 from exudyn.itemInterface import*
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 import numpy as np
@@ -142,8 +141,8 @@ vCrank4 = graphics.Brick([-L_A/2,0,0.05-0.005], [L_A+0.01,0.01,0.008],
 vCrank5 = graphics.Cylinder([-L_A,0,0.0], [0,0,0.05],
                                0.01,color=[0.3,0.3,0.9,1])
 
-vDisk_line0 = GraphicsDataRectangle(0,-0.001,r0,0.001)
-vDisk_line1 = GraphicsDataRectangle(0,-0.001,r1,0.001)
+vDisk_line0 = graphics.Lines([[0,-0.001,0], [r0,-0.001,0], [r0,0.001,0], [0,0.001,0], [0,-0.001,0]])
+vDisk_line1 = graphics.Lines([[0,-0.001,0], [r1,-0.001,0], [r1,0.001,0], [0,0.001,0], [0,-0.001,0]])
 
 cylDisc0 = graphics.Cylinder([0,0,-0.005], [0,0,0.01],
                                r0+a/2,color=[0.3,0.3,0.9,1], nTiles=64)

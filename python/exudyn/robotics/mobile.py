@@ -21,7 +21,6 @@ from exudyn.misc.docmeta import docmeta
 import exudyn as exu
 from exudyn.itemInterface import *
 from exudyn.utilities import *
-from exudyn.graphicsDataUtilities import *
 import exudyn.graphics as graphics
 from exudyn.robotics import *
 

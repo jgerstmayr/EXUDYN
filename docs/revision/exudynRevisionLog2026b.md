@@ -7722,3 +7722,33 @@ their github link only. Now:
 - `tools/checkDefinitions.py` gets `CheckExampleReferences`, which rejects a link whose target starts with
   `examples-` or `testmodels-` (it finds the three in the previous version of `itemDefsObjects.py`);
 - `definitions/README.md` states the rule in *Writing a description*.
+
+<a id="rg12-30-7"></a>
+### RG12.30.7 — the scripts use `exudyn.graphics` (2026-09-30, #2759)
+
+RG12.30.4 had given the scripts the import they needed - `from exudyn.graphicsDataUtilities import
+GraphicsDataRectangle`, and left 41 older `from exudyn.graphicsDataUtilities import *` in place. The maintainer
+meant the scripts to be **adapted**. A script (`ast`, the session scratchpad) rewrote every use:
+
+| was | is |
+|---|---|
+| `GraphicsDataRectangle(x0, y0, x1, y1, color)` | `graphics.Lines([[x0,y0,0], [x1,y0,0], [x1,y1,0], [x0,y1,0], [x0,y0,0]], color=color)` - the same five points |
+| `GraphicsDataOrthoCubeLines(x0, y0, z0, x1, y1, z1, color)` | `graphics.BrickXYZ(x0, y0, z0, x1, y1, z1, addFaces=False, addEdges=True, edgeColor=color)` |
+| `color4red`, ..., `color4list` | `graphics.color.red`, ..., `graphics.colorList` |
+| `from exudyn.graphicsDataUtilities import ...` | removed, `import exudyn.graphics as graphics` where missing |
+
+66 files: 43 examples (4 in subfolders), 18 test models, `pytestTemplate.py` and the four modules of
+`exudyn.robotics` (`mobile.py` star-imported it at module level, the other three in their `__main__` part). What
+stays with `exudyn.graphicsDataUtilities`, by the maintainer's decision that `exudyn.graphics` gets nothing new:
+the mesh functions, `RefineMesh` and `ShrinkMeshNormalToSurface` in `generalContactFrictionTests.py` and
+`ComputeTriangleArea` in `FEM.py`, each imported by name; `graphics.py` itself is built on the module.
+
+**Checked**: every changed file parses; the names a script loads and nothing binds are the same before and after
+for all 66 (a check that resolves the star imports; only line numbers moved, and `pytestTemplate.py` lost its
+unbound `graphics`); no script under `python/` loads a name of the module without importing it. The test suite
+and pytest pass; the examples run passes (170, 29 skipped, the one known failure); of the four in subfolders,
+two run until they read a reference file that is not there, one fails for #2757.
+
+The texts follow: the `revisions.md` table gives the one-line replacement per function, `GUI.md` says the
+`color4...` names are deprecated, `exudev scripts` suggests `graphics.Lines` and `graphics.BrickXYZ`, and the
+header of `utilities.py` names `exudyn.graphics`.

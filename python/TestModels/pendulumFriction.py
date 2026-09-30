@@ -13,7 +13,6 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 from exudyn.FEM import *
 
@@ -33,7 +32,7 @@ r = 0.05 #just for graphics
 d = r/2
 
 #add ground object and mass point:
-graphicsBackground = GraphicsDataRectangle(-1.2*L,-1.2*L, 1.2*L, 0.2*L, [1,1,1,1]) #for appropriate zoom
+graphicsBackground = graphics.Lines([[-1.2*L,-1.2*L,0], [1.2*L,-1.2*L,0], [1.2*L,0.2*L,0], [-1.2*L,0.2*L,0], [-1.2*L,-1.2*L,0]], color=[1,1,1,1]) #for appropriate zoom
 oGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0], 
                            visualization = VObjectGround(graphicsData = [graphicsBackground])))
 

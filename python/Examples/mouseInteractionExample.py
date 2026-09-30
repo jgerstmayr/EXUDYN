@@ -18,7 +18,6 @@ from exudyn.itemInterface import *
 import numpy as np
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
-from exudyn.graphicsDataUtilities import *
 
 from math import sin, cos, pi
 

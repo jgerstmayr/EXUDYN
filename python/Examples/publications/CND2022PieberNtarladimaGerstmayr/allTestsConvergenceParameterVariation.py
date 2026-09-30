@@ -28,7 +28,7 @@ import sys
 
 from exudyn.itemInterface import *
 from exudyn.FEM import *
-from exudyn.graphicsDataUtilities import *
+import exudyn.graphics as graphics
 from exudyn.processing import ParameterVariation
 
 import exudyn as exu
@@ -268,8 +268,8 @@ def ParameterFunction(parameterSet):
     tipDispMean=[]
     
     rect = [-2.5,-2,2.5,1] #xmin,ymin,xmax,ymax
-    background0 = GraphicsDataRectangle(0, -0.1, 1, 0.1, color=[0.,0.,0.,1.]) #background
-    background1 = GraphicsDataRectangle(0, -0.05, 0.25, 0.05, color=[0.,0.,0.,1.]) #background
+    background0 = graphics.Lines([[0,-0.1,0], [1,-0.1,0], [1,0.1,0], [0,0.1,0], [0,-0.1,0]], color=[0.,0.,0.,1.]) #background
+    background1 = graphics.Lines([[0,-0.05,0], [0.25,-0.05,0], [0.25,0.05,0], [0,0.05,0], [0,-0.05,0]], color=[0.,0.,0.,1.]) #background
     
     
     

@@ -713,7 +713,6 @@ if __name__ == '__main__':
     #imports
     from exudyn.utilities import *
     from exudyn.rigidBodyUtilities import *
-    from exudyn.graphicsDataUtilities import *
     from exudyn.robotics import *   # to import  robotics core functions
 
 

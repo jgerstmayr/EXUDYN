@@ -22,7 +22,6 @@ You can view and download this file on Github: [explicitLieGroupIntegratorPython
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 from exudyn.lieGroupIntegration import *
 
@@ -39,7 +38,7 @@ r = 0.5 #radius
 L = 1   #length
 
 
-background0 = GraphicsDataRectangle(-L,-L,L,L,color)
+background0 = graphics.Lines([[-L,-L,0], [L,-L,0], [L,L,0], [-L,L,0], [-L,-L,0]], color=color)
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [background0])))
 
 #heavy top is fixed at [0,0,0] (COM of simulated body), but force is applied at [0,1,0] (COM of real top)

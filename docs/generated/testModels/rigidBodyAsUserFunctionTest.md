@@ -23,7 +23,6 @@ You can view and download this file on Github: [rigidBodyAsUserFunctionTest.py](
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 import numpy as np
@@ -39,7 +38,7 @@ zz = 1 #max size
 s = 0.1 #size of cube
 sx = 3*s #x-size
 
-background0 = GraphicsDataRectangle(-zz,-zz,zz,zz,graphics.color.white)
+background0 = graphics.Lines([[-zz,-zz,0], [zz,-zz,0], [zz,zz,0], [-zz,zz,0], [-zz,-zz,0]], color=graphics.color.white)
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
                                    visualization=VObjectGround(graphicsData= [background0])))
 mPosLast = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, 

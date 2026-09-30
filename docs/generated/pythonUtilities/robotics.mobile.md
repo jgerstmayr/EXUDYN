@@ -14,7 +14,7 @@ specific friction angle of rolling disc is used to model rolls of mecanum wheels
 (sec-mobile-mobilerobot2mbs)=
 ## Function: MobileRobot2MBS
 
-[`MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers = True, *args, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L36)
+[`MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers = True, *args, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L35)
 
 - **function description**: add items to existing mbs to build up a mobile robot platform, there are options that can be passed as args / kwargs, which can contains options as described below. The robot platform is built out of rigid bodies where the wheels can be modeled as rolling discs (mecanum wheel x/o configuration) or with a detailed mecanum wheel simulation approach
 - **input**:
@@ -31,7 +31,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 (sec-mobile-generatrix2polynomial)=
 ## Function: Generatrix2Polynomial
 
-[`Generatrix2Polynomial(param, GeneratrixFunction, tol = 1e-14, nFit = 101, nTest = 1001)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L415)
+[`Generatrix2Polynomial(param, GeneratrixFunction, tol = 1e-14, nFit = 101, nTest = 1001)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L414)
 
 - **function description**: create a polynomial describing a generatrix function
 - **input**:
@@ -43,7 +43,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 (sec-mobile-generatrixroll)=
 ## Function: GeneratrixRoll
 
-[`GeneratrixRoll(u, param)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L485)
+[`GeneratrixRoll(u, param)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L484)
 
 - **function description**: generatrix function for a roll of a Mecanum wheel
 - **input**:
@@ -56,7 +56,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 (sec-mobile-fundiffpoly)=
 ## Function: FunDiffPoly
 
-[`FunDiffPoly(x, a)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L507)
+[`FunDiffPoly(x, a)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L506)
 
 - **function description**: calculates the derivative of the polynomial $a0*x^n + ... $
 - **input**:
@@ -70,7 +70,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 (sec-mobile-funddiffpoly)=
 ## Function: FunDDiffPoly
 
-[`FunDDiffPoly(x, a)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L527)
+[`FunDDiffPoly(x, a)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L526)
 
 - **function description**: calculates the second derivative of a polynomial
 - **input**:
@@ -92,7 +92,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 (sec-mobile-mobilekinematics---init--)=
 ### Class function: __init__
 
-[`__init__(self, R, lx, ly, flagAdjusted = False, lcx = 0, lcy = 0, wheeltype = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L325)
+[`__init__(self, R, lx, ly, flagAdjusted = False, lcx = 0, lcy = 0, wheeltype = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L324)
 
 - **class function description**: initialize mobileKinematics class
 - **input**:
@@ -106,7 +106,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 (sec-mobile-mobilekinematics-getwheelvelocities)=
 ### Class function: GetWheelVelocities
 
-[`GetWheelVelocities(self, vDes)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L361)
+[`GetWheelVelocities(self, vDes)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L360)
 
 - **class function description**: calculate wheel velocities from Cartesian velocities
 - **input**:
@@ -121,7 +121,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 (sec-mobile-mobilekinematics-getcartesianvelocities)=
 ### Class function: GetCartesianVelocities
 
-[`GetCartesianVelocities(self, w)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L388)
+[`GetCartesianVelocities(self, w)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/mobile.py#L387)
 
 - **class function description**: calculate Cartesian velocities from wheel velocities
 - **input**:

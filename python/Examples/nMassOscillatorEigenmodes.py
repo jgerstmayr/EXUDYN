@@ -13,7 +13,6 @@
 import exudyn as exu
 import exudyn.graphics as graphics
 from exudyn.itemInterface import *
-from exudyn.graphicsDataUtilities import *
 import matplotlib.pyplot as plt
 from exudyn.interactive import InteractiveDialog
 

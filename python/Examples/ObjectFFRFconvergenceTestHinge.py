@@ -18,7 +18,6 @@ from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
 from exudyn.FEM import *
-from exudyn.graphicsDataUtilities import *
 import time 
 
 SC = exu.SystemContainer()

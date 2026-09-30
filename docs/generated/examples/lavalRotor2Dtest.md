@@ -27,7 +27,6 @@ import exudyn as exu
 if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 import time
@@ -86,7 +85,7 @@ n1=mbs.AddNode(Rigid2D(referenceCoordinates = [0,eps,0],
 nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
 
 #add mass point (this is a 3D object with 3 coordinates):
-gRotor = GraphicsDataRectangle(-r*0.5,-r*0.5,r*0.5,r*0.5,[1,0,0,1])
+gRotor = graphics.Lines([[-r*0.5,-r*0.5,0], [r*0.5,-r*0.5,0], [r*0.5,r*0.5,0], [-r*0.5,r*0.5,0], [-r*0.5,-r*0.5,0]], color=[1,0,0,1])
 rigid2D = mbs.AddObject(RigidBody2D(physicsMass=mass, physicsInertia=mass*r**2, nodeNumber = n1, visualization=VObjectRigidBody2D(graphicsData=[gRotor])))
 
 #marker for ground (=fixed):

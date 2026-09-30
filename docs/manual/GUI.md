@@ -550,7 +550,7 @@ Many functions and objects include color information. In order to allow alpha-tr
 
 E.g., red color with no transparency is obtained by the color=[1,0,0,1].
 Color predefinitions are found in `graphics.py`, e.g., using `graphics.color.red` or `graphics.color.steelblue` as well a list of 16 colors `graphics.colorList`, which is convenient to be used in a loop creating objects.
-Earlier, special colors were given in `exudyn.graphicsDataUtilities.py`, e.g., `color4red` or `color4steelblue` as well as `color4list`, which are marked as deprecated.
+The names `color4red`, `color4steelblue`, ..., `color4list` of `exudyn.graphicsDataUtilities` are deprecated; they are the same values.
 
 (sec-utf8)=
 ### Character encoding: UTF-8

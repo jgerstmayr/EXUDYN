@@ -16,7 +16,6 @@ import exudyn.graphics as graphics
 # ClearWorkspace() #does not work with Marker definition
 
 from exudyn.FEM import *
-from exudyn.graphicsDataUtilities import *
 
 import copy
 

@@ -18,7 +18,6 @@ sys.path.append('../TestModels')            #for modelUnitTest as this example m
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
-from exudyn.graphicsDataUtilities import *
 import numpy as np
 
 testIsActive = exu.sys.get('testIsActive', False)

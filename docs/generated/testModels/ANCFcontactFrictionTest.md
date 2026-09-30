@@ -23,7 +23,6 @@ You can view and download this file on Github: [ANCFcontactFrictionTest.py](http
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)
@@ -117,7 +116,7 @@ if useCircleContact:
     mGroundCircle2 = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, localPosition=posRoll2)) 
 
 
-    rGraphics = GraphicsDataRectangle(0.,0.,0.1*r2,r2)
+    rGraphics = graphics.Lines([[0.,0.,0], [0.1*r2,0.,0], [0.1*r2,r2,0], [0.,r2,0], [0.,0.,0]])
     vRigidBody = VObjectRigidBody2D(graphicsData = [rGraphics])
     nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=posRoll2))
     oRigid = mbs.AddObject(RigidBody2D(nodeNumber = nRigid, physicsMass = 1, physicsInertia=0.001, visualization=vRigidBody))

@@ -22,7 +22,6 @@ if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('A
 from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
 import exudyn.graphics as graphics
-from exudyn.graphicsDataUtilities import *
 
 import numpy as np
 from numpy import linalg as LA
@@ -41,7 +40,7 @@ color = [0.1,0.1,0.8,1]
 r = 0.2 #radius
 L = 1   #length
 
-background0 = GraphicsDataRectangle(-L,-L,L,L,color)
+background0 = graphics.Lines([[-L,-L,0], [L,-L,0], [L,L,0], [-L,L,0], [-L,-L,0]], color=color)
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [background0])))
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

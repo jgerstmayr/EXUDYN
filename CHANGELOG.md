@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 173 | 1.12.187 |
+| 1.12 | Metheney | 174 | 1.12.188 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.188** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` scripts and modules use exudyn.graphics where it has the replacement, not exudyn.graphicsDataUtilities (#2759)
+  - description: After \#2756 the scripts under python/ imported GraphicsDataRectangle, GraphicsDataOrthoCubeLines and the color4 names from exudyn.graphicsDataUtilities (41 star imports among them) instead of using exudyn.graphics. The maintainer asked for the scripts and modules to be adapted: graphics.Lines, graphics.BrickXYZ(addFaces=False, addEdges=True), graphics.color; only the mesh functions without a replacement keep an import from graphicsDataUtilities.
+  - **notes:** The scripts and modules of Exudyn use exudyn.graphics for rectangles (graphics.Lines), line cubes (graphics.BrickXYZ with addFaces=False) and colors (graphics.color); exudyn.graphicsDataUtilities is imported only for its mesh functions.
+  - date resolved: **2026-09-30 18:22**, date raised: 2026-09-30
 - **1.12.187** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the pages of ObjectFFRF and ObjectFFRFreducedOrder link example pages that the PDF leaves out (#2758)
   - description: The descriptions of ObjectFFRF and ObjectFFRFreducedOrder (\#2734/\#2735) link \[\](\#examples-ngsolveffrf), \[\](\#examples-ngsolvecmstutorial) and \[\](\#testmodels-objectffrfreducedordertest). The PDF build excludes the example and test model pages (conf.py), so the three links are unresolved there (myst.xref\_missing). An item page names its examples through the examples field, which the page lists with github links; checkDefinitions shall reject a link to an example page.
   - **notes:** The pages of ObjectFFRF and ObjectFFRFreducedOrder name their complete models (NGsolveFFRF.py, NGsolveCMStutorial.py, objectFFRFreducedOrderTest.py) and list them with their github links; the PDF documentation no longer reports unresolved references on them.

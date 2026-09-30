@@ -466,7 +466,6 @@ if __name__ == '__main__':
     #imports
     from exudyn.utilities import *
     from exudyn.rigidBodyUtilities import *
-    from exudyn.graphicsDataUtilities import *
     from exudyn.robotics import *   # to import  robotics core functions
     import exudyn.robotics.models as models
     import exudyn.graphics as graphics #none of the star imports above provides it, #2489

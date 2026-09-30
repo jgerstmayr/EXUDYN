@@ -16,7 +16,6 @@ import exudyn as exu
 if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 from exudyn.itemInterface import *
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 import numpy as np
@@ -38,7 +37,7 @@ mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)
 #constrainGroundBody = True #use this flag to fix ground body
 
 #graphics for floating frame:
-gFloating = GraphicsDataRectangle(-0.25, -0.25, 0.8, 0.25, color=[0.95,0.95,0.95,1.]) 
+gFloating = graphics.Lines([[-0.25,-0.25,0], [0.8,-0.25,0], [0.8,0.25,0], [-0.25,0.25,0], [-0.25,-0.25,0]], color=[0.95,0.95,0.95,1.]) 
 #gFloating = graphics.BrickXYZ(-0.25, -0.25, -0.1, 0.8, 0.25, -0.05, color=[0.3,0.3,0.3,1.]) 
 
 oGround = mbs.AddObject(ObjectGround(referencePosition=[0,0,0], visualization=VObjectGround(graphicsData=[gFloating])))    

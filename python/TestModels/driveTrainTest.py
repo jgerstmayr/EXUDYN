@@ -16,7 +16,6 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 from exudyn.FEM import *
 
@@ -31,7 +30,7 @@ color = [0.1,0.1,0.8,1]
 s = 0.1 #width of cube
 sx = 3*s #length of cube/body
 
-background0 = GraphicsDataRectangle(-1,-1,1,1,graphics.color.white)
+background0 = graphics.Lines([[-1,-1,0], [1,-1,0], [1,1,0], [-1,1,0], [-1,-1,0]], color=graphics.color.white)
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
                                    visualization=VObjectGround(graphicsData= [background0])))
 

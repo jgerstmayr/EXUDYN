@@ -12,7 +12,6 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)
@@ -30,9 +29,9 @@ n=3 #run test with n=3
 
 r = 0.05 #just for graphics
 nL = (n+0.5)*L
-graphicsBackground = GraphicsDataRectangle(-L*1.5,-L*1.5, 1.5*nL, nL, graphics.color.lightgrey) #for appropriate zoom
-graphicscube = GraphicsDataRectangle(-L,-0.5*b, L, 0.5*b, graphics.color.steelblue) #graphics.Sphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 8)
-graphicscube2 = GraphicsDataRectangle(-L,-0.5*b, n*L*2**0.5, 0.5*b, graphics.color.steelblue) #graphics.Sphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 8)
+graphicsBackground = graphics.Lines([[-L*1.5,-L*1.5,0], [1.5*nL,-L*1.5,0], [1.5*nL,nL,0], [-L*1.5,nL,0], [-L*1.5,-L*1.5,0]], color=graphics.color.lightgrey) #for appropriate zoom
+graphicscube = graphics.Lines([[-L,-0.5*b,0], [L,-0.5*b,0], [L,0.5*b,0], [-L,0.5*b,0], [-L,-0.5*b,0]], color=graphics.color.steelblue) #graphics.Sphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 8)
+graphicscube2 = graphics.Lines([[-L,-0.5*b,0], [n*L*2**0.5,-0.5*b,0], [n*L*2**0.5,0.5*b,0], [-L,0.5*b,0], [-L,-0.5*b,0]], color=graphics.color.steelblue) #graphics.Sphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 8)
 #add ground object and mass point:
 
 pi = 3.1415926535897932384626

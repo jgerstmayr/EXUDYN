@@ -15,7 +15,6 @@ import exudyn as exu
 #a local run must not open a plot window when windows are suppressed (#2477)
 if exu.special.userInterface.suppressPlots: import matplotlib; matplotlib.use('Agg')
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import numpy as np
 import exudyn.graphics as graphics
 
@@ -27,7 +26,7 @@ mass = 2.5
 g = 9.81
 
 r = 0.05 #just for graphics
-graphicsBackground = GraphicsDataRectangle(-1.2*L,-1.2*L, 1.2*L, 0.2*L, [1,1,1,1]) #for appropriate zoom
+graphicsBackground = graphics.Lines([[-1.2*L,-1.2*L,0], [1.2*L,-1.2*L,0], [1.2*L,0.2*L,0], [-1.2*L,0.2*L,0], [-1.2*L,-1.2*L,0]], color=[1,1,1,1]) #for appropriate zoom
 graphicsSphere = graphics.Sphere(point=[0,0,0], radius=r, color=[1.,0.2,0.2,1], nTiles = 16)
 
 #add ground object and mass point:

@@ -21,7 +21,6 @@ You can view and download this file on Github: [ANCFcontactCircle2.py](https://g
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 
@@ -39,7 +38,7 @@ rect = [-0.5,-1,2.5,1] #xmin,ymin,xmax,ymax
 background1 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[0,-1,0, 2,-1,0]} #background
 
 
-background  = [GraphicsDataRectangle(-0.5,-1,2.5,1, color=graphics.color.blue)]
+background  = [graphics.Lines([[-0.5,-1,0], [2.5,-1,0], [2.5,1,0], [-0.5,1,0], [-0.5,-1,0]], color=graphics.color.blue)]
 background += [graphics.Lines([[0,-1,0], [2,-1,0]], color=graphics.color.green)]
 background += [graphics.Circle(point=pCircle, radius = circleRadius-0.002, color=graphics.color.blue)] #not necessary, as it is drawn by connector
 background += [graphics.Circle(point=pCircle2, radius = circleRadius2-0.002, color=graphics.color.blue)] #not necessary, as it is drawn by connector

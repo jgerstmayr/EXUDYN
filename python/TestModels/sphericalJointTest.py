@@ -13,7 +13,6 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataOrthoCubeLines, GraphicsDataRectangle
 import exudyn.graphics as graphics
 
 testIsActive = exu.sys.get('testIsActive', False)
@@ -28,7 +27,7 @@ sx = 3*s #lengt of cube/body
 cPosZ = 0.1 #offset of constraint in z-direction
 zz = sx * (nBodies+1)*2 #max size of background
 
-background0 = GraphicsDataRectangle(-zz,-zz,zz,sx,color)
+background0 = graphics.Lines([[-zz,-zz,0], [zz,-zz,0], [zz,sx,0], [-zz,sx,0], [-zz,-zz,0]], color=color)
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
                                    visualization=VObjectGround(graphicsData= [background0])))
 mPosLast = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oGround, 
@@ -47,7 +46,7 @@ for i in range(nBodies):
     nRB = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=p0+ep0, 
                                       initialVelocities=v0+list(ep_t0)))
     #nRB = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0,1,0,0,0], initialVelocities=[0,0,0,0,0,0,0]))
-    oGraphics = GraphicsDataOrthoCubeLines(-sx,-s,-s, sx,s,s, [0.8,0.1,0.1,1])
+    oGraphics = graphics.BrickXYZ(-sx, -s, -s, sx, s, s, addFaces=False, addEdges=True, edgeColor=[0.8,0.1,0.1,1])
     oRB = mbs.AddObject(ObjectRigidBody(physicsMass=2, 
                                         physicsInertia=[6,1,6,0,0,0], 
                                         nodeNumber=nRB, 

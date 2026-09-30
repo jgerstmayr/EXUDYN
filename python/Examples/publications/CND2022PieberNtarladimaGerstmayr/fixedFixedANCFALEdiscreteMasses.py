@@ -28,7 +28,6 @@ import os
 
 from exudyn.itemInterface import *
 from exudyn.FEM import *
-from exudyn.graphicsDataUtilities import *
 from exudyn.utilities import *
 from exudyn.beams import GenerateAleSlidingJoint, GenerateStraightLineANCFCable2D
 import exudyn.graphics as graphics
@@ -53,8 +52,8 @@ tEnd = tTerminateForce*2+tEvaluate   #simulation end time
 oCCvALE = 0 #coordinate constraint object for vALE
 
 rect = [-2.5,-2,2.5,1] #xmin,ymin,xmax,ymax
-background0 = GraphicsDataRectangle(0, -0.1, 1, 0.1, color=[0.,0.,0.,1.]) #background
-background1 = GraphicsDataRectangle(0, -0.05, 0.25, 0.05, color=[0.,0.,0.,1.]) #background
+background0 = graphics.Lines([[0,-0.1,0], [1,-0.1,0], [1,0.1,0], [0,0.1,0], [0,-0.1,0]], color=[0.,0.,0.,1.]) #background
+background1 = graphics.Lines([[0,-0.05,0], [0.25,-0.05,0], [0.25,0.05,0], [0,0.05,0], [0,-0.05,0]], color=[0.,0.,0.,1.]) #background
 
 
 #user function called at beginning of every time step
@@ -317,7 +316,7 @@ def BuildModel(parameterSet):
         sizeMass = 0.02
         for i in range(nMasses):
             nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0], initialVelocities=[0*mbs.variables['setVALE'],0]))
-            g = graphics.Sphere([0,0,0], radius=sizeMass*0.5, color=color4red)
+            g = graphics.Sphere([0,0,0], radius=sizeMass*0.5, color=graphics.color.red)
             oMass = mbs.AddObject(ObjectMassPoint2D(physicsMass=mass, nodeNumber=nMass, 
                                                     visualization=VMassPoint2D(graphicsData=[g])))
     

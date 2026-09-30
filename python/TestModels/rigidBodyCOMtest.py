@@ -12,7 +12,6 @@
 
 import exudyn as exu
 from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
-from exudyn.graphicsDataUtilities import GraphicsDataOrthoCubeLines, GraphicsDataRectangle
 import exudyn.graphics as graphics
 from exudyn.FEM import *
 
@@ -30,7 +29,7 @@ sx = 3*s #length of cube/body
 cPosZ = 0. #offset of constraint in z-direction
 zz = sx * (nBodies+1)*2 #max size of background
 
-background0 = GraphicsDataRectangle(-zz,-zz,zz,2.5*sx,color)
+background0 = graphics.Lines([[-zz,-zz,0], [zz,-zz,0], [zz,2.5*sx,0], [-zz,2.5*sx,0], [-zz,-zz,0]], color=color)
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], 
                                    visualization=VObjectGround(graphicsData= [background0])))
 
@@ -77,9 +76,9 @@ for case in range(2):
         if case==0:
             color=[0.1,0.1,0.8,1]
 
-        oGraphics = GraphicsDataOrthoCubeLines(-sx+com[0],-s+com[1],-s+com[2], sx+com[0],s+com[1],s+com[2], color)
+        oGraphics = graphics.BrickXYZ(-sx+com[0], -s+com[1], -s+com[2], sx+com[0], s+com[1], s+com[2], addFaces=False, addEdges=True, edgeColor=color)
         d=0.02
-        oGraphicsCOM = GraphicsDataOrthoCubeLines(-d+com[0],-d+com[1],-d+com[2], d+com[0],d+com[1],d+com[2], [0.1,0.8,0.1,1])
+        oGraphicsCOM = graphics.BrickXYZ(-d+com[0], -d+com[1], -d+com[2], d+com[0], d+com[1], d+com[2], addFaces=False, addEdges=True, edgeColor=[0.1,0.8,0.1,1])
 
         rDict = mbs.CreateRigidBody(inertia=RBinertia, 
                                   referencePosition=p0, 
