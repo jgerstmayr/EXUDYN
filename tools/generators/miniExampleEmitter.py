@@ -84,14 +84,14 @@ def main(argv=None):
     outputDir = args.output_dir.replace(os.sep, '/').rstrip('/') + '/'
 
     miniExamplesList = []
-    performanceSettings = {}    #className -> the item's miniExamplePerformance, for the performance run (#2745)
+    performanceSettings = {}    #className -> the item's miniExamplePerformanceTest, for the performance run (#2745)
     for definition in im.ItemDefinitions():
         miniExample = definition.get('miniExample', '') or ''
         if len(miniExample) != 0:
             WriteMiniExample(definition['className'], miniExample, outputDir)
             miniExamplesList += [definition['className']+'.py']
-            if definition.get('miniExamplePerformance') is not None:
-                performanceSettings[definition['className']] = definition['miniExamplePerformance']
+            if definition.get('miniExamplePerformanceTest') is not None:
+                performanceSettings[definition['className']] = definition['miniExamplePerformanceTest']
 
     fileExampleList=open(outputDir+'miniExamplesFileList.py','w',encoding='utf8') 
     s = '#this file provides a list of file names for mini examples\n'
@@ -103,9 +103,9 @@ def main(argv=None):
         sepStr=',\n'
     s+= ']\n'
     s+= '\n'
-    s+= '#per mini example the settings of its performance run, from the item definitions (miniExamplePerformance);\n'
+    s+= '#per mini example the settings of its performance run, from the item definitions (miniExamplePerformanceTest);\n'
     s+= '#an item without an entry uses the defaults of python/testing/runMiniExamplePerformance.py\n'
-    s+= 'miniExamplesPerformance = {'
+    s+= 'miniExamplesPerformanceTest = {'
     s+= ',\n'.join(repr(k)+': '+repr(v) for (k, v) in sorted(performanceSettings.items()))
     s+= '}\n'
     fileExampleList.write(s)

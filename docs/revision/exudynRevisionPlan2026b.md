@@ -1352,13 +1352,13 @@ The steps are numbered in the order they were raised and stand here in the order
       `GeneralContact` update inside the residual. #830 described an older state, and the warning of
       RG4.15.3 was wrong - removed. Which objects need the step is declared by `HasDiscontinuousIteration`,
       partly conditional already;
-    - **RG4.16.2** the concept - what the explicit solvers do today: the states frozen during the stages of
-      a step, updated after it, the step repeated when a state changed (as in the implicit solvers); or the
-      maintainer's alternative, an update in every stage. For the maintainer's decision; the evidence so
-      far (RG4.16.4) does not ask for a change;
-    - **RG4.16.3** each object with a PostNewton step checked against the concept: contact (coordinate,
-      sphere-sphere), rotation counter and stick-slip by RG4.16.4; the sliding and ALE joints have
-      algebraic equations, which the explicit solvers do not take at all; the others use the same path;
+    - **RG4.16.2** **DECIDED 2026-09-30** (maintainer): the concept is what the explicit solvers do today -
+      the states stay fixed during the stages of a step, are updated after it, and the step is repeated when
+      a state changed (as in the implicit solvers); no update per stage;
+    - **RG4.16.3** **DONE 2026-09-30** - each object with a PostNewton step against the concept: contact
+      (coordinate, sphere-sphere), rotation counter and stick-slip by RG4.16.4; the sliding and ALE joints
+      have algebraic equations, which the explicit solvers do not take at all; the other contacts, the
+      rolling disc and the rigid-body spring-damper with its PostNewton user function use the same path;
     - **RG4.16.4** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-16-1) - test model
       `explicitSolversPostNewtonTest.py`, all explicit integrators against generalized-alpha;
     - **RG4.16.5** #2109, the DOPRI5 step size at discontinuities: resolved by the concept, or what it
@@ -2961,8 +2961,10 @@ package).
       users' own models - `color4...` through `exudyn.utilities` is in many old scripts and tutorials, and
       a star import cannot be caught with a deprecation warning, only by `exudev scripts` and the revisions
       page;
-    - **RG12.30.2** `exudyn.graphics` gets what has no replacement yet, if decided in RG12.30.1 (e.g.
-      `graphics.Rectangle`, and the mesh functions under a name of `exudyn.graphics`);
+    - **RG12.30.2** **DECIDED 2026-09-30** (maintainer): nothing new in `exudyn.graphics`;
+      `GraphicsDataRectangle` and `GraphicsDataOrthoCubeLines` are to be replaced by the functions of
+      `exudyn.graphics` and are **marked deprecated**; scripts import them - and the mesh functions - from
+      `exudyn.graphicsDataUtilities`;
     - **RG12.30.3** `utilities.py`: the two imports and the seven names removed from `__all__`;
     - **RG12.30.4** the scripts under `python/` (examples, test models, the MiniExamples through their
       definitions): the imports they need written in - `from exudyn.beams import ...`, `mbs.CreateDistanceSensor`,
@@ -3208,10 +3210,16 @@ done.
     switch as the fallback. Sub-steps, as proposed there:
     - **RG14.2.1** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg14-2-1) - the MiniExample
       performance run `python/testing/runMiniExamplePerformance.py [--full] [--processes N]`: the generated
-      MiniExamples with a dynamic solve appended, `miniExamplePerformance` in the item definitions, ~2 s per
-      example in full and ~0.1 s in the regular run, in parallel on 80 % of the physical cores, the solver
-      timers recorded, not in fast mode, `--compare` of two logs; the baseline log of the full run;
-    - **RG14.2.2** the interface decided (the questions in section 9 of the evaluation);
+      MiniExamples with a dynamic solve appended, `miniExamplePerformanceTest` in the item definitions, ~2 s
+      per example in full and a tenth in the regular run, in parallel on 80 % of the physical cores, the
+      solver timers recorded, not in fast mode, `--compare` of two logs; the baseline log of the full run;
+    - **RG14.2.2** the interface decided (the questions in section 9 of the evaluation). **Decided
+      2026-09-30** (maintainer): one global experimental switch as the fallback; the field is
+      `miniExamplePerformanceTest`; the regular performance run a tenth of the full one; loads **not**
+      before the rigid-marker connectors; automatic differentiation is for later, not in the first
+      migration. Open, answered in section 10 of the evaluation for the maintainer: the velocities of a
+      rigid marker with homogeneous transformations (a), AD over separate vectors (b), why per-marker-kind
+      functions and where (e);
     - **RG14.2.3** L0, the per-thread `MarkerTemp`, the marker functions and the dispatch with `Legacy`
       for every connector - results identical;
     - **RG14.2.4** the pilot `ObjectConnectorSpringDamper`, its inner Jacobian by AD, compared with the

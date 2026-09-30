@@ -7576,3 +7576,18 @@ example, bodies included):
 The Jacobian dominates wherever a connector has no analytic one (the rigid-body spring-damper, gravity, the
 contacts) - which is what the automatic differentiation of RG14.2 addresses. The whole table is in the log;
 the next steps compare against it with `--compare`.
+
+<a id="decisions-2026-09-30"></a>
+### Decisions of 2026-09-30
+
+- **RG4.16.2**: the explicit solvers keep their scheme - the states of the PostNewton step fixed during the
+  stages of a step, updated after it, the step repeated when a state changed.
+- **RG12.30.2**: `GraphicsDataRectangle` and `GraphicsDataOrthoCubeLines` are deprecated (there are
+  functions in `exudyn.graphics` for what they do); scripts import them and the mesh functions from
+  `exudyn.graphicsDataUtilities`; nothing new in `exudyn.graphics`.
+- **RG14.2.1**: the field is named `miniExamplePerformanceTest` (and `miniExamplesPerformanceTest` in the
+  generated list, `miniExamplePerformanceTest_V...` the log); the regular run is a tenth of the full run
+  (~0.2 s per example; 93 in 5 s on this machine).
+- **RG14.2.2**: one global experimental switch as the fallback; loads not before the rigid-marker
+  connectors; automatic differentiation later, not in the first migration. Questions (a), (b) and (e)
+  answered in `tmp/evalRG14_2_connectorInterface.md`, section 10.

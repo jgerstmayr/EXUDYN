@@ -94,9 +94,9 @@ miniExamplesFileList = ['NodePoint.py',
 'SensorLoad.py',
 'SensorUserFunction.py']
 
-#per mini example the settings of its performance run, from the item definitions (miniExamplePerformance);
+#per mini example the settings of its performance run, from the item definitions (miniExamplePerformanceTest);
 #an item without an entry uses the defaults of python/testing/runMiniExamplePerformance.py
-miniExamplesPerformance = {'LoadCoordinate': {'numberOfSteps': 1285720},
+miniExamplesPerformanceTest = {'LoadCoordinate': {'numberOfSteps': 1285720},
 'LoadForceVector': {'numberOfSteps': 1201600},
 'LoadMassProportional': {'numberOfSteps': 1603210},
 'LoadTorqueVector': {'numberOfSteps': 577350},

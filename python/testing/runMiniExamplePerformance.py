@@ -6,17 +6,17 @@
 #           with a much smaller step size, and the solver timers of that second solve are recorded -
 #           jacobianODE2, jacobianODE1, massMatrix, ODE2RHS, ODE1RHS and total. No result value is
 #           recorded: the test suite checks the MiniExamples. The per-example settings come from the
-#           item definitions (miniExamplePerformance, written into miniExamplesFileList.py); without
+#           item definitions (miniExamplePerformanceTest, written into miniExamplesFileList.py); without
 #           an entry the defaults below apply.
 #
-#           The regular run takes about 0.1 s per example, the whole set some 20 s; --full about 2 s
+#           The regular run takes about 0.2 s per example, the whole set some 10 s in parallel; --full about 2 s
 #           per example, for measurements that are compared across changes. The examples run in
 #           parallel, each in its own interpreter, on 80 % of the physical cores (40 % of the logical
 #           ones without psutil); --processes 1 runs them one after the other, which is what a
 #           comparison of timings should use. The regular module only: the fast module has no timers.
 #
 # Usage:    python runMiniExamplePerformance.py [--full] [--processes N] [--only Name1,Name2]
-#           python runMiniExamplePerformance.py --calibrate          #prints miniExamplePerformance entries
+#           python runMiniExamplePerformance.py --calibrate          #prints miniExamplePerformanceTest entries
 #           python runMiniExamplePerformance.py --compare logA.txt logB.txt
 #
 # Author:   Johannes Gerstmayr
@@ -33,10 +33,10 @@ pythonDir = os.path.dirname(testingDir)
 miniExamplesDir = os.path.join(pythonDir, 'MiniExamples')
 logDir = os.path.join(pythonDir, 'logs', 'performance')
 
-#the defaults of an example without a miniExamplePerformance entry in its item definition
+#the defaults of an example without a miniExamplePerformanceTest entry in its item definition
 defaultStepSizeFactor = 1/200   #the step size of the MiniExample's own solve, times this
-defaultNumberOfSteps = 2000     #steps of the full run; the regular run takes a twentieth
-regularFraction = 1/20          #the regular run: ~0.1 s where the full run takes ~2 s
+defaultNumberOfSteps = 2000     #steps of the full run; the regular run takes a tenth
+regularFraction = 1/10          #the regular run: ~0.2 s where the full run takes ~2 s
 fullTargetTime = 2.             #seconds per example that --calibrate aims at
 
 timerNames = ['total', 'ODE2RHS', 'ODE1RHS', 'massMatrix', 'jacobianODE2', 'jacobianODE1']
@@ -47,10 +47,10 @@ def RunOne(className, full):
     os.environ['EXUDYN_SUPPRESS_UI_WINDOW_OPEN'] = '1'
     import exudyn as exu
     sys.path.insert(0, pythonDir)
-    from MiniExamples.miniExamplesFileList import miniExamplesPerformance
+    from MiniExamples.miniExamplesFileList import miniExamplesPerformanceTest
 
     result = {'name': className}
-    settings = miniExamplesPerformance.get(className, {})
+    settings = miniExamplesPerformanceTest.get(className, {})
     if settings.get('skip', False):
         result['status'] = 'skipped'
         return result
@@ -186,11 +186,11 @@ def Main(argv):
 
     if calibrate:
         #the number of steps that makes the full run take fullTargetTime, from the measured solver time
-        from MiniExamples.miniExamplesFileList import miniExamplesPerformance
-        print('#miniExamplePerformance entries for a full run of about', fullTargetTime, 's (solver time)')
+        from MiniExamples.miniExamplesFileList import miniExamplesPerformanceTest
+        print('#miniExamplePerformanceTest entries for a full run of about', fullTargetTime, 's (solver time)')
         for r in results:
             if r.get('status') == 'ok' and r['total'] > 0:
-                settings = dict(miniExamplesPerformance.get(r['name'], {}))
+                settings = dict(miniExamplesPerformanceTest.get(r['name'], {}))
                 settings['numberOfSteps'] = max(20, int(round(r['steps'] * fullTargetTime / r['total'], -1)))
                 print(r['name'] + ': ' + repr(settings))
             else:
@@ -200,7 +200,7 @@ def Main(argv):
     version = exu.config.Version()
     platformString = platform.system() + '-' + platform.machine() + '-P' + str(sys.version_info.major) + '.' + str(sys.version_info.minor)
     os.makedirs(logDir, exist_ok=True)
-    logFileName = os.path.join(logDir, 'miniExamplePerformance_V' + version + '_' + platformString
+    logFileName = os.path.join(logDir, 'miniExamplePerformanceTest_V' + version + '_' + platformString
                                + ('_full' if full else '') + '.txt')
     text = ('Exudyn ' + version + ', ' + platformString + ', ' + ('full' if full else 'regular') + ' run, '
             + str(processes) + ' process(es), ' + '{:.1f}'.format(wallTotal) + ' s\n'

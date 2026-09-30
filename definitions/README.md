@@ -281,8 +281,8 @@ Rules:
   one where the model has one;
 - the reference value goes into `MiniExamplesReferenceSolution` of `python/testing/runTestSuiteRefSol.py`;
   `runTestSuite.py` runs every mini example.
-- `miniExamplePerformance={'numberOfSteps': n}` is the length of its **performance run**
+- `miniExamplePerformanceTest={'numberOfSteps': n}` is the length of its **performance run**
   (`python/testing/runMiniExamplePerformance.py`, #2745): the mini example solved once more with a
-  200 times smaller step size for `n` steps, about 2 s of solver time in the full run, a twentieth in the
+  200 times smaller step size for `n` steps, about 2 s of solver time in the full run, a tenth in the
   regular run; `{'skip': True}` where a dynamic solve of the model makes no sense. `--calibrate` prints
   new values when a model or the machine changes.
