@@ -93,8 +93,14 @@ void VisualizationMarkerSuperElementPosition::UpdateGraphics(const Visualization
 	CMarkerSuperElementPosition* cMarker = (CMarkerSuperElementPosition*)vSystem->systemData->GetCMarkers()[itemNumber];
 	const CObjectSuperElement* cSuperElement = (const CObjectSuperElement*)vSystem->systemData->GetCObjects()[cMarker->GetObjectNumber()];
 
-	Vector3D pos; //global marker position
-	cMarker->GetPosition(*vSystem->systemData, pos, ConfigurationType::Visualization);
+	//global marker position, at the mesh nodes as the superelement draws them (deformationScaleFactor, #1813)
+	const Real scaleFactor = visualizationSettings.bodies.deformationScaleFactor;
+	const ArrayIndex& nodeNumbers = cMarker->GetParameters().meshNodeNumbers;
+	Vector3D pos(0.);
+	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
+	{
+		pos += cMarker->GetParameters().weightingFactors[i] * cSuperElement->GetMeshNodePositionVisualization(nodeNumbers[i], scaleFactor);
+	}
 
 	float radius = 0.5f*visualizationSettings.markers.defaultSize;
 	if (visualizationSettings.markers.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.advanced.initialMaxSceneSize * 0.002f; }
@@ -107,7 +113,7 @@ void VisualizationMarkerSuperElementPosition::UpdateGraphics(const Visualization
 		Float4 alternativeColor = EXUvis::ModifyColor(currentColor, 0.25f);
 		for (Index node : cMarker->GetParameters().meshNodeNumbers)
 		{
-			Vector3D p = cSuperElement->GetMeshNodePosition(node, ConfigurationType::Visualization);
+			Vector3D p = cSuperElement->GetMeshNodePositionVisualization(node, scaleFactor);
 			EXUvis::DrawMarker(p, radius, alternativeColor, vSystem->graphicsData, itemID,
 				!visualizationSettings.markers.drawSimplified && drawNodesMarkersLoadsWithFaces);
 		}

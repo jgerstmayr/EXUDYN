@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  22:48:27 (last modified)
+* @date         2026-09-30  18:25:55 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -136,6 +136,9 @@ public: // AUTO:
 
     //! AUTO:  return weighted angular velocity from local mesh velocities
     void GetWeightedAngularVelocity(const CSystemData& cSystemData, Vector3D& weightedAngularVelocity, ConfigurationType configuration = ConfigurationType::Current) const;
+
+    //! AUTO:  the rotation matrix of the marker from the rotation of the floating frame and the weighted rotations, as rotationsExponentialMap chooses
+    void ComputeRotationMatrix(const Matrix3D& frameRotationMatrix, const Vector3D& weightedRotations, Matrix3D& rotationMatrix) const;
 
 };
 

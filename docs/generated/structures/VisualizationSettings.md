@@ -206,7 +206,7 @@ VSettingsBodies has the following items:
 | `shells`<br>`SC.visualizationSettings.bodies.shells` | VSettingsShells |  |  | visualization settings for plates and shells |
 | `defaultColor`<br>`SC.visualizationSettings.bodies.defaultColor` | Float4 | 4 | [0.3,0.3,1.,1.] | default RGBA color for bodies; 4th value is alpha-transparency |
 | `defaultSize`<br>`SC.visualizationSettings.bodies.defaultSize` | Float3 | 3 | [1.,1.,1.] | global body size of xyz-cube |
-| `deformationScaleFactor`<br>`SC.visualizationSettings.bodies.deformationScaleFactor` | float |  | 1 | global deformation scale factor; also applies to nodes, if drawn; currently only used for scaled drawing of (linear) finite elements in FFRF and FFRFreducedOrder objects |
+| `deformationScaleFactor`<br>`SC.visualizationSettings.bodies.deformationScaleFactor` | float |  | 1 | global deformation scale factor for the drawing of superelements (FFRF, FFRFreducedOrder, GenericODE2 with a mesh): their mesh nodes and the markers on them are drawn with the local deformation scaled by it (#1813) |
 | `show`<br>`SC.visualizationSettings.bodies.show` | bool |  | True | flag to decide, whether the bodies are shown |
 | `showNumbers`<br>`SC.visualizationSettings.bodies.showNumbers` | bool |  | False | flag to decide, whether the body(=object) number is shown |
 

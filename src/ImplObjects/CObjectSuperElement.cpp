@@ -23,6 +23,20 @@
 //VISUALIZATION
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+Vector3D CObjectSuperElement::GetMeshNodePositionVisualization(Index meshNodeNumber, Real deformationScaleFactor) const
+{
+	if (deformationScaleFactor == 1.) { return GetMeshNodePosition(meshNodeNumber, ConfigurationType::Visualization); }
+
+	Vector3D position = GetMeshNodeLocalPositionVisualization(meshNodeNumber, deformationScaleFactor);
+	Index localRigidBodyNodeNumber; //local number in body!
+	if (HasReferenceFrame(localRigidBodyNodeNumber))
+	{
+		const CNodeRigidBody* frameNode = (const CNodeRigidBody*)GetCNode(localRigidBodyNodeNumber);
+		position = frameNode->GetPosition(ConfigurationType::Visualization) + frameNode->GetRotationMatrix(ConfigurationType::Visualization) * position;
+	}
+	return position;
+}
+
 //! Update visualizationSystem -> graphicsData for item
 void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber)
 {
@@ -31,18 +45,6 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 	if (GetColor()[0] != -1.f) { currentColor = GetColor(); }
 
 	CObjectSuperElement* cObject = (CObjectSuperElement*)vSystem->systemData->GetCObjects()[itemNumber];
-
-	Index localRigidBodyNodeNumber; //local number in body!
-	bool hasReferenceFrame = cObject->HasReferenceFrame(localRigidBodyNodeNumber);
-
-	Matrix3D refRot = EXUmath::unitMatrix3D;
-	Vector3D refPos({ 0,0,0 });
-
-	if (hasReferenceFrame)
-	{
-		refRot = ((const CNodeRigidBody*)cObject->GetCNode(localRigidBodyNodeNumber))->GetRotationMatrix(ConfigurationType::Visualization); //cObject->GetCNode(...) takes local number
-		refPos = ((const CNodeRigidBody*)cObject->GetCNode(localRigidBodyNodeNumber))->GetPosition(ConfigurationType::Visualization);
-	}
 
 	Real scaleFactor = visualizationSettings.bodies.deformationScaleFactor;
 
@@ -56,17 +58,7 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 
 		for (Index i = 0; i < cObject->GetNumberOfMeshNodes(); i++)
 		{
-			if (scaleFactor == 1.)
-			{
-				nodePos = cObject->GetMeshNodePosition(i, ConfigurationType::Visualization);
-			}
-			else
-			{
-				nodePos = cObject->GetMeshNodeLocalPosition(i, ConfigurationType::Visualization);
-				Vector3D nodeRefPos = cObject->GetMeshNodeLocalPosition(i, ConfigurationType::Reference);
-				nodePos = scaleFactor * (nodePos - nodeRefPos) + nodeRefPos;
-				nodePos = refPos + refRot * nodePos;
-			}
+			nodePos = cObject->GetMeshNodePositionVisualization(i, scaleFactor);
 
 			Index tiling = visualizationSettings.nodes.drawNodesAsPoint ? 0 : visualizationSettings.nodes.tiling;
 			EXUvis::DrawNode(nodePos, radius, currentColor, vSystem->graphicsData, itemID, drawNodesMarkersLoadsWithFaces, tiling); //itemID of SuperElement object!!!
@@ -100,17 +92,7 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 			{
 				colors[j] = currentColor; //set back to default if some values are invalid
 				Index meshNodeIndex = (Index)GetTriangleMesh()(i, j);
-				if (scaleFactor == 1.)
-				{
-					nodes[j] = cObject->GetMeshNodePosition(meshNodeIndex, ConfigurationType::Visualization);
-				}
-				else
-				{
-					nodes[j] = cObject->GetMeshNodeLocalPosition(meshNodeIndex, ConfigurationType::Visualization);
-					Vector3D nodeRefPos = cObject->GetMeshNodeLocalPosition(meshNodeIndex, ConfigurationType::Reference);
-					nodes[j] = scaleFactor * (nodes[j] - nodeRefPos) + nodeRefPos;
-					nodes[j] = refPos + refRot * nodes[j];
-				}
+				nodes[j] = cObject->GetMeshNodePositionVisualization(meshNodeIndex, scaleFactor);
 
 				//add contour plot values to color; may NOT be called if contour.outputVariable == None (GetOutputVariable(...) fails!)
 				if (EXUstd::IsOfTypeAndNotNone(cObject->GetOutputVariableTypesSuperElement(meshNodeIndex), visualizationSettings.contour.outputVariable))

@@ -1,0 +1,15 @@
+{
+  "number": 1813,
+  "title": "Marker positions",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "wrong representation of marker positions in AnimateModes for deformation scaling=0",
+  "dateRaised": "2024-04-08",
+  "deadline": "2024-10-05",
+  "dateResolved": "2026-09-30 18:34",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The markers on a superelement (MarkerSuperElementPosition, MarkerSuperElementRigid) are drawn on the body also when visualizationSettings.bodies.deformationScaleFactor scales its deformation, e.g. for a mode of amplitude 0 in AnimateModes.",
+  "resolvedInVersion": "1.12.189"
+}

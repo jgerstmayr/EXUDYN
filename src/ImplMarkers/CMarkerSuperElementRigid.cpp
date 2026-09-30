@@ -232,7 +232,11 @@ void CMarkerSuperElementRigid::GetRotationMatrix(const CSystemData& cSystemData,
 
 	Vector3D weightedRotations;
 	GetWeightedRotations(cSystemData, weightedRotations, configuration);
+	ComputeRotationMatrix(frameRotationMatrix, weightedRotations, rotationMatrix);
+}
 
+void CMarkerSuperElementRigid::ComputeRotationMatrix(const Matrix3D& frameRotationMatrix, const Vector3D& weightedRotations, Matrix3D& rotationMatrix) const
+{
 	//linearized, inconsistent rotation matrix: rotationMatrix = frameRotationMatrix * (EXUmath::unitMatrix3D + RigidBodyMath::Vector2SkewMatrix(weightedRotations)); //linearized rotation matrix reads: I+skew(rotVec)
     if (parameters.rotationsExponentialMap > 0)
     {
@@ -368,8 +372,23 @@ void VisualizationMarkerSuperElementRigid::UpdateGraphics(const VisualizationSet
 	CMarkerSuperElementRigid* cMarker = (CMarkerSuperElementRigid*)vSystem->systemData->GetCMarkers()[itemNumber];
 	const CObjectSuperElement* cSuperElement = (const CObjectSuperElement*)vSystem->systemData->GetCObjects()[cMarker->GetObjectNumber()];
 
-	Vector3D pos; //global marker position
-	cMarker->GetPosition(*vSystem->systemData, pos, ConfigurationType::Visualization);
+	//global marker position and orientation, at the mesh nodes as the superelement draws them: the weighted
+	//rotations are linear in the local displacements and scale with them (deformationScaleFactor, #1813)
+	const Real scaleFactor = visualizationSettings.bodies.deformationScaleFactor;
+	const CSystemData& cSystemData = *vSystem->systemData;
+	Vector3D framePosition;
+	Matrix3D frameRotationMatrix;
+	Vector3D frameVelocity;
+	Vector3D frameAngularVelocityLocal;
+	cMarker->GetFloatingFrameNodeData(cSystemData, framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, ConfigurationType::Visualization);
+
+	const ArrayIndex& nodeNumbers = cMarker->GetParameters().meshNodeNumbers;
+	Vector3D pos = cMarker->GetParameters().offset; //global marker position
+	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
+	{
+		pos += cMarker->GetParameters().weightingFactors[i] * cSuperElement->GetMeshNodeLocalPositionVisualization(nodeNumbers[i], scaleFactor);
+	}
+	pos = framePosition + frameRotationMatrix * pos;
 
 	float radius = 0.5f*visualizationSettings.markers.defaultSize;
 	if (visualizationSettings.markers.defaultSize == -1.f) { radius = 0.5f*visualizationSettings.openGL.advanced.initialMaxSceneSize * 0.002f; }
@@ -377,8 +396,10 @@ void VisualizationMarkerSuperElementRigid::UpdateGraphics(const VisualizationSet
 	//show marker position
 	EXUvis::DrawMarker(pos, radius, currentColor, vSystem->graphicsData, itemID, !visualizationSettings.markers.drawSimplified && drawNodesMarkersLoadsWithFaces);
 
+	Vector3D weightedRotations;
+	cMarker->GetWeightedRotations(cSystemData, weightedRotations, ConfigurationType::Visualization);
 	Matrix3D A;
-	cMarker->GetRotationMatrix(*vSystem->systemData, A, ConfigurationType::Visualization);
+	cMarker->ComputeRotationMatrix(frameRotationMatrix, scaleFactor * weightedRotations, A);
 	
 	//show marker orientation ==> only for rigid marker
 	EXUvis::DrawOrthonormalBasis(pos, A, radius*4, 0.1*radius,
@@ -390,7 +411,7 @@ void VisualizationMarkerSuperElementRigid::UpdateGraphics(const VisualizationSet
 		Float4 alternativeColor = EXUvis::ModifyColor(currentColor, 0.25f);
 		for (Index node : cMarker->GetParameters().meshNodeNumbers)
 		{
-			Vector3D p = cSuperElement->GetMeshNodePosition(node, ConfigurationType::Visualization);
+			Vector3D p = cSuperElement->GetMeshNodePositionVisualization(node, scaleFactor);
 			EXUvis::DrawMarker(p, radius, alternativeColor, vSystem->graphicsData, itemID,
 				!visualizationSettings.markers.drawSimplified && drawNodesMarkersLoadsWithFaces);
 		}

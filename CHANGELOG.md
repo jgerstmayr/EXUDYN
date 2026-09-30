@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 174 | 1.12.188 |
+| 1.12 | Metheney | 175 | 1.12.189 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.189** `FIX` `LOW EFF` `resolved by: Claude-JG` Marker positions (#1813)
+  - description: wrong representation of marker positions in AnimateModes for deformation scaling=0
+  - **notes:** The markers on a superelement (MarkerSuperElementPosition, MarkerSuperElementRigid) are drawn on the body also when visualizationSettings.bodies.deformationScaleFactor scales its deformation, e.g. for a mode of amplitude 0 in AnimateModes.
+  - date resolved: **2026-09-30 18:34**, date raised: 2024-04-08
 - **1.12.188** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` scripts and modules use exudyn.graphics where it has the replacement, not exudyn.graphicsDataUtilities (#2759)
   - description: After \#2756 the scripts under python/ imported GraphicsDataRectangle, GraphicsDataOrthoCubeLines and the color4 names from exudyn.graphicsDataUtilities (41 star imports among them) instead of using exudyn.graphics. The maintainer asked for the scripts and modules to be adapted: graphics.Lines, graphics.BrickXYZ(addFaces=False, addEdges=True), graphics.color; only the mesh functions without a replacement keep an import from graphicsDataUtilities.
   - **notes:** The scripts and modules of Exudyn use exudyn.graphics for rectangles (graphics.Lines), line cubes (graphics.BrickXYZ with addFaces=False) and colors (graphics.color); exudyn.graphicsDataUtilities is imported only for its mesh functions.

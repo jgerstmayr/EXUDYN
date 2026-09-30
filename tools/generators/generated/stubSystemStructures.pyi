@@ -587,7 +587,7 @@ class VSettingsBodies:
     defaultSize: Tuple[float,float,float]
     """global body size of xyz-cube."""
     deformationScaleFactor: float
-    """global deformation scale factor; also applies to nodes, if drawn; currently only used for scaled drawing of (linear) finite elements in FFRF and FFRFreducedOrder objects."""
+    """global deformation scale factor for the drawing of superelements (FFRF, FFRFreducedOrder, GenericODE2 with a mesh): their mesh nodes and the markers on them are drawn with the local deformation scaled by it (#1813)."""
     show: bool
     """flag to decide, whether the bodies are shown."""
     showNumbers: bool

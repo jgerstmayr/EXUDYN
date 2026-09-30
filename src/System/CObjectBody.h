@@ -243,6 +243,20 @@ public:
 		return Vector3D({ 0., 0., 0. });
 	}
 
+	//! the local position of a mesh node as the superelement draws it: the Visualization configuration with the
+	//! deformation scaled by deformationScaleFactor (visualizationSettings.bodies), so that markers follow the body (#1813)
+	Vector3D GetMeshNodeLocalPositionVisualization(Index meshNodeNumber, Real deformationScaleFactor) const
+	{
+		Vector3D position = GetMeshNodeLocalPosition(meshNodeNumber, ConfigurationType::Visualization);
+		if (deformationScaleFactor == 1.) { return position; }
+		Vector3D referencePosition = GetMeshNodeLocalPosition(meshNodeNumber, ConfigurationType::Reference);
+		return referencePosition + deformationScaleFactor * (position - referencePosition);
+	}
+
+	//! the global position of a mesh node as the superelement draws it: GetMeshNodeLocalPositionVisualization in the
+	//! floating frame, if the superelement has one (#1813)
+	Vector3D GetMeshNodePositionVisualization(Index meshNodeNumber, Real deformationScaleFactor) const;
+
 	//! return the (local) velocity of a mesh node according to configuration type; meshNodeNumber is the local node number of the (underlying) mesh
 	virtual Vector3D GetMeshNodeLocalVelocity(Index meshNodeNumber, ConfigurationType configuration = ConfigurationType::Current) const {
 		CHECKandTHROWstring("ERROR: illegal call to CObjectSuperElement::GetMeshNodeLocalVelocity");

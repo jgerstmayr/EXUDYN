@@ -526,7 +526,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tfloat, 
             pythonName='deformationScaleFactor',
             defaultValue=1,
-            description=r'global deformation scale factor; also applies to nodes, if drawn; currently only used for scaled drawing of (linear) finite elements in FFRF and FFRFreducedOrder objects'),
+            description=r'global deformation scale factor for the drawing of superelements (FFRF, FFRFreducedOrder, GenericODE2 with a mesh): their mesh nodes and the markers on them are drawn with the local deformation scaled by it (#1813)'),
         StructureParameter(type='VSettingsBeams', 
             pythonName='beams',
             defaultValue=NoDefaultValue,

@@ -7752,3 +7752,26 @@ two run until they read a reference file that is not there, one fails for #2757.
 The texts follow: the `revisions.md` table gives the one-line replacement per function, `GUI.md` says the
 `color4...` names are deprecated, `exudev scripts` suggests `graphics.Lines` and `graphics.BrickXYZ`, and the
 header of `utilities.py` names `exudyn.graphics`.
+
+<a id="rg6-8-1"></a>
+### RG6.8.1 — superelement markers follow the deformation scale factor (2026-09-30, #1813)
+
+`AnimateModes` draws a mode of amplitude 0 by setting the coordinates to the mode and
+`visualizationSettings.bodies.deformationScaleFactor = 0`. The superelement (`VisualizationObjectSuperElement`, the
+base of `ObjectFFRF`, `ObjectFFRFreducedOrder` and `ObjectGenericODE2`) draws its mesh nodes and triangles with the
+local deformation scaled by that factor - but `MarkerSuperElementPosition` and `MarkerSuperElementRigid` drew
+themselves and their nodes at `GetPosition(Visualization)`, the unscaled deformation: off the body.
+
+Now `CObjectSuperElement` has the drawn position of a mesh node in one place,
+`GetMeshNodeLocalPositionVisualization(node, scale)` (reference + scale times the local deformation) and
+`GetMeshNodePositionVisualization(node, scale)` (the same in the floating frame, if there is one), used by the
+superelement's own drawing, which had the formula twice, and by both markers. The rigid marker's orientation:
+its weighted rotations are linear in the local displacements, so they are scaled by the same factor; the rotation
+matrix from them is `ComputeRotationMatrix`, factored out of `GetRotationMatrix` so that both use it. What the
+solver computes is unchanged - the scaling is in the drawing only. The description of `deformationScaleFactor`
+says what it applies to.
+
+**Test** `python/testing/test_superElementMarkerGraphics.py`: an `ObjectFFRF` (a rotated and moved floating frame)
+and an `ObjectGenericODE2` (none), each with one displaced mesh node and both markers on it, drawn with the
+factors 1, 0 and 0.5; the marker positions and the node crosses from `SC.renderer.GetGraphicsData()` against
+the expected ones. Without the fix the factors 0 and 0.5 fail (4 of 6), with it all pass.

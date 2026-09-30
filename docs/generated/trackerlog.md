@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.188.dev1
+- Exudyn version = 1.12.189.dev1
 - last change = 2026-09-30
 - Number of issues = 2760
-- Number of resolved issues = 2502 (188 in current version)
+- Number of resolved issues = 2503 (189 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7893,10 +7893,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HUGE EFF` kinematics solver (#1821)
   - description: consider functionality of a kinematic solver; this could be based on a quasi-static solver which utilizes the velocity constraint level and computes unknown velocities for a given configuration; first attempt could be based on finite differences for prescribed incremental motion and resulting incremental coordinates; only possible for systems with DOF=0; alternatively, we could compute velocity coordinates only from the constrained system, which however would only work if all coordinates are constrained
   - date raised: 2024-04-19
-- `FIX` `LOW EFF` Marker positions (#1813)
-  - description: wrong representation of marker positions in AnimateModes for deformation scaling=0
-  - **remarks:** planned before 1.13 as revision2026b step RG6.8.1 (2026-09-29)
-  - date raised: 2024-04-08
 - `DOCU` `MEDIUM EFF` joint constraints (#1801)
   - description: add description of position jacobian for rigid bodies (in particular 3D rigid); add reference in description for MarkerBodyPosition
   - date raised: 2024-03-03

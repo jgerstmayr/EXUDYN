@@ -1763,8 +1763,10 @@ This group is that revision and what has to happen before it can start.
 **RG6.8** *(group RG6; maintainer 2026-09-29)* **The graphics fixes before 1.13** - *"many are graphics
     related; still, some may be solvable or you could suggest a simple test"*. With the test each can
     have:
-    - **RG6.8.1** (#1813) marker positions in `AnimateModes` with deformation scaling 0 - **headless**:
-      the marker positions in `SC.renderer.GetGraphicsData()` against the reference positions;
+    - **RG6.8.1** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg6-8-1) - (#1813) marker positions in
+      `AnimateModes` with deformation scaling 0 - **headless**: the marker positions in
+      `SC.renderer.GetGraphicsData()` against the reference positions. The superelement markers now draw at the
+      mesh nodes as the superelement draws them; `test_superElementMarkerGraphics.py`;
     - **RG6.8.2** (#2309) `ZoomAll` ignores a `trackMarker` - **headless**: the render state after
       `ZoomAll` with a moving tracked marker, the marker in the view;
     - **RG6.8.3** (#2321) meshes from NGsolve give triangles of the wrong orientation - with ngsolve
