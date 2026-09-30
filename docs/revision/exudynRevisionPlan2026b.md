@@ -3145,10 +3145,34 @@ done.
     whether, and which option.
 
 <a id="rg14-2"></a>
-**RG14.2** *(group RG14; after RG14.1 is decided)* **The migration**: a function in `CObjectConnector`
-    and `CLoad` that does what the precomputation does today, so that nothing changes; then each
-    connector and load changed to compute its marker values itself, one at a time, the test suite
-    unchanged after each.
+**RG14.2** *(group RG14; maintainer 2026-09-30, after reading RG14.1)* **The migration** (#2745). The
+    maintainer's frame: a **fallback** to today's path until there is evidence that the new one computes
+    the same; **no temporary data per item**, only per system and thread, fewer temporaries with generic
+    names; **measure first**; two layers - the connector computes from a small structure without
+    precomputed matrices, the system computes the marker data per marker kind (position, rigid,
+    coordinate) and transports only what is needed, templated for automatic differentiation; a unified
+    `ComputeConnectorForce`; homogeneous transformations for rigid markers, internally and later perhaps
+    for the user; a pilot connector, then classes of connectors, each a step; `GeneralContact` compatible.
+    The proposal is in `tmp/evalRG14_2_connectorInterface.md` (not kept in the repository): L0 marker
+    kinematics (fixed size, templated, a homogeneous transformation for rigid markers), L1 a connector
+    force as a pure function of them, L2 the system function per marker kind with the inner Jacobian by
+    AD over the marker kinematics - which does not need RG15 -, a `Legacy` branch and an experimental
+    switch as the fallback. Sub-steps, as proposed there:
+    - **RG14.2.1** the MiniExample performance run (`runPerformanceTests.py --mini-examples [--full]`):
+      the generated MiniExamples with a dynamic solve appended, factors in the item definition, ~2 s per
+      example in full and ~0.1 s in the regular run, in parallel on 80 % of the cores, the solver timers
+      recorded, not in fast mode; the baseline log on the maintainer's machine;
+    - **RG14.2.2** the interface decided (the questions in section 9 of the evaluation);
+    - **RG14.2.3** L0, the per-thread `MarkerTemp`, the marker functions and the dispatch with `Legacy`
+      for every connector - results identical;
+    - **RG14.2.4** the pilot `ObjectConnectorSpringDamper`, its inner Jacobian by AD, compared with the
+      legacy path in results, Newton iterations and timers;
+    - **RG14.2.5** the other position-marker connectors; **RG14.2.6** the coordinate-marker connectors;
+      **RG14.2.7** the loads; **RG14.2.8** the rigid-marker force connectors with homogeneous
+      transformations; **RG14.2.9** constraints and joints; **RG14.2.10** the contact connectors (with
+      RG4.16); **RG14.2.11** the special markers (shape, cable, many markers); **RG14.2.12**
+      `GeneralContact` on L0; **RG14.2.13** output variables and sensors through the connector force, then
+      the legacy path, the switch and the unused temporaries removed.
 
 ## RG15 — Objects computing from given coordinates
 
@@ -3207,7 +3231,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.29 | #2203 | ask an item from Python which output variables and types it provides |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
-| RG14.1 | #2745 | evaluation: connectors and loads compute their marker values themselves |
+| RG14.2 | #2745 | connectors compute from small marker structures: the performance baseline first (RG14.2.1), the interface to decide (RG14.2.2) |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG13.6.6 | #2732 | MiniExamples of `ObjectFFRF` and `ObjectFFRFreducedOrder`, once tetrahedral elements are part of Exudyn |

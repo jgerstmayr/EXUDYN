@@ -9,5 +9,6 @@
   "description": "The maintainer, 2026-09-29: compute marker values inside the connector (joint, constraint) and load functions, no precomputation of MarkerData; a new temporary data with smaller footprint per marker; check GeneralContact. Migration: a function in CObjectConnector / CLoad that does what the precomputation does today, then each connector and load changed. Advantage: automatic differentiation becomes much simpler. First an evaluation step - what is there now, what are the best options - since it shapes future items and the user elements. revision2026b group RG14.",
   "dateRaised": "2026-09-29",
   "deadline": "2027-03-28",
-  "file": "src/Main/MarkerData.h"
+  "file": "src/Main/MarkerData.h",
+  "workingRemarks": "maintainer 2026-09-30: continue with RG14.2 - fallback, per-thread temporaries only, performance baseline from the MiniExamples first, two-layer interface per marker kind, unified ComputeConnectorForce, homogeneous transformations for rigid markers; proposal in tmp/evalRG14_2_connectorInterface.md"
 }
