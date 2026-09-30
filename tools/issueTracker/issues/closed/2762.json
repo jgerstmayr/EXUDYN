@@ -1,0 +1,15 @@
+{
+  "number": 2762,
+  "title": "rightAngleFrame.py stops at the buckling load: drive it by displacement",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The test model rightAngleFrame.py (ANCF and geometrically exact beam) applies the load by a user function and the static solver stops near the critical load 1.088 N; it was not run by the suite (useGraphics). Maintainer 2026-09-30: drive the tip by displacement, a coordinate constraint with an offset user function, the reaction force being the load.",
+  "dateRaised": "2026-09-30",
+  "deadline": "2027-03-29",
+  "dateResolved": "2026-09-30 23:34",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The test model rightAngleFrame.py drives the frame by displacement and follows it past the buckling load of 1.088 N.",
+  "resolvedInVersion": "1.12.198"
+}

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 182 | 1.12.197 |
+| 1.12 | Metheney | 183 | 1.12.198 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.198** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` rightAngleFrame.py stops at the buckling load: drive it by displacement (#2762)
+  - description: The test model rightAngleFrame.py (ANCF and geometrically exact beam) applies the load by a user function and the static solver stops near the critical load 1.088 N; it was not run by the suite (useGraphics). Maintainer 2026-09-30: drive the tip by displacement, a coordinate constraint with an offset user function, the reaction force being the load.
+  - **notes:** The test model rightAngleFrame.py drives the frame by displacement and follows it past the buckling load of 1.088 N.
+  - date resolved: **2026-09-30 23:34**, date raised: 2026-09-30
 - **1.12.197** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the mass switch of ObjectBeamGeometricallyExact becomes exu.special.beams.geometricallyExactLumpedMass (#2761)
   - description: exu.experimental.beamGeometricallyExactConsistentMass (RG4.8.4) stays as a switch, for tests with both mass matrices, but as a special setting: exu.special.beams.geometricallyExactLumpedMass, default False (the consistent mass); the experimental one goes (maintainer, 2026-09-30).
   - **notes:** The mass matrix of ObjectBeamGeometricallyExact is switched with exu.special.beams.geometricallyExactLumpedMass (default False: the element-consistent mass); exu.experimental.beamGeometricallyExactConsistentMass is gone.

@@ -1,15 +1,21 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Test models for ANCFBeam and GeometricallyExactBeam (2-node shear deformable beam, 
-#           Lie group formulation for work of elastic forces); 
-#           test model: right angle frame under end load;
-#           K. Nachbagauer, J. Gerstmayr. Structural and Continuum Mechanics Approaches for a 3D Shear Deformable ANCF Beam Finite Element: Application to Buckling and Nonlinear Dynamic Examples, Journal of Computational and Nonlinear Dynamics, Vol. 9(1), pp. 011013-1 – 011013-8, 2013.
+# Details:  Lateral buckling of the right-angle frame (Argyris et al. 1979; Simo and Vu-Quoc 1986;
+#           Nachbagauer and Gerstmayr 2013), with ObjectANCFBeam or ObjectBeamGeometricallyExact:
+#           two arms of length 0.24 m with a thin rectangular cross section 30 x 0.6 mm, clamped at the
+#           end of the first arm, joined rigidly at the corner. The tip of the second arm is DRIVEN by
+#           displacement: a coordinate constraint prescribes its displacement along the first arm, and
+#           its reaction force is the load P. So the static solver passes the buckling point, where a
+#           load-driven computation stops at the critical load 1.088 N, and follows the post-buckling
+#           path, on which P stays close to 1.088 N while the tip moves out of the plane. A small
+#           out-of-plane force is the imperfection.
+#           K. Nachbagauer, J. Gerstmayr. Structural and Continuum Mechanics Approaches for a 3D Shear
+#           Deformable ANCF Beam Finite Element: Application to Buckling and Nonlinear Dynamic Examples,
+#           Journal of Computational and Nonlinear Dynamics, Vol. 9(1), pp. 011013-1 - 011013-8, 2013.
 #
 # Author:   Johannes Gerstmayr
-# Date:     2023-05-02
-#
-# Notes:    currently, this model shows very bad convergence for ANCFBeam and no convergence for GeometricallyExactBeam
+# Date:     2023-05-02, displacement-driven 2026-10-01
 #
 # Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
 #
@@ -23,341 +29,126 @@ import numpy as np
 
 testIsActive = exu.sys.get('testIsActive', False)
 
+useGeometricallyExact = True    #False: ObjectANCFBeam, whose Newton iteration stalls near 2e-7 after a few percent of the drive (#2763)
+nElements = 16                  #per arm
+uxMax = 2e-3                    #prescribed displacement of the tip along the first arm (x); 200 steps of 1e-5 follow the post-buckling path, much larger steps may jump to another branch
+imperfection = 1e-4             #out-of-plane force at the tip [N]
+numberOfLoadSteps = 200
+
+L = 0.24                #length of each arm
+w = 0.0006              #thickness, out of the plane of the frame
+h = 0.03                #height, in the plane of the frame
+Em = 7.124e10; nu = 0.31; Gm = Em/(2*(1+nu))
+A = h*w; Iyy = h*w**3/12; Izz = w*h**3/12
+J = h*w**3/3            #torsion of a thin rectangle
+rho = 1e2               #not used by the static solver
+
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
-useGeometricallyExact = True
+sectionData = exu.BeamSection()
+sectionData.stiffnessMatrix = np.diag([Em*A, Gm*A, Gm*A, Gm*J, Em*Iyy, Em*Izz])
+sectionData.inertia = rho*J*np.eye(3)
+sectionData.massPerLength = rho*A
 
-nElements = 4*2*2
+sectionGeometry = exu.BeamSectionGeometry()
+sectionGeometry.polygonalPoints = exu.Vector2DList()
+for p in [[h, -w], [h, w], [-h, w], [-h, -w]]:
+    sectionGeometry.polygonalPoints.Append(p)
 
+lElem = L/nElements
+rotZ = RotationMatrixZ(-np.pi/2)
 
-testIsActive = False
-verbose = 1
-
-useEP = True #for geometrically exact beam node
-angleZ = -pi/2
-rotZ = RotationMatrixZ(-pi/2)
-if useEP:
-    NodeClass = NodeRigidBodyEP
-    initialRotationsGE = eulerParameters0
-    initialRotationsGE2 = list(RotationMatrix2EulerParameters(rotZ))
-else: #does not work for static case, as static solver currently (2023-04) cannot solve for Lie group nodes 
-    NodeClass = NodeRigidBodyRotVecLG
-    initialRotationsGE = [0,0,0]
-    initialRotationsGE2 = [0,0,angleZ]
-
-
-testErrorSum = 0
-
-printCase = True
-
-if True:
-    mbs.Reset()
-    
-    computeEigenmodes = False
-    csFact = 1
-    sectionData = exu.BeamSection()
-    ks1=1 #shear correction, torsion
-    ks2=1 #shear correction, bending
-    ks3=1 #shear correction, bending
-    ff=1 #drawing factor
-
-    L = 0.24 #length of beam
-    w = 0.0006 #width of beam
-    h = 0.03 #height Y
-
-    Em = 7.124e10
-    rho = 1e2 #unused in static computation
-
-    A=h*w
-    nu = 0.31              # Poisson ratio
-
-    #not mentioned in Simo's paper
-    # ks1= 0.5768 #torsion correction factor if J=Jyy+Jzz
-    # ks2= 10*(1+nu)/(12+11*nu)
-    # ks3=ks2
-
-    
-    Gm = Em/(2*(1+nu))      # Shear modulus
-
-    # Cross-section properties
-    Iyy = h*w**3/12 # Second moment of area of the beam cross-section
-    Izz = w*h**3/12 # Second moment of area of the beam cross-section
-    #J = (Iyy+Izz)   # approximation; Polar moment of area of the beam cross-section
-    #thin rectangle:
-    beta = 1/3 #for infinitely thin beam
-    J = beta*h*w**3
-
-    sectionData.stiffnessMatrix = np.diag([Em*A, Gm*A*ks2, Gm*A*ks3, Gm*J*ks1, Em*Iyy, Em*Izz])
-
-
-    rhoA = rho*A
-
-    sectionData.inertia= rho*J*np.eye(3)
-    sectionData.massPerLength = rhoA
-
-    sectionGeometry = exu.BeamSectionGeometry()
-
-    #points, in positive rotation sense viewing in x-direction, points in [Y,Z]-plane
-    #points do not need to be closed!
-    lp = exu.Vector2DList()
-    if True:
-        lp.Append([h*ff,-w*ff])
-        lp.Append([h*ff,w*ff])
-        lp.Append([-h*ff,w*ff])
-        lp.Append([-h*ff,-w*ff])
-
-    sectionGeometry.polygonalPoints = lp
-    #exu.Print('HERE\n',sectionGeometry.polygonalPoints)
-    nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #ground node for coordinate constraint
-    mnGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
- 
-
-    lElem = L/nElements
-
-    #first arm:
-    eY=[0,1,0]
-    eZ=[0,0,1]
-    if useGeometricallyExact:
-        n0 = mbs.AddNode(NodeClass(referenceCoordinates=[0,0,0]+initialRotationsGE))
-    else:
-        initialRotations = eY+eZ
-        n0 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[0,0,0]+initialRotations))
-    nInit = n0
+def Arm(position0, direction, rotation, slopes):
+    """the nodes and elements of one arm; returns the first and the last node"""
+    nodes = []
+    for k in range(nElements+1):
+        p = list(np.array(position0) + k*lElem*np.array(direction))
+        if useGeometricallyExact:
+            nodes += [mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=p+list(RotationMatrix2EulerParameters(rotation))))]
+        else:
+            nodes += [mbs.AddNode(NodePointSlope23(referenceCoordinates=p+slopes))]
     for k in range(nElements):
         if useGeometricallyExact:
-            n1 = mbs.AddNode(NodeClass(referenceCoordinates=[lElem*(k+1),0,0]+initialRotationsGE))
-        
-            oBeam = mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[n0,n1], physicsLength = lElem, 
-                                                                 sectionData = sectionData,
-                                                                 visualization=VBeam3D(sectionGeometry=sectionGeometry)))
+            mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[k], nodes[k+1]], physicsLength=lElem,
+                                                       sectionData=sectionData,
+                                                       visualization=VBeam3D(sectionGeometry=sectionGeometry)))
         else:
-            n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[lElem*(k+1),0,0]+initialRotations))
-            oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength = lElem, 
-                                                   #testBeamRectangularSize = [h,w],
-                                                   sectionData = sectionData,
-                                                   crossSectionPenaltyFactor = [csFact,csFact,csFact],
-                                                   visualization=VANCFBeam(sectionGeometry=sectionGeometry)))
-        n0 = n1
+            mbs.AddObject(ObjectANCFBeam(nodeNumbers=[nodes[k], nodes[k+1]], physicsLength=lElem,
+                                         sectionData=sectionData, crossSectionPenaltyFactor=[1, 1, 1],
+                                         visualization=VANCFBeam(sectionGeometry=sectionGeometry)))
+    return nodes[0], nodes[-1]
 
-    #second arm:
-    eY=[1,0,0]
-    eZ=[0,0,1]
-    if useGeometricallyExact:
-        n0B = mbs.AddNode(NodeClass(referenceCoordinates=[L,0,0]+initialRotationsGE2))
-    else:
-        initialRotations = eY+eZ
-        n0B = mbs.AddNode(NodePointSlope23(referenceCoordinates=[L,0,0]+initialRotations))
+nInit, n1 = Arm([0, 0, 0], [1, 0, 0], np.eye(3), [0, 1, 0, 0, 0, 1])      #first arm, along x
+nInitB, n1B = Arm([L, 0, 0], [0, -1, 0], rotZ, [1, 0, 0, 0, 0, 1])       #second arm, along -y
 
-    nInitB = n0B
-    for k in range(nElements):
-        if useGeometricallyExact:
-            n1B = mbs.AddNode(NodeClass(referenceCoordinates=[L,-lElem*(k+1),0]+initialRotationsGE2))
-        
-            oBeam = mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[n0B,n1B], physicsLength = lElem, 
-                                                                  sectionData = sectionData,
-                                                                  visualization=VBeam3D(sectionGeometry=sectionGeometry)))
-        else:
-            n1B = mbs.AddNode(NodePointSlope23(referenceCoordinates=[L,-lElem*(k+1),0]+initialRotations))
-            oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0B,n1B], physicsLength = lElem, 
-                                                    #testBeamRectangularSize = [h,w],
-                                                    sectionData = sectionData,
-                                                    crossSectionPenaltyFactor = [csFact,csFact,csFact],
-                                                    visualization=VANCFBeam(sectionGeometry=sectionGeometry)))
-        n0B = n1B
+nGround = mbs.AddNode(NodePointGround(visualization=VNodePointGround(show=False)))
+mCoordinateGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 
-
-    
-    mTip = mbs.AddMarker(MarkerNodeRigid(nodeNumber = n1))
-    mTipB = mbs.AddMarker(MarkerNodeRigid(nodeNumber = n1B))
-    #disturbance force:
-    def UFloadTip(mbs, t, loadVector):
-        tEnd = 1
-        factDist = 0
-        factLoad = 1
-        if t < tEnd:
-            factDist = t*(tEnd-t)/tEnd**2
-            #factDist = (tEnd-t)/tEnd
-            
-        # if t < 1:
-        factLoad = t
-        # if factLoad > 0.6: #check if b
-        #     factLoad = 0.6
-        # else:
-        #     factLoad = 0.715
-        return [1.2*factLoad,0,0.0012*t]
-    
-    # mbs.AddLoad(Force(markerNumber=mTip, loadVector = [0,0,-0.2], 
-    #                   #loadVectorUserFunction=UFloadTip
-    #                   ))
-    lTip = mbs.AddLoad(Force(markerNumber=mTipB, loadVector = [1,0,-0.1*2*0],
-                             loadVectorUserFunction=UFloadTip
-                             ))
-
-    nGround = mbs.AddNode(NodePointGround(visualization=VNodePointGround(show=False)) )
-    mCGround= mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
-    # mNode = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n1, coordinate=2))
-    # oCC = mbs.AddObject(CoordinateConstraint(markerNumbers = [mCGround, mNode], offset = 0.02,))
-
-    mNodeB = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n1B, coordinate=0))
-    #oCC = mbs.AddObject(CoordinateConstraint(markerNumbers = [mCGround, mNodeB], offset = 0.,))
-
-    # def UFoffset(mbs, t, itemNumber, lOffset):
-    #     fact = 0
-    #     if t>0.5:
-    #         fact = 2*(t-0.5)
-    #     return 0.02*fact
-
-    # oCC = mbs.AddObject(CoordinateConstraint(markerNumbers = [mCGround, mNodeB],
-    #                                 offsetUserFunction = UFoffset,
-    #                                 ))
-
-    if useGeometricallyExact:
-        nm0 = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nInit))
-        nmGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround))
-        mbs.AddObject(GenericJoint(markerNumbers=[nmGround, nm0],
-                                   visualization=VGenericJoint(axesRadius=2*w, axesLength=2*w)))
-    else:
-        for i in range(9):
-            #if i != 4 and i != 8: #exclude constraining the slope lengths
-            if True:
-                nm0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nInit, coordinate=i))
-                mbs.AddObject(CoordinateConstraint(markerNumbers=[mnGround, nm0]))
-
-    nm0Last = mbs.AddMarker(MarkerNodeRigid(nodeNumber=n1))
-    nm0B = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nInitB))
-    mbs.AddObject(GenericJoint(markerNumbers=[nm0Last, nm0B],
-                               rotationMarker1=rotZ,
-                               constrainedAxes=[1,1,1,1,1,1],
+#clamping at the start of the first arm, and the rigid corner
+if useGeometricallyExact:
+    mbs.AddObject(GenericJoint(markerNumbers=[mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround)),
+                                              mbs.AddMarker(MarkerNodeRigid(nodeNumber=nInit))],
                                visualization=VGenericJoint(axesRadius=2*w, axesLength=2*w)))
+else:
+    for i in range(9):
+        mbs.AddObject(CoordinateConstraint(markerNumbers=[mCoordinateGround,
+                                                          mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nInit, coordinate=i))]))
+mbs.AddObject(GenericJoint(markerNumbers=[mbs.AddMarker(MarkerNodeRigid(nodeNumber=n1)),
+                                          mbs.AddMarker(MarkerNodeRigid(nodeNumber=nInitB))],
+                           rotationMarker1=rotZ, visualization=VGenericJoint(axesRadius=2*w, axesLength=2*w)))
 
+#the tip is driven along x; the reaction force of the constraint is the load P
+def UFoffset(mbs, t, itemNumber, lOffset):
+    return uxMax*t
 
-    sLoad = mbs.AddSensor(SensorLoad(loadNumber = lTip, storeInternal=True))
-    # sLoad = mbs.AddSensor(SensorObject(objectNumber = oCC, storeInternal=True,outputVariableType=exu.OutputVariableType.Force))
-    sDisp = mbs.AddSensor(SensorNode(nodeNumber=n1B, outputVariableType=exu.OutputVariableType.Displacement, storeInternal=True))
+oDrive = mbs.AddObject(CoordinateConstraint(markerNumbers=[mCoordinateGround,
+                                                           mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n1B, coordinate=0))],
+                                            offsetUserFunction=UFoffset))
+mbs.AddLoad(Force(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n1B)), loadVector=[0, 0, imperfection]))
 
-    # exu.Print(mbs)
-    mbs.Assemble()
+sForce = mbs.AddSensor(SensorObject(objectNumber=oDrive, outputVariableType=exu.OutputVariableType.Force,
+                                    storeInternal=True, writeToFile=False))
+sDisp = mbs.AddSensor(SensorNode(nodeNumber=n1B, outputVariableType=exu.OutputVariableType.Displacement,
+                                 storeInternal=True, writeToFile=False))
+mbs.Assemble()
 
-    tEnd = 1     #end time of simulation
-    stepSize = 1e-4   #step size; leads to 1000 steps
+simulationSettings = exu.SimulationSettings()
+simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.staticSolver.useLoadFactor = False   #the drive follows the user function of t in [0, 1]
+simulationSettings.staticSolver.numberOfLoadSteps = numberOfLoadSteps
+simulationSettings.staticSolver.newton.relativeTolerance = 1e-8
+simulationSettings.staticSolver.newton.absoluteTolerance = 1e-7
+simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solutionSettings.sensorsWritePeriod = 1/numberOfLoadSteps
 
-    simulationSettings = exu.SimulationSettings()
-    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize) #must be integer
-    simulationSettings.timeIntegration.endTime = tEnd
+SC.visualizationSettings.bodies.beams.axialTiling = 50
+SC.visualizationSettings.view0.scene.drawWorldBasis = True
+SC.visualizationSettings.view0.scene.worldBasisSize = 0.1
 
-    simulationSettings.solutionSettings.solutionWritePeriod = 2e-2  #output interval general
-    simulationSettings.solutionSettings.sensorsWritePeriod = 1e-5  #output interval of sensors
+if not testIsActive:
+    SC.renderer.Start()
 
-    simulationSettings.staticSolver.verboseMode = verbose
+mbs.SolveStatic(simulationSettings)
 
-    # simulationSettings.displayComputationTime = True
-    #simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-    # simulationSettings.parallel.numberOfThreads = 4
+if not testIsActive:
+    SC.renderer.DoIdleTasks()
+    SC.renderer.Stop()
 
-    #simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 5e-5
-    #simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2 = True
-    #simulationSettings.staticSolver.newton.relativeTolerance = 1e-6
-    # simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-4
+force = mbs.GetSensorStoredData(sForce)[:, 1]       #the load P on the tip: the force of the drive
+uz = mbs.GetSensorStoredData(sDisp)[:, 3]           #out-of-plane displacement of the tip
+testResult = 0
+for displacement in [1e-3, 5e-3, 1e-2]:
+    forceAt = np.interp(displacement, np.abs(uz), force)
+    exu.Print('out-of-plane tip displacement', displacement, 'at P =', round(forceAt, 4))
+    testResult += forceAt
+exu.Print('at the end: P =', round(force[-1], 4), ', out-of-plane tip displacement', round(uz[-1], 5))
+testResult += force[-1] + abs(uz[-1])
 
-    simulationSettings.staticSolver.useLoadFactor = False #load is applied via user function
-    simulationSettings.staticSolver.numberOfLoadSteps = 100
-    # simulationSettings.linearSolverSettings.ignoreSingularJacobian
-    
-    # simulationSettings.staticSolver.loadStepGeometric=True
-    # simulationSettings.staticSolver.loadStepGeometricRange = 1e4
-    # simulationSettings.staticSolver.adaptiveStep = False
-    # simulationSettings.staticSolver.stabilizerODE2term = 1
-    # simulationSettings.staticSolver.computeLoadsJacobian = False
+exu.Print('solution of rightAngleFrame=', testResult)
+exu.sys['testResult'] = testResult
 
-    # if useGeometricallyExact:
-    #     simulationSettings.staticSolver.newton.relativeTolerance = 1e-4
-    #     simulationSettings.staticSolver.newton.absoluteTolerance = 1e-5
-    #     simulationSettings.staticSolver.numberOfLoadSteps = 1 #otherwise makes problems
-
-    simulationSettings.staticSolver.newton.numericalDifferentiation.doSystemWideDifferentiation = True
-    # simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2=True
-
-    simulationSettings.staticSolver.newton.relativeTolerance = 1e-5*2
-    simulationSettings.staticSolver.newton.absoluteTolerance = 1e-5
-    # simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-4
-    # simulationSettings.staticSolver.stabilizerODE2term = 1e4
-
-    simulationSettings.timeIntegration.newton.relativeTolerance = 1e-7
-    simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-7
-    simulationSettings.timeIntegration.newton.useModifiedNewton = True
-
-    #add some drawing parameters for this example
-    SC.visualizationSettings.nodes.drawNodesAsPoint=False
-    SC.visualizationSettings.nodes.defaultSize=0.01
-    SC.visualizationSettings.nodes.basisSize=0.2
-    SC.visualizationSettings.nodes.showNodalSlopes=True
-
-    SC.visualizationSettings.bodies.beams.axialTiling = 50
-    SC.visualizationSettings.view0.scene.drawWorldBasis = True
-    SC.visualizationSettings.view0.scene.worldBasisSize = 0.1
-    SC.visualizationSettings.openGL.multiSampling = 4
-    SC.visualizationSettings.openGL.lineWidth=2
-
-    if not testIsActive:
-        SC.renderer.Start()
-        SC.renderer.DoIdleTasks()
-
-
-    # else:
-    mbs.SolveStatic(simulationSettings)
-    #mbs.SolveDynamic(simulationSettings)
-    #mbs.SolveDynamic(simulationSettings, solverType = exu.DynamicSolverType.RK44)
-
-    #%%+++++++++++++++++++++++++++++++++++    
-    if not testIsActive:
-        SC.renderer.DoIdleTasks()
-        SC.renderer.Stop() #safely close rendering window!
-    
-    ##evaluate final (=current) output values
-    uTip = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)
-    
-    testErrorSum += np.linalg.norm(uTip)
-
-    
-    
-    pTip = mbs.GetNodeOutput(n1, exu.OutputVariableType.Position)
-    exu.Print('ne=',nElements, ', ux=',L-pTip[0], ', uy=',pTip[1])
-
-
-exu.Print('Solution of rightAngleFrameTip=', testErrorSum)
-exu.sys['testResult'] = testErrorSum
-
-#%%+++++++++++++++++
-if True:
-    
-    PlotSensor(None, closeAll=True)
-
-    dataDisp = mbs.GetSensorStoredData(sDisp)
-    dataLoad = mbs.GetSensorStoredData(sLoad)
-    
-    data = np.zeros((len(dataDisp),2))
-    data[:,0] = dataDisp[:,3] #displacement in Z-direction
-    data[:,1] = dataLoad[:,1] #force in X-direction
-    data2 = np.zeros((len(dataDisp),2))
-    data2[:,0] = dataDisp[:,1] #displacement in X-direction
-    data2[:,1] = dataLoad[:,1] #force in X-direction
-    
-    mbs.PlotSensor(sensorNumbers=[data],components=[0], componentsX=[-1], 
-                xLabel='displacement in Z direction',yLabel='Load (in X direction)')
-    refSol = np.array([[0,1.088],[0.035,1.088]])
-    mbs.PlotSensor(sensorNumbers=[refSol],components=[0],  
-                xLabel='displacement in Z direction',yLabel='Load (in X direction)', newFigure=False,
-                colorCodeOffset=1)
-    # mbs.PlotSensor(sensorNumbers=[data2],components=[0], componentsX=[-1], 
-    #             xLabel='displacement in X direction',yLabel='Load (in X direction)')
-
-
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#all results are taken from ANCFBeam (shear deformable 2-node 3D beam):
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-#reference:
-#critical load: 1.088
-
-
+if not testIsActive:
+    mbs.PlotSensor(sensorNumbers=[np.column_stack((np.abs(uz), force)), np.array([[0, 1.088], [np.abs(uz).max(), 1.088]])],
+                   components=[0, 0], componentsX=[-1, -1], labels=['computed', 'critical load 1.088 N'],
+                   xLabel='out-of-plane tip displacement', yLabel='P')

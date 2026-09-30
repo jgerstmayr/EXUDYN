@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.197.dev1
+- Exudyn version = 1.12.198.dev1
 - last change = 2026-09-30
-- Number of issues = 2762
-- Number of resolved issues = 2511 (197 in current version)
+- Number of issues = 2764
+- Number of resolved issues = 2512 (198 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8328,6 +8328,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectANCFBeam: the Newton iteration stalls near 2e-7 in the right-angle frame (#2763)
+  - description: rightAngleFrame.py with ObjectANCFBeam (useGeometricallyExact = False), displacement-driven: from load step 7 on, Newton stagnates at a relative error of 1e-7 to 3e-7 (tolerance 1e-8; with 1e-6 the same at 1e-6 to 2e-6) and the static solver fails at 3 % of the drive; the geometrically exact beam converges in 4.7 iterations per step. Found 2026-10-01 in RG4.8.13; an inconsistent Jacobian of the ANCF beam is the first suspect (the original header said: very bad convergence for ANCFBeam).
+  - date raised: 2026-09-30
 - <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` NodeGenericAE cannot be used: no object, marker or script takes it (#2736)
   - description: Found while writing the MiniExamples (\#2732, revision2026b step RG13.6.1): NodeGenericAE provides only the type GenericAE, and no object requests it, no node marker can be attached to it, and no example, test model or module of the package uses it. A node with algebraic coordinates and no object that writes their equations leaves those coordinates without an equation. Either an object takes it - the description names linear state space systems - or the node is deprecated. revision2026b step RG4.12.
   - **remarks:** ON HOLD (maintainer 2026-09-29): not deprecated; the future owner of the Lagrange multipliers of a constraint (optional node, automatic allocation stays the default) and of the unknowns of purely algebraic equations; design in revision2026b step RG4.12

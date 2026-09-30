@@ -10263,5 +10263,31 @@ special settings, in a structure of its own for the beam elements: `exu.special.
 `geometricallyExactLumpedMass`, default `False` - the consistent mass. The name says what the non-default does.
 `exu.experimental.beamGeometricallyExactConsistentMass` is gone; it existed only in the internal 1.12 versions.
 The element's description names the new switch. **Test** `python/testing/test_specialBeams.py`: the system mass
-matrix of one element couples the positions of its nodes with $ho A L/6$ by default and not at all with the
+matrix of one element couples the positions of its nodes with $
+ho A L/6$ by default and not at all with the
 switch set.
+
+<a id="rg4-8-13"></a>
+### RG4.8.13 — the right-angle frame driven by displacement (2026-10-01, #2762)
+
+`python/TestModels/rightAngleFrame.py` applied the load at the tip by a user function; the static solver stopped
+near the critical load, and the file opened the renderer unconditionally, so the suite did not run it. Now the tip
+is **driven by displacement** (maintainer): a `CoordinateConstraint` prescribes its displacement along the first
+arm through an offset user function, $u_x = 2\cdot10^{-3}\,t$ m in 200 load steps, and the force of the constraint
+is the load $P$. A force of $10^{-4}$ N out of the plane is the imperfection. The static solver passes the
+buckling point and follows the post-buckling path in 4.7 Newton iterations per step (0.4 s):
+
+| out-of-plane tip displacement | 1 mm | 5 mm | 10 mm | 14 mm (end) |
+|---|---|---|---|---|
+| $P$, displacement-driven | 1.0819 N | 1.0881 N | 1.0917 N | 1.0960 N |
+| $P$, load-driven (`geometricallyExactBeamRightAngleFrame.py`) | 1.081 N | 1.088 N | 1.092 N | - |
+
+The two agree, and with the critical load 1.088 N of the literature. The file is rewritten around one function per
+arm, keeps the switch `useGeometricallyExact`, opens the renderer only when not in a test, and is in the suite now
+(`runTestSuiteRefSol.py`, removed from `DeliberatelyNotRun`).
+
+**Found**: with `ObjectANCFBeam` the same drive fails - from load step 7 on, Newton stagnates at a relative error of
+1e-7 to 3e-7 against the tolerance 1e-8, and with a tolerance of 1e-6 at 1e-6 to 2e-6 - and the solver stops at 3 %
+of the drive. An inconsistent Jacobian of the ANCF beam is the first suspect; raised as #2763, not a step yet.
+A much larger drive per step (1e-2 m in 200 steps) makes the geometrically exact frame jump to another branch
+(P = 3.2 N); the file says so at the parameter.

@@ -597,7 +597,7 @@ The steps are numbered in the order they were raised and stand here in the order
 <a id="rg4-8"></a>
 **RG4.8** **DONE 2026-09-30** (#2730) — [plan text](exudynRevisionLog2026b.md#plan-rg4-8) — `ObjectBeamGeometricallyExact` (3D): analyse the implementation.
     Two leftovers, decided by the maintainer on 2026-09-30:
-    - **RG4.8.13** `rightAngleFrame.py` (ANCF and this element, not run by the suite) stops near the
+    - **RG4.8.13** **DONE 2026-10-01** (#2762) — [log](exudynRevisionLog2026b.md#rg4-8-13) - `rightAngleFrame.py` (ANCF and this element, not run by the suite) stops near the
       buckling load with its load-driven settings: drive it by displacement instead - a coordinate constraint
       whose offset a user function prescribes;
     - **RG4.8.14** **DONE 2026-10-01** (#2761) — [log](exudynRevisionLog2026b.md#rg4-8-14) - the switch of the mass matrix stays, as a special setting and not an experimental one:
@@ -1539,7 +1539,7 @@ find out about the settings of a model. It is the group a user notices most and 
     are combinations in C++ (`NodeType`, `MarkerType`, `ObjectType`, `AccessFunctionType`) are split into
     their single members, which is what a script compares against. A test then loops over
     `Inspect(item, InspectType.OutputVariables)` of every MiniExample instead of a hand-kept list, and the
-    item pages of RG13.5.0.3 can take the same answers. Waits for the maintainer's confirmation.
+    item pages of RG13.5.0.3 can take the same answers. **Confirmed by the maintainer, 2026-10-01.**
 
 ## RG13 — Item documentation
 
@@ -1825,6 +1825,7 @@ whether it becomes a step.
 
 | where | issue | what it is |
 |---|---|---|
+| RG4.8.13 | #2763 | `ObjectANCFBeam`: the Newton iteration stalls near 2e-7 in the displacement-driven right-angle frame |
 
 *#2608 was done by RG6.2.11. The decision on the chapters of the user manual
 (#2657, #2662), which stood below, is carried out and is in the
