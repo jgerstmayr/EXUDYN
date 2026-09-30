@@ -121,6 +121,11 @@ void CObjectConnectorTorsionalSpringDamper::GetOutputVariableConnector(OutputVar
 	case OutputVariableType::Rotation: value.CopyFrom(Vector1D(angle)); break;
 	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(Vector1D(omega)); break;
 	case OutputVariableType::TorqueLocal: value.CopyFrom(Vector1D(torque)); break;
+	case OutputVariableType::PotentialEnergy: {
+		//V with dV/dangle = the spring torque: the constant torque adds torque*angle (#2202)
+		if (parameters.springTorqueUserFunction) { EnergyNotAvailable("ObjectConnectorTorsionalSpringDamper", "its springTorqueUserFunction defines the torque"); }
+		Real u = angle - parameters.offset;
+		value.CopyFrom(Vector1D(parameters.activeConnector ? 0.5*parameters.stiffness*u*u + parameters.torque*angle : 0.)); break; }
 	default:
 		SysError("CObjectConnectorTorsionalSpringDamper::GetOutputVariableConnector failed"); //error should not occur, because types are checked!
 	}

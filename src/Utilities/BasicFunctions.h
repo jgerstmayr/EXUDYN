@@ -259,14 +259,14 @@ namespace EXUstd {
 	template<class T>
 	inline bool IsOfType(T typeAvailable, T typeRequested)
 	{
-		return ((Index)typeAvailable & (Index)typeRequested) == (Index)typeRequested;
+		return ((Index64)typeAvailable & (Index64)typeRequested) == (Index64)typeRequested; //64 bits: OutputVariableType has more than 32 (#2766)
 	}
 
 	//! template function for boolean types to check whether the requested type (typeRequested) is available (typeAvailable) and if it is not None
 	template<class T>
 	inline bool IsOfTypeAndNotNone(T typeAvailable, T typeRequested)
 	{
-		return (((Index)typeAvailable & (Index)typeRequested) == (Index)typeRequested) && (Index)typeRequested != 0;
+		return (((Index64)typeAvailable & (Index64)typeRequested) == (Index64)typeRequested) && (Index64)typeRequested != 0;
 	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

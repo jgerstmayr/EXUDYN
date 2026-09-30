@@ -1,0 +1,16 @@
+{
+  "number": 2766,
+  "title": "a sensor or object dictionary cannot hold KineticEnergy or PotentialEnergy",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "The generated dictionary conversion of an OutputVariableType parameter cast the value to a 32-bit Index; KineticEnergy (bit 32) and PotentialEnergy (bit 33) then fail with 'Unable to cast Python instance of type OutputVariableType'. Found 2026-10-01 in RG9.4.2: mbs.AddSensor(SensorBody(..., outputVariableType=KineticEnergy)) raised.",
+  "dateRaised": "2026-10-01",
+  "deadline": "2027-03-30",
+  "dateResolved": "2026-10-01 00:22",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/itemHeaderEmitter.py",
+  "releaseNotes": "An outputVariableType beyond the 32nd bit (KineticEnergy, PotentialEnergy) can be given to sensors; an outputVariableType of -1 is refused.",
+  "resolvedInVersion": "1.12.201"
+}

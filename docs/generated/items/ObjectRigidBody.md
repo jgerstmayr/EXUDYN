@@ -70,6 +70,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | AccelerationLocal | $\LU{b}{\av}\cConfig(\pLocB) = \LU{b0}{\Rot} \LU{0}{\av}\cConfig(\pLocB)$ | local (body-fixed) acceleration vector of body-fixed point given by local position vector $\pLocB$ |
 | AngularAcceleration | $\LU{0}{\talpha}\cConfig$ | angular acceleration vector of body |
 | AngularAccelerationLocal | $\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talpha}\cConfig$ | local angular acceleration vector of body |
+| KineticEnergy | $T = \frac{1}{2} m\, \LU{0}{\vv}\tp\LU{0}{\vv} + m\, \LU{0}{\vv}\tp (\LU{0}{\tomega} \times \LU{0b}{\Rot}\LU{b}{\bv_{COM}}) + \frac{1}{2} \LU{b}{\tomega}\tp \LU{b}{\Jm} \LU{b}{\tomega}$ | kinetic energy of the body, with the velocity $\LU{0}{\vv}$ of its reference point and the inertia w.r.t. it; localPosition must be $[0,0,0]$ |
 
 (description-objectrigidbody)=
 ## Detailed description

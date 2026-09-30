@@ -101,6 +101,11 @@ void CObjectConnectorLinearSpringDamper::GetOutputVariableConnector(OutputVariab
 	case OutputVariableType::DisplacementLocal: value.CopyFrom(Vector1D(displacement)); break;
 	case OutputVariableType::VelocityLocal: value.CopyFrom(Vector1D(velocity)); break;
 	case OutputVariableType::ForceLocal: value.CopyFrom(Vector1D(force)); break;
+	case OutputVariableType::PotentialEnergy: {
+		//the constant force adds its potential (#2202)
+		if (parameters.springForceUserFunction) { EnergyNotAvailable("ObjectConnectorLinearSpringDamper", "its springForceUserFunction defines the force"); }
+		Real u = displacement - parameters.offset;
+		value.CopyFrom(Vector1D(parameters.activeConnector ? 0.5*parameters.stiffness*u*u + parameters.force*displacement : 0.)); break; }
 	default:
 		SysError("CObjectConnectorLinearSpringDamper::GetOutputVariableConnector failed"); //error should not occur, because types are checked!
 	}

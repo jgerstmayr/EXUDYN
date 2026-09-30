@@ -62,6 +62,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Velocity |  | relative velocity between both points |
 | Force | $\fv$ | 3D spring-damper force vector |
 | ForceLocal | $f_{SD}$ | scalar spring-damper force |
+| PotentialEnergy | $V = \frac{1}{2} k\, (L - L_0)^2 + f_c\, (L - L_0)$ | elastic energy of the spring and the potential of the constant force; zero if the connector is not active; raises for a springForceUserFunction |
 
 (description-objectconnectorspringdamper)=
 ## Detailed description

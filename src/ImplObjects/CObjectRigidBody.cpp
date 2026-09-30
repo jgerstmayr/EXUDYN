@@ -500,6 +500,19 @@ void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, co
 		value.SetVector(9, rot.GetDataPointer());
 		break;
 	}
+	case OutputVariableType::KineticEnergy: {
+		//T = 1/2 m v.v + m v.(omega x A b) + 1/2 omegaLocal.J omegaLocal, with v the velocity of the reference point,
+		//b the local center of mass and J the inertia w.r.t. the reference point
+		CheckEnergyLocalPosition(localPosition, "ObjectRigidBody");
+		Vector3D v = GetVelocity(localPosition, configuration);
+		Vector3D omega = GetAngularVelocity(localPosition, configuration);
+		Vector3D omegaLocal = GetAngularVelocityLocal(localPosition, configuration);
+		Vector3D b = GetRotationMatrix(localPosition, configuration) * parameters.physicsCenterOfMass;
+		Real m = parameters.physicsMass;
+		Matrix3D J;
+		RigidBodyMath::ComputeInertiaMatrix(parameters.physicsInertia, J);
+		value.SetVector({ 0.5*m*(v*v) + m*(v*omega.CrossProduct(b)) + 0.5*(omegaLocal*(J*omegaLocal)) });
+		break; }
 	default:
 		SysError("CObjectRigidBody::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

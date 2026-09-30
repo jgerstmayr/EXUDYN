@@ -524,6 +524,15 @@ outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !
 outcome: !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError list2=[1.0,2.0] list3=[1.0,2.0,3.0] list4=[1.0,2.0,3.0,4.0] list3=[1.0,2.0,3.0] !RuntimeError !RuntimeError !RuntimeError list2=[0.0,1.0] !RuntimeError
   VisualizationSettings.sensors.traces: traceColors(dict)
 
+outcome: !RuntimeError OutputVariableType OutputVariableType !RuntimeError !RuntimeError OutputVariableType !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError OutputVariableType OutputVariableType !RuntimeError !RuntimeError
+  ObjectFFRFreducedOrder: outputVariableTypeModeBasis(class,dict)
+  SensorBody: outputVariableType(class,dict)
+  SensorKinematicTree: outputVariableType(class,dict)
+  SensorMarker: outputVariableType(class,dict)
+  SensorNode: outputVariableType(class,dict)
+  SensorObject: outputVariableType(class,dict)
+  SensorSuperElement: outputVariableType(class,dict)
+
 outcome: !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError !TypeError
   VisualizationSettings.openGL.advanced: initialModelRotation(attribute)
 
@@ -668,15 +677,6 @@ outcome: ObjectIndex ObjectIndex ObjectIndex !ExudynTypeError !ExudynTypeError O
   SensorKinematicTree: objectNumber(class,dict,set)
   SensorObject: objectNumber(class,dict,set)
   SensorSuperElement: bodyNumber(class,dict,set)
-
-outcome: OutputVariableType OutputVariableType OutputVariableType !RuntimeError !RuntimeError OutputVariableType !RuntimeError !RuntimeError !RuntimeError !RuntimeError !RuntimeError OutputVariableType OutputVariableType !RuntimeError !RuntimeError
-  ObjectFFRFreducedOrder: outputVariableTypeModeBasis(class,dict)
-  SensorBody: outputVariableType(class,dict)
-  SensorKinematicTree: outputVariableType(class,dict)
-  SensorMarker: outputVariableType(class,dict)
-  SensorNode: outputVariableType(class,dict)
-  SensorObject: outputVariableType(class,dict)
-  SensorSuperElement: outputVariableType(class,dict)
 
 outcome: SensorIndex SensorIndex
   SensorBody: (defaults)

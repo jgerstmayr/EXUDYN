@@ -10329,3 +10329,42 @@ entries now.
 
 The 93 references are re-recorded (`exudev pytest --record -k miniExample`); the graphics tests, the suite and pytest
 pass.
+
+<a id="rg9-4-2"></a>
+### RG9.4.2 — the energies of the simple bodies and the linear spring-dampers (2026-10-01, #2202, #2766)
+
+**`KineticEnergy`** is an output variable of `ObjectMassPoint`, `ObjectMassPoint2D`, `ObjectMass1D`
+($\frac{1}{2} m\,\vv\tp\vv$), `ObjectRotationalMass1D` ($\frac{1}{2} J\,\omega^2$), `ObjectRigidBody` and
+`ObjectRigidBody2D`. The inertia of the rigid bodies is given w.r.t. their reference point, which need not be the
+center of mass, so
+$T = \frac{1}{2} m\,\vv\tp\vv + m\,\vv\tp(\tomega\times\Rot\bv_{COM}) + \frac{1}{2}\LU{b}{\tomega}\tp\Jm\,\LU{b}{\tomega}$
+with $\vv$ the velocity of the reference point.
+
+**`PotentialEnergy`** is an output variable of the spring-dampers whose law is linear:
+`ObjectConnectorCoordinateSpringDamper`, `ObjectConnectorCartesianSpringDamper`, `ObjectConnectorSpringDamper`,
+`ObjectConnectorLinearSpringDamper` and `ObjectConnectorTorsionalSpringDamper` - the elastic energy
+$\frac{1}{2} k\,u^2$ of the spring, and for the last three the potential of their constant force or torque
+($f_c\,u$), whose derivative is part of their force law. Zero if the connector is not active.
+
+**The rules of RG9.4.1**, in two helpers of `CObjectBody.h`: `CheckEnergyLocalPosition` raises a `ValueError` for a
+local position other than $[0,0,0]$ - the energy is one value for the whole item -, and `EnergyNotAvailable` a
+`NotImplementedError` for a spring-damper with a force user function, naming the function. Both are `PyError`, so
+the fast module raises them as well.
+
+**Found on the way (#2766)**: the two energies are the first output variables beyond bit 31 of
+`OutputVariableType`, and two places cut the type to 32 bits - the generated dictionary conversion of an
+`outputVariableType` parameter (`py::cast<Index>`, so `SensorBody(..., outputVariableType=KineticEnergy)` failed with
+*"Unable to cast"*), and `EXUstd::IsOfType`/`IsOfTypeAndNotNone`, which cast to `Index` and so found no energy in any
+item. Both use `Index64` now.
+One behaviour changes with it, and `parameterConversionTest.py` records it (reference re-written, one row): an
+`outputVariableType` of `-1` given in a dictionary or an item class was cast to all bits set and accepted; it is
+refused now, as every other value that is not an `OutputVariableType`.
+
+**Test model** `energiesTest.py`, eight independent mechanisms without gravity, 2000 steps of generalized-alpha
+($\rho_\infty = 1$), the energies read by sensors: a mass point on a Cartesian spring, a mass point on a distance
+spring (swinging and stretching), a planar rigid body on a coordinate spring with a spin, a rotor, a damped 1D mass,
+a free rigid body with its center of mass away from the reference point, a rigid body on a torsional spring with a
+constant torque, one on a linear spring-damper with a constant force. The undamped ones keep their total energy to
+$10^{-14}$ (the nonlinear distance spring and the free body to $2\cdot10^{-6}$ and $2\cdot10^{-7}$), the damped one
+loses 97 %, and the kinetic energy of the free body equals the one of its center of mass plus its rotation about it
+to 16 digits. `test_energies.py` checks the two refusals.

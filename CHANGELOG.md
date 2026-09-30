@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 185 | 1.12.200 |
+| 1.12 | Metheney | 186 | 1.12.201 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.201** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a sensor or object dictionary cannot hold KineticEnergy or PotentialEnergy (#2766)
+  - description: The generated dictionary conversion of an OutputVariableType parameter cast the value to a 32-bit Index; KineticEnergy (bit 32) and PotentialEnergy (bit 33) then fail with 'Unable to cast Python instance of type OutputVariableType'. Found 2026-10-01 in RG9.4.2: mbs.AddSensor(SensorBody(..., outputVariableType=KineticEnergy)) raised.
+  - **notes:** An outputVariableType beyond the 32nd bit (KineticEnergy, PotentialEnergy) can be given to sensors; an outputVariableType of -1 is refused.
+  - date resolved: **2026-10-01 00:22**, date raised: 2026-10-01
 - **1.12.200** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the MiniExample graphics test checks the transformation of the drawing (#2765)
   - description: Maintainer 2026-09-30 (RG2.3.3.6): the test sees more - a brick instead of a tetrahedron, the world basis drawn, bodies away from the origin, and the drawing transformation checked; the evaluation images in a 3D view.
   - **notes:** The graphics test of the MiniExamples checks that every body is drawn where its kinematics put it.

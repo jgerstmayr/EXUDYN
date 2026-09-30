@@ -59,6 +59,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Distance | $L=\|\Delta\! \LU{0}{\pv}\|$ | scalar distance between both marker points |
 | Velocity | $\Delta\! \LU{0}{\vv} = \LU{0}{\vv}_{m1} - \LU{0}{\vv}_{m0}$ | relative translational velocity in global coordinates |
 | Force | $\fv_{SD}$ | joint force in global coordinates, see equations |
+| PotentialEnergy | $V = \frac{1}{2} \sum_i k_i\, (\Delta p_i - v_{\mathrm{off},i})^2$ | elastic energy of the three springs; zero if the connector is not active; raises for a springForceUserFunction |
 
 (description-objectconnectorcartesianspringdamper)=
 ## Detailed description

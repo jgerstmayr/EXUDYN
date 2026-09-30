@@ -280,7 +280,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['Position'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of mass point'},
@@ -296,7 +296,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['Position2D'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of mass point'},
@@ -312,7 +312,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['GenericODE2'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of mass'},
@@ -330,7 +330,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['GenericODE2'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsInertia': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'inertia components [SI:kgm:math:`^2`] of rotor / rotational mass'},
@@ -348,7 +348,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['Position', 'Orientation', 'RigidBody'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'AccelerationLocal', 'AngularAcceleration', 'AngularAccelerationLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'AccelerationLocal', 'AngularAcceleration', 'AngularAccelerationLocal', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of rigid body'},
@@ -367,7 +367,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['Position2D', 'Orientation2D'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'JacobianTtimesVector_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'AccelerationLocal', 'AngularAcceleration', 'AngularAccelerationLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'AccelerationLocal', 'AngularAcceleration', 'AngularAccelerationLocal', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of rigid body'},
@@ -696,7 +696,7 @@ items = {
     'kind': 'Object',
     'types': ['Connector'],
     'requestedMarkerTypes': ['Position'],
-    'outputVariables': ['Distance', 'Displacement', 'Velocity', 'Force', 'ForceLocal'],
+    'outputVariables': ['Distance', 'Displacement', 'Velocity', 'Force', 'ForceLocal', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "connector's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},
@@ -718,7 +718,7 @@ items = {
     'kind': 'Object',
     'types': ['Connector'],
     'requestedMarkerTypes': ['Position'],
-    'outputVariables': ['Displacement', 'Distance', 'Velocity', 'Force'],
+    'outputVariables': ['Displacement', 'Distance', 'Velocity', 'Force', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "connector's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},
@@ -764,7 +764,7 @@ items = {
     'kind': 'Object',
     'types': ['Connector'],
     'requestedMarkerTypes': ['Position', 'Orientation'],
-    'outputVariables': ['DisplacementLocal', 'VelocityLocal', 'ForceLocal'],
+    'outputVariables': ['DisplacementLocal', 'VelocityLocal', 'ForceLocal', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "connector's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},
@@ -789,7 +789,7 @@ items = {
     'types': ['Connector'],
     'requestedNodeTypes': ['GenericData'],
     'requestedMarkerTypes': ['Orientation'],
-    'outputVariables': ['Rotation', 'AngularVelocityLocal', 'TorqueLocal'],
+    'outputVariables': ['Rotation', 'AngularVelocityLocal', 'TorqueLocal', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "connector's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},
@@ -814,7 +814,7 @@ items = {
     'kind': 'Object',
     'types': ['Connector'],
     'requestedMarkerTypes': ['Coordinate'],
-    'outputVariables': ['Displacement', 'Velocity', 'Force'],
+    'outputVariables': ['Displacement', 'Velocity', 'Force', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "connector's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},

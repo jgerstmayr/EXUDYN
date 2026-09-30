@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  19:23:37 (last modified)
+* @date         2026-10-01  00:12:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -124,7 +124,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "computeFFRFterms")) { EPyUtils::FromPython(d["computeFFRFterms"], cObjectFFRFreducedOrder->GetParameters().computeFFRFterms, "ObjectFFRFreducedOrder.computeFFRFterms"); }
         if (EPyUtils::DictItemExists(d, "modeBasis")) { EPyUtils::FromPython(d["modeBasis"], cObjectFFRFreducedOrder->GetParameters().modeBasis); }
         if (EPyUtils::DictItemExists(d, "outputVariableModeBasis")) { EPyUtils::FromPython(d["outputVariableModeBasis"], cObjectFFRFreducedOrder->GetParameters().outputVariableModeBasis); }
-        if (EPyUtils::DictItemExists(d, "outputVariableTypeModeBasis")) { cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis = (OutputVariableType)py::cast<Index>(d["outputVariableTypeModeBasis"]); }
+        if (EPyUtils::DictItemExists(d, "outputVariableTypeModeBasis")) { cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis = (OutputVariableType)py::cast<Index64>(d["outputVariableTypeModeBasis"]); }
         if (EPyUtils::DictItemExists(d, "referencePositions")) { EPyUtils::FromPython(d["referencePositions"], cObjectFFRFreducedOrder->GetParameters().referencePositions); }
         if (EPyUtils::DictItemExists(d, "mPsiTildePsi")) { EPyUtils::FromPython(d["mPsiTildePsi"], cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi); }
         if (EPyUtils::DictItemExists(d, "mPsiTildePsiTilde")) { EPyUtils::FromPython(d["mPsiTildePsiTilde"], cObjectFFRFreducedOrder->GetParameters().mPsiTildePsiTilde); }

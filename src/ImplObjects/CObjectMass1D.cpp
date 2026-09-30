@@ -100,6 +100,9 @@ void CObjectMass1D::GetOutputVariableBody(OutputVariableType variableType, const
 		value.SetVector(3, rot.GetDataPointer());
 		break;
 	}
+	case OutputVariableType::KineticEnergy: {
+		CheckEnergyLocalPosition(localPosition, "ObjectMass1D");
+		value.SetVector({ 0.5*parameters.physicsMass*GetVelocity(localPosition, configuration).GetL2NormSquared() }); break; }
 	default:
 		SysError("CObjectMass1D::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

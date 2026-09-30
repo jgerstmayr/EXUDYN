@@ -31,6 +31,22 @@
 
 #include "Main/MarkerData.h"
 
+//! the energies are one value for the whole item: a local position would suggest that they depend on it (#2202)
+inline void CheckEnergyLocalPosition(const Vector3D& localPosition, const char* itemName)
+{
+	if (localPosition[0] != 0. || localPosition[1] != 0. || localPosition[2] != 0.)
+	{
+		PyError(STDstring(itemName) + ": the energy is one value for the whole item; localPosition must be [0,0,0]",
+			PyErrorType::valueError);
+	}
+}
+
+//! an item whose force law is given by a user function cannot say what its potential energy is (#2202)
+inline void EnergyNotAvailable(const char* itemName, const char* reason)
+{
+	PyError(STDstring(itemName) + ": no PotentialEnergy, " + reason, PyErrorType::notImplementedError);
+}
+
 ////! flags that are transferred during mass matrix computation
 //namespace MassMatrixFlags {
 //	//! used mainly to show which jacobians are available analytically in objects; can be combined binary to see, which jacobian is available

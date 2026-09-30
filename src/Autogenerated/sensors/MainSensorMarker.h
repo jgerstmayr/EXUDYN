@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-28  00:33:57 (last modified)
+* @date         2026-10-01  00:12:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -111,7 +111,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "markerNumber")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumber"], cSensorMarker->GetParameters().markerNumber); }
         if (EPyUtils::DictItemExists(d, "writeToFile")) { EPyUtils::FromPython(d["writeToFile"], cSensorMarker->GetParameters().writeToFile, "SensorMarker.writeToFile"); }
         if (EPyUtils::DictItemExists(d, "fileName")) { EPyUtils::FromPython(d["fileName"], cSensorMarker->GetParameters().fileName); }
-        if (EPyUtils::DictItemExists(d, "outputVariableType")) { cSensorMarker->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index>(d["outputVariableType"]); }
+        if (EPyUtils::DictItemExists(d, "outputVariableType")) { cSensorMarker->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index64>(d["outputVariableType"]); }
         if (EPyUtils::DictItemExists(d, "storeInternal")) { EPyUtils::FromPython(d["storeInternal"], cSensorMarker->GetParameters().storeInternal, "SensorMarker.storeInternal"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationSensorMarker->GetShow(), "SensorMarker.Vshow"); }

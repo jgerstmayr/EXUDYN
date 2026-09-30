@@ -60,6 +60,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | DisplacementLocal | $\Delta x$ | (scalar) relative displacement of the spring-damper |
 | VelocityLocal | $\Delta v$ | (scalar) relative velocity of spring-damper |
 | ForceLocal | $f_{SD}$ | (scalar) spring-damper force |
+| PotentialEnergy | $V = \frac{1}{2} k\, (u - u_\mathrm{off})^2 + f_c\, u$ | elastic energy of the spring and the potential of the constant force; zero if the connector is not active; raises for a springForceUserFunction |
 
 (description-objectconnectorlinearspringdamper)=
 ## Detailed description
@@ -167,4 +168,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displace
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`energiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesTest.py) (TM)

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-28  00:33:57 (last modified)
+* @date         2026-10-01  00:12:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,7 +112,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "meshNodeNumber")) { EPyUtils::RequireGiven(d["meshNodeNumber"], EXUstd::InvalidIndex, "SensorSuperElement.meshNodeNumber"); EPyUtils::FromPython(d["meshNodeNumber"], cSensorSuperElement->GetParameters().meshNodeNumber, EPyUtils::RangeCheck::nonNegative, "SensorSuperElement.meshNodeNumber"); } else { EPyUtils::RequireGiven(py::cast(cSensorSuperElement->GetParameters().meshNodeNumber), EXUstd::InvalidIndex, "SensorSuperElement.meshNodeNumber"); }
         if (EPyUtils::DictItemExists(d, "writeToFile")) { EPyUtils::FromPython(d["writeToFile"], cSensorSuperElement->GetParameters().writeToFile, "SensorSuperElement.writeToFile"); }
         if (EPyUtils::DictItemExists(d, "fileName")) { EPyUtils::FromPython(d["fileName"], cSensorSuperElement->GetParameters().fileName); }
-        if (EPyUtils::DictItemExists(d, "outputVariableType")) { cSensorSuperElement->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index>(d["outputVariableType"]); }
+        if (EPyUtils::DictItemExists(d, "outputVariableType")) { cSensorSuperElement->GetParameters().outputVariableType = (OutputVariableType)py::cast<Index64>(d["outputVariableType"]); }
         if (EPyUtils::DictItemExists(d, "storeInternal")) { EPyUtils::FromPython(d["storeInternal"], cSensorSuperElement->GetParameters().storeInternal, "SensorSuperElement.storeInternal"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationSensorSuperElement->GetShow(), "SensorSuperElement.Vshow"); }

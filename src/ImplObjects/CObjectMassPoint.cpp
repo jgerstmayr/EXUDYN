@@ -85,6 +85,9 @@ void CObjectMassPoint::GetOutputVariableBody(OutputVariableType variableType, co
 	case OutputVariableType::RotationMatrix: {
 		Matrix3D m(EXUmath::unitMatrix3D); value.SetVector(9, m.GetDataPointer()); break;}
 	case OutputVariableType::Rotation: { value.SetVector({0,0,0}); break; }
+	case OutputVariableType::KineticEnergy: {
+		CheckEnergyLocalPosition(localPosition, "ObjectMassPoint");
+		value.SetVector({ 0.5*parameters.physicsMass*GetVelocity(localPosition, configuration).GetL2NormSquared() }); break; }
 	default:
 		SysError("CObjectMassPoint::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

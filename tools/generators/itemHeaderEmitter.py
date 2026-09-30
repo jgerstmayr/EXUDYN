@@ -115,7 +115,8 @@ def ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDiction
         return (given + 'EPyUtils::FromPython(' + source + ', ' + destStr + ', EPyUtils::RangeCheck::' + rangeCheckForms[typeName]
                 + ', "' + context + '");')
     if typeCastStr == 'OutputVariableType' and fromDictionary:
-        return destStr + ' = (OutputVariableType)py::cast<Index>(' + source + ');'
+        #Index64: the bits of OutputVariableType go beyond 32 (KineticEnergy is bit 32, #2766)
+        return destStr + ' = (OutputVariableType)py::cast<Index64>(' + source + ');'
     if typeName in ['Float3', 'Float4', 'ArrayIndex', 'Vector']: #the same overloads as the structure members
         return 'EPyUtils::FromPython(' + source + ', ' + destStr + ', "' + context + '");'
     if typeCastStr in ['bool', 'Real', 'float', 'Index']: #plain scalars: None raises

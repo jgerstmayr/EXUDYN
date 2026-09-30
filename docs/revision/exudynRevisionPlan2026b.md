@@ -684,6 +684,16 @@ The steps are numbered in the order they were raised and stand here in the order
 **RG4.16** **DONE 2026-09-30** (#2754, #830, #2109) — [log](exudynRevisionLog2026b.md#rg4-16-1) · [plan text](exudynRevisionLog2026b.md#plan-rg4-16) — Explicit solvers and the states of the PostNewton step.
 
 
+<a id="rg4-17"></a>
+**RG4.17** *(group RG4; maintainer 2026-10-01, from RG4.8.13)* **`ObjectANCFBeam`: the Newton iteration stalls in the
+    right-angle frame** (#2763). `rightAngleFrame.py` with `useGeometricallyExact = False`, driven by displacement:
+    from load step 7 on, Newton stagnates at a relative error of 1e-7 to 3e-7 against the tolerance 1e-8 (with 1e-6:
+    at 1e-6 to 2e-6), and the static solver stops at 3 % of the drive; the geometrically exact beam takes 4.7
+    iterations per step. Linear convergence at a floor points at an **inconsistent Jacobian**: the first check is
+    the analytic Jacobian of the element against a numerical one in a deformed, twisted state (as RG4.8.5 did for
+    the geometrically exact beam), then the corner - a `GenericJoint` between two slope nodes, whose rotation the
+    marker derives from the slopes.
+
 ## RG5 — Performance
 
 Measurement first, then the code that is actually hot. revision2026 step R2.16 measured the linear
@@ -1031,7 +1041,7 @@ revision (info document D15).
       the energies among the output variables only where they can be computed. **Loads are wanted as well**,
       at least constant and mass-proportional ones (the potential of the load through its marker's position)
       - planned in RG9.4.6 and RG9.4.7;
-    - **RG9.4.2** the simple objects first: `ObjectMassPoint`, `ObjectMassPoint2D`, `ObjectMass1D`,
+    - **RG9.4.2** **DONE 2026-10-01** (#2202, #2766) — [log](exudynRevisionLog2026b.md#rg9-4-2) - the simple objects first: `ObjectMassPoint`, `ObjectMassPoint2D`, `ObjectMass1D`,
       `ObjectRotationalMass1D`, `ObjectRigidBody`, `ObjectRigidBody2D` (kinetic), the linear spring-dampers
       (coordinate, Cartesian, torsional, linear; potential), and a **test model for energies** that shows
       the effect on several simple, independent mechanisms (a free oscillator, a pendulum on a spring, a
@@ -1800,6 +1810,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.12 | #2736 | `NodeGenericAE`: **on hold** - the future owner of a constraint's Lagrange multipliers and of the unknowns of algebraic equations |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
+| RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame - an inconsistent Jacobian to find |
 | RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list; decided (RG6.7.1), to be built in RG6.7.2 to RG6.7.4 |
@@ -1826,7 +1837,6 @@ whether it becomes a step.
 
 | where | issue | what it is |
 |---|---|---|
-| RG4.8.13 | #2763 | `ObjectANCFBeam`: the Newton iteration stalls near 2e-7 in the displacement-driven right-angle frame |
 
 *#2608 was done by RG6.2.11. The decision on the chapters of the user manual
 (#2657, #2662), which stood below, is carried out and is in the

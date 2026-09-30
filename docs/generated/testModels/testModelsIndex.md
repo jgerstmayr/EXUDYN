@@ -85,6 +85,7 @@ geometricallyExactBeamJacobianTest
 geometricallyExactBeamCurvedTest
 geometricallyExactBeamRightAngleFrame
 rightAngleFrame
+energiesTest
 geometricallyExactBeamOutputTest
 geometricallyExactBeamElbowCantilever
 geometricallyExactBeamMassTest

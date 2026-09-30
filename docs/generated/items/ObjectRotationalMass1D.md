@@ -58,6 +58,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Rotation | $\theta$ | scalar rotation angle obtained from underlying node |
 | AngularVelocity | $\LU{0}{\tomega}\cConfig$ | global 3D angular velocity vector of body |
 | AngularVelocityLocal | $\LU{b}{\tomega}\cConfig$ | local (body-fixed) 3D angular velocity vector of body |
+| KineticEnergy | $T = \frac{1}{2} J\, \dot \theta_0^2$ | kinetic energy of the rotor; localPosition must be $[0,0,0]$ |
 
 (description-objectrotationalmass1d)=
 ## Detailed description
@@ -110,4 +111,4 @@ exu.sys['testResult'] = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Ro
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`distanceSensor.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/distanceSensor.py) (TM), [`coordinateSpringDamperExt.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateSpringDamperExt.py) (TM), [`driveTrainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/driveTrainTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`distanceSensor.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/distanceSensor.py) (TM), [`energiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesTest.py) (TM), [`coordinateSpringDamperExt.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/coordinateSpringDamperExt.py) (TM), [`driveTrainTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/driveTrainTest.py) (TM)

@@ -56,6 +56,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Displacement | $\Delta q$ | relative scalar displacement of marker coordinates |
 | Velocity | $\Delta v$ | difference of scalar marker velocity coordinates |
 | Force | $f_{SD}$ | scalar force in connector |
+| PotentialEnergy | $V = \frac{1}{2} k\, (\Delta q - l_\mathrm{off})^2$ | elastic energy of the spring; zero if the connector is not active; raises for a springForceUserFunction |
 
 (description-objectconnectorcoordinatespringdamper)=
 ## Detailed description

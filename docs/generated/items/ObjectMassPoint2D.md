@@ -59,6 +59,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Rotation | $[0,0,0]$ | (only for completeness) |
 | AngularVelocity | $[0,0,0]$ | (only for completeness) |
 | AngularVelocityLocal | $[0,0,0]$ | (only for completeness) |
+| KineticEnergy | $T = \frac{1}{2} m\, \LU{0}{\vv}\tp \LU{0}{\vv}$ | kinetic energy of the mass point; localPosition must be $[0,0,0]$ |
 
 (description-objectmasspoint2d)=
 ## Detailed description
