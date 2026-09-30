@@ -7824,3 +7824,28 @@ NGsolve surface for contact.
 **Test** `python/testing/test_femSurfaceOrientation.py`, skipped without ngsolve: the import (linear and
 quadratic), `NGsolveMesh2PointsAndTrigs` and `VolumeToSurfaceElements` all give outward triangles on the box.
 The examples run passes (170, one known failure).
+
+<a id="rg2-3-3-5"></a>
+### RG2.3.3.5 — the graphics of every item, through its MiniExample (2026-09-30, #2751)
+
+`python/testing/test_graphicsMiniExamples.py`, one pytest case per MiniExample (93, from
+`miniExamplesFileList.py`):
+
+1. the MiniExample runs as it is (as `runMiniExamplePerformance.py` runs it, in a namespace of its own);
+2. every object that has `VgraphicsData` gets a small graphics injected - three lines, a tetrahedron (4
+   triangles) and a text - and the model is assembled again, which puts it back to its initial state;
+3. nodes, markers, loads and sensors are switched on in the visualization settings;
+4. the fingerprint of `SC.renderer.GetGraphicsData()` (no window) is taken at the initial state and after five
+   steps of the MiniExample's own step size;
+5. the ground objects must not have moved (the check of RG2.3.3.3, where the fingerprint is per item);
+6. both are compared with the reference `graphicsReferences/miniExamples/<Item>.json`, the second as what it
+   changes against the first (`CheckVariantsAgainstReference`, as for the settings of RG2.3.3.2).
+
+`graphicsRegression.py` creates the subfolder of a case's reference. The run takes about 15 s for all 93; the
+references are 1.4 MB (4 to 40 KB each, the largest for the plate and the cable elements, whose drawing has many
+elements per item). A MiniExample added by RG13.6 is covered on its first run: its reference is written and the
+case reports that it was, as every graphics reference does.
+
+**Not done** (the plan's *"the same run can write the image of each item for its documentation page"*): the
+images. The raytracer can take them at the same point (RG2.3.3.4 measured 1 to 12 ms per small image); what
+remains to decide is the size, the view per item and where the pages take them from.

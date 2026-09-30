@@ -2,12 +2,16 @@
   "number": 2751,
   "title": "graphics regression test: every item through its MiniExample",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "TESTING",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "The last part of #2704 (resolved 2026-09-29 with RG2.3.3.1 to RG2.3.3.4): take every item through its MiniExample - which every item but three has since RG13.6 (#2732) - and store the graphics fingerprint of each (SC.renderer.GetGraphicsData(), counts and metrics) as a reference. revision2026b step RG2.3.3.5.",
   "dateRaised": "2026-09-29",
   "deadline": "2027-03-28",
-  "file": "python/testing/test_graphicsRegression.py"
+  "dateResolved": "2026-09-30 19:04",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/test_graphicsRegression.py",
+  "releaseNotes": "Every item's drawing is checked through its MiniExample: the graphics data at the start and after a few steps are compared with stored references.",
+  "resolvedInVersion": "1.12.192"
 }

@@ -180,7 +180,7 @@ def _ReadOrRecord(case, content):
     path = ReferencePath(case)
     record = os.environ.get('EXUDYN_RECORD_GRAPHICS_REFERENCES', '') not in ['', '0']
     if record or not os.path.exists(path):
-        os.makedirs(referenceDirectory, exist_ok=True)
+        os.makedirs(os.path.dirname(path), exist_ok=True)   #a case may name a subfolder: 'miniExamples/...'
         with open(path, 'w', encoding='utf-8', newline='\n') as file:
             json.dump(content, file, indent=1, sort_keys=True)
             file.write('\n')

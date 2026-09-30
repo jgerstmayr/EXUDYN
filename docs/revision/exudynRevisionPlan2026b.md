@@ -291,7 +291,9 @@ NOT cover, and about the testing that no suite can do.
         set, always run: the representative model with the default, transparent faces, face edges
         and no faces, as PNG references of 0.2 to 1.1 KB. The tolerance across platforms is a guess
         until the first linux run.
-      - **RG2.3.3.5** (#2751; #2704 resolved with .1 to .4) **every item, through its MiniExample** - the
+      - **RG2.3.3.5** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg2-3-3-5) (#2751; #2704 resolved
+        with .1 to .4) **every item, through its MiniExample** - `test_graphicsMiniExamples.py`, all 93; the
+        images per item for the documentation are not written yet. The plan was - the
         MiniExamples exist since RG13.6. It depended on the group the maintainer
         announced on 2026-09-27: **a MiniExample for every item**, together with the missing
         documentation and examples of all items (a revision group of its own, *"like RG13"* - not

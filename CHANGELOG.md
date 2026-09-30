@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 177 | 1.12.191 |
+| 1.12 | Metheney | 178 | 1.12.192 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.192** `TESTING` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics regression test: every item through its MiniExample (#2751)
+  - description: The last part of \#2704 (resolved 2026-09-29 with RG2.3.3.1 to RG2.3.3.4): take every item through its MiniExample - which every item but three has since RG13.6 (\#2732) - and store the graphics fingerprint of each (SC.renderer.GetGraphicsData(), counts and metrics) as a reference. revision2026b step RG2.3.3.5.
+  - **notes:** Every item's drawing is checked through its MiniExample: the graphics data at the start and after a few steps are compared with stored references.
+  - date resolved: **2026-09-30 19:04**, date raised: 2026-09-29
 - **1.12.191** `FIX` `MEDIUM EFF` `resolved by: Claude-JG` FEMinterface (#2321)
   - description: meshes imported from NGsolve lead to triangles with wrong orientation as compared to GraphicsData
   - **notes:** The surface triangles of a mesh imported with FEMinterface.ImportMeshFromNGsolve point outward, as those of the other imports; an FFRF body from NGsolve is lit on its outside.
