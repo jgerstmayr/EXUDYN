@@ -3281,7 +3281,7 @@ whether it becomes a step.
 |---|---|---|
 | RG12.30.4 | #2757 | `runTestExamples.py` runs no example of the subfolders of `python/Examples`; two of them fail (`copy`, `basicUtilities.pi`) |
 
-*Empty since 2026-09-29: #2608 was done by RG6.2.11. The decision on the chapters of the user manual
+*#2608 was done by RG6.2.11. The decision on the chapters of the user manual
 (#2657, #2662), which stood below, is carried out and is in the
 [log](exudynRevisionLog2026b.md#decisions-2026-09-29).*
 
