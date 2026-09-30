@@ -7965,3 +7965,28 @@ the two volume passes are drawn, and disable it after: clipped depths are clampe
 remedy for z-fail. Nothing changes in the model-centric view, where no volume reaches the planes. It is not
 made here: it can only be judged on screen (a camera-centric model with a camera-frame light, the manual check
 of RG2.4), which this session does not open.
+
+<a id="rg12-30-8"></a>
+### RG12.30.8 — the examples in subfolders are run (2026-09-30, #2757)
+
+`runTestExamples.py` ran `python/Examples/*.py` only. It now also collects the 15 scripts of the subfolders
+(`FurtherExamples/`, `publications/`, `testData/ROS/`), named with their subfolder
+(`FurtherExamples/spotModel.py`); the skip rules and the output directories take such a name as they are.
+`RunExampleInProcess` runs an example of a subfolder with **its own folder as working directory**, as a user
+runs it - they read data files beside them (`spotData.h5`, `testData/sliderCrankACME/`), where the examples of
+the top folder are run from `python/TestModels` with their `../Examples/testData` paths.
+
+Of the 15: 3 skipped by the existing rules (stable-baselines3, two ROS scripts), 1 by a new one
+(`fixedFixedANCFALEdiscreteMassesPostprocessing.py` reads the results of parameter variations that run for
+hours); the other 11 pass. What had to be fixed, one cause each:
+
+| example | cause | fix |
+|---|---|---|
+| `FurtherExamples/fourBarKinematicTreeUF.py` | `import copy`, then `copy(link)` | `copy.copy(link)` |
+| `publications/.../fixedFixedANCFALEdiscreteMasses.py` | `ClearWorkspace()` deleted every non-function global of **`exudyn.basicUtilities` itself** (`pi`, ...) before the caller's; the next `from exudyn.basicUtilities import *` failed on its `__all__` | the library: `ClearWorkspace` clears the caller's globals only |
+| the same, `allTests*.py` (3) | `SolveStatic`: *"Load jacobian: inconsistent size of generalized load vector and LTG"* - a `LoadForceVector` with a user function on a `MarkerBodyPosition` of an `ObjectALEANCFCable2D`, which has 9 coordinates and a position jacobian of 8 columns (the ALE coordinate does not move a body-fixed point); the right-hand side took the 8 silently, the local computation for the load jacobian required equal sizes | the library (`CSystem::ComputeODE2SingleLoad`): the local computation fills the 8 and zeros the rest, as the global one does |
+| the same (3), `publications/sliderCrankCMSacme.py` | read their own sensor files back with a plain path, which the output directory redirects | `OutputFilePath(...)`, as for the other examples |
+| `sliderCrankCMSacme.py` | plots four cases, each the result of a separate run with other settings | plots the cases computed so far; its FEM cache goes to `solution/`, not into `testData/` |
+| `allTestsConvergenceParameterVariation.py` | `plt.semilogy(basey=10)` - removed in matplotlib 3.5 | `base=10` |
+
+The examples run: 185 examples, 33 skipped, the one known failure (was 170, 29). Test suite and pytest pass.

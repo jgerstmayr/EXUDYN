@@ -594,6 +594,8 @@ def ExampleSkipReason(exampleFileName, fileString):
                                  'them from an absolute path on the author machine (line 79)',
         'stlFileImport': 'reads solution/stlImport.stl, which it only WRITES when its '
                          'if-False branch is switched on by hand',
+        'fixedFixedANCFALEdiscreteMassesPostprocessing': 'reads the results of the parameter variations '
+                                                         'of allTests*.py, which run for hours (#2757)',
         }
     for key, reason in byName.items():
         if key in exampleFileName:
@@ -777,8 +779,11 @@ def RunExampleInProcess(exampleFileName, examplesDirectory, outputDirectory='', 
     process timeout is therefore short on purpose, and a timeout AFTER the solver was reached is a
     pass; a timeout before it is a failure, because then the example hung while building.
 
+    An example in a subfolder of the examples ('FurtherExamples/spotModel.py') runs in its own folder,
+    as a user runs it: it reads its data files beside it (#2757).
+
     Args:
-        exampleFileName (str): the plain file name of the example
+        exampleFileName (str): the file name of the example, with its subfolder if it is in one
         examplesDirectory (str): where the examples are, relative to the working directory
         outputDirectory (str): exudyn.config.outputDirectory for this example; '' (the default)
             lets it write where a user would, which an example that names its files needs
@@ -792,10 +797,12 @@ def RunExampleInProcess(exampleFileName, examplesDirectory, outputDirectory='', 
     """
     import subprocess
 
+    subfolder = os.path.dirname(exampleFileName)
+    workingDirectory = os.path.abspath(examplesDirectory + subfolder) if subfolder != '' else None
     source = runExampleBootstrap.format(exampleFileName=exampleFileName,
                                         testingDirectory=testingDir,
-                                        examplePath=examplesDirectory + exampleFileName,
-                                        outputDirectory=outputDirectory,
+                                        examplePath=os.path.abspath(examplesDirectory + exampleFileName),
+                                        outputDirectory=os.path.abspath(outputDirectory) if outputDirectory != '' else '',
                                         solverTimeout=solverTimeout,
                                         quietMode=quietMode,
                                         marker=exampleSolvingMarker)
@@ -804,7 +811,7 @@ def RunExampleInProcess(exampleFileName, examplesDirectory, outputDirectory='', 
     try:
         completed = subprocess.run([pythonExecutable or sys.executable, '-c', source],
                                    capture_output=True, text=True, errors='replace',
-                                   timeout=timeout)
+                                   timeout=timeout, cwd=workingDirectory)
         output = completed.stdout + completed.stderr
         failed = completed.returncode != 0
     except subprocess.TimeoutExpired as e:

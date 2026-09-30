@@ -1909,10 +1909,16 @@ void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& t
         else //local computation, for jacobian
         {
             Index nLoadCoordinates = temp.generalizedLoad.NumberOfItems();
-            CHECKandTHROW(systemODE2Rhs.NumberOfItems() == nLoadCoordinates, "ComputeODE2SingleLoad: Load jacobian: inconsistent size of generalized load vector and LTG");
+            //the generalized load may cover only the first coordinates of the body, as in the global
+            //computation above: ObjectALEANCFCable2D has 9, its position jacobian 8 - the load on the ALE coordinate is zero (#2757)
+            CHECKandTHROW(systemODE2Rhs.NumberOfItems() >= nLoadCoordinates, "ComputeODE2SingleLoad: Load jacobian: generalized load vector larger than LTG");
             for (Index k = 0; k < nLoadCoordinates; k++)
             {
                 systemODE2Rhs[k] = loadFactor * temp.generalizedLoad[k];
+            }
+            for (Index k = nLoadCoordinates; k < systemODE2Rhs.NumberOfItems(); k++)
+            {
+                systemODE2Rhs[k] = 0.;
             }
         }
 	}

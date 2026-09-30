@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 178 | 1.12.192 |
+| 1.12 | Metheney | 179 | 1.12.193 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.193** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` examples in subfolders are not run, and two of them fail (#2757)
+  - description: runTestExamples.py runs python/Examples/\*.py only; the subfolders (FurtherExamples, publications, ...) are not run. Found 2026-09-30 (revision2026b RG12.30.4) by running six of them: FurtherExamples/fourBarKinematicTreeUF.py fails with 'module object is not callable' (copy), publications/CND2022PieberNtarladimaGerstmayr/fixedFixedANCFALEdiscreteMasses.py with 'exudyn.basicUtilities has no attribute pi' - both from earlier import cleanups, not from RG12.30.
+  - **notes:** The examples in the subfolders of python/Examples are run with the other examples and work again; ClearWorkspace() no longer breaks a later import of exudyn.basicUtilities; a static solve with a user-function load on an ALE ANCF cable no longer fails with an inconsistent load jacobian.
+  - date resolved: **2026-09-30 20:03**, date raised: 2026-09-30
 - **1.12.192** `TESTING` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics regression test: every item through its MiniExample (#2751)
   - description: The last part of \#2704 (resolved 2026-09-29 with RG2.3.3.1 to RG2.3.3.4): take every item through its MiniExample - which every item but three has since RG13.6 (\#2732) - and store the graphics fingerprint of each (SC.renderer.GetGraphicsData(), counts and metrics) as a reference. revision2026b step RG2.3.3.5.
   - **notes:** Every item's drawing is checked through its MiniExample: the graphics data at the start and after a few steps are compared with stored references.

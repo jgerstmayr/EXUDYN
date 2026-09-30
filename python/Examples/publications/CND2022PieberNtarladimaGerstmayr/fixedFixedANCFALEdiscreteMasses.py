@@ -429,7 +429,7 @@ def BuildModel(parameterSet):
         exu.variables['mbs'] = mbs
         
 
-    data0 = np.loadtxt(sensorFileName, comments='#', delimiter=',') 
+    data0 = np.loadtxt(OutputFilePath(sensorFileName), comments='#', delimiter=',') 
     n = len(data0)
     nStart = int(n*(tEnd - 0.25*tEvaluate)/tEnd)
     #amp = max(data0[nStart:n,2]) - min(data0[nStart:n,2]) #oscillation amplitude
@@ -441,8 +441,8 @@ def BuildModel(parameterSet):
 #%%++++++++++++++++++++++++++++++++++++
     if True: #delete files; does not work for parallel, consecutive operation
         if iCalc != 'Ref':
-            os.remove(sensorFileName) #remove files in order to clean up
-            while(os.path.exists(sensorFileName)): #wait until file is really deleted -> usually some delay
+            os.remove(OutputFilePath(sensorFileName)) #remove files in order to clean up
+            while(os.path.exists(OutputFilePath(sensorFileName))): #wait until file is really deleted -> usually some delay
                 sleep(0.001) #not nice, but there is no other way than that
 
     del mbs
@@ -462,9 +462,9 @@ if True:
     ax=plt.gca()
     ax.grid(True,'major','both')
     
-    data0 = np.loadtxt('solution/beamALEmidPointRef.txt', comments='#', delimiter=',') 
+    data0 = np.loadtxt(OutputFilePath('solution/beamALEmidPointRef.txt'), comments='#', delimiter=',') 
     plt.plot(data0[:,0],data0[:,2],'b-',label='midPointDeflection')
-    data0 = np.loadtxt('solution/beamALEmidPointRef.txt', comments='#', delimiter=',') 
+    data0 = np.loadtxt(OutputFilePath('solution/beamALEmidPointRef.txt'), comments='#', delimiter=',') 
     plt.plot(data0[:,0],data0[:,2],'b-',label='vALE'+str(vALE0))
     
     plt.tight_layout()

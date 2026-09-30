@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.192.dev1
+- Exudyn version = 1.12.193.dev1
 - last change = 2026-09-30
 - Number of issues = 2760
-- Number of resolved issues = 2506 (192 in current version)
+- Number of resolved issues = 2507 (193 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8336,9 +8336,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` examples in subfolders are not run, and two of them fail (#2757)
-  - description: runTestExamples.py runs python/Examples/\*.py only; the subfolders (FurtherExamples, publications, ...) are not run. Found 2026-09-30 (revision2026b RG12.30.4) by running six of them: FurtherExamples/fourBarKinematicTreeUF.py fails with 'module object is not callable' (copy), publications/CND2022PieberNtarladimaGerstmayr/fixedFixedANCFALEdiscreteMasses.py with 'exudyn.basicUtilities has no attribute pi' - both from earlier import cleanups, not from RG12.30.
-  - date raised: 2026-09-30
 - <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` NodeGenericAE cannot be used: no object, marker or script takes it (#2736)
   - description: Found while writing the MiniExamples (\#2732, revision2026b step RG13.6.1): NodeGenericAE provides only the type GenericAE, and no object requests it, no node marker can be attached to it, and no example, test model or module of the package uses it. A node with algebraic coordinates and no object that writes their equations leaves those coordinates without an equation. Either an object takes it - the description names linear state space systems - or the node is deprecated. revision2026b step RG4.12.
   - **remarks:** ON HOLD (maintainer 2026-09-29): not deprecated; the future owner of the Lagrange multipliers of a constraint (optional node, automatic allocation stays the default) and of the unknowns of purely algebraic equations; design in revision2026b step RG4.12

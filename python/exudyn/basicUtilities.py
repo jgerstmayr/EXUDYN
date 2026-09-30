@@ -59,15 +59,7 @@ def ClearWorkspace():
         mbs = SC.AddSystem()
         ...
     """
-    #if __name__ == "__main__":  #this won't work as the function is not running in __main__, but in exudyn.basicUtilities
-    gl = globals().copy()
-
-    for var in gl:
-        if var[0] == '_': continue
-        if 'func' in str(globals()[var]): continue
-        if 'module' in str(globals()[var]): continue
-        del globals()[var]
-
+    #only the caller's globals: the module's own ones (pi, ...) stay, or a later import of it fails (#2757)
     import inspect
     fglobals = inspect.stack()[1][0].f_globals
     gl2 = fglobals.copy() #these are the globals of the caller

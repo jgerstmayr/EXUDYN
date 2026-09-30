@@ -520,11 +520,11 @@ def ParameterFunction(parameterSet):
                     SC.renderer.DoIdleTasks()
                     SC.renderer.Stop() #safely close rendering window!        
              
-                data0 = np.loadtxt(fileName, comments='#', delimiter=',') 
+                data0 = np.loadtxt(OutputFilePath(fileName), comments='#', delimiter=',') 
                 
                 plt.close()
                 if plotVALE:
-                    data1 = np.loadtxt(fileName2, comments='#', delimiter=',') 
+                    data1 = np.loadtxt(OutputFilePath(fileName2), comments='#', delimiter=',') 
                     plt.figure()
                     plt.plot(data1[:,0],data1[:,1])
                     plt.xlabel(r'time in s',fontsize=fontSize)
@@ -554,7 +554,7 @@ def ParameterFunction(parameterSet):
 
     import os
     if iCalc != 'Ref':
-        os.remove(fileName) #remove files in order to clean up
+        os.remove(OutputFilePath(fileName)) #remove files in order to clean up
         
     del mbs
     del SC
@@ -580,9 +580,9 @@ if False:
     ax=plt.gca()
     ax.grid(True,'major','both')
     
-    data0 = np.loadtxt('solution/beamALEmidPointRef.txt', comments='#', delimiter=',') 
+    data0 = np.loadtxt(OutputFilePath('solution/beamALEmidPointRef.txt'), comments='#', delimiter=',') 
     plt.plot(data0[:,0],data0[:,2],'b-',label='midPointDeflection')
-    data0 = np.loadtxt('solution/beamALEmidPointRef.txt', comments='#', delimiter=',') 
+    data0 = np.loadtxt(OutputFilePath('solution/beamALEmidPointRef.txt'), comments='#', delimiter=',') 
     plt.plot(data0[:,0],data0[:,2],'b-',label='vALE'+str(vAx))
     
     plt.tight_layout()
@@ -694,9 +694,9 @@ if True and __name__ == "__main__": #check if this is performed in main thread f
     plt.show()
     plt.legend()
 
-    plt.semilogy(basey=10)
+    plt.semilogy(base=10)
     
-    plt.semilogx(basex=2)
+    plt.semilogx(base=2)
 
     if saveFigure:
         plt.savefig('plots/convergenceElement.pdf',format='pdf')

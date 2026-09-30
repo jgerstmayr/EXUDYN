@@ -51,7 +51,7 @@ fileName = sourceDir+'job_matrix_generate_conrod'
 
 if loadFromSavedNPYfile:
     print('load fem data for conrod...')
-    femConrod.LoadFromFile(fileName)
+    femConrod.LoadFromFile('solution/job_matrix_generate_conrod')
 else:
 
     
@@ -65,7 +65,7 @@ else:
     print("compute eigenmodes:")
     nModesConrod = nModes
     femConrod.ComputeEigenmodes(nModesConrod, excludeRigidBodyModes = 6, useSparseSolver = True)
-    femConrod.SaveToFile(fileName) #adds .npy to fileName
+    femConrod.SaveToFile('solution/job_matrix_generate_conrod') #adds the file ending; the test data stays as it is
     
 if CMS:
     cms0 = ObjectFFRFreducedOrderInterface(femConrod)
@@ -118,7 +118,7 @@ fileName = sourceDir+'job_matrix_generate_crank'
 
 if loadFromSavedNPYfile:
     print('load fem data for conrod...')
-    femCrank.LoadFromFile(fileName)
+    femCrank.LoadFromFile('solution/job_matrix_generate_crank')
 else:
     #nodes=fem.ImportFromAbaqusInputFile(inputFileName+'.inp', typeName='Instance', name='rotor-1')
     #inputFileDir = 'testData/sliderCrankACME/' #runTestSuite.py is at another directory
@@ -132,7 +132,7 @@ else:
     nModesCrank = nModes
     femCrank.ComputeEigenmodes(nModesCrank, excludeRigidBodyModes = 6, useSparseSolver = True)
     #print("eigen freq.=", fem.GetEigenFrequenciesHz())
-    femCrank.SaveToFile(fileName) #adds .npy to fileName
+    femCrank.SaveToFile('solution/job_matrix_generate_crank') #adds the file ending; the test data stays as it is
     
 if CMS:
     cms1 = ObjectFFRFreducedOrderInterface(femCrank)
@@ -464,6 +464,9 @@ cList=['k-','r-','g-','b-','c-','k:','r:','g:','b:','c:']
 plt.close("all")
 
 plotCases = ['CMS8','CMS16','CMS256','FullFFRF']
+#each case is one run of this script, with its own settings above; plot the ones computed so far
+import os
+plotCases = [case for case in plotCases if os.path.exists(OutputFilePath(fileDir+'sliderCrankMidDisplLocal'+case+'.txt'))]
 nColor = 5#len(plotCases)
 #plotCases = ['CMS'+str(nModes)]
 
@@ -474,15 +477,15 @@ if True:
     
     for i in range(len(plotCases)):
         solutionLabel = plotCases[i]
-        data = np.loadtxt(fileDir+'sliderCrankMidDisplLocal'+solutionLabel+'.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
-        #data = np.loadtxt(fileDir+'sliderCrankAngVel'+solutionLabel+'.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
+        data = np.loadtxt(OutputFilePath(fileDir+'sliderCrankMidDisplLocal'+solutionLabel+'.txt'), comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
+        #data = np.loadtxt(OutputFilePath(fileDir+'sliderCrankAngVel'+solutionLabel+'.txt'), comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
         plt.plot(data[:,0], 1000*np.sqrt(data[:,1]**2+data[:,2]**2+data[:,3]**2), cList[i],label='mangitude local mid displ. conrod,'+solutionLabel) #numerical solution, 1 == x-direction
         #plt.plot(data[:,0], 1000*data[:,1], cList[i],label='local mid displ. conrod x,'+solutionLabel) #numerical solution, 1 == x-direction
         
     for i in range(len(plotCases)):
         solutionLabel = plotCases[i]
-        data = np.loadtxt(fileDir+'sliderCrankMidDisplLocal'+solutionLabel+'.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
-        #data = np.loadtxt(fileDir+'sliderCrankAngVel'+solutionLabel+'.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
+        data = np.loadtxt(OutputFilePath(fileDir+'sliderCrankMidDisplLocal'+solutionLabel+'.txt'), comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
+        #data = np.loadtxt(OutputFilePath(fileDir+'sliderCrankAngVel'+solutionLabel+'.txt'), comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
         plt.plot(data[:,0], 1000*np.sqrt(data[:,1]**2+data[:,2]**2+data[:,3]**2), cList[i+nColor],label='mangitude local mid displ. conrod,'+solutionLabel) #numerical solution, 1 == x-direction
         #plt.plot(data[:,0], 1000*data[:,3], cList[i+nColor],label='local mid displ. conrod z,'+solutionLabel) #numerical solution, 1 == x-direction
         
@@ -503,7 +506,7 @@ if True:
     
     for i in range(len(plotCases)):
         solutionLabel = plotCases[i]
-        data = np.loadtxt(fileDir+'sliderCrankMidPosition'+solutionLabel+'.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
+        data = np.loadtxt(OutputFilePath(fileDir+'sliderCrankMidPosition'+solutionLabel+'.txt'), comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
         plt.plot(data[:,0], 1000*data[:,1], cList[i],label='mid pos conrod x,'+solutionLabel) #numerical solution, 1 == x-direction
         
     ax=plt.gca() # get current axes
@@ -523,12 +526,12 @@ if True:
     
     for i in range(len(plotCases)):
         solutionLabel = plotCases[i]
-        data = np.loadtxt(fileDir+'conrodJointPosition'+solutionLabel+'.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
+        data = np.loadtxt(OutputFilePath(fileDir+'conrodJointPosition'+solutionLabel+'.txt'), comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
         plt.plot(data[:,0], 1000*data[:,1], cList[i],label='conrod-crank joint pos x,'+solutionLabel) #numerical solution, 1 == x-direction
         
     for i in range(len(plotCases)):
         solutionLabel = plotCases[i]
-        data = np.loadtxt(fileDir+'conrodJointPosition'+solutionLabel+'.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
+        data = np.loadtxt(OutputFilePath(fileDir+'conrodJointPosition'+solutionLabel+'.txt'), comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
         plt.plot(data[:,0], 1000*data[:,3], cList[i+nColor],label='conrod-crank joint pos z,'+solutionLabel) #numerical solution, 1 == x-direction
         
     ax=plt.gca() # get current axes
@@ -548,7 +551,7 @@ if True:
     
     for i in range(len(plotCases)):
         solutionLabel = plotCases[i]
-        data = np.loadtxt(fileDir+'sliderCrankAngVel'+solutionLabel+'.txt', comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
+        data = np.loadtxt(OutputFilePath(fileDir+'sliderCrankAngVel'+solutionLabel+'.txt'), comments='#', delimiter=',') #reference solution which has been checked intensively in pytest.py file
         plt.plot(data[:,0], data[:,3], cList[i],label='sliderCrankAngVel z-axis,'+solutionLabel) #numerical solution, 1 == x-direction
         
     ax=plt.gca() # get current axes

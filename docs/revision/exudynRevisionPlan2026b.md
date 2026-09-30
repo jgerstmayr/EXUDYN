@@ -2982,6 +2982,10 @@ package).
       `graphics.Lines` for `GraphicsDataRectangle`, `graphics.BrickXYZ(..., addFaces=False, addEdges=True)`
       for `GraphicsDataOrthoCubeLines`, `graphics.color...` for `color4...`; 66 files, the 41 star imports of
       `exudyn.graphicsDataUtilities` gone; only the mesh functions without a replacement keep an explicit import.
+    - **RG12.30.8** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg12-30-8) (#2757) - the examples in the
+      subfolders of `python/Examples` are part of the examples run, each run in its own folder; the six that
+      failed are fixed - two of them by fixes in the library (`ClearWorkspace` emptied `basicUtilities`, the
+      load jacobian of a body whose position jacobian has fewer columns than coordinates).
 
 <a id="rg12-29"></a>
 **RG12.29** *(group RG12; maintainer 2026-09-30)* **What an item provides, asked from Python** (#2203).
@@ -3312,7 +3316,6 @@ whether it becomes a step.
 
 | where | issue | what it is |
 |---|---|---|
-| RG12.30.4 | #2757 | `runTestExamples.py` runs no example of the subfolders of `python/Examples`; two of them fail (`copy`, `basicUtilities.pi`) |
 
 *#2608 was done by RG6.2.11. The decision on the chapters of the user manual
 (#2657, #2662), which stood below, is carried out and is in the

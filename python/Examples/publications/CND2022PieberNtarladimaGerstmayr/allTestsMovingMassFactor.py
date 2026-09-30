@@ -478,11 +478,11 @@ for x in range(nb):
                 SC.renderer.DoIdleTasks()
                 SC.renderer.Stop() #safely close rendering window!        
         
-            data0 = np.loadtxt('solution/displacementPoint.txt', comments='#', delimiter=',') 
+            data0 = np.loadtxt(OutputFilePath('solution/displacementPoint.txt'), comments='#', delimiter=',') 
             
             plt.close()
             if plotVALE:
-                data1 = np.loadtxt('solution/vALE.txt', comments='#', delimiter=',') 
+                data1 = np.loadtxt(OutputFilePath('solution/vALE.txt'), comments='#', delimiter=',') 
                 plt.figure()
                 plt.plot(data1[:,0],data1[:,1])
                 plt.xlabel(r'time in s',fontsize=fontSize)

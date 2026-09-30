@@ -66,7 +66,7 @@ link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(),
                  #PDcontrol=(pControl*0, dControl*0),
                  visualization=VRobotLink(linkColor=graphics.color.blue))
 linkSystem.AddLink(link)
-linksList += [copy(link)]
+linksList += [copy.copy(link)]
 
 
 
@@ -80,7 +80,7 @@ link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(),
                  #PDcontrol=(pControl*0, dControl*0),
                  visualization=VRobotLink(linkColor=graphics.color.blue))
 linkSystem.AddLink(link)
-linksList += [copy(link)]
+linksList += [copy.copy(link)]
 
 
 
@@ -94,7 +94,7 @@ link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(),
                  #PDcontrol=(pControl*0, dControl*0),
                  visualization=VRobotLink(linkColor=graphics.color.blue))
 linkSystem.AddLink(link)
-linksList += [copy(link)]
+linksList += [copy.copy(link)]
 
 
 #4. Rotationsgelenk mit später fixiertem Würfel als Arm
@@ -108,7 +108,7 @@ link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(),
                   #PDcontrol=(pControl*0, dControl*0),
                   visualization=VRobotLink(linkColor=graphics.color.blue))
 linkSystem.AddLink(link)
-linksList += [copy(link)]
+linksList += [copy.copy(link)]
 
 
 #Startkonfiguration

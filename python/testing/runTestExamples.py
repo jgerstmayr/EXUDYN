@@ -215,6 +215,12 @@ if __name__ == '__main__': #include to avoid potential problems with multiproces
     timeStart= -time.time()
     dirPath = '../Examples/'
     listExamples = GetFileNames(dirPath, '.py')
+    #and the examples in its subfolders, named with the subfolder: 'FurtherExamples/spotModel.py' (#2757)
+    for subfolder in sorted(f for f in listdir(dirPath) if os.path.isdir(join(dirPath, f)) and f[0] not in '_.'):
+        for root, dirs, files in os.walk(join(dirPath, subfolder)):
+            dirs[:] = sorted(d for d in dirs if d[0] not in '_.')
+            listExamples += [os.path.relpath(join(root, f), dirPath).replace(os.sep, '/')
+                             for f in sorted(files) if f.endswith('.py')]
     # listExamples = [dirPath+'xExudynConfigSpecial.py']
     
     totalExamples = len(listExamples)   #including the ones that cannot be run, see below
