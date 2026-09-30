@@ -930,10 +930,10 @@ void GlfwRenderer::ZoomAll(Index viewID, bool updateGraphicsData, bool computeMa
 	if (updateGraphicsData) { UpdateGraphicsDataNow(); }
 	if (computeMaxScene) 
 	{ 
-		state->ComputeMaxSceneSize(*visSettings, graphicsDataList);
+		state->ComputeMaxSceneSize(*visSettings, graphicsDataList, basicVisualizationSystemContainer, viewID);
 	}
 	stateMachine.hasLastMousePressed = 0;
-	state->ComputeZoomAll(*visSettings);
+	state->ComputeZoomAll(*visSettings, basicVisualizationSystemContainer, viewID);
 
 	if (render) { Render(window); }
 }
@@ -2095,7 +2095,7 @@ void GlfwRenderer::DoRendererTasks(bool graphicsUpdateAndRender)
 		{
 			ForEachEnabledView([&](Index viewID) {
 				RenderState* state = renderViews.State(viewID);
-				state->ComputeMaxSceneSize(*visSettings, graphicsDataList);
+				state->ComputeMaxSceneSize(*visSettings, graphicsDataList, basicVisualizationSystemContainer, viewID);
 				});
 
 			maxSceneComputed = true;

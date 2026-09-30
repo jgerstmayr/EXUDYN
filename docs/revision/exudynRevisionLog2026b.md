@@ -7775,3 +7775,26 @@ says what it applies to.
 and an `ObjectGenericODE2` (none), each with one displaced mesh node and both markers on it, drawn with the
 factors 1, 0 and 0.5; the marker positions and the node crosses from `SC.renderer.GetGraphicsData()` against
 the expected ones. Without the fix the factors 0 and 0.5 fail (4 of 6), with it all pass.
+
+<a id="rg6-8-2"></a>
+### RG6.8.2 — `ZoomAll` with a tracked marker (2026-09-30, #2309)
+
+The view translation is the render state's `centerPoint` plus what a tracked marker adds
+(`view0.camera.trackMarker`: its position, in the rotation of the view), and the view rotation is the model
+rotation times the marker orientation if that is tracked. `ZoomAll` computed the bounding box in the model
+rotation alone and set `centerPoint` to its center - so with a tracked marker the scene appeared shifted by the
+marker position, and with a tracked orientation the box was the one of an unrotated scene.
+
+Now `RenderState::GetTrackedMarkerTransformation` computes what the tracking adds, in one place:
+`GetRotationTranslationFWithMarker` (the drawing, OpenGL and raytracer) uses it as before, and
+`ComputeMaxSceneSize` and `ComputeZoomAll` use it when they are given the visualization container - the box is
+taken in the rotation the view draws, and the marker's translation is subtracted from the center point, so
+that the scene is centered **with** the tracking applied. A moving marker then keeps the scene where
+`ZoomAll` put it, relative to the marker - which is what tracking means. All three callers pass the container:
+`GlfwRenderer::ZoomAll`, the max-scene computation of the render loop, and the inactive renderer
+(`SC.renderer.ZoomAll()` without a window).
+
+**Test** `python/testing/test_zoomAllTrackMarker.py`, headless through the inactive renderer: a brick at
+x = 10..12 and a tracked marker at (3, 2): the view translation after `ZoomAll` equals the one without tracking;
+with a tracked orientation (90 degrees about z) the view is centered on the rotated brick and the zoom follows its
+rotated size.

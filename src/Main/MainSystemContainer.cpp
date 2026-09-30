@@ -746,10 +746,10 @@ void MainRenderer::ZoomAll(bool computeMaxScene, Index viewID)
 
 			VSC.UpdateGraphicsDataNow();
 			VSC.UpdateGraphicsData();
-			RVD.renderState.ComputeMaxSceneSize(VSC.GetVisualizationSettings(), &VSC.GetGraphicsDataList());
+			RVD.renderState.ComputeMaxSceneSize(VSC.GetVisualizationSettings(), &VSC.GetGraphicsDataList(), &VSC, viewID);
 		}
 
-		RVD.renderState.ComputeZoomAll(VSC.GetVisualizationSettings());
+		RVD.renderState.ComputeZoomAll(VSC.GetVisualizationSettings(), &VSC, viewID);
 		//std::cout << "ZoomAll-inactive: zoom=" << VSC.GetRenderState().zoom << "\n";
 	}
 }

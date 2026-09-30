@@ -1767,8 +1767,9 @@ This group is that revision and what has to happen before it can start.
       `AnimateModes` with deformation scaling 0 - **headless**: the marker positions in
       `SC.renderer.GetGraphicsData()` against the reference positions. The superelement markers now draw at the
       mesh nodes as the superelement draws them; `test_superElementMarkerGraphics.py`;
-    - **RG6.8.2** (#2309) `ZoomAll` ignores a `trackMarker` - **headless**: the render state after
-      `ZoomAll` with a moving tracked marker, the marker in the view;
+    - **RG6.8.2** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg6-8-2) - (#2309) `ZoomAll` ignores a
+      `trackMarker` - **headless**: the render state after `ZoomAll` with a tracked marker; `ZoomAll` now
+      centers the scene with the tracking applied, position and orientation; `test_zoomAllTrackMarker.py`;
     - **RG6.8.3** (#2321) meshes from NGsolve give triangles of the wrong orientation - with ngsolve
       (optional package): the normals of `fem.GetSurfaceTriangles()` against the outward normals;
     - **RG6.8.4** (#2308) erratic shadows with `modelCentricView=False` and lights in the camera frame -

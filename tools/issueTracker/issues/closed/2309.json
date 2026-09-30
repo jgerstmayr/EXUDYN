@@ -1,0 +1,15 @@
+{
+  "number": 2309,
+  "title": "ZoomAll",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "MEDIUM",
+  "description": "does not include trackMarker position (and orientation); fix that even for moving markers in modelCentricView zoom all is possible",
+  "dateRaised": "2026-02-19",
+  "deadline": "2026-08-18",
+  "dateResolved": "2026-09-30 18:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ZoomAll takes a tracked marker (camera.trackMarker) into account: the scene is centered and sized as the view draws it, with the marker's position and orientation tracked.",
+  "resolvedInVersion": "1.12.190"
+}

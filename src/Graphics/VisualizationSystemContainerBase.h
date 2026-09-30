@@ -192,6 +192,12 @@ public:
 
 	}
 
+	//! what a tracked marker (camera.trackMarker) adds to the view, as GetRotationTranslationFWithMarker applies it:
+	//! its orientation multiplied onto rotationMV (column-major), and the translation of its position in the view
+	//! (markerTranslationMV); without trackMarker, rotationMV is unchanged and markerTranslationMV zero (#2309)
+	void GetTrackedMarkerTransformation(VisualizationSystemContainerBase* VSC, const VSettingsView& settingsView,
+		Matrix3DF& rotationMV, Float3& markerTranslationMV);
+
 	//! compute model rotation and translation for camera-frame; uses either column-major (OpenGL) or row-major format (standard HT)
 	void GetRotationTranslationFWithMarker(Matrix3DF& rotationMV, Float3& translationMV,
 		VisualizationSystemContainerBase* VSC, const VSettingsView& settingsView,
@@ -234,11 +240,18 @@ public:
 	}
 
 	// ++++++++++++++++++++++++++++++++++++++++++
-	void ComputeMaxSceneSize(const VisualizationSettings& visSettings, ResizableArray<GraphicsData*>* graphicsDataList)
+	//! the scene in the rotation of the view, including the orientation of a tracked marker if VSC is given (#2309)
+	void ComputeMaxSceneSize(const VisualizationSettings& visSettings, ResizableArray<GraphicsData*>* graphicsDataList,
+		VisualizationSystemContainerBase* VSC = nullptr, Index viewID = 0)
 	{
 		float minSceneSize = visSettings.general.minSceneSize;
 
-		Matrix3DF rotationMV = GetRotation3DF(); //without trackMarker, as this should not be done when trackMarker is active?
+		Matrix3DF rotationMV = GetRotation3DF();
+		if (VSC != nullptr)
+		{
+			Float3 markerTranslationMV;
+			GetTrackedMarkerTransformation(VSC, GetSettingsView(viewID, visSettings), rotationMV, markerTranslationMV);
+		}
 		Float3 translationMV(0.f); //don't add translation, as the center point is computed from scene dimensions!
 
 		Box3DF box = GraphicsData::ComputeMaxScene(graphicsDataList, rotationMV, translationMV, minSceneSize, 1.f);
@@ -269,14 +282,23 @@ public:
 	}
 
 
-	//! ZoomAll compute actions: optionally update graphics
-	void ComputeZoomAll(const VisualizationSettings& visSettings)
+	//! ZoomAll compute actions: optionally update graphics; with VSC, a tracked marker's translation is
+	//! subtracted, so that the scene is centered with the tracking applied, and it stays so while the marker moves (#2309)
+	void ComputeZoomAll(const VisualizationSettings& visSettings, VisualizationSystemContainerBase* VSC = nullptr, Index viewID = 0)
 	{
 		float bbFactor = visSettings.general.boundingBoxZoomAllFactor;
 		float bbOffset = visSettings.general.boundingBoxZoomAllOffset;
 
 		//center point shifts scene in x/y plane
 		centerPoint = Float3({ boundingBox.Center()[0], boundingBox.Center()[1], 0.f }); //do not use Z-coordinate!
+		if (VSC != nullptr)
+		{
+			Matrix3DF rotationMV = GetRotation3DF();
+			Float3 markerTranslationMV;
+			GetTrackedMarkerTransformation(VSC, GetSettingsView(viewID, visSettings), rotationMV, markerTranslationMV);
+			centerPoint[0] -= markerTranslationMV[0];
+			centerPoint[1] -= markerTranslationMV[1];
+		}
 
 		if (!visSettings.general.zoomAllUseBoundingBox)
 		{
@@ -450,6 +472,20 @@ inline void RenderState::GetRotationTranslationFWithMarker(Matrix3DF& rotationMV
 		translationMV += rotationMV * settingsView.camera.cameraPosition; //in marker-frame; without camera-rotation...
 	}
 
+	Float3 markerTranslationMV;
+	GetTrackedMarkerTransformation(VSC, settingsView, rotationMV, markerTranslationMV);
+	translationMV += markerTranslationMV;
+
+	if (!useColumnMajor)
+	{
+		rotationMV.TransposeYourself();
+	}
+}
+
+inline void RenderState::GetTrackedMarkerTransformation(VisualizationSystemContainerBase* VSC, const VSettingsView& settingsView,
+	Matrix3DF& rotationMV, Float3& markerTranslationMV)
+{
+	markerTranslationMV = Float3(0.f);
 	//update center point if tracked by marker
 	if (settingsView.camera.trackMarker != -1)
 	{
@@ -477,15 +513,9 @@ inline void RenderState::GetRotationTranslationFWithMarker(Matrix3DF& rotationMV
 			Float3 markerPosition3DF;
 			markerPosition3DF.CopyFrom(markerPosition);
 			//convert model-centric marker to camera-frame:
-			translationMV += markerPosition3DF * rotationMV;
+			markerTranslationMV = markerPosition3DF * rotationMV;
 		}
 	}
-
-	if (!useColumnMajor)
-	{
-		rotationMV.TransposeYourself();
-	}
-
 }
 
 

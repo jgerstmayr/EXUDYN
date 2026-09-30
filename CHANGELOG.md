@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 175 | 1.12.189 |
+| 1.12 | Metheney | 176 | 1.12.190 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.190** `FIX` `MEDIUM EFF` `resolved by: Claude-JG` ZoomAll (#2309)
+  - description: does not include trackMarker position (and orientation); fix that even for moving markers in modelCentricView zoom all is possible
+  - **notes:** ZoomAll takes a tracked marker (camera.trackMarker) into account: the scene is centered and sized as the view draws it, with the marker's position and orientation tracked.
+  - date resolved: **2026-09-30 18:43**, date raised: 2026-02-19
 - **1.12.189** `FIX` `LOW EFF` `resolved by: Claude-JG` Marker positions (#1813)
   - description: wrong representation of marker positions in AnimateModes for deformation scaling=0
   - **notes:** The markers on a superelement (MarkerSuperElementPosition, MarkerSuperElementRigid) are drawn on the body also when visualizationSettings.bodies.deformationScaleFactor scales its deformation, e.g. for a mode of amplitude 0 in AnimateModes.

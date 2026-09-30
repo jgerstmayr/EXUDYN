@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.189.dev1
+- Exudyn version = 1.12.190.dev1
 - last change = 2026-09-30
 - Number of issues = 2760
-- Number of resolved issues = 2503 (189 in current version)
+- Number of resolved issues = 2504 (190 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7662,10 +7662,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HIGH EFF` Add ObjectJointSliding (#2315)
   - description: Extend SlidingJoint for rotation case
   - date raised: 2026-03-02
-- `FIX` `MEDIUM EFF` ZoomAll (#2309)
-  - description: does not include trackMarker position (and orientation); fix that even for moving markers in modelCentricView zoom all is possible
-  - **remarks:** planned before 1.13 as revision2026b step RG6.8.2 (2026-09-29)
-  - date raised: 2026-02-19
 - `FIX` `MEDIUM EFF` shadows (#2308)
   - description: in case modelCentricView=False, lights with useCameraFrame=True have erratic shadows  in OpenGL mode
   - **remarks:** planned before 1.13 as revision2026b step RG6.8.4 (2026-09-29)
