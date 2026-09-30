@@ -8006,3 +8006,2211 @@ there no volume reaches the planes.
 [`docs/dev/GUI_MANUAL_CHECK.md`](../dev/GUI_MANUAL_CHECK.md), **K12**: a shadow, a light in the camera frame, the
 camera-centric view, then rotate and zoom - the shadow must not flicker or come and go. #2308 stays open until
 that row has been checked.
+
+<a id="plan-texts-of-finished-steps"></a>
+## Plan texts of the finished steps (moved 2026-09-30)
+
+The full text each step had in the plan when it was finished, moved here verbatim so that the plan keeps one line per finished step, by its own rule. A link of the form `#rg...` points back into the plan.
+
+<a id="plan-rg3-1"></a>
+#### RG3.1
+
+**RG3.1** **DONE 2026-09-22** (#2584) — [log](exudynRevisionLog2026b.md#rg3-1) —
+    **The section structure of the user manual was wrong.** The conversion of revision2026
+    step R7.1.5 left the `toctree` of `docs/manual/introduction.md` below its last section,
+    so three chapters appeared as sub-pages of *"Mapping between local and global coordinate
+    indices"*. The order the maintainer asked for is in place, and *C++ Code* is a short
+    section of *Advanced topics* that points at the developer documentation.
+
+<a id="plan-rg3-2"></a>
+#### RG3.2
+
+**RG3.2** **DONE 2026-09-22** (#2585) — [log](exudynRevisionLog2026b.md#rg3-2) —
+    **The internal how-to notes left the published documentation.** `docs/howTo/` held two
+    kinds of note - what a user needs and what only a maintainer needs - and the second kind
+    is now excluded in `conf.py`, where `docs/revision/*` already was, and mentioned in one
+    line with a link. It stays in git and is simply not a page.
+
+<a id="plan-rg3-3"></a>
+#### RG3.3
+
+**RG3.3** **DONE 2026-09-22** (#2586) — [log](exudynRevisionLog2026b.md#rg3-3) —
+    **Is there a PDF, and should there be?** There was none since decision D8 ended it with
+    the LaTeX sources. **Answered 2026-09-22 (D17): yes** - `exudev docs --pdf`, release
+    only, everything except the source listings of the examples and test models, and the
+    issue history is in, because a reader who searches it gets the reason for each change
+    with it. 1159 pages. The three defects it uncovered are RG3.6, RG3.7 and RG3.8.
+
+
+    - **RG3.3.2** **DONE 2026-09-27** (#2707) — [log](exudynRevisionLog2026b.md#rg3-3-2) — **the
+      first page of the PDF shows the logo once**, and as wide as the piston engine below it.
+
+<a id="plan-rg3-3-1"></a>
+#### RG3.3.1
+
+**RG3.3.1** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-3-1) —
+    **`exudev docs --pdf` needed Perl and did not say so** (#2658). The LaTeX run was `latexmk`,
+    which is a Perl script: it succeeded in Git Bash and failed in PowerShell on the same machine,
+    because Git for Windows ships a perl in its `usr/bin` that the one puts on PATH and the other
+    does not. The three things `latexmk` automates - run the engine, build the index, run the engine
+    again until the cross-references stop moving - are done by `commands.BuildDocumentationPdf` now,
+    with the engine and `makeindex` that every TeX installation brings. **Verified with every
+    directory holding a `perl.exe` removed from PATH**: 1103 pages, two passes, 54 s.
+
+<a id="plan-rg3-4"></a>
+#### RG3.4
+
+**RG3.4** **DONE 2026-09-22** (#2587) — [log](exudynRevisionLog2026b.md#rg3-4) — *(group RG3; maintainer 2026-09-22)* **The revisions chapter says where the details
+    are** (#2587). It is deliberately short, and it should end by pointing at the developer
+    documentation: the revision is recorded in full in a plan and a log, and there are **two**
+    of them now - revision2026, finished and completed as 1.12, and revision2026b, continuing.
+
+<a id="plan-rg3-5"></a>
+#### RG3.5
+
+**RG3.5** **DONE 2026-09-22** (#2550) — [log](exudynRevisionLog2026b.md#rg3-5) — *(group RG3; maintainer 2026-09-22)* **The citations point nowhere**
+    (#2550). The chapters cite in running text — "see Zwölfer and Gerstmayr
+    [ZwoelferGerstmayr2021]" — which the LaTeX build resolved and nothing resolved after
+    it: the keys were printed and linked to nothing. `docs/bibliographyDoc.bib` survived the
+    LaTeX build (revision2026 step R7.1.7 moved it to `docs/`) and holds every key that is used.
+
+    A generated references page, and the citations become links to it without a single source
+    text being edited.
+
+<a id="plan-rg3-6"></a>
+#### RG3.6
+
+**RG3.6** **DONE 2026-09-22** (#2592) — [log](exudynRevisionLog2026b.md#rg3-6) —
+    *(group RG3; found in RG3.3)* **A generated settings page shows a table with no rows.**
+    `structureDocsEmitter.py` writes the table header before the loop that writes the rows, and
+    every row of a structure can be skipped - `VSettingsWindowDeprecated` has nothing left that
+    is not deprecated. An empty box on the published page, and the reason `sphinx -b latex`
+    aborted.
+
+<a id="plan-rg3-7"></a>
+#### RG3.7
+
+**RG3.7** **DONE 2026-09-22** (#2593) — [log](exudynRevisionLog2026b.md#rg3-7) —
+    *(group RG3; found in RG3.3)* **Display math opened at the end of a text line swallows the
+    text.** 45 blocks in three documents: the sentence is typeset as the formula and the formula
+    is shown as raw LaTeX in a code block. Two causes - the list conversion of
+    `latexToMarkdown.py` joins an item into one line, and `theoryContact.md` was written that way
+    by the conversion of revision2026 step R7.1.5.
+
+<a id="plan-rg3-8-1"></a>
+#### RG3.8.1
+
+**RG3.8.1** **DONE 2026-09-24** (#2594) — [log](exudynRevisionLog2026b.md#rg3-8-1) —
+    **The three contact-friction figures are vector** *(maintainer, 2026-09-24, who drew the
+    SVGs)*. `ContactFrictionCircleCable2D`, `...stickingPos` and `...normals` are written as
+    `docs/figures/<name>.*` in `definitions/itemDefsObjects.py`, so Sphinx picks the **SVG for
+    the browser and the PDF for the LaTeX build** from one name - the pair the step asked for.
+    Which further figures are worth an SVG is measured in the log.
+
+<a id="plan-rg3-8-2"></a>
+#### RG3.8.2
+
+**RG3.8.2** **DONE 2026-09-25** (#2594, #2650) — [log](exudynRevisionLog2026b.md#rg3-8-2) —
+    **Three more figures are vector, two became text, and what they replaced is out of the tree**
+    *(maintainer, 2026-09-25, who drew the SVGs)*. `pendulum`, `pendulumConstraint` and
+    `RotationsSequences` are `.*` candidates; the two `kinematicTree` images were **screenshots of
+    a LaTeX algorithm** and are the algorithms themselves now, written out from the old `.tex`;
+    `intro2.jpg` is the title picture of the PDF again. Eight obsolete files left the tree, and
+    the four sub-tutorials are no longer nested under the first one (#2650).
+
+<a id="plan-rg3-8-3"></a>
+#### RG3.8.3
+
+**RG3.8.3** **DONE 2026-09-25** (#2651) — [log](exudynRevisionLog2026b.md#rg3-8-3) —
+    **Three item pictures were in the repository and on no page** *(maintainer, 2026-09-25)*.
+    `RevoluteJointZ2`, `SphericalJoint` and `UniversalJoint` show exactly one item each and are
+    now in the descriptions of `ObjectJointRevoluteZ`, `ObjectJointSpherical` and
+    `ObjectJointGeneric`. `TutorialRigidBody1.png` belonged to a tutorial that no longer exists
+    and is gone.
+
+<a id="plan-rg3-8-4"></a>
+#### RG3.8.4
+
+**RG3.8.4** **DONE 2026-09-26** (#2594) — [log](exudynRevisionLog2026b.md#rg3-8-4) —
+    **The four lost figures are three, and they are back.** `generalContactSpheres` and
+    `generalContactANCF2Dcircle` are in `docs/manual/theoryContact.md` with the captions they had in
+    `theory.tex`, and `ObjectJointALEmoving2D` is in the description of its item, where
+    `itemDefinition.tex` had it inside an `\ignoreRST{...}` that the conversion honoured. Each is a
+    `.*` candidate, so the browser gets the SVG the maintainer drew and the PDF the vector original -
+    checked in `_buildpdf/latex/exudynDocumentation.tex`, which includes all three as `.pdf`.
+
+<a id="plan-rg3-9"></a>
+#### RG3.9
+
+**RG3.9** **DONE 2026-09-23** (#2598) — [log](exudynRevisionLog2026b.md#rg3-9) —
+    **Three corrections to the landing pages and the developer chapters.** That Exudyn is
+    developed heavily with Claude Code since 1.11.0 is said at the top of `README.rst` and
+    of `pdfIndex.md`; the hand-counted numbers of examples, test models and pages are gone
+    (a number that is not generated is wrong the next day); and the seven developer
+    documents are nested under *Exudyn developer documentation* instead of beside it.
+
+<a id="plan-rg3-10"></a>
+#### RG3.10
+
+**RG3.10** **DONE 2026-09-24** (#2599) — [log](exudynRevisionLog2026b.md#rg3-10) —
+    **`CHANGELOG.md` and the issue tracker page hold the same list twice.** They do not any more:
+    the changelog is the **current release** with a table of every release above it (2440 lines
+    to **124**), and the tracker page is *"Resolved issues and resolved bugs **before version
+    1.12**"* (9153 to **8923**). Every issue is published, in exactly one place.
+
+<a id="plan-rg3-10-1"></a>
+#### RG3.10.1
+
+**RG3.10.1** **DONE 2026-09-24** (#2637) — [log](exudynRevisionLog2026b.md#rg3-10-1) —
+    **The changelog and the tracker page printed the same issue in two formats**
+    *(maintainer, 2026-09-24)*. RG3.10 split the two lists but left the two renderings: the
+    changelog had a type badge and no dates, the tracker page had dates and no type. One
+    `IssueEntry()` prints both - the type, then the priority and the effort as badges, then
+    who raised and resolved it, then the sub-list of the tracker. The changelog sentence that
+    called the other page "the full issue tracker" was wrong and is gone.
+
+<a id="plan-rg3-11"></a>
+#### RG3.11
+
+**RG3.11** **DONE 2026-09-23** (#2611) — [log](exudynRevisionLog2026b.md#rg3-11) —
+    **"The C++ core" pointed at the repository instead of at the documentation.** The
+    section in *Advanced topics* stays - it is short and it answers a question users ask -
+    but it sent the reader to GitHub URLs of pages that RG3.2 publishes. It links to the
+    developer documentation now, and says what a link cannot: that for a deeper
+    understanding of the core there is no way around the GitHub project itself.
+
+<a id="plan-rg3-12"></a>
+#### RG3.12
+
+**RG3.12** **DONE 2026-09-24** (#2646) — [log](exudynRevisionLog2026b.md#rg3-12-1) — *(group RG3; maintainer 2026-09-24)* **Building from source and the development
+    workflow are told three times and never from the start** (#2646). The maintainer read the
+    two chapters end to end and the faults are structural, not wording. Measured:
+
+    - **the order is wrong.** `gettingStarted.md` ends with the toctree that nests *Installation
+      instructions*, so a reader meets *Run a simple example in Python* **before** being told how
+      to install anything;
+    - **three places describe the build** and disagree. `gettingStartedInstall.md` has *Build and
+      install under Windows / Mac OS X / Ubuntu* (~170 lines, still *"go to `main` of your cloned
+      github folder"* although the `main/` level went in revision2026 step R3.1, still Ubuntu
+      18.04 with Python 3.6 and a `USE_GLFW_GRAPHICS` define in `BasicDefinitions.h` that no
+      longer exists); `docs/howTo/buildFromSource.md` is the current reference at 151 lines and
+      the maintainer *"finally found"* it; `docs/dev/README.md` has a third, short version;
+    - **nothing says how to get the code.** There is no `git clone` in the documentation, no
+      choice between ssh and https, and no page on branches, commit messages, pull, push and
+      merge - which an external contributor has to be told and which is what keeps the internal
+      workflow consistent;
+    - **`WORKFLOW.md` is 845 lines** whose sections run 0, 1, 2, **0a**, 2a, 2b, 3, 4, 5, 6: the
+      one-time setup of a clone stands after versioning. Section 0 starts from an environment
+      that already exists, without saying where it comes from;
+    - **Visual Studio 2022 is called the primary development environment**, which is half true.
+      It is the mixed Python/native debugger. The everyday work - Python, the definition files,
+      the documentation, Claude Code - happens in **VS Code**, which is where the co-developers
+      will be.
+
+    **The recommended shape**, which is what the sub-steps build. The rule behind it: *a fact is
+    written once and linked to*, and the **user manual tells a user how to install**, while
+    **building from source belongs to the developer documentation**.
+
+    | page | what it holds |
+    |---|---|
+    | `docs/manual/gettingStarted.md` | what Exudyn is, the goals, the thanks - and the toctree **before** the example |
+    | `docs/manual/gettingStartedInstall.md` | requirements, pip, a specific wheel, troubleshooting, uninstall. **One short section** *Build from source* saying when a user needs it and linking to the developer page; no recipe |
+    | **new** `docs/dev/GETTING_STARTED.md` | clone over https or ssh, create the environment, run `tools/setupLocalWorkspace.py`, build once, run the tests once - the step-by-step an engineer needs, absorbing `WORKFLOW.md` §0a |
+    | **new** `docs/dev/BUILD.md` | the **one** build reference: a platform-independent part first, then Windows, Linux, macOS, then "the build works and the import does not", debugging and cleaning up. Absorbs `docs/howTo/buildFromSource.md` **and** the three sections of the user manual |
+    | **new** `docs/dev/GIT.md` | branch, commit message, pull, push, merge, and what a contribution must provide - the command line form, because that is what a VS Code user types |
+    | `docs/dev/WORKFLOW.md` | what is left once the setup and the git part have moved out: the issue tracker, versioning, CI, the gates, committing - renumbered in the order it is done |
+    | `docs/howTo/buildFromSource.md` | **deleted**; `condaEnvironments.md` stays and is linked from the new setup page |
+
+    Sub-steps:
+
+    - **RG3.12.1** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-1) — the order in the user manual, and the LaTeX relicts;
+    - **RG3.12.2** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-2) — `docs/dev/BUILD.md`: one build reference, the how-to note deleted, the manual reduced to a pointer;
+    - **RG3.12.3** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-3) — `docs/dev/GETTING_STARTED.md`: clone, environment, workspace, first build, first test run;
+    - **RG3.12.4** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-4) — `docs/dev/GIT.md`: the git workflow, for co-developers and for contributors;
+    - **RG3.12.5** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-5) — `WORKFLOW.md` restructured into the order the work is done, and shortened by what moved out;
+    - **RG3.12.6** **DONE 2026-09-24** — [log](exudynRevisionLog2026b.md#rg3-12-6) — the editors: VS Code for the everyday work, Visual Studio 2022 for mixed
+      Python/native debugging, in the invariants of the info document, in `CLAUDE.md`, in the
+      developer README and in the user manual.
+
+<a id="plan-rg3-13"></a>
+#### RG3.13
+
+**RG3.13** **DONE 2026-09-24** (#2648) — [log](exudynRevisionLog2026b.md#rg3-13) — *(group RG3; maintainer 2026-09-24)* **The tree told the reader about the revision
+    instead of about itself** (#2646). The rule is now written down - `CLAUDE.md` 6a and
+    `CODING_STYLE.md` §6, *documentation says what IS, not what it was* - and this step applies it
+    to what is already there. The maintainer's example, `python/TestModels/GraphicsDataTest.py`:
+
+    > *"GraphicsDataTest, one of the ten small tests that lived in `python/testing/modelUnitTests.py`
+    > from 2019 until revision2026b step RG10.6.5 made each of them an ordinary test model."*
+
+    A reader of that page - the test models **are** documentation pages - wants to know what the
+    model computes. Measured 2026-09-24: **887 mentions of `revision2026` in 257 files** outside
+    `docs/revision/`, which is where they belong. Not all of them are wrong, so the step is a
+    sweep with a rule, not a replace:
+
+    | where | mentions | what to do |
+    |---|---|---|
+    | `python/TestModels` (24 files), `python/PerformanceModels` (3) | 36 | **published pages**: rewrite the `Details:` header to say what the model does; the issue number stays, the step number goes |
+    | `definitions/` (27 files) | 39 | **published**: the item and settings descriptions are the reference manual |
+    | `docs/manual` (2 files left), `docs/dev` (6) | ~60 | `docs/dev` may keep a step reference where it is about the plan itself; a manual page may not |
+    | `src/`, `tools/`, `setup.py`, `conf.py` | ~750 | **not published**: the rule there is the older one - a comment cites the issue, not the step - so this is a cheaper pass, and a comment that explains a measurement may keep its step |
+
+    What must not be lost: the **issue number**, which is a link a reader can follow, and any
+    sentence that carries a *measurement* or a *decision*. What goes: the name a thing had before,
+    when it changed, and which plan step changed it.
+
+<a id="plan-rg3-13-1"></a>
+#### RG3.13.1
+
+**RG3.13.1** *(group RG3; from RG3.13, 2026-09-24)* **DONE 2026-09-27** —
+    [log](exudynRevisionLog2026b.md#rg3-13-1) — **235 references to the plan are left in
+    comments, each inside a sentence** (#2649). By the time it was done they were 330 in 177 files -
+    the work since RG3.13 had added its own - and they are 0. 652 of the 887 were parentheticals or appended
+    clauses and went by rule, keeping the issue number where there was one. The rest read like
+    *"step R4.3 is moving outputs from the old generators to separate emitters"* - a sentence has
+    to be written for each, which a pattern cannot do. **None is in a published page**: they are
+    comments in `src/`, `tools/` and `python/`, so this is tidiness rather than a defect, and it
+    is work for a session with nothing better to do.
+
+    - **RG3.13.2** *(sub-step; found in RG3.13.1)* **DONE 2026-09-27** —
+      [log](exudynRevisionLog2026b.md#rg3-13-2) — **88 bare step numbers** (#2703): the same rule
+      broken without the plan's name - `step R6.3.8`, `the rule RG6.2.11 wrote down`, `dies with the
+      LaTeX branch in R7.1.7` - in 39 files. RG3.13.1 counted `revision2026` and did not see them. The
+      same three passes and the same proof apply.
+
+<a id="plan-rg3-14"></a>
+#### RG3.14
+
+**RG3.14** **DONE 2026-09-26** (#2655) **The item and settings descriptions are written
+    in LaTeX** (#2655). `definitions/` is the source of the reference manual, and a developer who
+    writes an item description there writes LaTeX: the published pages are Markdown and are
+    correct, so this is not a defect in the output - it is that the input is a language nobody
+    writing an item description should have to know, and that nothing checks it.
+
+    Measured 2026-09-25 over the string constants of `definitions/*.py`:
+
+    | construct | count | what it is |
+    |---|---|---|
+    | `$...$`, `\be..\ee`, `\bea..\eea` | 2897 / 372 / 45 | **the math - already native Markdown** (`dollarmath`), 166 macros declared to MathJax and to LaTeX by `conf.py` |
+    | `\rowTable` / `\startTable` | 709 / 86 | the tables, in **7 header kinds**, two of which differ only in a space |
+    | `\hac` / `\ac` | 160 / 17 | an abbreviation, linked to `docs/generated/abbreviations.md` |
+    | `\mysubsubsubsection(label)` | 127 / 6 | the only heading level an item uses; `\mysubsection(label)` appears 4 times, in the four **structure** files |
+    | `\refSection` / `\eq` / `\eqs` / `\eqref` / `\fig` / `\ref` / `\label` | 69 / 37 / 3 / 2 / 16 / 17 / 55 | the references |
+    | `\userFunction` / `\returnValue` / `\userFunctionExample` | 35 / 35 / 17 | a user function: signature, argument table, example |
+    | `\onlyRST` / `\ignoreRST` | 11 / 13 | the two switches |
+    | `\texttt` | 725 | inline code |
+    | everything else | 87 distinct macros, 2684 occurrences in all; **32 of them occur at most twice** | |
+
+    The decision (maintainer, 2026-09-25): **the description stays one text field, and it becomes
+    MyST Markdown.** The math stays LaTeX, because that is what Markdown's math *is*. What goes is
+    the structural LaTeX: the headings, the references, the tables, the user function blocks and
+    the two switches. What replaces it is a **small documented set of `NAME:argument` macros** that
+    the converter expands, and **data in the definition dict** wherever the text was a table. When
+    the step is done, **a backslash outside math is an error** - see RG3.14.7 - so the writer is
+    not tempted to reach for the rest of LaTeX.
+
+    **Which strings are converted.** Every description text of `definitions/` reaches the same
+    function, `latexToMarkdown.ConvertText`, and all of them are in scope; measured by the keyword
+    each literal is passed to:
+
+    | file group | keyword | strings | reached through |
+    |---|---|---|---|
+    | `itemDefs*.py` | `equations` | 64 | `itemDocsEmitter.WriteFile` → `ConvertText`, then `NormalizeHeadings` in `itemDocsEmitter.WriteMarkdownPages` |
+    | `itemDefs*.py` | `classDescription` | 31 | the same |
+    | `itemDefs*.py`, `itemFunctions.py` | `description` of `ItemParameter` / `ItemFunction` | 52 | `autoGenerateHelper.PyLatexRST.ItemInterfaceWriteRow` → `ConvertText`, one table cell |
+    | `structureDefs*.py` | `description`, `classDescription`, `sectionText` | 43 | `structureDocsEmitter.StructureDocs` and `PyLatexRST.SystemStructuresWriteDefRow` |
+    | `pybind*.py` | `description` | 6 with macros, and **163 non-raw strings with a backslash** | `pybindEmitter` replays the calls onto `PyLatexRST`, whose `AddDocu`, `AddDocuList`, `DefPyFunctionAccess` and `Table3WriteRow` call `ConvertText` |
+    | `outputVariableDescriptions.py`, `outputVariableTypes.py`, `enumTypes.py`, `definitionTypes.py` | - | **none** | they carry math only, or no text at all - the output variable table is **already** generated from data, which is the shape RG3.14.4 gives the others |
+
+    `miniExample` is Python, not prose, and is not converted. The same `ConvertText` also serves
+    the docstrings of `python/exudyn/` through `utilityDocsEmitter`; those are **not** in this step.
+
+    **Every sub-step ends by writing its rules into one place**, the new *"Writing a description"*
+    section of [`definitions/README.md`](../../definitions/README.md) (RG3.14.8). No rule is
+    copied anywhere else: the header of each definition file, `CLAUDE.md` and this step all
+    *point* at it.
+
+
+    - **RG3.14.1** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-1) - **the abbreviations**: `ABRV:ODE2` in place of the seven
+      LaTeX spellings (`\hac`, `\hacs`, `\acf`, `\acl`, `\acs`, `\acp`, `\ac`), which
+      `latexToMarkdown.ConvertInline` rendered identically - so they were one macro under seven
+      names. 178 occurrences, and none needs an argument the macro cannot carry. The list is
+      already a Python dict, `abbreviations` in `tools/generators/examplesDocsEmitter.py`, written
+      out by its `WriteAbbreviations`, so the new `tools/checkDefinitions.py` **checks the key** and
+      names the file and the line of a wrong one.
+    - **RG3.14.2** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-2) - **the heading levels, defined and checked.** An item page is
+      `# <file>` / `## <item>` / `### DESCRIPTION of <item>`, and a `\mysubsubsubsection` becomes
+      `####`; the depth is implicit in the macro name (`latexToMarkdown.ConvertSections`) and
+      `latexToMarkdown.NormalizeHeadings` silently repairs whatever does not fit. In Markdown the
+      writer writes `#### Equations`, and the emitter that places the page -
+      `itemDocsEmitter.WriteMarkdownPages` and `structureDocsEmitter.StructureDocs` - checks the
+      level against the page it is placed in. The check has something to find: the 133 headings
+      carry **49 distinct titles**, and two pairs differ only in case or spacing -
+      *Connector forces* (11) against *Connector Forces* (3), *Post Newton Step* (3) against
+      *PostNewtonStep* (1). A documented set of the recurring ones - *Definition of quantities*
+      (37), *Equations of motion* (12), *Connector forces* (14), *Connector constraint equations*
+      (9), *Geometric relations* (8), *Details* (4) - with free titles allowed below them.
+    - **RG3.14.3** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-3) - **the references, in native Markdown.** `[](#sec:itemGround)` in place of
+      `\refSection{sec:itemGround}`, `[](#eq:ObjectGround:position)` in place of `\eq{...}`,
+      `[](#fig:ObjectSphereSphereContact)` in place of `\fig{...}`, and `$$...$$ (eq:name)` in
+      place of `\be ... \label{eq:name} ... \ee`. All of these live in
+      `latexToMarkdown.ConvertInline` (with `RefLabel` and `autoGenerateHelper.MarkdownLabel` for
+      the label spelling) and `latexToMarkdown.ConvertDisplayMath`. **Probed 2026-09-25** against
+      Sphinx 9.1.0 / myst-parser 5.1.0 with this project's `myst_enable_extensions`: a target
+      written `(sec:name)=` **on a heading**, an equation label, and a `{figure}` with `:name:` all
+      three resolve from another page, with and without link text, and the text defaults to the
+      heading or the caption. The 55 `\label`s are **45 equations, 10 figures and nothing else**,
+      and all 9 section labels are written as `\mysub...sectionlabel`, i.e. on their heading - so
+      every reference in `definitions/` can become a native link. A citation needs **no macro at all**: `conf.py`
+      appends a Markdown link definition for every key of the bibliography, so
+      `[ZwoelferGerstmayr2021]` written directly is already a link, and all 31 `\cite` calls are
+      single-key. So the answer to the maintainer's question is the strongest one available:
+      **nothing stays a backslash command outside math.**
+
+      - **RG3.14.3.1** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-3-1) - **the display math.** The 372 `\be .. \ee` and
+        45 `\bea .. \eea` blocks become `$$ ... $$` and `$$ \begin{aligned} ... \end{aligned} $$`,
+        which is what `latexToMarkdown.ConvertDisplayMath` already writes, and the **45 equation
+        labels inside them** become the MyST form `$$ ... $$ (eq-name)`. The mathematics itself does
+        not change: `\be` and `\ee` are Exudyn's own delimiters, not LaTeX's, and `$$` is what
+        Markdown's display math is. With them go `\eqComma` and `\eqDot`, which the converter
+        already spells out, and `\nonumber`, which numbers nothing in an `aligned` block.
+      - **RG3.14.3.2** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-3-2) -
+        **a reference to an equation is the role, not a link.** RG3.14.3 made all 144 references
+        native, and 42 of them point at an equation: those resolve in the HTML and **left the PDF as
+        undefined references**, because the LaTeX writer gives a link to an equation the anchor
+        `<document>:equation-<label>` while it labels the equation `equation:<document>:<label>`.
+        Only the PDF said so, which is why RG3.3.1 had to come first. `checkDefinitions` rejects a
+        link whose target is an equation label.
+    - **RG3.14.4** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-4) - **a table
+      is a Markdown table.** The 48 tables that are not a user function's argument list are pipe
+      tables, written where they stand in the text; the 34 argument tables belong to RG3.14.5 and
+      four more `\startTable`s are commented out and already dead. The pages are byte-identical.
+
+      **The dict was measured and not used.** `quantities=[Quantity(name, symbol, description)]` was
+      the plan for the 39 *"Definition of quantities"* tables, but **32 of the 39 open the
+      `equations` text and 7 do not** - three items carry a second one, and one sits under the
+      sentence that introduces it. A field in the dict says what a table holds and not where it goes,
+      so those seven would move on the page or the text would need a placement marker: more
+      machinery than the table. A pipe table says both, in one place, in native Markdown. Making the
+      **symbol column** data, so that a checker can say whether every symbol is a declared math
+      macro, is worth a step of its own and is not this one.
+    - **RG3.14.5** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-5) - **a user function block loses its LaTeX** - and the typed Python signature was measured and not used, because 35 of the 228 argument rows say the *size* of an argument as a formula, and a formula does not render inside a code block. The arguments stay a table, now a pipe table; the signature is written as the Python it is, so the `\_` escapes are gone either way. Originally planned as: In place of
+      `\userFunction{forceUserFunction(mbs, t, itemNumber, q, q\_t)}` followed by a table and a
+      `\returnValue` row:
+
+      ```python
+      userFunctions=[UserFunction(r'''
+          def forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
+                                q: 'Vector $\in \Rcal^{n_{ODE2}}$',
+                                q_t: 'Vector $\in \Rcal^{n_{ODE2}}$') -> 'Vector6D':
+              """compute the force ... """
+          ''')]
+      ```
+
+      The signature carries the names, the order and the types; the docstring carries the prose;
+      the per-argument description comes from the docstring's parameter lines. The measurement says
+      this fits: 34 of the 35 signatures are a single line, and **15 of them contain `\_` escapes
+      that exist only because the text is LaTeX** - `q\_t` is `q_t` in Python. The 231 argument
+      rows use **26 distinct types**, 14 of them plain names (`Real` 98, `MainSystem` 35,
+      `Index` 29, `Vector3D` 16, `BodyGraphicsData` 5, ...). The 17 `\userFunctionExample` blocks
+      become ordinary fenced code (`latexToMarkdown.ConvertListings` loses them).
+
+      **Duplication between items is intended and stays** (maintainer, 2026-09-25): two items can
+      share a signature and mean different things by it, and the argument and return descriptions
+      are what say so. What the step does remove is duplication **inside** one item: a user
+      function is documented once per item.
+    - **RG3.14.6** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-6) - **the two RST switches go.** `latexToMarkdown.ResolveRSTSwitches` keeps what
+      `\onlyRST` holds and **drops what `\ignoreRST` holds**, and `grep includegraphics
+      docs/generated/` finds nothing: all 13 `\ignoreRST` blocks are **dead text that reaches no
+      builder**, because the PDF is built by Sphinx from the same Markdown since RG3.3 (D17). Ten
+      of the 11 `\onlyRST` blocks hold an RST `.. figure::` that a MyST `{image}` says in three
+      lines. So: **delete the 13, unwrap the 11, and delete the two macros with
+      `ResolveRSTSwitches`, `DropLatexFigures`, `ConvertRSTFigures`, `ConvertRSTImages` and
+      `LatexRSTFigure`.** The one pair worth a decision is `ObjectKinematicTree`, where the
+      `\ignoreRST` twin holds the two LaTeX `algorithm` environments; RG3.8.2 already put the
+      algorithms into the text as numbered lists, so **there is no case left for keeping even
+      one**, and the step may delete all 24.
+    - **RG3.14.7** **DONE 2026-09-25** - **the tail and the gate.** 1005 backslash commands in 23 names are left in a
+      description outside mathematics, a comment and a code block: **807 in `itemDefs*`, 190 in
+      `pybind*`, 8 in `structureDefs*`**. A first attempt converted them in one pass and moved 738
+      lines of the pages, so the step is split - the maintainer's advice, 2026-09-25: *"why not try
+      step-by-step or by defs-classes, with some global replacement of latex elements where it would
+      always work first"*. The order is by how much a macro interacts with the line structure, which
+      is where every failure so far has come from.
+
+      - **RG3.14.7.1** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-7-1) - the
+        macros that are a single element and touch no line: `\codeName` (11), `\vspace` (20),
+        `\noindent` (17), `\paragraph` (15), `\footnote` (13), and one each of `\text`,
+        `\mysmall`, `\textdegree`, `\phantom`, `\exuUrl`, plus the 55 escaped spaces that
+        `\codeName\ ` needed before a comma.
+      - **RG3.14.7.2** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-7-2) - `\texttt{x}` to `` `x` ``: 706 of the 1005, one to one, no line structure.
+      - **RG3.14.7.3** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-7-3) - the bold forms: `\bf` (45) in its `{\bf x}` shape and `\mybold` (29).
+      - **RG3.14.7.4** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-7-4) - the **lists**: `\bi`/`\ei` (19/19), `\item` (84), `\bn`/`\en` (4/4).
+        This is the one that rewrites lines, and `ConvertLists` indents a block inside an item by two
+        while `DedentOutsideCode` keeps that indentation inside a fence - so it is done alone, with
+        the byte-identical comparison read per file.
+      - **RG3.14.7.5** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-7-5) - what is not a `\name`: the **41 LaTeX line breaks** `\\` (21 in
+        `itemDefs`, 14 in `pybind`, 6 in `structureDefs`), the 6 `\tabnewline` of the pybind tables,
+        the **67 `%%RSTCOMPATIBLE` markers** - 65 of which have nothing after them at all - and the
+        six `\n` in pybind descriptions that reach the page as two characters, because the old
+        parser turned a literal `\n` into a newline for the item files and never for these. A
+        Markdown hard break is two trailing spaces, which `StripComments` removes, and 191 lines
+        already end in two or more spaces by accident - so this sub-step decides what a line break in
+        a description *is*, and that decision is why it comes last.
+      - **RG3.14.7.6** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-7-6) - **the gate**: a `\name` in a description, outside mathematics, a comment
+        and a code block, is an error with the file, the line and the name - in
+        `tools/checkDefinitions.py`, beside the other five rules.
+        `latexToMarkdown.ReportUnknown` has been dead code all along and goes with it.
+    - **RG3.14.8** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-8) - **the one place the rules are written.** A new section of
+      `definitions/README.md`, which is published (`docs/dev/README.md` lists it) and today says
+      how a *member* is written but nothing about the description text. Its skeleton is written
+      **first** and each sub-step adds its own paragraph, so that no sub-step is done before its
+      rule is readable. Then, and this is the point of the step: the **header comment of every
+      `definitions/*.py` file** says *read `definitions/README.md` before writing a description*,
+      and **`CLAUDE.md` says the same** in its hard rules - a session that writes plain Markdown
+      where a `ABRV:` macro is meant, or LaTeX where the check will reject it, is a session that
+      did not read one file.
+    - **RG3.14.9** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-9) - **a description that carries math is an `r'...'` literal, and that is
+      checked.** Measured 2026-09-25 over `definitions/*.py`: **1128 string literals carry a `$` or
+      a backslash macro; 940 are already `r'...'`, 188 are not, and 163 of those 188 already hold a
+      doubled backslash** - `'\\item'`, `'  \\item Create \\texttt{Vector3DList}'`, `' \\\\ \\\\
+      Usage: \\bi'`, almost all in the `pybind*.py` files. So the escaping is already being paid
+      by hand, and one `\n` or `\t` written by accident is a bug nobody sees. The check is a file
+      check and needs no new machinery: `ast` gives each literal its line and column, and the
+      source at that column carries the prefix - the measurement script for this step is the check.
+      The 163 become raw literals and readable; the other 25 hold a `$` and no backslash and are
+      converted for the rule's sake.
+
+    - **RG3.14.10** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-10) - **the
+      citations, and the field that was called `latexText`.** The 31 `\cite{key}` calls are
+      `[key]`, which is what they already rendered as, so the pages do not move; a citation is
+      given the marker of RG3.14.11 and checked against the bibliography;
+      without a marker nothing could be told apart, because 1228 bracketed tokens in `definitions/`
+      are not citations and twelve of the 100 keys are not shaped like one. And `StructureDefinition.latexText`, which is neither LaTeX nor written in
+      it, is `sectionText`: the heading and the paragraph that open a group of structures.
+
+    - **RG3.14.11** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-14-11) - **the
+      citation marker, and the last of `theDoc.pdf`.** A citation is `[CITE:Key]`, which the
+      converter turns into the `[Key]` that `conf.py` resolves: the pages do not move, and the
+      marker is what makes three checks possible - a key the bibliography does not have, a key
+      written without the marker, and a bracketed word that is nearly a key. A `[CITE:` left in a
+      generated page is a conversion that did not happen. `\refSection` in a docstring names its
+      section instead of the literal `theDoc.pdf`, and the eight `\refSection{...}` that stood in
+      the issue archive are plain section names (**#2656** is the five hand-written docstrings that
+      still say `theDoc.pdf` in their own text).
+
+    - **RG3.14.12** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-14-12) - the five
+      `theDoc.pdf` references are gone, and the name is explained once in the revisions chapter.
+      Smaller than the step assumed: both section targets already resolved, so only the words in
+      front of them were wrong. The same docstrings said `staticSolver` where `SolveDynamic`
+      stores `dynamicSolver`.
+    - **RG3.14.13** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-14-13) - the LaTeX
+      machinery of `autoGenerateHelper.py`, audited by reachability and not by reading: **eight
+      names reachable from nothing**, 185 lines, and the regeneration a no-op afterwards. What is
+      alive is alive for a reason and is named in the log. The audit found what the step could not
+      know: **745 LaTeX escapes in the generated Markdown**, which is RG3.14.14.
+    - **RG3.14.14** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-14-14) - the LaTeX
+      escapes that were left in the generated Markdown. **115 of them, not 745**: the other 638 are
+      the tracker log, where escaping issue text is the rule of #2545 and is correct. Five producers
+      removed, 38 subscripts that had never rendered, and two utility functions that had no
+      *Relevant Examples* list because the search looked for a name with a backslash in it.
+
+    **What would not work today**, and is either solved inside the step or stated as its boundary:
+
+    - **A target that sits on neither a heading, an equation nor a named figure cannot be reached by
+      `[](#name)`.** Probed 2026-09-25: a target on a paragraph, on a list item, as an inline
+      `{#anchor}` and as a raw `<a id>` all four warn `myst.xref_missing`, and only
+      `` {ref}`text <name>` `` resolves them - with the text, because `` {ref}`name` `` alone warns
+      *"A title or caption not found"*. There is exactly one such place, and it is the reason
+      RG3.14.1 keeps a macro: the abbreviation list, section `sec:listofabbreviations` in
+      `docs/generated/abbreviations.md`, where each entry is a bare target above a paragraph -
+      `(ODE2)=` above `**ODE2**: second order ordinary differential equations`. `ABRV:ODE2`
+      therefore expands to `{ref}`ODE2 <ODE2>``, which is what `\hac` does today, and **the writer
+      never types the role**. Giving every abbreviation its own heading would make the native form
+      work and is not worth 90 headings in a list.
+    - **An implicit heading anchor is same-page only.** `myst_heading_anchors = 3` generates a slug
+      per heading, and `[](#a-sub-heading)` from another file warns. Every target that is
+      referenced across pages has to be written as `(name)=`, which is what `\label` does today,
+      so nothing is lost - but the check of RG3.14.7 cannot be *"no labels"*.
+    - **A type that is a shape cannot be a Python annotation.** 44 of the 231 argument rows have a
+      type cell like `Vector $\in \Rcal^{n_{ODE2}}$`. A string annotation carries it -
+      `q: 'Vector $\in \Rcal^{n_{ODE2}}$'` - and the generator reads the annotation as a string
+      rather than evaluating it. The block is therefore parsed with `ast`, not executed.
+    - **The user function signature is declared in three places and this step unifies none of
+      them**: the documentation block, the member's type (`PyFunctionGraphicsData`, and the
+      `std::function<...>` it maps to in `definitions/definitionTypes.py`) and the stub files.
+      Making the documented signature the source of all three is a step of its own and belongs to
+      RG12, not here.
+    - **The math macros stay LaTeX**, and that is the decision, not a limitation: MyST's math *is*
+      LaTeX, `conf.py` declares the 166 macros to MathJax and to the LaTeX preamble, and
+      `tools/checkMathMacros.py` already checks that every one used is known. Rewriting 2897 inline
+      formulas would buy nothing.
+    - **The hand-written chapters of `docs/manual/` are not in scope**, nor are the docstrings of
+      `python/exudyn/`. `ConvertText` keeps its LaTeX branch for them; what this step adds is a
+      check that `definitions/` no longer uses it.
+
+    The gate is the ordinary one, with one addition: the **generated pages must not change** except
+    where a table gains a column or a heading is corrected, so the step is done in passes with
+    `git diff docs/generated/` read after each.
+
+<a id="plan-rg3-15"></a>
+#### RG3.15
+
+**RG3.15** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-15) — **The chapters of the user manual** (#2657, #2661).
+    The table of contents is decided and is written out at the end of this document, in *The chapters
+    of the user manual, as decided for #2657 and #2662*. In short: **Renderer, graphics and
+    visualization** becomes the one visualization chapter, in four sections - *The renderer window*,
+    *The model view*, *Images, animations and the solution viewer*, *How to add graphics* - built
+    from the eleven visualization sections that sit in *Exudyn basics* today, the five that are
+    already in the chapter and the one in *Advanced topics*. **Performance, errors and solver
+    failures** becomes a chapter of its own with the three sections of *Exudyn basics* that belong
+    together and are not basics. *Advanced topics* takes what is internals or reference - the
+    graphics pipeline, raytracing, the `GraphicsData` reference - and, with #2661, the command line
+    and the results monitor. *Exudyn basics* keeps one visualization section, *Seeing the model*,
+    which points at the chapter.
+
+    Every section that moves keeps its target, so that the references to it keep working; that is
+    what makes this a move and not a rewrite, and it is the thing the gate has to prove.
+
+<a id="plan-rg3-16"></a>
+#### RG3.16
+
+**RG3.16** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-16) — **Every heading is sentence case** (#2662).
+    *"This is a heading"*, everywhere. Measured 2026-09-25: 116 of the 189 headings of
+    `docs/manual/` and `index.md` already are, and about fifteen are Title Case and should not be -
+    *Installation and Getting Started*, *Exudyn Basics*, *Generating Animations*, *Generalized
+    Forces*, *Lagrange's Equations of Motion* and the like. What stays capitalised is a proper noun
+    (*Runge-Kutta*, *Newmark*, *Hurty-Craig-Bampton*, *Tait-Bryan*) and a name the code spells with
+    a capital (`GraphicsData: Line`, *Items: Nodes, Objects, ...*), so the checker that finds them
+    needs a list of those names and reports the rest.
+
+<a id="plan-rg3-17"></a>
+#### RG3.17
+
+**RG3.17** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg3-17) — **A comment in a description is an HTML comment**
+    (#2663). 513 lines of `definitions/` are nothing but a `%` comment and 7 more carry one after
+    text; they become `<!-- ... -->`, which the converter removes so that it does not reach the page.
+    **`%` survives inside mathematics and nowhere else**: MathJax and LaTeX both honour it there, so
+    it needs no handling at all - two of the 513 are a commented-out continuation line inside a
+    multi-line formula, which is exactly the case that must keep working. The reason to change the
+    rest is in `StripComments`: it runs **before** the mathematics is protected, so a `%` anywhere
+    truncates the rest of its line whatever that line is.
+
+<a id="plan-rg3-18"></a>
+#### RG3.18
+
+**RG3.18** **DONE 2026-09-26** (#2660) — [log](exudynRevisionLog2026b.md#rg3-18) —
+    **The pages of the Python-C++ interface repeat their own title, and it costs the MainSystem
+    extensions their place in the table of contents** (#2660).
+
+    Six pages open with their own name twice - *12.3 SystemContainer* / *12.3.1 SystemContainer*, and
+    the same for `Renderer`, `MainSystem`, `SystemData`, `Symbolic` and `GeneralContact`. The title
+    comes from `markdownPageTitles` in `pybindEmitter.WriteMarkdownPages` and the section from the
+    class's own `DefPyStartClass`, and for these six the two are the same word.
+
+    **The second half of the issue is the same defect seen from the table of contents** (maintainer,
+    2026-09-25): there is no entry for *MainSystem extensions (create)* nor for *MainSystem
+    extensions (general)*. Measured: both are **level-3** headings of
+    `docs/generated/cInterface/MainSystem.md`, and they are at level 3 rather than 2 *because* the
+    redundant section takes a level - the page title is 1, the repeated name is 2, the extension
+    sections are 3. Nested through the cInterface index into the main `toctree`, both of which say
+    `:maxdepth: 3`, level 3 on that page falls past the limit. **Removing the repetition moves them
+    to level 2 and they appear**, which is why the two halves are one step.
+
+    What has to be arranged: the repeated section **carries the target** a reference points at
+    (`sec:mainsystem:pythonextensions` and its kind), so the label moves to the page title before the
+    heading goes - the same rule that made RG3.15 a move and not a rewrite, and the strict build is
+    what proves it.
+
+    The item pages of the reference manual have the same shape - `# ObjectGround` then
+    `## ObjectGround` - and are done in the same step. There the second heading carries
+    `sec:item:<Item>`, which **every** item reference in the documentation uses, so it is the more
+    delicate half of the two.
+
+    **Done with one helper for both**, `latexToMarkdown.DropRepeatedTitle`: it removes a first
+    heading that only repeats the page title and **returns its label**, which the emitters write
+    above the `# ` title. Nothing lifts the headings that follow by hand - `NormalizeHeadings`
+    rebuilds every level from the nesting it walks, so a heading that is gone takes its level with
+    it, which is exactly what the table of contents needed.
+
+<a id="plan-rg3-28"></a>
+#### RG3.28
+
+**RG3.28** *(group RG3; from RG13.7, 2026-09-29)* **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg3-28) —
+    **The developer documentation named paths of the old `main/` directory** (#2743): `WORKFLOW.md`,
+    the layout block of `docs/dev/README.md` and a how-to note; the layout block also lost its
+    hand-kept counts.
+
+<a id="plan-rg3-21"></a>
+#### RG3.21
+
+**RG3.21** *(group RG3; maintainer 2026-09-24, clarified on their request 2026-09-27)* **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg3-21) — **The pages that
+    still describe the state before a step that is done** (#2673). The list was made by measurement -
+    496 identifiers, 129 settings paths, 11 deprecated call forms - and everything it found was fixed in
+    one commit; the two scripts are the cheap way to ask again.
+
+    **The reason**: six weeks of revision2026 and revision2026b changed behaviour that `docs/manual/`
+    pages describe, and a page is corrected only when somebody walks past it - so some of them still
+    describe how Exudyn worked in August.
+
+    **What is in scope, because "which exact audit" is a fair question**: `docs/manual/` only.
+    `docs/generated/` is rewritten from `definitions/` and the docstrings and cannot be stale;
+    `docs/dev/` and `docs/howTo/` describe the workflow rather than the behaviour, and go with the step
+    that changes the workflow. The subjects are the ones the closed issues name:
+
+    | subject | what changed |
+    |---|---|
+    | the renderer keys and the dialogs | RG6.2.x: the settings dialog, the find, the fonts, the columns, what is stored |
+    | the output directory | `exudyn.config.outputDirectory`, and which files follow it |
+    | the star imports and `exudyn.config` | the deprecated module-level functions |
+    | the command line | `python -m exudyn ...` |
+    | the results monitor | it exists, and what it stores |
+    | the override settings | `~/.exudyn/config.json`, which changes what a script does |
+    | the deprecated names | what is on its way out, and by when |
+    | the PlotSensor defaults | `None` means the default, and the file can set them |
+
+    **The method, and why it is cheap**: `docs/manual/revisions.md` is the list of what changed for a
+    user, and every closed issue of the two revisions carries its release note. So this is a comparison
+    of two lists against the pages, not a re-reading of the manual.
+
+    **The first deliverable is the LIST** - per page, what it claims against what the code does - and
+    nothing else can be planned before it exists. It decides whether the rest is one commit or five.
+
+<a id="plan-rg3-22"></a>
+#### RG3.22
+
+**RG3.22** *(group RG3; maintainer 2026-09-25)* **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg3-22) — **The simulation settings section says how to look a
+    setting up** (#2659). It explains the substructures and how to assign values, and says nothing
+    about *finding* one. `python -m exudyn dialogs sim` opens the same tree the renderer's V key
+    opens, with no model and no renderer, and it is the fastest way to answer "what is this setting
+    called" - two sentences and a line of code in `docs/manual/` where the section is.
+
+<a id="plan-rg3-19"></a>
+#### RG3.19
+
+**RG3.19** *(group RG3; maintainer 2026-09-26)* **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-19) - **the arguments of
+    a documented function are one per line, with the name in code** (#2665). The `Args:` block of a
+    docstring was joined into one paragraph by `utilityDocsModel.Tags2Markdown`, so a function of ten
+    arguments was one wall of text and the names were in the body font - in the Python utility
+    functions and in the MainSystem extensions of the Python-C++ command interface, in the HTML and
+    in the PDF, because both are built from the same Markdown. The maintainer reported it with a
+    screenshot of the old RST pages, which had it right.
+
+<a id="plan-rg4-2"></a>
+#### RG4.2
+
+**RG4.2** **DONE 2026-09-26** (#2413) — [log](exudynRevisionLog2026b.md#rg4-2) —
+    **`ObjectContactConvexRoll.pContact` is a computed value that Python reads**, which is what the
+    maintainer decided on 2026-09-26: *"make pContact same as the variables in FFRF that are computed
+    internally and can be read by the Python interface"* - and **not** a data variable, which is what
+    this step said from revision2026 step R10.2 until then. The step closes with the measurement that
+    `pContact` already was one, and with `rBoundingSphere` beside it, which was not.
+
+<a id="plan-rg4-4"></a>
+#### RG4.4
+
+**RG4.4** **DONE 2026-09-23** (#2603) — [log](exudynRevisionLog2026b.md#rg4-4) —
+    **Two lines of Python segfault the process.** The top settings class calls `Init(this)` in
+    its constructor, so a structure Python builds links itself; it defines a copy constructor and
+    a copy assignment that re-link the **copy**, which is the answer to the question the step
+    left open; and every deprecated forwarding checks its backlink and raises instead of
+    dereferencing `nullptr`. All 93 deprecated members of a standalone
+    `exu.VisualizationSettings()` are read and written in a test.
+
+<a id="plan-rg4-5"></a>
+#### RG4.5
+
+**RG4.5** **DONE 2026-09-23** (#2616) — [log](exudynRevisionLog2026b.md#rg4-5) —
+    **Quitting the renderer before a simulation started raised, quitting during it did
+    not.** `CSolverBase::SolveSystem` returned `false` when `forceQuitSimulation` was
+    already set, and `SolveDynamic` reads `false` as a failure, so a user who closed the
+    render window while the script waited got *DYNAMIC SOLVER FAILED* and a traceback. It
+    returns `true` now.
+
+    **Left open deliberately**: `forceQuitSimulation` is set by `GlfwClient.cpp` alone and
+    has no Python binding, so the path cannot be reached without a window and has no test.
+    A binding or a test hook would make "stopped" against "failed" testable; it is worth a
+    step of its own if the maintainer wants it.
+
+<a id="plan-rg4-6"></a>
+#### RG4.6
+
+**RG4.6** *(group RG4; from RG4.5, 2026-09-26)* **DONE 2026-09-28** —
+    [log](exudynRevisionLog2026b.md#rg4-6) — decided for **a binding a user can use as well**,
+    `SC.renderer.StopSimulation(forceQuit=True)`, which does what closing the render window does.
+    **A test hook for `forceQuitSimulation`** (#2674).
+    #2616 fixed the behaviour - quitting the renderer **before** a simulation starts raised where
+    quitting **during** it did not - and nothing can test it: the flag is set by the renderer thread
+    from a key press or a closed window, and there is no binding for it. The fix is therefore checked
+    by hand and stays checked by hand. The decision the step takes is **which of the two**: a
+    binding a user could also use (on `mbs.systemData` or the renderer) or a hook that exists only
+    for the test.
+
+<a id="plan-rg4-7"></a>
+#### RG4.7
+
+**RG4.7** *(group RG4; from #2423)* **CLOSED 2026-09-29, done by revision2026 step R6.3.5** (a49d501f):
+    `PyGetCurrentFileInformation` reads `f_code.co_filename` and `f_lineno` of the frame and no longer
+    calls `inspect.getframeinfo`. **Every C++ user error inspects the Python source for its file
+    and line.** `PyError` and `PyWarning` call `PyGetCurrentFileInformation`
+    (`src/Main/Stdoutput.cpp:259`), which calls `inspect.getframeinfo`: that resolves the module by
+    scanning `sys.modules` and then reads the source file. The cost grows with the number of
+    imported modules, and `parameterConversionTest.py` pays it about 38000 times - which is also the
+    measurement that found it. A raised error is not a hot path, but a *probe* is, and the test model
+    that probes every parameter of every item is the one place both meet.
+
+<a id="plan-rg4-8"></a>
+#### RG4.8
+
+**RG4.8** *(group RG4; maintainer 2026-09-28)* **DONE 2026-09-30** — **`ObjectBeamGeometricallyExact` (3D): analyse the
+    implementation** (#2730). *"The 3D GeometricallyExactBeam has some defects and is still under
+    development. So, you would find some errors in the implementation - so keep this item open and
+    add a step and issue to RG4."* The analysis says what the element computes, where it departs from
+    the formulation, and what is missing; its reference page (RG13.5.2) waits for it. **The rule this
+    sets**: an item found with a larger defect while RG13 documents it gets an RG4 step for a deeper
+    analysis, not a fix inside RG13.
+
+    **The material** (maintainer, 2026-09-29): a colleague's comparison of the element with an own
+    SE(3) beam after Sonneville, Cardona & Brüls (2014), done with Claude (`tmp/beam_element_comparison_vs_exudyn.pdf`,
+    the code not included). Its findings, from the source and from runs:
+    - the same as the literature: the SE(3) interpolation; `TExpSE3`/`TExpSE3Inv` (the active form after
+      Hante 2022 equals Sonneville's to machine precision; the commented-out one loses accuracy at small
+      angles); the elastic forces and their Jacobian, checked against the running element;
+    - different: the **mass matrix** - lumped, block-diagonal per node, the rotational block from each
+      node's `G_local` - where Sonneville's Eq. (81) is consistent and couples the nodes; the
+      **gyroscopic terms** per node, $\tomega \times (\Jm \tomega)$, not integrated over the element
+      (Eq. 78-82); **no Jacobian of the mass matrix and the gyroscopic terms**, and the elastic Jacobian
+      misses the $\Gm_{local,q}$ and $\Rot\tp_q$ chain rule terms (marked *MISSING* in the source);
+      **gravity** by midpoint shape functions, without the nodal torques; the **velocity** of a point
+      interpolated linearly (*"not consistent with position"*); **no body markers**
+      (`GetAccessFunctionBody` not implemented);
+    - measured: static large deformation agrees to $5\cdot10^{-9}$ m; a flexible pendulum of 10 elements
+      released from horizontal follows `ObjectBeamGeometricallyExact2D` and the SE(3) reference, while
+      the 3D element departs visibly after $t = 0.5$ s.
+
+    The open issues of the element are sub-steps here, each **inspected first** - some may be solved:
+    - **RG4.8.1** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg4-8-1) - the elastic part
+      checked statically against the planar element and an exact solution (`tmp/rg4_8_1_staticComparison.py`,
+      not kept): the 3D element is exact for a pure moment;
+    - **RG4.8.2** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg4-8-1) - the flexible
+      pendulum with `ObjectBeamGeometricallyExact2D`, the 3D element and `ObjectANCFCable2D`, test model
+      `flexiblePendulumBeamComparison.py`: the 3D element converges with the mesh;
+    - **RG4.8.3** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-8-3) - the right-angle frame
+      buckles at the published 1.088 N; test model `geometricallyExactBeamRightAngleFrame.py` (#1499). The
+      older `rightAngleFrame.py` (ANCF and this element, not run by the suite) still stops near the
+      buckling load with its own settings - to be revised or removed, the maintainer's call;
+    - **RG4.8.4** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-8-4) - the element-consistent
+      mass matrix and quadratic velocity vector, the default; `exu.experimental.beamGeometricallyExactConsistentMass
+      = 0` switches back to the lumped ones for comparison, and the switch goes when the choice has settled
+      (#1273). Rigid motion is exact at any mesh; test model `geometricallyExactBeamMassTest.py`;
+    - **RG4.8.5** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg4-8-5) - the Jacobian of the
+      elastic forces is complete, the velocity Jacobian of the quadratic velocity vector added; a cantilever
+      with Tait-Bryan nodes that the static solver could not solve converges (#1550, #1100); the Tait-Bryan
+      quadratic velocity term had the inertia of the whole cross section per unit length instead of half
+      the element (#1273, part of RG4.8.4); test model `geometricallyExactBeamJacobianTest.py`;
+    - **RG4.8.6** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg4-8-6) - the element is
+      stress-free in the reference configuration of its nodes, so a curved or twisted beam can be modelled;
+      test model `geometricallyExactBeamCurvedTest.py`, the 45-degree bend, within 0.5 % of Simo and
+      Vu-Quoc (#1494);
+    - **RG4.8.7** **DONE 2026-09-29, the body markers** — [log](exudynRevisionLog2026b.md#rg4-8-7) -
+      `MarkerBodyPosition`, `MarkerBodyRigid`, `MarkerBodyMass` work on the element; found and fixed on the
+      way: positions along the element were interpolated from the wrong end. Left for RG4.8.4: distributed
+      loads with their nodal torques and a velocity field consistent with the position;
+    - **RG4.8.8** **CLOSED 2026-09-29** - #736 (*"include GeomExactBeam3D as provided by Jan Tomec"*) is
+      superseded by this element (maintainer);
+    - **RG4.8.9** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-8-9) - the reference page
+      (RG13.5.2) and the MiniExample (RG13.6);
+    - **RG4.8.10** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-8-10) - the output variables
+      (#2753): `Rotation`, `StrainLocal` and `CurvatureLocal` were declared and not computed; added with
+      `RotationMatrix`, `AngularVelocity`, `AngularVelocityLocal` and the section forces and moments
+      `ForceLocal` and `TorqueLocal` (maintainer, 2026-09-29); test model `geometricallyExactBeamOutputTest.py`.
+    - **RG4.8.11** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-8-11) - the dynamic
+      right-angle cantilever of Simo and Vu-Quoc (1988) against the published curves, test model
+      `geometricallyExactBeamElbowCantilever.py`; literature values of the benchmarks retrieved (maintainer:
+      *"it has plenty of uses"*). Open from it: the energy of the element as an output, to check the
+      conservation in free oscillation, as Meier et al. (2016) do.
+    - **RG4.8.12** *(maintainer 2026-09-30)* **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-8-12) -
+      the element against the reference of Holzinger: the SE(3) beam of
+      the colleague's comparison (Sonneville et al. 2014, configuration-dependent mass matrix and gyroscopic
+      force; `tmp/geomExactHolzinger/`, not in the repository) and the current `ObjectBeamGeometricallyExact`
+      on the same flexible pendulum, both solutions plotted into a PDF and their differences computed - the
+      case that should close the analysis of the 3D beam. Result: both converge to the same solution; with 20
+      elements the tips differ by at most 2.1 mm (0.4 % of the length), and each is 1.6-2.1 mm from Exudyn with
+      80 elements.
+
+<a id="plan-rg4-9"></a>
+#### RG4.9
+
+**RG4.9** *(group RG4; from RG13.5.3, 2026-09-28)* **DONE 2026-09-29** —
+    [log](exudynRevisionLog2026b.md#rg4-9) — **The cable and beam shape markers accept any
+    body** (#2731). `MarkerBodyCable2DShape`, `MarkerBodyCable2DCoordinates` and `MarkerBodyBeamShape`
+    have no consistency check of their body; `Assemble()` accepts them on a rigid body, and computing
+    the marker data then treats it as an ANCF cable - an `InternalError` with range checks, undefined
+    behaviour in the fast module. The analysis: which bodies each marker can serve, a
+    `CheckPreAssembleConsistency` that says so, and whether `MarkerBodyBeamShape` - described as for
+    *"a 3D beam finite element"* - should serve other beams than `ObjectANCFCable`.
+
+    **And the relative-coordinate markers** (maintainer, 2026-09-28): `MarkerBodiesRelativeTranslation-`
+    and `...RotationCoordinate` declare `Position` and `Orientation` besides `Coordinate`, so their
+    pages list 28 connectors, joints and loads that could use them, a spring-damper among them. To be
+    checked here whether such a combination computes anything meaningful; if not, they are declared as
+    coordinate markers only.
+
+<a id="plan-rg4-10"></a>
+#### RG4.10
+
+**RG4.10** *(group RG4; from RG13.5.2.3, 2026-09-28)* **DONE 2026-09-29** —
+    [log](exudynRevisionLog2026b.md#rg4-10) — **`ObjectGenericODE2` and `ObjectKinematicTree`
+    admit the general body markers, which then fail** (#2734). Both declare `TranslationalVelocity_qt`
+    and `AngularVelocity_qt` so that their own markers pass `CSystem::CheckSystemIntegrity`; the same
+    declaration admits `MarkerBodyPosition`, `MarkerBodyRigid` and `MarkerBodyMass`, whose computation
+    calls `GetAccessFunctionBody`, which raises *"not available"* for both. The declaration carries
+    `bodyMarkers=False` since RG13.5.2.3, which the item pages use; the step lets the integrity check use
+    it as well, so that `Assemble()` refuses the combination.
+
+<a id="plan-rg4-11"></a>
+#### RG4.11
+
+**RG4.11** *(group RG4; from RG13.5.2.4, 2026-09-28)* **DONE 2026-09-29** —
+    [log](exudynRevisionLog2026b.md#rg4-10) — **`ObjectContactCoordinate` ignores
+    `activeConnector`, and its output variable `Distance` raises** (#2735). **Extended in RG13.5.2.5**:
+    four objects declare output variables whose `GetOutputVariableConnector` raises *"not implemented"* -
+    `ObjectContactCoordinate` and `ObjectContactCircleCable2D` (`Distance`), `ObjectJointRevolute2D`
+    (`Displacement`, `Rotation`), `ObjectJointPrismatic2D` (`Distance`, `Rotation`); implement them or
+    declare none. `ComputeODE2LHS` computes the
+    contact force without looking at `activeConnector`; `GetOutputVariableTypes` declares `Distance`
+    while `GetOutputVariableConnector` raises *"not implemented"*, so a sensor asking for it passes
+    `Assemble()` and fails in the simulation. Small; an RG4 step by the maintainer's rule for defects
+    found while documenting.
+
+<a id="plan-rg4-13"></a>
+#### RG4.13
+
+**RG4.13** *(group RG4; from RG13.5.3.1, 2026-09-29)* **DONE 2026-09-29** —
+    [log](exudynRevisionLog2026b.md#rg4-13) — **`ObjectKinematicTree`: the position Jacobian of
+    a prismatic joint rotates the axis twice** (#2740). `CObjectKinematicTree::ComputeJacobian` sets the
+    column to `rotJoint*axis` where `axis` is already global. Measured: a force along a prismatic axis
+    behind a revolute joint at 90 degrees moves nothing. Wrong generalized forces for every marker,
+    load and connector behind a rotated prismatic joint. One line and a test model; **high priority**.
+
+<a id="plan-rg4-14"></a>
+#### RG4.14
+
+**RG4.14** *(group RG4; 2026-09-29)* **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-14) —
+    **`ObjectBeamGeometricallyExact2D`: a test of the 3-node element** (#2208) - the only open issue of
+    the planar element; test model `geometricallyExactBeam2DquadraticTest.py`.
+
+<a id="plan-rg4-16"></a>
+#### RG4.16
+
+**RG4.16** *(group RG4; maintainer 2026-09-30)* **DONE 2026-09-30** — **Explicit solvers and the states of the PostNewton step**
+    (#2754, from #830). The explicit solvers do no PostNewton step; since RG4.15.3 they warn about the
+    objects whose state is then not updated - contact, friction, switching, rotation counters, sliding joint
+    elements. Only `GeneralContact` updates its state itself, inside the residual.
+    - **RG4.16.1** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-16-1) - **the explicit solvers
+      do perform the PostNewton step**, after every step, through the discontinuous iteration all solvers
+      share (`CSolverBase::DiscontinuousIteration`); `doPostNewtonIteration = false` only makes
+      `GeneralContact` update inside the residual. #830 described an older state, and the warning of
+      RG4.15.3 was wrong - removed. Which objects need the step is declared by `HasDiscontinuousIteration`,
+      partly conditional already;
+    - **RG4.16.2** **DECIDED 2026-09-30** (maintainer): the concept is what the explicit solvers do today -
+      the states stay fixed during the stages of a step, are updated after it, and the step is repeated when
+      a state changed (as in the implicit solvers); no update per stage;
+    - **RG4.16.3** **DONE 2026-09-30** - each object with a PostNewton step against the concept: contact
+      (coordinate, sphere-sphere), rotation counter and stick-slip by RG4.16.4; the sliding and ALE joints
+      have algebraic equations, which the explicit solvers do not take at all; the other contacts, the
+      rolling disc and the rigid-body spring-damper with its PostNewton user function use the same path;
+    - **RG4.16.4** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-16-1) - test model
+      `explicitSolversPostNewtonTest.py`, all explicit integrators against generalized-alpha;
+    - **RG4.16.5** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-16-5) - #2109, the DOPRI5 step
+      size at discontinuities: two defects fixed - an accepted step changed its own step size before its
+      discontinuous iteration repeated it (DOPRI5 could reject the same step forever), and the sphere
+      contacts recommended a step size only where a contact begins, not where it ends.
+
+<a id="plan-rg6-1"></a>
+#### RG6.1
+
+**RG6.1** **DONE 2026-09-24** (#2645) — [log](exudynRevisionLog2026b.md#rg6-1) —
+    **OpenVR is removed**, which is what the rendering revision was waiting for. The
+    interface and its header, every `__EXUDYN_USE_OPENVR` guard, the `--openvr` flag and
+    `-lopenvr_api`, the vendored SDK and the prebuilt library, the settings under
+    `interactive.openVR`, the `openVR` entry of the render state, the example and the manual
+    section are gone: **2.1 MB in 13 tracked files**. A user who needs it stays on 1.11, and
+    the changelog and the revisions chapter say so.
+
+<a id="plan-rg6-2"></a>
+#### RG6.2
+
+**RG6.2** **DONE 2026-09-23** (#2591), **reopened and closed again the same day for RG6.2.12
+    to RG6.2.15** — [log](exudynRevisionLog2026b.md#rg6-2) —
+    **The settings dialogs, and the shape of `GUI.py`.** The seven complaints the maintainer
+    named on 2026-09-22 - a restricted table, no type hints, no font scaling off macOS,
+    columns that cannot be adjusted, descriptions behind a special key, no inline editing,
+    unhandy combo boxes - are answered by RG6.2.1 to RG6.2.10, and RG6.2.5 (a second front
+    end) is dropped. The review that found the cause of each of them, and the three findings
+    that shaped the sub-steps - the dialog is not specific to `visualizationSettings`, 220 of
+    the 775 lines of `rendererPythonInterface.cpp` were Python, and no test touched any of
+    it - are in the [review](exudynRevisionLog2026b.md#rg6-2-review). RG6.2.11 to RG6.2.25
+    are what using the dialog produced afterwards.
+
+<a id="plan-rg6-2-1"></a>
+#### RG6.2.1
+
+**RG6.2.1** **DONE 2026-09-22** (#2595) — [log](exudynRevisionLog2026b.md#rg6-2-1) — **The dialogs leave the C++.** The help dialog, the command window, the quit
+    question and the right-mouse dialog become functions of `exudyn.misc.GUI`, and
+    `rendererPythonInterface.cpp` keeps one call each — which is what it already does for the
+    settings dialog. The window setup that the C++ assembles by string concatenation today
+    (`-topmost`, `-alpha` from `visualizationSettings.dialogs`) becomes one helper on the Python
+    side, where those settings are readable anyway. **No behaviour changes**; what changes is that
+    220 lines of Python become Python: ruff reads them, the stub check reads them, and a person
+    editing them gets a syntax error instead of a runtime one.
+
+<a id="plan-rg6-2-2"></a>
+#### RG6.2.2
+
+**RG6.2.2** **DONE 2026-09-23** (#2596) — [log](exudynRevisionLog2026b.md#rg6-2-2) — **The layer under the widgets gets tests.** `ConvertString2Value`,
+    `ConvertValue2String`, `CheckType` and `GetComboBoxListsDict` decide what a typed value
+    becomes, and no test calls them. They need no window, so pytest can: every type the settings
+    structures actually use (20 of them, `bool` to `VectorFloat`), the round trip value -> string
+    -> value, and the rejection of a wrong one.
+
+<a id="plan-rg6-2-3"></a>
+#### RG6.2.3
+
+**RG6.2.3** **DONE 2026-09-23** (#2597, #2601) — [log](exudynRevisionLog2026b.md#rg6-2-3)
+    **The six small complaints.** The column widths (`tree.column(...)` was never called),
+    the enum lists built from the module instead of the hard-coded three, the type shown in
+    the table and named in the error message, and the description in a tooltip rather than
+    behind the key `h`. `dialogs.fontScaling` is RG6.2.3.1, the only one that leaves Python.
+    The three defects RG6.2.2 found went with it: `CheckType` had no branch for an enum, `:`
+    was not a valid file name character, and a value that passed `CheckType` but failed
+    `ConvertString2Value` was dropped with a `print()`.
+
+<a id="plan-rg6-2-3-1"></a>
+#### RG6.2.3.1
+
+**RG6.2.3.1** **DONE 2026-09-23** (#2602) — [log](exudynRevisionLog2026b.md#rg6-2-3-1) — **One `dialogs.fontScaling` for every platform.** `if not IsApple(): fontFactor = 1`
+    — off macOS the font factor is forced to 1 and only the row height follows the display
+    scaling, so the maintainer cannot make the dialog readable on Linux. The setting is called
+    `dialogs.fontScalingMacOS`, so the fix is a rename with a **deprecation** — the mechanism of
+    RG12.1, `Deprecated(since, expires)` in `definitions/structureDefsVisualizationSettings.py`.
+    It is the only part of RG6.2.3 that leaves Python: the definitions regenerate the C++ settings
+    headers, so it needs a build and it can break one.
+
+<a id="plan-rg6-2-4"></a>
+#### RG6.2.4
+
+**RG6.2.4** **DONE 2026-09-23** (#2604) — [log](exudynRevisionLog2026b.md#rg6-2-4) — **Inline editing** — the one real rewrite: the value is edited in the cell
+    instead of in a separate field at the bottom of the window that swaps with a combo box by
+    z-order. The bottom row became the **line that sets the selected item**, with a copy button
+    (maintainer, 2026-09-23) — which is what RG12.3 produces for the whole structure.
+
+<a id="plan-rg6-2-5"></a>
+#### RG6.2.5
+
+**RG6.2.5** **DROPPED 2026-09-23** *(maintainer)* — **A second front end.** It was planned
+    as a question, not as work: whether another toolkit is wanted once RG6.2.1-RG6.2.4 have shown
+    what the interface between the data and the widgets is. The answer is no. tkinter runs
+    everywhere and needs no installation, which is the reason it was kept in the first place, and
+    RG6.2.8 to RG6.2.10 have made it do what was asked of it. What the step would have needed is
+    ready in any case — `GetDictionaryWithTypeInfo()` is bound for every settings structure, and
+    everything below the widgets is module level functions on dictionaries since RG6.2.8 — so a
+    second front end remains possible without this step standing open.
+
+<a id="plan-rg6-2-6"></a>
+#### RG6.2.6
+
+**RG6.2.6** **DONE 2026-09-23** (#2591) — [log](exudynRevisionLog2026b.md#rg6-2-6) — **The key bindings are written down three times**: `GlfwClient.cpp` implements them,
+    `docs/manual/GUI.md` tabulates them in 64 rows, and the help dialog prints its own 55-line
+    text. Two of the three are prose that nothing keeps in step with the first. One source — a
+    table in Python — could feed both the dialog and a generated page, the way `definitions/`
+    feeds the reference manual (rule 10). Raised here because RG6.2.1 moves the third copy
+    without fixing the duplication.
+
+<a id="plan-rg6-2-7"></a>
+#### RG6.2.7
+
+**RG6.2.7** **DONE 2026-09-23** (#2591) — [log](exudynRevisionLog2026b.md#rg6-2-7) —
+    **`GUI.py` is cleaned up, last** *(maintainer, 2026-09-23)*: the module every other
+    sub-step edits, tidied when the shape had settled - 55 lines of commented-out code, the
+    dead `#EXAMPLE` dictionary, 10 bare `print()` calls, the font and scaling setup
+    duplicated between the two dialogs, and `treeEditOpenItems`, module level mutable state
+    that made the open folders outlive the dialog and every SystemContainer in the process.
+
+<a id="plan-rg6-2-8"></a>
+#### RG6.2.8
+
+**RG6.2.8** **DONE 2026-09-23** (#2605) — [log](exudynRevisionLog2026b.md#rg6-2-8) —
+    **The bottom row reads like code, and says each thing once** *(maintainer, 2026-09-23,
+    after trying RG6.2.4)*: the pastable line in a smaller fixed font with a box of its own,
+    the label that repeated the pop-up description gone, `copy` renamed to say what it
+    copies, and the type and size kept - they are what the pop-up does not say.
+
+<a id="plan-rg6-2-9"></a>
+#### RG6.2.9
+
+**RG6.2.9** **DONE 2026-09-23** (#2606) — [log](exudynRevisionLog2026b.md#rg6-2-9) —
+    **A changed value is visible, and every change can be copied at once** *(maintainer,
+    2026-09-23)*. Nothing marked the rows a user had edited, so after ten edits in four
+    folders the ten could not be found again. A changed row is coloured, and a second button
+    copies all changes as the lines that set them. It also answers the question RG12.3
+    shares: changed against the values the dialog opened with, and against the defaults -
+    both, in two views.
+
+<a id="plan-rg6-2-10"></a>
+#### RG6.2.10
+
+**RG6.2.10** **DONE 2026-09-23** (#2607) — [log](exudynRevisionLog2026b.md#rg6-2-10) —
+    **Find a setting** *(maintainer, 2026-09-23)*. Several hundred values in a tree of
+    folders, and the only route to one was knowing its folder. CTRL-F, names before
+    descriptions, a drop-down of the hits as dotted paths, Return to the first and F3 to the
+    next. The two rejected shapes - filtering the tree, a separate result window - and why,
+    are in the log.
+
+<a id="plan-rg6-2-11"></a>
+#### RG6.2.11
+
+**RG6.2.11** **DONE 2026-09-23** (#2608) — [log](exudynRevisionLog2026b.md#rg6-2-11) —
+    **The catalogue of optional features, decided.** The maintainer went through it on
+    2026-09-23: reset, undo and the *changed only* view were already built; load and save to
+    a file, units in the description and apply-while-open are answered with no or with "that
+    is already the behaviour"; the same dialog for `simulationSettings` survives as RG6.2.18.
+    **Remember the window** stays undecided, and the log carries the rule that would make it
+    safe - restore the size always, the position only when it still lies inside the virtual
+    desktop - so that the step, if it is ever taken, starts from it.
+
+<a id="plan-rg6-2-12"></a>
+#### RG6.2.12
+
+**RG6.2.12** **DONE 2026-09-23** (#2612) — [log](exudynRevisionLog2026b.md#rg6-2-12) —
+    **59 untouched settings were called changed, and a folded folder hid a change**
+    *(maintainer, 2026-09-23, from demo 2)*. The reference was `exu.VisualizationSettings()`,
+    and a `SystemContainer` initialised 59 of those settings - the lights and the raytracer
+    materials - so a user who had changed nothing saw every one of them reported. The
+    reference is the state a user starts from, and a folder is marked when its subtree holds
+    a change. (RG6.2.20 later made those 59 defaults of the structure itself.)
+
+<a id="plan-rg6-2-13"></a>
+#### RG6.2.13
+
+**RG6.2.13** **DONE 2026-09-23** (#2613) — [log](exudynRevisionLog2026b.md#rg6-2-13) — **The find bar needs no button, and says nothing when it is idle** (#2613)
+    *(maintainer, 2026-09-23)*. The search runs while the text is typed, so the **find** button is
+    removed; and the drop-down of the hits looks like something to click before anything has been
+    searched for, so it is **greyed out** until there is a search text.
+
+<a id="plan-rg6-2-14"></a>
+#### RG6.2.14
+
+**RG6.2.14** **DONE 2026-09-23** (#2614) — [log](exudynRevisionLog2026b.md#rg6-2-14) —
+    **Reset, revert, undo, close - and the windows stay in front** *(maintainer,
+    2026-09-23)*. A second button row: *diff to default* and *this session* on the left,
+    reset, revert, undo and close on the right, each with a tooltip; the tooltips of the tree
+    open after 0.5 seconds because they were in the way while the mouse crossed it.
+
+<a id="plan-rg6-2-15"></a>
+#### RG6.2.15
+
+**RG6.2.15** **DONE 2026-09-23** (#2615) — [log](exudynRevisionLog2026b.md#rg6-2-15) — **A settings folder has a description, and nothing shows it** (#2615)
+    *(maintainer, 2026-09-23)*. Every settings structure carries `classDescription` in
+    `definitions/— ` *"General settings for visualization that influence all windows, default
+    values, autofit, multithreading, etc."* — and it reaches the reference manual and the C++
+    header, but **not `GetDictionaryWithTypeInfo`**: only the leaves have a description there, so
+    the dialog has nothing to show when the mouse is over a folder. The emitter puts the class
+    description into the dictionary under a **reserved key**, the way `itemIdentifier` is
+    reserved, and the tooltip shows it for a folder.
+
+<a id="plan-rg6-2-16"></a>
+#### RG6.2.16
+
+**RG6.2.16** **DONE 2026-09-23** (#2621) — [log](exudynRevisionLog2026b.md#rg6-2-16) —
+    **The window with the changes was invisible** *(maintainer, 2026-09-23)*. *"diff to default"
+    and "this session" show nothing.* The content was right — a probe that builds the dialog
+    without mapping a window finds the changes and raises nothing — so the window never became
+    visible: the dialog is topmost and the `Toplevel` opened at the same place behind it, which
+    looks exactly like a button that does nothing. Two more from the same message: *this session*
+    is called **changes since start**, and the rows at the top and the bottom span the columns of
+    the tree only, so that no button sits under its vertical scroll bar.
+
+<a id="plan-rg6-2-17"></a>
+#### RG6.2.17
+
+**RG6.2.17** **DONE 2026-09-23** (#2623) — [log](exudynRevisionLog2026b.md#rg6-2-17) —
+    **Opening the dialog re-pointed `exudyn.sys` at a throw-away container.** Found while
+    chasing RG6.2.16 and the cause of it: constructing an `exudyn.SystemContainer()` replaces
+    `exudyn.sys['currentRendererSystemContainer']`, and RG6.2.12 created one to read the
+    defaults - so from the moment the dialog opened, the redraw signal went to the throw-away
+    container instead of to the renderer. The entry is saved and restored around it.
+
+<a id="plan-rg6-2-18"></a>
+#### RG6.2.18
+
+**RG6.2.18** **DONE 2026-09-24** (#2624) — [log](exudynRevisionLog2026b.md#rg6-2-18) —
+    **The same dialog for `simulationSettings`** — and for the visualization settings and the
+    key bindings, from the command line the maintainer proposed:
+    **`python -m exudyn dialogs vis | sim | help`**. The command dialog is deliberately not among
+    them.
+
+<a id="plan-rg6-2-19"></a>
+#### RG6.2.19
+
+**RG6.2.19** **DONE 2026-09-23** (#2625) — [log](exudynRevisionLog2026b.md#rg6-2-19) —
+    **Opening the settings dialog closed the render window** *(maintainer, 2026-09-23)*.
+    `MainSystemContainer()` attaches to the render engine in its constructor and detaches in
+    its destructor, so the temporary container of RG6.2.12 took the window away from the
+    container that owns it. The dialog creates no container any more.
+
+<a id="plan-rg6-2-20"></a>
+#### RG6.2.20
+
+**RG6.2.20** **DONE 2026-09-23** (#2626) — [log](exudynRevisionLog2026b.md#rg6-2-20) —
+    **The defaults of the lights and the raytracer materials are hidden in C++ constructors.**
+    They are defaults of the **structure** now: `StructureParameter` gained `memberDefaults`, the
+    89 values are in `definitions/structureDefsVisualizationSettings.py`, the generated
+    constructors carry them, the C++ that set them afterwards is gone, and the reference says
+    what `material1` and `light2` start from. Every one of the 89 was compared against the C++ it
+    replaces and is identical.
+
+<a id="plan-rg6-2-21"></a>
+#### RG6.2.21
+
+**RG6.2.21** **DONE 2026-09-23** (#2627) — [log](exudynRevisionLog2026b.md#rg6-2-21) —
+    **The dialog stopped asking, and undo goes back one whole state** *(maintainer,
+    2026-09-23)*. Reset and revert each asked a yes/no question nobody had asked for -
+    *"we can always revert to initial settings and there is undo"* - and undo went back one
+    value and was switched off by exactly the two clicks one would want to undo. Both
+    questions are gone and the dialog keeps a stack of whole states.
+
+<a id="plan-rg6-2-22"></a>
+#### RG6.2.22
+
+**RG6.2.22** **DONE 2026-09-23** (#2630) — [log](exudynRevisionLog2026b.md#rg6-2-22) —
+    **A double click on a bool no longer toggled it** *(maintainer, 2026-09-23)*. It used to
+    switch `True`/`False`, and the cause is the cell editor of RG6.2.4 (#2604): the tree binds
+    `<ButtonRelease-1>` to the editor, and for a `bool` that editor is a **Combobox placed over
+    the value cell**, so the second click of a double click landed on the combobox and the
+    `<Double-1>` binding on the tree never fired. The toggle code itself was untouched and
+    unreachable. On a bool row the cell edit is **scheduled** now and a double click cancels the
+    job; every other type keeps the editor that opens at once.
+
+<a id="plan-rg6-2-23"></a>
+#### RG6.2.23
+
+**RG6.2.23** **DONE 2026-09-23** (#2631) — [log](exudynRevisionLog2026b.md#rg6-2-23) —
+    **`dialogs.fontScaling` only worked at 0** *(maintainer, 2026-09-23)*: *"1.0 gives a
+    larger font, but much too small row height and smaller column width"*. The row height and
+    the column width were computed from the font scaling, which is not what decides how large
+    a glyph comes out - the point-to-pixel conversion follows the tk scaling of the display.
+    Both are measured from the font now, by `DialogRowMetrics`.
+
+<a id="plan-rg6-2-24"></a>
+#### RG6.2.24
+
+**RG6.2.24** **DONE 2026-09-24** (#2634) — [log](exudynRevisionLog2026b.md#rg6-2-24) —
+    **The dialogs opened from the command line were larger and blurred** *(maintainer,
+    2026-09-24)*. Two causes, both from the missing renderer: the process was not **DPI aware**
+    — GLFW makes it so when the render window opens, and without it Windows draws tkinter at 96
+    dpi and stretches the bitmap — and `GetExudynDisplayScaling()` read the scaling from the
+    renderer's state and returned **1** when there is none. The process makes itself DPI aware
+    before the first window, and tkinter is asked for the scaling when no renderer can be.
+
+<a id="plan-rg6-2-25"></a>
+#### RG6.2.25
+
+**RG6.2.25** **DONE 2026-09-24** (#2635) — [log](exudynRevisionLog2026b.md#rg6-2-25) —
+    **The combo box of an enum repeated the type name in every entry** *(maintainer,
+    2026-09-24)*. `contour.outputVariable` offered `OutputVariableType.Displacement` and 32
+    more, all beginning with the same 19 characters, in a box as wide as the value column -
+    and the type is in the column beside it. The list shows the entry without its type; the
+    settings structure and the generated code line keep the full name.
+
+<a id="plan-rg6-2-25-1"></a>
+#### RG6.2.25.1
+
+**RG6.2.25.1** **DONE 2026-09-24** (#2640) — [log](exudynRevisionLog2026b.md#rg6-2-25-1) —
+    **The value cell showed the type name again as soon as the combo box collapsed**
+    *(maintainer, 2026-09-24)*. RG6.2.25 shortened the list and left the cell, which is the
+    same problem one step later. The short name is **the** value string of an enum now -
+    `ConvertValue2String` produces it, so the cell, the marking of a changed value and the
+    comparison of `ChangedSettings` all speak it - and `ValueLiteral` puts the type back,
+    because the generated Python is the only place that needs the full name.
+
+<a id="plan-rg6-2-26"></a>
+#### RG6.2.26
+
+**RG6.2.26** **DONE 2026-09-24** (#2639) — [log](exudynRevisionLog2026b.md#rg6-2-26) —
+    **The tooltips were invisible while the dialog is topmost** *(maintainer, 2026-09-24)*, in
+    the renderer and from the command line alike; turning `dialogs.alwaysTopmost` off and
+    reopening made them work, which named the cause. A tooltip is a `Toplevel` of the dialog
+    and had no topmost flag, and on Windows a topmost window is always above one that is not -
+    the mechanism that hid the window of the changes in #2621. The tooltip window carries the
+    flag now, so the dialog keeps the topmost it needs to block the render window.
+
+<a id="plan-rg6-2-28"></a>
+#### RG6.2.28
+
+**RG6.2.28** **DONE 2026-09-23** (by RG6.2.20, #2626) — [log](exudynRevisionLog2026b.md#rg6-2-28) —
+    **The lights and the raytracer materials are defaults of the structure.** Proposed on 2026-09-26
+    as the blocker of RG12.9 to RG12.11, on the strength of the RG6.2.12 log; the maintainer read
+    the C++ and said it looked done already, and it is. **RG6.2.20 did it three days earlier**: the
+    89 assignments moved out of the C++ constructor into
+    `definitions/structureDefsVisualizationSettings.py`, `containerInitialisedSettings` is empty,
+    `DefaultSettingsDictionary` takes the plain constructor, and
+    `testASystemContainerInitialisesNothingBeyondTheDefaults` requires the difference to stay empty.
+
+    **Measured on 2026-09-26 before anything was changed**: `exu.VisualizationSettings()` and
+    `SystemContainer().visualizationSettings` differ in **0 of 470** settings. #2678 is closed as
+    obsolete, and **nothing blocks RG12.9 to RG12.11**.
+
+    The lesson is worth the two lines: the plan said "the container initialises 59 settings"
+    because a log entry from eight steps earlier said so, and a log entry is what was true **when
+    it was written**. A premise that decides the order of three steps is measured, not read.
+
+<a id="plan-rg6-3"></a>
+#### RG6.3
+
+**RG6.3** *(group RG6; maintainer 2026-09-22)* **CLOSED 2026-09-27, superseded** (#2583) - the
+    maintainer: replaced by the new ways to go. The headless call is `SC.renderer.GetGraphicsData()`
+    (#2700), which returns the data itself; the low-resolution images are RG2.3.3.4. The step as it
+    was: **The renderer extraction functions are not shaped
+    for testing** (#2583). `RedrawAndGetImage()` and `GetRenderState()` exist and are what a
+    graphics test has to build on, but they were written for interactive use: the image comes
+    back at full resolution, nothing returns a **summary** of the graphics data without
+    rendering, and the raytracer path and the GLFW path differ in what they update. RG2.3 needs
+    a documented headless call that updates the graphics data and returns counts, and an image
+    call that takes a resolution.
+
+<a id="plan-rg6-4"></a>
+#### RG6.4
+
+**RG6.4** **DONE 2026-09-23** (#2609) — [log](exudynRevisionLog2026b.md#rg6-4) —
+    **The light and shadow descriptions say things that are no longer true.** All three faults
+    are fixed: the members of a light read *"of this light"* and the mapping to
+    `GL_LIGHT0`-`GL_LIGHT3` is said once at `enable`; the claim that `light0` is the light with
+    shadows is gone, and `shadow` says that every light casts one; the directional-light
+    approximation moved from `position` to `shadow` and names **no factor**. Two deprecated
+    setting names in the hand-written manual went with them.
+
+<a id="plan-rg6-5"></a>
+#### RG6.5
+
+**RG6.5** **DONE 2026-09-24** (#2633) — [log](exudynRevisionLog2026b.md#rg6-5) —
+    **Restoring the saved render state took two lines in 82 places** *(maintainer,
+    2026-09-24)*. `SC.renderer.Stop()` saves the state of every open view in `exudyn.sys`,
+    and every model that wanted the previous view back repeated the same `if 'renderState'
+    in exu.sys:` guard. **`SC.renderer.RestoreSavedState()`** does it and returns `False`
+    when nothing has been saved - the first run of a script, which is what the guard was for.
+    82 occurrences in 85 files, in five variants of which four still used the deprecated
+    `SC.SetRenderState`, are one call each.
+
+<a id="plan-rg6-6"></a>
+#### RG6.6
+
+**RG6.6** **DONE 2026-09-24** (#2643) — [log](exudynRevisionLog2026b.md#rg6-6) —
+    **macOS: the settings dialog aborted the process** *(maintainer, 2026-09-24, first
+    graphics test on macOS)*. The single-threaded renderer - which macOS always is - polls
+    events and runs the queued Python inside `DoIdleTasks()`, and the settings dialog calls
+    `DoIdleTasks(0)` on every change. A second event pump inside the first is fatal there,
+    because `glfwPollEvents()` runs the **shared** Cocoa run loop, which redraws the tkinter
+    dialog and calls back into Python. `GlfwRenderer::idleOperationDepth` counts the idle
+    operations on the stack and only the outermost pumps; a nested one renders and returns.
+
+<a id="plan-rg9-1"></a>
+#### RG9.1
+
+**RG9.1** **DONE 2026-09-23** (#2622) — [log](exudynRevisionLog2026b.md#rg9-1) —
+    **The item sources stop paying for pybind11.** **52 of 52** sources in `src/ImplObjects/`
+    reached pybind11 before, **19** after — and those 19 for a reason of their own, a user
+    function, a `PyMatrixContainer`, a numpy array or `ExceptionsTemplates.h`, not through the
+    graphics headers. **The build time did not change**: 57.1 s before, 58.0 s after, on a clean
+    build of the same machine, so the gain is in the structure and not in the clock.
+
+<a id="plan-rg9-2"></a>
+#### RG9.2
+
+**RG9.2** **DONE 2026-09-23** (#2628) — [log](exudynRevisionLog2026b.md#rg9-2) —
+    **Fourteen item sources included an exception header they do not use, and paid pybind11
+    for it.** `src/Utilities/ExceptionsTemplates.h` was included by 17 sources in
+    `src/ImplObjects/` and used by one; it includes pybind11, which was the only route to it
+    for eight of them. Item sources reaching pybind11: **19 to 11**, and the build time again
+    did not move. The build then found what the include had hidden - 24 generated headers
+    free-riding on it for the `namespace py` alias - and a second defect (#2629):
+    `itemHeaderEmitter.py` wrote generated headers in the **locale** encoding.
+
+<a id="plan-rg10-2"></a>
+#### RG10.2
+
+**RG10.2** **DONE 2026-09-23** (#2600) — [log](exudynRevisionLog2026b.md#rg10-2) —
+    **The issue table of `exudev issue serve` did not say what its columns are, and left out
+    the priority** *(maintainer, 2026-09-23)*. It has a header row with the meaning of the
+    effort values within reach, it shows the priority, and the effort tag carries its word -
+    `LOW EFF` - because `LOW` and `HIGH` are values of both fields and two bare tags in one
+    row cannot be told apart. That rule is what RG3.10.1 later took for both pages.
+
+<a id="plan-rg10-2-1"></a>
+#### RG10.2.1
+
+**RG10.2.1** **DONE 2026-09-24** (#2636) — [log](exudynRevisionLog2026b.md#rg10-2-1) —
+    **The search of `exudev issue serve` missed most fields, and the list stopped at 400**
+    *(maintainer, 2026-09-24)*. The text search read four fields, so neither author could be
+    searched for, and the listing sent the newest 400 of 2,637 rows with no paging, which put
+    everything older than about #2240 out of reach. The search reads every field; the listing sends
+    what matched.
+
+<a id="plan-rg10-2-2"></a>
+#### RG10.2.2
+
+**RG10.2.2** **DONE 2026-09-24** (#2641) — [log](exudynRevisionLog2026b.md#rg10-2-2) —
+    **A search for digits found every field except the issue number** *(maintainer,
+    2026-09-24)*: `249` listed the issues that name it in their text and two whose
+    `resolvedInVersion` is `0.1.249`, and missed **#2497**, which is what it was typed for.
+    RG10.2.1 had left the number as a separate exact test. It is a substring like every other
+    field now, so `249` finds #249 and #2490 to #2499.
+
+<a id="plan-rg10-3"></a>
+#### RG10.3
+
+**RG10.3** **DONE 2026-09-23** (#2617) — [log](exudynRevisionLog2026b.md#rg10-3) — *(group
+    RG10; maintainer 2026-09-23)* **`exudev` does not say how long a step took.** The batch
+    scripts it replaced printed the build time, and it is read: a build that suddenly takes twice
+    as long is the first sign that a header dependency grew. Every step is timed and the summary
+    prints it, with the total.
+
+<a id="plan-rg10-4"></a>
+#### RG10.4
+
+**RG10.4** **DONE 2026-09-23** (#2618) — [log](exudynRevisionLog2026b.md#rg10-4) — *(group
+    RG10; maintainer 2026-09-23)* **`src/pythonGenerator/` holds one file and should not exist.**
+    Everything of the old generator directory moved to `tools/generators/` in revision2026 step
+    R4.3 except `exudynVersion.py`, which locates the repository root and reads `version.txt`. It
+    moves to `tools/generators/`, where the other build-time helpers live and are already in
+    `MANIFEST.in`, and the directory is deleted.
+
+<a id="plan-rg10-5"></a>
+#### RG10.5
+
+**RG10.5** **DONE 2026-09-23** (#2619) — [log](exudynRevisionLog2026b.md#rg10-5) — *(group
+    RG10; maintainer 2026-09-23)* **VS Code cannot follow a C++ include.** *"include errors
+    detected - update your include paths"*, and *"cannot open source file ../Eigen/Sparse"*: the
+    vendored headers are reached through subdirectories of `include/`, and nothing tells the
+    C/C++ extension about them. `.vscode/` is git-ignored, so the fix is a committed template
+    that `tools/setupLocalWorkspace.py` copies, as for `exudyn.sln` and `python/pytest.py`.
+
+<a id="plan-rg10-7"></a>
+#### RG10.7
+
+**RG10.7** **DONE 2026-09-24** (#2638) — [log](exudynRevisionLog2026b.md#rg10-7) —
+    **The plan carried the full text of the steps that are finished** *(maintainer,
+    2026-09-24)*: 971 of its 1391 lines, against its own rule that a done step keeps status,
+    date, outcome and a link. A step that ended in *"the original text follows"* is cut there -
+    that text is the issue as it was raised, and the tracker has it - and the rest were
+    rewritten to the outcome. 1391 lines to 939, with no anchor, step number or group heading
+    lost. The review of `GUI.py` was the one piece of analysis that lived only here and is now
+    a [log entry](exudynRevisionLog2026b.md#rg6-2-review).
+
+<a id="plan-rg10-7-1"></a>
+#### RG10.7.1
+
+**RG10.7.1** **DONE 2026-09-24** (#2642) — [log](exudynRevisionLog2026b.md#rg10-7-1) —
+    **The plan did not say what to do next** *(maintainer, 2026-09-24)*. The open steps are
+    spread over twelve groups and were read by scrolling. The last section, **Next steps
+    recommended**, names them with their issue and a short title, lists what the current work
+    raised without making it a step, and recommends an order with the reason for it. It copies
+    nothing and is updated from time to time.
+
+<a id="plan-rg10-8"></a>
+#### RG10.8
+
+**RG10.8** **DONE 2026-09-24** (#2644) — [log](exudynRevisionLog2026b.md#rg10-8) —
+    **`exudev` is needed on linux and macOS too** *(maintainer, 2026-09-24)*. Measured by
+    planning every command under WSL: most of it was already portable, and **three** places were
+    not - `clean` matched only the Windows build directories, `docs --open` called `xdg-open`,
+    which macOS does not have, and `linux` drove the manylinux container through `wsl -e`, which
+    on linux there is nothing to go through. All three are the platform's own now, the macOS
+    case of the manylinux image is refused with a reason, and `test_exudev.py` pins the three
+    from any platform.
+
+<a id="plan-rg10-9"></a>
+#### RG10.9
+
+**RG10.9** **DONE 2026-09-24** (#2647) — [log](exudynRevisionLog2026b.md#rg10-9) —
+    **`regenerated_files` failed on linux and could not fail on Windows** *(maintainer supplied
+    the GitLab log of 1.12.61)*. The generator wrote `pybind_modules.h` while the repository has
+    `Pybind_modules.h`: one file on Windows, two on linux, where the real header was **never
+    regenerated**. The name is one spelling now, a declared output is checked **case-exactly** on
+    every platform, and a generator may create a file it declares instead of printing
+    *"illegal file"* and writing nothing.
+
+<a id="plan-rg10-10"></a>
+#### RG10.10
+
+**RG10.10** **DONE 2026-09-25** (#2653) — [log](exudynRevisionLog2026b.md#rg10-10) —
+    **The header of `definitionLoader.py` read like the file was dead** *(maintainer question,
+    2026-09-25)*. It is live - three generators stop working without it - and what made it look
+    dead was a header that opened with what the old parser produced and ended with two promises
+    about its own removal. It says what it is and who uses it. `itemModel.LegacyItems()`, found
+    while checking, really was dead and is gone.
+
+<a id="plan-rg10-11"></a>
+#### RG10.11
+
+**RG10.11** *(group RG10; from #2541; numbered RG10.2 by mistake until 2026-09-27, when that number
+    was already taken)* **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg10-11) —
+    **`exudyn.config` and `exudyn.special` reach a stub file.**
+    `exudyn.config` is the run-time settings object - `outputDirectory`, `printToConsole`,
+    `suppressWarnings`, `precision` - and `exudyn.special` holds the rarely needed corners. Neither
+    the objects nor their C++ classes appear in `python/exudyn/__init__.pyi`, so no editor completes
+    `exudyn.config.outputDirectory` and no checker knows it exists. The stub is generated
+    (`tools/checkPython.py --stubs`), so this is a question of what the generator is told about the
+    two members rather than of writing a stub by hand.
+
+<a id="plan-rg10-12"></a>
+#### RG10.12
+
+**RG10.12** *(group RG10; maintainer 2026-09-29)* **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg10-12) —
+    **The GitLab job `check_docstrings` passes, and the gates run pydoclint** (#2747): four docstrings
+    fixed, the deliberate `DOC108` of the typed user function parameters in the baseline, and
+    `pydoclint` a stage of `exudev generate --all-checks`.
+
+<a id="plan-rg10-13"></a>
+#### RG10.13
+
+**RG10.13** *(group RG10; maintainer 2026-09-29)* **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg10-13) —
+    **`exudev issue plot`** (#2752): the issues over time as a matplotlib figure - total, closed, open on
+    the left axis, bugs and fixes (total and open) on the right, with a legend; `--save FILE` writes it.
+
+<a id="plan-rg11-1"></a>
+#### RG11.1
+
+**RG11.1** **DONE 2026-09-24** (#2610) — [log](exudynRevisionLog2026b.md#rg11-1) —
+    **The results monitor runs beside the simulation, or it is redundant.** Evaluated, and the
+    recommendation is a **second process**: the file is already the protocol, the command line
+    already exists, and it is a handful of lines around
+    `subprocess.Popen([sys.executable, '-m', 'exudyn', 'monitor', ...])`. One premise of the step
+    was wrong and is corrected below — `PlotSensor` cannot follow a growing file, so the
+    in-script call is **not** redundant today. Building it is **RG11.3**, proposed and not
+    created.
+
+<a id="plan-rg11-3"></a>
+#### RG11.3
+
+**RG11.3** **DONE 2026-09-26** (#2670) — [log](exudynRevisionLog2026b.md#rg11-3) — **The results monitor beside
+    a running simulation.** RG11.1 evaluated the four ways and recommends a **second process**:
+    the solution file is already the protocol, `python -m exudyn monitor` already exists, nothing
+    is shared so no backend, GIL or thread-safety question arises, and it is a handful of lines
+    around `subprocess.Popen([sys.executable, '-m', 'exudyn', 'monitor', fileName, ...])` that
+    returns the handle. `MonitorResults` stays as it is for the case where blocking is wanted.
+    The two open questions are **answered**: the child is **left running**, because the point of a
+    monitor on a short simulation is that the plot is still there when it ends, and the returned
+    `subprocess.Popen` is the handle for a script that wants it gone; and `SolutionViewer` is **not**
+    served by the same call - it needs the renderer and the system, not a file, so it has nothing to
+    gain from a second process that can only read what was written.
+
+    - **RG11.3.1** **DONE 2026-09-27** (#2672) — [log](exudynRevisionLog2026b.md#rg11-3-1) - **the
+      monitor waits for the file.** `WaitForData` waits for the file, the header and the first row;
+      the caller's existence test, which said *"file not found"* before any waiting could begin, now
+      applies only to `--once`, which plots what exists and returns. `waitTimeout` keeps its meaning
+      and gains the file: 0 waits without limit, N gives up after N seconds - and what is waited for
+      is announced, naming the file, because waiting forever for a file that never appears is what a
+      typo looks like. Reported twice, three days apart.
+
+      The fix is to move the existence test into the waiting loop, so that `--wait 0` waits for the
+      file to **appear** and not only for its first row. What `--wait N` should mean for a file that
+      never appears is the one decision: the same timeout, or a separate one, because waiting for a
+      file that a typo made impossible is a different mistake from waiting for a slow solver. Until
+      it is done, the docstring of `StartResultsMonitor` and `docs/manual/resultsMonitor.md` promise
+      something that is not true; that is recorded in the issue rather than by weakening the text,
+      because the text says what the function is **for**.
+
+<a id="plan-rg11-2"></a>
+#### RG11.2
+
+**RG11.2** **DONE 2026-09-23** (#2620) — [log](exudynRevisionLog2026b.md#rg11-2) —
+    **The demos wrote a `solution/` directory into whatever directory they were started in.**
+    `python -m exudyn demo 2` created one beside the sources of this repository - untracked,
+    unignored, and nearly committed by accident. They write to `tmp/solution/` now, and
+    `solution/` is in `.gitignore` so that an older installed version cannot leave one.
+
+<a id="plan-rg12-3"></a>
+#### RG12.3
+
+**RG12.3** **DONE 2026-09-24** (#2590) — [log](exudynRevisionLog2026b.md#rg12-3) —
+    **What did this model actually change?** `ChangedSettings`, `ChangedSettingsCode` and
+    `PrintChangedSettings` answer it, for `visualizationSettings` and `simulationSettings` alike,
+    in the new **`exudyn.misc.settingsUtilities`** — which is the window-free half of
+    `exudyn.misc.GUI`, moved out because that module imports tkinter at module scope and a model
+    script therefore could not use any of it. A test starts a fresh interpreter and requires that
+    importing the new module pulls in **no tkinter**. The solution file needs no C++ change:
+    `solutionSettings.solutionInformation` is written into its header and takes the block as it
+    is.
+
+Open in the tracker for this group: **#2497** (59 bare `except:` remain in the shipped
+package).
+
+<a id="plan-rg12-5"></a>
+#### RG12.5
+
+**RG12.5** *(group RG12; maintainer 2026-09-26)* **DONE 2026-09-28** (#2666) — **User settings that persist between runs: one
+    `~/.exudyn` file, and what may be in it** (#2666). The results monitor introduced
+    `~/.exudyn/resultsMonitor.json` (`resultsMonitor.SettingsFileName`) without a decision about what
+    such a directory is *for*. The maintainer: *"this is basically good and could be used for other
+    things as well (store window positions, dialog sizes, even fontscaling, etc. in a systematic
+    manner) ... mostly I would see overrides for anything in visualizationSettings - except special
+    types - and exudyn.config (like config.outputDirectory)"*.
+
+    **What is settled**: one file rather than one per tool; it needs documentation; and because it
+    changes what a script does when it is present, it belongs in `docs/manual/revisions.md`. A note
+    is printed on the first import when the stored settings are **not empty**, because a stored
+    setting makes a run less reproducible and the user must be able to see that from the output.
+
+    **What is open, and is what the sub-steps decide.** Each of these is a real fork, not a detail:
+
+    - **What may be overridden.** `visualizationSettings` (excluding the types that are not a plain
+      value - a `BodyGraphicsData`, a user function, a container) and parts of `exudyn.config` such
+      as `outputDirectory`. A whitelist by type is checkable; a free-form dictionary is not.
+    - **Who reads it.** Either `python/exudyn/__init__.py` reads the JSON and writes the values into
+      the module through the existing dict interface - Python only, no C++ change, and the values are
+      in place before a script can look at them - or C++ reads it with
+      `py::module_::import("json")`, which puts the file into the core and its failure modes with it.
+      The first is the smaller change and is the recommendation to argue against.
+    - **When it is applied**, and whether a script can ask what came from the file rather than from
+      the defaults. Without that, a bug report about a setting is not reproducible by the reader.
+    - **Whether the results monitor's own file is folded in** or kept beside it. Folding it in is the
+      point of "one file"; keeping it is less work and leaves the monitor standalone.
+    - **The dialog settings that drive it**: `storeDialogPositions` (position and size) and
+      `storeDialogSettings` (font size, columns, opened trees) in `visualizationSettings`, so that
+      storing is something a user switches on rather than something that happens.
+
+    Related: **RG6.2.11** (#2608) is a second file storing overall window states, and this step
+    should decide whether that is the same file.
+
+    - **RG12.5.1** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-5-1) - the file, the
+      two sections that are read, the note, and the switch. `~/.exudyn/config.json` with `config`
+      and `visualizationSettings`; `python/exudyn/settings.py`; applied at import and at every
+      `SystemContainer`; `exudyn.settings.Print()` says what came from it; nothing writes it by
+      itself; `EXUDYN_NO_USER_SETTINGS=1` ignores it and **the four test runners set that
+      variable**, so a stored setting can never move a test result.
+
+      Three of the four open questions are answered by it: **what may be overridden** (plain values
+      and lists of them; anything else is refused with a message), **who reads it** (Python, in
+      `__init__.py`, so the C++ core is untouched and the values are in place before a script can
+      look at them) and **when a script can ask** (`Applied()`, `Ignored()`, `Print()`).
+    - **RG12.5.2** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg12-5-2) — **the types
+      that are not plain.** An enum - `OutputVariableType`,
+      `ItemType` - is stored honestly as its name, and `settingsUtilities` already converts between
+      the two (`ConvertString2Value`, `EnumFullName`). 2 of the 466 visualization settings are
+      enums, which is why they were left out of .1 rather than guessed at.
+
+      The measurement and the decision are in the
+      [log](exudynRevisionLog2026b.md#decisions-2026-09-29).
+    - **RG12.5.3** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-5-3) - the dialogs
+      section, which is **RG6.2.29** (#2675) built: `visualizationSettings.dialogs.
+      storeDialogPositions` (new, default False), the `"dialogs"` section of the file, and the rule
+      of RG6.2.11 - the size always, the position only when the window would still be reachable.
+    - **RG12.5.4** **DONE 2026-09-26** (by RG12.10, #2684) - **folding in
+      `~/.exudyn/resultsMonitor.json`.** Done without the migration the step planned: the maintainer
+      deleted the file on 2026-09-26 and decided it shall not be used again, so the monitor reads its
+      section of the one file and the old name disappears everywhere.
+
+<a id="plan-rg12-6"></a>
+#### RG12.6
+
+**RG12.6** **DONE 2026-09-26** (#2667) — [log](exudynRevisionLog2026b.md#rg12-6) —
+    **The columns of a settings dialog are relative and configurable**. `misc/GUI.py` gives the tree four fixed widths - 325, 188, 113 and 420
+    pixels, multiplied by the dialog scaling - so a long name is cut off on every screen.
+    `visualizationSettings.dialogs` gets `columnWidthName`, `columnWidthValue` and `columnWidthType`,
+    each a fraction in 0..1 of the dialog width, and the **description column takes what is left**,
+    which is what makes three numbers enough. The minimum widths stay, because a column of zero
+    width is not a configuration a user means.
+
+<a id="plan-rg12-7"></a>
+#### RG12.7
+
+**RG12.7** **DONE 2026-09-26** (#2668) — [log](exudynRevisionLog2026b.md#rg12-6) —
+    **The mouse wheel changes the font size of a dialog**. About 10% per notch, up and down. Every metric of the dialog already follows the font -
+    `DialogFontSize`, `DialogRowMetrics`, `textHeightFactor` - so the work is to rebuild the tree at
+    the new size and to keep the scroll position. **Which modifier** is the open question: the wheel
+    alone scrolls the tree, so it is `Ctrl` + wheel unless the maintainer prefers otherwise, and on
+    macOS that is a different event name than on Windows and X11.
+
+<a id="plan-rg12-8"></a>
+#### RG12.8
+
+**RG12.8** *(group RG12; maintainer 2026-09-26)* **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-8) -
+    **One test for all user functions at once** (#2671). RG12.4 made one def the source of four
+    generated things - the documentation block, the entry of `userFunctionArgsDict`, the `Protocol`,
+    and the check against the C++ `std::function`. The generators compare them **while they run**;
+    nothing compared what was **shipped**, and the item test models exercise a handful of user
+    functions rather than the set. `python/testing/test_userFunctions.py` reads the installed package
+    only, so it fails when a generated file is stale, when a `Protocol` is missing from `__all__`, or
+    when an argument was renamed in one place and not the other. It runs no simulation: a model per
+    user function is what the test models are, and would be testing the solver.
+
+<a id="plan-rg12-9"></a>
+#### RG12.9
+
+**RG12.9** **DONE 2026-09-26** (#2679) — [log](exudynRevisionLog2026b.md#rg12-9) —
+    **The override settings live in `exudyn.special.overrideSettings`**, a dictionary that
+    `import exudyn` fills once from `~/.exudyn/config.json` and that both Python and the C++ core
+    read, and the module that reads and writes the file is **`exudyn.misc.overrideSettings`**
+    (`exudyn.settings` is gone - it is internal, and a user reaches the values through
+    `exudyn.special.overrideSettings`).
+
+    **The decided `py::dict` carrier, with the lifetime caveat handled the other way round.** The
+    step said "a `py::dict` member of `PySpecial`"; the member would have put pybind11 into
+    `Main/Experimental.h`, which **eight** translation units include, two of them in `Linalg` and
+    `Utilities`. The dictionary is therefore `EPyUtils::OverrideSettings()` in
+    `Pybind_manual_classes.cpp` - allocated once on the first access, during module import while the
+    interpreter and the GIL are there, and **never freed on purpose**, which is the caveat the step
+    itself named: a global that releases a Python reference after finalization crashes the process.
+    From Python it is what was asked for, `exu.special.overrideSettings`, read-only so that it cannot
+    be replaced by something that is not a dictionary, and `__repr__` says how many sections are in
+    it.
+
+    **What changed beyond the move**: every function that took `settings=None` now means *the store*
+    and not a second read of the file, so the dialogs and the settings can no longer disagree within
+    a run - `DialogGeometry` re-opened the file on every call. `Store` and `StoreDialogGeometry`
+    write the file **and** the store, for the same reason. Three new tests, 29 in the file.
+
+<a id="plan-rg12-10"></a>
+#### RG12.10
+
+**RG12.10** **DONE 2026-09-26** (#2684) — [log](exudynRevisionLog2026b.md#rg12-10) —
+    **The workflow of the override settings**, as the maintainer wrote it out, in six steps that are
+    now also the documentation.
+
+    **A stored `visualizationSetting` reaches every structure that is created** - the one a
+    `SystemContainer` builds and one built by `exu.VisualizationSettings()`, which got nothing before
+    - through two subclasses that `import exudyn` installs *only* when the file holds such a section.
+
+    **The trap the subclass sets is closed in the same step**, and it is the part worth remembering:
+    `DefaultSettingsDictionary` called `type(structure)()`, so on an instance of the subclass it
+    returned the **override** as its own default - measured at `multiSampling: 4` where the default is
+    1 - which would have broken every "diff to default", the dialog's marking and `Store(SC)` without
+    a word. `settingsUtilities.CompiledSettingsClass(structure)` walks to the class the compiled
+    module defines, and the defaults are the defaults again.
+
+    **The results monitor has no file of its own.** The maintainer deleted
+    `~/.exudyn/resultsMonitor.json` on 2026-09-26 - it had existed for a few hours - and decided
+    there is no migration: the monitor reads and writes the `resultsMonitor` section of the one file,
+    `SettingsFileName` is gone, and the old name is gone from the documentation.
+    **`overrideSettings.StoreSection(name, values)` is the one writer of a section**, which the
+    dialogs, the monitor and `Store` all go through.
+
+
+    - **RG12.10.1** **DONE 2026-09-27** (#2705) — [log](exudynRevisionLog2026b.md#rg12-10-1) — **the
+      import note is one short line, and the file can switch it off.** *"NOTE: 8 visualizationSettings
+      read from ~/.exudyn/config.json"* - a count of 0 is not printed - and
+      `"suppressOverrideSettingsWarning": true` in the file keeps it quiet.
+
+<a id="plan-rg12-11"></a>
+#### RG12.11
+
+**RG12.11** **DONE 2026-09-26** (#2685) — [log](exudynRevisionLog2026b.md#rg12-11) —
+    **Storing the override settings**, all three parts of it.
+
+    **`exudyn.config` has a dictionary interface and its defaults** - `GetDictionary()`,
+    `SetDictionary(d)`, `GetDefaults()` - which is what the maintainer asked for. The defaults are
+    **snapshotted during module import**, because they cannot be constructed: `ExudynConfig` is a
+    facade over globals, so a second one reports the current values (measured: 12 after
+    `outputPrecision = 12`). What Exudyn starts with **is** the default, taken while it still is, so
+    nothing is written down twice and nothing can drift. The settings are listed once, with the three
+    read-only ones marked, and `Main/Config.h` stays free of pybind11 - eight translation units
+    include it.
+
+    **`Store(config=...)` stores what differs from those defaults.** It used to store every value that
+    was not `''`, `0` or `False`, so it stored `printToConsole` from every run and `outputPrecision`
+    because 6 is not 0 - settings a user never touched.
+
+    **The dialog has a "store settings" button**: the `visualizationSettings` that differ from the
+    defaults and the dialog's own size and position, nothing else, and it **shows exactly what it will
+    write** with a store/cancel pair first, because one click reaches the home directory. It stores
+    the geometry whether or not `storeDialogPositions` is on - that flag is about remembering on
+    closing, this is a user asking.
+
+    **"diff to default" stays a difference to the real default**, and what the file already stores is
+    named again under a comment line saying so, as decided. The grouping is
+    `GUI.SplitStoredFromChanged`, a function, so it is tested without opening a window.
+
+<a id="plan-rg12-12"></a>
+#### RG12.12
+
+**RG12.12** **DONE 2026-09-27** (#2588 family; no issue of its own) — [log](exudynRevisionLog2026b.md#rg12-12) —
+    **PlotSensor takes its defaults from the override settings.**
+
+    **The defaults**: the eleven arguments that shadowed `PlotSensorDefaults()` now default to `None`,
+    and `None` is what asks for the default. They used to be compared against *the original literal
+    default* - `if fontSize == 16` - so passing that value on purpose could not be told from not
+    passing it, which `PlotSensorDefaults()` documented as a wart of its own: *"BUT PlotSensor(...,
+    fontSize=16) will use fontSize=12, BECAUSE 16 is the original default value!!!"*. That sentence is
+    gone from the docstring because the behaviour is gone, and the mutable default arguments
+    (`colors=[]`, `sizeInches=[6.4,4.8]`) went with it.
+
+    **The file**: a `plotSensor` section of `~/.exudyn/config.json` sets any of those defaults, read
+    when `exudyn.plot` is imported; a name that is not a default is reported rather than invented.
+
+    **The window positions**, by the decision recorded here: **by their sequence**, the counter reset
+    by `closeAll=True`, because plot windows have no unique title. Only the **position** - the size of
+    a plot is `sizeInches`, which is already a default the file can set - and only when
+    `PlotSensorDefaults().storeWindowPositions` is True, which is off, as every "store where I left it"
+    in Exudyn is. It reuses what the dialogs use: the `dialogs` section, `DialogGeometry`, the
+    reachability rule and `StoreGeometryString`, and it is written for the tkinter and Qt backends and
+    silent on anything else. **No test opens a plot window**, so that half is contract, not
+    measurement.
+
+<a id="plan-rg3-23"></a>
+#### RG3.23
+
+**RG3.23** **DONE 2026-09-26** (#2680) — [log](exudynRevisionLog2026b.md#rg3-23) —
+    **The override settings are documented where the module is.** The text of
+    `docs/manual/userSettings.md` is now a section of the Exudyn module page,
+    *Settings that persist between runs* (`sec-overridesettings`), written as `pb.AddDocu(...)` in
+    `definitions/pybindModule.py`; `exu.special.overrideSettings` is a documented data member beside
+    `exu.sys` and `exu.variables`; and the manual page keeps its place in the table of contents as a
+    pointer to it.
+
+    **The environment variables have a list**, `sec-environmentvariables`, and it was needed: of the
+    **six** the package reads, three - `EXUDYN_NO_USER_SETTINGS`, `EXUDYN_CONFIG_FILE` and
+    `EXUDYN_IMPORT_VERBOSE` - were documented nowhere at all.
+
+    **The troubleshooting hint** is in `performanceErrors.md`, *Behaviour that is not in your
+    script*: deleting `~/.exudyn` returns everything to the defaults, and
+    `EXUDYN_NO_USER_SETTINGS=1` answers the question without deleting anything.
+
+    Two rules were learnt against the gate rather than from the README: inline code in a description
+    is a **backtick span** and `\texttt{}` is rejected outside mathematics - the README said the
+    opposite and now says what is checked - and a sub-heading of an `AddDocu` section is level
+    **4**.
+
+    **Still open, and not part of this step**: `exu.config` and `exu.special` are documented by
+    `pb.DefLatexDataAccess(...)` written by hand while the settings structures have a generator.
+    The maintainer: *"Ideally, the access to structures would be handled and documented both via the
+    same mechanism ... but I don't know if this needs an improvement right now."*
+
+<a id="plan-rg3-24"></a>
+#### RG3.24
+
+**RG3.24** *(group RG3; maintainer 2026-09-26)* **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg3-24) — **The generator API still says "Latex"** (#2681).
+    Done in three passes, each gated by a regeneration that changed nothing: the declaration API and
+    its class, the local names, and the dead LaTeX the reading found. **RG3.24.4 is the one question
+    left** and it is the maintainer's.
+    *"DefLatexDataAccess and similar Latex commands need to be just renamed consistently. Search for
+    latex and see where it still makes sense, rename where clear (Markdown) or suggest options when
+    unclear."*
+
+    Measured the same day over `tools/generators/` and `definitions/`: **28 files** carry the word.
+    The big ones are the pybind declaration API, which every definition file uses -
+    **`DefLatexDataAccess` (64 uses)**, `DefLatexStartTable` (32), `DefLatexFinishTable` (27),
+    `DefLatexOperator` (17), `DefLatexStartClass` (13) - and they write **Markdown** and have done
+    since RG3.14. Then `PyLatexRST` (18), which writes Python, a stub and Markdown and neither LaTeX
+    nor RST, and the small ones: `latexSymbol`, `moduleNameLatex`, `sLatexObjectClass`, `latexStr`.
+
+    **Three kinds, and only the third needs a decision.** A name that describes **Markdown output**
+    is renamed by rule (`DefLatexDataAccess` to `DefDataAccess`, `PyLatexRST` to something that says
+    what it writes). A name that describes **real LaTeX** stays: `Str2Doxygen` writes C++ comments
+    and `latexToMarkdown.py` is named after what it converts **from**. The third kind is
+    `latexSymbol` and its family - the `$...$` symbol of an item parameter, which **is** LaTeX inside
+    Markdown - where `mathSymbol` says what it is and touching it moves 12 uses in three emitters.
+    Options go to the maintainer with the list.
+
+    **RG3.24.1/.2 corrected one sentence of this step**: `Str2Latex` and `GetTypesStringLatex` were
+    named here as functions that feed real LaTeX and therefore keep their names. They do not - see
+    the audit below - so they are a question of *removal*, not of renaming.
+
+    A rename of 64 call sites in the definition files is a large diff that changes no output, so it
+    wants the same gate as RG3.14.13: **the regeneration is a no-op**, or the rename was not one.
+
+    - **RG3.24.1** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-24-1) - **where the
+      legacy string helpers are still called.** Asked for by the maintainer: *"I still believe that
+      functions like Str2Latex and in particular DefaultValue2Python would now be replaced by the new
+      generators and definitions mechanisms."* Nine helpers, 60 call sites, all in
+      `tools/generators/`:
+
+      | helper | call sites | what it is given |
+      |---|---|---|
+      | `Str2Latex` | 21 | a type name, a size, a default value, a python name, an argument name, a description |
+      | `Str2Doxygen` | 17 | the text of a C++ `//!` comment |
+      | `ExtractLatexSymbol` | 9 | a description that begins with `$...$` |
+      | `GetTypesStringLatex` | 8 | the `Node::Position`-style requested types of an item |
+      | `DefaultValue2Python` | 5 | the C++ literal of a default value |
+      | `Latex2RSTlabel` | 4 | a section label |
+      | `RemoveSpacesTabs` | 3 | a type string |
+      | `SplitString`, `CutLinesFromString` | 0 | nothing - imported by `itemDocsEmitter` and never called |
+
+      `PyLatexRST` (18) and `NormalizeHeadings` (10) are counted with them in the earlier survey and
+      are **not** legacy: the first is the writer every emitter uses, the second is the Markdown rule
+      of RG3.14. They belong to the renaming, not here.
+
+    - **RG3.24.2** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg3-24-2) - **what each of
+      them still does**, measured by giving every call site its real inputs (the generator runs each
+      stage as a subprocess, so a wrapper would have seen nothing):
+
+      | helper | verdict |
+      |---|---|
+      | `Str2Latex(s)`, plain | **a no-op, provably**: 0 of 3720 type names, sizes, python names and descriptions are changed. All it does now is `{` to `\{`, into Markdown, where it would be wrong if it ever fired |
+      | `Str2Latex(s, isDefaultValue=True)` | the **only** source of the printed default of 990 item and 263 settings parameters; not LaTeX at all, a C++-to-Python converter with a different rounding than `DefaultValue2Python` (`np.zeros((6,6))` against `IIDiagMatrix(...)`) |
+      | `DefaultValue2Python` | the same conversion for the interface and the stubs, 1001 of 2837 inputs changed; see below |
+      | `GetTypesStringLatex` | **correct, and RG3.24.3 corrected this row**: it writes `\texttt{...}` into text that goes through the LaTeX-to-Markdown converter, which turns it into a backtick span. Only the **name** is wrong, which is RG3.24 |
+      | `Str2Doxygen` | **correct and stays**: it escapes for a C++ comment, which is what it says |
+      | `ExtractLatexSymbol` | **stays**, and is the `latexSymbol` question of RG3.24 - it splits a real `$...$` off a description |
+      | `Latex2RSTlabel`, `RemoveSpacesTabs` | small, correct, badly named (`Latex2RSTlabel` makes a **MyST** label) |
+      | `SplitString`, `CutLinesFromString` | **dead**, and the import in `itemDocsEmitter` is the only thing that keeps them |
+
+    - **RG3.24.3** **DONE 2026-09-26** (#2682) — [log](exudynRevisionLog2026b.md#rg3-24-3) -
+      **the default values stopped making a round trip through a C++ literal string.** Option A was
+      built, and the audit's own premise turned out to be too pessimistic: `CppValue` has carried
+      `ToPython()` and `ToDocument()` since it was written and **nothing had ever called them**, so
+      for 142 of the 402 the renderings were already there to be asked for.
+
+      `definitionTypes.py` gained **`PythonLiteral(value, typeName)`** and
+      **`DocumentLiteral(value, typeName)`** beside `CppLiteral`: a `CppValue` is asked, a plain
+      number, flag or string is its own Python value, and C++ source text is translated by named
+      tables - `emptyContainerValues` (17 entries), `namedDefaultValues` (7), `innerDefaultValues`
+      (1) - plus one rule for a braced initializer and one for an enum value. **An expression no
+      rule covers raises `UnknownDefaultValue`**, which stops the generator and names the table to
+      extend; that is the whole difference from guessing. No regular expressions, because
+      `checkDefinitions` reads every string literal of a definition file and a backslash followed by
+      a letter is a LaTeX command to it - which is right for a description, so the patterns are
+      plain string logic and the f-suffix rule is written out.
+
+      **`DefaultValue2Python`, `Str2Latex`, `SplitString` and `CutLinesFromString` are gone** - 201
+      lines - and with them the 14 `Str2Latex` calls that RG3.24.2 measured at 0 changes out of
+      3720 inputs, and the emitter workaround *"don't do this for file names, because 'f' is
+      erased!"*. Removing them changed the generated output by **nothing**, which is what those
+      measurements predicted.
+
+      **What it repaired in the published documentation**, all of it found by writing the tables out:
+
+      | in the pages | was | is |
+      |---|---|---|
+      | 85 cells | `[ invalid [-1], invalid [-1] ]` | `[ invalid (-1), invalid (-1) ]` |
+      | 30 cells | `Matrix[]`, `PyMatrixContainer[]`, `MatrixI[]` | `[]` |
+      | 1 cell | `[Matrix3DF[3,3,1.,0.,0., 0.,1.,0., 0.,0.,1.]]` | `[[1.,0.,0.], [0.,1.,0.], [0.,0.,1.]]` |
+      | the signature of `ObjectContactConvexRoll` | `coefficientsHull =  []` | `coefficientsHull = []` |
+
+      **74 lines in 47 generated files, and every one of them is in that table** - the gate the step
+      asked for, run before and after the removals. **17 new tests**
+      (`python/testing/test_defaultValueRenderings.py`), each naming the defect it forbids, and one
+      that renders all 1376 defaults so that a missing rule is a test failure and not a surprise
+      during a release.
+
+      **One thing was deliberately not done**: the three `CppValue` constants carried a *document*
+      wording that disagrees with what is published - `'invalid index'` against `invalid (-1)`, and
+      prose for the default colour against `[-1.,-1.,-1.,-1.]`. The published wording won and the
+      constants were corrected to it: this step removes corruption, it does not re-word the manual.
+      Whether the default column should read `exudyn.InvalidIndex()` instead of `invalid (-1)` is a
+      decision, and it is a small one now that there is one place to make it.
+
+    - **RG3.24.4** *(the question RG3.24 reserved; maintainer's choice)* **DONE 2026-09-27** (#2699)
+      — [log](exudynRevisionLog2026b.md#rg3-24-4) — **what the `latexSymbol` family should be
+      called.** The maintainer chose **B**, `mathSymbol`. `latexSymbol` (12 uses in `itemDocsEmitter`, `itemHeaderEmitter`,
+      `itemInterfaceEmitter` and `typesEmitter`), `ExtractLatexSymbol` (`itemModel`, 9), and inside it
+      `stringLatexSymbol` and `addLatexSign`. It is the `$...$` that a parameter description may open
+      with - `$\theta$ rotation angle` - which the emitters split off and put into its own column of
+      the parameter table.
+
+      **Why it was not renamed by rule**: the thing it names *is* LaTeX, so `latexSymbol` is not
+      wrong the way `DefLatexDataAccess` was wrong. The options:
+
+      | option | what it costs | what it buys |
+      |---|---|---|
+      | **A** leave it | nothing | the name says the markup, which is true |
+      | **B** `mathSymbol`, `ExtractMathSymbol`, `mathSymbolString`, `mathSign` *(recommended)* | one mechanical rename, 24 occurrences in five files, gated by a no-op regeneration | the name says what it *is* - the symbol of the parameter - and the markup stays the converter's business |
+      | **C** rename the function by what it does, `SplitLeadingMathSymbol(description)`, and leave the variables | the same rename plus a docstring | the function name says that only a **leading** `$...$` is split off, which is the rule nothing states today and which its error message does not name either |
+
+      B and C are compatible: C is B plus a better name for the function.
+
+<a id="plan-rg12-14"></a>
+#### RG12.14
+
+**RG12.14** **DONE 2026-09-26** (#2687) — [log](exudynRevisionLog2026b.md#rg12-14) —
+    **The override settings can be read again**: `overrideSettings.Reload()`. A file edited while a
+    session runs, or stored by another session, takes effect without restarting the interpreter -
+    which is the Spyder case, where the kernel stays and a second `import exudyn` does nothing.
+
+    The store is emptied first, so a section removed from the file is gone from it; `config` is
+    applied; and the `visualizationSettings` reach every structure created afterwards, **including the
+    case where the file had none at import** - then the reload is what installs the wrapped
+    constructors. **A reload does not undo**: what already reached `exudyn.config`, and a structure
+    that already exists, keep what they were given, and that is documented where the reload is.
+
+    The step shrank twice before it was built, both times because the maintainer looked: `StoreSection`
+    already updates the store, and the wrappers close over that same dictionary - so what looked like
+    "it does not store" was RG12.13.
+
+<a id="plan-rg12-15"></a>
+#### RG12.15
+
+**RG12.15** **DONE 2026-09-27** (#2688) — [log](exudynRevisionLog2026b.md#rg12-15) —
+    **A script can place a dialog, and it is written down.** `StoreDialogGeometry(name, size,
+    position)` with the dialog's title, in the Exudyn module page beside the file it writes; the
+    render window with its own two settings, including what its position means; and the footnote the
+    maintainer asked for - writing into `exudyn.special.overrideSettings` works, holds for one run and
+    does not touch the file, and is not the recommended way because nothing checks what is put there.
+
+<a id="plan-rg12-16"></a>
+#### RG12.16
+
+**RG12.16** **DONE 2026-09-26** (#2689) — [log](exudynRevisionLog2026b.md#rg12-16) —
+    **The render window and the SolutionViewer remember their size and position**, as the settings
+    dialogs do since RG12.5.3.
+
+    - **RG12.16.1** **DONE 2026-09-26** **the render window can be placed.** `view*.window.renderWindowPosition` and
+      `view*.window.useRenderWindowPosition`, ordinary settings, so the settings file, `Store(SC)` and
+      the store button carry them with nothing added, one set per view. `GlfwClient.cpp` calls
+      `glfwSetWindowPos` when the flag is on - it never called it at all.
+
+      **The `(-1,-1)` sentinel is what it uses**, after a detour: it was built with a
+      `useRenderWindowPosition` flag instead, because the settings dialog refuses a negative
+      `IndexArray` - the type the position shares with the size - and that rule is the only guard
+      there is, since the C++ accepts a negative sensor number *and* a negative window size. The
+      maintainer then **measured the render window itself** (2026-09-26): a GLFW window position is
+      always positive, *"so this means that we CAN take the negative values (any of both)"*, and
+      asked for the flag to go. It did. The dialog still cannot type a negative value there, which is
+      named in `knownRoundTripGaps` with the reason: a user **sets** a position in the dialog, which is
+      positive, and unsets it in the file or from a script.
+
+      They also measured what the position means: it is the position of the **OpenGL area**, not of the
+      title bar, so a value below about 50 hides part of the title bar and 0 hides it completely -
+      *"this works, as there is still the escape button"* - which is a way to have a view without one.
+      The description says so.
+    - **RG12.16.2** **DONE 2026-09-26** **it remembers where it was.** `view*.window.storeRenderWindowGeometry`, off by
+      default, writes the size and the position back into the settings when the window closes, so that
+      storing the settings keeps a render window where it was left. Off by default for the reason
+      `dialogs.storeDialogPositions` exists: a settings structure that changes by itself would make
+      *diff to default* report a window position after every run.
+    - **RG12.16.3** **DONE 2026-09-26** **the SolutionViewer, and two more for free.** Its window is an
+      `InteractiveDialog` - and so are the mode shapes and an interactive simulation - so all three
+      restore and store themselves under their own title, through the same
+      `RestoreWindowGeometry`/`StoreWindowGeometry` and the same `dialogs` section as the settings
+      dialogs. `RestoreWindowGeometry` leaves the size to the layout when nothing is stored, which a
+      dialog that sizes itself from its widgets needs.
+
+<a id="plan-rg12-20"></a>
+#### RG12.20
+
+**RG12.20** **DONE 2026-09-27** (#2694) — [log](exudynRevisionLog2026b.md#rg12-20) —
+    **Where the render window is, and what happens when the file and the session disagree.**
+
+    The maintainer pointed at the code: *"there is already SetRenderStateScreenSize in GlfwClient.cpp
+    and it only needs to be copied or extended to size AND position ... follow the trace of the
+    state->currentWindowSize, to add a currentWindowPosition to the RenderState, also making it
+    read/write in the MainRenderer::Get/SetState."* That is what was done, and the trace was exactly
+    as described.
+
+    **No window-move callback was needed**: the size is refreshed on every `Render`, so the position is
+    asked for in the same place - one `glfwGetWindowPos` next to a redraw - and there is one place where
+    the state learns about the window instead of two. `SetState` writes the position **and**
+    `view*.window.renderWindowPosition`, as it has always done for the size, which is the maintainer's
+    *"otherwise a re-open would not have the just stored positions"*.
+
+    **The conflict is said once.** `SC.renderer.Start()` compares the `visualizationSettings` section of
+    the file with what the session has, names both values when they differ, and is silent when they
+    agree. It runs **before** the `suppressRenderer` guard, because the disagreement is between the file
+    and the session whether or not a window opens - and with no settings file it returns at once, which
+    is every test run.
+
+<a id="plan-rg3-25"></a>
+#### RG3.25
+
+**RG3.25** *(group RG3; raised 2026-09-26)* **DONE 2026-09-27** (#2683) —
+    [log](exudynRevisionLog2026b.md#rg3-25) — **a TAB instead of a backslash put `exttt{...}` on three
+    pages of the Symbolic manual.** Three descriptions fixed to a backtick span, four typos with them,
+    and `checkDefinitions` rejects a TAB in a description, which is the part that was worth deciding:
+    the LaTeX rule looks for the backslash, and the TAB had eaten it.
+
+<a id="plan-rg3-26"></a>
+#### RG3.26
+
+**RG3.26** *(group RG3; maintainer 2026-09-27)* **DONE 2026-09-27** —
+    [log](exudynRevisionLog2026b.md#rg3-26) — the maintainer chose **option B**, the check.
+    **`index.md` and `pdfIndex.md` are two hand-written
+    tables of contents that must agree** (#2697). *"Maybe this is necessary, but it is really brittle
+    and requires a clear indication to sync the toctrees ... The rest should be practically identical,
+    if possible."*
+
+    **Measured, and it is more than remembered**: 25 toctree entries against 23. Only in `index.md`:
+    `README`, **`docs/manual/performanceErrors`**, the examples index and the test-models index. Only in
+    `pdfIndex.md`: `docs/manual/commandLine` and `docs/manual/resultsMonitor`, which in the HTML are
+    nested under `introductionAdvanced` instead. **And the order of the shared entries differs.** So the
+    examples and the front page are the intended differences; a whole chapter missing from the PDF, the
+    different nesting and the different order are not, and nothing says so when they drift again.
+
+    - **Option A**: generate `pdfIndex.md` from `index.md` with a declared list of exclusions. One file
+      is then the truth and the other a build product - and it needs a rule for the front page, which is
+      the one part that really differs.
+    - **Option B (cheapest, and it catches drift tomorrow)**: keep both and add a check to `tools/` that
+      compares the two entry lists against a **declared** difference, the way `checkAll` compares
+      `__all__` against what a module defines. A new page in one and not the other then fails a gate
+      instead of being noticed months later.
+    - **Option C**: accept the difference and say so at the top of both files. The least work and the
+      least protection.
+
+    - **RG3.26.1** **DONE 2026-09-27** (#2702) — [log](exudynRevisionLog2026b.md#rg3-26-1) — **the
+      part that is a defect, not a decision.** The drift has a date: RG3.15 restructured the user
+      manual in `index.md` on 2026-09-25 and `pdfIndex.md` was not changed with it. `pdfIndex.md` now
+      takes the user-manual order of `index.md`; what differs is what is meant to - `README`, the
+      examples and test models, the front page - and **the choice among A, B and C is still open**.
+
+<a id="plan-rg3-27"></a>
+#### RG3.27
+
+**RG3.27** *(group RG3; maintainer 2026-09-27)* **DONE 2026-09-27** (#2708) —
+    [log](exudynRevisionLog2026b.md#rg3-27) — **The mass-spring-damper tutorial comes first.**
+
+<a id="plan-rg12-21"></a>
+#### RG12.21
+
+**RG12.21** **DONE 2026-09-27** (#2695) — [log](exudynRevisionLog2026b.md#rg12-21) — **`python -m exudyn info` prints the home directory** - and the command exists to be pasted into an issue, so it carries an account name with it.
+    The home directory is shown as `%USERPROFILE%` or `~`, which is what a reader would type anyway, and
+    `--showPaths` gives the real ones for a problem that is about a path.
+
+<a id="plan-rg12-22"></a>
+#### RG12.22
+
+**RG12.22** **DONE 2026-09-27** (#2696) — [log](exudynRevisionLog2026b.md#rg12-22) — **The results monitor took the focus and came to the front
+    on every update** - *"so one cannot use the control panel"*. The cause is
+    `plt.pause`, which calls `show(block=False)` every time, and TkAgg's `show()` does `deiconify()` and
+    `lift()`. `canvas.start_event_loop` waits and processes events and does nothing else. The *"except
+    optionally alwaysOnTop"* half is a monitor setting of that name, default False, stored in the
+    `resultsMonitor` section like the rest, with `--always-on-top` on the command line.
+
+<a id="plan-rg12-23"></a>
+#### RG12.23
+
+**RG12.23** *(group RG12; maintainer 2026-09-27)* **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg12-23) — **The plot windows cannot be stored while the renderer
+    is still open** (#2698). RG12.12 places a plot window where the one of the same sequence number was
+    left, and stores it when it closes - but the maintainer is pointing at the *moment*: a user arranges
+    several windows and wants to store them together, and the settings dialog, which is where storing
+    happens for everything else, is usually gone by then because the renderer has stopped.
+
+    Their design, and it is the right shape: a **function** a script or a dialog can call - *store where
+    the plot windows are now* - which needs a list of the live figures. *"possibly the matplotlib figures
+    need to be stored in an internal list - either in plot.py or in exudyn.sys, cleared when doing
+    closeAll; the figure references should get invalid on closing ... and thus a function could then try
+    to grab the current figure's positions and sizes and store them, allowing to reuse the size in the
+    next PlotSensor commands."* With it, the sizes become reusable too, which the per-window close
+    handler cannot do.
+
+<a id="plan-rg12-24"></a>
+#### RG12.24
+
+**RG12.24** *(group RG12; maintainer 2026-09-27)* **DONE 2026-09-27** (#2718) —
+    [log](exudynRevisionLog2026b.md#rg12-24) — **The files a run writes by default go into
+    `solution/`**, and the scripts that write beside themselves are found. The solution file, the
+    solver information and the restart file default to `solution/...`; `exudev scripts` reports a file
+    a script names without a directory and the default solution file read back by its old name; the
+    repository's scripts follow, and neither the examples nor the test models write a file beside a
+    script any more. The other way the maintainer named - the output directory set in Spyder - is
+    documented beside the environment variables.
+
+<a id="plan-rg12-25"></a>
+#### RG12.25
+
+**RG12.25** *(group RG12; maintainer 2026-09-27)* **DONE 2026-09-27** (#2719) —
+    [log](exudynRevisionLog2026b.md#rg12-25) — **store positions stores every open window**: the
+    settings dialog, the other interactive dialogs (the SolutionViewer), the PlotSensor windows, and the
+    render window where it is, which becomes `view0.window.renderWindowSize/Position` in the file and
+    in the dialog.
+
+<a id="plan-rg12-26"></a>
+#### RG12.26
+
+**RG12.26** *(group RG12; maintainer 2026-09-27)* **DONE 2026-09-27** (#2720) —
+    [log](exudynRevisionLog2026b.md#rg12-26) — **the SolutionViewer**: its sliders and the Run
+    button follow the width of the window, `windowSize=[w, h]` gives it a size, it is stored with the
+    other windows, and the label *t = 1.0* is gone.
+
+<a id="plan-rg12-27"></a>
+#### RG12.27
+
+**RG12.27** *(group RG12; maintainer 2026-09-27)* **DONE 2026-09-27** (#2722) —
+    [log](exudynRevisionLog2026b.md#rg12-27) — **store positions with Qt plot windows, and the
+    SolutionViewer when it is narrow**: the plot windows of Spyder's Qt backend are listed and stored
+    (a `QRect` was taken for tkinter's geometry string, and the button failed before it showed
+    anything); the button and label columns of a dialog keep their width, and only the slider column
+    gives when the window is narrower than the dialog asks for.
+
+<a id="plan-rg12-28"></a>
+#### RG12.28
+
+**RG12.28** *(group RG12; maintainer 2026-09-27)* **DONE 2026-09-27** (#2723) —
+    [log](exudynRevisionLog2026b.md#rg12-28) — **PlotSensor opens at the stored size**: the default
+    `sizeInches` no longer resizes a window that was given its stored size; a `sizeInches` given in
+    the script still wins.
+
+<a id="plan-rg12-30"></a>
+#### RG12.30
+
+**RG12.30** *(group RG12; maintainer 2026-09-30)* **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg12-30) —
+    **`exudyn.utilities` imports less** (#2756): no longer the beam generators (`exudyn.beams`), the
+    MainSystem extensions (`mbs.Create...`, `mbs.DrawSystemGraph`) and `exudyn.graphicsDataUtilities` (the
+    old colors `color4...` are `graphics.color....`). A further break for scripts, accepted for the cleaner
+    future (maintainer).
+    - **RG12.30.1** **DONE** - the evaluation: no blocker in the repository; about 55 scripts need an
+      import, which a script writes; the larger risk is users' own models (`color4...`), which only
+      `exudev scripts` and the revisions page catch;
+    - **RG12.30.2** **DECIDED** (maintainer): nothing new in `exudyn.graphics`; `GraphicsDataRectangle` and
+      `GraphicsDataOrthoCubeLines` deprecated, their docstrings name the replacement;
+    - **RG12.30.3** **DONE** - `utilities.py`: the imports and the seven names out of `__all__`;
+    - **RG12.30.4** **DONE** - 46 scripts under `python/` and 8 MiniExamples (through their definitions) import
+      what they use; colors as `graphics.color...`;
+    - **RG12.30.5** **DONE** - `exudev scripts` names every such line with its replacement;
+    - **RG12.30.6** **DONE** - `revisions.md` (a table with the one-line fixes), the flexible-beam tutorial,
+      the contact theory chapter; the generated pages regenerated.
+    - **RG12.30.7** *(maintainer 2026-09-30: RG12.30.4 was a misunderstanding - the scripts are to be
+      adapted, not given an import)* **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg12-30-7) (#2759) -
+      every script and module under `python/` uses `exudyn.graphics` where it has the replacement:
+      `graphics.Lines` for `GraphicsDataRectangle`, `graphics.BrickXYZ(..., addFaces=False, addEdges=True)`
+      for `GraphicsDataOrthoCubeLines`, `graphics.color...` for `color4...`; 66 files, the 41 star imports of
+      `exudyn.graphicsDataUtilities` gone; only the mesh functions without a replacement keep an explicit import.
+    - **RG12.30.8** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg12-30-8) (#2757) - the examples in the
+      subfolders of `python/Examples` are part of the examples run, each run in its own folder; the six that
+      failed are fixed - two of them by fixes in the library (`ClearWorkspace` emptied `basicUtilities`, the
+      load jacobian of a body whose position jacobian has fewer columns than coordinates).
+
+<a id="plan-rg13-1"></a>
+#### RG13.1
+
+**RG13.1** *(group RG13; maintainer 2026-09-27)* **DONE 2026-09-27** —
+    [log](exudynRevisionLog2026b.md#rg13-1) — the table is
+    [itemDocumentationState.md](itemDocumentationState.md), written by
+    `tools/itemDocumentationReport.py`. **The state of the documentation, item by item**
+    (#2715). Per item, measured from its definition and not estimated: the class description, the
+    description of its equations, which parameters and output variables are described and which are
+    not, whether it has a MiniExample and whether that one runs, an image, the examples and test
+    models that use it. The deliverable is the table, and what it says about the kinds of items.
+
+<a id="plan-rg13-4"></a>
+#### RG13.4
+
+**RG13.4** *(group RG13; maintainer 2026-09-27)* **DONE 2026-09-29** —
+    [log](exudynRevisionLog2026b.md#rg13-4) — **The development documents per item type** (#2721)
+    - *what the documentation of a node, object, marker, load and sensor must contain*, evaluated on
+    the text: from the tutorials and the Create functions - *"most model scripts now use Create
+    functions, so the core functionality is hidden, which means that one has to build a combined view
+    of a script and the Create functions in the background"* - and from the text the generator writes
+    around the generated information (*"This Node has/provides the following types = Position"* could
+    say which markers that allows, and could be generated). Nodes: how their coordinates are
+    interpreted, made systematic. Objects in groups: rigid bodies, flexible bodies (nonlinear finite
+    elements), connectors - which act on two or more markers, define the force from the kinematics and
+    apply it through what the markers provide. Sensors, loads, markers: a general section before the
+    first item, which every item refers to.
+
+    **Written first as temporary documents** `docs/revision/<itemType>DefinitionsDev.md`; when the
+    group is done, they become the section of the developer documentation that says what
+    documentation an item needs, what it contains and how it is structured, and are removed. They
+    are the input of RG13.2's plan.
+
+    - **RG13.4.0** to **RG13.4.5** **DONE 2026-09-28** - the documents on what is common, and on
+      nodes, objects, markers, loads and sensors; the maintainer's approval of each is in the
+      [log](exudynRevisionLog2026b.md#decisions-2026-09-29).
+    - **RG13.4.6** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-4-6) - folded into
+      [definitions/README.md](../../definitions/README.md) §*The page of an item*, and removed.
+
+<a id="plan-rg13-7"></a>
+#### RG13.7
+
+**RG13.7** *(group RG13; maintainer 2026-09-29)* **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-7) —
+    **How to set up a new item** (#2742): one developer page, `docs/dev/NEW_ITEM.md` - the definition,
+    which files the generator writes for a new class name, the C++ to write by kind, the checks, what to
+    run; it refers to `definitions/README.md`, `ARCHITECTURE.md` and `WORKFLOW.md` for the details.
