@@ -142,10 +142,6 @@ femInterface.ComputeHurtyCraigBamptonModes(boundaryNodesList=boundaryNodesList,
 
 print('eigenfrequencies (Hz):\n',femInterface.GetEigenFrequenciesHz(),sep='')
 
-#invert boundary faces (BUG in surface creation in FEM?)
-trigs = femInterface.surface[0]['Trigs']
-femInterface.surface[0]['Trigs'][:,[0,2,1]] = trigs
-
 cms = ObjectFFRFreducedOrderInterface(femInterface)
 
 objFFRF = cms.AddObjectFFRFreducedOrder(mbs, positionRef=[0,0,0], 

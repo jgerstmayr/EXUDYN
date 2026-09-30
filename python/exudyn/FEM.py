@@ -2631,10 +2631,7 @@ class FEMinterface:
                 exu.Print("ERROR in ImportMeshFromNGsolve: invalid element in ngmesh, elementNr=", cnt, "linear tet elements required!")
             cnt+=1
 
-        #function to flip surface elements:
-        def Flip3D(v):
-            return [v[0], v[2], v[1]]
-        
+        #the surface elements of NETGEN point outward, as the surface of VolumeToSurfaceElements does (#2321)
         surface = mesh.ngmesh.Elements2D() #surface mesh
         if meshOrder == 1:
             for st in surface: 
@@ -2644,7 +2641,7 @@ class FEMinterface:
                 if len(vertices) != 3:
                     raise ValueError('ImportMeshFromNGsolve: expected linear 3-node surface elements')
 
-                surfaceTriangleList += [Flip3D(vertices)]
+                surfaceTriangleList += [vertices]
         else: #order 2
             for st in surface: 
                 w = []
@@ -2653,10 +2650,10 @@ class FEMinterface:
                 if len(w) != 6:
                     raise ValueError('ImportMeshFromNGsolve: expected second order 6-node surface elements')
 
-                surfaceTriangleList += [Flip3D([w[0],w[5],w[4]])]
-                surfaceTriangleList += [Flip3D([w[5],w[1],w[3]])]
-                surfaceTriangleList += [Flip3D([w[5],w[3],w[4]])]
-                surfaceTriangleList += [Flip3D([w[4],w[3],w[2]])]
+                surfaceTriangleList += [[w[0],w[5],w[4]]]
+                surfaceTriangleList += [[w[5],w[1],w[3]]]
+                surfaceTriangleList += [[w[5],w[3],w[4]]]
+                surfaceTriangleList += [[w[4],w[3],w[2]]]
 
         nodes = np.array(nodeList)
         elements=np.array(tetList) #unused

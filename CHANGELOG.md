@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 176 | 1.12.190 |
+| 1.12 | Metheney | 177 | 1.12.191 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.191** `FIX` `MEDIUM EFF` `resolved by: Claude-JG` FEMinterface (#2321)
+  - description: meshes imported from NGsolve lead to triangles with wrong orientation as compared to GraphicsData
+  - **notes:** The surface triangles of a mesh imported with FEMinterface.ImportMeshFromNGsolve point outward, as those of the other imports; an FFRF body from NGsolve is lit on its outside.
+  - date resolved: **2026-09-30 18:52**, date raised: 2026-03-03
 - **1.12.190** `FIX` `MEDIUM EFF` `resolved by: Claude-JG` ZoomAll (#2309)
   - description: does not include trackMarker position (and orientation); fix that even for moving markers in modelCentricView zoom all is possible
   - **notes:** ZoomAll takes a tracked marker (camera.trackMarker) into account: the scene is centered and sized as the view draws it, with the marker's position and orientation tracked.

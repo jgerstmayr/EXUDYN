@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.190.dev1
+- Exudyn version = 1.12.191.dev1
 - last change = 2026-09-30
 - Number of issues = 2760
-- Number of resolved issues = 2504 (190 in current version)
+- Number of resolved issues = 2505 (191 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7643,10 +7643,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `DOCU` `LOW EFF` GenericJoint (#2325)
   - description: improve documentation, in particular about order of axes for case of 1 and 2 rotation axes constrained
   - date raised: 2026-03-23
-- `FIX` `MEDIUM EFF` FEMinterface (#2321)
-  - description: meshes imported from NGsolve lead to triangles with wrong orientation as compared to GraphicsData
-  - **remarks:** planned before 1.13 as revision2026b step RG6.8.3 (2026-09-29)
-  - date raised: 2026-03-03
 - `EXTENSION` `HIGH EFF` FEM (#2319)
   - description: extend interface to 6-noded triangles to represent quadratic shape functions / meshOrder=2 in ngsolve directly
   - date raised: 2026-03-02

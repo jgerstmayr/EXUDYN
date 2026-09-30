@@ -1770,8 +1770,10 @@ This group is that revision and what has to happen before it can start.
     - **RG6.8.2** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg6-8-2) - (#2309) `ZoomAll` ignores a
       `trackMarker` - **headless**: the render state after `ZoomAll` with a tracked marker; `ZoomAll` now
       centers the scene with the tracking applied, position and orientation; `test_zoomAllTrackMarker.py`;
-    - **RG6.8.3** (#2321) meshes from NGsolve give triangles of the wrong orientation - with ngsolve
-      (optional package): the normals of `fem.GetSurfaceTriangles()` against the outward normals;
+    - **RG6.8.3** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg6-8-3) - (#2321) meshes from NGsolve
+      give triangles of the wrong orientation - with ngsolve (optional package): the normals of
+      `fem.GetSurfaceTriangles()` against the outward normals. `ImportMeshFromNGsolve` flipped the surface of
+      NETGEN, which points outward already; `test_femSurfaceOrientation.py`;
     - **RG6.8.4** (#2308) erratic shadows with `modelCentricView=False` and lights in the camera frame -
       a small raytracer image against a reference, as in RG2.3.3.4;
     - **RG6.8.5** (#2140, #2236) Linux: crashes when the renderer closes and with the SolutionViewer; the

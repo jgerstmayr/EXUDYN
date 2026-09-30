@@ -7798,3 +7798,29 @@ that the scene is centered **with** the tracking applied. A moving marker then k
 x = 10..12 and a tracked marker at (3, 2): the view translation after `ZoomAll` equals the one without tracking;
 with a tracked orientation (90 degrees about z) the view is centered on the rotated brick and the zoom follows its
 rotated size.
+
+<a id="rg6-8-3"></a>
+### RG6.8.3 — the surface of an NGsolve mesh points outward (2026-09-30, #2321)
+
+Measured on a box meshed by netgen (maxh 0.2), the fraction of surface triangles whose normal points away from
+the center:
+
+| | linear | quadratic |
+|---|---|---|
+| `FEMinterface.ImportMeshFromNGsolve` -> `GetSurfaceTriangles()`, before | **0** | **0** |
+| `graphics.NGsolveMesh2PointsAndTrigs` | 1 | 1 |
+| `FEMinterface.VolumeToSurfaceElements` (the path of the Abaqus import) | 1 | - |
+| `ImportMeshFromNGsolve`, now | 1 | 1 |
+
+Every surface triangle of the import pointed **inward**: it passed NETGEN's surface elements, which point
+outward, through a `Flip3D`. The superelements draw these triangles with the normal of their order, so the
+lighting of an `ObjectFFRFreducedOrder` from NGsolve was the one of its inside; the raytracer counts such
+triangles as wrong normals. The flip is gone, for the linear surface and the four sub-triangles of the
+quadratic one. `NGsolveOCCboundaries2.py` flipped the triangles back by hand (*"BUG in surface creation in
+FEM?"*); that workaround is removed. What else uses the surface - node weights from triangle areas, the
+superelement drawing - does not depend on the orientation for its values; no model of the repository uses an
+NGsolve surface for contact.
+
+**Test** `python/testing/test_femSurfaceOrientation.py`, skipped without ngsolve: the import (linear and
+quadratic), `NGsolveMesh2PointsAndTrigs` and `VolumeToSurfaceElements` all give outward triangles on the box.
+The examples run passes (170, one known failure).
