@@ -92,6 +92,9 @@ void CObjectKinematicTree::GetOutputVariableBody(OutputVariableType variableType
 		CHECKandTHROW(configuration == ConfigurationType::Current, "ObjectKinematicTree::GetOutputVariable: OutputVariableType::Force can only be computed for Current configuration", ExudynValueError);
 		ComputeODE2LHS(value, objectNumber);	break;
 	}
+	case OutputVariableType::KineticEnergy: {
+		CheckEnergyLocalPosition(localPosition, "ObjectKinematicTree");
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectKinematicTree") }); break; }
 	default:
 		SysError("CObjectKinematicTree::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

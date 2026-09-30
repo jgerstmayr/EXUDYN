@@ -62,6 +62,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Acceleration |  | global acceleration vector of local position vector |
 | Rotation |  | 3D Tait-Bryan rotation components of cross section rotation |
 | RotationMatrix |  | rotation matrix of cross section rotation as 9D vector |
+| KineticEnergy | $T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$ | kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$ |
 
 (description-objectancfbeam)=
 ## Detailed description

@@ -67,6 +67,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | AngularVelocityLocal | $\LU{J0}{\Delta\tomega}$ | relative angular velocity in local joint0 coordinates |
 | ForceLocal | $\LU{J0}{\fv}$ | joint force in local joint0 coordinates |
 | TorqueLocal | $\LU{J0}{\mv}$ | joint torque in in local joint0 coordinates |
+| PotentialEnergy | $V = \frac{1}{2} (\uv - \uv_\mathrm{off})\tp \Km\, (\uv - \uv_\mathrm{off})$ | with the six relative displacements and rotations $\uv$ in the joint frame, as the force law uses them - conserved exactly only for small rotations; zero if not active; raises for a springForceTorqueUserFunction |
 
 (description-objectconnectorrigidbodyspringdamper)=
 ## Detailed description

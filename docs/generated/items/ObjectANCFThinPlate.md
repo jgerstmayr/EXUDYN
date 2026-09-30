@@ -67,6 +67,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | TorqueLocal | $M$ | (local) bending moment per length (scalar) (at $z$=0), which are bending moments as there is no torque |
 | StressLocal |  | local inplane stress components |
 | Acceleration | $\LU{0}{\av(x,y,z)} = \LU{0}{\ddot \rv(x,y,z)}$ | global acceleration vector of local position |
+| KineticEnergy | $T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$ | kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$ |
 
 (description-objectancfthinplate)=
 ## Detailed description

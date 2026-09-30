@@ -34,7 +34,7 @@ __all__ = [
     'SmoothStepDerivative', 'IndexFromValue', 'RoundMatrix', 'ConvertScipySparseToDict',
     'ConvertDictToScipySparse', 'SaveDictToHDF5', 'LoadDictFromHDF5', 'ConvertFunctionToSymbolic',
     'CreateSymbolicUserFunction', 'TCPIPdata', 'CreateTCPIPconnection', 'TCPIPsendReceive',
-    'CloseTCPIPconnection',
+    'CloseTCPIPconnection', 'LoadPotentialEnergy', 'CreateLoadEnergySensor', 'SystemEnergy',
     ]
 
 def PlotLineCode(index):
@@ -1052,3 +1052,167 @@ def CloseTCPIPconnection(TCPIPobject):
     """
     TCPIPobject.connection.close()
     TCPIPobject.socket.close()
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#ENERGY OF A SYSTEM (#2202)
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+#the bodies whose mass and center of mass a mass-proportional load can use: the type, and a function that
+#returns (mass, local position of the center of mass)
+_massOfBody = {
+    'MassPoint': lambda d: (d['physicsMass'], [0, 0, 0]),
+    'MassPoint2D': lambda d: (d['physicsMass'], [0, 0, 0]),
+    'Mass1D': lambda d: (d['physicsMass'], [0, 0, 0]),
+    'RigidBody': lambda d: (d['physicsMass'], list(d['physicsCenterOfMass'])),
+    'RigidBody2D': lambda d: (d['physicsMass'], list(d['physicsCenterOfMass']) + [0]),
+    }
+
+
+def LoadPotentialEnergy(mbs, loadNumber, configuration=exudyn.ConfigurationType.Current):
+    """the potential energy of a constant load, zero in the reference configuration: $-\\fv\\tp \\uv$ of the
+    displacement $\\uv$ of its marker point; None if the load has none that can be computed
+
+    Args:
+        mbs: the MainSystem of the load
+        loadNumber: the load, a LoadIndex
+        configuration: the configuration its marker is evaluated in
+
+    Returns:
+        the potential energy as a float, or None for a load whose potential is not available: a load with a
+        user function (it may depend on time), a body-fixed load, a torque (not conservative in 3D), a
+        mass-proportional load on a body other than a mass point, a 1D mass or a rigid body
+
+    Note:
+        Covered are ForceVector and Coordinate loads on any marker that gives a position or a coordinate,
+        and MassProportional loads on the bodies named above.
+    """
+    R = exudyn.ConfigurationType.Reference
+    d = mbs.GetLoad(loadNumber)
+    loadType = d['loadType']
+    if d.get('loadVectorUserFunction', 0) != 0 or d.get('loadUserFunction', 0) != 0 or d.get('bodyFixed', False):
+        return None
+    marker = d['markerNumber']
+    if loadType == 'ForceVector':
+        f = np.array(d['loadVector'])
+        u = mbs.GetMarkerOutput(marker, exudyn.OutputVariableType.Position, configuration) - \
+            mbs.GetMarkerOutput(marker, exudyn.OutputVariableType.Position, R)
+        return float(-f @ u)
+    if loadType == 'Coordinate':
+        q = mbs.GetMarkerOutput(marker, exudyn.OutputVariableType.Coordinates, configuration)
+        return float(-d['load'] * q[0])
+    if loadType == 'MassProportional':
+        markerData = mbs.GetMarker(marker)
+        if markerData['markerType'] != 'BodyMass':
+            return None
+        body = markerData['bodyNumber']
+        bodyData = mbs.GetObject(body)
+        if bodyData['objectType'] not in _massOfBody:
+            return None
+        (mass, com) = _massOfBody[bodyData['objectType']](bodyData)
+        u = mbs.GetObjectOutputBody(body, exudyn.OutputVariableType.Position, com, configuration) - \
+            mbs.GetObjectOutputBody(body, exudyn.OutputVariableType.Position, com, R)
+        return float(-mass * np.array(d['loadVector']) @ u)
+    return None
+
+
+def CreateLoadEnergySensor(mbs, loadNumber, storeInternal=True, writeToFile=False, fileName=''):
+    """a SensorUserFunction that measures the potential energy of a constant load, LoadPotentialEnergy(...)
+
+    Args:
+        mbs: the MainSystem of the load
+        loadNumber: the load, a LoadIndex; raises if its potential energy is not available
+        storeInternal: store the values in the sensor, as for every sensor
+        writeToFile: write the values to a file
+        fileName: the file, if written
+
+    Returns:
+        the SensorIndex of the new sensor
+    """
+    if LoadPotentialEnergy(mbs, loadNumber, exudyn.ConfigurationType.Reference) is None:
+        raise ValueError('CreateLoadEnergySensor: the potential energy of load ' + str(loadNumber) + ' ('
+                         + mbs.GetLoad(loadNumber)['loadType'] + ') is not available')
+    def UFsensor(mbs, t, sensorNumbers, factors, configuration):
+        return [LoadPotentialEnergy(mbs, loadNumber, configuration)]
+    return mbs.AddSensor(exudyn.itemInterface.SensorUserFunction(sensorUserFunction=UFsensor, storeInternal=storeInternal,
+                                                                 writeToFile=writeToFile, fileName=fileName))
+
+
+class SystemEnergy:
+    """the kinetic and potential energies of a whole system, from the output variables KineticEnergy and
+    PotentialEnergy of its objects and from the potential of its constant loads (#2202)
+
+    Args:
+        mbs: the MainSystem, assembled
+        skipUnavailable: if True, an item that cannot give its energy (a user function, a type without the
+            output variable) is left out and listed in .unavailable; if False, it raises
+
+    Note:
+        The lists are made once, in __init__: .kineticObjects, .potentialObjects, .loads and .unavailable -
+        the items that have the energy as an output variable and cannot give it with their parameters (a user
+        function), and the loads without a potential, each with the reason. ComputeSystemEnergies() returns
+        the four numbers; AddSensor() adds a SensorUserFunction that records them - call mbs.Assemble() again
+        after it.
+    """
+    def __init__(self, mbs, skipUnavailable=True):
+        self.mbs = mbs
+        self.kineticObjects = []
+        self.potentialObjects = []
+        self.loads = []
+        self.unavailable = []
+        KE = exudyn.OutputVariableType.KineticEnergy
+        PE = exudyn.OutputVariableType.PotentialEnergy
+        for i in range(mbs.systemData.NumberOfObjects()):
+            o = exudyn.ObjectIndex(i)
+            objectType = mbs.GetObject(o)['objectType']
+            if objectType == 'Ground':
+                continue
+            for (variable, target, isBody) in [(KE, self.kineticObjects, True), (PE, self.potentialObjects, True),
+                                               (PE, self.potentialObjects, False)]:
+                try:
+                    if isBody:
+                        mbs.GetObjectOutputBody(o, variable)
+                    else:
+                        mbs.GetObjectOutput(o, variable)
+                    if o not in target:
+                        target.append(o)
+                except NotImplementedError as error: #declared, and not available with these parameters
+                    if not skipUnavailable:
+                        raise
+                    if (o, variable) not in [(u[0], u[2]) for u in self.unavailable]:
+                        self.unavailable.append((o, objectType, variable, str(error).splitlines()[0]))
+                except Exception: #the type does not have this energy at all
+                    pass
+        for i in range(mbs.systemData.NumberOfLoads()):
+            load = exudyn.LoadIndex(i)
+            if LoadPotentialEnergy(mbs, load) is None:
+                if not skipUnavailable:
+                    raise ValueError('SystemEnergy: the potential energy of load ' + str(i) + ' is not available')
+                self.unavailable.append((load, mbs.GetLoad(load)['loadType'], PE, 'no potential energy for this load'))
+            else:
+                self.loads.append(load)
+
+    def ComputeSystemEnergies(self, configuration=exudyn.ConfigurationType.Current):
+        """[kinetic, potential of the objects, potential of the loads, total] in the given configuration;
+        the kinetic energy of bodies computed from their mass matrix is available in the current
+        configuration only"""
+        mbs = self.mbs
+        KE = exudyn.OutputVariableType.KineticEnergy
+        PE = exudyn.OutputVariableType.PotentialEnergy
+        kinetic = sum(float(mbs.GetObjectOutputBody(o, KE, configuration=configuration)) for o in self.kineticObjects)
+        potential = 0.
+        for o in self.potentialObjects:
+            try:
+                potential += float(mbs.GetObjectOutputBody(o, PE, configuration=configuration))
+            except Exception:
+                potential += float(mbs.GetObjectOutput(o, PE, configuration=configuration))
+        loads = sum(LoadPotentialEnergy(mbs, load, configuration) for load in self.loads)
+        return [kinetic, potential, loads, kinetic + potential + loads]
+
+    def AddSensor(self, storeInternal=True, writeToFile=False, fileName=''):
+        """a SensorUserFunction recording ComputeSystemEnergies(): [kinetic, potential of the objects, potential
+        of the loads, total]; returns its SensorIndex"""
+        def UFsensor(mbs, t, sensorNumbers, factors, configuration):
+            return self.ComputeSystemEnergies(configuration)
+        return self.mbs.AddSensor(exudyn.itemInterface.SensorUserFunction(sensorUserFunction=UFsensor, storeInternal=storeInternal,
+                                                                          writeToFile=writeToFile, fileName=fileName))

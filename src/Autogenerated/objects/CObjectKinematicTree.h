@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-29  18:02:44 (last modified)
+* @date         2026-10-01  00:28:58 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -412,7 +412,8 @@ public: // AUTO:
             (Index64)OutputVariableType::Coordinates +
             (Index64)OutputVariableType::Coordinates_t +
             (Index64)OutputVariableType::Coordinates_tt +
-            (Index64)OutputVariableType::Force );
+            (Index64)OutputVariableType::Force +
+            (Index64)OutputVariableType::KineticEnergy );
     }
 
 };

@@ -188,6 +188,15 @@ void CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector(OutputVar
 	case OutputVariableType::AngularVelocityLocal: value.CopyFrom(vLocAngVel); break;
 	case OutputVariableType::ForceLocal: value.CopyFrom(fPosLoc); break;
 	case OutputVariableType::TorqueLocal: value.CopyFrom(fRotLoc); break;
+	case OutputVariableType::PotentialEnergy: {
+		//1/2 u^T K u of the six relative displacements and rotations in the joint frame, as the force law uses them
+		if (parameters.springForceTorqueUserFunction) { EnergyNotAvailable("ObjectConnectorRigidBodySpringDamper", "its springForceTorqueUserFunction defines the force and torque"); }
+		Vector6D u;
+		for (Index i = 0; i < 3; i++) { u[i] = vLocPos[i]; u[i + 3] = vLocRot[i]; }
+		u -= parameters.offset;
+		Vector6D Ku;
+		EXUmath::MultMatrixVector(parameters.stiffness, u, Ku);
+		value.SetVector({ parameters.activeConnector ? 0.5*(u*Ku) : 0. }); break; }
 	default:
 		SysError("CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector failed"); //error should not occur, because types are checked!
 	}

@@ -1267,6 +1267,9 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
         value.SetAll(0.);
         break;
     }
+    case OutputVariableType::KineticEnergy: {
+        CheckEnergyLocalPosition(localPosition, "ObjectANCFThinPlate");
+        value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectANCFThinPlate") }); break; }
     default:
         SysError("CObjectANCFThinPlate::GetOutputVariableBody failed"); // error should not occur, because types are checked!
     }

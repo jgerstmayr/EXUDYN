@@ -657,6 +657,25 @@ void CObjectFFRFreducedOrder::GetOutputVariableBody(OutputVariableType variableT
 	case OutputVariableType::Coordinates:	value.CopyFrom(tempCoordinates);	break;
 	case OutputVariableType::Coordinates_t: value.CopyFrom(tempCoordinates_t);	break;
 	case OutputVariableType::Force:			ComputeODE2LHS(value, objectNumber);	break;
+	case OutputVariableType::KineticEnergy: {
+		CheckEnergyLocalPosition(localPosition, "ObjectFFRFreducedOrder");
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectFFRFreducedOrder") }); break; }
+	case OutputVariableType::PotentialEnergy: {
+		//1/2 zeta^T K zeta of the reduced stiffness matrix and the modal coordinates
+		CheckEnergyLocalPosition(localPosition, "ObjectFFRFreducedOrder");
+		if (parameters.forceUserFunction) { EnergyNotAvailable("ObjectFFRFreducedOrder", "its forceUserFunction defines forces"); }
+		Vector q;
+		ComputeObjectCoordinates(q, configuration);
+		Index nODE2Rigid = ((CNodeODE2*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();
+		LinkedDataVector modal(q, nODE2Rigid, q.NumberOfItems() - nODE2Rigid);
+		Real energy = 0.;
+		if (parameters.stiffnessMatrixReduced.NumberOfRows() != 0)
+		{
+			Vector Kq(modal.NumberOfItems(), 0.);
+			parameters.stiffnessMatrixReduced.MultMatrixVectorAdd(modal, Kq);
+			energy += 0.5*(modal*Kq);
+		}
+		value.SetVector({ energy }); break; }
 	default:
 		SysError("CObjectFFRFreducedOrder::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

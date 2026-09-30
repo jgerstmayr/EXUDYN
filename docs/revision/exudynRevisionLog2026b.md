@@ -10368,3 +10368,49 @@ constant torque, one on a linear spring-damper with a constant force. The undamp
 $10^{-14}$ (the nonlinear distance spring and the free body to $2\cdot10^{-6}$ and $2\cdot10^{-7}$), the damped one
 loses 97 %, and the kinetic energy of the free body equals the one of its center of mass plus its rotation about it
 to 16 digits. `test_energies.py` checks the two refusals.
+
+<a id="rg9-4-3"></a>
+### RG9.4.3, RG9.4.4, RG9.4.6, RG9.4.7 — energies of the heavier objects, of loads and of a system (2026-10-01, #2202)
+
+**Kinetic energy from the mass matrix.** `CObjectBody::ComputeKineticEnergyFromMassMatrix` computes
+$T = \frac{1}{2}\dot\qv\tp\Mm\,\dot\qv$ from the object's own `ComputeMassMatrix` - dense or sparse, with local
+indices - and the velocities of its nodes. It is exact wherever the mass matrix is the one of the kinetic energy,
+which it is for every body of Exudyn, and it duplicates no inertia code. The mass matrix is the one of the current
+state, so the energy is given in the current configuration only (another raises `NotImplementedError`). It is the
+`KineticEnergy` of `ObjectANCFCable2D`, `ObjectALEANCFCable2D`, `ObjectANCFCable`, `ObjectANCFBeam`,
+`ObjectBeamGeometricallyExact2D`, `ObjectBeamGeometricallyExact`, `ObjectANCFThinPlate`, `ObjectFFRF`,
+`ObjectFFRFreducedOrder`, `ObjectGenericODE2` and `ObjectKinematicTree`.
+
+**Potential energy** of the superelements with a stiffness matrix - `ObjectGenericODE2` ($\frac{1}{2}\qv\tp\Km\qv -
+\fv\tp\qv$), `ObjectFFRF` ($\frac{1}{2}\qv_f\tp\Km_{ff}\qv_f - \fv\tp\qv$), `ObjectFFRFreducedOrder`
+($\frac{1}{2}\tzeta\tp\Km_{red}\tzeta$) - where a constant generalized force vector is conservative in any coordinates,
+so its potential is exact; and of `ObjectConnectorRigidBodySpringDamper`, $\frac{1}{2}(\uv-\uv_{off})\tp\Km(\uv-\uv_{off})$
+of the six relative displacements and rotations its force law uses - exactly conserved only for small rotations,
+because the law with Tait-Bryan angles is not conservative for large ones (the description says so). A force user
+function raises, as in RG9.4.2.
+
+**Not done, and why**: the elastic energy of the ANCF cables and beams, the geometrically exact beams and the plate
+needs the integration rules of their `ComputeODE2LHS` (the ANCF cable chooses among three pairs of Gauss rules,
+has strains relative to the reference configuration and moving-mass terms); a second loop would duplicate them,
+which the maintainer ruled out - the rule selection goes into one function per element first (RG9.4.3.1). And the
+potential of `ObjectKinematicTree` - its P-control springs, constant joint forces and built-in gravity - (RG9.4.4.1).
+
+**The energy of loads and of a system** (`exudyn.advancedUtilities`):
+
+- `LoadPotentialEnergy(mbs, load, configuration)`: $-\fv\tp\uv$ of a constant load, zero in the reference
+  configuration - `LoadForceVector` on any marker with a position, `LoadCoordinate`, and `LoadMassProportional` on a
+  mass point, a 1D mass or a rigid body (its mass and center of mass); `None` for a load with a user function, a
+  body-fixed load, a torque (not conservative in 3D) or a mass-proportional load on another body;
+- `CreateLoadEnergySensor(mbs, load)`: a `SensorUserFunction` that records it;
+- `SystemEnergy(mbs, skipUnavailable=True)`: collects in `__init__` the objects that give `KineticEnergy` and
+  `PotentialEnergy` and the loads that have a potential; `.unavailable` lists what declares an energy and cannot give
+  it with its parameters (a user function), with the reason - a type that has no such output variable is simply not
+  asked; `ComputeSystemEnergies()` returns `[kinetic, potential of the objects, potential of the loads, total]`, and
+  `AddSensor()` records them. Until RG12.29 gives the declared output variables, availability is found by asking;
+  RG9.4.5 (what an object *should* provide) waits for it.
+
+**Test model** `energiesTest.py`, extended: an `ObjectGenericODE2` with a constant force vector (total kept to
+$10^{-15}$), a rigid body on a rigid-body spring-damper in small motion ($2\cdot10^{-5}$), ANCF cables and geometrically
+exact beams in a rigid translation ($T = \frac{1}{2} m v^2$ exactly, from their mass matrices), and a system with gravity
+and a constant force whose total from `SystemEnergy` is kept to $1.3\cdot10^{-5}$ (a rigid body with an offset center
+of mass on a nonlinear spring). `test_energies.py` checks `SystemEnergy` with a user-function spring.

@@ -1047,18 +1047,28 @@ revision (info document D15).
       the effect on several simple, independent mechanisms (a free oscillator, a pendulum on a spring, a
       rotating body), each with its conserved or dissipated total;
     - **RG9.4.3** the heavier objects: `ObjectConnectorRigidBodySpringDamper`, the ANCF cables and beams,
-      `ObjectBeamGeometricallyExact(2D)`, the ALE cable - kinetic and elastic energy, by the rule above;
+      `ObjectBeamGeometricallyExact(2D)`, the ALE cable - kinetic and elastic energy, by the rule above.
+      **Kinetic energy DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - for all of them from
+      their mass matrix, and the potential energy of the rigid-body spring-damper. **Open: the elastic energy
+      of the beams** (RG9.4.3.1), which needs the integration rules of their `ComputeODE2LHS` - for the ANCF
+      cable three pairs of Gauss rules chosen by `useReducedOrderIntegration`, plus strain references relative
+      to the reference configuration and moving-mass terms. Written as a second loop it would duplicate them;
+      the rule selection goes into one function per element first, which the forces and the energy share;
     - **RG9.4.4** superelements: `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectGenericODE2`,
       `ObjectKinematicTree` - kinetic energy from the mass matrix, elastic energy from the stiffness matrix
-      where the object has one;
+      where the object has one. **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - except the
+      potential energy of `ObjectKinematicTree` (its joint springs of the P control, its constant joint
+      forces and its built-in gravity), open as RG9.4.4.1;
     - **RG9.4.5** what an object **should** provide against what it provides now (with its current
       parameters): the declaration per object type, and the output variables of RG12.29 for the second -
       possibly every body provides both, zero for the potential energy of a rigid body, and a connector the
       potential energy only;
-    - **RG9.4.6** the energy of a load, for constant and mass-proportional loads: the potential of the force
+    - **RG9.4.6** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - `LoadPotentialEnergy` and
+      `CreateLoadEnergySensor` in `exudyn.advancedUtilities`. The energy of a load, for constant and mass-proportional loads: the potential of the force
       through the position of its marker, computed by a user sensor (`LoadEnergyUserSensor`) - a load has no
       output variable today, only a sensor that reads its value;
-    - **RG9.4.7** a utility class `SystemEnergy` (a user sensor): its `__init__` collects the objects that
+    - **RG9.4.7** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - `SystemEnergy` in
+      `exudyn.advancedUtilities`. A utility class `SystemEnergy` (a user sensor): its `__init__` collects the objects that
       provide kinetic and potential energy - with a flag to skip those that should and do not, with the
       current parameters - and the loads, and `ComputeSystemEnergies` returns the totals, as long as there
       is no MainSystem function for the energy of the system.

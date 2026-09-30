@@ -68,6 +68,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | CurvatureLocal |  | 3D vector of (local) curvature, only $Z$ component is non-zero |
 | ForceLocal |  | 3D vector of (local) section normal force, containing axial (X) and shear force (Y) |
 | TorqueLocal |  | 3D vector of (local) torques, containing only bending moment (Z) |
+| KineticEnergy | $T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$ | kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$ |
 
 (description-objectbeamgeometricallyexact2d)=
 ## Detailed description

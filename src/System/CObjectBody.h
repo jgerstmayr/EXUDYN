@@ -166,6 +166,10 @@ public:
 
 	//! compute object massmatrix to massMatrix; offers interface to dense and sparse mass matrix computation; standard is dense mode; ltg only used in sparse mode; only possible for bodies
 	virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrix, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::ComputeMassMatrix"); }
+
+	//! the kinetic energy 1/2 q_t^T M q_t, from the mass matrix of the body and the velocities of its nodes; the mass
+	//! matrix is the one of the current state, so the current configuration only (#2202)
+	Real ComputeKineticEnergyFromMassMatrix(ConfigurationType configuration, Index objectNumber, const char* itemName) const;
 	//old: virtual void ComputeMassMatrix(Matrix& massMatrix, Index objectNumber) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::ComputeMassMatrix"); }
 
 	//! return true if object has time and coordinate independent (=constant) mass matrix; used by solver

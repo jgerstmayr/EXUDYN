@@ -14,13 +14,11 @@
 1	python/exudyn/graphicsDataUtilities.py	F841	Local variable `nVertices` is assigned to but never used
 4	python/exudyn/interactive.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 2	python/exudyn/lieGroupBasics.py	E741	Ambiguous variable name: `I`
-1	python/exudyn/misc/GUI.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 8	python/exudyn/misc/mainSystemExtensions.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 26	python/exudyn/plot.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 5	python/exudyn/processing.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 2	python/exudyn/rigidBodyUtilities.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks
 1	python/exudyn/robotics/__init__.py	F403	`from .roboticsCore import *` used; unable to detect undefined names
-1	python/exudyn/robotics/future.py	F403	`from exudyn.graphicsDataUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/future.py	F403	`from exudyn.rigidBodyUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/future.py	F403	`from exudyn.robotics import *` used; unable to detect undefined names
 1	python/exudyn/robotics/future.py	F403	`from exudyn.utilities import *` used; unable to detect undefined names
@@ -39,7 +37,6 @@
 1	python/exudyn/robotics/future.py	F841	Local variable `d2` is assigned to but never used
 1	python/exudyn/robotics/future.py	F841	Local variable `d3` is assigned to but never used
 1	python/exudyn/robotics/future.py	F841	Local variable `d5` is assigned to but never used
-1	python/exudyn/robotics/mobile.py	F403	`from exudyn.graphicsDataUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/mobile.py	F403	`from exudyn.itemInterface import *` used; unable to detect undefined names
 1	python/exudyn/robotics/mobile.py	F403	`from exudyn.robotics import *` used; unable to detect undefined names
 1	python/exudyn/robotics/mobile.py	F403	`from exudyn.utilities import *` used; unable to detect undefined names
@@ -58,7 +55,6 @@
 1	python/exudyn/robotics/mobile.py	F405	`pi` may be undefined, or defined from star imports
 1	python/exudyn/robotics/mobile.py	F841	Local variable `graphRoll` is assigned to but never used
 1	python/exudyn/robotics/mobile.py	F841	Local variable `y_fit` is assigned to but never used
-1	python/exudyn/robotics/models.py	F403	`from exudyn.graphicsDataUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/models.py	F403	`from exudyn.rigidBodyUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/models.py	F403	`from exudyn.robotics import *` used; unable to detect undefined names
 1	python/exudyn/robotics/models.py	F403	`from exudyn.utilities import *` used; unable to detect undefined names
@@ -74,7 +70,6 @@
 1	python/exudyn/robotics/rosInterface.py	F403	`from exudyn.utilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/rosInterface.py	F405	`RotXYZ2EulerParameters` may be undefined, or defined from star imports
 1	python/exudyn/robotics/special.py	E741	Ambiguous variable name: `I`
-1	python/exudyn/robotics/special.py	F403	`from exudyn.graphicsDataUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/special.py	F403	`from exudyn.rigidBodyUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/special.py	F403	`from exudyn.robotics import *` used; unable to detect undefined names
 1	python/exudyn/robotics/special.py	F403	`from exudyn.utilities import *` used; unable to detect undefined names

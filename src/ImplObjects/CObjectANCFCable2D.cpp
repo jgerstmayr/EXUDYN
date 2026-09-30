@@ -992,6 +992,9 @@ void CObjectANCFCable2DBase::GetOutputVariableBody(OutputVariableType variableTy
 
 		value.SetVector({ torque }); break;
 	}
+	case OutputVariableType::KineticEnergy: {
+		CheckEnergyLocalPosition(localPosition, "ObjectANCFCable2D");
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectANCFCable2D") }); break; }
 	default:
 		SysError("CObjectANCFCable2D::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

@@ -67,6 +67,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | ForceLocal | $N$ | (local) section normal force (scalar, including reference strains) (at $y$=$z$=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint |
 | TorqueLocal | $M$ | (local) bending moment (scalar) (at $y$=$z$=0), which are bending moments as there is no torque |
 | Acceleration | $\LU{0}{\av(x,0,0)} = \LU{0}{\ddot \rv(x)}$ | global acceleration vector of local position |
+| KineticEnergy | $T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$ | kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$ |
 
 (description-objectancfcable)=
 ## Detailed description

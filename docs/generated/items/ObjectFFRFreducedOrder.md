@@ -77,6 +77,8 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Coordinates |  | all {ref}`ODE2 <ODE2>` coordinates |
 | Coordinates_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
 | Force |  | generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS) |
+| KineticEnergy | $T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$ | kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$ |
+| PotentialEnergy | $V = \frac{1}{2} \tzeta\tp \Km_\mathrm{red}\, \tzeta$ | elastic energy of the modal coordinates; raises for a forceUserFunction; localPosition must be $[0,0,0]$ |
 
 (description-objectffrfreducedorder)=
 ## Detailed description

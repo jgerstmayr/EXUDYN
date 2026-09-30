@@ -791,6 +791,9 @@ void CObjectBeamGeometricallyExact::GetOutputVariableBody(OutputVariableType var
 		}
 		break;
 	}
+	case OutputVariableType::KineticEnergy: {
+		CheckEnergyLocalPosition(localPosition, "ObjectBeamGeometricallyExact");
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectBeamGeometricallyExact") }); break; }
 	default:
 		SysError("CObjectBeamGeometricallyExact::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

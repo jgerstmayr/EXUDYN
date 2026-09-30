@@ -53,3 +53,15 @@ def test_aUserFunctionHasNoPotentialEnergy():
     mbs, oMass, oSpring = Model(userFunction=lambda mbs, t, itemNumber, u, v, k, d, f: k*u)
     with pytest.raises(NotImplementedError, match='springForceUserFunction'):
         mbs.GetObjectOutput(oSpring, exu.OutputVariableType.PotentialEnergy)
+
+
+def test_systemEnergyListsWhatItCannotCompute():
+    from exudyn.advancedUtilities import SystemEnergy
+    mbs, oMass, oSpring = Model(userFunction=lambda mbs, t, itemNumber, u, v, k, d, f: k*u)
+    energy = SystemEnergy(mbs)
+    assert [int(o) for o in energy.kineticObjects] == [int(oMass)] and energy.potentialObjects == []
+    assert [int(u[0]) for u in energy.unavailable] == [int(oSpring)]
+    with pytest.raises(NotImplementedError):
+        SystemEnergy(mbs, skipUnavailable=False)
+    T, V, loads, total = energy.ComputeSystemEnergies()
+    assert T == pytest.approx(0.5*3*2**2) and total == pytest.approx(T)

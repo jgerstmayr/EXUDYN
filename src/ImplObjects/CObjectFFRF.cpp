@@ -573,6 +573,26 @@ void CObjectFFRF::GetOutputVariableBody(OutputVariableType variableType, const V
 		break;
 	}
 	case OutputVariableType::Force:			ComputeODE2LHS(value, objectNumber);	break; //no index available
+	case OutputVariableType::KineticEnergy: {
+		CheckEnergyLocalPosition(localPosition, "ObjectFFRF");
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectFFRF") }); break; }
+	case OutputVariableType::PotentialEnergy: {
+		//1/2 q_f^T K_ff q_f of the flexible coordinates, and -f^T q of the constant force vector
+		CheckEnergyLocalPosition(localPosition, "ObjectFFRF");
+		if (parameters.forceUserFunction) { EnergyNotAvailable("ObjectFFRF", "its forceUserFunction defines forces"); }
+		Vector q, q_t;
+		ComputeObjectCoordinates(q, q_t, configuration);
+		Index nODE2Rigid = ((CNodeODE2*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();
+		LinkedDataVector flexible(q, nODE2Rigid, q.NumberOfItems() - nODE2Rigid);
+		Real energy = 0.;
+		if (parameters.stiffnessMatrixFF.NumberOfRows() != 0)
+		{
+			Vector Kq(flexible.NumberOfItems(), 0.);
+			parameters.stiffnessMatrixFF.MultMatrixVectorAdd(flexible, Kq);
+			energy += 0.5*(flexible*Kq);
+		}
+		if (parameters.forceVector.NumberOfItems() != 0) { energy -= parameters.forceVector*q; }
+		value.SetVector({ energy }); break; }
 	default:
 		SysError("CObjectFFRF::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

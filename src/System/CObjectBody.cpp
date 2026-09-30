@@ -33,6 +33,52 @@ const CNode* CObject::GetCNode(Index localIndex) const
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+Real CObjectBody::ComputeKineticEnergyFromMassMatrix(ConfigurationType configuration, Index objectNumber, const char* itemName) const
+{
+	if (configuration != ConfigurationType::Current)
+	{
+		PyError(STDstring(itemName) + ": KineticEnergy is computed from the mass matrix of the current state, so in the current configuration only",
+			PyErrorType::notImplementedError);
+	}
+	Index n = 0;
+	for (Index i = 0; i < GetNumberOfNodes(); i++) { n += GetCNode(i)->GetNumberOfODE2Coordinates(); }
+	Vector qt(n); //the velocities of the object's ODE2 coordinates, in the order of its nodes
+	Index k = 0;
+	for (Index i = 0; i < GetNumberOfNodes(); i++)
+	{
+		if (GetCNode(i)->GetNumberOfODE2Coordinates() != 0)
+		{
+			for (Real v : ((const CNodeODE2*)GetCNode(i))->GetCoordinateVector_t(configuration)) { qt[k++] = v; }
+		}
+	}
+	ArrayIndex ltg; //local indices, so that sparse triplets are local as well
+	for (Index i = 0; i < qt.NumberOfItems(); i++) { ltg.Append(i); }
+
+	EXUmath::MatrixContainer massMatrix;
+	massMatrix.SetUseDenseMatrix(true);
+	ComputeMassMatrix(massMatrix, ltg, objectNumber, false);
+
+	Real energy = 0.;
+	if (massMatrix.UseDenseMatrix())
+	{
+		const Matrix& M = massMatrix.GetInternalDenseMatrix();
+		for (Index i = 0; i < M.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < M.NumberOfColumns(); j++) { energy += qt[i] * M(i, j) * qt[j]; }
+		}
+	}
+	else
+	{
+		for (const EXUmath::Triplet& triplet : massMatrix.GetInternalSparseTripletMatrix().GetTriplets())
+		{
+			energy += qt[triplet.row()] * triplet.value() * qt[triplet.col()];
+		}
+	}
+	return 0.5*energy;
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 void CObjectBody::Print(std::ostream& os) const {
 	os << "CObjectBody(";
 	for (Index i = 0; i < GetNumberOfNodes(); i++) {

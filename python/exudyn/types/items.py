@@ -386,7 +386,7 @@ items = {
     'types': ['Body', 'MultiNoded', 'SuperElement'],
     'requestedNodeTypes': [],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'SuperElement'],
-    'outputVariables': ['CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'Force'],
+    'outputVariables': ['CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'Force', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'nodeNumbers': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'node numbers which provide the coordinates for the object (consecutively as provided in this list)'},
@@ -428,7 +428,7 @@ items = {
     'types': ['Body', 'MultiNoded', 'SuperElement', 'KinematicTree'],
     'requestedNodeTypes': ['GenericODE2'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'KinematicTree'],
-    'outputVariables': ['Coordinates', 'Coordinates_t', 'Coordinates_tt', 'Force'],
+    'outputVariables': ['Coordinates', 'Coordinates_t', 'Coordinates_tt', 'Force', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'nodeNumber': {'type': 'NodeIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'node number (type NodeIndex) of GenericODE2 node containing the coordinates for the kinematic tree; :math:`n` being the number of minimal coordinates'},
@@ -463,7 +463,7 @@ items = {
     'types': ['Body', 'MultiNoded', 'SuperElement'],
     'requestedNodeTypes': [],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'SuperElement'],
-    'outputVariables': ['Coordinates', 'Coordinates_t', 'Coordinates_tt', 'Force'],
+    'outputVariables': ['Coordinates', 'Coordinates_t', 'Coordinates_tt', 'Force', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'nodeNumbers': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'node numbers which provide the coordinates for the object (consecutively as provided in this list); the :math:`(n_\\mathrm{nf}+1)` nodes represent the nodes of the FE mesh (except for node 0); the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame'},
@@ -488,7 +488,7 @@ items = {
     'types': ['Body', 'MultiNoded', 'SuperElement'],
     'requestedNodeTypes': [],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'SuperElement'],
-    'outputVariables': ['Coordinates', 'Coordinates_t', 'Force'],
+    'outputVariables': ['Coordinates', 'Coordinates_t', 'Force', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'nodeNumbers': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'node numbers of rigid body node and NodeGenericODE2 for modal coordinates; the global nodal position needs to be reconstructed from the rigid-body motion of the reference frame, the modal coordinates and the mode basis'},
@@ -526,7 +526,7 @@ items = {
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position', 'PointSlope1'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Director1', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'Acceleration'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Director1', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'Acceleration', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsLength': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': '[SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\\rho A L`; must be positive'},
@@ -551,7 +551,7 @@ items = {
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position2D', 'Orientation2D', 'Point2DSlope1'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'Rotation', 'Director1', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'AngularVelocity', 'Acceleration', 'AngularAcceleration'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'Rotation', 'Director1', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'AngularVelocity', 'Acceleration', 'AngularAcceleration', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsLength': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': '[SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\\rho A L`; must be positive'},
@@ -579,7 +579,7 @@ items = {
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': [],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'Rotation', 'Director1', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'Rotation', 'Director1', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsLength': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': '[SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\\rho A L`; must be positive'},
@@ -608,7 +608,7 @@ items = {
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position', 'Orientation', 'PointSlope23'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'Rotation', 'RotationMatrix'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'Rotation', 'RotationMatrix', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'nodeNumbers': {'type': 'NodeIndex2', 'size': '2', 'range': '', 'default': '[exudyn.InvalidIndex(), exudyn.InvalidIndex()]', 'mustBeGiven': False, 'description': 'two node numbers for beam element'},
@@ -628,7 +628,7 @@ items = {
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position2D', 'Orientation2D'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Rotation', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Rotation', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'nodeNumbers': {'type': 'ArrayNodeIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'two node numbers for beam element'},
@@ -655,7 +655,7 @@ items = {
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position', 'Orientation'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Rotation', 'RotationMatrix', 'AngularVelocity', 'AngularVelocityLocal', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Rotation', 'RotationMatrix', 'AngularVelocity', 'AngularVelocityLocal', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'nodeNumbers': {'type': 'NodeIndex2', 'size': '2', 'range': '', 'default': '[exudyn.InvalidIndex(), exudyn.InvalidIndex()]', 'mustBeGiven': False, 'description': 'two node numbers for beam element'},
@@ -673,7 +673,7 @@ items = {
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position', 'PointSlope12'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Director1', 'Director2', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'StressLocal', 'Acceleration'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Director1', 'Director2', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'StressLocal', 'Acceleration', 'KineticEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsThickness': {'type': 'NumpyVector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': '[SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients'},
@@ -739,7 +739,7 @@ items = {
     'types': ['Connector'],
     'requestedNodeTypes': ['GenericData'],
     'requestedMarkerTypes': ['Position', 'Orientation'],
-    'outputVariables': ['DisplacementLocal', 'VelocityLocal', 'Rotation', 'AngularVelocityLocal', 'ForceLocal', 'TorqueLocal'],
+    'outputVariables': ['DisplacementLocal', 'VelocityLocal', 'Rotation', 'AngularVelocityLocal', 'ForceLocal', 'TorqueLocal', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "connector's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector'},

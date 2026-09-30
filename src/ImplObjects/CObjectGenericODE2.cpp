@@ -321,6 +321,24 @@ void CObjectGenericODE2::GetOutputVariableBody(OutputVariableType variableType, 
 		ComputeODE2LHS(value, objectNumber);	
 		break;
 	}
+	case OutputVariableType::KineticEnergy: {
+		CheckEnergyLocalPosition(localPosition, "ObjectGenericODE2");
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectGenericODE2") }); break; }
+	case OutputVariableType::PotentialEnergy: {
+		//1/2 q^T K q of the stiffness matrix, and -f^T q of the constant force vector, which is conservative in any coordinates
+		CheckEnergyLocalPosition(localPosition, "ObjectGenericODE2");
+		if (parameters.forceUserFunction) { EnergyNotAvailable("ObjectGenericODE2", "its forceUserFunction defines forces"); }
+		Vector q;
+		ComputeObjectCoordinates(q, configuration);
+		Real energy = 0.;
+		if (parameters.stiffnessMatrix.NumberOfRows() != 0)
+		{
+			Vector Kq(q.NumberOfItems(), 0.);
+			parameters.stiffnessMatrix.MultMatrixVectorAdd(q, Kq);
+			energy += 0.5*(q*Kq);
+		}
+		if (parameters.forceVector.NumberOfItems() != 0) { energy -= parameters.forceVector*q; }
+		value.SetVector({ energy }); break; }
 	default:
 		SysError("CObjectGenericODE2::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

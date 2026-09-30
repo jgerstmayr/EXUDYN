@@ -108,7 +108,7 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeamCurvedTest.py':4.561491685469841, #the 45-degree bend, stress-free in its curved reference configuration (#1494)
         'geometricallyExactBeamRightAngleFrame.py':3.306181714013268, #lateral buckling of the right-angle frame at 1.088 N (#1499)
         'rightAngleFrame.py':4.371823197993865, #the same frame driven by displacement, past the buckling point (#2762)
-        'energiesTest.py':4.705337818502805, #kinetic and potential energy of simple bodies and spring-dampers (#2202)
+        'energiesTest.py':8.724884363749222, #kinetic and potential energy of simple bodies and spring-dampers (#2202)
         'geometricallyExactBeamOutputTest.py':-6.079487513916353, #section forces, moments and strains of the 3D beam (#2753)
         'geometricallyExactBeamElbowCantilever.py':-5.57992601861755, #2026-09-30: consistent mass matrix (#1273); #right-angle cantilever of Simo and Vu-Quoc 1988, free oscillations (#2730)
         'geometricallyExactBeamMassTest.py':2.9942070791403967, #consistent mass matrix of the 3D beam: rigid motion exact (#1273)

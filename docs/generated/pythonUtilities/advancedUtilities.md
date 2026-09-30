@@ -535,6 +535,35 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudynMatlab.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/TCPIPexudynMatlab.py) (Ex)
 
 
+(sec-advancedutilities-loadpotentialenergy)=
+## Function: LoadPotentialEnergy
+
+[`LoadPotentialEnergy(mbs, loadNumber, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1072)
+
+- **function description**: the potential energy of a constant load, zero in the reference configuration: $-\fv\tp \uv$ of the displacement $\uv$ of its marker point; None if the load has none that can be computed
+- **input**:
+  - `mbs`: the MainSystem of the load
+  - `loadNumber`: the load, a LoadIndex
+  - `configuration`: the configuration its marker is evaluated in
+- **output**: the potential energy as a float, or None for a load whose potential is not available: a load with a user function (it may depend on time), a body-fixed load, a torque (not conservative in 3D), a mass-proportional load on a body other than a mass point, a 1D mass or a rigid body
+- **notes**: Covered are ForceVector and Coordinate loads on any marker that gives a position or a coordinate, and MassProportional loads on the bodies named above.
+
+
+(sec-advancedutilities-createloadenergysensor)=
+## Function: CreateLoadEnergySensor
+
+[`CreateLoadEnergySensor(mbs, loadNumber, storeInternal = True, writeToFile = False, fileName = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1119)
+
+- **function description**: a SensorUserFunction that measures the potential energy of a constant load, LoadPotentialEnergy(...)
+- **input**:
+  - `mbs`: the MainSystem of the load
+  - `loadNumber`: the load, a LoadIndex; raises if its potential energy is not available
+  - `storeInternal`: store the values in the sensor, as for every sensor
+  - `writeToFile`: write the values to a file
+  - `fileName`: the file, if written
+- **output**: the SensorIndex of the new sensor
+
+
 (sec-module-advancedutilities-class-expectedtype(enum))=
 ## CLASS ExpectedType(Enum) (in module advancedUtilities)
 
@@ -545,3 +574,32 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 ## CLASS TCPIPdata (in module advancedUtilities)
 
 **class description**: helper class for CreateTCPIPconnection and for TCPIPsendReceive
+
+
+(sec-module-advancedutilities-class-systemenergy)=
+## CLASS SystemEnergy (in module advancedUtilities)
+
+**class description**: the kinetic and potential energies of a whole system, from the output variables KineticEnergy and PotentialEnergy of its objects and from the potential of its constant loads (#2202)
+
+- **input**:
+  - `mbs`: the MainSystem, assembled
+  - `skipUnavailable`: if True, an item that cannot give its energy (a user function, a type without the output variable) is left out and listed in .unavailable; if False, it raises
+- **notes**: The lists are made once, in __init__: .kineticObjects, .potentialObjects, .loads and .unavailable - the items that have the energy as an output variable and cannot give it with their parameters (a user function), and the loads without a potential, each with the reason. ComputeSystemEnergies() returns the four numbers; AddSensor() adds a SensorUserFunction that records them - call mbs.Assemble() again after it.
+
+(sec-advancedutilities-systemenergy-computesystemenergies)=
+### Class function: ComputeSystemEnergies
+
+[`ComputeSystemEnergies(self, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1195)
+
+- **class function description**: [kinetic, potential of the objects, potential of the loads, total] in the given configuration; the kinetic energy of bodies computed from their mass matrix is available in the current configuration only
+
+
+(sec-advancedutilities-systemenergy-addsensor)=
+### Class function: AddSensor
+
+[`AddSensor(self, storeInternal = True, writeToFile = False, fileName = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1212)
+
+- **class function description**: a SensorUserFunction recording ComputeSystemEnergies(): [kinetic, potential of the objects, potential of the loads, total]; returns its SensorIndex
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`energiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesTest.py) (TM)

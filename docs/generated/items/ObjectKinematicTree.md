@@ -74,6 +74,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Coordinates_t |  | all {ref}`ODE2 <ODE2>` velocity coordinates |
 | Coordinates_tt |  | all {ref}`ODE2 <ODE2>` acceleration coordinates |
 | Force |  | generalized forces for all coordinates (residual of all forces except mass*accleration; corresponds to ComputeODE2LHS) |
+| KineticEnergy | $T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$ | kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$ |
 
 (description-objectkinematictree)=
 ## Detailed description

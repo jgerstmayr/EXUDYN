@@ -576,6 +576,9 @@ void CObjectBeamGeometricallyExact2D::GetOutputVariableBody(OutputVariableType v
             case OutputVariableType::ForceLocal:	value.SetVector({ (parameters.physicsAxialDamping * gamma1_t + parameters.physicsAxialStiffness * gamma1),
                 (parameters.physicsShearDamping * gamma2_t + parameters.physicsShearStiffness * gamma2), 0. }); break;
             case OutputVariableType::TorqueLocal:	value.SetVector({ 0., 0., (parameters.physicsBendingDamping * theta_xt + parameters.physicsBendingStiffness * theta_x) }); break;
+            case OutputVariableType::KineticEnergy: {
+                CheckEnergyLocalPosition(localPosition, "ObjectBeamGeometricallyExact2D");
+                value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectBeamGeometricallyExact2D") }); break; }
             default:
                 SysError("CObjectBeamGeometricallyExact2D::GetOutputVariableBody failed"); //error should not occur, because types are checked!
             }

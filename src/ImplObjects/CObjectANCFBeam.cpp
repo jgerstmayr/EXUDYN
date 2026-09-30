@@ -1052,6 +1052,9 @@ void CObjectANCFBeam::GetOutputVariableBody(OutputVariableType variableType, con
 	//	if (bendingDamping != 0) { torque += bendingDamping * ComputeCurvature_t(x, configuration); }
 	//	value.SetVector({ torque }); break;
 	//}
+	case OutputVariableType::KineticEnergy: {
+		CheckEnergyLocalPosition(localPosition, "ObjectANCFBeam");
+		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectANCFBeam") }); break; }
 	default:
 		SysError("CObjectANCFBeam::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}
