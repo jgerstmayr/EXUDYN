@@ -118,3 +118,43 @@ def testTheManylinuxWheelsAreRefusedOnMacOS(onPlatform):
     with pytest.raises(SystemExit) as raised:
         commands.Linux(Options(wsl_conda=False, fast=False))
     assert 'macOS' in str(raised.value)
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the pytest files and the MiniExample performance run (#2760)
+def PytestOptions(**values):
+    defaults = dict(env=None, processes=None, keyword=None, graphics=False, gate=False, record=False,
+                    extra=[], verbose=False, noConda=True)
+    defaults.update(values)
+    return Options(**defaults)
+
+
+def testPytestRunsTheTestingDirectoryInEightProcesses():
+    [step] = commands.Pytest(PytestOptions())
+    assert step.argv[1:4] == ['-m', 'pytest', commands.ModelsDirectory()]
+    assert step.argv[4:6] == ['-n', '8'] and step.env['PYTHONPATH'] == ''
+    assert step.check
+
+
+def testPytestGraphicsSelectsTheGraphicsFilesAndTheyExist():
+    [step] = commands.Pytest(PytestOptions(graphics=True, processes=1, keyword='MassPoint'))
+    files = [a for a in step.argv if a.endswith('.py')]
+    assert [os.path.basename(f) for f in files] == commands.graphicsTestFiles
+    assert all(os.path.isfile(f) for f in files)
+    assert '-n' not in step.argv and step.argv[-3:] == ['-k', 'MassPoint', '-q']
+
+
+def testPytestRecordSetsTheVariableAndListsTheChanges():
+    steps = commands.Pytest(PytestOptions(record=True))
+    assert steps[0].env['EXUDYN_RECORD_GRAPHICS_REFERENCES'] == '1' and not steps[0].check
+    assert steps[1].action is not None and 'graphicsReferences' in steps[1].note
+
+
+def testPerfMiniRunsTheMiniExamplePerformance():
+    options = Options(mini=True, fast=False, full=True, processes=1, only='ObjectMassPoint', compare=None,
+                      extra=[], verbose=False, noConda=True, env='venvExuP313', py=None)
+    [step] = commands.Performance(options)
+    assert step.argv[1:] == ['runMiniExamplePerformance.py', '--full', '--processes', '1', '--only', 'ObjectMassPoint']
+    options.fast = True
+    with pytest.raises(SystemExit):
+        commands.Performance(options)

@@ -1110,6 +1110,12 @@ file, so an editor cannot complete them).
 <a id="rg10-13"></a>
 **RG10.13** **DONE 2026-09-29** (#2752) — [log](exudynRevisionLog2026b.md#rg10-13) · [plan text](exudynRevisionLog2026b.md#plan-rg10-13) — `exudev issue plot`.
 
+<a id="rg10-14"></a>
+**RG10.14** *(group RG10; maintainer 2026-09-30)* **DONE 2026-09-30** (#2760) — [log](exudynRevisionLog2026b.md#rg10-14) —
+    **`exudev` runs the pytest files and the MiniExample performance run**: `exudev pytest [--graphics]
+    [--gate] [--record] [-k] [--processes]` and `exudev perf --mini [--full] [--processes] [--only] [--compare]`;
+    `build --complete` runs the pytest files last.
+
 ## RG11 — Misc
 
 What belongs to no group yet. Three of a kind here are a reason to propose a group of their own.

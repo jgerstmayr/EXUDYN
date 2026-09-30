@@ -1,0 +1,15 @@
+{
+  "number": 2760,
+  "title": "exudev runs the pytest files and the MiniExample performance run",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "exudev has commands for runTestSuite, runTestExamples and runPerformanceTests, but none for the pytest files of python/testing (graphics regression, MiniExample graphics, settings, dialogs, tools), none for runMiniExamplePerformance.py and none to re-record the graphics references. New: exudev pytest [--graphics] [--gate] [--record] [-k] [--processes], exudev perf --mini [--full] [--processes] [--only] [--compare]; build --complete also runs pytest.",
+  "dateRaised": "2026-09-30",
+  "deadline": "2027-03-29",
+  "dateResolved": "2026-09-30 21:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudev pytest runs the pytest files of python/testing (--graphics for the graphics tests, --record to re-write their references); exudev perf --mini runs the performance measurement of the MiniExamples.",
+  "resolvedInVersion": "1.12.194"
+}

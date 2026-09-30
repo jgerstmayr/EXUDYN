@@ -40,6 +40,9 @@ epilogText = """examples:
   exudev test --py all              the test suite in every environment
   exudev test --fast                the test suite against the fast module
   exudev perf --fast                the performance tests against the fast module
+  exudev perf --mini                the performance run of the MiniExamples (--full: ~2 s each)
+  exudev pytest                     the pytest files of python/testing, 8 processes
+  exudev pytest --graphics          the graphics tests only; --record writes their references anew
   exudev env                        which environment has which python, exudyn and numpy
   exudev issue list --open          the open issues; "issue raise/resolve/remark" write
   exudev -n release                 print everything a release would run, and do nothing
@@ -334,9 +337,37 @@ def BuildParsers():
     performance.add_argument('--machine-id', metavar='ID',
                              help='EXUDYN_MACHINE_ID: the subfolder of python/logs/performance/')
     performance.add_argument('--overwrite-log', action='store_true', help='overwrite an existing log')
+    performance.add_argument('--mini', action='store_true',
+                             help='the performance run of the MiniExamples (runMiniExamplePerformance.py) '
+                                  'instead of runPerformanceTests.py')
+    performance.add_argument('--full', action='store_true', help='--mini: the full run, ~2 s per example')
+    performance.add_argument('--processes', type=int, metavar='N', help='--mini: N processes; 1 for timings '
+                             'that are compared')
+    performance.add_argument('--only', metavar='NAME,...', help='--mini: only these items')
+    performance.add_argument('--compare', nargs=2, metavar=('LOG1', 'LOG2'),
+                             help='--mini: compare two logs instead of running')
     performance.add_argument('extra', nargs=argparse.REMAINDER,
-                             help="after '--': arguments passed to runPerformanceTests.py verbatim")
+                             help="after '--': arguments passed to the runner verbatim")
     performance.set_defaults(function=commands.Performance)
+
+    pytest = subParsers.add_parser('pytest', parents=[globalParser],
+        help='run the pytest files of python/testing (graphics, dialogs, settings, tools)',
+        description='pytest over python/testing/ in the development environment (venvExuP313, the one '
+                    'that has pytest and pytest-xdist), in 8 processes. The test models are run by '
+                    '"exudev test"; these are the tests that are not models.')
+    pytest.add_argument('--env', metavar='NAME', help='conda environment (default venvExuP313)')
+    pytest.add_argument('--processes', type=int, metavar='N', help='processes, default 8; 1 runs in one')
+    pytest.add_argument('-k', dest='keyword', metavar='EXPRESSION', help='only the tests matching it (pytest -k)')
+    pytest.add_argument('--graphics', action='store_true',
+                        help='the graphics tests only: regression, MiniExamples, markers, ZoomAll, GraphicsData')
+    pytest.add_argument('--gate', action='store_true',
+                        help='the commit gate: -m "not slow and not optionalPackage"')
+    pytest.add_argument('--record', action='store_true',
+                        help='write the graphics references anew (EXUDYN_RECORD_GRAPHICS_REFERENCES=1) and '
+                             'list the files that changed; review the diff before committing')
+    pytest.add_argument('extra', nargs=argparse.REMAINDER,
+                        help="after '--': arguments passed to pytest verbatim")
+    pytest.set_defaults(function=commands.Pytest)
 
     docs = subParsers.add_parser('docs', parents=[globalParser, versionParser],
         help='build the html documentation with sphinx',

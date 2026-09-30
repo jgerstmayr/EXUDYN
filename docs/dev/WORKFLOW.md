@@ -348,9 +348,11 @@ The gates that require them are §8.
 
 | run | what | how |
 |---|---|---|
-| commit gate / pull request | test models without the slow ones and without optional packages | `runTestSuite.py --fast` (12 s) or `pytest -m "not slow and not optionalPackage"` (9 s with `-n 8`) |
-| full local check | all test models and mini examples | `runTestSuite.py` (22 s) or `pytest` |
-| nightly / release | models, performance tests and all examples | `exudev build --complete`, or `exudev release`, which calls the three runners |
+| commit gate / pull request | test models without the slow ones and without optional packages | `runTestSuite.py --fast` (12 s) or `exudev pytest --gate` |
+| full local check | all test models and mini examples, and the tests that are not models - graphics, settings, dialogs, tools | `exudev test` (22 s) and `exudev pytest` (about a minute in 8 processes) |
+| graphics | what the renderer would draw, every item through its MiniExample, small raytraced images | `exudev pytest --graphics` (15 s); `--record` after an intended change, then read the diff of `python/testing/graphicsReferences/` |
+| performance of the items | every MiniExample, the solver timers | `exudev perf --mini` (regular), `--full` for a comparison, `--compare LOG1 LOG2` |
+| nightly / release | models, performance tests, all examples and the pytest files | `exudev build --complete`, or `exudev release`, which calls the runners |
 | examples | all 171 examples, in parallel, as an API check | `exudev examples`, i.e. `runTestExamples.py` (49 s; `--serial`, `--parallel=N`, `--timeout=S`, `--exit-code`) |
 | C++ unit tests | the `lest` tests in `src/Tests/` | only in a build with the `performUnitTests` switch, or the VS `Debug` configuration; then `runTestSuite.py` runs them |
 

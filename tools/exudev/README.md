@@ -28,6 +28,8 @@ three from any platform.
 | `exudev test [--py] [--fast] [--parallel [N]]` | `runTestSuite.py`, always with `--exit-code` |
 | `exudev examples [--py] [--timeout S]` | `runTestExamples.py` (slow; default `venvP312`) |
 | `exudev perf [--py] [--fast]` | `runPerformanceTests.py` |
+| `exudev perf --mini [--full] [--processes N] [--only A,B] [--compare LOG1 LOG2]` | `runMiniExamplePerformance.py`: every MiniExample solved once more with a small step, the solver timers recorded; the regular module only |
+| `exudev pytest [--graphics] [--gate] [--record] [-k EXPR] [--processes N]` | pytest over `python/testing/` in `venvExuP313` (the environment with pytest), 8 processes; `--graphics` the graphics tests only, `--gate` the commit-gate subset, `--record` writes the graphics references anew and lists what changed |
 | `exudev docs [--keep-cache] [--open] [--pdf]` | `sphinx-build -b html . _build -E`; `--pdf` adds the printable documentation in `dist/` (LaTeX needed, release only) |
 | `exudev linux [--manylinux \| --wsl-conda]` | the linux wheels: through WSL on Windows, in this shell on linux; refused on macOS |
 | `exudev release [--dev] [--no-linux]` | `build --complete` over every version, with the guards a release needs |

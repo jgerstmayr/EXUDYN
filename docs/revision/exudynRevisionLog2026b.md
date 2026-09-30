@@ -10214,3 +10214,25 @@ package).
     **How to set up a new item** (#2742): one developer page, `docs/dev/NEW_ITEM.md` - the definition,
     which files the generator writes for a new class name, the C++ to write by kind, the checks, what to
     run; it refers to `definitions/README.md`, `ARCHITECTURE.md` and `WORKFLOW.md` for the details.
+
+<a id="rg10-14"></a>
+### RG10.14 — `exudev pytest` and `exudev perf --mini` (2026-09-30, #2760)
+
+`exudev` drove the three runners - `runTestSuite.py`, `runTestExamples.py`, `runPerformanceTests.py` - and none of
+the 31 pytest files of `python/testing/` (the graphics regression, every item through its MiniExample, settings,
+dialogs, the tools), nor `runMiniExamplePerformance.py` (RG14.2.1), nor the re-recording of the graphics references,
+which took an environment variable set by hand.
+
+| command | runs |
+|---|---|
+| `exudev pytest` | `pytest python/testing -n 8 -q` in `venvExuP313` - the only environment with pytest and pytest-xdist; `PYTHONPATH` emptied, so that the driver's own modules cannot shadow those of `python/testing/` |
+| `--graphics` | the five graphics files: `test_graphicsRegression.py`, `test_graphicsMiniExamples.py`, `test_superElementMarkerGraphics.py`, `test_zoomAllTrackMarker.py`, `test_graphicsData.py` (14 s) |
+| `--gate` | `-m "not slow and not optionalPackage"`, the commit gate `WORKFLOW.md` names |
+| `--record` | the graphics files with `EXUDYN_RECORD_GRAPHICS_REFERENCES=1`, not stopping on the cases that report a written reference, then `git status` of `graphicsReferences/` - the diff to read before a commit |
+| `-k`, `--processes N`, `--env`, `-- ...` | as in pytest; one process with `--processes 1` |
+| `exudev perf --mini` | `runMiniExamplePerformance.py` with `--full`, `--processes`, `--only`, `--compare LOG1 LOG2`; refused with `--fast`, because the fast module has no timers |
+
+`exudev build --complete` ends with a check of the exudyn installed in `venvExuP313` and the pytest files: that
+environment is not one of the version matrix the build installs into, so a stale install stops the run there,
+at the end. `tools/exudev/README.md` and the table *Which tests run when* of `WORKFLOW.md` name the commands;
+`test_exudev.py` checks what each plans (four tests), and both commands were run.

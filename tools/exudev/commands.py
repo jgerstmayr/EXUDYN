@@ -419,6 +419,13 @@ def Complete(options):
         steps += Examples(OptionsWith(options, py=None, serial=False, parallel=None,
                                       timeout=None, overwrite_log=True, extra=[]))
 
+        #the pytest files, last: they need pytest, which only the development environment has, and
+        #its exudyn is not one of the wheels built above - so the install is checked first, and a
+        #stale one stops the run here, where nothing else is left to do (#2760)
+        steps += [VersionCheckStep(pytestEnvironment, options)]
+        steps += Pytest(OptionsWith(options, env=None, processes=None, keyword=None,
+                                    graphics=False, gate=False, record=False, extra=[]))
+
     return steps
 
 
@@ -659,6 +666,64 @@ def Test(options):
 
 
 #%%******************************************************************************************************
+#pytest and pytest-xdist are development tools (CLAUDE.md rule 6) and are installed in the development
+#environment only; the version matrix venvP310..venvP314 does not have them
+pytestEnvironment = 'venvExuP313'
+
+#the graphics tests: what the renderer would draw, as data and as small raytraced images (#2704, #2751)
+graphicsTestFiles = ['test_graphicsRegression.py', 'test_graphicsMiniExamples.py',
+                     'test_superElementMarkerGraphics.py', 'test_zoomAllTrackMarker.py', 'test_graphicsData.py']
+
+
+def Pytest(options):
+    """The pytest files of python/testing/ - the tests that are not models: graphics, dialogs, settings,
+    the tools, the generators (#2760). '--record' writes the graphics references anew and then shows
+    which of them changed, for the diff to be read before a commit."""
+    extra = ExtraArguments(options)
+    environment = options.env or pytestEnvironment
+    testingDirectory = ModelsDirectory()
+    argv = ['python', '-m', 'pytest']
+    if options.graphics or options.record:
+        argv += [os.path.join(testingDirectory, name) for name in graphicsTestFiles]
+    else:
+        argv += [testingDirectory]
+    processes = 8 if options.processes is None else options.processes
+    if processes > 1:
+        argv += ['-n', str(processes)]
+    if options.keyword:
+        argv += ['-k', options.keyword]
+    if options.gate:
+        argv += ['-m', 'not slow and not optionalPackage']
+    argv += [] if options.verbose else ['-q']
+    argv += extra
+
+    #PYTHONPATH is emptied: a driver started with tools/ on it would put runner.py and commands.py
+    #ahead of the modules of python/testing/
+    stepEnvironment = {'PYTHONPATH': ''}
+    if options.record:
+        stepEnvironment['EXUDYN_RECORD_GRAPHICS_REFERENCES'] = '1'
+    steps = [Step('pytest in ' + environment + (' [graphics]' if options.graphics else '')
+                  + (' [recording the graphics references]' if options.record else ''),
+                  argv=runner.InEnvironment(environment, argv, options),
+                  cwd=runner.RepositoryRoot(), env=stepEnvironment,
+                  #a recording run reports each written reference as a failure, by design
+                  check=not options.record)]
+
+    if options.record:
+        def ShowChangedReferences():
+            import subprocess
+            references = os.path.join('python', 'testing', 'graphicsReferences')
+            status = subprocess.run(['git', 'status', '--short', '--', references], cwd=runner.RepositoryRoot(),
+                                    capture_output=True, text=True).stdout.strip()
+            print('graphics references changed or new:\n' + (status if status else '  none'))
+            return 0
+        steps += [Step('the graphics references that changed', action=ShowChangedReferences,
+                       note='git status --short python/testing/graphicsReferences')]
+
+    return steps
+
+
+#%%******************************************************************************************************
 def Examples(options):
     """The Examples set. '--exit-code' is always added: since #2504 the runner returns non-zero on
     an UNEXPECTED failure - the known ones are listed in testRunnerTools.KnownExampleFailures()."""
@@ -688,7 +753,10 @@ def Examples(options):
 
 #%%******************************************************************************************************
 def Performance(options):
-    """The performance tests, with '--exit-code' (#2504)."""
+    """The performance tests, with '--exit-code' (#2504); with '--mini' the performance run of the
+    MiniExamples instead (runMiniExamplePerformance.py, #2745, #2760)."""
+    if getattr(options, 'mini', False):
+        return MiniExamplePerformance(options)
     extra = ExtraArguments(options)
     steps = []
 
@@ -711,6 +779,34 @@ def Performance(options):
                        argv=runner.InEnvironment(environment, argv, options),
                        cwd=ModelsDirectory(), env=stepEnvironment, check=False)]
 
+    return steps
+
+
+#%%******************************************************************************************************
+def MiniExamplePerformance(options):
+    """'perf --mini': every MiniExample solved once more with a small step size, the solver timers
+    recorded (#2745). The regular module only - the fast module has no timers."""
+    if options.fast:
+        raise SystemExit('exudev: perf --mini measures with the solver timers, which the fast module does '
+                         'not have; run it without --fast')
+    extra = ExtraArguments(options)
+    steps = []
+    for (pythonTag, environment) in TargetEnvironments(options, 'P313'):
+        argv = ['python', 'runMiniExamplePerformance.py']
+        if options.compare:
+            argv += ['--compare'] + list(options.compare)
+        else:
+            if options.full:
+                argv += ['--full']
+            if options.processes is not None:
+                argv += ['--processes', str(options.processes)]
+            if options.only:
+                argv += ['--only', options.only]
+        argv += extra
+        steps += [Step('MiniExample performance' + (' comparison' if options.compare else
+                                                    (' [full]' if options.full else '')) + ' in ' + environment,
+                       argv=runner.InEnvironment(environment, argv, options),
+                       cwd=ModelsDirectory(), env={'EXUDYN_SUPPRESS_UI_WINDOW_OPEN': '1'}, check=False)]
     return steps
 
 
