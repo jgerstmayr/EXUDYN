@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 181 | 1.12.195 |
+| 1.12 | Metheney | 182 | 1.12.197 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.197** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the mass switch of ObjectBeamGeometricallyExact becomes exu.special.beams.geometricallyExactLumpedMass (#2761)
+  - description: exu.experimental.beamGeometricallyExactConsistentMass (RG4.8.4) stays as a switch, for tests with both mass matrices, but as a special setting: exu.special.beams.geometricallyExactLumpedMass, default False (the consistent mass); the experimental one goes (maintainer, 2026-09-30).
+  - **notes:** The mass matrix of ObjectBeamGeometricallyExact is switched with exu.special.beams.geometricallyExactLumpedMass (default False: the element-consistent mass); exu.experimental.beamGeometricallyExactConsistentMass is gone.
+  - date resolved: **2026-09-30 23:27**, date raised: 2026-09-30
 - **1.12.195** `FIX` `MEDIUM EFF` `resolved by: Claude-JG` shadows (#2308)
   - description: in case modelCentricView=False, lights with useCameraFrame=True have erratic shadows  in OpenGL mode
   - **notes:** Shadows in the OpenGL renderer no longer flicker or disappear with a camera-centric view and lights in the camera frame.

@@ -294,8 +294,6 @@ pb.DefDataAccess('experimental.eigenFullPivotLUsolverDebugLevel','debug output o
                        dataType='int', isTopLevel = True)
 pb.DefDataAccess('experimental.markerSuperElementRigidTexpSO3','if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters',
                        dataType='int', isTopLevel = True)
-pb.DefDataAccess('experimental.beamGeometricallyExactConsistentMass','if nonzero (default), ObjectBeamGeometricallyExact uses the element-consistent mass matrix and quadratic velocity vector; 0 uses the lumped ones, for comparison',
-                       dataType='int', isTopLevel = True)
 
 pb.CppCode('        m.attr("special") = py::cast(&pySpecial);\n') 
 pb.DefDataAccess('special','special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial',
@@ -328,6 +326,11 @@ pb.DefDataAccess('special.exceptions.dictionaryVersionMismatch','if True (=defau
 pb.DefDataAccess('special.exceptions.dictionaryNonCopyable','if True (=default), GetDictionary(...) raises an error if a value cannot be copied into the dictionary',
                         dataType='bool', isTopLevel = True)
 pb.DefDataAccess('special.exceptions.parameterRangeChecks','if True (=default), writing an item or settings parameter outside its range (e.g. a negative mass or a non-positive number of steps) raises an error, on every write path (item classes, dictionaries, SetObjectParameter, ...); set False to accept any value, e.g. if a range limit turns out to be wrong',
+                        dataType='bool', isTopLevel = True)
+
+pb.DefDataAccess('special.beams','switches of the beam elements, for tests and comparisons; a model keeps the defaults; for available features, see the C++ code class PySpecialBeams',
+                        dataType='SpecialBeams', isTopLevel = True)
+pb.DefDataAccess('special.beams.geometricallyExactLumpedMass','if True, ObjectBeamGeometricallyExact uses the lumped mass matrix of its nodes and their quadratic velocity vector instead of the element-consistent ones (default False); for comparisons and tests',
                         dataType='bool', isTopLevel = True)
 
 pb.DefDataAccess('special.userInterface','flags that stop Exudyn from opening windows; meant for automated runs (test runners, CI, AI-assisted development), where a window that waits for a human stops everything; not intended for regular users; for available features, see the C++ code class PySpecialUserInterface',

@@ -600,7 +600,7 @@ The steps are numbered in the order they were raised and stand here in the order
     - **RG4.8.13** `rightAngleFrame.py` (ANCF and this element, not run by the suite) stops near the
       buckling load with its load-driven settings: drive it by displacement instead - a coordinate constraint
       whose offset a user function prescribes;
-    - **RG4.8.14** the switch of the mass matrix stays, as a special setting and not an experimental one:
+    - **RG4.8.14** **DONE 2026-10-01** (#2761) — [log](exudynRevisionLog2026b.md#rg4-8-14) - the switch of the mass matrix stays, as a special setting and not an experimental one:
       `exu.special.beams.geometricallyExactLumpedMass` (default False, the consistent mass), so that tests
       can run both; `exu.experimental.beamGeometricallyExactConsistentMass` goes.
 

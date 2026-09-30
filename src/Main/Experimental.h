@@ -31,7 +31,6 @@ class PyExperimental
 public: 
     Index eigenFullPivotLUsolverDebugLevel; //!< debug: 0=off, 1=print rank and info, 2=print matrices
     Index markerSuperElementRigidTexpSO3; //!< True: use additional TexpSO3 for FFRF
-    Index beamGeometricallyExactConsistentMass; //!< True: ObjectBeamGeometricallyExact uses the element-consistent mass matrix (#1273)
 
     PyExperimental()
     {
@@ -42,7 +41,6 @@ public:
     {
         eigenFullPivotLUsolverDebugLevel = 0;
         markerSuperElementRigidTexpSO3 = true;
-        beamGeometricallyExactConsistentMass = true;
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -51,7 +49,6 @@ public:
     {
         os << "  eigenFullPivotLUsolverDebugLevel = " << eigenFullPivotLUsolverDebugLevel << "\n";
         os << "  markerSuperElementRigidTexpSO3 = " << markerSuperElementRigidTexpSO3 << "\n";
-        os << "  beamGeometricallyExactConsistentMass = " << beamGeometricallyExactConsistentMass << "\n";
         os << "\n";
     }
 
@@ -197,6 +194,37 @@ public:
 
 };
 
+//!switches of the beam elements that tests and comparisons use; a model keeps the defaults
+class PySpecialBeams
+{
+public:
+    bool geometricallyExactLumpedMass;  //!< ObjectBeamGeometricallyExact: the lumped mass per node instead of the element-consistent one (#1273, #2761)
+
+    PySpecialBeams()
+    {
+        Initialize();
+    }
+
+    void Initialize()
+    {
+        geometricallyExactLumpedMass = false;
+    }
+
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    virtual void Print(std::ostream& os) const
+    {
+        os << "  geometricallyExactLumpedMass = " << geometricallyExactLumpedMass << "\n";
+        os << "\n";
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const PySpecialBeams& item)
+    {
+        item.Print(os);
+        return os;
+    }
+
+};
+
 //!class with according structure in PybindModule.cpp which can be accessed from Python and inside C++
 //!used for special features and global settings
 class PySpecial
@@ -205,6 +233,7 @@ public:
     PySpecialSolver solver;
     PySpecialExceptions exceptions;
     PySpecialUserInterface userInterface;
+    PySpecialBeams beams;
 
     PySpecial()
     {
@@ -216,6 +245,7 @@ public:
         solver.Initialize();
         exceptions.Initialize();
         userInterface.Initialize();
+        beams.Initialize();
     }
 
     //! put RunCppUnitTests into special class
@@ -237,6 +267,7 @@ public:
         os << "solver:\n" << solver;
         os << "exceptions:\n" << exceptions;
         os << "userInterface:\n" << userInterface;
+        os << "beams:\n" << beams;
         //os << "  InfoStat() = " << InfoStat(false) << "\n";
         os << "\n";
     }

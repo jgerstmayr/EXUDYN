@@ -5288,8 +5288,8 @@ definitions.append(ItemDefinition(
     [1/3,\ 1/6;\ 1/6,\ 1/3]$ for the positions, and for the rotations
     $\Gm_i\tp \int S_i S_j\, \Rot(x) \Jm \Rot(x)\tp dx\ \Gm_j$ with the cross section inertia $\Jm$ per unit length,
     integrated with two Gauss points; the quadratic velocity vector is formed the same way. A rigid motion is
-    therefore represented exactly by any number of elements. `exu.experimental.beamGeometricallyExactConsistentMass
-    = 0` switches to the lumped mass of the nodes, for comparison.
+    therefore represented exactly by any number of elements. `exu.special.beams.geometricallyExactLumpedMass = True`
+    switches to the lumped mass of the nodes, for comparison.
 
     #### Marker interfaces
     `MarkerBodyPosition`, `MarkerBodyRigid` and `MarkerBodyMass` attach at a local position; their Jacobians

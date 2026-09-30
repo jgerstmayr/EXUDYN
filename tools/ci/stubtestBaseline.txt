@@ -69,6 +69,7 @@ exudyn.SolverConvergenceData
 exudyn.SolverIterationData
 exudyn.SolverOutputData
 exudyn.Special
+exudyn.SpecialBeams
 exudyn.SpecialExceptions
 exudyn.SpecialSolver
 exudyn.SpecialUserInterface

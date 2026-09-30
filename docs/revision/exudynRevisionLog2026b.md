@@ -10252,3 +10252,16 @@ quadratic triangle with optional nodal normals; split into flat triangles when d
 between the normals with a threshold (3 degrees) and a maximum number of subdivisions (5) as two global settings
 in `openGL.advanced`; the raytracer the same; the sphere a GraphicsData type with which the nodes are drawn, in
 the order of today.
+
+<a id="rg4-8-14"></a>
+### RG4.8.14 — `exu.special.beams.geometricallyExactLumpedMass` (2026-10-01, #2761)
+
+The switch between the element-consistent and the lumped mass matrix of `ObjectBeamGeometricallyExact`
+(RG4.8.4) stays, so that tests and comparisons can run both, and moves from the experimental features to the
+special settings, in a structure of its own for the beam elements: `exu.special.beams` (`PySpecialBeams` in
+`Experimental.h`, bound beside `special.solver`, `special.exceptions` and `special.userInterface`) with
+`geometricallyExactLumpedMass`, default `False` - the consistent mass. The name says what the non-default does.
+`exu.experimental.beamGeometricallyExactConsistentMass` is gone; it existed only in the internal 1.12 versions.
+The element's description names the new switch. **Test** `python/testing/test_specialBeams.py`: the system mass
+matrix of one element couples the positions of its nodes with $ho A L/6$ by default and not at all with the
+switch set.

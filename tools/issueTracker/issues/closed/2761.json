@@ -1,0 +1,15 @@
+{
+  "number": 2761,
+  "title": "the mass switch of ObjectBeamGeometricallyExact becomes exu.special.beams.geometricallyExactLumpedMass",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "exu.experimental.beamGeometricallyExactConsistentMass (RG4.8.4) stays as a switch, for tests with both mass matrices, but as a special setting: exu.special.beams.geometricallyExactLumpedMass, default False (the consistent mass); the experimental one goes (maintainer, 2026-09-30).",
+  "dateRaised": "2026-09-30",
+  "deadline": "2027-03-29",
+  "dateResolved": "2026-09-30 23:27",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The mass matrix of ObjectBeamGeometricallyExact is switched with exu.special.beams.geometricallyExactLumpedMass (default False: the element-consistent mass); exu.experimental.beamGeometricallyExactConsistentMass is gone.",
+  "resolvedInVersion": "1.12.197"
+}

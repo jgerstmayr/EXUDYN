@@ -3986,6 +3986,11 @@ class SpecialExceptions:
     parameterRangeChecks:bool
     """if True (=default), writing an item or settings parameter outside its range (e.g. a negative mass or a non-positive number of steps) raises an error, on every write path (item classes, dictionaries, SetObjectParameter, ...); set False to accept any value, e.g. if a range limit turns out to be wrong."""
 
+class SpecialBeams:
+    """switches of the beam elements, for tests and comparisons; a model keeps the defaults; for available features, see the C++ code class PySpecialBeams"""
+    geometricallyExactLumpedMass:bool
+    """if True, ObjectBeamGeometricallyExact uses the lumped mass matrix of its nodes and their quadratic velocity vector instead of the element-consistent ones (default False); for comparisons and tests."""
+
 class SpecialUserInterface:
     """flags that stop Exudyn from opening windows; meant for automated runs (test runners, CI, AI-assisted development), where a window that waits for a human stops everything; not intended for regular users; for available features, see the C++ code class PySpecialUserInterface"""
     suppressRenderer:bool
@@ -4055,8 +4060,6 @@ class Experimental:
     """debug output of the EigenDense solver with full pivoting: 0 (default) = none, 1 = rank and information, 2 = also the matrices."""
     markerSuperElementRigidTexpSO3:int
     """if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters."""
-    beamGeometricallyExactConsistentMass:int
-    """if nonzero (default), ObjectBeamGeometricallyExact uses the element-consistent mass matrix and quadratic velocity vector; 0 uses the lumped ones, for comparison."""
 
 class Special:
     """special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial"""
@@ -4068,6 +4071,8 @@ class Special:
     """special solver attributes and functions; not intended for regular users; for available features, see the C++ code class PySpecialSolver."""
     exceptions:SpecialExceptions
     """special flags for exceptions and checks; not intended for regular users; for available features, see the C++ code class PySpecialExceptions."""
+    beams:SpecialBeams
+    """switches of the beam elements, for tests and comparisons; a model keeps the defaults; for available features, see the C++ code class PySpecialBeams."""
     userInterface:SpecialUserInterface
     """flags that stop Exudyn from opening windows; meant for automated runs (test runners, CI, AI-assisted development), where a window that waits for a human stops everything; not intended for regular users; for available features, see the C++ code class PySpecialUserInterface."""
     @property

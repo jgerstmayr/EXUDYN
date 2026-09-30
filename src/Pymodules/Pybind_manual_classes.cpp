@@ -526,7 +526,6 @@ void Init_Pybind_manual_classes(py::module& m) {
 		//.def_readwrite("useEigenFullPivotLUsolver", &Experimental::useEigenFullPivotLUsolver)//, "switch to special solver")
 		.def_readwrite("eigenFullPivotLUsolverDebugLevel", &PyExperimental::eigenFullPivotLUsolverDebugLevel)//, "debug level for solver")
 		.def_readwrite("markerSuperElementRigidTexpSO3", &PyExperimental::markerSuperElementRigidTexpSO3)//, "debug level for solver")
-		.def_readwrite("beamGeometricallyExactConsistentMass", &PyExperimental::beamGeometricallyExactConsistentMass)
 
 		//representation:
 		.def("__repr__", [](const PyExperimental& item) {
@@ -580,6 +579,15 @@ void Init_Pybind_manual_classes(py::module& m) {
 			}, "return the string representation of SpecialUserInterface class")
 		;
 
+	//Python version of SpecialBeams class
+	py::class_<PySpecialBeams>(m, "SpecialBeams", "switches of the beam elements, for tests and comparisons")
+		.def(py::init<>())
+		.def_readwrite("geometricallyExactLumpedMass", &PySpecialBeams::geometricallyExactLumpedMass)
+		.def("__repr__", [](const PySpecialBeams& item) {
+		return STDstring(EXUstd::ToString(item));
+			}, "return the string representation of SpecialBeams class")
+		;
+
 	//Python version of Special class
 	py::class_<PySpecial>(m, "Special", "Special features, to be handled with care")
 		.def(py::init<>())
@@ -587,6 +595,7 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def_readwrite("solver", &PySpecial::solver)
 		.def_readwrite("exceptions", &PySpecial::exceptions)
 		.def_readwrite("userInterface", &PySpecial::userInterface)
+		.def_readwrite("beams", &PySpecial::beams)
 		.def_property_readonly("currentRendererSystemContainer", [](const PySpecial&) -> py::object {
 			//py::cast of the POINTER returns the Python object that already wraps it, so a script
 			//gets the very SystemContainer it created; None when no renderer is attached
