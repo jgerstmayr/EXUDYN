@@ -1326,9 +1326,9 @@ The steps are numbered in the order they were raised and stand here in the order
     - **RG4.15.4** **DONE 2026-09-30** (#2127) — [log](exudynRevisionLog2026b.md#rg4-15-3) —
       `ObjectContactSphereTorus`: momentum conservation - the torque of the normal force on the ring was
       missing without friction; test model `contactSphereTorusMomentumTest.py`;
-    - **RG4.15.5** (#1639) a repeated `mbs.SolveDynamic` with `ObjectFFRFreducedOrder` diverges - **not
-      reproduced** (2026-09-30) with `objectFFRFreducedOrderTest.py`, `superElementRigidJointTest.py` and
-      `abaqusImportTest.py`, each solved again: identical results; needs the model of the report;
+    - **RG4.15.5** **CLOSED 2026-09-30** (#1639) a repeated `mbs.SolveDynamic` with `ObjectFFRFreducedOrder`
+      diverges - not reproduced with `objectFFRFreducedOrderTest.py`, `superElementRigidJointTest.py` and
+      `abaqusImportTest.py`, each solved again: identical results; old and probably fixed (maintainer);
     - **RG4.15.6** **DONE 2026-09-29** (#1888) — [log](exudynRevisionLog2026b.md#rg4-15-2) — `mbs.GetDictionary()` works with a symbolic user function, but
       `mbs.SetDictionary()` of that dictionary fails (*"Unable to cast ... symbolic.UserFunction"*);
     - **RG4.15.7** **DONE 2026-09-30** (#1424) — [log](exudynRevisionLog2026b.md#rg4-15-3) — the numerical
@@ -1338,8 +1338,23 @@ The steps are numbered in the order they were raised and stand here in the order
       `ObjectContactSphereSphere` - the drop of RG4.15.1 as a fourth case.
 
     After 1.13, not urgent: #1845 (`ComputePostProcessingModes` with threads), #1565
-    (`InitializeFromRestartFile`), #2109 (DOPRI5 step size at discontinuities), #2326 (the slider crank
-    benchmark after the revised IFToMM model).
+    (`InitializeFromRestartFile`), #2326 (the slider crank benchmark after the revised IFToMM model);
+    #2109 (DOPRI5 step size at discontinuities) goes with RG4.16.
+
+<a id="rg4-16"></a>
+**RG4.16** *(group RG4; maintainer 2026-09-30)* **Explicit solvers and the states of the PostNewton step**
+    (#2754, from #830). The explicit solvers do no PostNewton step; since RG4.15.3 they warn about the
+    objects whose state is then not updated - contact, friction, switching, rotation counters, sliding joint
+    elements. Only `GeneralContact` updates its state itself, inside the residual.
+    - **RG4.16.1** whether a PostNewton step is needed at all: which objects need one, and for what - a
+      state that switches (contact, stick-slip), a counter (rotations), an element index (sliding joints);
+    - **RG4.16.2** the concept, similar to `GeneralContact`: the data variables are updated at the beginning
+      of a step, or - more correct - in every stage of a multi-stage method (everything above explicit
+      Euler); written down and decided before code;
+    - **RG4.16.3** each object with a PostNewton step checked against the concept;
+    - **RG4.16.4** a test sweeping all explicit integrators, in the manner of `contactComparisonTest.py`;
+    - **RG4.16.5** #2109, the DOPRI5 step size at discontinuities: resolved by the concept, or what it
+      teaches about it.
 
 
 ## RG5 — Performance
@@ -3180,7 +3195,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.12 | #2736 | `NodeGenericAE`: **on hold** - the future owner of a constraint's Lagrange multipliers and of the unknowns of algebraic equations |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
-| RG4.15 | #1639, #1848, #1947 | the open bugs and fixes before 1.13: the repeated FFRF solve (not reproduced), `GeneralContact` against the sphere contact |
+| RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
+| RG4.16 | #2754, #2109 | explicit solvers and the states of the PostNewton step: concept, then each object, then a test of all explicit integrators |
 | RG6.8 | #1813, #2309, #2321, #2308, #2140, #2236, #2237, #2350 | the graphics fixes before 1.13, each with a test |
 | RG6.7 | #2709, #2710 | GraphicsData gets a Sphere and a curved triangle list; RG6.7.1 evaluates the geometry first |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |

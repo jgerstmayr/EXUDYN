@@ -7473,3 +7473,13 @@ differentiate by it: 1 step per time step. New test model `genericODE1duplicateN
 3.1091750014354522.
 
 **RG4.15.8** (#1848, #1947, `GeneralContact` against the sphere contact) is not a small step and stays open.
+
+<a id="rg4-8-9-note"></a>
+### Note to RG4.8.9 (2026-09-30): display formulas after a text line
+
+The maintainer found the HTML page of `ObjectBeamGeometricallyExact` typesetting a formula and the text after
+it as one run of italic letters. A `$$` that directly follows a text line, without a blank line, is read by
+MyST as inline math inside the paragraph, and the next `$` pairs with it. The descriptions of RG4.8.9 had
+three such formulas; `ObjectContactFrictionCircleCable2D` had one. `ConvertText` in
+`tools/generators/latexToMarkdown.py` now inserts the blank line itself (`SeparateDisplayMath`), so a
+description needs not know the rule; the two pages are regenerated.

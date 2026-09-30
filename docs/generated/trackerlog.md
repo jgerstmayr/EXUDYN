@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.181.dev1
+- Exudyn version = 1.12.182.dev1
 - last change = 2026-09-30
-- Number of issues = 2754
-- Number of resolved issues = 2495 (181 in current version)
+- Number of issues = 2755
+- Number of resolved issues = 2496 (182 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` explicit solvers: the states updated in the PostNewton step (#2754)
+  - description: Explicit solvers do no PostNewton step, so contact, friction, switching states, rotation counters and sliding joint elements are not updated (\#830 added a warning). Concept (maintainer 2026-09-30): check whether a PostNewton step is needed at all; update the data variables in the explicit integration similar to GeneralContact - at the beginning of a step, or more correctly in every stage of a multi-stage method; check every object with a PostNewton step against the concept; a test sweeping all explicit integrators, like contactComparisonTest.py; \#2109 (DOPRI5 step size at discontinuities) may be resolved by it or give insight. Planned as revision2026b step RG4.16.
+  - date raised: 2026-09-30
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` graphics regression test: every item through its MiniExample (#2751)
   - description: The last part of \#2704 (resolved 2026-09-29 with RG2.3.3.1 to RG2.3.3.4): take every item through its MiniExample - which every item but three has since RG13.6 (\#2732) - and store the graphics fingerprint of each (SC.renderer.GetGraphicsData(), counts and metrics) as a reference. revision2026b step RG2.3.3.5.
   - date raised: 2026-09-29
@@ -8359,7 +8362,3 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` explicit integration costs O(N^2) per step with the default dense linear solver (#2398)
   - description: measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision2026 step R2.10
   - date raised: 2026-09-12
-- <span class="textred">`BUG`</span> `HIGH EFF` SolveDynamic FFRF (#1639)
-  - description: repeated call to mbs.SolveDynamic gives divergence; attributed to FFRFreducedOrder model; workaround uses repeated build of model before calling solver again; may be related to FFRF or MarkerSuperElement-internal variables
-  - **remarks:** planned before 1.13 as revision2026b step RG4.15.5 (2026-09-29); not reproduced 2026-09-30 (revision2026b RG4.15.5): objectFFRFreducedOrderTest.py, superElementRigidJointTest.py, abaqusImportTest.py solved repeatedly give identical coordinates; needs the original model
-  - date raised: 2023-07-10

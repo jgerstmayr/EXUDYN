@@ -132,6 +132,7 @@ $$
 \pv_p = \pv_i + \rho \cdot \vv_s
 $$
 and the distance
+
 $$
 d_g = |\dv_g| = \sqrt{\vv_p\tp \vv_p - (n^2)/d}
 $$
@@ -290,17 +291,20 @@ The basic algorithm in the `PostNewtonStep`, with all operations given for any s
 1. Compute contact force $f_n$ according to {eq}`objectcontactfrictioncirclecable2d-contactforce`
 2. Compute current sticking position $x_{curStick}$ according to {eq}`objectcontactfrictioncirclecable2d-lastcurstick` (terms are only evaluated if $\mu_k \neq 0$)
 3. Retrieve `startOfStep` sticking position (Importantly, the `PostNewtonStep` always refers to the `startOfStep` state in the sticking position, because in the discontinuous iterations, the algorithm could switch to slipping in between and override the last sticking position in the current step) in $x^{startOfStep}_{lastStick}$ and compute and normalize difference in sticking position (in case that $x_{isSlipStick} = -2$, meaning that there is no stored sticking position, we set $\Delta x_{stick} = 0$):
+
 $$
 \Delta x^*_{stick} = x_{curStick} - x^{startOfStep}_{lastStick}, \quad
 \Delta x_{stick} = \Delta x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
 $$
 
 4. Compute linear tangential force for friction stiffness and velocity penalty:
+
 $$
 f_{t,lin} = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
 $$
 
 5. Compute tangential force according to Coulomb friction model  (note that the sign of $\Delta x_{stick}$ is used here, but alternatively we may also use the sign of $f_{t,lin}$):
+
 $$
 f_t =
 \begin{cases} f_t^{(lin)}, \quad \quad \quad \quad \quad \quad \quad \mathrm{if} \quad
@@ -310,6 +314,7 @@ f_t =
 $$
 
 6. In the case of slipping, given by $|f_t^{(lin)}| > \mu \cdot |f_n|$, we update the last sticking position in the data variable, such that the spring is pre-tensioned already,
+
 $$
 x_{lastStick} = x_{curStick} - \mathrm{Sign}(\Delta x_{stick}) \frac{\mu \cdot |f_n|}{\mu_k}, \quad
 x_{isSlipStick} = \mathrm{Sign}(\Delta x_{stick})
@@ -321,12 +326,14 @@ $$
 - Compute an error $\varepsilon_{PNS} = \varepsilon^n_{PNS}+\varepsilon^t_{PNS}$, with physical units forces (per segment point), for `PostNewtonStep`:
 
 1. if gap $x_{gap,lastPNS}$ of previous `PostNewtonStep` had different sign to current gap, set
+
 $$
 \varepsilon^n_{PNS} = k_c \cdot \Vert x_{gap} - x_{gap,lastPNS}\Vert
 $$
 while otherwise $\varepsilon^n_{PNS}=0$.
 
 2. if stick-slip-state $x_{isSlipStick,lastPNS}$ of previous `PostNewtonStep` is different from current $x_{isSlipStick}$, set
+
 $$
 \varepsilon^t_{PNS} = \Vert \left(\Vert f_t^{(lin)} \Vert  - \mu \cdot |f_n| \right)\Vert
 $$
@@ -347,6 +354,7 @@ $x_{gap, s_i} <= 0$:
 - In case of sticking ($|x_{isSlipStick}|\neq 1$):
 
 - the current sticking position $x_{curStick}$ is computed from {eq}`objectcontactfrictioncirclecable2d-lastcurstick`, and the difference of current and last sticking position reads (see the difference to the `PostNewtonStep`: we use $x_{lastStick}$ here, not the `startOfStep` variant.):
+
 $$
 \Delta x^*_{stick} = x_{curStick} - x_{lastStick}, \quad
 \Delta x_{stick} = x^*_{stick} - \mathrm{floor}\left(\frac{\Delta x^*_{stick} }{2 \pi \cdot r} + \frac{1}{2}\right) \cdot 2 \pi \cdot r
@@ -354,6 +362,7 @@ $$
 
 - if the friction stiffness is $\mu_k==0$ or if $x_{isSlipStick} == -2$, we set $\Delta x_{stick}=0$
 - using the tangential velocity from {eq}`objectcontactfrictioncirclecable2d-vtangent`, the tangent force follows as (even if it is larger than the sticking limit)
+
 $$
 f_t = \mu_v \cdot v_t + \mu_k \Delta x_{stick}
 $$
@@ -392,6 +401,7 @@ $$
 \fv_{s_i} = f_n \cdot \nv_{s_i} + f_t \tv_{s_i}
 $$
 and added to every force at segment points according to
+
 $$
 \begin{aligned}
 \fv_i &\pluseq& (1-\rho) \cdot \fv_{s_i}      \\ \fv_{i+1} &\pluseq& \rho \cdot \fv_{s_i}
@@ -411,6 +421,7 @@ in which $\nv_{l,s_i}$ is the vector from circle center to the left point ($i$) 
 and $\nv_{l,s_i}$ to the right point ($i+1$). The tangent vectors are perpendicular to the normals.
 
 The forces are then applied to the contact forces $\fv_i$ using the parameter $\rho$, which takes into account the distance of contact to the left or right side of the segment,
+
 $$
 \begin{aligned}
 \fv_i &\pluseq& (1-\rho) \cdot \fv^l      \\ \fv_{i+1} &\pluseq& \rho \cdot \fv^r

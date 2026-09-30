@@ -79,11 +79,13 @@ $x \in [-L/2,\, L/2]$ with $L$ = `physicsLength`; node 0 is at $x = -L/2$.
 ### Kinematics and interpolation
 With the homogeneous transformations $\Hm_i = (\Rot_i, \pv_i)$ of the nodes, the relative motion of node 1
 with respect to node 0 is the logarithm on SE(3),
+
 $$
 \hv = \log_{SE(3)}\left( \Hm_0^{-1} \Hm_1 \right) \in \Rcal^6 ,
 $$
 three components of displacement and three of rotation, in the frame of node 0. The frame of the cross
 section at $x$ is
+
 $$
 \Hm(x) = \Hm_0 \exp_{SE(3)}\left( \left(\frac{x}{L} + \frac{1}{2}\right) \hv \right) ,
 $$
@@ -91,6 +93,7 @@ which gives the position `Position` and the rotation `RotationMatrix` of a local
 
 ### Strains and elastic forces
 The strains are constant in the element,
+
 $$
 \teps = \frac{1}{L} \left( \hv - \hv_0 \right) = [\Gamma_x,\ \Gamma_y,\ \Gamma_z,\ \kappa_x,\ \kappa_y,\ \kappa_z]\tp ,
 $$
@@ -99,6 +102,7 @@ motion of the nodes in their **reference configuration**: the element is stress-
 twisted beam is modelled by placing and orienting its nodes. The section forces and moments are
 $\Km \teps$ with $\Km = \mathrm{diag}(EA,\, GA_y,\, GA_z,\, GJ,\, EI_y,\, EI_z)$, the diagonal of the stiffness matrix
 of `sectionData`. The generalized forces of node $i$ are
+
 $$
 \Qm_i = \Bm_i\tp \Tm_i\tp \Km \teps , \quad \Bm_i = \mathrm{diag}(\Rot_i\tp,\, \Gm_{local,i}) ,
 $$

@@ -511,8 +511,28 @@ def ConvertText(text):
     text = re.sub(r'\\tabnewline\s*', '', text)
     text = RestoreMath(text, pieces)
     text = DedentOutsideCode(text)                   #no stray indentation from the .tex source
+    text = SeparateDisplayMath(text)
     text = re.sub(r'\n{3,}', '\n\n', text)
     return text.strip()
+
+
+def SeparateDisplayMath(text):
+    """a blank line before the opening $$ of a display formula that follows a text line: without it,
+    MyST reads the $$ as inline math inside the paragraph, and the formula and the text after it are
+    typeset as one run of italic letters (ObjectBeamGeometricallyExact, 2026-09-30)"""
+    lines = []
+    inMath = False
+    inFence = False
+    for line in text.split('\n'):
+        stripped = line.strip()
+        if stripped.startswith('```'):
+            inFence = not inFence
+        elif not inFence and stripped.startswith('$$'):
+            if not inMath and stripped == '$$' and len(lines) != 0 and lines[-1].strip() != '':
+                lines.append('')
+            inMath = not inMath
+        lines.append(line)
+    return '\n'.join(lines)
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
