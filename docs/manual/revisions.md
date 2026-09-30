@@ -42,14 +42,31 @@ import exudyn.graphics as graphics
 ```
 
 **Names that are gone.** Eleven small vector helpers were removed from `exudyn.basicUtilities`
-(`NormL2`, `VSum`, `VAdd`, `VSub`, `VMult`, `ScalarMult`, `Vec2Tilde`, `Tilde2Vec`,
-`DiagonalMatrix`, `eye2D`, `eye3D`) — numpy does all of them, faster and in one call. The 23
-deprecated `GraphicsData...` aliases in `exudyn.utilities` are gone as well; the current names are
-in `exudyn.graphics`.
+— numpy does all of them, faster and in one call; what they did is in the
+[`basicUtilities.py` of Exudyn 1.11.0](https://github.com/jgerstmayr/EXUDYN/blob/e44aca1b4fe3e5f4d820ff407fb3fd30b6581c1c/main/pythonDev/exudyn/basicUtilities.py).
+They returned lists, numpy returns arrays:
+
+| removed | use |
+|---|---|
+| `NormL2(v)`, `VSum(v)` | `np.linalg.norm(v)`, `np.sum(v)` |
+| `VAdd(a, b)`, `VSub(a, b)`, `ScalarMult(s, v)` | `np.array(a) + b`, `np.array(a) - b`, `s*np.array(v)` |
+| `VMult(a, b)` (the scalar product) | `np.dot(a, b)` |
+| `Vec2Tilde(v)`, `Tilde2Vec(m)` | `Skew(v)`, `Skew2Vec(m)` of `exudyn.rigidBodyUtilities` |
+| `DiagonalMatrix(n, value)`, `eye2D`, `eye3D` | `value*np.eye(n)`, `np.eye(2)`, `np.eye(3)` |
+
+The 23 deprecated `GraphicsData...` aliases in `exudyn.utilities` are gone as well; the current names
+are in `exudyn.graphics` - mostly the old name without the prefix, `GraphicsDataSphere` is
+`graphics.Sphere`. The exceptions: `GraphicsDataOrthoCubePoint` is `graphics.Brick`, `GraphicsDataCube`
+`graphics.Cuboid`, `GraphicsDataOrthoCube` `graphics.BrickXYZ`, `GraphicsDataLine` `graphics.Lines`,
+`GraphicsDataFromSTLfileTxt` `graphics.FromSTLfileASCII`, `GraphicsData2PointsAndTrigs`
+`graphics.ToPointsAndTrigs`, `ExportGraphicsData2STL` `graphics.ExportSTL` and
+`MergeGraphicsDataTriangleList` `graphics.MergeTriangleLists`
+([the aliases of 1.11.0](https://github.com/jgerstmayr/EXUDYN/blob/e44aca1b4fe3e5f4d820ff407fb3fd30b6581c1c/main/pythonDev/exudyn/utilities.py)).
 
 **Functions that moved inside the package**: from `exudyn.utilities` into `basicUtilities`,
 `advancedUtilities` and `mainSystemExtensions`. A script that imports from `exudyn.utilities` in
-the usual way notices nothing.
+the usual way notices nothing; one that imported such a function by its full module path imports it
+from `exudyn.utilities` instead.
 
 **The files a run writes by default are in `solution/`**: the solution file is
 `solution/coordinatesSolution.txt`, and the solver information and the restart file are there as
@@ -72,14 +89,15 @@ a bug report needs. The test suites set that variable for themselves.
 **`ObjectContactConvexRoll.rBoundingSphere` is read-only.** It is computed from
 `coefficientsHull`, and setting it never had an effect: the value was recomputed whenever the
 parameters changed. It is no longer an argument of the item and can no longer be set, so a script
-that passed it says so instead of being quietly ignored. Reading it — and `pContact`, the current
+that passed it says so instead of being quietly ignored - delete the argument. Reading it — and `pContact`, the current
 potential contact point — works as before, with `mbs.GetObjectParameter(objectNumber, 'pContact')`.
 
 **OpenVR is removed.** The `--openvr` build flag, the settings under
 `visualizationSettings.interactive.openVR`, the `openVR` entry of the render state and the
 example `openVRengine.py` are gone. It could only be used with a head mounted display or an
 emulator, it was never part of a released wheel - it had to be compiled in - and it stood in the
-way of the coming rendering work. A script that needs it stays on Exudyn 1.11.
+way of the coming rendering work. A script that only sets `openVR` settings runs once those lines are
+deleted; one that needs a head mounted display stays on Exudyn 1.11.
 
 **The text export of an image is removed.** `exportImages.saveImageFormat = 'TXT'`, the four
 `exportImages.saveImageAsText...` settings and `exudyn.plot.LoadImage` are gone.

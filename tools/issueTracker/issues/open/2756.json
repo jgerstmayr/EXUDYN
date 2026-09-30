@@ -1,0 +1,11 @@
+{
+  "number": 2756,
+  "title": "exudyn.utilities imports less",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "Maintainer 2026-09-30: remove from exudyn.utilities the imports of the beam generators (GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint, GenerateStraightBeam - in exudyn.beams), of CreateDistanceSensorGeometry, CreateDistanceSensor, DrawSystemGraph (mbs.Create..., mbs.Draw...) and of graphicsDataUtilities (the old colors color4red, ... shall not be promoted); update the exudev scripts checker, all models under python/, and the documentation with the workarounds. Planned as revision2026b step RG12.30.",
+  "dateRaised": "2026-09-30",
+  "deadline": "2027-03-29"
+}

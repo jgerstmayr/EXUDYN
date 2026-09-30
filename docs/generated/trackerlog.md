@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.183.dev1
 - last change = 2026-09-30
-- Number of issues = 2756
+- Number of issues = 2757
 - Number of resolved issues = 2497 (183 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` exudyn.utilities imports less (#2756)
+  - description: Maintainer 2026-09-30: remove from exudyn.utilities the imports of the beam generators (GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint, GenerateStraightBeam - in exudyn.beams), of CreateDistanceSensorGeometry, CreateDistanceSensor, DrawSystemGraph (mbs.Create..., mbs.Draw...) and of graphicsDataUtilities (the old colors color4red, ... shall not be promoted); update the exudev scripts checker, all models under python/, and the documentation with the workarounds. Planned as revision2026b step RG12.30.
+  - date raised: 2026-09-30
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` explicit solvers: the states updated in the PostNewton step (#2754)
   - description: Explicit solvers do no PostNewton step, so contact, friction, switching states, rotation counters and sliding joint elements are not updated (\#830 added a warning). Concept (maintainer 2026-09-30): check whether a PostNewton step is needed at all; update the data variables in the explicit integration similar to GeneralContact - at the beginning of a step, or more correctly in every stage of a multi-stage method; check every object with a PostNewton step against the concept; a test sweeping all explicit integrators, like contactComparisonTest.py; \#2109 (DOPRI5 step size at discontinuities) may be resolved by it or give insight. Planned as revision2026b step RG4.16.
   - date raised: 2026-09-30
