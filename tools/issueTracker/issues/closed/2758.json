@@ -1,0 +1,16 @@
+{
+  "number": 2758,
+  "title": "the pages of ObjectFFRF and ObjectFFRFreducedOrder link example pages that the PDF leaves out",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The descriptions of ObjectFFRF and ObjectFFRFreducedOrder (#2734/#2735) link [](#examples-ngsolveffrf), [](#examples-ngsolvecmstutorial) and [](#testmodels-objectffrfreducedordertest). The PDF build excludes the example and test model pages (conf.py), so the three links are unresolved there (myst.xref_missing). An item page names its examples through the examples field, which the page lists with github links; checkDefinitions shall reject a link to an example page.",
+  "dateRaised": "2026-09-30",
+  "deadline": "2027-03-29",
+  "dateResolved": "2026-09-30 17:52",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/itemDefsObjects.py",
+  "releaseNotes": "The pages of ObjectFFRF and ObjectFFRFreducedOrder name their complete models (NGsolveFFRF.py, NGsolveCMStutorial.py, objectFFRFreducedOrderTest.py) and list them with their github links; the PDF documentation no longer reports unresolved references on them.",
+  "resolvedInVersion": "1.12.187"
+}

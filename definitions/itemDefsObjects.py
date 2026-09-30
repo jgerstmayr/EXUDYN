@@ -2533,6 +2533,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     cParentClass=ParentClassCObjectSuperElement,
     overallDescription=r"""This object is used to represent equations modelled by the ABRV:FFRF. It contains a RigidBodyNode (always node 0) and a list of other nodes representing the finite element nodes used in the ABRV:FFRF. Note that temporary matrices and vectors are subject of change in future. NOTE: Usually you SHOULD NOT USE THIS OBJECT - use the much more efficient ObjectFFRFreducedOrder object with modal reduction instead.""",
     classType=ClassTypeObject,
+    examples=['Examples/NGsolveFFRF.py', 'TestModels/objectFFRFTest.py', 'TestModels/objectFFRFTest2.py'],
     detailedDescription=r"""    #### Additional output variables for superelement node access
 
     Functions like `GetObjectOutputSuperElement(...)`, see [](#sec-mainsystem-object), 
@@ -2797,7 +2798,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
 
     This object has no MiniExample, because it needs a finite element mesh; a complete model is
-    [](#examples-ngsolveffrf), with the mesh from NGsolve.
+    `NGsolveFFRF.py`, with the mesh from NGsolve; it is in the examples below.
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeSuperElement,
@@ -3057,6 +3058,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     cParentClass=ParentClassCObjectSuperElement,
     overallDescription=r"""This object is used to represent modally reduced flexible bodies using the ABRV:FFRF and the ABRV:CMS. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the `FEMinterface` in [](#sec-fem-feminterface---init--). It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class `ObjectFFRFreducedOrderInterface`, especially the user functions `UFmassFFRFreducedOrder` and `UFforceFFRFreducedOrder`, [](#sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions).""",
     classType=ClassTypeObject,
+    examples=['Examples/NGsolveCMStutorial.py', 'TestModels/objectFFRFreducedOrderTest.py', 'Examples/NGsolvePistonEngine.py', 'Examples/objectFFRFreducedOrderNetgen.py', 'TestModels/objectFFRFreducedOrderAccelerations.py', 'TestModels/objectFFRFreducedOrderShowModes.py', 'TestModels/objectFFRFreducedOrderStressModesTest.py', 'TestModels/superElementRigidJointTest.py'],
     detailedDescription=r"""    <!--+++++++++++++++++++++++++++++++++++++ -->
 
     (sec-objectffrfreducedorder-superelementoutput)=
@@ -3366,8 +3368,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 
 
     This object has no MiniExample, because it needs a finite element mesh and its modes; complete
-    models are [](#examples-ngsolvecmstutorial), with NGsolve, and [](#testmodels-objectffrfreducedordertest),
-    with a mesh and matrices from Abaqus files.
+    models are `NGsolveCMStutorial.py`, with NGsolve, and `objectFFRFreducedOrderTest.py`, with a mesh and
+    matrices from Abaqus files; both are in the examples below.
 """,
     mainParentClass=MainParentClassMainObjectBody,
     objectType=ObjectTypeSuperElement,

@@ -133,6 +133,10 @@ not in the list below reaches the page as itself and is a defect.
   anchor that does not match the label it writes on the equation itself, so all 42 of them came out
   of the PDF as undefined references. `tools/checkDefinitions.py` rejects a link whose target is an
   equation label.
+- **An example or test model** is named, `` `NGsolveFFRF.py` ``, and listed in the field `examples`,
+  which puts it on the page with its github link; it is not linked by its page, `[](#examples-...)`.
+  The PDF leaves those pages out, so the link is unresolved there; `tools/checkDefinitions.py`
+  rejects it (#2758).
 - **A citation** is `[CITE:ZwoelferGerstmayr2021]`, with a key of `docs/bibliographyDoc.bib`. The
   converter drops the marker and `conf.py` does the rest: it appends a Markdown link definition for
   every key of the bibliography, so `[Key]` becomes a link into the generated references page. The

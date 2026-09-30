@@ -7706,3 +7706,19 @@ At equal mesh the SE(3) element is slightly more accurate (its configuration-dep
 mass halves the distance to it compared with the lumped mass. No defect of `ObjectBeamGeometricallyExact` shows
 in this case. Plots and the table: `tmp/geomExactHolzinger/comparisonHolzingerExudyn.pdf` (not in the
 repository).
+
+<a id="rg13-5-2-7"></a>
+### RG13.5.2.7 — no links to example pages in a description (2026-09-30, #2758)
+
+The docs build reported three unresolved references (`myst.xref_missing`) on the pages of `ObjectFFRF` and
+`ObjectFFRFreducedOrder`: `[](#examples-ngsolveffrf)`, `[](#examples-ngsolvecmstutorial)`,
+`[](#testmodels-objectffrfreducedordertest)`, written in RG13.5.2.3. The targets exist in the HTML build, but
+`conf.py` excludes the pages of the examples and test models from the PDF, and the item pages reach them by
+their github link only. Now:
+
+- the two descriptions name the scripts, and the field `examples` lists them on the page - for `ObjectFFRF`
+  `NGsolveFFRF.py` in front of the two test models found by name, for `ObjectFFRFreducedOrder`
+  `NGsolveCMStutorial.py` and `objectFFRFreducedOrderTest.py` in front of the six found by name, which did not include them;
+- `tools/checkDefinitions.py` gets `CheckExampleReferences`, which rejects a link whose target starts with
+  `examples-` or `testmodels-` (it finds the three in the previous version of `itemDefsObjects.py`);
+- `definitions/README.md` states the rule in *Writing a description*.

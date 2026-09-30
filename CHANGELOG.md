@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 172 | 1.12.186 |
+| 1.12 | Metheney | 173 | 1.12.187 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.187** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the pages of ObjectFFRF and ObjectFFRFreducedOrder link example pages that the PDF leaves out (#2758)
+  - description: The descriptions of ObjectFFRF and ObjectFFRFreducedOrder (\#2734/\#2735) link \[\](\#examples-ngsolveffrf), \[\](\#examples-ngsolvecmstutorial) and \[\](\#testmodels-objectffrfreducedordertest). The PDF build excludes the example and test model pages (conf.py), so the three links are unresolved there (myst.xref\_missing). An item page names its examples through the examples field, which the page lists with github links; checkDefinitions shall reject a link to an example page.
+  - **notes:** The pages of ObjectFFRF and ObjectFFRFreducedOrder name their complete models (NGsolveFFRF.py, NGsolveCMStutorial.py, objectFFRFreducedOrderTest.py) and list them with their github links; the PDF documentation no longer reports unresolved references on them.
+  - date resolved: **2026-09-30 17:52**, date raised: 2026-09-30
 - **1.12.186** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` explicit solvers: the states updated in the PostNewton step (#2754)
   - description: Explicit solvers do no PostNewton step, so contact, friction, switching states, rotation counters and sliding joint elements are not updated (\#830 added a warning). Concept (maintainer 2026-09-30): check whether a PostNewton step is needed at all; update the data variables in the explicit integration similar to GeneralContact - at the beginning of a step, or more correctly in every stage of a multi-stage method; check every object with a PostNewton step against the concept; a test sweeping all explicit integrators, like contactComparisonTest.py; \#2109 (DOPRI5 step size at discontinuities) may be resolved by it or give insight. Planned as revision2026b step RG4.16.
   - **notes:** the explicit solvers perform the PostNewton step after every step (contact, friction, switching states) and keep the scheme of the implicit solvers: states fixed during the stages of a step, updated after it, the step repeated when a state changed; tested with all explicit integrators (explicitSolversPostNewtonTest.py)

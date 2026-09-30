@@ -323,7 +323,7 @@ center of mass `physicsCenterOfMass`, through the coordinates of the reference f
 flexible coordinates get no share of it.
 
 This object has no MiniExample, because it needs a finite element mesh; a complete model is
-[](#examples-ngsolveffrf), with the mesh from NGsolve.
+`NGsolveFFRF.py`, with the mesh from NGsolve; it is in the examples below.
 
 **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
@@ -350,4 +350,4 @@ A user function, which computes a mass matrix depending on current time and stat
 | **return value** | NumpyMatrix $\in \Rcal^{n_c \times n_c}$ | returns mass matrix for object |
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py) (TM), [`objectFFRFTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest2.py) (TM)
+Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`NGsolveFFRF.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRF.py) (Ex), [`objectFFRFTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest.py) (TM), [`objectFFRFTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFTest2.py) (TM)

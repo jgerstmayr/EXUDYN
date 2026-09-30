@@ -3118,6 +3118,10 @@ What depends on it: the graphics regression test takes every item through its Mi
         and joints.
       - **RG13.5.2.6** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-5) - the general
         objects - `ObjectGenericODE1`.
+      - **RG13.5.2.7** *(maintainer 2026-09-30)* **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg13-5-2-7) -
+        the pages of `ObjectFFRF` and `ObjectFFRFreducedOrder` linked three example pages, which the PDF
+        leaves out (#2758): the scripts are named and listed in the field `examples`, and
+        `tools/checkDefinitions.py` rejects such a link.
     - **RG13.5.3** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-3) - markers - the
       general marker section with the generated table of all markers, and **Marker quantities** and
       **Jacobians** for the 13 markers that had little or no text; the five with long texts of their

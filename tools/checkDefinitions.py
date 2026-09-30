@@ -215,6 +215,25 @@ def CheckEquationReferences(paths):
     return findings
 
 
+def CheckExampleReferences(paths):
+    """an item page names its examples in the field 'examples', and does not link their pages
+
+    The PDF leaves the pages of the examples and test models out (conf.py), so a link to one is an
+    undefined reference there; the field lists them with their github link, in both builds (#2758)."""
+    findings = []
+    for path in paths:
+        for (keyword, text, lineno) in Descriptions(path):
+            if keyword in CODE_KEYWORDS:
+                continue
+            for match in markdownLink.finditer(text):
+                if not match.group(1).startswith(('examples-', 'testmodels-')):
+                    continue
+                findings.append((path, lineno + text.count('\n', 0, match.start()),
+                                 match.group(0) + ' links an example page, which the PDF leaves out; '
+                                 'name the script in the field examples=[...]'))
+    return findings
+
+
 mathSpan = [r'(?<!\\)\$\$.*?\$\$', r'(?<!\\)\$(?:\\.|[^$\\])*\$']
 
 
@@ -407,7 +426,7 @@ def main():
     findings = (CheckAbbreviations(paths, declared) + CheckHeadings(paths)
                 + CheckCitations(paths, known) + CheckRawStrings(paths)
                 + CheckPercentComments(paths) + CheckTabs(paths)
-                + CheckEquationReferences(paths) + CheckNoLatex(paths)
+                + CheckEquationReferences(paths) + CheckExampleReferences(paths) + CheckNoLatex(paths)
                 + CheckUserFunctions(root))
 
     if len(findings) == 0:

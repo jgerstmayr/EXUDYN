@@ -346,8 +346,8 @@ results depend strongly on the choice of the reference frame (or the underlying 
 CoordinateLoads are added for each {ref}`ODE2 <ODE2>` coordinate on the RHS of the equations of motion.
 
 This object has no MiniExample, because it needs a finite element mesh and its modes; complete
-models are [](#examples-ngsolvecmstutorial), with NGsolve, and [](#testmodels-objectffrfreducedordertest),
-with a mesh and matrices from Abaqus files.
+models are `NGsolveCMStutorial.py`, with NGsolve, and `objectFFRFreducedOrderTest.py`, with a mesh and
+matrices from Abaqus files; both are in the examples below.
 
 **Userfunction**: `forceUserFunction(mbs, t, itemNumber, q, q_t)`
 A user function, which computes a force vector depending on current time and states of object. Can be used to create any kind of mechanical system by using the object states.
@@ -376,4 +376,4 @@ A user function, which computes a mass matrix depending on current time and stat
 | **return value** | NumpyMatrix $\in \Rcal^{n_{ODE2} \times n_{ODE2}}$ | returns mass matrix for object |
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex), [`objectFFRFreducedOrderNetgen.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/objectFFRFreducedOrderNetgen.py) (Ex), [`objectFFRFreducedOrderAccelerations.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderAccelerations.py) (TM), [`objectFFRFreducedOrderShowModes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderShowModes.py) (TM), [`objectFFRFreducedOrderStressModesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderStressModesTest.py) (TM), [`superElementRigidJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/superElementRigidJointTest.py) (TM)
+Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`NGsolveCMStutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCMStutorial.py) (Ex), [`objectFFRFreducedOrderTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderTest.py) (TM), [`NGsolvePistonEngine.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolvePistonEngine.py) (Ex), [`objectFFRFreducedOrderNetgen.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/objectFFRFreducedOrderNetgen.py) (Ex), [`objectFFRFreducedOrderAccelerations.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderAccelerations.py) (TM), [`objectFFRFreducedOrderShowModes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderShowModes.py) (TM), [`objectFFRFreducedOrderStressModesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/objectFFRFreducedOrderStressModesTest.py) (TM), [`superElementRigidJointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/superElementRigidJointTest.py) (TM)
