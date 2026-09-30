@@ -213,11 +213,9 @@ void CObjectContactSphereTorus::ComputeODE2LHS(Vector& ode2Lhs, const MarkerData
 			//positionJacobian.NumberOfColumns() == rotationJacobian.NumberOfColumns()
 			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).positionJacobian, fVec, ldv1); //fVec = f_m1
-			if (frictionCoeff != 0)
-			{
-				Vector3D torque = (contactPoint - markerData.GetMarkerData(1).position).CrossProduct(fVec); //fVec = f_m1
-				EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(1).rotationJacobian, torque, ldv1);
-			}
+			//the torus is loaded at the contact point, away from its marker: also the normal force has a torque (#2127)
+			Vector3D torque = (contactPoint - markerData.GetMarkerData(1).position).CrossProduct(fVec); //fVec = f_m1
+			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(1).rotationJacobian, torque, ldv1);
 		}
 
 
@@ -226,7 +224,7 @@ void CObjectContactSphereTorus::ComputeODE2LHS(Vector& ode2Lhs, const MarkerData
 		{
 			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
 			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).positionJacobian, -fVec, ldv0); //fVec = f_m1
-			if (frictionCoeff != 0)
+			if (frictionCoeff != 0) //the normal force acts through the center of the sphere and has no torque
 			{
 				Vector3D torque = (-(parameters.radiusSphere + 0.5 * gap) * n0).CrossProduct(fVec); //fVec = f_m1
 				EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(0).rotationJacobian, torque, ldv0);

@@ -1,0 +1,15 @@
+{
+  "number": 1424,
+  "title": "NumericalJacobianODE1RHS",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "MEDIUM",
+  "description": "add case for duplicated ODE1 coordinates if connector has two markers for the same object, same as ltgODE2numDiff",
+  "dateRaised": "2023-02-08",
+  "deadline": "2023-08-07",
+  "dateResolved": "2026-09-30 07:33",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the numerical Jacobian of ODE1 equations differentiates an ODE1 coordinate that an object addresses twice only once; before, its column was added twice, which slowed Newton's convergence",
+  "resolvedInVersion": "1.12.180"
+}

@@ -7434,3 +7434,42 @@ $3\cdot10^{-8}$ against a tolerance of $10^{-8}$ - the round-off of a nearly lin
 a tiny residual, the same as in RG4.8.3; one load step converges.
 
 New test model `geometricallyExactBeam2DquadraticTest.py`; reference 0.7426300926712416.
+
+<a id="rg4-15-3"></a>
+### RG4.15.3, .4, .5, .7 — explicit solvers and post Newton, sphere-torus momentum, repeated FFRF solve, ODE1 duplicates (2026-09-30)
+
+**RG4.15.3 (#830).** The explicit solvers set `doPostNewtonIteration = false` and do no post Newton step.
+Only `GeneralContact` honours the flag and computes its contact inside the residual; fifteen object types
+keep a state that only the post Newton step updates - the contact objects, `ObjectConnectorCoordinateSpringDamperExt`
+(stick-slip), `ObjectConnectorRigidBodySpringDamper` and `ObjectConnectorTorsionalSpringDamper` (rotation
+counters), `ObjectConnectorRollingDiscPenalty`, the sliding joints. The issue offered a warning or the update
+after each step; the warning is done: at the start of an explicit solve, *"explicit solver: n object(s) update
+their state in the PostNewton step of the implicit solvers, which explicit solvers do not perform ... objects
+2, 5; use an implicit solver for them"* (checked with a ball on `ObjectContactSphereSphere` and RK44). The
+update after each completed step would be the semantic of the implicit solvers' discontinuous iteration with
+one iteration; it moves the results of every explicit model with such objects and is left to the maintainer.
+
+**RG4.15.4 (#2127).** A free ball in the groove of a free ring, no gravity, the ball thrown against the
+groove: the linear momentum stayed to $10^{-15}$, the angular momentum about the origin changed by $6\cdot10^{-3}$
+of 0.09 without friction - and by $2\cdot10^{-9}$ with friction. `CObjectContactSphereTorus::ComputeODE2LHS`
+added the torque of the contact force on the torus only `if (frictionCoeff != 0)`: but the torus is loaded at
+the contact point, away from its marker, so the normal force has a torque too (for the sphere the normal
+force passes through the center, and the condition is right). Fixed: the angular momentum now stays to
+$3\cdot10^{-9}$ without friction. `ObjectContactSphereTriangle` had the same condition commented out already
+(*"this torque is always acting"*); `ObjectContactSphereSphere` is right as it is. This is the momentum
+problem of ball bearings that #2127 reported: a ring with a fixed axis never saw it, a free ring did. New test
+model `contactSphereTorusMomentumTest.py`, reference 4.227231105610667.
+
+**RG4.15.5 (#1639), not reproduced.** Solving `objectFFRFreducedOrderTest.py` again (three times, and a
+longer run twice), `superElementRigidJointTest.py` and `abaqusImportTest.py` (`MarkerSuperElementRigid`, which
+the issue suspects) give identical coordinates. The issue stays open for the model it was found with.
+
+**RG4.15.7 (#1424).** An object that addresses an ODE1 coordinate twice - measured with an
+`ObjectGenericODE1` on the same node twice, $\dot\qv = -\qv$ written as two halves - got every column of its
+numerical ODE1 Jacobian twice: the linear problem took 4 Newton steps per time step instead of 1, and a
+wrong Jacobian only slows Newton, so the result was right and nothing showed it. Now `localToGlobalODE1numDiff`
+holds each coordinate once, built in the same loop as the ODE2 list, and the ODE1-ODE1 and ODE2-ODE1 blocks
+differentiate by it: 1 step per time step. New test model `genericODE1duplicateNodeTest.py`, reference
+3.1091750014354522.
+
+**RG4.15.8** (#1848, #1947, `GeneralContact` against the sphere contact) is not a small step and stays open.

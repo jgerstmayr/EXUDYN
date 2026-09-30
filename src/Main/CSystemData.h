@@ -95,6 +95,7 @@ public:
 
 	//lists for Jacobians
 	ObjectContainer<ArrayIndex> localToGlobalODE2numDiff;  //!< special LTG list needed for Jacobians, in order to prevent duplicate entries for self-connecting connectors, especially in ObjectKinematicTree
+	ObjectContainer<ArrayIndex> localToGlobalODE1numDiff;  //!< the same for ODE1 coordinates (#1424)
 
 public: //
 
@@ -154,6 +155,7 @@ public: //
 		listObjectProjectedReactionForcesODE2.Flush();
 
 		localToGlobalODE2numDiff.Flush();
+		localToGlobalODE1numDiff.Flush();
 
 		listLieGroupODE2toDUnode.Flush();
 		hasLieGroupDUNodes = false;
@@ -228,6 +230,11 @@ public: //
 	ObjectContainer<ArrayIndex>& GetLocalToGlobalODE2NumDiff() { return localToGlobalODE2numDiff; }
 	//! Read (Reference) access to:CObject local to global ODE2 (Second order ODEs) coordinate indices transformation without duplicates
 	const ObjectContainer<ArrayIndex>& GetLocalToGlobalODE2NumDiff() const { return localToGlobalODE2numDiff; }
+
+	//! Write (Reference) access to:CObject local to global ODE1 coordinate indices transformation without duplicates
+	ObjectContainer<ArrayIndex>& GetLocalToGlobalODE1NumDiff() { return localToGlobalODE1numDiff; }
+	//! Read (Reference) access to:CObject local to global ODE1 coordinate indices transformation without duplicates
+	const ObjectContainer<ArrayIndex>& GetLocalToGlobalODE1NumDiff() const { return localToGlobalODE1numDiff; }
 
     //! Write (Reference) access to:CObject local to global ODE1 (first order ODEs) coordinate indices transformation
     ObjectContainer<ArrayIndex>& GetLocalToGlobalODE1() { return localToGlobalODE1; }

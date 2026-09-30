@@ -75,6 +75,22 @@ void CSolverExplicitTimeInt::PostInitializeSolverSpecific(CSystem& computational
 	//it.automaticStepSize is used such that it is only on, if solver has automatic step size control
 	if (!rk.hasStepSizeControl) { it.automaticStepSize = false; }
 
+	//objects that update their state in a PostNewton step - contact, friction, switching, the rotation counter of
+	//torsional springs, the element of sliding joints - are not updated by explicit solvers (#830)
+	const ResizableArray<Index>& listPostNewton = computationalSystem.GetSystemData().listDiscontinuousIteration;
+	if (listPostNewton.NumberOfItems() != 0)
+	{
+		STDstring objectNumbers;
+		for (Index k = 0; k < EXUstd::Minimum(listPostNewton.NumberOfItems(), (Index)10); k++)
+		{
+			objectNumbers += (k == 0 ? "" : ", ") + EXUstd::ToString(listPostNewton[k]);
+		}
+		if (listPostNewton.NumberOfItems() > 10) { objectNumbers += ", ..."; }
+		PyWarning("explicit solver: " + EXUstd::ToString(listPostNewton.NumberOfItems()) + " object(s) update their state in the PostNewton step "
+			"of the implicit solvers, which explicit solvers do not perform: their contact, friction or switching states, rotation counters "
+			"or sliding joint elements are not updated; objects " + objectNumbers + "; use an implicit solver for them", file.solverFile);
+	}
+
 	//++++++++++++++++++++++++++++++++++++++++++++++
 	//create list of constrained coordinates
 	constrainedODE2Coordinates.SetNumberOfItems(0);

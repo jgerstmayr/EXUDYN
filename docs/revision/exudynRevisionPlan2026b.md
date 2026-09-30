@@ -1320,18 +1320,20 @@ The steps are numbered in the order they were raised and stand here in the order
     - **RG4.15.2** **DONE 2026-09-29** (#2750) — [log](exudynRevisionLog2026b.md#rg4-15-2) — `ObjectContactCoordinate` gets the contact law of `ObjectContactSphereSphere` -
       `contactStiffnessExponent`, `restitutionCoefficient`, `impactModel`, `minimumImpactVelocity` -, and the
       comparison test extends to them; its release step size is also the one difference the test found;
-    - **RG4.15.3** (#830) the explicit solvers do no post Newton step - contact and switching items are
-      not updated: a warning at the start of an explicit solve with such items, or the update after each
-      step;
-    - **RG4.15.4** (#2127) `ObjectContactSphereTorus`: momentum conservation - a free ball in a free ring,
-      the sum of the torques on both bodies must vanish;
-    - **RG4.15.5** (#1639) a repeated `mbs.SolveDynamic` with `ObjectFFRFreducedOrder` diverges -
-      reproduced by solving `objectFFRFreducedOrderTest.py` twice;
+    - **RG4.15.3** **DONE 2026-09-30** (#830) — [log](exudynRevisionLog2026b.md#rg4-15-3) — the explicit
+      solvers do no post Newton step: a warning at the start of an explicit solve names the objects that are
+      not updated; the update after each step is left open (it would move results);
+    - **RG4.15.4** **DONE 2026-09-30** (#2127) — [log](exudynRevisionLog2026b.md#rg4-15-3) —
+      `ObjectContactSphereTorus`: momentum conservation - the torque of the normal force on the ring was
+      missing without friction; test model `contactSphereTorusMomentumTest.py`;
+    - **RG4.15.5** (#1639) a repeated `mbs.SolveDynamic` with `ObjectFFRFreducedOrder` diverges - **not
+      reproduced** (2026-09-30) with `objectFFRFreducedOrderTest.py`, `superElementRigidJointTest.py` and
+      `abaqusImportTest.py`, each solved again: identical results; needs the model of the report;
     - **RG4.15.6** **DONE 2026-09-29** (#1888) — [log](exudynRevisionLog2026b.md#rg4-15-2) — `mbs.GetDictionary()` works with a symbolic user function, but
       `mbs.SetDictionary()` of that dictionary fails (*"Unable to cast ... symbolic.UserFunction"*);
-    - **RG4.15.7** (#1424) the numerical ODE1 Jacobian with a connector whose two markers are on the same
-      object - the duplicate coordinates, as for ODE2 (`CSystem.cpp` says *"ODE1 needs to be checked as
-      well"*);
+    - **RG4.15.7** **DONE 2026-09-30** (#1424) — [log](exudynRevisionLog2026b.md#rg4-15-3) — the numerical
+      ODE1 Jacobian with coordinates an object addresses twice: each column once, as for ODE2; test model
+      `genericODE1duplicateNodeTest.py`;
     - **RG4.15.8** (#1848, #1947) `GeneralContact`: implicit sphere-triangle contact and its friction against
       `ObjectContactSphereSphere` - the drop of RG4.15.1 as a fourth case.
 

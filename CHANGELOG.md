@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 165 | 1.12.178 |
+| 1.12 | Metheney | 168 | 1.12.181 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.181** <span class="textred">`BUG`</span> `HIGH EFF` `resolved by: Claude-JG` ContactSphereTorus (#2127)
+  - description: check torques on both bodies, as there seems to be momentum conservation issues in ball bearings
+  - **notes:** ObjectContactSphereTorus: the torque of the normal contact force on the torus is applied also without friction; before, a free torus (e.g. the ring of a ball bearing) did not conserve angular momentum
+  - date resolved: **2026-09-30 07:33**, date raised: 2025-07-03
+- **1.12.180** `FIX` `MEDIUM EFF` `resolved by: Claude-JG` NumericalJacobianODE1RHS (#1424)
+  - description: add case for duplicated ODE1 coordinates if connector has two markers for the same object, same as ltgODE2numDiff
+  - **notes:** the numerical Jacobian of ODE1 equations differentiates an ODE1 coordinate that an object addresses twice only once; before, its column was added twice, which slowed Newton's convergence
+  - date resolved: **2026-09-30 07:33**, date raised: 2023-02-08
+- **1.12.179** <span class="textred">`BUG`</span> `MEDIUM EFF` `resolved by: Claude-JG` PostNewton (#830)
+  - description: PostNewton missing in explicit solvers; add warning or add after single steps (but exclude in contact computation!)
+  - **notes:** explicit solvers (RK, DOPRI5, ...) warn at the start of a solve about objects that update their state in the PostNewton step of the implicit solvers - contact, friction, switching, rotation counters, sliding joints - which the explicit solvers do not update
+  - date resolved: **2026-09-30 07:33**, date raised: 2021-12-15
 - **1.12.178** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` GeometricallyExactBeam2D (#2208)
   - description: add test for 3-node element
   - **notes:** ObjectBeamGeometricallyExact2D: the 3-node (quadratic) element is tested - one element reproduces the Timoshenko cantilever, and it converges with fourth order for large deformation (test model geometricallyExactBeam2DquadraticTest.py)

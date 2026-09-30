@@ -146,3 +146,6 @@ mbs.SolveDynamic(simulationSettings)
 #the ball rests in the groove: outwards by the play 0.001 and F/k
 exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0] #0.10101
 ```
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactSphereTorusMomentumTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactSphereTorusMomentumTest.py) (TM)

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.178.dev1
+- Exudyn version = 1.12.181.dev1
 - last change = 2026-09-30
 - Number of issues = 2754
-- Number of resolved issues = 2492 (178 in current version)
+- Number of resolved issues = 2495 (181 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8004,10 +8004,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` <span class="textred">`HIGH`</span> `MEDIUM EFF` solver (#1434)
   - description: add CqT\*lambda terms to systemwide jacobian computation with flag
   - date raised: 2023-02-16
-- `FIX` `MEDIUM EFF` NumericalJacobianODE1RHS (#1424)
-  - description: add case for duplicated ODE1 coordinates if connector has two markers for the same object, same as ltgODE2numDiff
-  - **remarks:** planned before 1.13 as revision2026b step RG4.15.7 (2026-09-29)
-  - date raised: 2023-02-08
 - `EXTENSION` `MEDIUM EFF` CoordinateSpringDamperExt (#1415)
   - description: add flag for stepSizeRecommendation, where 0 is no recommendation, -1 is automatic and \>0 is a directly recommended step size
   - date raised: 2023-01-22
@@ -8363,15 +8359,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` explicit integration costs O(N^2) per step with the default dense linear solver (#2398)
   - description: measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision2026 step R2.10
   - date raised: 2026-09-12
-- <span class="textred">`BUG`</span> `HIGH EFF` ContactSphereTorus (#2127)
-  - description: check torques on both bodies, as there seems to be momentum conservation issues in ball bearings
-  - **remarks:** planned before 1.13 as revision2026b step RG4.15.4 (2026-09-29)
-  - date raised: 2025-07-03
 - <span class="textred">`BUG`</span> `HIGH EFF` SolveDynamic FFRF (#1639)
   - description: repeated call to mbs.SolveDynamic gives divergence; attributed to FFRFreducedOrder model; workaround uses repeated build of model before calling solver again; may be related to FFRF or MarkerSuperElement-internal variables
-  - **remarks:** planned before 1.13 as revision2026b step RG4.15.5 (2026-09-29)
+  - **remarks:** planned before 1.13 as revision2026b step RG4.15.5 (2026-09-29); not reproduced 2026-09-30 (revision2026b RG4.15.5): objectFFRFreducedOrderTest.py, superElementRigidJointTest.py, abaqusImportTest.py solved repeatedly give identical coordinates; needs the original model
   - date raised: 2023-07-10
-- <span class="textred">`BUG`</span> `MEDIUM EFF` PostNewton (#830)
-  - description: PostNewton missing in explicit solvers; add warning or add after single steps (but exclude in contact computation!)
-  - **remarks:** planned before 1.13 as revision2026b step RG4.15.3 (2026-09-29)
-  - date raised: 2021-12-15

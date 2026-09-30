@@ -1,0 +1,15 @@
+{
+  "number": 2127,
+  "title": "ContactSphereTorus",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "HIGH",
+  "description": "check torques on both bodies, as there seems to be momentum conservation issues in ball bearings",
+  "dateRaised": "2025-07-03",
+  "deadline": "2025-12-30",
+  "dateResolved": "2026-09-30 07:33",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectContactSphereTorus: the torque of the normal contact force on the torus is applied also without friction; before, a free torus (e.g. the ring of a ball bearing) did not conserve angular momentum",
+  "resolvedInVersion": "1.12.181"
+}

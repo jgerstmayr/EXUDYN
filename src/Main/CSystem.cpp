@@ -653,6 +653,8 @@ void CSystem::AssembleLTGLists(const MainSystem& mainSystem)
 
 	ObjectContainer<ArrayIndex>& listODE2numDiff = cSystemData.GetLocalToGlobalODE2NumDiff();
 	listODE2numDiff.Flush();
+	ObjectContainer<ArrayIndex>& listODE1numDiff = cSystemData.GetLocalToGlobalODE1NumDiff();
+	listODE1numDiff.Flush();
 
     //reset load dependencies :
     cSystemData.GetLoadsODE2dependencies().Flush();
@@ -678,23 +680,28 @@ void CSystem::AssembleLTGLists(const MainSystem& mainSystem)
 		listAE.Append(ltgListAE);
 		listData.Append(ltgListData);
 
-		//check for duplicates in ODE2 lists (other lists may have problems as well; AE does not use numDiff, so it is safe; ODE1 needs to be checked as well)
-		ltgListODE2numDiff = ltgListODE2;
-		EXUstd::QuickSort(ltgListODE2numDiff); //additional overhead, but should not be too time critical!
-		ltgListODE2.SetNumberOfItems(0); //new list without duplicates
-
-		//first item always added
-		if (ltgListODE2numDiff.NumberOfItems() != 0) { ltgListODE2.Append(ltgListODE2numDiff[0]); }
-
-		//add only non-duplicates:
-		for (Index j = 1; j < ltgListODE2numDiff.NumberOfItems(); j++)
+		//the lists for numerical differentiation contain each coordinate once, as an object may address a
+		//coordinate twice (two markers on the same node or object); AE does not use numDiff (#1424)
+		for (Index k = 0; k < 2; k++)
 		{
-			if (ltgListODE2numDiff[j] != ltgListODE2numDiff[j - 1])
+			ArrayIndex& ltgList = (k == 0) ? ltgListODE2 : ltgListODE1;
+			ltgListODE2numDiff = ltgList;
+			EXUstd::QuickSort(ltgListODE2numDiff); //additional overhead, but should not be too time critical!
+			ltgList.SetNumberOfItems(0); //new list without duplicates
+
+			//first item always added
+			if (ltgListODE2numDiff.NumberOfItems() != 0) { ltgList.Append(ltgListODE2numDiff[0]); }
+
+			//add only non-duplicates:
+			for (Index j = 1; j < ltgListODE2numDiff.NumberOfItems(); j++)
 			{
-				ltgListODE2.Append(ltgListODE2numDiff[j]);
+				if (ltgListODE2numDiff[j] != ltgListODE2numDiff[j - 1])
+				{
+					ltgList.Append(ltgListODE2numDiff[j]);
+				}
 			}
+			((k == 0) ? listODE2numDiff : listODE1numDiff).Append(ltgList);
 		}
-		listODE2numDiff.Append(ltgListODE2);
 	}
 	//pout << "local to global ODE2 Indices:\n" << listODE2 << "\n\n";
 	//pout << "local to global ODE1 Indices:\n" << listODE1 << "\n\n";
@@ -2643,8 +2650,8 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 
 							if (diffODE1 && (jacType & JacobianType::ODE2_ODE1))
 							{
-								ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
-								Index nLocalODE1 = ltgODE1.NumberOfItems(); //here, duplicates would also need to be extracted!
+								ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1NumDiff()[j]; //columns without duplicates (#1424)
+								Index nLocalODE1 = ltgODE1.NumberOfItems();
 
 								localJacobian.SetNumberOfRowsAndColumns(nLocalODE2, nLocalODE1); //needs not to be initialized, beause the matrix is fully computed and then added to jacobianGM
 
@@ -2773,6 +2780,7 @@ void CSystem::NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray,
 		for (Index j : cSystemData.listComputeObjectODE1Rhs)
 		{
 			ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[j];
+			ArrayIndex& ltgODE1numDiff = cSystemData.GetLocalToGlobalODE1NumDiff()[j]; //columns without duplicates (#1424)
 			ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2NumDiff()[j];
 			CObject* object = cSystemData.GetCObjects()[j];
 
@@ -2786,15 +2794,15 @@ void CSystem::NumericalJacobianODE1RHS(TemporaryComputationDataArray& tempArray,
 			{
 				//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				//compute ODE1-ODE1:
-				localJacobian.SetNumberOfRowsAndColumns(nLocalODE1, nLocalODE1); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
+				localJacobian.SetNumberOfRowsAndColumns(nLocalODE1, ltgODE1numDiff.NumberOfItems()); //needs not to be initialized, because the matrix is fully computed and then added to jacobianGM
 
-				AddNumDiffObject(numDiff, -factorODE1, xODE1, xRefODE1, localJacobian, f0, f1, ltgODE1,
+				AddNumDiffObject(numDiff, -factorODE1, xODE1, xRefODE1, localJacobian, f0, f1, ltgODE1numDiff,
 					[this, &temp, &object, &f1, &j]
 				{
 					ComputeObjectODE1RHS(temp, object, f1, j);
 				}, true); //set values
 
-				jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE1, ltgODE1, nODE2, nODE2);
+				jacobianGM.AddSubmatrix(localJacobian, 1., ltgODE1, ltgODE1numDiff, nODE2, nODE2);
 
 				//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 				//compute ODE1-ODE2:

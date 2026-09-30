@@ -8,5 +8,5 @@
   "description": "repeated call to mbs.SolveDynamic gives divergence; attributed to FFRFreducedOrder model; workaround uses repeated build of model before calling solver again; may be related to FFRF or MarkerSuperElement-internal variables",
   "dateRaised": "2023-07-10",
   "deadline": "2024-01-06",
-  "workingRemarks": "planned before 1.13 as revision2026b step RG4.15.5 (2026-09-29)"
+  "workingRemarks": "planned before 1.13 as revision2026b step RG4.15.5 (2026-09-29); not reproduced 2026-09-30 (revision2026b RG4.15.5): objectFFRFreducedOrderTest.py, superElementRigidJointTest.py, abaqusImportTest.py solved repeatedly give identical coordinates; needs the original model"
 }
