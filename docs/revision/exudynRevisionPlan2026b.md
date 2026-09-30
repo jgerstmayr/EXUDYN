@@ -1783,8 +1783,9 @@ This group is that revision and what has to happen before it can start.
       a small raytracer image against a reference, as in RG2.3.3.4. **Analysed 2026-09-30**
       ([log](exudynRevisionLog2026b.md#rg6-8-4)): the shadows are OpenGL stencil shadow volumes, which the
       raytracer does not use, so its image cannot show the defect; the likely cause is the clipping of the
-      volumes by the near and far planes of the camera-centric projection. The proposed change (depth clamping
-      while the volumes are drawn) needs a look on screen - open;
+      volumes by the near and far planes of the camera-centric projection. **Changed 2026-09-30**
+      ([log](exudynRevisionLog2026b.md#rg6-8-4-1)): depth clamping while the volumes are drawn; the look on
+      screen is row K12 of the manual GUI check - the issue stays open until it is done;
     - **RG6.8.5** (#2140, #2236) Linux: crashes when the renderer closes and with the SolutionViewer; the
       time in the renderer initialized wrong - the manual check (RG2.4) S7, Q1, Q2 on Ubuntu, plus a
       script that starts and stops the renderer twenty times;

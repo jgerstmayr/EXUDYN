@@ -64,6 +64,7 @@ Report each check as **OK / FAIL / n.a.** with the ID; for a FAIL, one line on w
 | K9 | in the view 1 window: `Q` | only view 1 closes, the simulation continues in the main window |
 | K10 | F2, then `N`, then F2, then `N` | first `N` ignored (message *ignore keys mode switched on*), after F2 again `N` works |
 | K11 | `Q` | simulation stops; console prints *simulation finished ...*; the window stays and can still be rotated |
+| K12 | `V`: `openGL.light0.shadow` = `0.4`, `openGL.light0.useCameraFrame` = `True`, `view0.camera.modelCentricView` = `False`; close the dialog, rotate and zoom with the mouse | the shadow of the pendulum stays where the light puts it and follows the view smoothly - it does not flicker or appear and vanish with the view (#2308); set the three back |
 
 ## 3. Dialogs from the render window (15 min)
 

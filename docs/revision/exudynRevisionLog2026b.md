@@ -7990,3 +7990,19 @@ hours); the other 11 pass. What had to be fixed, one cause each:
 | `allTestsConvergenceParameterVariation.py` | `plt.semilogy(basey=10)` - removed in matplotlib 3.5 | `base=10` |
 
 The examples run: 185 examples, 33 skipped, the one known failure (was 170, 29). Test suite and pytest pass.
+
+<a id="rg6-8-4-1"></a>
+### RG6.8.4, continued — depth clamping for the shadow volumes (2026-09-30, #2308)
+
+The change proposed above, made at the maintainer's request: `DrawTrianglesWithShadow` enables `GL_DEPTH_CLAMP`
+for the two passes that draw the shadow volumes into the stencil buffer and disables it before the shadow is
+drawn. A volume reaching past the far plane is clamped to it instead of clipped, so its far cap is counted and
+the z-fail count stays right. `GL_DEPTH_CLAMP` is defined in the file if a platform's `gl.h` lacks it (OpenGL 3.2,
+`ARB_depth_clamp`; the compatibility contexts GLFW creates on Windows and Linux have it; on a context without
+it, `glEnable` sets an error flag nobody reads and nothing changes). The model-centric view is not affected:
+there no volume reaches the planes.
+
+**Not verified on screen** - this session opens no window. The check is a new row of
+[`docs/dev/GUI_MANUAL_CHECK.md`](../dev/GUI_MANUAL_CHECK.md), **K12**: a shadow, a light in the camera frame, the
+camera-centric view, then rotate and zoom - the shadow must not flicker or come and go. #2308 stays open until
+that row has been checked.

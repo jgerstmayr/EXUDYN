@@ -3443,6 +3443,13 @@ void DrawShadowPlane(float shadow)
 }
 
 
+#ifndef GL_DEPTH_CLAMP
+#define GL_DEPTH_CLAMP 0x864F //OpenGL 3.2 / ARB_depth_clamp; not in every gl.h
+#endif
+
+//! the shadows are stencil shadow volumes, counted with the z-fail method: correct only if no volume is clipped
+//! by the near or far plane, which the camera-centric view (camera inside the scene, far plane close) does;
+//! depth clamping keeps the clipped parts at the plane instead (#2308)
 void GlfwRenderer::DrawTrianglesWithShadow(Index viewID, GraphicsData* data)
 {
 	RenderState* state = renderViews.State(viewID);
@@ -3496,6 +3503,7 @@ void GlfwRenderer::DrawTrianglesWithShadow(Index viewID, GraphicsData* data)
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_STENCIL_TEST);
 		glEnable(GL_POLYGON_OFFSET_FILL);
+		glEnable(GL_DEPTH_CLAMP); //(#2308)
 
 		//here, we must use the original offset and add a shadow offset ...
 		glPolygonOffset(visSettings->openGL.advanced.polygonOffset * factOffset,
@@ -3526,6 +3534,7 @@ void GlfwRenderer::DrawTrianglesWithShadow(Index viewID, GraphicsData* data)
 			}
 		}
 
+		glDisable(GL_DEPTH_CLAMP);
 		glDisable(GL_POLYGON_OFFSET_FILL);
 		glDisable(GL_CULL_FACE);
 		glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
