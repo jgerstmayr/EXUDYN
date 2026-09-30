@@ -7616,5 +7616,5 @@ it, what to write - reported when a script star-imports `exudyn.utilities` and n
 sample script (all four kinds found) and on the 334 scripts of the repository (none left).
 
 **Checks**: the test suite and pytest pass, all MiniExamples; the examples run passes (`runTestExamples.py`:
-170 examples, 29 skipped for missing packages, one known failure); the examples in subfolders are not part of it - six of them run by hand: four fine, two fail for
+170 examples, 29 skipped by the runner's rules, one known failure); the examples in subfolders are not part of it - six of them run by hand: four fine, two fail for
 reasons older than this step (`copy` not callable, `basicUtilities.pi`) - raised as #2757.
