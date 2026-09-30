@@ -90,6 +90,7 @@ geometricallyExactBeamMassTest
 geometricallyExactBeam2DquadraticTest
 genericODE1duplicateNodeTest
 contactSphereTorusMomentumTest
+explicitSolversPostNewtonTest
 contactComparisonTest
 kinematicTreePrismaticJacobianTest
 kinematicTreeTest

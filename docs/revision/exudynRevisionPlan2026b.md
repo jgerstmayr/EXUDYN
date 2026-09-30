@@ -1346,13 +1346,21 @@ The steps are numbered in the order they were raised and stand here in the order
     (#2754, from #830). The explicit solvers do no PostNewton step; since RG4.15.3 they warn about the
     objects whose state is then not updated - contact, friction, switching, rotation counters, sliding joint
     elements. Only `GeneralContact` updates its state itself, inside the residual.
-    - **RG4.16.1** whether a PostNewton step is needed at all: which objects need one, and for what - a
-      state that switches (contact, stick-slip), a counter (rotations), an element index (sliding joints);
-    - **RG4.16.2** the concept, similar to `GeneralContact`: the data variables are updated at the beginning
-      of a step, or - more correct - in every stage of a multi-stage method (everything above explicit
-      Euler); written down and decided before code;
-    - **RG4.16.3** each object with a PostNewton step checked against the concept;
-    - **RG4.16.4** a test sweeping all explicit integrators, in the manner of `contactComparisonTest.py`;
+    - **RG4.16.1** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-16-1) - **the explicit solvers
+      do perform the PostNewton step**, after every step, through the discontinuous iteration all solvers
+      share (`CSolverBase::DiscontinuousIteration`); `doPostNewtonIteration = false` only makes
+      `GeneralContact` update inside the residual. #830 described an older state, and the warning of
+      RG4.15.3 was wrong - removed. Which objects need the step is declared by `HasDiscontinuousIteration`,
+      partly conditional already;
+    - **RG4.16.2** the concept - what the explicit solvers do today: the states frozen during the stages of
+      a step, updated after it, the step repeated when a state changed (as in the implicit solvers); or the
+      maintainer's alternative, an update in every stage. For the maintainer's decision; the evidence so
+      far (RG4.16.4) does not ask for a change;
+    - **RG4.16.3** each object with a PostNewton step checked against the concept: contact (coordinate,
+      sphere-sphere), rotation counter and stick-slip by RG4.16.4; the sliding and ALE joints have
+      algebraic equations, which the explicit solvers do not take at all; the others use the same path;
+    - **RG4.16.4** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-16-1) - test model
+      `explicitSolversPostNewtonTest.py`, all explicit integrators against generalized-alpha;
     - **RG4.16.5** #2109, the DOPRI5 step size at discontinuities: resolved by the concept, or what it
       teaches about it.
 
@@ -3158,10 +3166,11 @@ done.
     force as a pure function of them, L2 the system function per marker kind with the inner Jacobian by
     AD over the marker kinematics - which does not need RG15 -, a `Legacy` branch and an experimental
     switch as the fallback. Sub-steps, as proposed there:
-    - **RG14.2.1** the MiniExample performance run (`runPerformanceTests.py --mini-examples [--full]`):
-      the generated MiniExamples with a dynamic solve appended, factors in the item definition, ~2 s per
-      example in full and ~0.1 s in the regular run, in parallel on 80 % of the cores, the solver timers
-      recorded, not in fast mode; the baseline log on the maintainer's machine;
+    - **RG14.2.1** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg14-2-1) - the MiniExample
+      performance run `python/testing/runMiniExamplePerformance.py [--full] [--processes N]`: the generated
+      MiniExamples with a dynamic solve appended, `miniExamplePerformance` in the item definitions, ~2 s per
+      example in full and ~0.1 s in the regular run, in parallel on 80 % of the physical cores, the solver
+      timers recorded, not in fast mode, `--compare` of two logs; the baseline log of the full run;
     - **RG14.2.2** the interface decided (the questions in section 9 of the evaluation);
     - **RG14.2.3** L0, the per-thread `MarkerTemp`, the marker functions and the dispatch with `Legacy`
       for every connector - results identical;

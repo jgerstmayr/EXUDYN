@@ -7483,3 +7483,96 @@ MyST as inline math inside the paragraph, and the next `$` pairs with it. The de
 three such formulas; `ObjectContactFrictionCircleCable2D` had one. `ConvertText` in
 `tools/generators/latexToMarkdown.py` now inserts the blank line itself (`SeparateDisplayMath`), so a
 description needs not know the rule; the two pages are regenerated.
+
+<a id="rg4-16-1"></a>
+### RG4.16.1 and RG4.16.4 — the explicit solvers do the PostNewton step (2026-09-30, #2754)
+
+**Correction of RG4.15.3.** The warning added there - *"explicit solver: n object(s) update their state in the
+PostNewton step of the implicit solvers, which explicit solvers do not perform"* - was **wrong**, and is
+removed. The explicit solvers set `doPostNewtonIteration = false`, and RG4.15.3 read that as "no PostNewton
+step"; but they do not override `CSolverBase::DiscontinuousIteration`, which every solver runs per step:
+`Newton` (for an explicit solver, the step) and then `PostNewton`, which calls `CSystem::PostNewtonStep` for
+every object of `listDiscontinuousIteration`, repeating the step while the discontinuous error is above the
+tolerance (at most `discontinuous.maxIterations` times). The flag only switches `GeneralContact` to update its
+contact state inside the residual. #830 (2021) described an older state of the solvers.
+
+**Measured**, every explicit integrator (explicit Euler, midpoint, RK33, RK44, RK67, ODE23, DOPRI5, velocity
+Verlet) against generalized-alpha, the same step size:
+
+| model | object with a PostNewton step | result |
+|---|---|---|
+| ball dropped on the ground, 20 000 steps | `ObjectContactCoordinate`, `ObjectContactSphereSphere` (Lie group node) | deepest point 0.09639 for all; largest deviation of the height $9\cdot10^{-4}$ (Euler), $2\cdot10^{-4}$ (the others) |
+| body turning several times against a torsional spring | `ObjectConnectorTorsionalSpringDamper` (rotation counter) | angle at the end 0.26157 (RK), 0.26154 (implicit), 0.26407 (Euler) |
+| mass under a periodic force with stick-slip friction | `ObjectConnectorCoordinateSpringDamperExt` | 5.78e-4 (RK), 6.16e-4 (implicit) - the stick-slip history |
+
+The number of discontinuous iterations equals the number of steps, plus a few repeated steps where the
+stick-slip state changes. The ball on `ObjectContactSphereSphere` needs a Lie group node
+(`NodeRigidBodyRotVecLG`): with Euler parameters the explicit solvers stop - they do not take the algebraic
+equation of the Euler parameters - which is also why the sliding and ALE joints (algebraic equations) do not
+concern them.
+
+**What is left for the concept (RG4.16.2)**: the states are constant during the stages of a step and
+updated after it, with the step repeated when they change - the scheme of the implicit solvers. An update
+in every stage would put the discontinuity inside the step of a higher-order method. The evidence above does
+not ask for it; the maintainer decides.
+
+New test model `explicitSolversPostNewtonTest.py`: the drop (coordinate and sphere contact), the torsional
+counter and the stick-slip mass, each with all integrators; the result is the sum of all values.
+
+**#2109 (DOPRI5 at discontinuities), first observation** - the drop with a large maximum step size
+(`numberOfSteps` = 300, $h_{max} = 10^{-3}$), height of the ball after the rebound at t = 0.3, implicit
+reference with 20 000 steps 0.11621:
+
+| integrator | contact | steps (rejected) | height at the end |
+|---|---|---|---|
+| DOPRI5 | `ObjectContactCoordinate` | 339 (3) | 0.11615 |
+| DOPRI5 | `ObjectContactSphereSphere` | 330 (3) | **0.12016** |
+| ODE23 | `ObjectContactSphereSphere` | 646 (9) | 0.11647 |
+| RK44, fixed | `ObjectContactSphereSphere` | 418 (repeated steps) | 0.11844 |
+
+The same law and the same motion: the coordinate contact stays accurate, the sphere contact loses 4 mm with
+DOPRI5 - where the contact ends, the sphere contact takes its state from the data variable of the previous
+iteration (`contactFromData`), the coordinate contact from the geometry. That is where RG4.16.5 starts.
+
+<a id="rg14-2-1"></a>
+### RG14.2.1 — the MiniExample performance run, and the baseline (2026-09-30, #2745)
+
+`python/testing/runMiniExamplePerformance.py`, as the maintainer specified it:
+
+- every generated MiniExample (`python/MiniExamples/*.py`, no copy) runs as it is, in its own interpreter;
+  then its `simulationSettings` (or new ones) get a step size 200 times smaller than the example's own, a
+  number of steps from the item definition, `displayComputationTime = True`, and `mbs.SolveDynamic` runs once
+  more; the solver timers of that solve are recorded - `total`, `ODE2RHS`, `ODE1RHS`, `massMatrix`,
+  `jacobianODE2`, `jacobianODE1` - and no result value (the test suite checks those);
+- `miniExamplePerformance={'numberOfSteps': n}` in the item definition, `{'skip': True}` where a dynamic solve
+  makes no sense (`NodePointSlope12`, `ObjectANCFThinPlate`, whose MiniExamples solve statically and diverge
+  dynamically); the generator writes them into `miniExamplesFileList.py` as `miniExamplesPerformance`, and
+  `definitions/README.md` says what the field is. `--calibrate` measures and prints the numbers of steps for
+  about 2 s of solver time per example - done once for all 93 (from 1 930 steps for a cable contact to
+  1.8 million for a node);
+- the regular run takes a twentieth of the steps, ~0.1 s per example: **all 93 in 4 s** on 80 % of the
+  physical cores (psutil; 40 % of the logical cores without it); `--full` about 2 s each; `--processes 1`
+  for measurements that are compared; `--only A,B` for a few; refuses the fast module (no timers);
+- the log, `python/logs/performance/miniExamplePerformance_V<version>_<platform>[_full].txt`, holds a table
+  and the results as JSON; `--compare logA logB` prints the ratio of every timer, B over A.
+
+**The baseline**, full run, one process, this machine: 93 examples in 212 s. Per step of the performance
+solve, and the share of the right-hand side and of the ODE2 Jacobian in the solver time (of all items of the
+example, bodies included):
+
+| connector | µs per step | ODE2RHS | jacobianODE2 |
+|---|---|---|---|
+| `ObjectConnectorSpringDamper` | 1.84 | 24 % | 22 % |
+| `ObjectConnectorCartesianSpringDamper` | 2.01 | 34 % | 15 % |
+| `ObjectConnectorCoordinateSpringDamper` | 4.11 | 22 % | 52 % |
+| `ObjectConnectorRigidBodySpringDamper` | 8.43 | 14 % | 68 % |
+| `ObjectConnectorLinearSpringDamper` | 8.26 | 13 % | 43 % |
+| `ObjectConnectorTorsionalSpringDamper` | 9.61 | 14 % | 52 % |
+| `ObjectConnectorGravity` | 4.87 | 14 % | 61 % |
+| `ObjectContactSphereSphere` | 6.14 | 14 % | 52 % |
+| `ObjectJointGeneric` | 5.62 | 9 % | 15 % |
+| `ObjectJointSpherical` | 4.99 | 10 % | 18 % |
+
+The Jacobian dominates wherever a connector has no analytic one (the rigid-body spring-damper, gravity, the
+contacts) - which is what the automatic differentiation of RG14.2 addresses. The whole table is in the log;
+the next steps compare against it with `--compare`.

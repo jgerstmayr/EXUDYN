@@ -50,6 +50,7 @@ definitions.append(ItemDefinition(
     #free fall: y = -g/2*t^2 at t=1, independent of the mass
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #-4.905
     """,
+    miniExamplePerformance={'numberOfSteps': 1584910},
     examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py'],
     detailedDescription=r"""    #### Marker quantities
 
@@ -127,6 +128,7 @@ definitions.append(ItemDefinition(
     #the spring is stretched by F/k
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[2] #-0.1
     """,
+    miniExamplePerformance={'numberOfSteps': 920110},
     examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidPendulum.py', 'Examples/pendulum2Dconstraint.py', 'Examples/cartesianSpringDamper.py'],
     detailedDescription=r"""    #### Marker quantities
 
@@ -217,6 +219,7 @@ definitions.append(ItemDefinition(
     #rotation about z: M/k_rot, for the small angle
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2] #0.01
     """,
+    miniExamplePerformance={'numberOfSteps': 226940},
     examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py'],
     detailedDescription=r"""    #### Marker quantities
 
@@ -318,6 +321,7 @@ definitions.append(ItemDefinition(
     #lowest point: twice the static deflection, -2*g/k
     exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[2] #-0.497
     """,
+    miniExamplePerformance={'numberOfSteps': 956230},
     examples=['Examples/doublePendulum2D.py', 'Examples/pendulum2Dconstraint.py', 'Examples/interactiveTutorial.py', 'Examples/simple4linkPendulumBing.py', 'TestModels/connectorGravityTest.py'],
     detailedDescription=r"""    #### Marker quantities
 
@@ -394,6 +398,7 @@ definitions.append(ItemDefinition(
     Jzz = inertia.GetInertia6D()[2]
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2]*2*Jzz #1
     """,
+    miniExamplePerformance={'numberOfSteps': 547540},
     examples=['TestModels/connectorRigidBodySpringDamperTest.py'],
     detailedDescription=r"""    #### Marker quantities
 
@@ -478,6 +483,7 @@ definitions.append(ItemDefinition(
     #the spring is stretched by F/k
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.1
     """,
+    miniExamplePerformance={'numberOfSteps': 1414030},
     examples=['Examples/springDamperTutorial.py', 'Examples/coordinateSpringDamper.py', 'Examples/SliderCrank.py', 'Examples/plotSensorExamples.py', 'Examples/SpringDamperMassUserFunction.py'],
     detailedDescription=r"""    #### Marker quantities
 
@@ -562,6 +568,7 @@ definitions.append(ItemDefinition(
     #both masses move together: a = F/(2m) = 1, x = a/2*t^2 at t=1
     exu.sys['testResult'] = mbs.GetNodeOutput(nB, exu.OutputVariableType.Displacement)[0] #0.5
     """,
+    miniExamplePerformance={'numberOfSteps': 757100},
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -634,6 +641,7 @@ definitions.append(ItemDefinition(
     #q(1) = 1 - exp(-1)
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.632
     """,
+    miniExamplePerformance={'numberOfSteps': 1564820},
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -715,6 +723,7 @@ definitions.append(ItemDefinition(
     #the constraint holds the rotation about z against the torque: its force is the reaction torque
     exu.sys['testResult'] = mbs.GetObjectOutput(oHold, exu.OutputVariableType.Force) #2
     """,
+    miniExamplePerformance={'numberOfSteps': 467030},
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -798,6 +807,7 @@ definitions.append(ItemDefinition(
     #the body is held 0.3 along x of the ground
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0] #0.3
     """,
+    miniExamplePerformance={'numberOfSteps': 434380},
     detailedDescription=r"""    The marker consists of two bodies, body $b_0$ and body $b_1$ with respective global marker positions $\LU{0}{\pv}_{m0}$ and $\LU{0}{\pv}_{m1}$,
     depending on local positions $\LU{m_0}{\pv}_0$ and $\LU{m_1}{\pv}_1$, 
     and marker orientations $\LU{0,m_0}{\Rot}_{m0}$ and $\LU{0,m_1}{\Rot}_{m1}$.
@@ -918,6 +928,7 @@ definitions.append(ItemDefinition(
     #the constraint holds the relative rotation about z against the torque: its force is the reaction torque
     exu.sys['testResult'] = mbs.GetObjectOutput(oHold, exu.OutputVariableType.Force) #2
     """,
+    miniExamplePerformance={'numberOfSteps': 349140},
     detailedDescription=r"""    The marker consists of two bodies, body $b_0$ and body $b_1$ with respective global marker positions $\LU{0}{\pv}_{m0}$ and $\LU{0}{\pv}_{m1}$,
     depending on local positions $\LU{m_0}{\pv}_0$ and $\LU{m_1}{\pv}_1$, 
     and marker orientations $\LU{0,m_0}{\Rot}_{m0}$ and $\LU{0,m_1}{\Rot}_{m1}$.
@@ -1123,6 +1134,7 @@ definitions.append(ItemDefinition(
     #check result at default integration time
     exu.sys['testResult'] = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]
 """,
+    miniExamplePerformance={'numberOfSteps': 581100},
     visuParentClass=VisuParentClassVisualizationMarker,
     members=[
         ItemParameter(type=TString, destination=DestMain, fromParent=True,
@@ -1194,6 +1206,7 @@ definitions.append(ItemDefinition(
     #each node gets F/4: x = F/(4m)/2*t^2 at t=1
     exu.sys['testResult'] = mbs.GetNodeOutput(nodes[0], exu.OutputVariableType.Displacement)[0] #0.5
     """,
+    miniExamplePerformance={'numberOfSteps': 121470},
     detailedDescription=r"""    **Definition of marker quantities**:
 
     | intermediate variables | symbol | description |
@@ -1512,6 +1525,7 @@ definitions.append(ItemDefinition(
     #q = F/(2m)*t^2 at t=1
     exu.sys['testResult'] = mbs.GetNodeOutput(nTree, exu.OutputVariableType.Coordinates) #0.25
     """,
+    miniExamplePerformance={'numberOfSteps': 638920},
     detailedDescription=r"""    #### Marker quantities
 
     The link frame of link $n_l$ - its position $\LU{0}{\pv}_{l}$, rotation $\LU{0l}{\Rot}$, velocity
@@ -1621,6 +1635,7 @@ definitions.append(ItemDefinition(
     #both coordinates move together: a = F/2 = 1, q1 = a/2*t^2 at t=1
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[1] #0.5
     """,
+    miniExamplePerformance={'numberOfSteps': 905650},
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -1707,6 +1722,7 @@ definitions.append(ItemDefinition(
     #the tip rests beyond the circle, whose top is at y=-0.1
     exu.sys['testResult'] = mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)[1]
     """,
+    miniExamplePerformance={'numberOfSteps': 57080},
     detailedDescription=r"""    #### Attached to
 
     A planar ANCF cable element, `ObjectANCFCable2D` or `ObjectALEANCFCable2D`; the marker is made for
@@ -1802,6 +1818,7 @@ definitions.append(ItemDefinition(
     #the mass slides: x = 0.6 + F/(2m)*t^2 at t=1, the stiff cable deflects little
     exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] #1.1
     """,
+    miniExamplePerformance={'numberOfSteps': 78860},
     detailedDescription=r"""    #### Attached to
 
     A planar ANCF cable element, `ObjectANCFCable2D` or `ObjectALEANCFCable2D`; the marker is made for
@@ -1887,6 +1904,7 @@ definitions.append(ItemDefinition(
     #the mass slides: x = 0.6 + F/(2m)*t^2 at t=1, the stiff cable deflects little
     exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] #1.1
     """,
+    miniExamplePerformance={'numberOfSteps': 27920},
     detailedDescription=r"""    #### Attached to
 
     A spatial ANCF cable element, `ObjectANCFCable`; the marker is made for `ObjectJointSliding`, which

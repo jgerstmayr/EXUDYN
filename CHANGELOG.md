@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 168 | 1.12.181 |
+| 1.12 | Metheney | 169 | 1.12.183 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.183** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` explicit solvers: the warning about the PostNewton step is wrong (#2755)
+  - description: The warning added for \#830 (revision2026b RG4.15.3) says that explicit solvers do not perform the PostNewton step; they do, after every step, through the discontinuous iteration of CSolverBase. The warning is removed; found in revision2026b step RG4.16.1.
+  - **notes:** the warning at the start of an explicit solve about objects with a PostNewton step is removed: it was wrong - explicit solvers perform the PostNewton step after every step, like the implicit solvers
+  - date resolved: **2026-09-30 11:33**, date raised: 2026-09-30
 - **1.12.181** <span class="textred">`BUG`</span> `HIGH EFF` `resolved by: Claude-JG` ContactSphereTorus (#2127)
   - description: check torques on both bodies, as there seems to be momentum conservation issues in ball bearings
   - **notes:** ObjectContactSphereTorus: the torque of the normal contact force on the torus is applied also without friction; before, a free torus (e.g. the ring of a ball bearing) did not conserve angular momentum

@@ -1,0 +1,115 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  Objects whose state is updated in the PostNewton step, solved with every explicit integrator
+#           against the implicit generalized-alpha solver (#2754): a ball dropping on the ground through
+#           ObjectContactCoordinate and ObjectContactSphereSphere (contact switches on and off), a body
+#           turning several times against an ObjectConnectorTorsionalSpringDamper (the rotation counter)
+#           and a mass under a periodic force with the stick-slip friction of
+#           ObjectConnectorCoordinateSpringDamperExt. The explicit solvers perform the PostNewton step
+#           after every step, through the discontinuous iteration all solvers share; measured: every
+#           explicit integrator follows the implicit solution to the accuracy of its step size, e.g. the
+#           deepest point of the drop 0.09639 for all, the counted rotation angle 0.2616 at the end.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-09-30
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+solverTypes = ['GeneralizedAlpha', 'ExplicitEuler', 'ExplicitMidpoint', 'RK33', 'RK44', 'RK67', 'ODE23',
+               'DOPRI5', 'VelocityVerlet']
+
+
+def Solve(mbs, endTime, numberOfSteps, solverType):
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = numberOfSteps
+    simulationSettings.timeIntegration.endTime = endTime
+    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solutionSettings.sensorsWritePeriod = endTime/numberOfSteps
+    mbs.SolveDynamic(simulationSettings, solverType=getattr(exu.DynamicSolverType, solverType))
+
+
+def Drop(kind, solverType):
+    """the deepest point of the center of a ball of radius 0.1 dropped from 0.2 onto the ground"""
+    r = 0.1; m = 1; g = 9.81; z0 = 0.2
+    SC = exu.SystemContainer(); mbs = SC.AddSystem()
+    oGround = mbs.AddObject(ObjectGround())
+    if kind == 'coordinate':
+        node = mbs.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[z0]))
+        mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=m))
+        mBall = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+        mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
+        nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[z0 - r]))
+        mbs.AddObject(ObjectContactCoordinate(markerNumbers=[mGround, mBall], nodeNumber=nData, offset=r,
+                                              contactStiffness=1e5, contactDamping=100))
+        mbs.AddLoad(LoadCoordinate(markerNumber=mBall, load=-m*g))
+        sensor = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=exu.OutputVariableType.Coordinates,
+                                          storeInternal=True, writeToFile=False))
+    else:
+        #Lie group node: the explicit integrators do not take the constraint of Euler parameters
+        node = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=[0.1, 0.1, z0, 0, 0, 0]))
+        ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=m,
+                                             physicsInertia=InertiaSphere(mass=m, radius=r).GetInertia6D()))
+        mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball))
+        mbs.AddLoad(LoadForceVector(markerNumber=mBall, loadVector=[0, 0, -m*g]))
+        nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0, 0, 0, 0]))
+        mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0.1, 0.1, -1]))
+        mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[mGround, mBall], nodeNumber=nData,
+                                                spheresRadii=[1, r], contactStiffness=1e5, contactDamping=100))
+        sensor = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=exu.OutputVariableType.Position,
+                                          storeInternal=True, writeToFile=False))
+    Solve(mbs, 0.3, 6000, solverType)
+    return mbs.GetSensorStoredData(sensor)[:, -1].min()
+
+
+def Torsional(solverType):
+    """the rotation angle counted by the data node, after several turns back and forth"""
+    SC = exu.SystemContainer(); mbs = SC.AddSystem()
+    node = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=[0]*6, initialVelocities=[0, 0, 0, 0, 0, 20]))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=1, physicsInertia=[1, 1, 1, 0, 0, 0]))
+    ground = mbs.AddObject(ObjectGround())
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[0]))
+    mbs.AddObject(ObjectConnectorTorsionalSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=ground)),
+                  mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))], nodeNumber=nData, stiffness=10, damping=0))
+    Solve(mbs, 2, 2000, solverType)
+    return float(np.atleast_1d(mbs.GetNodeOutput(nData, exu.OutputVariableType.Coordinates))[0])
+
+
+def StickSlip(solverType):
+    """the position of a mass with stick-slip friction under a periodic force"""
+    SC = exu.SystemContainer(); mbs = SC.AddSystem()
+    node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
+    mMass = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[0, 0, 0]))
+    mbs.AddObject(ObjectConnectorCoordinateSpringDamperExt(markerNumbers=[mGround, mMass], nodeNumber=nData, stiffness=0,
+                  damping=0, fDynamicFriction=2, fStaticFrictionOffset=0.5, stickingStiffness=1e4,
+                  stickingDamping=100, frictionProportionalZone=0))
+    mbs.AddLoad(LoadCoordinate(markerNumber=mMass, load=0, loadUserFunction=lambda mbs, t, load: 3*np.sin(2*np.pi*t)))
+    Solve(mbs, 2, 4000, solverType)
+    return float(np.atleast_1d(mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates))[0])
+
+
+testResult = 0
+cases = [('drop, coordinate', lambda s: Drop('coordinate', s)), ('drop, sphere', lambda s: Drop('sphere', s)),
+         ('torsional', Torsional), ('stick-slip', StickSlip)]
+for (name, Case) in cases:
+    values = dict((solverType, Case(solverType)) for solverType in solverTypes)
+    reference = values['GeneralizedAlpha']
+    deviation = max(abs(v - reference) for v in values.values())
+    exu.Print(name + ': implicit', round(reference, 6), ', largest deviation of an explicit integrator', deviation)
+    testResult += sum(values.values())
+
+exu.Print('solution of explicitSolversPostNewtonTest=', testResult)
+exu.sys['testResult'] = testResult

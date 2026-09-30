@@ -1,0 +1,15 @@
+{
+  "number": 2755,
+  "title": "explicit solvers: the warning about the PostNewton step is wrong",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The warning added for #830 (revision2026b RG4.15.3) says that explicit solvers do not perform the PostNewton step; they do, after every step, through the discontinuous iteration of CSolverBase. The warning is removed; found in revision2026b step RG4.16.1.",
+  "dateRaised": "2026-09-30",
+  "deadline": "2027-03-29",
+  "dateResolved": "2026-09-30 11:33",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the warning at the start of an explicit solve about objects with a PostNewton step is removed: it was wrong - explicit solvers perform the PostNewton step after every step, like the implicit solvers",
+  "resolvedInVersion": "1.12.183"
+}

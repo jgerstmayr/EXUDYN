@@ -51,6 +51,7 @@ definitions.append(ItemDefinition(
     data = mbs.GetSensorStoredData(sNode)
     exu.sys['testResult'] = data[-1,0] + data[-1,1] #1+1
     """,
+    miniExamplePerformance={'numberOfSteps': 1660510},
     examples=['Examples/plotSensorExamples.py', 'TestModels/sensorUserFunctionTest.py', 'TestModels/springDamperUserFunctionTest.py', 'TestModels/rigidBodyCOMtest.py', 'TestModels/plotSensorTest.py'],
     detailedDescription=r"""    #### Attached to
 
@@ -146,6 +147,7 @@ definitions.append(ItemDefinition(
     #the spring force equals the load
     exu.sys['testResult'] = mbs.GetSensorValues(sForce)[0] #10
     """,
+    miniExamplePerformance={'numberOfSteps': 759980},
     examples=['Examples/springDamperTutorial.py', 'Examples/springDamperTutorialNew.py', 'Examples/pendulum2Dconstraint.py', 'Examples/plotSensorExamples.py'],
     detailedDescription=r"""    #### Attached to
 
@@ -237,6 +239,7 @@ definitions.append(ItemDefinition(
     #after a quarter turn the point [0.5,0,0] is at [0,0.5,0]
     exu.sys['testResult'] = mbs.GetSensorValues(sPoint)[1] #0.5
     """,
+    miniExamplePerformance={'numberOfSteps': 1650230},
     examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py'],
     detailedDescription=r"""    #### Attached to
 
@@ -340,6 +343,7 @@ definitions.append(ItemDefinition(
     #mesh node 1: x = F/(2m)*t^2 at t=1
     exu.sys['testResult'] = mbs.GetSensorValues(sMesh)[0] #0.5
     """,
+    miniExamplePerformance={'numberOfSteps': 719900},
     detailedDescription=r"""    #### Attached to
 
     The superelement `bodyNumber` - `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectGenericODE2` - at its
@@ -447,6 +451,7 @@ definitions.append(ItemDefinition(
     #local position 0.5 plus the joint coordinate F/(2m)*t^2 at t=1
     exu.sys['testResult'] = mbs.GetSensorValues(sLink)[0] #0.75
     """,
+    miniExamplePerformance={'numberOfSteps': 628000},
     examples=['TestModels/kinematicTreeConstraintTest.py'],
     detailedDescription=r"""    #### Attached to
 
@@ -555,6 +560,7 @@ definitions.append(ItemDefinition(
     #v = v0 + F/m*t at t=1
     exu.sys['testResult'] = mbs.GetSensorValues(sVelocity)[1] #1
     """,
+    miniExamplePerformance={'numberOfSteps': 1307060},
     examples=['TestModels/plotSensorTest.py', 'TestModels/pendulumFriction.py'],
     detailedDescription=r"""    #### Attached to
 
@@ -654,6 +660,7 @@ definitions.append(ItemDefinition(
     #the load at t=1: 2*cos(pi)
     exu.sys['testResult'] = mbs.GetSensorValues(sLoad) #-2
     """,
+    miniExamplePerformance={'numberOfSteps': 989710},
     examples=['TestModels/springDamperUserFunctionTest.py', 'TestModels/plotSensorTest.py'],
     detailedDescription=r"""    #### Attached to
 
@@ -766,6 +773,7 @@ definitions.append(ItemDefinition(
     #at t=1: pA = [-1,0,0], pB = [1,1,0]
     exu.sys['testResult'] = mbs.GetSensorValues(sDistance) #sqrt(5), a scalar for one value
     """,
+    miniExamplePerformance={'numberOfSteps': 1443940},
     examples=['TestModels/sensorUserFunctionTest.py'],
     detailedDescription=r"""    The sensor collects data via a user function, which completely describes the output itself.
     Note that the sensorNumbers and factors need to be consistent. 

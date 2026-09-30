@@ -113,6 +113,7 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeam2DquadraticTest.py':0.7426300926712416, #the 3-node planar geometrically exact beam (#2208)
         'genericODE1duplicateNodeTest.py':3.1091750014354522, #numerical ODE1 Jacobian with a coordinate addressed twice (#1424)
         'contactSphereTorusMomentumTest.py':4.227231105610667, #momentum conservation of the sphere-torus contact (#2127)
+        'explicitSolversPostNewtonTest.py':4.097033066855782, #PostNewton states with every explicit integrator (#2754)
         'contactComparisonTest.py':1.200040705928356, #deepest points and end heights, three contact objects, two laws (#2749, #2750)
         'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164064,

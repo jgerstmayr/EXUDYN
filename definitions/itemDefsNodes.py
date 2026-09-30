@@ -51,6 +51,7 @@ definitions.append(ItemDefinition(
     #position = reference + displacement: [1+0+2*1, 0.5, 0]
     exu.sys['testResult'] = sum(mbs.GetNodeOutput(node, exu.OutputVariableType.Position)) #3.5
     """,
+    miniExamplePerformance={'numberOfSteps': 1673150},
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -180,6 +181,7 @@ definitions.append(ItemDefinition(
     #y = v0*t - g/2*t^2 at t=1
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #2-4.905=-2.905
     """,
+    miniExamplePerformance={'numberOfSteps': 1614470},
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -310,6 +312,7 @@ definitions.append(ItemDefinition(
     #the node adds the constraint of the Euler parameters itself; the angle about z after 1 second:
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2] #pi/2, to the accuracy of the time integration
     """,
+    miniExamplePerformance={'numberOfSteps': 650680},
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -515,6 +518,7 @@ definitions.append(ItemDefinition(
     #the third rotation coordinate after 1 second:
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[5] #pi/2
     """,
+    miniExamplePerformance={'numberOfSteps': 609950},
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -691,6 +695,7 @@ definitions.append(ItemDefinition(
     #the rotation vector after 1 second:
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2] #pi/2
     """,
+    miniExamplePerformance={'numberOfSteps': 644750},
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -847,6 +852,7 @@ definitions.append(ItemDefinition(
     #x = 1*t, angle = 2*t at t=1
     exu.sys['testResult'] = sum(mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)) #3
     """,
+    miniExamplePerformance={'numberOfSteps': 1747720},
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -977,6 +983,7 @@ definitions.append(ItemDefinition(
     #q = v0*t + F/(2m)*t^2 at t=1
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #2 (a scalar for one coordinate)
     """,
+    miniExamplePerformance={'numberOfSteps': 1715930},
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -1089,6 +1096,7 @@ definitions.append(ItemDefinition(
     #the cubic element is exact for a tip load: F*L^3/(3*EI) = -1/3000
     exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)[1]*1000 #-1/3
     """,
+    miniExamplePerformance={'numberOfSteps': 330150},
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -1229,6 +1237,7 @@ definitions.append(ItemDefinition(
     #the cubic element is exact for a tip load: F*L^3/(3*EI) = -1/3000
     exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)[2]*1000 #-1/3
     """,
+    miniExamplePerformance={'numberOfSteps': 126950},
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -1357,6 +1366,7 @@ definitions.append(ItemDefinition(
     corner = plate.vertexNodeNumbers[1]
     exu.sys['testResult'] = mbs.GetNodeOutput(corner, exu.OutputVariableType.Displacement)[2]
     """,
+    miniExamplePerformance={'skip': True},
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -1504,6 +1514,7 @@ definitions.append(ItemDefinition(
     #converges to F*L^3/(3*EI_z) + F*L/GA_y = -0.3433e-3 as the number of elements grows
     exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)[1]*1000 #-0.338
     """,
+    miniExamplePerformance={'numberOfSteps': 2940},
     detailedDescription=r"""    #### Coordinates
 
     | index | symbol | kind | meaning | frame |
@@ -1640,6 +1651,7 @@ definitions.append(ItemDefinition(
     #after one period, q0 = 0.1 again; q1 = 1*t
     exu.sys['testResult'] = sum(mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)) #1.1
     """,
+    miniExamplePerformance={'numberOfSteps': 1316310},
     detailedDescription=r"""    #### Coordinates
 
     A number of ABRV:ODE2 coordinates, `numberOfODE2Coordinates`, whose meaning is **defined by the
@@ -1737,6 +1749,7 @@ definitions.append(ItemDefinition(
     #q(1) = exp(-1)
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.3679
     """,
+    miniExamplePerformance={'numberOfSteps': 1666940},
     detailedDescription=r"""    #### Coordinates
 
     A number of ABRV:ODE1 coordinates, `numberOfODE1Coordinates`, whose meaning is **defined by the
@@ -1886,6 +1899,7 @@ definitions.append(ItemDefinition(
     #the mass rests at the stop, pressed into it by F/k_limits
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.05+0.001
     """,
+    miniExamplePerformance={'numberOfSteps': 1229520},
     detailedDescription=r"""    #### Coordinates
 
     A number of data coordinates, `numberOfDataCoordinates`, whose meaning is **defined by the object
@@ -1964,6 +1978,7 @@ definitions.append(ItemDefinition(
     #the spring is stretched by F/k
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[0] #0.1
     """,
+    miniExamplePerformance={'numberOfSteps': 1001500},
     detailedDescription=r"""    #### Coordinates
 
     None: the node is fixed at its reference position $\pv\cRef$, and does not add a coordinate to the

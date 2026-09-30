@@ -64,6 +64,7 @@ definitions.append(ItemDefinition(
     #y = F/(2m)*t^2 at t=1; x stays 0
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[1] #0.25
     """,
+    miniExamplePerformance={'numberOfSteps': 1201600},
     createFunctions=['CreateForce'],
     examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidPendulum.py', 'Examples/doublePendulum2D.py', 'Examples/pendulum2Dconstraint.py'],
     detailedDescription=r"""    #### Load and its frame
@@ -185,6 +186,7 @@ definitions.append(ItemDefinition(
     Jzz = inertia.GetInertia6D()[2]
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.AngularVelocity)[2]*Jzz #1, to the accuracy of the time integration
     """,
+    miniExamplePerformance={'numberOfSteps': 577350},
     createFunctions=['CreateTorque'],
     examples=['Examples/rigidBodyTutorial3.py', 'Examples/SliderCrank.py', 'Examples/rigidBodyIMUtest.py'],
     detailedDescription=r"""    #### Load and its frame
@@ -332,6 +334,7 @@ definitions.append(ItemDefinition(
     #final z-coordinate of position shall be -g/2 due to constant acceleration with g=-9.81
     #result independent of mass
 """,
+    miniExamplePerformance={'numberOfSteps': 1603210},
     pythonShortName='Gravity',
     visuParentClass=VisuParentClassVisualizationLoad,
     members=[
@@ -414,6 +417,7 @@ definitions.append(ItemDefinition(
     #q = t^3/6 at t=1
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.1667
     """,
+    miniExamplePerformance={'numberOfSteps': 1285720},
     examples=['Examples/springDamperTutorial.py', 'Examples/coordinateSpringDamper.py', 'Examples/plotSensorExamples.py', 'Examples/slidercrankWithMassSpring.py', 'TestModels/CoordinateSpringDamperTest.py'],
     detailedDescription=r"""    #### Load and its frame
 

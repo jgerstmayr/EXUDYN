@@ -77,6 +77,7 @@ definitions.append(ItemDefinition(
     #the mass hangs 1 below the ground point, lowered by m*g/k
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[1] #-0.0981
     """,
+    miniExamplePerformance={'numberOfSteps': 973260},
     createFunctions=['CreateGround'],
     examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py'],
     detailedDescription=r"""    #### Equations
@@ -272,6 +273,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
     #final x-coordinate of position shall be 2
 """,
+    miniExamplePerformance={'numberOfSteps': 1726000},
     objectType=ObjectTypeBody,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\ImThree}\pLocB$global position vector of translated local position; local (body) coordinate system = global coordinate system"""),
@@ -399,6 +401,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
     #final x-coordinate of position shall be 2
 """,
+    miniExamplePerformance={'numberOfSteps': 1757550},
     objectType=ObjectTypeBody,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\ImTwo}\pLocB$global position vector of translated local position; local (body) coordinate system = global coordinate system"""),
@@ -523,6 +526,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult'] = mbs.GetObjectOutputBody(mass, exu.OutputVariableType.Position, [0,0,0])[0]
     #final x-coordinate of position shall be 2
 """,
+    miniExamplePerformance={'numberOfSteps': 1845530},
     objectType=ObjectTypeBody,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig$global position vector; for interpretation see intermediate variables"""),
@@ -658,6 +662,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult'] = mbs.GetObjectOutputBody(rotor, exu.OutputVariableType.Rotation, [0,0,0])
     #final z-angle of rotor shall be 2
 """,
+    miniExamplePerformance={'numberOfSteps': 1841280},
     objectType=ObjectTypeBody,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig= \pRefG$global position vector; for interpretation see intermediate variables"""),
@@ -795,6 +800,7 @@ definitions.append(ItemDefinition(
     angle = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2]
     exu.sys['testResult'] = p[2] + angle #0.095 + 1
     """,
+    miniExamplePerformance={'numberOfSteps': 607590},
     createFunctions=['CreateRigidBody'],
     examples=['Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py'],
     detailedDescription=r"""    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
@@ -1179,6 +1185,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult']+= mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[2]
     #final x-coordinate of position shall be 2, angle theta shall be np.pi
 """,
+    miniExamplePerformance={'numberOfSteps': 1728680},
     objectType=ObjectTypeBody,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv}\cConfig(\pLocB) = \LU{0}{\pRef}\cConfig + \LU{0}{\pRef}\cRef + \LU{0b}{\Rot}\pLocB$global position vector of body-fixed point given by local position vector $\pLocB$"""),
@@ -1472,6 +1479,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     #check result at default integration time
     exu.sys['testResult'] = mbs.GetNodeOutput(nMass1, exu.OutputVariableType.Position)[0]
 """,
+    miniExamplePerformance={'numberOfSteps': 650270},
     objectType=ObjectTypeSuperElement,
     outputVariables=[
         ItemOutputVariable(OVCoordinatesTotal, r"""all ABRV:ODE2 displacement plus reference coordinates of object"""),
@@ -1795,6 +1803,7 @@ oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1],
     #check result at default integration time
     exu.sys['testResult'] = mbs.GetNodeOutput(nODE1, exu.OutputVariableType.Coordinates)[0]
 """,
+    miniExamplePerformance={'numberOfSteps': 1576350},
     objectType=ObjectTypeObject,
     outputVariables=[
         ItemOutputVariable(OVCoordinatesTotal, r"""all ABRV:ODE2 displacement plus reference coordinates of object"""),
@@ -2177,6 +2186,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     #exu.Print(q0)
     exu.sys['testResult'] = q0 #-3.134018551808591; RigidBody2D with 2e6 time steps gives: -3.134018551809384
 """,
+    miniExamplePerformance={'numberOfSteps': 755290},
     objectType=ObjectTypeSuperElement,
     outputVariables=[
         ItemOutputVariable(OVCoordinates, r"""all ABRV:ODE2 joint coordinates, including reference values (which is slightly inconsistent with CoordinatesTotal used in nodes); if you need values without reference part, read out the node; these are the minimal coordinates of the object"""),
@@ -3712,6 +3722,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult'] = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
     #ux=-0.5013058140308901
 """,
+    miniExamplePerformance={'numberOfSteps': 1930},
     objectType=ObjectTypeFiniteElement,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv\cConfig(x,0,0)} = \rv\cConfig(x) + y\cdot \nv\cConfig(x)$global position vector of local position $[x,0,0]$"""),
@@ -4299,6 +4310,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     exu.sys['testResult'] = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
     #ux=-0.5013058140308901
 """,
+    miniExamplePerformance={'numberOfSteps': 4940},
     objectType=ObjectTypeFiniteElement,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv\cConfig(x,y,0)} = \rv\cConfig(x) + y\cdot \nv\cConfig(x)$global position vector of local position $[x,y,0]$"""),
@@ -4499,6 +4511,7 @@ definitions.append(ItemDefinition(
     #the material of mass 2 is accelerated by 1 N: s = F/(2m)*t^2 at t=1
     exu.sys['testResult'] = mbs.GetNodeOutput(nALE, exu.OutputVariableType.Coordinates) #0.25
     """,
+    miniExamplePerformance={'numberOfSteps': 34180},
     detailedDescription=r"""    A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and an axially moving coordinate of type NodeGenericODE2.
     The element has 8+1 coordinates and uses cubic polynomials for position interpolation.
     In addition to ANCFCable2D the element adds an Eulerian axial velocity by the GenericODE2 coordiante.
@@ -4693,6 +4706,7 @@ definitions.append(ItemDefinition(
     #bending about y; converges to F*L^3/(3*EI_y) + F*L/GA_z = -0.3433e-3 with more elements
     exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)[2]*1000
     """,
+    miniExamplePerformance={'numberOfSteps': 2900},
     detailedDescription=r"""    **This element is under development**, as its class description says: what follows is what the
     implementation computes, not a finished formulation.
 
@@ -4965,6 +4979,7 @@ definitions.append(ItemDefinition(
     #Timoshenko beam: F*L^3/(3*EI) + F*L/GA = -0.3433e-3, approached with more elements
     exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)[1]*1000
     """,
+    miniExamplePerformance={'numberOfSteps': 233750},
     detailedDescription=r"""    A shear deformable beam after Simo and Vu-Quoc (1986): the positions and the rotations of the cross
     section are interpolated independently.
 
@@ -5221,6 +5236,7 @@ definitions.append(ItemDefinition(
     #Timoshenko beam: F*L^3/(3*EI) + F*L/GA = -0.3433e-3, approached with more elements
     exu.sys['testResult'] = mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Displacement)[1]*1000
     """,
+    miniExamplePerformance={'numberOfSteps': 24100},
     detailedDescription=r"""    A shear deformable 3D beam after Simo and Vu-Quoc [CITE:Simo1988], formulated on the special Euclidean group
     SE(3) after Sonneville et al. [CITE:Sonneville2014]: the element interpolates the relative motion of its two
     nodes as a screw motion, which represents a constant curvature, twist, shear and extension exactly.
@@ -5475,6 +5491,7 @@ definitions.append(ItemDefinition(
     #a corner of the free edge; compare q*L^4/(8*D) = 0.0736 of a cantilever strip, D = E*h^3/12
     exu.sys['testResult'] = mbs.GetNodeOutput(plate.vertexNodeNumbers[1], exu.OutputVariableType.Displacement)[2]
     """,
+    miniExamplePerformance={'skip': True},
     objectType=ObjectTypeFiniteElement,
     outputVariables=[
         ItemOutputVariable(OVPosition, r"""$\LU{0}{\pv\cConfig(x,y,z)}$global position vector of local position $[x,y,z]$"""),
@@ -5912,6 +5929,7 @@ definitions.append(ItemDefinition(
     #check result at default integration time
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0]
 """,
+    miniExamplePerformance={'numberOfSteps': 1020020},
     objectType=ObjectTypeConnector,
     outputVariables=[
         ItemOutputVariable(OVDistance, 'distance between both points'),
@@ -6191,6 +6209,7 @@ definitions.append(ItemDefinition(
     #check result at default integration time
     exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[1]
 """,
+    miniExamplePerformance={'numberOfSteps': 948610},
     objectType=ObjectTypeConnector,
     outputVariables=[
         ItemOutputVariable(OVDisplacement, r"""$\Delta\! \LU{0}{\pv} = \LU{0}{\pv}_{m1} - \LU{0}{\pv}_{m0}$relative displacement in global coordinates"""),
@@ -6451,6 +6470,7 @@ definitions.append(ItemDefinition(
     #check result at default integration time
     exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[1] 
 """,
+    miniExamplePerformance={'numberOfSteps': 232850},
     objectType=ObjectTypeConnector,
     outputVariables=[
         ItemOutputVariable(OVDisplacementLocal, r"""$\LU{J0}{\Delta\pv}$relative displacement in local joint0 coordinates"""),
@@ -6702,6 +6722,7 @@ definitions.append(ItemDefinition(
     #check result at default integration time
     exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displacement)[0]
 """,
+    miniExamplePerformance={'numberOfSteps': 240230},
     objectType=ObjectTypeConnector,
     outputVariables=[
         ItemOutputVariable(OVDisplacementLocal, r"""$\Delta x$(scalar) relative displacement of the spring-damper"""),
@@ -6925,6 +6946,7 @@ definitions.append(ItemDefinition(
     #check result at default integration time
     exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
 """,
+    miniExamplePerformance={'numberOfSteps': 208390},
     objectType=ObjectTypeConnector,
     outputVariables=[
         ItemOutputVariable(OVRotation, r"""$\Delta\theta$relative rotation around the spring-damper Z-coordinate, enhanced to a continuous rotation (infinite rotations $>+\pi$ and $<-\pi$) if a NodeGeneric with 1 coordinate as added"""),
@@ -7177,6 +7199,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult'] = mbs.GetNodeOutput(nMass, 
                                                  exu.OutputVariableType.Displacement)[0]
 """,
+    miniExamplePerformance={'numberOfSteps': 483470},
     objectType=ObjectTypeConnector,
     outputVariables=[
         ItemOutputVariable(OVDisplacement, r'$\Delta q$relative scalar displacement of marker coordinates'),
@@ -7341,6 +7364,7 @@ definitions.append(ItemDefinition(
     #spring and stop share the load: 100*q + 1e4*(q - 0.05) = 10
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.050495
     """,
+    miniExamplePerformance={'numberOfSteps': 1219510},
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -7784,6 +7808,7 @@ definitions.append(ItemDefinition(
     #expect y=x after one period of orbiting (got: 100000.00000000479)
     exu.sys['testResult'] = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position)[1]/100000
 """,
+    miniExamplePerformance={'numberOfSteps': 404760},
     objectType=ObjectTypeConnector,
     outputVariables=[
         ItemOutputVariable(OVDistance, r"""$L$distance between both points"""),
@@ -7901,6 +7926,7 @@ definitions.append(ItemDefinition(
     #the mass stays where it is
     exu.sys['testResult'] = mbs.GetObjectOutput(oCylinder, exu.OutputVariableType.Distance) #1
     """,
+    miniExamplePerformance={'numberOfSteps': 398340},
     detailedDescription=r"""    #### Definition of quantities
 
 
@@ -8266,6 +8292,7 @@ definitions.append(ItemDefinition(
     #the rope is stretched by m*g*L/EA (damped to rest)
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[1]/(inertia.Mass()*9.81/EA) #-1
     """,
+    miniExamplePerformance={'numberOfSteps': 270520},
     detailedDescription=r"""    <!--
     #### Definition of quantities
     \startTable{input parameter}{symbol}{description}
@@ -8617,6 +8644,7 @@ definitions.append(ItemDefinition(
     #check result at default integration time
     exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0]
 """,
+    miniExamplePerformance={'numberOfSteps': 1238700},
     objectType=ObjectTypeConstraint,
     outputVariables=[
         ItemOutputVariable(OVDisplacement, r"""$\LU{0}{\Delta\pv}$relative displacement in global coordinates"""),
@@ -8816,6 +8844,7 @@ definitions.append(ItemDefinition(
     #check result at default integration time
     exu.sys['testResult']  = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Displacement)[0]
 """,
+    miniExamplePerformance={'numberOfSteps': 851050},
     objectType=ObjectTypeConstraint,
     outputVariables=[
         ItemOutputVariable(OVDisplacement, r"""$\Delta q$relative scalar displacement of marker coordinates, not including factorValue1"""),
@@ -9013,6 +9042,7 @@ definitions.append(ItemDefinition(
     #both masses move together: a = F/(2m) = 1, x = a/2*t^2 at t=1
     exu.sys['testResult'] = mbs.GetNodeOutput(nB, exu.OutputVariableType.Displacement)[0] #0.5
     """,
+    miniExamplePerformance={'numberOfSteps': 760930},
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -9236,6 +9266,7 @@ definitions.append(ItemDefinition(
     #it rolls on with the initial velocity: y = -2*t at t=1
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #-2
     """,
+    miniExamplePerformance={'numberOfSteps': 142170},
     createFunctions=['CreateRollingDiscPenalty'],
     detailedDescription=r"""    #### Definition of quantities
 
@@ -9894,6 +9925,7 @@ definitions.append(ItemDefinition(
     #at rest on the stop, pressed in by F/k
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #-0.001
     """,
+    miniExamplePerformance={'numberOfSteps': 1256910},
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -10079,6 +10111,7 @@ definitions.append(ItemDefinition(
     #the tip rests beyond the circle, whose top is at y=-0.1
     exu.sys['testResult'] = mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)[1]
     """,
+    miniExamplePerformance={'numberOfSteps': 57310},
     detailedDescription=r"""    #### Markers
 
     Marker 0 is the center of the circle, any marker with a position; marker 1 is a
@@ -10247,6 +10280,7 @@ definitions.append(ItemDefinition(
     #the tip rests beyond the circle, whose top is at y=-0.1
     exu.sys['testResult'] = mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)[1]
     """,
+    miniExamplePerformance={'numberOfSteps': 55910},
     detailedDescription=r"""    #### Definition of quantities
 
     <!--\rowTable{marker m1 velocity}{$\LU{0}{\vv}_{m1}$}{} -->
@@ -10848,6 +10882,7 @@ definitions.append(ItemDefinition(
     #at rest on top: 1.1 - m*g/k
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2] #1.0999
     """,
+    miniExamplePerformance={'numberOfSteps': 330100},
     createFunctions=['CreateSphereSphereContact'],
     detailedDescription=r"""    #### Definition of quantities
 
@@ -11230,6 +11265,7 @@ definitions.append(ItemDefinition(
     #the ball rests in the groove: outwards by the play 0.001 and F/k
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[0] #0.10101
     """,
+    miniExamplePerformance={'numberOfSteps': 273130},
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -11448,6 +11484,7 @@ definitions.append(ItemDefinition(
     #at rest on the triangle: 0.1 - m*g/k
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2] #0.0999
     """,
+    miniExamplePerformance={'numberOfSteps': 274900},
     createFunctions=['CreateSphereTriangleContact', 'CreateSphereQuadContact'],
     detailedDescription=r"""    #### Definition of quantities
 
@@ -11652,6 +11689,7 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     #at rest: 0.1 - F/k
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #0.099
     """,
+    miniExamplePerformance={'numberOfSteps': 514120},
     detailedDescription=r"""    **Further testing is required, and friction is not available yet**, as the class description says.
 
     #### Definition of quantities
@@ -11913,6 +11951,7 @@ definitions.append(ItemDefinition(
     #the pendulum falls from horizontal; the angle after 1 second (numerical)
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2]
     """,
+    miniExamplePerformance={'numberOfSteps': 343660},
     createFunctions=['CreateGenericJoint'],
     examples=['Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py', 'TestModels/genericJointUserFunctionTest.py'],
     detailedDescription=r"""    (sec-objectjointgeneric-definitionofquantities)=
@@ -12272,6 +12311,7 @@ definitions.append(ItemDefinition(
     #check result at default integration time
     exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation)[2]
 """,
+    miniExamplePerformance={'numberOfSteps': 365300},
     objectType=ObjectTypeJoint,
     outputVariables=[
         ItemOutputVariable(OVPosition, OVDPositionMarker0),
@@ -12395,6 +12435,7 @@ definitions.append(ItemDefinition(
     #y = F_y/(2m)*t^2 at t=1, x and z stay 0
     exu.sys['testResult'] = sum(mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement))*2*inertia.Mass() #1
     """,
+    miniExamplePerformance={'numberOfSteps': 352510},
     createFunctions=['CreatePrismaticJoint'],
     examples=['TestModels/revoluteJointPrismaticJointTest.py'],
     detailedDescription=r"""    (sec-objectjointprismaticx-definitionofquantities)=
@@ -12599,6 +12640,7 @@ definitions.append(ItemDefinition(
     #the joint point stays at the origin; the height of the center after 1 second (numerical)
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[2]
     """,
+    miniExamplePerformance={'numberOfSteps': 393840},
     createFunctions=['CreateSphericalJoint'],
     examples=['TestModels/sphericalJointTest.py', 'TestModels/genericJointUserFunctionTest.py', 'TestModels/kinematicTreeConstraintTest.py'],
     detailedDescription=r"""    #### Definition of quantities
@@ -12791,6 +12833,7 @@ definitions.append(ItemDefinition(
     #it rolls on with the initial velocity: y = -2*t at t=1
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #-2
     """,
+    miniExamplePerformance={'numberOfSteps': 396690},
     createFunctions=['CreateRollingDisc'],
     detailedDescription=r"""    #### Definition of quantities
 
@@ -13010,6 +13053,7 @@ definitions.append(ItemDefinition(
     #the pendulum falls from horizontal; the angle after 1 second (numerical)
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[2]
     """,
+    miniExamplePerformance={'numberOfSteps': 858330},
     examples=['Examples/rigidPendulum.py', 'Examples/doublePendulum2D.py', 'Examples/SliderCrank.py', 'Examples/simple4linkPendulumBing.py', 'Examples/slidercrankWithMassSpring.py'],
     detailedDescription=r"""    #### Definition of quantities
 
@@ -13120,6 +13164,7 @@ definitions.append(ItemDefinition(
     #along the 45 degree axis: s = (F/sqrt(2))/(2m)*t^2, so x = s/sqrt(2) = F/(4m) at t=1
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)[0] #0.25
     """,
+    miniExamplePerformance={'numberOfSteps': 753760},
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -13263,6 +13308,7 @@ definitions.append(ItemDefinition(
     #the mass slides: x = 0.6 + F/(2m)*t^2 at t=1, the stiff cable deflects little
     exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] #1.1
     """,
+    miniExamplePerformance={'numberOfSteps': 28550},
     detailedDescription=r"""    #### Definition of quantities
 
     <!--
@@ -13576,6 +13622,7 @@ definitions.append(ItemDefinition(
     #the mass slides: x = 0.6 + F/(2m)*t^2 at t=1, the stiff cable deflects little
     exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] #1.1
     """,
+    miniExamplePerformance={'numberOfSteps': 81330},
     detailedDescription=r"""    #### Definition of quantities
 
     <!-- -->
@@ -13907,6 +13954,7 @@ definitions.append(ItemDefinition(
     #cable material (mass 2) and mass point (2) move together: x = 0.6 + F/(2*4)*t^2 at t=1
     exu.sys['testResult'] = mbs.GetNodeOutput(nMass, exu.OutputVariableType.Position)[0] #0.725
     """,
+    miniExamplePerformance={'numberOfSteps': 33580},
     detailedDescription=r"""    #### Definition of quantities
 
     <!--

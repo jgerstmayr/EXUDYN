@@ -532,7 +532,8 @@ def main():
                  'overallDescription':'', #the brief description: the class, the docstring, the paragraph under the heading
                  'requestedNodeTypes':'', #node markers: the node types they need (itemCompatibility.py)
                  'createFunctions':'',  #the mbs.Create... functions that add the item (#2737)
-                 'examples':''}         #the examples of the page, instead of those found by name (#2737)
+                 'examples':'',         #the examples of the page, instead of those found by name (#2737)
+                 'miniExamplePerformance':''} #the steps of the MiniExample's performance run (#2745); not on the page
     #this defines the columns of the line, which is then filled into this structure
     lineDefinition = ['lineType',       #[V|F[v]]P: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; P ... write Pybind11 interface
                       'destination',    #M ... Main object, C ... computational object, V ... visualization object; P ... parameter structure
