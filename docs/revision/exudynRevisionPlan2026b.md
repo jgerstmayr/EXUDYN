@@ -1228,6 +1228,14 @@ The steps are numbered in the order they were raised and stand here in the order
       `geometricallyExactBeamElbowCantilever.py`; literature values of the benchmarks retrieved (maintainer:
       *"it has plenty of uses"*). Open from it: the energy of the element as an output, to check the
       conservation in free oscillation, as Meier et al. (2016) do.
+    - **RG4.8.12** *(maintainer 2026-09-30)* **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-8-12) -
+      the element against the reference of Holzinger: the SE(3) beam of
+      the colleague's comparison (Sonneville et al. 2014, configuration-dependent mass matrix and gyroscopic
+      force; `tmp/geomExactHolzinger/`, not in the repository) and the current `ObjectBeamGeometricallyExact`
+      on the same flexible pendulum, both solutions plotted into a PDF and their differences computed - the
+      case that should close the analysis of the 3D beam. Result: both converge to the same solution; with 20
+      elements the tips differ by at most 2.1 mm (0.4 % of the length), and each is 1.6-2.1 mm from Exudyn with
+      80 elements.
 
 <a id="rg4-9"></a>
 **RG4.9** *(group RG4; from RG13.5.3, 2026-09-28)* **DONE 2026-09-29** —

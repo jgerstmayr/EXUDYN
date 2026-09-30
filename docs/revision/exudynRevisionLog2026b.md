@@ -7661,3 +7661,48 @@ References moved (the recommended step size changes the steps of every model wit
 `contactSphereSphereTest.py`, `createSphereQuadContact.py`, `createSphereTriangleContact.py`, `sphereTriangleTest2.py`,
 `contactSphereTorusMomentumTest.py`, `contactComparisonTest.py` (header updated), `explicitSolversPostNewtonTest.py`,
 which gets the DOPRI5 runs with 300 steps, with and without the recommended step size - the case that looped.
+
+<a id="rg4-8-12"></a>
+### RG4.8.12 — the 3D beam against the SE(3) reference of Holzinger (2026-09-30, #2730)
+
+**The reference.** `tmp/geomExactHolzinger/geometricallyExactBeamSE3.py` (the colleague's element, Sonneville et
+al. 2014: configuration-dependent mass matrix M(d), gyroscopic force, internal forces on body-frame nodes) is not
+a solver; a small driver in the session scratchpad integrates it with classical RK4 on (p, R, body twist), R put
+back onto SO(3) by a QR decomposition each step, node 0 pinned.
+
+**The model**: flexible pendulum, L = 0.5 m, cross section 10 x 2 mm, E = 1e8 Pa, nu = 0.3, rho = 1000 kg/m^3,
+shear correction 10(1+nu)/(12+11nu), released from horizontal under gravity, 1 s. Two adaptations were needed:
+
+- the rotary inertia per length is scaled up (rhoIp = 4e-5, rhoIy = rhoIz = 2e-5 kg m, both codes): with the true
+  values the explicit reference is unstable at any practicable step size;
+- gravity as nodal forces (half the weight of an element at each node) in both codes - the element's own
+  gravityType "simplified" adds the global force unrotated to the body-frame translational coordinates, which is
+  not conservative (the energy of the driver drifted). With R^T f the driver conserves the total energy to
+  2e-9 J (4 elements, 0.3 s; total about 0.023 J).
+
+Exudyn: `ObjectBeamGeometricallyExact`, Euler parameter nodes, generalized-alpha (rho_inf = 1), step 1e-4
+(20 elements 5e-5), `LoadMassProportional` per element; the default consistent mass and the lumped one.
+Reference steps 1e-4 (10 el.) and 5e-5 (20 el.).
+
+**Largest difference of the tip position** (max over x and y, t in [0, 1]):
+
+| | max | t <= 0.5 | at t = 1 |
+|---|---|---|---|
+| Exudyn 10 el. (consistent mass) vs SE(3) 10 el. | 7.4e-3 | 3.3e-3 | 1.2e-3 |
+| Exudyn 10 el. (lumped mass) vs SE(3) 10 el. | 1.34e-2 | 4.2e-3 | 5.3e-3 |
+| **Exudyn 20 el. vs SE(3) 20 el.** | **2.1e-3** | 8.5e-4 | 5.6e-4 |
+| SE(3) 20 el. vs SE(3) 10 el. | 5.2e-3 | 1.8e-3 | 3.1e-3 |
+| Exudyn 20 el. vs Exudyn 10 el. | 6.6e-3 | 4.0e-3 | 4.4e-3 |
+| SE(3) 10 el. vs Exudyn 80 el. | 6.7e-3 | 2.4e-3 | 4.2e-3 |
+| Exudyn 10 el. vs Exudyn 80 el. | 8.4e-3 | 5.0e-3 | 5.4e-3 |
+| SE(3) 20 el. vs Exudyn 80 el. | 1.6e-3 | 5.6e-4 | 1.1e-3 |
+| Exudyn 20 el. vs Exudyn 80 el. | 2.1e-3 | 1.1e-3 | 1.0e-3 |
+| Exudyn 40 el. vs Exudyn 80 el. | 4.1e-4 | 2.2e-4 | 2.3e-4 |
+| Exudyn 10 el., step 5e-5 vs 1e-4 | 6.3e-7 | 1.8e-7 | 1.3e-7 |
+
+**Conclusion.** The two formulations converge to the same solution: the difference between them shrinks with
+the mesh at the rate each shrinks towards Exudyn with 80 elements, and the time step contributes nothing visible.
+At equal mesh the SE(3) element is slightly more accurate (its configuration-dependent mass); Exudyn's consistent
+mass halves the distance to it compared with the lumped mass. No defect of `ObjectBeamGeometricallyExact` shows
+in this case. Plots and the table: `tmp/geomExactHolzinger/comparisonHolzingerExudyn.pdf` (not in the
+repository).
