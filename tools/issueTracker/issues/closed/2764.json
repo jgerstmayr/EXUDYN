@@ -1,0 +1,16 @@
+{
+  "number": 2764,
+  "title": "a body rotated by a small angle is drawn unrotated",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "AddBodyGraphicsData and AddBodyGraphicsDataColored skipped the rotation of a body's graphics when the diagonal of its rotation matrix was 1.f - which it is in single precision for any angle below about 3e-4 rad, while the off-diagonal terms are not zero. Found 2026-10-01 by the transformation check of the MiniExample graphics test (RG2.3.3.6): the spherical, generic and planar revolute joint examples drew their bodies 3e-5 m off after five steps.",
+  "dateRaised": "2026-09-30",
+  "deadline": "2027-03-29",
+  "dateResolved": "2026-09-30 23:59",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/VisualizationPrimitives.cpp",
+  "releaseNotes": "A rigid body rotated by a very small angle is drawn with its rotation; before, rotations below about 3e-4 rad were not drawn.",
+  "resolvedInVersion": "1.12.199"
+}

@@ -93,7 +93,7 @@ def UFforce(mbs, t, loadVector):
 
 ```python
 #a body-fixed force on a planar rigid body turned by 90 degrees: the local x-direction is global y
-node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0.5*np.pi]))
+node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0.2,0.5*np.pi]))
 body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
 mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
 mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[1,0,0], bodyFixed=True))

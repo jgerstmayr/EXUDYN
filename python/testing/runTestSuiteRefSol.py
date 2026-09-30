@@ -478,7 +478,7 @@ def MiniExamplesReferenceSolution():
         'LoadCoordinate.py':0.16667520761043855,
         'SensorNode.py':2.0,
         'SensorObject.py':10.000000000000009,
-        'SensorBody.py':0.5,
+        'SensorBody.py':0.7, #2026-10-01: the body at [0.5,0.2] (#2764); before 0.5
         'SensorSuperElement.py':0.499999999999998,
         'SensorKinematicTree.py':0.749999999999999,
         'SensorMarker.py':0.9999999999999999,

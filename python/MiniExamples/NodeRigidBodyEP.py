@@ -23,7 +23,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 #a rigid body spinning about its z-axis; the velocity coordinates are the time derivatives of the Euler parameters
 omega = [0,0,0.5*np.pi]
 ep0 = eulerParameters0
-node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+ep0,
+node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0.2,0.1]+ep0,
                                    initialVelocities=[0,0,0]+list(AngularVelocity2EulerParameters_t(omega, ep0))))
 inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
 mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),

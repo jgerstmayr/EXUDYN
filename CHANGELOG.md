@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 183 | 1.12.198 |
+| 1.12 | Metheney | 185 | 1.12.200 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.200** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the MiniExample graphics test checks the transformation of the drawing (#2765)
+  - description: Maintainer 2026-09-30 (RG2.3.3.6): the test sees more - a brick instead of a tetrahedron, the world basis drawn, bodies away from the origin, and the drawing transformation checked; the evaluation images in a 3D view.
+  - **notes:** The graphics test of the MiniExamples checks that every body is drawn where its kinematics put it.
+  - date resolved: **2026-09-30 23:59**, date raised: 2026-09-30
+- **1.12.199** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a body rotated by a small angle is drawn unrotated (#2764)
+  - description: AddBodyGraphicsData and AddBodyGraphicsDataColored skipped the rotation of a body's graphics when the diagonal of its rotation matrix was 1.f - which it is in single precision for any angle below about 3e-4 rad, while the off-diagonal terms are not zero. Found 2026-10-01 by the transformation check of the MiniExample graphics test (RG2.3.3.6): the spherical, generic and planar revolute joint examples drew their bodies 3e-5 m off after five steps.
+  - **notes:** A rigid body rotated by a very small angle is drawn with its rotation; before, rotations below about 3e-4 rad were not drawn.
+  - date resolved: **2026-09-30 23:59**, date raised: 2026-09-30
 - **1.12.198** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` rightAngleFrame.py stops at the buckling load: drive it by displacement (#2762)
   - description: The test model rightAngleFrame.py (ANCF and geometrically exact beam) applies the load by a user function and the static solver stops near the critical load 1.088 N; it was not run by the suite (useGraphics). Maintainer 2026-09-30: drive the tip by displacement, a coordinate constraint with an offset user function, the reaction force being the load.
   - **notes:** The test model rightAngleFrame.py drives the frame by displacement and follows it past the buckling load of 1.088 N.

@@ -1,0 +1,15 @@
+{
+  "number": 2765,
+  "title": "the MiniExample graphics test checks the transformation of the drawing",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "Maintainer 2026-09-30 (RG2.3.3.6): the test sees more - a brick instead of a tetrahedron, the world basis drawn, bodies away from the origin, and the drawing transformation checked; the evaluation images in a 3D view.",
+  "dateRaised": "2026-09-30",
+  "deadline": "2027-03-29",
+  "dateResolved": "2026-09-30 23:59",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The graphics test of the MiniExamples checks that every body is drawn where its kinematics put it.",
+  "resolvedInVersion": "1.12.200"
+}

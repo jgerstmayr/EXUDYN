@@ -306,7 +306,8 @@ NOT cover, and about the testing that no suite can do.
         simulate, so nodes, markers, loads and sensors are covered there as well, inside their
         MiniExamples. It grows with that group, one item at a time.
 
-      - **RG2.3.3.6** *(maintainer 2026-09-30)* **the MiniExample graphics test sees more**: a 3D view
+      - **RG2.3.3.6** *(maintainer 2026-09-30)* **DONE 2026-10-01** (#2765, #2764) — [log](exudynRevisionLog2026b.md#rg2-3-3-6) -
+        **the MiniExample graphics test sees more**, and it found a drawing bug on its first run: a 3D view
         instead of the x-y plane and `view0.scene.drawWorldBasis = True`, so that a wrong transformation in
         the drawing shows as a displaced or turned item against the world basis - which only works where the
         MiniExample's positions and orientations are not all zero, so some MiniExamples get a reference

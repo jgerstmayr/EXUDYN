@@ -43,14 +43,27 @@ namespace EXUvis {
 		}
 	}
 
+	//! true only for the identity: the rotation of the drawing is skipped then. The diagonal alone does not say it:
+	//! for a small rotation, cos(angle) is 1.f in single precision while the off-diagonal terms are not zero (#2764)
+	inline bool IsIdentityRotation(const Matrix3DF& rotation)
+	{
+		for (Index i = 0; i < 3; i++)
+		{
+			for (Index j = 0; j < 3; j++)
+			{
+				if (rotation(i, j) != (i == j ? 1.f : 0.f)) { return false; }
+			}
+		}
+		return true;
+	}
+
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! copy bodyGraphicsData (of body) into global graphicsData (of system)
 	void AddBodyGraphicsDataColored(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, 
 		const Float3& position, const Matrix3DF& rotation, const Float3& refPosition, const Matrix3DF& refRotation, const Float3& velocity, const Float3& angularVelocity,
 		Index itemID, const VisualizationSettings& visualizationSettings, bool contourColor)
 	{
-		bool applyRotation = true;
-		if (rotation(0, 0) == 1.f && rotation(1, 1) == 1.f && rotation(2, 2) == 1.f) { applyRotation = false; }
+		bool applyRotation = !IsIdentityRotation(rotation);
 
 		for (GLLine item : bodyGraphicsData.glLines) //copy objects, because we also need the transformed objects
 		{
@@ -241,8 +254,7 @@ namespace EXUvis {
 	void AddBodyGraphicsData(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, const Float3& position,
 		const Matrix3DF& rotation, Index itemID)
 	{
-		bool applyRotation = true;
-		if (rotation(0, 0) == 1.f && rotation(1, 1) == 1.f && rotation(2, 2) == 1.f) { applyRotation = false; }
+		bool applyRotation = !IsIdentityRotation(rotation);
 
 		for (GLLine item : bodyGraphicsData.glLines) //copy objects, because we also need the transformed objects
 		{

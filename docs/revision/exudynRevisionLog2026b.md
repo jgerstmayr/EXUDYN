@@ -10291,3 +10291,41 @@ arm, keeps the switch `useGeometricallyExact`, opens the renderer only when not 
 of the drive. An inconsistent Jacobian of the ANCF beam is the first suspect; raised as #2763, not a step yet.
 A much larger drive per step (1e-2 m in 200 steps) makes the geometrically exact frame jump to another branch
 (P = 3.2 N); the file says so at the parameter.
+
+<a id="rg2-3-3-6"></a>
+### RG2.3.3.6 — the MiniExample graphics test sees more (2026-10-01, #2765, #2764)
+
+**What the test does now** (`python/testing/test_graphicsMiniExamples.py`):
+
+- the graphics injected into every body is a **brick** (`graphics.BrickXYZ` from $[0.04, 0.02, 0.01]$ to
+  $[0.16, 0.08, 0.04]$ in body coordinates - away from the reference point and not symmetric to it), a line and a
+  text, where it was a small tetrahedron;
+- **the drawing transformation is checked directly**: the corners at which each body's brick is drawn
+  (`GetGraphicsData()`) must be where the body's kinematics put its local corners
+  (`GetObjectOutputBody(..., Position, localPosition, Visualization)`), at the initial state and after five steps -
+  for every body whose kinematics can say it; a missing translation or rotation of the drawing is a failure with
+  the object named, not a changed fingerprint;
+- `view0.scene.drawWorldBasis = True`, so that the world basis is part of the data.
+
+The view itself (a 3D view instead of the x-y plane) does not enter the test: `GetGraphicsData()` returns the
+drawing in world coordinates, independent of the view. It matters for images, and the evaluation images of RG2.3.3.7
+(`tmp/miniExampleImages/renderMiniExampleImages.py`) now use a 3D view with z up, the world basis at 0.25 and the
+injected brick - where most of them showed almost nothing before (maintainer).
+
+**Ten MiniExamples** had a free rigid body at the origin, where a drawing that drops the translation looks right:
+`NodeRigidBodyEP`, `NodeRigidBodyRxyz`, `NodeRigidBodyRotVecLG`, `NodeRigidBody2D`, `ObjectRigidBody`,
+`MarkerBodyMass`, `MarkerNodeRigid`, `LoadForceVector`, `LoadTorqueVector`, `SensorBody`. Their bodies start at
+$[0.5, 0.2, 0.1]$ (the 2D ones at $[0.5, 0.2]$); their results are unchanged except `SensorBody` (the point is at
+$y = 0.7$ now, reference moved) and `MarkerBodyMass`, which reads the displacement instead of the position. The
+bodies connected by joints and springs keep their places - moving them means moving their markers too; the
+direct check covers them wherever they move or turn during the five steps.
+
+**It found a bug on its first run (#2764)**: `AddBodyGraphicsData` and `AddBodyGraphicsDataColored`
+(`VisualizationPrimitives.cpp`) skipped the rotation of a body's graphics when the **diagonal** of its rotation matrix
+was `1.f` - in single precision that is so for every angle below about $3\cdot10^{-4}$ rad, while the off-diagonal terms
+are not zero. The spherical, the generic and the planar revolute joint examples drew their bodies $3\cdot10^{-5}$ m
+off after five steps; any slowly starting rotation was drawn unrotated at first. `IsIdentityRotation` checks all nine
+entries now.
+
+The 93 references are re-recorded (`exudev pytest --record -k miniExample`); the graphics tests, the suite and pytest
+pass.

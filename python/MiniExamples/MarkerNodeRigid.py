@@ -22,7 +22,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 #position and orientation of a rigid body node: a torque spins the body up
 inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
-node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0]))
+node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.5,0.2,0.1, 0,0,0]))
 mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
                               physicsInertia=inertia.GetInertia6D()))
 mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))

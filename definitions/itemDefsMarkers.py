@@ -39,7 +39,7 @@ definitions.append(ItemDefinition(
     overallDescription=r'A marker attached to the body mass; use this marker to apply a body-load (e.g. gravitational force).',
     classType=ClassTypeMarker,
     miniExample=r"""    #gravity on a planar rigid body: the load acts on the mass of the whole body
-    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0]))
+    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0.2,0]))
     body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
     mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
     mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,-9.81,0]))
@@ -48,7 +48,7 @@ definitions.append(ItemDefinition(
     mbs.SolveDynamic()
 
     #free fall: y = -g/2*t^2 at t=1, independent of the mass
-    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)[1] #-4.905
+    exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[1] #-4.905
     """,
     miniExamplePerformanceTest={'numberOfSteps': 1584910},
     examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py'],
@@ -385,7 +385,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeMarker,
     miniExample=r"""    #position and orientation of a rigid body node: a torque spins the body up
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
-    node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0]))
+    node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.5,0.2,0.1, 0,0,0]))
     mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
                                   physicsInertia=inertia.GetInertia6D()))
     mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))

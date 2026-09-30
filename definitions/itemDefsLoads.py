@@ -53,7 +53,7 @@ definitions.append(ItemDefinition(
     overallDescription=r'Load with (3D) force vector; attached to position-based marker.',
     classType=ClassTypeLoad,
     miniExample=r"""    #a body-fixed force on a planar rigid body turned by 90 degrees: the local x-direction is global y
-    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0.5*np.pi]))
+    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0.2,0.5*np.pi]))
     body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
     mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
     mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[1,0,0], bodyFixed=True))
@@ -173,7 +173,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeLoad,
     miniExample=r"""    #a torque about z spins a rigid body up
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
-    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0))
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0.2,0.1]+eulerParameters0))
     body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
                                          physicsInertia=inertia.GetInertia6D()))
     mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))

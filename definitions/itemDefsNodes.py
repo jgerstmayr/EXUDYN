@@ -300,7 +300,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #a rigid body spinning about its z-axis; the velocity coordinates are the time derivatives of the Euler parameters
     omega = [0,0,0.5*np.pi]
     ep0 = eulerParameters0
-    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+ep0,
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0.2,0.1]+ep0,
                                        initialVelocities=[0,0,0]+list(AngularVelocity2EulerParameters_t(omega, ep0))))
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
     mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
@@ -506,7 +506,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeNode,
     examples=['TestModels/connectorRigidBodySpringDamperTest.py', 'TestModels/heavyTop.py'],
     miniExample=r"""    #a rigid body spinning about its z-axis; the rotation coordinates are Tait-Bryan angles
-    node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0],
+    node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.5,0.2,0.1, 0,0,0],
                                          initialVelocities=[0,0,0, 0,0,0.5*np.pi])) #angle rates
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
     mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
@@ -681,7 +681,7 @@ definitions.append(ItemDefinition(
     overallDescription=r'A 3D rigid body node based on rotation vector and Lie group methods for rigid bodies. The node has 3 displacement coordinates and three rotation coordinates and can be used in combination with explicit Lie Group time integration methods.',
     classType=ClassTypeNode,
     miniExample=r"""    #a rigid body spinning about its z-axis, integrated with the Lie group integrator of the explicit solver
-    node = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=[0,0,0, 0,0,0],
+    node = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=[0.5,0.2,0.1, 0,0,0],
                                              initialVelocities=[0,0,0, 0,0,0.5*np.pi])) #angular velocity
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
     mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
@@ -843,7 +843,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeNode,
     examples=['Examples/rigidPendulum.py', 'Examples/doublePendulum2D.py', 'Examples/SliderCrank.py', 'Examples/simple4linkPendulumBing.py', 'Examples/slidercrankWithMassSpring.py'],
     miniExample=r"""    #a planar rigid body: x, y and the rotation angle, thrown with a spin
-    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0], initialVelocities=[1,0,2]))
+    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0.2,0], initialVelocities=[1,0,2]))
     mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
 
     mbs.Assemble()

@@ -227,7 +227,7 @@ definitions.append(ItemDefinition(
     overallDescription=r"""A sensor attached to a body at a local position $\pLocB$, which measures one of the output variables of the body at that point.""",
     classType=ClassTypeSensor,
     miniExample=r"""    #a point of a body given by its local position: a planar rigid body spinning about its center
-    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0], initialVelocities=[0,0,0.5*np.pi]))
+    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0.2,0], initialVelocities=[0,0,0.5*np.pi]))
     body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=0.1))
     sPoint = mbs.AddSensor(SensorBody(bodyNumber=body, localPosition=[0.5,0,0],
                                       outputVariableType=exu.OutputVariableType.Position,
@@ -236,8 +236,8 @@ definitions.append(ItemDefinition(
     mbs.Assemble()
     mbs.SolveDynamic()
 
-    #after a quarter turn the point [0.5,0,0] is at [0,0.5,0]
-    exu.sys['testResult'] = mbs.GetSensorValues(sPoint)[1] #0.5
+    #after a quarter turn the point [0.5,0,0] of the body at [0.5,0.2] is at [0.5,0.7,0]
+    exu.sys['testResult'] = mbs.GetSensorValues(sPoint)[1] #0.7
     """,
     miniExamplePerformanceTest={'numberOfSteps': 1650230},
     examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py'],
