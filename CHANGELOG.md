@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 164 | 1.12.177 |
+| 1.12 | Metheney | 165 | 1.12.178 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.178** `EXTENSION` `LOW EFF` `resolved by: Claude-JG` GeometricallyExactBeam2D (#2208)
+  - description: add test for 3-node element
+  - **notes:** ObjectBeamGeometricallyExact2D: the 3-node (quadratic) element is tested - one element reproduces the Timoshenko cantilever, and it converges with fourth order for large deformation (test model geometricallyExactBeam2DquadraticTest.py)
+  - date resolved: **2026-09-30 07:18**, date raised: 2026-01-08
 - **1.12.177** <span class="textred">`BUG`</span> `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectBeamGeometricallyExact (3D) has defects and is under development: analyse the implementation (#2730)
   - description: The maintainer, 2026-09-28: 'The 3D GeometricallyExactBeam has some defects and is still under development. So, you would find some errors in the implementation - so keep this item open and add a step and issue to RG4.' Its reference page (4 words of description) stays open in RG13.5.2 until the analysis says what the element does and what it does not; an item found with a larger defect while it is documented gets an RG4 step like this one rather than a fix inside RG13. revision2026b step RG4.8.
   - **notes:** ObjectBeamGeometricallyExact is analysed and completed: body markers and output variables (section forces, strains, rotations) are available, the Jacobian is complete, the element is stress-free in the reference configuration of its nodes (curved and twisted beams), the mass matrix is element-consistent, and the element is tested against the literature (45-degree bend, right-angle frame buckling, dynamic right-angle cantilever); its reference page and MiniExample describe it

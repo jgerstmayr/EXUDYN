@@ -7410,3 +7410,27 @@ nodes, clamped by a `GenericJoint`: tip displacement -0.33812496093079464e-3, th
 eight digits (-0.3381249616596102e-3) - the Timoshenko value -0.3433e-3 is approached with more elements.
 
 With this the RG4.8 analysis (#2730) is complete: all eleven sub-steps are done or closed.
+
+<a id="rg4-14"></a>
+### RG4.14 — a test of the 3-node planar geometrically exact beam (2026-09-30, #2208)
+
+No test model, example or MiniExample used the quadratic element (three nodes, in the order start, middle,
+end). Measured on a cantilever ($L = 1$, $EI = 100$, $GA = 10^4$, $EA = 10^5$):
+
+| | 1 element | 2 | 4 | 8 |
+|---|---|---|---|---|
+| small tip force, quadratic (Timoshenko $-3.43333\cdot10^{-4}$) | $-3.43333\cdot10^{-4}$ | same | same | same |
+| small tip force, linear | $-2.600\cdot10^{-4}$ | $-3.225\cdot10^{-4}$ | $-3.381\cdot10^{-4}$ | $-3.420\cdot10^{-4}$ |
+| half circle by $M = \pi EI/L$, quadratic (tip $2L/\pi = 0.636620$) | 0.616191 | 0.635647 | 0.636563 | 0.636616 |
+| half circle, linear | 1.000000 | 0.707107 | 0.653281 | 0.640729 |
+
+The quadratic element is exact for the linear Timoshenko cantilever with one element (to $10^{-7}$, the
+geometrically nonlinear part) and converges with **fourth order** for the large deformation, the linear
+element with second order. A pendulum falling under gravity through `MarkerBodyMass`: 4, 8 and 16 quadratic
+elements give the tip at t = 1 as -0.001862, -0.001827, -0.001830. Nothing wrong was found.
+
+Not a defect, on the way: with a small load in ten load steps the static solver stalls at a relative error of
+$3\cdot10^{-8}$ against a tolerance of $10^{-8}$ - the round-off of a nearly linear problem measured relative to
+a tiny residual, the same as in RG4.8.3; one load step converges.
+
+New test model `geometricallyExactBeam2DquadraticTest.py`; reference 0.7426300926712416.

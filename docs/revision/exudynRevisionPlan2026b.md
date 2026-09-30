@@ -1305,8 +1305,9 @@ The steps are numbered in the order they were raised and stand here in the order
     load and connector behind a rotated prismatic joint. One line and a test model; **high priority**.
 
 <a id="rg4-14"></a>
-**RG4.14** *(group RG4; 2026-09-29)* **`ObjectBeamGeometricallyExact2D`: a test of the 3-node element**
-    (#2208) - the only open issue of the planar element.
+**RG4.14** *(group RG4; 2026-09-29)* **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-14) —
+    **`ObjectBeamGeometricallyExact2D`: a test of the 3-node element** (#2208) - the only open issue of
+    the planar element; test model `geometricallyExactBeam2DquadraticTest.py`.
 
 <a id="rg4-15"></a>
 **RG4.15** *(group RG4; maintainer 2026-09-29)* **The open bugs and fixes before 1.13.** The maintainer: *"Before
@@ -3173,7 +3174,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models |
 | RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
-| RG4.14 | #2208 | `ObjectBeamGeometricallyExact2D`: a test of the 3-node element |
 | RG2.4 | #2748 | the manual GUI check, per release and platform (list and model done) |
 | RG4.12 | #2736 | `NodeGenericAE`: **on hold** - the future owner of a constraint's Lagrange multipliers and of the unknowns of algebraic equations |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |

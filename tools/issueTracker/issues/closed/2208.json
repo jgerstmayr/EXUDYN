@@ -1,0 +1,15 @@
+{
+  "number": 2208,
+  "title": "GeometricallyExactBeam2D",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "add test for 3-node element",
+  "dateRaised": "2026-01-08",
+  "deadline": "2026-07-07",
+  "dateResolved": "2026-09-30 07:18",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectBeamGeometricallyExact2D: the 3-node (quadratic) element is tested - one element reproduces the Timoshenko cantilever, and it converges with fourth order for large deformation (test model geometricallyExactBeam2DquadraticTest.py)",
+  "resolvedInVersion": "1.12.178"
+}

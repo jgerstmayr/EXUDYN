@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.177.dev1
+- Exudyn version = 1.12.178.dev1
 - last change = 2026-09-30
 - Number of issues = 2754
-- Number of resolved issues = 2491 (177 in current version)
+- Number of resolved issues = 2492 (178 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7737,10 +7737,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `LOW EFF` ANCFThinPlate (#2218)
   - description: add access function for rotation
   - date raised: 2026-01-13
-- `EXTENSION` `LOW EFF` GeometricallyExactBeam2D (#2208)
-  - description: add test for 3-node element
-  - **remarks:** planned as revision2026b step RG4.14 (2026-09-29), inspected first: it may be solved already
-  - date raised: 2026-01-08
 - `CHECK` `LOW EFF` perspective (#2205)
   - description: test moving along a scene when changing the centerPoint
   - date raised: 2026-01-08
