@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.194.dev1
+- Exudyn version = 1.12.195.dev1
 - last change = 2026-09-30
 - Number of issues = 2761
-- Number of resolved issues = 2508 (194 in current version)
+- Number of resolved issues = 2509 (195 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7589,7 +7589,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-09-27
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` evaluate the geometry of a curved triangle (or quad) and the features of a sphere for GraphicsData (#2710)
   - description: The preliminary sub-step of RG6.7 (maintainer, 2026-09-27): which features the Sphere gets and - more important - what the underlying geometry of the curved triangle is. Ideally it represents curved geometry with smooth tangents not only at the nodes but also along the boundaries; quads are acceptable if they are better and work in the degenerated case. How many and which nodes it has is part of the decision. The result is a short comparison of candidates for the maintainer, with what each costs in the OpenGL renderer, the raytracer and GetGraphicsData(). revision2026b step RG6.7.1.
-  - **remarks:** RG6.7.1 comparison delivered 2026-09-30 (log \#rg6-7-1): proposed 6-node quadratic triangle with optional nodal normals, tessellated at conversion; sphere type drawn by all three consumers; four questions to the maintainer
+  - **remarks:** RG6.7.1 comparison delivered 2026-09-30 (log \#rg6-7-1): proposed 6-node quadratic triangle with optional nodal normals, tessellated at conversion; sphere type drawn by all three consumers; four questions to the maintainer; decided by the maintainer 2026-09-30 (RG6.7.1): 6-node quadratic triangle, adaptive split by normal angle, sphere type used for the nodes; implementation RG6.7.2-6.7.4
   - date raised: 2026-09-27
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` GraphicsData gets a Sphere and a CurvedTriangleList (#2709)
   - description: The maintainer, 2026-09-27: GraphicsData will be extended by two classes, Sphere and CurvedTriangleList. Bigger than it sounds: the GraphicsData dictionary, the OpenGL renderer and the raytracer have to be adapted (at least with temporary workarounds), the pybind interfaces, SC.renderer.GetGraphicsData(), the documentation - so even the minimal implementation takes time. Known limitation to resolve with it: the OpenGL renderer already treats spheres separately for nodes (large node numbers); the raytracer does not draw glSpheres at all, while GetGraphicsData() does return them. The graphics regression test (RG2.3.3, \#2704) is extended when this lands. revision2026b step RG6.7.
@@ -7656,10 +7656,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HIGH EFF` Add ObjectJointSliding (#2315)
   - description: Extend SlidingJoint for rotation case
   - date raised: 2026-03-02
-- `FIX` `MEDIUM EFF` shadows (#2308)
-  - description: in case modelCentricView=False, lights with useCameraFrame=True have erratic shadows  in OpenGL mode
-  - **remarks:** planned before 1.13 as revision2026b step RG6.8.4 (2026-09-29); analysed 2026-09-30 (RG6.8.4 log): stencil shadow volumes (z-fail) clipped by the far plane of the camera-centric projection; proposed GL\_DEPTH\_CLAMP during the volume passes; needs a check on screen; GL\_DEPTH\_CLAMP during the shadow-volume passes committed 2026-09-30 (RG6.8.4); resolve after row K12 of docs/dev/GUI\_MANUAL\_CHECK.md has been checked on screen
-  - date raised: 2026-02-19
 - `EXTENSION` `LOW EFF` graphics (#2305)
   - description: Add error checks for isfinite for all point data imported in PyWriteBodyGraphicsDataList
   - date raised: 2026-02-15

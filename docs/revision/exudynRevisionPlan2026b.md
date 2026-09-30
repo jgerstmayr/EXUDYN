@@ -306,6 +306,20 @@ NOT cover, and about the testing that no suite can do.
         simulate, so nodes, markers, loads and sensors are covered there as well, inside their
         MiniExamples. It grows with that group, one item at a time.
 
+      - **RG2.3.3.6** *(maintainer 2026-09-30)* **the MiniExample graphics test sees more**: a 3D view
+        instead of the x-y plane and `view0.scene.drawWorldBasis = True`, so that a wrong transformation in
+        the drawing shows as a displaced or turned item against the world basis - which only works where the
+        MiniExample's positions and orientations are not all zero, so some MiniExamples get a reference
+        position or rotation (their test results move and are re-recorded). The references stay as the
+        test writes them.
+      - **RG2.3.3.7** *(maintainer 2026-09-30)* **an image per item for its page**: 800 x 600, generated
+        automatically by the raytracer, the white border cropped, a 3D view; selected by hand where the image
+        fits the description - the others stay without one for now. The definition of the item names the
+        file (a field such as `image='itemImages/ObjectRigidBody.png'`), stored in `docs/figures/itemImages/`.
+        The evaluation run of 2026-09-30 (`tmp/miniExampleImages/`) showed what the MiniExamples need first:
+        the raytracer draws no spheres (RG6.7.3), most bodies have no graphics of their own, and the node
+        frames and load arrows dominate.
+
       When GraphicsData gets its sphere and curved triangles (RG6.7, #2709), the test grows with it.
 
       **The maintainer on RG2.3.3.1 (2026-09-27)**: *"The described approach sounds good - good to
@@ -582,6 +596,13 @@ The steps are numbered in the order they were raised and stand here in the order
 
 <a id="rg4-8"></a>
 **RG4.8** **DONE 2026-09-30** (#2730) — [plan text](exudynRevisionLog2026b.md#plan-rg4-8) — `ObjectBeamGeometricallyExact` (3D): analyse the implementation.
+    Two leftovers, decided by the maintainer on 2026-09-30:
+    - **RG4.8.13** `rightAngleFrame.py` (ANCF and this element, not run by the suite) stops near the
+      buckling load with its load-driven settings: drive it by displacement instead - a coordinate constraint
+      whose offset a user function prescribes;
+    - **RG4.8.14** the switch of the mass matrix stays, as a special setting and not an experimental one:
+      `exu.special.beams.geometricallyExactLumpedMass` (default False, the consistent mass), so that tests
+      can run both; `exu.experimental.beamGeometricallyExactConsistentMass` goes.
 
 <a id="rg4-9"></a>
 **RG4.9** **DONE 2026-09-29** (#2731) — [log](exudynRevisionLog2026b.md#rg4-9) · [plan text](exudynRevisionLog2026b.md#plan-rg4-9) — The cable and beam shape markers accept any body.
@@ -826,16 +847,27 @@ This group is that revision and what has to happen before it can start.
     `glSpheres` at all**; `GetGraphicsData()` does return them (measured 2026-09-27). A Sphere that is
     fully part of GraphicsData has to be drawn the same way by all three.
 
-    - **RG6.7.1** *(the preliminary sub-step)* **DELIVERED 2026-09-30, the decisions are open** —
-      [log](exudynRevisionLog2026b.md#rg6-7-1) - **what the sphere can do, and what the curved triangle
-      is** (#2710). Proposed: the 6-node quadratic triangle with optional normals at its six nodes, tessellated
-      where the dictionary is converted, so that the OpenGL renderer and the raytracer draw it unchanged; a
-      sphere type drawn by all three consumers. Four questions to the maintainer in the log. The geometry is the decision that matters: ideally a curved element that is smooth
-      with continuous tangents **not only at its nodes but along its boundaries**, so that a curved
-      surface made of many of them has no visible edges. Quads are acceptable if they are better and
-      also work degenerated to a triangle. How many and which nodes the element has belongs to the
-      decision. The deliverable is a short comparison of candidates for the maintainer, each with what
-      it costs in the OpenGL renderer, the raytracer and `GetGraphicsData()`.
+    - **RG6.7.1** **DONE 2026-09-30, decided** — [log](exudynRevisionLog2026b.md#rg6-7-1) - what the sphere
+      can do, and what the curved triangle is (#2710). **Decided (maintainer, 2026-09-30)**:
+      - the element is the **6-node quadratic triangle with optional normals at its six nodes**;
+      - it is **split into flat triangles when the graphics data is drawn**, the normals interpolated with
+        the shape functions; the split is **adaptive**: the angle between the normals of a triangle (given or
+        computed from the geometry), approximated cheaply by $|\nv_i \times \nv_j|$, against a threshold
+        angle, with a maximum number of subdivisions per direction - two settings, **one global setting each**,
+        in `openGL.advanced` although the raytracer reads them as well: `curvedTriangleTilingAngle` (degrees,
+        default 3) and `curvedTriangleMaxTiling` (default 5), names to be confirmed by the implementation;
+      - **the raytracer does the same**: the normals were never the problem, the flat shape of the sub-triangles
+        is; a raytracer for curved geometry would be the real answer and is not planned;
+      - **the sphere is a GraphicsData type, and the nodes are drawn with it** - a node is no separate graphics
+        feature any more but gets a sphere shape; the order of drawing stays, so that with transparent faces
+        the nodes are seen through the objects.
+    - **RG6.7.2** the 6-node triangle: the dictionary (`TriangleList` with six indices per triangle and
+      optional normals per point), the adaptive split with the two settings, `GetGraphicsData()` returning the
+      split, `exudyn.graphics` helpers (`NGsolveMesh2PointsAndTrigs` and the FEM surface of quadratic meshes
+      use it), the superelements with six columns in `triangleMesh`;
+    - **RG6.7.3** the sphere type in GraphicsData, drawn by OpenGL, the raytracer (a ray-sphere intersection
+      in its search tree) and `GetGraphicsData()`; the nodes drawn through it, in the order of today;
+    - **RG6.7.4** the graphics tests (RG2.3.3) and the documentation grow with both.
 
 <a id="rg6-8"></a>
 **RG6.8** *(group RG6; maintainer 2026-09-29)* **The graphics fixes before 1.13** - *"many are graphics
@@ -857,8 +889,8 @@ This group is that revision and what has to happen before it can start.
       ([log](exudynRevisionLog2026b.md#rg6-8-4)): the shadows are OpenGL stencil shadow volumes, which the
       raytracer does not use, so its image cannot show the defect; the likely cause is the clipping of the
       volumes by the near and far planes of the camera-centric projection. **Changed 2026-09-30**
-      ([log](exudynRevisionLog2026b.md#rg6-8-4-1)): depth clamping while the volumes are drawn; the look on
-      screen is row K12 of the manual GUI check - the issue stays open until it is done;
+      ([log](exudynRevisionLog2026b.md#rg6-8-4-1)): depth clamping while the volumes are drawn. **DONE
+      2026-09-30**: the maintainer checked it on screen - no artifacts any more;
     - **RG6.8.5** (#2140, #2236) Linux: crashes when the renderer closes and with the SolutionViewer; the
       time in the renderer initialized wrong - the manual check (RG2.4) S7, Q1, Q2 on Ubuntu, plus a
       script that starts and stops the renderer twenty times;
@@ -987,18 +1019,38 @@ revision (info document D15).
     provides them. They are added where they make sense - rigid bodies, flexible bodies, superelements
     and connectors - and nowhere else; a test then checks the conservation of energy of a free
     oscillation, as the literature does for the beam benchmarks (RG4.8.11). One step per object type:
-    - **RG9.4.1** the convention - what `PotentialEnergy` contains (elastic
-      energy only; gravity and other loads are not part of an item), the reference (zero in the
-      reference configuration), and whether an object with a user function reports it;
-    - **RG9.4.2** rigid bodies and mass points: `ObjectRigidBody`, `ObjectRigidBody2D`, `ObjectMassPoint`,
-      `ObjectMassPoint2D`, `ObjectMass1D`, `ObjectRotationalMass1D` - kinetic energy;
-    - **RG9.4.3** flexible bodies: the ANCF cables and beams, `ObjectBeamGeometricallyExact(2D)`,
-      the ALE cable - kinetic and elastic energy;
+    - **RG9.4.1** **DECIDED 2026-09-30** (maintainer) - the convention: `PotentialEnergy` of an object is
+      its **elastic** energy, zero in the reference configuration; only objects for which it is meaningful
+      report `KineticEnergy` or `PotentialEnergy`. An object with a **user function** reports no energy; an
+      object that cannot report it raises an exception **with the reason**. The energies are added only where
+      the computation is straightforward and duplicates no larger code - for a beam from the existing
+      `ComputeODE2LHS` functions, or a simple loop over the integration points (bending and axial strain
+      energy; inefficient but simple is acceptable). The energy is one number for the item: **`localPosition`
+      must be `[0,0,0]`**, so that nobody takes it for a quantity at a point. The inspection of RG12.29 lists
+      the energies among the output variables only where they can be computed. **Loads are wanted as well**,
+      at least constant and mass-proportional ones (the potential of the load through its marker's position)
+      - planned in RG9.4.6 and RG9.4.7;
+    - **RG9.4.2** the simple objects first: `ObjectMassPoint`, `ObjectMassPoint2D`, `ObjectMass1D`,
+      `ObjectRotationalMass1D`, `ObjectRigidBody`, `ObjectRigidBody2D` (kinetic), the linear spring-dampers
+      (coordinate, Cartesian, torsional, linear; potential), and a **test model for energies** that shows
+      the effect on several simple, independent mechanisms (a free oscillator, a pendulum on a spring, a
+      rotating body), each with its conserved or dissipated total;
+    - **RG9.4.3** the heavier objects: `ObjectConnectorRigidBodySpringDamper`, the ANCF cables and beams,
+      `ObjectBeamGeometricallyExact(2D)`, the ALE cable - kinetic and elastic energy, by the rule above;
     - **RG9.4.4** superelements: `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectGenericODE2`,
-      `ObjectKinematicTree` - kinetic energy from the mass matrix, elastic energy from the stiffness
-      matrix where the object has one;
-    - **RG9.4.5** connectors: the spring-dampers (coordinate, Cartesian, rigid body, torsional, linear,
-      the generic spring-damper where its law is linear) - the elastic energy of the spring.
+      `ObjectKinematicTree` - kinetic energy from the mass matrix, elastic energy from the stiffness matrix
+      where the object has one;
+    - **RG9.4.5** what an object **should** provide against what it provides now (with its current
+      parameters): the declaration per object type, and the output variables of RG12.29 for the second -
+      possibly every body provides both, zero for the potential energy of a rigid body, and a connector the
+      potential energy only;
+    - **RG9.4.6** the energy of a load, for constant and mass-proportional loads: the potential of the force
+      through the position of its marker, computed by a user sensor (`LoadEnergyUserSensor`) - a load has no
+      output variable today, only a sensor that reads its value;
+    - **RG9.4.7** a utility class `SystemEnergy` (a user sensor): its `__init__` collects the objects that
+      provide kinetic and potential energy - with a flag to skip those that should and do not, with the
+      current parameters - and the loads, and `ComputeSystemEnergies` returns the totals, as long as there
+      is no MainSystem function for the energy of the system.
 
 ## RG10 — Tooling and process
 
@@ -1012,7 +1064,7 @@ file, so an editor cannot complete them).
 <a id="rg10-1"></a>
 **RG10.1** *(group RG10; maintainer request 2026-09-15; revision2026 step R8.6)* **DONE 2026-09-27**
     (#2712) — [log](exudynRevisionLog2026b.md#rg10-1) — `exudev scripts <folder>`, a maintainer tool
-    for now, as the maintainer decided for teaching; whether it later ships in the package is open.
+    for now, as the maintainer decided for teaching; **it stays a maintainer tool** (maintainer, 2026-09-30).
     **Checker for user scripts after the 1.12 API changes.** Teaching folders and user projects hold Exudyn scripts written
     against 1.x. A static checker (parses, never runs) reports per file and line: names the script
     uses but no longer gets from a star import (`np`, `sin`, `graphics`, ...; revision2026 step R4.22.3), removed
@@ -1287,9 +1339,8 @@ find out about the settings of a model. It is the group a user notices most and 
           take the signature from the def, and the group name becomes an emitted detail. Where the
           generated C++ wants a name it is `<Item><Parameter>` - the name the `Protocol` already has -
           so `PySymbolicUserFunctionSet.h` can declare one member per user function instead of one per
-          group, which is what the maintainer asked for. Whether it *should* is a separate question:
-          identical signatures collapsing into one member is deduplication, and deduplication of a
-          generated file is cheap to keep and cheap to drop.
+          group, which is what the maintainer asked for. **Identical signatures collapse into one member**
+          (maintainer, 2026-09-30).
 
       **The restriction the maintainer names is real and it is in the symbolic set.** A symbolic user
       function is evaluated through `EvaluateBool`, `EvaluateReal`, `EvaluateStdVector`,
@@ -1454,6 +1505,41 @@ find out about the settings of a model. It is the group a user notices most and 
     loop over the output variables an object declares instead of a hand-kept list, and the generated
     item pages (RG13.5.0.3) show the same. Not implemented yet - the interface first: one function
     with a `what` argument or one function per question.
+
+    **The maintainer (2026-09-30)**: one function with a `what`, where `what` is a **type** and not a
+    string - importable, completed by an editor; *"make a good suggestion"*. **Proposed**:
+
+    ```python
+    mbs.Inspect(itemIndex, what=None)
+    #itemIndex: an exu.ObjectIndex, NodeIndex, MarkerIndex, LoadIndex or SensorIndex - the typed index
+    #           says the kind of item, so a plain int is refused with the hint to use the typed one
+    #what:      a member of exu.InspectType, or None for a dict {InspectType.X: answer} of all that apply
+
+    mbs.Inspect(oBody, exu.InspectType.OutputVariables)
+    #-> [exu.OutputVariableType.Position, exu.OutputVariableType.Velocity, ...]
+    mbs.Inspect(oSpring, exu.InspectType.RequestedMarkerTypes)
+    #-> [exu.MarkerType.Position, exu.MarkerType.Position]   one entry per marker the connector takes
+    ```
+
+    `exu.InspectType` is a new enum, generated like the others (`definitions/`), and **every answer is a
+    list of the enums Exudyn already exports** - `OutputVariableType`, `NodeType`, `MarkerType`,
+    `ObjectType`, `AccessFunctionType` - never an integer bit mask and never a string:
+
+    | `InspectType` | applies to | answers with |
+    |---|---|---|
+    | `OutputVariables` | object, node | `[OutputVariableType]` - with the parameters the item has now, so energies only where they can be computed (RG9.4) |
+    | `ObjectType` | object | `[ObjectType]`: `Body`, `Connector`, `Constraint`, `SuperElement`, ... - the flags, one enum each |
+    | `NodeType` | node | `[NodeType]` the node provides: `Position`, `Orientation`, `RotationEulerParameters`, ... |
+    | `RequestedNodeTypes` | object, node marker | one `[NodeType]` per node it takes |
+    | `MarkerType` | marker | `[MarkerType]` it provides |
+    | `RequestedMarkerTypes` | connector, constraint, load | one `[MarkerType]` per marker it takes |
+    | `AccessFunctions` | body | `[AccessFunctionType]` it offers - what decides which body markers it takes |
+
+    A `what` that does not apply to the kind of item raises with the list of those that do. The flags that
+    are combinations in C++ (`NodeType`, `MarkerType`, `ObjectType`, `AccessFunctionType`) are split into
+    their single members, which is what a script compares against. A test then loops over
+    `Inspect(item, InspectType.OutputVariables)` of every MiniExample instead of a hand-kept list, and the
+    item pages of RG13.5.0.3 can take the same answers. Waits for the maintainer's confirmation.
 
 ## RG13 — Item documentation
 
@@ -1714,8 +1800,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
-| RG6.8 | #2308, #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the shadow fix waits for row K12 of the manual GUI check; the Linux and macOS ones for those machines |
-| RG6.7 | #2709, #2710 | GraphicsData gets a Sphere and a curved triangle list; RG6.7.1 delivered, its decisions are open |
+| RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
+| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list; decided (RG6.7.1), to be built in RG6.7.2 to RG6.7.4 |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG9.3 | #2744 | access functions as single functions of the objects; evaluation first |
 | RG9.4 | #2202 | kinetic and potential energy as output variables, per object type |
@@ -1752,9 +1838,9 @@ The title of each says what the step **does**; the sentence after it says why it
    the only item on this page that needs **other people's time**, so it starts before the
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748). It is the last condition of 1.13 that one
-   person can meet alone, and its row K12 decides the shadow fix of RG6.8.4 (#2308).
-3. **Give GraphicsData the curved triangle and the sphere** (RG6.7, #2709), once the four questions of
-   RG6.7.1 are answered. The raytracer does not draw spheres today, and the quadratic meshes of NGsolve
+   person can meet alone.
+3. **Give GraphicsData the curved triangle and the sphere** (RG6.7.2 to RG6.7.4, #2709), as decided in
+   RG6.7.1. The raytracer does not draw spheres today, and the quadratic meshes of NGsolve
    and the FFRF bodies are drawn with visible edges.
 4. **Let an item be asked what it provides** (RG12.29, #2203). The declarations exist; the tests and the
    item pages already use them, a script cannot.

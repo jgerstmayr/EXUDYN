@@ -1,0 +1,15 @@
+{
+  "number": 2308,
+  "title": "shadows",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "MEDIUM",
+  "description": "in case modelCentricView=False, lights with useCameraFrame=True have erratic shadows  in OpenGL mode",
+  "dateRaised": "2026-02-19",
+  "deadline": "2026-08-18",
+  "dateResolved": "2026-09-30 23:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Shadows in the OpenGL renderer no longer flicker or disappear with a camera-centric view and lights in the camera frame.",
+  "resolvedInVersion": "1.12.195"
+}

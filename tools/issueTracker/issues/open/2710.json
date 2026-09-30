@@ -9,5 +9,5 @@
   "dateRaised": "2026-09-27",
   "deadline": "2027-03-26",
   "file": "src/Graphics/GraphicsData.h",
-  "workingRemarks": "RG6.7.1 comparison delivered 2026-09-30 (log #rg6-7-1): proposed 6-node quadratic triangle with optional nodal normals, tessellated at conversion; sphere type drawn by all three consumers; four questions to the maintainer"
+  "workingRemarks": "RG6.7.1 comparison delivered 2026-09-30 (log #rg6-7-1): proposed 6-node quadratic triangle with optional nodal normals, tessellated at conversion; sphere type drawn by all three consumers; four questions to the maintainer; decided by the maintainer 2026-09-30 (RG6.7.1): 6-node quadratic triangle, adaptive split by normal angle, sphere type used for the nodes; implementation RG6.7.2-6.7.4"
 }

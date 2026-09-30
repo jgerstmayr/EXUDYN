@@ -10236,3 +10236,19 @@ which took an environment variable set by hand.
 environment is not one of the version matrix the build installs into, so a stale install stops the run there,
 at the end. `tools/exudev/README.md` and the table *Which tests run when* of `WORKFLOW.md` name the commands;
 `test_exudev.py` checks what each plans (four tests), and both commands were run.
+
+<a id="rg6-7-1-note"></a>
+### RG6.7.1 — a note on the table (2026-09-30, #2710)
+
+The comparison of RG6.7.1 gives the shading error of the 6-node triangle with nodal normals as **0**. That is an
+artefact of the two test surfaces, not a property of the element: the error was measured against the exact
+normal at the radial projection of the patch point, and on a sphere and a cylinder the exact nodal normals are
+radial, so the normalized quadratic interpolation of the normals points exactly along that projection by
+construction. On a general curved surface the error is small - of the order of the cube of the element size -
+but not zero. The order of the candidates and the recommendation do not change.
+
+**The maintainer's decisions on RG6.7.1** (2026-09-30), written into the plan as RG6.7.1 to RG6.7.4: the 6-node
+quadratic triangle with optional nodal normals; split into flat triangles when drawn, adaptively by the angle
+between the normals with a threshold (3 degrees) and a maximum number of subdivisions (5) as two global settings
+in `openGL.advanced`; the raytracer the same; the sphere a GraphicsData type with which the nodes are drawn, in
+the order of today.
