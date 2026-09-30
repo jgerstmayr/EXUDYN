@@ -1342,7 +1342,7 @@ The steps are numbered in the order they were raised and stand here in the order
     #2109 (DOPRI5 step size at discontinuities) goes with RG4.16.
 
 <a id="rg4-16"></a>
-**RG4.16** *(group RG4; maintainer 2026-09-30)* **Explicit solvers and the states of the PostNewton step**
+**RG4.16** *(group RG4; maintainer 2026-09-30)* **DONE 2026-09-30** — **Explicit solvers and the states of the PostNewton step**
     (#2754, from #830). The explicit solvers do no PostNewton step; since RG4.15.3 they warn about the
     objects whose state is then not updated - contact, friction, switching, rotation counters, sliding joint
     elements. Only `GeneralContact` updates its state itself, inside the residual.
@@ -1361,8 +1361,10 @@ The steps are numbered in the order they were raised and stand here in the order
       rolling disc and the rigid-body spring-damper with its PostNewton user function use the same path;
     - **RG4.16.4** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-16-1) - test model
       `explicitSolversPostNewtonTest.py`, all explicit integrators against generalized-alpha;
-    - **RG4.16.5** #2109, the DOPRI5 step size at discontinuities: resolved by the concept, or what it
-      teaches about it.
+    - **RG4.16.5** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg4-16-5) - #2109, the DOPRI5 step
+      size at discontinuities: two defects fixed - an accepted step changed its own step size before its
+      discontinuous iteration repeated it (DOPRI5 could reject the same step forever), and the sphere
+      contacts recommended a step size only where a contact begins, not where it ends.
 
 
 ## RG5 — Performance
@@ -3253,7 +3255,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
-| RG4.16 | #2754, #2109 | explicit solvers and the states of the PostNewton step: concept, then each object, then a test of all explicit integrators |
 | RG6.8 | #1813, #2309, #2321, #2308, #2140, #2236, #2237, #2350 | the graphics fixes before 1.13, each with a test |
 | RG6.7 | #2709, #2710 | GraphicsData gets a Sphere and a curved triangle list; RG6.7.1 evaluates the geometry first |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |

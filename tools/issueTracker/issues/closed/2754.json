@@ -2,10 +2,14 @@
   "number": 2754,
   "title": "explicit solvers: the states updated in the PostNewton step",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "HIGH",
   "description": "Explicit solvers do no PostNewton step, so contact, friction, switching states, rotation counters and sliding joint elements are not updated (#830 added a warning). Concept (maintainer 2026-09-30): check whether a PostNewton step is needed at all; update the data variables in the explicit integration similar to GeneralContact - at the beginning of a step, or more correctly in every stage of a multi-stage method; check every object with a PostNewton step against the concept; a test sweeping all explicit integrators, like contactComparisonTest.py; #2109 (DOPRI5 step size at discontinuities) may be resolved by it or give insight. Planned as revision2026b step RG4.16.",
   "dateRaised": "2026-09-30",
-  "deadline": "2027-03-29"
+  "deadline": "2027-03-29",
+  "dateResolved": "2026-09-30 14:48",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the explicit solvers perform the PostNewton step after every step (contact, friction, switching states) and keep the scheme of the implicit solvers: states fixed during the stages of a step, updated after it, the step repeated when a state changed; tested with all explicit integrators (explicitSolversPostNewtonTest.py)",
+  "resolvedInVersion": "1.12.186"
 }

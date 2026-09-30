@@ -1,0 +1,15 @@
+{
+  "number": 2109,
+  "title": "DOPRI5",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "HIGH",
+  "description": "DOPRI5 automatic step size not working well with discontinuities (ContactSphereSphere, etc.)",
+  "dateRaised": "2025-06-22",
+  "deadline": "2025-12-19",
+  "dateResolved": "2026-09-30 14:48",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "explicit solvers with automatic step size (DOPRI5, ODE23): an accepted step keeps its step size while a discontinuous iteration (contact, friction) repeats it; before, the step size proposed for the next step was used for the repetition, which could reject the same step forever; ObjectContactSphereSphere, ObjectContactSphereTorus and ObjectContactSphereTriangle recommend a step size also where the contact ends, as ObjectContactCoordinate does, which makes the release accurate with large steps; results of models with these contacts change slightly",
+  "resolvedInVersion": "1.12.185"
+}

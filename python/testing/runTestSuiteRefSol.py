@@ -60,7 +60,7 @@ def TestExamplesReferenceSolution():
         'connectorRigidBodySpringDamperTest.py':0.18276224743555652, #new 2022-07-11 (CState Parallel); 
         'contactCoordinateTest.py':0.0553131995062827,
         'contactCurveExample.py':0.3096143279681373,                #new 2025-05-11
-        'contactSphereSphereTest.py': 0.5348463502652304,           #new 2025-02-03
+        'contactSphereSphereTest.py':0.4416615668422053, #2026-09-30: step size recommended also where a contact ends (#2109); before 0.5348463502652304;           #new 2025-02-03
         'contactSphereSphereTestEAPM.py': 0.20000219249662216,      #new 2025-02-03
         'ConvexContactTest.py':0.011770267410492958,                #new 2022-07-11 (CState Parallel); #before 2022-01-25?: 0.05737886603111926, 
         'coordinateSpringDamperExt.py':17.084935539349033,          #new 2023-01-23
@@ -70,9 +70,9 @@ def TestExamplesReferenceSolution():
         'createFunctionsTest.py':0.04228833966560114,              #new 2025-05-11
         'createRollingDiscPenaltyTest.py':2.1129927199922123,       #new 2025-02-27
         'createRollingDiscTest.py':4.009716209090303,               #new 2025-03-05
-        'createSphereQuadContact.py':1.1243776621604573,             #new 2025-06-29
+        'createSphereQuadContact.py':1.124394416977545, #2026-09-30: step size recommended also where a contact ends (#2109); before 1.1243776621604573;             #new 2025-06-29
         'createSphereQuadContact2.py':0.15616582432943388,          #new 2025-07-05
-        'createSphereTriangleContact.py':4.840960219289836,        #new 2026-09-11; tEnd shortened 0.65->0.25 on adding
+        'createSphereTriangleContact.py':4.840244058316264, #2026-09-30: step size recommended also where a contact ends (#2109); before 4.840960219289836;        #new 2026-09-11; tEnd shortened 0.65->0.25 on adding
         'deleteItemsTest.py':-0.9860528006518324,                   #new 2025-05-10
         'distanceSensor.py':1.86776431077868,
         'driveTrainTest.py':-9.26985560534277e-08,                 #new 2023-05-20 (mainSystemExtensions); before:-9.269311940229841e-08,
@@ -112,9 +112,9 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeamMassTest.py':2.9942070791403967, #consistent mass matrix of the 3D beam: rigid motion exact (#1273)
         'geometricallyExactBeam2DquadraticTest.py':0.7426300926712416, #the 3-node planar geometrically exact beam (#2208)
         'genericODE1duplicateNodeTest.py':3.1091750014354522, #numerical ODE1 Jacobian with a coordinate addressed twice (#1424)
-        'contactSphereTorusMomentumTest.py':4.227231105610667, #momentum conservation of the sphere-torus contact (#2127)
-        'explicitSolversPostNewtonTest.py':4.097033066855782, #PostNewton states with every explicit integrator (#2754)
-        'contactComparisonTest.py':1.200040705928356, #deepest points and end heights, three contact objects, two laws (#2749, #2750)
+        'contactSphereTorusMomentumTest.py':4.227231105376637, #2026-09-30: step size recommended also where a contact ends (#2109); before 4.227231105610667; #momentum conservation of the sphere-torus contact (#2127)
+        'explicitSolversPostNewtonTest.py':4.563482002223096, #2026-09-30: DOPRI5 with large steps added, and the step size recommended where a contact ends (#2109); before 4.097033066855782; #PostNewton states with every explicit integrator (#2754)
+        'contactComparisonTest.py':1.200116276111891, #2026-09-30: step size recommended also where a contact ends (#2109); before 1.200040705928356; #deepest points and end heights, three contact objects, two laws (#2749, #2750)
         'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164064,
         'laserScannerTest.py':2.695064443768281 ,                   #new 2024-04-29
@@ -167,7 +167,7 @@ def TestExamplesReferenceSolution():
         'sliderCrankFloatingTest.py':0.591649163378833,
         'solverExplicitODE1ODE2test.py':3.3767933275918964,         #new 2022-07-11 (CState Parallel); 
         'sparseMatrixSpringDamperTest.py':-0.06779862812271391,     #changed to analytic Spring-Damper jacobian (missing d(vel)/dpos term): -0.06779862983767654,
-        'sphereTriangleTest2.py':4.35608275479331,                 #changed: 2026-01-23 (sparse acc(vel) initialization); new 2025-06-22
+        'sphereTriangleTest2.py':4.35616383223589, #2026-09-30: step size recommended also where a contact ends (#2109); before 4.35608275479331;                 #changed: 2026-01-23 (sparse acc(vel) initialization); new 2025-06-22
         'sphericalJointTest.py':4.409080446575154,                  #new 2022-07-11 (CState Parallel); 
         'springDamperUserFunctionTest.py':0.5062872273010924,
         'stiffFlyballGovernor.py':0.8962488779114738,

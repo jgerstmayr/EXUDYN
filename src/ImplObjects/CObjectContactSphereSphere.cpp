@@ -366,7 +366,8 @@ Real CObjectContactSphereSphere::PostNewtonStep(const MarkerDataStructure& marke
 
 		//in fact it is (0-startofStepState) which is the part of time to go in these steps!
 		//startofStepGap<=0 caused in case of inappropriate initialization => no step recommendation, but try to re-iterate
-		if (vGap != 0 && startofStepGap > 0) { recommendedStepSize = fabs(startofStepGap / vGap); }
+		//the time to the switch, also where the contact ends, as ObjectContactCoordinate does it (#2109)
+		if (vGap != 0 && startofStepGap != 0) { recommendedStepSize = fabs(startofStepGap / vGap); }
 
 		//pout << "curGap=" << currentGap << ", sosGap=" << startofStepGap << ", discErr=" << discontinuousError << ", recStep=" << recommendedStepSize << ", vGap=" << vGap << "\n";
 		flags = PostNewtonFlags::UpdateJacobian;

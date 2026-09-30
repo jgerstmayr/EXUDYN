@@ -6,10 +6,9 @@
 #           one coordinate, ObjectContactSphereSphere as a hit on a large ground sphere,
 #           ObjectContactSphereTriangle as a hit on a ground triangle - the motion is the same, so the
 #           three give the same height z(t) (#2749), a cross-check of three implementations.
-#           Measured: sphere and triangle agree to 1e-13; all three agree to 1e-10 until the ball
-#           leaves the ground, the deepest point 0.0963898 against 0.0963927 of an independent RK4
-#           integration of the same law; after the release the coordinate contact differs by 4e-5,
-#           of first order in the step size, because its post Newton step recommends another step.
+#           Measured: all three agree to 1e-12 over the whole drop - they recommend the same step
+#           size where the contact begins and where it ends (#2109); the deepest point 0.0963898
+#           against 0.0963927 of an independent RK4 integration of the same law.
 #           The same for a nonlinear law with the impact model of Gonthier et al. / Carvalho-Martins,
 #           which ObjectContactCoordinate has since #2750.
 #

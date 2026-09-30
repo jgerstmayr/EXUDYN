@@ -7618,3 +7618,46 @@ sample script (all four kinds found) and on the 334 scripts of the repository (n
 **Checks**: the test suite and pytest pass, all MiniExamples; the examples run passes (`runTestExamples.py`:
 170 examples, 29 skipped by the runner's rules, one known failure); the examples in subfolders are not part of it - six of them run by hand: four fine, two fail for
 reasons older than this step (`copy` not callable, `basicUtilities.pi`) - raised as #2757.
+
+<a id="rg4-16-5"></a>
+### RG4.16.5 — DOPRI5 at discontinuities (2026-09-30, #2109)
+
+The drop of `contactComparisonTest.py` with a large maximum step size (300 steps for 0.3 s) showed two defects.
+
+**1. An accepted step changed its own step size, and DOPRI5 could loop forever.** With
+`discontinuous.useRecommendedStepSize = False`, DOPRI5 never finished (killed after minutes). The verbose output:
+at the release of the contact, step 146 is computed (discontinuous iteration 0), its error estimate is small
+and it is accepted - and `CSolverExplicitTimeInt::Newton` set `it.currentStepSize` to the larger size proposed
+for the *next* step right there. The PostNewton step then found the contact state changed, and the
+discontinuous iteration repeated step 146 - with the doubled step size but the old end time. That repetition
+was rejected (error 18.9), the rejection reduced the step size back to the original one, iteration 0 accepted
+it again and doubled it again: the same step, forever. Now an accepted step keeps its step size until it is
+finished; the proposed size (`nextStepSize`) is applied when the next step starts (`UpdateCurrentTime`), and a
+rejection or a reduction clears it.
+
+**2. The sphere contacts recommended a step size only where a contact begins.** `ObjectContactCoordinate`
+recommends $|g_0/\dot g|$ - the time to the switch - wherever its state switches; `ObjectContactSphereSphere`,
+`...SphereTorus` and `...SphereTriangle` did so only when entering (`startofStepGap > 0`). Where the ball leaves the
+ground, the step then went past the release. Now all four recommend it in both directions (not when the gap
+at the start of the step is exactly zero, which an initial data value of 0 gives).
+
+Height of the ball after the rebound, t = 0.3, 300 steps (maximum step size $10^{-3}$); implicit reference with
+20 000 steps 0.11625:
+
+| | before | now |
+|---|---|---|
+| DOPRI5, coordinate contact | 0.11615 | 0.11615 |
+| DOPRI5, sphere contact | 0.12016 | **0.11615** |
+| RK44, sphere contact | 0.11844 | **0.11616** |
+| generalized-alpha, sphere contact | 0.11531 | **0.11612** |
+| DOPRI5 without recommended step size, coordinate / sphere | did not finish | 0.11962 / 0.11468 |
+
+The three contact objects of `contactComparisonTest.py` now agree to $10^{-12}$ also after the release, where
+the coordinate contact differed by $4\cdot10^{-5}$ before. The restitution test `contactSphereSphereTest.py`
+comes closer to its coefficient 0.7 - velocity ratios 0.708, 0.707, 0.703, 0.716 against 0.711, 0.710, 0.702,
+0.747 before.
+
+References moved (the recommended step size changes the steps of every model with a sphere contact):
+`contactSphereSphereTest.py`, `createSphereQuadContact.py`, `createSphereTriangleContact.py`, `sphereTriangleTest2.py`,
+`contactSphereTorusMomentumTest.py`, `contactComparisonTest.py` (header updated), `explicitSolversPostNewtonTest.py`,
+which gets the DOPRI5 runs with 300 steps, with and without the recommended step size - the case that looped.

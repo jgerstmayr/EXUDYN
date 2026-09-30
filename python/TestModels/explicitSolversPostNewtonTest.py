@@ -10,6 +10,10 @@
 #           after every step, through the discontinuous iteration all solvers share; measured: every
 #           explicit integrator follows the implicit solution to the accuracy of its step size, e.g. the
 #           deepest point of the drop 0.09639 for all, the counted rotation angle 0.2616 at the end.
+#           Last, the drop with DOPRI5 and a large maximum step size (300 steps for 0.3 s), with and without
+#           the step size the contacts recommend where they begin and end (#2109): the height after the
+#           rebound 0.11615 with the recommendation for both contacts, against 0.11625 of the implicit solver
+#           with 20 000 steps; without it the step size control alone gives 0.1147 to 0.1196.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-30
@@ -29,9 +33,10 @@ solverTypes = ['GeneralizedAlpha', 'ExplicitEuler', 'ExplicitMidpoint', 'RK33', 
                'DOPRI5', 'VelocityVerlet']
 
 
-def Solve(mbs, endTime, numberOfSteps, solverType):
+def Solve(mbs, endTime, numberOfSteps, solverType, useRecommendedStepSize=True):
     mbs.Assemble()
     simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize = useRecommendedStepSize
     simulationSettings.timeIntegration.numberOfSteps = numberOfSteps
     simulationSettings.timeIntegration.endTime = endTime
     simulationSettings.solutionSettings.writeSolutionToFile = False
@@ -39,8 +44,9 @@ def Solve(mbs, endTime, numberOfSteps, solverType):
     mbs.SolveDynamic(simulationSettings, solverType=getattr(exu.DynamicSolverType, solverType))
 
 
-def Drop(kind, solverType):
-    """the deepest point of the center of a ball of radius 0.1 dropped from 0.2 onto the ground"""
+def Drop(kind, solverType, numberOfSteps=6000, useRecommendedStepSize=True, lastValue=False):
+    """the deepest point of the center of a ball of radius 0.1 dropped from 0.2 onto the ground, or the
+    height at the end"""
     r = 0.1; m = 1; g = 9.81; z0 = 0.2
     SC = exu.SystemContainer(); mbs = SC.AddSystem()
     oGround = mbs.AddObject(ObjectGround())
@@ -68,7 +74,9 @@ def Drop(kind, solverType):
                                                 spheresRadii=[1, r], contactStiffness=1e5, contactDamping=100))
         sensor = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=exu.OutputVariableType.Position,
                                           storeInternal=True, writeToFile=False))
-    Solve(mbs, 0.3, 6000, solverType)
+    Solve(mbs, 0.3, numberOfSteps, solverType, useRecommendedStepSize)
+    if lastValue:
+        return mbs.GetSensorStoredData(sensor)[-1, -1]
     return mbs.GetSensorStoredData(sensor)[:, -1].min()
 
 
@@ -110,6 +118,14 @@ for (name, Case) in cases:
     deviation = max(abs(v - reference) for v in values.values())
     exu.Print(name + ': implicit', round(reference, 6), ', largest deviation of an explicit integrator', deviation)
     testResult += sum(values.values())
+
+#DOPRI5 with a large maximum step size; without the recommended step size it did not finish (#2109)
+for kind in ['coordinate', 'sphere']:
+    for useRecommendedStepSize in [True, False]:
+        height = Drop(kind, 'DOPRI5', 300, useRecommendedStepSize, lastValue=True)
+        exu.Print('drop with DOPRI5, 300 steps,', kind, 'contact, recommended step size', useRecommendedStepSize,
+                  ': height at the end', round(height, 5))
+        testResult += height
 
 exu.Print('solution of explicitSolversPostNewtonTest=', testResult)
 exu.sys['testResult'] = testResult

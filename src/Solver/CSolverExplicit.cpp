@@ -51,6 +51,7 @@ void CSolverExplicitTimeInt::PreInitializeSolverSpecific(CSystem& computationalS
 	eliminateConstraints = timeint.explicitIntegration.eliminateConstraints;
 	useLieGroupIntegration = timeint.explicitIntegration.useLieGroupIntegration;
 	minStepSizeWarned = false;
+	nextStepSize = -1;
 
 }
 
@@ -496,8 +497,19 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 			it.rejectedAutomaticStepSizeSteps++;
 		}
 
-		//now set suggested step size
-		it.currentStepSize = hNew;
+		//a rejected step is repeated at once with the smaller step size; an accepted step keeps its step size
+		//until it is finished - a discontinuous iteration repeats it with the same step - and the proposed
+		//size is used from the next step on (#2109): changing it here made the repeated step integrate over
+		//another interval than the one its time stands for, and could reject it forever
+		if (stepRejected)
+		{
+			it.currentStepSize = hNew;
+			nextStepSize = -1;
+		}
+		else
+		{
+			nextStepSize = hNew;
+		}
 		STOPTIMER(timer.errorEstimator);
 
 		if (IsVerbose(2)) {
@@ -545,6 +557,7 @@ bool CSolverExplicitTimeInt::ReduceStepSize(CSystem& computationalSystem, const 
 {
 	//it.currentTime is the only important value to be updated in order to reset the step time:
 	it.currentTime = computationalSystem.GetSystemData().GetCData().currentState.time;
+	nextStepSize = -1; //the step is repeated with the reduced size (#2109)
 
 	if (!conv.discontinuousIterationSuccessful) //additionally reduce step size
 	{
@@ -603,6 +616,11 @@ void CSolverExplicitTimeInt::UpdateCurrentTime(CSystem& computationalSystem, con
 	}
 	else
 	{
+		if (nextStepSize > 0) //the size proposed by the error control of the previous step (#2109)
+		{
+			it.currentStepSize = nextStepSize;
+			nextStepSize = -1;
+		}
 		if (it.currentTime + it.currentStepSize > it.endTime)
 		{
 			it.currentStepSize = it.endTime - it.currentTime;

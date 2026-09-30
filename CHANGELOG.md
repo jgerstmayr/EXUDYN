@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 170 | 1.12.184 |
+| 1.12 | Metheney | 172 | 1.12.186 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.186** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` explicit solvers: the states updated in the PostNewton step (#2754)
+  - description: Explicit solvers do no PostNewton step, so contact, friction, switching states, rotation counters and sliding joint elements are not updated (\#830 added a warning). Concept (maintainer 2026-09-30): check whether a PostNewton step is needed at all; update the data variables in the explicit integration similar to GeneralContact - at the beginning of a step, or more correctly in every stage of a multi-stage method; check every object with a PostNewton step against the concept; a test sweeping all explicit integrators, like contactComparisonTest.py; \#2109 (DOPRI5 step size at discontinuities) may be resolved by it or give insight. Planned as revision2026b step RG4.16.
+  - **notes:** the explicit solvers perform the PostNewton step after every step (contact, friction, switching states) and keep the scheme of the implicit solvers: states fixed during the stages of a step, updated after it, the step repeated when a state changed; tested with all explicit integrators (explicitSolversPostNewtonTest.py)
+  - date resolved: **2026-09-30 14:48**, date raised: 2026-09-30
+- **1.12.185** `FIX` `HIGH EFF` `resolved by: Claude-JG` DOPRI5 (#2109)
+  - description: DOPRI5 automatic step size not working well with discontinuities (ContactSphereSphere, etc.)
+  - **notes:** explicit solvers with automatic step size (DOPRI5, ODE23): an accepted step keeps its step size while a discontinuous iteration (contact, friction) repeats it; before, the step size proposed for the next step was used for the repetition, which could reject the same step forever; ObjectContactSphereSphere, ObjectContactSphereTorus and ObjectContactSphereTriangle recommend a step size also where the contact ends, as ObjectContactCoordinate does, which makes the release accurate with large steps; results of models with these contacts change slightly
+  - date resolved: **2026-09-30 14:48**, date raised: 2025-06-22
 - **1.12.184** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.utilities imports less (#2756)
   - description: Maintainer 2026-09-30: remove from exudyn.utilities the imports of the beam generators (GenerateStraightLineANCFCable2D, GenerateSlidingJoint, GenerateAleSlidingJoint, GenerateStraightBeam - in exudyn.beams), of CreateDistanceSensorGeometry, CreateDistanceSensor, DrawSystemGraph (mbs.Create..., mbs.Draw...) and of graphicsDataUtilities (the old colors color4red, ... shall not be promoted); update the exudev scripts checker, all models under python/, and the documentation with the workarounds. Planned as revision2026b step RG12.30.
   - **notes:** from exudyn.utilities import \* no longer provides the beam generators (import them from exudyn.beams), the MainSystem extensions CreateDistanceSensor..., DrawSystemGraph (use mbs.CreateDistanceSensor(...), mbs.DrawSystemGraph(...)) and the names of exudyn.graphicsDataUtilities (the colors color4red... are graphics.color.red...; import the rest from exudyn.graphicsDataUtilities); GraphicsDataRectangle and GraphicsDataOrthoCubeLines are deprecated; exudev scripts names every affected line

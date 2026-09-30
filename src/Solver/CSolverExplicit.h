@@ -65,6 +65,7 @@ public: //made public for access via pybind
 	bool computeMassMatrixInversePerBody;
 
 	bool minStepSizeWarned; //!< set true, if already warned because of reaching minimum step due to error control
+	Real nextStepSize; //!< step size the error control proposes for the NEXT step, applied when it starts; -1: none (#2109)
 
 	Index nStages;	//!< number of active stages in explicit integrator
 

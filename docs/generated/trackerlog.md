@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.184.dev1
+- Exudyn version = 1.12.186.dev1
 - last change = 2026-09-30
 - Number of issues = 2758
-- Number of resolved issues = 2498 (184 in current version)
+- Number of resolved issues = 2500 (186 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,9 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` explicit solvers: the states updated in the PostNewton step (#2754)
-  - description: Explicit solvers do no PostNewton step, so contact, friction, switching states, rotation counters and sliding joint elements are not updated (\#830 added a warning). Concept (maintainer 2026-09-30): check whether a PostNewton step is needed at all; update the data variables in the explicit integration similar to GeneralContact - at the beginning of a step, or more correctly in every stage of a multi-stage method; check every object with a PostNewton step against the concept; a test sweeping all explicit integrators, like contactComparisonTest.py; \#2109 (DOPRI5 step size at discontinuities) may be resolved by it or give insight. Planned as revision2026b step RG4.16.
-  - date raised: 2026-09-30
 - `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` graphics regression test: every item through its MiniExample (#2751)
   - description: The last part of \#2704 (resolved 2026-09-29 with RG2.3.3.1 to RG2.3.3.4): take every item through its MiniExample - which every item but three has since RG13.6 (\#2732) - and store the graphics fingerprint of each (SC.renderer.GetGraphicsData(), counts and metrics) as a reference. revision2026b step RG2.3.3.5.
   - date raised: 2026-09-29
@@ -7795,9 +7792,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HIGH EFF` solver (#2110)
   - description: add flag for local frame implicit solver, computing jacobians in local frame and using specific step updates
   - date raised: 2025-06-24
-- `FIX` `HIGH EFF` DOPRI5 (#2109)
-  - description: DOPRI5 automatic step size not working well with discontinuities (ContactSphereSphere, etc.)
-  - date raised: 2025-06-22
 - `EXTENSION` `MEDIUM EFF` Chain drive (#2106)
   - description: add function to create chain gears as well as geometry from chain drive; calculate length similar to reeving system, but with two chains (and kinck) to compensate length
   - date raised: 2025-06-21
