@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.195.dev1
+- Exudyn version = 1.12.196.dev1
 - last change = 2026-09-30
 - Number of issues = 2761
-- Number of resolved issues = 2509 (195 in current version)
+- Number of resolved issues = 2510 (196 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7586,10 +7586,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-09-27
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` exudev scripts runs the user scripts too: copies in a local space, with a timeout (#2713)
   - description: The maintainer, 2026-09-27, the future half of RG10.1: copy the scripts into a local space and execute them, as the examples are run, with a timeout. Before a script is run it has to be checked for paths that do not travel - absolute ones such as 'C:\\' and relative ones such as '../' or '..\\' - because a copied script with such a path reads or writes somewhere else, or fails for a reason that is not the Exudyn version. revision2026b step RG10.1.1.
-  - date raised: 2026-09-27
-- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` evaluate the geometry of a curved triangle (or quad) and the features of a sphere for GraphicsData (#2710)
-  - description: The preliminary sub-step of RG6.7 (maintainer, 2026-09-27): which features the Sphere gets and - more important - what the underlying geometry of the curved triangle is. Ideally it represents curved geometry with smooth tangents not only at the nodes but also along the boundaries; quads are acceptable if they are better and work in the degenerated case. How many and which nodes it has is part of the decision. The result is a short comparison of candidates for the maintainer, with what each costs in the OpenGL renderer, the raytracer and GetGraphicsData(). revision2026b step RG6.7.1.
-  - **remarks:** RG6.7.1 comparison delivered 2026-09-30 (log \#rg6-7-1): proposed 6-node quadratic triangle with optional nodal normals, tessellated at conversion; sphere type drawn by all three consumers; four questions to the maintainer; decided by the maintainer 2026-09-30 (RG6.7.1): 6-node quadratic triangle, adaptive split by normal angle, sphere type used for the nodes; implementation RG6.7.2-6.7.4
   - date raised: 2026-09-27
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` GraphicsData gets a Sphere and a CurvedTriangleList (#2709)
   - description: The maintainer, 2026-09-27: GraphicsData will be extended by two classes, Sphere and CurvedTriangleList. Bigger than it sounds: the GraphicsData dictionary, the OpenGL renderer and the raytracer have to be adapted (at least with temporary workarounds), the pybind interfaces, SC.renderer.GetGraphicsData(), the documentation - so even the minimal implementation takes time. Known limitation to resolve with it: the OpenGL renderer already treats spheres separately for nodes (large node numbers); the raytracer does not draw glSpheres at all, while GetGraphicsData() does return them. The graphics regression test (RG2.3.3, \#2704) is extended when this lands. revision2026b step RG6.7.
