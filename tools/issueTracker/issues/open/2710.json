@@ -8,5 +8,6 @@
   "description": "The preliminary sub-step of RG6.7 (maintainer, 2026-09-27): which features the Sphere gets and - more important - what the underlying geometry of the curved triangle is. Ideally it represents curved geometry with smooth tangents not only at the nodes but also along the boundaries; quads are acceptable if they are better and work in the degenerated case. How many and which nodes it has is part of the decision. The result is a short comparison of candidates for the maintainer, with what each costs in the OpenGL renderer, the raytracer and GetGraphicsData(). revision2026b step RG6.7.1.",
   "dateRaised": "2026-09-27",
   "deadline": "2027-03-26",
-  "file": "src/Graphics/GraphicsData.h"
+  "file": "src/Graphics/GraphicsData.h",
+  "workingRemarks": "RG6.7.1 comparison delivered 2026-09-30 (log #rg6-7-1): proposed 6-node quadratic triangle with optional nodal normals, tessellated at conversion; sphere type drawn by all three consumers; four questions to the maintainer"
 }

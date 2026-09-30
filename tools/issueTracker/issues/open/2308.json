@@ -8,5 +8,5 @@
   "description": "in case modelCentricView=False, lights with useCameraFrame=True have erratic shadows  in OpenGL mode",
   "dateRaised": "2026-02-19",
   "deadline": "2026-08-18",
-  "workingRemarks": "planned before 1.13 as revision2026b step RG6.8.4 (2026-09-29)"
+  "workingRemarks": "planned before 1.13 as revision2026b step RG6.8.4 (2026-09-29); analysed 2026-09-30 (RG6.8.4 log): stencil shadow volumes (z-fail) clipped by the far plane of the camera-centric projection; proposed GL_DEPTH_CLAMP during the volume passes; needs a check on screen"
 }

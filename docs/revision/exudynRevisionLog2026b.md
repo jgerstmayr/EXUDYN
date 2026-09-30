@@ -7849,3 +7849,119 @@ case reports that it was, as every graphics reference does.
 **Not done** (the plan's *"the same run can write the image of each item for its documentation page"*): the
 images. The raytracer can take them at the same point (RG2.3.3.4 measured 1 to 12 ms per small image); what
 remains to decide is the size, the view per item and where the pages take them from.
+
+<a id="rg6-7-1"></a>
+### RG6.7.1 — the curved triangle and the sphere: a comparison (2026-09-30, #2710)
+
+**The maintainer's question**: which curved element works best - compatible with curved finite elements
+(10-node tets), better for nonlinear ANCF plates, better locally for cylinders and general curved geometry; the
+kinks at edges matter a little; quadratic or cubic; points, points and tangents, or more; normals from the
+geometry or given.
+
+**What the consumers do today.** `GLTriangle` is three points, three normals and three colors. The OpenGL
+renderer draws it with the fixed pipeline and smooth shading (normals interpolated per vertex, lighting per
+vertex); the raytracer intersects flat triangles and interpolates the three normals at the hit point (Phong
+shading, `Raytracing.cpp:93`); `GetGraphicsData()` returns the flat triangles. Two things are curved already,
+each on its own: the ANCF thin plate tessellates itself in `UpdateGraphics` with the exact normals of the
+element, so it has no kinks inside an element and, being C1, none across them; and `NGsolveMesh2PointsAndTrigs`
+splits a quadratic surface triangle into four flat ones with normals from `Compute6NodeTrigsNormals`. A superelement
+with a quadratic mesh (FFRF from a 10-node tet mesh) draws the four flat sub-triangles with flat normals - there
+the kinks are visible.
+
+**Candidates, measured** (`tmp/curvedTriangleCandidates.py`): each surface meshed coarsely, each triangle turned
+into the candidate patch, sampled at 45 points; *distance* is the largest distance to the true surface, *shading
+error* the largest angle between the normal the candidate shades with and the true one, *kink* the largest angle
+between the geometric normals of two neighbours along their common edge - what shows as an edge in the
+silhouette and, with geometric normals, in the shading.
+
+| candidate | data per triangle | sphere, 80 triangles: distance / shading / kink | cylinder, 12 segments | cylinder, 24 segments |
+|---|---|---|---|---|
+| flat (today) | 3 points, 3 normals | 6.5e-2 / - / 22.5 deg | 3.4e-2 / 30 deg kink | 8.6e-3 / 15 deg |
+| Phong tessellation | the same | 2.3e-2 / 0.5 / 7.1 | 1.5e-2 / 11.1 | 4.1e-3 / 7.0 |
+| PN triangle (cubic, from points and normals) | the same | 6.2e-3 / 2.1 / 2.6 | 1.7e-3 / 1.0 | 1.1e-4 / 0.13 |
+| **6-node quadratic, geometric normal** | 6 points | 1.7e-3 / 1.3 / 2.3 | 1.4e-4 / 0.5 | 9.0e-6 / 0.06 |
+| **6-node quadratic + 6 nodal normals** | 6 points, 6 normals | 1.7e-3 / **0** / 2.3 | 1.4e-4 / **0** / 0.5 | 9.0e-6 / **0** / 0.06 |
+| 10-node cubic, geometric normal | 10 points | 9.4e-4 / 1.5 / 1.6 | 3.5e-4 / 1.4 | 2.2e-5 / 0.17 |
+
+(radius 1; the sphere with 320 triangles gives the same order: quadratic 1.2e-4 and 0.35 deg, PN 4.6e-4 and 0.4 deg,
+flat 1.8e-2 and 11 deg.)
+
+**What the numbers say**
+
+- **Quadratic is enough.** The 6-node triangle with its mid-side nodes on the surface is 4 to 40 times closer
+  than the best candidate that needs no new data (PN), and on a cylinder better than the 10-node cubic, whose
+  interior nodes are harder to place. Cubic is not worth 10 points per triangle.
+- **The kinks are a question of the normals, not of the order.** Along a common edge, two quadratic triangles
+  share the three nodes of the edge, so the geometry is continuous there, and so is any normal field
+  interpolated from normals given **at the nodes**: with nodal normals the shading has no kink at all, whatever
+  the order. What remains is the kink of the silhouette, 0.06 to 2.3 degrees here - invisible at the tessellation
+  a renderer uses. Normals computed from the geometry alone leave that kink in the shading as well.
+- **True tangent continuity** (G1 patches - Clough-Tocher splits, Gregory patches, points plus tangents) needs
+  derivatives at the nodes that neither a mesh nor a user has, rational or split patches, and Newton iterations
+  in the raytracer. For a kink that nodal normals already hide, not worth it.
+- **Finite elements**: the face of a 10-node tet *is* a 6-node triangle, so is the surface of a quadratic
+  shell; `ImportMeshFromNGsolve(meshOrder=2)` and `NGsolveMesh2PointsAndTrigs` have the six nodes today and split
+  them. The ANCF plate does not need the new element - it tessellates itself with exact normals - but a user
+  graphics following a deformed plate could use it.
+- **Quads** (9-node biquadratic) are no better: the same continuity, and degenerated to a triangle the normal
+  at the collapsed corner is singular.
+
+**Proposal**
+
+1. The element: **6 points, normals at the six nodes optional** (without them: the geometric normal of the
+   patch). In the dictionary a `TriangleList` with six indices per triangle, `'order': 2`, `points`, optional
+   `normals` and `colors` per point, optional `edges` drawn along the curved edges. A helper in
+   `exudyn.graphics` makes one from today's triangle lists with normals (mid-side points from the PN
+   construction), so that an STL or a cylinder can be curved without finite element data.
+2. **Tessellated where the dictionary is converted** (`VisualizationSystemContainer.cpp`, the conversion into
+   `BodyGraphicsData`): n x n flat triangles per curved one, with positions and normals of the patch. The OpenGL
+   renderer and the raytracer then draw it **unchanged**; `GetGraphicsData()` returns the tessellation, so the
+   graphics regression tests see it. Later, and only if the images ask for it: the raytracer evaluates the
+   normal of the patch at the hit point, which makes the shading exact with a coarse tessellation.
+3. **Deformable bodies**: a superelement whose `triangleMesh` has six columns tessellates per frame with fixed
+   weights (n x n points per triangle, a precomputed linear combination of the six nodes).
+4. **The sphere**: a `Sphere` type in the dictionary (position, radius, color, tiling), kept as `GLSphere` in
+   `BodyGraphicsData` (the array is there, commented out). The OpenGL renderer draws it with the code that draws
+   the node spheres; `GetGraphicsData()` already returns spheres; **the raytracer** gets an analytic
+   ray-sphere intersection and puts the spheres into its search tree - which also makes the node spheres
+   visible in raytraced images, where they are missing today (measured 2026-09-27). The largest part of the
+   work is this one.
+
+Cost, roughly: the element and its tessellation 200 to 300 lines of C++ and the Python helper; the sphere in
+the raytracer about 100; the superelement drawing about 50; the graphics tests grow with both (RG2.3.3).
+
+**Questions to the maintainer**
+
+1. The 6-node quadratic triangle with optional nodal normals - or PN triangles built from today's data only, no
+   new data (4 to 40 times less accurate, but every existing triangle list would curve)?
+2. Tessellation at conversion first, the exact normal in the raytracer later - agreed?
+3. The tessellation level: one visualization setting (e.g. `general.curvedTriangleTiling`), or per graphics item?
+4. The sphere: also the way the nodes are drawn, so that the raytracer shows them?
+
+<a id="rg6-8-4"></a>
+### RG6.8.4 — shadows with a camera-centric view: analysis (2026-09-30, #2308)
+
+The OpenGL shadows are **stencil shadow volumes** (`DrawTrianglesWithShadow`, `RenderTriangleShadowVolume` in
+`GlfwClient.cpp`), drawn per light: each triangle facing the light is extruded away from it by
+`1.5 * maxSceneSize`, with both caps, and the stencil counts back faces up and front faces down where the depth
+test **fails** - the z-fail method. The raytracer computes its shadows by casting rays and does not use this
+code, so the planned raytracer image cannot show the defect.
+
+What was checked, and is consistent: a light in the camera frame is transformed into the model frame with the
+inverse of the model view, `p = R (e + t)` for a point light and `R e` for a direction, using the same
+`GetRotationTranslationFWithMarker` the drawing uses - with the camera position of the camera-centric view in
+`t`. The light positions the fixed pipeline uses (`SetGLLights`, identity model view for camera-frame lights)
+agree with that.
+
+**The likely cause**: z-fail is correct only if no part of a volume is clipped by the **far** plane (and its
+caps are drawn, which they are). In the model-centric view the projection keeps the scene far inside its planes
+(the camera is pushed back by the zoom distance, near and far are the distance -/+ `zMaxSceneFactor * maxSize`);
+in the camera-centric view the camera is inside or close to the scene, the far plane is `zMaxSceneFactor * maxSize`
+from the camera, and a volume extruded by 1.5 scene sizes behind an object reaches past it - the far cap is
+clipped, and the stencil count of every pixel behind it is off: shadows that come and go with the view.
+
+**Proposed change**: enable `GL_DEPTH_CLAMP` (OpenGL 3.2, defined in the glad header of the repository) while
+the two volume passes are drawn, and disable it after: clipped depths are clamped instead, which is the standard
+remedy for z-fail. Nothing changes in the model-centric view, where no volume reaches the planes. It is not
+made here: it can only be judged on screen (a camera-centric model with a camera-frame light, the manual check
+of RG2.4), which this session does not open.

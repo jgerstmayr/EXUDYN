@@ -1753,8 +1753,11 @@ This group is that revision and what has to happen before it can start.
     `glSpheres` at all**; `GetGraphicsData()` does return them (measured 2026-09-27). A Sphere that is
     fully part of GraphicsData has to be drawn the same way by all three.
 
-    - **RG6.7.1** *(the preliminary sub-step)* **what the sphere can do, and what the curved triangle
-      is** (#2710). The geometry is the decision that matters: ideally a curved element that is smooth
+    - **RG6.7.1** *(the preliminary sub-step)* **DELIVERED 2026-09-30, the decisions are open** —
+      [log](exudynRevisionLog2026b.md#rg6-7-1) - **what the sphere can do, and what the curved triangle
+      is** (#2710). Proposed: the 6-node quadratic triangle with optional normals at its six nodes, tessellated
+      where the dictionary is converted, so that the OpenGL renderer and the raytracer draw it unchanged; a
+      sphere type drawn by all three consumers. Four questions to the maintainer in the log. The geometry is the decision that matters: ideally a curved element that is smooth
       with continuous tangents **not only at its nodes but along its boundaries**, so that a curved
       surface made of many of them has no visible edges. Quads are acceptable if they are better and
       also work degenerated to a triangle. How many and which nodes the element has belongs to the
@@ -1777,7 +1780,11 @@ This group is that revision and what has to happen before it can start.
       `fem.GetSurfaceTriangles()` against the outward normals. `ImportMeshFromNGsolve` flipped the surface of
       NETGEN, which points outward already; `test_femSurfaceOrientation.py`;
     - **RG6.8.4** (#2308) erratic shadows with `modelCentricView=False` and lights in the camera frame -
-      a small raytracer image against a reference, as in RG2.3.3.4;
+      a small raytracer image against a reference, as in RG2.3.3.4. **Analysed 2026-09-30**
+      ([log](exudynRevisionLog2026b.md#rg6-8-4)): the shadows are OpenGL stencil shadow volumes, which the
+      raytracer does not use, so its image cannot show the defect; the likely cause is the clipping of the
+      volumes by the near and far planes of the camera-centric projection. The proposed change (depth clamping
+      while the volumes are drawn) needs a look on screen - open;
     - **RG6.8.5** (#2140, #2236) Linux: crashes when the renderer closes and with the SolutionViewer; the
       time in the renderer initialized wrong - the manual check (RG2.4) S7, Q1, Q2 on Ubuntu, plus a
       script that starts and stops the renderer twenty times;
