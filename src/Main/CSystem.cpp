@@ -41,6 +41,8 @@
 //#include "Utilities/AutomaticDifferentiation.h"
 //#include "Utilities/AdvancedMath.h"
 #include "Utilities/Differentiation.h" //include after 
+#include "Main/Experimental.h"
+extern PyExperimental pyExperimental; //the switch of the connector interface (#2745)
 
 
 //! Prepare a newly created System of nodes, objects, loads, ... for computation
@@ -1428,6 +1430,35 @@ TimerStructureRegistrator TSRcomputeGeneralContact("Contact:Overall", TScomputeG
 //TimerStructureRegistrator TSRcomputeMarkerDataODE2("computeMarkerDataODE2", TScomputeMarkerDataODE2, globalTimers);
 
 
+//! L2 of the connector interface for connectors on position markers (#2745): the kinematics of the two markers (L0),
+//! the connector's force (L1), and its projection by each marker, into the local vector [marker 0, marker 1]
+void CSystem::ComputeODE2LHSPositionMarkers(TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber)
+{
+	const CMarker* marker0 = cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[0]];
+	const CMarker* marker1 = cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[1]];
+	MarkerPosition<Real> kinematics[2];
+	marker0->GetKinematicsPosition(cSystemData, kinematics[0]);
+	marker1->GetKinematicsPosition(cSystemData, kinematics[1]);
+
+	Index n0 = marker0->GetODE2Size(cSystemData, temp.markerTemp[0]);
+	Index n1 = marker1->GetODE2Size(cSystemData, temp.markerTemp[1]);
+	localODE2Lhs.SetNumberOfItems(n0 + n1);
+	localODE2Lhs.SetAll(0.);
+
+	Vector3D force;
+	connector.ComputeConnectorForcePosition(kinematics, cSystemData.GetCData().currentState.time, objectNumber, force);
+	if (n1 != 0)
+	{
+		LinkedDataVector ode2Lhs1(localODE2Lhs, n0, n1);
+		marker1->AddGeneralizedForce(cSystemData, force, temp.markerTemp[1], ode2Lhs1);
+	}
+	if (n0 != 0)
+	{
+		LinkedDataVector ode2Lhs0(localODE2Lhs, 0, n0);
+		marker0->AddGeneralizedForce(cSystemData, -force, temp.markerTemp[0], ode2Lhs0);
+	}
+}
+
 //! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in RHS computation)
 //! return true, if object has localODE2Lhs, false otherwise
 inline bool CSystem::ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs, Index objectNumber)
@@ -1442,11 +1473,18 @@ inline bool CSystem::ComputeObjectODE2LHS(TemporaryComputationData& temp, CObjec
 		{
 			CObjectConnector* connector = (CObjectConnector*)object;
 
-			//compute MarkerData for connector:
-			const bool computeJacobian = true; //jacobian needed for connectors, to add correct projection of forces!
-			cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
+			if (connector->GetConnectorInterface() == ConnectorInterface::PositionMarkers && !pyExperimental.connectorInterfaceLegacy)
+			{
+				ComputeODE2LHSPositionMarkers(temp, *connector, localODE2Lhs, objectNumber);
+			}
+			else
+			{
+				//compute MarkerData for connector:
+				const bool computeJacobian = true; //jacobian needed for connectors, to add correct projection of forces!
+				cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
 
-			connector->ComputeODE2LHS(localODE2Lhs, temp.markerDataStructure, objectNumber);
+				connector->ComputeODE2LHS(localODE2Lhs, temp.markerDataStructure, objectNumber);
+			}
 		}
 		return true;
 	}

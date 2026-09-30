@@ -43,6 +43,23 @@ void CMarkerNodePosition::ComputeMarkerData(const CSystemData& cSystemData, bool
 	}
 }
 
+Index CMarkerNodePosition::GetODE2Size(const CSystemData& cSystemData, MarkerTemp& temp) const
+{
+	return cSystemData.GetCNodes()[parameters.nodeNumber]->GetNumberOfODE2Coordinates();
+}
+
+void CMarkerNodePosition::AddGeneralizedForce(const CSystemData& cSystemData, const Vector3D& force, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const
+{
+	const CNodeODE2* node = (const CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]);
+	if (node->GetType() == Node::Position) //NodePoint: the position Jacobian is the identity
+	{
+		ode2Lhs[0] += force[0]; ode2Lhs[1] += force[1]; ode2Lhs[2] += force[2];
+		return;
+	}
+	node->GetPositionJacobian(temp.tempMatrix);
+	EXUmath::MultMatrixTransposedVectorAdd(temp.tempMatrix, force, ode2Lhs);
+}
+
 //! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(Jpos.T @ v)/dq
 void CMarkerNodePosition::ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const
 {

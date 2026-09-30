@@ -23,6 +23,20 @@
 namespace EXUmath 
 {
 
+	//! seed a vector of AutoDiff with its values and the derivative directions offset, offset+1, ...: the kinematics of
+	//! several markers stay separate vectors, each seeded at its own offset; the result's DValue(j) is the derivative
+	//! with respect to direction j (#2745)
+	template<typename TAutoDiffVector, typename TVector>
+	inline void SeedAutoDiff(TAutoDiffVector& autoDiffVector, const TVector& values, int offset)
+	{
+		for (int i = 0; i < (int)values.NumberOfItems(); i++)
+		{
+			autoDiffVector[i] = values[i];      //the value, all derivatives zero
+			autoDiffVector[i].DValue(offset + i) = 1.;
+		}
+	}
+
+
 	//! class for automatic differentiation.
 	//! specify scalar data type and nDiff derivatives. 
 	//! standard operations are overloaded by using product-rule etc. etc.

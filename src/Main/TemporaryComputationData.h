@@ -61,6 +61,7 @@ public:
 	SparseTripletVector sparseTriplets;		//!< used for temporary assembly of jacobian, mass matrix, etc.
 
 	MarkerDataStructure markerDataStructure;
+	MarkerTemp markerTemp[2];				//!< the two markers of a connector on the new path (#2745)
 	Real tempValue; //!< used for PostNewton PNerror, maybe also for other procedures in future
 	Real tempValue2; //!< used for PostNewton recommendedStepSize, maybe also for other procedures in future
 };

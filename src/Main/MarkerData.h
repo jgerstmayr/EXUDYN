@@ -240,4 +240,39 @@ public:
 //};
 
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//THE CONNECTOR INTERFACE OF RG14 (#2745): a connector reads only the kinematics of its markers (L0), computes its
+//force from them alone (L1, the connector) and the system projects it (L2, CSystem, one function per marker kind);
+//nothing is stored per item, the temporaries are per thread
+
+//! position and velocity of a marker, global; templated so that automatic differentiation can carry them
+template<class TReal>
+class MarkerPosition
+{
+public:
+	SlimVectorBase<TReal, 3> position;
+	SlimVectorBase<TReal, 3> velocity;
+};
+
+//! the value and its time derivative of a coordinate marker
+template<class TReal>
+class MarkerCoordinate
+{
+public:
+	TReal value;
+	TReal value_t;
+};
+
+//! temporaries of one marker on the new path, per thread (TemporaryComputationData); the markers without their own
+//! functions of the new path fill markerData through ComputeMarkerData
+class MarkerTemp
+{
+public:
+	MarkerData markerData;
+	ResizableMatrix tempMatrix;
+};
+
+//! which path the system takes for a connector: Legacy is ComputeMarkerDataStructure and the connector's ComputeODE2LHS
+enum class ConnectorInterface { Legacy, PositionMarkers, RigidMarkers, CoordinateMarkers };
+
 #endif

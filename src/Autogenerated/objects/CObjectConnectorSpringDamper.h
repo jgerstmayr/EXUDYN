@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  00:09:41 (last modified)
+* @date         2026-10-01  00:53:30 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -138,6 +138,18 @@ public: // AUTO:
     {
         return CObjectType::Connector;
     }
+
+    //! AUTO:  the connector implements the interface of position markers (#2745)
+    virtual ConnectorInterface GetConnectorInterface() const override
+    {
+        return ConnectorInterface::PositionMarkers;
+    }
+
+    //! AUTO:  the force on marker 1 from the kinematics of the two markers (#2745)
+    virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Index itemIndex, Vector3D& force) const override;
+
+    //! AUTO:  the physics of the spring-damper, shared by the legacy path, the new one and the output variables (#2745)
+    void ComputeSpringForce(const Vector3D& position0, const Vector3D& position1, const Vector3D& velocity0, const Vector3D& velocity1, Real t, Index itemIndex, Vector3D& relPos, Vector3D& relVel, Real& force, Vector3D& forceDirection) const;
 
     //! AUTO:  return if connector is active-->speeds up computation
     virtual bool IsActive() const override

@@ -111,6 +111,30 @@ public: //
 	}
 
 	//! compute markerdata: fill in according data for derivative of jacobian times 6D vector v6D, e.g.: d(Jpos.T @ v6D[0:3])/dq
+	//! L0 of the connector interface (#2745): position and velocity only; every position marker has GetPosition and GetVelocity
+	virtual void GetKinematicsPosition(const CSystemData& cSystemData, MarkerPosition<Real>& kinematics) const
+	{
+		Vector3D p, v;
+		GetPosition(cSystemData, p);
+		GetVelocity(cSystemData, v);
+		kinematics.position = p;
+		kinematics.velocity = v;
+	}
+
+	//! number of ODE2 coordinates the marker acts on: the columns of its position Jacobian; the default computes the marker data
+	virtual Index GetODE2Size(const CSystemData& cSystemData, MarkerTemp& temp) const
+	{
+		ComputeMarkerData(cSystemData, true, temp.markerData);
+		return temp.markerData.positionJacobian.NumberOfColumns();
+	}
+
+	//! add J_pos^T force to ode2Lhs, the marker's part of the connector's vector (#2745); the default forms the Jacobian
+	virtual void AddGeneralizedForce(const CSystemData& cSystemData, const Vector3D& force, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const
+	{
+		ComputeMarkerData(cSystemData, true, temp.markerData);
+		EXUmath::MultMatrixTransposedVectorAdd(temp.markerData.positionJacobian, force, ode2Lhs);
+	}
+
 	virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const {
 		CHECKandTHROWstring("Invalid call to CMarker::ComputeMarkerDataJacobianDerivative");
 	}

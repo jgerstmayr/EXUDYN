@@ -473,6 +473,21 @@ void CObjectRigidBody::GetAccessFunctionBody(AccessFunctionType accessType, cons
 }
 
 //! provide according output variable in "value"
+//! J_pos^T f without forming J_pos = [I, -A b~ G_local]: f on the translations, G_local^T (b x A^T f) on the rotation parameters (#2745)
+void CObjectRigidBody::AddPositionForce(const Vector3D& localPosition, const Vector3D& force, ResizableMatrix& tempMatrix, LinkedDataVector& ode2Lhs) const
+{
+	const CNodeRigidBody* node = (const CNodeRigidBody*)GetCNode(0);
+	for (Index i = 0; i < nDim3D; i++) { ode2Lhs[i] += force[i]; }
+
+	Vector3D momentLocal = localPosition.CrossProduct(node->GetRotationMatrix().GetTransposed() * force);
+	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
+	node->GetGlocal(Glocal);
+	for (Index j = 0; j < node->GetNumberOfRotationCoordinates(); j++)
+	{
+		ode2Lhs[nDisplacementCoordinates + j] += Glocal(0, j)*momentLocal[0] + Glocal(1, j)*momentLocal[1] + Glocal(2, j)*momentLocal[2];
+	}
+}
+
 void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
 	switch (variableType)

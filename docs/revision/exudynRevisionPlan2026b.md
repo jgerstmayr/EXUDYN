@@ -1730,7 +1730,7 @@ how future items and the user elements (RG7, RG8) are written, so it is decided 
 done.
 
 <a id="rg14-1"></a>
-**RG14.1** *(group RG14; maintainer 2026-09-29)* **DONE 2026-09-29, for the maintainer's decision** —
+**RG14.1** *(group RG14; maintainer 2026-09-29)* **CLOSED 2026-10-01, superseded by RG14.2** (maintainer) —
     in `tmp/evalRG14_1_markerData.md` (not kept in the repository). Proposed: connectors and loads call
     marker functions with a compact temporary, after RG9.3, loads first; GeneralContact keeps its
     precomputation; the AD benefit needs the body side of RG15. **The evaluation** (#2745): what `MarkerData` holds
@@ -1762,19 +1762,34 @@ done.
       2026-09-30** (maintainer): one global experimental switch as the fallback; the field is
       `miniExamplePerformanceTest`; the regular performance run a tenth of the full one; loads **not**
       before the rigid-marker connectors; automatic differentiation is for later, not in the first
-      migration. Open, answered in section 10 of the evaluation for the maintainer: the velocities of a
-      rigid marker with homogeneous transformations (a), AD over separate vectors (b), why per-marker-kind
-      functions and where (e);
-    - **RG14.2.3** L0, the per-thread `MarkerTemp`, the marker functions and the dispatch with `Legacy`
-      for every connector - results identical;
+      migration. **Decided 2026-10-01** (maintainer) on the three open points: (a) the rigid marker keeps
+      the mixed form - $\Hm$, $\vv$ global, $\tomega$ local - with a `BodyTwist` function, possibly a member
+      of the homogeneous transformation; (b) automatic differentiation over separate vectors with a
+      seeding helper, as proposed; (e) the second layer, one function per marker kind, **in `CSystem`**;
+    - **RG14.2.3** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-3) - L0, the per-thread
+      `MarkerTemp`, the marker functions and the dispatch with `Legacy` for every connector - results identical;
     - **RG14.2.4** the pilot `ObjectConnectorSpringDamper`, its inner Jacobian by AD, compared with the
-      legacy path in results, Newton iterations and timers;
+      legacy path in results, Newton iterations and timers. **The force (ODE2) part DONE 2026-10-01** —
+      [log](exudynRevisionLog2026b.md#rg14-2-3) - results identical, the right-hand side up to 20 % faster
+      on rigid bodies; **open: RG14.2.4.1** the inner Jacobian by AD with the seeding helper, in `CSystem`,
+      against the analytic legacy Jacobian;
     - **RG14.2.5** the other position-marker connectors; **RG14.2.6** the coordinate-marker connectors;
       **RG14.2.7** the loads; **RG14.2.8** the rigid-marker force connectors with homogeneous
       transformations; **RG14.2.9** constraints and joints; **RG14.2.10** the contact connectors (with
       RG4.16); **RG14.2.11** the special markers (shape, cable, many markers); **RG14.2.12**
       `GeneralContact` on L0; **RG14.2.13** output variables and sensors through the connector force, then
       the legacy path, the switch and the unused temporaries removed.
+
+<a id="rg14-3"></a>
+**RG14.3** *(group RG14; maintainer 2026-10-01)* **Joints and their Jacobians on homogeneous transformations.**
+    The derivatives of the kinematic equations of the joints are always of the same kind - relative position
+    and rotation of two frames, projected on axes - and each joint writes them by hand today, with its own
+    rotation Jacobians. With the rigid markers as homogeneous transformations (RG14.2.8), a joint's
+    constraint equations become functions of $\Hm_0^{-1}\Hm_1$, and their Jacobians follow systematically from
+    the relative twist - one implementation for `JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, the 2D
+    joints and the rolling disc, instead of one each. Done when homogeneous transformations are integrated
+    more deeply, after RG14.2.9 (constraints on L0/L1/L2); a step of its own because it replaces working
+    code and needs the comparison of RG14.2.
 
 ## RG15 — Objects computing from given coordinates
 
@@ -1832,7 +1847,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.29 | #2203 | ask an item from Python which output variables and types it provides |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
-| RG14.2 | #2745 | connectors compute from small marker structures: the baseline (RG14.2.1) and most of the interface (RG14.2.2) are done; RG14.2.3 waits for the confirmation of (a) and (e) |
+| RG14.2 | #2745 | connectors compute from small marker structures: interface decided, L0-L2 and the pilot spring-damper (forces) done; next the AD Jacobian of the pilot (RG14.2.4.1), then RG14.2.5 |
+| RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG13.6.6 | #2732 | MiniExamples of `ObjectFFRF` and `ObjectFFRFreducedOrder`, once tetrahedral elements are part of Exudyn |

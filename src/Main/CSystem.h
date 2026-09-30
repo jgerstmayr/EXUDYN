@@ -231,6 +231,9 @@ public:
 	//void ComputeMassMatrixOLD(TemporaryComputationData& temp, Matrix& massMatrix);
 
 	//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in LHS computation); return true, if object has localODE2Lhs, false otherwise
+	//! L2 of the connector interface for connectors on position markers (#2745)
+	void ComputeODE2LHSPositionMarkers(TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber);
+
 	bool ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs, Index objectNumber);
 		
 	//! compute right-hand-side (RHS) of first order ordinary differential equations (ODE) for every object (used in numerical differentiation and in LHS computation); return true, if object has localODE1Rhs, false otherwise

@@ -58,6 +58,17 @@ private:
 public:
     //! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
     virtual CObjectConnector* GetClone() const { return new CObjectConnector(*this); }
+
+	//! the path the system takes for this connector (#2745): Legacy unless the connector implements the new interface
+	virtual ConnectorInterface GetConnectorInterface() const { return ConnectorInterface::Legacy; }
+
+	//! L1 of a connector on position markers (#2745): its force on marker 1 from the kinematics of its two markers,
+	//! global; marker 0 gets the reaction; no system access and no Jacobians
+	virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Index itemIndex, Vector3D& force) const
+	{
+		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForcePosition: not implemented for this connector");
+	}
+
     virtual const char* GetName() const { return "CObjectConnector"; }
 
     virtual void Print(std::ostream& os) const {

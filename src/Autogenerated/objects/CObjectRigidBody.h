@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  00:09:41 (last modified)
+* @date         2026-10-01  00:53:30 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -148,6 +148,9 @@ public: // AUTO:
 
     //! AUTO:  accelerator function for faster computation of MarkerData for rigid bodies/joints
     virtual void ComputeRigidBodyMarkerData(const Vector3D& localPosition, bool computeJacobian, MarkerData& markerData) const override;
+
+    //! AUTO:  add J_pos^T force at localPosition without forming the Jacobian: the force on the translations, G_local^T (b x A^T f) on the rotation parameters (#2745)
+    virtual void AddPositionForce(const Vector3D& localPosition, const Vector3D& force, ResizableMatrix& tempMatrix, LinkedDataVector& ode2Lhs) const override;
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override

@@ -167,6 +167,14 @@ public:
 	//! compute object massmatrix to massMatrix; offers interface to dense and sparse mass matrix computation; standard is dense mode; ltg only used in sparse mode; only possible for bodies
 	virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrix, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::ComputeMassMatrix"); }
 
+	//! add J_pos^T force at localPosition to ode2Lhs, the body's coordinates (#2745); the default forms the Jacobian of the
+	//! access function, a body may project without forming it
+	virtual void AddPositionForce(const Vector3D& localPosition, const Vector3D& force, ResizableMatrix& tempMatrix, LinkedDataVector& ode2Lhs) const
+	{
+		GetAccessFunctionBody(AccessFunctionType::TranslationalVelocity_qt, localPosition, tempMatrix);
+		EXUmath::MultMatrixTransposedVectorAdd(tempMatrix, force, ode2Lhs);
+	}
+
 	//! the kinetic energy 1/2 q_t^T M q_t, from the mass matrix of the body and the velocities of its nodes; the mass
 	//! matrix is the one of the current state, so the current configuration only (#2202)
 	Real ComputeKineticEnergyFromMassMatrix(ConfigurationType configuration, Index objectNumber, const char* itemName) const;

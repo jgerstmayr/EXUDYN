@@ -44,6 +44,16 @@ void CMarkerBodyPosition::ComputeMarkerData(const CSystemData& cSystemData, bool
 	}
 }
 
+Index CMarkerBodyPosition::GetODE2Size(const CSystemData& cSystemData, MarkerTemp& temp) const
+{
+	return cSystemData.GetCObjects()[parameters.bodyNumber]->GetODE2Size();
+}
+
+void CMarkerBodyPosition::AddGeneralizedForce(const CSystemData& cSystemData, const Vector3D& force, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const
+{
+	((const CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->AddPositionForce(parameters.localPosition, force, temp.tempMatrix, ode2Lhs);
+}
+
 //! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(J.T @ v)/dq
 void CMarkerBodyPosition::ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const
 {

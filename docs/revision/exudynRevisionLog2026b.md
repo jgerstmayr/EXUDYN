@@ -10414,3 +10414,40 @@ $10^{-15}$), a rigid body on a rigid-body spring-damper in small motion ($2\cdot
 exact beams in a rigid translation ($T = \frac{1}{2} m v^2$ exactly, from their mass matrices), and a system with gravity
 and a constant force whose total from `SystemEnergy` is kept to $1.3\cdot10^{-5}$ (a rigid body with an offset center
 of mass on a nonlinear spring). `test_energies.py` checks `SystemEnergy` with a user-function spring.
+
+<a id="rg14-2-3"></a>
+### RG14.2.3 and RG14.2.4 (forces) — the connector interface, and the pilot spring-damper (2026-10-01, #2745)
+
+**Decided by the maintainer** on the open points of RG14.2.2: the rigid marker keeps the mixed velocities, with a
+`BodyTwist` function for the homogeneous transformation; automatic differentiation over separate vectors with a
+seeding helper; the second layer in `CSystem`. RG14.1 is closed as superseded by RG14.2, and the joints on
+homogeneous transformations are a step of their own, RG14.3.
+
+**What is there now** (the three layers of the evaluation, for connectors on position markers):
+
+| layer | where | what |
+|---|---|---|
+| L0, kinematics | `src/Main/MarkerData.h` | `MarkerPosition<TReal>` (position, velocity), `MarkerCoordinate<TReal>`, `MarkerTemp` (per thread, in `TemporaryComputationData::markerTemp[2]`), `enum class ConnectorInterface` |
+| L0, markers | `src/System/CMarker.h` | `GetKinematicsPosition`, `GetODE2Size`, `AddGeneralizedForce` ($\Jm_{pos}\tp\fv$ into the marker's part of the connector vector) - defaults correct for every marker, through `GetPosition`/`GetVelocity` and `ComputeMarkerData` |
+| L0, fast paths | `CMarkerNodePosition.cpp`, `CMarkerBodyPosition.cpp`, `CObjectBody.h`, `CObjectRigidBody.cpp` | a `NodePoint` adds the force directly; a body projects through `AddPositionForce`, which the rigid body does without forming $\Jm_{pos}$: $\fv$ on the translations, $\Gm_{local}\tp(\bv\times\Rot\tp\fv)$ on the rotation parameters |
+| L1, the connector | `CObjectConnector.h`, `CObjectConnectorSpringDamper.cpp` | `GetConnectorInterface()` (`Legacy` by default), `ComputeConnectorForcePosition(markers, t, itemIndex, force)`; the spring-damper's physics is one function, `ComputeSpringForce`, which the legacy path, the new one and the output variables share |
+| L2, the system | `CSystem::ComputeODE2LHSPositionMarkers` (`CSystem.cpp`) | the kinematics of the two markers, the connector's force, the projections into `[marker 0, marker 1]`; `ComputeObjectODE2LHS` dispatches on the connector's interface |
+| the fallback | `exu.experimental.connectorInterfaceLegacy` | 1 sends every connector down the legacy path |
+| AD | `EXUmath::SeedAutoDiff` (`AutomaticDifferentiation.h`) | seeds a vector of `AutoDiff` at an offset of the derivative directions; for RG14.2.4.1 |
+
+Nothing is stored per item; the Jacobian of the connector still comes from the legacy analytic path.
+
+**First measurement** (`tmp/rg14/connectorInterfaceBenchmark.py`, not in the repository): a chain of 200 bodies
+joined by 200 spring-dampers, solved with the switch at 1 and at 0, the best of five runs; the coordinates agree to
+$1.5\cdot10^{-14}$ (mass points: exactly):
+
+| case | ODE2RHS legacy → new | total legacy → new |
+|---|---|---|
+| mass points (`MarkerNodePosition`), generalized-alpha, 400 steps | 0.038 → 0.036 s (-6 %) | 0.131 → 0.129 s |
+| rigid bodies (`MarkerBodyPosition` at an offset), generalized-alpha, 400 steps | 0.155 → 0.124 s (**-20 %**) | Jacobian-dominated, within the noise |
+| rigid bodies (Lie group nodes), RK44, 2000 steps | 1.486 → 1.219 s (**-18 %**) | 1.708 → 1.444 s (**-15 %**) |
+| mass points, RK44, 2000 steps | 0.468 → 0.463 s | 0.503 → 0.500 s |
+
+The gain is where the legacy path formed a Jacobian it only multiplied with - the rigid body's $3\times7$ position
+Jacobian; for mass points it is small, because their marker data was already lean. The test suite and pytest pass
+on the new path (the default); the MiniExample of the spring-damper and every test model with one use it.
