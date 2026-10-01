@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  00:53:30 (last modified)
+* @date         2026-10-01  07:49:13 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -151,6 +151,12 @@ public: // AUTO:
 
     //! AUTO:  add J_pos^T force at localPosition without forming the Jacobian: the force on the translations, G_local^T (b x A^T f) on the rotation parameters (#2745)
     virtual void AddPositionForce(const Vector3D& localPosition, const Vector3D& force, ResizableMatrix& tempMatrix, LinkedDataVector& ode2Lhs) const override;
+
+    //! AUTO:  frame and velocities at localPosition from one evaluation of the node; keeps the rotation matrix, G_local and G in temp for AddForceTorque (#2745)
+    virtual void GetKinematicsRigid(const Vector3D& localPosition, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const override;
+
+    //! AUTO:  add J_pos^T force + J_rot^T torque at localPosition without forming the Jacobians: the force on the translations, G_local^T (b x A^T f) + G^T torque on the rotation parameters (#2745)
+    virtual void AddForceTorque(const Vector3D& localPosition, const Vector3D& force, const Vector3D& torque, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const override;
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
     virtual Index GetNodeNumber(Index localIndex) const override

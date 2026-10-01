@@ -19,7 +19,8 @@
 #include "Utilities/BasicDefinitions.h" //defines Real
 #include "Utilities/ResizableArray.h" 
 #include "Linalg/ResizableMatrix.h"
-#include "Utilities/AutomaticDifferentiation.h" 
+#include "Utilities/AutomaticDifferentiation.h"
+#include "Linalg/RigidBodyMath.h" 
 
 
 //! a structure, which contains temporary data from markers (position, orientation, velocity, Jacobians, ...)
@@ -260,6 +261,18 @@ public:
 //! pass gives factorODE2*dF/dp_k + factorODE2_t*dF/dv_k
 typedef EXUmath::AutoDiff<6, Real> DRealPositionMarkers;
 
+//! frame and velocities of a rigid marker (#2745): the frame as a homogeneous transformation (rotation local to global,
+//! position global), the velocity global and the angular velocity in the marker's frame - what the bodies deliver
+//! without an extra product, and what the legacy marker data holds
+template<class TReal>
+class MarkerRigid
+{
+public:
+	HomogeneousTransformationBase<TReal> frame;
+	SlimVectorBase<TReal, 3> velocity;
+	SlimVectorBase<TReal, 3> angularVelocityLocal;
+};
+
 //! the value and its time derivative of a coordinate marker
 template<class TReal>
 class MarkerCoordinate
@@ -280,9 +293,22 @@ class MarkerTemp
 public:
 	MarkerData markerData;
 	ResizableMatrix tempMatrix;
+	ResizableMatrix tempMatrix2;
 };
 
 //! which path the system takes for a connector: Legacy is ComputeMarkerDataStructure and the connector's ComputeODE2LHS
 enum class ConnectorInterface { Legacy, PositionMarkers, RigidMarkers, CoordinateMarkers };
+
+//! the kinematics of the two rigid markers of a connector from the marker data of the legacy path (#2745)
+inline void GetMarkersRigid(const MarkerDataStructure& markerData, MarkerRigid<Real>* markers)
+{
+	for (Index k = 0; k < 2; k++)
+	{
+		const MarkerData& data = markerData.GetMarkerData(k);
+		markers[k].frame = HomogeneousTransformation(data.orientation, data.position);
+		markers[k].velocity = data.velocity;
+		markers[k].angularVelocityLocal = data.angularVelocityLocal;
+	}
+}
 
 #endif

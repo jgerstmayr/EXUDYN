@@ -10536,3 +10536,42 @@ node and a `MarkerNodeRotationCoordinate` through the default functions): result
 analytic ones to round-off. **Measured** (`tmp/rg14/coordinateBenchmark.py`, 1000 `Mass1D` in a chain, best of 5):
 identical coordinates; right-hand side **0.77** of legacy implicit and explicit, the Jacobian 0.95, total 0.92
 (generalized-alpha, 400 steps) and **0.79** (RK44, 1000 steps).
+
+<a id="rg14-2-8"></a>
+### RG14.2.8 — the force connectors on rigid markers (2026-10-01, #2745)
+
+**L0**: `MarkerRigid<TReal>` (`MarkerData.h`) - the frame as a `HomogeneousTransformationBase<TReal>` (rotation local to
+global, position), the velocity global and the angular velocity local, the mixed form decided in RG14.2.2 (a); for the
+legacy callers `GetMarkersRigid(markerDataStructure, markers)` builds the two from the marker data. A marker returns it
+from `GetKinematicsRigid` (with the number of ODE2 coordinates) and projects with `AddGeneralizedForceTorque`
+($\Jm_{pos}\tp\fv + \Jm_{rot}\tp\ttau$, `CMarker.h`, defaults through `ComputeMarkerData`). `MarkerBodyRigid` hands both to
+its body: `CObjectBody::GetKinematicsRigid` and `AddForceTorque`, a pair that shares the marker's `MarkerTemp`. The rigid
+body evaluates its node **once** (`CollectCurrentNodeMarkerData`), keeps $\Rot$ and $\Gm_{local}$ in the temporaries and
+projects $\Gm_{local}\tp(\bv\times\Rot\tp\fv + \Rot\tp\ttau)$ without the $3\times7$ Jacobians. **L1**:
+`ComputeConnectorForceRigid(markers, t, itemIndex, forces, torques)` - a force and a torque **per marker**, because the
+intrinsic rigid-body spring-damper puts the same torque of its offset force on both markers (not action and reaction).
+**L2**: `CSystem::ComputeODE2LHSRigidMarkers`.
+
+The connectors read the kinematics from `MarkerRigid` instead of the marker data - `ComputeSpringForceTorque`
+(`RigidBodySpringDamper`), `ComputeSpringForce` (`LinearSpringDamper`), `ComputeSpringTorque`
+(`TorsionalSpringDamper`, with its data node for the continuous angle) - for both paths and the output variables. Their
+Jacobians remain numerical, now over the new force path.
+
+**A first version was slower** (1.3× legacy): the rigid body's `AddForceTorque` asked the node for $\Rot$, $\Gm_{local}$
+and $\Gm$ separately, each a fresh evaluation from the coordinates, after `ComputeRigidBodyMarkerData` had already
+evaluated the node once; three to four evaluations against one on the legacy path, which then only multiplies. With the
+pair sharing the temporaries the node is evaluated once. **And the torque projected by $\Gm$**, not by
+$\Rot\,\Gm_{local}$: the two agree only for exactly normalized Euler parameters; the test model
+`rigidBodySpringDamperIntrinsic.py` moved by $2\cdot10^{-7}$ with the latter, the Newton iteration leaving the norm
+slightly off. The rigid body keeps $\Gm$ too (`MarkerTemp::tempMatrix2`), and the test now also compares the
+right-hand sides of both paths at perturbed coordinates (Euler parameters off their norm), to $10^{-13}$ - they agree
+to $2\cdot10^{-16}$ relative. The reference of `rigidBodySpringDamperIntrinsic.py` is re-recorded for the remaining
+round-off, 0.5472368462870515 instead of 0.5472368462985283 ($2\cdot10^{-11}$).
+
+**Checked** (`test_connectorInterface.py`, a chain of rigid bodies with body markers at offsets, a `MarkerNodeRigid` and
+the ground; the rigid-body spring-damper also intrinsic): explicit solutions equal to round-off, implicit ones to the
+Newton tolerance and the numerical Jacobians to $10^{-6}$. **Measured** (`tmp/rg14/rigidBenchmark.py`, 100 rigid bodies,
+best of 5): the rigid-body spring-damper right-hand side 0.94 (RK44, Lie group nodes) and 0.96 (generalized-alpha,
+Euler parameters) of legacy, the numerical Jacobian 0.95, total 0.94/0.99; the torsional spring-damper 0.99-1.00. The connectors' own physics
+(rotation parameters of the relative rotation, $6\times6$ stiffness) dominates here, unlike the spring-damper - the gain
+of these connectors is in their Jacobian, 14 force evaluations per pair today (RG14.2.8.1).

@@ -52,6 +52,20 @@ void CMarkerBodyRigid::ComputeMarkerData(const CSystemData& cSystemData, bool co
 	((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->ComputeRigidBodyMarkerData(parameters.localPosition, computeJacobian, markerData);
 }
 
+//! frame and velocities for the connector interface (#2745): the body's marker data without the Jacobians
+Index CMarkerBodyRigid::GetKinematicsRigid(const CSystemData& cSystemData, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const
+{
+	const CObjectBody* body = (const CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]);
+	body->GetKinematicsRigid(parameters.localPosition, kinematics, temp);
+	return body->GetODE2Size();
+}
+
+void CMarkerBodyRigid::AddGeneralizedForceTorque(const CSystemData& cSystemData, const Vector3D& force, const Vector3D& torque, MarkerTemp& temp,
+	LinkedDataVector& ode2Lhs) const
+{
+	((const CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->AddForceTorque(parameters.localPosition, force, torque, temp, ode2Lhs);
+}
+
 //! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(J.T @ v)/dq
 void CMarkerBodyRigid::ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const
 {

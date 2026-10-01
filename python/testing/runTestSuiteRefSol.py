@@ -151,7 +151,7 @@ def TestExamplesReferenceSolution():
         'rigidBody2Dtest.py': -0.5055295700922418,                  #new 2025-02-05: added arbitrary COM to 2D rigid body
         'rigidBodyAsUserFunctionTest.py':8.950865271552148,
         'rigidBodyCOMtest.py':3.409431467726291,
-        'rigidBodySpringDamperIntrinsic.py':0.5472368462985283,     #new 2023-11-30 (intrinsic formulation for rigid body spring damper)
+        'rigidBodySpringDamperIntrinsic.py':0.5472368462870515,     #2026-10-01: on the connector interface (#2745), round-off of the projection; before 0.5472368462985283; new 2023-11-30 (intrinsic formulation for rigid body spring damper)
         'rollingCoinTest.py':1.0634381189361193,                     #until 2024-04-29 (without force): 0.0020040999273379673
         'rollingDiscTangentialForces.py':1.0342017404650015,        #new 2024-05-04: RollingDiscPenalty: switch to local computation of tangential forces
         'rollingCoinPenaltyTest.py':0.03489603106786701,

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  00:09:41 (last modified)
+* @date         2026-10-01  07:33:37 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -145,7 +145,16 @@ public: // AUTO:
     }
 
     //! AUTO:  compute spring damper force helper function
-    void ComputeSpringForce(const MarkerDataStructure& markerData, Index itemIndex, Matrix3D& A0, Real& displacement, Real& velocity, Real& force) const;
+    void ComputeSpringForce(const MarkerRigid<Real>* markers, Real t, Index itemIndex, Matrix3D& A0, Real& displacement, Real& velocity, Real& force) const;
+
+    //! AUTO:  the connector implements the interface of rigid markers (#2745)
+    virtual ConnectorInterface GetConnectorInterface() const override
+    {
+        return ConnectorInterface::RigidMarkers;
+    }
+
+    //! AUTO:  the force and torque on each marker from the kinematics of the two markers (#2745)
+    virtual void ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex, Vector3D* forces, Vector3D* torques) const override;
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
     void EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real displacement, Real velocity) const;

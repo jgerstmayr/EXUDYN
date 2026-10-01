@@ -236,6 +236,8 @@ public:
 	//! the Jacobian of L2 for connectors on position markers, by automatic differentiation of the connector's force (#2745)
 	void ComputeJacobianODE2PositionMarkers(TemporaryComputationData& temp, const CObjectConnector& connector,
 		Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero);
+	//! L2 of the connector interface for connectors on rigid markers (#2745); the Jacobian is numerical
+	void ComputeODE2LHSRigidMarkers(TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber);
 	//! L2 of the connector interface for connectors on coordinate markers, and its Jacobian (#2745)
 	void ComputeODE2LHSCoordinateMarkers(TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber);
 	void ComputeJacobianODE2CoordinateMarkers(TemporaryComputationData& temp, const CObjectConnector& connector,

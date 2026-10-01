@@ -175,6 +175,25 @@ public:
 		EXUmath::MultMatrixTransposedVectorAdd(tempMatrix, force, ode2Lhs);
 	}
 
+	//! frame and velocities at localPosition for a rigid marker (#2745); a body may keep in temp what AddForceTorque needs
+	virtual void GetKinematicsRigid(const Vector3D& localPosition, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const
+	{
+		ComputeRigidBodyMarkerData(localPosition, false, temp.markerData);
+		kinematics.frame = HomogeneousTransformation(temp.markerData.orientation, temp.markerData.position);
+		kinematics.velocity = temp.markerData.velocity;
+		kinematics.angularVelocityLocal = temp.markerData.angularVelocityLocal;
+	}
+
+	//! add J_pos^T force + J_rot^T torque at localPosition to ode2Lhs, the body's coordinates (#2745); force and torque global;
+	//! after GetKinematicsRigid with the same temp
+	virtual void AddForceTorque(const Vector3D& localPosition, const Vector3D& force, const Vector3D& torque, MarkerTemp& temp,
+		LinkedDataVector& ode2Lhs) const
+	{
+		AddPositionForce(localPosition, force, temp.tempMatrix, ode2Lhs);
+		GetAccessFunctionBody(AccessFunctionType::AngularVelocity_qt, localPosition, temp.tempMatrix);
+		EXUmath::MultMatrixTransposedVectorAdd(temp.tempMatrix, torque, ode2Lhs);
+	}
+
 	//! the kinetic energy 1/2 q_t^T M q_t, from the mass matrix of the body and the velocities of its nodes; the mass
 	//! matrix is the one of the current state, so the current configuration only (#2202)
 	Real ComputeKineticEnergyFromMassMatrix(ConfigurationType configuration, Index objectNumber, const char* itemName) const;

@@ -77,6 +77,13 @@ public:
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForcePositionDiff: not implemented for this connector");
 	}
 
+	//! L1 of a connector on rigid markers (#2745): the force and the torque on each marker, global, from the kinematics of
+	//! the two markers; not necessarily action and reaction (a torque from the offset of the force, for instance)
+	virtual void ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex, Vector3D* forces, Vector3D* torques) const
+	{
+		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceRigid: not implemented for this connector");
+	}
+
 	//! L1 of a connector on coordinate markers (#2745): its generalized force on the coordinate of marker 1 from the
 	//! values of its two markers; marker 0 gets the reaction
 	virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real& force) const

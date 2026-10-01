@@ -1538,6 +1538,32 @@ void CSystem::ComputeJacobianODE2PositionMarkers(TemporaryComputationData& temp,
 		temp.markerTemp[1].markerData.positionJacobian, factorODE2, jacobianDerivativeNonZero, temp);
 }
 
+//! L2 of the connector interface for connectors on rigid markers (#2745): the frames and velocities of the two markers
+//! (L0), the connector's forces and torques (L1), and their projection by each marker, into [marker 0, marker 1]
+void CSystem::ComputeODE2LHSRigidMarkers(TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber)
+{
+	const CMarker* marker0 = cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[0]];
+	const CMarker* marker1 = cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[1]];
+	MarkerRigid<Real> kinematics[2];
+	Index n0 = marker0->GetKinematicsRigid(cSystemData, kinematics[0], temp.markerTemp[0]);
+	Index n1 = marker1->GetKinematicsRigid(cSystemData, kinematics[1], temp.markerTemp[1]);
+	localODE2Lhs.SetNumberOfItems(n0 + n1);
+	localODE2Lhs.SetAll(0.);
+
+	Vector3D forces[2], torques[2];
+	connector.ComputeConnectorForceRigid(kinematics, cSystemData.GetCData().currentState.time, objectNumber, forces, torques);
+	if (n1 != 0)
+	{
+		LinkedDataVector ode2Lhs1(localODE2Lhs, n0, n1);
+		marker1->AddGeneralizedForceTorque(cSystemData, forces[1], torques[1], temp.markerTemp[1], ode2Lhs1);
+	}
+	if (n0 != 0)
+	{
+		LinkedDataVector ode2Lhs0(localODE2Lhs, 0, n0);
+		marker0->AddGeneralizedForceTorque(cSystemData, forces[0], torques[0], temp.markerTemp[0], ode2Lhs0);
+	}
+}
+
 //! L2 of the connector interface for connectors on coordinate markers (#2745): the values of the two markers (L0), the
 //! connector's generalized force (L1), and its projection by each marker, into the local vector [marker 0, marker 1]
 void CSystem::ComputeODE2LHSCoordinateMarkers(TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber)
@@ -1610,6 +1636,10 @@ inline bool CSystem::ComputeObjectODE2LHS(TemporaryComputationData& temp, CObjec
 			else if (connectorInterface == ConnectorInterface::CoordinateMarkers)
 			{
 				ComputeODE2LHSCoordinateMarkers(temp, *connector, localODE2Lhs, objectNumber);
+			}
+			else if (connectorInterface == ConnectorInterface::RigidMarkers)
+			{
+				ComputeODE2LHSRigidMarkers(temp, *connector, localODE2Lhs, objectNumber);
 			}
 			else
 			{

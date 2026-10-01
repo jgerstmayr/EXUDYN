@@ -22,7 +22,8 @@ from exudyn.utilities import (ObjectGround, NodePoint, MassPoint, NodeRigidBodyE
                               NodeRigidBody2D, ObjectRigidBody2D, MarkerBodyPosition, MarkerNodePosition, SpringDamper,
                               CartesianSpringDamper, ObjectConnectorGravity, ObjectConnectorHydraulicActuatorSimple,
                               NodeGenericODE1, NodePointGround, MarkerNodeCoordinate, MarkerNodeRotationCoordinate,
-                              CoordinateSpringDamper, InertiaCuboid, RotXYZ2RotationMatrix, RotationMatrix2EulerParameters,
+                              CoordinateSpringDamper, RigidBodySpringDamper, LinearSpringDamper, TorsionalSpringDamper,
+                              MarkerBodyRigid, MarkerNodeRigid, InertiaCuboid, RotXYZ2RotationMatrix, RotationMatrix2EulerParameters,
                               AngularVelocity2EulerParameters_t)
 
 exu.special.userInterface.SuppressAll(True)
@@ -56,6 +57,24 @@ def AddCoordinateSpringDamper(mbs, markers):
     mbs.AddObject(CoordinateSpringDamper(markerNumbers=markers, stiffness=500, damping=3, offset=0.02))
 
 
+def AddRigidBodySpringDamper(mbs, markers, intrinsic=False):
+    stiffness = np.diag([500, 400, 300, 20, 30, 40])
+    stiffness[0, 4] = stiffness[4, 0] = 10
+    mbs.AddObject(RigidBodySpringDamper(markerNumbers=markers, stiffness=stiffness, damping=0.01*stiffness,
+                                        offset=[0.15, 0.01, 0, 0.1, 0, 0], intrinsicFormulation=intrinsic,
+                                        rotationMarker0=np.eye(3), rotationMarker1=RotXYZ2RotationMatrix([0.1, 0, 0.2])))
+
+
+def AddLinearSpringDamper(mbs, markers):
+    mbs.AddObject(LinearSpringDamper(markerNumbers=markers, stiffness=500, damping=3, axisMarker0=[0.6, 0.8, 0],
+                                     offset=0.05, force=0.7, velocityOffset=0.1))
+
+
+def AddTorsionalSpringDamper(mbs, markers):
+    mbs.AddObject(TorsionalSpringDamper(markerNumbers=markers, stiffness=5, damping=0.03, offset=0.01, torque=0.002,
+                                        rotationMarker1=RotXYZ2RotationMatrix([0, 0.2, 0])))
+
+
 #each connector: the function adding it, whether it takes a length of zero, and whether both paths differentiate it the
 #same way (analytically); if not, the legacy path differentiates numerically: the Jacobians agree to the accuracy of the
 #numerical differentiation - on Rxyz nodes, whose numerical derivative has no normalization error of Euler
@@ -64,8 +83,13 @@ connectors = {'SpringDamper': (AddSpringDamper, True, True),
               'CartesianSpringDamper': (AddCartesianSpringDamper, True, True),
               'Gravity': (AddGravity, False, False),
               'HydraulicActuatorSimple': (AddHydraulicActuator, False, False),
-              'CoordinateSpringDamper': (AddCoordinateSpringDamper, True, True)}
+              'CoordinateSpringDamper': (AddCoordinateSpringDamper, True, True),
+              'RigidBodySpringDamper': (AddRigidBodySpringDamper, False, False),
+              'RigidBodySpringDamperIntrinsic': (lambda mbs, markers: AddRigidBodySpringDamper(mbs, markers, True), False, False),
+              'LinearSpringDamper': (AddLinearSpringDamper, False, False),
+              'TorsionalSpringDamper': (AddTorsionalSpringDamper, False, False)}
 coordinateConnectors = ['CoordinateSpringDamper']
+rigidConnectors = ['RigidBodySpringDamper', 'RigidBodySpringDamperIntrinsic', 'LinearSpringDamper', 'TorsionalSpringDamper']
 
 
 def BuildCoordinateModel(connector, explicit=False, eulerParameters=True):
@@ -95,6 +119,46 @@ def BuildCoordinateModel(connector, explicit=False, eulerParameters=True):
     addConnector(mbs, [mPrevious, mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=1))])
     mbs.Assemble()
     return mbs
+
+
+def BuildRigidModel(connector, explicit=False, eulerParameters=True):
+    """connectors on rigid markers: a chain of rigid bodies with body markers at offset points, a node marker (the default
+    functions of the markers) and the ground"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    addConnector = connectors[connector][0]
+    oGround = mbs.AddObject(ObjectGround())
+    mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0, 0.01, 0]))
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.1, 0.05, 0.05])
+    for i in range(3):
+        angles = [0.3, 0.2, 0.1*i]
+        if not eulerParameters:
+            n = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.2*(i+1), 0.01, 0] + angles,
+                                              initialVelocities=[0, 0.1, 0, 0.1, 0.2, 0.3]))
+        elif explicit:
+            n = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=[0.2*(i+1), 0, 0] + angles,
+                                                  initialVelocities=[0, 0.1, 0, 0.1, 0.2, 0.3]))
+        else:
+            ep = RotationMatrix2EulerParameters(RotXYZ2RotationMatrix(angles))
+            n = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2*(i+1), 0.01, 0] + list(ep),
+                                            initialVelocities=[0, 0.1, 0] + list(AngularVelocity2EulerParameters_t([0.1, 0.2, 0.3], ep))))
+        b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+        m0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[-0.05, 0.01, 0]))
+        m1 = (mbs.AddMarker(MarkerNodeRigid(nodeNumber=n)) if i == 1 else
+              mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[0.05, 0.01, 0.02])))
+        addConnector(mbs, [mPrevious, m0])
+        mPrevious = m1
+    addConnector(mbs, [mPrevious, mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0.8, 0, 0]))])
+    mbs.Assemble()
+    return mbs
+
+
+def Builder(connector):
+    if connector in coordinateConnectors:
+        return BuildCoordinateModel
+    if connector in rigidConnectors:
+        return BuildRigidModel
+    return BuildModel
 
 
 def BuildModel(connector, explicit=False, eulerParameters=True):
@@ -145,7 +209,7 @@ def BuildModel(connector, explicit=False, eulerParameters=True):
 
 def Solve(connector, legacy, explicit):
     exu.experimental.connectorInterfaceLegacy = legacy
-    mbs = (BuildCoordinateModel if connector in coordinateConnectors else BuildModel)(connector, explicit)
+    mbs = Builder(connector)(connector, explicit)
     s = exu.SimulationSettings()
     s.timeIntegration.numberOfSteps = 200
     s.timeIntegration.endTime = 0.02 if explicit else 0.2
@@ -159,7 +223,7 @@ def Solve(connector, legacy, explicit):
 
 def Jacobian(connector, legacy, factorODE2, factorODE2_t):
     exu.experimental.connectorInterfaceLegacy = legacy
-    mbs = (BuildCoordinateModel if connector in coordinateConnectors else BuildModel)(connector, eulerParameters=connectors[connector][2])
+    mbs = Builder(connector)(connector, eulerParameters=connectors[connector][2])
     s = exu.SimulationSettings()
     solver = exu.MainSolverImplicitSecondOrder()
     solver.InitializeSolver(mbs, s)
@@ -167,6 +231,23 @@ def Jacobian(connector, legacy, factorODE2, factorODE2_t):
     jacobian = np.array(solver.GetSystemJacobian())
     solver.FinalizeSolver(mbs, s)
     return jacobian
+
+
+def RightHandSide(connector, legacy):
+    """the ODE2 right-hand side at perturbed coordinates and velocities - Euler parameters off their norm included"""
+    exu.experimental.connectorInterfaceLegacy = legacy
+    mbs = Builder(connector)(connector)
+    s = exu.SimulationSettings()
+    solver = exu.MainSolverImplicitSecondOrder()
+    solver.InitializeSolver(mbs, s)
+    q = mbs.systemData.GetODE2Coordinates()
+    rng = np.random.default_rng(1)
+    mbs.systemData.SetODE2Coordinates(q + 0.05*rng.standard_normal(len(q)))
+    mbs.systemData.SetODE2Coordinates_t(rng.standard_normal(len(q)))
+    solver.ComputeODE2RHS(mbs)
+    rhs = np.array(solver.GetSystemResidual())[:len(q)]
+    solver.FinalizeSolver(mbs, s)
+    return rhs
 
 
 @pytest.fixture(autouse=True)
@@ -192,3 +273,11 @@ def test_theJacobianOfTheNewPathIsTheLegacyJacobian(connector, factors):
     new = Jacobian(connector, 0, *factors)
     tolerance = 1e-12 if connectors[connector][2] else 1e-6
     assert np.abs(new - legacy).max() <= tolerance * np.abs(legacy).max()
+
+
+@pytest.mark.parametrize('connector', connectors)
+def test_theRightHandSideOfTheNewPathIsTheLegacyOne(connector):
+    legacy = RightHandSide(connector, 1)
+    new = RightHandSide(connector, 0)
+    assert np.abs(legacy).max() > 1e-3
+    assert np.abs(new - legacy).max() < 1e-13 * np.abs(legacy).max()
