@@ -69,7 +69,7 @@ def Statistics(values):
 def Fingerprint(data, perItem=None):
     """the fingerprint of the dictionary SC.renderer.GetGraphicsData() returns; perItem=None groups
     per item up to itemLimit items and per item type above, True or False forces it"""
-    present = [kind for kind in kinds if kind in data and len(data[kind]['items'])] #formatVersion 1 has no lines3, triangles6
+    present = [kind for kind in kinds if kind in data and len(data[kind]['items'])] #a dictionary written by hand may lack lines3, triangles6
     allItems = np.concatenate([data[kind]['items'] for kind in present]) if present else np.zeros((0, 3), dtype=int)
     distinctItems = set(map(tuple, allItems.tolist()))
     if perItem is None:

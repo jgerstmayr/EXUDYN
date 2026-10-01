@@ -80,14 +80,15 @@ namespace EXUvis {
 	}
 
 	void SplitTriangles6(const ResizableArray<GLTriangle6>& triangles6, const VisualizationSettings& visualizationSettings,
-		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges)
+		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges, bool faceEdges, bool meshEdges)
 	{
 		triangles.SetNumberOfItems(0);
 		if (edges) { edges->SetNumberOfItems(0); }
 		for (const GLTriangle6& triangle : triangles6)
 		{
+			bool showEdges = triangle.isFiniteElement ? meshEdges : faceEdges;
 			SplitTriangle6(triangle, visualizationSettings.openGL.advanced.curvedTriangleTilingAngle,
-				visualizationSettings.openGL.advanced.curvedTriangleMaxTiling, triangles, edges);
+				visualizationSettings.openGL.advanced.curvedTriangleMaxTiling, triangles, showEdges ? edges : nullptr);
 		}
 	}
 

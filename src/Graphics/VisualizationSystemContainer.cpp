@@ -1052,15 +1052,35 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								GLTriangle6 trig6;
 								trig6.itemID = -1;
 								trig6.isFiniteElement = false;
-								trig6.hasNormals = normalsDefined;
-								for (Index i = 0; i < (Index)indices.size() / 6; i++)
+								trig6.hasNormals = false;
+								Index nTrigs6 = (Index)indices.size() / 6;
+								for (Index ind : indices)
+								{
+									if (!EXUstd::IndexIsInRange(ind, 0, np)) { PyError(STDstring("GraphicsData::TriangleList::triangles6: point indices need to be in range [0, points.size()-1], but got index: ") + EXUstd::ToString(ind), PyErrorType::indexError); return false; }
+								}
+								//without normals: at a point the mean of the normals of the geometry of the triangles that share it, so
+								//that the shading is smooth across the elements, whose geometric normals jump at their edges
+								std::vector<Float3> pointNormals;
+								if (!normalsDefined)
+								{
+									pointNormals.assign(np, Float3(0.f));
+									std::array<Float3, 6> nodeNormals;
+									for (Index i = 0; i < nTrigs6; i++)
+									{
+										for (Index j = 0; j < 6; j++) { trig6.points[j] = points[indices[i * 6 + j]]; }
+										EXUvis::Triangle6NodeNormals(trig6, nodeNormals);
+										for (Index j = 0; j < 6; j++) { pointNormals[indices[i * 6 + j]] += nodeNormals[j]; }
+									}
+									for (Float3& normal : pointNormals) { normal.NormalizeSafe(); }
+								}
+								trig6.hasNormals = true;
+								for (Index i = 0; i < nTrigs6; i++)
 								{
 									for (Index j = 0; j < 6; j++)
 									{
 										Index ind = indices[i * 6 + j];
-										if (!EXUstd::IndexIsInRange(ind, 0, np)) { PyError(STDstring("GraphicsData::TriangleList::triangles6: point indices need to be in range [0, points.size()-1], but got index: ") + EXUstd::ToString(ind), PyErrorType::indexError); return false; }
 										trig6.points[j] = points[ind];
-										trig6.normals[j] = normals[ind];
+										trig6.normals[j] = normalsDefined ? normals[ind] : pointNormals[ind];
 										trig6.colors[j] = colors[ind];
 									}
 									data.glTriangles6.Append(trig6);

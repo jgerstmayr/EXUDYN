@@ -987,6 +987,9 @@ This group is that revision and what has to happen before it can start.
         `graphics.Lines` gets `shape`.
       - the visual check: `python/Examples/graphicsCurvedShapes.py` (curved shapes beside the flat ones of `exudyn.graphics`,
         quadratic lines, spheres, a rotating body), row K13 of the manual GUI check (RG2.4);
+      - **RG6.7.7.9** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-7-9) - the maintainer's look at
+        `graphicsCurvedShapes.py`: element edges that could not be switched off, seams in the shading; `formatVersion`
+        stays 1;
       - **RG6.7.7.8** *open* (#2769) - `MergeTriangleLists` does not offset the `edges` of `g2` when `g1` has none
         (found in RG6.7.7.5; the `edges3` merge offsets always).
       - **RG6.7.7.6** **the primitives on quadratic shapes** - `Cylinder`, `Tube`, `Torus`, `SolidOfRevolution`, the

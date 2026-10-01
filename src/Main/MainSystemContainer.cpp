@@ -727,7 +727,7 @@ py::dict MainRenderer::GetGraphicsData(bool flatShapes)
 	lines3["items"] = line3Items; lines3["points"] = line3Points; lines3["colors"] = line3Colors;
 
 	py::dict d;
-	d["formatVersion"] = 2;
+	d["formatVersion"] = 1;
 	d["lines"] = lines;
 	d["spheres"] = spheres;
 	d["circles"] = circles;

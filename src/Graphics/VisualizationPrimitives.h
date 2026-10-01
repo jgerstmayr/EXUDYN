@@ -102,9 +102,10 @@ namespace EXUvis {
 		ResizableArray<GLLine>& lines);
 
 	//! split all 6-node triangles of a list with visualizationSettings.openGL.advanced (curvedTriangleTilingAngle,
-	//! curvedTriangleMaxTiling); triangles and edges are reset first; what the renderers draw (#2709)
+	//! curvedTriangleMaxTiling); triangles and edges are reset first; what the renderers draw (#2709); edges only of the
+	//! triangles whose edges are shown: faceEdges for the others, meshEdges for those of finite elements
 	void SplitTriangles6(const ResizableArray<GLTriangle6>& triangles6, const VisualizationSettings& visualizationSettings,
-		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges = nullptr);
+		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges = nullptr, bool faceEdges = true, bool meshEdges = true);
 
 	//! copy bodyGraphicsData (of body) into global graphicsData (of system)
 	void AddBodyGraphicsDataColored(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, 

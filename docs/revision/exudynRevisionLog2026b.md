@@ -10815,3 +10815,24 @@ three errors (unknown shape, wrong count, index out of range). Tests: `testEvery
 now 1 `triangles6` instead of 36 triangles), `testQuadraticShapes` (native and flat counts at two tiling angles, the mid node
 on the flat lines, read-back and given again, `Triangles6ToTriangles`); `test_graphicsData` for version 2. Found on the way:
 #2769 (RG6.7.7.8).
+
+<a id="rg6-7-7-9"></a>
+### RG6.7.7.9 — corrections after the visual check (2026-10-01, #2709)
+
+The maintainer ran `graphicsCurvedShapes.py` (OpenGL and raytracer):
+- **The curved element edges could not be switched off.** OpenGL drew the edges of every 6-node triangle inside
+  `if (showFaceEdges || showMeshEdges)`, and `showMeshEdges` is on by default. Now `SplitTriangles6` gives the edges
+  only of the triangles whose edges are shown - `showFaceEdges`, or `showMeshEdges` for finite elements - in OpenGL
+  and in the raytracer (which had used `showFaceEdges` for all).
+- **Seams in the shading** of 6-node triangles without normals (the vase): the geometric normal of a quadratic element
+  is continuous inside it but jumps across its edges, since two neighbours only share the edge curve. The reader now
+  gives such triangles **at each point the mean of the geometric normals of the triangles sharing it** (by the point
+  indices of `triangles6`, which only the reader still has), so the shading is smooth; sharp edges need normals given.
+- **Lumpy sphere and torus**: the geometry, not the renderer - a quadratic element through three points of a 90° arc
+  is off the circle by about 2 % of the radius. The example uses 45° elements now (8 around).
+- What remains: a faint seam where two neighbours are split with different subdivisions (a T-junction, the points of
+  the finer one are not on the chord of the coarser one) - RG6.7.5, where the count per edge removes it.
+
+`GetGraphicsData()` keeps **`formatVersion` 1** (maintainer: no change of the version before anything is on GitHub;
+there are no files of the earlier form) - the entry RG6.7.7 above says 2; the keys `triangles6` and `lines3` are part of
+version 1.

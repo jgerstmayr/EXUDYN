@@ -1076,7 +1076,8 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 	ResizableArray<GLLine> lines3Split;			//the quadratic lines, split likewise
 	for (auto data : basicVisualizationSystemContainer->GetGraphicsDataList())
 	{
-		EXUvis::SplitTriangles6(data->glTriangles6, *visSettings, triangles6Split, &triangles6Edges);
+		EXUvis::SplitTriangles6(data->glTriangles6, *visSettings, triangles6Split, &triangles6Edges,
+			settingsView.scene.showFaceEdges, settingsView.scene.showMeshEdges);
 		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &triangles6Split })
 		for (const GLTriangle& trig : *triangleList)
 		{
@@ -1115,17 +1116,14 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 				}
 			}
 		}
-		if (settingsView.scene.showFaceEdges)
+		for (const GLLine& line : triangles6Edges) //only those of the triangles whose edges are shown
 		{
-			for (const GLLine& line : triangles6Edges)
-			{
-				GLLine lineNew(line);
-				lineNew.color1 = visSettings->openGL.faceEdgesColor;
-				lineNew.color2 = visSettings->openGL.faceEdgesColor;
-				TransformVertexRM(line.point1, RTS.modelViewRM, lineNew.point1);
-				TransformVertexRM(line.point2, RTS.modelViewRM, lineNew.point2);
-				graphicsData.glLines.Append(lineNew);
-			}
+			GLLine lineNew(line);
+			lineNew.color1 = visSettings->openGL.faceEdgesColor;
+			lineNew.color2 = visSettings->openGL.faceEdgesColor;
+			TransformVertexRM(line.point1, RTS.modelViewRM, lineNew.point1);
+			TransformVertexRM(line.point2, RTS.modelViewRM, lineNew.point2);
+			graphicsData.glLines.Append(lineNew);
 		}
 		for (const GLSphere& sphere : data->glSpheres) //drawn as spheres, not as points (#2709)
 		{

@@ -51,7 +51,7 @@ def testTheDictionaryHasEveryKindWithConsistentShapes():
     (SC, mbs, oGround, oBody) = Pendulum()
     data = SC.renderer.GetGraphicsData()
 
-    assert data['formatVersion'] == 2
+    assert data['formatVersion'] == 1
     assert not SC.renderer.IsActive()                        #it needed no window
     for kind in kinds:
         n = len(data[kind]['items'])

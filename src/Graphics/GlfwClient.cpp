@@ -3075,7 +3075,8 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 		for (auto data : *graphicsDataList)
 		{
 			//the 6-node triangles are drawn as their split, with the settings of now (#2709)
-			EXUvis::SplitTriangles6(data->glTriangles6, *visSettings, triangles6Split, &triangles6Edges);
+			EXUvis::SplitTriangles6(data->glTriangles6, *visSettings, triangles6Split, &triangles6Edges,
+				settingsView.scene.showFaceEdges, settingsView.scene.showMeshEdges);
 			EXUvis::SplitLines3(data->glLines3, *visSettings, lines3Split);
 
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

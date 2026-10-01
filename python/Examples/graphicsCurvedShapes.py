@@ -5,7 +5,7 @@
 #           ('triangles6' of a TriangleList) with quadratic edges ('edges3'), quadratic lines
 #           (Lines with shape 'quadratic') and spheres (type 'Spheres'), each beside the flat
 #           shape of exudyn.graphics it compares to (#2709).
-#           Row y=0: cylinder, torus, sphere and vase of 6-node triangles - few, large elements,
+#           Row y=0: cylinder, torus, sphere and vase of 6-node triangles - few, large elements (45 degrees),
 #           the renderer splits them when it draws; the cylinder and the vase carry red edges3 on their rims.
 #           Row y=-3: graphics.Cylinder, Torus, Sphere and SolidOfRevolution with flat triangles.
 #           Row y=3: quadratic lines (a circle of 4 segments, a helix), many spheres, a whole graphics.Sphere.
@@ -61,23 +61,23 @@ def Surface6(F, uRange, vRange, nu, nv, color, normalFunction=None, rims=False, 
 
 r = 0.5
 gCurved = []
-#cylinder: 4 elements around, 90 degrees each
-gCurved += [Surface6(lambda u, v: [r*np.cos(u), r*np.sin(u), v], [0, 2*np.pi], [0, 1.5], 4, 1,
+#cylinder: 8 elements around, 45 degrees each
+gCurved += [Surface6(lambda u, v: [r*np.cos(u), r*np.sin(u), v], [0, 2*np.pi], [0, 1.5], 8, 1,
                      graphics.color.steelblue, normalFunction=lambda u, v: [np.cos(u), np.sin(u), 0], rims=True)]
-#torus: 6 x 4 elements
+#torus: 8 x 4 elements
 (R0, r0) = (0.6, 0.25)
 gCurved += [graphics.Move(Surface6(lambda u, v: [(R0+r0*np.cos(v))*np.cos(u), (R0+r0*np.cos(v))*np.sin(u), r0*np.sin(v)],
-                                   [0, 2*np.pi], [0, 2*np.pi], 6, 4, graphics.color.orange,
+                                   [0, 2*np.pi], [0, 2*np.pi], 8, 4, graphics.color.orange,
                                    normalFunction=lambda u, v: [np.cos(v)*np.cos(u), np.cos(v)*np.sin(u), np.sin(v)]),
                           [3, 0, 0.5])]
-#sphere: 4 elements around, 2 from pole to pole
+#sphere: 8 elements around, 4 from pole to pole
 gCurved += [graphics.Move(Surface6(lambda u, v: [r*np.cos(v)*np.cos(u), r*np.cos(v)*np.sin(u), r*np.sin(v)],
-                                   [0, 2*np.pi], [-np.pi/2, np.pi/2], 4, 2, graphics.color.lawngreen,
+                                   [0, 2*np.pi], [-np.pi/2, np.pi/2], 8, 4, graphics.color.lawngreen,
                                    normalFunction=lambda u, v: [np.cos(v)*np.cos(u), np.cos(v)*np.sin(u), np.sin(v)]),
                           [6, 0, 0.5])]
-#vase, a solid of revolution with the radius rV(z): without normals, the renderer uses those of the geometry
+#vase, a solid of revolution with the radius rV(z), without normals: at each point the mean of the normals of the geometry
 rV = lambda z: 0.3 + 0.2*np.sin(2.5*z)
-gCurved += [graphics.Move(Surface6(lambda u, v: [rV(v)*np.cos(u), rV(v)*np.sin(u), v], [0, 2*np.pi], [0, 1.5], 6, 2,
+gCurved += [graphics.Move(Surface6(lambda u, v: [rV(v)*np.cos(u), rV(v)*np.sin(u), v], [0, 2*np.pi], [0, 1.5], 8, 3,
                                    graphics.color.dodgerblue, rims=True), [9, 0, 0])]
 
 #the flat shapes of exudyn.graphics, for comparison
