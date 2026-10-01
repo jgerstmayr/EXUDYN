@@ -22,6 +22,7 @@
 #include "Pymodules/PybindUtilities.h" //for RenderState conversions
 #include "Main/SystemContainer.h"
 #include "Main/MainSystemContainer.h"
+#include "Graphics/VisualizationPrimitives.h" //EXUvis::SplitTriangles6
 
 //for DictionariesGetSet:
 #include "Pymodules/PyMatrixVector.h" //includes "Pymodules/PybindUtilities.h"
@@ -551,7 +552,15 @@ py::dict MainRenderer::GetGraphicsData()
 		for (auto data : list) { data->LockData(); }
 	}
 
+	//the 6-node triangles as the renderers draw them: split with the current settings (#2709)
+	std::vector<ResizableArray<GLTriangle>> triangles6Split(list.NumberOfItems());
+	for (Index i = 0; i < list.NumberOfItems(); i++)
+	{
+		EXUvis::SplitTriangles6(list[i]->glTriangles6, VSC.GetVisualizationSettings(), triangles6Split[i]);
+	}
+
 	py::ssize_t nLines = 0, nSpheres = 0, nCircles = 0, nTexts = 0, nTriangles = 0;
+	for (Index i = 0; i < list.NumberOfItems(); i++) { nTriangles += triangles6Split[i].NumberOfItems(); }
 	for (auto data : list)
 	{
 		nLines += data->glLines.NumberOfItems();
@@ -597,6 +606,7 @@ py::dict MainRenderer::GetGraphicsData()
 
 	py::ssize_t iLine = 0, iSphere = 0, iCircle = 0, iText = 0, iTriangle = 0;
 	int item[3];
+	Index iData = 0;
 	for (auto data : list)
 	{
 		for (const GLLine& line : data->glLines)
@@ -635,7 +645,8 @@ py::dict MainRenderer::GetGraphicsData()
 			textStrings.append(py::str(text.text != nullptr ? text.text : ""));
 			iText++;
 		}
-		for (const GLTriangle& trig : data->glTriangles)
+		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &triangles6Split[iData++] })
+		for (const GLTriangle& trig : *triangleList)
 		{
 			GraphicsDataItem(trig.itemID, item);
 			for (Index k = 0; k < 3; k++) { gi(iTriangle, k) = item[k]; }

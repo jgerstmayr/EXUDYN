@@ -981,7 +981,7 @@ class VSettingsOpenGLAdvanced:
     curvedTriangleMaxTiling: int
     """maximum number of subdivisions per edge of a 6-node (curved) triangle; see curvedTriangleTilingAngle."""
     curvedTriangleTilingAngle: float
-    """6-node (curved) triangles of a TriangleList (key triangles6) are drawn as flat triangles: an edge is subdivided until the angle between the normals of its nodes falls below this angle (in degrees), at most curvedTriangleMaxTiling times; 0 draws each as 1 flat triangle; used by the raytracer as well."""
+    """6-node (curved) triangles of a TriangleList (key triangles6) are drawn as flat triangles, split when they are drawn: an edge is subdivided until the angle between the normals of its nodes falls below this angle (in degrees), at most curvedTriangleMaxTiling times - 15 degrees give 24 segments around a full cylinder; 0 draws each as 1 flat triangle; used by the raytracer and GetGraphicsData() as well."""
     depthSorting: bool
     """True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster)."""
     enableLighting: bool

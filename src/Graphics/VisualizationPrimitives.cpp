@@ -59,14 +59,6 @@ namespace EXUvis {
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//the 6-node triangle (#2709)
-	static float curvedTriangleTilingAngle = 3.f;	//!< degrees; visualizationSettings.openGL.advanced.curvedTriangleTilingAngle
-	static Index curvedTriangleMaxTiling = 5;		//!< visualizationSettings.openGL.advanced.curvedTriangleMaxTiling
-
-	void SetCurvedTriangleTiling(float tilingAngleDegrees, Index maxTiling)
-	{
-		curvedTriangleTilingAngle = tilingAngleDegrees;
-		curvedTriangleMaxTiling = maxTiling;
-	}
 
 	//! the quadratic shape functions at (u,v), corners at (0,0), (1,0), (0,1), and their derivatives
 	inline void Triangle6ShapeFunctions(float u, float v, std::array<float, 6>& N, std::array<float, 6>& Nu, std::array<float, 6>& Nv)
@@ -87,9 +79,21 @@ namespace EXUvis {
 		return n;
 	}
 
-	void AddTriangle6(const GLTriangle6& triangle, GraphicsData& graphicsData)
+	void SplitTriangles6(const ResizableArray<GLTriangle6>& triangles6, const VisualizationSettings& visualizationSettings,
+		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges)
 	{
-		graphicsData.glTriangles6.Append(triangle);
+		triangles.SetNumberOfItems(0);
+		if (edges) { edges->SetNumberOfItems(0); }
+		for (const GLTriangle6& triangle : triangles6)
+		{
+			SplitTriangle6(triangle, visualizationSettings.openGL.advanced.curvedTriangleTilingAngle,
+				visualizationSettings.openGL.advanced.curvedTriangleMaxTiling, triangles, edges);
+		}
+	}
+
+	void SplitTriangle6(const GLTriangle6& triangle, float tilingAngleDegrees, Index maxTiling,
+		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges)
+	{
 
 		//the normals at the nodes, given or of the geometry, decide the tiling
 		const float nodeU[6] = { 0.f, 1.f, 0.f, 0.5f, 0.5f, 0.f };
@@ -114,9 +118,9 @@ namespace EXUvis {
 			}
 		}
 		Index n = 1;
-		if (curvedTriangleTilingAngle > 0.f)
+		if (tilingAngleDegrees > 0.f)
 		{
-			n = EXUstd::Clamp((Index)ceil(maxAngle * (float)(180. / EXUstd::pi) / curvedTriangleTilingAngle), (Index)1, EXUstd::Maximum((Index)1, curvedTriangleMaxTiling));
+			n = EXUstd::Clamp((Index)ceil(maxAngle * (float)(180. / EXUstd::pi) / tilingAngleDegrees), (Index)1, EXUstd::Maximum((Index)1, maxTiling));
 		}
 
 		//the vertices of the subdivision, row by row in v
@@ -161,7 +165,7 @@ namespace EXUvis {
 			flat.points = { points[a], points[b], points[c] };
 			flat.normals = { normals[a], normals[b], normals[c] };
 			flat.colors = { colors[a], colors[b], colors[c] };
-			graphicsData.glTriangles.Append(flat);
+			triangles.Append(flat);
 		};
 		for (Index j = 0; j < n; j++)
 		{
@@ -169,6 +173,19 @@ namespace EXUvis {
 			{
 				AddFlat(VertexIndex(i, j), VertexIndex(i + 1, j), VertexIndex(i, j + 1));
 				if (i + j < n - 1) { AddFlat(VertexIndex(i + 1, j), VertexIndex(i + 1, j + 1), VertexIndex(i, j + 1)); }
+			}
+		}
+
+		if (edges) //the three curved edges as polylines through the vertices of the subdivision on them
+		{
+			GLLine line;
+			line.itemID = triangle.itemID;
+			line.color1 = line.color2 = triangle.colors[0];
+			for (Index k = 0; k < n; k++)
+			{
+				line.point1 = points[VertexIndex(k, 0)]; line.point2 = points[VertexIndex(k + 1, 0)]; edges->Append(line);        //edge 0-1 (v = 0)
+				line.point1 = points[VertexIndex(n - k, k)]; line.point2 = points[VertexIndex(n - k - 1, k + 1)]; edges->Append(line); //edge 1-2 (u + v = 1)
+				line.point1 = points[VertexIndex(0, n - k)]; line.point2 = points[VertexIndex(0, n - k - 1)]; edges->Append(line); //edge 2-0 (u = 0)
 			}
 		}
 	}
@@ -237,7 +254,7 @@ namespace EXUvis {
 				}
 				else { item.points[i] += position; }
 			}
-			AddTriangle6(item, graphicsData);
+			graphicsData.glTriangles6.Append(item);
 		}
 
 		for (GLText item : bodyGraphicsData.glTexts) //copy objects, but string pointers are just assigned!
@@ -457,7 +474,7 @@ namespace EXUvis {
 				}
 				else { item.points[i] += position; }
 			}
-			AddTriangle6(item, graphicsData);
+			graphicsData.glTriangles6.Append(item);
 		}
 
 		for (GLText item : bodyGraphicsData.glTexts) //copy objects, but string pointers are just assigned!

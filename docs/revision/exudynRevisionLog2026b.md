@@ -10741,3 +10741,35 @@ meshOrder=2, triangles6=True)` returns the elements as 6-node triangles (NETGEN 
 With `showFaceEdges` the edges of the split are drawn. References: `graphicsFunctions.json` with the new cases
 (`testEveryGraphicsFunction` now forces the per-item fingerprint, as it has more items than `itemLimit`);
 `parameterConversionTestReference.txt` with the two settings.
+
+<a id="rg6-7-2-2"></a>
+### RG6.7.2.2 and RG6.7.3.1 — the 6-node triangles split when drawn; the raytraced sphere (2026-10-01, #2709)
+
+**Correction of RG6.7.2** (entry above): the split was added to `glTriangles` when the graphics data was built, with
+the settings of that moment. RG6.7.1 had decided otherwise - split *when drawing* - and the maintainer pointed it out.
+Now `GraphicsData` keeps the 6-node triangles in `glTriangles6` only, and each consumer splits them with the settings
+of the moment, by `EXUvis::SplitTriangles6(triangles6, visualizationSettings, triangles, edges)`:
+- **OpenGL**: per frame and per GraphicsData into two static arrays of `GlfwRenderer`, drawn with the flat triangles
+  in every pass (faces, transparent faces, highlight, normals, shadow volumes);
+- **raytracer**: per image, the split transformed with the flat triangles;
+- **`GetGraphicsData()`**: per call, in the `triangles` it returns;
+- `GraphicsData::ComputeMaxScene` includes their points.
+
+`SetCurvedTriangleTiling` and its call in `VisualizationSystem::UpdateGraphicsData` are gone. With `showFaceEdges` the
+**curved edges** are drawn - polylines through the subdivision points of the three edges - not the edges of the
+split. Defaults: `curvedTriangleTilingAngle` **15°** (24 segments around a full cylinder; a 90° patch gets 6
+subdivisions per edge), `curvedTriangleMaxTiling` **8**. Checked: a half cylinder of four 6-node triangles gives 4,
+144 and 256 flat triangles at 90°, 15° and 5°, set between two `RedrawAndGetImage` calls without any other change,
+and the images follow. Reference `graphicsFunctions.json`: the `Triangles6` case 25 → 36 triangles.
+
+**The raytraced sphere** (maintainer's screenshot: rings): the intersection computed $c = |\mathbf{o}-\mathbf{c}|^2 -
+r^2$ in float - with the camera far from a small sphere (a large scene, an orthographic view), $|\mathbf{o}-\mathbf{c}|^2$
+is $10^4$ to $10^6$ times $r^2$ and the difference is noise. Reproduced (a sphere of radius 0.05 beside a checkerboard
+of size 200: a huge garbled sphere), fixed by the stable form: $b = (\mathbf{o}-\mathbf{c})\cdot\mathbf{d}/|\mathbf{d}|^2$,
+the perpendicular part $\mathbf{h} = \mathbf{o}-\mathbf{c} - b\,\mathbf{d}$, discriminant $r^2 - |\mathbf{h}|^2$, which
+is well conditioned; the same images correct after the fix.
+
+New sub-steps from the maintainer's remarks of 2026-10-01: RG6.7.2.3 (cost of the split, only if measured), RG6.7.5
+(anisotropic tiling), RG6.7.6 (rows instead of flat lists); RG4.1.3 (math library, FMA contraction on ARM64 and
+uninitialized values as causes of the platform differences); RG14.2.14 (`MarkerTemp` without `MarkerData`), RG14.2.15
+(markers with `localHT`, the joints' `rotationMarker0/1` deprecated).

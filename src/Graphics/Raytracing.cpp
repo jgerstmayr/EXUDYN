@@ -108,15 +108,18 @@ void Raytracer::IntersectRayWithSphere(const RTVector3D& rayOrigin, const RTVect
 	const RaytracingSettings& RTS, IntersectionResult& result)
 {
 	result.Init();
-	RTVector3D oc = rayOrigin - sphere.point;
+	//numerically stable in float: not |oc|^2 - r^2, which cancels for a camera far from a small sphere (rings in the image),
+	//but the distance of the center from the ray, from the perpendicular part of oc
 	RTfloat a = rayDirection * rayDirection;
-	RTfloat b = oc * rayDirection;
-	RTfloat c = oc * oc - sphere.radius * sphere.radius;
-	RTfloat discriminant = b * b - a * c;
-	if (discriminant < 0.f || a == 0.f) { return; }
-	RTfloat root = std::sqrt(discriminant);
-	RTfloat t = (-b - root) / a;
-	if (t < RTS.minZ) { t = (-b + root) / a; }
+	if (a == 0.f) { return; }
+	RTVector3D oc = rayOrigin - sphere.point;
+	RTfloat b = (oc * rayDirection) / a;			//oc + s*rayDirection is closest to the center at s = -b
+	RTVector3D perpendicular = oc - b * rayDirection;
+	RTfloat discriminant = sphere.radius * sphere.radius - perpendicular * perpendicular;
+	if (discriminant < 0.f) { return; }
+	RTfloat root = std::sqrt(discriminant / a);
+	RTfloat t = -b - root;
+	if (t < RTS.minZ) { t = -b + root; }
 	if (t < RTS.minZ) { return; }
 
 	result.hit = true;
@@ -1068,10 +1071,15 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 	Box3DBase<RTfloat> box3D;
 	Index cntWrongNormals = 0;
 	static bool warnedWrongNormals = false;
+	ResizableArray<GLTriangle> triangles6Split;	//the 6-node triangles of a GraphicsData, split with the settings of now (#2709)
+	ResizableArray<GLLine> triangles6Edges;
 	for (auto data : basicVisualizationSystemContainer->GetGraphicsDataList())
 	{
-		for (const GLTriangle& trig : data->glTriangles)
+		EXUvis::SplitTriangles6(data->glTriangles6, *visSettings, triangles6Split, &triangles6Edges);
+		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &triangles6Split })
+		for (const GLTriangle& trig : *triangleList)
 		{
+			bool isSplit = (triangleList == &triangles6Split); //its edges are the curved ones below
 			GLTriangle trigNew(trig);
 
 			for (Index i = 0; i < 3; i++)
@@ -1089,7 +1097,7 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 			{
 				graphicsData.glTriangles.Append(trigNew);
 			}
-			if (settingsView.scene.showFaceEdges || settingsView.scene.showMeshEdges)
+			if (!isSplit && (settingsView.scene.showFaceEdges || settingsView.scene.showMeshEdges))
 			{
 				if ((trigNew.isFiniteElement && settingsView.scene.showMeshEdges)
 					|| (!trigNew.isFiniteElement && settingsView.scene.showFaceEdges))
@@ -1104,6 +1112,18 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 						graphicsData.glLines.Append(lineNew);
 					}
 				}
+			}
+		}
+		if (settingsView.scene.showFaceEdges)
+		{
+			for (const GLLine& line : triangles6Edges)
+			{
+				GLLine lineNew(line);
+				lineNew.color1 = visSettings->openGL.faceEdgesColor;
+				lineNew.color2 = visSettings->openGL.faceEdgesColor;
+				TransformVertexRM(line.point1, RTS.modelViewRM, lineNew.point1);
+				TransformVertexRM(line.point2, RTS.modelViewRM, lineNew.point2);
+				graphicsData.glLines.Append(lineNew);
 			}
 		}
 		for (const GLSphere& sphere : data->glSpheres) //drawn as spheres, not as points (#2709)

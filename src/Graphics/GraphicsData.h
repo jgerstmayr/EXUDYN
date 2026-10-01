@@ -110,7 +110,8 @@ public:
 
 //! structure for a 6-node quadratic triangle (#2709): corners 0,1,2 counter-clockwise seen from outside, then the mid-side
 //! nodes 3 (between 0 and 1), 4 (between 1 and 2) and 5 (between 2 and 0); points, normals and colors per node, the points
-//! duplicated per triangle as for GLTriangle; drawn as flat triangles, split adaptively (EXUvis::AddTriangle6)
+//! duplicated per triangle as for GLTriangle; kept as they are, the renderers split them into flat triangles when they draw
+//! (EXUvis::SplitTriangles6), with the current visualizationSettings.openGL.advanced.curvedTriangleTilingAngle
 class GLTriangle6
 {
 public:
@@ -132,7 +133,7 @@ public:
 	ResizableArray<GLCircleXY> glCirclesXY;		//!< circles to be displayed
 	ResizableArray<GLText> glTexts;				//!< texts to be displayed
 	ResizableArray<GLTriangle> glTriangles;		//!< triangles to be displayed
-	ResizableArray<GLTriangle6> glTriangles6;	//!< 6-node triangles; what is drawn is their split, added to glTriangles with them (#2709)
+	ResizableArray<GLTriangle6> glTriangles6;	//!< 6-node triangles, split by the renderers when they draw (#2709)
 
 	//bool isStatic;				//!< true, if object is fixed to world-frame (e.g. background or groundObject)
 	//bool isRigid;				//!< signals that after creation of the object, all points just undergo a rigidbody transformation
@@ -238,6 +239,13 @@ public:
 			box.Add(circle);
 		}
 		for (const GLTriangle& item : glTriangles)
+		{
+			for (const Float3& point : item.points)
+			{
+				box.Add(Transform(point));
+			}
+		}
+		for (const GLTriangle6& item : glTriangles6)
 		{
 			for (const Float3& point : item.points)
 			{

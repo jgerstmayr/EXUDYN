@@ -74,13 +74,16 @@ namespace EXUvis {
 		}
 	}
 
-	//! the tiling of the 6-node triangles, set from visualizationSettings.openGL.advanced at each graphics update (#2709)
-	void SetCurvedTriangleTiling(float tilingAngleDegrees, Index maxTiling);
+	//! split a 6-node triangle into flat triangles, appended to triangles (#2709); the number of subdivisions per edge follows
+	//! the largest angle between the normals of its nodes (given, or of the geometry) against tilingAngleDegrees, at most
+	//! maxTiling; with edges, its three curved edges are appended as lines (color of the triangle's node 0)
+	void SplitTriangle6(const GLTriangle6& triangle, float tilingAngleDegrees, Index maxTiling,
+		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges = nullptr);
 
-	//! add a 6-node triangle to graphicsData (#2709): kept in glTriangles6, and its split into flat triangles added to
-	//! glTriangles, which is what the renderers draw; the number of subdivisions per edge follows the largest angle between
-	//! the normals of its nodes (given, or of the geometry) against curvedTriangleTilingAngle, at most curvedTriangleMaxTiling
-	void AddTriangle6(const GLTriangle6& triangle, GraphicsData& graphicsData);
+	//! split all 6-node triangles of a list with visualizationSettings.openGL.advanced (curvedTriangleTilingAngle,
+	//! curvedTriangleMaxTiling); triangles and edges are reset first; what the renderers draw (#2709)
+	void SplitTriangles6(const ResizableArray<GLTriangle6>& triangles6, const VisualizationSettings& visualizationSettings,
+		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges = nullptr);
 
 	//! copy bodyGraphicsData (of body) into global graphicsData (of system)
 	void AddBodyGraphicsDataColored(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, 

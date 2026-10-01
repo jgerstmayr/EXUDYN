@@ -251,6 +251,8 @@ private:
 	static ResizableArray<GLubyte> charBuffer;	//!< buffer for converstion of UTF8 into internal unicode-like format
 
 	static GLuint spheresListBase;				//!< starting index for GLlists for spheres
+	static ResizableArray<GLTriangle> triangles6Split;	//!< the 6-node triangles of the GraphicsData being drawn, split with the current settings (#2709)
+	static ResizableArray<GLLine> triangles6Edges;		//!< their curved edges, for showFaceEdges / showMeshEdges (#2709)
 	static constexpr Index maxSpheresLists = 8; //!< max. number of GLlists for spheres (with resolution 2,4,8,16, etc.
 	static GraphicsData graphicsDataStatic;		//!< static GraphicsData objects (info, Exudyn, etc.)
 	//+++++++++++++++++++++++++++++++++++++++++

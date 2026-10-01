@@ -4166,7 +4166,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsOpenGLAdvanced& data) {
     d["value"] = data.curvedTriangleTilingAngle;
     d["type"] = "UFloat";
     d["size"] = std::vector<int>{1};
-    d["description"] = "6-node (curved) triangles of a TriangleList (key triangles6) are drawn as flat triangles: an edge is subdivided until the angle between the normals of its nodes falls below this angle (in degrees), at most curvedTriangleMaxTiling times; 0 draws each as 1 flat triangle; used by the raytracer as well";
+    d["description"] = "6-node (curved) triangles of a TriangleList (key triangles6) are drawn as flat triangles, split when they are drawn: an edge is subdivided until the angle between the normals of its nodes falls below this angle (in degrees), at most curvedTriangleMaxTiling times - 15 degrees give 24 segments around a full cylinder; 0 draws each as 1 flat triangle; used by the raytracer and GetGraphicsData() as well";
     structureDict["curvedTriangleTilingAngle"] = d;
 
     d = py::dict(); //reset local dict

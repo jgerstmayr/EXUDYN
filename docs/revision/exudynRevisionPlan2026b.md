@@ -572,6 +572,36 @@ The steps are numbered in the order they were raised and stand here in the order
       four are ANCF contact/sliding and one is a gravity connector, and none of them appears on
       Linux at all. Worth one look at whether they share a mechanism before being folded into the
       general question.
+    - **RG4.1.3** *open (maintainer 2026-10-01)* — **the math library and uninitialized values**, two candidate
+      causes to test. What is known (IEEE 754-2008/2019, the glibc manual *Errors in Math Functions*, the MSVC `/fp`
+      and GCC/clang `-ffp-contract` documentation; from the standard literature, not re-fetched here):
+      - **`sqrt` is the same everywhere**: IEEE 754 requires it correctly rounded, and x86-64 (`sqrtsd`) and ARM64
+        (`fsqrt`) do that in hardware. It can only differ through a compiler that replaces it by an approximation
+        (`-ffast-math`, reciprocal square root), which no Exudyn build uses.
+      - **`atan2`, `sin`, `cos`, `exp`, `log`, `pow`, `acos`, `tanh` are not**: IEEE 754 only *recommends* correct
+        rounding for them, and glibc's libm, the MSVC UCRT and Apple's libm are separate implementations that
+        each guarantee about 1 ULP and differ in the last bit for some arguments. One ULP that decides a contact
+        state or a friction branch is enough for differences like the 1e-5..1e-3 of the table above.
+      - **FMA contraction**, closely related: clang contracts `a*b+c` into one rounded operation by default
+        (`-ffp-contract=on`), and **ARM64 always has the instruction** - so the macOS ARM build contracts, while the
+        Windows build does not (MSVC does not contract) and the Linux x86-64 baseline cannot (no FMA in the baseline
+        ISA; `setup.py` adds `-ffp-contract=off` for the fast module only). A strong candidate for the five
+        macOS-only models (RG4.1.2) - the first thing to try is `-ffp-contract=off` in the darwin options.
+      - **the test for the math functions**, as proposed by the maintainer: route the transcendental calls through
+        one header (`EXUmath::Atan2`, ...) with a switch to own portable implementations (fdlibm/openlibm-like, or a
+        correctly rounded one), build both platforms with it, and rerun the suite; the entries of
+        `UnresolvedOnLinux()` that vanish were caused by it. First count which of these functions the
+        affected models actually reach (contact, friction regularization, rotation parameters).
+      - **uninitialized values**: `SlimVectorBase`, `SlimArray`, `ConstSizeVectorBase` and `ConstSizeMatrixBase` have
+        `= default` constructors, so `Vector3D v;` leaves the values uninitialized on **both** compilers (only a
+        value-initialization `Vector3D v{}` zeroes them), and so do member variables without an initializer. What
+        such a read returns is whatever the stack held, which differs between compilers, libraries and
+        optimization - a classic platform difference. The test: a build switch that fills default-constructed
+        linalg objects with NaN, and the suite run with it (a NaN in a result names a read before a write); on
+        Linux additionally `valgrind --tool=memcheck` or clang's `-fsanitize=memory` on the affected models, and
+        `-Wmaybe-uninitialized` at `-O2`.
+      - not yet checked, a third candidate of the same kind: iteration order of unordered containers and
+        non-stable sorts with equal keys, which differ between libstdc++, libc++ and the MSVC library.
 
 <a id="rg4-2"></a>
 **RG4.2** **DONE 2026-09-26** (#2413) — [log](exudynRevisionLog2026b.md#rg4-2) · [plan text](exudynRevisionLog2026b.md#plan-rg4-2) — `ObjectContactConvexRoll.pContact` is a computed value that Python reads.
@@ -879,12 +909,45 @@ This group is that revision and what has to happen before it can start.
       - **RG6.7.2.1** *open* - the superelements with six columns in `triangleMesh` (the FFRF bodies and the FEM
         surface of quadratic meshes, `FEMinterface`), whose points deform in every frame; and the contour colors on
         6-node triangles (`AddBodyGraphicsDataColored` applies them to flat triangles only);
+      - **RG6.7.2.2** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-2-2) - **the split when drawing**, as
+        decided in RG6.7.1 (the first implementation split when the graphics data was built, a misunderstanding):
+        `GraphicsData` keeps `glTriangles6` only; OpenGL splits per frame, the raytracer per image,
+        `GetGraphicsData()` per call, each with the settings of that moment - a change of
+        `curvedTriangleTilingAngle` shows at once. The edges (`showFaceEdges`) are the curved edges, not those of the
+        split. Defaults **15°** (24 segments around a full cylinder) and at most **8** subdivisions;
+      - **RG6.7.2.3** *open, only if measured* - the cost of the split per frame for large quadratic meshes (an NGsolve
+        surface of $10^5$ triangles6 at 15°: up to 64 flat triangles each); if it shows, cache the split per
+        GraphicsData, invalidated by the graphics update and by the two settings;
     - **RG6.7.3** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-3) - the sphere type in GraphicsData,
       drawn by OpenGL, the raytracer (a ray-sphere intersection in its search tree) and `GetGraphicsData()`; the
       nodes drawn through it, in the order of today;
+      - **RG6.7.3.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-2-2) - the raytraced sphere fell
+        apart into rings (maintainer's screenshot): $|\mathbf{o}-\mathbf{c}|^2-r^2$ cancels in float when the camera
+        is far from a small sphere; now the distance of the center from the ray, which is stable;
     - **RG6.7.4** the graphics tests (RG2.3.3) and the documentation grow with both - **DONE with RG6.7.2 and
       RG6.7.3**: the cases `Sphere`, `Spheres` and `Triangles6` of `testEveryGraphicsFunction`, the manual
       (*GraphicsData: Spheres*, the key `triangles6` of *GraphicsData: TriangleList*).
+    - **RG6.7.5** *proposed (maintainer 2026-10-01), feasible* - **anisotropic tiling**: a cylinder patch is curved in
+      one direction only, but the split subdivides both, $n^2$ triangles where $2n$ would do. The way: a number of
+      subdivisions **per edge**, $n_{01}, n_{12}, n_{20}$, each from the angle between the normals of that edge's three
+      nodes; the interior triangulated to match the three edge counts (rows of strips between the two most subdivided
+      edges, the third edge's points joined by a fan). The counts must come from what two neighbours share - the
+      edge's own nodes and their given normals, or, without normals, the edge's tangents at its ends - so that the
+      shared edge is split alike on both sides and no cracks appear; the isotropic split of today has that problem
+      already (one $n$ per triangle) and would lose it. A cylinder of 6-node triangles then needs $2n$ instead of
+      $n^2$ flat triangles per element.
+    - **RG6.7.6** *proposed (maintainer 2026-10-01)* - **`TriangleList` and `Spheres` as $(n\times 3)$ arrays**: points,
+      normals, triangles (and $(n\times 4)$ colors, $(n\times 6)$ triangles6) as rows, not flat lists. Measured
+      2026-10-01: the C++ reader (`PyWriteBodyGraphicsDataList`) casts each key to a flat `std::vector<float>` and
+      **rejects** a nested list or a 2D array today, so the flat form is all there is. Sub-steps:
+      - **RG6.7.6.1** the reader accepts both - flat as now, and rows of 3 (4, 6), as list or 2D numpy array;
+      - **RG6.7.6.2** the documentation (manual *GraphicsData*, the docstrings) shows only the rows;
+      - **RG6.7.6.3** `exudyn.graphics` returns rows (`Brick`, `Cylinder`, `FromPointsAndTrigs`, `Transform`,
+        `MergeTriangleLists`, ...) and reads both; `graphicsDataUtilities.py` likewise;
+      - **RG6.7.6.4** the read-back (`mbs.GetObject(..., addGraphicsData=True)`, `GetBodyGraphicsDataList`) returns rows.
+      *For the maintainer*: a script that indexes a returned list as flat (`g['points'][3*i+1]`) breaks with
+      RG6.7.6.3/.4 - either accepted for 1.13 with a note in `revisions.md`, or the returned form switched in 2.0
+      (RG8/RG9) and only the reader and the documentation now.
 
     <a id="rg6-7-sketch"></a>
     **The interface, sketched 2026-10-01** (for the maintainer; nothing implemented). What exists, read in the code:
@@ -1944,6 +2007,34 @@ done.
     - **RG14.2.10** the contact connectors (with RG4.16); **RG14.2.11** the special markers (shape, cable, many
       markers); **RG14.2.12** `GeneralContact` on L0; **RG14.2.13** output variables and sensors through the
       connector force, then the legacy path, the switch and the unused temporaries removed.
+    - **RG14.2.14** *(maintainer 2026-10-01)* **`MarkerTemp` without `MarkerData`.** Why it holds one today: the L0/L1
+      pair of a marker (`GetKinematicsRigid`/`AddGeneralizedForceTorque`, `GetODE2Size`/`AddGeneralizedForce`,
+      `GetKinematicsCoordinate`/`AddGeneralizedForceCoordinate`) has a **default in `CMarker`** that calls the old
+      `ComputeMarkerData` and keeps its Jacobians in `temp.markerData` between the two calls - so that every marker
+      works on the new path before it is migrated. Measured 2026-10-01: own implementations exist for
+      `MarkerBodyRigid` (through `CObjectBody::GetKinematicsRigid`/`AddForceTorque`, which needs no `MarkerData`),
+      `MarkerBodyPosition`, `MarkerNodePosition` and `MarkerNodeCoordinate`; `MarkerNodeRigid`,
+      `MarkerSuperElementRigid/Position`, `MarkerKinematicTreeRigid`, the beam/cable/relative-coordinate markers
+      still go through the default. The clean form: every marker implements its pair, and what it keeps between
+      the two calls is **its own small fixed-size state** (a node index and $\Gm$ as a `ConstSizeMatrix<3*4>` for a
+      node marker; the body's $\Gm_{loc}$ for a body marker), so `MarkerTemp` becomes a small union-like buffer of
+      fixed size instead of a `MarkerData` with two `ResizableMatrix`; the `MarkerData` of the fallback moves to
+      the legacy path (a per-thread `MarkerDataStructure` that exists anyway) and disappears with it
+      (RG14.2.13). Done marker by marker, together with RG14.2.11; nothing to gain from doing it before.
+    - **RG14.2.15** *(maintainer 2026-10-01; to be considered in all marker and connector work from now on)*
+      **Markers with a rotation; the joints' `rotationMarker0/1` deprecated.** A rigid marker gets a local frame:
+      **`localHT`** (a homogeneous transformation in the body) as the alternative to `localPosition`, which is
+      deprecated later; the marker frame is then body frame × `localHT`, and the connector receives it as
+      `MarkerRigid.frame` (RG14.2.8) - nothing changes at L1/L2. The joints and connectors with
+      `rotationMarker0/1` (eight objects: `JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, the
+      connectors `CartesianSpringDamper`, `RigidBodySpringDamper`, `LinearSpringDamper`, `TorsionalSpringDamper`
+      and `ContactCurveCircles`) then have **two rotations in a row** - marker and
+      connector - and the connector's ones are deprecated: internally a flag *rotation markers are not identity*,
+      set at `CheckPreAssembleConsistency`, so that the extra products are computed only in that deprecated case.
+      Sub-steps when it starts: the parameter in the rigid markers (`MarkerBodyRigid`, `MarkerNodeRigid`,
+      `MarkerSuperElementRigid`, `MarkerKinematicTreeRigid`) and their L0; the flag and the deprecation warning in
+      the joints; the documentation and the examples moved to `localHT`. Until then, new marker and connector code
+      takes the frame from `MarkerRigid` and does not add new uses of `rotationMarker0/1`.
 
 <a id="rg14-2-9"></a>
 **RG14.2.9 in detail** *(proposed 2026-10-01, for the maintainer's decision before it starts)* - constraints and joints
