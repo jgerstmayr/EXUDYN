@@ -1,0 +1,17 @@
+{
+  "number": 2772,
+  "title": "ObjectJointGeneric: the Jacobian ignores alternativeConstraints",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "With alternativeConstraints=True and all rotations constrained, ComputeAlgebraicEquations uses the alternative equations (vx0*(vy1 x vz0) - 1, ...), but ComputeJacobianAE always forms the Jacobian of the default ones (vz0*vy1, ...). Newton then works with a wrong Jacobian. Found by revision2026b step RG14.2.9.3 (#2745): the Jacobian by automatic differentiation of the joint's own equations agrees with a numerical one, the hand-written one does not; on the new path the joint uses the AD Jacobian.",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-02 00:26",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectJointGeneric.cpp",
+  "releaseNotes": "ObjectJointGeneric with alternativeConstraints=True: Newton used the Jacobian of the default rotation constraints; the joint now differentiates its own equations",
+  "resolvedInVersion": "1.12.207"
+}

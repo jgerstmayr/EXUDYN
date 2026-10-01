@@ -325,6 +325,183 @@ void CObjectJointGeneric::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 }
 
 
+//! the equations on the connector interface (#2745), as ComputeAlgebraicEquations: the constrained translations (global if
+//! all three are constrained, else in the frame of marker 0) minus the offset of the user function, the constrained
+//! rotations as rigid, revolute or universal joint, lambda_i = 0 on the free axes; the velocity level (index 2) for Real only
+template<class TReal>
+void CObjectJointGeneric::ComputeConstraintEquationsTemplate(const MarkerRigid<TReal>* markers, const LinkedDataVector& lambda, Real t,
+	Index itemIndex, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
+{
+	equations.SetNumberOfItems(nConstraints);
+	const ConstSizeMatrixBase<TReal, 9>& A0 = markers[0].frame.GetRotation();
+	const ConstSizeMatrixBase<TReal, 9>& A1 = markers[1].frame.GetRotation();
+	ConstSizeMatrixBase<TReal, 9> A0all = A0 * Matrix3DAs<TReal>(parameters.rotationMarker0);
+	SlimVectorBase<TReal, 3> relativePosition = markers[1].frame.GetTranslation() - markers[0].frame.GetTranslation();
+	const bool allTranslationsConstrained = parameters.constrainedAxes[0] == 1 && parameters.constrainedAxes[1] == 1 && parameters.constrainedAxes[2] == 1;
+	const Index constrainedRotations = parameters.constrainedAxes[3] + parameters.constrainedAxes[4] + parameters.constrainedAxes[5];
+
+	if (!velocityLevel)
+	{
+		Vector6D userOffset(0.);
+		if (parameters.offsetUserFunction)
+		{
+			EvaluateUserFunctionOffset(userOffset, cSystemData->GetMainSystemBacklink(), t, itemIndex);
+			if (userOffset[3] != 0. || userOffset[4] != 0. || userOffset[5] != 0.)
+			{
+				Matrix3D A0offset = RigidBodyMath::RotXYZ2RotationMatrix(Vector3D({ userOffset[3], userOffset[4], userOffset[5] }));
+				A0all = A0all * Matrix3DAs<TReal>(A0offset);
+			}
+		}
+		SlimVectorBase<TReal, 3> vPos = allTranslationsConstrained ? relativePosition : A0all.GetTransposed() * relativePosition;
+		for (Index i = 0; i < 3; i++)
+		{
+			if (parameters.constrainedAxes[i] == 1) { equations[i] = vPos[i] - userOffset[i]; }
+		}
+
+		if (constrainedRotations > 0)
+		{
+			ConstSizeMatrixBase<TReal, 9> A1all = A1 * Matrix3DAs<TReal>(parameters.rotationMarker1);
+			if (constrainedRotations == 3) //rigid joint (at least regarding rotations)
+			{
+				SlimVectorBase<TReal, 3> vx0 = A0all.template GetColumnVector<3>(0);
+				SlimVectorBase<TReal, 3> vz0 = A0all.template GetColumnVector<3>(2);
+				SlimVectorBase<TReal, 3> vx1 = A1all.template GetColumnVector<3>(0);
+				SlimVectorBase<TReal, 3> vy1 = A1all.template GetColumnVector<3>(1);
+				if (!parameters.alternativeConstraints)
+				{
+					equations[3] = vz0 * vy1;
+					equations[4] = vz0 * vx1;
+					equations[5] = vx0 * vy1;
+				}
+				else
+				{
+					SlimVectorBase<TReal, 3> vy0 = A0all.template GetColumnVector<3>(1);
+					SlimVectorBase<TReal, 3> vz1 = A1all.template GetColumnVector<3>(2);
+					equations[3] = vx0 * vy1.CrossProduct(vz0) - 1;
+					equations[4] = vy0 * vz1.CrossProduct(vx0) - 1;
+					equations[5] = vz0 * vx1.CrossProduct(vy0) - 1;
+				}
+			}
+			else if (constrainedRotations == 2) //revolute joint
+			{
+				Index freeAxis, lockedAxis1, lockedAxis2;
+				CObjectJointGenericFreeRotAxis(parameters.constrainedAxes, freeAxis, lockedAxis1, lockedAxis2);
+				SlimVectorBase<TReal, 3> vRot0 = A0all.template GetColumnVector<3>(freeAxis);
+				equations[lockedAxis1 + 3] = vRot0 * A1all.template GetColumnVector<3>(lockedAxis1);
+				equations[lockedAxis2 + 3] = vRot0 * A1all.template GetColumnVector<3>(lockedAxis2);
+			}
+			else //universal joint: freeAxis1 in marker 0, freeAxis2 in marker 1
+			{
+				Index lockedAxis, freeAxis1, freeAxis2;
+				CObjectJointGenericLockedRotAxis(parameters.constrainedAxes, lockedAxis, freeAxis1, freeAxis2);
+				equations[lockedAxis + 3] = A0all.template GetColumnVector<3>(freeAxis1) * A1all.template GetColumnVector<3>(freeAxis2);
+			}
+		}
+		for (Index i = 0; i < nConstraints; i++)
+		{
+			if (parameters.constrainedAxes[i] == 0) { equations[i] = (TReal)lambda[i]; }
+		}
+	}
+	else
+	{
+		if constexpr (std::is_same<TReal, Real>::value)
+		{
+			if (parameters.offsetUserFunction_t)
+			{
+				PyError("ObjectJointGeneric: offsetUserFunction_t not implemented for velocity level constraints!", PyErrorType::notImplementedError);
+			}
+			Matrix3D A0all_t = (A0 * RigidBodyMath::Vector2SkewMatrix(markers[0].angularVelocityLocal)) * parameters.rotationMarker0;
+			Vector3D vVel;
+			if (allTranslationsConstrained)
+			{
+				vVel = markers[1].velocity - markers[0].velocity;
+			}
+			else
+			{
+				vVel = A0all.GetTransposed()*(markers[1].velocity - markers[0].velocity) + A0all_t.GetTransposed()*relativePosition;
+			}
+			for (Index i = 0; i < 3; i++)
+			{
+				if (parameters.constrainedAxes[i] == 1) { equations[i] = vVel[i]; }
+			}
+			if (constrainedRotations > 0)
+			{
+				Matrix3D A1all = A1 * parameters.rotationMarker1;
+				Matrix3D A1all_t = (A1 * RigidBodyMath::Vector2SkewMatrix(markers[1].angularVelocityLocal)) * parameters.rotationMarker1;
+				if (constrainedRotations == 3)
+				{
+					Vector3D vx0 = A0all.GetColumnVector<3>(0), vz0 = A0all.GetColumnVector<3>(2);
+					Vector3D vx1 = A1all.GetColumnVector<3>(0), vy1 = A1all.GetColumnVector<3>(1);
+					Vector3D vx0_t = A0all_t.GetColumnVector<3>(0), vz0_t = A0all_t.GetColumnVector<3>(2);
+					Vector3D vx1_t = A1all_t.GetColumnVector<3>(0), vy1_t = A1all_t.GetColumnVector<3>(1);
+					equations[3] = vz0_t * vy1 + vz0 * vy1_t;
+					equations[4] = vz0_t * vx1 + vz0 * vx1_t;
+					equations[5] = vx0_t * vy1 + vx0 * vy1_t;
+				}
+				else if (constrainedRotations == 2)
+				{
+					Index freeAxis, lockedAxis1, lockedAxis2;
+					CObjectJointGenericFreeRotAxis(parameters.constrainedAxes, freeAxis, lockedAxis1, lockedAxis2);
+					Vector3D vRot0 = A0all.GetColumnVector<3>(freeAxis);
+					Vector3D vLocked1 = A1all.GetColumnVector<3>(lockedAxis1);
+					Vector3D vLocked2 = A1all.GetColumnVector<3>(lockedAxis2);
+					Vector3D vRot0_t = A0all_t.GetColumnVector<3>(freeAxis);
+					Vector3D vLocked1_t = A1all_t.GetColumnVector<3>(lockedAxis1);
+					Vector3D vLocked2_t = A1all_t.GetColumnVector<3>(lockedAxis2);
+					equations[freeAxis + 3] = lambda[freeAxis + 3];
+					equations[lockedAxis1 + 3] = vRot0_t * vLocked1 + vRot0 * vLocked1_t;
+					equations[lockedAxis2 + 3] = vRot0_t * vLocked2 + vRot0 * vLocked2_t;
+				}
+				else
+				{
+					Index lockedAxis, freeAxis1, freeAxis2;
+					CObjectJointGenericLockedRotAxis(parameters.constrainedAxes, lockedAxis, freeAxis1, freeAxis2);
+					equations[freeAxis1 + 3] = lambda[freeAxis1 + 3];
+					equations[freeAxis2 + 3] = lambda[freeAxis2 + 3];
+					Vector3D vFree1 = A0all.GetColumnVector<3>(freeAxis1);
+					Vector3D vFree2 = A1all.GetColumnVector<3>(freeAxis2);
+					Vector3D vFree1_t = A0all_t.GetColumnVector<3>(freeAxis1);
+					Vector3D vFree2_t = A1all_t.GetColumnVector<3>(freeAxis2);
+					equations[lockedAxis + 3] = vFree1_t * vFree2 + vFree1 * vFree2_t;
+				}
+			}
+			for (Index i = 0; i < 3; i++)
+			{
+				if (parameters.constrainedAxes[i] == 0) { equations[i] = lambda[i]; }
+			}
+			if (constrainedRotations == 0) //as ComputeAlgebraicEquations leaves them: the rotations are free
+			{
+				for (Index i = 3; i < 6; i++) { equations[i] = lambda[i]; }
+			}
+		}
+		else
+		{
+			CHECKandTHROWstring("ObjectJointGeneric: the equations at velocity level have no Jacobian by automatic differentiation");
+		}
+	}
+}
+
+void CObjectJointGeneric::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t,
+	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, t, itemIndex, velocityLevel, equations);
+}
+
+void CObjectJointGeneric::ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
+	Real t, Index itemIndex, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, t, itemIndex, false, equations);
+}
+
+void CObjectJointGeneric::ComputeJacobianAE_AE(ResizableMatrix& jacobian_AE) const
+{
+	jacobian_AE.SetScalarMatrix(nConstraints, 0.);
+	for (Index i = 0; i < nConstraints; i++)
+	{
+		if (parameters.constrainedAxes[i] == 0) { jacobian_AE(i, i) = 1.; }
+	}
+}
+
 void CObjectJointGeneric::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
 	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {

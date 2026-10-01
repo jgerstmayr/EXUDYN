@@ -49,7 +49,7 @@ def TestExamplesReferenceSolution():
         'ANCFmovingRigidBodyTest.py':-0.12893096934990356,          #new 2022-12-25; old solution differs for 1e-10 since several updates -0.12893096921737698,
         'ANCFslidingAndALEjointTest.py':-4.426408394755277,         #before 2023-05-01 (loads jacobian): -4.426408390697862,         #before 2022-12-25(resolved BUG 1274): -4.426403044189653; with old ObjectContactFrictionCircleCable2D until: 2022-03-09: -4.42640304418963,
         'ballBearingTest.py':0.037852414033278825,                 #2026-10-01: the cage's CartesianSpringDamper on the connector interface (#2745), round-off of the projection; before 0.03785241402944885
-        'bricardMechanism.py': 4.172189649306256, #2026-10-02: rigid joints on the connector interface, reaction forces summed in another order (#2745), before 4.172189649306508;
+        'bricardMechanism.py': 4.172189651042737, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 4.172189649306256; #2026-10-02: rigid joints on the connector interface, reaction forces summed in another order (#2745), before 4.172189649306508;
         'carRollingDiscTest.py':-0.2394004871711386,
         'compareAbaqusAnsysRotorEigenfrequencies.py':0.0004185480476228394,
         'compareFullModifiedNewton.py':0.00020079676000188396,
@@ -107,8 +107,8 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeamMarkerTest.py':0.22853106396053813, #2026-09-30: consistent mass matrix (#1273); #body markers on the 3D beam = loads on its nodes (#2730)
         'geometricallyExactBeamJacobianTest.py':4.282489188464191, #analytic against numerical Jacobian of the 3D beam (#1550)
         'geometricallyExactBeamCurvedTest.py':4.561491685469841, #the 45-degree bend, stress-free in its curved reference configuration (#1494)
-        'geometricallyExactBeamRightAngleFrame.py':3.306181714013268, #lateral buckling of the right-angle frame at 1.088 N (#1499)
-        'rightAngleFrame.py':4.371823197993865, #the same frame driven by displacement, past the buckling point (#2762)
+        'geometricallyExactBeamRightAngleFrame.py':3.306181713660017, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 3.306181714013268; #lateral buckling of the right-angle frame at 1.088 N (#1499)
+        'rightAngleFrame.py':4.3718231979938, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 4.371823197993865; #the same frame driven by displacement, past the buckling point (#2762)
         'energiesFlexibleBodiesTest.py':5.850170604919896, #elastic energy of beams, plate and kinematic tree in free oscillations (#2202)
         'inspectTest.py':44, #new 2026-10-01: mbs.Inspect (#2203); the number of listed members, refusals included
         'energiesTest.py':17.614884358875663, #kinetic and potential energy of simple bodies and spring-dampers (#2202); 2026-10-01 with what the energies refuse and the gravity connector; before 8.724884363749222
@@ -126,7 +126,7 @@ def TestExamplesReferenceSolution():
         'linearFEMgenericODE2.py': 0.38767197129755937,              #new 2024-10-06 for jacobianUserFunction in GenericODE2
         'loadUserFunctionTest.py': 1.8051173706570727,              #new 2024-10-10 for visualization of time-dependent loads
         'LShapeGeomExactBeam2D.py':-0.9181474510515215,             #2026-01-09 update due to autodifferentiation
-        'mainSystemExtensionsTests.py': 57.64639446941507, #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 57.646394469414666;          #updated 2023-11-16; updated 2023-06-09; old: new 2023-05-19
+        'mainSystemExtensionsTests.py': 57.64639446941518, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 57.64639446941507; #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 57.646394469414666;          #updated 2023-11-16; updated 2023-06-09; old: new 2023-05-19
         'mainSystemUserFunctionsTest.py': 4.069301305919595,        #new 2024-10-17
         'manualExplicitIntegrator.py':2.0596986296922988,
         'matrixContainerTest.py':56.5,                              #new 2024-10-09
@@ -156,7 +156,7 @@ def TestExamplesReferenceSolution():
         'rigidBodyCOMtest.py':3.409431467726291,
         'rigidBodySpringDamperIntrinsic.py':0.5472368462870515,     #2026-10-01: on the connector interface (#2745), round-off of the projection; before 0.5472368462985283; new 2023-11-30 (intrinsic formulation for rigid body spring damper)
         'rollingCoinTest.py':1.0634381189361193,                     #until 2024-04-29 (without force): 0.0020040999273379673
-        'rollingDiscTangentialForces.py':1.034201740253807, #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 1.0342017404650015;        #new 2024-05-04: RollingDiscPenalty: switch to local computation of tangential forces
+        'rollingDiscTangentialForces.py':1.034201740283854, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 1.034201740253807; #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 1.0342017404650015;        #new 2024-05-04: RollingDiscPenalty: switch to local computation of tangential forces
         'rollingCoinPenaltyTest.py':0.03489603106786701,
         'rotatingTableTest.py':7.838680414273867,                   #2026-10-01: Jacobian of the rigid-body spring-damper by AD (#2745), before 7.838680375029852; until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
         'scissorPrismaticRevolute2D.py':27.20255648904438,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2connectors, 2022-01-18: 27.202556489044145,
@@ -167,7 +167,7 @@ def TestExamplesReferenceSolution():
         #depends on which numpy release built the marker positions. It is the value numpy
         #2.2.4 produced and the one an explicit sum produces; the old 7.256859912845965 was
         #what numpy 2.4.6's matmul happened to give
-        'sliderCrank3Dbenchmark.py':7.256859914829453,              #new 2026-09-11; tEnd shortened 5->0.5, the value the file itself calls converged
+        'sliderCrank3Dbenchmark.py':7.256859912753395, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 7.256859914829453;              #new 2026-09-11; tEnd shortened 5->0.5, the value the file itself calls converged
         'sliderCrank3Dtest.py':3.364276178092191,
         'sliderCrankFloatingTest.py':0.591649163378833,
         'solverExplicitODE1ODE2test.py':3.3767933275918964,         #new 2022-07-11 (CState Parallel); 

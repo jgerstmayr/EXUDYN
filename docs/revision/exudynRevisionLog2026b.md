@@ -10980,3 +10980,30 @@ rotated marker frames; 2D bodies with prismatic joints, one with a free rotation
 one to 1e-14 relative - the hand-written Jacobians are exact - the equations and the static residual with the reaction
 forces to round-off, the solutions as before. References: `bricardMechanism` (2.5e-13) and
 `revoluteJointPrismaticJointTest` (8.5e-13) moved within the Newton tolerance, re-recorded.
+
+<a id="rg14-2-9-3-generic"></a>
+### RG14.2.9.3 — JointGeneric on the connector interface (2026-10-02, #2745, #2772)
+
+`JointGeneric` gives its equations as `ComputeConstraintEquationsTemplate<TReal>(markers, lambda, t, itemIndex,
+velocityLevel, equations)` - with `t` and `itemIndex`, for the offset user function (Real, a function of time; its
+rotation offset enters as `Matrix3DAs<TReal>`): the translations global when all three are constrained, else in the
+frame of marker 0, minus the offset; the rotations as rigid joint (also with `alternativeConstraints`), revolute or
+universal; $\lambda_i = 0$ on the free axes, and `ComputeJacobianAE_AE` for them. The velocity level is Real only, as written;
+where the legacy velocity level left the three equations of free rotations unset (all rotations free), they are
+$\lambda_i = 0$ as at position level.
+
+**#2772**: the hand-written `ComputeJacobianAE` forms the Jacobian of the default rotation constraints also with
+`alternativeConstraints=True` - a wrong Jacobian for Newton. On the new path the joint has the Jacobian of its own
+equations; the test compares it with a numerical one (on Rxyz nodes, whose numerical derivative is the one of the
+rotation increments) to 1e-6. No model of the repository uses the alternative constraints.
+
+Checked (`test_connectorInterface.py`, a chain with five generic joints - rigid, revolute, universal with a free
+translation in the frame of marker 0, spherical, and a revolute one with rotated marker frames): $\Cm_\qv$ by AD equals the
+hand-written one to 1e-14, the equations and the static residual with the reaction forces to round-off, the solution
+as before. Six test models moved within the Newton tolerance (1e-13 to 2e-9: `bricardMechanism`,
+`geometricallyExactBeamRightAngleFrame`, `rightAngleFrame`, `mainSystemExtensionsTests`, `rollingDiscTangentialForces`,
+`sliderCrank3Dbenchmark`) and were re-recorded; all 186 examples run (the known failure `rendererNOGLFWexample`).
+
+With this, the eight constraints of RG14.2.9 have their equations once, as templates; the hand-written
+`ComputeJacobianAE` of all eight is used only on the legacy path (`exu.experimental.connectorInterfaceLegacy`) and
+goes with it (RG14.2.13).

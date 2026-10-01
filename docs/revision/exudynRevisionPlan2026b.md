@@ -2138,8 +2138,10 @@ both are analytic), solutions and timers:
 - **RG14.2.9.2** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-9-2) - `ConnectorCoordinate` (coordinate markers);
 - **RG14.2.9.3** the rigid joints `JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, `JointPrismatic2D` - after
   RG14.2.8.1, which brings the rotation directions; their equations are ported as they are (RG14.3 then rewrites
-  them on $\Hm_0^{-1}\Hm_1$); **`JointRevoluteZ`, `JointPrismaticX`, `JointPrismatic2D` DONE 2026-10-02** —
-  [log](exudynRevisionLog2026b.md#rg14-2-9-3); `JointGeneric` open;
+  them on $\Hm_0^{-1}\Hm_1$); **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-9-3),
+  `JointGeneric`: [log](exudynRevisionLog2026b.md#rg14-2-9-3-generic);
+  - **RG14.2.9.3.1** **DONE 2026-10-02** (#2772) - the hand-written Jacobian of `JointGeneric` ignored
+    `alternativeConstraints`; on the new path the joint has the Jacobian of its own equations;
 - **RG14.2.9.4** decision (a): $\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ in the Newton matrix, off by default. *Correction of the
   proposal*: it is not "almost free" - the reaction forces $(\partial\gv/\partial\pv_k)\tp\lambdav$ are first derivatives of the
   equations, so their derivative needs the second ones: an `AutoDiff` of `AutoDiff` (12 x 12 directions for rigid

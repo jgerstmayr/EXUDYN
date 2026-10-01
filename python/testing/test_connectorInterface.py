@@ -26,7 +26,7 @@ from exudyn.utilities import (ObjectGround, NodePoint, MassPoint, NodeRigidBodyE
                               MarkerBodyRigid, MarkerNodeRigid, InertiaCuboid, RotXYZ2RotationMatrix, RotationMatrix2EulerParameters,
                               AngularVelocity2EulerParameters_t, ObjectJointSpherical, ObjectConnectorDistance,
                               ObjectJointRevolute2D, Force, ObjectConnectorCoordinate,
-                              ObjectJointRevoluteZ, ObjectJointPrismaticX, ObjectJointPrismatic2D)
+                              ObjectJointRevoluteZ, ObjectJointPrismaticX, ObjectJointPrismatic2D, ObjectJointGeneric)
 
 exu.special.userInterface.SuppressAll(True)
 
@@ -322,6 +322,28 @@ def BuildConstraintModel(kind):
                                 rotationMarker0=rotation, rotationMarker1=rotation))
             mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[0.1, 0, 0]))
             mbs.AddLoad(Force(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=b)), loadVector=[1, -9.81*inertia.Mass(), 0.5]))
+    elif kind in ['Generic', 'GenericAlternative']: #a chain of rigid bodies with generic joints: rigid (alternative constraints), revolute,
+        #universal with a free translation in the frame of marker 0, a spherical one, and a revolute one with an offset;
+        #the alternative constraints have a singular Jacobian at aligned frames, so only the Jacobian is compared for them,
+        #on Rxyz nodes, whose numerical derivative is the one of the rotation increments (#2772)
+        inertia = InertiaCuboid(density=1000, sideLengths=[0.2, 0.05, 0.05])
+        mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
+        joints = [([1, 1, 1, 1, 1, 1], kind == 'GenericAlternative'), ([1, 1, 1, 0, 1, 1], False), ([1, 0, 1, 1, 0, 0], False),
+                  ([1, 1, 1, 0, 0, 0], False), ([1, 1, 1, 1, 1, 0], False)]
+        for (i, (axes, alternative)) in enumerate(joints):
+            ep = RotationMatrix2EulerParameters(np.eye(3))
+            if kind == 'GenericAlternative':
+                n = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.2*i+0.1, 0, 0, 0, 0, 0], initialVelocities=[0.05, 0.1, 0, 0.1, 0, 0.3]))
+            else:
+                n = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2*i+0.1, 0, 0] + list(ep),
+                                                initialVelocities=[0.05, 0.1, 0] + list(AngularVelocity2EulerParameters_t([0.1, 0, 0.3], ep))))
+            b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+            rotation = RotXYZ2RotationMatrix([0.2, 0.1, 0.3]) if i == 4 else np.eye(3)
+            mbs.AddObject(ObjectJointGeneric(markerNumbers=[mPrevious, mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[-0.1, 0, 0]))],
+                                             constrainedAxes=axes, alternativeConstraints=alternative,
+                                             rotationMarker0=rotation, rotationMarker1=rotation))
+            mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[0.1, 0, 0]))
+            mbs.AddLoad(Force(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=b)), loadVector=[1, -9.81*inertia.Mass(), 0.5]))
     elif kind == 'Prismatic2D': #2D bodies sliding on each other, one with a free rotation
         mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
         for i in range(3):
@@ -360,7 +382,7 @@ def BuildConstraintModel(kind):
     return mbs
 
 
-constraintKinds = ['Spherical', 'Distance', 'Revolute2D', 'Coordinate', 'RevoluteZ', 'PrismaticX', 'Prismatic2D']
+constraintKinds = ['Spherical', 'Distance', 'Revolute2D', 'Coordinate', 'RevoluteZ', 'PrismaticX', 'Prismatic2D', 'Generic']
 
 
 def SolveConstraintModel(kind, legacy):
@@ -375,19 +397,21 @@ def SolveConstraintModel(kind, legacy):
     return (mbs.systemData.GetODE2Coordinates(), mbs.systemData.GetAECoordinates())
 
 
-def ConstraintJacobianAndResidual(kind, legacy):
+def ConstraintJacobianAndResidual(kind, legacy, numerical=False):
     """the Jacobian of the algebraic equations and their residual, at perturbed coordinates and Lagrange multipliers"""
     exu.experimental.connectorInterfaceLegacy = legacy
     mbs = BuildConstraintModel(kind)
     s = exu.SimulationSettings()
+    s.timeIntegration.newton.numericalDifferentiation.forAE = numerical
     solver = exu.MainSolverImplicitSecondOrder()
     solver.InitializeSolver(mbs, s)
     rng = np.random.default_rng(1)
     q = mbs.systemData.GetODE2Coordinates()
     mbs.systemData.SetODE2Coordinates(q + 0.02*rng.standard_normal(len(q)))
     mbs.systemData.SetAECoordinates(rng.standard_normal(len(mbs.systemData.GetAECoordinates())))
+    jacobian0 = np.array(solver.GetSystemJacobian())  #ComputeJacobianAE adds to what the solver holds
     solver.ComputeJacobianAE(mbs, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False)
-    jacobian = np.array(solver.GetSystemJacobian())
+    jacobian = np.array(solver.GetSystemJacobian()) - jacobian0
     solver.ComputeAlgebraicEquations(mbs)
     residual = np.array(solver.GetSystemResidual())[-len(mbs.systemData.GetAECoordinates()):]  #the algebraic part
     solver.FinalizeSolver(mbs, s)
@@ -428,6 +452,17 @@ def test_theReactionForcesWithoutCqAreCqTimesLambda(kind):
     new = ConstraintNewtonResidual(kind, 0)
     assert np.abs(legacy).max() > 1
     assert np.abs(new - legacy).max() < 1e-14 * np.abs(legacy).max()
+
+
+def test_theAlternativeConstraintsOfTheGenericJointHaveTheirOwnJacobian():
+    """the hand-written Jacobian of JointGeneric is the one of the default constraints (#2772): the one by automatic
+    differentiation is compared with the numerical one"""
+    (jacobianNumerical, residual) = ConstraintJacobianAndResidual('GenericAlternative', 1, numerical=True)
+    (jacobianNew, residual) = ConstraintJacobianAndResidual('GenericAlternative', 0)
+    nAE = len(residual)   #the numerical Jacobian fills the rows of the algebraic equations only: C_q
+    (jacobianNumerical, jacobianNew) = (jacobianNumerical[-nAE:, :-nAE], jacobianNew[-nAE:, :-nAE])
+    assert np.abs(jacobianNumerical).max() > 0.1
+    assert np.abs(jacobianNew - jacobianNumerical).max() < 1e-6 * np.abs(jacobianNumerical).max()
 
 
 @pytest.mark.parametrize('kind', constraintKinds)

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 191 | 1.12.206 |
+| 1.12 | Metheney | 192 | 1.12.207 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.207** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectJointGeneric: the Jacobian ignores alternativeConstraints (#2772)
+  - description: With alternativeConstraints=True and all rotations constrained, ComputeAlgebraicEquations uses the alternative equations (vx0\*(vy1 x vz0) - 1, ...), but ComputeJacobianAE always forms the Jacobian of the default ones (vz0\*vy1, ...). Newton then works with a wrong Jacobian. Found by revision2026b step RG14.2.9.3 (\#2745): the Jacobian by automatic differentiation of the joint's own equations agrees with a numerical one, the hand-written one does not; on the new path the joint uses the AD Jacobian.
+  - **notes:** ObjectJointGeneric with alternativeConstraints=True: Newton used the Jacobian of the default rotation constraints; the joint now differentiates its own equations
+  - date resolved: **2026-10-02 00:26**, date raised: 2026-10-02
 - **1.12.206** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` MainSolverBase.ComputeAlgebraicEquations and ComputeODE1RHS raise a size mismatch (#2771)
   - description: solver.ComputeAlgebraicEquations(mbs) and solver.ComputeODE1RHS(mbs) link the residual as LinkedDataVector(systemResidual, start, start + n), but the third argument is the number of items: with algebraic equations (or ODE1 coordinates) the call raises 'LinkedDataVectorBase: size mismatch'. Found by the tests of revision2026b step RG14.2.9.1 (\#2745).
   - **notes:** solver.ComputeAlgebraicEquations(mbs) and solver.ComputeODE1RHS(mbs) raised a size mismatch when the system has algebraic equations or ODE1 coordinates; ComputeAlgebraicEquations returns the equations alone, no longer added to the previous residual
