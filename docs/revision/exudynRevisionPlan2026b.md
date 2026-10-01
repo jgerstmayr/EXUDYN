@@ -948,6 +948,46 @@ This group is that revision and what has to happen before it can start.
       *For the maintainer*: a script that indexes a returned list as flat (`g['points'][3*i+1]`) breaks with
       RG6.7.6.3/.4 - either accepted for 1.13 with a note in `revisions.md`, or the returned form switched in 2.0
       (RG8/RG9) and only the reader and the documentation now.
+    - **RG6.7.7** *(maintainer 2026-10-01)* **Quadratic (3-node) lines and edges**, the line counterpart of the 6-node
+      triangle. Today a `TriangleList`'s `edges` are point pairs, drawn as straight `GLLine`s, and `Lines` takes two
+      points per line - a feature edge on a curved surface of 6-node triangles (the rim of a cylinder) can only be a
+      chord. Sub-steps:
+      - **RG6.7.7.1** `TriangleList` gets the key **`edges3`**: three point indices per edge, `[p0, p1, m01, ...]` - the
+        corners first, then the mid node, the order of `triangles6`; points and colors shared with the triangles,
+        `edgeColor` as for `edges`. Drawn always, like `edges`; `showFaceEdges` keeps drawing the element edges of the
+        6-node triangles.
+      - **RG6.7.7.2** `Lines` gets the key **`shape`**: `'linear'` (the default, also when the key is missing; two points
+        per line) or `'quadratic'` (three points per line, `[p0, p1, m01]` as for `edges3`; colors per point as now);
+        later other shapes in the same way (splines). The points (and colors) as rows, $(2n\times3)$ / $(3n\times3)$
+        and $(2n\times4)$ / $(3n\times4)$, with the flat lists still read - as for every GraphicsData (RG6.7.6).
+      - **RG6.7.7.3** C++: **`GLLine3`** (three points, three colors, item) and a list `glLines3` in `BodyGraphicsData`
+        and `GraphicsData`, kept as they are and split when drawn (OpenGL, raytracer as lines,
+        `ComputeMaxScene`), by one function beside `SplitTriangle6`: the number of segments from the angle between the
+        curve's end tangents $\tv_0 = 4\mv - 3\pv_0 - \pv_1$, $\tv_1 = 3\pv_1 + \pv_0 - 4\mv$ against
+        `curvedTriangleTilingAngle`, at most `curvedTriangleMaxTiling` - a quarter circle at 15° gets 6 segments, as
+        the edge of a neighbouring 6-node triangle does. The count depends only on the three points of the edge,
+        which two neighbours share, so it is the edge rule RG6.7.5 needs as well. The curved element edges of the
+        6-node triangles (RG6.7.2.2) use the same function.
+      - **RG6.7.7.4** **`SC.renderer.GetGraphicsData(flatShapes=False)`**: by default the **native** shapes - the
+        6-node triangles under `triangles6` and the quadratic lines under `lines3`, beside the flat `triangles` and
+        `lines`; with `flatShapes=True` everything flat by **one fixed refinement** (each 6-node triangle into the 4
+        triangles on its six nodes, each quadratic line into 2 lines), independent of the tiling settings. This
+        replaces the split by the current settings that `GetGraphicsData()` returns since RG6.7.2.2, and makes the
+        graphics references independent of `curvedTriangleTilingAngle`.
+      - **RG6.7.7.5** the `exudyn.graphics` helpers keep `edges3` and the line shapes (`MergeTriangleLists`,
+        `Transform`/`Move`, `InvertTriangles`); `Triangles6ToTriangles` turns an `edges3` into two `edges`;
+        `graphics.Lines` gets `shape`.
+      - **RG6.7.7.6** **the primitives on quadratic shapes** - `Cylinder`, `Tube`, `Torus`, `SolidOfRevolution`, the
+        partial `Sphere`, `Arrow`, ... built from 6-node triangles with `edges3` on their rims. *Compatibility of
+        `nTiles`* (maintainer's question): `nTiles` keeps its meaning - **the number of flat segments around** - and
+        the primitive uses $\lceil$`nTiles`/2$\rceil$ quadratic elements, each covering two of today's segments.
+        For a script to never look coarser than today, the split of a *curved* 6-node triangle or 3-node line has
+        **at least 2** subdivisions (one stays for a flat one, where the mid nodes add nothing); it gets more only
+        where `curvedTriangleTilingAngle` asks for them. So a default cylinder (`nTiles=16`: 8 elements of 45°) shows
+        24 segments at 15°, and a script with `nTiles=64` shows at least its 64. The data (points, triangles) shrink
+        to about half, the drawn triangles never fall below today's.
+      - **RG6.7.7.7** the examples and test models with very large `nTiles` (chosen to hide the facets) are revised,
+        most to about half the value, once RG6.7.7.6 is in - checked by image, not by rule.
 
     <a id="rg6-7-sketch"></a>
     **The interface, sketched 2026-10-01** (for the maintainer; nothing implemented). What exists, read in the code:
@@ -2152,7 +2192,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame - an inconsistent Jacobian to find |
 | RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
-| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list; decided (RG6.7.1), to be built in RG6.7.2 to RG6.7.4 |
+| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres and 6-node triangles done; open RG6.7.2.1 (superelements), RG6.7.5 (anisotropic tiling), RG6.7.6 (rows), RG6.7.7 (quadratic lines and edges, `GetGraphicsData(flatShapes)`, primitives) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG9.3 | #2744 | access functions as single functions of the objects; evaluation first |
 | RG9.4 | #2202 | kinetic and potential energy as output variables, per object type: done for bodies, beams, plates, superelements, spring-dampers; open RG9.4.5 (should a rigid body report zero potential energy) |
