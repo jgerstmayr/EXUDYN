@@ -48,7 +48,7 @@ def TestExamplesReferenceSolution():
         'ANCFgeneralContactCircle.py':-0.581654253165756,          #new 2022-07-11 (CState Parallel); #before some update to contact module(iterations decreased!):-0.5816521429557808, #2022-02-01
         'ANCFmovingRigidBodyTest.py':-0.12893096934990356,          #new 2022-12-25; old solution differs for 1e-10 since several updates -0.12893096921737698,
         'ANCFslidingAndALEjointTest.py':-4.426408394755277,         #before 2023-05-01 (loads jacobian): -4.426408390697862,         #before 2022-12-25(resolved BUG 1274): -4.426403044189653; with old ObjectContactFrictionCircleCable2D until: 2022-03-09: -4.42640304418963,
-        'ballBearingTest.py':0.03785241402944885,                  #new 2025-07-03
+        'ballBearingTest.py':0.037852414033278825,                 #2026-10-01: the cage's CartesianSpringDamper on the connector interface (#2745), round-off of the projection; before 0.03785241402944885
         'bricardMechanism.py': 4.172189649306508,
         'carRollingDiscTest.py':-0.2394004871711386,
         'compareAbaqusAnsysRotorEigenfrequencies.py':0.0004185480476228394,

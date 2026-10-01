@@ -18,9 +18,10 @@ import numpy as np
 import pytest
 
 import exudyn as exu
-from exudyn.utilities import (ObjectGround, NodePoint, MassPoint, NodeRigidBodyEP, NodeRigidBodyRotVecLG, ObjectRigidBody,
+from exudyn.utilities import (ObjectGround, NodePoint, MassPoint, NodeRigidBodyEP, NodeRigidBodyRxyz, NodeRigidBodyRotVecLG, ObjectRigidBody,
                               NodeRigidBody2D, ObjectRigidBody2D, MarkerBodyPosition, MarkerNodePosition, SpringDamper,
-                              InertiaCuboid, RotXYZ2RotationMatrix, RotationMatrix2EulerParameters,
+                              CartesianSpringDamper, ObjectConnectorGravity, ObjectConnectorHydraulicActuatorSimple,
+                              NodeGenericODE1, InertiaCuboid, RotXYZ2RotationMatrix, RotationMatrix2EulerParameters,
                               AngularVelocity2EulerParameters_t)
 
 exu.special.userInterface.SuppressAll(True)
@@ -31,12 +32,39 @@ def AddSpringDamper(mbs, markers):
                                velocityOffset=0.1))
 
 
-connectors = {'SpringDamper': AddSpringDamper}
+def AddCartesianSpringDamper(mbs, markers):
+    mbs.AddObject(CartesianSpringDamper(markerNumbers=markers, stiffness=[500, 300, 200], damping=[3, 2, 1],
+                                        offset=[0.15, 0.01, -0.02]))
 
 
-def BuildModel(addConnector, explicit=False):
+def AddGravity(mbs, markers):
+    mbs.AddObject(ObjectConnectorGravity(markerNumbers=markers, gravitationalConstant=1e-3, mass0=20, mass1=30,
+                                         minDistanceRegularization=0.05))
+
+
+def AddHydraulicActuator(mbs, markers):
+    nPressures = mbs.AddNode(NodeGenericODE1(referenceCoordinates=[0, 0], initialCoordinates=[1e5, 2e5],
+                                             numberOfODE1Coordinates=2))
+    mbs.AddObject(ObjectConnectorHydraulicActuatorSimple(markerNumbers=markers, nodeNumbers=[nPressures],
+                  offsetLength=0.1, strokeLength=0.2, chamberCrossSection0=1e-4, chamberCrossSection1=1e-4,
+                  hoseVolume0=1e-3, hoseVolume1=1e-3, valveOpening0=0.1, valveOpening1=-0.1, actuatorDamping=10,
+                  oilBulkModulus=1e8, nominalFlow=1e-6, systemPressure=2e6, tankPressure=0))
+
+
+#each connector: the function adding it, whether it takes a length of zero, and whether both paths differentiate it the
+#same way (analytically); if not, the legacy path differentiates numerically: the Jacobians agree to the accuracy of the
+#numerical differentiation - on Rxyz nodes, whose numerical derivative has no normalization error of Euler
+#parameters - and the implicit solutions to the Newton tolerance
+connectors = {'SpringDamper': (AddSpringDamper, True, True),
+              'CartesianSpringDamper': (AddCartesianSpringDamper, True, True),
+              'Gravity': (AddGravity, False, False),
+              'HydraulicActuatorSimple': (AddHydraulicActuator, False, False)}
+
+
+def BuildModel(connector, explicit=False, eulerParameters=True):
     """a chain of mass points and rigid bodies, a connector of zero length with and without relative velocity, and a
     marker on a 2D rigid body, whose Jacobian depends on the coordinates"""
+    addConnector, zeroLength = connectors[connector][0:2]
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     oGround = mbs.AddObject(ObjectGround())
@@ -50,7 +78,10 @@ def BuildModel(addConnector, explicit=False):
             m0 = m1 = mbs.AddMarker(MarkerNodePosition(nodeNumber=n))
         else:
             A = RotXYZ2RotationMatrix([0.3, 0.2, 0.1*i])
-            if explicit:
+            if not eulerParameters:
+                n = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.2*(i+1), 0.01, 0, 0.3, 0.2, 0.1*i],
+                                                  initialVelocities=[0, 0.1, 0, 0.1, 0.2, 0.3]))
+            elif explicit:
                 n = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=[0.2*(i+1), 0, 0, 0.3, 0.2, 0.1*i],
                                                       initialVelocities=[0, 0.1, 0, 0.1, 0.2, 0.3]))
             else:
@@ -63,7 +94,7 @@ def BuildModel(addConnector, explicit=False):
         addConnector(mbs, [mPrevious, m0])
         mPrevious = m1
 
-    for k, velocity in enumerate([[0.1, -0.2, 0.3], [0, 0, 0]]):  #zero length
+    for k, velocity in enumerate([[0.1, -0.2, 0.3], [0, 0, 0]] if zeroLength else []):
         n = mbs.AddNode(NodePoint(referenceCoordinates=[1+k, 0, 0], initialVelocities=velocity))
         mbs.AddObject(MassPoint(nodeNumber=n, physicsMass=1))
         addConnector(mbs, [mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[1+k, 0, 0])),
@@ -76,21 +107,23 @@ def BuildModel(addConnector, explicit=False):
     return mbs
 
 
-def Solve(addConnector, legacy, explicit):
+def Solve(connector, legacy, explicit):
     exu.experimental.connectorInterfaceLegacy = legacy
-    mbs = BuildModel(addConnector, explicit)
+    mbs = BuildModel(connector, explicit)
     s = exu.SimulationSettings()
     s.timeIntegration.numberOfSteps = 200
     s.timeIntegration.endTime = 0.02 if explicit else 0.2
     s.timeIntegration.verboseMode = 0
+    s.timeIntegration.newton.relativeTolerance = 1e-12    #Jacobians that differ converge to the same solution
+    s.timeIntegration.newton.absoluteTolerance = 1e-14
     s.solutionSettings.writeSolutionToFile = False
     mbs.SolveDynamic(s, solverType=exu.DynamicSolverType.RK44 if explicit else exu.DynamicSolverType.GeneralizedAlpha)
     return mbs.systemData.GetODE2Coordinates()
 
 
-def Jacobian(addConnector, legacy, factorODE2, factorODE2_t):
+def Jacobian(connector, legacy, factorODE2, factorODE2_t):
     exu.experimental.connectorInterfaceLegacy = legacy
-    mbs = BuildModel(addConnector)
+    mbs = BuildModel(connector, eulerParameters=connectors[connector][2])
     s = exu.SimulationSettings()
     solver = exu.MainSolverImplicitSecondOrder()
     solver.InitializeSolver(mbs, s)
@@ -109,16 +142,17 @@ def RestoreSwitch():
 @pytest.mark.parametrize('connector', connectors)
 @pytest.mark.parametrize('explicit', [False, True])
 def test_theNewPathComputesWhatTheLegacyPathComputes(connector, explicit):
-    legacy = Solve(connectors[connector], 1, explicit)
-    new = Solve(connectors[connector], 0, explicit)
+    legacy = Solve(connector, 1, explicit)
+    new = Solve(connector, 0, explicit)
+    tolerance = 1e-12 if (explicit or connectors[connector][2]) else 1e-7
     assert np.abs(legacy).max() > 1e-3     #something moved
-    assert np.abs(new - legacy).max() < 1e-12 * (1 + np.abs(legacy).max())
+    assert np.abs(new - legacy).max() < tolerance * (1 + np.abs(legacy).max())
 
 
 @pytest.mark.parametrize('connector', connectors)
 @pytest.mark.parametrize('factors', [(1., 0.), (0., 1.), (0.7, 0.3)])
-def test_theJacobianByAutomaticDifferentiationIsTheLegacyJacobian(connector, factors):
-    legacy = Jacobian(connectors[connector], 1, *factors)
-    new = Jacobian(connectors[connector], 0, *factors)
-    assert np.abs(legacy).max() > 1e-3
-    assert np.abs(new - legacy).max() < 1e-12 * np.abs(legacy).max()
+def test_theJacobianOfTheNewPathIsTheLegacyJacobian(connector, factors):
+    legacy = Jacobian(connector, 1, *factors)
+    new = Jacobian(connector, 0, *factors)
+    tolerance = 1e-12 if connectors[connector][2] else 1e-6
+    assert np.abs(new - legacy).max() <= tolerance * np.abs(legacy).max()

@@ -35,7 +35,25 @@ Index CObjectConnectorHydraulicActuatorSimple::GetODE1Size() const
 void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex,
 	Vector3D& relPos, Vector3D& relVel, Real& linearVelocity, Real& force, Vector3D& forceDirection) const
 {
-	relPos = (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position);
+	ComputeActuatorForce(markerData.GetMarkerData(0).position, markerData.GetMarkerData(1).position,
+		markerData.GetMarkerData(0).velocity, markerData.GetMarkerData(1).velocity, relPos, relVel, linearVelocity, force, forceDirection);
+}
+
+//! the force of the connector interface on position markers (#2745): on marker 1, global
+void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Index itemIndex, Vector3D& force) const
+{
+	Vector3D relPos, relVel, forceDirection;
+	Real forceScalar, linearVelocity;
+	ComputeActuatorForce(markers[0].position, markers[1].position, markers[0].velocity, markers[1].velocity,
+		relPos, relVel, linearVelocity, forceScalar, forceDirection);
+	force = forceScalar * forceDirection;
+}
+
+void CObjectConnectorHydraulicActuatorSimple::ComputeActuatorForce(const Vector3D& position0, const Vector3D& position1,
+	const Vector3D& velocity0, const Vector3D& velocity1, Vector3D& relPos, Vector3D& relVel, Real& linearVelocity, Real& force,
+	Vector3D& forceDirection) const
+{
+	relPos = (position1 - position0);
 
 	//actuatorLength measures the distance between the markers (bushings)
 	Real actuatorLength = relPos.GetL2Norm();
@@ -46,7 +64,7 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeConnectorProperties(const M
 
 	//unit direction and relative velocity of actuator
 	forceDirection = actuatorLengthInv * relPos;
-	relVel = (markerData.GetMarkerData(1).velocity - markerData.GetMarkerData(0).velocity);
+	relVel = (velocity1 - velocity0);
 
 	linearVelocity = forceDirection * relVel; //this quantity is difference from relVel.GetL2Norm()
 

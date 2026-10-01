@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  00:09:41 (last modified)
+* @date         2026-10-01  07:10:18 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -135,8 +135,20 @@ public: // AUTO:
         return CObjectType::Connector;
     }
 
-    //! AUTO:  compute spring damper force helper function
-    void ComputeSpringForce(const MarkerDataStructure& markerData, Index itemIndex, Vector3D& vPos, Vector3D& vVel, Vector3D& fVec) const;
+    //! AUTO:  the connector implements the interface of position markers (#2745)
+    virtual ConnectorInterface GetConnectorInterface() const override
+    {
+        return ConnectorInterface::PositionMarkers;
+    }
+
+    //! AUTO:  the force on marker 1 from the kinematics of the two markers (#2745)
+    virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Index itemIndex, Vector3D& force) const override;
+
+    //! AUTO:  the same force with automatic differentiation, for the Jacobian (#2745)
+    virtual void ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t, Index itemIndex, SlimVectorBase<DRealPositionMarkers, 3>& force) const override;
+
+    //! AUTO:  the physics of the spring-damper, shared by the legacy path, the new one, its Jacobian and the output variables (#2745)
+    template<class TReal> void ComputeSpringForce(const SlimVectorBase<TReal, 3>& position0, const SlimVectorBase<TReal, 3>& position1, const SlimVectorBase<TReal, 3>& velocity0, const SlimVectorBase<TReal, 3>& velocity1, Real t, Index itemIndex, SlimVectorBase<TReal, 3>& vPos, SlimVectorBase<TReal, 3>& vVel, SlimVectorBase<TReal, 3>& fVec) const;
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
     void EvaluateUserFunctionForce(Vector3D& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Vector3D& vPos, Vector3D& vVel) const;

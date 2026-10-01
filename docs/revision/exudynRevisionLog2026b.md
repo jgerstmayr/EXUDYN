@@ -10478,3 +10478,37 @@ $2\cdot10^{-13}$ of their largest entry.
 steps and Jacobians (400 for the mass points, 831 for the rigid bodies); `jacobianODE2` 0.98 (mass points) and
 1.03-1.07 (rigid bodies) of the legacy time - the automatic differentiation costs about 0.1-0.2 µs per connector
 over the hand-written $3\times3$; the right-hand side stays 24 % faster, the total within $\pm4$ %.
+
+<a id="rg14-2-5"></a>
+### RG14.2.5 — the other connectors on position markers (2026-10-01, #2745)
+
+Each connector's physics is one function of the kinematics of its two markers, which the legacy path, the
+connector interface and the output variables share; where the Jacobian is wanted, it is a template:
+
+| connector | physics | force | Jacobian on the new path |
+|---|---|---|---|
+| `ObjectConnectorCartesianSpringDamper` | `ComputeSpringForce<TReal>` | `ComputeConnectorForcePosition` | by AD, as the legacy analytic one |
+| `ObjectConnectorGravity` | `ComputeGravityForce<TReal>` | `ComputeConnectorForcePosition` | by AD - **new**: the legacy path differentiates numerically, and still does with the switch at 1 (`GetAvailableJacobians` asks the switch) |
+| `ObjectConnectorHydraulicActuatorSimple` | `ComputeActuatorForce` (reads the pressures of its node) | `ComputeConnectorForcePosition` | numerical, as before: the force depends on the ODE1 coordinates of its node; its `ComputeODE1RHS` stays on the legacy path |
+
+A template on automatic differentiation needs three things the `Real` code did not: the square root only of a
+nonzero length (`ComputeGravityForce` as `ComputeSpringForce`), no `<=` between an `AutoDiff` and a `Real` (the
+regularization branch of the gravity is the `else` of `>`), and a `Real` parameter applied component by component
+(the Cartesian offset); a user function is reached only for `Real` (`if constexpr`).
+
+**Checked** in `test_connectorInterface.py`, now one parametrized model per connector: the two paths agree to
+round-off in the explicit solve and, for the spring-dampers, in the implicit solve and the Jacobian. For the gravity
+and the actuator the legacy Jacobian is numerical: the Jacobians agree to $10^{-6}$ on Rxyz nodes (on Euler parameters
+the numerical derivative carries the normalization direction, 1 % apart from the analytic one), and the implicit
+solutions to the Newton tolerance ($2\cdot10^{-9}$ at a relative tolerance of $10^{-12}$; $1.7\cdot10^{-5}$ at the default
+$10^{-8}$, which is the convergence, not an error).
+
+**Measured** (the benchmark, 200 bodies, 400 steps generalized-alpha, best of 5): the Cartesian spring-damper as the
+spring-damper - right-hand side 0.90/0.76 of legacy (mass points/rigid bodies), Jacobian 1.05/1.06, total
+0.98/1.02, identical Newton steps; the gravity **total 0.37 (mass points) and 0.39 (rigid bodies)** of legacy, the
+Jacobian 0.16/0.19, at the same Newton steps for mass points and 6 % more for rigid bodies on Euler parameters (the
+analytic Jacobian lacks the normalization direction that the numerical one has).
+
+**One reference re-recorded**: `ballBearingTest.py` (the cage holds the balls with `CartesianSpringDamper`s on rigid
+bodies, among sphere-torus contacts) gives 0.037852414033278825 instead of 0.03785241402944885, $10^{-10}$ relative - the
+projection by `AddPositionForce` sums in another order; with the switch at 1 the old value comes back exactly.

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  19:23:37 (last modified)
+* @date         2026-10-01  07:10:18 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -178,6 +178,18 @@ public: // AUTO:
 
     //! AUTO:  compute connector force and further properties (relative position, etc.) for unique functionality and output
     void ComputeConnectorProperties(const MarkerDataStructure& markerData, Index itemIndex, Vector3D& relPos, Vector3D& relVel, Real& linearVelocity, Real& force, Vector3D& forceDirection) const;
+
+    //! AUTO:  the connector implements the interface of position markers (#2745)
+    virtual ConnectorInterface GetConnectorInterface() const override
+    {
+        return ConnectorInterface::PositionMarkers;
+    }
+
+    //! AUTO:  the force on marker 1 from the kinematics of the two markers (#2745)
+    virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Index itemIndex, Vector3D& force) const override;
+
+    //! AUTO:  the force of the actuator from the kinematics of its markers and the pressures of its node, shared by the legacy path, the new one and the output variables (#2745)
+    void ComputeActuatorForce(const Vector3D& position0, const Vector3D& position1, const Vector3D& velocity0, const Vector3D& velocity1, Vector3D& relPos, Vector3D& relVel, Real& linearVelocity, Real& force, Vector3D& forceDirection) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {
