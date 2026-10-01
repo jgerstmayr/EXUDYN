@@ -10863,3 +10863,47 @@ Checked: `testRowsAndFlat` (a brick returned as rows; the same brick flat, and m
 elements), the read-back as rows in `testQuadraticShapes`; the test suite, pytest and all 186 examples (the one known
 failure, `rendererNOGLFWexample`). In the repository, only `graphicsDataExample.py` read a returned list by length
 (`len(g['triangles'])//3`, now the number of rows).
+
+<a id="rg14-2-8-1"></a>
+### RG14.2.8.1 — the Jacobian of the rigid-marker connectors by AD (2026-10-01, #2745, #2770)
+
+As proposed in the plan (maintainer: "do as proposed").
+- **`CSystem::ComputeJacobianODE2RigidMarkers`**: `DRealRigidMarkers = AutoDiff<12>` - per marker 3 translations and 3
+  rotation increments, global. The position is seeded with `factorODE2`, the rotation as $\Rot(\delta\thetav) =
+  (\Im + \delta\tilde\thetav)\Rot$ (direction $m$: $\tilde{\ev}_m\Rot$, column $j$ is $\ev_m\times\Rot_j$), the velocity and the
+  global angular velocity with `factorODE2_t` in the same directions, and the local angular velocity is formed as
+  $\Rot(\delta\thetav)\tp(\Rot\,\omegav_{local} + \delta\omegav)$. One call of `ComputeConnectorForceRigidDiff` gives force
+  and torque per marker; the four $6\times6$ blocks $\Km_{ik}$ are chained with the stacked $[\Jm_{pos,k};\Jm_{rot,k}]$
+  (6 x n, in `MarkerTemp::tempMatrix`), and `ComputeMarkerDataJacobianDerivative` is added per marker with **its own**
+  force and torque. `ChainConnectorJacobian` stays as it is for one force with its reaction; the rigid chain is
+  separate, as its outputs are per marker.
+- **The connectors**: the physics of `RigidBodySpringDamper`, `TorsionalSpringDamper` and `LinearSpringDamper` are
+  templates (`ComputeSpringForceTorque`/`ComputeSpringTorque`/`ComputeSpringForce` and
+  `ComputeConnectorForceRigidTemplate`), declared in `itemDefsObjects.py`; the Real virtual and the AD virtual call the
+  same template. The offset rotations become the number type by `Matrix3DAs<TReal>` (`MarkerData.h`); the products of a
+  Real matrix with an AD vector are written as loops. `GetAvailableJacobians` names the Jacobian functions unless a user
+  function defines the force - and, for the rigid-body spring-damper, unless the **intrinsic formulation** is used
+  (`GetRelativeMotionTo`/`ExpSE3` are Real only; it stays numerical, with a clear error should the AD path reach it).
+  On the legacy path (`exu.experimental.connectorInterfaceLegacy`) the three have no Jacobian of their own and are
+  differentiated numerically, as before.
+- **The math**: `RotationMatrix2RotXYZTemplate` (the Real function calls it); `atan2` and `asin` for `AutoDiff`.
+- **#2770**, found by the comparison: `RotXYZGTv_qTemplate` - $\partial(\Gm\tp\vv)/\partial\qv$ for Tait-Bryan angles, which the
+  Jacobian derivative of a torque on a `NodeRigidBodyRxyz` uses - had entry (2,1) $= -c_1 v_0 + \ldots$; correct is
+  $+c_1 v_0$ ($\partial(s_1 v_0)/\partial q_1$). With it, the AD Jacobian agrees with the numerical one to $3\cdot10^{-8}$ at zero
+  velocities; it had differed by 7 % (torsional) in exactly that entry.
+
+**What is neglected**, as for position markers: $\partial\vv/\partial\qv$ and $\partial\omegav/\partial\qv$ - with velocities the
+Jacobians differ by $10^{-4}$ to $10^{-3}$ (relative) from the numerical one, which contains them. `test_connectorInterface`
+therefore compares the Jacobians of the rigid connectors at zero velocities (plus an absolute $10^{-7}$ for the noise of the
+numerical one); the solutions agree to the Newton tolerance. Markers: `MarkerBodyRigid`, `MarkerNodeRigid`;
+`MarkerKinematicTreeRigid` and `MarkerSuperElementRigid` have no Jacobian derivative, so the system stays numerical for
+them, as for the analytic connectors. `BodyTwist` (RG14.2.2 (a)) was not needed.
+
+**Measured** (`perfConnectorInterface.py`, new run `rigid-n100-implicit`: 100 bodies, rigid-body spring-damper,
+generalized-alpha, 100 steps, EigenSparse): 0.383 s legacy (numerical Jacobian) → 0.227 s (AD), **1.7×** in total.
+
+**References**: four models solve with the new Jacobian to the Newton tolerance and moved in the last digits -
+`explicitSolversPostNewtonTest` (5.6e-13, its torsional spring-damper under generalized-alpha), `rotatingTableTest`
+(5.0e-9), the mini examples `ObjectConnectorRigidBodySpringDamper` (9.0e-9) and `MarkerBodyRigid` (4.2e-10); new
+values recorded. The fast-module list (`AVX2ReferenceSolutionUpdate`) has the rigid-body spring-damper example and needs
+its value re-recorded with the next fast build (not built here).

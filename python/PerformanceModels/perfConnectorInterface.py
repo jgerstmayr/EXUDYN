@@ -8,7 +8,9 @@
 #           on Mass1D) and rigid (ObjectConnectorRigidBodySpringDamper) - each solved twice, with
 #           exu.experimental.connectorInterfaceLegacy = 1 and = 0, so that the summary of the
 #           performance run shows the two solver times side by side. The two runs of a pair compute
-#           the same result to round-off and share their reference value. The legacy runs go when the
+#           the same result to round-off and share their reference value - except the implicit rigid
+#           pair, whose Jacobians differ (numerical on the legacy path, by AD on the new one) and whose
+#           results agree to the Newton tolerance. The legacy runs go when the
 #           legacy path goes (#2745).
 #
 # Author:   Johannes Gerstmayr
@@ -83,6 +85,7 @@ runList = [
     {'connector': 'spring',     'nBodies': 200,  'explicit': True,  'numberOfSteps': 400},
     {'connector': 'gravity',    'nBodies': 200,  'explicit': False, 'numberOfSteps': 800},
     {'connector': 'coordinate', 'nBodies': 1000, 'explicit': True,  'numberOfSteps': 1200},
+    {'connector': 'rigid',      'nBodies': 100,  'explicit': False, 'numberOfSteps': 100},  #legacy: numerical Jacobian; new: by AD
     {'connector': 'rigid',      'nBodies': 100,  'explicit': True,  'numberOfSteps': 900},
     ]
 

@@ -1,0 +1,18 @@
+{
+  "number": 2770,
+  "title": "RotXYZGTv_qTemplate: wrong sign in d(G^T v)/dq for Tait-Bryan angles",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "The derivative of G^T*v with respect to the Tait-Bryan angles has entry (2,1) = -c1*v[0] + ..., but d(s1*v[0])/dq1 = +c1*v[0]. It enters the Jacobian derivative of every torque on a NodeRigidBodyRxyz (CObjectRigidBody JacobianTtimesVector_q, CNodeRigidBodyRxyz line 302); found by revision2026b step RG14.2.8.1 (#2745), whose AD Jacobian of the torsional spring-damper differed from the numerical one in exactly this entry.",
+  "dateRaised": "2026-10-01",
+  "deadline": "2027-03-30",
+  "dateResolved": "2026-10-01 23:30",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/RigidBodyMath.h",
+  "line": "500",
+  "releaseNotes": "RotXYZGTv_qTemplate: the derivative of G^T v by the Tait-Bryan angles had a wrong sign in entry (2,1) (d(s1*v0)/dq1 = +c1*v0); it entered the Jacobian of every torque on a NodeRigidBodyRxyz",
+  "resolvedInVersion": "1.12.205"
+}

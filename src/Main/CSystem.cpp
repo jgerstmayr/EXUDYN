@@ -1564,6 +1564,115 @@ void CSystem::ComputeODE2LHSRigidMarkers(TemporaryComputationData& temp, const C
 	}
 }
 
+//! the Jacobian of L2 for connectors on rigid markers (#2745): the connector's forces and torques once with automatic
+//! differentiation in 12 directions - per marker 3 translations and 3 rotation increments, global, A(dtheta) = (I + skew(dtheta)) A,
+//! so that they chain with the marker's rotation Jacobian (omega = J_rot q_t, global); the position and rotation seeded with
+//! factorODE2, the velocity and the global angular velocity with factorODE2_t in the same directions, and the local
+//! angular velocity formed from them as A(dtheta)^T (A omega_local + domega). The connector gives the force and torque per
+//! marker, so the inner Jacobian is four 6x6 blocks K_ik = d(f_i, tau_i)/d(p_k, theta_k), chained as
+//! [J_pos,i; J_rot,i]^T K_ik [J_pos,k; J_rot,k]; then the derivative of J_i^T (f_i, tau_i) for markers whose Jacobian depends
+//! on the coordinates, each with its own force and torque; dv/dq and domega/dq are neglected, as for position markers
+void CSystem::ComputeJacobianODE2RigidMarkers(TemporaryComputationData& temp, const CObjectConnector& connector,
+	Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero)
+{
+	const ArrayIndex& markerNumbers = connector.GetMarkerNumbers();
+	MarkerRigid<DRealRigidMarkers> kinematics[2];
+	for (Index k = 0; k < 2; k++)
+	{
+		MarkerData& markerData = temp.markerTemp[k].markerData;
+		cSystemData.GetCMarkers()[markerNumbers[k]]->ComputeMarkerData(cSystemData, true, markerData);
+		CHECKandTHROW(markerData.velocityAvailable, "CSystem::ComputeJacobianODE2RigidMarkers: the marker provides no velocity");
+		const int offset = 6 * (int)k;
+		SlimVectorBase<DRealRigidMarkers, 3> position, velocity, angularVelocity;
+		EXUmath::SeedAutoDiff(position, markerData.position, offset, factorODE2);
+		EXUmath::SeedAutoDiff(velocity, markerData.velocity, offset, factorODE2_t);
+
+		const Matrix3D& A = markerData.orientation;
+		ConstSizeMatrixBase<DRealRigidMarkers, 9> rotation(3, 3);
+		for (Index i = 0; i < 3; i++)
+		{
+			for (Index j = 0; j < 3; j++)
+			{
+				rotation(i, j) = A(i, j); //all derivatives zero
+			}
+		}
+		for (Index m = 0; m < 3; m++) //d/dtheta_m (I + skew(theta)) A = skew(e_m) A: column j is e_m x A_j
+		{
+			for (Index j = 0; j < 3; j++)
+			{
+				const Index m1 = (m + 1) % 3, m2 = (m + 2) % 3;
+				rotation(m1, j).DValue(offset + 3 + (int)m) = -factorODE2 * A(m2, j);
+				rotation(m2, j).DValue(offset + 3 + (int)m) = factorODE2 * A(m1, j);
+			}
+		}
+		Vector3D omega = A * markerData.angularVelocityLocal; //global
+		EXUmath::SeedAutoDiff(angularVelocity, omega, offset + 3, factorODE2_t);
+
+		kinematics[k].frame = HomogeneousTransformationBase<DRealRigidMarkers>(rotation, position);
+		kinematics[k].velocity = velocity;
+		kinematics[k].angularVelocityLocal = rotation.GetTransposed() * angularVelocity;
+	}
+
+	SlimVectorBase<DRealRigidMarkers, 3> forces[2], torques[2];
+	connector.ComputeConnectorForceRigidDiff(kinematics, cSystemData.GetCData().currentState.time, objectNumber, forces, torques);
+
+	//the chain, into temp.jacobianODE2Container
+	const Index n[2] = { temp.markerTemp[0].markerData.positionJacobian.NumberOfColumns(), temp.markerTemp[1].markerData.positionJacobian.NumberOfColumns() };
+	const Index offsetJacobian[2] = { 0, n[0] };
+	temp.jacobianODE2Container.SetUseDenseMatrix();
+	ResizableMatrix& jacobian = temp.jacobianODE2Container.GetInternalDenseMatrix();
+	jacobian.SetNumberOfRowsAndColumns(n[0] + n[1], n[0] + n[1]);
+	jacobian.SetAll(0.);
+	for (Index k = 0; k < 2; k++) //the stacked Jacobian [J_pos; J_rot], 6 x n_k
+	{
+		if (n[k] == 0) { continue; }
+		const MarkerData& markerData = temp.markerTemp[k].markerData;
+		ResizableMatrix& stacked = temp.markerTemp[k].tempMatrix;
+		stacked.SetNumberOfRowsAndColumns(6, n[k]);
+		stacked.SetSubmatrix(markerData.positionJacobian, 0, 0);
+		stacked.SetSubmatrix(markerData.rotationJacobian, 3, 0);
+	}
+	ConstSizeMatrix<36> innerJacobian(6, 6);
+	for (Index k = 0; k < 2; k++) //columns: the marker the forces are differentiated for
+	{
+		if (n[k] == 0) { continue; }
+		for (Index i = 0; i < 2; i++) //rows: the marker the force and torque act on
+		{
+			if (n[i] == 0) { continue; }
+			for (Index c = 0; c < 6; c++)
+			{
+				for (Index r = 0; r < 3; r++)
+				{
+					innerJacobian(r, c) = forces[i][r].DValue((int)(6 * k + c));
+					innerJacobian(r + 3, c) = torques[i][r].DValue((int)(6 * k + c));
+				}
+			}
+			EXUmath::MultMatrixTransposedMatrixTemplate(temp.markerTemp[i].tempMatrix, innerJacobian, temp.jacobianTemp.matrix0);
+			EXUmath::MultMatrixMatrix2SubmatrixTemplate(temp.jacobianTemp.matrix0, temp.markerTemp[k].tempMatrix, jacobian, offsetJacobian[i], offsetJacobian[k]);
+		}
+	}
+
+	if (jacobianDerivativeNonZero)
+	{
+		for (Index k = 0; k < 2; k++)
+		{
+			if (n[k] == 0) { continue; }
+			Vector6D forceTorque;
+			for (Index r = 0; r < 3; r++)
+			{
+				forceTorque[r] = forces[k][r].Value();
+				forceTorque[r + 3] = torques[k][r].Value();
+			}
+			MarkerData& markerData = temp.markerTemp[k].markerData;
+			cSystemData.GetCMarkers()[markerNumbers[k]]->ComputeMarkerDataJacobianDerivative(cSystemData, forceTorque, markerData);
+			if (markerData.jacobianDerivative.NumberOfRows() != 0)
+			{
+				jacobian.AddSubmatrixWithFactor(markerData.jacobianDerivative, factorODE2, offsetJacobian[k], offsetJacobian[k]);
+			}
+		}
+	}
+}
+
 //! L2 of the connector interface for connectors on coordinate markers (#2745): the values of the two markers (L0), the
 //! connector's generalized force (L1), and its projection by each marker, into the local vector [marker 0, marker 1]
 void CSystem::ComputeODE2LHSCoordinateMarkers(TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber)
@@ -2768,6 +2877,10 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 								}
 							}
 
+							if (pyExperimental.connectorInterfaceLegacy && connector->GetConnectorInterface() == ConnectorInterface::RigidMarkers)
+							{
+								jacobianComputed = false; //on the legacy path, the rigid-marker connectors have no Jacobian of their own: numerical
+							}
 							if (jacobianComputed)
 							{
 								//pout << "  continue\n";
@@ -2779,6 +2892,10 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 								else if (connectorInterface == ConnectorInterface::CoordinateMarkers)
 								{
 									ComputeJacobianODE2CoordinateMarkers(temp, *connector, -factorODE2, -factorODE2_t, j, jacDerivNonZero);
+								}
+								else if (connectorInterface == ConnectorInterface::RigidMarkers)
+								{
+									ComputeJacobianODE2RigidMarkers(temp, *connector, -factorODE2, -factorODE2_t, j, jacDerivNonZero);
 								}
 								else
 								{

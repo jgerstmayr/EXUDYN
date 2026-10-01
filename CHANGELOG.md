@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 189 | 1.12.204 |
+| 1.12 | Metheney | 190 | 1.12.205 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.205** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` RotXYZGTv\_qTemplate: wrong sign in d(G^T v)/dq for Tait-Bryan angles (#2770)
+  - description: The derivative of G^T\*v with respect to the Tait-Bryan angles has entry (2,1) = -c1\*v\[0\] + ..., but d(s1\*v\[0\])/dq1 = +c1\*v\[0\]. It enters the Jacobian derivative of every torque on a NodeRigidBodyRxyz (CObjectRigidBody JacobianTtimesVector\_q, CNodeRigidBodyRxyz line 302); found by revision2026b step RG14.2.8.1 (\#2745), whose AD Jacobian of the torsional spring-damper differed from the numerical one in exactly this entry.
+  - **notes:** RotXYZGTv\_qTemplate: the derivative of G^T v by the Tait-Bryan angles had a wrong sign in entry (2,1) (d(s1\*v0)/dq1 = +c1\*v0); it entered the Jacobian of every torque on a NodeRigidBodyRxyz
+  - date resolved: **2026-10-01 23:30**, date raised: 2026-10-01
 - **1.12.204** <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` declared output variables that cannot be read (#2768)
   - description: mbs.Inspect(item, exu.InspectType.OutputVariables) over every item of every MiniExample (\#2203) finds output variables an item declares but cannot compute: NodePoint2D RotationMatrix, Rotation, AngularVelocity, AngularVelocityLocal (GetOutputVariable failed); MarkerNodeODE1Coordinate Coordinates\_t (refused by MainMarker); ObjectANCFThinPlate Director2 (GetOutputVariableBody failed); ObjectANCFBeam AngularVelocity and AngularVelocityLocal (not implemented); ObjectRotationalMass1D AngularVelocityLocal (GetOutputVariableBody failed); and two that depend on the node: ObjectRigidBody on NodeRigidBodyRotVecLG Acceleration, AccelerationLocal, AngularAcceleration, AngularAccelerationLocal (the Lie group node has no angular acceleration), MarkerNodeRigid on the node of ObjectBeamGeometricallyExact AngularVelocity. Each is either implemented or no longer declared; the node-dependent ones need the body or marker to ask its node.
   - **notes:** Every output variable an item declares can now be read: the rotation outputs of NodePoint2D, Director1/Director2/ForceLocal/TorqueLocal of ObjectANCFThinPlate (which returned zeros before; ForceLocal and TorqueLocal are the membrane force and moment resultants per length), the angular velocity of ObjectANCFBeam, the accelerations of a rigid body on NodeRigidBodyRotVecLG, AngularVelocityLocal of ObjectRotationalMass1D, the angular velocity of a rigid marker on NodePointGround; markers on ODE1 coordinates no longer list Coordinates\_t.

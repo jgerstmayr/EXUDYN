@@ -118,7 +118,7 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeam2DquadraticTest.py':0.7426300926712416, #the 3-node planar geometrically exact beam (#2208)
         'genericODE1duplicateNodeTest.py':3.1091750014354522, #numerical ODE1 Jacobian with a coordinate addressed twice (#1424)
         'contactSphereTorusMomentumTest.py':4.227231105376637, #2026-09-30: step size recommended also where a contact ends (#2109); before 4.227231105610667; #momentum conservation of the sphere-torus contact (#2127)
-        'explicitSolversPostNewtonTest.py':4.563482002223096, #2026-09-30: DOPRI5 with large steps added, and the step size recommended where a contact ends (#2109); before 4.097033066855782; #PostNewton states with every explicit integrator (#2754)
+        'explicitSolversPostNewtonTest.py':4.563482002223654, #2026-10-01: Jacobian of the torsional spring-damper by AD (#2745); before 4.563482002223096;  #2026-09-30: DOPRI5 with large steps added, and the step size recommended where a contact ends (#2109); before 4.097033066855782; #PostNewton states with every explicit integrator (#2754)
         'contactComparisonTest.py':1.200116276111891, #2026-09-30: step size recommended also where a contact ends (#2109); before 1.200040705928356; #deepest points and end heights, three contact objects, two laws (#2749, #2750)
         'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164064,
@@ -158,7 +158,7 @@ def TestExamplesReferenceSolution():
         'rollingCoinTest.py':1.0634381189361193,                     #until 2024-04-29 (without force): 0.0020040999273379673
         'rollingDiscTangentialForces.py':1.0342017404650015,        #new 2024-05-04: RollingDiscPenalty: switch to local computation of tangential forces
         'rollingCoinPenaltyTest.py':0.03489603106786701,
-        'rotatingTableTest.py':7.838680375029852,                   #until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
+        'rotatingTableTest.py':7.838680414273867,                   #2026-10-01: Jacobian of the rigid-body spring-damper by AD (#2745), before 7.838680375029852; until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
         'scissorPrismaticRevolute2D.py':27.20255648904438,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2connectors, 2022-01-18: 27.202556489044145,
         'sensorUserFunctionTest.py':45.0,            
         'serialRobotTest.py':0.7681856909844541,                    #until 2022-04-21: 0.7680031232063571 wrong static torque compensation
@@ -462,7 +462,7 @@ def MiniExamplesReferenceSolution():
         #the markers, loads and sensors (#2732)
         'MarkerBodyMass.py':-4.904999999999998,
         'MarkerBodyPosition.py':-0.1,
-        'MarkerBodyRigid.py':0.010000000002617884,
+        'MarkerBodyRigid.py':0.009999999998437649, #2026-10-01: Jacobian of the rigid-body spring-damper by AD (#2745), before 0.010000000002617884
         'MarkerNodePosition.py':-0.49698039550402484,
         'MarkerNodeRigid.py':0.9999999999999968,
         'MarkerNodeCoordinate.py':0.1,
@@ -512,7 +512,7 @@ def MiniExamplesReferenceSolution():
 
     if 'AVX2' not in exu.config.Version(True): #for nonAVX2 versions in Windows as well as other platforms
         #a build without AVX leads to a different solution: since 2022-07-11 (StateVector with ResizableVectorParallel)
-        refSol['ObjectConnectorRigidBodySpringDamper.py'] = -0.534929955894111
+        refSol['ObjectConnectorRigidBodySpringDamper.py'] = -0.5349299510886986 #2026-10-01: Jacobian by AD (#2745), before -0.534929955894111
 
     
     return refSol
@@ -558,6 +558,8 @@ def PerformanceTestsReferenceSolution():
         'perfConnectorInterface:gravity-n200-implicit':            17.452516360952007,
         'perfConnectorInterface:coordinate-n1000-explicit-legacy': 0.9526968492542502,
         'perfConnectorInterface:coordinate-n1000-explicit':        0.9526968492542502,
+        'perfConnectorInterface:rigid-n100-implicit-legacy':       1.5527250883085153, #numerical Jacobian
+        'perfConnectorInterface:rigid-n100-implicit':              1.552725088397863,  #by AD: the same to the Newton tolerance
         'perfConnectorInterface:rigid-n100-explicit-legacy':       1.8871766817354405,
         'perfConnectorInterface:rigid-n100-explicit':              1.8871766817354405,
         }

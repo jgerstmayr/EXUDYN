@@ -540,27 +540,34 @@ namespace EXUmath
 		return res;
 	}
 
-	//untested!
-	//using std::atan2;
-	//template <int nDiff, typename TReal>
-	//inline AutoDiff<nDiff, TReal>
-	//	atan2(const AutoDiff<nDiff, TReal>& y, const AutoDiff<nDiff, TReal>& x)
-	//{
-	//	AutoDiff<nDiff, TReal> res;
+	//! atan2(y, x) with the derivative (x dy - y dx)/(x^2 + y^2), for the rotation parameters of connectors (#2745)
+	using std::atan2;
+	template <int nDiff, typename TReal>
+	inline AutoDiff<nDiff, TReal> atan2(const AutoDiff<nDiff, TReal>& y, const AutoDiff<nDiff, TReal>& x)
+	{
+		AutoDiff<nDiff, TReal> res;
+		const TReal xv = x.Value();
+		const TReal yv = y.Value();
+		res.Value() = atan2(yv, xv);
+		const TReal denominator = xv * xv + yv * yv;
+		for (int k = 0; k < nDiff; k++)
+		{
+			res.DValue(k) = denominator == 0 ? (TReal)0 : (xv * y.DValue(k) - yv * x.DValue(k)) / denominator;
+		}
+		return res;
+	}
 
-	//	const TReal xv = x.Value();
-	//	const TReal yv = y.Value();
-
-	//	res.Value() = std::atan2(yv, xv);
-
-	//	const TReal denom = xv * xv + yv * yv;
-	//	for (int k = 0; k < nDiff; ++k) {
-	//		res.DValue(k) = (xv * y.DValue(k) - yv * x.DValue(k)) / denom;
-	//	}
-
-	//	return res;
-	//}
-
+	//! asin(x) with the derivative dx/sqrt(1 - x^2) (#2745)
+	using std::asin;
+	template <int nDiff, typename TReal>
+	inline AutoDiff<nDiff, TReal> asin(const AutoDiff<nDiff, TReal>& x)
+	{
+		AutoDiff<nDiff, TReal> res;
+		res.Value() = asin(x.Value());
+		const TReal factor = 1. / std::sqrt(1. - x.Value() * x.Value());
+		for (int k = 0; k < nDiff; k++) { res.DValue(k) = factor * x.DValue(k); }
+		return res;
+	}
 
 	template <int nDiff, typename TReal, typename TB, typename TC>
 	auto IfPos(AutoDiff<nDiff, TReal> a, TB b, TC c) -> decltype(IfPos(a.Value(), b, c))

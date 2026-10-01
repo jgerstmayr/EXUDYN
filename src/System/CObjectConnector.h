@@ -84,6 +84,14 @@ public:
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceRigid: not implemented for this connector");
 	}
 
+	//! the same forces and torques with automatic differentiation, for the connector's Jacobian (#2745); a connector on rigid
+	//! markers whose GetAvailableJacobians() names the ODE2 Jacobian functions must implement it
+	virtual void ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t, Index itemIndex,
+		SlimVectorBase<DRealRigidMarkers, 3>* forces, SlimVectorBase<DRealRigidMarkers, 3>* torques) const
+	{
+		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceRigidDiff: not implemented for this connector");
+	}
+
 	//! L1 of a connector on coordinate markers (#2745): its generalized force on the coordinate of marker 1 from the
 	//! values of its two markers; marker 0 gets the reaction
 	virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real& force) const

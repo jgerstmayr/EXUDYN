@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  10:01:56 (last modified)
+* @date         2026-10-01  23:13:18 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -147,10 +147,7 @@ public: // AUTO:
     virtual void ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const override;
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
-    virtual JacobianType::Type GetAvailableJacobians() const override
-    {
-        return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
-    }
+    virtual JacobianType::Type GetAvailableJacobians() const override;
 
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;
@@ -188,8 +185,8 @@ public: // AUTO:
 
     }
 
-    //! AUTO:  compute spring damper force-torque helper function
-    void ComputeSpringTorque(const MarkerRigid<Real>* markers, Real t, Index itemIndex, Matrix3D& A0all, Real& angle, Real& omega, Real& torque) const;
+    //! AUTO:  the physics of the connector, for Real and AutoDiff (#2745)
+    template<class TReal> void ComputeSpringTorque(const MarkerRigid<TReal>* markers, Real t, Index itemIndex, ConstSizeMatrixBase<TReal, 9>& A0all, TReal& angle, TReal& omega, TReal& torque) const;
 
     //! AUTO:  the connector implements the interface of rigid markers (#2745)
     virtual ConnectorInterface GetConnectorInterface() const override
@@ -199,6 +196,12 @@ public: // AUTO:
 
     //! AUTO:  the force and torque on each marker from the kinematics of the two markers (#2745)
     virtual void ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex, Vector3D* forces, Vector3D* torques) const override;
+
+    //! AUTO:  the same forces and torques with automatic differentiation, for the Jacobian (#2745)
+    virtual void ComputeConnectorForceRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, Real t, Index itemIndex, SlimVectorBase<DRealRigidMarkers, 3>* forces, SlimVectorBase<DRealRigidMarkers, 3>* torques) const override;
+
+    //! AUTO:  the forces and torques of both, Real and AutoDiff (#2745)
+    template<class TReal> void ComputeConnectorForceRigidTemplate(const MarkerRigid<TReal>* markers, Real t, Index itemIndex, SlimVectorBase<TReal, 3>* forces, SlimVectorBase<TReal, 3>* torques) const;
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
     void EvaluateUserFunctionForce(Real& torque, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real angle, Real omega) const;

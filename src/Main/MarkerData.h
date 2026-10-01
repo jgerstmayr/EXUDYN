@@ -286,6 +286,23 @@ public:
 //! seeded with factorODE2 and its time derivative with factorODE2_t
 typedef EXUmath::AutoDiff<2, Real> DRealCoordinateMarkers;
 
+//! the number type of the Jacobian of a connector on two rigid markers (#2745): per marker 3 translations and 3 rotation
+//! increments, global; the position and rotation seeded with factorODE2, the velocity and angular velocity with
+//! factorODE2_t in the same directions
+typedef EXUmath::AutoDiff<12, Real> DRealRigidMarkers;
+
+//! a matrix of Real in the number type of a connector's physics (#2745)
+template<class TReal>
+inline ConstSizeMatrixBase<TReal, 9> Matrix3DAs(const Matrix3D& matrix)
+{
+	ConstSizeMatrixBase<TReal, 9> result(3, 3);
+	for (Index i = 0; i < 3; i++)
+	{
+		for (Index j = 0; j < 3; j++) { result(i, j) = matrix(i, j); }
+	}
+	return result;
+}
+
 //! temporaries of one marker on the new path, per thread (TemporaryComputationData); the markers without their own
 //! functions of the new path fill markerData through ComputeMarkerData
 class MarkerTemp

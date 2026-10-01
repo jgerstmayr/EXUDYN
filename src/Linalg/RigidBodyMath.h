@@ -382,12 +382,14 @@ namespace RigidBodyMath {
 	inline Matrix3D RotXYZ2RotationMatrix(const CSVector3D& rot) { return RotXYZ2RotationMatrixTemplate(rot); }
 	inline Matrix3D RotXYZ2RotationMatrix(const CSVector4D& rot) { return RotXYZ2RotationMatrixTemplate(rot); } //for NodeRigidBody compatibility functions
 
-	//! convert rotation matrix to Euler angles Rxyz (Tait-Bryan angles)
-	inline Vector3D RotationMatrix2RotXYZ(const Matrix3D& R)
+	//! convert rotation matrix to Euler angles Rxyz (Tait-Bryan angles); templated for automatic differentiation (#2745)
+	template<class TReal>
+	inline SlimVectorBase<TReal, 3> RotationMatrix2RotXYZTemplate(const ConstSizeMatrixBase<TReal, 9>& R)
 	{
-		Vector3D rot;
+		using std::sqrt; using std::atan2; //for Real; AutoDiff finds its own by its namespace
+		SlimVectorBase<TReal, 3> rot;
 
-		Real absC1 = sqrt(EXUstd::Square(-R(1, 2)) + EXUstd::Square(R(2, 2)) );
+		TReal absC1 = sqrt(EXUstd::Square(-R(1, 2)) + EXUstd::Square(R(2, 2)) );
 		rot[1] = atan2(R(0, 2), absC1);
 		if (absC1 > 1e-14)
 		{
@@ -396,7 +398,7 @@ namespace RigidBodyMath {
 		}
 		else //c1 = 0, s0 = 0, c0 = 1:  #rot[0] and rot[2] represent same axes, set one of them zero!
 		{
-			rot[0] = 0.;
+			rot[0] = (TReal)0.;
 			//s0*s1*c2 + c0 * s2, -s0 * s1*s2 + c0 * c2 = > c0*s2, c0*c2
 			rot[2] = atan2(R(1, 0), R(1, 1));
 		}
@@ -407,6 +409,7 @@ namespace RigidBodyMath {
 		//rot[2] = atan2(-R(0, 1), R(0, 0));
 		return rot;
 	}
+	inline Vector3D RotationMatrix2RotXYZ(const Matrix3D& R) { return RotationMatrix2RotXYZTemplate(R); }
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -494,7 +497,7 @@ namespace RigidBodyMath {
 		return ConstSizeMatrix<maxRotCoordinates*maxRotCoordinates>(3, 3, {
 				                     0.,                             0., 0.,
 				       -s0*v[1]+c0*v[2],                             0., 0.,
-				 -c1*c0*v[1]-s0*c1*v[2], -c1*v[0]+s1*s0*v[1]-c0*s1*v[2], 0. });
+				 -c1*c0*v[1]-s0*c1*v[2],  c1*v[0]+s1*s0*v[1]-c0*s1*v[2], 0. }); //d(s1*v[0])/dq1 = c1*v[0] (#2770)
 	}
 
 	//! compute d(Glocal^T*v)/dq for RotXYZ parameters

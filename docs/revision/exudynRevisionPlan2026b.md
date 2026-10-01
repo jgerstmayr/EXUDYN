@@ -2025,8 +2025,11 @@ done.
     - **RG14.2.8** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-8) - the rigid-marker force
       connectors (`RigidBodySpringDamper`, `LinearSpringDamper`, `TorsionalSpringDamper`) on `MarkerRigid` with the
       frame as a homogeneous transformation, forces and torques per marker; their Jacobians stay numerical.
-    - **RG14.2.8.1** the connector Jacobian of the rigid-marker connectors by AD, **proposed, waiting for the
-      maintainer**.
+    - **RG14.2.8.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-8-1) - the connector Jacobian of
+      the rigid-marker connectors by AD, **decided as proposed (maintainer 2026-10-01)**; the intrinsic formulation of
+      the rigid-body spring-damper and the user functions stay numerical.
+      - **RG14.2.8.1.1** **DONE 2026-10-01** (#2770) - `RotXYZGTv_qTemplate`, $\partial(\Gm\tp\vv)/\partial\qv$ for
+        Tait-Bryan angles, had a wrong sign in entry (2,1); found by the comparison of RG14.2.8.1.
       *Today*: these three connectors declare no Jacobian function, so `CSystem::JacobianODE2RHS` differentiates the
       whole connector numerically - one evaluation of its right-hand side (marker data with Jacobians for both markers,
       the physics, the projection) per coordinate of both bodies, for the positions and again for the velocities: up
@@ -2215,7 +2218,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
-| RG14.2 | #2745 | connectors compute from small marker structures: interface decided, L0-L2, the position-marker connectors and the coordinate spring-damper with Jacobians by AD, the rigid-marker force connectors done; next RG14.2.8.1 (the AD Jacobian of rigid markers), then RG14.2.7 |
+| RG14.2 | #2745 | connectors compute from small marker structures: interface decided, L0-L2, the position-marker connectors and the coordinate spring-damper with Jacobians by AD, the rigid-marker force connectors with their Jacobian by AD done; next RG14.2.9 (constraints and joints), then RG14.2.7 |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
