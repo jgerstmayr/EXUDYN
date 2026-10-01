@@ -146,7 +146,7 @@ def TestExamplesReferenceSolution():
         'pickleCopyMbs.py':0.2583013564103506,                      #new 2025-05-10
         'plotSensorTest.py':1.0,
         'postNewtonStepContactTest.py':0.057286638346409235,
-        'raytracerNOGLFWtest.py':0.28151013387134,                  #new 2026-01-03
+        'raytracerNOGLFWtest.py':0.28161678591179,                  #2026-10-01: the node of the rigid body is raytraced as a sphere (#2709); before 0.28151013387134; new 2026-01-03
         'reevingSystemSpringsTest.py':2.215557571743302,           #new 2023-07-17 (old solution contained compression forces: 2.213190117855691),
         'relativeRotationTranslationMechanism.py': 1.509631854432179,#new 2026-09-11
         'resultsMonitorTest.py': 1.0,                               #new 2026-09-19; exudyn.misc.resultsMonitor: the four file types, incremental reading, the CLI return codes

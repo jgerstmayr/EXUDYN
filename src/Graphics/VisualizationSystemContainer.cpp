@@ -824,6 +824,44 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 							else { PyError("GraphicsData Text: must contain 'text' providing a string", PyErrorType::valueError); return false; }
 
 						} //end Text ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+						else if (pyTypeStr == "Spheres")
+						{
+							//{'type':'Spheres', 'points':[x0,y0,z0, ...], 'radii':[r0, ...] or r, 'colors':[R0,G0,B0,A0, ...] or [R,G,B,A],
+							// 'resolution': nTiles} (#2709)
+							if (!gDict.contains("points")) { PyError("GraphicsData Spheres: must contain 'points' with 3*n coordinates of the centers", PyErrorType::valueError); return false; }
+							std::vector<float> points = py::cast<std::vector<float>>(gDict["points"]);
+							Index n = (Index)points.size() / 3;
+							if (n * 3 != (Index)points.size()) { PyError("GraphicsData Spheres: 'points' must have 3*n components", PyErrorType::valueError); return false; }
+
+							std::vector<float> radii(1, 0.1f);
+							if (gDict.contains("radii"))
+							{
+								py::object gRadii = gDict["radii"];
+								if (py::isinstance<py::float_>(gRadii) || py::isinstance<py::int_>(gRadii)) { radii[0] = py::cast<float>(gRadii); }
+								else { radii = py::cast<std::vector<float>>(gRadii); }
+							}
+							if (radii.size() != 1 && (Index)radii.size() != n) { PyError("GraphicsData Spheres: 'radii' must be one value or one per point", PyErrorType::valueError); return false; }
+
+							std::vector<float> colors({ EXUvis::defaultColorFloat4[0], EXUvis::defaultColorFloat4[1], EXUvis::defaultColorFloat4[2], EXUvis::defaultColorFloat4[3] });
+							if (gDict.contains("colors")) { colors = py::cast<std::vector<float>>(gDict["colors"]); }
+							if (colors.size() != 4 && (Index)colors.size() != 4 * n) { PyError("GraphicsData Spheres: 'colors' must be one RGBA color or one per point", PyErrorType::valueError); return false; }
+
+							Index resolution = TilingToBitResolution(8);
+							if (gDict.contains("resolution")) { resolution = TilingToBitResolution(EXUstd::Maximum(2, py::cast<Index>(gDict["resolution"]))); }
+
+							for (Index i = 0; i < n; i++)
+							{
+								GLSphere sphere;
+								sphere.itemID = -1;
+								sphere.point = Float3({ points[3 * i], points[3 * i + 1], points[3 * i + 2] });
+								if (sphere.point.HasInvalid()) { PyError("GraphicsData Spheres: 'points' contain not-a-number (nan) or infinity", PyErrorType::valueError); return false; }
+								sphere.radius = radii.size() == 1 ? radii[0] : radii[i];
+								Index c = colors.size() == 4 ? 0 : 4 * i;
+								sphere.color = Float4({ colors[c], colors[c + 1], colors[c + 2], colors[c + 3] });
+								sphere.resolution = resolution;
+								data.glSpheres.Append(sphere);
+							}
+						} //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 						else if (pyTypeStr == "TriangleList")
 						{
 							//dataTriangleList = { 'type':'TriangleList', 
@@ -1126,6 +1164,27 @@ py::list PyGetBodyGraphicsDataList(const BodyGraphicsData& data, bool addGraphic
 			}
 			d["colors"] = FloatVector2NumPy(colors);
 			d["points"] = FloatVector2NumPy(points);
+			list.append(d);
+		}
+
+		Index nSpheres = data.glSpheres.NumberOfItems();
+		if (nSpheres != 0)
+		{
+			auto d = py::dict();
+			d["type"] = std::string("Spheres");
+			ResizableArray<float> points(nSpheres * 3);
+			ResizableArray<float> radii(nSpheres);
+			ResizableArray<float> colors(nSpheres * 4);
+			for (const auto& item : data.glSpheres)
+			{
+				for (Index i = 0; i < 3; i++) { points.Append(item.point[i]); }
+				radii.Append(item.radius);
+				for (Index i = 0; i < 4; i++) { colors.Append(item.color[i]); }
+			}
+			d["points"] = FloatVector2NumPy(points);
+			d["radii"] = FloatVector2NumPy(radii);
+			d["colors"] = FloatVector2NumPy(colors);
+			d["resolution"] = (Index)1 << data.glSpheres[0].resolution;
 			list.append(d);
 		}
 

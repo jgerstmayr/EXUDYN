@@ -31,13 +31,13 @@ from math import radians, pi, sin, cos, tan, asin #, acos
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'graphicsDataNormalsFactor', 'graphicsDataSwitchTriangleOrder', 'color', 'material',
-    'colorList', 'Sphere', 'Lines', 'Circle', 'Text', 'Cuboid', 'BrickXYZ', 'Brick', 'Cylinder',
-    'Tube', 'Torus', 'RigidLink', 'SolidOfRevolution', 'Arrow', 'Basis', 'Frame', 'Quad',
-    'CheckerBoard', 'SolidExtrusion', 'LinkedCylinders', 'BallBearingRings', 'InvoluteGear',
-    'ToothedRack', 'BoundingBoxSingle', 'BoundingBox', 'FromPointsAndTrigs', 'ToPointsAndTrigs',
-    'Transform', 'Move', 'MergeTriangleLists', 'InvertTriangles', 'InconsistentTriangles',
-    'NGsolveMesh2PointsAndTrigs', 'FromSTLfileASCII', 'FromPyMeshlabFile', 'FromSTLfile',
-    'AddEdgesAndSmoothenNormals', 'ExportSTL',
+    'colorList', 'Sphere', 'Spheres', 'SpheresToTriangleList', 'Lines', 'Circle', 'Text', 'Cuboid',
+    'BrickXYZ', 'Brick', 'Cylinder', 'Tube', 'Torus', 'RigidLink', 'SolidOfRevolution', 'Arrow',
+    'Basis', 'Frame', 'Quad', 'CheckerBoard', 'SolidExtrusion', 'LinkedCylinders',
+    'BallBearingRings', 'InvoluteGear', 'ToothedRack', 'BoundingBoxSingle', 'BoundingBox',
+    'FromPointsAndTrigs', 'ToPointsAndTrigs', 'Transform', 'Move', 'MergeTriangleLists',
+    'InvertTriangles', 'InconsistentTriangles', 'NGsolveMesh2PointsAndTrigs', 'FromSTLfileASCII',
+    'FromPyMeshlabFile', 'FromSTLfile', 'AddEdgesAndSmoothenNormals', 'ExportSTL',
     ]
 
 graphicsDataNormalsFactor = 1. #this is a factor being either -1. [original normals pointing inside; until 2022-06-27], while +1. gives corrected normals pointing outside
@@ -118,10 +118,12 @@ colorList = exudyn.graphicsDataUtilities.color4list
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8, 
+def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
            addEdges = False, edgeColor=color.black, addFaces=True,
            majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi, innerRadius = None):
-    """generate graphics data for a sphere with point p and radius
+    """generate graphics data for a sphere with point p and radius; a whole sphere is the type 'Spheres', which the
+    renderer draws as a sphere and the raytracer intersects exactly; with edges, without faces, as a part of a sphere
+    or hollow, it is a 'TriangleList'
 
     Args:
         point: center of sphere (3D list or np.array)
@@ -138,9 +140,69 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
     Returns:
         graphicsData dictionary, to be used in visualization of EXUDYN objects
     """
-    if nTiles < 2: 
+    if nTiles < 2:
         exudyn.Print("WARNING: graphics.Sphere: nTiles < 2: setting nTiles=2")
         nTiles = 2
+    if (not addEdges and addFaces and majorAngleMin == -0.5*pi and majorAngleMax == 0.5*pi and innerRadius is None):
+        return Spheres(points=[point], radii=radius, colors=color, nTiles=nTiles)
+    return _SphereTriangleList(point=point, radius=radius, color=color, nTiles=nTiles, addEdges=addEdges,
+                               edgeColor=edgeColor, addFaces=addFaces, majorAngleMin=majorAngleMin,
+                               majorAngleMax=majorAngleMax, innerRadius=innerRadius)
+
+
+def Spheres(points, radii=0.1, colors=[0.,0.,0.,1.], nTiles=8):
+    """generate graphics data for many spheres at once, as one item of the type 'Spheres' - for particles or point
+    clouds; the renderer draws each as a sphere, the raytracer intersects them exactly
+
+    Args:
+        points: the centers, as a list of 3D points or a numpy array of shape (n,3)
+        radii: one radius for all, or one per point
+        colors: one RGBA color for all, or one per point (list of lists or numpy array of shape (n,4))
+        nTiles: resolution of the drawn spheres, the number of segments of a half circle (rounded down to a power of 2)
+
+    Returns:
+        graphicsData dictionary {'type':'Spheres', 'points', 'radii', 'colors', 'resolution'}
+    """
+    points = np.array(points, dtype=float).reshape((-1, 3))
+    n = len(points)
+    radii = np.array(radii, dtype=float).flatten()
+    colors = np.array(colors, dtype=float).flatten()
+    if len(radii) not in [1, n]:
+        raise ValueError('graphics.Spheres: radii must be one value or one per point')
+    if len(colors) not in [4, 4*n]:
+        raise ValueError('graphics.Spheres: colors must be one RGBA color or one per point')
+    return {'type':'Spheres', 'points':points.flatten(), 'radii':radii, 'colors':colors, 'resolution':int(nTiles)}
+
+
+def SpheresToTriangleList(graphicsData):
+    """convert graphics data of the type 'Spheres' into a 'TriangleList' with the triangles of graphics.Sphere, for
+    the functions that need triangles (merging, STL export, ...); other types are returned unchanged
+
+    Args:
+        graphicsData: a graphicsData dictionary
+
+    Returns:
+        a graphicsData dictionary of the type 'TriangleList', or graphicsData itself if it is not of the type 'Spheres'
+    """
+    if graphicsData['type'] != 'Spheres':
+        return graphicsData
+    points = np.array(graphicsData['points'], dtype=float).reshape((-1, 3))
+    n = len(points)
+    radii = np.array(graphicsData.get('radii', 0.1), dtype=float).flatten()
+    colors = np.array(graphicsData.get('colors', [0.,0.,0.,1.]), dtype=float).flatten()
+    nTiles = int(graphicsData.get('resolution', 8))
+    data = None
+    for i in range(n):
+        g = _SphereTriangleList(point=points[i], radius=radii[0] if len(radii) == 1 else radii[i],
+                                color=list(colors[0:4] if len(colors) == 4 else colors[4*i:4*i+4]), nTiles=nTiles)
+        data = g if data is None else MergeTriangleLists(data, g)
+    return data
+
+
+def _SphereTriangleList(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
+           addEdges = False, edgeColor=color.black, addFaces=True,
+           majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi, innerRadius = None):
+    """the triangles of a sphere, also a part of a sphere or hollow, with edges; see Sphere"""
     nTilesPhi = 2*nTiles
     if majorAngleMin < -0.5*pi or majorAngleMax > 0.5*pi or majorAngleMax <= majorAngleMin:
         raise ValueError("graphics.Sphere: majorAngleMin must be > -0.5*pi and < majorAngleMax; majorAngleMax must > majorAngleMin")
@@ -1096,7 +1158,7 @@ def RigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
     data2 = {}
 
     if np.linalg.norm(axis0) == 0:
-        data1 = Sphere(p0, radius[0], color, nTiles)
+        data1 = _SphereTriangleList(p0, radius[0], color, nTiles) #merged into the triangles of the link
     else:
         a0=ebu.Normalize(a0)
         data1 = Cylinder(list(np.array(p0)-0.5*width[0]*np.array(a0)), 
@@ -1104,7 +1166,7 @@ def RigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
                                      radius[0], color, nTiles)
         
     if np.linalg.norm(axis1) == 0:
-        data2 = Sphere(p1, radius[1], color, nTiles)
+        data2 = _SphereTriangleList(p1, radius[1], color, nTiles) #merged into the triangles of the link
     else:
         a1=ebu.Normalize(a1)
         data2 = Cylinder(list(np.array(p1)-0.5*width[1]*np.array(a1)), 
@@ -2083,6 +2145,13 @@ def BoundingBoxSingle(graphicsData):
         # Text treated as point bbox
         return [pos.copy(), pos.copy()]
 
+    elif gtype == 'Spheres':
+        points = np.array(graphicsData.get('points', []), dtype=float).reshape((-1, 3))
+        if points.size == 0:
+            return [None, None]
+        radii = np.array(graphicsData.get('radii', 0.1), dtype=float).reshape((-1, 1))
+        return [(points - radii).min(axis=0), (points + radii).max(axis=0)]
+
     elif gtype == 'Circle':
         c = np.array(graphicsData.get('position', []), dtype=float)
         if c.size == 0:
@@ -2177,6 +2246,7 @@ def ToPointsAndTrigs(g):
     Returns:
         returns [points, triangles], with points as list of np.array with 3 floats per point and triangles as a list of np.array with 3 int per triangle (0-based indices to points)
     """
+    g = SpheresToTriangleList(g)
     if g['type'] == 'TriangleList':
         nPoints=int(len(g['points'])/3)
         points = [np.zeros(3)]*nPoints
@@ -2276,6 +2346,16 @@ def Transform(graphicsData, translation=None, rotation=None, scale=1,
             
             gNew['normals'] = (A0 @ normals.T).T.flatten()
         
+    elif graphicsData['type'] == 'Spheres':
+        #a rotation times a uniform factor keeps a sphere a sphere; any other matrix makes an ellipsoid, which needs triangles
+        uniformFactor2 = np.trace(A0 @ A0.T)/3
+        if np.abs(A0 @ A0.T - uniformFactor2*np.eye(3)).max() > 1e-12*max(1., uniformFactor2):
+            return Transform(SpheresToTriangleList(graphicsData), translation=translation, rotation=rotation, scale=scale,
+                             normalizeNormals=normalizeNormals, invertNormals=invertNormals, invertTriangles=invertTriangles, warn=warn)
+        gNew = copy.deepcopy(graphicsData)
+        v0 = np.array(graphicsData['points'], dtype=float).reshape((-1, 3))
+        gNew['points'] = (p0 + scale*(A0 @ v0.T).T).flatten()
+        gNew['radii'] = scale*np.sqrt(uniformFactor2)*np.array(graphicsData.get('radii', 0.1), dtype=float)
     elif graphicsData['type'] == 'Line':
         gNew = copy.deepcopy(graphicsData)
         n=int(len(graphicsData['data'])/3)
@@ -2327,6 +2407,8 @@ def MergeTriangleLists(g1,g2):
     Returns:
         one graphicsData dictionary with single triangle lists and compatible points and normals, to be used in visualization of EXUDYN objects; edges are merged; edgeColor is taken from graphicsData g1
     """
+    g1 = SpheresToTriangleList(g1)
+    g2 = SpheresToTriangleList(g2)
     nPoints = int(len(g1['points'])/3) #number of points in g1
     useNormals = False
     if 'normals' in g1 and 'normals' in g2:
@@ -2384,7 +2466,8 @@ def InvertTriangles(graphicsData, invertTriangles=True, invertNormals=True):
     Returns:
         returns new graphicsData (copy) with modified triangles and normals
     """
-    if graphicsData['type'] != 'TriangleList': 
+    graphicsData = SpheresToTriangleList(graphicsData)
+    if graphicsData['type'] != 'TriangleList':
         raise ValueError('InvertTriangles only works for graphicsData of TriangleList type')
     if 'normals' not in graphicsData and invertNormals:
         raise ValueError('InvertTriangles requires normals in TriangleList if invertNormals=True')
@@ -2433,6 +2516,7 @@ def InconsistentTriangles(graphicsData):
     Returns:
         returns number of cases in which triangle normals and vertex normals are inconsistent (scalar product is negative)
     """
+    graphicsData = SpheresToTriangleList(graphicsData)
     if graphicsData['type'] != 'TriangleList': 
         raise ValueError('InconsistentTriangles only works for graphicsData of TriangleList type')
     if 'normals' not in graphicsData:
@@ -3016,8 +3100,9 @@ def ExportSTL(graphicsData, fileName, solidName='ExudynSolid', invertNormals=Tru
         invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
         invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
     """
+    graphicsData = SpheresToTriangleList(graphicsData)
     if graphicsData['type'] != 'TriangleList':
-        raise ValueError('ExportSTL: invalid graphics data type; only TriangleList allowed')
+        raise ValueError('ExportSTL: invalid graphics data type; only TriangleList and Spheres allowed')
         
     with open(fileName, 'w') as f:
         f.write('solid '+solidName+'\n')

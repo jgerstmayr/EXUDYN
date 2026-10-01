@@ -380,6 +380,18 @@ public:
 	inline void IntersectRayWithTriangle(const RTVector3D& rayOrigin, const RTVector3D& rayDirection,
 		const GLTriangle& triangle, const RaytracingSettings& RTS, IntersectionResult& result);
 
+	//! ray-sphere intersection, with the exact normal (#2709)
+	inline void IntersectRayWithSphere(const RTVector3D& rayOrigin, const RTVector3D& rayDirection,
+		const GLSphere& sphere, const RaytracingSettings& RTS, IntersectionResult& result);
+
+	//! the item iInd of the search tree: a triangle, or with iInd >= triangles.NumberOfItems() a sphere of graphicsData.glSpheres
+	inline void IntersectRayWithItem(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, Index iInd,
+		const ResizableArray<GLTriangle>& triangles, const RaytracingSettings& RTS, IntersectionResult& result)
+	{
+		if (iInd < triangles.NumberOfItems()) { IntersectRayWithTriangle(rayOrigin, rayDirection, triangles[iInd], RTS, result); }
+		else { IntersectRayWithSphere(rayOrigin, rayDirection, graphicsData.glSpheres[iInd - triangles.NumberOfItems()], RTS, result); }
+	}
+
 	//! check intersection with list of triangles; 
 	//! write information in closestHit structure; 
 	//! use minDistanceZ to realize a nearplane, using Z-component of rayDirection
@@ -395,7 +407,7 @@ public:
 	//! basic static triangle (colorbar)
 	bool IsStaticTriangle(Index triangleIndex) const
 	{
-		if (triangleIndex > graphicsData.glTriangles.NumberOfItems()) { return false; }
+		if (!EXUstd::IndexIsInRange(triangleIndex, 0, graphicsData.glTriangles.NumberOfItems())) { return false; } //spheres come after the triangles
 
 		return graphicsData.glTriangles[triangleIndex].itemID == itemIDstaticObject;
 	}
@@ -403,7 +415,7 @@ public:
 	//! shaded static triangle (arrow)
 	bool IsStaticShadedTriangle(Index triangleIndex) const
 	{
-		if (EXUstd::IndexIsInRange(triangleIndex, 0, graphicsData.glTriangles.NumberOfItems())) { return false; }
+		if (!EXUstd::IndexIsInRange(triangleIndex, 0, graphicsData.glTriangles.NumberOfItems())) { return false; } //spheres come after the triangles
 
 		return (graphicsData.glTriangles[triangleIndex].itemID == itemIDstaticObject) || (graphicsData.glTriangles[triangleIndex].itemID == itemIDstaticObjectShaded);
 	}

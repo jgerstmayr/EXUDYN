@@ -39,6 +39,7 @@ public:
 	ResizableArray<GLCircleXY> glCirclesXY;		//!< circles to be displayed
 	ResizableArray<GLText> glTexts;				//!< texts to be displayed
 	ResizableArray<GLTriangle> glTriangles;	//!< triangles to be displayed
+	ResizableArray<GLSphere> glSpheres;		//!< spheres of the type 'Spheres' (#2709)
 
 	//! clear lists (keep allocated data) and deallocate data of texts, allocated with new
 	void FlushData()
@@ -48,7 +49,7 @@ public:
 			delete[] item.text; //must be allocated by procedure which generates the texts;
 		}
 		glLines.SetNumberOfItems(0);
-		//glSpheres.SetNumberOfItems(0);
+		glSpheres.SetNumberOfItems(0);
 		glCirclesXY.SetNumberOfItems(0);
 		glTexts.SetNumberOfItems(0);
 		glTriangles.SetNumberOfItems(0);

@@ -195,6 +195,24 @@ GraphicsData `'type' = 'Text'` places the given text (mono-space font) at positi
 | fontSize | float | 0 | scalar fontSize or 0 for default; default font size in Exudyn is 12 (visualizationSettings.view0.window.globalFontSize); display scaling increases font size |
 | offset | list | [0,0] | offset in X/Y screen plane provided as list of 2 float values; this offset is not rotated with the model view and given relative to font size (offset [1,1] equals offset of one character to the right and up) |
 
+### GraphicsData: Spheres
+
+GraphicsData `'type' = 'Spheres'` draws $n$ spheres; the OpenGL renderer draws them with the given resolution, the raytracer intersects them exactly. `graphics.Sphere` returns this type for a whole sphere, `graphics.Spheres` for many at once (particles, point clouds); a sphere with edges, a part of a sphere or a hollow one is a `TriangleList`. The functions of `exudyn.graphics` that need triangles (`MergeTriangleLists`, `ExportSTL`, ...) convert spheres with `graphics.SpheresToTriangleList`, and `graphics.Move` with a rotation matrix that scales unequally (an ellipsoid) as well:
+
+| **Name** | **type** | **default value** | **description** |
+|---|---|---|---|
+| points | list | mandatory | list [x0,y0,z0, x1,y1,z1, ...] of $n \times 3$ floats, the centers |
+| radii | list or float | 0.1 | one radius for all spheres, or a list of $n$ radii |
+| colors | list | [0,0,0,1] | one RGBA color [R,G,B,A] for all spheres, or a list of $n \times 4$ floats; a material index in A as for `TriangleList` |
+| resolution | int | 8 | number of segments of a half circle when drawn by OpenGL, rounded down to a power of 2 |
+
+ **Example**:
+
+```python
+  graphicsData = graphics.Spheres(points=[[0,0,0],[1,0,0]], radii=[0.1,0.2],
+                                  colors=[graphics.color.red, graphics.color.green])
+```
+
 ### GraphicsData: TriangleList
 
 GraphicsData `'type' = 'TriangleList'` draws a mesh with flat triangles for given points and connectivity; triangles may look smoothened by using appropriate normals; edges may be added optionally:

@@ -10680,3 +10680,32 @@ item of every MiniExample. Each is now computed - none needed to be dropped from
 
 The test has no list of known failures any more. It cannot see an output variable that returns zeros instead of a value -
 the plate's were found by reading its code.
+
+<a id="rg6-7-3"></a>
+### RG6.7.3 — the sphere as a GraphicsData type (2026-10-01, #2709)
+
+**Python**: `{'type':'Spheres', 'points':[3n], 'radii':[n] or r, 'colors':[4n] or [4], 'resolution':nTiles}`.
+`graphics.Sphere` returns it for a whole sphere (no edges, faces, the full angle range, not hollow) and a
+`TriangleList` otherwise (the old code, now `_SphereTriangleList`); `graphics.Spheres(points, radii, colors, nTiles)`
+for many; `graphics.SpheresToTriangleList` converts back. The helpers that need triangles convert: `ToPointsAndTrigs`,
+`MergeTriangleLists`, `InvertTriangles`, `InconsistentTriangles`, `ExportSTL`; `RigidLink` builds its end spheres as
+triangles, as it merges them into one list; `BoundingBoxSingle` knows spheres; `Transform`/`Move` moves the centers
+and scales the radii with a rotation times a uniform factor, and converts to triangles for any other matrix - an
+ellipsoid, as `raytracerNOGLFWtest.py` makes one with `Move(gSphere, ..., np.diag([1.2,0.8,0.8]))`, which a sphere
+type would have turned back into a sphere. The manual has the type (*GraphicsData: Spheres*).
+
+**C++**: `BodyGraphicsData` (the converted `VgraphicsData`) has `glSpheres` of the existing `GLSphere`;
+`PyWriteBodyGraphicsDataList` reads `Spheres`, `PyGetBodyGraphicsDataList` writes it back;
+`AddBodyGraphicsData(Colored)` moves the centers with the body into `GraphicsData.glSpheres` - the list the nodes
+already use, so OpenGL, `GetGraphicsData()` and the drawing order are as for the nodes. **The raytracer** takes the
+spheres of the scene in view coordinates (the radius scaled with the view), puts them into its search tree after the
+triangles (`AddItem` with their bounding box, index = number of triangles + sphere index) and intersects them exactly
+(`IntersectRayWithSphere`, the exact normal; from inside the far intersection); shadows, reflection and transparency
+go through the same functions. So the **nodes are raytraced as spheres now** (they were not drawn at all). Two
+functions there assumed every hit index to be a triangle: `IsStaticTriangle` read one past the end (`>` instead of
+`>=`), `IsStaticShadedTriangle` had the range check inverted (it returned false for every triangle in range and read
+outside for the others); both now return false for an index outside the triangles.
+
+**References re-recorded**: `raytracerNOGLFWtest.py` 0.28161678591179 (before 0.28151013387134: the node of its
+rigid body is a sphere in the image now); `graphicsReferences/graphicsFunctions.json` (the `Sphere` case is one
+sphere instead of 256 triangles). All 152 examples run (`exudev examples`).

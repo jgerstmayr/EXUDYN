@@ -95,6 +95,20 @@ namespace EXUvis {
 			graphicsData.glCirclesXY.Append(item);
 		}
 
+		for (GLSphere item : bodyGraphicsData.glSpheres) //copy objects; the radius does not change (#2709)
+		{
+			item.itemID = itemID;
+			if (applyRotation)
+			{
+				EXUmath::RigidBodyTransformation(rotation, position, item.point, item.point);
+			}
+			else
+			{
+				item.point += position;
+			}
+			graphicsData.glSpheres.Append(item);
+		}
+
 		for (GLText item : bodyGraphicsData.glTexts) //copy objects, but string pointers are just assigned!
 		{
 			item.itemID = itemID;
@@ -284,6 +298,20 @@ namespace EXUvis {
 				item.point += position;
 			}
 			graphicsData.glCirclesXY.Append(item);
+		}
+
+		for (GLSphere item : bodyGraphicsData.glSpheres) //copy objects; the radius does not change (#2709)
+		{
+			item.itemID = itemID;
+			if (applyRotation)
+			{
+				EXUmath::RigidBodyTransformation(rotation, position, item.point, item.point);
+			}
+			else
+			{
+				item.point += position;
+			}
+			graphicsData.glSpheres.Append(item);
 		}
 
 		for (GLText item : bodyGraphicsData.glTexts) //copy objects, but string pointers are just assigned!

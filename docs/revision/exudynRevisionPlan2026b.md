@@ -876,8 +876,9 @@ This group is that revision and what has to happen before it can start.
       optional normals per point), the adaptive split with the two settings, `GetGraphicsData()` returning the
       split, `exudyn.graphics` helpers (`NGsolveMesh2PointsAndTrigs` and the FEM surface of quadratic meshes
       use it), the superelements with six columns in `triangleMesh`;
-    - **RG6.7.3** the sphere type in GraphicsData, drawn by OpenGL, the raytracer (a ray-sphere intersection
-      in its search tree) and `GetGraphicsData()`; the nodes drawn through it, in the order of today;
+    - **RG6.7.3** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-3) - the sphere type in GraphicsData,
+      drawn by OpenGL, the raytracer (a ray-sphere intersection in its search tree) and `GetGraphicsData()`; the
+      nodes drawn through it, in the order of today;
     - **RG6.7.4** the graphics tests (RG2.3.3) and the documentation grow with both.
 
     <a id="rg6-7-sketch"></a>
@@ -947,11 +948,13 @@ This group is that revision and what has to happen before it can start.
     | graphics tests (RG2.3.3) | spheres counted per item; references re-recorded where `graphics.Sphere` was a TriangleList | more triangles; references re-recorded |
     | settings | - | `openGL.advanced.curvedTriangleTilingAngle` (3°), `curvedTriangleMaxTiling` (5) |
 
-    *For the maintainer to decide*: (a) `Spheres` with arrays (proposed) or a single `Sphere`; (b) `graphics.Sphere`
-    returning the new type by default (proposed; a script that treats its result as a `TriangleList` - merging,
-    STL export - then goes through the helpers above) or only on request; (c) `triangles6` as a key of
-    `TriangleList` (proposed) or a type of its own; (d) the split cached for rigid bodies (proposed) or in every frame
-    for all.
+    **Decided (maintainer, 2026-10-01)**: (a) one `Spheres` type with arrays; (b) `graphics.Sphere` returns it by
+    default, but only for a whole sphere - not with edges, as a part of a sphere or hollow; scripts that treat the
+    result as a `TriangleList` go through the helpers; (c) `triangles6` as a key of `TriangleList`; (d) **not** the
+    cached split: `GraphicsData` (C++) gets its own structure for the 6-node triangle, which the `triangles6` of a
+    `TriangleList` map to (the points duplicated per triangle, as for `GLTriangle` - the meshes are not kept), and
+    `GLSphere`, which exists, is the internal structure of the sphere. The split into flat triangles happens where
+    the 6-node triangles are drawn.
 
 <a id="rg6-8"></a>
 **RG6.8** *(group RG6; maintainer 2026-09-29)* **The graphics fixes before 1.13** - *"many are graphics

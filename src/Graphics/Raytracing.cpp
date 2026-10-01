@@ -103,6 +103,33 @@ void Raytracer::IntersectRayWithTriangle(const RTVector3D& rayOrigin, const RTVe
 	return;
 }
 
+//! ray-sphere intersection (#2709): the nearer intersection in front of the ray origin, else the farther one (from inside)
+void Raytracer::IntersectRayWithSphere(const RTVector3D& rayOrigin, const RTVector3D& rayDirection, const GLSphere& sphere,
+	const RaytracingSettings& RTS, IntersectionResult& result)
+{
+	result.Init();
+	RTVector3D oc = rayOrigin - sphere.point;
+	RTfloat a = rayDirection * rayDirection;
+	RTfloat b = oc * rayDirection;
+	RTfloat c = oc * oc - sphere.radius * sphere.radius;
+	RTfloat discriminant = b * b - a * c;
+	if (discriminant < 0.f || a == 0.f) { return; }
+	RTfloat root = std::sqrt(discriminant);
+	RTfloat t = (-b - root) / a;
+	if (t < RTS.minZ) { t = (-b + root) / a; }
+	if (t < RTS.minZ) { return; }
+
+	result.hit = true;
+	result.distance = t;
+	result.u = 0.f;
+	result.v = 0.f;
+	result.normal = (rayOrigin + t * rayDirection - sphere.point) * (1.f / sphere.radius);
+	result.color = sphere.color;
+	RTS.ColorRGBA2MaterialColor(result.color, result.materialIndex, result.alpha);
+	result.hitFromBack = (rayDirection * result.normal) > 0.f;
+	if (result.hitFromBack) { result.normal = -result.normal; }
+}
+
 //! check if point is in shadow with given light
 bool Raytracer::IsInShadow(const RTVector3D& point, const RTVector3D& lightDirection, const ResizableArray<GLTriangle>& triangles, 
 	const RaytracingSettings& RTS, RTfloat maxDistance) 
@@ -155,7 +182,7 @@ void Raytracer::IntersectRayWithTriangles(const RTVector3D& rayOrigin, const RTV
 			const ArrayIndex& trigIndices = RTS.searchTree.GetItemsOfBin(binInd);
 			for (Index iInd : trigIndices)
 			{
-				IntersectRayWithTriangle(rayOrigin, rayDirection, triangles[iInd], RTS, hit);
+				IntersectRayWithItem(rayOrigin, rayDirection, iInd, triangles, RTS, hit);
 				if (hit.hit && hit.distance < closestHit.distance &&
 					(hit.distance*(-rayDirection[2]) >= minDistanceZ))
 				{
@@ -204,7 +231,7 @@ void Raytracer::IntersectRayWithTriangles(const RTVector3D& rayOrigin, const RTV
 
 			for (Index iInd : trigIndices)
 			{
-				IntersectRayWithTriangle(rayOrigin, rayDirection, triangles[iInd], RTS, hit);
+				IntersectRayWithItem(rayOrigin, rayDirection, iInd, triangles, RTS, hit);
 				if (hit.hit && hit.distance < closestHit.distance &&
 					(hit.distance* (-rayDirection[2]) >= minDistanceZ))
 				{
@@ -1079,6 +1106,19 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 				}
 			}
 		}
+		for (const GLSphere& sphere : data->glSpheres) //drawn as spheres, not as points (#2709)
+		{
+			if (sphere.radius <= 0.f || sphere.resolution < 1 || !settingsView.scene.showFaces) { continue; }
+			GLSphere sphereNew(sphere);
+			TransformVertexRM(sphere.point, RTS.modelViewRM, sphereNew.point);
+			Float3 surfacePoint;
+			TransformVertexRM(sphere.point + Float3({ sphere.radius, 0.f, 0.f }), RTS.modelViewRM, surfacePoint);
+			sphereNew.radius = (surfacePoint - sphereNew.point).GetL2Norm();
+			CHECKandTHROW(!sphereNew.point.HasInvalid(), "SoftwareRenderer: sphere centers contain invalid (nan) coordinates - check your geometry!");
+			box3D.Add(sphereNew.point + Float3({ sphereNew.radius, sphereNew.radius, sphereNew.radius }));
+			box3D.Add(sphereNew.point - Float3({ sphereNew.radius, sphereNew.radius, sphereNew.radius }));
+			graphicsData.glSpheres.Append(sphereNew);
+		}
 		if (RTS.showLines)
 		{
 			for (const GLLine& line : data->glLines)
@@ -1160,7 +1200,7 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 
 		Index factST = EXUstd::Clamp(visSettings->raytracer.advanced.searchTreeFactor, 1, 128); //additional factor for testing ...
 		Index sx, sy, sz;
-		SearchTreeBase<RTfloat>::ComputeSearchTreeBinCounts(graphicsData.glTriangles.NumberOfItems()*factST, box3D, sx, sy, sz);
+		SearchTreeBase<RTfloat>::ComputeSearchTreeBinCounts((graphicsData.glTriangles.NumberOfItems() + graphicsData.glSpheres.NumberOfItems())*factST, box3D, sx, sy, sz);
 
 		//std::cout << "sizes=" << sx << "," << sy << "," << sz << "\n";
 
@@ -1174,6 +1214,14 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 			for (Index i = 0; i < 3; i++) { tBox.Add(triangle.points[i]); }
 
 			RTS.searchTree.AddItemTriangle(tBox, i, triangle.points[0], triangle.points[1], triangle.points[2]);
+		}
+		for (Index i = 0; i < graphicsData.glSpheres.NumberOfItems(); ++i) //spheres after the triangles (#2709)
+		{
+			const GLSphere& sphere = graphicsData.glSpheres[i];
+			Box3DBase<RTfloat> sBox;
+			sBox.Add(sphere.point + Float3({ sphere.radius, sphere.radius, sphere.radius }));
+			sBox.Add(sphere.point - Float3({ sphere.radius, sphere.radius, sphere.radius }));
+			RTS.searchTree.AddItem(sBox, graphicsData.glTriangles.NumberOfItems() + i);
 		}
 
 		//std::cout << "searchTree box=" << RTS.searchTree.GetBox() << "\n";
