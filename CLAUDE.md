@@ -41,8 +41,12 @@ docs/generated/                           GENERATED documentation - never edit b
 docs/figures/                             the images of the documentation
 docs/dev/, docs/howTo/, CONTRIBUTING.md   hand-written Markdown, published through MyST since R7.1.4
 python/exudyn/                            the shipped Python package
-python/testing/runTestSuite.py            the test suite (~20 s, run it in full); the runners
-python/TestModels/                        test models only; models for the other suites are in
+python/testing/runTestSuite.py            the test suite (~20 s, run it in full); the runners, and the
+                                          pytest files of what is NOT a user example (tools, generators,
+                                          renderer, code-path comparisons)
+python/TestModels/                        test models only - and every test of what a USER does (items,
+                                          output variables, sensors, utilities, what they refuse), because
+                                          users search here for examples (WORKFLOW.md §5); models for the other suites are in
                                           python/{PerformanceModels,MiniExamples,Examples}/
 python/logs/                              testmodels/ examples/ performance/ tmp/
 python/pytestTemplate.py                  template for python/pytest.py, the untracked scratch file

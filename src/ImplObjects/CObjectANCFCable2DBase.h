@@ -45,6 +45,16 @@ public:
 	//! access to parameters.strainIsRelativeToReference of derived class
 	virtual Real StrainIsRelativeToReference() const { return 0.; }
 
+	//! the integration rule of the elastic forces for the axial strain or, with bending, for the curvature (#2202)
+	void GetIntegrationRule(bool bending, ConstSizeVector<EXUmath::maxIntegrationPoints>& points,
+		ConstSizeVector<EXUmath::maxIntegrationPoints>& weights) const;
+
+	//! the reference axial strain and curvature at x, as the elastic forces use them (#2202)
+	void ComputeReferenceStrains(Real x, Real& axialStrainRef, Real& curvatureRef) const;
+
+	//! the elastic energy: axial and bending, over the integration rules of the elastic forces (#2202)
+	Real ComputeElasticEnergy(ConfigurationType configuration) const;
+
 	//! in derived class, implement
 	virtual bool HasUserFunction() const override { return HasForceUserFunction() || HasTorqueUserFunction(); }
 	virtual bool HasForceUserFunction() const { return false; }

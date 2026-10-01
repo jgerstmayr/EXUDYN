@@ -1,0 +1,15 @@
+{
+  "number": 2767,
+  "title": "tests of user-facing features as test models",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "A test of what a user does with Exudyn (items, output variables, sensors, utilities, and what they refuse) belongs into python/TestModels, where users look for examples, not into python/testing (maintainer, 2026-10-01): python/testing/test_energies.py goes into the test model energiesTest.py and python/testing/test_connectorOutputVariables.py becomes the test model connectorOutputVariablesTest.py; the rule is written into CLAUDE.md and docs/dev/WORKFLOW.md section 5.",
+  "dateRaised": "2026-10-01",
+  "deadline": "2027-03-30",
+  "dateResolved": "2026-10-01 08:49",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "A test of what a user does with Exudyn is a test model in python/TestModels, where users look for examples: the energy tests are in energiesTest.py and energiesFlexibleBodiesTest.py, the output variables of connectors in connectorOutputVariablesTest.py; the rule is in CLAUDE.md and docs/dev/WORKFLOW.md.",
+  "resolvedInVersion": "1.12.202"
+}

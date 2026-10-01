@@ -92,6 +92,9 @@ void CObjectKinematicTree::GetOutputVariableBody(OutputVariableType variableType
 		CHECKandTHROW(configuration == ConfigurationType::Current, "ObjectKinematicTree::GetOutputVariable: OutputVariableType::Force can only be computed for Current configuration", ExudynValueError);
 		ComputeODE2LHS(value, objectNumber);	break;
 	}
+	case OutputVariableType::PotentialEnergy: {
+		CheckEnergyLocalPosition(localPosition, "ObjectKinematicTree");
+		value.SetVector({ ComputePotentialEnergy(configuration) }); break; }
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectKinematicTree");
 		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectKinematicTree") }); break; }
@@ -502,6 +505,51 @@ void CObjectKinematicTree::AddExternalForces6D(const Transformation66List& Xup, 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++     KINEMATIC TREE FUNCTIONS      +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//! the potential energy (#2202): the springs of the P control of the joints, the constant joint forces and the built-in
+//! gravity, as ComputeODE2LHS applies them; the latter two are zero in the reference configuration; the D control
+//! dissipates and has none
+Real CObjectKinematicTree::ComputePotentialEnergy(ConfigurationType configuration) const
+{
+	if (parameters.forceUserFunction) { EnergyNotAvailable("ObjectKinematicTree", "its forceUserFunction defines forces"); }
+	Index n = NumberOfLinks();
+	Vector q, qRef;
+	((CNodeODE2*)GetCNode(0))->GetODE2CoordinateVectorWithReference(q, configuration);
+	((CNodeODE2*)GetCNode(0))->GetODE2CoordinateVectorWithReference(qRef, ConfigurationType::Reference);
+
+	Real energy = 0.;
+	for (Index i = 0; i < n; i++)
+	{
+		if (parameters.jointPositionOffsetVector.NumberOfItems() != 0)
+		{
+			energy += 0.5*parameters.jointPControlVector[i] * EXUstd::Square(q[i] - parameters.jointPositionOffsetVector[i]);
+		}
+		if (parameters.jointForceVector.NumberOfItems() != 0)
+		{
+			energy -= parameters.jointForceVector[i] * (q[i] - qRef[i]);
+		}
+	}
+
+	if (parameters.gravity[0] != 0. || parameters.gravity[1] != 0. || parameters.gravity[2] != 0.)
+	{
+		//-m g^T (p - p_ref) of the center of mass of each link
+		Transformation66List transformations;
+		Vector6DList velocities, accelerations;
+		Matrix3D rot3D;
+		Vector3D pos3D;
+		for (ConfigurationType config : {configuration, ConfigurationType::Reference})
+		{
+			ComputeTreeTransformations(config, false, true, transformations, velocities, accelerations);
+			Real sign = (config == ConfigurationType::Reference) ? -1. : 1.;
+			for (Index i = 0; i < n; i++)
+			{
+				RigidBodyMath::T66toRotationTranslationInverse(transformations[i], rot3D, pos3D);
+				energy -= sign * parameters.linkMasses[i] * (parameters.gravity * (pos3D + rot3D * parameters.linkCOMs[i]));
+			}
+		}
+	}
+	return energy;
+}
+
 //OutputVariable functions:
 
 //! return the (global) position of 'localPosition' of linkNumber according to configuration type

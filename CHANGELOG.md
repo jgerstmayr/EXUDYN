@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 186 | 1.12.201 |
+| 1.12 | Metheney | 187 | 1.12.202 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.202** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` tests of user-facing features as test models (#2767)
+  - description: A test of what a user does with Exudyn (items, output variables, sensors, utilities, and what they refuse) belongs into python/TestModels, where users look for examples, not into python/testing (maintainer, 2026-10-01): python/testing/test\_energies.py goes into the test model energiesTest.py and python/testing/test\_connectorOutputVariables.py becomes the test model connectorOutputVariablesTest.py; the rule is written into CLAUDE.md and docs/dev/WORKFLOW.md section 5.
+  - **notes:** A test of what a user does with Exudyn is a test model in python/TestModels, where users look for examples: the energy tests are in energiesTest.py and energiesFlexibleBodiesTest.py, the output variables of connectors in connectorOutputVariablesTest.py; the rule is in CLAUDE.md and docs/dev/WORKFLOW.md.
+  - date resolved: **2026-10-01 08:49**, date raised: 2026-10-01
 - **1.12.201** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a sensor or object dictionary cannot hold KineticEnergy or PotentialEnergy (#2766)
   - description: The generated dictionary conversion of an OutputVariableType parameter cast the value to a 32-bit Index; KineticEnergy (bit 32) and PotentialEnergy (bit 33) then fail with 'Unable to cast Python instance of type OutputVariableType'. Found 2026-10-01 in RG9.4.2: mbs.AddSensor(SensorBody(..., outputVariableType=KineticEnergy)) raised.
   - **notes:** An outputVariableType beyond the 32nd bit (KineticEnergy, PotentialEnergy) can be given to sensors; an outputVariableType of -1 is refused.

@@ -150,6 +150,16 @@ void CObjectConnectorGravity::GetOutputVariableConnector(OutputVariableType vari
 	case OutputVariableType::Distance: value.SetVector({ relPos.GetL2Norm() }); break;
 	case OutputVariableType::Displacement: value.CopyFrom(relPos); break;
 	case OutputVariableType::Force: value.CopyFrom(force*forceDirection); break;
+	case OutputVariableType::PotentialEnergy: {
+		//dV/dL is the force of ComputeGravityForce: -c/L, and below the regularization distance r the integral of
+		//c/(L^2 + (L-r)^2), continuous at r (#2202)
+		Real c = parameters.gravitationalConstant*(parameters.mass0*parameters.mass1);
+		Real L = relPos.GetL2Norm();
+		Real r = parameters.minDistanceRegularization;
+		Real energy;
+		if (L > r) { energy = -c / L; }
+		else { energy = -c / r * (1. + 0.25*EXUstd::pi - atan((2.*L - r) / r)); }
+		value.SetVector({ parameters.activeConnector ? energy : 0. }); break; }
 	default:
 		SysError("CObjectConnectorGravity::GetOutputVariable failed"); //error should not occur, because types are checked!
 	}

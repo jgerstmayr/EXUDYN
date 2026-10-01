@@ -385,23 +385,7 @@ void CObjectBeamGeometricallyExact2D::ComputeODE2LHStemplate(VectorBase<TReal>& 
 
     ConstSizeVector<3> integrationPoints;
     ConstSizeVector<3> integrationWeights;
-    if (IsLinear())
-    {
-        //fenics: "The basis functions used in this code are Lagrange elements. To ensure lock-free elements, we use a reduced integration scheme. 
-        // For linear displacement and rotational interpolation schemes, we use 1 Gauss integration point. 
-        // For quadratic displacement and linear rotational interpolation schemes, we use 3 Gauss integration points. These rules apply for both the 3D and 2D case."
-        integrationPoints.CopyFrom(EXUmath::gaussRuleOrder1Points);
-        integrationWeights.CopyFrom(EXUmath::gaussRuleOrder1Weights);
-    }
-    else
-    {
-        //integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder3Points);
-        //integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder3Weights);
-        integrationPoints.CopyFrom(EXUmath::gaussRuleOrder3Points);
-        integrationWeights.CopyFrom(EXUmath::gaussRuleOrder3Weights);
-        //integrationPoints.CopyFrom(EXUmath::gaussRuleOrder5Points);
-        //integrationWeights.CopyFrom(EXUmath::gaussRuleOrder5Weights);
-    }
+    GetIntegrationRule(integrationPoints, integrationWeights);
 
     ConstSizeVector<maxNNodes> SV, SV_x;
     ConstSizeVectorBase<TReal, maxODE2coordinates> deltaGamma1, deltaGamma2;
@@ -450,6 +434,47 @@ void CObjectBeamGeometricallyExact2D::ComputeODE2LHStemplate(VectorBase<TReal>& 
     }
 }
 
+
+//! the integration rule of the elastic forces, shared with the elastic energy (#2202)
+void CObjectBeamGeometricallyExact2D::GetIntegrationRule(ConstSizeVector<3>& integrationPoints, ConstSizeVector<3>& integrationWeights) const
+{
+    if (IsLinear())
+    {
+        //fenics: "The basis functions used in this code are Lagrange elements. To ensure lock-free elements, we use a reduced integration scheme.
+        // For linear displacement and rotational interpolation schemes, we use 1 Gauss integration point.
+        // For quadratic displacement and linear rotational interpolation schemes, we use 3 Gauss integration points. These rules apply for both the 3D and 2D case."
+        integrationPoints.CopyFrom(EXUmath::gaussRuleOrder1Points);
+        integrationWeights.CopyFrom(EXUmath::gaussRuleOrder1Weights);
+    }
+    else
+    {
+        integrationPoints.CopyFrom(EXUmath::gaussRuleOrder3Points);
+        integrationWeights.CopyFrom(EXUmath::gaussRuleOrder3Weights);
+    }
+}
+
+//! the elastic energy of axial, shear and bending strain, with the strains and the rule of the elastic forces (#2202)
+Real CObjectBeamGeometricallyExact2D::ComputeElasticEnergy(ConfigurationType configuration) const
+{
+    ConstSizeVector<maxODE2coordinates> qBeamTotal, qBeam_t, qBeamRef;
+    ComputeCurrentCoordinates(qBeamTotal, qBeam_t, qBeamRef, configuration);
+    ConstSizeVector<3> integrationPoints, integrationWeights;
+    GetIntegrationRule(integrationPoints, integrationWeights);
+    const Real L = parameters.physicsLength;
+
+    ConstSizeVector<maxNNodes> SV, SV_x;
+    ConstSizeVector<maxODE2coordinates> deltaGamma1, deltaGamma2;
+    Real theta, gamma1, gamma2, theta_x, gamma1_t, gamma2_t, theta_xt;
+    Real energy = 0.;
+    for (Index i = 0; i < integrationPoints.NumberOfItems(); i++)
+    {
+        ComputeGeneralizedStrains<Real>(0.5 * L * integrationPoints[i], theta, qBeamTotal, qBeam_t, qBeamRef, SV, SV_x,
+            gamma1, gamma2, theta_x, gamma1_t, gamma2_t, theta_xt, deltaGamma1, deltaGamma2);
+        energy += 0.5 * L * integrationWeights[i] * 0.5 * (parameters.physicsAxialStiffness * gamma1 * gamma1
+            + parameters.physicsShearStiffness * gamma2 * gamma2 + parameters.physicsBendingStiffness * theta_x * theta_x);
+    }
+    return energy;
+}
 
 //! provide Jacobian at localPosition in 'value' according to object access
 void CObjectBeamGeometricallyExact2D::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
@@ -576,6 +601,9 @@ void CObjectBeamGeometricallyExact2D::GetOutputVariableBody(OutputVariableType v
             case OutputVariableType::ForceLocal:	value.SetVector({ (parameters.physicsAxialDamping * gamma1_t + parameters.physicsAxialStiffness * gamma1),
                 (parameters.physicsShearDamping * gamma2_t + parameters.physicsShearStiffness * gamma2), 0. }); break;
             case OutputVariableType::TorqueLocal:	value.SetVector({ 0., 0., (parameters.physicsBendingDamping * theta_xt + parameters.physicsBendingStiffness * theta_x) }); break;
+            case OutputVariableType::PotentialEnergy: {
+                CheckEnergyLocalPosition(localPosition, "ObjectBeamGeometricallyExact2D");
+                value.SetVector({ ComputeElasticEnergy(configuration) }); break; }
             case OutputVariableType::KineticEnergy: {
                 CheckEnergyLocalPosition(localPosition, "ObjectBeamGeometricallyExact2D");
                 value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectBeamGeometricallyExact2D") }); break; }

@@ -739,18 +739,7 @@ void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 
     // Get Gauss integration points based on useReducedOrderIntegration
     ConstSizeVector<5> xiGP, xiW;
-    if (parameters.useReducedOrderIntegration == 0)
-    {
-        EXUmath::SetGaussIntegrationRule(7, xiGP, xiW);  // order=7 gives 4-point Gauss (higher order)
-    }
-    else if (parameters.useReducedOrderIntegration == 1)
-    {
-        EXUmath::SetGaussIntegrationRule(5, xiGP, xiW);  // order=5 gives 3-point Gauss
-    }
-    else
-    {
-        CHECKandTHROWstring("CObjectANCFThinPlate::ComputeODE2LHStemplate: useReducedOrderIntegration must be 0 or 1", ExudynValueError);
-    }
+    GetIntegrationRule(xiGP, xiW);
     
     // Loop over Gauss points and compute forces directly
     // ConstSizeVectorBase can be used as owning container when properly initialized
@@ -1267,12 +1256,74 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
         value.SetAll(0.);
         break;
     }
+    case OutputVariableType::PotentialEnergy: {
+        CheckEnergyLocalPosition(localPosition, "ObjectANCFThinPlate");
+        value.SetVector({ ComputeElasticEnergy(configuration) }); break; }
     case OutputVariableType::KineticEnergy: {
         CheckEnergyLocalPosition(localPosition, "ObjectANCFThinPlate");
         value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectANCFThinPlate") }); break; }
     default:
         SysError("CObjectANCFThinPlate::GetOutputVariableBody failed"); // error should not occur, because types are checked!
     }
+}
+
+//! the integration rule of the elastic forces in each direction, shared with the elastic energy (#2202)
+void CObjectANCFThinPlate::GetIntegrationRule(ConstSizeVector<5>& xiGP, ConstSizeVector<5>& xiW) const
+{
+    if (parameters.useReducedOrderIntegration == 0)
+    {
+        EXUmath::SetGaussIntegrationRule(7, xiGP, xiW);  // order=7 gives 4-point Gauss (higher order)
+    }
+    else if (parameters.useReducedOrderIntegration == 1)
+    {
+        EXUmath::SetGaussIntegrationRule(5, xiGP, xiW);  // order=5 gives 3-point Gauss
+    }
+    else
+    {
+        CHECKandTHROWstring("CObjectANCFThinPlate::ComputeODE2LHStemplate: useReducedOrderIntegration must be 0 or 1", ExudynValueError);
+    }
+}
+
+//! the elastic energy of the membrane strains and the curvatures, with the kinematics, coefficients and integration rule
+//! of the elastic forces (#2202)
+Real CObjectANCFThinPlate::ComputeElasticEnergy(ConfigurationType configuration) const
+{
+    ConstSizeVector<nODE2coordinates> qANCFref, qANCFtotal;
+    ComputeReferenceObjectCoordinates(qANCFref);
+    qANCFtotal = qANCFref;
+    if (configuration != ConfigurationType::Reference)
+    {
+        for (Index i = 0; i < nNodes; i++)
+        {
+            LinkedDataVector qNodeU(qANCFtotal, i * nnc, nnc);
+            qNodeU += ((CNodeODE2*)GetCNode(i))->GetCoordinateVector(configuration);
+        }
+    }
+    ConstSizeVector<5> xiGP, xiW;
+    GetIntegrationRule(xiGP, xiW);
+    Real energy = 0.;
+    for (Index iGP = 0; iGP < xiGP.NumberOfItems(); iGP++)
+    {
+        for (Index jGP = 0; jGP < xiGP.NumberOfItems(); jGP++)
+        {
+            Real xi = xiGP[iGP];
+            Real eta = xiGP[jGP];
+            //the area factor of the elastic forces, J0.GetDeterminant()
+            Vector12D sf_x, sf_y;
+            ComputeShapeFunctions_xy(xi, eta, sf_x, sf_y);
+            SlimVectorBase<Real, 3> r_xi_ref = MapCoordinates(sf_x, qANCFref);
+            SlimVectorBase<Real, 3> r_eta_ref = MapCoordinates(sf_y, qANCFref);
+            SlimVectorBase<Real, 3> n0 = r_xi_ref.CrossProduct(r_eta_ref);
+            Matrix2D J0 = GetElementJacobian(r_xi_ref, r_eta_ref, n0 * (1. / n0.GetL2Norm()));
+
+            SlimVectorBase<Real, 3> eps_mid, kappa, N, M;
+            ComputeKinematics(xi, eta, qANCFref, qANCFtotal, eps_mid, kappa);
+            EXUmath::MultMatrixVectorTemplate(ComputeStrainCoefficientsAtPoint(xi, eta), eps_mid, N);
+            EXUmath::MultMatrixVectorTemplate(ComputeCurvatureCoefficientsAtPoint(xi, eta), kappa, M);
+            energy += xiW[iGP] * xiW[jGP] * J0.GetDeterminant() * 0.5 * (eps_mid * N + kappa * M);
+        }
+    }
+    return energy;
 }
 
 void CObjectANCFThinPlate::GetSlopes(const Vector3D& localPosition, Vector3D& slopeX, Vector3D& slopeY,

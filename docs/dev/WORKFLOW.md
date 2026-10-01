@@ -364,6 +364,20 @@ both by `--fast` and by the pytest markers, so the two runners always skip the s
 **The models are not the slow part of a nightly run**: the whole suite is 26 seconds, while the
 171 examples and the performance tests dominate. Those are the slow part, not this split.
 
+### Where a test goes: test model or `python/testing/`
+
+**A test of what a user does with Exudyn is a test model** in `python/TestModels/`: an item, an
+output variable, a sensor, a solver setting, a utility such as `SystemEnergy` - including what it
+refuses and with which message. Users search the test models for examples; a test of the energy
+output variables in `python/testing/` is one they never find. The test model shows the use and
+reports one number (§*What a test model looks like*); a refused input is shown with `try`/`except`
+and counted in the result. (Maintainer, 2026-10-01, #2202.)
+
+**`python/testing/` is for what is not an example**: the tools, the generators and the definitions,
+the renderer, dialogs and settings, the runners, and comparisons between two code paths of the core
+(such as `test_connectorInterface.py`, the connector interface against its legacy path) - tests that
+need pytest's parametrization, fixtures or `pytest.raises` over internals a user does not touch.
+
 ### What a test model looks like
 
 A test model is an ordinary Exudyn script that says **one** thing about itself and reports **one**

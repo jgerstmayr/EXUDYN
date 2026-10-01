@@ -119,3 +119,6 @@ mbs.SolveStatic()
 #the cubic element is exact for a tip load: F*L^3/(3*EI) = -1/3000
 exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacement)[2]*1000 #-1/3
 ```
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM)

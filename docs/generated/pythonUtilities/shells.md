@@ -33,4 +33,4 @@ Shells and plates utility functions, e.g. for creation of plate / shell mesh.
 - **notes**: x-axis is aligned with bottom (y=min) and top (y=max); y-axis is aligned with left (x=min) and right (x=max)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPlateTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFThinPlateTests.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFThinPlateTests.py) (TM), [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM)

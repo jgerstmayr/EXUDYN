@@ -1049,16 +1049,26 @@ revision (info document D15).
     - **RG9.4.3** the heavier objects: `ObjectConnectorRigidBodySpringDamper`, the ANCF cables and beams,
       `ObjectBeamGeometricallyExact(2D)`, the ALE cable - kinetic and elastic energy, by the rule above.
       **Kinetic energy DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - for all of them from
-      their mass matrix, and the potential energy of the rigid-body spring-damper. **Open: the elastic energy
-      of the beams** (RG9.4.3.1), which needs the integration rules of their `ComputeODE2LHS` - for the ANCF
-      cable three pairs of Gauss rules chosen by `useReducedOrderIntegration`, plus strain references relative
-      to the reference configuration and moving-mass terms. Written as a second loop it would duplicate them;
-      the rule selection goes into one function per element first, which the forces and the energy share;
+      their mass matrix, and the potential energy of the rigid-body spring-damper.
+      - **RG9.4.3.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3-1) - the elastic energy of
+        `ANCFCable2D`, `ALEANCFCable2D`, `ANCFCable`, `ANCFBeam`, `BeamGeometricallyExact(2D)` and `ANCFThinPlate`:
+        the rule selection of each element moved into one function that the forces and the energy share, the
+        strains are the ones of the forces; $\partial V/\partial\qv$ equals the elastic forces to $10^{-10}$; and the
+        potential of `ObjectConnectorGravity`;
+      - **RG9.4.3.2** *open, proposed* - the stored energy of the **contact** connectors
+        (`ContactSphereSphere`, `ContactSphereTorus`, `ContactConvexRoll`, `ContactCurveCircles`,
+        `ContactCoordinate`, `RollingDiscPenalty`) and of the bristle spring of `CoordinateSpringDamperExt`. What
+        would have to be done: per contact law the integral of the normal penalty force over the penetration
+        ($\frac{1}{2}k g^2$ for a linear law, $\frac{2}{5}k g^{5/2}$ for Hertz with exponent 3/2), zero without contact;
+        friction and damping dissipate and have none, the bristle of the stick-slip model stores
+        $\frac{1}{2}k_b x_b^2$ in its data coordinate. Each contact has its own law and its own data states (some
+        with a regularized or switched law), so it is one function per contact, not a shared one - a step per
+        contact, decided case by case whether its law has a potential;
     - **RG9.4.4** superelements: `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectGenericODE2`,
       `ObjectKinematicTree` - kinetic energy from the mass matrix, elastic energy from the stiffness matrix
-      where the object has one. **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - except the
-      potential energy of `ObjectKinematicTree` (its joint springs of the P control, its constant joint
-      forces and its built-in gravity), open as RG9.4.4.1;
+      where the object has one. **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - and
+      **RG9.4.4.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3-1) - the potential energy of
+      `ObjectKinematicTree`: the springs of the P control, the constant joint forces and the built-in gravity;
     - **RG9.4.5** what an object **should** provide against what it provides now (with its current
       parameters): the declaration per object type, and the output variables of RG12.29 for the second -
       possibly every body provides both, zero for the potential energy of a rigid body, and a connector the
@@ -1072,6 +1082,16 @@ revision (info document D15).
       provide kinetic and potential energy - with a flag to skip those that should and do not, with the
       current parameters - and the loads, and `ComputeSystemEnergies` returns the totals, as long as there
       is no MainSystem function for the energy of the system.
+    - **RG9.4.8** **DONE 2026-10-01** (#2767) — [log](exudynRevisionLog2026b.md#rg9-4-3-1) - the energy tests as
+      **test models**, where users look for examples (maintainer, 2026-10-01): `test_energies.py` goes into
+      `energiesTest.py`, a new `energiesFlexibleBodiesTest.py` keeps the energy of a free oscillation of each beam
+      and plate element and of a kinematic tree (the conservation test this step asked for), and
+      `test_connectorOutputVariables.py` became `connectorOutputVariablesTest.py`; the rule is in `CLAUDE.md` and
+      `docs/dev/WORKFLOW.md` §5. **Open: RG9.4.8.1**, for the maintainer - two more pytest files test what a user
+      does and could become test models: `test_specialBeams.py` (the switch
+      `exu.special.beams.geometricallyExactLumpedMass`) and `test_computedParameters.py` (a parameter the core
+      computes is read-only); the others in `python/testing/` test tools, generators, the renderer, settings or
+      code paths, not examples.
 
 ## RG10 — Tooling and process
 

@@ -68,6 +68,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | TorqueLocal | $M$ | (local) bending moment (scalar) (at $y$=$z$=0), which are bending moments as there is no torque |
 | Acceleration | $\LU{0}{\av(x,0,0)} = \LU{0}{\ddot \rv(x)}$ | global acceleration vector of local position |
 | KineticEnergy | $T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$ | kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$ |
+| PotentialEnergy | $V = \frac{1}{2}\int_0^L EA\,(\varepsilon - \varepsilon_\mathrm{ref})^2 + EI\,\|\tkappa - \tkappa_\mathrm{ref}\|^2\, dx$ | elastic energy, integrated with the rules of the elastic forces (useReducedOrderIntegration); localPosition must be $[0,0,0]$ |
 
 (description-objectancfcable)=
 ## Detailed description
@@ -166,3 +167,6 @@ mbs.SolveStatic()
 exu.sys['testResult'] = mbs.GetNodeOutput(lastNode, exu.OutputVariableType.Displacement)[0]
 #ux=-0.5013058140308901
 ```
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM)

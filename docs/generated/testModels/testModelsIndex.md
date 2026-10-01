@@ -37,6 +37,7 @@ complexEigenvaluesTest
 computeODE2AEeigenvaluesTest
 computeODE2EigenvaluesTest
 connectorGravityTest
+connectorOutputVariablesTest
 connectorRigidBodySpringDamperTest
 contactCoordinateTest
 contactCurveExample
@@ -85,6 +86,7 @@ geometricallyExactBeamJacobianTest
 geometricallyExactBeamCurvedTest
 geometricallyExactBeamRightAngleFrame
 rightAngleFrame
+energiesFlexibleBodiesTest
 energiesTest
 geometricallyExactBeamOutputTest
 geometricallyExactBeamElbowCantilever

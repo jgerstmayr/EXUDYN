@@ -10596,3 +10596,39 @@ judges that both compute the same. About 4 s in all, 0.3-0.8 s per run. The firs
 
 The ad-hoc benchmarks of the steps before stay in `tmp/rg14/` (not in the repository); the legacy runs leave the
 model with the legacy path (RG14.2.13).
+
+<a id="rg9-4-3-1"></a>
+### RG9.4.3.1, RG9.4.4.1, RG9.4.8 — the elastic energy of beams and plates, the kinematic tree, the tests as test models (2026-10-01, #2202, #2767)
+
+**The rule of RG9.4.1 applied**: the energy uses the strains and integration rules of the element's elastic forces, so
+that its derivative is the force, and the rule selection is not written twice - it moved into one function per element
+that `ComputeODE2LHS` and the energy both call:
+
+| element | shared function | energy |
+|---|---|---|
+| `ANCFCable2D`, `ALEANCFCable2D` (`CObjectANCFCable2DBase`) | `GetIntegrationRule(bending, ...)`, `ComputeReferenceStrains(x, ...)` (also used by the output variables `ForceLocal`, `TorqueLocal`) | $\frac{1}{2}\int EA(\varepsilon-\varepsilon_\mathrm{ref})^2 + EI(\kappa-\kappa_\mathrm{ref})^2$; raises for a user function |
+| `ANCFCable` | the same two functions | the same, $\kappav$ a vector |
+| `BeamGeometricallyExact2D` | `GetIntegrationRule` | $\frac{1}{2}\int EA\gamma_1^2 + GA\gamma_2^2 + EI\theta_x^2$ with `ComputeGeneralizedStrains` |
+| `BeamGeometricallyExact` | - (constant strains) | $\frac{L}{2}\teps\tp\Km\teps$ in the existing strain output block |
+| `ANCFBeam` | the three integration orders as file constants | twist/curvature, axial/shear and the penalized cross-section deformation; current configuration only |
+| `ANCFThinPlate` | `GetIntegrationRule` | $\frac{1}{2}\int \epsv\tp\mathbf N + \kappav\tp\mathbf M\,dA$ with `ComputeKinematics` and the coefficients of the forces |
+| `KinematicTree` | - | $\sum \frac12 P_i(q_i-q_{\mathrm{off},i})^2 - f_i(q_i-q_{\mathrm{ref},i}) - m_i\gv\tp(\pv_{\mathrm{COM},i}-\pv_{\mathrm{COM},i,\mathrm{ref}})$ |
+| `ConnectorGravity` | - | $-Gm_0m_1/L$, below the regularization distance the integral of the regularized force, continuous |
+
+**Checked** (`tmp/rg9/energyGradient.py`, not in the repository): the central difference of `PotentialEnergy` against the
+elastic forces ($-$ODE2 right-hand side at zero velocity) at randomly perturbed coordinates agrees to $10^{-11}$-$10^{-10}$
+relative for every element, all three integration choices of the cables and both of the plate, the kinematic tree with
+gravity, springs and joint forces included. Only on Lie group nodes (`NodeRigidBodyRotVecLG`) the two differ by
+$10^{-3}$: the right-hand side of a Lie group node is in the tangent space, not the derivative by the rotation vector - with
+Rxyz nodes the same beam agrees to $10^{-10}$. **The conservation test** (`energiesFlexibleBodiesTest.py`, free undamped
+oscillations, generalized-alpha with spectral radius 1, 1000 steps): the total changes by $2\cdot10^{-8}$ to $1.2\cdot10^{-7}$ for
+the six elements and $4\cdot10^{-5}$ for the kinematic tree in its large swing. `ANCFBeam` needs
+`computeInitialAccelerations = False`: its cross-section deformation carries no mass, the mass matrix is singular.
+
+**The tests as test models (#2767)**: the maintainer's rule - a test of what a user does is a test model, because users
+look there for examples. `python/testing/test_energies.py` is now section (13) of `energiesTest.py` (what the energies
+refuse, with the message, and how `SystemEnergy` skips it), which also got (14), two masses on a gravity orbit;
+`test_connectorOutputVariables.py` is `connectorOutputVariablesTest.py`. The rule stands in `CLAUDE.md` (orientation) and
+`docs/dev/WORKFLOW.md` §5 *Where a test goes*. References: `energiesTest.py` 17.614884358875663 (before 8.724884363749222,
+the new sections add 8.89), `energiesFlexibleBodiesTest.py` 5.850170604919896, `connectorOutputVariablesTest.py`
+-1.5578550690285144.

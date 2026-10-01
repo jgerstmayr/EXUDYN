@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  00:28:58 (last modified)
+* @date         2026-10-01  08:33:15 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -123,6 +123,12 @@ public: // AUTO:
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const override;
 
+    //! AUTO:  the integration rule of the elastic forces, shared with the elastic energy (#2202)
+    void GetIntegrationRule(ConstSizeVector<3>& integrationPoints, ConstSizeVector<3>& integrationWeights) const;
+
+    //! AUTO:  the elastic energy of axial, shear and bending strain, with the strains and the rule of the elastic forces (#2202)
+    Real ComputeElasticEnergy(ConfigurationType configuration) const;
+
     //! AUTO:  return the (global) position of 'localPosition' according to configuration type
     virtual Vector3D GetPosition(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;
 
@@ -231,7 +237,8 @@ public: // AUTO:
             (Index64)OutputVariableType::CurvatureLocal +
             (Index64)OutputVariableType::ForceLocal +
             (Index64)OutputVariableType::TorqueLocal +
-            (Index64)OutputVariableType::KineticEnergy );
+            (Index64)OutputVariableType::KineticEnergy +
+            (Index64)OutputVariableType::PotentialEnergy );
     }
 
 };

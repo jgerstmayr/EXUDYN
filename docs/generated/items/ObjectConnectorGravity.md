@@ -56,6 +56,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Distance | $L$ | distance between both points |
 | Displacement | $\Delta\! \LU{0}{\pv}$ | relative displacement between both points |
 | Force | $\fv$ | gravity force vector, pointing from marker $m0$ to marker $m1$ |
+| PotentialEnergy | $V = -\frac{G m_0 m_1}{L}$ | gravitational potential, zero at infinite distance; below minDistanceRegularization $r$ the potential of the regularized force, $V = -\frac{G m_0 m_1}{r}\left(1 + \frac{\pi}{4} - \arctan\frac{2L - r}{r}\right)$; zero if the connector is not active |
 
 (description-objectconnectorgravity)=
 ## Detailed description
@@ -173,4 +174,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`connectorGravityTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorGravityTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`connectorGravityTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorGravityTest.py) (TM), [`energiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesTest.py) (TM)

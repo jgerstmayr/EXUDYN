@@ -677,6 +677,48 @@ void CObjectANCFBeam::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, c
 }
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
+//the integration orders of the elastic forces, shared with the elastic energy (#2202)
+static const Index orderCurvature = 1; //reduced integration for two nodes, otherwise locking!
+static const Index orderAxialShear = 1;
+static const Index orderCrossSection = 1; //Lobatto!!!
+
+//! the elastic energy: twist and curvature, axial and shear deformation, cross-section deformation (penalty), with the
+//! deformations and integration rules of the elastic forces; current configuration (#2202)
+Real CObjectANCFBeam::ComputeElasticEnergy() const
+{
+	ConstSizeVector<nODE2coordinates> qANCF;
+	ComputeCurrentObjectCoordinates(qANCF);
+	const Real L = parameters.physicsLength;
+	ConstSizeVector<EXUmath::maxIntegrationPoints> intPoints, intWeights;
+	ConstSizeVector<EXUstd::dim3D> deformation;
+	ConstSizeMatrix<EXUstd::dim3D * nODE2coordinates> deltaDeformation(EXUstd::dim3D, nODE2coordinates);
+	Real energy = 0.;
+
+	EXUmath::SetGaussIntegrationRule(orderCurvature, intPoints, intWeights);
+	for (Index ix = 0; ix < intPoints.NumberOfItems(); ix++)
+	{
+		GetLocalTwistAndCurvatureDiff<Real>(qANCF, deformation, L, 0.5*L*intPoints[ix]);
+		for (Index k = 0; k < 3; k++) { energy += 0.5*L*intWeights[ix] * 0.5*parameters.physicsTorsionalBendingStiffness[k] * deformation[k] * deformation[k]; }
+	}
+	EXUmath::SetGaussIntegrationRule(orderAxialShear, intPoints, intWeights);
+	for (Index ix = 0; ix < intPoints.NumberOfItems(); ix++)
+	{
+		GetLocalAxialShearDeformationDiff<Real>(qANCF, deformation, L, 0.5*L*intPoints[ix]);
+		for (Index k = 0; k < 3; k++) { energy += 0.5*L*intWeights[ix] * 0.5*parameters.physicsAxialShearStiffness[k] * deformation[k] * deformation[k]; }
+	}
+	Real EA = parameters.physicsAxialShearStiffness[0];
+	Real GA2 = parameters.physicsAxialShearStiffness[1] + parameters.physicsAxialShearStiffness[2];
+	Vector3D kCS({ EA,EA,GA2 });
+	kCS.MultComponentWise(parameters.crossSectionPenaltyFactor);
+	EXUmath::SetLobattoIntegrationRule(orderCrossSection, intPoints, intWeights);
+	for (Index ix = 0; ix < intPoints.NumberOfItems(); ix++)
+	{
+		GetDeltaCrossSectionDeformation(0.5*L*intPoints[ix], deltaDeformation, deformation);
+		for (Index k = 0; k < 3; k++) { energy += 0.5*L*intWeights[ix] * 0.5*kCS[k] * deformation[k] * deformation[k]; }
+	}
+	return energy;
+}
+
 void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 {
 	ConstSizeVector<nODE2coordinates> qANCF;
@@ -695,9 +737,6 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 	Real L = parameters.physicsLength;
 	const Index dim3D = EXUstd::dim3D;
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	const Index orderCurvature = 1; //reduced integration for two nodes, otherwise locking!
-	const Index orderAxialShear = 1;
-	const Index orderCrossSection = 1; //Lobatto!!!
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//for thickness stiffness, take average of shear stiffness: 0.5*(GAy+GAz)
 
@@ -1052,6 +1091,10 @@ void CObjectANCFBeam::GetOutputVariableBody(OutputVariableType variableType, con
 	//	if (bendingDamping != 0) { torque += bendingDamping * ComputeCurvature_t(x, configuration); }
 	//	value.SetVector({ torque }); break;
 	//}
+	case OutputVariableType::PotentialEnergy: {
+		CheckEnergyLocalPosition(localPosition, "ObjectANCFBeam");
+		CHECKandTHROW(configuration == ConfigurationType::Current, "ObjectANCFBeam: PotentialEnergy only for the current configuration", ExudynValueError);
+		value.SetVector({ ComputeElasticEnergy() }); break; }
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectANCFBeam");
 		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectANCFBeam") }); break; }

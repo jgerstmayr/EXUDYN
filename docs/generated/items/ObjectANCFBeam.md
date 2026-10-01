@@ -63,6 +63,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Rotation |  | 3D Tait-Bryan rotation components of cross section rotation |
 | RotationMatrix |  | rotation matrix of cross section rotation as 9D vector |
 | KineticEnergy | $T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$ | kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$ |
+| PotentialEnergy | $V = \frac{1}{2}\int_0^L \tkappa\tp \Km_\kappa \tkappa + \tgamma\tp \Km_\gamma \tgamma + \teps_\mathrm{cs}\tp \Km_\mathrm{cs} \teps_\mathrm{cs}\, dx$ | elastic energy of twist and curvature, axial and shear deformation and the penalized cross-section deformation, with the deformations and integration rules of the elastic forces; current configuration only; localPosition must be $[0,0,0]$ |
 
 (description-objectancfbeam)=
 ## Detailed description
@@ -148,4 +149,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacemen
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`ANCFBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py) (TM), [`ANCFCableBeamDampingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py) (TM), [`geometricallyExactBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEigTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamEigTest.py) (TM), [`ANCFBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFBeamTest.py) (TM), [`ANCFCableBeamDampingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFCableBeamDampingTest.py) (TM), [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM), [`geometricallyExactBeamTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamTest.py) (TM), [`rightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rightAngleFrame.py) (TM)

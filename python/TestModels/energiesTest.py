@@ -16,7 +16,9 @@
 #           (9) an ObjectGenericODE2 with a constant force vector; (10) a rigid body on a rigid-body
 #           spring-damper, in small motion; (11) ANCF cables and geometrically exact beams in a rigid
 #           translation, whose kinetic energy comes from their mass matrix; (12) a system with gravity
-#           and a constant force, whose total energy SystemEnergy (exudyn.advancedUtilities) records.
+#           and a constant force, whose total energy SystemEnergy (exudyn.advancedUtilities) records;
+#           (13) what the energies refuse, with the reason, and how SystemEnergy skips it; (14) two mass
+#           points attracting each other (ObjectConnectorGravity), on an elliptic orbit.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-01
@@ -143,6 +145,14 @@ beams12 = [mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes12[i], n
            for i in range(2)]
 sRigidMotion = [mbs.AddSensor(SensorBody(bodyNumber=b, outputVariableType=KE, storeInternal=True)) for b in cables11 + beams12]
 
+#(14) two mass points attracting each other (ObjectConnectorGravity) on an elliptic orbit about their center of mass
+n14 = [mbs.AddNode(NodePoint(referenceCoordinates=[0, 13, 0], initialVelocities=[0, -0.3, 0])),
+       mbs.AddNode(NodePoint(referenceCoordinates=[1, 13, 0], initialVelocities=[0, 0.3, 0]))]
+o14 = [mbs.AddObject(MassPoint(nodeNumber=n, physicsMass=1)) for n in n14]
+c14 = mbs.AddObject(ObjectConnectorGravity(markerNumbers=[mbs.AddMarker(MarkerNodePosition(nodeNumber=n)) for n in n14],
+                                           gravitationalConstant=0.2, mass0=1, mass1=1, minDistanceRegularization=0.05))
+EnergySensors('two masses attracting each other', o14, [c14])
+
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
@@ -200,6 +210,42 @@ energies = mbs2.GetSensorStoredData(sEnergy)
 exu.Print('system with loads: total energy %.8f -> %.8f, relative change %.2e' % (energies[0, 4], energies[-1, 4],
           (energies[-1, 4]-energies[0, 4])/energies[0, 4]))
 testResult += energies[-1, 4]
+
+#(13) what the energies refuse, with the reason: a local position other than [0,0,0] (the energy is one value of the
+#whole item), and a spring-damper whose force is a user function (its potential is unknown); SystemEnergy lists such
+#an item as unavailable and skips it, or raises with skipUnavailable=False
+refused = 0
+try:
+    mbs.GetObjectOutputBody(o1, KE, localPosition=[0.1, 0, 0])
+except ValueError as error:
+    exu.Print('refused:', str(error).split(' [Python file')[0])
+    refused += 1
+
+SC3 = exu.SystemContainer()
+mbs3 = SC3.AddSystem()
+oGround3 = mbs3.AddObject(ObjectGround())
+n13 = mbs3.AddNode(NodePoint(referenceCoordinates=[1, 0, 0], initialVelocities=[0, 2, 0]))
+o13 = mbs3.AddObject(MassPoint(nodeNumber=n13, physicsMass=3))
+c13 = mbs3.AddObject(SpringDamper(markerNumbers=[mbs3.AddMarker(MarkerBodyPosition(bodyNumber=oGround3)),
+                                                 mbs3.AddMarker(MarkerNodePosition(nodeNumber=n13))],
+                                  referenceLength=0.5, stiffness=10,
+                                  springForceUserFunction=lambda mbs, t, itemNumber, u, v, k, d, f: k*u))
+mbs3.Assemble()
+try:
+    mbs3.GetObjectOutput(c13, PE)
+except NotImplementedError as error:
+    exu.Print('refused:', str(error).split(' [Python file')[0])
+    refused += 1
+systemEnergy3 = SystemEnergy(mbs3)
+exu.Print('SystemEnergy with a user function: unavailable', systemEnergy3.unavailable)
+try:
+    SystemEnergy(mbs3, skipUnavailable=False)
+except NotImplementedError as error:
+    exu.Print('refused:', str(error).split(' [Python file')[0])
+    refused += 1
+T3, V3, loads3, total3 = systemEnergy3.ComputeSystemEnergies()
+exu.Print('the mass point alone: T =', T3, '(exact 6), total =', total3)
+testResult += refused + total3
 
 exu.Print('solution of energiesTest=', testResult)
 exu.sys['testResult'] = testResult

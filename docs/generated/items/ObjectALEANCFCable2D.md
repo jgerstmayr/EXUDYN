@@ -73,6 +73,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | ForceLocal | $N$ | (local) section normal force (scalar, including reference strains) (at Y=0); note that strains are highly inaccurate when coupled to bending, thus consider useReducedOrderIntegration=2 and evaluate axial strain at nodes or at midpoint |
 | TorqueLocal | $M$ | (local) bending moment (scalar) (at Y=0) |
 | KineticEnergy | $T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$ | kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$ |
+| PotentialEnergy | $V = \frac{1}{2}\int_0^L EA\,(\varepsilon - \varepsilon_\mathrm{ref})^2 + EI\,(\kappa - \kappa_\mathrm{ref})^2\, dx$ | elastic energy, integrated with the rules of the elastic forces (useReducedOrderIntegration); raises for a user function; localPosition must be $[0,0,0]$ |
 
 (description-objectaleancfcable2d)=
 ## Detailed description

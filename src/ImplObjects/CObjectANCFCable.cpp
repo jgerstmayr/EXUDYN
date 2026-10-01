@@ -263,22 +263,7 @@ void CObjectANCFCable::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 	ConstSizeVector<maxIntegrationPoints> integrationPoints;
 	ConstSizeVector<maxIntegrationPoints> integrationWeights;
 
-	if (parameters.useReducedOrderIntegration == 0) //A9-B5 (max. integration axial order 9, bending order 5)
-	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder9Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
-		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder9Weights);
-	}
-	else if (parameters.useReducedOrderIntegration == 1) //A7-B3
-	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder7Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
-		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder7Weights);
-	}
-	else if (parameters.useReducedOrderIntegration == 2) //A4-B3 ; gives excellent axial strain at 0, L/2 and L !!
-	{
-		integrationPoints.CopyFrom(EXUmath::lobattoRuleOrder3Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
-		integrationWeights.CopyFrom(EXUmath::lobattoRuleOrder3Weights);
-	}
-	else { CHECKandTHROWstring("ObjectANCFCable::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2", ExudynValueError); }
+	GetIntegrationRule(false, integrationPoints, integrationWeights);
 
 	//axial strain:
 	cnt = 0;
@@ -327,22 +312,7 @@ void CObjectANCFCable::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 	//++++++++++++++++++++++++++++++
 	//curvature:
 
-	if (parameters.useReducedOrderIntegration == 0) //A9-B5 (max. integration axial order 9, bending order 5)
-	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder5Points); //copy is slower, but cannot link to variable size ==> LinkedDataVector ...
-		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder5Weights);
-	}
-	else if (parameters.useReducedOrderIntegration == 1) //A7-B3
-	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder3Points); 
-		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder3Weights);
-	}
-	else if (parameters.useReducedOrderIntegration == 2) //A4-B3 ; gives excellent axial strain at 0, L/2 and L !!
-	{
-		integrationPoints.CopyFrom(EXUmath::gaussRuleOrder3Points); 
-		integrationWeights.CopyFrom(EXUmath::gaussRuleOrder3Weights);
-	}
-	else { CHECKandTHROWstring("ObjectANCFCable::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2", ExudynValueError); }
+	GetIntegrationRule(true, integrationPoints, integrationWeights);
 
 	cnt = 0;
 	for (auto item : integrationPoints)
@@ -587,6 +557,74 @@ void CObjectANCFCable::GetAccessFunctionBody(AccessFunctionType accessType, cons
 	}
 }
 
+//accurate integration: axialStrain = order9, curvature = order5
+//reduced order 1: axialStrain = order7, curvature = order3 (lower Gauss order not possible, becomes unstable or very inaccurate ...
+//reduced order 2: axialStrain = Lobatto order3, curvature = order3 (less oscillations in axial strains, if evaluated at [0,0.5L,L]
+void CObjectANCFCable::GetIntegrationRule(bool bending, ConstSizeVector<EXUmath::maxIntegrationPoints>& points,
+	ConstSizeVector<EXUmath::maxIntegrationPoints>& weights) const
+{
+	if (parameters.useReducedOrderIntegration == 0) //A9-B5 (max. integration axial order 9, bending order 5)
+	{
+		if (bending) { points.CopyFrom(EXUmath::gaussRuleOrder5Points); } else { points.CopyFrom(EXUmath::gaussRuleOrder9Points); }
+		if (bending) { weights.CopyFrom(EXUmath::gaussRuleOrder5Weights); } else { weights.CopyFrom(EXUmath::gaussRuleOrder9Weights); }
+	}
+	else if (parameters.useReducedOrderIntegration == 1) //A7-B3
+	{
+		if (bending) { points.CopyFrom(EXUmath::gaussRuleOrder3Points); } else { points.CopyFrom(EXUmath::gaussRuleOrder7Points); }
+		if (bending) { weights.CopyFrom(EXUmath::gaussRuleOrder3Weights); } else { weights.CopyFrom(EXUmath::gaussRuleOrder7Weights); }
+	}
+	else if (parameters.useReducedOrderIntegration == 2) //A4-B3 ; gives excellent axial strain at 0, L/2 and L !!
+	{
+		if (bending) { points.CopyFrom(EXUmath::gaussRuleOrder3Points); } else { points.CopyFrom(EXUmath::lobattoRuleOrder3Points); }
+		if (bending) { weights.CopyFrom(EXUmath::gaussRuleOrder3Weights); } else { weights.CopyFrom(EXUmath::lobattoRuleOrder3Weights); }
+	}
+	else { CHECKandTHROWstring("ObjectANCFCable::ComputeODE2LHS: useReducedOrderIntegration must be between 0 and 2", ExudynValueError); }
+}
+
+void CObjectANCFCable::ComputeReferenceStrains(Real x, Real& axialStrainRef, Vector3D& curvatureRef) const
+{
+	axialStrainRef = parameters.physicsReferenceAxialStrain;
+	curvatureRef.SetAll(0.);
+	if (parameters.strainIsRelativeToReference != 0.)
+	{
+		Vector3D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
+		Vector3D rxxRef = ComputeSlopeVector_x(x, ConfigurationType::Reference);
+		axialStrainRef += parameters.strainIsRelativeToReference*(rxRef.GetL2Norm() - 1.);
+		curvatureRef += parameters.strainIsRelativeToReference*(rxRef.CrossProduct(rxxRef) * (1. / rxRef.GetL2NormSquared()));
+	}
+}
+
+Real CObjectANCFCable::ComputeElasticEnergy(ConfigurationType configuration) const
+{
+	Real L = parameters.physicsLength;
+	ConstSizeVector<EXUmath::maxIntegrationPoints> points, weights;
+	Real energy = 0.;
+	for (bool bending : {false, true})
+	{
+		GetIntegrationRule(bending, points, weights);
+		for (Index i = 0; i < points.NumberOfItems(); i++)
+		{
+			Real x = 0.5*L*points[i] + 0.5*L;
+			Real axialStrainRef;
+			Vector3D curvatureRef;
+			ComputeReferenceStrains(x, axialStrainRef, curvatureRef);
+			Real strainEnergy;
+			if (bending)
+			{
+				Vector3D curvature = ComputeCurvature(x, configuration) - curvatureRef;
+				strainEnergy = parameters.physicsBendingStiffness * (curvature*curvature);
+			}
+			else
+			{
+				Real axialStrain = ComputeAxialStrain(x, configuration) - axialStrainRef;
+				strainEnergy = parameters.physicsAxialStiffness * axialStrain*axialStrain;
+			}
+			energy += 0.5*L*weights[i] * 0.5*strainEnergy;
+		}
+	}
+	return energy;
+}
+
 //! provide according output variable in "value"
 void CObjectANCFCable::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const
 {
@@ -646,12 +684,9 @@ void CObjectANCFCable::GetOutputVariableBody(OutputVariableType variableType, co
 	case OutputVariableType::ForceLocal: {
 		//do not add this due to drawing function: CHECKandTHROW(y == 0., "CObjectANCFCable::GetOutputVariableBody: Y-component of localPosition must be zero for ForceLocal");
 
-		Real axialStrainRef = parameters.physicsReferenceAxialStrain;
-		if (parameters.strainIsRelativeToReference != 0.)
-		{
-			Vector3D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
-			axialStrainRef += parameters.strainIsRelativeToReference*(rxRef.GetL2Norm() - 1.);
-		}
+		Real axialStrainRef;
+		Vector3D curvatureRef;
+		ComputeReferenceStrains(x, axialStrainRef, curvatureRef);
 
 		Real force = parameters.physicsAxialStiffness * (ComputeAxialStrain(x, configuration) - axialStrainRef);
 		if (parameters.physicsAxialDamping != 0) { force += parameters.physicsAxialDamping * ComputeAxialStrain_t(x, configuration); }
@@ -661,16 +696,9 @@ void CObjectANCFCable::GetOutputVariableBody(OutputVariableType variableType, co
 	case OutputVariableType::TorqueLocal: {
 		//do not add this due to drawing function: CHECKandTHROW(y == 0., "CObjectANCFCable::GetOutputVariableBody: Y-component of localPosition must be zero for TorqueLocal");
 
-		Vector3D curvatureRef(0.);
-		if (parameters.strainIsRelativeToReference != 0.)
-		{
-			Vector3D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
-			Vector3D rxxRef = ComputeSlopeVector_x(x, ConfigurationType::Reference);
-
-			Real rxNorm2ref = rxRef.GetL2NormSquared();
-			Vector3D rxCrossRxxRef = rxRef.CrossProduct(rxxRef);
-			curvatureRef += parameters.strainIsRelativeToReference*(rxCrossRxxRef * (1. / rxNorm2ref) );
-		}
+		Real axialStrainRef;
+		Vector3D curvatureRef;
+		ComputeReferenceStrains(x, axialStrainRef, curvatureRef);
 
 		Vector3D torque = parameters.physicsBendingStiffness * (ComputeCurvature(x, configuration) - curvatureRef);
 		if (parameters.physicsBendingDamping != 0) 
@@ -680,6 +708,9 @@ void CObjectANCFCable::GetOutputVariableBody(OutputVariableType variableType, co
 		value.CopyFrom(torque); 
 		break;
 	}
+	case OutputVariableType::PotentialEnergy: {
+		CheckEnergyLocalPosition(localPosition, "ObjectANCFCable");
+		value.SetVector({ ComputeElasticEnergy(configuration) }); break; }
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectANCFCable");
 		value.SetVector({ ComputeKineticEnergyFromMassMatrix(configuration, objectNumber, "ObjectANCFCable") }); break; }

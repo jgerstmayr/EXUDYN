@@ -772,6 +772,7 @@ void CObjectBeamGeometricallyExact::GetOutputVariableBody(OutputVariableType var
 	case OutputVariableType::CurvatureLocal:
 	case OutputVariableType::ForceLocal:
 	case OutputVariableType::TorqueLocal:
+	case OutputVariableType::PotentialEnergy:
 	{
 		//the strains (h-h0)/L are constant in the element, the section forces and moments K*(h-h0)/L (#2753)
 		Vector6D h;
@@ -787,6 +788,12 @@ void CObjectBeamGeometricallyExact::GetOutputVariableBody(OutputVariableType var
 		case OutputVariableType::StrainLocal:		value.SetVector({ strain[0], 0., 0., 0., strain[2], strain[1] }); break;
 		case OutputVariableType::CurvatureLocal:	value.SetVector({ strain[3], strain[4], strain[5] }); break;
 		case OutputVariableType::ForceLocal:		value.SetVector({ kAS[0] * strain[0], kAS[1] * strain[1], kAS[2] * strain[2] }); break;
+		case OutputVariableType::PotentialEnergy: {
+			//L/2 eps^T K eps, whose derivative by the incremental motion h is the elastic force K eps (#2202)
+			CheckEnergyLocalPosition(localPosition, "ObjectBeamGeometricallyExact");
+			Real energy = 0.;
+			for (Index k = 0; k < 3; k++) { energy += 0.5*L*(kAS[k] * strain[k] * strain[k] + kTB[k] * strain[k + 3] * strain[k + 3]); }
+			value.SetVector({ energy }); break; }
 		default:									value.SetVector({ kTB[0] * strain[3], kTB[1] * strain[4], kTB[2] * strain[5] }); break; //TorqueLocal
 		}
 		break;
