@@ -186,7 +186,8 @@ OutputVariableType CMarker::GetOutputVariableTypes() const
 	}
 	if (EXUstd::IsOfType(GetType(), Marker::Coordinate) || EXUstd::IsOfType(GetType(), Marker::Coordinates))
 	{
-		ovt += (Index64)OutputVariableType::Coordinates + (Index64)OutputVariableType::Coordinates_t; //via MarkerData
+		ovt += (Index64)OutputVariableType::Coordinates; //via MarkerData
+		if (!EXUstd::IsOfType(GetType(), Marker::ODE1)) { ovt += (Index64)OutputVariableType::Coordinates_t; } //ODE1 coordinates have no velocity (#2768)
 	}
 
 	return (OutputVariableType)ovt;

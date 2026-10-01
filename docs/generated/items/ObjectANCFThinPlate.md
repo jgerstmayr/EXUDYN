@@ -63,8 +63,8 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | Director2 | $\rv_y(x,y,z)$ | (axial) slope vector of local position (at $z$=0) |
 | StrainLocal | $\varepsilon$ | axial strain (scalar) of local axis position (at Z=0) |
 | CurvatureLocal | $[K_x, K_y, K_z]\tp$ | local curvature vector |
-| ForceLocal | $N$ | (local) section normal force per length (scalar, including reference strains) (at $z$=0) |
-| TorqueLocal | $M$ | (local) bending moment per length (scalar) (at $z$=0), which are bending moments as there is no torque |
+| ForceLocal | $[N_{xx},\, N_{yy},\, N_{xy}]\tp$ | membrane force resultants per length in the local frame, from the membrane strains relative to the reference configuration |
+| TorqueLocal | $[M_{xx},\, M_{yy},\, M_{xy}]\tp$ | bending moment resultants per length in the local frame, from the curvatures relative to the reference configuration |
 | StressLocal |  | local inplane stress components |
 | Acceleration | $\LU{0}{\av(x,y,z)} = \LU{0}{\ddot \rv(x,y,z)}$ | global acceleration vector of local position |
 | KineticEnergy | $T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$ | kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$ |

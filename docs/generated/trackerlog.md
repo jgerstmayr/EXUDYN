@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.203.dev1
+- Exudyn version = 1.12.204.dev1
 - last change = 2026-10-01
 - Number of issues = 2769
-- Number of resolved issues = 2517 (203 in current version)
+- Number of resolved issues = 2518 (204 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8324,9 +8324,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` declared output variables that cannot be read (#2768)
-  - description: mbs.Inspect(item, exu.InspectType.OutputVariables) over every item of every MiniExample (\#2203) finds output variables an item declares but cannot compute: NodePoint2D RotationMatrix, Rotation, AngularVelocity, AngularVelocityLocal (GetOutputVariable failed); MarkerNodeODE1Coordinate Coordinates\_t (refused by MainMarker); ObjectANCFThinPlate Director2 (GetOutputVariableBody failed); ObjectANCFBeam AngularVelocity and AngularVelocityLocal (not implemented); ObjectRotationalMass1D AngularVelocityLocal (GetOutputVariableBody failed); and two that depend on the node: ObjectRigidBody on NodeRigidBodyRotVecLG Acceleration, AccelerationLocal, AngularAcceleration, AngularAccelerationLocal (the Lie group node has no angular acceleration), MarkerNodeRigid on the node of ObjectBeamGeometricallyExact AngularVelocity. Each is either implemented or no longer declared; the node-dependent ones need the body or marker to ask its node.
-  - date raised: 2026-10-01
 - <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectANCFBeam: the Newton iteration stalls near 2e-7 in the right-angle frame (#2763)
   - description: rightAngleFrame.py with ObjectANCFBeam (useGeometricallyExact = False), displacement-driven: from load step 7 on, Newton stagnates at a relative error of 1e-7 to 3e-7 (tolerance 1e-8; with 1e-6 the same at 1e-6 to 2e-6) and the static solver fails at 3 % of the drive; the geometrically exact beam converges in 4.7 iterations per step. Found 2026-10-01 in RG4.8.13; an inconsistent Jacobian of the ANCF beam is the first suspect (the original header said: very bad convergence for ANCFBeam).
   - date raised: 2026-09-30

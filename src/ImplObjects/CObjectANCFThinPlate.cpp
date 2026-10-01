@@ -1248,12 +1248,29 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
         break;
     }
     case OutputVariableType::Director1:
+    case OutputVariableType::Director2:
+    {
+        //the slope vectors at (xi,eta) (#2768)
+        Vector3D slopeX, slopeY;
+        GetSlopes(localPosition, slopeX, slopeY, configuration);
+        value.CopyFrom(variableType == OutputVariableType::Director1 ? slopeX : slopeY);
+        break;
+    }
     case OutputVariableType::ForceLocal:
     case OutputVariableType::TorqueLocal:
     {
-        // Not yet implemented for this element type; return zeros with correct size
-        value.SetNumberOfItems(3);
-        value.SetAll(0.);
+        //the membrane force and moment resultants per length, as StressLocal uses them (#2768)
+        SlimVectorBase<Real, 3> eps_mid, kappa, resultant;
+        ComputeKinematics(xi, eta, qANCFref, qANCFtotal, eps_mid, kappa);
+        if (variableType == OutputVariableType::ForceLocal)
+        {
+            EXUmath::MultMatrixVectorTemplate(ComputeStrainCoefficientsAtPoint(xi, eta), eps_mid, resultant);
+        }
+        else
+        {
+            EXUmath::MultMatrixVectorTemplate(ComputeCurvatureCoefficientsAtPoint(xi, eta), kappa, resultant);
+        }
+        value.CopyFrom(resultant);
         break;
     }
     case OutputVariableType::PotentialEnergy: {

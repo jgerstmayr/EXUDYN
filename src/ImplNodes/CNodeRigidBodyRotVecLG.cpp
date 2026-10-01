@@ -227,6 +227,14 @@ Vector3D CNodeRigidBodyRotVecLG::GetAngularVelocity(ConfigurationType configurat
 	return omega;
 }
 
+//! the angular acceleration: the rotational acceleration coordinates are the local angular acceleration, and
+//! d/dt(A omegaLocal) = A omegaLocal_t, as A omegaLocal~ omegaLocal = 0 (#2768)
+Vector3D CNodeRigidBodyRotVecLG::GetAngularAcceleration(ConfigurationType configuration) const
+{
+	LinkedDataVector q_tt = GetCoordinateVector_tt(configuration);
+	return GetRotationMatrix(configuration) * Vector3D({ q_tt[nDisplacementCoordinates + 0], q_tt[nDisplacementCoordinates + 1], q_tt[nDisplacementCoordinates + 2] });
+}
+
 //! return configuration dependent local (=body fixed) angular velocity of node; returns always a 3D Vector
 Vector3D CNodeRigidBodyRotVecLG::GetAngularVelocityLocal(ConfigurationType configuration) const
 {

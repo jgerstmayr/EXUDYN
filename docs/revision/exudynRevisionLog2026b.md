@@ -10660,3 +10660,23 @@ output variable used inline before - the output variable and `Inspect` now share
 then **reads** every output variable `Inspect` lists, for every object, node and marker of every MiniExample - and finds
 output variables that items declare and cannot compute (#2768, RG12.29.1), kept as a list of known failures in the
 test. The test model `inspectTest.py` shows the use (reference 44).
+
+<a id="rg12-29-1"></a>
+### RG12.29.1 — the output variables that were declared and could not be computed (2026-10-01, #2768)
+
+Found by `test_inspectOutputVariables.py` (RG12.29), which reads every output variable `mbs.Inspect` lists for every
+item of every MiniExample. Each is now computed - none needed to be dropped from its declaration:
+
+| item | output variables | what it was, what it is |
+|---|---|---|
+| `NodePoint2D` | `RotationMatrix`, `Rotation`, `AngularVelocity`, `AngularVelocityLocal` | declared "for completeness" and missing in the switch: now identity and zeros, as `NodePoint` has them |
+| `MarkerNodeODE1Coordinate` (any marker on ODE1 coordinates) | `Coordinates_t` | ODE1 coordinates have no velocity: `CMarker::GetOutputVariableTypes` no longer lists it for an ODE1 marker |
+| `ObjectANCFThinPlate` | `Director1`, `Director2` | `Director2` failed and `Director1` **returned zeros**: now the slope vectors of `GetSlopes` |
+| `ObjectANCFThinPlate` | `ForceLocal`, `TorqueLocal` | **returned zeros**: now the membrane force and moment resultants per length, $[N_{xx}, N_{yy}, N_{xy}]$ and $[M_{xx}, M_{yy}, M_{xy}]$, as `StressLocal` uses them; the descriptions say so (they said "scalar") |
+| `ObjectANCFBeam` | `AngularVelocity`, `AngularVelocityLocal` | not implemented: now the angular velocity of the cross section that fits the velocities of the slopes y and z in the least-squares sense, the formula of `NodePointSlope23`; exact for a rigid rotation (checked: a beam rotating with $\omegav$ gives $\omegav$) |
+| `ObjectRigidBody` on `NodeRigidBodyRotVecLG` | `Acceleration`, `AccelerationLocal`, `AngularAcceleration(Local)` | the node had no angular acceleration: its rotational velocity coordinates are $\tomega_\mathrm{local}$, so $\alphav = \Rot\,\dot{\tomega}_\mathrm{local}$ ($\Rot\tilde\omega\omega = 0$); checked against the time derivative of the angular velocity of an RK44 run, as accurate as the Rxyz node |
+| `MarkerNodeRigid` on `NodePointGround` | `AngularVelocity` | the ground node had `GetAngularVelocityLocal` and not `GetAngularVelocity`: now zero as well |
+| `ObjectRotationalMass1D` | `AngularVelocityLocal` | missing in the switch |
+
+The test has no list of known failures any more. It cannot see an output variable that returns zeros instead of a value -
+the plate's were found by reading its code.

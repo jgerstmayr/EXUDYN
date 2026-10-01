@@ -5,8 +5,7 @@
 #           MiniExample runs, and for each of its objects, nodes and markers every OutputVariableType
 #           of Inspect(item, InspectType.OutputVariables) is read with the default arguments. An item
 #           that declares an output variable it cannot compute is an error of its definition or its
-#           implementation; the ones known are listed with their issue (#2768) - remove an entry when
-#           it is fixed.
+#           implementation - the first run found eight such items (#2768).
 #
 # Usage:    pytest python/testing/test_inspectOutputVariables.py
 #
@@ -33,25 +32,6 @@ from MiniExamples.miniExamplesFileList import miniExamplesFileList         # noq
 exu.special.userInterface.SuppressAll(True)
 I = exu.InspectType
 
-#(kind, item type, output variable) declared but not computable (#2768); the rigid body and the rigid node marker
-#depend on the node: a rigid body on a Lie group node has no angular acceleration, a rigid node marker on a node
-#without angular velocity
-knownFailures = {
-    ('node', 'Point2D', 'RotationMatrix'),
-    ('node', 'Point2D', 'Rotation'),
-    ('node', 'Point2D', 'AngularVelocity'),
-    ('node', 'Point2D', 'AngularVelocityLocal'),
-    ('marker', 'NodeODE1Coordinate', 'Coordinates_t'),
-    ('object', 'ANCFThinPlate', 'Director2'),
-    ('object', 'ObjectANCFBeam', 'AngularVelocity'),
-    ('object', 'ObjectANCFBeam', 'AngularVelocityLocal'),
-    ('object', 'RigidBody', 'Acceleration'),
-    ('object', 'RigidBody', 'AccelerationLocal'),
-    ('object', 'RigidBody', 'AngularAcceleration'),
-    ('object', 'RigidBody', 'AngularAccelerationLocal'),
-    ('marker', 'NodeRigid', 'AngularVelocity'),
-    ('object', 'RotationalMass1D', 'AngularVelocityLocal'),
-    }
 
 
 def RunMiniExample(fileName):
@@ -103,5 +83,5 @@ def outputDirectory(tmp_path):
 @pytest.mark.parametrize('fileName', miniExamplesFileList)
 def test_everyListedOutputVariableCanBeRead(fileName, outputDirectory):
     mbs = RunMiniExample(fileName)
-    failures = ReadEveryOutputVariable(mbs) - knownFailures
+    failures = ReadEveryOutputVariable(mbs)
     assert failures == set(), 'declared, but cannot be read:\n' + '\n'.join(str(f) for f in sorted(failures))

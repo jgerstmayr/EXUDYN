@@ -1180,25 +1180,30 @@ HomogeneousTransformation CObjectANCFBeam::GetLocalPositionFrame(const Vector3D&
 }
 
 
-//! return configuration dependent angular velocity of node; returns always a 3D Vector
+//! the angular velocity of the cross section at localPosition: the rotation that fits the velocities of the slope vectors
+//! y and z in the least-squares sense, as NodePointSlope23 computes it (#2768)
 Vector3D CObjectANCFBeam::GetAngularVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	CHECKandTHROWstring("ObjectANCFBeamBase::GetAngularVelocity: not implemented!", ExudynNotImplementedError);
-	return Vector3D();
+	Vector3D slopeX, slopeY, slopeZ;
+	ComputeSlopeVectors(localPosition[0], configuration, slopeX, slopeY, slopeZ);
+	LinkedDataVector q0_t(((CNodeODE2*)GetCNode(0))->GetCoordinateVector_t(configuration));
+	LinkedDataVector q1_t(((CNodeODE2*)GetCNode(1))->GetCoordinateVector_t(configuration));
+	Vector3D position({ localPosition[0], 0., 0. });
+	Vector3D slopeY_t = ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(
+		ComputeShapeFunctions_y(position, parameters.physicsLength), q0_t, q1_t);
+	Vector3D slopeZ_t = ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(
+		ComputeShapeFunctions_z(position, parameters.physicsLength), q0_t, q1_t);
 
-	////for details see GetAngularVelocity in PointSlope23
+	Matrix3D slopeYskew = RigidBodyMath::Vector2SkewMatrix(slopeY);
+	Matrix3D slopeZskew = RigidBodyMath::Vector2SkewMatrix(slopeZ);
+	Matrix3D W = -1.*(slopeYskew*slopeYskew + slopeZskew * slopeZskew);
+	return W.GetInverse() * (slopeYskew*slopeY_t + slopeZskew * slopeZ_t);
+}
 
-	//Real xLoc = localPosition[0]; //only x-coordinate
-	//Vector2D slope = ComputeSlopeVector(xLoc, configuration);
-	//Real x = slope[0]; //x-slopex
-	//Real y = slope[1]; //y-slopex
-
-	//Vector4D SVx = ComputeShapeFunctions_x(xLoc, parameters.physicsLength);
-	//Vector2D slope_t = MapCoordinates(SVx, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector_t(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector_t(configuration));
-	////Vector2D slope_t = MapCoordinates(SVx, ((CNodeODE2*)GetCNode(0))->GetCurrentCoordinateVector_t(), ((CNodeODE2*)GetCNode(1))->GetCurrentCoordinateVector_t());
-
-	////compare this function to GetRotationMatrix(...)
-	//return Vector3D({ 0., 0., (-y * slope_t[0] + x * slope_t[1]) / (x*x + y * y) });
+//! the angular velocity in the frame of the cross section (#2768)
+Vector3D CObjectANCFBeam::GetAngularVelocityLocal(const Vector3D& localPosition, ConfigurationType configuration) const
+{
+	return GetRotationMatrix(localPosition, configuration).GetTransposed() * GetAngularVelocity(localPosition, configuration);
 }
 
 ////! return configuration dependent angular acceleration of node; returns always a 3D Vector

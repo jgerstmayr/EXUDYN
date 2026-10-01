@@ -1590,13 +1590,12 @@ find out about the settings of a model. It is the group a user notices most and 
     proposed; output variables of markers too; a sensor has nothing to inspect (`{}` for `what=None`); the
     potential energy listed only where `PotentialEnergyAvailable()`; the test model `inspectTest.py` and the pytest
     `test_inspectOutputVariables.py`, which reads every listed output variable of every MiniExample.
-    - **RG12.29.1** *open* (#2768) - the output variables that items declare and cannot compute, found by that
-      test: `NodePoint2D` (`RotationMatrix`, `Rotation`, `AngularVelocity(Local)`), `MarkerNodeODE1Coordinate`
+    - **RG12.29.1** **DONE 2026-10-01** (#2768) — [log](exudynRevisionLog2026b.md#rg12-29-1) - the output
+      variables that items declared and could not compute, found by that test, all implemented: `NodePoint2D` (`RotationMatrix`, `Rotation`, `AngularVelocity(Local)`), `MarkerNodeODE1Coordinate`
       (`Coordinates_t`), `ObjectANCFThinPlate` (`Director2`), `ObjectANCFBeam` (`AngularVelocity(Local)`),
       `ObjectRotationalMass1D` (`AngularVelocityLocal`), and two that depend on the node - `ObjectRigidBody` on a
-      Lie group node (the accelerations of rotation), `MarkerNodeRigid` on a node without angular velocity. Each is
-      implemented or no longer declared; the node-dependent ones ask their node. The test lists them as known
-      failures, an entry to be removed when fixed;
+      Lie group node (the accelerations of rotation), `MarkerNodeRigid` on a node without angular velocity
+      (`NodePointGround`); the plate's `Director1`, `ForceLocal` and `TorqueLocal` returned zeros as well;
     - **RG12.29.2** *open* - the node types a **node marker** requests: today checked in C++ as alternatives
       (`Position` or `Position2D`, ...), declared as `requestedNodeTypes` in the definitions for the documentation
       only (RG13.5.0.3); `Inspect` does not answer them yet - a list of alternatives per node would need its own
@@ -1985,7 +1984,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG9.3 | #2744 | access functions as single functions of the objects; evaluation first |
 | RG9.4 | #2202 | kinetic and potential energy as output variables, per object type: done for bodies, beams, plates, superelements, spring-dampers; open RG9.4.5 (should a rigid body report zero potential energy) |
-| RG12.29.1 | #2768 | output variables declared and not computable, found by `mbs.Inspect` |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |

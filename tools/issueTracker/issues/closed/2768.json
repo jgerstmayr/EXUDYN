@@ -2,10 +2,14 @@
   "number": 2768,
   "title": "declared output variables that cannot be read",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "MEDIUM",
   "description": "mbs.Inspect(item, exu.InspectType.OutputVariables) over every item of every MiniExample (#2203) finds output variables an item declares but cannot compute: NodePoint2D RotationMatrix, Rotation, AngularVelocity, AngularVelocityLocal (GetOutputVariable failed); MarkerNodeODE1Coordinate Coordinates_t (refused by MainMarker); ObjectANCFThinPlate Director2 (GetOutputVariableBody failed); ObjectANCFBeam AngularVelocity and AngularVelocityLocal (not implemented); ObjectRotationalMass1D AngularVelocityLocal (GetOutputVariableBody failed); and two that depend on the node: ObjectRigidBody on NodeRigidBodyRotVecLG Acceleration, AccelerationLocal, AngularAcceleration, AngularAccelerationLocal (the Lie group node has no angular acceleration), MarkerNodeRigid on the node of ObjectBeamGeometricallyExact AngularVelocity. Each is either implemented or no longer declared; the node-dependent ones need the body or marker to ask its node.",
   "dateRaised": "2026-10-01",
-  "deadline": "2027-03-30"
+  "deadline": "2027-03-30",
+  "dateResolved": "2026-10-01 10:52",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Every output variable an item declares can now be read: the rotation outputs of NodePoint2D, Director1/Director2/ForceLocal/TorqueLocal of ObjectANCFThinPlate (which returned zeros before; ForceLocal and TorqueLocal are the membrane force and moment resultants per length), the angular velocity of ObjectANCFBeam, the accelerations of a rigid body on NodeRigidBodyRotVecLG, AngularVelocityLocal of ObjectRotationalMass1D, the angular velocity of a rigid marker on NodePointGround; markers on ODE1 coordinates no longer list Coordinates_t.",
+  "resolvedInVersion": "1.12.204"
 }
