@@ -978,6 +978,8 @@ This group is that revision and what has to happen before it can start.
       - **RG6.7.7.5** the `exudyn.graphics` helpers keep `edges3` and the line shapes (`MergeTriangleLists`,
         `Transform`/`Move`, `InvertTriangles`); `Triangles6ToTriangles` turns an `edges3` into two `edges`;
         `graphics.Lines` gets `shape`.
+      - the visual check: `python/Examples/graphicsCurvedShapes.py` (curved shapes beside the flat ones of `exudyn.graphics`,
+        quadratic lines, spheres, a rotating body), row K13 of the manual GUI check (RG2.4);
       - **RG6.7.7.8** *open* (#2769) - `MergeTriangleLists` does not offset the `edges` of `g2` when `g1` has none
         (found in RG6.7.7.5; the `edges3` merge offsets always).
       - **RG6.7.7.6** **the primitives on quadratic shapes** - `Cylinder`, `Tube`, `Torus`, `SolidOfRevolution`, the

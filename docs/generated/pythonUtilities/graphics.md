@@ -49,6 +49,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFsliding
 - **output**: graphicsData dictionary {'type':'Spheres', 'points', 'radii', 'colors', 'resolution'}
 
 
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsCurvedShapes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsCurvedShapes.py) (Ex)
+
+
 (sec-graphics-triangles6totriangles)=
 ## Function: Triangles6ToTriangles
 
@@ -102,7 +105,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFsliding
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFswitchingSlidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFswitchingSlidingJoint2D.py) (Ex), [`doublePendulum2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/doublePendulum2D.py) (Ex), [`lavalRotor2Dtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/lavalRotor2Dtest.py) (Ex), [`pendulum2Dconstraint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulum2Dconstraint.py) (Ex), [`ANCFcontactFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactFrictionTest.py) (TM), [`ANCFmovingRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py) (TM), [`ANCFslidingAndALEjointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFslidingAndALEjointTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontactCircle2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFcontactCircle2.py) (Ex), [`ANCFswitchingSlidingJoint2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFswitchingSlidingJoint2D.py) (Ex), [`doublePendulum2D.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/doublePendulum2D.py) (Ex), [`graphicsCurvedShapes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsCurvedShapes.py) (Ex), [`lavalRotor2Dtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/lavalRotor2Dtest.py) (Ex), [`ANCFcontactFrictionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFcontactFrictionTest.py) (TM), [`ANCFmovingRigidBodyTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFmovingRigidBodyTest.py) (TM), [`ANCFslidingAndALEjointTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ANCFslidingAndALEjointTest.py) (TM), ...
 
 
 (sec-graphics-circle)=
@@ -256,6 +259,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFsliding
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsCurvedShapes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsCurvedShapes.py) (Ex)
+
+
 (sec-graphics-rigidlink)=
 ## Function: RigidLink
 
@@ -321,7 +327,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`fourBarMech
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`graphicsDataExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py) (Ex), [`gyroStability.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/gyroStability.py) (Ex), [`involuteGearGraphics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py) (Ex), [`particlesSilo.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/particlesSilo.py) (Ex), [`ballBearingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ballBearingTest.py) (TM), [`ConvexContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ConvexContactTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`graphicsCurvedShapes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsCurvedShapes.py) (Ex), [`graphicsDataExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py) (Ex), [`gyroStability.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/gyroStability.py) (Ex), [`involuteGearGraphics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/involuteGearGraphics.py) (Ex), [`ballBearingTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ballBearingTest.py) (TM), [`ConvexContactTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/ConvexContactTest.py) (TM), ...
 
 
 (sec-graphics-arrow)=
@@ -685,7 +691,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecan
 - **notes**: transformation corresponds to HomogeneousTransformation(Aoff, pOff), transforming original coordinates v into vNew = pOff + Aoff @ v
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`graphicsDataExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py) (Ex), [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`NGsolveFFRFSlidingJoint.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveFFRFSlidingJoint.py) (Ex), [`raytracerNOGLFWtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/raytracerNOGLFWtest.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearningModel.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ballBearningModel.py) (Ex), [`graphicsCurvedShapes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsCurvedShapes.py) (Ex), [`graphicsDataExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py) (Ex), [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`raytracerNOGLFWtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/raytracerNOGLFWtest.py) (TM), [`rigidBodyAsUserFunctionTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/rigidBodyAsUserFunctionTest.py) (TM), ...
 
 
 (sec-graphics-mergetrianglelists)=

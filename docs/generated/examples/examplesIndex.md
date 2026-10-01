@@ -52,6 +52,7 @@ flexiblePendulumANCF
 flexibleRotor3Dtest
 fourBarMechanism3D
 geneticOptimizationSliderCrank
+graphicsCurvedShapes
 graphicsDataExample
 gyroStability
 humanRobotInteraction

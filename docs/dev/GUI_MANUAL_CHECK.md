@@ -16,8 +16,8 @@ mouse, tkinter windows, focus, fonts, window placement. That is this list.
 2. Run `python -m exudyn info` and paste the output into the report.
 3. **Back up `~/.exudyn/config.json`** if it exists, then delete it, so that you test the defaults.
    Some checks below write this file; restore your backup at the end.
-4. Copy `python/testing/guiManualCheckModel.py` and `python/Examples/nMassOscillatorEigenmodes.py`
-   into an empty working directory.
+4. Copy `python/testing/guiManualCheckModel.py`, `python/Examples/nMassOscillatorEigenmodes.py` and
+   `python/Examples/graphicsCurvedShapes.py` into an empty working directory.
 5. `python -m exudyn demo` - the renderer opens, the demo runs, the window closes. If this fails,
    stop here and report it.
 
@@ -65,6 +65,7 @@ Report each check as **OK / FAIL / n.a.** with the ID; for a FAIL, one line on w
 | K10 | F2, then `N`, then F2, then `N` | first `N` ignored (message *ignore keys mode switched on*), after F2 again `N` works |
 | K11 | `Q` | simulation stops; console prints *simulation finished ...*; the window stays and can still be rotated |
 | K12 | `V`: `openGL.light0.shadow` = `0.4`, `openGL.light0.useCameraFrame` = `True`, `view0.camera.modelCentricView` = `False`; close the dialog, rotate and zoom with the mouse | the shadow of the pendulum stays where the light puts it and follows the view smoothly - it does not flicker or appear and vanish with the view (#2308); set the three back |
+| K13 | run `graphicsCurvedShapes.py` (its own window): look at the rows; `V`: `openGL.advanced.curvedTriangleTilingAngle` = `90`, then `5`, then back to `15`; `T` until face edges show; CTRL+R and back; SPACE | the curved row (y=0) is smooth where the flat row (y=-3) shows facets, the red rims lie on the cylinder and the vase; at 90 the coarse elements show, at 5 a fine split - at once, without restarting; the face edges of the curved shapes are curved; the raytraced image shows the same shapes; the body at x=12 rotates with its rims and ring (#2709) |
 
 ## 3. Dialogs from the render window (15 min)
 
