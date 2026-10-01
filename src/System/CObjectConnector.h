@@ -230,6 +230,28 @@ public:
 	//! Return true, if constraint currently is formulated at velocity level (e.g. coordinate constraint ==> this information is needed for correct jacobian computation)
 	virtual bool UsesVelocityLevel() const { return false; }
 
+	//! L1 of a constraint on position markers (#2745): its algebraic equations from the kinematics of its two markers -
+	//! the positions, or at velocityLevel the velocities - and its Lagrange multipliers (lambda_i = 0 for a free axis);
+	//! the system forms C_q from the same equations by automatic differentiation (ComputeConstraintEquationsPositionDiff)
+	virtual void ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t,
+		Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+	{
+		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsPosition: not implemented for this constraint");
+	}
+
+	//! the same equations at position level with automatic differentiation by the marker positions (#2745)
+	virtual void ComputeConstraintEquationsPositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, const LinkedDataVector& lambda,
+		Real t, Index itemIndex, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
+	{
+		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsPositionDiff: not implemented for this constraint");
+	}
+
+	//! the derivative of the equations by the Lagrange multipliers, if GetAvailableJacobians() names AE_AE (#2745)
+	virtual void ComputeJacobianAE_AE(ResizableMatrix& jacobian_AE) const
+	{
+		CHECKandTHROWstring("CObjectConstraint::ComputeJacobianAE_AE: not implemented for this constraint");
+	}
+
 	//! get global starting index (index of first algebraic variable) at global algebraic coordinates vector in CData
 	virtual Index GetGlobalAECoordinateIndex() const { return globalAECoordinateIndex; }
 	//! set global starting index (index of first algebraic variable) at global algebraic coordinates vector in CData

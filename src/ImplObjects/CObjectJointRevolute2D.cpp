@@ -51,6 +51,30 @@ void CObjectJointRevolute2D::ComputeAlgebraicEquations(Vector& algebraicEquation
 }
 
 
+//! the equations on the connector interface (#2745): the relative position (or velocity) in x and y, global - as
+//! ComputeAlgebraicEquations
+template<class TReal>
+void CObjectJointRevolute2D::ComputeConstraintEquationsTemplate(const MarkerPosition<TReal>* markers, const LinkedDataVector& lambda,
+	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
+{
+	equations.SetNumberOfItems(2);
+	SlimVectorBase<TReal, 3> relative = velocityLevel ? markers[1].velocity - markers[0].velocity : markers[1].position - markers[0].position;
+	equations[0] = relative[0];
+	equations[1] = relative[1];
+}
+
+void CObjectJointRevolute2D::ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t,
+	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
+}
+
+void CObjectJointRevolute2D::ComputeConstraintEquationsPositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, const LinkedDataVector& lambda,
+	Real t, Index itemIndex, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);
+}
+
 void CObjectJointRevolute2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
 	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {

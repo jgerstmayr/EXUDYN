@@ -24,7 +24,8 @@ from exudyn.utilities import (ObjectGround, NodePoint, MassPoint, NodeRigidBodyE
                               NodeGenericODE1, NodePointGround, MarkerNodeCoordinate, MarkerNodeRotationCoordinate,
                               CoordinateSpringDamper, RigidBodySpringDamper, LinearSpringDamper, TorsionalSpringDamper,
                               MarkerBodyRigid, MarkerNodeRigid, InertiaCuboid, RotXYZ2RotationMatrix, RotationMatrix2EulerParameters,
-                              AngularVelocity2EulerParameters_t)
+                              AngularVelocity2EulerParameters_t, ObjectJointSpherical, ObjectConnectorDistance,
+                              ObjectJointRevolute2D, Force)
 
 exu.special.userInterface.SuppressAll(True)
 
@@ -285,3 +286,118 @@ def test_theRightHandSideOfTheNewPathIsTheLegacyOne(connector):
     new = RightHandSide(connector, 0)
     assert np.abs(legacy).max() > 1e-3
     assert np.abs(new - legacy).max() < 1e-13 * np.abs(legacy).max()
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#constraints on the connector interface (#2745): equations as templates of the marker kinematics, C_q by automatic
+#differentiation, the reaction forces without C_q; both paths are analytic, so they agree to round-off
+def BuildConstraintModel(kind):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    oGround = mbs.AddObject(ObjectGround())
+    if kind == 'Revolute2D':
+        mPrevious = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround))
+        for i in range(3):
+            n = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.2*i+0.1, 0, 0], initialVelocities=[0, 0, 0.2*i]))
+            b = mbs.AddObject(ObjectRigidBody2D(nodeNumber=n, physicsMass=1, physicsInertia=0.01))
+            mbs.AddObject(ObjectJointRevolute2D(markerNumbers=[mPrevious, mbs.AddMarker(MarkerBodyPosition(bodyNumber=b, localPosition=[-0.1, 0, 0]))]))
+            mPrevious = mbs.AddMarker(MarkerBodyPosition(bodyNumber=b, localPosition=[0.1, 0, 0]))
+            mbs.AddLoad(Force(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=b)), loadVector=[0, -9.81, 0]))
+    else:
+        #consistent initial positions: the distance constraint gets a gap of 0.05 between its markers
+        inertia = InertiaCuboid(density=1000, sideLengths=[0.2, 0.05, 0.05])
+        offset = 0.1 if kind == 'Spherical' else 0.075
+        mPrevious = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0, 0.01, 0]))
+        for i in range(3):
+            ep = RotationMatrix2EulerParameters(np.eye(3))
+            n = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2*i+0.1, 0, 0] + list(ep),
+                                            initialVelocities=[0, 0.1, 0] + list(AngularVelocity2EulerParameters_t([0.1, 0.2, 0.3], ep))))
+            b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+            mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=b, localPosition=[-offset, 0.01, 0]))
+            if kind == 'Spherical':
+                mbs.AddObject(ObjectJointSpherical(markerNumbers=[mPrevious, mBody], constrainedAxes=[1, 1, 1] if i != 1 else [1, 0, 1]))
+            else:
+                mbs.AddObject(ObjectConnectorDistance(markerNumbers=[mPrevious, mBody], distance=0.1-offset if i == 0 else 0.2-2*offset))
+            mPrevious = mbs.AddMarker(MarkerBodyPosition(bodyNumber=b, localPosition=[offset, 0.01, 0]))
+            mbs.AddLoad(Force(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=b)), loadVector=[0, 0, -9.81*inertia.Mass()]))
+    mbs.Assemble()
+    return mbs
+
+
+constraintKinds = ['Spherical', 'Distance', 'Revolute2D']
+
+
+def SolveConstraintModel(kind, legacy):
+    exu.experimental.connectorInterfaceLegacy = legacy
+    mbs = BuildConstraintModel(kind)
+    s = exu.SimulationSettings()
+    s.timeIntegration.numberOfSteps = 200
+    s.timeIntegration.endTime = 0.2
+    s.timeIntegration.verboseMode = 0
+    s.solutionSettings.writeSolutionToFile = False
+    mbs.SolveDynamic(s)
+    return (mbs.systemData.GetODE2Coordinates(), mbs.systemData.GetAECoordinates())
+
+
+def ConstraintJacobianAndResidual(kind, legacy):
+    """the Jacobian of the algebraic equations and their residual, at perturbed coordinates and Lagrange multipliers"""
+    exu.experimental.connectorInterfaceLegacy = legacy
+    mbs = BuildConstraintModel(kind)
+    s = exu.SimulationSettings()
+    solver = exu.MainSolverImplicitSecondOrder()
+    solver.InitializeSolver(mbs, s)
+    rng = np.random.default_rng(1)
+    q = mbs.systemData.GetODE2Coordinates()
+    mbs.systemData.SetODE2Coordinates(q + 0.02*rng.standard_normal(len(q)))
+    mbs.systemData.SetAECoordinates(rng.standard_normal(len(mbs.systemData.GetAECoordinates())))
+    solver.ComputeJacobianAE(mbs, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False)
+    jacobian = np.array(solver.GetSystemJacobian())
+    solver.ComputeAlgebraicEquations(mbs)
+    residual = np.array(solver.GetSystemResidual())[-len(mbs.systemData.GetAECoordinates()):]  #the algebraic part
+    solver.FinalizeSolver(mbs, s)
+    return jacobian, residual
+
+
+def ConstraintNewtonResidual(kind, legacy):
+    """the static residual with the reaction forces C_q^T lambda, at perturbed coordinates and Lagrange multipliers"""
+    exu.experimental.connectorInterfaceLegacy = legacy
+    mbs = BuildConstraintModel(kind)
+    s = exu.SimulationSettings()
+    solver = exu.MainSolverStatic()
+    solver.InitializeSolver(mbs, s)
+    rng = np.random.default_rng(1)
+    q = mbs.systemData.GetODE2Coordinates()
+    mbs.systemData.SetODE2Coordinates(q + 0.02*rng.standard_normal(len(q)))
+    mbs.systemData.SetAECoordinates(rng.standard_normal(len(mbs.systemData.GetAECoordinates())))
+    solver.ComputeNewtonResidual(mbs, s)
+    residual = np.array(solver.GetSystemResidual())
+    solver.FinalizeSolver(mbs, s)
+    return residual
+
+
+@pytest.mark.parametrize('kind', constraintKinds)
+def test_constraintsOnTheNewPathComputeWhatTheLegacyPathComputes(kind):
+    """the coordinates to round-off; the Lagrange multipliers to the Newton tolerance, as the reaction forces differ in the
+    order of their sums"""
+    (qLegacy, lambdaLegacy) = SolveConstraintModel(kind, 1)
+    (qNew, lambdaNew) = SolveConstraintModel(kind, 0)
+    assert np.abs(qLegacy).max() > 1e-3 and np.abs(lambdaLegacy).max() > 1e-3
+    assert np.abs(qNew - qLegacy).max() < 1e-12 * np.abs(qLegacy).max()
+    assert np.abs(lambdaNew - lambdaLegacy).max() < 1e-7 * np.abs(lambdaLegacy).max()
+
+
+@pytest.mark.parametrize('kind', constraintKinds)
+def test_theReactionForcesWithoutCqAreCqTimesLambda(kind):
+    legacy = ConstraintNewtonResidual(kind, 1)
+    new = ConstraintNewtonResidual(kind, 0)
+    assert np.abs(legacy).max() > 1
+    assert np.abs(new - legacy).max() < 1e-14 * np.abs(legacy).max()
+
+
+@pytest.mark.parametrize('kind', constraintKinds)
+def test_theConstraintJacobianByADIsTheHandWrittenOne(kind):
+    (jacobianLegacy, residualLegacy) = ConstraintJacobianAndResidual(kind, 1)
+    (jacobianNew, residualNew) = ConstraintJacobianAndResidual(kind, 0)
+    assert np.abs(jacobianLegacy).max() > 0.1
+    assert np.abs(jacobianNew - jacobianLegacy).max() < 1e-14 * np.abs(jacobianLegacy).max()
+    assert np.abs(residualNew - residualLegacy).max() < 1e-14 * (1 + np.abs(residualLegacy).max())

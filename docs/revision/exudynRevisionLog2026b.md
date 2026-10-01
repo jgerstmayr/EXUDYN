@@ -10907,3 +10907,42 @@ generalized-alpha, 100 steps, EigenSparse): 0.383 s legacy (numerical Jacobian) 
 (5.0e-9), the mini examples `ObjectConnectorRigidBodySpringDamper` (9.0e-9) and `MarkerBodyRigid` (4.2e-10); new
 values recorded. The fast-module list (`AVX2ReferenceSolutionUpdate`) has the rigid-body spring-damper example and needs
 its value re-recorded with the next fast build (not built here).
+
+<a id="rg14-2-9-1"></a>
+### RG14.2.9.1 — constraints on position markers through the connector interface (2026-10-01, #2745, #2771)
+
+Decided as proposed (maintainer, 2026-10-01). The pilot and the two other constraints on position markers:
+`JointSpherical`, `ConnectorDistance`, `JointRevolute2D`.
+- **The constraint** (L1): `ComputeConstraintEquationsTemplate<TReal>(markers, lambda, velocityLevel, equations)` - the
+  joint's equations from `MarkerPosition` and its Lagrange multipliers (an equation $\lambda_i = 0$ on a free axis of
+  the spherical joint), exactly as `ComputeAlgebraicEquations` writes them; the virtuals
+  `ComputeConstraintEquationsPosition` (Real) and `...PositionDiff` (`DRealPositionMarkers`, position level) call it;
+  `ComputeJacobianAE_AE` gives $\partial\gv/\partial\lambdav$ where `GetAvailableJacobians` names AE_AE (the free axes).
+  Up to `maxConstraintEquations = 6` equations (`MarkerData.h`).
+- **The system** (L2, `CSystem`), when `ConstraintUsesInterface` (new path, active, not at velocity level, position
+  markers): the equations from `GetKinematicsPosition` of the markers - no `MarkerDataStructure`; $\Cm_\qv$ =
+  $[\partial\gv/\partial\pv_0\,\Jm_{pos,0},\ \partial\gv/\partial\pv_1\,\Jm_{pos,1}]$ from one AD pass (6 directions) chained with the
+  marker Jacobians - no `ComputeJacobianAE`; and **the reaction forces without $\Cm_\qv$**: per marker
+  $\fv_k = (\partial\gv/\partial\pv_k)\tp\lambdav$, projected with `AddGeneralizedForce` like a connector force, in both the
+  parallel and the serial loop of `ComputeODE2ProjectedReactionForces`. Inactive constraints and the legacy path take
+  the old functions, which stay until the legacy path goes.
+- **#2771**, found by the tests: `solver.ComputeAlgebraicEquations(mbs)` linked the algebraic part of the residual as
+  `(start, start + n)` where the third argument is the count, and so raised a size mismatch whenever there were
+  algebraic equations; it also added to an uninitialized residual. `ComputeODE1RHS` had the same count error. Both fixed.
+
+**Checked** (`test_connectorInterface.py`, three models - a chain of rigid bodies with spherical joints, one with a free
+axis; the same with distance constraints; a chain of 2D bodies with revolute joints): the constraint Jacobian $\Cm_\qv$
+by AD equals the hand-written one (3e-16 relative, `ComputeJacobianAE`), the algebraic equations to round-off, the static
+Newton residual with $\Cm_\qv\tp\lambdav$ to 1e-16; after an implicit solve the coordinates agree to round-off and the
+Lagrange multipliers to the Newton tolerance (2e-9 relative) - the reaction forces are summed in another order.
+
+**Measured**: 200 rigid bodies with spherical joints, generalized-alpha, 100 steps: 0.96 s legacy, 0.93 s new (3 %);
+the right-hand side no longer forms $\Cm_\qv$, but the step is dominated by the rest. The gain is the code: the three
+hand-written `ComputeJacobianAE` are no longer used on the new path.
+
+**References**: four test models moved within the Newton tolerance and were re-recorded - `fourBarMechanismIftomm`
+(6.0e-12), `mainSystemExtensionsTests` (4.1e-13), `rollingDiscTangentialForces` (2.1e-10, on the platform list as
+sensitive), `sphericalJointTest` (3.0e-13).
+
+(a) - the term $\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ in the Newton matrix, off by default - comes with RG14.2.9.3, where it
+matters (rotations); for these three constraints it is zero or nearly so.

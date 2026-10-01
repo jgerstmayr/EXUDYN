@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 190 | 1.12.205 |
+| 1.12 | Metheney | 191 | 1.12.206 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.206** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` MainSolverBase.ComputeAlgebraicEquations and ComputeODE1RHS raise a size mismatch (#2771)
+  - description: solver.ComputeAlgebraicEquations(mbs) and solver.ComputeODE1RHS(mbs) link the residual as LinkedDataVector(systemResidual, start, start + n), but the third argument is the number of items: with algebraic equations (or ODE1 coordinates) the call raises 'LinkedDataVectorBase: size mismatch'. Found by the tests of revision2026b step RG14.2.9.1 (\#2745).
+  - **notes:** solver.ComputeAlgebraicEquations(mbs) and solver.ComputeODE1RHS(mbs) raised a size mismatch when the system has algebraic equations or ODE1 coordinates; ComputeAlgebraicEquations returns the equations alone, no longer added to the previous residual
+  - date resolved: **2026-10-01 23:50**, date raised: 2026-10-01
 - **1.12.205** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` RotXYZGTv\_qTemplate: wrong sign in d(G^T v)/dq for Tait-Bryan angles (#2770)
   - description: The derivative of G^T\*v with respect to the Tait-Bryan angles has entry (2,1) = -c1\*v\[0\] + ..., but d(s1\*v\[0\])/dq1 = +c1\*v\[0\]. It enters the Jacobian derivative of every torque on a NodeRigidBodyRxyz (CObjectRigidBody JacobianTtimesVector\_q, CNodeRigidBodyRxyz line 302); found by revision2026b step RG14.2.8.1 (\#2745), whose AD Jacobian of the torsional spring-damper differed from the numerical one in exactly this entry.
   - **notes:** RotXYZGTv\_qTemplate: the derivative of G^T v by the Tait-Bryan angles had a wrong sign in entry (2,1) (d(s1\*v0)/dq1 = +c1\*v0); it entered the Jacobian of every torque on a NodeRigidBodyRxyz

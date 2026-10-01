@@ -70,6 +70,41 @@ void CObjectJointSpherical::ComputeAlgebraicEquations(Vector& algebraicEquations
 }
 
 
+//! the equations on the connector interface (#2745): the relative position (or velocity), global, on the constrained
+//! axes; lambda_i = 0 on the free ones - as ComputeAlgebraicEquations
+template<class TReal>
+void CObjectJointSpherical::ComputeConstraintEquationsTemplate(const MarkerPosition<TReal>* markers, const LinkedDataVector& lambda,
+	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
+{
+	equations.SetNumberOfItems(nConstraints);
+	SlimVectorBase<TReal, 3> relative = velocityLevel ? markers[1].velocity - markers[0].velocity : markers[1].position - markers[0].position;
+	for (Index i = 0; i < nConstraints; i++)
+	{
+		equations[i] = parameters.constrainedAxes[i] == 1 ? relative[i] : (TReal)lambda[i];
+	}
+}
+
+void CObjectJointSpherical::ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t,
+	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
+}
+
+void CObjectJointSpherical::ComputeConstraintEquationsPositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, const LinkedDataVector& lambda,
+	Real t, Index itemIndex, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);
+}
+
+void CObjectJointSpherical::ComputeJacobianAE_AE(ResizableMatrix& jacobian_AE) const
+{
+	jacobian_AE.SetScalarMatrix(nConstraints, 0.);
+	for (Index i = 0; i < nConstraints; i++)
+	{
+		if (parameters.constrainedAxes[i] == 0) { jacobian_AE(i, i) = 1.; }
+	}
+}
+
 void CObjectJointSpherical::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
 	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {

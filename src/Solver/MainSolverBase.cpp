@@ -262,7 +262,7 @@ void MainSolverBase::ComputeODE2RHS(MainSystem& mainSystem/*, const SimulationSe
 void MainSolverBase::ComputeODE1RHS(MainSystem& mainSystem/*, const SimulationSettings& simulationSettings*/)
 {
 	CheckInitialized(mainSystem);
-	LinkedDataVector linkODE1residual(GetCSolver().data.systemResidual, GetCSolver().data.nODE2, GetCSolver().data.nODE2+ GetCSolver().data.nODE1);
+	LinkedDataVector linkODE1residual(GetCSolver().data.systemResidual, GetCSolver().data.nODE2, GetCSolver().data.nODE1); //start, number of items (#2771)
 
 	mainSystem.cSystem.ComputeSystemODE1RHS(GetCSolver().data.tempCompData, linkODE1residual); //entries initialized in ComputeSystemODE1RHS
 }
@@ -275,7 +275,8 @@ void MainSolverBase::ComputeAlgebraicEquations(MainSystem& mainSystem/*, const S
 	if (GetCSolver().data.nAE) //only if equations exist!
 	{
 		Index nODE21 = GetCSolver().data.nODE2 + GetCSolver().data.nODE1;
-		LinkedDataVector linkAEresidual(GetCSolver().data.systemResidual, nODE21, nODE21 + GetCSolver().data.nAE);
+		LinkedDataVector linkAEresidual(GetCSolver().data.systemResidual, nODE21, GetCSolver().data.nAE); //start, number of items (#2771)
+		linkAEresidual.SetAll(0.); //the system adds the equations to it (#2771)
 
 		mainSystem.cSystem.ComputeAlgebraicEquations(GetCSolver().data.tempCompDataArray, linkAEresidual, velocityLevel); //in staticsolver use always index2constraints simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints);
 	}

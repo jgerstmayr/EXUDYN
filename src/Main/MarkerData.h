@@ -261,6 +261,9 @@ public:
 //! pass gives factorODE2*dF/dp_k + factorODE2_t*dF/dv_k
 typedef EXUmath::AutoDiff<6, Real> DRealPositionMarkers;
 
+//! the largest number of algebraic equations of a constraint on the connector interface (#2745)
+const Index maxConstraintEquations = 6;
+
 //! frame and velocities of a rigid marker (#2745): the frame as a homogeneous transformation (rotation local to global,
 //! position global), the velocity global and the angular velocity in the marker's frame - what the bodies deliver
 //! without an extra product, and what the legacy marker data holds

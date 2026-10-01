@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  20:44:07 (last modified)
+* @date         2026-10-01  23:36:04 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -106,6 +106,24 @@ public: // AUTO:
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override;
+
+    //! AUTO:  the constraint implements the interface of position markers (#2745)
+    virtual ConnectorInterface GetConnectorInterface() const override
+    {
+        return ConnectorInterface::PositionMarkers;
+    }
+
+    //! AUTO:  the algebraic equations from the kinematics of the two markers (#2745)
+    virtual void ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t, Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const override;
+
+    //! AUTO:  the same equations with automatic differentiation, for C_q (#2745)
+    virtual void ComputeConstraintEquationsPositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, const LinkedDataVector& lambda, Real t, Index itemIndex, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const override;
+
+    //! AUTO:  the equations of the constraint, for Real and AutoDiff (#2745)
+    template<class TReal> void ComputeConstraintEquationsTemplate(const MarkerPosition<TReal>* markers, const LinkedDataVector& lambda, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const;
+
+    //! AUTO:  the derivative of the equations of the free axes by the Lagrange multipliers (#2745)
+    virtual void ComputeJacobianAE_AE(ResizableMatrix& jacobian_AE) const override;
 
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;

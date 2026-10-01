@@ -1,0 +1,18 @@
+{
+  "number": 2771,
+  "title": "MainSolverBase.ComputeAlgebraicEquations and ComputeODE1RHS raise a size mismatch",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "solver.ComputeAlgebraicEquations(mbs) and solver.ComputeODE1RHS(mbs) link the residual as LinkedDataVector(systemResidual, start, start + n), but the third argument is the number of items: with algebraic equations (or ODE1 coordinates) the call raises 'LinkedDataVectorBase: size mismatch'. Found by the tests of revision2026b step RG14.2.9.1 (#2745).",
+  "dateRaised": "2026-10-01",
+  "deadline": "2027-03-30",
+  "dateResolved": "2026-10-01 23:50",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Solver/MainSolverBase.cpp",
+  "line": "278",
+  "releaseNotes": "solver.ComputeAlgebraicEquations(mbs) and solver.ComputeODE1RHS(mbs) raised a size mismatch when the system has algebraic equations or ODE1 coordinates; ComputeAlgebraicEquations returns the equations alone, no longer added to the previous residual",
+  "resolvedInVersion": "1.12.206"
+}

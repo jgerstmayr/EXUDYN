@@ -2095,8 +2095,9 @@ done.
       takes the frame from `MarkerRigid` and does not add new uses of `rotationMarker0/1`.
 
 <a id="rg14-2-9"></a>
-**RG14.2.9 in detail** *(proposed 2026-10-01, for the maintainer's decision before it starts)* - constraints and joints
-on the connector interface.
+**RG14.2.9 in detail** *(proposed 2026-10-01; **decided as proposed by the maintainer, 2026-10-01**: (a) the term
+$\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ available and off, (b) and (c) as written)* - constraints and joints on the
+connector interface.
 
 *What the code does today.* 13 constraint objects (`CObjectConstraint`, derived from `CObjectConnector`), by the
 marker kind they request:
@@ -2129,8 +2130,11 @@ on `MarkerPosition`, `MarkerRigid` or `MarkerCoordinate`. `CSystem` does the res
 
 *Sub-steps*, each with the fallback switch and the comparison of residuals, $\Cm_\qv$ and reaction forces (to round-off,
 both are analytic), solutions and timers:
-- **RG14.2.9.1** the interface in `CObjectConnector`/`CSystem` and the pilot `JointSpherical` (position markers),
-  then `ConnectorDistance` and `JointRevolute2D`;
+- **RG14.2.9.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-9-1) - the interface in
+  `CObjectConnector`/`CSystem` and the pilot `JointSpherical` (position markers), then `ConnectorDistance` and
+  `JointRevolute2D`;
+  - **RG14.2.9.1.1** **DONE 2026-10-01** (#2771) - `solver.ComputeAlgebraicEquations` and `ComputeODE1RHS` linked the
+    residual with an end index where a count belongs, and added the equations to an uninitialized residual;
 - **RG14.2.9.2** `ConnectorCoordinate` (coordinate markers);
 - **RG14.2.9.3** the rigid joints `JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, `JointPrismatic2D` - after
   RG14.2.8.1, which brings the rotation directions; their equations are ported as they are (RG14.3 then rewrites

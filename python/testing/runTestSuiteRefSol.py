@@ -81,7 +81,7 @@ def TestExamplesReferenceSolution():
         'explicitLieGroupIntegratorTest.py':0.16164013319819118,
         'explicitLieGroupMBSTest.py':3.028987107923892,             #new 2026-09-11; endTime shortened 1->0.1 on adding, step size unchanged
         'fourBarMechanismTest.py':-2.376335780518213,
-        'fourBarMechanismIftomm.py':0.17216652717785863,
+        'fourBarMechanismIftomm.py':0.1721665271838613, #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 0.17216652717785863
         'generalContactCylinderTest.py':12.24658398056691,         #new 2024-03-17 (spurious trig-sphere contact forces)
         'generalContactCylinderTrigsTest.py':5.48690843091258,     #new 2024-03-17 (internal sphere-sphere contact)
         'generalContactFrictionTests.py':12.022654145378834,        #changed 2025-05-06 (seems to now be closer to linux; differences with object8); new 2024-03-17: 12.027740342293988 (doubled damping; fixed sphere-sphere and trig-sphere contact); old: 12.464092000879125,        #new 2022-07-11 (CState Parallel); #before 2022-01-25 (changed some velocity computation in GeneralContact): 10.133183086232139, #changed GeneralContact and implicit solver; before 2022-01-18: 10.132106712933348 , 
@@ -126,7 +126,7 @@ def TestExamplesReferenceSolution():
         'linearFEMgenericODE2.py': 0.38767197129755937,              #new 2024-10-06 for jacobianUserFunction in GenericODE2
         'loadUserFunctionTest.py': 1.8051173706570727,              #new 2024-10-10 for visualization of time-dependent loads
         'LShapeGeomExactBeam2D.py':-0.9181474510515215,             #2026-01-09 update due to autodifferentiation
-        'mainSystemExtensionsTests.py': 57.646394469414666,          #updated 2023-11-16; updated 2023-06-09; old: new 2023-05-19
+        'mainSystemExtensionsTests.py': 57.64639446941507, #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 57.646394469414666;          #updated 2023-11-16; updated 2023-06-09; old: new 2023-05-19
         'mainSystemUserFunctionsTest.py': 4.069301305919595,        #new 2024-10-17
         'manualExplicitIntegrator.py':2.0596986296922988,
         'matrixContainerTest.py':56.5,                              #new 2024-10-09
@@ -156,7 +156,7 @@ def TestExamplesReferenceSolution():
         'rigidBodyCOMtest.py':3.409431467726291,
         'rigidBodySpringDamperIntrinsic.py':0.5472368462870515,     #2026-10-01: on the connector interface (#2745), round-off of the projection; before 0.5472368462985283; new 2023-11-30 (intrinsic formulation for rigid body spring damper)
         'rollingCoinTest.py':1.0634381189361193,                     #until 2024-04-29 (without force): 0.0020040999273379673
-        'rollingDiscTangentialForces.py':1.0342017404650015,        #new 2024-05-04: RollingDiscPenalty: switch to local computation of tangential forces
+        'rollingDiscTangentialForces.py':1.034201740253807, #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 1.0342017404650015;        #new 2024-05-04: RollingDiscPenalty: switch to local computation of tangential forces
         'rollingCoinPenaltyTest.py':0.03489603106786701,
         'rotatingTableTest.py':7.838680414273867,                   #2026-10-01: Jacobian of the rigid-body spring-damper by AD (#2745), before 7.838680375029852; until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
         'scissorPrismaticRevolute2D.py':27.20255648904438,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2connectors, 2022-01-18: 27.202556489044145,
@@ -173,7 +173,7 @@ def TestExamplesReferenceSolution():
         'solverExplicitODE1ODE2test.py':3.3767933275918964,         #new 2022-07-11 (CState Parallel); 
         'sparseMatrixSpringDamperTest.py':-0.06779862812271391,     #changed to analytic Spring-Damper jacobian (missing d(vel)/dpos term): -0.06779862983767654,
         'sphereTriangleTest2.py':4.35616383223589, #2026-09-30: step size recommended also where a contact ends (#2109); before 4.35608275479331;                 #changed: 2026-01-23 (sparse acc(vel) initialization); new 2025-06-22
-        'sphericalJointTest.py':4.409080446575154,                  #new 2022-07-11 (CState Parallel); 
+        'sphericalJointTest.py':4.409080446574851, #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 4.409080446575154;                  #new 2022-07-11 (CState Parallel); 
         'springDamperUserFunctionTest.py':0.5062872273010924,
         'stiffFlyballGovernor.py':0.8962488779114738,
         'superElementRigidJointTest.py':0.015217208913989099,       #before 2022-02-20 (accuracy of internal sensors is higher): 0.015217208913983024,

@@ -56,6 +56,40 @@ void CObjectConnectorDistance::ComputeAlgebraicEquations(Vector& algebraicEquati
 	}
 }
 
+//! the equation on the connector interface (#2745): the distance minus its value, or at velocity level its time derivative -
+//! as ComputeAlgebraicEquations
+template<class TReal>
+void CObjectConnectorDistance::ComputeConstraintEquationsTemplate(const MarkerPosition<TReal>* markers, const LinkedDataVector& lambda,
+	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
+{
+	using std::sqrt;
+	equations.SetNumberOfItems(1);
+	SlimVectorBase<TReal, 3> vPos = markers[1].position - markers[0].position;
+	TReal currentDistance = sqrt(vPos * vPos);
+	CHECKandTHROW((Real)currentDistance != 0., "ObjectConnectorDistance: the distance of the markers is zero");
+	if (!velocityLevel)
+	{
+		equations[0] = currentDistance - parameters.distance;
+	}
+	else
+	{
+		TReal currentDistanceInv = 1. / currentDistance;
+		equations[0] = currentDistanceInv * (vPos * (markers[1].velocity - markers[0].velocity));
+	}
+}
+
+void CObjectConnectorDistance::ComputeConstraintEquationsPosition(const MarkerPosition<Real>* markers, const LinkedDataVector& lambda, Real t,
+	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
+}
+
+void CObjectConnectorDistance::ComputeConstraintEquationsPositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, const LinkedDataVector& lambda,
+	Real t, Index itemIndex, ConstSizeVectorBase<DRealPositionMarkers, maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);
+}
+
 void CObjectConnectorDistance::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1,
 	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {
