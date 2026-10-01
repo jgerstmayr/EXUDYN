@@ -49,7 +49,7 @@ def TestExamplesReferenceSolution():
         'ANCFmovingRigidBodyTest.py':-0.12893096934990356,          #new 2022-12-25; old solution differs for 1e-10 since several updates -0.12893096921737698,
         'ANCFslidingAndALEjointTest.py':-4.426408394755277,         #before 2023-05-01 (loads jacobian): -4.426408390697862,         #before 2022-12-25(resolved BUG 1274): -4.426403044189653; with old ObjectContactFrictionCircleCable2D until: 2022-03-09: -4.42640304418963,
         'ballBearingTest.py':0.037852414033278825,                 #2026-10-01: the cage's CartesianSpringDamper on the connector interface (#2745), round-off of the projection; before 0.03785241402944885
-        'bricardMechanism.py': 4.172189649306508,
+        'bricardMechanism.py': 4.172189649306256, #2026-10-02: rigid joints on the connector interface, reaction forces summed in another order (#2745), before 4.172189649306508;
         'carRollingDiscTest.py':-0.2394004871711386,
         'compareAbaqusAnsysRotorEigenfrequencies.py':0.0004185480476228394,
         'compareFullModifiedNewton.py':0.00020079676000188396,
@@ -150,7 +150,7 @@ def TestExamplesReferenceSolution():
         'reevingSystemSpringsTest.py':2.215557571743302,           #new 2023-07-17 (old solution contained compression forces: 2.213190117855691),
         'relativeRotationTranslationMechanism.py': 1.509631854432179,#new 2026-09-11
         'resultsMonitorTest.py': 1.0,                               #new 2026-09-19; exudyn.misc.resultsMonitor: the four file types, incremental reading, the CLI return codes
-        'revoluteJointPrismaticJointTest.py':1.2538806799241744,    #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver (modified Newton restart, etc.); before 2022-01-18: 1.2538806799243265,
+        'revoluteJointPrismaticJointTest.py':1.253880679925025, #2026-10-02: rigid joints on the connector interface, reaction forces summed in another order (#2745), before 1.2538806799241744;    #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver (modified Newton restart, etc.); before 2022-01-18: 1.2538806799243265,
         'rigidBody2Dtest.py': -0.5055295700922418,                  #new 2025-02-05: added arbitrary COM to 2D rigid body
         'rigidBodyAsUserFunctionTest.py':8.950865271552148,
         'rigidBodyCOMtest.py':3.409431467726291,

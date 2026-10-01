@@ -261,6 +261,22 @@ public:
 		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsCoordinateDiff: not implemented for this constraint");
 	}
 
+	//! L1 of a constraint on rigid markers (#2745): its algebraic equations from the frames (and at velocityLevel the
+	//! velocities) of its two markers and its Lagrange multipliers
+	virtual void ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t,
+		Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+	{
+		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsRigid: not implemented for this constraint");
+	}
+
+	//! the same equations at position level with automatic differentiation by the translations and rotations of the markers
+	//! (#2745)
+	virtual void ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
+		Real t, Index itemIndex, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
+	{
+		CHECKandTHROWstring("CObjectConstraint::ComputeConstraintEquationsRigidDiff: not implemented for this constraint");
+	}
+
 	//! the derivative of the equations by the Lagrange multipliers, if GetAvailableJacobians() names AE_AE (#2745)
 	virtual void ComputeJacobianAE_AE(ResizableMatrix& jacobian_AE) const
 	{

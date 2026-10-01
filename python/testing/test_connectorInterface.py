@@ -25,7 +25,8 @@ from exudyn.utilities import (ObjectGround, NodePoint, MassPoint, NodeRigidBodyE
                               CoordinateSpringDamper, RigidBodySpringDamper, LinearSpringDamper, TorsionalSpringDamper,
                               MarkerBodyRigid, MarkerNodeRigid, InertiaCuboid, RotXYZ2RotationMatrix, RotationMatrix2EulerParameters,
                               AngularVelocity2EulerParameters_t, ObjectJointSpherical, ObjectConnectorDistance,
-                              ObjectJointRevolute2D, Force, ObjectConnectorCoordinate)
+                              ObjectJointRevolute2D, Force, ObjectConnectorCoordinate,
+                              ObjectJointRevoluteZ, ObjectJointPrismaticX, ObjectJointPrismatic2D)
 
 exu.special.userInterface.SuppressAll(True)
 
@@ -307,6 +308,29 @@ def BuildConstraintModel(kind):
             mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[i], coordinate=1)),
                                                                    mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[i+1], coordinate=1+i))],
                                                     factorValue1=2., offset=0.01*i))
+    elif kind in ['RevoluteZ', 'PrismaticX']: #a chain of rigid bodies; one joint with rotated marker frames
+        inertia = InertiaCuboid(density=1000, sideLengths=[0.2, 0.05, 0.05])
+        mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
+        Joint = ObjectJointRevoluteZ if kind == 'RevoluteZ' else ObjectJointPrismaticX
+        for i in range(3):
+            ep = RotationMatrix2EulerParameters(np.eye(3))
+            n = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2*i+0.1, 0, 0] + list(ep),
+                                            initialVelocities=[0.05, 0.1, 0] + list(AngularVelocity2EulerParameters_t([0, 0, 0.3], ep))))
+            b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+            rotation = RotXYZ2RotationMatrix([0.2, 0.1, 0.3]) if i == 1 else np.eye(3)
+            mbs.AddObject(Joint(markerNumbers=[mPrevious, mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[-0.1, 0, 0]))],
+                                rotationMarker0=rotation, rotationMarker1=rotation))
+            mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[0.1, 0, 0]))
+            mbs.AddLoad(Force(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=b)), loadVector=[1, -9.81*inertia.Mass(), 0.5]))
+    elif kind == 'Prismatic2D': #2D bodies sliding on each other, one with a free rotation
+        mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
+        for i in range(3):
+            n = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.2*i+0.1, 0, 0], initialVelocities=[0.1, 0, 0.2*i]))
+            b = mbs.AddObject(ObjectRigidBody2D(nodeNumber=n, physicsMass=1, physicsInertia=0.01))
+            mbs.AddObject(ObjectJointPrismatic2D(markerNumbers=[mPrevious, mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[-0.1, 0, 0]))],
+                                                 constrainRotation=(i != 1)))
+            mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[0.1, 0, 0]))
+            mbs.AddLoad(Force(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=b)), loadVector=[1, -9.81, 0]))
     elif kind == 'Revolute2D':
         mPrevious = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround))
         for i in range(3):
@@ -336,7 +360,7 @@ def BuildConstraintModel(kind):
     return mbs
 
 
-constraintKinds = ['Spherical', 'Distance', 'Revolute2D', 'Coordinate']
+constraintKinds = ['Spherical', 'Distance', 'Revolute2D', 'Coordinate', 'RevoluteZ', 'PrismaticX', 'Prismatic2D']
 
 
 def SolveConstraintModel(kind, legacy):

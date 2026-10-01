@@ -78,6 +78,59 @@ void CObjectJointPrismatic2D::ComputeAlgebraicEquations(Vector& algebraicEquatio
 }
 
 
+//! the equations on the connector interface (#2745), as ComputeAlgebraicEquations: the relative position normal to the axis
+//! of marker 1, and the axis of marker 0 normal to it as well, unless the rotation is free (lambda = 0); at velocity
+//! level their time derivatives (Real)
+template<class TReal>
+void CObjectJointPrismatic2D::ComputeConstraintEquationsTemplate(const MarkerRigid<TReal>* markers, const LinkedDataVector& lambda,
+	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
+{
+	equations.SetNumberOfItems(2);
+	const ConstSizeMatrixBase<TReal, 9>& A0 = markers[0].frame.GetRotation();
+	const ConstSizeMatrixBase<TReal, 9>& A1 = markers[1].frame.GetRotation();
+	SlimVectorBase<TReal, 3> vPos = markers[1].frame.GetTranslation() - markers[0].frame.GetTranslation();
+	SlimVectorBase<TReal, 3> t0 = A0 * parameters.axisMarker0;
+	SlimVectorBase<TReal, 3> n1 = A1 * parameters.normalMarker1;
+	if (!velocityLevel)
+	{
+		equations[0] = vPos * n1;
+		equations[1] = parameters.constrainRotation ? t0 * n1 : (TReal)lambda[1];
+	}
+	else
+	{
+		if constexpr (std::is_same<TReal, Real>::value)
+		{
+			Vector3D vVel = markers[1].velocity - markers[0].velocity;
+			Vector3D t0_t = A0 * (markers[0].angularVelocityLocal.CrossProduct(parameters.axisMarker0));
+			Vector3D n1_t = A1 * (markers[1].angularVelocityLocal.CrossProduct(parameters.normalMarker1));
+			equations[0] = vVel * n1 + vPos * n1_t;
+			equations[1] = parameters.constrainRotation ? t0_t * n1 + t0 * n1_t : lambda[1];
+		}
+		else
+		{
+			CHECKandTHROWstring("ObjectJointPrismatic2D: the equations at velocity level have no Jacobian by automatic differentiation");
+		}
+	}
+}
+
+void CObjectJointPrismatic2D::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t,
+	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
+}
+
+void CObjectJointPrismatic2D::ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
+	Real t, Index itemIndex, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);
+}
+
+void CObjectJointPrismatic2D::ComputeJacobianAE_AE(ResizableMatrix& jacobian_AE) const
+{
+	jacobian_AE.SetScalarMatrix(2, 0.);
+	jacobian_AE(1, 1) = 1.;
+}
+
 void CObjectJointPrismatic2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1,
 	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {

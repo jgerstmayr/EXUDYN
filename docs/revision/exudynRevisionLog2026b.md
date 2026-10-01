@@ -10962,3 +10962,21 @@ level (`velocityLevel=True`, `UsesVelocityLevel`) keeps the legacy functions - i
 Checked with a fourth model in `test_connectorInterface.py` (mass points tied by coordinate constraints to the ground and
 to each other with a factor and an offset): $\Cm_\qv$, equations and the static residual with the reaction forces equal
 to round-off, the solution as for RG14.2.9.1. No reference value moved.
+
+<a id="rg14-2-9-3"></a>
+### RG14.2.9.3 — JointRevoluteZ, JointPrismaticX, JointPrismatic2D on the connector interface (2026-10-02, #2745)
+
+The three joints give their equations as `ComputeConstraintEquationsTemplate<TReal>` of `MarkerRigid` - the position
+level as in `ComputeAlgebraicEquations`, the velocity level (index 2) for Real only, as written there (an AD call at
+velocity level is an error; the system differentiates at position level). `CObjectConstraint` gets
+`ComputeConstraintEquationsRigid`/`...RigidDiff` (`DRealRigidMarkers`); `JointPrismatic2D` the AE_AE term of a free
+rotation. `CSystem` takes rigid markers in the three constraint functions with the 12 directions of RG14.2.8.1:
+$\Cm_\qv$ row by row $\partial g/\partial\pv_k\,\Jm_{pos,k} + \partial g/\partial\thetav_k\,\Jm_{rot,k}$, and the reaction force and torque
+per marker $((\partial\gv/\partial\pv_k)\tp\lambdav,\ (\partial\gv/\partial\thetav_k)\tp\lambdav)$ through `AddGeneralizedForceTorque` after
+`GetKinematicsRigid` (whose frames seed the AD pass - no `MarkerData` with Jacobians in the right-hand side).
+
+Checked (`test_connectorInterface.py`: chains of rigid bodies with revolute-z and prismatic-x joints, one joint with
+rotated marker frames; 2D bodies with prismatic joints, one with a free rotation): the AD $\Cm_\qv$ equals the hand-written
+one to 1e-14 relative - the hand-written Jacobians are exact - the equations and the static residual with the reaction
+forces to round-off, the solutions as before. References: `bricardMechanism` (2.5e-13) and
+`revoluteJointPrismaticJointTest` (8.5e-13) moved within the Newton tolerance, re-recorded.

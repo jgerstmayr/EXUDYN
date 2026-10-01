@@ -198,6 +198,65 @@ void CObjectJointRevoluteZ::ComputeAlgebraicEquations(Vector& algebraicEquations
 }
 
 
+//! the equations on the connector interface (#2745), as ComputeAlgebraicEquations: the relative position, global, and the
+//! free axis of marker 0 perpendicular to the two locked axes of marker 1; at velocity level their time derivatives (Real)
+template<class TReal>
+void CObjectJointRevoluteZ::ComputeConstraintEquationsTemplate(const MarkerRigid<TReal>* markers, const LinkedDataVector& lambda,
+	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
+{
+	constexpr Index lockedAxis1 = 0; //x
+	constexpr Index lockedAxis2 = 1; //y
+	constexpr Index freeAxis = 2;	 //z
+	equations.SetNumberOfItems(nConstraints);
+
+	const ConstSizeMatrixBase<TReal, 9>& A0 = markers[0].frame.GetRotation();
+	const ConstSizeMatrixBase<TReal, 9>& A1 = markers[1].frame.GetRotation();
+	SlimVectorBase<TReal, 3> vRot0 = A0 * parameters.rotationMarker0.GetColumnVector<3>(freeAxis);
+	SlimVectorBase<TReal, 3> vLocked1 = A1 * parameters.rotationMarker1.GetColumnVector<3>(lockedAxis1);
+	SlimVectorBase<TReal, 3> vLocked2 = A1 * parameters.rotationMarker1.GetColumnVector<3>(lockedAxis2);
+
+	if (!velocityLevel)
+	{
+		SlimVectorBase<TReal, 3> vPos = markers[1].frame.GetTranslation() - markers[0].frame.GetTranslation();
+		equations[0] = vPos[0];
+		equations[1] = vPos[1];
+		equations[2] = vPos[2];
+		equations[lockedAxis1 + 3] = vRot0 * vLocked1;
+		equations[lockedAxis2 + 3] = vRot0 * vLocked2;
+	}
+	else
+	{
+		if constexpr (std::is_same<TReal, Real>::value)
+		{
+			Vector3D vVel = markers[1].velocity - markers[0].velocity;
+			equations[0] = vVel[0];
+			equations[1] = vVel[1];
+			equations[2] = vVel[2];
+			Vector3D vRot0_t = A0 * markers[0].angularVelocityLocal.CrossProduct(parameters.rotationMarker0.GetColumnVector<3>(freeAxis));
+			Vector3D vLocked1_t = A1 * markers[1].angularVelocityLocal.CrossProduct(parameters.rotationMarker1.GetColumnVector<3>(lockedAxis1));
+			Vector3D vLocked2_t = A1 * markers[1].angularVelocityLocal.CrossProduct(parameters.rotationMarker1.GetColumnVector<3>(lockedAxis2));
+			equations[lockedAxis1 + 3] = vRot0_t * vLocked1 + vRot0 * vLocked1_t;
+			equations[lockedAxis2 + 3] = vRot0_t * vLocked2 + vRot0 * vLocked2_t;
+		}
+		else
+		{
+			CHECKandTHROWstring("ObjectJointRevoluteZ: the equations at velocity level have no Jacobian by automatic differentiation");
+		}
+	}
+}
+
+void CObjectJointRevoluteZ::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t,
+	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
+}
+
+void CObjectJointRevoluteZ::ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
+	Real t, Index itemIndex, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);
+}
+
 void CObjectJointRevoluteZ::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
 	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {

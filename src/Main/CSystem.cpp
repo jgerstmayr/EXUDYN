@@ -1680,7 +1680,78 @@ bool CSystem::ConstraintUsesInterface(const CObjectConstraint& constraint) const
 {
 	ConnectorInterface connectorInterface = constraint.GetConnectorInterface();
 	return !pyExperimental.connectorInterfaceLegacy && constraint.IsActive() && !constraint.UsesVelocityLevel()
-		&& (connectorInterface == ConnectorInterface::PositionMarkers || connectorInterface == ConnectorInterface::CoordinateMarkers);
+		&& (connectorInterface == ConnectorInterface::PositionMarkers || connectorInterface == ConnectorInterface::CoordinateMarkers
+			|| connectorInterface == ConnectorInterface::RigidMarkers);
+}
+
+//! the equations of a constraint on rigid markers (#2745)
+inline void ComputeConstraintEquationsRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp,
+	const CObjectConstraint& constraint, Index objectNumber, bool velocityLevel, Vector& localAE)
+{
+	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
+	MarkerRigid<Real> kinematics[2];
+	for (Index k = 0; k < 2; k++)
+	{
+		cSystemData.GetCMarkers()[markerNumbers[k]]->GetKinematicsRigid(cSystemData, kinematics[k], temp.markerTemp[k]);
+	}
+	LinkedDataVector lambda(cSystemData.GetCData().currentState.AECoords, constraint.GetGlobalAECoordinateIndex(), constraint.GetAlgebraicEquationsSize());
+	ConstSizeVector<maxConstraintEquations> equations;
+	constraint.ComputeConstraintEquationsRigid(kinematics, lambda, cSystemData.GetCData().currentState.time, objectNumber, velocityLevel, equations);
+	localAE.CopyFrom(equations);
+}
+
+//! the equations of a constraint on rigid markers with automatic differentiation in the 12 directions of RG14.2.8.1 -
+//! per marker 3 translations and 3 global rotation increments, A(dtheta) = (I + skew(dtheta)) A; with Jacobians, the
+//! marker data is in temp.markerTemp, else the frames come from GetKinematicsRigid
+inline void SeedConstraintEquationsRigid(const CSystemData& cSystemData, TemporaryComputationData& temp,
+	const CObjectConstraint& constraint, Index objectNumber, bool withJacobians, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations,
+	Index* numberOfCoordinates = nullptr)
+{
+	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
+	MarkerRigid<DRealRigidMarkers> kinematics[2];
+	for (Index k = 0; k < 2; k++)
+	{
+		const CMarker* marker = cSystemData.GetCMarkers()[markerNumbers[k]];
+		Vector3D position;
+		Matrix3D A;
+		if (withJacobians)
+		{
+			MarkerData& markerData = temp.markerTemp[k].markerData;
+			marker->ComputeMarkerData(cSystemData, true, markerData);
+			position = markerData.position;
+			A = markerData.orientation;
+		}
+		else
+		{
+			MarkerRigid<Real> frame;
+			Index n = marker->GetKinematicsRigid(cSystemData, frame, temp.markerTemp[k]);
+			if (numberOfCoordinates) { numberOfCoordinates[k] = n; }
+			position = frame.frame.GetTranslation();
+			A = frame.frame.GetRotation();
+		}
+		const int offset = 6 * (int)k;
+		SlimVectorBase<DRealRigidMarkers, 3> positionAD;
+		EXUmath::SeedAutoDiff(positionAD, position, offset);
+		ConstSizeMatrixBase<DRealRigidMarkers, 9> rotation(3, 3);
+		for (Index i = 0; i < 3; i++)
+		{
+			for (Index j = 0; j < 3; j++) { rotation(i, j) = A(i, j); }
+		}
+		for (Index m = 0; m < 3; m++) //d/dtheta_m (I + skew(theta)) A = skew(e_m) A: column j is e_m x A_j
+		{
+			const Index m1 = (m + 1) % 3, m2 = (m + 2) % 3;
+			for (Index j = 0; j < 3; j++)
+			{
+				rotation(m1, j).DValue(offset + 3 + (int)m) = -A(m2, j);
+				rotation(m2, j).DValue(offset + 3 + (int)m) = A(m1, j);
+			}
+		}
+		kinematics[k].frame = HomogeneousTransformationBase<DRealRigidMarkers>(rotation, positionAD);
+		kinematics[k].velocity.SetAll(0.); //position level: the equations do not read them
+		kinematics[k].angularVelocityLocal.SetAll(0.);
+	}
+	LinkedDataVector lambda(cSystemData.GetCData().currentState.AECoords, constraint.GetGlobalAECoordinateIndex(), constraint.GetAlgebraicEquationsSize());
+	constraint.ComputeConstraintEquationsRigidDiff(kinematics, lambda, cSystemData.GetCData().currentState.time, objectNumber, equations);
 }
 
 //! the equations of a constraint on coordinate markers (#2745)
@@ -1728,6 +1799,11 @@ void CSystem::ComputeConstraintEquationsInterface(TemporaryComputationData& temp
 		ComputeConstraintEquationsCoordinateMarkers(cSystemData, temp, constraint, objectNumber, velocityLevel, localAE);
 		return;
 	}
+	if (constraint.GetConnectorInterface() == ConnectorInterface::RigidMarkers)
+	{
+		ComputeConstraintEquationsRigidMarkers(cSystemData, temp, constraint, objectNumber, velocityLevel, localAE);
+		return;
+	}
 	const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
 	MarkerPosition<Real> kinematics[2];
 	for (Index k = 0; k < 2; k++)
@@ -1773,6 +1849,32 @@ inline void SeedConstraintEquationsPosition(const CSystemData& cSystemData, Temp
 void CSystem::ComputeConstraintJacobianInterface(TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
 	ResizableMatrix& jacobian)
 {
+	if (constraint.GetConnectorInterface() == ConnectorInterface::RigidMarkers) //[dg/d(p,theta)_k [J_pos,k; J_rot,k]]
+	{
+		ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations> equations;
+		SeedConstraintEquationsRigid(cSystemData, temp, constraint, objectNumber, true, equations);
+		const Index n0 = temp.markerTemp[0].markerData.positionJacobian.NumberOfColumns();
+		const Index n1 = temp.markerTemp[1].markerData.positionJacobian.NumberOfColumns();
+		jacobian.SetNumberOfRowsAndColumns(equations.NumberOfItems(), n0 + n1);
+		for (Index r = 0; r < equations.NumberOfItems(); r++)
+		{
+			for (Index k = 0; k < 2; k++)
+			{
+				const MarkerData& markerData = temp.markerTemp[k].markerData;
+				for (Index j = 0; j < (k == 0 ? n0 : n1); j++)
+				{
+					Real value = 0.;
+					for (Index c = 0; c < 3; c++)
+					{
+						value += equations[r].DValue((int)(6 * k + c)) * markerData.positionJacobian(c, j)
+							+ equations[r].DValue((int)(6 * k + 3 + c)) * markerData.rotationJacobian(c, j);
+					}
+					jacobian(r, (k == 0 ? 0 : n0) + j) = value;
+				}
+			}
+		}
+		return;
+	}
 	if (constraint.GetConnectorInterface() == ConnectorInterface::CoordinateMarkers) //[dg/dv_0 J_0, dg/dv_1 J_1], J_k the 1 x n_k marker Jacobian
 	{
 		ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations> equations;
@@ -1814,6 +1916,33 @@ void CSystem::ComputeConstraintJacobianInterface(TemporaryComputationData& temp,
 void CSystem::ComputeConstraintReactionForcesInterface(TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
 	const Vector& reactionForces, Vector& localODE2)
 {
+	if (constraint.GetConnectorInterface() == ConnectorInterface::RigidMarkers) //per marker force and torque (dg/d(p,theta)_k)^T lambda
+	{
+		ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations> equations;
+		Index n[2];
+		SeedConstraintEquationsRigid(cSystemData, temp, constraint, objectNumber, false, equations, n); //GetKinematicsRigid prepares temp for the projection
+		const ArrayIndex& markerNumbers = constraint.GetMarkerNumbers();
+		const ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[objectNumber];
+		const CMarker* marker[2] = { cSystemData.GetCMarkers()[markerNumbers[0]], cSystemData.GetCMarkers()[markerNumbers[1]] };
+		localODE2.SetNumberOfItems(n[0] + n[1]);
+		localODE2.SetAll(0.);
+		for (Index k = 0; k < 2; k++)
+		{
+			if (n[k] == 0) { continue; }
+			Vector3D force(0.), torque(0.);
+			for (Index r = 0; r < equations.NumberOfItems(); r++)
+			{
+				for (Index c = 0; c < 3; c++)
+				{
+					force[c] += reactionForces[ltgAE[r]] * equations[r].DValue((int)(6 * k + c));
+					torque[c] += reactionForces[ltgAE[r]] * equations[r].DValue((int)(6 * k + 3 + c));
+				}
+			}
+			LinkedDataVector localODE2k(localODE2, k == 0 ? 0 : n[0], n[k]);
+			marker[k]->AddGeneralizedForceTorque(cSystemData, force, torque, temp.markerTemp[k], localODE2k);
+		}
+		return;
+	}
 	if (constraint.GetConnectorInterface() == ConnectorInterface::CoordinateMarkers) //per marker the generalized force (dg/dv_k)^T lambda
 	{
 		ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations> equations;

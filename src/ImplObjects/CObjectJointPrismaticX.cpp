@@ -123,6 +123,68 @@ void CObjectJointPrismaticX::ComputeAlgebraicEquations(Vector& algebraicEquation
 }
 
 
+//! the equations on the connector interface (#2745), as ComputeAlgebraicEquations: the relative position in the y and z axes
+//! of marker 0, and the three rotations locked; at velocity level their time derivatives (Real)
+template<class TReal>
+void CObjectJointPrismaticX::ComputeConstraintEquationsTemplate(const MarkerRigid<TReal>* markers, const LinkedDataVector& lambda,
+	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
+{
+	equations.SetNumberOfItems(nConstraints);
+	const ConstSizeMatrixBase<TReal, 9>& A0 = markers[0].frame.GetRotation();
+	const ConstSizeMatrixBase<TReal, 9>& A1 = markers[1].frame.GetRotation();
+	ConstSizeMatrixBase<TReal, 9> A0all = A0 * Matrix3DAs<TReal>(parameters.rotationMarker0);
+	ConstSizeMatrixBase<TReal, 9> A1all = A1 * Matrix3DAs<TReal>(parameters.rotationMarker1);
+	SlimVectorBase<TReal, 3> vx0 = A0all.template GetColumnVector<3>(0);
+	SlimVectorBase<TReal, 3> vz0 = A0all.template GetColumnVector<3>(2);
+	SlimVectorBase<TReal, 3> vx1 = A1all.template GetColumnVector<3>(0);
+	SlimVectorBase<TReal, 3> vy1 = A1all.template GetColumnVector<3>(1);
+	SlimVectorBase<TReal, 3> relativePosition = markers[1].frame.GetTranslation() - markers[0].frame.GetTranslation();
+
+	if (!velocityLevel)
+	{
+		SlimVectorBase<TReal, 3> vPos = A0all.GetTransposed() * relativePosition; //local equations (marker0-fixed)
+		equations[0] = vPos[1];
+		equations[1] = vPos[2];
+		equations[2] = vz0 * vy1;
+		equations[3] = vz0 * vx1;
+		equations[4] = vx0 * vy1;
+	}
+	else
+	{
+		if constexpr (std::is_same<TReal, Real>::value)
+		{
+			Matrix3D A0all_t = (A0 * RigidBodyMath::Vector2SkewMatrix(markers[0].angularVelocityLocal)) * parameters.rotationMarker0;
+			Matrix3D A1all_t = (A1 * RigidBodyMath::Vector2SkewMatrix(markers[1].angularVelocityLocal)) * parameters.rotationMarker1;
+			Vector3D vVel = A0all.GetTransposed()*(markers[1].velocity - markers[0].velocity) + A0all_t.GetTransposed()*relativePosition;
+			equations[0] = vVel[1];
+			equations[1] = vVel[2];
+			Vector3D vx0_t = A0all_t.GetColumnVector<3>(0);
+			Vector3D vz0_t = A0all_t.GetColumnVector<3>(2);
+			Vector3D vx1_t = A1all_t.GetColumnVector<3>(0);
+			Vector3D vy1_t = A1all_t.GetColumnVector<3>(1);
+			equations[2] = vz0_t * vy1 + vz0 * vy1_t;
+			equations[3] = vz0_t * vx1 + vz0 * vx1_t;
+			equations[4] = vx0_t * vy1 + vx0 * vy1_t;
+		}
+		else
+		{
+			CHECKandTHROWstring("ObjectJointPrismaticX: the equations at velocity level have no Jacobian by automatic differentiation");
+		}
+	}
+}
+
+void CObjectJointPrismaticX::ComputeConstraintEquationsRigid(const MarkerRigid<Real>* markers, const LinkedDataVector& lambda, Real t,
+	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, velocityLevel, equations);
+}
+
+void CObjectJointPrismaticX::ComputeConstraintEquationsRigidDiff(const MarkerRigid<DRealRigidMarkers>* markers, const LinkedDataVector& lambda,
+	Real t, Index itemIndex, ConstSizeVectorBase<DRealRigidMarkers, maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, lambda, false, equations);
+}
+
 void CObjectJointPrismaticX::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
 	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {
