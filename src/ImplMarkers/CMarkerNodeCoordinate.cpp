@@ -68,6 +68,29 @@ void CMarkerNodeCoordinate::ComputeMarkerData(const CSystemData& cSystemData, bo
 	}
 }
 
+//! the coordinate and its velocity for the connector interface (#2745); as ComputeMarkerData, a node without ODE2
+//! coordinates is a ground node with the value 0 and acts on nothing
+Index CMarkerNodeCoordinate::GetKinematicsCoordinate(const CSystemData& cSystemData, MarkerCoordinate<Real>& kinematics, MarkerTemp& temp) const
+{
+	const CNode* node = cSystemData.GetCNodes()[parameters.nodeNumber];
+	Index n = node->GetNumberOfODE2Coordinates();
+	if (n == 0)
+	{
+		kinematics.value = 0.;
+		kinematics.value_t = 0.;
+		return 0;
+	}
+	CHECKandTHROW((Index)node->GetNodeGroup() & (Index)CNodeGroup::ODE2variables, "MarkerNodeCoordinate::GetKinematicsCoordinate: the marker provides no velocity");
+	kinematics.value = node->GetCurrentCoordinateVector()[parameters.coordinate];
+	kinematics.value_t = ((const CNodeODE2*)node)->GetCurrentCoordinateVector_t()[parameters.coordinate];
+	return n;
+}
+
+void CMarkerNodeCoordinate::AddGeneralizedForceCoordinate(const CSystemData& cSystemData, Real force, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const
+{
+	ode2Lhs[parameters.coordinate] += force;
+}
+
 //! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(Jpos.T @ v)/dq
 void CMarkerNodeCoordinate::ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const
 {

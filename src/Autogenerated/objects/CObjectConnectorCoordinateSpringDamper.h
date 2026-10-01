@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  00:09:41 (last modified)
+* @date         2026-10-01  07:22:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -141,8 +141,20 @@ public: // AUTO:
         return parameters.activeConnector;
     }
 
-    //! AUTO:  compute spring damper force helper function
-    void ComputeSpringForce(const MarkerDataStructure& markerData, Index itemIndex, Real& relPos, Real& relVel, Real& force) const;
+    //! AUTO:  the connector implements the interface of coordinate markers (#2745)
+    virtual ConnectorInterface GetConnectorInterface() const override
+    {
+        return ConnectorInterface::CoordinateMarkers;
+    }
+
+    //! AUTO:  the generalized force on marker 1 from the values of the two markers (#2745)
+    virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real& force) const override;
+
+    //! AUTO:  the same force with automatic differentiation, for the Jacobian (#2745)
+    virtual void ComputeConnectorForceCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, Real t, Index itemIndex, DRealCoordinateMarkers& force) const override;
+
+    //! AUTO:  the physics of the spring-damper, shared by the legacy path, the new one, its Jacobian and the output variables (#2745)
+    template<class TReal> void ComputeSpringForce(TReal value0, TReal value1, TReal value0_t, TReal value1_t, Real t, Index itemIndex, TReal& relPos, TReal& relVel, TReal& force) const;
 
     //! AUTO:  call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
     void EvaluateUserFunctionForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real relPos, Real relVel) const;

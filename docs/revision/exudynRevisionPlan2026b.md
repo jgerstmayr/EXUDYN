@@ -1777,7 +1777,10 @@ done.
     - **RG14.2.5** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-5) - the other position-marker
       connectors: `CartesianSpringDamper` (force and Jacobian by AD), `ConnectorGravity` (force, and a Jacobian by AD
       where the legacy path differentiates numerically: the Jacobian 5× faster), `HydraulicActuatorSimple` (force; its
-      Jacobian stays numerical, it couples to its ODE1 node); **RG14.2.6** the coordinate-marker connectors;
+      Jacobian stays numerical, it couples to its ODE1 node); **RG14.2.6** **DONE 2026-10-01** —
+      [log](exudynRevisionLog2026b.md#rg14-2-6) - the coordinate-marker connectors: L0 `MarkerCoordinate`, L2 with
+      the Jacobian by AD, `CoordinateSpringDamper`; `CoordinateSpringDamperExt` (friction states, post Newton) and
+      `ContactCoordinate` go with the contact connectors (RG14.2.10);
       **RG14.2.7** the loads; **RG14.2.8** the rigid-marker force connectors with homogeneous
       transformations; **RG14.2.9** constraints and joints; **RG14.2.10** the contact connectors (with
       RG4.16); **RG14.2.11** the special markers (shape, cable, many markers); **RG14.2.12**
@@ -1851,7 +1854,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.29 | #2203 | ask an item from Python which output variables and types it provides |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
-| RG14.2 | #2745 | connectors compute from small marker structures: interface decided, L0-L2, the pilot spring-damper with its AD Jacobian and the other position-marker connectors done; next RG14.2.6 |
+| RG14.2 | #2745 | connectors compute from small marker structures: interface decided, L0-L2, the position-marker connectors and the coordinate spring-damper done, with Jacobians by AD; next RG14.2.8 |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |

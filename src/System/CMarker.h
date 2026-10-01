@@ -135,6 +135,24 @@ public: //
 		EXUmath::MultMatrixTransposedVectorAdd(temp.markerData.positionJacobian, force, ode2Lhs);
 	}
 
+	//! L0 of a coordinate marker (#2745): its value and time derivative; returns the number of ODE2 coordinates it acts on;
+	//! the default computes the marker data into temp, which AddGeneralizedForceCoordinate then uses
+	virtual Index GetKinematicsCoordinate(const CSystemData& cSystemData, MarkerCoordinate<Real>& kinematics, MarkerTemp& temp) const
+	{
+		ComputeMarkerData(cSystemData, true, temp.markerData);
+		CHECKandTHROW(temp.markerData.velocityAvailable, "CMarker::GetKinematicsCoordinate: the marker provides no velocity");
+		kinematics.value = temp.markerData.vectorValue[0];
+		kinematics.value_t = temp.markerData.vectorValue_t[0];
+		return temp.markerData.jacobian.NumberOfColumns();
+	}
+
+	//! add J^T force to ode2Lhs, the marker's part of the connector's vector (#2745); after GetKinematicsCoordinate with the same temp
+	virtual void AddGeneralizedForceCoordinate(const CSystemData& cSystemData, Real force, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const
+	{
+		const ResizableMatrix& jacobian = temp.markerData.jacobian;
+		for (Index i = 0; i < jacobian.NumberOfColumns(); i++) { ode2Lhs[i] += jacobian(0, i) * force; }
+	}
+
 	virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const {
 		CHECKandTHROWstring("Invalid call to CMarker::ComputeMarkerDataJacobianDerivative");
 	}

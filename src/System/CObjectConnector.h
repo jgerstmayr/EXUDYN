@@ -77,6 +77,20 @@ public:
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForcePositionDiff: not implemented for this connector");
 	}
 
+	//! L1 of a connector on coordinate markers (#2745): its generalized force on the coordinate of marker 1 from the
+	//! values of its two markers; marker 0 gets the reaction
+	virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real& force) const
+	{
+		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceCoordinate: not implemented for this connector");
+	}
+
+	//! the same force with automatic differentiation, for the connector's Jacobian (#2745)
+	virtual void ComputeConnectorForceCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, Real t, Index itemIndex,
+		DRealCoordinateMarkers& force) const
+	{
+		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceCoordinateDiff: not implemented for this connector");
+	}
+
     virtual const char* GetName() const { return "CObjectConnector"; }
 
     virtual void Print(std::ostream& os) const {

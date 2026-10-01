@@ -269,6 +269,10 @@ public:
 	TReal value_t;
 };
 
+//! the number type of the Jacobian of a connector on two coordinate markers (#2745): one direction per marker, the value
+//! seeded with factorODE2 and its time derivative with factorODE2_t
+typedef EXUmath::AutoDiff<2, Real> DRealCoordinateMarkers;
+
 //! temporaries of one marker on the new path, per thread (TemporaryComputationData); the markers without their own
 //! functions of the new path fill markerData through ComputeMarkerData
 class MarkerTemp

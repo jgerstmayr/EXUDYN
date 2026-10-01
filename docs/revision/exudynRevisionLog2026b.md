@@ -10512,3 +10512,27 @@ analytic Jacobian lacks the normalization direction that the numerical one has).
 **One reference re-recorded**: `ballBearingTest.py` (the cage holds the balls with `CartesianSpringDamper`s on rigid
 bodies, among sphere-torus contacts) gives 0.037852414033278825 instead of 0.03785241402944885, $10^{-10}$ relative - the
 projection by `AddPositionForce` sums in another order; with the switch at 1 the old value comes back exactly.
+
+<a id="rg14-2-6"></a>
+### RG14.2.6 — connectors on coordinate markers (2026-10-01, #2745)
+
+The third marker kind on the interface. **L0**: `MarkerCoordinate<TReal>` (value, value_t); a marker returns it from
+`GetKinematicsCoordinate`, which also returns the number of ODE2 coordinates it acts on, and adds $\Jm\tp f$ with
+`AddGeneralizedForceCoordinate` (`CMarker.h`) - the defaults go through `ComputeMarkerData` into the thread's
+`MarkerTemp`, once for both; `MarkerNodeCoordinate` reads its node and adds the force to its coordinate without the
+$1\times n$ Jacobian. **L1**: `ComputeConnectorForceCoordinate` and its AD twin (`CObjectConnector.h`). **L2**:
+`CSystem::ComputeODE2LHSCoordinateMarkers` and `ComputeJacobianODE2CoordinateMarkers` with
+`DRealCoordinateMarkers = AutoDiff<2>`, one direction per marker. The chain of the Jacobian - all four blocks and the
+Jacobian derivative - is one function now, `ChainConnectorJacobian<dim>` in `CSystem.cpp`, for the position markers
+(dim 3) and the coordinate markers (dim 1); the dispatch reads the switch once, `connectorInterface`.
+
+`ObjectConnectorCoordinateSpringDamper`: `ComputeSpringForce<TReal>` from the two values and their velocities, for
+the legacy path, the new one, the Jacobian and the output variables. `CoordinateSpringDamperExt` (stick-slip
+friction with data coordinates and a post-Newton step) and `ContactCoordinate` are contact-like and belong to
+RG14.2.10; `ConnectorCoordinate` is a constraint (RG14.2.9).
+
+**Checked** (`test_connectorInterface.py`, a model with coordinates of mass points and of Rxyz rigid bodies, a ground
+node and a `MarkerNodeRotationCoordinate` through the default functions): results and Jacobians equal to the legacy
+analytic ones to round-off. **Measured** (`tmp/rg14/coordinateBenchmark.py`, 1000 `Mass1D` in a chain, best of 5):
+identical coordinates; right-hand side **0.77** of legacy implicit and explicit, the Jacobian 0.95, total 0.92
+(generalized-alpha, 400 steps) and **0.79** (RK44, 1000 steps).

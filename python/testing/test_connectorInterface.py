@@ -21,7 +21,8 @@ import exudyn as exu
 from exudyn.utilities import (ObjectGround, NodePoint, MassPoint, NodeRigidBodyEP, NodeRigidBodyRxyz, NodeRigidBodyRotVecLG, ObjectRigidBody,
                               NodeRigidBody2D, ObjectRigidBody2D, MarkerBodyPosition, MarkerNodePosition, SpringDamper,
                               CartesianSpringDamper, ObjectConnectorGravity, ObjectConnectorHydraulicActuatorSimple,
-                              NodeGenericODE1, InertiaCuboid, RotXYZ2RotationMatrix, RotationMatrix2EulerParameters,
+                              NodeGenericODE1, NodePointGround, MarkerNodeCoordinate, MarkerNodeRotationCoordinate,
+                              CoordinateSpringDamper, InertiaCuboid, RotXYZ2RotationMatrix, RotationMatrix2EulerParameters,
                               AngularVelocity2EulerParameters_t)
 
 exu.special.userInterface.SuppressAll(True)
@@ -51,6 +52,10 @@ def AddHydraulicActuator(mbs, markers):
                   oilBulkModulus=1e8, nominalFlow=1e-6, systemPressure=2e6, tankPressure=0))
 
 
+def AddCoordinateSpringDamper(mbs, markers):
+    mbs.AddObject(CoordinateSpringDamper(markerNumbers=markers, stiffness=500, damping=3, offset=0.02))
+
+
 #each connector: the function adding it, whether it takes a length of zero, and whether both paths differentiate it the
 #same way (analytically); if not, the legacy path differentiates numerically: the Jacobians agree to the accuracy of the
 #numerical differentiation - on Rxyz nodes, whose numerical derivative has no normalization error of Euler
@@ -58,7 +63,38 @@ def AddHydraulicActuator(mbs, markers):
 connectors = {'SpringDamper': (AddSpringDamper, True, True),
               'CartesianSpringDamper': (AddCartesianSpringDamper, True, True),
               'Gravity': (AddGravity, False, False),
-              'HydraulicActuatorSimple': (AddHydraulicActuator, False, False)}
+              'HydraulicActuatorSimple': (AddHydraulicActuator, False, False),
+              'CoordinateSpringDamper': (AddCoordinateSpringDamper, True, True)}
+coordinateConnectors = ['CoordinateSpringDamper']
+
+
+def BuildCoordinateModel(connector, explicit=False, eulerParameters=True):
+    """connectors on coordinate markers: coordinates of mass points and of rigid bodies, a ground node, and a rotation
+    coordinate (the default functions of the markers)"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    addConnector = connectors[connector][0]
+    nGround = mbs.AddNode(NodePointGround())
+    mPrevious = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+    for i in range(4):
+        if i % 2 == 0:
+            n = mbs.AddNode(NodePoint(referenceCoordinates=[0.2*(i+1), 0, 0], initialCoordinates=[0.01, 0.02*i, 0],
+                                      initialVelocities=[0.1, 0.1, 0.05*i]))
+            mbs.AddObject(MassPoint(nodeNumber=n, physicsMass=1))
+            m0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n, coordinate=0))
+            m1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n, coordinate=1))
+        else:
+            n = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.2*(i+1), 0.01, 0, 0.3, 0.2, 0.1*i],
+                                              initialVelocities=[0.1, 0.1, 0, 0.1, 0.2, 0.3]))
+            inertia = InertiaCuboid(density=1000, sideLengths=[0.1, 0.05, 0.05])
+            mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+            m0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n, coordinate=1))
+            m1 = mbs.AddMarker(MarkerNodeRotationCoordinate(nodeNumber=n, rotationCoordinate=2))
+        addConnector(mbs, [mPrevious, m0])
+        mPrevious = m1
+    addConnector(mbs, [mPrevious, mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=1))])
+    mbs.Assemble()
+    return mbs
 
 
 def BuildModel(connector, explicit=False, eulerParameters=True):
@@ -109,7 +145,7 @@ def BuildModel(connector, explicit=False, eulerParameters=True):
 
 def Solve(connector, legacy, explicit):
     exu.experimental.connectorInterfaceLegacy = legacy
-    mbs = BuildModel(connector, explicit)
+    mbs = (BuildCoordinateModel if connector in coordinateConnectors else BuildModel)(connector, explicit)
     s = exu.SimulationSettings()
     s.timeIntegration.numberOfSteps = 200
     s.timeIntegration.endTime = 0.02 if explicit else 0.2
@@ -123,7 +159,7 @@ def Solve(connector, legacy, explicit):
 
 def Jacobian(connector, legacy, factorODE2, factorODE2_t):
     exu.experimental.connectorInterfaceLegacy = legacy
-    mbs = BuildModel(connector, eulerParameters=connectors[connector][2])
+    mbs = (BuildCoordinateModel if connector in coordinateConnectors else BuildModel)(connector, eulerParameters=connectors[connector][2])
     s = exu.SimulationSettings()
     solver = exu.MainSolverImplicitSecondOrder()
     solver.InitializeSolver(mbs, s)
