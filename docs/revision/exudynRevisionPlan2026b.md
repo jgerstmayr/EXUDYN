@@ -1783,16 +1783,105 @@ done.
       [log](exudynRevisionLog2026b.md#rg14-2-6) - the coordinate-marker connectors: L0 `MarkerCoordinate`, L2 with
       the Jacobian by AD, `CoordinateSpringDamper`; `CoordinateSpringDamperExt` (friction states, post Newton) and
       `ContactCoordinate` go with the contact connectors (RG14.2.10);
-      **RG14.2.7** the loads; **RG14.2.8** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-8) - the
-      rigid-marker force connectors (`RigidBodySpringDamper`, `LinearSpringDamper`, `TorsionalSpringDamper`) on
-      `MarkerRigid` with the frame as a homogeneous transformation, forces and torques per marker; their Jacobians
-      stay numerical; **open: RG14.2.8.1** the Jacobian of the rigid markers by AD - the rotation seeded as an
-      increment, $\Rot(\thetav) = \exp(\tilde\thetav)\Rot$, chained with the rotation Jacobians - where the gain
-      of the rigid connectors is (their numerical Jacobian evaluates the force 14 times per body pair), and
-      `BodyTwist` with it (RG14.2.2 (a)); **RG14.2.9** constraints and joints; **RG14.2.10** the contact connectors (with
-      RG4.16); **RG14.2.11** the special markers (shape, cable, many markers); **RG14.2.12**
-      `GeneralContact` on L0; **RG14.2.13** output variables and sensors through the connector force, then
-      the legacy path, the switch and the unused temporaries removed.
+    - **RG14.2.7** the loads.
+    - **RG14.2.8** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-8) - the rigid-marker force
+      connectors (`RigidBodySpringDamper`, `LinearSpringDamper`, `TorsionalSpringDamper`) on `MarkerRigid` with the
+      frame as a homogeneous transformation, forces and torques per marker; their Jacobians stay numerical.
+    - **RG14.2.8.1** the connector Jacobian of the rigid-marker connectors by AD, **proposed, waiting for the
+      maintainer**.
+      *Today*: these three connectors declare no Jacobian function, so `CSystem::JacobianODE2RHS` differentiates the
+      whole connector numerically - one evaluation of its right-hand side (marker data with Jacobians for both markers,
+      the physics, the projection) per coordinate of both bodies, for the positions and again for the velocities: up
+      to $2\times14+1$ evaluations per connector with Euler parameters. The analytic marker Jacobians and
+      `ComputeMarkerDataJacobianDerivative` exist for `MarkerBodyRigid` and `MarkerNodeRigid`, but only the connectors
+      with an analytic Jacobian use them (spring-damper, Cartesian, coordinate, gravity); the rigid ones do not.
+      *Proposed*: the same chain as for position markers, with 12 directions - per marker 3 translations and 3
+      rotation increments, the positions and rotations seeded with `factorODE2`, the velocities and angular
+      velocities with `factorODE2_t` in the same directions. The rotation increment is global,
+      $\Rot(\delta\thetav) = (\Im + \delta\tilde\thetav)\Rot$, so that it chains with the marker's rotation Jacobian
+      ($\omegav = \Jm_{rot}\dot\qv$, global); the local angular velocity is formed in the AD type as
+      $\Rot(\delta\thetav)\tp(\Rot\,\tomega_{local} + \delta\omegav)$. The connector returns force and torque per
+      marker, so the inner Jacobian is four $6\times6$ blocks $\partial(\fv_i,\ttau_i)/\partial(\pv_k,\thetav_k)$, chained
+      as $[\Jm_{pos,i};\Jm_{rot,i}]\tp \Km_{ik} [\Jm_{pos,k};\Jm_{rot,k}]$, plus `ComputeMarkerDataJacobianDerivative` per
+      marker with **its own** force and torque (`ChainConnectorJacobian` generalized from "force on marker 1, reaction on
+      marker 0" to a force and torque per marker). $\partial\vv/\partial\qv$ and $\partial\omegav/\partial\qv$ neglected,
+      as for the position markers. `BodyTwist` (RG14.2.2 (a)) comes with it.
+      *Needed*: the physics of the three connectors as templates; `RotationMatrix2RotXYZ` templated (today `Real`
+      only), and for the intrinsic formulation `GetRelativeMotionTo`/`LogSO3`/`ExpSE3` checked for `AutoDiff`;
+      `atan2` (and `asin`) added to `AutoDiff`, which has `sin`, `cos`, `atan`, `exp`, `sqrt` but not these. A
+      user function keeps the numerical Jacobian.
+      *Markers*: `MarkerBodyRigid` and `MarkerNodeRigid` (analytic Jacobian and its derivative); `MarkerKinematicTreeRigid`
+      and `MarkerSuperElementRigid` have no Jacobian derivative and stay numerical, as for the analytic connectors today
+      (unless `jacobianConnectorDerivative` is switched off).
+      *Expected gain*, from the benchmark of RG14.2.8 (100 bodies, rigid-body spring-damper, generalized-alpha): the
+      numerical Jacobian is 0.47 s of 0.75 s; one AD pass (about 5-15 force evaluations' worth) plus the analytic chain
+      instead of up to 29 evaluations - a Jacobian 3-5× faster, the implicit total about 1.5-2× (the gravity connector,
+      the same change on position markers, measured 5× on the Jacobian). Explicit solvers gain nothing. The Jacobian
+      becomes exact instead of numerical; on Euler parameters it lacks the normalization direction, as for the
+      gravity (+6 % Newton steps there). Checked against the numerical legacy Jacobian ($10^{-6}$) and in
+      `perfConnectorInterface.py` with an implicit rigid run.
+    - **RG14.2.9** constraints and joints on L0/L1/L2 - see [RG14.2.9 in detail](#rg14-2-9) below.
+    - **RG14.2.10** the contact connectors (with RG4.16); **RG14.2.11** the special markers (shape, cable, many
+      markers); **RG14.2.12** `GeneralContact` on L0; **RG14.2.13** output variables and sensors through the
+      connector force, then the legacy path, the switch and the unused temporaries removed.
+
+<a id="rg14-2-9"></a>
+**RG14.2.9 in detail** *(proposed 2026-10-01, for the maintainer's decision before it starts)* - constraints and joints
+on the connector interface.
+
+*What the code does today.* 13 constraint objects (`CObjectConstraint`, derived from `CObjectConnector`), by the
+marker kind they request:
+
+| kind | constraints | lines of the .cpp |
+|---|---|---|
+| position | `ConnectorDistance`, `JointSpherical`, `JointRevolute2D` | 160, 179, 140 |
+| position + orientation (rigid) | `JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, `JointPrismatic2D`, `JointRollingDisc` | 706, 382, 314, 219, 347 |
+| coordinate | `ConnectorCoordinate`; vector: `ConnectorCoordinateVector` | 172, 310 |
+| special (cable, ALE, sliding) | `JointSliding`, `JointSliding2D`, `JointALEMoving2D` | 397, 421, 375 |
+
+Each writes its equations $\gv$ in `ComputeAlgebraicEquations(localAE, markerData, t, itemIndex, velocityLevel)` and its
+Jacobian $\Cm_\qv$ **by hand** in `ComputeJacobianAE`, from the marker data with all Jacobians
+(`ComputeMarkerDataStructure`). `CSystem` asks for them at four places: the equations (`ComputeAlgebraicEquations`),
+the Newton matrix (`JacobianAE`: $\Cm_\qv$ and $\Cm_\qv\tp$), **the reaction forces in every right-hand side**
+(`ComputeODE2ProjectedReactionForces`: the full local $\Cm_\qv$, $m\times n$, formed and multiplied with $\lambdav$), and
+the initial accelerations ($(\Cm_\qv\dot\qv)_\qv$, numerical over `ComputeConstraintJacobianTimesVector`). The term
+$\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ is **not** in the Newton matrix today.
+
+*Proposed.* The constraint's equations become a template of the marker kinematics only,
+`ComputeConstraintEquations<TReal>(markers, t, itemIndex, velocityLevel, g)` - the joint's geometry, nothing else,
+on `MarkerPosition`, `MarkerRigid` or `MarkerCoordinate`. `CSystem` does the rest, once per marker kind:
+1. the equations: the template with `Real`;
+2. $\Cm_\qv$ by AD over the marker kinematics (the directions of RG14.2.4.1 for position markers, of RG14.2.8.1 for
+   rigid ones, chained with the marker Jacobians) - no hand-written `ComputeJacobianAE`;
+3. the reaction forces without the $m\times n$ matrix: $\fv_k = (\partial\gv/\partial\pv_k)\tp\lambdav$,
+   $\ttau_k = (\partial\gv/\partial\thetav_k)\tp\lambdav$ projected with `AddGeneralizedForce(Torque)` - $\Cm_\qv\tp\lambdav$
+   is a connector force with $\lambdav$ as a parameter;
+4. velocity-level constraints (`UsesVelocityLevel`, index 2) seed the velocity directions instead.
+
+*Sub-steps*, each with the fallback switch and the comparison of residuals, $\Cm_\qv$ and reaction forces (to round-off,
+both are analytic), solutions and timers:
+- **RG14.2.9.1** the interface in `CObjectConnector`/`CSystem` and the pilot `JointSpherical` (position markers),
+  then `ConnectorDistance` and `JointRevolute2D`;
+- **RG14.2.9.2** `ConnectorCoordinate` (coordinate markers);
+- **RG14.2.9.3** the rigid joints `JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, `JointPrismatic2D` - after
+  RG14.2.8.1, which brings the rotation directions; their equations are ported as they are (RG14.3 then rewrites
+  them on $\Hm_0^{-1}\Hm_1$);
+- `JointRollingDisc`, `ConnectorCoordinateVector` and the special joints go with RG14.2.11, or stay legacy.
+
+*For the maintainer to decide*:
+(a) whether $\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ enters the Newton matrix - available almost free by AD of item 3
+(the connector Jacobian of a force with $\lambdav$ fixed); it improves Newton convergence for large rotations but changes
+results within the tolerance and needs re-recorded references; proposed: available, **off** by default
+(a `newton` flag), so the port itself changes nothing;
+(b) the split against RG14.3: RG14.2.9 moves the joints onto the interface with their equations unchanged; RG14.3
+reformulates and unifies the equations - proposed as written here;
+(c) the order: the rigid joints wait for RG14.2.8.1 - proposed.
+
+*Expected gain.* The right-hand side no longer forms $\Cm_\qv$ for the reaction forces (today one full
+`ComputeMarkerDataStructure` and `ComputeJacobianAE` per constraint and evaluation); the Newton matrix about as today.
+The larger gain is the code: about 590 lines of hand-written `ComputeJacobianAE` in the eight ported constraints
+(234 of them in `JointGeneric`) are replaced by one AD chain per marker kind - and with them the class of errors that a
+hand-written $\Cm_\qv$ allows.
 
 <a id="rg14-3"></a>
 **RG14.3** *(group RG14; maintainer 2026-10-01)* **Joints and their Jacobians on homogeneous transformations.**
