@@ -530,6 +530,7 @@ def PerformanceTestsReferenceSolution():
         'perfRigidPendulum.py':2.4735499200766586, #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 2.4745344452543323,
         'perfSpringDamperExplicit.py':0.52,
         'perfSpringDamperUserFunction.py':0.5065575310983877,
+        'perfConnectorInterface.py':1.8871766817354405, #new 2026-10-01 (#2745)
         'perfLargeMassSpringChain.py':0.01426191722384829, #2026-09-16: rigid body chain, last run n=20000; before (mass points): 0.03136079550415616
 
         #the single runs of the models that solve several sizes or thread counts. Measured
@@ -544,6 +545,18 @@ def PerformanceTestsReferenceSolution():
         'perfLargeMassSpringChain:rigid-n5000-explicit' : 0.03706120534025104,
         'perfLargeMassSpringChain:rigid-n5000-implicit' : 0.01663000270673365,
         'perfLargeMassSpringChain:rigid-n20000-explicit': 0.01426191722384829,
+        #the connector interface (#2745): each pair of runs, legacy path and new one, shares its value - measured
+        #2026-10-01 on Windows cp313; the pairs agree to round-off (the implicit ones to 1e-15 relative)
+        'perfConnectorInterface:spring-n200-implicit-legacy':      8.222900073211406,
+        'perfConnectorInterface:spring-n200-implicit':             8.222900073211406,
+        'perfConnectorInterface:spring-n200-explicit-legacy':      6.071378919533291,
+        'perfConnectorInterface:spring-n200-explicit':             6.071378919533291,
+        'perfConnectorInterface:gravity-n200-implicit-legacy':     17.452516360952007,
+        'perfConnectorInterface:gravity-n200-implicit':            17.452516360952007,
+        'perfConnectorInterface:coordinate-n1000-explicit-legacy': 0.9526968492542502,
+        'perfConnectorInterface:coordinate-n1000-explicit':        0.9526968492542502,
+        'perfConnectorInterface:rigid-n100-explicit-legacy':       1.8871766817354405,
+        'perfConnectorInterface:rigid-n100-explicit':              1.8871766817354405,
         }
 
     return refSol

@@ -1758,6 +1758,8 @@ done.
       MiniExamples with a dynamic solve appended, `miniExamplePerformanceTest` in the item definitions, ~2 s
       per example in full and a tenth in the regular run, in parallel on 80 % of the physical cores, the
       solver timers recorded, not in fast mode, `--compare` of two logs; the baseline log of the full run;
+      **RG14.2.1.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-1-1) - the legacy path and
+      the new one side by side in the performance run, `python/PerformanceModels/perfConnectorInterface.py`;
     - **RG14.2.2** the interface decided (the questions in section 9 of the evaluation). **Decided
       2026-09-30** (maintainer): one global experimental switch as the fallback; the field is
       `miniExamplePerformanceTest`; the regular performance run a tenth of the full one; loads **not**

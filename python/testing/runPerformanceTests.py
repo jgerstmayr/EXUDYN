@@ -199,6 +199,7 @@ testGroups = {
                 'perf3DRigidBodies.py',
                 'perfObjectFFRFreducedOrder.py',
                 'perfLargeMassSpringChain.py',
+                'perfConnectorInterface.py',
              ],
     }
 

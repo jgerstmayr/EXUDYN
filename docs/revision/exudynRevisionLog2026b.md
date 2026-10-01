@@ -10575,3 +10575,24 @@ best of 5): the rigid-body spring-damper right-hand side 0.94 (RK44, Lie group n
 Euler parameters) of legacy, the numerical Jacobian 0.95, total 0.94/0.99; the torsional spring-damper 0.99-1.00. The connectors' own physics
 (rotation parameters of the relative rotation, $6\times6$ stiffness) dominates here, unlike the spring-damper - the gain
 of these connectors is in their Jacobian, 14 force evaluations per pair today (RG14.2.8.1).
+
+<a id="rg14-2-1-1"></a>
+### RG14.2.1.1 — the connector interface in the performance run (2026-10-01, #2745)
+
+`python/PerformanceModels/perfConnectorInterface.py`, in the group *large* of `runPerformanceTests.py`: chains of
+bodies joined by a connector of each marker kind - `SpringDamper` on body markers at offset points of rigid bodies
+(implicit and explicit), `ConnectorGravity` on mass points (implicit), `CoordinateSpringDamper` on `Mass1D`
+(explicit), `RigidBodySpringDamper` (explicit) - each solved with `exu.experimental.connectorInterfaceLegacy` at 1 and
+at 0; the runs of a pair share their reference value, so the summary shows the two solver times side by side and
+judges that both compute the same. About 4 s in all, 0.3-0.8 s per run. The first run on the maintainer's machine:
+
+| run | legacy [s] | new [s] |
+|---|---|---|
+| spring, 200 rigid bodies, implicit | 0.437 | 0.395 |
+| spring, 200 rigid bodies, explicit | 0.334 | 0.295 |
+| gravity, 200 mass points, implicit | 0.775 | **0.280** |
+| coordinate, 1000 `Mass1D`, explicit | 0.405 | 0.330 |
+| rigid-body spring-damper, 100 bodies, explicit | 0.373 | 0.332 |
+
+The ad-hoc benchmarks of the steps before stay in `tmp/rg14/` (not in the repository); the legacy runs leave the
+model with the legacy path (RG14.2.13).
