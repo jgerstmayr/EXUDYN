@@ -10773,3 +10773,45 @@ New sub-steps from the maintainer's remarks of 2026-10-01: RG6.7.2.3 (cost of th
 (anisotropic tiling), RG6.7.6 (rows instead of flat lists); RG4.1.3 (math library, FMA contraction on ARM64 and
 uninitialized values as causes of the platform differences); RG14.2.14 (`MarkerTemp` without `MarkerData`), RG14.2.15
 (markers with `localHT`, the joints' `rotationMarker0/1` deprecated).
+
+<a id="rg6-7-7"></a>
+### RG6.7.7.1 to RG6.7.7.5 — quadratic lines and edges; `GetGraphicsData(flatShapes)` (2026-10-01, #2709)
+
+**C++**: `GLLine3` (three points - end points, then the mid node - three colors, item) and `glLines3` in `BodyGraphicsData`
+and `GraphicsData`, copied and moved with the body like the 6-node triangles, included in `ComputeMaxScene`. They are split
+when drawn, by `EXUvis::SplitLine3`: the number of segments from the angle between the end tangents
+$\mathbf{t}_0 = 4\mathbf{m} - 3\mathbf{p}_0 - \mathbf{p}_1$, $\mathbf{t}_1 = 3\mathbf{p}_1 + \mathbf{p}_0 - 4\mathbf{m}$ against
+`curvedTriangleTilingAngle`, at most `curvedTriangleMaxTiling`; points and colors by the quadratic shape functions, the
+alpha of node 0 (material index). OpenGL splits per frame and draws them with the lines (also highlighted), the raytracer
+per image with its lines. The curved edges of the 6-node triangles go through the same function
+(`SplitLine3Uniform`), but with **the triangle's subdivision**, not their own: the edge must lie on the boundary of the
+flat triangles drawn, or it is hidden behind them where it subdivides less. The 6-node triangle's split is now in two
+parts, the adaptive count and `SplitTriangle6Uniform`, which `GetGraphicsData` uses with 2.
+
+**The dictionaries**: `Lines` reads `shape` - `'linear'` (default, also when missing) or `'quadratic'` (3 points per line),
+anything else is an error; points and colors as rows ($(2n\times3)$/$(3n\times3)$, $(2n\times4)$/$(3n\times4)$, a list of lists or a
+2D array) or flat as before, by one reader `PyReadNumbers<T>` (`py::array_t::ensure`, a ragged list is an error).
+`TriangleList` reads `edges3` (rows of 3 point indices or flat, range-checked - `edges` is not), in `edgeColor`. The
+read-back returns the quadratic lines as a `Lines` with `shape` `'quadratic'` (flat lists, as all read-backs until RG6.7.6.4),
+which can be given again.
+
+**`SC.renderer.GetGraphicsData(flatShapes=False)`**, `formatVersion` 2: by default the native shapes under
+`triangles6` (`items`, `points` (n,6,3), `normals` (n,6,3) - given, else of the geometry -, `colors` (n,6,4)) and `lines3`
+(`items`, `points` (n,3,3), `colors` (n,3,4)); `flatShapes=True` leaves these empty and puts 4 triangles per 6-node
+triangle and 2 lines per quadratic line among `triangles` and `lines`. Neither depends on the tiling settings any more
+(since RG6.7.2.2 the default had returned the split of the moment). `plot.PlotImage` draws both forms;
+`graphicsRegression.Fingerprint` has the kinds `lines3` and `triangles6`, and reads a version-1 dictionary as well.
+
+**Python**: `graphics.Lines(pList, color, shape='quadratic')` takes the points along the curve, $\mathbf{p}_0, \mathbf{m}_{01},
+\mathbf{p}_1, \mathbf{m}_{12}, \ldots$ (an odd number) - the natural order for a polyline - and returns a `Lines` of shape
+`'quadratic'` in the order of the dictionary; `'linear'` returns the `Line` as before. `Transform`/`Move` and
+`BoundingBoxSingle` know `Lines`; `Transform` and `MergeTriangleLists` keep `edges3` (offset by the points of `g1`);
+`Triangles6ToTriangles` turns each `edges3` into two `edges`.
+
+**Checked**: a half cylinder of four 6-node triangles with its two rims as `edges3`, two quadratic arcs and a `Lines` given
+as rows: native 4 `triangles6` / 8 `lines3`, flat 16 triangles / 17 lines; raytraced at 90° and 15°, chords and arcs; the
+three errors (unknown shape, wrong count, index out of range). Tests: `testEveryGraphicsFunction` with the cases
+`LinesQuadratic`, `Edges3`, `MergeEdges3` (appended, so that the other objects keep their numbers; the `Triangles6` case is
+now 1 `triangles6` instead of 36 triangles), `testQuadraticShapes` (native and flat counts at two tiling angles, the mid node
+on the flat lines, read-back and given again, `Triangles6ToTriangles`); `test_graphicsData` for version 2. Found on the way:
+#2769 (RG6.7.7.8).

@@ -533,6 +533,18 @@ Index VisualizationSystemContainer::NumberOFMainSystemsBacklink() const
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//! read numbers given flat or as rows - a list, a list of lists, a 1D or 2D numpy array - into a flat vector; false if
+//! the value is none of these or ragged (#2709)
+template<typename T>
+static bool PyReadNumbers(const py::object& value, std::vector<T>& values)
+{
+	if (!EPyUtils::IsPyTypeListOrArray(value)) { return false; }
+	auto array = py::array_t<T, py::array::c_style | py::array::forcecast>::ensure(value);
+	if (!array) { return false; }
+	values.assign(array.data(), array.data() + array.size());
+	return true;
+}
+
 //! object graphics data for ground objects, rigid bodies and mass points
 bool PyWriteBodyGraphicsDataList(const py::dict& d, const char* item, BodyGraphicsData& data)
 {
@@ -625,52 +637,70 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 						} //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 						else if (pyTypeStr == "Lines")
 						{
-							GLLine line; line.itemID = -1;
-							line.color1 = line.color2 = EXUvis::defaultColorFloat4;
-							std::vector<float> stdColorsList;
+							//shape 'linear' (the default): 2 points per line; 'quadratic': 3, the end points and then the mid node (#2709)
+							Index nPointsPerLine = 2;
+							if (gDict.contains("shape"))
+							{
+								STDstring shape = py::cast<std::string>(gDict["shape"]);
+								if (shape == "quadratic") { nPointsPerLine = 3; }
+								else if (shape != "linear")
+								{
+									PyError("GraphicsData Lines: shape must be 'linear' or 'quadratic', but got '" + shape + "'", PyErrorType::valueError); return false;
+								}
+							}
+							STDstring perLine = EXUstd::ToString(nPointsPerLine);
+
 							std::vector<float> stdPointsList;
-							Index nLines = 0;
-
-							if (gDict.contains("points"))
+							std::vector<float> stdColorsList;
+							if (!gDict.contains("points"))
 							{
-								py::object gData = gDict["points"]; //this is necessary to make isinstance work
-								if (EPyUtils::IsPyTypeListOrArray(gData)) 
-								{
-									py::list dataList = (py::list)(gData);
-									stdPointsList = py::cast<std::vector<float>>(dataList); //! # read out dictionary and cast to C++ type
+								PyError("GraphicsData Lines: must contain 'points', " + perLine + " points per line", PyErrorType::valueError); return false;
+							}
+							if (!PyReadNumbers(gDict["points"], stdPointsList))
+							{
+								PyError("GraphicsData Lines: points must be a float list or numpy array, with rows of 3 floats or flat", PyErrorType::valueError); return false;
+							}
+							Index nLines = (Index)stdPointsList.size() / (3 * nPointsPerLine);
+							if (nLines * 3 * nPointsPerLine != (Index)stdPointsList.size() || nLines < 1)
+							{
+								PyError("GraphicsData Lines: for n lines, points must contain " + perLine + "*n points of 3 floats, n > 0", PyErrorType::valueError); return false;
+							}
 
-									nLines = (Index)stdPointsList.size() / 6;
-									if (nLines * 6 != (Index)stdPointsList.size() || nLines < 1)
+							if (!gDict.contains("colors"))
+							{
+								PyError("GraphicsData Lines: must contain 'colors', 4 floats per point", PyErrorType::valueError); return false;
+							}
+							if (!PyReadNumbers(gDict["colors"], stdColorsList) || (Index)stdColorsList.size() != nLines * nPointsPerLine * 4)
+							{
+								PyError("GraphicsData Lines: for n lines, colors must contain " + perLine + "*n colors of 4 floats, with rows of 4 floats or flat", PyErrorType::valueError); return false;
+							}
+
+							auto Point = [&stdPointsList](Index i) { return Float3({ stdPointsList[3 * i], stdPointsList[3 * i + 1], stdPointsList[3 * i + 2] }); };
+							auto Color = [&stdColorsList](Index i) { return Float4({ stdColorsList[4 * i], stdColorsList[4 * i + 1], stdColorsList[4 * i + 2], stdColorsList[4 * i + 3] }); };
+							if (nPointsPerLine == 2)
+							{
+								GLLine line; line.itemID = -1;
+								for (Index k = 0; k < nLines; k++)
+								{
+									line.point1 = Point(2 * k);
+									line.point2 = Point(2 * k + 1);
+									line.color1 = Color(2 * k);
+									line.color2 = Color(2 * k + 1);
+									data.glLines.Append(line);
+								}
+							}
+							else
+							{
+								GLLine3 line; line.itemID = -1;
+								for (Index k = 0; k < nLines; k++)
+								{
+									for (Index j = 0; j < 3; j++)
 									{
-										PyError("GraphicsData Lines: for n lines, points must be a float list or numpy array with exactly 6*n components and n > 1", PyErrorType::valueError); return false;
+										line.points[j] = Point(3 * k + j);
+										line.colors[j] = Color(3 * k + j);
 									}
+									data.glLines3.Append(line);
 								}
-								else { PyError("GraphicsData Lines: for n lines, points must be a float list or numpy array with 6*n floats, 3 floats per point", PyErrorType::valueError); return false; }
-							}
-							else { PyError("GraphicsData Lines: must contain 'points' with (x1,y1,z1,...) line coordinates ", PyErrorType::valueError); return false; }
-
-							if (gDict.contains("colors"))
-							{
-								py::object gColor = gDict["colors"]; //this is necessary to make isinstance work
-								if (EPyUtils::IsPyTypeListOrArray(gColor)) 
-								{
-									py::list colorList = (py::list)(gColor);
-									stdColorsList = py::cast<std::vector<float>>(colorList); //! # read out dictionary and cast to C++ type
-
-									if ((Index)stdColorsList.size() != nLines * 8)
-									{ PyError("GraphicsData Line: for n lines, colors must contain 8*n floats, 4 floats per line point", PyErrorType::valueError); return false; }
-								}
-								else { PyError("GraphicsData Line: for n lines, colors must contain 8*n floats, 4 floats per line point", PyErrorType::valueError); return false; }
-							}
-							else { PyError("GraphicsData Lines: must contain 'colors', containing 4 floats per line point", PyErrorType::valueError); return false; }
-
-							for (Index k = 0; k < nLines; k++)
-							{
-								line.point1 = Float3({ stdPointsList[6 * k + 0],stdPointsList[6 * k + 1],stdPointsList[6 * k + 2] });
-								line.point2 = Float3({ stdPointsList[6 * k + 3],stdPointsList[6 * k + 4],stdPointsList[6 * k + 5] });
-								line.color1 = Float4({ stdColorsList[8 * k + 0],stdColorsList[8 * k + 1],stdColorsList[8 * k + 2],stdColorsList[8 * k + 3] });
-								line.color2 = Float4({ stdColorsList[8 * k + 4],stdColorsList[8 * k + 5],stdColorsList[8 * k + 6],stdColorsList[8 * k + 7] });
-								data.glLines.Append(line);
 							}
 
 						} //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1087,6 +1117,30 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								}
 							}
 
+							if (gDict.contains("edges3")) //quadratic edges: the end points, then the mid node (#2709)
+							{
+								std::vector<int> stdEdgesList;
+								if (!PyReadNumbers(gDict["edges3"], stdEdgesList) || stdEdgesList.size() % 3 != 0)
+								{
+									PyError("GraphicsData TriangleList: 'edges3' must be a list or numpy array with 3*n integers, flat or with rows of 3", PyErrorType::valueError); return false;
+								}
+								GLLine3 edge; edge.itemID = -1;
+								edge.colors = { edgeColor, edgeColor, edgeColor };
+								for (Index k = 0; k < (Index)stdEdgesList.size() / 3; k++)
+								{
+									for (Index j = 0; j < 3; j++)
+									{
+										Index index = stdEdgesList[3 * k + j];
+										if (!EXUstd::IndexIsInRange(index, 0, points.NumberOfItems()))
+										{
+											PyError("GraphicsData TriangleList: 'edges3' contains the point index " + EXUstd::ToString(index) + ", but there are " + EXUstd::ToString(points.NumberOfItems()) + " points", PyErrorType::valueError); return false;
+										}
+										edge.points[j] = points[index];
+									}
+									data.glLines3.Append(edge);
+								}
+							}
+
 
 
 
@@ -1184,6 +1238,27 @@ py::list PyGetBodyGraphicsDataList(const BodyGraphicsData& data, bool addGraphic
 				for (Index i = 0; i < 4; i++) { colors.Append(item.color2[i]); }
 				for (Index i = 0; i < 3; i++) { points.Append(item.point1[i]); }
 				for (Index i = 0; i < 3; i++) { points.Append(item.point2[i]); }
+			}
+			d["colors"] = FloatVector2NumPy(colors);
+			d["points"] = FloatVector2NumPy(points);
+			list.append(d);
+		}
+
+		Index nLines3 = data.glLines3.NumberOfItems();
+		if (nLines3 != 0) //the quadratic lines (and edges3) as Lines of shape 'quadratic' (#2709)
+		{
+			auto d = py::dict();
+			d["type"] = std::string("Lines");
+			d["shape"] = std::string("quadratic");
+			ResizableArray<float> colors(nLines3 * 12);
+			ResizableArray<float> points(nLines3 * 9);
+			for (const auto& item : data.glLines3)
+			{
+				for (Index j = 0; j < 3; j++)
+				{
+					for (Index i = 0; i < 4; i++) { colors.Append(item.colors[j][i]); }
+					for (Index i = 0; i < 3; i++) { points.Append(item.points[j][i]); }
+				}
 			}
 			d["colors"] = FloatVector2NumPy(colors);
 			d["points"] = FloatVector2NumPy(points);

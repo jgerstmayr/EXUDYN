@@ -952,6 +952,7 @@ This group is that revision and what has to happen before it can start.
       triangle. Today a `TriangleList`'s `edges` are point pairs, drawn as straight `GLLine`s, and `Lines` takes two
       points per line - a feature edge on a curved surface of 6-node triangles (the rim of a cylinder) can only be a
       chord. Sub-steps:
+      **RG6.7.7.1 to RG6.7.7.5 DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-7).
       - **RG6.7.7.1** `TriangleList` gets the key **`edges3`**: three point indices per edge, `[p0, p1, m01, ...]` - the
         corners first, then the mid node, the order of `triangles6`; points and colors shared with the triangles,
         `edgeColor` as for `edges`. Drawn always, like `edges`; `showFaceEdges` keeps drawing the element edges of the
@@ -977,6 +978,8 @@ This group is that revision and what has to happen before it can start.
       - **RG6.7.7.5** the `exudyn.graphics` helpers keep `edges3` and the line shapes (`MergeTriangleLists`,
         `Transform`/`Move`, `InvertTriangles`); `Triangles6ToTriangles` turns an `edges3` into two `edges`;
         `graphics.Lines` gets `shape`.
+      - **RG6.7.7.8** *open* (#2769) - `MergeTriangleLists` does not offset the `edges` of `g2` when `g1` has none
+        (found in RG6.7.7.5; the `edges3` merge offsets always).
       - **RG6.7.7.6** **the primitives on quadratic shapes** - `Cylinder`, `Tube`, `Torus`, `SolidOfRevolution`, the
         partial `Sphere`, `Arrow`, ... built from 6-node triangles with `edges3` on their rims. *Compatibility of
         `nTiles`* (maintainer's question): `nTiles` keeps its meaning - **the number of flat segments around** - and
@@ -2192,7 +2195,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame - an inconsistent Jacobian to find |
 | RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
-| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres and 6-node triangles done; open RG6.7.2.1 (superelements), RG6.7.5 (anisotropic tiling), RG6.7.6 (rows), RG6.7.7 (quadratic lines and edges, `GetGraphicsData(flatShapes)`, primitives) |
+| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges done; open RG6.7.2.1 (superelements), RG6.7.5 (anisotropic tiling), RG6.7.6 (rows), RG6.7.7.6/.7 (the primitives on quadratic shapes), RG6.7.7.8 (#2769) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG9.3 | #2744 | access functions as single functions of the objects; evaluation first |
 | RG9.4 | #2202 | kinetic and potential energy as output variables, per object type: done for bodies, beams, plates, superelements, spring-dampers; open RG9.4.5 (should a rigid body report zero potential energy) |

@@ -100,7 +100,44 @@ def GraphicsFunctions(stlFileName):
     cases.append(('FromPointsAndTrigs', graphics.FromPointsAndTrigs(points, triangles, color=blue)))
     graphics.ExportSTL(brick, stlFileName)
     cases.append(('FromSTLfileASCII', graphics.FromSTLfileASCII(stlFileName, color=blue)))  #FromSTLfile needs numpy-stl
+    #the quadratic shapes (#2709), appended so that the objects above keep their numbers
+    cases.append(('LinesQuadratic', graphics.Lines([[0, 0, 0], [0.5, 0.2, 0], [1, 0, 0], [1.2, 0.5, 0], [1, 1, 0]],
+                                                   color=blue, shape='quadratic')))
+    cases.append(('Edges3', Triangle6WithEdges3()))
+    cases.append(('MergeEdges3', graphics.MergeTriangleLists(brick, Triangle6WithEdges3())))
     return cases
+
+
+def Triangle6WithEdges3():
+    """one 6-node triangle with its three edges as quadratic edges"""
+    g = graphics.FromPointsAndTrigs([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0.5, 0, 0.2], [0.5, 0.5, 0.2], [0, 0.5, 0.2]],
+                                    [[0, 1, 2, 3, 4, 5]], color=[1, 0, 0, 1])
+    g['edges3'] = np.array([[0, 1, 3], [1, 2, 4], [2, 0, 5]])  #rows: end points, then the mid node
+    return g
+
+
+def testQuadraticShapes():
+    """GetGraphicsData returns the native shapes, or refined once with flatShapes, independent of the tiling (#2709)"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    lines = {'type': 'Lines', 'shape': 'quadratic', 'points': [[0, 0, 0], [1, 0, 0], [0.5, 0.3, 0]],
+             'colors': [[0, 0, 1, 1]]*3}  #given as rows
+    oGround = mbs.CreateGround(graphicsDataList=[Triangle6WithEdges3(), lines])
+    mbs.Assemble()
+    for angle in [90., 3.]:
+        SC.visualizationSettings.openGL.advanced.curvedTriangleTilingAngle = angle
+        native = SC.renderer.GetGraphicsData()
+        assert [len(native[kind]['items']) for kind in ['triangles6', 'lines3', 'triangles', 'lines']] == [1, 4, 0, 0]
+        flat = SC.renderer.GetGraphicsData(flatShapes=True)
+        assert [len(flat[kind]['items']) for kind in ['triangles6', 'lines3', 'triangles', 'lines']] == [0, 0, 4, 8]
+    #the flat lines of the quadratic line pass through its mid node
+    assert np.allclose(flat['lines']['points'][-2][1], [0.5, 0.3, 0])
+    #read back as a Lines of shape 'quadratic', which can be given again
+    readBack = mbs.GetObject(oGround, addGraphicsData=True)['VgraphicsData']
+    assert [(g['type'], g.get('shape')) for g in readBack if g['type'] == 'Lines'] == [('Lines', 'quadratic')]
+    mbs.CreateGround(graphicsDataList=readBack)
+    #the helpers: two straight edges per quadratic edge
+    assert len(graphics.Triangles6ToTriangles(Triangle6WithEdges3())['edges']) == 12
 
 
 def testEveryGraphicsFunction(tmp_path):

@@ -91,15 +91,24 @@ namespace EXUvis {
 		}
 	}
 
-	void SplitTriangle6(const GLTriangle6& triangle, float tilingAngleDegrees, Index maxTiling,
-		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges)
+	//! the angle between two vectors, in degrees; exact and cheap; 0 if one of them is zero
+	inline float AngleDegrees(const Float3& a, const Float3& b)
 	{
+		return (float)(180. / EXUstd::pi) * atan2(a.CrossProduct(b).GetL2Norm(), a * b);
+	}
 
-		//the normals at the nodes, given or of the geometry, decide the tiling
+	//! the number of subdivisions for an angle in degrees
+	inline Index Tiling(float angleDegrees, float tilingAngleDegrees, Index maxTiling)
+	{
+		if (tilingAngleDegrees <= 0.f) { return 1; }
+		return EXUstd::Clamp((Index)ceil(angleDegrees / tilingAngleDegrees), (Index)1, EXUstd::Maximum((Index)1, maxTiling));
+	}
+
+	void Triangle6NodeNormals(const GLTriangle6& triangle, std::array<Float3, 6>& nodeNormals)
+	{
 		const float nodeU[6] = { 0.f, 1.f, 0.f, 0.5f, 0.5f, 0.f };
 		const float nodeV[6] = { 0.f, 0.f, 1.f, 0.f, 0.5f, 0.5f };
 		std::array<float, 6> N, Nu, Nv;
-		std::array<Float3, 6> nodeNormals;
 		for (Index k = 0; k < 6; k++)
 		{
 			if (triangle.hasNormals) { nodeNormals[k] = triangle.normals[k]; nodeNormals[k].NormalizeSafe(); }
@@ -109,19 +118,32 @@ namespace EXUvis {
 				nodeNormals[k] = Triangle6GeometricNormal(triangle, Nu, Nv);
 			}
 		}
+	}
+
+	void SplitTriangle6(const GLTriangle6& triangle, float tilingAngleDegrees, Index maxTiling,
+		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges)
+	{
+		//the normals at the nodes, given or of the geometry, decide the tiling
+		std::array<Float3, 6> nodeNormals;
+		Triangle6NodeNormals(triangle, nodeNormals);
 		float maxAngle = 0.f;
 		for (Index i = 0; i < 6; i++)
 		{
 			for (Index j = i + 1; j < 6; j++)
 			{
-				maxAngle = EXUstd::Maximum(maxAngle, atan2(nodeNormals[i].CrossProduct(nodeNormals[j]).GetL2Norm(), nodeNormals[i] * nodeNormals[j]));
+				maxAngle = EXUstd::Maximum(maxAngle, AngleDegrees(nodeNormals[i], nodeNormals[j]));
 			}
 		}
-		Index n = 1;
-		if (tilingAngleDegrees > 0.f)
-		{
-			n = EXUstd::Clamp((Index)ceil(maxAngle * (float)(180. / EXUstd::pi) / tilingAngleDegrees), (Index)1, EXUstd::Maximum((Index)1, maxTiling));
-		}
+		SplitTriangle6Uniform(triangle, Tiling(maxAngle, tilingAngleDegrees, maxTiling), triangles, edges);
+	}
+
+	void SplitTriangle6Uniform(const GLTriangle6& triangle, Index n,
+		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges)
+	{
+		n = EXUstd::Maximum((Index)1, n);
+		std::array<float, 6> N, Nu, Nv;
+		std::array<Float3, 6> nodeNormals;
+		if (triangle.hasNormals) { Triangle6NodeNormals(triangle, nodeNormals); }
 
 		//the vertices of the subdivision, row by row in v
 		auto VertexIndex = [n](Index i, Index j) { return j * (n + 1) - (j * (j - 1)) / 2 + i; }; //i along u, j along v, i + j <= n
@@ -176,17 +198,65 @@ namespace EXUvis {
 			}
 		}
 
-		if (edges) //the three curved edges as polylines through the vertices of the subdivision on them
+		if (edges) //the three curved edges, split as the triangle, so that they lie on its boundary
 		{
-			GLLine line;
-			line.itemID = triangle.itemID;
-			line.color1 = line.color2 = triangle.colors[0];
-			for (Index k = 0; k < n; k++)
+			const Index edgeNodes[3][3] = { {0, 1, 3}, {1, 2, 4}, {2, 0, 5} };
+			GLLine3 edge;
+			edge.itemID = triangle.itemID;
+			for (Index e = 0; e < 3; e++)
 			{
-				line.point1 = points[VertexIndex(k, 0)]; line.point2 = points[VertexIndex(k + 1, 0)]; edges->Append(line);        //edge 0-1 (v = 0)
-				line.point1 = points[VertexIndex(n - k, k)]; line.point2 = points[VertexIndex(n - k - 1, k + 1)]; edges->Append(line); //edge 1-2 (u + v = 1)
-				line.point1 = points[VertexIndex(0, n - k)]; line.point2 = points[VertexIndex(0, n - k - 1)]; edges->Append(line); //edge 2-0 (u = 0)
+				for (Index k = 0; k < 3; k++)
+				{
+					edge.points[k] = triangle.points[edgeNodes[e][k]];
+					edge.colors[k] = triangle.colors[edgeNodes[e][k]];
+				}
+				SplitLine3Uniform(edge, n, *edges);
 			}
+		}
+	}
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//the quadratic line (#2709)
+
+	void SplitLine3Uniform(const GLLine3& line, Index n, ResizableArray<GLLine>& lines)
+	{
+		n = EXUstd::Maximum((Index)1, n);
+		GLLine straight;
+		straight.itemID = line.itemID;
+		auto Evaluate = [&line](float s, Float3& p, Float4& color)
+		{
+			const float N[3] = { (1.f - s)*(1.f - 2.f*s), s*(2.f*s - 1.f), 4.f*s*(1.f - s) };
+			p = N[0] * line.points[0] + N[1] * line.points[1] + N[2] * line.points[2];
+			color = N[0] * line.colors[0] + N[1] * line.colors[1] + N[2] * line.colors[2];
+			for (Index c = 0; c < 3; c++) { color[c] = EXUstd::Clamp(color[c], 0.f, 1.f); }
+			color[3] = line.colors[0][3]; //not interpolated, as for the triangles
+		};
+		Evaluate(0.f, straight.point2, straight.color2);
+		for (Index k = 1; k <= n; k++)
+		{
+			straight.point1 = straight.point2;
+			straight.color1 = straight.color2;
+			Evaluate((float)k / (float)n, straight.point2, straight.color2);
+			lines.Append(straight);
+		}
+	}
+
+	void SplitLine3(const GLLine3& line, float tilingAngleDegrees, Index maxTiling, ResizableArray<GLLine>& lines)
+	{
+		//the tangents at the end points of p(s) = N0 p0 + N1 p1 + N2 m
+		Float3 t0 = 4.f*line.points[2] - 3.f*line.points[0] - line.points[1];
+		Float3 t1 = 3.f*line.points[1] + line.points[0] - 4.f*line.points[2];
+		SplitLine3Uniform(line, Tiling(AngleDegrees(t0, t1), tilingAngleDegrees, maxTiling), lines);
+	}
+
+	void SplitLines3(const ResizableArray<GLLine3>& lines3, const VisualizationSettings& visualizationSettings,
+		ResizableArray<GLLine>& lines)
+	{
+		lines.SetNumberOfItems(0);
+		for (const GLLine3& line : lines3)
+		{
+			SplitLine3(line, visualizationSettings.openGL.advanced.curvedTriangleTilingAngle,
+				visualizationSettings.openGL.advanced.curvedTriangleMaxTiling, lines);
 		}
 	}
 
@@ -255,6 +325,17 @@ namespace EXUvis {
 				else { item.points[i] += position; }
 			}
 			graphicsData.glTriangles6.Append(item);
+		}
+
+		for (GLLine3 item : bodyGraphicsData.glLines3) //copy objects (#2709)
+		{
+			item.itemID = itemID;
+			for (Float3& point : item.points)
+			{
+				if (applyRotation) { EXUmath::RigidBodyTransformation(rotation, position, point, point); }
+				else { point += position; }
+			}
+			graphicsData.glLines3.Append(item);
 		}
 
 		for (GLText item : bodyGraphicsData.glTexts) //copy objects, but string pointers are just assigned!
@@ -475,6 +556,17 @@ namespace EXUvis {
 				else { item.points[i] += position; }
 			}
 			graphicsData.glTriangles6.Append(item);
+		}
+
+		for (GLLine3 item : bodyGraphicsData.glLines3) //copy objects (#2709)
+		{
+			item.itemID = itemID;
+			for (Float3& point : item.points)
+			{
+				if (applyRotation) { EXUmath::RigidBodyTransformation(rotation, position, point, point); }
+				else { point += position; }
+			}
+			graphicsData.glLines3.Append(item);
 		}
 
 		for (GLText item : bodyGraphicsData.glTexts) //copy objects, but string pointers are just assigned!

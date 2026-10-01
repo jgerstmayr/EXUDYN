@@ -38,7 +38,7 @@ import numpy as np
 referenceDirectory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'graphicsReferences')
 relativeTolerance = 1e-5              #maintainer, 2026-09-27
 itemLimit = 32                        #per item up to this many items, per item type above
-kinds = ['lines', 'spheres', 'circles', 'texts', 'triangles']
+kinds = ['lines', 'spheres', 'circles', 'texts', 'triangles', 'lines3', 'triangles6']
 #the scalar quantities of an element, under the keys GetGraphicsData() gives them
 scalars = {'spheres': ['radius', 'resolution'], 'circles': ['radius', 'numberOfSegments'], 'texts': ['fontSize']}
 quantities = ['points', 'colors', 'radius', 'resolution', 'numberOfSegments', 'fontSize', 'normals']
@@ -69,13 +69,13 @@ def Statistics(values):
 def Fingerprint(data, perItem=None):
     """the fingerprint of the dictionary SC.renderer.GetGraphicsData() returns; perItem=None groups
     per item up to itemLimit items and per item type above, True or False forces it"""
-    allItems = np.concatenate([data[kind]['items'] for kind in kinds if len(data[kind]['items'])]) \
-        if any(len(data[kind]['items']) for kind in kinds) else np.zeros((0, 3), dtype=int)
+    present = [kind for kind in kinds if kind in data and len(data[kind]['items'])] #formatVersion 1 has no lines3, triangles6
+    allItems = np.concatenate([data[kind]['items'] for kind in present]) if present else np.zeros((0, 3), dtype=int)
     distinctItems = set(map(tuple, allItems.tolist()))
     if perItem is None:
         perItem = len(distinctItems) <= itemLimit
     groups = {}
-    for kind in kinds:
+    for kind in present:
         entry = data[kind]
         keys = [GroupKey(item, perItem) for item in entry['items']]
         for key in sorted(set(keys)):
@@ -88,7 +88,7 @@ def Fingerprint(data, perItem=None):
             summary['colors'] = Statistics(colors)
             for quantity in scalars.get(kind, []):
                 summary[quantity] = Statistics(np.asarray(entry[quantity])[mask])
-            if kind == 'triangles':
+            if kind in ['triangles', 'triangles6']:
                 summary['normals'] = Statistics(np.asarray(entry['normals'])[mask].reshape(-1, 3))
             if kind == 'texts':
                 summary['text'] = sorted(text for (text, m) in zip(entry['text'], mask) if m)

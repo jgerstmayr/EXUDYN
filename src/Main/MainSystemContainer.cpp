@@ -533,8 +533,9 @@ inline void GraphicsDataItem(Index itemID, int* item)
 
 //! the drawing elements of the scene as numpy arrays (#2700). The graphics data is built the way
 //! RedrawAndGetImage(useRaytracer=True) builds it, so no window and no OpenGL is needed; nothing that
-//! depends on a window - zoom, model view, screen size - is part of it
-py::dict MainRenderer::GetGraphicsData()
+//! depends on a window - zoom, model view, screen size - is part of it. The 6-node triangles and quadratic
+//! lines as they are, or with flatShapes by one fixed refinement among the flat ones (#2709)
+py::dict MainRenderer::GetGraphicsData(bool flatShapes)
 {
 	VisualizationSystemContainer& VSC = mainSystemContainer->GetVisualizationSystemContainer();
 
@@ -552,15 +553,26 @@ py::dict MainRenderer::GetGraphicsData()
 		for (auto data : list) { data->LockData(); }
 	}
 
-	//the 6-node triangles as the renderers draw them: split with the current settings (#2709)
-	std::vector<ResizableArray<GLTriangle>> triangles6Split(list.NumberOfItems());
+	//flat: each 6-node triangle into the 4 triangles on its nodes, each quadratic line into 2 lines - independent of the
+	//tiling settings, which only the renderers apply (#2709)
+	std::vector<ResizableArray<GLTriangle>> trianglesRefined(list.NumberOfItems());
+	std::vector<ResizableArray<GLLine>> linesRefined(list.NumberOfItems());
+	py::ssize_t nLines = 0, nSpheres = 0, nCircles = 0, nTexts = 0, nTriangles = 0, nTriangles6 = 0, nLines3 = 0;
 	for (Index i = 0; i < list.NumberOfItems(); i++)
 	{
-		EXUvis::SplitTriangles6(list[i]->glTriangles6, VSC.GetVisualizationSettings(), triangles6Split[i]);
+		if (flatShapes)
+		{
+			for (const GLTriangle6& triangle : list[i]->glTriangles6) { EXUvis::SplitTriangle6Uniform(triangle, 2, trianglesRefined[i]); }
+			for (const GLLine3& line : list[i]->glLines3) { EXUvis::SplitLine3Uniform(line, 2, linesRefined[i]); }
+			nTriangles += trianglesRefined[i].NumberOfItems();
+			nLines += linesRefined[i].NumberOfItems();
+		}
+		else
+		{
+			nTriangles6 += list[i]->glTriangles6.NumberOfItems();
+			nLines3 += list[i]->glLines3.NumberOfItems();
+		}
 	}
-
-	py::ssize_t nLines = 0, nSpheres = 0, nCircles = 0, nTexts = 0, nTriangles = 0;
-	for (Index i = 0; i < list.NumberOfItems(); i++) { nTriangles += triangles6Split[i].NumberOfItems(); }
 	for (auto data : list)
 	{
 		nLines += data->glLines.NumberOfItems();
@@ -593,6 +605,13 @@ py::dict MainRenderer::GetGraphicsData()
 	py::array_t<float> trianglePoints({ nTriangles, (py::ssize_t)3, (py::ssize_t)3 });
 	py::array_t<float> triangleNormals({ nTriangles, (py::ssize_t)3, (py::ssize_t)3 });
 	py::array_t<float> triangleColors({ nTriangles, (py::ssize_t)3, (py::ssize_t)4 });
+	py::array_t<int> triangle6Items({ nTriangles6, (py::ssize_t)3 });
+	py::array_t<float> triangle6Points({ nTriangles6, (py::ssize_t)6, (py::ssize_t)3 });
+	py::array_t<float> triangle6Normals({ nTriangles6, (py::ssize_t)6, (py::ssize_t)3 });
+	py::array_t<float> triangle6Colors({ nTriangles6, (py::ssize_t)6, (py::ssize_t)4 });
+	py::array_t<int> line3Items({ nLines3, (py::ssize_t)3 });
+	py::array_t<float> line3Points({ nLines3, (py::ssize_t)3, (py::ssize_t)3 });
+	py::array_t<float> line3Colors({ nLines3, (py::ssize_t)3, (py::ssize_t)4 });
 
 	auto li = lineItems.mutable_unchecked<2>(); auto lp = linePoints.mutable_unchecked<3>(); auto lc = lineColors.mutable_unchecked<3>();
 	auto si = sphereItems.mutable_unchecked<2>(); auto sp = spherePoints.mutable_unchecked<2>(); auto sc = sphereColors.mutable_unchecked<2>();
@@ -603,13 +622,18 @@ py::dict MainRenderer::GetGraphicsData()
 	auto tf = textFontSizes.mutable_unchecked<1>(); auto to = textOffsets.mutable_unchecked<2>();
 	auto gi = triangleItems.mutable_unchecked<2>(); auto gp = trianglePoints.mutable_unchecked<3>();
 	auto gn = triangleNormals.mutable_unchecked<3>(); auto gc = triangleColors.mutable_unchecked<3>();
+	auto hi = triangle6Items.mutable_unchecked<2>(); auto hp = triangle6Points.mutable_unchecked<3>();
+	auto hn = triangle6Normals.mutable_unchecked<3>(); auto hc = triangle6Colors.mutable_unchecked<3>();
+	auto qi = line3Items.mutable_unchecked<2>(); auto qp = line3Points.mutable_unchecked<3>(); auto qc = line3Colors.mutable_unchecked<3>();
 
-	py::ssize_t iLine = 0, iSphere = 0, iCircle = 0, iText = 0, iTriangle = 0;
+	py::ssize_t iLine = 0, iSphere = 0, iCircle = 0, iText = 0, iTriangle = 0, iTriangle6 = 0, iLine3 = 0;
 	int item[3];
 	Index iData = 0;
+	std::array<Float3, 6> nodeNormals;
 	for (auto data : list)
 	{
-		for (const GLLine& line : data->glLines)
+		for (const ResizableArray<GLLine>* lineList : { &data->glLines, &linesRefined[iData] })
+		for (const GLLine& line : *lineList)
 		{
 			GraphicsDataItem(line.itemID, item);
 			for (Index k = 0; k < 3; k++) { li(iLine, k) = item[k]; lp(iLine, 0, k) = line.point1[k]; lp(iLine, 1, k) = line.point2[k]; }
@@ -645,7 +669,7 @@ py::dict MainRenderer::GetGraphicsData()
 			textStrings.append(py::str(text.text != nullptr ? text.text : ""));
 			iText++;
 		}
-		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &triangles6Split[iData++] })
+		for (const ResizableArray<GLTriangle>* triangleList : { &data->glTriangles, &trianglesRefined[iData] })
 		for (const GLTriangle& trig : *triangleList)
 		{
 			GraphicsDataItem(trig.itemID, item);
@@ -657,6 +681,33 @@ py::dict MainRenderer::GetGraphicsData()
 			}
 			iTriangle++;
 		}
+		if (!flatShapes)
+		{
+			for (const GLTriangle6& trig : data->glTriangles6)
+			{
+				GraphicsDataItem(trig.itemID, item);
+				EXUvis::Triangle6NodeNormals(trig, nodeNormals); //the given ones, else those of the geometry
+				for (Index k = 0; k < 3; k++) { hi(iTriangle6, k) = item[k]; }
+				for (Index j = 0; j < 6; j++)
+				{
+					for (Index k = 0; k < 3; k++) { hp(iTriangle6, j, k) = trig.points[j][k]; hn(iTriangle6, j, k) = nodeNormals[j][k]; }
+					for (Index k = 0; k < 4; k++) { hc(iTriangle6, j, k) = trig.colors[j][k]; }
+				}
+				iTriangle6++;
+			}
+			for (const GLLine3& line : data->glLines3)
+			{
+				GraphicsDataItem(line.itemID, item);
+				for (Index k = 0; k < 3; k++) { qi(iLine3, k) = item[k]; }
+				for (Index j = 0; j < 3; j++)
+				{
+					for (Index k = 0; k < 3; k++) { qp(iLine3, j, k) = line.points[j][k]; }
+					for (Index k = 0; k < 4; k++) { qc(iLine3, j, k) = line.colors[j][k]; }
+				}
+				iLine3++;
+			}
+		}
+		iData++;
 	}
 	for (auto data : list) { data->ClearLock(); }
 
@@ -670,14 +721,20 @@ py::dict MainRenderer::GetGraphicsData()
 	texts["fontSize"] = textFontSizes; texts["offset"] = textOffsets; texts["text"] = textStrings;
 	triangles["items"] = triangleItems; triangles["points"] = trianglePoints;
 	triangles["normals"] = triangleNormals; triangles["colors"] = triangleColors;
+	py::dict triangles6, lines3;
+	triangles6["items"] = triangle6Items; triangles6["points"] = triangle6Points;
+	triangles6["normals"] = triangle6Normals; triangles6["colors"] = triangle6Colors;
+	lines3["items"] = line3Items; lines3["points"] = line3Points; lines3["colors"] = line3Colors;
 
 	py::dict d;
-	d["formatVersion"] = 1;
+	d["formatVersion"] = 2;
 	d["lines"] = lines;
 	d["spheres"] = spheres;
 	d["circles"] = circles;
 	d["texts"] = texts;
 	d["triangles"] = triangles;
+	d["triangles6"] = triangles6;
+	d["lines3"] = lines3;
 	return d;
 }
 

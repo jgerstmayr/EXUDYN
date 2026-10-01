@@ -74,11 +74,32 @@ namespace EXUvis {
 		}
 	}
 
+	//! the normals at the six nodes of a 6-node triangle: the given ones, normalized, or those of its geometry (#2709)
+	void Triangle6NodeNormals(const GLTriangle6& triangle, std::array<Float3, 6>& nodeNormals);
+
+	//! split a 6-node triangle into n*n flat triangles, appended to triangles (#2709); with edges, its three curved edges are
+	//! appended as n lines each (SplitLine3Uniform)
+	void SplitTriangle6Uniform(const GLTriangle6& triangle, Index n,
+		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges = nullptr);
+
 	//! split a 6-node triangle into flat triangles, appended to triangles (#2709); the number of subdivisions per edge follows
 	//! the largest angle between the normals of its nodes (given, or of the geometry) against tilingAngleDegrees, at most
-	//! maxTiling; with edges, its three curved edges are appended as lines (color of the triangle's node 0)
+	//! maxTiling; with edges, its three curved edges are appended as lines
 	void SplitTriangle6(const GLTriangle6& triangle, float tilingAngleDegrees, Index maxTiling,
 		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges = nullptr);
+
+	//! split a quadratic line into n straight lines, appended to lines (#2709)
+	void SplitLine3Uniform(const GLLine3& line, Index n, ResizableArray<GLLine>& lines);
+
+	//! split a quadratic line into straight lines, appended to lines (#2709); the number of segments follows the angle between
+	//! the tangents at its end points against tilingAngleDegrees, at most maxTiling - it depends on the three points only, so
+	//! two triangles sharing the edge split it alike
+	void SplitLine3(const GLLine3& line, float tilingAngleDegrees, Index maxTiling, ResizableArray<GLLine>& lines);
+
+	//! split all quadratic lines of a list with visualizationSettings.openGL.advanced (curvedTriangleTilingAngle,
+	//! curvedTriangleMaxTiling); lines is reset first; what the renderers draw (#2709)
+	void SplitLines3(const ResizableArray<GLLine3>& lines3, const VisualizationSettings& visualizationSettings,
+		ResizableArray<GLLine>& lines);
 
 	//! split all 6-node triangles of a list with visualizationSettings.openGL.advanced (curvedTriangleTilingAngle,
 	//! curvedTriangleMaxTiling); triangles and edges are reset first; what the renderers draw (#2709)

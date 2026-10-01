@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.204.dev1
 - last change = 2026-10-01
-- Number of issues = 2769
+- Number of issues = 2770
 - Number of resolved issues = 2518 (204 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7589,6 +7589,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-09-27
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` GraphicsData gets a Sphere and a CurvedTriangleList (#2709)
   - description: The maintainer, 2026-09-27: GraphicsData will be extended by two classes, Sphere and CurvedTriangleList. Bigger than it sounds: the GraphicsData dictionary, the OpenGL renderer and the raytracer have to be adapted (at least with temporary workarounds), the pybind interfaces, SC.renderer.GetGraphicsData(), the documentation - so even the minimal implementation takes time. Known limitation to resolve with it: the OpenGL renderer already treats spheres separately for nodes (large node numbers); the raytracer does not draw glSpheres at all, while GetGraphicsData() does return them. The graphics regression test (RG2.3.3, \#2704) is extended when this lands. revision2026b step RG6.7.
+  - **remarks:** revision2026b step RG6.7.7 planned (maintainer 2026-10-01): 3-node edges (TriangleList key edges3), Lines with key shape ('linear' default, 'quadratic'), GLLine3 split when drawn, GetGraphicsData(flatShapes=False) returning the native shapes, the primitives on quadratic shapes with nTiles = flat segments around (ceil(nTiles/2) elements, a curved element split at least twice)
   - date raised: 2026-09-27
 - `CHECK` `raised by: Claude-JG` fourteen figure files in docs/figures are referenced by nothing (#2594)
   - description: Twelve .pdf and two .eps files in docs/figures/ are referenced by no page, no definition and no tool: CommonTangents3D.eps, DrawSystemGraphExample.pdf, RotationAxisAngle.pdf, RotationAxisAngleDerivation.pdf, degrees\_of\_freedom.pdf, elementaryRotationX.pdf, elementaryRotationY.pdf, generalContactANCF2Dcircle.pdf, generalContactSpheres.pdf, open\_closed\_loop.pdf, plotSpringDamper.pdf, spectralRadiusZeta0.pdf, triangleNormal.eps, triangleNormal.pdf. They are the vector originals of the LaTeX era; most have a .png twin that IS used. Copies are in tmp/unusedFigures for the maintainer to look at (that directory is git-ignored, so nothing left version control). What has to be decided: delete them, or keep them as the editable source of the png twins - in which case they belong somewhere that says so. NOTE eleven further .pdf figures ARE referenced, but only inside \\ignoreRST{} blocks in definitions/itemDefsObjects.py, i.e. only by the LaTeX build that no longer exists; the Markdown and the new PDF of revision2026b step RG3.3 use their png twins.
@@ -8324,6 +8325,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` graphics.MergeTriangleLists: the edges of g2 are not offset when g1 has no edges (#2769)
+  - description: MergeTriangleLists appends the points of g2 after those of g1, but adds the offset nPoints to the edge indices of g2 only if g1 has edges as well; if g1 has none, the edges of g2 point to the points of g1. Found during revision2026b step RG6.7.7.5 (\#2709), whose edges3 merge offsets always.
+  - date raised: 2026-10-01
 - <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectANCFBeam: the Newton iteration stalls near 2e-7 in the right-angle frame (#2763)
   - description: rightAngleFrame.py with ObjectANCFBeam (useGeometricallyExact = False), displacement-driven: from load step 7 on, Newton stagnates at a relative error of 1e-7 to 3e-7 (tolerance 1e-8; with 1e-6 the same at 1e-6 to 2e-6) and the static solver fails at 3 % of the drive; the geometrically exact beam converges in 4.7 iterations per step. Found 2026-10-01 in RG4.8.13; an inconsistent Jacobian of the ANCF beam is the first suspect (the original header said: very bad convergence for ANCFBeam).
   - date raised: 2026-09-30

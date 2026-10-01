@@ -1073,6 +1073,7 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 	static bool warnedWrongNormals = false;
 	ResizableArray<GLTriangle> triangles6Split;	//the 6-node triangles of a GraphicsData, split with the settings of now (#2709)
 	ResizableArray<GLLine> triangles6Edges;
+	ResizableArray<GLLine> lines3Split;			//the quadratic lines, split likewise
 	for (auto data : basicVisualizationSystemContainer->GetGraphicsDataList())
 	{
 		EXUvis::SplitTriangles6(data->glTriangles6, *visSettings, triangles6Split, &triangles6Edges);
@@ -1141,7 +1142,9 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 		}
 		if (RTS.showLines)
 		{
-			for (const GLLine& line : data->glLines)
+			EXUvis::SplitLines3(data->glLines3, *visSettings, lines3Split);
+			for (const ResizableArray<GLLine>* lineList : { &data->glLines, &lines3Split })
+			for (const GLLine& line : *lineList)
 			{
 				GLLine lineNew(line);
 				TransformVertexRM(line.point1, RTS.modelViewRM, lineNew.point1);

@@ -23,7 +23,7 @@ import exudyn as exu
 import exudyn.graphics as graphics
 from exudyn.utilities import InertiaCuboid                                  # noqa: F401 - installs mbs.Create...
 
-kinds = ['lines', 'spheres', 'circles', 'texts', 'triangles']
+kinds = ['lines', 'spheres', 'circles', 'texts', 'triangles', 'lines3', 'triangles6']
 
 
 def Pendulum():
@@ -51,7 +51,7 @@ def testTheDictionaryHasEveryKindWithConsistentShapes():
     (SC, mbs, oGround, oBody) = Pendulum()
     data = SC.renderer.GetGraphicsData()
 
-    assert data['formatVersion'] == 1
+    assert data['formatVersion'] == 2
     assert not SC.renderer.IsActive()                        #it needed no window
     for kind in kinds:
         n = len(data[kind]['items'])

@@ -114,6 +114,7 @@ bool GlfwRenderer::depthMask;                   //!< state of glDepthMask (excep
 GLuint GlfwRenderer::spheresListBase;			//!< starting index for GLlists for spheres
 ResizableArray<GLTriangle> GlfwRenderer::triangles6Split;
 ResizableArray<GLLine> GlfwRenderer::triangles6Edges;
+ResizableArray<GLLine> GlfwRenderer::lines3Split;
 
 GraphicsData GlfwRenderer::graphicsDataStatic;	//!< static GraphicsData objects (info, Exudyn, etc.)
 
@@ -3075,6 +3076,7 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 		{
 			//the 6-node triangles are drawn as their split, with the settings of now (#2709)
 			EXUvis::SplitTriangles6(data->glTriangles6, *visSettings, triangles6Split, &triangles6Edges);
+			EXUvis::SplitLines3(data->glLines3, *visSettings, lines3Split);
 
             //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             //DRAW TEXT (before triangles, in order to make texts visible in case of transparency
@@ -3242,7 +3244,8 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 			{
 				if (!highlight)
 				{
-					for (const GLLine& item : data->glLines)
+					for (const ResizableArray<GLLine>* lineList : { &data->glLines, &lines3Split }) //with the split quadratic lines (#2709)
+					for (const GLLine& item : *lineList)
 					{
 						if (useClipping)
 						{
@@ -3259,7 +3262,8 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 				}
 				else
 				{
-					for (const GLLine& item : data->glLines)
+					for (const ResizableArray<GLLine>* lineList : { &data->glLines, &lines3Split })
+					for (const GLLine& item : *lineList)
 					{
 						if (useClipping)
 						{
@@ -3295,11 +3299,8 @@ void GlfwRenderer::RenderGraphicsData(Index viewID, bool selectionMode)
 				}
 				//the 6-node triangles: their curved edges, not the edges of their split (#2709)
 				glBegin(GL_LINES);
-				for (Index k = 0; k < triangles6Edges.NumberOfItems(); k++)
+				for (const GLLine& line : triangles6Edges)
 				{
-					const GLTriangle6& trig6 = data->glTriangles6[0]; //only for the flag: all edges of one GraphicsData share the scene settings below
-					(void)trig6;
-					const GLLine& line = triangles6Edges[k];
 					Float4 edgeColor = (highlight && line.itemID == highlightID) ? highlightColor : visSettings->openGL.faceEdgesColor;
 					glColor4fv(edgeColor.GetDataPointer());
 					glVertex3fv(line.point1.GetDataPointer());

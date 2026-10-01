@@ -157,12 +157,24 @@ GraphicsData `'type' = 'Line'` draws a polygonal line between all specified poin
 
 ### GraphicsData: Lines
 
-GraphicsData `'type': 'Lines'` draws a list of $n$ lines defined by 2 points each:
+GraphicsData `'type': 'Lines'` draws a list of $n$ lines, straight with 2 points each or quadratic (curved) with 3 points each:
 
 | **Name** | **type** | **default value** | **description** |
 |---|---|---|---|
-| colors | list | mandatory | list [R0,G0,B0,A0, R1,G2,B1,A1, ...] of $2\times n$ x 4 floats to define RGB-color and transparency of line points |
-| points | list | mandatory | list of $2 \times n$ float triples of x,y,z coordinates of the line points; Example for two lines: data=[0,0,0, 1,0,0, 1,0,0, 1,1,0] ... draws a L-shape with side length 1 |
+| points | array | mandatory | the line points as rows of x,y,z coordinates, $2n \times 3$ for straight lines and $3n \times 3$ for quadratic ones (a flat list of the same numbers is read as well); a quadratic line is given by its end points and then its mid point |
+| colors | array | mandatory | the RGBA colors of the line points as rows, $2n \times 4$ or $3n \times 4$ (or flat) |
+| shape | string | 'linear' | 'linear' for straight lines, 'quadratic' for curved ones, each a quadratic curve through its three points; they are kept as they are and split into straight lines when drawn, with the settings of that moment: as many segments as the angle between the curve's end tangents needs against `visualizationSettings.openGL.advanced.curvedTriangleTilingAngle`, at most `curvedTriangleMaxTiling`; `graphics.Lines(..., shape='quadratic')` builds such a polyline from the points along the curve |
+
+ **Example**:
+
+```python
+  graphicsData = {'type':'Lines',
+                  'points': [[0,0,0], [1,0,0],  [1,0,0], [1,1,0]], #two lines: an L-shape with side length 1
+                  'colors': [[0,0,1,1]]*4}                          #blue
+  arc = {'type':'Lines', 'shape':'quadratic',                       #a quarter circle, approximately
+         'points': [[1,0,0], [0,1,0], [0.7071,0.7071,0]],           #end points, then the mid point
+         'colors': [[1,0,0,1]]*3}
+```
 
 ### GraphicsData: Circle
 
@@ -225,6 +237,7 @@ GraphicsData `'type' = 'TriangleList'` draws a mesh with flat triangles for give
 | triangles | list | [] | list [T0point0, T0point1, T0point2, ...] containing $n_{trig} \times 3$ integers to define point indices of each vertex of the triangles (=connectivity); point indices start with index 0; the maximum index must be $<$ points.size(); mandatory if there are no triangles6 |
 | triangles6 | list | [] | list [c0,c1,c2, m01,m12,m20, ...] containing $n_{trig6} \times 6$ integers, the point indices of 6-node (quadratic, curved) triangles: the corners counter-clockwise seen from outside, then the mid-side nodes between the corners 0-1, 1-2 and 2-0 (`graphics.FromPointsAndTrigs` with 6 indices per row, `graphics.NGsolveMesh2PointsAndTrigs(..., triangles6=True)`); they are kept as they are and split into flat triangles when drawn (OpenGL, raytracer, `SC.renderer.GetGraphicsData()`), with the settings of that moment: an edge subdivided until the angle between the normals of its nodes is below `visualizationSettings.openGL.advanced.curvedTriangleTilingAngle`, at most `curvedTriangleMaxTiling` times; without normals, the normals of the curved geometry are used |
 | edges | list | [] | list [L0point0, L0point1, L1point0, L1point1, ...] containing $n_{lines} \times 2$ integers to define point indices of edges drawn on triangle mesh |
+| edges3 | array | [] | quadratic (curved) edges, rows [p0, p1, m01] of three point indices: the end points, then the mid point - the order of `triangles6`; for feature edges on a surface of 6-node triangles, such as the rim of a cylinder; drawn as the quadratic lines of `Lines`, in `edgeColor` |
 | edgeColor | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency of edges |
 
 Examples of `GraphicsData` can be found in the Python examples and in the file `graphics.py`, see Section {ref}`sec-module-graphics`.

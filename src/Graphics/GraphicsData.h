@@ -54,6 +54,16 @@ public:
 	Float4 color2;			//!< RGBA color in range 0.f - 1.f; A ... alpha
 };
 
+//! structure for a quadratic (3-node) line (#2709): the end points 0 and 1, then the mid node 2; kept as it is, the renderers
+//! split it into straight lines when they draw (EXUvis::SplitLines3), with visualizationSettings.openGL.advanced.curvedTriangleTilingAngle
+class GLLine3
+{
+public:
+	Index itemID;					//!< itemID according to ItemType and index, see Index2ItemID(...)
+	std::array<Float3, 3> points;	//!< 3D point coordinates: end points, then mid node
+	std::array<Float4, 3> colors;	//!< RGBA color in range 0.f - 1.f; A ... alpha
+};
+
 //! structure for a point (node); drawing might be realized as point, circle or sphere
 class GLSphere
 {
@@ -129,6 +139,7 @@ class GraphicsData
 {
 public:
 	ResizableArray<GLLine> glLines;				//!< lines to be displayed
+	ResizableArray<GLLine3> glLines3;			//!< quadratic lines, split by the renderers when they draw (#2709)
 	ResizableArray<GLSphere> glSpheres;			//!< points to be displayed
 	ResizableArray<GLCircleXY> glCirclesXY;		//!< circles to be displayed
 	ResizableArray<GLText> glTexts;				//!< texts to be displayed
@@ -193,6 +204,7 @@ public:
 			delete[] item.text;
 		}
 		glLines.SetNumberOfItems(0);
+		glLines3.SetNumberOfItems(0);
 		glSpheres.SetNumberOfItems(0);
 		glCirclesXY.SetNumberOfItems(0);
 		glTexts.SetNumberOfItems(0);
@@ -223,6 +235,10 @@ public:
 		{
 			box.Add(Transform(item.point1));
 			box.Add(Transform(item.point2));
+		}
+		for (const GLLine3& item : glLines3)
+		{
+			for (const Float3& point : item.points) { box.Add(Transform(point)); }
 		}
 		for (const GLText& item : glTexts)
 		{

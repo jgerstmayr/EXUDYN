@@ -1064,8 +1064,18 @@ def __ImageDataFromGraphicsData(graphicsData, trianglesAsLines, circleSegments):
         listLines += [list(points.flatten())]
         listLineColors += [tuple(color)]
 
-    triangles = graphicsData['triangles']
-    for (points, colors) in zip(triangles['points'], triangles['colors']):
+    for (points, colors) in zip(graphicsData.get('lines3', {}).get('points', []), graphicsData.get('lines3', {}).get('colors', [])):
+        listLines += [list(np.array([points[0], points[2], points[1]]).flatten())] #through the mid node
+        listLineColors += [tuple(colors[0])]
+
+    trianglePoints = list(graphicsData['triangles']['points'])
+    triangleColors = list(graphicsData['triangles']['colors'])
+    triangles6 = graphicsData.get('triangles6', {})
+    for (points, colors) in zip(triangles6.get('points', []), triangles6.get('colors', [])):
+        for (a, b, c) in [(0, 3, 5), (3, 1, 4), (5, 4, 2), (3, 4, 5)]: #the 4 flat triangles on the 6 nodes
+            trianglePoints += [np.array([points[a], points[b], points[c]])]
+            triangleColors += [colors]
+    for (points, colors) in zip(trianglePoints, triangleColors):
         if trianglesAsLines:
             listLines += [list(points.flatten()) + list(points[0])]
             listLineColors += [tuple(colors[0])]

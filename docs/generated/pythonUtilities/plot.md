@@ -257,7 +257,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-plot-plotimage)=
 ## Function: PlotImage
 
-[`PlotImage(imageData, HT = np.eye(4), axesEqual = True, plot3D = False, lineWidths = 1, lineStyles = '-', triangleEdgeColors = 'black', triangleEdgeWidths = 0.5, removeAxes = True, orthogonalProjection = True, title = '', figureName = '', fileName = '', fontSize = 16, closeAll = False, azim = 0., elev = 0., trianglesAsLines = True, circleSegments = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1078)
+[`PlotImage(imageData, HT = np.eye(4), axesEqual = True, plot3D = False, lineWidths = 1, lineStyles = '-', triangleEdgeColors = 'black', triangleEdgeWidths = 0.5, removeAxes = True, orthogonalProjection = True, title = '', figureName = '', fileName = '', fontSize = 16, closeAll = False, azim = 0., elev = 0., trianglesAsLines = True, circleSegments = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1088)
 
 - **function description**: plot the scene of a SystemContainer as 2D or 3D vector graphics using matplotlib, e.g. for a figure in a paper
 - **input**:

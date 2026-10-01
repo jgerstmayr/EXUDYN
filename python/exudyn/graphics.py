@@ -177,8 +177,8 @@ def Spheres(points, radii=0.1, colors=[0.,0.,0.,1.], nTiles=8):
 
 def Triangles6ToTriangles(graphicsData):
     """convert the 6-node triangles (key 'triangles6') of a TriangleList into 4 flat triangles each, on the same points,
-    for the functions that need flat triangles (STL export, ToPointsAndTrigs, ...); the renderer splits them finer,
-    see visualizationSettings.openGL.advanced.curvedTriangleTilingAngle
+    and its quadratic edges (key 'edges3') into 2 straight edges each, for the functions that need flat triangles (STL
+    export, ToPointsAndTrigs, ...); the renderer splits them finer, see visualizationSettings.openGL.advanced.curvedTriangleTilingAngle
 
     Args:
         graphicsData: a graphicsData dictionary
@@ -186,13 +186,18 @@ def Triangles6ToTriangles(graphicsData):
     Returns:
         a graphicsData dictionary of the type 'TriangleList' with 'triangles' only, or graphicsData itself if it has no 'triangles6'
     """
-    if graphicsData['type'] != 'TriangleList' or 'triangles6' not in graphicsData:
+    if graphicsData['type'] != 'TriangleList' or ('triangles6' not in graphicsData and 'edges3' not in graphicsData):
         return graphicsData
-    gNew = {key: value for (key, value) in graphicsData.items() if key != 'triangles6'}
+    gNew = {key: value for (key, value) in graphicsData.items() if key not in ['triangles6', 'edges3']}
     triangles = list(np.array(graphicsData.get('triangles', []), dtype=int).flatten())
-    for (c0, c1, c2, m01, m12, m20) in np.array(graphicsData['triangles6'], dtype=int).reshape((-1, 6)):
+    for (c0, c1, c2, m01, m12, m20) in np.array(graphicsData.get('triangles6', []), dtype=int).reshape((-1, 6)):
         triangles += [c0, m01, m20,  m01, c1, m12,  m20, m12, c2,  m01, m12, m20]
     gNew['triangles'] = np.array(triangles, dtype=int)
+    if 'edges3' in graphicsData: #each quadratic edge into two straight ones
+        edges = list(np.array(graphicsData.get('edges', []), dtype=int).flatten())
+        for (p0, p1, m) in np.array(graphicsData['edges3'], dtype=int).reshape((-1, 3)):
+            edges += [p0, m,  m, p1]
+        gNew['edges'] = np.array(edges, dtype=int)
     return gNew
 
 
@@ -440,20 +445,33 @@ def _SphereTriangleList(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles =
 
 
 #************************************************
-def Lines(pList, color=[0.,0.,0.,1.]): 
-    """generate graphics data for lines, given by list of points and color; transforms to GraphicsData dictionary
+def Lines(pList, color=[0.,0.,0.,1.], shape='linear'):
+    """generate graphics data for a polyline, given by list of points and color; transforms to GraphicsData dictionary
 
     Args:
-        pList: list of 3D numpy arrays or lists (to achieve closed curve, set last point equal to first point)
+        pList: list of 3D numpy arrays or lists (to achieve closed curve, set last point equal to first point); with shape='quadratic' the points along the curve, each segment by its start point, mid point and end point, so p0, m01, p1, m12, p2, ... - an odd number of points
         color: provided as list of 4 RGBA values
+        shape: 'linear' for straight segments, 'quadratic' for curved segments, each drawn as a quadratic curve through its three points and split by the renderer, see visualizationSettings.openGL.advanced.curvedTriangleTilingAngle
 
     Returns:
-        graphicsData dictionary, to be used in visualization of EXUDYN objects
+        graphicsData dictionary, to be used in visualization of EXUDYN objects: of the type 'Line' for shape='linear', of the type 'Lines' with shape 'quadratic' else
 
     Example:
         #create simple 3-point lines
         gLine=graphics.Lines([[0,0,0],[1,0,0],[2,0.5,0]], color=color.red)
+        #a quarter circle as one quadratic segment
+        gArc=graphics.Lines([[1,0,0],[np.sqrt(0.5),np.sqrt(0.5),0],[0,1,0]], color=color.red, shape='quadratic')
     """
+    if shape == 'quadratic':
+        points = np.array(pList, dtype=float).reshape((-1, 3))
+        if len(points) < 3 or len(points) % 2 != 1:
+            raise ValueError("graphics.Lines: shape='quadratic' needs an odd number of points, at least 3: start, mid, end, mid, end, ...")
+        #per segment the end points, then the mid point, as GraphicsData Lines expects it
+        rows = np.concatenate([[points[k], points[k+2], points[k+1]] for k in range(0, len(points)-1, 2)])
+        return {'type':'Lines', 'shape':'quadratic', 'points':rows,
+                'colors':np.tile(np.array(color, dtype=float), (len(rows), 1))}
+    elif shape != 'linear':
+        raise ValueError("graphics.Lines: shape must be 'linear' or 'quadratic'")
     data = np.zeros(len(pList)*3)
     for i, p in enumerate(pList):
         data[i*3:i*3+3] = p
@@ -2152,6 +2170,13 @@ def BoundingBoxSingle(graphicsData):
         pts = pts.reshape((-1, 3))
         return [pts.min(axis=0), pts.max(axis=0)]
 
+    elif gtype == 'Lines':
+        points = np.array(graphicsData.get('points', []), dtype=float)
+        if points.size == 0:
+            return [None, None]
+        points = points.reshape((-1, 3))
+        return [points.min(axis=0), points.max(axis=0)]
+
     elif gtype == 'Line':
         data = np.array(graphicsData.get('data', []), dtype=float)
         if data.size == 0:
@@ -2343,6 +2368,8 @@ def Transform(graphicsData, translation=None, rotation=None, scale=1,
 
         if 'edges' in graphicsData:
             gNew['edges'] = np.array(graphicsData['edges'])
+        if 'edges3' in graphicsData:
+            gNew['edges3'] = np.array(graphicsData['edges3'])
         if 'edgeColor' in graphicsData:
             gNew['edgeColor'] = np.array(graphicsData['edgeColor'])
 
@@ -2384,6 +2411,11 @@ def Transform(graphicsData, translation=None, rotation=None, scale=1,
         v0 = np.array(graphicsData['points'], dtype=float).reshape((-1, 3))
         gNew['points'] = (p0 + scale*(A0 @ v0.T).T).flatten()
         gNew['radii'] = scale*np.sqrt(uniformFactor2)*np.array(graphicsData.get('radii', 0.1), dtype=float)
+    elif graphicsData['type'] == 'Lines': #any shape: only the points move
+        gNew = copy.deepcopy(graphicsData)
+        points = np.array(graphicsData['points'], dtype=float)
+        rows = points.reshape((-1, 3))
+        gNew['points'] = (p0 + scale*(A0 @ rows.T).T).reshape(points.shape)
     elif graphicsData['type'] == 'Line':
         gNew = copy.deepcopy(graphicsData)
         n=int(len(graphicsData['data'])/3)
@@ -2477,6 +2509,9 @@ def MergeTriangleLists(g1,g2):
             edges2 += nPoints #add offset
         
         data['edges'] = np.append(data['edges'], edges2)
+    if 'edges3' in g1 or 'edges3' in g2: #quadratic edges (#2709)
+        data['edges3'] = np.append(np.array(g1.get('edges3', []), dtype=int),
+                                   np.array(g2.get('edges3', []), dtype=int)+nPoints)
     if 'edgeColor' in g1:
         data['edgeColor'] = np.array(g1['edgeColor']) #only taken from g1, as there is only a single color
     elif 'edgeColor' in g2:
