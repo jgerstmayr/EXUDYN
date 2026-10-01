@@ -2230,7 +2230,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
-| RG14.2 | #2745 | connectors compute from small marker structures: interface decided, L0-L2, the position-marker connectors and the coordinate spring-damper with Jacobians by AD, the rigid-marker force connectors with their Jacobian by AD done; next RG14.2.9 (constraints and joints), then RG14.2.7 |
+| RG14.2 | #2745 | connectors compute from small marker structures: interface decided, L0-L2, the position-marker connectors and the coordinate spring-damper with Jacobians by AD, the rigid-marker force connectors with their Jacobian by AD, the eight constraints of RG14.2.9.1-.3 done; next RG14.2.9.4 (the term of the reaction forces in the Newton matrix), then RG14.2.7 (the loads) |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
@@ -2263,9 +2263,9 @@ The title of each says what the step **does**; the sentence after it says why it
 3. **Draw the primitives and the meshes curved** (RG6.7.7.6/.7, RG6.7.2.1, #2709). The 6-node triangles and
    quadratic edges exist; `Cylinder`, `Torus`, `SolidOfRevolution` and the NGsolve/FFRF meshes do not use them yet,
    which is where a user sees the difference. #2769 (RG6.7.7.8) is small and goes with it.
-4. **Compute the Jacobian of the rigid-marker connectors by AD, then move the joints onto L0/L1/L2**
-   (RG14.2.8.1, RG14.2.9, #2745), both decided as proposed (maintainer 2026-10-01); the rigid joints of RG14.2.9
-   need the rotation directions of RG14.2.8.1, so it comes first.
+4. **Add the derivative of the reaction forces to the Newton matrix, then move the loads** (RG14.2.9.4, RG14.2.7,
+   #2745). The connectors and the eight constraints of RG14.2.9 are on the interface; RG14.2.9.4 is decision (a),
+   which needs second derivatives, off by default.
 5. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
 6. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
