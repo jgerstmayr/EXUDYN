@@ -241,14 +241,14 @@ public:
 	//! true, if a constraint goes the way of the connector interface (#2745): on the new path, active, and of a marker kind
 	//! CSystem implements; inactive ones and the legacy path take ComputeAlgebraicEquations/ComputeJacobianAE
 	bool ConstraintUsesInterface(const CObjectConstraint& constraint) const;
-	//! the algebraic equations of a constraint on position markers (#2745)
-	void ComputeConstraintEquationsPositionMarkers(TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
+	//! the algebraic equations of a constraint on the connector interface: position or coordinate markers (#2745)
+	void ComputeConstraintEquationsInterface(TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
 		bool velocityLevel, Vector& localAE);
-	//! C_q of a constraint on position markers by automatic differentiation (#2745)
-	void ComputeConstraintJacobianPositionMarkers(TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
+	//! C_q of a constraint on the connector interface by automatic differentiation (#2745)
+	void ComputeConstraintJacobianInterface(TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
 		ResizableMatrix& jacobian);
-	//! C_q^T lambda of a constraint on position markers, without forming C_q (#2745)
-	void ComputeConstraintReactionForcesPositionMarkers(TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
+	//! C_q^T lambda of a constraint on the connector interface, without forming C_q (#2745)
+	void ComputeConstraintReactionForcesInterface(TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
 		const Vector& reactionForces, Vector& localODE2);
 	//! the Jacobian of L2 for connectors on rigid markers (#2745)
 	void ComputeJacobianODE2RigidMarkers(TemporaryComputationData& temp, const CObjectConnector& connector,

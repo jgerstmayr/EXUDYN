@@ -62,6 +62,47 @@ void CObjectConnectorCoordinate::ComputeAlgebraicEquations(Vector& algebraicEqua
 
 }
 
+//! the equation on the connector interface (#2745), as ComputeAlgebraicEquations; the system takes it at position level
+//! only (UsesVelocityLevel: the legacy functions)
+template<class TReal>
+void CObjectConnectorCoordinate::ComputeConstraintEquationsTemplate(const MarkerCoordinate<TReal>* markers, Real t, Index itemIndex,
+	bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const
+{
+	equations.SetNumberOfItems(1);
+	if (!velocityLevel && !parameters.velocityLevel)
+	{
+		Real offset = parameters.offset;
+		if (parameters.offsetUserFunction)
+		{
+			EvaluateUserFunctionOffset(offset, cSystemData->GetMainSystemBacklink(), t, itemIndex);
+		}
+		equations[0] = markers[1].value * parameters.factorValue1 - markers[0].value - offset;
+	}
+	else
+	{
+		equations[0] = markers[1].value_t * parameters.factorValue1 - markers[0].value_t; //the index-reduced equation: no offset
+		if (parameters.offsetUserFunction_t)
+		{
+			Real offset = 0;
+			EvaluateUserFunctionOffset_t(offset, cSystemData->GetMainSystemBacklink(), t, itemIndex);
+			equations[0] -= offset;
+		}
+		else if (parameters.velocityLevel) { equations[0] -= parameters.offset; }
+	}
+}
+
+void CObjectConnectorCoordinate::ComputeConstraintEquationsCoordinate(const MarkerCoordinate<Real>* markers, const LinkedDataVector& lambda, Real t,
+	Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, t, itemIndex, velocityLevel, equations);
+}
+
+void CObjectConnectorCoordinate::ComputeConstraintEquationsCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, const LinkedDataVector& lambda,
+	Real t, Index itemIndex, ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations>& equations) const
+{
+	ComputeConstraintEquationsTemplate(markers, t, itemIndex, false, equations);
+}
+
 void CObjectConnectorCoordinate::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, ResizableMatrix& jacobian_ODE2_t, ResizableMatrix& jacobian_ODE1, 
 	ResizableMatrix& jacobian_AE, const MarkerDataStructure& markerData, Real t, Index itemIndex) const
 {

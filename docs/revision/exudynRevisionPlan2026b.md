@@ -2135,7 +2135,7 @@ both are analytic), solutions and timers:
   `JointRevolute2D`;
   - **RG14.2.9.1.1** **DONE 2026-10-01** (#2771) - `solver.ComputeAlgebraicEquations` and `ComputeODE1RHS` linked the
     residual with an end index where a count belongs, and added the equations to an uninitialized residual;
-- **RG14.2.9.2** `ConnectorCoordinate` (coordinate markers);
+- **RG14.2.9.2** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-9-2) - `ConnectorCoordinate` (coordinate markers);
 - **RG14.2.9.3** the rigid joints `JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, `JointPrismatic2D` - after
   RG14.2.8.1, which brings the rotation directions; their equations are ported as they are (RG14.3 then rewrites
   them on $\Hm_0^{-1}\Hm_1$);

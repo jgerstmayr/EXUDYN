@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  09:23:36 (last modified)
+* @date         2026-10-01  23:53:18 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -130,6 +130,21 @@ public: // AUTO:
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override;
+
+    //! AUTO:  the constraint implements the interface of coordinate markers (#2745)
+    virtual ConnectorInterface GetConnectorInterface() const override
+    {
+        return ConnectorInterface::CoordinateMarkers;
+    }
+
+    //! AUTO:  the algebraic equation from the values of the two markers (#2745)
+    virtual void ComputeConstraintEquationsCoordinate(const MarkerCoordinate<Real>* markers, const LinkedDataVector& lambda, Real t, Index itemIndex, bool velocityLevel, ConstSizeVector<maxConstraintEquations>& equations) const override;
+
+    //! AUTO:  the same equation with automatic differentiation, for C_q (#2745)
+    virtual void ComputeConstraintEquationsCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, const LinkedDataVector& lambda, Real t, Index itemIndex, ConstSizeVectorBase<DRealCoordinateMarkers, maxConstraintEquations>& equations) const override;
+
+    //! AUTO:  the equation of the constraint, for Real and AutoDiff (#2745)
+    template<class TReal> void ComputeConstraintEquationsTemplate(const MarkerCoordinate<TReal>* markers, Real t, Index itemIndex, bool velocityLevel, ConstSizeVectorBase<TReal, maxConstraintEquations>& equations) const;
 
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const override;

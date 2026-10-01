@@ -10946,3 +10946,19 @@ sensitive), `sphericalJointTest` (3.0e-13).
 
 (a) - the term $\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ in the Newton matrix, off by default - comes with RG14.2.9.3, where it
 matters (rotations); for these three constraints it is zero or nearly so.
+
+<a id="rg14-2-9-2"></a>
+### RG14.2.9.2 — ConnectorCoordinate on the connector interface (2026-10-01, #2745)
+
+`ConnectorCoordinate` gives its equation as `ComputeConstraintEquationsTemplate<TReal>` of `MarkerCoordinate` - value,
+factor, offset and the two offset user functions (Real, they depend on time only), as `ComputeAlgebraicEquations`;
+`ComputeConstraintEquationsCoordinate`/`...CoordinateDiff` (`DRealCoordinateMarkers`) in `CObjectConstraint`. `CSystem`
+takes coordinate markers in the same three functions as position markers, now named `ComputeConstraintEquationsInterface`,
+`ComputeConstraintJacobianInterface` and `ComputeConstraintReactionForcesInterface`: the equations from
+`GetKinematicsCoordinate`, $\Cm_\qv = [\partial g/\partial v_0\,\Jm_0,\ \partial g/\partial v_1\,\Jm_1]$ by AD (one direction per marker),
+the reaction force per marker $(\partial g/\partial v_k)\lambda$ through `AddGeneralizedForceCoordinate`. A constraint at velocity
+level (`velocityLevel=True`, `UsesVelocityLevel`) keeps the legacy functions - its Jacobian is the one of $\dot\qv$.
+
+Checked with a fourth model in `test_connectorInterface.py` (mass points tied by coordinate constraints to the ground and
+to each other with a factor and an offset): $\Cm_\qv$, equations and the static residual with the reaction forces equal
+to round-off, the solution as for RG14.2.9.1. No reference value moved.

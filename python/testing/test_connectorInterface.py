@@ -25,7 +25,7 @@ from exudyn.utilities import (ObjectGround, NodePoint, MassPoint, NodeRigidBodyE
                               CoordinateSpringDamper, RigidBodySpringDamper, LinearSpringDamper, TorsionalSpringDamper,
                               MarkerBodyRigid, MarkerNodeRigid, InertiaCuboid, RotXYZ2RotationMatrix, RotationMatrix2EulerParameters,
                               AngularVelocity2EulerParameters_t, ObjectJointSpherical, ObjectConnectorDistance,
-                              ObjectJointRevolute2D, Force)
+                              ObjectJointRevolute2D, Force, ObjectConnectorCoordinate)
 
 exu.special.userInterface.SuppressAll(True)
 
@@ -295,7 +295,19 @@ def BuildConstraintModel(kind):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     oGround = mbs.AddObject(ObjectGround())
-    if kind == 'Revolute2D':
+    if kind == 'Coordinate': #mass points tied by coordinate constraints, to the ground and to each other with a factor
+        nGround = mbs.AddNode(NodePointGround())
+        mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
+        nodes = [mbs.AddNode(NodePoint(referenceCoordinates=[0.2*i, 0, 0], initialVelocities=[0.1, 0.2*i, 0.3])) for i in range(3)]
+        for n in nodes:
+            mbs.AddObject(MassPoint(nodeNumber=n, physicsMass=1))
+            mbs.AddLoad(Force(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n)), loadVector=[1, -9.81, 0.5]))
+        mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[0], coordinate=1))]))
+        for i in range(2):
+            mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[i], coordinate=1)),
+                                                                   mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[i+1], coordinate=1+i))],
+                                                    factorValue1=2., offset=0.01*i))
+    elif kind == 'Revolute2D':
         mPrevious = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround))
         for i in range(3):
             n = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.2*i+0.1, 0, 0], initialVelocities=[0, 0, 0.2*i]))
@@ -324,7 +336,7 @@ def BuildConstraintModel(kind):
     return mbs
 
 
-constraintKinds = ['Spherical', 'Distance', 'Revolute2D']
+constraintKinds = ['Spherical', 'Distance', 'Revolute2D', 'Coordinate']
 
 
 def SolveConstraintModel(kind, legacy):
