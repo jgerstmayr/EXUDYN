@@ -880,6 +880,79 @@ This group is that revision and what has to happen before it can start.
       in its search tree) and `GetGraphicsData()`; the nodes drawn through it, in the order of today;
     - **RG6.7.4** the graphics tests (RG2.3.3) and the documentation grow with both.
 
+    <a id="rg6-7-sketch"></a>
+    **The interface, sketched 2026-10-01** (for the maintainer; nothing implemented). What exists, read in the code:
+    `GraphicsData` (C++, what is drawn) already has `glSpheres` - `GLSphere` = item, point, color, radius,
+    resolution - and the nodes already go into it (`DrawNode` → `AddSphere`); OpenGL draws them, and
+    `GetGraphicsData()` returns them as `spheres`. Missing are two links: the **body graphics** (`BodyGraphicsData`,
+    the converted `VgraphicsData` of a body: lines, circles, texts, triangles - no spheres) and the **raytracer**,
+    which intersects triangles only. The dictionary types today: `Line`, `Lines`, `Circle`, `Text`, `TriangleList`.
+
+    *Python - the dictionaries.* One new type and one new key:
+
+    ```python
+    #spheres: arrays like 'Lines'; one sphere is n = 1
+    {'type': 'Spheres',
+     'points': [x0,y0,z0, x1,y1,z1, ...],      #centers, 3n floats
+     'radii':  [r0, r1, ...] or r,             #n values, or one for all
+     'colors': [R0,G0,B0,A0, ...] or [R,G,B,A],#n colors, or one for all
+     'resolution': 8}                          #nTiles of today's graphics.Sphere (OpenGL; the raytracer is exact)
+
+    #curved triangles: a key of 'TriangleList', so that one list can carry flat and curved triangles
+    {'type': 'TriangleList', 'points': [...], 'colors': [...], 'normals': [...],   #normals optional, per point
+     'triangles':   [i0,i1,i2, ...],                      #flat, as today
+     'triangles6':  [c0,c1,c2, m01,m12,m20, ...],         #NEW: 6-node quadratic triangles
+     'edges': [...]}                                       #as today
+    #node order of a 6-node triangle: corners c0,c1,c2 counter-clockwise seen from outside, then the mid-side
+    #nodes m01 (between c0 and c1), m12, m20 - the order of NETGEN/NGsolve second-order surface elements
+    ```
+
+    *Python - the helpers* (`exudyn.graphics`):
+
+    | function | change |
+    |---|---|
+    | `Sphere(point, radius, color, nTiles, ...)` | returns `Spheres` with one point for a full sphere; with `addEdges`, a partial sphere (`majorAngleMin/Max`) or `innerRadius` it returns a `TriangleList` as today - those cannot be a `GLSphere` |
+    | `Spheres(points, radii, colors, nTiles)` (new) | many spheres in one dictionary - particles, point clouds - one item instead of n |
+    | `NGsolveMesh2PointsAndTrigs(..., meshOrder=2)` | returns `triangles6` for a second-order mesh instead of four flat triangles per element; the FEM surface of quadratic meshes the same |
+    | `Move`, `Transform`, `MergeTriangleLists`, `BoundingBoxSingle`, `ToPointsAndTrigs`, STL export | learn `Spheres` (transform centers, scale radii) and `triangles6`; those that need flat triangles (STL, `ToPointsAndTrigs`) split with the same rule as the renderer |
+
+    *C++ - where the new data goes.*
+
+    ```cpp
+    class BodyGraphicsData {            //the converted VgraphicsData of a body
+        ResizableArray<GLLine> glLines; ResizableArray<GLCircleXY> glCirclesXY; ResizableArray<GLText> glTexts;
+        ResizableArray<GLTriangle> glTriangles;
+        ResizableArray<GLSphere> glSpheres;               //NEW: 'Spheres'
+        ResizableArray<GLTriangle6> glTriangles6;         //NEW: 'triangles6', kept for the read-back and the split
+    };
+    class GLTriangle6 { Index itemID; std::array<Float3,6> points, normals; std::array<Float4,6> colors; bool hasNormals; };
+    ```
+
+    `GraphicsData` (what is drawn) gets **no** curved triangles: they are split into `GLTriangle`s when the body
+    graphics are transformed into it, so the OpenGL renderer, the raytracer, `GetGraphicsData()` and the graphics
+    fingerprints see flat triangles only, as decided. The split of a rigid body's graphics is the same in every frame:
+    it is done once at the conversion and cached in `BodyGraphicsData`, redone when `curvedTriangleTilingAngle` or
+    `curvedTriangleMaxTiling` changes; a superelement's `triangleMesh` with six columns deforms, so it is split in
+    every frame. Spheres are transformed (center; radius unchanged, scaled only by an explicit scale) into
+    `GraphicsData.glSpheres`, the list the nodes already use, in the same drawing order.
+
+    | consumer | `Spheres` | `triangles6` |
+    |---|---|---|
+    | `PyWriteBodyGraphicsDataList` (dictionary → C++) | new branch | new key in `TriangleList` |
+    | `PyGetBodyGraphicsDataList` (C++ → dictionary, `mbs.GetObject`) | new branch | the 6-node form, as given |
+    | body graphics → `GraphicsData` (`UpdateGraphics` of the bodies) | transform into `glSpheres` | split (cached) into `glTriangles` |
+    | OpenGL | nothing new | nothing new |
+    | raytracer | **new**: ray-sphere intersection with the exact normal; the spheres in the search tree by their bounding boxes, after the triangles; shadows the same | nothing new |
+    | `GetGraphicsData()` | nothing new (`spheres` exists) | the split triangles |
+    | graphics tests (RG2.3.3) | spheres counted per item; references re-recorded where `graphics.Sphere` was a TriangleList | more triangles; references re-recorded |
+    | settings | - | `openGL.advanced.curvedTriangleTilingAngle` (3°), `curvedTriangleMaxTiling` (5) |
+
+    *For the maintainer to decide*: (a) `Spheres` with arrays (proposed) or a single `Sphere`; (b) `graphics.Sphere`
+    returning the new type by default (proposed; a script that treats its result as a `TriangleList` - merging,
+    STL export - then goes through the helpers above) or only on request; (c) `triangles6` as a key of
+    `TriangleList` (proposed) or a type of its own; (d) the split cached for rigid bodies (proposed) or in every frame
+    for all.
+
 <a id="rg6-8"></a>
 **RG6.8** *(group RG6; maintainer 2026-09-29)* **The graphics fixes before 1.13** - *"many are graphics
     related; still, some may be solvable or you could suggest a simple test"*. With the test each can
