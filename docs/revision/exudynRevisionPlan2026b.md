@@ -145,6 +145,11 @@ NOT cover, and about the testing that no suite can do.
     use the window and the dialogs - keys, mouse, tkinter windows, focus, fonts, placement. The check
     list is [docs/dev/GUI_MANUAL_CHECK.md](../dev/GUI_MANUAL_CHECK.md), about one hour per platform, with
     `python/testing/guiManualCheckModel.py`, which has an item of every kind and waits for the person.
+    **The GraphicsData features drawn since 1.12** are part of it (maintainer 2026-10-01; row K13, model
+    `python/Examples/graphicsCurvedShapes.py`): the type `Spheres` (also `graphics.Sphere`), the 6-node triangles
+    (`triangles6`) and their curved face edges, the quadratic edges (`edges3`) and lines (`Lines` with `shape`
+    `'quadratic'`), the two tiling settings `openGL.advanced.curvedTriangleTilingAngle`/`curvedTriangleMaxTiling`
+    changed in the running window, and all of it in the raytracer - what the graphics tests can only check as data.
     **The list and the model DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg2-4); **the checks
     themselves** are done once per release on Windows, Ubuntu and macOS, and RG1.4 waits for them.
 
@@ -936,7 +941,7 @@ This group is that revision and what has to happen before it can start.
       shared edge is split alike on both sides and no cracks appear; the isotropic split of today has that problem
       already (one $n$ per triangle) and would lose it. A cylinder of 6-node triangles then needs $2n$ instead of
       $n^2$ flat triangles per element.
-    - **RG6.7.6** *proposed (maintainer 2026-10-01)* - **`TriangleList` and `Spheres` as $(n\times 3)$ arrays**: points,
+    - **RG6.7.6** *decided (maintainer 2026-10-01): switched for 1.13* - **`TriangleList` and `Spheres` as $(n\times 3)$ arrays**: points,
       normals, triangles (and $(n\times 4)$ colors, $(n\times 6)$ triangles6) as rows, not flat lists. Measured
       2026-10-01: the C++ reader (`PyWriteBodyGraphicsDataList`) casts each key to a flat `std::vector<float>` and
       **rejects** a nested list or a 2D array today, so the flat form is all there is. Sub-steps:
@@ -945,9 +950,11 @@ This group is that revision and what has to happen before it can start.
       - **RG6.7.6.3** `exudyn.graphics` returns rows (`Brick`, `Cylinder`, `FromPointsAndTrigs`, `Transform`,
         `MergeTriangleLists`, ...) and reads both; `graphicsDataUtilities.py` likewise;
       - **RG6.7.6.4** the read-back (`mbs.GetObject(..., addGraphicsData=True)`, `GetBodyGraphicsDataList`) returns rows.
-      *For the maintainer*: a script that indexes a returned list as flat (`g['points'][3*i+1]`) breaks with
-      RG6.7.6.3/.4 - either accepted for 1.13 with a note in `revisions.md`, or the returned form switched in 2.0
-      (RG8/RG9) and only the reader and the documentation now.
+      - **RG6.7.6.5** the note in `docs/manual/revisions.md`: a script that indexes a returned list as flat
+        (`g['points'][3*i+1]`) must reshape it, `np.array(g['points']).reshape(-1,3)` works for both forms.
+      **Decided (maintainer, 2026-10-01)**: the returned form switches **already for 1.13**, not in 2.0. `Lines` and
+      `edges3` read rows since RG6.7.7.2; `PyReadNumbers<T>` (`VisualizationSystemContainer.cpp`) is the reader the other
+      keys get in RG6.7.6.1.
     - **RG6.7.7** *(maintainer 2026-10-01)* **Quadratic (3-node) lines and edges**, the line counterpart of the 6-node
       triangle. Today a `TriangleList`'s `edges` are point pairs, drawn as straight `GLLine`s, and `Lines` takes two
       points per line - a feature edge on a curved surface of 6-node triangles (the rim of a cylinder) can only be a
@@ -2233,14 +2240,16 @@ The title of each says what the step **does**; the sentence after it says why it
 1. **Run the integration round of the institute, then release 1.13** (RG2.2, RG1.4). It is
    the only item on this page that needs **other people's time**, so it starts before the
    rest is ready, not after.
-2. **Do the manual GUI check on Windows** (RG2.4, #2748). It is the last condition of 1.13 that one
-   person can meet alone.
-3. **Give GraphicsData the curved triangle and the sphere** (RG6.7.2 to RG6.7.4, #2709), as decided in
-   RG6.7.1. The raytracer does not draw spheres today, and the quadratic meshes of NGsolve
-   and the FFRF bodies are drawn with visible edges.
-4. **Let an item be asked what it provides** (RG12.29, #2203). The declarations exist; the tests and the
-   item pages already use them, a script cannot.
-5. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
+2. **Do the manual GUI check on Windows** (RG2.4, #2748), now with the curved GraphicsData (row K13). It is
+   the last condition of 1.13 that one person can meet alone.
+3. **Switch GraphicsData to rows** (RG6.7.6, #2709). Decided for 1.13, and it changes what scripts get back, so
+   it has to be in before the release and not after.
+4. **Draw the primitives and the meshes curved** (RG6.7.7.6/.7, RG6.7.2.1, #2709). The 6-node triangles and
+   quadratic edges exist; `Cylinder`, `Torus`, `SolidOfRevolution` and the NGsolve/FFRF meshes do not use them yet,
+   which is where a user sees the difference. #2769 (RG6.7.7.8) is small and goes with it.
+5. **Decide RG14.2.8.1 and RG14.2.9** (#2745). Both are written out and wait for the maintainer; the connector
+   migration stops there until then.
+6. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
-6. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
+7. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
    published documentation that is visibly wrong.
