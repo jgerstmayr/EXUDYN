@@ -39,13 +39,34 @@ void CObjectConnectorSpringDamper::ComputeConnectorForcePosition(const MarkerPos
 	force = forceScalar * forceDirection;
 }
 
-void CObjectConnectorSpringDamper::ComputeSpringForce(const Vector3D& position0, const Vector3D& position1,
-	const Vector3D& velocity0, const Vector3D& velocity1, Real t, Index itemIndex,
-	Vector3D& relPos, Vector3D& relVel, Real& force, Vector3D& forceDirection) const
+//! the force with automatic differentiation, for the Jacobian of the connector interface (#2745)
+void CObjectConnectorSpringDamper::ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t, Index itemIndex,
+	SlimVectorBase<DRealPositionMarkers, 3>& force) const
 {
+	SlimVectorBase<DRealPositionMarkers, 3> relPos, relVel, forceDirection;
+	DRealPositionMarkers forceScalar;
+	ComputeSpringForce(markers[0].position, markers[1].position, markers[0].velocity, markers[1].velocity, t, itemIndex,
+		relPos, relVel, forceScalar, forceDirection);
+	force = forceScalar * forceDirection;
+	if (relPos.GetL2NormSquared() == 0. && parameters.activeConnector)
+	{
+		//at zero length the direction has no derivative; the Jacobian is k I and d I, as on the legacy path
+		force += parameters.stiffness * relPos + parameters.damping * (relVel - (relVel * forceDirection) * forceDirection);
+	}
+}
+
+template<class TReal>
+void CObjectConnectorSpringDamper::ComputeSpringForce(const SlimVectorBase<TReal, 3>& position0, const SlimVectorBase<TReal, 3>& position1,
+	const SlimVectorBase<TReal, 3>& velocity0, const SlimVectorBase<TReal, 3>& velocity1, Real t, Index itemIndex,
+	SlimVectorBase<TReal, 3>& relPos, SlimVectorBase<TReal, 3>& relVel, TReal& force, SlimVectorBase<TReal, 3>& forceDirection) const
+{
+	using std::sqrt;
 	relPos = (position1 - position0);
-	Real springLength = relPos.GetL2Norm();
-	Real springLengthInv;
+	//sqrt only of a nonzero length: its derivative at zero is not defined
+	TReal springLength2 = relPos.GetL2NormSquared();
+	TReal springLength = 0.;
+	if (springLength2 != 0.) { springLength = sqrt(springLength2); }
+	TReal springLengthInv;
 
 	//unit direction and relative velocity of spring-damper
 	forceDirection = relPos;
@@ -64,10 +85,14 @@ void CObjectConnectorSpringDamper::ComputeSpringForce(const Vector3D& position0,
 
 		//compute alternative force-direction for zero distance; alternatively, forceDirection could be [0,0,0]
 		forceDirection = relVel;
-		Real relVelNorm = relVel.GetL2Norm();
+		TReal relVelNorm = relVel.GetL2Norm();
 		if (relVelNorm != 0.)
 		{
 			forceDirection *= 1. / relVelNorm;
+		}
+		if constexpr (!std::is_same<TReal, Real>::value)
+		{
+			for (Index i = 0; i < 3; i++) { forceDirection[i] = forceDirection[i].Value(); } //a constant direction, as on the legacy path
 		}
 	}
 
@@ -84,12 +109,16 @@ void CObjectConnectorSpringDamper::ComputeSpringForce(const Vector3D& position0,
 			//damping term  + force:
 			force += (parameters.damping * (relVel*forceDirection - parameters.velocityOffset)) + parameters.force;
 		}
-		else
+		else if constexpr (std::is_same<TReal, Real>::value)
 		{
 			Real forceAdd;
 			EvaluateUserFunctionForce(forceAdd, cSystemData->GetMainSystemBacklink(), t, itemIndex,
 				springLength - parameters.referenceLength, relVel*forceDirection - parameters.velocityOffset);
 			force += forceAdd;
+		}
+		else
+		{
+			CHECKandTHROWstring("ObjectConnectorSpringDamper: no automatic differentiation of a springForceUserFunction");
 		}
 	}
 }

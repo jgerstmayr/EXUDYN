@@ -69,6 +69,14 @@ public:
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForcePosition: not implemented for this connector");
 	}
 
+	//! the same force with automatic differentiation, for the connector's Jacobian (#2745); a connector whose
+	//! GetAvailableJacobians() names the ODE2 Jacobian functions must implement it
+	virtual void ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t, Index itemIndex,
+		SlimVectorBase<DRealPositionMarkers, 3>& force) const
+	{
+		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForcePositionDiff: not implemented for this connector");
+	}
+
     virtual const char* GetName() const { return "CObjectConnector"; }
 
     virtual void Print(std::ostream& os) const {

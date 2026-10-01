@@ -233,6 +233,9 @@ public:
 	//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in LHS computation); return true, if object has localODE2Lhs, false otherwise
 	//! L2 of the connector interface for connectors on position markers (#2745)
 	void ComputeODE2LHSPositionMarkers(TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber);
+	//! the Jacobian of L2 for connectors on position markers, by automatic differentiation of the connector's force (#2745)
+	void ComputeJacobianODE2PositionMarkers(TemporaryComputationData& temp, const CObjectConnector& connector,
+		Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero);
 
 	bool ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs, Index objectNumber);
 		

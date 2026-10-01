@@ -1459,6 +1459,72 @@ void CSystem::ComputeODE2LHSPositionMarkers(TemporaryComputationData& temp, cons
 	}
 }
 
+//! the Jacobian of L2 for connectors on position markers (#2745): the connector's force once with automatic
+//! differentiation, the directions [marker 0, marker 1] x 3 seeded with factorODE2 at the positions and factorODE2_t at the
+//! velocities, which gives K_k = factorODE2*dF/dp_k + factorODE2_t*dF/dv_k; chained with the position Jacobians as
+//! J_i^T s_i K_k J_k (s_0 = -1, s_1 = 1), plus the derivative of J_i^T f for markers whose Jacobian depends on the
+//! coordinates; dense, into temp.jacobianODE2Container; dv/dq is neglected, as on the legacy path
+void CSystem::ComputeJacobianODE2PositionMarkers(TemporaryComputationData& temp, const CObjectConnector& connector,
+	Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero)
+{
+	const ArrayIndex& markerNumbers = connector.GetMarkerNumbers();
+	MarkerPosition<DRealPositionMarkers> kinematics[2];
+	Index n[2];
+	for (Index k = 0; k < 2; k++)
+	{
+		MarkerData& markerData = temp.markerTemp[k].markerData;
+		cSystemData.GetCMarkers()[markerNumbers[k]]->ComputeMarkerData(cSystemData, true, markerData);
+		n[k] = markerData.positionJacobian.NumberOfColumns();
+		EXUmath::SeedAutoDiff(kinematics[k].position, markerData.position, 3 * (int)k, factorODE2);
+		EXUmath::SeedAutoDiff(kinematics[k].velocity, markerData.velocity, 3 * (int)k, factorODE2_t);
+	}
+
+	SlimVectorBase<DRealPositionMarkers, 3> force;
+	connector.ComputeConnectorForcePositionDiff(kinematics, cSystemData.GetCData().currentState.time, objectNumber, force);
+
+	temp.jacobianODE2Container.SetUseDenseMatrix();
+	ResizableMatrix& jacobian = temp.jacobianODE2Container.GetInternalDenseMatrix();
+	jacobian.SetNumberOfRowsAndColumns(n[0] + n[1], n[0] + n[1]);
+	const Index offset[2] = { 0, n[0] };
+	const Real sign[2] = { -1., 1. }; //marker 0 gets the reaction
+
+	Matrix3D innerJacobian(3, 3);
+	for (Index k = 0; k < 2; k++) //columns: the marker the force is differentiated for
+	{
+		if (n[k] == 0) { continue; }
+		for (Index i = 0; i < 2; i++) //rows: the marker the force acts on
+		{
+			if (n[i] == 0) { continue; }
+			for (Index r = 0; r < 3; r++)
+			{
+				for (Index c = 0; c < 3; c++)
+				{
+					innerJacobian(r, c) = sign[i] * force[r].DValue(3 * (int)k + (int)c);
+				}
+			}
+			const ResizableMatrix& jacobianI = temp.markerTemp[i].markerData.positionJacobian;
+			EXUmath::MultMatrixTransposedMatrixTemplate(jacobianI, innerJacobian, temp.jacobianTemp.matrix0);
+			EXUmath::MultMatrixMatrix2SubmatrixTemplate(temp.jacobianTemp.matrix0, temp.markerTemp[k].markerData.positionJacobian,
+				jacobian, offset[i], offset[k]);
+		}
+	}
+
+	if (jacobianDerivativeNonZero)
+	{
+		Vector6D force6D({ force[0].Value(), force[1].Value(), force[2].Value(), 0., 0., 0. });
+		for (Index k = 0; k < 2; k++)
+		{
+			if (n[k] == 0) { continue; }
+			MarkerData& markerData = temp.markerTemp[k].markerData;
+			cSystemData.GetCMarkers()[markerNumbers[k]]->ComputeMarkerDataJacobianDerivative(cSystemData, force6D, markerData);
+			if (markerData.jacobianDerivative.NumberOfRows() != 0)
+			{
+				jacobian.AddSubmatrixWithFactor(markerData.jacobianDerivative, sign[k] * factorODE2, offset[k], offset[k]);
+			}
+		}
+	}
+}
+
 //! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in RHS computation)
 //! return true, if object has localODE2Lhs, false otherwise
 inline bool CSystem::ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs, Index objectNumber)
@@ -2607,36 +2673,43 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 							if (jacobianComputed)
 							{
 								//pout << "  continue\n";
-								//compute MarkerData for connector:
-								const bool computeJacobian = true; //jacobian needed for jacobian computation ...
-								cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
-								//pout << "compute connector " << j << " jacobian \n";
-								if (jacDerivNonZero) //call needed, if one marker has non-zero derivative ==> compute jacobianForce for both cases
+								if (connector->GetConnectorInterface() == ConnectorInterface::PositionMarkers && !pyExperimental.connectorInterfaceLegacy)
 								{
-									Vector6D jacobianForce;
-									connector->ComputeJacobianForce6D(temp.markerDataStructure, j, jacobianForce);
-									//even though that force on marker0 acts with negative sign, 
-									//  the different signs are accounted for in connector->ComputeJacobianODE2_ODE2(...)
-									//  ==> but this could also be done here !
-									//pout << "  jacobian force = " << temp.jacobianForce << " \n";
-									for (Index k = 0; k < markerNumbers.NumberOfItems(); k++)
-									{
-										cSystemData.GetCMarkers()[markerNumbers[k]]->ComputeMarkerDataJacobianDerivative(cSystemData,
-											jacobianForce, temp.markerDataStructure.GetMarkerData(k));
-										//pout << "  compute non-zero jacobian derivative" << k << ": " << temp.markerDataStructure.GetMarkerData(k).jacobianDerivative << " \n";
-									}
+									ComputeJacobianODE2PositionMarkers(temp, *connector, -factorODE2, -factorODE2_t, j, jacDerivNonZero);
 								}
 								else
 								{
-									//clear jacobianDerivative!!!
-									for (Index k = 0; k < markerNumbers.NumberOfItems(); k++)
+									//compute MarkerData for connector:
+									const bool computeJacobian = true; //jacobian needed for jacobian computation ...
+									cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
+									//pout << "compute connector " << j << " jacobian \n";
+									if (jacDerivNonZero) //call needed, if one marker has non-zero derivative ==> compute jacobianForce for both cases
 									{
-										temp.markerDataStructure.GetMarkerData(k).jacobianDerivative.SetNumberOfRowsAndColumns(0, 0);
+										Vector6D jacobianForce;
+										connector->ComputeJacobianForce6D(temp.markerDataStructure, j, jacobianForce);
+										//even though that force on marker0 acts with negative sign, 
+										//  the different signs are accounted for in connector->ComputeJacobianODE2_ODE2(...)
+										//  ==> but this could also be done here !
+										//pout << "  jacobian force = " << temp.jacobianForce << " \n";
+										for (Index k = 0; k < markerNumbers.NumberOfItems(); k++)
+										{
+											cSystemData.GetCMarkers()[markerNumbers[k]]->ComputeMarkerDataJacobianDerivative(cSystemData,
+												jacobianForce, temp.markerDataStructure.GetMarkerData(k));
+											//pout << "  compute non-zero jacobian derivative" << k << ": " << temp.markerDataStructure.GetMarkerData(k).jacobianDerivative << " \n";
+										}
 									}
-								}
+									else
+									{
+										//clear jacobianDerivative!!!
+										for (Index k = 0; k < markerNumbers.NumberOfItems(); k++)
+										{
+											temp.markerDataStructure.GetMarkerData(k).jacobianDerivative.SetNumberOfRowsAndColumns(0, 0);
+										}
+									}
 
-								connector->ComputeJacobianODE2_ODE2(temp.jacobianODE2Container, temp.jacobianTemp, 
-									-factorODE2, -factorODE2_t, j, ltgODE2, temp.markerDataStructure);
+									connector->ComputeJacobianODE2_ODE2(temp.jacobianODE2Container, temp.jacobianTemp, 
+										-factorODE2, -factorODE2_t, j, ltgODE2, temp.markerDataStructure);
+								}
 
 
 								if (temp.jacobianODE2Container.UseDenseMatrix())

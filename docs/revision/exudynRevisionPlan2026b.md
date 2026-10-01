@@ -1771,8 +1771,9 @@ done.
     - **RG14.2.4** the pilot `ObjectConnectorSpringDamper`, its inner Jacobian by AD, compared with the
       legacy path in results, Newton iterations and timers. **The force (ODE2) part DONE 2026-10-01** —
       [log](exudynRevisionLog2026b.md#rg14-2-3) - results identical, the right-hand side up to 20 % faster
-      on rigid bodies; **open: RG14.2.4.1** the inner Jacobian by AD with the seeding helper, in `CSystem`,
-      against the analytic legacy Jacobian;
+      on rigid bodies; **RG14.2.4.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-4-1) - the
+      inner Jacobian by AD with the seeding helper, in `CSystem` (`ComputeJacobianODE2PositionMarkers`), equal to
+      the analytic legacy Jacobian to round-off, the same Newton iterations;
     - **RG14.2.5** the other position-marker connectors; **RG14.2.6** the coordinate-marker connectors;
       **RG14.2.7** the loads; **RG14.2.8** the rigid-marker force connectors with homogeneous
       transformations; **RG14.2.9** constraints and joints; **RG14.2.10** the contact connectors (with
@@ -1847,7 +1848,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.29 | #2203 | ask an item from Python which output variables and types it provides |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
-| RG14.2 | #2745 | connectors compute from small marker structures: interface decided, L0-L2 and the pilot spring-damper (forces) done; next the AD Jacobian of the pilot (RG14.2.4.1), then RG14.2.5 |
+| RG14.2 | #2745 | connectors compute from small marker structures: interface decided, L0-L2 and the pilot spring-damper with its AD Jacobian done; next RG14.2.5 |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |

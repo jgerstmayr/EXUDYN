@@ -18,7 +18,8 @@
 #include <initializer_list>
 #include "Utilities/BasicDefinitions.h" //defines Real
 #include "Utilities/ResizableArray.h" 
-#include "Linalg/ResizableMatrix.h" 
+#include "Linalg/ResizableMatrix.h"
+#include "Utilities/AutomaticDifferentiation.h" 
 
 
 //! a structure, which contains temporary data from markers (position, orientation, velocity, Jacobians, ...)
@@ -253,6 +254,11 @@ public:
 	SlimVectorBase<TReal, 3> position;
 	SlimVectorBase<TReal, 3> velocity;
 };
+
+//! the number type of the Jacobian of a connector on two position markers (#2745): the 3 directions of marker 0 and the 3
+//! of marker 1; a position is seeded with factorODE2 and the velocity with factorODE2_t in the same direction, so one
+//! pass gives factorODE2*dF/dp_k + factorODE2_t*dF/dv_k
+typedef EXUmath::AutoDiff<6, Real> DRealPositionMarkers;
 
 //! the value and its time derivative of a coordinate marker
 template<class TReal>

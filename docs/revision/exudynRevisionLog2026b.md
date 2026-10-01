@@ -10451,3 +10451,30 @@ $1.5\cdot10^{-14}$ (mass points: exactly):
 The gain is where the legacy path formed a Jacobian it only multiplied with - the rigid body's $3\times7$ position
 Jacobian; for mass points it is small, because their marker data was already lean. The test suite and pytest pass
 on the new path (the default); the MiniExample of the spring-damper and every test model with one use it.
+
+<a id="rg14-2-4-1"></a>
+### RG14.2.4.1 — the Jacobian of a connector on position markers by automatic differentiation (2026-10-01, #2745)
+
+`CSystem::ComputeJacobianODE2PositionMarkers` (`CSystem.cpp`) computes the connector's force **once** with
+`DRealPositionMarkers = AutoDiff<6>` (`MarkerData.h`): the three directions of marker 0 and the three of marker 1. A
+marker's position is seeded with `factorODE2` and its velocity with `factorODE2_t` **in the same direction**
+(`EXUmath::SeedAutoDiff` got a factor), so one pass gives $\Km_k = f_{ODE2}\,\partial\fv/\partial\pv_k +
+f_{ODE2,t}\,\partial\fv/\partial\vv_k$ - six directions instead of twelve. The chain is
+$\Jm_i\tp s_i \Km_k \Jm_k$ ($s_0 = -1$, $s_1 = 1$) for all four blocks, not only $\pm\Km$ as in
+`ComputeJacobianODE2_ODE2generic`, plus the derivative of $\Jm_i\tp\fv$ for markers whose Jacobian depends on the
+coordinates; $\partial\vv/\partial\qv$ is neglected, as on the legacy path. The connector writes no Jacobian code: it
+implements `ComputeConnectorForcePositionDiff`, and the spring-damper's physics is one template,
+`ComputeSpringForce<TReal>`, for the legacy path, the force, the Jacobian and the output variables. Two details of the
+template: the square root only of a nonzero length (its derivative at zero is undefined), and at zero length the
+direction is a constant and the force gets $k\,\Delta\pv + d\,(\Delta\vv - (\Delta\vv\cdot\ev)\ev)$, whose value is zero
+and whose derivative is the legacy $k\Im$, $d\Im$; a `springForceUserFunction` keeps the numerical Jacobian.
+
+**Checked** in `python/testing/test_connectorInterface.py`: mass points, rigid bodies at offset points, two
+connectors of zero length (with and without relative velocity) and a marker on a 2D rigid body (a Jacobian
+derivative); the system Jacobians of both paths for $(f_{ODE2}, f_{ODE2,t}) = (1,0), (0,1), (0.7,0.3)$ agree to
+$2\cdot10^{-13}$ of their largest entry.
+
+**Measured** (the benchmark of RG14.2.3, 200 bodies, 400 steps generalized-alpha, best of 5-7): the same Newton
+steps and Jacobians (400 for the mass points, 831 for the rigid bodies); `jacobianODE2` 0.98 (mass points) and
+1.03-1.07 (rigid bodies) of the legacy time - the automatic differentiation costs about 0.1-0.2 µs per connector
+over the hand-written $3\times3$; the right-hand side stays 24 % faster, the total within $\pm4$ %.
