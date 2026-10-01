@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  08:33:15 (last modified)
+* @date         2026-10-01  10:01:56 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -245,6 +245,12 @@ public: // AUTO:
     const Vector6DList& GetJointForces() const { return jointForces; }
     //! AUTO:  Read (Reference) access to:\f$\Fm_j \in \Rcal^{n \times 6}\f$temporary list containing 6D torques/forces per joint/link
     Vector6DList& GetJointForces() { return jointForces; }
+
+    //! AUTO:  no PotentialEnergy while a user function defines the force (#2202)
+    virtual bool PotentialEnergyAvailable() const override
+    {
+        return !parameters.forceUserFunction;
+    }
 
     //! AUTO:  return true, if object has a computation user function
     virtual bool HasUserFunction() const override

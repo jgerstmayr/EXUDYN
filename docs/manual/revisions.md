@@ -158,6 +158,18 @@ neither is reported as a solver failure - from a user function, another thread o
 **`exudyn.types`** answers questions about items from Python: which markers an object accepts,
 which item types exist.
 
+**`mbs.Inspect(itemIndex, what)`** asks an existing item what it provides and requests - its output
+variables, its type flags, the node and marker types it requests, the access functions of a body -
+as lists of the exported enumerations; `what` is a member of `exu.InspectType`, or `None` for all
+that apply. The test model `inspectTest.py` shows it.
+
+**Kinetic and potential energy as output variables** (`OutputVariableType.KineticEnergy`,
+`PotentialEnergy`) of the bodies, beams, plates, superelements and spring-dampers, and
+`exudyn.advancedUtilities.SystemEnergy` for the energy of a whole system with its loads; an item
+that cannot compute its energy - with a user function defining its force - says so, and
+`mbs.Inspect` does not list it. The test models `energiesTest.py` and `energiesFlexibleBodiesTest.py`
+show them.
+
 ### What is new to read
 
 The documentation is **Markdown** and is built with Sphinx for every release; the hand-written

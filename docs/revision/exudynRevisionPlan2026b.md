@@ -1055,15 +1055,21 @@ revision (info document D15).
         the rule selection of each element moved into one function that the forces and the energy share, the
         strains are the ones of the forces; $\partial V/\partial\qv$ equals the elastic forces to $10^{-10}$; and the
         potential of `ObjectConnectorGravity`;
-      - **RG9.4.3.2** *open, proposed* - the stored energy of the **contact** connectors
-        (`ContactSphereSphere`, `ContactSphereTorus`, `ContactConvexRoll`, `ContactCurveCircles`,
-        `ContactCoordinate`, `RollingDiscPenalty`) and of the bristle spring of `CoordinateSpringDamperExt`. What
-        would have to be done: per contact law the integral of the normal penalty force over the penetration
-        ($\frac{1}{2}k g^2$ for a linear law, $\frac{2}{5}k g^{5/2}$ for Hertz with exponent 3/2), zero without contact;
-        friction and damping dissipate and have none, the bristle of the stick-slip model stores
-        $\frac{1}{2}k_b x_b^2$ in its data coordinate. Each contact has its own law and its own data states (some
-        with a regularized or switched law), so it is one function per contact, not a shared one - a step per
-        contact, decided case by case whether its law has a potential;
+      - **RG9.4.3.2** **the objects without energy** - *not now* (maintainer, 2026-10-01: the special and contact
+        objects need no energy right away, with friction it may be difficult); the list is kept here. What an
+        object provides is answered by `mbs.Inspect(item, exu.InspectType.OutputVariables)` (RG12.29), which is
+        where this list comes from (all MiniExamples, 2026-10-01); an energy added to an object removes it here:
+
+        | objects | energy | why, or what would have to be done |
+        |---|---|---|
+        | `ContactCoordinate`, `ContactSphereSphere`, `ContactSphereTorus`, `ContactConvexRoll`, `ContactCurveCircles`, `ContactCircleCable2D`, `ContactFrictionCircleCable2D`, `ConnectorRollingDiscPenalty` | none yet | the integral of the normal penalty force over the penetration ($\frac{1}{2}k g^2$ linear, $\frac{2}{5}k g^{5/2}$ Hertz), zero without contact; friction and damping dissipate; one function per contact law, each with its own data states |
+        | `ConnectorCoordinateSpringDamperExt` | none yet | the spring $\frac{1}{2}k(u-u_\mathrm{off})^2$ plus the bristle of the stick-slip friction $\frac{1}{2}k_b x_b^2$ in its data coordinate |
+        | `ConnectorReevingSystemSprings` | none yet | the axial springs of the rope segments, $\sum\frac{1}{2}\frac{EA}{L}\Delta L^2$ with its own length bookkeeping |
+        | `ConnectorHydraulicActuatorSimple` | none | the energy of the compressed oil is not elastic energy of the structure; first-order pressure states |
+        | all constraints and joints (`ConnectorCoordinate`, `ConnectorCoordinateVector`, `ConnectorDistance`, `Joint...`) | none | ideal constraints do no work |
+        | `ObjectGround`, `ObjectGenericODE1` | none | no motion; first-order coordinates |
+        | the spring-dampers, `GenericODE2`, `FFRF`, `FFRFreducedOrder`, `KinematicTree`, `ANCFCable2D` **with a force user function** | none while the user function is set | the user function defines the force; `PotentialEnergyAvailable()` of the object, and `mbs.Inspect` does not list it |
+
     - **RG9.4.4** superelements: `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectGenericODE2`,
       `ObjectKinematicTree` - kinetic energy from the mass matrix, elastic energy from the stiffness matrix
       where the object has one. **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - and
@@ -1072,7 +1078,9 @@ revision (info document D15).
     - **RG9.4.5** what an object **should** provide against what it provides now (with its current
       parameters): the declaration per object type, and the output variables of RG12.29 for the second -
       possibly every body provides both, zero for the potential energy of a rigid body, and a connector the
-      potential energy only;
+      potential energy only. *What it provides* is answered since RG12.29 (`mbs.Inspect`, with
+      `PotentialEnergyAvailable()` for the current parameters); open is only the *should*, i.e. whether a rigid
+      body reports a zero potential energy;
     - **RG9.4.6** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - `LoadPotentialEnergy` and
       `CreateLoadEnergySensor` in `exudyn.advancedUtilities`. The energy of a load, for constant and mass-proportional loads: the potential of the force
       through the position of its marker, computed by a user sensor (`LoadEnergyUserSensor`) - a load has no
@@ -1087,11 +1095,8 @@ revision (info document D15).
       `energiesTest.py`, a new `energiesFlexibleBodiesTest.py` keeps the energy of a free oscillation of each beam
       and plate element and of a kinematic tree (the conservation test this step asked for), and
       `test_connectorOutputVariables.py` became `connectorOutputVariablesTest.py`; the rule is in `CLAUDE.md` and
-      `docs/dev/WORKFLOW.md` §5. **Open: RG9.4.8.1**, for the maintainer - two more pytest files test what a user
-      does and could become test models: `test_specialBeams.py` (the switch
-      `exu.special.beams.geometricallyExactLumpedMass`) and `test_computedParameters.py` (a parameter the core
-      computes is read-only); the others in `python/testing/` test tools, generators, the renderer, settings or
-      code paths, not examples.
+      `docs/dev/WORKFLOW.md` §5. **RG9.4.8.1** **CLOSED 2026-10-01** (maintainer): `test_specialBeams.py` and
+      `test_computedParameters.py` stay in `python/testing/`.
 
 ## RG10 — Tooling and process
 
@@ -1581,6 +1586,21 @@ find out about the settings of a model. It is the group a user notices most and 
     their single members, which is what a script compares against. A test then loops over
     `Inspect(item, InspectType.OutputVariables)` of every MiniExample instead of a hand-kept list, and the
     item pages of RG13.5.0.3 can take the same answers. **Confirmed by the maintainer, 2026-10-01.**
+    **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg12-29) - `mbs.Inspect` and `exu.InspectType` as
+    proposed; output variables of markers too; a sensor has nothing to inspect (`{}` for `what=None`); the
+    potential energy listed only where `PotentialEnergyAvailable()`; the test model `inspectTest.py` and the pytest
+    `test_inspectOutputVariables.py`, which reads every listed output variable of every MiniExample.
+    - **RG12.29.1** *open* (#2768) - the output variables that items declare and cannot compute, found by that
+      test: `NodePoint2D` (`RotationMatrix`, `Rotation`, `AngularVelocity(Local)`), `MarkerNodeODE1Coordinate`
+      (`Coordinates_t`), `ObjectANCFThinPlate` (`Director2`), `ObjectANCFBeam` (`AngularVelocity(Local)`),
+      `ObjectRotationalMass1D` (`AngularVelocityLocal`), and two that depend on the node - `ObjectRigidBody` on a
+      Lie group node (the accelerations of rotation), `MarkerNodeRigid` on a node without angular velocity. Each is
+      implemented or no longer declared; the node-dependent ones ask their node. The test lists them as known
+      failures, an entry to be removed when fixed;
+    - **RG12.29.2** *open* - the node types a **node marker** requests: today checked in C++ as alternatives
+      (`Position` or `Position2D`, ...), declared as `requestedNodeTypes` in the definitions for the documentation
+      only (RG13.5.0.3); `Inspect` does not answer them yet - a list of alternatives per node would need its own
+      form, or the C++ check generated from the declaration first.
 
 ## RG13 — Item documentation
 
@@ -1964,11 +1984,11 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list; decided (RG6.7.1), to be built in RG6.7.2 to RG6.7.4 |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG9.3 | #2744 | access functions as single functions of the objects; evaluation first |
-| RG9.4 | #2202 | kinetic and potential energy as output variables, per object type |
+| RG9.4 | #2202 | kinetic and potential energy as output variables, per object type: done for bodies, beams, plates, superelements, spring-dampers; open RG9.4.5 (should a rigid body report zero potential energy) |
+| RG12.29.1 | #2768 | output variables declared and not computable, found by `mbs.Inspect` |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
-| RG12.29 | #2203 | ask an item from Python which output variables and types it provides |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
 | RG14.2 | #2745 | connectors compute from small marker structures: interface decided, L0-L2, the position-marker connectors and the coordinate spring-damper with Jacobians by AD, the rigid-marker force connectors done; next RG14.2.8.1 (the AD Jacobian of rigid markers), then RG14.2.7 |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |

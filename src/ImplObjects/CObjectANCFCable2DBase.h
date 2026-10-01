@@ -59,6 +59,7 @@ public:
 	virtual bool HasUserFunction() const override { return HasForceUserFunction() || HasTorqueUserFunction(); }
 	virtual bool HasForceUserFunction() const { return false; }
 	virtual bool HasTorqueUserFunction() const { return false; }
+	virtual bool PotentialEnergyAvailable() const override { return !HasUserFunction(); }
 
 	//!  Computational function: compute mass matrix
 	virtual void ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse=false) const override;

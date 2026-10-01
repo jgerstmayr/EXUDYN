@@ -64,6 +64,18 @@ class EnumType:
 
 #the listing order is the order in C++, in Python and in the documentation
 enumTypes = [
+    EnumType('InspectType', 'InspectType',
+             'The enumeration type InspectType selects what mbs.Inspect(itemIndex, what) reports about an item; each answer is a list of the enumeration types Exudyn exports, the flags of C++ split into their single members.\n\n',
+             [EnumValue('OutputVariables', 1, 'the output variables of an object, node or marker (OutputVariableType), with its current parameters: the energies only where they can be computed'),
+              EnumValue('ObjectType', 2, 'the type flags of an object (ObjectType): Body, Connector, Constraint, SuperElement, ...'),
+              EnumValue('NodeType', 3, 'the types a node provides (NodeType): Position, Orientation, RotationEulerParameters, ...'),
+              EnumValue('RequestedNodeTypes', 4, 'for each node of an object, the node types it requests (NodeType)'),
+              EnumValue('MarkerType', 5, 'the types a marker provides (MarkerType)'),
+              EnumValue('RequestedMarkerTypes', 6, 'for each marker of a connector, constraint or load, the marker types it requests (MarkerType)'),
+              EnumValue('AccessFunctions', 7, 'the access functions a body offers (AccessFunctionType), which decide the body markers it takes'),
+              ],
+             stringFunction='operator<<',
+             cppNote='the questions of MainSystem::PyInspect (#2203)'),
     EnumType('ConfigurationType', 'ConfigurationType',
              'The enumeration type  ConfigurationType is used for selecting a configuration for reading or writing information to the module. Specifically, the ConfigurationType.Current configuration is usually used at the end of a solution process, to obtain result values, or the ConfigurationType.Initial is used to set initial values for a solution process.\n\n',
              [EnumValue('_None', 0, 'no configuration; usually not valid, but may be used, e.g., if no configurationType is required'),

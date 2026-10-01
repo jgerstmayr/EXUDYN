@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  00:28:58 (last modified)
+* @date         2026-10-01  10:01:56 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -252,6 +252,12 @@ public: // AUTO:
     const ResizableVector& GetTempVector2() const { return tempVector2; }
     //! AUTO:  Read (Reference) access to:\f$\vv_{temp2}\f$second temporary vector at computation of ODE2Lhs
     ResizableVector& GetTempVector2() { return tempVector2; }
+
+    //! AUTO:  no PotentialEnergy while a user function defines the force (#2202)
+    virtual bool PotentialEnergyAvailable() const override
+    {
+        return !parameters.forceUserFunction;
+    }
 
     //! AUTO:  return true, if object has a computation user function
     virtual bool HasUserFunction() const override

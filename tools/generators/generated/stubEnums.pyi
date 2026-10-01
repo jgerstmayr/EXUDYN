@@ -76,6 +76,23 @@ class OutputVariableType(Enum):
     PotentialEnergy = int
     """measure potential (=elastic) energy of a body or connector, position independent"""
 
+class InspectType(Enum):
+    """The enumeration type InspectType selects what mbs.Inspect(itemIndex, what) reports about an item; each answer is a list of the enumeration types Exudyn exports, the flags of C++ split into their single members."""
+    OutputVariables = int
+    """the output variables of an object, node or marker (OutputVariableType), with its current parameters: the energies only where they can be computed"""
+    ObjectType = int
+    """the type flags of an object (ObjectType): Body, Connector, Constraint, SuperElement, ..."""
+    NodeType = int
+    """the types a node provides (NodeType): Position, Orientation, RotationEulerParameters, ..."""
+    RequestedNodeTypes = int
+    """for each node of an object, the node types it requests (NodeType)"""
+    MarkerType = int
+    """the types a marker provides (MarkerType)"""
+    RequestedMarkerTypes = int
+    """for each marker of a connector, constraint or load, the marker types it requests (MarkerType)"""
+    AccessFunctions = int
+    """the access functions a body offers (AccessFunctionType), which decide the body markers it takes"""
+
 class ConfigurationType(Enum):
     """The enumeration type  ConfigurationType is used for selecting a configuration for reading or writing information to the module.
 

@@ -64,6 +64,23 @@ The class **OutputVariableType** has the following **functions and structures**:
 - **`PotentialEnergy`**: measure potential (=elastic) energy of a body or connector, position independent
 
 
+(sec-inspecttype)=
+## InspectType
+
+The enumeration type InspectType selects what mbs.Inspect(itemIndex, what) reports about an item; each answer is a list of the enumeration types Exudyn exports, the flags of C++ split into their single members.
+
+
+The class **InspectType** has the following **functions and structures**:
+
+- **`OutputVariables`**: the output variables of an object, node or marker (OutputVariableType), with its current parameters: the energies only where they can be computed
+- **`ObjectType`**: the type flags of an object (ObjectType): Body, Connector, Constraint, SuperElement, ...
+- **`NodeType`**: the types a node provides (NodeType): Position, Orientation, RotationEulerParameters, ...
+- **`RequestedNodeTypes`**: for each node of an object, the node types it requests (NodeType)
+- **`MarkerType`**: the types a marker provides (MarkerType)
+- **`RequestedMarkerTypes`**: for each marker of a connector, constraint or load, the marker types it requests (MarkerType)
+- **`AccessFunctions`**: the access functions a body offers (AccessFunctionType), which decide the body markers it takes
+
+
 (sec-configurationtype)=
 ## ConfigurationType
 

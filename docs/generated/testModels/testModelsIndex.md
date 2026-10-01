@@ -87,6 +87,7 @@ geometricallyExactBeamCurvedTest
 geometricallyExactBeamRightAngleFrame
 rightAngleFrame
 energiesFlexibleBodiesTest
+inspectTest
 energiesTest
 geometricallyExactBeamOutputTest
 geometricallyExactBeamElbowCantilever

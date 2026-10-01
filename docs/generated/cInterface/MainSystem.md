@@ -1853,6 +1853,15 @@ The class **MainSystem** has the following **functions and structures** regardin
   ```
 
 - **`GetObjectOutput(objectNumber, variableType, configuration = exu.ConfigurationType.Current)`**: get object's current output variable from object number (type ObjectIndex) and OutputVariableType; for connectors, it can only be computed for exu.ConfigurationType.Current configuration!
+- **`Inspect(itemIndex, what = None)`**: what an item provides and requests (#2203): for the typed index of an object, node, marker, load or sensor and a what of type exu.InspectType, a list of exported enumeration members - the output variables (OutputVariableType; energies only where they can be computed with the current parameters), the object, node or marker type flags (ObjectType, NodeType, MarkerType), the requested node types per node or marker types per marker, the access functions of a body (AccessFunctionType); with what=None a dict of all that apply to the item; a what that does not apply raises with the list of those that do
+
+  *Example*:
+
+  ```python
+  mbs.Inspect(oMassPoint, exu.InspectType.OutputVariables)
+  mbs.Inspect(oSpringDamper) #all that apply
+  ```
+
 - **`GetObjectOutputBody(objectNumber, variableType, localPosition = [0,0,0], configuration = exu.ConfigurationType.Current)`**: get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody
 
   *Example*:

@@ -225,7 +225,7 @@ void CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector(OutputVar
 	case OutputVariableType::TorqueLocal: value.CopyFrom(fRotLoc); break;
 	case OutputVariableType::PotentialEnergy: {
 		//1/2 u^T K u of the six relative displacements and rotations in the joint frame, as the force law uses them
-		if (parameters.springForceTorqueUserFunction) { EnergyNotAvailable("ObjectConnectorRigidBodySpringDamper", "its springForceTorqueUserFunction defines the force and torque"); }
+		if (!PotentialEnergyAvailable()) { EnergyNotAvailable("ObjectConnectorRigidBodySpringDamper", "its springForceTorqueUserFunction defines the force and torque"); }
 		Vector6D u;
 		for (Index i = 0; i < 3; i++) { u[i] = vLocPos[i]; u[i + 3] = vLocRot[i]; }
 		u -= parameters.offset;

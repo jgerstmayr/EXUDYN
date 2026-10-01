@@ -468,6 +468,7 @@ class DeclarationWriter:
                 sNew = sNew.replace('(std::vector<Real>)Vector3D','')
                 sNew = sNew.replace('{','').replace('}','')
                 sNew = sNew.replace('(','[').replace(')',']')
+            sNew = sNew.replace('py::none()','None')
             sNew = sNew.replace('py::','').replace('::','.') #replace C-style '::' (e.g. in ConfiguationType) to python-style '.'            
             return sNew
         

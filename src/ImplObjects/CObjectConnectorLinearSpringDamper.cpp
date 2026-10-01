@@ -122,7 +122,7 @@ void CObjectConnectorLinearSpringDamper::GetOutputVariableConnector(OutputVariab
 	case OutputVariableType::ForceLocal: value.CopyFrom(Vector1D(force)); break;
 	case OutputVariableType::PotentialEnergy: {
 		//the constant force adds its potential (#2202)
-		if (parameters.springForceUserFunction) { EnergyNotAvailable("ObjectConnectorLinearSpringDamper", "its springForceUserFunction defines the force"); }
+		if (!PotentialEnergyAvailable()) { EnergyNotAvailable("ObjectConnectorLinearSpringDamper", "its springForceUserFunction defines the force"); }
 		Real u = displacement - parameters.offset;
 		value.CopyFrom(Vector1D(parameters.activeConnector ? 0.5*parameters.stiffness*u*u + parameters.force*displacement : 0.)); break; }
 	default:

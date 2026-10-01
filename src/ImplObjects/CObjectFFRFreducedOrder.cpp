@@ -663,7 +663,7 @@ void CObjectFFRFreducedOrder::GetOutputVariableBody(OutputVariableType variableT
 	case OutputVariableType::PotentialEnergy: {
 		//1/2 zeta^T K zeta of the reduced stiffness matrix and the modal coordinates
 		CheckEnergyLocalPosition(localPosition, "ObjectFFRFreducedOrder");
-		if (parameters.forceUserFunction) { EnergyNotAvailable("ObjectFFRFreducedOrder", "its forceUserFunction defines forces"); }
+		if (!PotentialEnergyAvailable()) { EnergyNotAvailable("ObjectFFRFreducedOrder", "its forceUserFunction defines forces"); }
 		Vector q;
 		ComputeObjectCoordinates(q, configuration);
 		Index nODE2Rigid = ((CNodeODE2*)GetCNode(rigidBodyNodeNumber))->GetNumberOfODE2Coordinates();

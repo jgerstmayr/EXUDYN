@@ -510,7 +510,7 @@ void CObjectKinematicTree::AddExternalForces6D(const Transformation66List& Xup, 
 //! dissipates and has none
 Real CObjectKinematicTree::ComputePotentialEnergy(ConfigurationType configuration) const
 {
-	if (parameters.forceUserFunction) { EnergyNotAvailable("ObjectKinematicTree", "its forceUserFunction defines forces"); }
+	if (!PotentialEnergyAvailable()) { EnergyNotAvailable("ObjectKinematicTree", "its forceUserFunction defines forces"); }
 	Index n = NumberOfLinks();
 	Vector q, qRef;
 	((CNodeODE2*)GetCNode(0))->GetODE2CoordinateVectorWithReference(q, configuration);

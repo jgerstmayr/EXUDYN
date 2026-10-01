@@ -824,7 +824,7 @@ void CObjectANCFCable2DBase::ComputeReferenceStrains(Real x, Real& axialStrainRe
 
 Real CObjectANCFCable2DBase::ComputeElasticEnergy(ConfigurationType configuration) const
 {
-	if (HasUserFunction()) { EnergyNotAvailable("ObjectANCFCable2D", "its axialForceUserFunction or bendingMomentUserFunction defines the forces"); }
+	if (!PotentialEnergyAvailable()) { EnergyNotAvailable("ObjectANCFCable2D", "its axialForceUserFunction or bendingMomentUserFunction defines the forces"); }
 	Real EI, EA, bendingDamping, axialDamping, axialStrain0, curvature0, physicsMovingMassFactor;
 	GetMaterialParameters(EI, EA, bendingDamping, axialDamping, axialStrain0, curvature0, physicsMovingMassFactor);
 	Real L = GetLength();

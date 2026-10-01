@@ -1085,6 +1085,135 @@ py::dict MainSystem::PyGetObjectDefaults(STDstring typeName)
 //}
 
 //! Get specific output variable with variable type
+//! the single flags set in mask, as the members of the Python enumeration of TEnum (#2203); members that are not one bit
+//! (_None) are left out, so a combination of C++ flags becomes the list a script compares against
+template<class TEnum>
+py::list InspectFlags(Index64 mask)
+{
+	py::list result;
+	if (mask < 0 && mask >= INT32_MIN) { mask &= 0xFFFFFFFF; }
+	py::dict members = py::type::of<TEnum>().attr("__members__");
+	for (auto member : members)
+	{
+		Index64 value = (Index64)(member.second.cast<TEnum>());
+		if (value < 0 && value >= INT32_MIN) { value &= 0xFFFFFFFF; } //a flag in bit 31 of a 32-bit enumeration, e.g. AccessFunctionType
+		if (value > 0 && (value & (value - 1)) == 0 && (mask & value) == value) { result.append(member.second); }
+	}
+	return result;
+}
+
+//! mbs.Inspect (#2203): the typed index says the kind of item; the answers are lists of the exported enumerations
+py::object MainSystem::PyInspect(const py::object& itemIndex, const py::object& what) const
+{
+	const MainSystemData& data = GetMainSystemData();
+	ItemType itemType = ItemType::_None;
+	Index number = EXUstd::InvalidIndex;
+	Index numberOfItems = 0;
+	if (py::isinstance<ObjectIndex>(itemIndex)) { itemType = ItemType::Object; number = py::cast<ObjectIndex>(itemIndex).GetIndex(); numberOfItems = data.GetMainObjects().NumberOfItems(); }
+	else if (py::isinstance<NodeIndex>(itemIndex)) { itemType = ItemType::Node; number = py::cast<NodeIndex>(itemIndex).GetIndex(); numberOfItems = data.GetMainNodes().NumberOfItems(); }
+	else if (py::isinstance<MarkerIndex>(itemIndex)) { itemType = ItemType::Marker; number = py::cast<MarkerIndex>(itemIndex).GetIndex(); numberOfItems = data.GetMainMarkers().NumberOfItems(); }
+	else if (py::isinstance<LoadIndex>(itemIndex)) { itemType = ItemType::Load; number = py::cast<LoadIndex>(itemIndex).GetIndex(); numberOfItems = data.GetMainLoads().NumberOfItems(); }
+	else if (py::isinstance<SensorIndex>(itemIndex)) { itemType = ItemType::Sensor; number = py::cast<SensorIndex>(itemIndex).GetIndex(); numberOfItems = data.GetMainSensors().NumberOfItems(); }
+	else
+	{
+		PyError(STDstring("Inspect: itemIndex must be the typed index of an item - an ObjectIndex, NodeIndex, MarkerIndex, LoadIndex or SensorIndex, as mbs.AddObject(...) and the other Add functions return it - because the type says the kind of item; got ")
+			+ STDstring(py::str(itemIndex)) + " of type " + STDstring(py::str(itemIndex.get_type().attr("__name__"))), PyErrorType::typeError);
+		return py::none();
+	}
+	if (!EXUstd::IndexIsInRange(number, 0, numberOfItems))
+	{
+		PyError("Inspect: " + EXUstd::ToString(itemType) + " number " + EXUstd::ToString(number) + " does not exist", PyErrorType::indexError);
+		return py::none();
+	}
+
+	//what applies to this item
+	std::vector<InspectType> applicable;
+	const CObject* object = nullptr;
+	if (itemType == ItemType::Object)
+	{
+		object = data.GetMainObjects()[number]->GetCObject();
+		applicable = { InspectType::OutputVariables, InspectType::ObjectType };
+		if (object->GetNumberOfNodes() != 0) { applicable.push_back(InspectType::RequestedNodeTypes); }
+		if (EXUstd::IsOfType(object->GetType(), CObjectType::Connector)) { applicable.push_back(InspectType::RequestedMarkerTypes); }
+		if (EXUstd::IsOfType(object->GetType(), CObjectType::Body)) { applicable.push_back(InspectType::AccessFunctions); }
+	}
+	else if (itemType == ItemType::Node) { applicable = { InspectType::OutputVariables, InspectType::NodeType }; }
+	else if (itemType == ItemType::Marker) { applicable = { InspectType::OutputVariables, InspectType::MarkerType }; }
+	else if (itemType == ItemType::Load) { applicable = { InspectType::RequestedMarkerTypes }; }
+
+	auto Answer = [&](InspectType inspectType) -> py::object
+	{
+		switch (inspectType)
+		{
+		case InspectType::OutputVariables:
+		{
+			Index64 types = 0;
+			if (itemType == ItemType::Object)
+			{
+				types = (Index64)object->GetOutputVariableTypes();
+				if (!object->PotentialEnergyAvailable()) { types &= ~(Index64)OutputVariableType::PotentialEnergy; }
+			}
+			else if (itemType == ItemType::Node) { types = (Index64)data.GetMainNodes()[number]->GetCNode()->GetOutputVariableTypes(); }
+			else { types = (Index64)data.GetMainMarkers()[number]->GetCMarker()->GetOutputVariableTypes(); }
+			return InspectFlags<OutputVariableType>(types);
+		}
+		case InspectType::ObjectType: return InspectFlags<CObjectType>((Index64)object->GetType());
+		case InspectType::NodeType: return InspectFlags<Node::Type>((Index64)data.GetMainNodes()[number]->GetCNode()->GetType());
+		case InspectType::MarkerType: return InspectFlags<Marker::Type>((Index64)data.GetMainMarkers()[number]->GetCMarker()->GetType());
+		case InspectType::AccessFunctions: return InspectFlags<AccessFunctionType>((Index64)object->GetAccessFunctionTypes());
+		case InspectType::RequestedNodeTypes:
+		{
+			py::list perNode;
+			for (Index i = 0; i < object->GetNumberOfNodes(); i++)
+			{
+				perNode.append(InspectFlags<Node::Type>((Index64)data.GetMainObjects()[number]->GetRequestedNodeType()));
+			}
+			return perNode;
+		}
+		case InspectType::RequestedMarkerTypes:
+		{
+			py::list perMarker;
+			if (itemType == ItemType::Load)
+			{
+				perMarker.append(InspectFlags<Marker::Type>((Index64)data.GetMainLoads()[number]->GetCLoad()->GetRequestedMarkerType()));
+			}
+			else
+			{
+				const CObjectConnector* connector = (const CObjectConnector*)object;
+				for (Index i = 0; i < connector->GetMarkerNumbers().NumberOfItems(); i++)
+				{
+					perMarker.append(InspectFlags<Marker::Type>((Index64)connector->GetRequestedMarkerType()));
+				}
+			}
+			return perMarker;
+		}
+		default: return py::none();
+		}
+	};
+
+	if (what.is_none())
+	{
+		py::dict all;
+		for (InspectType inspectType : applicable) { all[py::cast(inspectType)] = Answer(inspectType); }
+		return all;
+	}
+	if (!py::isinstance<InspectType>(what))
+	{
+		PyError("Inspect: what must be a member of exu.InspectType or None; got " + STDstring(py::str(what)), PyErrorType::typeError);
+		return py::none();
+	}
+	InspectType inspectType = py::cast<InspectType>(what);
+	if (std::find(applicable.begin(), applicable.end(), inspectType) == applicable.end())
+	{
+		STDstring list;
+		for (InspectType t : applicable) { list += (list.size() ? ", " : "") + STDstring("InspectType.") + EXUstd::ToString(t); }
+		PyError("Inspect: InspectType." + EXUstd::ToString(inspectType) + " does not apply to " + EXUstd::ToString(itemType) + " " + EXUstd::ToString(number)
+			+ "; what applies: [" + list + "]", PyErrorType::valueError);
+		return py::none();
+	}
+	return Answer(inspectType);
+}
+
 py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, OutputVariableType variableType, ConfigurationType configuration) const
 {
 	Index itemNumber = EPyUtils::ItemIndexFromPython<ObjectIndex>(itemIndex);

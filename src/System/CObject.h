@@ -119,6 +119,10 @@ public:
 	//! function to be overwritten, if object has user function
 	virtual bool HasUserFunction() const { return false; }
 
+	//! false where the object cannot compute its PotentialEnergy with its current parameters, e.g. with a user function
+	//! defining its force (#2202); mbs.Inspect then does not list it (#2203)
+	virtual bool PotentialEnergyAvailable() const { return true; }
+
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // SYSTEM FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

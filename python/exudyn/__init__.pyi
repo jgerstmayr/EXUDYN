@@ -255,6 +255,24 @@ class OutputVariableType(Enum):
     """measure potential (=elastic) energy of a body or connector, position independent"""
 
 
+class InspectType(Enum):
+    """The enumeration type InspectType selects what mbs.Inspect(itemIndex, what) reports about an item; each answer is a list of the enumeration types Exudyn exports, the flags of C++ split into their single members."""
+    OutputVariables = int
+    """the output variables of an object, node or marker (OutputVariableType), with its current parameters: the energies only where they can be computed"""
+    ObjectType = int
+    """the type flags of an object (ObjectType): Body, Connector, Constraint, SuperElement, ..."""
+    NodeType = int
+    """the types a node provides (NodeType): Position, Orientation, RotationEulerParameters, ..."""
+    RequestedNodeTypes = int
+    """for each node of an object, the node types it requests (NodeType)"""
+    MarkerType = int
+    """the types a marker provides (MarkerType)"""
+    RequestedMarkerTypes = int
+    """for each marker of a connector, constraint or load, the marker types it requests (MarkerType)"""
+    AccessFunctions = int
+    """the access functions a body offers (AccessFunctionType), which decide the body markers it takes"""
+
+
 class ConfigurationType(Enum):
     """The enumeration type  ConfigurationType is used for selecting a configuration for reading or writing information to the module.
 
@@ -3340,6 +3358,15 @@ class MainSystem:
     @overload
     def GetObjectOutput(self, objectNumber: ObjectIndex, variableType: OutputVariableType, configuration: ConfigurationType=ConfigurationType.Current) -> List[float]: 
         """Get object's current output variable from object number (type ObjectIndex) and OutputVariableType; for connectors, it can only be computed for exu.ConfigurationType.Current configuration!."""
+        ...
+    @overload
+    def Inspect(self, itemIndex: Any, what: InspectType=None) -> Any: 
+        """What an item provides and requests (#2203): for the typed index of an object, node, marker, load or sensor and a what of type exu.InspectType, a list of exported enumeration members - the output variables (OutputVariableType; energies only where they can be computed with the current parameters), the object, node or marker type flags (ObjectType, NodeType, MarkerType), the requested node types per node or marker types per marker, the access functions of a body (AccessFunctionType); with what=None a dict of all that apply to the item; a what that does not apply raises with the list of those that do.
+        
+        Examples:
+            mbs.Inspect(oMassPoint, exu.InspectType.OutputVariables)
+            mbs.Inspect(oSpringDamper) #all that apply
+        """
         ...
     @overload
     def GetObjectOutputBody(self, objectNumber: ObjectIndex, variableType: OutputVariableType, localPosition: [float,float,float]=[0,0,0], configuration: ConfigurationType=ConfigurationType.Current) -> List[float]: 

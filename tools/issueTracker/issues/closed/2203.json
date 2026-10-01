@@ -1,0 +1,15 @@
+{
+  "number": 2203,
+  "title": "MainSystem.Inspect",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add function MainSystem.Inspect(itemIndex, what, optArgs) which retrieves additional info on items like available output variables, node/marker types, etc.",
+  "dateRaised": "2026-01-07",
+  "deadline": "2026-07-06",
+  "dateResolved": "2026-10-01 10:16",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "mbs.Inspect(itemIndex, what) asks an item what it provides and requests: output variables, type flags, requested node and marker types, access functions, as lists of exudyn enumeration members; what is a member of exu.InspectType, or None for all that apply. The output variables list the energies only where the item can compute them with its current parameters.",
+  "resolvedInVersion": "1.12.203"
+}

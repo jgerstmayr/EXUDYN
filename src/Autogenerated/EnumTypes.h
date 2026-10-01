@@ -210,6 +210,33 @@ namespace Contact {
     }
 } //namespace Contact
 
+//! the questions of MainSystem::PyInspect (#2203)
+enum class InspectType {
+    OutputVariables = 1,      //!< the output variables of an object, node or marker (OutputVariableType), with its current parameters: the energies only where they can be computed
+    ObjectType = 2,           //!< the type flags of an object (ObjectType): Body, Connector, Constraint, SuperElement, ...
+    NodeType = 3,             //!< the types a node provides (NodeType): Position, Orientation, RotationEulerParameters, ...
+    RequestedNodeTypes = 4,   //!< for each node of an object, the node types it requests (NodeType)
+    MarkerType = 5,           //!< the types a marker provides (MarkerType)
+    RequestedMarkerTypes = 6, //!< for each marker of a connector, constraint or load, the marker types it requests (MarkerType)
+    AccessFunctions = 7       //!< the access functions a body offers (AccessFunctionType), which decide the body markers it takes
+};
+
+//! ostream operator for printing of InspectType
+inline std::ostream& operator<<(std::ostream& os, InspectType value)
+{
+    switch (value)
+    {
+    case InspectType::OutputVariables: return os << "OutputVariables";
+    case InspectType::ObjectType: return os << "ObjectType";
+    case InspectType::NodeType: return os << "NodeType";
+    case InspectType::RequestedNodeTypes: return os << "RequestedNodeTypes";
+    case InspectType::MarkerType: return os << "MarkerType";
+    case InspectType::RequestedMarkerTypes: return os << "RequestedMarkerTypes";
+    case InspectType::AccessFunctions: return os << "AccessFunctions";
+    default: return os << "InspectType::invalid";
+    }
+}
+
 //! EndOfEnumList must remain the (consecutive) maximum of the list
 enum class ConfigurationType {
     _None = 0,         //!< no configuration; usually not valid, but may be used, e.g., if no configurationType is required

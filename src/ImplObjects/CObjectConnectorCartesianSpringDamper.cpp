@@ -173,7 +173,7 @@ void CObjectConnectorCartesianSpringDamper::GetOutputVariableConnector(OutputVar
 	case OutputVariableType::Velocity: value.CopyFrom(vVel); break;
 	case OutputVariableType::Force: value.CopyFrom(fVec); break;
 	case OutputVariableType::PotentialEnergy: {
-		if (parameters.springForceUserFunction) { EnergyNotAvailable("ObjectConnectorCartesianSpringDamper", "its springForceUserFunction defines the force"); }
+		if (!PotentialEnergyAvailable()) { EnergyNotAvailable("ObjectConnectorCartesianSpringDamper", "its springForceUserFunction defines the force"); }
 		Real energy = 0.;
 		for (Index i = 0; i < 3; i++) { energy += 0.5*parameters.stiffness[i]*vPos[i]*vPos[i]; } //vPos includes the offset
 		value.SetVector({ parameters.activeConnector ? energy : 0. }); break; }

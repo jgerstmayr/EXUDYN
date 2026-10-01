@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 187 | 1.12.202 |
+| 1.12 | Metheney | 188 | 1.12.203 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.203** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` MainSystem.Inspect (#2203)
+  - description: add function MainSystem.Inspect(itemIndex, what, optArgs) which retrieves additional info on items like available output variables, node/marker types, etc.
+  - **notes:** mbs.Inspect(itemIndex, what) asks an item what it provides and requests: output variables, type flags, requested node and marker types, access functions, as lists of exudyn enumeration members; what is a member of exu.InspectType, or None for all that apply. The output variables list the energies only where the item can compute them with its current parameters.
+  - date resolved: **2026-10-01 10:16**, date raised: 2026-01-07
 - **1.12.202** `TESTING` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` tests of user-facing features as test models (#2767)
   - description: A test of what a user does with Exudyn (items, output variables, sensors, utilities, and what they refuse) belongs into python/TestModels, where users look for examples, not into python/testing (maintainer, 2026-10-01): python/testing/test\_energies.py goes into the test model energiesTest.py and python/testing/test\_connectorOutputVariables.py becomes the test model connectorOutputVariablesTest.py; the rule is written into CLAUDE.md and docs/dev/WORKFLOW.md section 5.
   - **notes:** A test of what a user does with Exudyn is a test model in python/TestModels, where users look for examples: the energy tests are in energiesTest.py and energiesFlexibleBodiesTest.py, the output variables of connectors in connectorOutputVariablesTest.py; the rule is in CLAUDE.md and docs/dev/WORKFLOW.md.

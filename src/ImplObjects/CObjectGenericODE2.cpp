@@ -327,7 +327,7 @@ void CObjectGenericODE2::GetOutputVariableBody(OutputVariableType variableType, 
 	case OutputVariableType::PotentialEnergy: {
 		//1/2 q^T K q of the stiffness matrix, and -f^T q of the constant force vector, which is conservative in any coordinates
 		CheckEnergyLocalPosition(localPosition, "ObjectGenericODE2");
-		if (parameters.forceUserFunction) { EnergyNotAvailable("ObjectGenericODE2", "its forceUserFunction defines forces"); }
+		if (!PotentialEnergyAvailable()) { EnergyNotAvailable("ObjectGenericODE2", "its forceUserFunction defines forces"); }
 		Vector q;
 		ComputeObjectCoordinates(q, configuration);
 		Real energy = 0.;

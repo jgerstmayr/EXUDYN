@@ -10632,3 +10632,31 @@ refuse, with the message, and how `SystemEnergy` skips it), which also got (14),
 `docs/dev/WORKFLOW.md` §5 *Where a test goes*. References: `energiesTest.py` 17.614884358875663 (before 8.724884363749222,
 the new sections add 8.89), `energiesFlexibleBodiesTest.py` 5.850170604919896, `connectorOutputVariablesTest.py`
 -1.5578550690285144.
+
+<a id="rg12-29"></a>
+### RG12.29 — `mbs.Inspect`: what an item provides, asked from Python (2026-10-01, #2203, #2768)
+
+`mbs.Inspect(itemIndex, what=None)` (`MainSystem::PyInspect`, `MainSystem.cpp`), as confirmed: the **typed index** says
+the kind of item (a plain int is refused with the hint), `what` is a member of the new enumeration `exu.InspectType`
+(`definitions/enumTypes.py`, generated like the others), and every answer is a list of the members of the exported
+enumerations, the C++ flags split into their single bits - `InspectFlags<TEnum>` reads the members of the Python
+enumeration and keeps those that are one bit and set, so `_None` and C++-only values never appear (a flag in bit 31 of
+a 32-bit enumeration, `AccessFunctionType.SuperElementAlternativeRotationMode`, is handled as unsigned). With
+`what=None` a dict of all that apply; a `what` that does not apply raises a `ValueError` naming those that do.
+
+| item | applies |
+|---|---|
+| object | `OutputVariables`, `ObjectType`; `RequestedNodeTypes` if it has nodes (one list per node); `RequestedMarkerTypes` for a connector or constraint (one per marker); `AccessFunctions` for a body |
+| node | `OutputVariables`, `NodeType` |
+| marker | `OutputVariables` (beyond the proposal: markers have output variables, `SensorMarker` reads them), `MarkerType` |
+| load | `RequestedMarkerTypes` |
+| sensor | nothing - `{}` for `what=None` |
+
+**Energies only where they can be computed**: `CObject::PotentialEnergyAvailable()` (default true), overridden by the
+ten objects whose potential depends on a user function, generated from the definitions with the condition that the
+output variable used inline before - the output variable and `Inspect` now share it.
+
+**Checked**: every item of every MiniExample inspected (1402 items); `python/testing/test_inspectOutputVariables.py`
+then **reads** every output variable `Inspect` lists, for every object, node and marker of every MiniExample - and finds
+output variables that items declare and cannot compute (#2768, RG12.29.1), kept as a list of known failures in the
+test. The test model `inspectTest.py` shows the use (reference 44).
