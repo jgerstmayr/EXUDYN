@@ -204,7 +204,7 @@ The faster versions are available for all release versions, but only for some `.
 - try to switch to **explicit solvers**, if problem has no constraints and if problem is not stiff
 - try to have **constant mass matrices** (see according objects, which have constant mass matrices; e.g. rigid bodies using RotationVector Lie group node have constant mass matrix)
 - for explicit integration, set `computeEndOfStepAccelerations = False`, if you do not need accurate evaluation of accelerations at end of time step (will then be taken from beginning)
-- for explicit integration, set `explicitIntegration.computeMassMatrixInversePerBody=True`, which avoids factorization and back substitution, which may speed up computations with many bodies / particles
+- for explicit integration of large systems, use a **sparse solver** (`simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse`): with the dense default every step multiplies with a dense mass matrix and costs $O(n^2)$ - 400 times slower than sparse for 2000 point masses; then set `explicitIntegration.computeMassMatrixInversePerBody=True`, which avoids factorization and back substitution, which may speed up computations with many bodies / particles further (it has no effect with the dense solver)
 - if you are sure that your mass matrix is constant, set:
 - `simulationSettings.timeIntegration.reuseConstantMassMatrix = True`; check results!
 - check that `simulationSettings.timeIntegration.simulateInRealtime = False`; if set True, it breaks down simulation to real time

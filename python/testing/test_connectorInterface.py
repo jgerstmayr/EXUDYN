@@ -472,3 +472,67 @@ def test_theConstraintJacobianByADIsTheHandWrittenOne(kind):
     assert np.abs(jacobianLegacy).max() > 0.1
     assert np.abs(jacobianNew - jacobianLegacy).max() < 1e-14 * np.abs(jacobianLegacy).max()
     assert np.abs(residualNew - residualLegacy).max() < 1e-14 * (1 + np.abs(residualLegacy).max())
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#loads through the marker functions of the connector interface (#2745): the same generalized forces as the legacy path
+def BuildLoadModel():
+    from exudyn.utilities import (LoadForceVector, LoadTorqueVector, LoadMassProportional, LoadCoordinate, MarkerBodyMass,
+                                  Cable2D)
+    from exudyn.beams import GenerateStraightLineANCFCable2D
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    inertia = InertiaCuboid(density=1000, sideLengths=[0.2, 0.05, 0.05])
+    for (k, Node) in enumerate([NodeRigidBodyEP, NodeRigidBodyRxyz]):
+        if Node == NodeRigidBodyEP:
+            ep = RotationMatrix2EulerParameters(RotXYZ2RotationMatrix([0.3, 0.2, 0.1]))
+            n = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[k, 0, 0] + list(ep)))
+        else:
+            n = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[k, 0, 0, 0.3, 0.2, 0.1]))
+        b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D(),
+                                          physicsCenterOfMass=[0.01, 0.02, 0]))
+        mRigid = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[0.1, 0.02, 0.01]))
+        mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=b, localPosition=[0.1, 0, 0.02])), loadVector=[1, 2, 3]))
+        mbs.AddLoad(LoadForceVector(markerNumber=mRigid, loadVector=[3, -1, 2], bodyFixed=True))
+        mbs.AddLoad(LoadTorqueVector(markerNumber=mRigid, loadVector=[0.3, 0.2, -0.1]))
+        mbs.AddLoad(LoadTorqueVector(markerNumber=mRigid, loadVector=[0.1, -0.2, 0.4], bodyFixed=True))
+        mbs.AddLoad(LoadTorqueVector(markerNumber=mbs.AddMarker(MarkerNodeRigid(nodeNumber=n)), loadVector=[0.2, 0.1, 0.3]))
+        mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=b)), loadVector=[0, -9.81, 1]))
+    nPoint = mbs.AddNode(NodePoint(referenceCoordinates=[2, 0, 0]))
+    mbs.AddObject(MassPoint(nodeNumber=nPoint, physicsMass=1))
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=nPoint)), loadVector=[1, 0, 2]))
+    mbs.AddLoad(LoadCoordinate(markerNumber=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nPoint, coordinate=1)), load=0.7))
+    n2D = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[3, 0, 0.4]))
+    b2D = mbs.AddObject(ObjectRigidBody2D(nodeNumber=n2D, physicsMass=1, physicsInertia=0.1))
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=b2D, localPosition=[0.2, 0.1, 0])), loadVector=[1, 2, 0]))
+    mbs.AddLoad(LoadTorqueVector(markerNumber=mbs.AddMarker(MarkerBodyRigid(bodyNumber=b2D, localPosition=[0.2, 0, 0])), loadVector=[0, 0, 0.5], bodyFixed=True))
+    cable = Cable2D(physicsMassPerLength=1, physicsBendingStiffness=1, physicsAxialStiffness=100)
+    (nodes, objects, loadList, nodeList, markers) = GenerateStraightLineANCFCable2D(mbs, [4, 0, 0], [5, 0, 0], 2, cable)
+    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=objects[0], localPosition=[0.3, 0, 0])), loadVector=[0, -1, 0]))
+    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=objects[1])), loadVector=[0, -9.81, 0]))
+    mbs.Assemble()
+    return mbs
+
+
+def LoadRightHandSide(legacy):
+    exu.experimental.connectorInterfaceLegacy = legacy
+    mbs = BuildLoadModel()
+    s = exu.SimulationSettings()
+    solver = exu.MainSolverImplicitSecondOrder()
+    solver.InitializeSolver(mbs, s)
+    q = mbs.systemData.GetODE2Coordinates()
+    rng = np.random.default_rng(1)
+    mbs.systemData.SetODE2Coordinates(q + 0.05*rng.standard_normal(len(q)))
+    solver.ComputeODE2RHS(mbs)
+    rhs = np.array(solver.GetSystemResidual())[:len(q)]
+    solver.FinalizeSolver(mbs, s)
+    return rhs
+
+
+def test_theLoadsOnTheNewPathAreTheLegacyLoads():
+    """forces (also fixed to the body), torques (global and fixed), mass-proportional and coordinate loads on rigid
+    bodies with Euler parameters and Tait-Bryan angles, a mass point, a 2D body and ANCF cable elements"""
+    legacy = LoadRightHandSide(1)
+    new = LoadRightHandSide(0)
+    assert np.abs(legacy).max() > 1
+    assert np.abs(new - legacy).max() < 1e-14 * np.abs(legacy).max()

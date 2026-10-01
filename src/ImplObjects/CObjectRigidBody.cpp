@@ -546,6 +546,9 @@ void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, co
 		value.SetVector(9, rot.GetDataPointer());
 		break;
 	}
+	case OutputVariableType::PotentialEnergy: //no elastic energy (#2202)
+		CheckEnergyLocalPosition(localPosition, "ObjectRigidBody");
+		value.SetVector({ 0. }); break;
 	case OutputVariableType::KineticEnergy: {
 		//T = 1/2 m v.v + m v.(omega x A b) + 1/2 omegaLocal.J omegaLocal, with v the velocity of the reference point,
 		//b the local center of mass and J the inertia w.r.t. the reference point

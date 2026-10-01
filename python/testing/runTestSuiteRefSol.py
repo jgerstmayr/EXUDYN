@@ -94,7 +94,7 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeam2Dtest.py':-2.211502835379855,       #2026-01-09 update due to autodifferentiation
         'geometricallyExactBeamTest.py':1.012821233280551,         #before 2026-09-29: 1.012820942859896 (full Jacobian, #1550); before 2023-01-29: 1.012822053539261; before 2023-05-05: 1.0128218992948643 (changed Texp function); new 2023-04-06 may still include small errors in implementation
         'gridGeomExactBeam2D.py':-1.5827965743262553,                #new 2024-01-28
-        'heavyTop.py':33.423125751743804,                            #new 2022-07-11 (CState Parallel); 
+        'heavyTop.py':33.42312575174812, #2026-10-02: loads through the marker functions (#2745), before 33.423125751743804;                            #new 2022-07-11 (CState Parallel); 
         'hydraulicActuatorSimpleTest.py':7.130440021870289,
         'jointArgsTest.py':0.00426904955009082,                    #2025-05-10
         'kinematicTreeAndMBStest.py':263.88120463802585,           #the raw value since 2026-09-24: the model used
@@ -110,7 +110,7 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeamRightAngleFrame.py':3.306181713660017, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 3.306181714013268; #lateral buckling of the right-angle frame at 1.088 N (#1499)
         'rightAngleFrame.py':4.3718231979938, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 4.371823197993865; #the same frame driven by displacement, past the buckling point (#2762)
         'energiesFlexibleBodiesTest.py':5.850170604919896, #elastic energy of beams, plate and kinematic tree in free oscillations (#2202)
-        'inspectTest.py':44, #new 2026-10-01: mbs.Inspect (#2203); the number of listed members, refusals included
+        'inspectTest.py':45, #2026-10-02: a rigid body reports PotentialEnergy = 0 (#2202), before 44; new 2026-10-01: mbs.Inspect (#2203); the number of listed members, refusals included
         'energiesTest.py':17.614884358875663, #kinetic and potential energy of simple bodies and spring-dampers (#2202); 2026-10-01 with what the energies refuse and the gravity connector; before 8.724884363749222
         'geometricallyExactBeamOutputTest.py':-6.079487513916353, #section forces, moments and strains of the 3D beam (#2753)
         'geometricallyExactBeamElbowCantilever.py':-5.57992601861755, #2026-09-30: consistent mass matrix (#1273); #right-angle cantilever of Simo and Vu-Quoc 1988, free oscillations (#2730)
@@ -126,7 +126,7 @@ def TestExamplesReferenceSolution():
         'linearFEMgenericODE2.py': 0.38767197129755937,              #new 2024-10-06 for jacobianUserFunction in GenericODE2
         'loadUserFunctionTest.py': 1.8051173706570727,              #new 2024-10-10 for visualization of time-dependent loads
         'LShapeGeomExactBeam2D.py':-0.9181474510515215,             #2026-01-09 update due to autodifferentiation
-        'mainSystemExtensionsTests.py': 57.64639446941518, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 57.64639446941507; #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 57.646394469414666;          #updated 2023-11-16; updated 2023-06-09; old: new 2023-05-19
+        'mainSystemExtensionsTests.py': 57.64639446941533, #2026-10-02: loads through the marker functions (#2745), before 57.64639446941518; JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 57.64639446941507; #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 57.646394469414666;          #updated 2023-11-16; updated 2023-06-09; old: new 2023-05-19
         'mainSystemUserFunctionsTest.py': 4.069301305919595,        #new 2024-10-17
         'manualExplicitIntegrator.py':2.0596986296922988,
         'matrixContainerTest.py':56.5,                              #new 2024-10-09

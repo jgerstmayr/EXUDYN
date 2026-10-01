@@ -2568,17 +2568,10 @@ def MergeTriangleLists(g1,g2):
         data['triangles6'] = np.append(np.array(g1.get('triangles6', []), dtype=int),
                                        np.array(g2.get('triangles6', []), dtype=int)+nPoints)
 
-    #copy and merge edges; edges can be available only in one triangle list
-    if 'edges' in g1:
-        data['edges'] = np.array(g1['edges'])
-    if 'edges' in g2:
-        edges2 = np.array(g2['edges'])
-        if 'edges' not in data:
-            data['edges'] = []
-        else:
-            edges2 += nPoints #add offset
-        
-        data['edges'] = np.append(data['edges'], edges2)
+    #merge edges; edges can be available only in one triangle list; those of g2 refer to its points, which follow those of g1 (#2769)
+    if 'edges' in g1 or 'edges' in g2:
+        data['edges'] = np.append(np.array(g1.get('edges', []), dtype=int),
+                                  np.array(g2.get('edges', []), dtype=int)+nPoints)
     if 'edges3' in g1 or 'edges3' in g2: #quadratic edges (#2709)
         data['edges3'] = np.append(np.array(g1.get('edges3', []), dtype=int),
                                    np.array(g2.get('edges3', []), dtype=int)+nPoints)

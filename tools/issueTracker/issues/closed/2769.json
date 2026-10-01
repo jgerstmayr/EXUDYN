@@ -2,13 +2,17 @@
   "number": 2769,
   "title": "graphics.MergeTriangleLists: the edges of g2 are not offset when g1 has no edges",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "MergeTriangleLists appends the points of g2 after those of g1, but adds the offset nPoints to the edge indices of g2 only if g1 has edges as well; if g1 has none, the edges of g2 point to the points of g1. Found during revision2026b step RG6.7.7.5 (#2709), whose edges3 merge offsets always.",
   "dateRaised": "2026-10-01",
   "deadline": "2027-03-30",
+  "dateResolved": "2026-10-02 01:22",
+  "resolvedAuthor": "Claude-JG",
   "file": "python/exudyn/graphics.py",
-  "line": "2509"
+  "line": "2509",
+  "releaseNotes": "graphics.MergeTriangleLists: the edges of the second list are offset by the points of the first also when the first has no edges",
+  "resolvedInVersion": "1.12.210"
 }

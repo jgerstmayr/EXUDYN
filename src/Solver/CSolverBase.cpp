@@ -292,7 +292,7 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
 		Index n = computationalSystem.GetSystemData().GetNumberOfComputationCoordinates();
 		if (n > 1000) 
 		{ 
-			PyWarning("The number of total coordinates (unknowns) is larger than 1000. Consider a sparse solver (SimulationSettings().linearSolverType) to reduce memory consumption and computation time.", file.solverFile);
+			PyWarning("The number of total coordinates (unknowns) is larger than 1000. Consider a sparse solver (SimulationSettings().linearSolverType = exu.LinearSolverType.EigenSparse) to reduce memory consumption and computation time; explicit integrators multiply with the dense (inverse) mass matrix in every step, which costs O(n^2), also with explicitIntegration.computeMassMatrixInversePerBody (#2398, #2400).", file.solverFile);
 		}
 	}
 	else if (simulationSettings.linearSolverType == LinearSolverType::EigenSparse ||

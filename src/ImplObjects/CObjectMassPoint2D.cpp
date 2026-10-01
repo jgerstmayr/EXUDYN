@@ -86,6 +86,9 @@ void CObjectMassPoint2D::GetOutputVariableBody(OutputVariableType variableType, 
 	case OutputVariableType::RotationMatrix: {
 		Matrix3D m(EXUmath::unitMatrix3D); value.SetVector(9, m.GetDataPointer()); break; }
 	case OutputVariableType::Rotation: { value.SetVector({ 0,0,0 }); break; }
+	case OutputVariableType::PotentialEnergy: //no elastic energy (#2202)
+		CheckEnergyLocalPosition(localPosition, "ObjectMassPoint2D");
+		value.SetVector({ 0. }); break;
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectMassPoint2D");
 		value.SetVector({ 0.5*parameters.physicsMass*GetVelocity(localPosition, configuration).GetL2NormSquared() }); break; }

@@ -2450,7 +2450,55 @@ void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& t
 			bodyFixed = true;
 		}
 
-		if (loadType == LoadType::Force || loadType == LoadType::ForcePerMass)
+		//the connector interface (#2745): the marker projects the load itself - its own functions, or its default through
+		//ComputeMarkerData; a force fixed to a marker without orientation keeps the marker data of the legacy path
+		const bool useInterface = !pyExperimental.connectorInterfaceLegacy
+			&& !(loadType != LoadType::Coordinate && bodyFixed && !(marker->GetType() & Marker::Orientation));
+		if (useInterface)
+		{
+			MarkerTemp& markerTemp = temp.markerTemp[0];
+			Index n;
+			if (loadType == LoadType::Coordinate)
+			{
+				CHECKandTHROW(loadVector1Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 1D load)", ExudynValueError);
+				MarkerCoordinate<Real> kinematics;
+				n = marker->GetKinematicsCoordinate(cSystemData, kinematics, markerTemp);
+				temp.generalizedLoad.SetNumberOfItems(n);
+				temp.generalizedLoad.SetAll(0.);
+				LinkedDataVector generalizedLoad(temp.generalizedLoad, 0, n);
+				marker->AddGeneralizedForceCoordinate(cSystemData, loadVector1D[0], markerTemp, generalizedLoad);
+			}
+			else
+			{
+				CHECKandTHROW(loadVector3Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 3D load)", ExudynValueError);
+				if (loadType == LoadType::Torque || bodyFixed) //the frame of the marker: a torque, or a force fixed to it
+				{
+					MarkerRigid<Real> kinematics;
+					n = marker->GetKinematicsRigid(cSystemData, kinematics, markerTemp);
+					if (bodyFixed) { loadVector3D = kinematics.frame.GetRotation() * loadVector3D; }
+				}
+				else
+				{
+					n = marker->GetODE2Size(cSystemData, markerTemp);
+				}
+				temp.generalizedLoad.SetNumberOfItems(n);
+				temp.generalizedLoad.SetAll(0.);
+				LinkedDataVector generalizedLoad(temp.generalizedLoad, 0, n);
+				if (loadType == LoadType::Torque)
+				{
+					marker->AddGeneralizedForceTorque(cSystemData, Vector3D(0.), loadVector3D, markerTemp, generalizedLoad);
+				}
+				else if (bodyFixed)
+				{
+					marker->AddGeneralizedForceTorque(cSystemData, loadVector3D, Vector3D(0.), markerTemp, generalizedLoad);
+				}
+				else
+				{
+					marker->AddGeneralizedForce(cSystemData, loadVector3D, markerTemp, generalizedLoad);
+				}
+			}
+		}
+		else if (loadType == LoadType::Force || loadType == LoadType::ForcePerMass)
 		{
 			const bool computeJacobian = true;
 			CHECKandTHROW(loadVector3Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 3D load)", ExudynValueError);

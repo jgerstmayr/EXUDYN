@@ -11007,3 +11007,47 @@ as before. Six test models moved within the Newton tolerance (1e-13 to 2e-9: `br
 With this, the eight constraints of RG14.2.9 have their equations once, as templates; the hand-written
 `ComputeJacobianAE` of all eight is used only on the legacy path (`exu.experimental.connectorInterfaceLegacy`) and
 goes with it (RG14.2.13).
+
+<a id="rg9-4-5"></a>
+### RG9.4.5 — a rigid body reports a zero potential energy (2026-10-02, #2202)
+
+Decided by the maintainer: a rigid body reports `PotentialEnergy` = 0 - it may get a built-in gravity later, and then
+its output does not change its meaning. Applied to all bodies without elastic energy: `ObjectMassPoint`,
+`ObjectMassPoint2D`, `ObjectMass1D`, `ObjectRotationalMass1D`, `ObjectRigidBody`, `ObjectRigidBody2D` - the output
+variable declared in the definitions (its description says that gravity and other loads are not part of it and points
+to `LoadPotentialEnergy`) and a case returning 0. Every body now provides both energies, a connector the potential
+energy only. `inspectTest` lists one member more (45).
+
+<a id="rg14-2-7"></a>
+### RG14.2.7 — the loads through the marker functions (2026-10-02, #2745)
+
+`CSystem::ComputeODE2SingleLoad` no longer computes a `MarkerData` with all Jacobians for a load: the marker projects
+the load itself, with the functions of the connector interface - a force by `GetODE2Size` and `AddGeneralizedForce`
+(also the mass-proportional load, through the default of `MarkerBodyMass`), a torque and a force fixed to the body by
+`GetKinematicsRigid` (whose frame turns the load) and `AddGeneralizedForceTorque`, a coordinate load by
+`GetKinematicsCoordinate` and `AddGeneralizedForceCoordinate`. Markers without functions of their own take their
+defaults through `ComputeMarkerData`, as before. A force fixed to a marker without orientation and the legacy switch
+keep the old code. ODE1 loads are unchanged.
+
+Checked: `test_theLoadsOnTheNewPathAreTheLegacyLoads` - forces (also body-fixed), torques (global and body-fixed),
+mass-proportional and coordinate loads on rigid bodies with Euler parameters and Tait-Bryan angles (center of mass
+off the reference point), a mass point, a 2D body and ANCF cable elements - the right-hand side equals the legacy
+one to 1e-14. Measured: 1000 rigid bodies, each with a force at an offset point and a body-fixed torque, 2000 explicit
+Euler steps: 2.8 s legacy, 1.95 s new (**1.45×** in total). References: `heavyTop` (4.3e-12) and
+`mainSystemExtensionsTests` (1.5e-13) moved in the last digits.
+
+<a id="rg4-3"></a>
+### RG4.3 — explicit integration with the dense solver (2026-10-02, #2398, #2400)
+
+Checked again (maintainer: "not a bug"). The explicit integrators factorize the mass matrix once (constant mass
+matrix) or per step and then solve with it; with the dense default that is a dense $n\times n$ product per step,
+$O(n^2)$, and `computeMassMatrixInversePerBody` stores its block inverse in the same dense matrix - so it changes nothing.
+With `EigenSparse` both are linear. That is the documented behavior of the dense solver, not an error; what was
+missing is that a user learns it. A solution inside the current solver (a sparse mass matrix for explicit integrators
+regardless of the setting) would change the linear algebra of every explicit model and its results in the last digits,
+and duplicate the choice the setting already makes.
+
+So: the warning that the solver already gives above 1000 unknowns with a dense solver now says what it means for
+explicit integrators and names `exu.LinearSolverType.EigenSparse`; the description of
+`computeMassMatrixInversePerBody` says that it needs a sparse solver; the manual (*performance*) says both, with the
+factor measured in #2398. Both issues resolved.

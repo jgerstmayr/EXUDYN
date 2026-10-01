@@ -71,6 +71,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | AngularAcceleration | $\LU{0}{\talpha}\cConfig$ | angular acceleration vector of body |
 | AngularAccelerationLocal | $\LU{b}{\talpha}\cConfig = \LU{b0}{\Rot} \LU{0}{\talpha}\cConfig$ | local angular acceleration vector of body |
 | KineticEnergy | $T = \frac{1}{2} m\, \LU{0}{\vv}\tp\LU{0}{\vv} + m\, \LU{0}{\vv}\tp (\LU{0}{\tomega} \times \LU{0b}{\Rot}\LU{b}{\bv_{COM}}) + \frac{1}{2} \LU{b}{\tomega}\tp \LU{b}{\Jm} \LU{b}{\tomega}$ | kinetic energy of the body, with the velocity $\LU{0}{\vv}$ of its reference point and the inertia w.r.t. it; localPosition must be $[0,0,0]$ |
+| PotentialEnergy | $V = 0$ | the body has no elastic energy; gravity and other loads are not part of it (see exudyn.advancedUtilities.LoadPotentialEnergy) - the value stays the same when a body gets a built-in gravity; localPosition must be $[0,0,0]$ |
 
 (description-objectrigidbody)=
 ## Detailed description

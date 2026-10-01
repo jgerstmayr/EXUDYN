@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 192 | 1.12.207 |
+| 1.12 | Metheney | 195 | 1.12.210 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.210** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics.MergeTriangleLists: the edges of g2 are not offset when g1 has no edges (#2769)
+  - description: MergeTriangleLists appends the points of g2 after those of g1, but adds the offset nPoints to the edge indices of g2 only if g1 has edges as well; if g1 has none, the edges of g2 point to the points of g1. Found during revision2026b step RG6.7.7.5 (\#2709), whose edges3 merge offsets always.
+  - **notes:** graphics.MergeTriangleLists: the edges of the second list are offset by the points of the first also when the first has no edges
+  - date resolved: **2026-10-02 01:22**, date raised: 2026-10-01
+- **1.12.209** `CHECK` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected (#2400)
+  - description: the flag is documented as computing the inverse of the mass matrix per body so that explicit integration does not need a global solve; and it is the intended answer to the O(N^2) cost of issue 2398 (it cannot be the default; because it gives wrong results when bodies share nodes - a beam or an FEM body - as its own documentation and the maintainer both state). Measured 2026-09-12 on a chain of independent point masses; with the flag value read back from the settings to confirm it was applied: with the DEFAULT DENSE solver the flag changes nothing. At nMasses=1000 and 200 steps: ExplicitEuler 8.43 s off against 8.57 s on, RK44 20.5 against 20.4, DOPRI5 33.0 against 32.7 - all within noise. Selecting EigenSparse is what removes the cost (0.070 s); and only then is the flag worth a further 10 to 15 percent (0.058 s). So on its own the flag does not do what it promises; the user still has to know to change the linear solver. Either the flag should bypass the solver path; or its documentation should say that it must be combined with a sparse solver. Found while building the large system performance test for revision2026 step R2.10
+  - **notes:** explicitIntegration.computeMassMatrixInversePerBody: documented that it needs a sparse solver (EigenSparse) to reduce the cost of a step
+  - date resolved: **2026-10-02 01:22**, date raised: 2026-09-12
+- **1.12.208** <span class="textred">`BUG`</span> `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` explicit integration costs O(N^2) per step with the default dense linear solver (#2398)
+  - description: measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision2026 step R2.10
+  - **notes:** explicit integration with the dense default solver: the warning above 1000 unknowns says that every step costs O(n^2) and names exu.LinearSolverType.EigenSparse; documented in the manual (performance)
+  - date resolved: **2026-10-02 01:22**, date raised: 2026-09-12
 - **1.12.207** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectJointGeneric: the Jacobian ignores alternativeConstraints (#2772)
   - description: With alternativeConstraints=True and all rotations constrained, ComputeAlgebraicEquations uses the alternative equations (vx0\*(vy1 x vz0) - 1, ...), but ComputeJacobianAE always forms the Jacobian of the default ones (vz0\*vy1, ...). Newton then works with a wrong Jacobian. Found by revision2026b step RG14.2.9.3 (\#2745): the Jacobian by automatic differentiation of the joint's own equations agrees with a numerical one, the hand-written one does not; on the new path the joint uses the AD Jacobian.
   - **notes:** ObjectJointGeneric with alternativeConstraints=True: Newton used the Jacobian of the default rotation constraints; the joint now differentiates its own equations

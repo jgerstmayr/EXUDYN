@@ -217,6 +217,9 @@ void CObjectRigidBody2D::GetOutputVariableBody(OutputVariableType variableType, 
 		value.SetVector(rot.NumberOfColumns()*rot.NumberOfRows(), rot.GetDataPointer()); 
 		break;
 	}
+	case OutputVariableType::PotentialEnergy: //no elastic energy (#2202)
+		CheckEnergyLocalPosition(localPosition, "ObjectRigidBody2D");
+		value.SetVector({ 0. }); break;
 	case OutputVariableType::KineticEnergy: {
 		//T = 1/2 m v.v + m v.(omega x A b) + 1/2 J omega^2, the inertia J w.r.t. the reference point (#2202)
 		CheckEnergyLocalPosition(localPosition, "ObjectRigidBody2D");

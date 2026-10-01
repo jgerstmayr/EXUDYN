@@ -612,7 +612,8 @@ The steps are numbered in the order they were raised and stand here in the order
 **RG4.2** **DONE 2026-09-26** (#2413) — [log](exudynRevisionLog2026b.md#rg4-2) · [plan text](exudynRevisionLog2026b.md#plan-rg4-2) — `ObjectContactConvexRoll.pContact` is a computed value that Python reads.
 
 <a id="rg4-3"></a>
-**RG4.3** *(group RG4; revision2026 step R10.3)* **Explicit integration cost** (#2398, #2400). With the default dense linear solver
+**RG4.3** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg4-3) - a warning and the documentation, no change of the
+    solver. *(group RG4; revision2026 step R10.3)* **Explicit integration cost** (#2398, #2400). With the default dense linear solver
     an explicit step on a chain of point masses costs O(N^2) (168 ms per step at N=2000; 400 times
     faster with `EigenSparse`), and `computeMassMatrixInversePerBody` changes nothing unless a
     sparse solver is selected as well. At least warn at large N; better, avoid the global solve
@@ -990,8 +991,8 @@ This group is that revision and what has to happen before it can start.
       - **RG6.7.7.9** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-7-9) - the maintainer's look at
         `graphicsCurvedShapes.py`: element edges that could not be switched off, seams in the shading; `formatVersion`
         stays 1;
-      - **RG6.7.7.8** *open* (#2769) - `MergeTriangleLists` does not offset the `edges` of `g2` when `g1` has none
-        (found in RG6.7.7.5; the `edges3` merge offsets always).
+      - **RG6.7.7.8** **DONE 2026-10-02** (#2769) - `MergeTriangleLists` did not offset the `edges` of `g2` when `g1`
+        had none; now as for `edges3`, test `testMergeOffsetsTheEdgesOfTheSecondList`.
       - **RG6.7.7.6** **the primitives on quadratic shapes** - `Cylinder`, `Tube`, `Torus`, `SolidOfRevolution`, the
         partial `Sphere`, `Arrow`, ... built from 6-node triangles with `edges3` on their rims. *Compatibility of
         `nTiles`* (maintainer's question): `nTiles` keeps its meaning - **the number of flat segments around** - and
@@ -1213,15 +1214,42 @@ revision (info document D15).
     `JacobianTtimesVector_q` travels in the output matrix, `OwnMarkersOnly` (RG4.10) says what a
     declaration cannot. Single functions per access type, with interfaces that say what they take and
     return, avoid them.
-    - **RG9.3.1** **DONE 2026-09-29, for the maintainer's decision** — the evaluation, in
+    - **RG9.3.1** **DONE 2026-09-29, decided 2026-10-02** — the evaluation, in
       `tmp/evalRG9_3_accessFunctions.md` (not kept in the repository): which objects provide which
       access functions today, which markers and loads call them, and what the best interface is for each.
       Proposed: one virtual function per access type, and the flags derived from the functions a
-      definition declares (with RG9.3.2); before RG14;
+      definition declares (with RG9.3.2); **decided (maintainer, 2026-10-02): as recommended** - option A (single
+      virtual functions) and C (the flags from the definition), RG9.3.4 first; the question whether the Jacobians stay
+      hand-written is evaluated after the split (RG9.3.5);
     - **RG9.3.2** a check that the access function flags an object declares (`ItemAccessFunctionTypes`)
       and the functions its definition declares agree - possibly by deriving the flags from the
       functions;
-    - **RG9.3.3** the migration, object by object.
+    - **RG9.3.3** the migration, object by object - realized in RG9.3.4.
+    - **RG9.3.4** *(maintainer 2026-10-02)* **the split of `GetAccessFunctionBody`**:
+      - **RG9.3.4.1** the class of access functions: in `CObjectBody`, one virtual function per access type with an
+        interface that says what it takes and returns - `GetPositionJacobian(localPosition, jacobian)` (3 x n),
+        `GetRotationJacobian(localPosition, jacobian)`, `GetMassWeightedPositionJacobian(jacobian)`,
+        `GetJacobianTransposedTimesVectorDerivative(localPosition, forceTorque, result)` (the vector as an argument, a
+        return value for "zero"), `IsValidLocalPosition(localPosition, reason)` (the restrictions now found at run time
+        - "on the axis", "at the center of mass" - checked at `Assemble()`); base implementations that raise
+        *"<object> provides no <access>"*; documented in one place; `GetAccessFunctionBody` calls them meanwhile, so
+        the callers do not change yet;
+      - **RG9.3.4.2** the objects, one by one (17 objects and `MarkerBodyCable2DShape`): the switch split into the
+        functions, compared with the old switch on the test models; the commented-out and dead cases removed
+        (`ObjectRotationalMass1D`, `ObjectANCFCable`, `ObjectANCFBeam`); `ObjectBeamGeometricallyExact` provides what it
+        declares or declares nothing (with RG4.8);
+      - **RG9.3.4.3** the callers (the markers, the loads, `GeneralContact`) call the single functions;
+        `GetAccessFunctionBody` and the input-through-output convention of `JacobianTtimesVector_q` go;
+      - **RG9.3.4.4** = RG9.3.2: the flags derived from the functions a definition declares; `OwnMarkersOnly` becomes
+        "declares none"; `SuperElementAlternativeRotationMode` moves to the marker;
+    - **RG9.3.5** *(maintainer 2026-10-02; after RG9.3.4)* **evaluation: hand-written Jacobians or AD of a templated
+      `GetPosition`**. To answer: what changes - a template cannot be virtual, so the object would provide a templated
+      position function plus a virtual wrapper per number type (Real, the AD types of RG14), or the markers call
+      object-specific templates; the impact on the implementation of each object (17), on the markers and on the
+      definitions; what would be gained in performance (the Jacobian by AD costs a pass with n directions against a
+      hand-written matrix today) and in code (the hand-written Jacobians and their derivatives
+      `JacobianTtimesVector_q` disappear); and what RG15 (objects computing from given coordinates) changes about it.
+      The result is a proposal, not a migration.
 
 <a id="rg9-4"></a>
 **RG9.4** *(group RG9; maintainer 2026-09-30)* **Kinetic and potential energy as output variables**
@@ -1274,12 +1302,10 @@ revision (info document D15).
       where the object has one. **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - and
       **RG9.4.4.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3-1) - the potential energy of
       `ObjectKinematicTree`: the springs of the P control, the constant joint forces and the built-in gravity;
-    - **RG9.4.5** what an object **should** provide against what it provides now (with its current
-      parameters): the declaration per object type, and the output variables of RG12.29 for the second -
-      possibly every body provides both, zero for the potential energy of a rigid body, and a connector the
-      potential energy only. *What it provides* is answered since RG12.29 (`mbs.Inspect`, with
-      `PotentialEnergyAvailable()` for the current parameters); open is only the *should*, i.e. whether a rigid
-      body reports a zero potential energy;
+    - **RG9.4.5** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg9-4-5) - what an object **should** provide
+      against what it provides now. **Decided (maintainer, 2026-10-02)**: a rigid body reports a zero potential energy -
+      it may get a built-in gravity later, and then its behavior does not change. So every body provides both,
+      a connector the potential energy only;
     - **RG9.4.6** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - `LoadPotentialEnergy` and
       `CreateLoadEnergySensor` in `exudyn.advancedUtilities`. The energy of a load, for constant and mass-proportional loads: the potential of the force
       through the position of its marker, computed by a user sensor (`LoadEnergyUserSensor`) - a load has no
@@ -2021,7 +2047,7 @@ done.
       [log](exudynRevisionLog2026b.md#rg14-2-6) - the coordinate-marker connectors: L0 `MarkerCoordinate`, L2 with
       the Jacobian by AD, `CoordinateSpringDamper`; `CoordinateSpringDamperExt` (friction states, post Newton) and
       `ContactCoordinate` go with the contact connectors (RG14.2.10);
-    - **RG14.2.7** the loads.
+    - **RG14.2.7** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-7) - the loads.
     - **RG14.2.8** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-8) - the rigid-marker force
       connectors (`RigidBodySpringDamper`, `LinearSpringDamper`, `TorsionalSpringDamper`) on `MarkerRigid` with the
       frame as a homogeneous transformation, forces and torques per marker; their Jacobians stay numerical.
@@ -2079,6 +2105,21 @@ done.
       fixed size instead of a `MarkerData` with two `ResizableMatrix`; the `MarkerData` of the fallback moves to
       the legacy path (a per-thread `MarkerDataStructure` that exists anyway) and disappears with it
       (RG14.2.13). Done marker by marker, together with RG14.2.11; nothing to gain from doing it before.
+    - **RG14.2.16** *(maintainer 2026-10-02)* **`TemporaryComputationData` smaller**: it holds 22 members per thread
+      (measured 2026-10-02), most for the legacy path and its matrices: `markerDataStructure` (connectors, constraints and
+      loads on the legacy path, `GeneralContact`), `localJacobianAE_ODE2/_ODE2_t/_ODE1/_AE` (the hand-written constraint
+      Jacobians and the numerical one), `generalizedLoad`/`loadJacobian` (loads), `localJacobian`/`localJacobian_t`
+      (numerical differentiation, the analytic legacy connectors, contact), `jacobianTemp`, `jacobianODE2Container`,
+      `numericalJacobianf0/f1`, `tempIndex`-`tempIndex4`, `tempValue`/`tempValue2`, and `markerTemp[2]` of the new path.
+      The goal: per thread only what the new path needs - the marker temporaries (after RG14.2.14 small and fixed in
+      size), one local vector and one local matrix with generic names, the sparse buffers - and nothing kept for a
+      single caller. Sub-steps when it starts: (1) the inventory as a table, member by member: which function uses it,
+      on which path; (2) the members used only by the legacy path go with it (RG14.2.13); (3) the rest renamed to
+      generic temporaries and shared. **Blocking**: the legacy path and its switch (RG14.2.13), which waits for the
+      special markers (RG14.2.11), the contact connectors and `GeneralContact` (RG14.2.10, RG14.2.12) and the
+      remaining constraints (`JointRollingDisc`, `ConnectorCoordinateVector`, the sliding joints); the numerical
+      differentiation of objects and connectors, which stays; and the objects' own `ComputeODE2LHS`/mass matrix
+      temporaries until RG15.
     - **RG14.2.15** *(maintainer 2026-10-01; to be considered in all marker and connector work from now on)*
       **Markers with a rotation; the joints' `rotationMarker0/1` deprecated.** A rigid marker gets a local frame:
       **`localHT`** (a homogeneous transformation in the body) as the alternative to `localPosition`, which is
@@ -2142,11 +2183,20 @@ both are analytic), solutions and timers:
   `JointGeneric`: [log](exudynRevisionLog2026b.md#rg14-2-9-3-generic);
   - **RG14.2.9.3.1** **DONE 2026-10-02** (#2772) - the hand-written Jacobian of `JointGeneric` ignored
     `alternativeConstraints`; on the new path the joint has the Jacobian of its own equations;
-- **RG14.2.9.4** decision (a): $\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ in the Newton matrix, off by default. *Correction of the
-  proposal*: it is not "almost free" - the reaction forces $(\partial\gv/\partial\pv_k)\tp\lambdav$ are first derivatives of the
-  equations, so their derivative needs the second ones: an `AutoDiff` of `AutoDiff` (12 x 12 directions for rigid
-  markers) in the equation templates, which they allow as they are; plus the Jacobian derivative of the marker
-  Jacobians as for the connectors. A sub-step of its own, after `JointGeneric`;
+- **RG14.2.9.4** **ON HOLD (maintainer, 2026-10-02)**; it blocks no other step. *What it means*: the Newton matrix
+  of a constrained system contains $\Cm_\qv\tp$ but not the derivative of the reaction forces $\Cm_\qv\tp\lambdav$ by the
+  coordinates, $\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ - the "geometric stiffness" of the joints. It is zero for linear
+  constraints (coordinate constraints, the translations of joints with global equations) and small while the
+  Lagrange multipliers are small; with large reaction forces at large rotations it would improve the convergence of
+  Newton, and it changes no solution, only the iterations. *What it would need*: (1) the second derivatives of the
+  equations - the templates of RG14.2.9 take a nested `AutoDiff<12, AutoDiff<12>>` as they are, at 144 directions per
+  rigid joint, or the derivative of the reaction-force function $(\partial\gv/\partial\pv_k)\tp\lambdav$ by AD, which
+  needs the same; (2) the derivative of the marker Jacobians with $\lambdav$ as the force -
+  `ComputeMarkerDataJacobianDerivative`, as for the connectors (RG14.2.8.1); (3) a `newton` setting, off by default,
+  and the chain into the ODE2-ODE2 block of the Newton matrix; (4) tests of convergence on large-rotation models.
+  *Why on hold*: the gain is limited to models with large reaction forces at large rotations, the cost per joint is
+  high (a 144-direction AD pass), and modified Newton usually hides the missing term; it may not be worth adding in
+  general. Correction of the original proposal: it is not "almost free";
 - `JointRollingDisc`, `ConnectorCoordinateVector` and the special joints go with RG14.2.11, or stay legacy.
 
 *For the maintainer to decide*:
@@ -2214,7 +2264,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models |
-| RG4.3 | #2398, #2400 | bring down the cost of an explicit integration step |
 | RG2.4 | #2748 | the manual GUI check, per release and platform (list and model done) |
 | RG4.12 | #2736 | `NodeGenericAE`: **on hold** - the future owner of a constraint's Lagrange multipliers and of the unknowns of algebraic equations |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
@@ -2222,15 +2271,15 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame - an inconsistent Jacobian to find |
 | RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
-| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges done; open RG6.7.2.1 (superelements), RG6.7.5 (anisotropic tiling), RG6.7.7.6/.7 (the primitives on quadratic shapes), RG6.7.7.8 (#2769) |
+| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges, rows done; open RG6.7.2.1 (superelements), RG6.7.5 (anisotropic tiling), RG6.7.7.6/.7 (the primitives on quadratic shapes) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
-| RG9.3 | #2744 | access functions as single functions of the objects; evaluation first |
-| RG9.4 | #2202 | kinetic and potential energy as output variables, per object type: done for bodies, beams, plates, superelements, spring-dampers; open RG9.4.5 (should a rigid body report zero potential energy) |
+| RG9.3 | #2744 | access functions as single functions of the objects: decided (A + C); next RG9.3.4 (the split, starting with the class of access functions), then RG9.3.5 (evaluation: hand-written Jacobians or AD) |
+| RG9.4 | #2202 | kinetic and potential energy as output variables: done for all bodies, beams, plates, superelements and spring-dampers; RG9.4.3.2 (the contact and special objects) not now |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
-| RG14.2 | #2745 | connectors compute from small marker structures: interface decided, L0-L2, the position-marker connectors and the coordinate spring-damper with Jacobians by AD, the rigid-marker force connectors with their Jacobian by AD, the eight constraints of RG14.2.9.1-.3 done; next RG14.2.9.4 (the term of the reaction forces in the Newton matrix), then RG14.2.7 (the loads) |
+| RG14.2 | #2745 | connectors, constraints and loads compute from small marker structures: the force connectors with Jacobians by AD, the eight constraints of RG14.2.9 and the loads done; RG14.2.9.4 on hold; next RG14.2.11 (special markers), RG14.2.10/.12 (contact), then RG14.2.13 (the legacy path goes), RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
@@ -2258,15 +2307,16 @@ The title of each says what the step **does**; the sentence after it says why it
 1. **Run the integration round of the institute, then release 1.13** (RG2.2, RG1.4). It is
    the only item on this page that needs **other people's time**, so it starts before the
    rest is ready, not after.
-2. **Do the manual GUI check on Windows** (RG2.4, #2748), now with the curved GraphicsData (row K13). It is
+2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Draw the primitives and the meshes curved** (RG6.7.7.6/.7, RG6.7.2.1, #2709). The 6-node triangles and
+3. **Split the access functions** (RG9.3.4, #2744), starting with the class of single functions in `CObjectBody`.
+   Decided, mechanical, and the interface the special markers of RG14.2.11 and the evaluation RG9.3.5 need.
+4. **Draw the primitives and the meshes curved** (RG6.7.7.6/.7, RG6.7.2.1, #2709). The 6-node triangles and
    quadratic edges exist; `Cylinder`, `Torus`, `SolidOfRevolution` and the NGsolve/FFRF meshes do not use them yet,
-   which is where a user sees the difference. #2769 (RG6.7.7.8) is small and goes with it.
-4. **Add the derivative of the reaction forces to the Newton matrix, then move the loads** (RG14.2.9.4, RG14.2.7,
-   #2745). The connectors and the eight constraints of RG14.2.9 are on the interface; RG14.2.9.4 is decision (a),
-   which needs second derivatives, off by default.
-5. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
+   which is where a user sees the difference.
+5. **Bring the rest onto the connector interface, then remove the legacy path** (RG14.2.11, RG14.2.10/.12, RG14.2.13,
+   #2745). Only then can `MarkerTemp` and `TemporaryComputationData` shrink (RG14.2.14, RG14.2.16).
+6. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
-6. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
+7. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
    published documentation that is visibly wrong.

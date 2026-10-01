@@ -280,7 +280,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['Position'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of mass point'},
@@ -296,7 +296,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['Position2D'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of mass point'},
@@ -312,7 +312,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['GenericODE2'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of mass'},
@@ -330,7 +330,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['GenericODE2'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsInertia': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'inertia components [SI:kgm:math:`^2`] of rotor / rotational mass'},
@@ -348,7 +348,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['Position', 'Orientation', 'RigidBody'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'AccelerationLocal', 'AngularAcceleration', 'AngularAccelerationLocal', 'KineticEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'AccelerationLocal', 'AngularAcceleration', 'AngularAccelerationLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of rigid body'},
@@ -367,7 +367,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['Position2D', 'Orientation2D'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'JacobianTtimesVector_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'AccelerationLocal', 'AngularAcceleration', 'AngularAccelerationLocal', 'KineticEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'AccelerationLocal', 'AngularAcceleration', 'AngularAccelerationLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of rigid body'},

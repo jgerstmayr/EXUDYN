@@ -710,7 +710,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDat
 (sec-graphics-inverttriangles)=
 ## Function: InvertTriangles
 
-[`InvertTriangles(graphicsData, invertTriangles = True, invertNormals = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2595)
+[`InvertTriangles(graphicsData, invertTriangles = True, invertNormals = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2588)
 
 - **function description**: invert triangle orientation and triangle normals (or only one of these tasks); can also check consistency of normals
 - **input**:
@@ -723,7 +723,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDat
 (sec-graphics-inconsistenttriangles)=
 ## Function: InconsistentTriangles
 
-[`InconsistentTriangles(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2650)
+[`InconsistentTriangles(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2643)
 
 - **function description**: check consistency of orientation of triangles and vertex (point) normals
 - **input**:
@@ -737,7 +737,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDat
 (sec-graphics-ngsolvemesh2pointsandtrigs)=
 ## Function: NGsolveMesh2PointsAndTrigs
 
-[`NGsolveMesh2PointsAndTrigs(mesh = None, ngMesh = None, meshOrder = 2, scale = 1, addNormals = True, verbose = False, triangles6 = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2681)
+[`NGsolveMesh2PointsAndTrigs(mesh = None, ngMesh = None, meshOrder = 2, scale = 1, addNormals = True, verbose = False, triangles6 = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2674)
 
 - **function description**: convert NGsolve (surface) mesh into (surface) points and triangles; clearly, it requires to have ngsolve installed
 - **input**:
@@ -773,7 +773,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCb
 (sec-graphics-fromstlfileascii)=
 ## Function: FromSTLfileASCII
 
-[`FromSTLfileASCII(fileName, color = [0.,0.,0.,1.], verbose = False, invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2821)
+[`FromSTLfileASCII(fileName, color = [0.,0.,0.,1.], verbose = False, invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2814)
 
 - **function description**: generate graphics data from STL file (text format!) and use color for visualization; this function is slow, use stl binary files with FromSTLfile(...)
 - **input**:
@@ -791,7 +791,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCg
 (sec-graphics-frompymeshlabfile)=
 ## Function: FromPyMeshlabFile
 
-[`FromPyMeshlabFile(fileName, defaultColor = color.defaultBody, invertNormals = False, invertTriangles = False, normalizeNormals = True, useDefaultColor = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2920)
+[`FromPyMeshlabFile(fileName, defaultColor = color.defaultBody, invertNormals = False, invertTriangles = False, normalizeNormals = True, useDefaultColor = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2913)
 
 - **function description**: generate graphics data from any file that can be loaded with PyMeshLab (in particular .obj, .dae and .stl); either use defaultColor or given color in mesh.
 - **input**:
@@ -812,7 +812,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pymeshlabFi
 (sec-graphics-fromstlfile)=
 ## Function: FromSTLfile
 
-[`FromSTLfile(fileName, color = [0.,0.,0.,1.], verbose = False, density = 0., scale = 1., Aoff = [], pOff = [], invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3001)
+[`FromSTLfile(fileName, color = [0.,0.,0.,1.], verbose = False, density = 0., scale = 1., Aoff = [], pOff = [], invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2994)
 
 - **function description**: generate graphics data from STL file, allowing text or binary format; requires numpy-stl to be installed; additionally can scale, rotate and translate
 - **input**:
@@ -833,7 +833,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-graphics-addedgesandsmoothennormals)=
 ## Function: AddEdgesAndSmoothenNormals
 
-[`AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle = 0.25*pi, addEdges = True, smoothNormals = True, roundDigits = 5, triangleColor = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3079)
+[`AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle = 0.25*pi, addEdges = True, smoothNormals = True, roundDigits = 5, triangleColor = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3072)
 
 - **function description**: compute and return GraphicsData with edges and smoothend normals for mesh consisting of points and triangles (e.g., as returned from GraphicsData2PointsAndTrigs); ignores stored normals graphicsData: single GraphicsData object of type TriangleList; existing edges are ignored edgeColor: optional color for edges edgeAngle: angle above which edges are added to geometry addEdges: if True, edges are added in TriangleList of GraphicsData smoothNormals: if True, algorithm tries to smoothen normals at vertices; otherwise, uses triangle normals roundDigits: number of digits, relative to max dimensions of object, at which points are assumed to be equal; too small or too larger number of digits may cause artifacts triangleColor: if triangleColor is set to a RGBA color, this color is used for the new triangle mesh throughout; otherwise, stored colors are unchanged
 - **output**: returns GraphicsData with added edges and smoothed normals
@@ -846,7 +846,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-graphics-exportstl)=
 ## Function: ExportSTL
 
-[`ExportSTL(graphicsData, fileName, solidName = 'ExudynSolid', invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3250)
+[`ExportSTL(graphicsData, fileName, solidName = 'ExudynSolid', invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3243)
 
 - **function description**: export given graphics data (only type TriangleList allowed!) to STL ascii file using fileName
 - **input**:

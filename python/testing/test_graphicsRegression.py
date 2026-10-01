@@ -401,3 +401,13 @@ def testRowsAndFlat():
         data = SC.renderer.GetGraphicsData()
         counts.append((len(data['triangles']['items']), len(data['lines']['items']), float(np.sum(data['triangles']['points']))))
     assert counts[0] == counts[1] == counts[2]
+
+
+def testMergeOffsetsTheEdgesOfTheSecondList():
+    """the edges of g2 point to its points, which follow those of g1 - also if g1 has no edges (#2769)"""
+    g1 = graphics.Brick(size=[1, 1, 1], addEdges=False)
+    g2 = graphics.Brick(centerPoint=[2, 0, 0], size=[1, 1, 1], addEdges=True)
+    merged = graphics.MergeTriangleLists(g1, g2)
+    nPoints1 = len(g1['points'])
+    assert np.array_equal(merged['edges'], np.array(g2['edges']) + nPoints1)
+    assert np.allclose(merged['points'][merged['edges'].flatten()], np.array(g2['points'])[np.array(g2['edges']).flatten()])

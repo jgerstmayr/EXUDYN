@@ -99,6 +99,9 @@ void CObjectRotationalMass1D::GetOutputVariableBody(OutputVariableType variableT
 		value.SetVector(rot.NumberOfColumns()*rot.NumberOfRows(), rot.GetDataPointer()); 
 		break;
 	}
+	case OutputVariableType::PotentialEnergy: //no elastic energy (#2202)
+		CheckEnergyLocalPosition(localPosition, "ObjectRotationalMass1D");
+		value.SetVector({ 0. }); break;
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectRotationalMass1D");
 		value.SetVector({ 0.5*parameters.physicsInertia*GetAngularVelocity(localPosition, configuration).GetL2NormSquared() }); break; }

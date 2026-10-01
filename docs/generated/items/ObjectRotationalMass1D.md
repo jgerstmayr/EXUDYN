@@ -59,6 +59,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 | AngularVelocity | $\LU{0}{\tomega}\cConfig$ | global 3D angular velocity vector of body |
 | AngularVelocityLocal | $\LU{b}{\tomega}\cConfig$ | local (body-fixed) 3D angular velocity vector of body |
 | KineticEnergy | $T = \frac{1}{2} J\, \dot \theta_0^2$ | kinetic energy of the rotor; localPosition must be $[0,0,0]$ |
+| PotentialEnergy | $V = 0$ | the body has no elastic energy; gravity and other loads are not part of it (see exudyn.advancedUtilities.LoadPotentialEnergy) - the value stays the same when a body gets a built-in gravity; localPosition must be $[0,0,0]$ |
 
 (description-objectrotationalmass1d)=
 ## Detailed description

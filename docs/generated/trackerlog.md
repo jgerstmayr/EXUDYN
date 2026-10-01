@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.207.dev1
+- Exudyn version = 1.12.210.dev1
 - last change = 2026-10-02
 - Number of issues = 2773
-- Number of resolved issues = 2521 (207 in current version)
+- Number of resolved issues = 2524 (210 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7613,9 +7613,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `TESTING` <span class="textblue">`LOW`</span> `HIGH EFF` `raised by: Claude-JG` no test checks the member functions an item type must provide (#2498)
   - description: Successor of \#1142. What that issue asked for is now covered for PARAMETERS - parameterConversionTest.py writes a fixed set of probe values into every parameter of every item and compares the outcome with a reference (revision2026 step R4.4.3.1) - and for the linear algebra classes by the lest unit tests of src/Tests/ (step R5.4). What is still not tested per item type is its FUNCTIONS: that every object implements what its type requires (ComputeODE2LHS; GetOutputVariable; GetAccessFunctionTypes; ...) and that the output variables it advertises can actually be read. That needs the definitions database as its source of truth; like the parameter test does.
   - date raised: 2026-09-17
-- `CHECK` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` computeMassMatrixInversePerBody does not reduce cost unless a sparse solver is also selected (#2400)
-  - description: the flag is documented as computing the inverse of the mass matrix per body so that explicit integration does not need a global solve; and it is the intended answer to the O(N^2) cost of issue 2398 (it cannot be the default; because it gives wrong results when bodies share nodes - a beam or an FEM body - as its own documentation and the maintainer both state). Measured 2026-09-12 on a chain of independent point masses; with the flag value read back from the settings to confirm it was applied: with the DEFAULT DENSE solver the flag changes nothing. At nMasses=1000 and 200 steps: ExplicitEuler 8.43 s off against 8.57 s on, RK44 20.5 against 20.4, DOPRI5 33.0 against 32.7 - all within noise. Selecting EigenSparse is what removes the cost (0.070 s); and only then is the flag worth a further 10 to 15 percent (0.058 s). So on its own the flag does not do what it promises; the user still has to know to change the linear solver. Either the flag should bypass the solver path; or its documentation should say that it must be combined with a sparse solver. Found while building the large system performance test for revision2026 step R2.10
-  - date raised: 2026-09-12
 - `FIX` `MEDIUM EFF` MacOS (#2350)
   - description: fix problem in raytracerNOGLFWtest.py on MacOS
   - **remarks:** planned before 1.13 as revision2026b step RG6.8.6 (2026-09-29)
@@ -8325,9 +8322,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` graphics.MergeTriangleLists: the edges of g2 are not offset when g1 has no edges (#2769)
-  - description: MergeTriangleLists appends the points of g2 after those of g1, but adds the offset nPoints to the edge indices of g2 only if g1 has edges as well; if g1 has none, the edges of g2 point to the points of g1. Found during revision2026b step RG6.7.7.5 (\#2709), whose edges3 merge offsets always.
-  - date raised: 2026-10-01
 - <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectANCFBeam: the Newton iteration stalls near 2e-7 in the right-angle frame (#2763)
   - description: rightAngleFrame.py with ObjectANCFBeam (useGeometricallyExact = False), displacement-driven: from load step 7 on, Newton stagnates at a relative error of 1e-7 to 3e-7 (tolerance 1e-8; with 1e-6 the same at 1e-6 to 2e-6) and the static solver fails at 3 % of the drive; the geometrically exact beam converges in 4.7 iterations per step. Found 2026-10-01 in RG4.8.13; an inconsistent Jacobian of the ANCF beam is the first suspect (the original header said: very bad convergence for ANCFBeam).
   - date raised: 2026-09-30
@@ -8335,6 +8329,3 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: Found while writing the MiniExamples (\#2732, revision2026b step RG13.6.1): NodeGenericAE provides only the type GenericAE, and no object requests it, no node marker can be attached to it, and no example, test model or module of the package uses it. A node with algebraic coordinates and no object that writes their equations leaves those coordinates without an equation. Either an object takes it - the description names linear state space systems - or the node is deprecated. revision2026b step RG4.12.
   - **remarks:** ON HOLD (maintainer 2026-09-29): not deprecated; the future owner of the Lagrange multipliers of a constraint (optional node, automatic allocation stays the default) and of the unknowns of purely algebraic equations; design in revision2026b step RG4.12
   - date raised: 2026-09-29
-- <span class="textred">`BUG`</span> <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` explicit integration costs O(N^2) per step with the default dense linear solver (#2398)
-  - description: measured 2026-09-12 on a chain of point masses coupled by coordinate spring dampers; explicit Euler; 200 steps: nMasses 250/500/1000/2000 gives 2.5/10.1/42/168 ms per step - the per step cost quadruples on every doubling; so it is O(N^2) although an explicit step on a chain should be O(N). Setting simulationSettings.linearSolverType to EigenSparse makes it linear and 400 times faster at nMasses=2000 (0.084 s against 33.5 s for 200 steps). The dense default is reasonable for small systems; but nothing warns at large N and explicit integration does not obviously need a linear solver at all; so the trap is invisible. Found while building a large system performance test for revision2026 step R2.10
-  - date raised: 2026-09-12
