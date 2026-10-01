@@ -66,7 +66,7 @@ for i, gData in enumerate(gList):
         exu.Print('  graphicsData type=',gData['type'])
         if gData['type'] == 'TriangleList' and 'normals' in gData:
             nWrong = graphics.InconsistentTriangles(gData)
-            exu.Print('  inconsistent trigs=',nWrong,'of',len(gData['triangles']//3))
+            exu.Print('  inconsistent trigs=',nWrong,'of',len(gData['triangles']))
         
 
 oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= gList)))

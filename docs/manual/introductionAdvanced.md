@@ -120,6 +120,10 @@ the normal $\nv$ then points to the outside region of the mesh or body; the dire
 
 `BodyGraphicsData` contains a list of `GraphicsData` items, i.e. `bodyGraphicsData = [graphicsItem1, graphicsItem2, ...]`. Every single `graphicsItem` may be defined as one of the following structures using a specific 'type'.
 The following sections show the different possible types of `GraphicsData`.
+Points, normals, colors, triangles and edges are given as **rows** - one row per point, color, triangle or edge,
+as a list of lists or a 2D numpy array - and the functions of `exudyn.graphics` return them so; a flat list of the
+same numbers is read as well. A script that indexes such a list as flat reshapes it first, e.g.
+`np.array(g['points']).reshape(-1,3)`, which works for both forms.
 
 ### GraphicsData: Line
 
@@ -128,7 +132,7 @@ GraphicsData `'type' = 'Line'` draws a polygonal line between all specified poin
 | **Name** | **type** | **default value** | **description** |
 |---|---|---|---|
 | color | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency |
-| data | list | mandatory | list of float triples of x,y,z coordinates of the line floats to define RGB-color and transparency |
+| data | array | mandatory | the points of the polygonal line as rows of x,y,z coordinates |
 
  **Example**:
 
@@ -136,11 +140,11 @@ GraphicsData `'type' = 'Line'` draws a polygonal line between all specified poin
   #rectangle with side length 1:
   graphicsData = {'type':'Line',
                   'color': [1,0,0,1], #red
-                  'data': [0,0,0,
-                           1,0,0,
-                           1,1,0,
-                           0,1,0,
-                           0,0,0]}
+                  'data': [[0,0,0],
+                           [1,0,0],
+                           [1,1,0],
+                           [0,1,0],
+                           [0,0,0]]}
 
   vGround=VObjectGround(graphicsData=[graphicsData])
   oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
@@ -213,9 +217,9 @@ GraphicsData `'type' = 'Spheres'` draws $n$ spheres; the OpenGL renderer draws t
 
 | **Name** | **type** | **default value** | **description** |
 |---|---|---|---|
-| points | list | mandatory | list [x0,y0,z0, x1,y1,z1, ...] of $n \times 3$ floats, the centers |
+| points | array | mandatory | the centers as rows [x,y,z], $n \times 3$ |
 | radii | list or float | 0.1 | one radius for all spheres, or a list of $n$ radii |
-| colors | list | [0,0,0,1] | one RGBA color [R,G,B,A] for all spheres, or a list of $n \times 4$ floats; a material index in A as for `TriangleList` |
+| colors | array | [0,0,0,1] | one RGBA color [R,G,B,A] for all spheres, or one row [R,G,B,A] per sphere, $n \times 4$; a material index in A as for `TriangleList` |
 | resolution | int | 8 | number of segments of a half circle when drawn by OpenGL, rounded down to a power of 2 |
 
  **Example**:
@@ -231,12 +235,12 @@ GraphicsData `'type' = 'TriangleList'` draws a mesh with flat triangles for give
 
 | **Name** | **type** | **default value** | **description** |
 |---|---|---|---|
-| points | list | mandatory | list [x0,y0,z0, x1,y1,z1, ...] containing $n \times 3$ floats (grouped x0,y0,z0, x1,y1,z1, ...) to define x,y,z coordinates of points, $n$ being the number of points (=vertices) |
-| colors | list | [] | list [R0,G0,B0,A0, R1,G2,B1,A1, ...] containing $n \times 4$ floats to define RGB-color and transparency A of triangle vertices (points), where $n$ must be according to number of points; if field 'colors' does not exist, default colors will be used |
-| normals | list | [] | list [n0x,n0y,n0z, ...] containing $n \times 3$ floats to define normal direction of triangles per point, where $n$ must be according to number of points; if field 'normals' does not exist, default normals [0,0,0] will be used |
-| triangles | list | [] | list [T0point0, T0point1, T0point2, ...] containing $n_{trig} \times 3$ integers to define point indices of each vertex of the triangles (=connectivity); point indices start with index 0; the maximum index must be $<$ points.size(); mandatory if there are no triangles6 |
-| triangles6 | list | [] | list [c0,c1,c2, m01,m12,m20, ...] containing $n_{trig6} \times 6$ integers, the point indices of 6-node (quadratic, curved) triangles: the corners counter-clockwise seen from outside, then the mid-side nodes between the corners 0-1, 1-2 and 2-0 (`graphics.FromPointsAndTrigs` with 6 indices per row, `graphics.NGsolveMesh2PointsAndTrigs(..., triangles6=True)`); they are kept as they are and split into flat triangles when drawn (OpenGL, raytracer, `SC.renderer.GetGraphicsData()`), with the settings of that moment: an edge subdivided until the angle between the normals of its nodes is below `visualizationSettings.openGL.advanced.curvedTriangleTilingAngle`, at most `curvedTriangleMaxTiling` times; without normals, the normals of the curved geometry are used |
-| edges | list | [] | list [L0point0, L0point1, L1point0, L1point1, ...] containing $n_{lines} \times 2$ integers to define point indices of edges drawn on triangle mesh |
+| points | array | mandatory | the points (vertices) as rows [x,y,z], $n \times 3$, $n$ being the number of points |
+| colors | array | [] | the RGBA color of each point as rows [R,G,B,A], $n \times 4$; if field 'colors' does not exist, default colors will be used |
+| normals | array | [] | the normal at each point as rows [nx,ny,nz], $n \times 3$; if field 'normals' does not exist, the normals of the flat triangles are used, and for 6-node triangles at each point the mean of the normals of the geometry of the triangles sharing it |
+| triangles | array | [] | the triangles as rows of 3 point indices (=connectivity), $n_{trig} \times 3$, counter-clockwise seen from outside; point indices start with 0 and must be $<$ the number of points; mandatory if there are no triangles6 |
+| triangles6 | array | [] | rows [c0,c1,c2, m01,m12,m20] of 6 point indices, $n_{trig6} \times 6$, of 6-node (quadratic, curved) triangles: the corners counter-clockwise seen from outside, then the mid-side nodes between the corners 0-1, 1-2 and 2-0 (`graphics.FromPointsAndTrigs` with 6 indices per row, `graphics.NGsolveMesh2PointsAndTrigs(..., triangles6=True)`); they are kept as they are and split into flat triangles when drawn (OpenGL, raytracer, `SC.renderer.GetGraphicsData()`), with the settings of that moment: an edge subdivided until the angle between the normals of its nodes is below `visualizationSettings.openGL.advanced.curvedTriangleTilingAngle`, at most `curvedTriangleMaxTiling` times |
+| edges | array | [] | the edges drawn on the triangle mesh as rows of 2 point indices, $n_{lines} \times 2$ |
 | edges3 | array | [] | quadratic (curved) edges, rows [p0, p1, m01] of three point indices: the end points, then the mid point - the order of `triangles6`; for feature edges on a surface of 6-node triangles, such as the rim of a cylinder; drawn as the quadratic lines of `Lines`, in `edgeColor` |
 | edgeColor | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency of edges |
 

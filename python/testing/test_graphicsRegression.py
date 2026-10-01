@@ -135,9 +135,10 @@ def testQuadraticShapes():
     #read back as a Lines of shape 'quadratic', which can be given again
     readBack = mbs.GetObject(oGround, addGraphicsData=True)['VgraphicsData']
     assert [(g['type'], g.get('shape')) for g in readBack if g['type'] == 'Lines'] == [('Lines', 'quadratic')]
+    assert all(np.asarray(g["points"]).ndim == 2 for g in readBack if g["type"] in ["Lines", "TriangleList"])  #returned as rows
     mbs.CreateGround(graphicsDataList=readBack)
     #the helpers: two straight edges per quadratic edge
-    assert len(graphics.Triangles6ToTriangles(Triangle6WithEdges3())['edges']) == 12
+    assert len(graphics.Triangles6ToTriangles(Triangle6WithEdges3())['edges']) == 6  #rows
 
 
 def testEveryGraphicsFunction(tmp_path):
@@ -380,3 +381,23 @@ def testThePNGsAreReadAsTheyWereWritten(tmp_path):
     image = (np.arange(4*5*3) % 256).astype(np.uint8).reshape(4, 5, 3)
     graphicsRegression.WritePNG(str(tmp_path / 'image.png'), image)
     assert np.array_equal(graphicsRegression.ReadPNG(str(tmp_path / 'image.png')), image)
+
+
+def testRowsAndFlat():
+    """exudyn.graphics returns GraphicsData as rows; Exudyn reads rows and flat lists alike (#2709)"""
+    brick = graphics.Brick(size=[1, 2, 3], color=[1, 0, 0, 1], addEdges=True)
+    assert brick['points'].shape[1] == 3 and brick['colors'].shape[1] == 4
+    assert brick['triangles'].shape[1] == 3 and brick['edges'].shape[1] == 2
+    spheres = graphics.Spheres(points=[[0, 0, 0], [1, 0, 0]], radii=0.1)
+    assert spheres['points'].shape == (2, 3)
+    flat = {key: (np.asarray(value).flatten() if key in ['points', 'colors', 'normals', 'triangles', 'edges'] else value)
+            for (key, value) in brick.items()}
+    counts = []
+    for g in [brick, flat, graphics.Move(flat, [0, 0, 0])]:  #the helpers read flat lists as well
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem()
+        mbs.CreateGround(graphicsDataList=[g])
+        mbs.Assemble()
+        data = SC.renderer.GetGraphicsData()
+        counts.append((len(data['triangles']['items']), len(data['lines']['items']), float(np.sum(data['triangles']['points']))))
+    assert counts[0] == counts[1] == counts[2]

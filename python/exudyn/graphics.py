@@ -26,6 +26,7 @@ from exudyn.advancedUtilities import IsEmptyList
 #constants and fixed structures:
 import numpy as np #LoadSolutionFile
 import copy as copy #to be able to copy e.g. lists
+import functools
 from math import radians, pi, sin, cos, tan, asin #, acos
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
@@ -116,9 +117,48 @@ class material:
 #a convenient list for creating automatic coloring of objects
 colorList = exudyn.graphicsDataUtilities.color4list
 
+#the columns of the rows of a GraphicsData, per type and key (#2709)
+_rowColumns = {'TriangleList': {'points':3, 'normals':3, 'colors':4, 'triangles':3, 'triangles6':6, 'edges':2, 'edges3':3},
+               'Spheres': {'points':3, 'colors':4},
+               'Lines': {'points':3, 'colors':4},
+               'Line': {'data':3}}
+
+#GraphicsData with its points, normals, colors, triangles and edges as rows (#2709) - the form exudyn.graphics returns; also a list or a dict of GraphicsData; anything else unchanged
+def _Rows(graphicsData):
+    if isinstance(graphicsData, list):
+        return [_Rows(g) for g in graphicsData]
+    if not isinstance(graphicsData, dict):
+        return graphicsData
+    if 'type' not in graphicsData:
+        return {key: _Rows(value) for (key, value) in graphicsData.items()}
+    columns = _rowColumns.get(graphicsData['type'], {})
+    gNew = dict(graphicsData)
+    for (key, n) in columns.items():
+        if key in gNew:
+            gNew[key] = np.asarray(gNew[key]).reshape((-1, n))
+    return gNew
+
+#GraphicsData with flat lists, as the functions of exudyn.graphics work on them inside; reads rows and flat
+def _Flat(graphicsData):
+    if not isinstance(graphicsData, dict) or 'type' not in graphicsData:
+        return graphicsData
+    gNew = dict(graphicsData)
+    for key in _rowColumns.get(graphicsData['type'], {}):
+        if key in gNew:
+            gNew[key] = np.asarray(gNew[key]).flatten()
+    return gNew
+
+#the GraphicsData a function of exudyn.graphics returns is given as rows (#2709)
+def _ReturnsRows(function):
+    @functools.wraps(function)
+    def WithRows(*args, **kwargs):
+        return _Rows(function(*args, **kwargs))
+    return WithRows
+
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@_ReturnsRows
 def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
            addEdges = False, edgeColor=color.black, addFaces=True,
            majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi, innerRadius = None):
@@ -151,6 +191,7 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
                                majorAngleMax=majorAngleMax, innerRadius=innerRadius)
 
 
+@_ReturnsRows
 def Spheres(points, radii=0.1, colors=[0.,0.,0.,1.], nTiles=8):
     """generate graphics data for many spheres at once, as one item of the type 'Spheres' - for particles or point
     clouds; the renderer draws each as a sphere, the raytracer intersects them exactly
@@ -175,6 +216,7 @@ def Spheres(points, radii=0.1, colors=[0.,0.,0.,1.], nTiles=8):
     return {'type':'Spheres', 'points':points.flatten(), 'radii':radii, 'colors':colors, 'resolution':int(nTiles)}
 
 
+@_ReturnsRows
 def Triangles6ToTriangles(graphicsData):
     """convert the 6-node triangles (key 'triangles6') of a TriangleList into 4 flat triangles each, on the same points,
     and its quadratic edges (key 'edges3') into 2 straight edges each, for the functions that need flat triangles (STL
@@ -186,6 +228,7 @@ def Triangles6ToTriangles(graphicsData):
     Returns:
         a graphicsData dictionary of the type 'TriangleList' with 'triangles' only, or graphicsData itself if it has no 'triangles6'
     """
+    graphicsData = _Flat(graphicsData)
     if graphicsData['type'] != 'TriangleList' or ('triangles6' not in graphicsData and 'edges3' not in graphicsData):
         return graphicsData
     gNew = {key: value for (key, value) in graphicsData.items() if key not in ['triangles6', 'edges3']}
@@ -201,6 +244,7 @@ def Triangles6ToTriangles(graphicsData):
     return gNew
 
 
+@_ReturnsRows
 def SpheresToTriangleList(graphicsData):
     """convert graphics data of the type 'Spheres' into a 'TriangleList' with the triangles of graphics.Sphere, for
     the functions that need triangles (merging, STL export, ...); other types are returned unchanged
@@ -211,6 +255,7 @@ def SpheresToTriangleList(graphicsData):
     Returns:
         a graphicsData dictionary of the type 'TriangleList', or graphicsData itself if it is not of the type 'Spheres'
     """
+    graphicsData = _Flat(graphicsData)
     if graphicsData['type'] != 'Spheres':
         return graphicsData
     points = np.array(graphicsData['points'], dtype=float).reshape((-1, 3))
@@ -445,6 +490,7 @@ def _SphereTriangleList(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles =
 
 
 #************************************************
+@_ReturnsRows
 def Lines(pList, color=[0.,0.,0.,1.], shape='linear'):
     """generate graphics data for a polyline, given by list of points and color; transforms to GraphicsData dictionary
 
@@ -523,6 +569,7 @@ def Text(point=[0,0,0], text='', color=[0.,0.,0.,1.], fontSize=0., offset=[0.,0.
             'offset':offset}
 
 
+@_ReturnsRows
 def Cuboid(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1], addNormals=False, addEdges=False, edgeColor=color.black, addFaces=True): 
     """generate graphics data for general block with endpoints, according to given vertex definition
 
@@ -622,6 +669,7 @@ def Cuboid(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1], addNormals=False, ad
     return data
 
 
+@_ReturnsRows
 def BrickXYZ(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.], addNormals=False, addEdges=False, edgeColor=color.black, addFaces=True): 
     """generate graphics data for orthogonal 3D block with min and max dimensions
 
@@ -645,6 +693,7 @@ def BrickXYZ(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.], addNormals
                   edgeColor=edgeColor, addFaces=addFaces)
 
 
+@_ReturnsRows
 def Brick(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0.,0.,0.,1.], addNormals=False, addEdges=False, 
           edgeColor=color.black, addFaces=True, roundness=0, nTiles=12): 
     """generate graphics data for orthogonal 3D box with center point and size; using roundness=1, it draws an ellipsoid inside the box and in case 0 < roundness < 1, it draws a body blended between box and ellipsoid
@@ -760,6 +809,7 @@ def Brick(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0.,0.,0.,1.], addNorma
         return data
 
 
+@_ReturnsRows
 def Cylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTiles = 16, 
              radiusInner = None, angleRange=[0,2*pi], lastFace = True, cutPlain = True, 
              addEdges=False, edgeColor=color.black, addFaces=True, **kwargs):  
@@ -975,6 +1025,7 @@ def Cylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTil
 
     return data
 
+@_ReturnsRows
 def Tube(points, axes, radius=0.1, color=[0.,0.,0.,1.], nTiles = 16):  
     """generate graphics data for a tube with given list of points and axes, radius and color; nTiles gives the number of tiles (minimum=3)
 
@@ -1072,6 +1123,7 @@ def Tube(points, axes, radius=0.1, color=[0.,0.,0.,1.], nTiles = 16):
     return data
 
 
+@_ReturnsRows
 def Torus(point, axis, radiusMajor=0.5, radiusMinor=0.1, color=[0., 0., 0., 1.], 
           nTilesMajor=24, nTilesMinor=12, minorAngleStart=0, minorAngleEnd=2*np.pi, 
           smoothNormals=True, invert=False):
@@ -1170,6 +1222,7 @@ def Torus(point, axis, radiusMajor=0.5, radiusMinor=0.1, color=[0., 0., 0., 1.],
 
 
 
+@_ReturnsRows
 def RigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1], 
                           thickness=0.05, width=[0.05,0.05], color=[0.,0.,0.,1.], nTiles = 16):
     """generate graphics data for a planar Link between the two joint positions, having two axes
@@ -1212,6 +1265,7 @@ def RigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
         data2 = Cylinder(list(np.array(p1)-0.5*width[1]*np.array(a1)), 
                                      list(width[1]*np.array(a1)), radius[1], color, nTiles)
 
+    (data0, data1, data2) = (_Flat(data0), _Flat(data1), _Flat(data2))
     #now merge lists, including appropriate indices of triangle points!
     np0 = int(len(data0['points'])/3) #number of points of first point list ==> this is the offset for next list
     np1 = np0 + int(len(data1['points'])/3) #number of points of first point list ==> this is the offset for next list
@@ -1236,6 +1290,7 @@ def RigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #   unused argument yet: contourNormals: if provided as list of 2D vectors, they prescribe the normals to the contour for smooth visualization; otherwise, contour is drawn flat
+@_ReturnsRows
 def SolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, smoothContour = False, 
                       addEdges = False, edgeColor=color.black, addFaces=True, smoothingAngle=2*np.pi, **kwargs):  
     """generate graphics data for a solid of revolution with given 3D point and axis, 2D point list for contour, (optional)2D normals and color;
@@ -1412,6 +1467,7 @@ def SolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, s
     return data
 
 
+@_ReturnsRows
 def Arrow(pAxis, vAxis, radius, color=[0.,0.,0.,1.], headFactor = 2, headStretch = 4, nTiles = 12):  
     """generate graphics data for an arrow with given origin, axis, shaft radius, optional size factors for head and color; nTiles gives the number of tiles (minimum=3)
 
@@ -1433,6 +1489,7 @@ def Arrow(pAxis, vAxis, radius, color=[0.,0.,0.,1.], headFactor = 2, headStretch
     contour=[[0,0],[0,radius],[xHead,radius],[xHead,rHead],[L,0]]
     return SolidOfRevolution(pAxis=pAxis, vAxis=vAxis, contour=contour, color=color, nTiles=nTiles)
 
+@_ReturnsRows
 def Basis(origin=[0,0,0], rotationMatrix = np.eye(3), length = 1, colors=[color.red, color.green, color.blue], 
                       headFactor = 2, headStretch = 4, nTiles = 12, **kwargs):  
     """generate graphics data for three arrows representing an orthogonal basis with point of origin, shaft radius, optional size factors for head and colors; nTiles gives the number of tiles (minimum=3)
@@ -1473,6 +1530,7 @@ def Basis(origin=[0,0,0], rotationMatrix = np.eye(3), length = 1, colors=[color.
         label3 = Text(p+A@[0,0,length], labels[2])
         return [trigList, label1, label2, label3]
 
+@_ReturnsRows
 def Frame(HT=np.eye(4), length = 1, colors=[color.red, color.green, color.blue], 
                       headFactor = 2, headStretch = 4, nTiles = 12, **kwargs):  
     """generate graphics data for frame (similar to Basis), showing three arrows representing an orthogonal basis for the homogeneous transformation HT; optional shaft radius, optional size factors for head and colors; nTiles gives the number of tiles (minimum=3)
@@ -1504,6 +1562,7 @@ def Frame(HT=np.eye(4), length = 1, colors=[color.red, color.green, color.blue],
     return MergeTriangleLists(MergeTriangleLists(g1,g2),g3)
 
 
+@_ReturnsRows
 def Quad(pList, color=[0.,0.,0.,1.], **kwargs): 
     """generate graphics data for simple quad with option for checkerboard pattern;
     points are arranged counter-clock-wise, e.g.: p0=[0,0,0], p1=[1,0,0], p2=[1,1,0], p3=[0,1,0]
@@ -1582,6 +1641,7 @@ def Quad(pList, color=[0.,0.,0.,1.], **kwargs):
     return data
 
 
+@_ReturnsRows
 def CheckerBoard(point=[0,0,0], normal=[0,0,1], size = 1,
                              color=color.lightgrey, alternatingColor=color.lightgrey2, nTiles=10, **kwargs):
     """function to generate checkerboard background;
@@ -1630,6 +1690,7 @@ def CheckerBoard(point=[0,0,0], normal=[0,0,1], size = 1,
                 nTiles=nTiles, nTilesY=nTiles2)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@_ReturnsRows
 def SolidExtrusion(vertices, segments, height, 
                    rot = np.diag([1,1,1]), pOff = [0,0,0], 
                    relRot = np.diag([1,1,1]), relOff = [0,0,0], 
@@ -1777,6 +1838,7 @@ def SolidExtrusion(vertices, segments, height,
     return data
 
 
+@_ReturnsRows
 def LinkedCylinders(point0, point1, axisCylinder, radius0, radius1,
                     radiusInner0=0, radiusInner1=0, nTiles=32, color=[0,0,0,1],
                     addEdges=0, edgeColor=color.black, addFaces=True, smoothNormals=True,
@@ -1913,6 +1975,7 @@ def LinkedCylinders(point0, point1, axisCylinder, radius0, radius1,
 
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@_ReturnsRows
 def BallBearingRings(axis, outsideDiameter, boreDiameter, width, 
                      radiusCage, 
                      innerRingShoulderRadius, outerRingShoulderRadius, 
@@ -2018,6 +2081,7 @@ def BallBearingRings(axis, outsideDiameter, boreDiameter, width,
     return graphicsData
 
 
+@_ReturnsRows
 def InvoluteGear(involuteGear, width, 
                  centerPoint=np.zeros(3), rotationMatrix = np.eye(3), 
                  helixAngleDeg=0, radius=0, relativeAngleOffset=0, 
@@ -2079,6 +2143,7 @@ def InvoluteGear(involuteGear, width,
 
 
 
+@_ReturnsRows
 def ToothedRack(module, nTeeth, width, toothHeight, rackBaseHeight,
                 pressureAngleDeg=20,
                 centerPoint=np.zeros(3), rotationMatrix = np.eye(3), 
@@ -2244,6 +2309,7 @@ def BoundingBox(graphicsData):
         raise ValueError("BoundingBox: graphicsData must be dict or list")
 
 
+@_ReturnsRows
 def FromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.], normals=None):
     """convert triangles and points as returned from graphics.ToPointsAndTrigs(...) to GraphicsData; additionally, normals and color(s) can be provided
 
@@ -2294,7 +2360,7 @@ def ToPointsAndTrigs(g):
     Returns:
         returns [points, triangles], with points as list of np.array with 3 floats per point and triangles as a list of np.array with 3 int per triangle (0-based indices to points)
     """
-    g = Triangles6ToTriangles(SpheresToTriangleList(g))
+    g = _Flat(Triangles6ToTriangles(SpheresToTriangleList(g)))
     if g['type'] == 'TriangleList':
         nPoints=int(len(g['points'])/3)
         points = [np.zeros(3)]*nPoints
@@ -2313,6 +2379,7 @@ def ToPointsAndTrigs(g):
 
 
 #************************************************
+@_ReturnsRows
 def Transform(graphicsData, translation=None, rotation=None, scale=1,
               normalizeNormals=False, invertNormals=False, invertTriangles=False,
               warn=True):
@@ -2334,6 +2401,7 @@ def Transform(graphicsData, translation=None, rotation=None, scale=1,
         the rigid body transformation corresponds to HomogeneousTransformation(rotation, translation), transforming original coordinates v into vNew = translation + rotation @ v
     """
     
+    graphicsData = _Flat(graphicsData)
     if translation is None:
         translation = [0,0,0]
     if rotation is None:
@@ -2441,6 +2509,7 @@ def Transform(graphicsData, translation=None, rotation=None, scale=1,
 
 
 #************************************************
+@_ReturnsRows
 def Move(g, pOff, Aoff=None):
     """add rigid body transformation and possible scaling to GraphicsData, using position offset (global) pOff (list or np.array) and rotation Aoff (transforms local to global coordinates; list of lists or np.array)
 
@@ -2458,6 +2527,7 @@ def Move(g, pOff, Aoff=None):
     return Transform(graphicsData=g, translation=pOff, rotation=Aoff)
 
 #************************************************
+@_ReturnsRows
 def MergeTriangleLists(g1,g2):
     """merge 2 different graphics data with triangle lists
 
@@ -2467,8 +2537,8 @@ def MergeTriangleLists(g1,g2):
     Returns:
         one graphicsData dictionary with single triangle lists and compatible points and normals, to be used in visualization of EXUDYN objects; edges are merged; edgeColor is taken from graphicsData g1
     """
-    g1 = SpheresToTriangleList(g1)
-    g2 = SpheresToTriangleList(g2)
+    g1 = _Flat(SpheresToTriangleList(g1))
+    g2 = _Flat(SpheresToTriangleList(g2))
     nPoints = int(len(g1['points'])/3) #number of points in g1
     useNormals = False
     if 'normals' in g1 and 'normals' in g2:
@@ -2521,6 +2591,7 @@ def MergeTriangleLists(g1,g2):
     return data
 
 #************************************************
+@_ReturnsRows
 def InvertTriangles(graphicsData, invertTriangles=True, invertNormals=True):
     """invert triangle orientation and triangle normals (or only one of these tasks); can also check consistency of normals
 
@@ -2532,7 +2603,7 @@ def InvertTriangles(graphicsData, invertTriangles=True, invertNormals=True):
     Returns:
         returns new graphicsData (copy) with modified triangles and normals
     """
-    graphicsData = SpheresToTriangleList(graphicsData)
+    graphicsData = _Flat(SpheresToTriangleList(graphicsData))
     if graphicsData['type'] != 'TriangleList':
         raise ValueError('InvertTriangles only works for graphicsData of TriangleList type')
     if 'normals' not in graphicsData and invertNormals:
@@ -2585,7 +2656,7 @@ def InconsistentTriangles(graphicsData):
     Returns:
         returns number of cases in which triangle normals and vertex normals are inconsistent (scalar product is negative)
     """
-    graphicsData = Triangles6ToTriangles(SpheresToTriangleList(graphicsData))
+    graphicsData = _Flat(Triangles6ToTriangles(SpheresToTriangleList(graphicsData)))
     if graphicsData['type'] != 'TriangleList':
         raise ValueError('InconsistentTriangles only works for graphicsData of TriangleList type')
     if 'normals' not in graphicsData:
@@ -2746,6 +2817,7 @@ def NGsolveMesh2PointsAndTrigs(mesh=None, ngMesh=None, meshOrder=2, scale=1, add
 
 
 
+@_ReturnsRows
 def FromSTLfileASCII(fileName, color=[0.,0.,0.,1.], verbose=False, invertNormals=True, invertTriangles=True): 
     """generate graphics data from STL file (text format!) and use color for visualization; this function is slow, use stl binary files with FromSTLfile(...)
 
@@ -2844,6 +2916,7 @@ def FromSTLfileASCII(fileName, color=[0.,0.,0.,1.], verbose=False, invertNormals
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++
+@_ReturnsRows
 def FromPyMeshlabFile(fileName, defaultColor=color.defaultBody,
                       invertNormals=False, invertTriangles=False, normalizeNormals=True,
                       useDefaultColor=False, verbose=False):
@@ -2924,6 +2997,7 @@ def FromPyMeshlabFile(fileName, defaultColor=color.defaultBody,
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@_ReturnsRows
 def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=1., Aoff=[], pOff=[], invertNormals=True, invertTriangles=True):
     """generate graphics data from STL file, allowing text or binary format; requires numpy-stl to be installed; additionally can scale, rotate and translate
 
@@ -3001,6 +3075,7 @@ def FromSTLfile(fileName, color=[0.,0.,0.,1.], verbose=False, density=0., scale=
         return [dictGraphics, dictData]
 
 
+@_ReturnsRows
 def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle = 0.25*pi,
                                addEdges=True, smoothNormals=True, roundDigits=5, 
                                triangleColor = []):
@@ -3019,6 +3094,7 @@ def AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle 
     Note:
         this function is suitable for STL import; it assumes that all colors in graphicsData are the same and only takes the first color!
     """
+    graphicsData = _Flat(graphicsData)
     from math import acos # ,sin, cos
 
     oldColors = copy.copy(graphicsData['colors']) #2022-12-06: accepts now all colors; graphicsData['colors'][0:4]    
@@ -3181,7 +3257,7 @@ def ExportSTL(graphicsData, fileName, solidName='ExudynSolid', invertNormals=Tru
         invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
         invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
     """
-    graphicsData = Triangles6ToTriangles(SpheresToTriangleList(graphicsData))
+    graphicsData = _Flat(Triangles6ToTriangles(SpheresToTriangleList(graphicsData)))
     if graphicsData['type'] != 'TriangleList':
         raise ValueError('ExportSTL: invalid graphics data type; only TriangleList and Spheres allowed')
         

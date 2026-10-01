@@ -153,7 +153,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`particleClu
 (sec-graphicsdatautilities-graphicsdataorthocubelines)=
 ## Function: GraphicsDataOrthoCubeLines
 
-[`GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color = [0.,0.,0.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L479)
+[`GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color = [0.,0.,0.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L480)
 
 - **function description**: generate graphics data for orthogonal block drawn with lines
 - **input**: minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values

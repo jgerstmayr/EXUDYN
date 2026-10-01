@@ -941,7 +941,7 @@ This group is that revision and what has to happen before it can start.
       shared edge is split alike on both sides and no cracks appear; the isotropic split of today has that problem
       already (one $n$ per triangle) and would lose it. A cylinder of 6-node triangles then needs $2n$ instead of
       $n^2$ flat triangles per element.
-    - **RG6.7.6** *decided (maintainer 2026-10-01): switched for 1.13* - **`TriangleList` and `Spheres` as $(n\times 3)$ arrays**: points,
+    - **RG6.7.6** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-6) - *decided (maintainer 2026-10-01): switched for 1.13* - **`TriangleList` and `Spheres` as $(n\times 3)$ arrays**: points,
       normals, triangles (and $(n\times 4)$ colors, $(n\times 6)$ triangles6) as rows, not flat lists. Measured
       2026-10-01: the C++ reader (`PyWriteBodyGraphicsDataList`) casts each key to a flat `std::vector<float>` and
       **rejects** a nested list or a 2D array today, so the flat form is all there is. Sub-steps:
@@ -2207,7 +2207,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame - an inconsistent Jacobian to find |
 | RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
-| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges done; open RG6.7.2.1 (superelements), RG6.7.5 (anisotropic tiling), RG6.7.6 (rows), RG6.7.7.6/.7 (the primitives on quadratic shapes), RG6.7.7.8 (#2769) |
+| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges done; open RG6.7.2.1 (superelements), RG6.7.5 (anisotropic tiling), RG6.7.7.6/.7 (the primitives on quadratic shapes), RG6.7.7.8 (#2769) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG9.3 | #2744 | access functions as single functions of the objects; evaluation first |
 | RG9.4 | #2202 | kinetic and potential energy as output variables, per object type: done for bodies, beams, plates, superelements, spring-dampers; open RG9.4.5 (should a rigid body report zero potential energy) |
@@ -2245,14 +2245,13 @@ The title of each says what the step **does**; the sentence after it says why it
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748), now with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Switch GraphicsData to rows** (RG6.7.6, #2709). Decided for 1.13, and it changes what scripts get back, so
-   it has to be in before the release and not after.
-4. **Draw the primitives and the meshes curved** (RG6.7.7.6/.7, RG6.7.2.1, #2709). The 6-node triangles and
+3. **Draw the primitives and the meshes curved** (RG6.7.7.6/.7, RG6.7.2.1, #2709). The 6-node triangles and
    quadratic edges exist; `Cylinder`, `Torus`, `SolidOfRevolution` and the NGsolve/FFRF meshes do not use them yet,
    which is where a user sees the difference. #2769 (RG6.7.7.8) is small and goes with it.
-5. **Decide RG14.2.8.1 and RG14.2.9** (#2745). Both are written out and wait for the maintainer; the connector
-   migration stops there until then.
-6. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
+4. **Compute the Jacobian of the rigid-marker connectors by AD, then move the joints onto L0/L1/L2**
+   (RG14.2.8.1, RG14.2.9, #2745), both decided as proposed (maintainer 2026-10-01); the rigid joints of RG14.2.9
+   need the rotation directions of RG14.2.8.1, so it comes first.
+5. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
-7. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
+6. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
    published documentation that is visibly wrong.

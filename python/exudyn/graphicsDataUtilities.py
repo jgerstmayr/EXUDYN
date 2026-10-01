@@ -473,6 +473,7 @@ def GraphicsDataRectangle(xMin, yMin, xMax, yMax, color=[0.,0.,0.,1.]):
     rect = [xMin, yMin,xMax,yMax]
     dataRect = {'type':'Line', 'color': list(color), 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]}
 
+    dataRect['data'] = np.array(dataRect['data']).reshape((-1, 3)) #rows of x,y,z (#2709)
     return dataRect
 
 #************************************************
@@ -494,6 +495,7 @@ def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,
                                                        xMax,yMin,zMax, xMax,yMax,zMax, xMax,yMin,zMax, xMin,yMin,zMax, xMin,yMax,zMax, xMin,yMin,zMax, 
                                                        xMin,yMin,zMin, xMin,yMax,zMin, xMax,yMax,zMin, xMax,yMax,zMax, xMin,yMax,zMax, xMin,yMax,zMin]}
 
+    dataRect['data'] = np.array(dataRect['data']).reshape((-1, 3)) #rows of x,y,z (#2709)
     return dataRect
 
 

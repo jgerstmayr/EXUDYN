@@ -122,7 +122,22 @@ deleted; one that needs a head mounted display stays on Exudyn 1.11.
 without a render window; `exudyn.plot.PlotImage` draws what it returns, so a vector figure of a model
 is `PlotImage(SC.renderer.GetGraphicsData(), fileName='model.pdf')`.
 
+**GraphicsData comes as rows.** The functions of `exudyn.graphics` return points, normals, colors,
+triangles and edges as 2D numpy arrays - one row per point, color or triangle - and so does
+`mbs.GetObject(..., addGraphicsData=True)`; they had been flat lists. Given to Exudyn, both forms are
+read. A script that indexes a returned list as flat, `g['points'][3*i+1]`, reshapes it first:
+`np.array(g['points']).reshape(-1,3)[i,1]` works for both. `graphics.Sphere` returns the new type
+`Spheres` for a whole sphere instead of a `TriangleList`; the functions of `exudyn.graphics` that need
+triangles convert it (#2709).
+
 ### What is new to use
+
+**Curved shapes in GraphicsData.** 6-node (quadratic) triangles - the key `triangles6` of a
+`TriangleList` - quadratic lines (`Lines` with `shape` `'quadratic'`) and quadratic edges (`edges3`)
+are drawn curved: the renderers split them when they draw, as fine as
+`visualizationSettings.openGL.advanced.curvedTriangleTilingAngle` asks, and a change of it shows at
+once. The type `Spheres` draws many spheres at once, and the raytracer intersects them exactly.
+`python/Examples/graphicsCurvedShapes.py` shows them all (#2709).
 
 **A command line for the installed package**: `python -m exudyn info` prints the version, where
 the package is installed, which compiled module is loaded and which optional packages are present

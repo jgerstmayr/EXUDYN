@@ -10836,3 +10836,30 @@ The maintainer ran `graphicsCurvedShapes.py` (OpenGL and raytracer):
 `GetGraphicsData()` keeps **`formatVersion` 1** (maintainer: no change of the version before anything is on GitHub;
 there are no files of the earlier form) - the entry RG6.7.7 above says 2; the keys `triangles6` and `lines3` are part of
 version 1.
+
+<a id="rg6-7-6"></a>
+### RG6.7.6 — GraphicsData as rows (2026-10-01, #2709)
+
+Decided by the maintainer for 1.13 (not 2.0).
+- **RG6.7.6.1, the reader**: every list of numbers of a GraphicsData goes through `PyReadNumbers<T>`
+  (`VisualizationSystemContainer.cpp`, `py::array_t<T>::ensure`): flat, a list of lists, a 1D or 2D numpy array; a
+  ragged list is an error. That covers `TriangleList` (points, colors, normals, triangles, triangles6, edges, edges3,
+  edgeColor), `Spheres` (points, radii, colors), `Lines`, `Line` (`data`, `color`), `Circle` and `Text`. Twelve
+  places had cast through `py::list` to a flat `std::vector`, which rejected rows.
+- **RG6.7.6.4, the read-back** (`mbs.GetObject(..., addGraphicsData=True)`) returns rows: `Rows2NumPy(values, columns)`.
+- **RG6.7.6.3, `exudyn.graphics`**: the functions that return GraphicsData carry the decorator `_ReturnsRows`, which
+  reshapes the keys by the table `_rowColumns` (type → key → columns), also in a list or a dict of GraphicsData
+  (`Basis` with labels, `BallBearingRings`, `FromSTLfile`); the functions that read GraphicsData call `_Flat` first and
+  work on flat lists inside as before (`Transform`, `MergeTriangleLists`, `InvertTriangles`, `InconsistentTriangles`,
+  `ToPointsAndTrigs`, `ExportSTL`, `Triangles6ToTriangles`, `SpheresToTriangleList`, `AddEdgesAndSmoothenNormals`,
+  `RigidLink` on its parts). So the change is at the boundary and not in the 3000 lines between; a decorator rather
+  than a reshape at each of some 30 `return`s, several of them multi-line. `graphicsDataUtilities`: the two deprecated
+  `Line` functions return rows.
+- **RG6.7.6.2/.5, the documentation**: the manual's *GraphicsData* tables and the `Line` example show rows, with one
+  paragraph on reading both and reshaping; `revisions.md` (1.12, *What can break a script*) says what changes for a
+  script, and *What is new to use* names the curved shapes.
+
+Checked: `testRowsAndFlat` (a brick returned as rows; the same brick flat, and moved from flat, gives the same drawing
+elements), the read-back as rows in `testQuadraticShapes`; the test suite, pytest and all 186 examples (the one known
+failure, `rendererNOGLFWexample`). In the repository, only `graphicsDataExample.py` read a returned list by length
+(`len(g['triangles'])//3`, now the number of rows).
