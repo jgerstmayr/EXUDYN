@@ -10709,3 +10709,35 @@ outside for the others); both now return false for an index outside the triangle
 **References re-recorded**: `raytracerNOGLFWtest.py` 0.28161678591179 (before 0.28151013387134: the node of its
 rigid body is a sphere in the image now); `graphicsReferences/graphicsFunctions.json` (the `Sphere` case is one
 sphere instead of 256 triangles). All 152 examples run (`exudev examples`).
+
+<a id="rg6-7-2"></a>
+### RG6.7.2 — the 6-node triangle (2026-10-01, #2709)
+
+As decided: `GraphicsData` (C++) has its own structure, **`GLTriangle6`** - six points, normals and colors, the points
+duplicated per triangle as for `GLTriangle`, `hasNormals`, `isFiniteElement`; `BodyGraphicsData` and `GraphicsData`
+each have a list `glTriangles6`. The key **`triangles6`** of a `TriangleList` maps to it: six indices per triangle,
+corners counter-clockwise seen from outside, then the mid-side nodes 01, 12, 20; normals optional; `triangles` is no
+longer mandatory when there is `triangles6`. The read-back (`mbs.GetObject(..., addGraphicsData=True)`) returns them in a
+`TriangleList` of their own with `triangles6`.
+
+**The split**: `EXUvis::AddTriangle6` adds the triangle to `GraphicsData.glTriangles6` and its split into flat
+triangles to `glTriangles`, which is what OpenGL, the raytracer and `GetGraphicsData()` draw and return. The number of
+subdivisions per edge $n$ = the largest angle between the normals of the six nodes (given, or of the geometry: the cross
+product of the derivatives of the quadratic map) divided by `openGL.advanced.curvedTriangleTilingAngle` (degrees,
+default 3; 0 = no split), at most `curvedTriangleMaxTiling` (default 5): $n^2$ flat triangles; points, normals (given
+normals interpolated quadratically and normalized, else those of the geometry) and colors (RGB clamped; the alpha, which
+may carry a material index, of node 0) from the quadratic shape functions. The angle is computed as
+$\mathrm{atan2}(|\nv_i\times\nv_j|, \nv_i\cdot\nv_j)$, exact and cheap. The settings reach the split at every graphics
+update (`EXUvis::SetCurvedTriangleTiling` in `VisualizationSystem::UpdateGraphicsData`). Checked: a 20° patch of the unit
+sphere gives the radius to $2\cdot10^{-4}$ and the geometric normals to $5\cdot10^{-3}$ (given normals: exactly).
+
+**Python**: `FromPointsAndTrigs` with six indices per row writes `triangles6`; `NGsolveMesh2PointsAndTrigs(...,
+meshOrder=2, triangles6=True)` returns the elements as 6-node triangles (NETGEN numbers the mid-side nodes 12, 20, 01);
+`Triangles6ToTriangles` splits into four flat triangles each for `ToPointsAndTrigs`, `ExportSTL`,
+`InconsistentTriangles`; `MergeTriangleLists`, `Transform`/`Move` and `InvertTriangles` (corners 0 and 1, mid-side nodes
+12 and 20 swapped) keep them.
+
+**Not yet** (RG6.7.2.1): the superelements' `triangleMesh` with six columns, and contour colors on 6-node triangles.
+With `showFaceEdges` the edges of the split are drawn. References: `graphicsFunctions.json` with the new cases
+(`testEveryGraphicsFunction` now forces the per-item fingerprint, as it has more items than `itemLimit`);
+`parameterConversionTestReference.txt` with the two settings.

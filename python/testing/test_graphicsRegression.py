@@ -46,6 +46,10 @@ def GraphicsFunctions(stlFileName):
     cases = [
         ('Sphere', graphics.Sphere(point=[0, 0, 0], radius=0.2, color=red, nTiles=8)),
         ('SphereEdges', graphics.Sphere(point=[0, 0, 0], radius=0.2, color=red, nTiles=8, addEdges=True)),
+        ('Spheres', graphics.Spheres(points=[[0, 0, 0], [0.5, 0, 0], [0, 0.5, 0]], radii=[0.1, 0.2, 0.05],
+                                     colors=[red, blue, red], nTiles=16)),
+        ('Triangles6', graphics.FromPointsAndTrigs([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0.5, 0, 0.2], [0.5, 0.5, 0.2], [0, 0.5, 0.2]],
+                                                   [[0, 1, 2, 3, 4, 5]], color=red)),  #6-node triangle, split by the renderer
         ('Lines', graphics.Lines([[0, 0, 0], [1, 0, 0], [1, 1, 0]], color=blue)),
         ('Circle', graphics.Circle(point=[0, 0, 0], radius=0.3, color=blue)),
         ('Text', graphics.Text(point=[0, 0, 0.5], text='text', color=blue)),
@@ -114,9 +118,9 @@ def testEveryGraphicsFunction(tmp_path):
         mbs.AddObject(ObjectGround(referencePosition=[2.*(index % 6), 2.*(index // 6), 0],
                                    visualization=VObjectGround(graphicsData=graphicsList)))
     mbs.Assemble()
-    fingerprint = graphicsRegression.Fingerprint(SC.renderer.GetGraphicsData())
+    fingerprint = graphicsRegression.Fingerprint(SC.renderer.GetGraphicsData(), perItem=True)  #more items than itemLimit
 
-    assert fingerprint['perItem'] and fingerprint['items'] == len(cases)
+    assert fingerprint['items'] == len(cases)
     differences = graphicsRegression.CheckAgainstReference('graphicsFunctions', fingerprint)
     names = {'Object ' + str(index): name for (index, (name, data)) in enumerate(cases)}
     readable = [names.get(line.split(':')[0], '') + ' - ' + line for line in differences]

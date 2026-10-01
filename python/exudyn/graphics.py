@@ -31,13 +31,14 @@ from math import radians, pi, sin, cos, tan, asin #, acos
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'graphicsDataNormalsFactor', 'graphicsDataSwitchTriangleOrder', 'color', 'material',
-    'colorList', 'Sphere', 'Spheres', 'SpheresToTriangleList', 'Lines', 'Circle', 'Text', 'Cuboid',
-    'BrickXYZ', 'Brick', 'Cylinder', 'Tube', 'Torus', 'RigidLink', 'SolidOfRevolution', 'Arrow',
-    'Basis', 'Frame', 'Quad', 'CheckerBoard', 'SolidExtrusion', 'LinkedCylinders',
-    'BallBearingRings', 'InvoluteGear', 'ToothedRack', 'BoundingBoxSingle', 'BoundingBox',
-    'FromPointsAndTrigs', 'ToPointsAndTrigs', 'Transform', 'Move', 'MergeTriangleLists',
-    'InvertTriangles', 'InconsistentTriangles', 'NGsolveMesh2PointsAndTrigs', 'FromSTLfileASCII',
-    'FromPyMeshlabFile', 'FromSTLfile', 'AddEdgesAndSmoothenNormals', 'ExportSTL',
+    'colorList', 'Sphere', 'Spheres', 'Triangles6ToTriangles', 'SpheresToTriangleList', 'Lines',
+    'Circle', 'Text', 'Cuboid', 'BrickXYZ', 'Brick', 'Cylinder', 'Tube', 'Torus', 'RigidLink',
+    'SolidOfRevolution', 'Arrow', 'Basis', 'Frame', 'Quad', 'CheckerBoard', 'SolidExtrusion',
+    'LinkedCylinders', 'BallBearingRings', 'InvoluteGear', 'ToothedRack', 'BoundingBoxSingle',
+    'BoundingBox', 'FromPointsAndTrigs', 'ToPointsAndTrigs', 'Transform', 'Move',
+    'MergeTriangleLists', 'InvertTriangles', 'InconsistentTriangles', 'NGsolveMesh2PointsAndTrigs',
+    'FromSTLfileASCII', 'FromPyMeshlabFile', 'FromSTLfile', 'AddEdgesAndSmoothenNormals',
+    'ExportSTL',
     ]
 
 graphicsDataNormalsFactor = 1. #this is a factor being either -1. [original normals pointing inside; until 2022-06-27], while +1. gives corrected normals pointing outside
@@ -172,6 +173,27 @@ def Spheres(points, radii=0.1, colors=[0.,0.,0.,1.], nTiles=8):
     if len(colors) not in [4, 4*n]:
         raise ValueError('graphics.Spheres: colors must be one RGBA color or one per point')
     return {'type':'Spheres', 'points':points.flatten(), 'radii':radii, 'colors':colors, 'resolution':int(nTiles)}
+
+
+def Triangles6ToTriangles(graphicsData):
+    """convert the 6-node triangles (key 'triangles6') of a TriangleList into 4 flat triangles each, on the same points,
+    for the functions that need flat triangles (STL export, ToPointsAndTrigs, ...); the renderer splits them finer,
+    see visualizationSettings.openGL.advanced.curvedTriangleTilingAngle
+
+    Args:
+        graphicsData: a graphicsData dictionary
+
+    Returns:
+        a graphicsData dictionary of the type 'TriangleList' with 'triangles' only, or graphicsData itself if it has no 'triangles6'
+    """
+    if graphicsData['type'] != 'TriangleList' or 'triangles6' not in graphicsData:
+        return graphicsData
+    gNew = {key: value for (key, value) in graphicsData.items() if key != 'triangles6'}
+    triangles = list(np.array(graphicsData.get('triangles', []), dtype=int).flatten())
+    for (c0, c1, c2, m01, m12, m20) in np.array(graphicsData['triangles6'], dtype=int).reshape((-1, 6)):
+        triangles += [c0, m01, m20,  m01, c1, m12,  m20, m12, c2,  m01, m12, m20]
+    gNew['triangles'] = np.array(triangles, dtype=int)
+    return gNew
 
 
 def SpheresToTriangleList(graphicsData):
@@ -2202,7 +2224,7 @@ def FromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.], normals=None):
 
     Args:
         points: list or np.array with np rows of 3 columns (floats) per point (with np points)
-        triangles: list or np.array with 3 int per triangle (0-based indices to triangles), giving a matrix with nt rows and 3 columns (with nt triangles)
+        triangles: list or np.array with 3 int per triangle (0-based indices to triangles), giving a matrix with nt rows and 3 columns (with nt triangles); a matrix with 6 columns gives 6-node (curved) triangles, corners counter-clockwise and then the mid-side nodes 01, 12, 20 (key 'triangles6')
         color: provided as list of 4 RGBA values or single list of (np)*[4 RGBA values]
         normals: if not None, they have to be provided per point (as matrix, list of lists or flattened) and will be added to returned GraphicsData
 
@@ -2210,6 +2232,7 @@ def FromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.], normals=None):
         returns GraphicsData with type TriangleList
     """
     pointList = np.array(points).flatten()
+    triangleKey = 'triangles6' if np.array(triangles).ndim == 2 and np.array(triangles).shape[1] == 6 else 'triangles'
     triangleList = np.array(triangles).flatten()
     nPoints = int(len(pointList)/3)
     if isinstance(color,np.ndarray):
@@ -2226,10 +2249,10 @@ def FromPointsAndTrigs(points, triangles, color=[0.,0.,0.,1.], normals=None):
         exudyn.Print('number of trigs=', len(triangleList)/3)
         exudyn.Print('number of colors=', len(color))
         raise ValueError('FromPointsAndTrigs: color must have either 4 RGBA values or 4*(number of points) RGBA values as a list')
-    data = {'type':'TriangleList', 
-            'colors': colorList, 
-            'points':pointList, 
-            'triangles':triangleList}
+    data = {'type':'TriangleList',
+            'colors': colorList,
+            'points':pointList,
+            triangleKey:triangleList}
     if normals is not None: 
         data['normals'] = np.array(normals).flatten()
     return data
@@ -2246,7 +2269,7 @@ def ToPointsAndTrigs(g):
     Returns:
         returns [points, triangles], with points as list of np.array with 3 floats per point and triangles as a list of np.array with 3 int per triangle (0-based indices to points)
     """
-    g = SpheresToTriangleList(g)
+    g = Triangles6ToTriangles(SpheresToTriangleList(g))
     if g['type'] == 'TriangleList':
         nPoints=int(len(g['points'])/3)
         points = [np.zeros(3)]*nPoints
@@ -2300,7 +2323,7 @@ def Transform(graphicsData, translation=None, rotation=None, scale=1,
     if graphicsData['type'] == 'TriangleList': 
         gNew = {'type':'TriangleList'}
         gNew['colors'] = np.array(graphicsData['colors'])
-        if invertTriangles:
+        if invertTriangles and 'triangles' in graphicsData:
             nTrigs=int(len(graphicsData['triangles'])/3)
             triangles = np.array(graphicsData['triangles']).reshape((nTrigs,3))
         
@@ -2310,9 +2333,14 @@ def Transform(graphicsData, translation=None, rotation=None, scale=1,
                     trig[0]=trig[1]
                     trig[1] = t0
                 gNew['triangles'] = triangles.flatten()
-        else:
+        elif 'triangles' in graphicsData:
             gNew['triangles'] = np.array(graphicsData['triangles'])
-            
+        if 'triangles6' in graphicsData:
+            triangles6 = np.array(graphicsData['triangles6'], dtype=int).reshape((-1, 6))
+            if invertTriangles: #corners c0,c1 and the mid-side nodes m12,m20 swap (#2709)
+                triangles6 = triangles6[:, [1, 0, 2, 3, 5, 4]]
+            gNew['triangles6'] = triangles6.flatten()
+
         if 'edges' in graphicsData:
             gNew['edges'] = np.array(graphicsData['edges'])
         if 'edgeColor' in graphicsData:
@@ -2420,20 +2448,23 @@ def MergeTriangleLists(g1,g2):
     if useNormals:
         if nPoints*3 != len(g1['normals']):
             raise ValueError('MergeTriangleLists: incompatible normals and points in lists')
-        data = {'type':'TriangleList', 'colors':np.array(g1['colors']), 'normals':np.array(g1['normals']), 
-                'points': np.array(g1['points']), 'triangles': np.array(g1['triangles'])}
+        data = {'type':'TriangleList', 'colors':np.array(g1['colors']), 'normals':np.array(g1['normals']),
+                'points': np.array(g1['points']), 'triangles': np.array(g1.get('triangles', []), dtype=int)}
 
         data['normals'] = np.append(data['normals'],g2['normals'])
     else:
         data = {'type':'TriangleList', 'colors':np.array(g1['colors']),
-                'points': np.array(g1['points']), 'triangles': np.array(g1['triangles'])}
+                'points': np.array(g1['points']), 'triangles': np.array(g1.get('triangles', []), dtype=int)}
     
     data['colors'] = np.append(data['colors'], g2['colors'])
     data['points'] = np.append(data['points'], g2['points'])
 
     # for p in g2['triangles']:
     #     data['triangles'] += [int(p + nPoints)] 
-    data['triangles'] = np.append(data['triangles'], np.array(g2['triangles'])+nPoints ) #add nPoints offset to g2 for correct connectivity
+    data['triangles'] = np.append(data['triangles'], np.array(g2.get('triangles', []), dtype=int)+nPoints ) #add nPoints offset to g2 for correct connectivity
+    if 'triangles6' in g1 or 'triangles6' in g2: #6-node triangles (#2709)
+        data['triangles6'] = np.append(np.array(g1.get('triangles6', []), dtype=int),
+                                       np.array(g2.get('triangles6', []), dtype=int)+nPoints)
 
     #copy and merge edges; edges can be available only in one triangle list
     if 'edges' in g1:
@@ -2475,10 +2506,13 @@ def InvertTriangles(graphicsData, invertTriangles=True, invertNormals=True):
     gNew = {'type':'TriangleList'}
     gNew['points'] = np.array(graphicsData['points']) #copy
     gNew['colors'] = np.array(graphicsData['colors']) #copy
-    gNew['triangles'] = np.array(graphicsData['triangles']) #copy
+    gNew['triangles'] = np.array(graphicsData.get('triangles', []), dtype=int) #copy
+    if 'triangles6' in graphicsData: #corners c0,c1 and the mid-side nodes m12,m20 swap (#2709)
+        triangles6 = np.array(graphicsData['triangles6'], dtype=int).reshape((-1, 6))
+        gNew['triangles6'] = (triangles6[:, [1, 0, 2, 3, 5, 4]] if invertTriangles else triangles6).flatten()
 
     nPoints=int(len(graphicsData['points'])/3)
-    nTrigs=int(len(graphicsData['triangles'])/3)
+    nTrigs=int(len(gNew['triangles'])/3)
 
     if 'normals' in graphicsData:
         gNew['normals'] = np.array(graphicsData['normals']).reshape((nPoints,3)) #copy
@@ -2516,8 +2550,8 @@ def InconsistentTriangles(graphicsData):
     Returns:
         returns number of cases in which triangle normals and vertex normals are inconsistent (scalar product is negative)
     """
-    graphicsData = SpheresToTriangleList(graphicsData)
-    if graphicsData['type'] != 'TriangleList': 
+    graphicsData = Triangles6ToTriangles(SpheresToTriangleList(graphicsData))
+    if graphicsData['type'] != 'TriangleList':
         raise ValueError('InconsistentTriangles only works for graphicsData of TriangleList type')
     if 'normals' not in graphicsData:
         raise ValueError('InconsistentTriangles requires normals in TriangleList')
@@ -2538,7 +2572,7 @@ def InconsistentTriangles(graphicsData):
 
     return cntWrong
 
-def NGsolveMesh2PointsAndTrigs(mesh=None, ngMesh=None, meshOrder=2, scale=1, addNormals=True, verbose=False):
+def NGsolveMesh2PointsAndTrigs(mesh=None, ngMesh=None, meshOrder=2, scale=1, addNormals=True, verbose=False, triangles6=False):
     """convert NGsolve (surface) mesh into (surface) points and triangles; clearly, it requires to have ngsolve installed
 
     Args:
@@ -2548,6 +2582,7 @@ def NGsolveMesh2PointsAndTrigs(mesh=None, ngMesh=None, meshOrder=2, scale=1, add
         scale: additional scaling factor for geometry, as it is recommended to define netgen geometries in mm due to tolerances
         addNormals: if True, it computes and adds normals
         verbose: print debug information
+        triangles6: with meshOrder=2, return the elements as 6-node triangles (6 indices per row, for FromPointsAndTrigs), drawn curved, instead of 4 flat triangles each
 
     Returns:
         [points, triangles] or if addNormals=True, [points, triangles, normals] for further usage in graphics.FromPointsAndTrigs(...)
@@ -2628,6 +2663,17 @@ def NGsolveMesh2PointsAndTrigs(mesh=None, ngMesh=None, meshOrder=2, scale=1, add
                 w += [v.nr-1] #convert to 0-based indices
             if len(w) != 6:
                 raise ValueError('ImportMeshFromNGsolve: expected second order 6-node surface elements')
+            if triangles6: #NETGEN numbers the mid-side nodes 3 (12), 4 (20), 5 (01); Exudyn 01, 12, 20 (#2709)
+                order6 = [0, 1, 2, 5, 3, 4]
+                if not addNormals:
+                    triangles += [[w[k] for k in order6]]
+                else:
+                    n6 = gdu.Compute6NodeTrigsNormals([meshPoints[w[k]] for k in range(6)])
+                    triangles += [list(range(cntPoints, cntPoints+6))]
+                    cntPoints += 6
+                    normals += [n6[k] for k in order6]
+                    points3 += [meshPoints[w[k]] for k in order6]
+                continue
             if not addNormals:
                 #convert into 4 triangles
                 for k, subTrig in enumerate(subTrigs):
@@ -3100,7 +3146,7 @@ def ExportSTL(graphicsData, fileName, solidName='ExudynSolid', invertNormals=Tru
         invertNormals: if True, orientation of normals (usually pointing inwards in STL mesh) are inverted for compatibility in Exudyn
         invertTriangles: if True, triangle orientation (based on local indices) is inverted for compatibility in Exudyn
     """
-    graphicsData = SpheresToTriangleList(graphicsData)
+    graphicsData = Triangles6ToTriangles(SpheresToTriangleList(graphicsData))
     if graphicsData['type'] != 'TriangleList':
         raise ValueError('ExportSTL: invalid graphics data type; only TriangleList and Spheres allowed')
         

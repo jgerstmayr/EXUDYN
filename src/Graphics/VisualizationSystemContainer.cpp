@@ -1009,9 +1009,32 @@ bool PyWriteBodyGraphicsDataList(const py::object object, BodyGraphicsData& data
 								}
 								else { PyError("GraphicsData::TriangleList::triangles must be a float list or numpy array", PyErrorType::valueError); return false; }
 							}
-							else
+							else if (!gDict.contains("triangles6"))
 							{
-								PyError("GraphicsData::TriangleList must contain 'triangles' being a float list or numpy array with n*(point0,point1,point2)-components, n being the number of triangles; point0, point1, point2 ... point indices of one triangle", PyErrorType::valueError);
+								PyError("GraphicsData::TriangleList must contain 'triangles' being a float list or numpy array with n*(point0,point1,point2)-components, n being the number of triangles; point0, point1, point2 ... point indices of one triangle; or 'triangles6' with 6 indices per triangle", PyErrorType::valueError);
+							}
+
+							if (gDict.contains("triangles6")) //6-node quadratic triangles: corners counter-clockwise, then the mid-side nodes 01, 12, 20 (#2709)
+							{
+								std::vector<Index> indices = py::cast<std::vector<Index>>(gDict["triangles6"]);
+								if ((indices.size() % 6) != 0) { PyError("GraphicsData::TriangleList::triangles6 must be an int list or numpy array with 6*n components, n being the number of triangles", PyErrorType::valueError); return false; }
+								Index np = points.NumberOfItems();
+								GLTriangle6 trig6;
+								trig6.itemID = -1;
+								trig6.isFiniteElement = false;
+								trig6.hasNormals = normalsDefined;
+								for (Index i = 0; i < (Index)indices.size() / 6; i++)
+								{
+									for (Index j = 0; j < 6; j++)
+									{
+										Index ind = indices[i * 6 + j];
+										if (!EXUstd::IndexIsInRange(ind, 0, np)) { PyError(STDstring("GraphicsData::TriangleList::triangles6: point indices need to be in range [0, points.size()-1], but got index: ") + EXUstd::ToString(ind), PyErrorType::indexError); return false; }
+										trig6.points[j] = points[ind];
+										trig6.normals[j] = normals[ind];
+										trig6.colors[j] = colors[ind];
+									}
+									data.glTriangles6.Append(trig6);
+								}
 							}
 
 							//++++++++++++++++++++++++++++++++++++++++
@@ -1185,6 +1208,35 @@ py::list PyGetBodyGraphicsDataList(const BodyGraphicsData& data, bool addGraphic
 			d["radii"] = FloatVector2NumPy(radii);
 			d["colors"] = FloatVector2NumPy(colors);
 			d["resolution"] = (Index)1 << data.glSpheres[0].resolution;
+			list.append(d);
+		}
+
+		Index nTrigs6 = data.glTriangles6.NumberOfItems();
+		if (nTrigs6 != 0) //the 6-node triangles as given, in a TriangleList of their own (#2709)
+		{
+			auto d = py::dict();
+			d["type"] = std::string("TriangleList");
+			ResizableArray<float> points(nTrigs6 * 6 * 3);
+			ResizableArray<float> colors(nTrigs6 * 6 * 4);
+			ResizableArray<float> normals(nTrigs6 * 6 * 3);
+			ResizableArray<int> triangles6(nTrigs6 * 6);
+			bool allNormals = true;
+			Index cnt = 0;
+			for (const auto& item : data.glTriangles6)
+			{
+				allNormals &= item.hasNormals;
+				for (Index j = 0; j < 6; j++)
+				{
+					triangles6.Append(cnt++);
+					for (Index i = 0; i < 4; i++) { colors.Append(item.colors[j][i]); }
+					for (Index i = 0; i < 3; i++) { points.Append(item.points[j][i]); }
+					for (Index i = 0; i < 3; i++) { normals.Append(item.normals[j][i]); }
+				}
+			}
+			d["points"] = FloatVector2NumPy(points);
+			d["colors"] = FloatVector2NumPy(colors);
+			if (allNormals) { d["normals"] = FloatVector2NumPy(normals); }
+			d["triangles6"] = IntVector2NumPy(triangles6);
 			list.append(d);
 		}
 

@@ -74,6 +74,14 @@ namespace EXUvis {
 		}
 	}
 
+	//! the tiling of the 6-node triangles, set from visualizationSettings.openGL.advanced at each graphics update (#2709)
+	void SetCurvedTriangleTiling(float tilingAngleDegrees, Index maxTiling);
+
+	//! add a 6-node triangle to graphicsData (#2709): kept in glTriangles6, and its split into flat triangles added to
+	//! glTriangles, which is what the renderers draw; the number of subdivisions per edge follows the largest angle between
+	//! the normals of its nodes (given, or of the geometry) against curvedTriangleTilingAngle, at most curvedTriangleMaxTiling
+	void AddTriangle6(const GLTriangle6& triangle, GraphicsData& graphicsData);
+
 	//! copy bodyGraphicsData (of body) into global graphicsData (of system)
 	void AddBodyGraphicsDataColored(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, 
 		const Float3& position, const Matrix3DF& rotation, const Float3& refPosition, const Matrix3DF& refRotation, const Float3& velocity, const Float3& angularVelocity,

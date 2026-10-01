@@ -1736,6 +1736,10 @@ class VSettingsOpenGLAdvanced:
     """Advanced settings for openGL."""
     clippingPlaneColor: Tuple[float,float,float,float]
     """RGBA color for clipping plane; if alpha-channel is 0, the cutting plane is not drawn; if alpha-channel is 1, the clippingPlaneColor is used; if alpha-channel is 2, the color of the object interior is used as clipping plane color (which may look strange in case of object-in-object); see also view.camera for clipping plane options."""
+    curvedTriangleMaxTiling: int
+    """maximum number of subdivisions per edge of a 6-node (curved) triangle; see curvedTriangleTilingAngle."""
+    curvedTriangleTilingAngle: float
+    """6-node (curved) triangles of a TriangleList (key triangles6) are drawn as flat triangles: an edge is subdivided until the angle between the normals of its nodes falls below this angle (in degrees), at most curvedTriangleMaxTiling times; 0 draws each as 1 flat triangle; used by the raytracer as well."""
     depthSorting: bool
     """True (slower): sort triangles by Z-depth to remove transparency artifacts: only works if triangles do not intersect or come close (you may like to refine triangle meshes); False: no depth-sort (faster)."""
     enableLighting: bool

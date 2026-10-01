@@ -108,6 +108,20 @@ public:
 	GLisFiniteElement isFiniteElement;	//!< true, if finite element with different handling of edge drawing, etc.
 };
 
+//! structure for a 6-node quadratic triangle (#2709): corners 0,1,2 counter-clockwise seen from outside, then the mid-side
+//! nodes 3 (between 0 and 1), 4 (between 1 and 2) and 5 (between 2 and 0); points, normals and colors per node, the points
+//! duplicated per triangle as for GLTriangle; drawn as flat triangles, split adaptively (EXUvis::AddTriangle6)
+class GLTriangle6
+{
+public:
+	Index itemID;						//!< itemID according to ItemType and index, see Index2ItemID(...)
+	std::array< Float3, 6> points;		//!< 3D point coordinates
+	std::array< Float3, 6> normals;		//!< 3D normals, pointing outwards; used if hasNormals, else the normals of the geometry
+	std::array< Float4, 6> colors;		//!< RGBA color in range 0.f - 1.f; A ... alpha (or material index)
+	bool hasNormals;					//!< true, if normals are given
+	GLisFiniteElement isFiniteElement;	//!< true, if finite element with different handling of edge drawing, etc.
+};
+
 //!interface for system graphics data
 // data is read by glfwClient (other thread) and Visualization
 class GraphicsData
@@ -118,6 +132,7 @@ public:
 	ResizableArray<GLCircleXY> glCirclesXY;		//!< circles to be displayed
 	ResizableArray<GLText> glTexts;				//!< texts to be displayed
 	ResizableArray<GLTriangle> glTriangles;		//!< triangles to be displayed
+	ResizableArray<GLTriangle6> glTriangles6;	//!< 6-node triangles; what is drawn is their split, added to glTriangles with them (#2709)
 
 	//bool isStatic;				//!< true, if object is fixed to world-frame (e.g. background or groundObject)
 	//bool isRigid;				//!< signals that after creation of the object, all points just undergo a rigidbody transformation
@@ -181,6 +196,7 @@ public:
 		glCirclesXY.SetNumberOfItems(0);
 		glTexts.SetNumberOfItems(0);
 		glTriangles.SetNumberOfItems(0);
+		glTriangles6.SetNumberOfItems(0);
 
 		ClearLock();
 	}

@@ -58,6 +58,122 @@ namespace EXUvis {
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//the 6-node triangle (#2709)
+	static float curvedTriangleTilingAngle = 3.f;	//!< degrees; visualizationSettings.openGL.advanced.curvedTriangleTilingAngle
+	static Index curvedTriangleMaxTiling = 5;		//!< visualizationSettings.openGL.advanced.curvedTriangleMaxTiling
+
+	void SetCurvedTriangleTiling(float tilingAngleDegrees, Index maxTiling)
+	{
+		curvedTriangleTilingAngle = tilingAngleDegrees;
+		curvedTriangleMaxTiling = maxTiling;
+	}
+
+	//! the quadratic shape functions at (u,v), corners at (0,0), (1,0), (0,1), and their derivatives
+	inline void Triangle6ShapeFunctions(float u, float v, std::array<float, 6>& N, std::array<float, 6>& Nu, std::array<float, 6>& Nv)
+	{
+		float w = 1.f - u - v;
+		N = { w*(2.f*w - 1.f), u*(2.f*u - 1.f), v*(2.f*v - 1.f), 4.f*w*u, 4.f*u*v, 4.f*v*w };
+		Nu = { -(4.f*w - 1.f), 4.f*u - 1.f, 0.f, 4.f*(w - u), 4.f*v, -4.f*v };
+		Nv = { -(4.f*w - 1.f), 0.f, 4.f*v - 1.f, -4.f*u, 4.f*u, 4.f*(w - v) };
+	}
+
+	//! the normal of the triangle's geometry at (u,v), normalized; for corners counter-clockwise seen from outside, outward
+	inline Float3 Triangle6GeometricNormal(const GLTriangle6& triangle, const std::array<float, 6>& Nu, const std::array<float, 6>& Nv)
+	{
+		Float3 pu(0.f), pv(0.f);
+		for (Index k = 0; k < 6; k++) { pu += Nu[k] * triangle.points[k]; pv += Nv[k] * triangle.points[k]; }
+		Float3 n = pu.CrossProduct(pv);
+		n.NormalizeSafe();
+		return n;
+	}
+
+	void AddTriangle6(const GLTriangle6& triangle, GraphicsData& graphicsData)
+	{
+		graphicsData.glTriangles6.Append(triangle);
+
+		//the normals at the nodes, given or of the geometry, decide the tiling
+		const float nodeU[6] = { 0.f, 1.f, 0.f, 0.5f, 0.5f, 0.f };
+		const float nodeV[6] = { 0.f, 0.f, 1.f, 0.f, 0.5f, 0.5f };
+		std::array<float, 6> N, Nu, Nv;
+		std::array<Float3, 6> nodeNormals;
+		for (Index k = 0; k < 6; k++)
+		{
+			if (triangle.hasNormals) { nodeNormals[k] = triangle.normals[k]; nodeNormals[k].NormalizeSafe(); }
+			else
+			{
+				Triangle6ShapeFunctions(nodeU[k], nodeV[k], N, Nu, Nv);
+				nodeNormals[k] = Triangle6GeometricNormal(triangle, Nu, Nv);
+			}
+		}
+		float maxAngle = 0.f;
+		for (Index i = 0; i < 6; i++)
+		{
+			for (Index j = i + 1; j < 6; j++)
+			{
+				maxAngle = EXUstd::Maximum(maxAngle, atan2(nodeNormals[i].CrossProduct(nodeNormals[j]).GetL2Norm(), nodeNormals[i] * nodeNormals[j]));
+			}
+		}
+		Index n = 1;
+		if (curvedTriangleTilingAngle > 0.f)
+		{
+			n = EXUstd::Clamp((Index)ceil(maxAngle * (float)(180. / EXUstd::pi) / curvedTriangleTilingAngle), (Index)1, EXUstd::Maximum((Index)1, curvedTriangleMaxTiling));
+		}
+
+		//the vertices of the subdivision, row by row in v
+		auto VertexIndex = [n](Index i, Index j) { return j * (n + 1) - (j * (j - 1)) / 2 + i; }; //i along u, j along v, i + j <= n
+		ResizableArray<Float3> points((n + 1)*(n + 2) / 2);
+		ResizableArray<Float3> normals((n + 1)*(n + 2) / 2);
+		ResizableArray<Float4> colors((n + 1)*(n + 2) / 2);
+		points.SetNumberOfItems((n + 1)*(n + 2) / 2);
+		normals.SetNumberOfItems((n + 1)*(n + 2) / 2);
+		colors.SetNumberOfItems((n + 1)*(n + 2) / 2);
+		for (Index j = 0; j <= n; j++)
+		{
+			for (Index i = 0; i + j <= n; i++)
+			{
+				float u = (float)i / (float)n;
+				float v = (float)j / (float)n;
+				Triangle6ShapeFunctions(u, v, N, Nu, Nv);
+				Float3 p(0.f), normal(0.f);
+				Float4 color(0.f);
+				for (Index k = 0; k < 6; k++)
+				{
+					p += N[k] * triangle.points[k];
+					if (triangle.hasNormals) { normal += N[k] * nodeNormals[k]; }
+					color += N[k] * triangle.colors[k];
+				}
+				if (triangle.hasNormals) { normal.NormalizeSafe(); }
+				else { normal = Triangle6GeometricNormal(triangle, Nu, Nv); }
+				for (Index c = 0; c < 3; c++) { color[c] = EXUstd::Clamp(color[c], 0.f, 1.f); }
+				color[3] = triangle.colors[0][3]; //the alpha channel may carry a material index: not interpolated
+				Index index = VertexIndex(i, j);
+				points[index] = p;
+				normals[index] = normal;
+				colors[index] = color;
+			}
+		}
+
+		GLTriangle flat;
+		flat.itemID = triangle.itemID;
+		flat.isFiniteElement = triangle.isFiniteElement;
+		auto AddFlat = [&](Index a, Index b, Index c)
+		{
+			flat.points = { points[a], points[b], points[c] };
+			flat.normals = { normals[a], normals[b], normals[c] };
+			flat.colors = { colors[a], colors[b], colors[c] };
+			graphicsData.glTriangles.Append(flat);
+		};
+		for (Index j = 0; j < n; j++)
+		{
+			for (Index i = 0; i + j < n; i++)
+			{
+				AddFlat(VertexIndex(i, j), VertexIndex(i + 1, j), VertexIndex(i, j + 1));
+				if (i + j < n - 1) { AddFlat(VertexIndex(i + 1, j), VertexIndex(i + 1, j + 1), VertexIndex(i, j + 1)); }
+			}
+		}
+	}
+
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! copy bodyGraphicsData (of body) into global graphicsData (of system)
 	void AddBodyGraphicsDataColored(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, 
 		const Float3& position, const Matrix3DF& rotation, const Float3& refPosition, const Matrix3DF& refRotation, const Float3& velocity, const Float3& angularVelocity,
@@ -107,6 +223,21 @@ namespace EXUvis {
 				item.point += position;
 			}
 			graphicsData.glSpheres.Append(item);
+		}
+
+		for (GLTriangle6 item : bodyGraphicsData.glTriangles6) //copy objects (#2709)
+		{
+			item.itemID = itemID;
+			for (Index i = 0; i < 6; i++)
+			{
+				if (applyRotation)
+				{
+					EXUmath::RigidBodyTransformation(rotation, position, item.points[i], item.points[i]);
+					item.normals[i] = rotation * item.normals[i];
+				}
+				else { item.points[i] += position; }
+			}
+			AddTriangle6(item, graphicsData);
 		}
 
 		for (GLText item : bodyGraphicsData.glTexts) //copy objects, but string pointers are just assigned!
@@ -312,6 +443,21 @@ namespace EXUvis {
 				item.point += position;
 			}
 			graphicsData.glSpheres.Append(item);
+		}
+
+		for (GLTriangle6 item : bodyGraphicsData.glTriangles6) //copy objects (#2709)
+		{
+			item.itemID = itemID;
+			for (Index i = 0; i < 6; i++)
+			{
+				if (applyRotation)
+				{
+					EXUmath::RigidBodyTransformation(rotation, position, item.points[i], item.points[i]);
+					item.normals[i] = rotation * item.normals[i];
+				}
+				else { item.points[i] += position; }
+			}
+			AddTriangle6(item, graphicsData);
 		}
 
 		for (GLText item : bodyGraphicsData.glTexts) //copy objects, but string pointers are just assigned!

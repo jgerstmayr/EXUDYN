@@ -23,6 +23,7 @@
 
 #include "Linalg/RigidBodyMath.h"
 #include "Graphics/VisualizationSystemContainer.h"  //includes everything needed
+#include "Graphics/VisualizationPrimitives.h"      //EXUvis::SetCurvedTriangleTiling
 
 #include "Main/MainSystemData.h"	//for backlink to main system
 #include "Main/MainSystem.h"		//for backlink to main system
@@ -126,6 +127,8 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 
 			//flushdata also locks data ...
 			graphicsData.FlushData(); //currently data is always recomputed; FUTURE: differ between structure update and vertex/rigid body update, etc.
+			EXUvis::SetCurvedTriangleTiling(visualizationSystemContainer.settings.openGL.advanced.curvedTriangleTilingAngle,
+				visualizationSystemContainer.settings.openGL.advanced.curvedTriangleMaxTiling); //#2709
 
 			//put this after FlushData():
 			graphicsData.LockData(); //avoid that data is cleared by computation/Python thread (should never happen, because updateGraphicsData is called usually from Render thread ...)

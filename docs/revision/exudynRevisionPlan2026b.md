@@ -872,14 +872,19 @@ This group is that revision and what has to happen before it can start.
       - **the sphere is a GraphicsData type, and the nodes are drawn with it** - a node is no separate graphics
         feature any more but gets a sphere shape; the order of drawing stays, so that with transparent faces
         the nodes are seen through the objects.
-    - **RG6.7.2** the 6-node triangle: the dictionary (`TriangleList` with six indices per triangle and
-      optional normals per point), the adaptive split with the two settings, `GetGraphicsData()` returning the
-      split, `exudyn.graphics` helpers (`NGsolveMesh2PointsAndTrigs` and the FEM surface of quadratic meshes
-      use it), the superelements with six columns in `triangleMesh`;
+    - **RG6.7.2** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-2) - the 6-node triangle: the
+      dictionary (`TriangleList` with six indices per triangle and optional normals per point), the adaptive split
+      with the two settings, `GetGraphicsData()` returning the split, `exudyn.graphics` helpers
+      (`NGsolveMesh2PointsAndTrigs(..., triangles6=True)`, `FromPointsAndTrigs` with six columns);
+      - **RG6.7.2.1** *open* - the superelements with six columns in `triangleMesh` (the FFRF bodies and the FEM
+        surface of quadratic meshes, `FEMinterface`), whose points deform in every frame; and the contour colors on
+        6-node triangles (`AddBodyGraphicsDataColored` applies them to flat triangles only);
     - **RG6.7.3** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-3) - the sphere type in GraphicsData,
       drawn by OpenGL, the raytracer (a ray-sphere intersection in its search tree) and `GetGraphicsData()`; the
       nodes drawn through it, in the order of today;
-    - **RG6.7.4** the graphics tests (RG2.3.3) and the documentation grow with both.
+    - **RG6.7.4** the graphics tests (RG2.3.3) and the documentation grow with both - **DONE with RG6.7.2 and
+      RG6.7.3**: the cases `Sphere`, `Spheres` and `Triangles6` of `testEveryGraphicsFunction`, the manual
+      (*GraphicsData: Spheres*, the key `triangles6` of *GraphicsData: TriangleList*).
 
     <a id="rg6-7-sketch"></a>
     **The interface, sketched 2026-10-01** (for the maintainer; nothing implemented). What exists, read in the code:
