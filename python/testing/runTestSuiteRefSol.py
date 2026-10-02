@@ -113,7 +113,7 @@ def TestExamplesReferenceSolution():
         'accessFunctionsTest.py':1.255546526424125, #new 2026-10-02: the access functions of a body at a local position, and what Assemble() refuses (#2744); 2026-10-02: a force at the rim of ObjectRotationalMass1D (#2775)
         'computeItemTest.py':71.26280786574209, #new 2026-10-02: mbs.ComputeItem and NumericalJacobian on a double pendulum (#2779)
         'emptySystemTest.py':124.09765181769477, #new 2026-10-02: a system without coordinates through every solver, dense and sparse (#2790)
-        'homogeneousTransformationParameterTest.py':9.34455866880382, #new 2026-10-03: the HT parameters of the items, ObjectGround (#2793)
+        'homogeneousTransformationParameterTest.py':8.950665172609305, #new 2026-10-03: the HT parameters of the items, ObjectGround, Create functions, rigid markers (#2793, #2794, #2795)
         'homogeneousTransformationTest.py':178.9377398330175, #new 2026-10-02: exudyn.HT against the 4x4 matrices of rigidBodyUtilities, and the output variable HomogeneousTransformation (#2780)
         'inspectTest.py':47, #2026-10-02: the output variable HomogeneousTransformation of the rigid body and its node (#2780), before 45; 2026-10-02: a rigid body reports PotentialEnergy = 0 (#2202), before 44; new 2026-10-01: mbs.Inspect (#2203); the number of listed members, refusals included
         'energiesTest.py':17.614884358875663, #kinetic and potential energy of simple bodies and spring-dampers (#2202); 2026-10-01 with what the energies refuse and the gravity connector; before 8.724884363749222

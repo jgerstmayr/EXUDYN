@@ -294,6 +294,34 @@ public:
 	SlimVectorBase<TReal, 3> angularVelocityLocal;
 };
 
+//! the rotation of the frame of a rigid marker (#2795): the marker frame is the frame of its body or node times the
+//! rotation of its localHT, which turns the rotation matrix and the local angular velocity; the Jacobians are global and
+//! stay; nothing to do for a localHT without rotation
+inline void ApplyMarkerLocalRotation(const HomogeneousTransformation& localHT, Matrix3D& rotation)
+{
+	if (!localHT.HasNoRotation()) { rotation = rotation * localHT.GetRotation(); }
+}
+
+inline void ApplyMarkerLocalRotationToAngularVelocity(const HomogeneousTransformation& localHT, Vector3D& angularVelocityLocal)
+{
+	if (!localHT.HasNoRotation()) { angularVelocityLocal = localHT.RotateVectorTransposed(angularVelocityLocal); }
+}
+
+inline void ApplyMarkerLocalRotation(const HomogeneousTransformation& localHT, MarkerData& markerData)
+{
+	ApplyMarkerLocalRotation(localHT, markerData.orientation);
+	ApplyMarkerLocalRotationToAngularVelocity(localHT, markerData.angularVelocityLocal);
+}
+
+inline void ApplyMarkerLocalRotation(const HomogeneousTransformation& localHT, MarkerRigid<Real>& kinematics)
+{
+	if (localHT.HasNoRotation()) { return; }
+	Matrix3D rotation = kinematics.frame.GetRotation();
+	ApplyMarkerLocalRotation(localHT, rotation);
+	kinematics.frame.SetRotationMatrix(rotation);
+	ApplyMarkerLocalRotationToAngularVelocity(localHT, kinematics.angularVelocityLocal);
+}
+
 //! the value and its time derivative of a coordinate marker
 template<class TReal>
 class MarkerCoordinate

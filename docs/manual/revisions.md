@@ -180,7 +180,10 @@ its 16 values row by row, from which `exu.HT(values)` makes the HT (#2780, #2789
 `referenceRotation` or at once as `referenceHT` - a 4x4 matrix, its 16 values or an `exu.HT`; a
 parameter left `None` is not given, and an HT given with one of its parts must agree with it.
 `CreateGround` and `CreateRigidBody` take `referenceHT`, and `CreateRigidBody` also `initialHT` for
-`initialRotationMatrix` and `initialDisplacement` (#2793, #2794).
+`initialRotationMatrix` and `initialDisplacement` (#2793, #2794). The rigid markers take `localHT`, a frame
+with a rotation in the body, link or node: `MarkerBodyRigid` and `MarkerKinematicTreeRigid` with `localPosition` as
+its translation, `MarkerSuperElementRigid` with `offset`, `MarkerNodeRigid` a rotation only - so a joint can take its
+axis from its markers instead of `rotationMarker0/1` (#2795).
 
 **A system without coordinates** - only ground, sensors and user functions - is solved by every
 solver: time advances, the user functions are called and the sensors record (#2790).

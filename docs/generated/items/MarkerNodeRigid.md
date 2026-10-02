@@ -25,6 +25,7 @@ The parameters of the item; in a dictionary, its type is 'NodeRigid':
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | node number to which marker is attached to |
+| **localHT** | HomogeneousTransformation |  | None (identity) | (symbol: $\LU{n}{\Hm}_{m}$) the frame of the marker in the node frame, as homogeneous transformation: its rotation turns the marker frame against the node; its translation must be zero for now; a 4x4 matrix, its 16 values row by row or an exu.HT; None: the node frame |
 | **visualization** | VMarkerNodeRigid |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -47,8 +48,10 @@ The parameters of `VMarkerNodeRigid`, given as `visualization`:
 |---|---|---|
 | position | $\LU{0}{\pv}_m$ | the position of the node |
 | velocity | $\LU{0}{\vv}_m$ | the velocity of the node |
-| rotation matrix | $\LU{0m}{\Rot}$ | the rotation matrix of the node |
-| angular velocity | $\LU{m}{\tomega}$ | the angular velocity of the node, in the node frame |
+| rotation matrix | $\LU{0m}{\Rot} = \LU{0n}{\Rot} \LU{nm}{\Rot}$ | the rotation matrix of the node, turned by the rotation $\LU{nm}{\Rot}$ of `localHT` |
+| angular velocity | $\LU{m}{\tomega} = \LU{nm}{\Rot}\tp \LU{n}{\tomega}$ | the angular velocity of the node, in the marker frame |
+
+The translation of `localHT` must be zero: the marker is at the node.
 
 ### Jacobians
 

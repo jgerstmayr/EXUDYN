@@ -11978,3 +11978,34 @@ reference rotation, the displacement added to the reference position (global) - 
 $\Hm_{ref}\Hm_{init}$, which would rotate the displacement; so an HT and its parts mean the same, as for the ground.
 An HT with one of its parts raises (`_FrameFromHT` in `mainSystemExtensions.py`, one helper for both functions). The
 test model compares the node coordinates of the parts and of the HT for the three rigid body nodes.
+
+<a id="rg16-3-3"></a>
+### RG16.3.3 — the rigid markers take `localHT` (2026-10-03, #2795)
+
+**The parameters** (with the frame of RG16.3.1 in the generator): `MarkerBodyRigid` and `MarkerKinematicTreeRigid`
+`localHT` with `localPosition` as its translation; `MarkerSuperElementRigid` `localHT` with `offset` as its translation
+(the maintainer: localHT replaces offset and adds a rotation; `offset` stays as the part, so nothing breaks);
+`MarkerNodeRigid` `localHT` alone. All `None` for not given.
+
+**The marker frame is the body, link or node frame times `localHT`.** Only the rotation is new: the rotation matrix
+becomes $\LU{0b}{\Rot}\LU{bm}{\Rot}$ and the local angular velocity $\LU{bm}{\Rot}\tp\LU{b}{\tomega}$; position, velocity,
+the global angular velocity and **the Jacobians stay** - they are global (checked: `CObjectRigidBody` fills the rotation
+Jacobian with $\Gm$, the kinematic tree with the global axes, the superelement with its global weighting), and so is the
+derivative of the transposed Jacobian times the global force and torque. Three helpers in `Main/MarkerData.h`,
+`ApplyMarkerLocalRotation` (for a rotation matrix, a `MarkerData`, a `MarkerRigid`) and
+`ApplyMarkerLocalRotationToAngularVelocity`, called in each marker where its rotation and local angular velocity
+come out: `GetRotationMatrix`, `GetAngularVelocityLocal`, `ComputeMarkerData`, `GetKinematicsRigid` - the defaults of
+`CMarker` (`GetKinematicsJacobianRigid`, ...) go through `ComputeMarkerData`. A `localHT` without rotation costs a flag
+test (`HasNoRotation`, set once when the parameter is written).
+
+**`MarkerNodeRigid` refuses a translation** (its new `CheckPreAssembleConsistency`): a point away from the node needs the
+position Jacobian and its derivative with the offset, which a node marker does not have - `MarkerBodyRigid` on the
+body has them. Planned as RG16.3.4 for when a case needs it.
+
+**Test** (`homogeneousTransformationParameterTest.py`): the rotation matrix, local and global angular velocity of
+`MarkerBodyRigid`, `MarkerNodeRigid` and `MarkerKinematicTreeRigid` with a rotation in `localHT`, against the marker
+without it; a node marker with a translation raises at `Assemble`; **a generic joint (5 constraints, free about its z
+axis) whose axis is turned by `localHT` of its two markers moves exactly as the same joint with `rotationMarker0/1`**,
+with body markers and with a node marker - 200 steps, difference 0. `MarkerSuperElementRigid` is covered by its
+existing test models with `offset` (unchanged results) and by the same code path for the rotation. The reference pages
+say the frames (`detailedDescription` of the four markers).

@@ -26,7 +26,8 @@ The parameters of the item; in a dictionary, its type is 'KinematicTreeRigid':
 | **name** | String |  | '' | marker's unique name |
 | **objectNumber** | ObjectIndex |  | invalid (-1) | (symbol: $n_b$) body number to which marker is attached to |
 | **linkNumber** | UInt |  | invalid (-1) | (symbol: $n_l$) number of link in KinematicTree to which marker is attached to; **must be given**: the default is only a placeholder |
-| **localPosition** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{l}{\bv}$) local (link-fixed) position of marker at link $n_l$, using the link ($n_l$) coordinate system |
+| **localPosition** | Vector3D | 3 | None (zero) | (symbol: $\LU{l}{\bv}$) local (link-fixed) position of marker at link $n_l$, using the link ($n_l$) coordinate system; the translation of localHT |
+| **localHT** | HomogeneousTransformation |  | None (identity) | (symbol: $\LU{l}{\Hm}_{m}$) the frame of the marker in the link frame, as homogeneous transformation: its translation is localPosition, its rotation turns the marker frame against the link; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with localPosition, both must agree |
 | **visualization** | VMarkerKinematicTreeRigid |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -53,8 +54,8 @@ transformations of `ObjectKinematicTree`, evaluated from the base to the link.
 |---|---|---|
 | marker position | $\LU{0}{\pv}_{m} = \LU{0}{\pv}_{l} + \LU{0l}{\Rot} \LU{l}{\bv}$ | global position of the local position $\LU{l}{\bv}$ on link $n_l$ |
 | marker velocity | $\LU{0}{\vv}_{m} = \LU{0l}{\Rot} \left(\LU{l}{\vv}_{l} + \LU{l}{\tomega}_{l} \times \LU{l}{\bv} \right)$ | global velocity |
-| marker rotation matrix | $\LU{0l}{\Rot}$ | the rotation of the link frame; the local position does not rotate the marker |
-| marker angular velocity | $\LU{0}{\tomega}_{m} = \LU{0l}{\Rot} \LU{l}{\tomega}_{l}$ | global; the local angular velocity is $\LU{l}{\tomega}_{l}$ |
+| marker rotation matrix | $\LU{0m}{\Rot} = \LU{0l}{\Rot} \LU{lm}{\Rot}$ | the rotation of the link frame, turned by the rotation $\LU{lm}{\Rot}$ of `localHT`; the local position does not rotate the marker |
+| marker angular velocity | $\LU{0}{\tomega}_{m} = \LU{0l}{\Rot} \LU{l}{\tomega}_{l}$ | global; the local angular velocity is $\LU{lm}{\Rot}\tp \LU{l}{\tomega}_{l}$ |
 
 ### Jacobians
 

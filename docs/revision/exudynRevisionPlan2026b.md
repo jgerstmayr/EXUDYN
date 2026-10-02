@@ -2314,7 +2314,9 @@ done.
       - **RG14.2.16.2** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-14-2) - (3) as proposed: the two
         matrices of `GeneralContact` are `tempMatrix`/`tempMatrix2`, the two numbers `postNewtonError`/`postNewtonStepSize`;
         the index arrays keep their generic names. 25 members remain, each with a user.
-    - **RG14.2.15** *(maintainer 2026-10-01; to be considered in all marker and connector work from now on)*
+    - **RG14.2.15** *(maintainer 2026-10-01; to be considered in all marker and connector work from now on; the parameter
+      `localHT` in the rigid markers DONE 2026-10-03 with RG16.3.3, #2795 - open: the flag and the deprecation of
+      `rotationMarker0/1` in the joints, the documentation and the examples moved to `localHT`)*
       **Markers with a rotation; the joints' `rotationMarker0/1` deprecated.** A rigid marker gets a local frame:
       **`localHT`** (a homogeneous transformation in the body) as the alternative to `localPosition`, which is
       deprecated later; the marker frame is then body frame × `localHT`, and the connector receives it as
@@ -2492,16 +2494,21 @@ the joints an HT means fewer variables and one way of doing things.
     - **RG16.3.2** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-3-2) (#2794) `CreateRigidBody` (and `CreateGround`): `referenceHT` and `initialHT` - the transformation added to the
       reference -, translated into the node's reference and initial coordinates; rigid bodies and their nodes themselves
       take no HT (their state is their coordinates);
-    - **RG16.3.3** the rigid body markers (`MarkerBodyRigid`, `MarkerNodeRigid`, `MarkerKinematicTreeRigid`): `localHT`,
+    - **RG16.3.3** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-3-3) (#2795) the rigid body markers (`MarkerBodyRigid`, `MarkerNodeRigid`, `MarkerKinematicTreeRigid`): `localHT`,
       the marker frame = body or node frame x `localHT` (RG14.2.15, RG16.5); and `MarkerSuperElementRigid`
       *(maintainer 2026-10-02)*, where `localHT` replaces `offset` and adds a rotation - needed when the joints'
       `rotationMarker0/1` are deprecated, as a joint on a superelement then has no other place for its rotation.
+    - **RG16.3.4** *(found in RG16.3.3)* a translation in the `localHT` of `MarkerNodeRigid` - today refused at
+      `Assemble`, as the position Jacobian and the derivative of its transposed product need the offset in the node
+      (the formulas of `CObjectRigidBody` for 3D rigid body nodes; for the slope nodes and `NodeRigidBody2D` to be
+      decided) - when a case needs it.
 
 **RG16.4** *(group RG16)* **The further steps** - the mode switch, the kinematic tree and the robotics utilities on
     HT -, planned after RG16.3.
 
 <a id="rg16-5"></a>
-**RG16.5** *(group RG16; maintainer 2026-10-02)* **`localHT` in the rigid markers**, with RG14.2.15: a parameter
+**RG16.5** **DONE 2026-10-03 by RG16.3.3** (the decision of RG16.2: `localHT` and `localPosition` next to each other,
+    `None` for not given, no break) *(group RG16; maintainer 2026-10-02)* **`localHT` in the rigid markers**, with RG14.2.15: a parameter
     `localHT`, by default `exudyn.HT0()` or `None` (to decide later between `localPosition` and `localHT`); where the
     change is made (the item interface); the break it would be - `localPosition` gone from `mbs.GetMarker()` and from
     the parameters -, handled by the deprecation of item parameters (RG12.2), or started together with it: for the

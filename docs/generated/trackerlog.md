@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.231.dev1
+- Exudyn version = 1.12.232.dev1
 - last change = 2026-10-03
 - Number of issues = 2796
-- Number of resolved issues = 2545 (231 in current version)
+- Number of resolved issues = 2546 (232 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,9 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` the rigid body markers take localHT, a frame with position and rotation (#2795)
-  - description: revision2026b step RG16.3.3 (decided in RG16.2, \#2781; RG14.2.15, RG16.5): MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid and MarkerSuperElementRigid (localHT replaces offset and adds a rotation) get localHT; the marker frame is the body or node frame times localHT; None for not given.
-  - date raised: 2026-10-03
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` ObjectALEANCFCable2D: the position Jacobian and the velocity output disagree (#2784)
   - description: Found by test\_accessFunctionsAllBodies.py (RG9.5.6): the position Jacobian of ObjectALEANCFCable2D is 3 x 8, the ANCF coordinates only, while the object has 9 (with the ALE coordinate) and its velocity output - the material velocity - depends on the ALE velocity (column r\_x); off the axis (localPosition\[1\] != 0) the Jacobian also differs from the derivative of the velocity output by the ANCF velocities (7e-3 against 0.35). To decide: is a marker on the ALE cable a material point (then the Jacobian needs the ALE column, and the forces act on the ALE coordinate) or a point fixed along the axis (then the velocity output of a marker is not J q\_t); and which normal derivative is right off the axis.
   - date raised: 2026-10-02

@@ -1644,7 +1644,7 @@ bool MainObjectJointRollingDisc::CheckPreAssembleConsistency(const MainSystem& m
 				CMarker* cMarker0Ptr = mainSystem.GetCSystem().GetSystemData().GetCMarkers()[nMarkers[0]];
 				if (dynamic_cast<CMarkerBodyRigid*>(cMarker0Ptr) != nullptr)
 				{
-					Vector3D p = dynamic_cast<CMarkerBodyRigid*>(cMarker0Ptr)->GetParameters().localPosition;
+					Vector3D p = dynamic_cast<CMarkerBodyRigid*>(cMarker0Ptr)->GetParameters().localHT.GetTranslation();
 					if (p.GetL2Norm() != 0)
 					{
 						errorString = "CObjectJointRollingDisc: Marker 0: if it is of rigid body type, localPosition must be zero";

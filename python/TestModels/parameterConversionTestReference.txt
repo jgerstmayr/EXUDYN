@@ -3,6 +3,10 @@
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError
   MarkerBodiesRelativeRotationCoordinate: bodyNumbers(class,dict,set)
   MarkerBodiesRelativeTranslationCoordinate: bodyNumbers(class,dict,set)
+  MarkerBodyRigid: localHT(set)
+  MarkerKinematicTreeRigid: localHT(set)
+  MarkerNodeRigid: localHT(set)
+  MarkerSuperElementRigid: localHT(set)
   ObjectALEANCFCable2D: nodeNumbers(class,dict,set)
   ObjectANCFBeam: nodeNumbers(class,dict,set) sectionData(class,dict,set)
   ObjectANCFCable: nodeNumbers(class,dict,set)
@@ -24,6 +28,10 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   VisualizationSettings.interactive: highlightItemType(attribute,dict)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError numpy4x4f
+  MarkerBodyRigid: localHT(class,dict)
+  MarkerKinematicTreeRigid: localHT(class,dict)
+  MarkerNodeRigid: localHT(class,dict)
+  MarkerSuperElementRigid: localHT(class,dict)
   ObjectGround: referenceHT(class,dict)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError list2:MarkerIndex !ExudynTypeError
@@ -226,9 +234,9 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   MarkerBodiesRelativeRotationCoordinate: axis0(class,dict,set) localPosition0(class,dict,set) localPosition1(class,dict,set)
   MarkerBodiesRelativeTranslationCoordinate: axis0(class,dict,set) localPosition0(class,dict,set) localPosition1(class,dict,set)
   MarkerBodyPosition: localPosition(class,dict,set)
-  MarkerBodyRigid: localPosition(class,dict,set)
-  MarkerKinematicTreeRigid: localPosition(class,dict,set)
-  MarkerSuperElementRigid: offset(class,dict,set)
+  MarkerBodyRigid: localPosition(set)
+  MarkerKinematicTreeRigid: localPosition(set)
+  MarkerSuperElementRigid: offset(set)
   NodePoint: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
   NodePointGround: referenceCoordinates(class,dict,set)
   NodeRigidBody2D: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
@@ -249,6 +257,9 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   SensorKinematicTree: localPosition(class,dict,set)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError numpy3f=[1.0,2.0,3.0] !ExudynValueError numpy3f=[1.0,2.0,3.0] !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError numpy3f=[0.0,0.0,0.0]
+  MarkerBodyRigid: localPosition(class,dict)
+  MarkerKinematicTreeRigid: localPosition(class,dict)
+  MarkerSuperElementRigid: offset(class,dict)
   ObjectGround: referencePosition(class,dict)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError list0=[] list0=[] list0=[] list0=[] list0=[] !ExudynTypeError !ExudynTypeError list0=[] !ExudynTypeError
@@ -995,17 +1006,17 @@ outcome: str=default
   MarkerBodyCable2DShape: Vshow(omit) bodyNumber(omit) numberOfSegments(omit) verticalOffset(omit)
   MarkerBodyMass: Vshow(omit) bodyNumber(omit)
   MarkerBodyPosition: Vshow(omit) bodyNumber(omit) localPosition(omit)
-  MarkerBodyRigid: Vshow(omit) bodyNumber(omit) localPosition(omit)
-  MarkerKinematicTreeRigid: Vshow(omit) localPosition(omit) objectNumber(omit)
+  MarkerBodyRigid: Vshow(omit) bodyNumber(omit) localHT(omit) localPosition(omit)
+  MarkerKinematicTreeRigid: Vshow(omit) localHT(omit) localPosition(omit) objectNumber(omit)
   MarkerNodeCoordinate: Vshow(omit) nodeNumber(omit)
   MarkerNodeCoordinates: Vshow(omit) nodeNumber(omit)
   MarkerNodeODE1Coordinate: Vshow(omit) nodeNumber(omit)
   MarkerNodePosition: Vshow(omit) nodeNumber(omit)
-  MarkerNodeRigid: Vshow(omit) nodeNumber(omit)
+  MarkerNodeRigid: Vshow(omit) localHT(omit) nodeNumber(omit)
   MarkerNodeRotationCoordinate: Vshow(omit) nodeNumber(omit)
   MarkerObjectODE2Coordinates: Vshow(omit) objectNumber(omit)
   MarkerSuperElementPosition: Vshow(omit) VshowMarkerNodes(omit) bodyNumber(omit) meshNodeNumbers(omit) weightingFactors(omit)
-  MarkerSuperElementRigid: Vshow(omit) VshowMarkerNodes(omit) bodyNumber(omit) meshNodeNumbers(omit) offset(omit) rotationsExponentialMap(omit) useAlternativeApproach(omit) weightingFactors(omit)
+  MarkerSuperElementRigid: Vshow(omit) VshowMarkerNodes(omit) bodyNumber(omit) localHT(omit) meshNodeNumbers(omit) offset(omit) rotationsExponentialMap(omit) useAlternativeApproach(omit) weightingFactors(omit)
   Node1D: Vshow(omit) initialCoordinates(omit) initialVelocities(omit) referenceCoordinates(omit)
   NodeGenericAE: Vshow(omit) initialCoordinates(omit) referenceCoordinates(omit)
   NodeGenericData: Vshow(omit) initialCoordinates(omit) numberOfDataCoordinates(omit)

@@ -25,7 +25,8 @@ The parameters of the item; in a dictionary, its type is 'BodyRigid':
 |---|---|---|---|---|
 | **name** | String |  | '' | marker's unique name |
 | **bodyNumber** | ObjectIndex |  | invalid (-1) | body number to which marker is attached to |
-| **localPosition** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\pLocB$) local body position of marker; e.g. local (body-fixed) position where force is applied to |
+| **localPosition** | Vector3D | 3 | None (zero) | (symbol: $\pLocB$) local body position of marker; e.g. local (body-fixed) position where force is applied to; the translation of localHT |
+| **localHT** | HomogeneousTransformation |  | None (identity) | (symbol: $\LU{b}{\Hm}_{m}$) the frame of the marker in the body frame, as homogeneous transformation: its translation is localPosition, its rotation $\LU{bm}{\Rot}$ turns the marker frame against the body; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with localPosition, both must agree |
 | **visualization** | VMarkerBodyRigid |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -48,11 +49,14 @@ The parameters of `VMarkerBodyRigid`, given as `visualization`:
 |---|---|---|
 | position | $\LU{0}{\pv}_m$ | the output variable `Position` of the body at the local position $\pLocB$ |
 | velocity | $\LU{0}{\vv}_m$ | the output variable `Velocity` of the body at $\pLocB$ |
-| rotation matrix | $\LU{0m}{\Rot}$ | the rotation of the body at $\pLocB$; for a rigid body the rotation of the body |
-| angular velocity | $\LU{m}{\tomega}$ | the angular velocity of the body at $\pLocB$, in the marker (body) frame |
+| rotation matrix | $\LU{0m}{\Rot} = \LU{0b}{\Rot} \LU{bm}{\Rot}$ | the rotation $\LU{0b}{\Rot}$ of the body at $\pLocB$ (for a rigid body the rotation of the body), turned by the rotation $\LU{bm}{\Rot}$ of `localHT` |
+| angular velocity | $\LU{m}{\tomega} = \LU{bm}{\Rot}\tp \LU{b}{\tomega}$ | the angular velocity of the body at $\pLocB$, in the marker frame |
 
 Position, velocity and rotation matrix are global quantities; the angular velocity is local.
-$\pLocB$ is given in the body frame, from the reference point of the body.
+$\pLocB$ is given in the body frame, from the reference point of the body. The marker frame is
+`localHT` = $[\LU{bm}{\Rot}\;\pLocB;\;\Null\tp\;1]$ in the body frame: `localPosition` is its
+translation, and its rotation is the unit matrix unless `localHT` is given. The Jacobians are
+global and do not depend on $\LU{bm}{\Rot}$.
 
 ### Jacobians
 

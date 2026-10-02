@@ -237,11 +237,14 @@ definitions.append(ItemDefinition(
     |---|---|---|
     | position | $\LU{0}{\pv}_m$ | the output variable `Position` of the body at the local position $\pLocB$ |
     | velocity | $\LU{0}{\vv}_m$ | the output variable `Velocity` of the body at $\pLocB$ |
-    | rotation matrix | $\LU{0m}{\Rot}$ | the rotation of the body at $\pLocB$; for a rigid body the rotation of the body |
-    | angular velocity | $\LU{m}{\tomega}$ | the angular velocity of the body at $\pLocB$, in the marker (body) frame |
+    | rotation matrix | $\LU{0m}{\Rot} = \LU{0b}{\Rot} \LU{bm}{\Rot}$ | the rotation $\LU{0b}{\Rot}$ of the body at $\pLocB$ (for a rigid body the rotation of the body), turned by the rotation $\LU{bm}{\Rot}$ of `localHT` |
+    | angular velocity | $\LU{m}{\tomega} = \LU{bm}{\Rot}\tp \LU{b}{\tomega}$ | the angular velocity of the body at $\pLocB$, in the marker frame |
 
     Position, velocity and rotation matrix are global quantities; the angular velocity is local.
-    $\pLocB$ is given in the body frame, from the reference point of the body.
+    $\pLocB$ is given in the body frame, from the reference point of the body. The marker frame is
+    `localHT` = $[\LU{bm}{\Rot}\;\pLocB;\;\Null\tp\;1]$ in the body frame: `localPosition` is its
+    translation, and its rotation is the unit matrix unless `localHT` is given. The Jacobians are
+    global and do not depend on $\LU{bm}{\Rot}$.
 
     #### Jacobians
 
@@ -268,8 +271,13 @@ definitions.append(ItemDefinition(
             description=r'body number to which marker is attached to'),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
             pythonName='localPosition',
-            defaultValue=DVZeroVector3D,
-            description=r"""$\pLocB$local body position of marker; e.g. local (body-fixed) position where force is applied to"""),
+            defaultValue=CppValue('Vector3D({0.,0.,0.})', 'None', 'None (zero)'),
+            description=r"""$\pLocB$local body position of marker; e.g. local (body-fixed) position where force is applied to; the translation of localHT""",
+            partOfHT='localHT'),
+        ItemParameter(type=THomogeneousTransformation, destination=DestComp+DestParam,
+            pythonName='localHT',
+            defaultValue=CppValue('HomogeneousTransformation()', 'None', 'None (identity)'),
+            description=r"""$\LU{b}{\Hm}_{m}$the frame of the marker in the body frame, as homogeneous transformation: its translation is localPosition, its rotation $\LU{bm}{\Rot}$ turns the marker frame against the body; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with localPosition, both must agree"""),
         ItemFunctionDef('GetObjectNumber',
             implementation='return parameters.bodyNumber;'),
         ItemFunctionDef('SetObjectNumber',
@@ -302,7 +310,7 @@ definitions.append(ItemDefinition(
             description=r"Get type name of marker (without keyword 'Marker'...!); could also be realized via a string -> type conversion?"),
         ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst,
             pythonName='GetLocalPosition', args='Vector3D& localPosition',
-            implementation='localPosition = parameters.localPosition; return true;',
+            implementation='localPosition = parameters.localHT.GetTranslation(); return true;',
             description=r'the local position on the body, for the check of IsValidLocalPosition at Assemble() (#2744)'),
         ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
             pythonName='show',
@@ -432,8 +440,10 @@ definitions.append(ItemDefinition(
     |---|---|---|
     | position | $\LU{0}{\pv}_m$ | the position of the node |
     | velocity | $\LU{0}{\vv}_m$ | the velocity of the node |
-    | rotation matrix | $\LU{0m}{\Rot}$ | the rotation matrix of the node |
-    | angular velocity | $\LU{m}{\tomega}$ | the angular velocity of the node, in the node frame |
+    | rotation matrix | $\LU{0m}{\Rot} = \LU{0n}{\Rot} \LU{nm}{\Rot}$ | the rotation matrix of the node, turned by the rotation $\LU{nm}{\Rot}$ of `localHT` |
+    | angular velocity | $\LU{m}{\tomega} = \LU{nm}{\Rot}\tp \LU{n}{\tomega}$ | the angular velocity of the node, in the marker frame |
+
+    The translation of `localHT` must be zero: the marker is at the node.
 
     #### Jacobians
 
@@ -457,6 +467,10 @@ definitions.append(ItemDefinition(
             pythonName='nodeNumber',
             defaultValue=DVInvalidIndex,
             description=r'node number to which marker is attached to'),
+        ItemParameter(type=THomogeneousTransformation, destination=DestComp+DestParam,
+            pythonName='localHT',
+            defaultValue=CppValue('HomogeneousTransformation()', 'None', 'None (identity)'),
+            description=r"""$\LU{n}{\Hm}_{m}$the frame of the marker in the node frame, as homogeneous transformation: its rotation turns the marker frame against the node; its translation must be zero for now; a 4x4 matrix, its 16 values row by row or an exu.HT; None: the node frame"""),
         ItemFunctionDef('GetNodeNumber',
             implementation='return parameters.nodeNumber;',
             description='general access to node number'),
@@ -481,6 +495,7 @@ definitions.append(ItemDefinition(
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst,
             pythonName='AddGeneralizedForceTorque', args='const CSystemData& cSystemData, const Vector3D& force, const Vector3D& torque, MarkerTemp& temp, LinkedDataVector& ode2Lhs',
             description=r'add J_pos^T force + J_rot^T torque to ode2Lhs, the coordinates of the node (#2745)'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
             implementation='return "NodeRigid";',
@@ -1277,7 +1292,7 @@ definitions.append(ItemDefinition(
     | super element angular velocity | $\LU{r}{\tomega_r}$ | current local angular velocity of super element's floating frame (r), which is zero, if the object does not provide a reference frame (such as GenericODE2) |
     | marker position | $\LU{0}{\pv}_{m} \!=\! \LU{0}{\pv}_r + \LU{0r}{\Rot} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right)$ | current global position which is provided by marker; note offset $\LU{r}{\ov\cRef}$ added, if used as a correction of marker mesh nodes |
     | marker velocity | $\LU{0}{\vv}_{m} = \LU{0}{\dot \pv}_r $ $+ \LU{0r}{\Rot} \left( \LU{r}{\tilde \tomega_r} \left(\LU{r}{\ov\cRef}\! +\! \sum_i w_i \cdot \LU{r}{\pv^{(i)}} \right) + \right.$ $\left. \sum_i (w_i \cdot \LU{r}{\dot \uv^{(i)}}) \right)$ | current global velocity which is provided by marker |
-    | marker rotation matrix | $\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \cdot \mathbf{exp}(\LU{r}{\ttheta}_{m})$ | current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; uses exponential map for SO3, assumes that $\ttheta$ represents a rotation vector |
+    | marker rotation matrix | $\LU{0r}{\Rot}_{m} = \LU{0r}{\Rot} \cdot \mathbf{exp}(\LU{r}{\ttheta}_{m}) \LU{rm}{\Rot}$ | current rotation matrix, which transforms the local marker coordinates and adds the rigid body transformation of floating frames $\LU{0r}{\Rot}$; uses exponential map for SO3, assumes that $\ttheta$ represents a rotation vector; $\LU{rm}{\Rot}$ is the rotation of `localHT`, which also turns the local angular velocity |
     | marker local rotation | $\LU{r}{\ttheta}_{m}$ | current local linearized rotations (rotation vector); for the computation, see below for the standard and alternative approach |
     | marker local angular velocity | $\LU{r}{\tomega}_{m}$ | local angular velocity due to mesh node velocity only; for the computation, see below for the standard and alternative approach |
     | marker global angular velocity | $\LU{0}{\tomega}_{m} = \LU{0}{\tomega_{r}} + \LU{0r}{\Rot} \LU{r}{\tomega}_{m}$ | current global angular velocity |
@@ -1487,8 +1502,13 @@ definitions.append(ItemDefinition(
             description=r'$n_b$body number to which marker is attached to'),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
             pythonName='offset',
-            defaultValue=DVZeroVector3D,
-            description=r"""$\LU{r}{\ov_{ref}}$local marker SuperElement reference position offset used to correct the center point of the marker, which is computed from the weighted average of reference node positions (which may have some offset to the desired joint position). Note that this offset shall be small and larger offsets can cause instability in simulation models (better to have symmetric meshes at joints)."""),
+            defaultValue=CppValue('Vector3D({0.,0.,0.})', 'None', 'None (zero)'),
+            description=r"""$\LU{r}{\ov_{ref}}$local marker SuperElement reference position offset used to correct the center point of the marker, which is computed from the weighted average of reference node positions (which may have some offset to the desired joint position). Note that this offset shall be small and larger offsets can cause instability in simulation models (better to have symmetric meshes at joints). The translation of localHT.""",
+            partOfHT='localHT'),
+        ItemParameter(type=THomogeneousTransformation, destination=DestComp+DestParam,
+            pythonName='localHT',
+            defaultValue=CppValue('HomogeneousTransformation()', 'None', 'None (identity)'),
+            description=r"""$\LU{r}{\Hm}_{m}$the frame of the marker against the frame the marker computes from the mesh nodes, as homogeneous transformation: its translation is offset, its rotation turns the marker frame; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with offset, both must agree"""),
         ItemParameter(type=TArrayIndex, destination=DestComp+DestParam,
             pythonName='meshNodeNumbers',
             defaultValue='ArrayIndex()',
@@ -1602,8 +1622,8 @@ definitions.append(ItemDefinition(
     |---|---|---|
     | marker position | $\LU{0}{\pv}_{m} = \LU{0}{\pv}_{l} + \LU{0l}{\Rot} \LU{l}{\bv}$ | global position of the local position $\LU{l}{\bv}$ on link $n_l$ |
     | marker velocity | $\LU{0}{\vv}_{m} = \LU{0l}{\Rot} \left(\LU{l}{\vv}_{l} + \LU{l}{\tomega}_{l} \times \LU{l}{\bv} \right)$ | global velocity |
-    | marker rotation matrix | $\LU{0l}{\Rot}$ | the rotation of the link frame; the local position does not rotate the marker |
-    | marker angular velocity | $\LU{0}{\tomega}_{m} = \LU{0l}{\Rot} \LU{l}{\tomega}_{l}$ | global; the local angular velocity is $\LU{l}{\tomega}_{l}$ |
+    | marker rotation matrix | $\LU{0m}{\Rot} = \LU{0l}{\Rot} \LU{lm}{\Rot}$ | the rotation of the link frame, turned by the rotation $\LU{lm}{\Rot}$ of `localHT`; the local position does not rotate the marker |
+    | marker angular velocity | $\LU{0}{\tomega}_{m} = \LU{0l}{\Rot} \LU{l}{\tomega}_{l}$ | global; the local angular velocity is $\LU{lm}{\Rot}\tp \LU{l}{\tomega}_{l}$ |
 
     #### Jacobians
 
@@ -1641,8 +1661,13 @@ definitions.append(ItemDefinition(
             description=r'$n_l$number of link in KinematicTree to which marker is attached to'),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
             pythonName='localPosition',
-            defaultValue=DVZeroVector3D,
-            description=r"""$\LU{l}{\bv}$local (link-fixed) position of marker at link $n_l$, using the link ($n_l$) coordinate system"""),
+            defaultValue=CppValue('Vector3D({0.,0.,0.})', 'None', 'None (zero)'),
+            description=r"""$\LU{l}{\bv}$local (link-fixed) position of marker at link $n_l$, using the link ($n_l$) coordinate system; the translation of localHT""",
+            partOfHT='localHT'),
+        ItemParameter(type=THomogeneousTransformation, destination=DestComp+DestParam,
+            pythonName='localHT',
+            defaultValue=CppValue('HomogeneousTransformation()', 'None', 'None (identity)'),
+            description=r"""$\LU{l}{\Hm}_{m}$the frame of the marker in the link frame, as homogeneous transformation: its translation is localPosition, its rotation turns the marker frame against the link; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with localPosition, both must agree"""),
         ItemFunctionDef('GetObjectNumber',
             implementation='return parameters.objectNumber;'),
         ItemFunctionDef('SetObjectNumber',

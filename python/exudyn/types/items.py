@@ -1498,7 +1498,8 @@ items = {
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "marker's unique name"},
       'bodyNumber': {'type': 'ObjectIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'body number to which marker is attached to'},
-      'localPosition': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'local body position of marker; e.g. local (body-fixed) position where force is applied to'},
+      'localPosition': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': 'None', 'mustBeGiven': False, 'description': 'local body position of marker; e.g. local (body-fixed) position where force is applied to; the translation of localHT'},
+      'localHT': {'type': 'HomogeneousTransformation', 'size': '', 'range': '', 'default': 'None', 'mustBeGiven': False, 'description': 'the frame of the marker in the body frame, as homogeneous transformation: its translation is localPosition, its rotation :math:`{}^{bm}{\\Rot}` turns the marker frame against the body; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with localPosition, both must agree'},
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
@@ -1523,6 +1524,7 @@ items = {
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "marker's unique name"},
       'nodeNumber': {'type': 'NodeIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'node number to which marker is attached to'},
+      'localHT': {'type': 'HomogeneousTransformation', 'size': '', 'range': '', 'default': 'None', 'mustBeGiven': False, 'description': 'the frame of the marker in the node frame, as homogeneous transformation: its rotation turns the marker frame against the node; its translation must be zero for now; a 4x4 matrix, its 16 values row by row or an exu.HT; None: the node frame'},
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
@@ -1634,7 +1636,8 @@ items = {
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "marker's unique name"},
       'bodyNumber': {'type': 'ObjectIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'body number to which marker is attached to'},
-      'offset': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'local marker SuperElement reference position offset used to correct the center point of the marker, which is computed from the weighted average of reference node positions (which may have some offset to the desired joint position). Note that this offset shall be small and larger offsets can cause instability in simulation models (better to have symmetric meshes at joints).'},
+      'offset': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': 'None', 'mustBeGiven': False, 'description': 'local marker SuperElement reference position offset used to correct the center point of the marker, which is computed from the weighted average of reference node positions (which may have some offset to the desired joint position). Note that this offset shall be small and larger offsets can cause instability in simulation models (better to have symmetric meshes at joints). The translation of localHT.'},
+      'localHT': {'type': 'HomogeneousTransformation', 'size': '', 'range': '', 'default': 'None', 'mustBeGiven': False, 'description': 'the frame of the marker against the frame the marker computes from the mesh nodes, as homogeneous transformation: its translation is offset, its rotation turns the marker frame; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with offset, both must agree'},
       'meshNodeNumbers': {'type': 'ArrayIndex', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'a list of :math:`n_m` mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position and orientation; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers'},
       'weightingFactors': {'type': 'Vector', 'size': '', 'range': '', 'default': '[]', 'mustBeGiven': False, 'description': 'a list of :math:`n_m` weighting factors per node to compute the final local position and orientation; these factors could be based on surface integrals of the constrained mesh faces'},
       'useAlternativeApproach': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'this flag switches between two versions for the computation of the rotation and angular velocity of the marker; alternative approach uses skew symmetric matrix of reference position; follows the inertia concept'},
@@ -1653,7 +1656,8 @@ items = {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "marker's unique name"},
       'objectNumber': {'type': 'ObjectIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'body number to which marker is attached to'},
       'linkNumber': {'type': 'UInt', 'size': '', 'range': '>= 0', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': True, 'description': 'number of link in KinematicTree to which marker is attached to'},
-      'localPosition': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'local (link-fixed) position of marker at link :math:`n_l`, using the link (:math:`n_l`) coordinate system'},
+      'localPosition': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': 'None', 'mustBeGiven': False, 'description': 'local (link-fixed) position of marker at link :math:`n_l`, using the link (:math:`n_l`) coordinate system; the translation of localHT'},
+      'localHT': {'type': 'HomogeneousTransformation', 'size': '', 'range': '', 'default': 'None', 'mustBeGiven': False, 'description': 'the frame of the marker in the link frame, as homogeneous transformation: its translation is localPosition, its rotation turns the marker frame against the link; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with localPosition, both must agree'},
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},

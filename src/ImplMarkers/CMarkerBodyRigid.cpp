@@ -22,48 +22,52 @@
 
 void CMarkerBodyRigid::GetPosition(const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration) const
 {
-	position = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetPosition(parameters.localPosition, configuration);
+	position = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetPosition(parameters.localHT.GetTranslation(), configuration);
 }
 
 void CMarkerBodyRigid::GetVelocity(const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration) const
 {
-	velocity = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetVelocity(parameters.localPosition, configuration);
+	velocity = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetVelocity(parameters.localHT.GetTranslation(), configuration);
 }
 
 void CMarkerBodyRigid::GetRotationMatrix(const CSystemData& cSystemData, Matrix3D& rotationMatrix, ConfigurationType configuration) const
 {
 
-	rotationMatrix = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetRotationMatrix(parameters.localPosition, configuration);
+	rotationMatrix = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetRotationMatrix(parameters.localHT.GetTranslation(), configuration);
+	ApplyMarkerLocalRotation(parameters.localHT, rotationMatrix);
 }
 
 void CMarkerBodyRigid::GetAngularVelocity(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration) const
 {
-	angularVelocity = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetAngularVelocity(parameters.localPosition, configuration);
+	angularVelocity = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetAngularVelocity(parameters.localHT.GetTranslation(), configuration);
 }
 
 void CMarkerBodyRigid::GetAngularVelocityLocal(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration) const
 {
-	angularVelocity = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetAngularVelocityLocal(parameters.localPosition, configuration);
+	angularVelocity = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->GetAngularVelocityLocal(parameters.localHT.GetTranslation(), configuration);
+	ApplyMarkerLocalRotationToAngularVelocity(parameters.localHT, angularVelocity);
 }
 
 void CMarkerBodyRigid::ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const
 //void CMarkerBodyRigid::GetPositionJacobian(const CSystemData& cSystemData, Matrix& jacobian) const
 {
-	((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->ComputeRigidBodyMarkerData(parameters.localPosition, computeJacobian, markerData);
+	((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->ComputeRigidBodyMarkerData(parameters.localHT.GetTranslation(), computeJacobian, markerData);
+	ApplyMarkerLocalRotation(parameters.localHT, markerData);
 }
 
 //! frame and velocities for the connector interface (#2745): the body's marker data without the Jacobians
 Index CMarkerBodyRigid::GetKinematicsRigid(const CSystemData& cSystemData, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const
 {
 	const CObjectBody* body = (const CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]);
-	body->GetKinematicsRigid(parameters.localPosition, kinematics, temp);
+	body->GetKinematicsRigid(parameters.localHT.GetTranslation(), kinematics, temp);
+	ApplyMarkerLocalRotation(parameters.localHT, kinematics);
 	return body->GetODE2Size();
 }
 
 void CMarkerBodyRigid::AddGeneralizedForceTorque(const CSystemData& cSystemData, const Vector3D& force, const Vector3D& torque, MarkerTemp& temp,
 	LinkedDataVector& ode2Lhs) const
 {
-	((const CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->AddForceTorque(parameters.localPosition, force, torque, temp, ode2Lhs);
+	((const CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->AddForceTorque(parameters.localHT.GetTranslation(), force, torque, temp, ode2Lhs);
 }
 
 //! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(J.T @ v)/dq
@@ -75,7 +79,7 @@ void CMarkerBodyRigid::ComputeMarkerDataJacobianDerivative(const CSystemData& cS
 	}
 
 	if (!((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->
-		GetJacobianTransposedTimesVectorDerivative(parameters.localPosition, v6D, markerData.jacobianDerivative))
+		GetJacobianTransposedTimesVectorDerivative(parameters.localHT.GetTranslation(), v6D, markerData.jacobianDerivative))
 	{
 		markerData.jacobianDerivative.SetNumberOfRowsAndColumns(0, 0); //signals that there is no dependency
 	}

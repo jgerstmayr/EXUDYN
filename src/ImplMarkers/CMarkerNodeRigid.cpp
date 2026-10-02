@@ -34,6 +34,7 @@ void CMarkerNodeRigid::GetRotationMatrix(const CSystemData& cSystemData, Matrix3
 {
 
 	rotationMatrix = ((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetRotationMatrix(configuration);
+	ApplyMarkerLocalRotation(parameters.localHT, rotationMatrix);
 }
 
 void CMarkerNodeRigid::GetAngularVelocity(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration) const
@@ -44,6 +45,7 @@ void CMarkerNodeRigid::GetAngularVelocity(const CSystemData& cSystemData, Vector
 void CMarkerNodeRigid::GetAngularVelocityLocal(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration) const
 {
 	angularVelocity = ((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetAngularVelocityLocal(configuration);
+	ApplyMarkerLocalRotationToAngularVelocity(parameters.localHT, angularVelocity);
 }
 
 
@@ -56,6 +58,7 @@ void CMarkerNodeRigid::ComputeMarkerData(const CSystemData& cSystemData, bool co
 	markerData.orientation = ((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetRotationMatrix(ConfigurationType::Current);
 	markerData.angularVelocityLocal = ((CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]))->GetAngularVelocityLocal(ConfigurationType::Current);
 
+	ApplyMarkerLocalRotation(parameters.localHT, markerData);
 	markerData.velocityAvailable = true;
 
 	if (computeJacobian)
@@ -77,12 +80,13 @@ static bool IsRigidBodyNode3D(const CNodeODE2* node)
 Index CMarkerNodeRigid::GetKinematicsRigid(const CSystemData& cSystemData, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const
 {
 	const CNodeODE2* node = (const CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]);
-	if (!IsRigidBodyNode3D(node)) { return CMarker::GetKinematicsRigid(cSystemData, kinematics, temp); }
+	if (!IsRigidBodyNode3D(node)) { return CMarker::GetKinematicsRigid(cSystemData, kinematics, temp); } //through ComputeMarkerData
 	Vector3D position, velocity;
 	((const CNodeRigidBody*)node)->CollectCurrentNodeMarkerData(temp.Glocal, temp.G, position, velocity, temp.rotation,
 		kinematics.angularVelocityLocal);
 	kinematics.frame = HomogeneousTransformation(temp.rotation, position);
 	kinematics.velocity = velocity;
+	ApplyMarkerLocalRotation(parameters.localHT, kinematics);
 	return node->GetNumberOfODE2Coordinates();
 }
 

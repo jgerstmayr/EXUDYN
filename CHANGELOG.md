@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 215 | 1.12.231 |
+| 1.12 | Metheney | 216 | 1.12.232 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.232** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the rigid body markers take localHT, a frame with position and rotation (#2795)
+  - description: revision2026b step RG16.3.3 (decided in RG16.2, \#2781; RG14.2.15, RG16.5): MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid and MarkerSuperElementRigid (localHT replaces offset and adds a rotation) get localHT; the marker frame is the body or node frame times localHT; None for not given.
+  - **notes:** The rigid markers take localHT, a frame with a rotation in the body, link or node: MarkerBodyRigid and MarkerKinematicTreeRigid (localPosition is its translation), MarkerSuperElementRigid (offset is its translation) and MarkerNodeRigid (a rotation only); a joint can take its axis from its markers instead of rotationMarker0/1.
+  - date resolved: **2026-10-03 00:44**, date raised: 2026-10-03
 - **1.12.231** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` CreateRigidBody and CreateGround take referenceHT and initialHT (#2794)
   - description: revision2026b step RG16.3.2 (decided in RG16.2, \#2781): referenceHT next to referencePosition/referenceRotationMatrix, initialHT (the transformation added to the reference) next to initialDisplacement/initialRotationMatrix; None for not given, both raises.
   - **notes:** CreateGround takes referenceHT, CreateRigidBody referenceHT and initialHT for the reference and the initial position and rotation matrix.

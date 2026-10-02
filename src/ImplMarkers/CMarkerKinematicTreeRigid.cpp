@@ -35,41 +35,44 @@
 
 void CMarkerKinematicTreeRigid::GetPosition(const CSystemData& cSystemData, Vector3D& position, ConfigurationType configuration) const
 {
-	position = ((CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetPositionKinematicTree(parameters.localPosition,
+	position = ((CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetPositionKinematicTree(parameters.localHT.GetTranslation(),
 		parameters.linkNumber, configuration);
-	//WRONG: position = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetPosition(parameters.localPosition, configuration);
+	//WRONG: position = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetPosition(parameters.localHT.GetTranslation(), configuration);
 }
 
 void CMarkerKinematicTreeRigid::GetVelocity(const CSystemData& cSystemData, Vector3D& velocity, ConfigurationType configuration) const
 {
-	velocity = ((CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetVelocityKinematicTree(parameters.localPosition,
+	velocity = ((CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetVelocityKinematicTree(parameters.localHT.GetTranslation(),
 		parameters.linkNumber, configuration);
-	//WRONG: velocity = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetVelocity(parameters.localPosition, configuration);
+	//WRONG: velocity = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetVelocity(parameters.localHT.GetTranslation(), configuration);
 }
 
 void CMarkerKinematicTreeRigid::GetRotationMatrix(const CSystemData& cSystemData, Matrix3D& rotationMatrix, ConfigurationType configuration) const
 {
 	rotationMatrix = ((CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetRotationMatrixKinematicTree(parameters.linkNumber, configuration);
-	//WRONG: rotationMatrix = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetRotationMatrix(parameters.localPosition, configuration);
+	ApplyMarkerLocalRotation(parameters.localHT, rotationMatrix);
+	//WRONG: rotationMatrix = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetRotationMatrix(parameters.localHT.GetTranslation(), configuration);
 }
 
 void CMarkerKinematicTreeRigid::GetAngularVelocity(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration) const
 {
 	angularVelocity = ((CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetAngularVelocityKinematicTree(parameters.linkNumber, configuration);
-	//WRONG: angularVelocity = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetAngularVelocity(parameters.localPosition, configuration);
+	//WRONG: angularVelocity = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetAngularVelocity(parameters.localHT.GetTranslation(), configuration);
 }
 
 void CMarkerKinematicTreeRigid::GetAngularVelocityLocal(const CSystemData& cSystemData, Vector3D& angularVelocity, ConfigurationType configuration) const
 {
 	angularVelocity = ((CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetAngularVelocityLocalKinematicTree(parameters.linkNumber, configuration);
-	//WRONG: angularVelocity = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetAngularVelocityLocal(parameters.localPosition, configuration);
+	ApplyMarkerLocalRotationToAngularVelocity(parameters.localHT, angularVelocity);
+	//WRONG: angularVelocity = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.objectNumber]))->GetAngularVelocityLocal(parameters.localHT.GetTranslation(), configuration);
 }
 
 void CMarkerKinematicTreeRigid::ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const
 {
 	//types as well as linkNumber already checked in checkPreAssembleConsistency
-	((CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->ComputeRigidBodyMarkerDataKT(parameters.localPosition, parameters.linkNumber,
+	((CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->ComputeRigidBodyMarkerDataKT(parameters.localHT.GetTranslation(), parameters.linkNumber,
 		computeJacobian, markerData);
+	ApplyMarkerLocalRotation(parameters.localHT, markerData);
 }
 
 //! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(J.T @ v)/dq

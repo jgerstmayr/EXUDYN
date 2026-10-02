@@ -6969,7 +6969,9 @@ class MarkerBodyRigid:
 
         bodyNumber: body number to which marker is attached to; type: ObjectIndex
 
-        localPosition: local body position of marker; e.g. local (body-fixed) position where force is applied to; type: [float,float,float]
+        localPosition: local body position of marker; e.g. local (body-fixed) position where force is applied to; the translation of localHT; type: [float,float,float]
+
+        localHT: the frame of the marker in the body frame, as homogeneous transformation: its translation is localPosition, its rotation :math:`{}^{bm}{\Rot}` turns the marker frame against the body; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with localPosition, both must agree; type: array_like (4x4) or exudyn.HT
 
         visualization: visualization data, see VMarkerBodyRigid
 
@@ -6977,10 +6979,11 @@ class MarkerBodyRigid:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], visualization = {'show': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), localPosition = None, localHT = None, visualization = {'show': True}):
         self.name = name
         self.bodyNumber = bodyNumber
-        self.localPosition = np.array(localPosition)
+        self.localPosition = None if localPosition is None else np.array(localPosition)
+        self.localHT = localHT
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -6988,6 +6991,7 @@ class MarkerBodyRigid:
         yield 'name', self.name
         yield 'bodyNumber', self.bodyNumber
         yield 'localPosition', self.localPosition
+        yield 'localHT', self.localHT
         yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
@@ -7065,21 +7069,25 @@ class MarkerNodeRigid:
 
         nodeNumber: node number to which marker is attached to; type: NodeIndex
 
+        localHT: the frame of the marker in the node frame, as homogeneous transformation: its rotation turns the marker frame against the node; its translation must be zero for now; a 4x4 matrix, its 16 values row by row or an exu.HT; None: the node frame; type: array_like (4x4) or exudyn.HT
+
         visualization: visualization data, see VMarkerNodeRigid
 
     Notes:
         Marker has/provides the following types: ``Node``, ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), localHT = None, visualization = {'show': True}):
         self.name = name
         self.nodeNumber = nodeNumber
+        self.localHT = localHT
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'markerType', 'NodeRigid'
         yield 'name', self.name
         yield 'nodeNumber', self.nodeNumber
+        yield 'localHT', self.localHT
         yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
@@ -7492,7 +7500,9 @@ class MarkerSuperElementRigid:
 
         bodyNumber: body number to which marker is attached to; type: ObjectIndex
 
-        offset: local marker SuperElement reference position offset used to correct the center point of the marker, which is computed from the weighted average of reference node positions (which may have some offset to the desired joint position). Note that this offset shall be small and larger offsets can cause instability in simulation models (better to have symmetric meshes at joints).; type: [float,float,float]
+        offset: local marker SuperElement reference position offset used to correct the center point of the marker, which is computed from the weighted average of reference node positions (which may have some offset to the desired joint position). Note that this offset shall be small and larger offsets can cause instability in simulation models (better to have symmetric meshes at joints). The translation of localHT.; type: [float,float,float]
+
+        localHT: the frame of the marker against the frame the marker computes from the mesh nodes, as homogeneous transformation: its translation is offset, its rotation turns the marker frame; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with offset, both must agree; type: array_like (4x4) or exudyn.HT
 
         meshNodeNumbers: a list of :math:`n_m` mesh node numbers of superelement (=interface nodes) which are used to compute the body-fixed marker position and orientation; the related nodes must provide 3D position information, such as NodePoint, NodePoint2D, NodeRigidBody[..]; in order to retrieve the global node number, the generic body needs to convert local into global node numbers; type: array_like
 
@@ -7508,10 +7518,11 @@ class MarkerSuperElementRigid:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), offset = [0.,0.,0.], meshNodeNumbers = [], weightingFactors = [], useAlternativeApproach = True, rotationsExponentialMap = 2, visualization = {'show': True, 'showMarkerNodes': True}):
+    def __init__(self, name = '', bodyNumber = exudyn.InvalidIndex(), offset = None, localHT = None, meshNodeNumbers = [], weightingFactors = [], useAlternativeApproach = True, rotationsExponentialMap = 2, visualization = {'show': True, 'showMarkerNodes': True}):
         self.name = name
         self.bodyNumber = bodyNumber
-        self.offset = np.array(offset)
+        self.offset = None if offset is None else np.array(offset)
+        self.localHT = localHT
         self.meshNodeNumbers = copy.copy(meshNodeNumbers)
         self.weightingFactors = np.array(weightingFactors)
         self.useAlternativeApproach = useAlternativeApproach
@@ -7523,6 +7534,7 @@ class MarkerSuperElementRigid:
         yield 'name', self.name
         yield 'bodyNumber', self.bodyNumber
         yield 'offset', self.offset
+        yield 'localHT', self.localHT
         yield 'meshNodeNumbers', self.meshNodeNumbers
         yield 'weightingFactors', self.weightingFactors
         yield 'useAlternativeApproach', self.useAlternativeApproach
@@ -7561,7 +7573,9 @@ class MarkerKinematicTreeRigid:
 
         linkNumber: number of link in KinematicTree to which marker is attached to; type: int
 
-        localPosition: local (link-fixed) position of marker at link :math:`n_l`, using the link (:math:`n_l`) coordinate system; type: [float,float,float]
+        localPosition: local (link-fixed) position of marker at link :math:`n_l`, using the link (:math:`n_l`) coordinate system; the translation of localHT; type: [float,float,float]
+
+        localHT: the frame of the marker in the link frame, as homogeneous transformation: its translation is localPosition, its rotation turns the marker frame against the link; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with localPosition, both must agree; type: array_like (4x4) or exudyn.HT
 
         visualization: visualization data, see VMarkerKinematicTreeRigid
 
@@ -7569,11 +7583,12 @@ class MarkerKinematicTreeRigid:
         Marker has/provides the following types: ``Object``, ``Body``, ``Position``, ``Orientation``
 
     """
-    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), linkNumber = exudyn.InvalidIndex(), localPosition = [0.,0.,0.], visualization = {'show': True}):
+    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), linkNumber = exudyn.InvalidIndex(), localPosition = None, localHT = None, visualization = {'show': True}):
         self.name = name
         self.objectNumber = objectNumber
         self.linkNumber = linkNumber
-        self.localPosition = np.array(localPosition)
+        self.localPosition = None if localPosition is None else np.array(localPosition)
+        self.localHT = localHT
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -7582,6 +7597,7 @@ class MarkerKinematicTreeRigid:
         yield 'objectNumber', self.objectNumber
         yield 'linkNumber', self.linkNumber
         yield 'localPosition', self.localPosition
+        yield 'localHT', self.localHT
         yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):

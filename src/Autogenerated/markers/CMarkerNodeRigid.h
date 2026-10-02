@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  17:21:11 (last modified)
+* @date         2026-10-03  00:32:23 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,10 +28,12 @@ class CMarkerNodeRigidParameters // AUTO:
 {
 public: // AUTO:
     Index nodeNumber;                             //!< AUTO: node number to which marker is attached to
+    HomogeneousTransformation localHT;            //!< AUTO: the frame of the marker in the node frame, as homogeneous transformation: its rotation turns the marker frame against the node; its translation must be zero for now; a 4x4 matrix, its 16 values row by row or an exu.HT; None: the node frame
     //! AUTO: default constructor with parameter initialization
     CMarkerNodeRigidParameters()
     {
         nodeNumber = EXUstd::InvalidIndex;
+        localHT = HomogeneousTransformation();
     };
 };
 

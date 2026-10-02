@@ -79,7 +79,7 @@ void CMarkerSuperElementRigid::GetWeightedRotations(const CSystemData& cSystemDa
 	Vector3D pRef; //mesh node local reference position
 
 	Vector3D translationPart(0); //this term occurs if the mesh at the Marker is not symmetric regarding rotations => translation causes rotation ...
-	Vector3D pRef0 = CMarkerSuperElementRigidOffsetRotationFactor * parameters.offset; //this is a correction, if the midpoint is not at the desired center of the marker
+	Vector3D pRef0 = CMarkerSuperElementRigidOffsetRotationFactor * parameters.localHT.GetTranslation(); //this is a correction, if the midpoint is not at the desired center of the marker
 
 	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
 	{
@@ -137,7 +137,7 @@ void CMarkerSuperElementRigid::GetWeightedAngularVelocity(const CSystemData& cSy
 
 	Vector3D translationPart(0); //this term occurs if the mesh at the Marker is not symmetric regarding rotations => translation causes rotation ...
 	//Vector3D pRef0 = parameters.referencePosition; //this is the midpoint of the Marker, computed from reference positions
-	Vector3D pRef0 = CMarkerSuperElementRigidOffsetRotationFactor * parameters.offset; //this is a correction, if the midpoint is not at the desired center of the marker
+	Vector3D pRef0 = CMarkerSuperElementRigidOffsetRotationFactor * parameters.localHT.GetTranslation(); //this is a correction, if the midpoint is not at the desired center of the marker
 
 	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
 	{
@@ -184,7 +184,7 @@ void CMarkerSuperElementRigid::GetPosition(const CSystemData& cSystemData, Vecto
 	//also works for ConfigurationType::Reference:
 	GetFloatingFrameNodeData(cSystemData, framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, configuration);
 
-	position = parameters.offset;
+	position = parameters.localHT.GetTranslation();
 	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
 	{
 		//add weighted displacements: could be optimized if SuperElement has additional GetMeshNodeLocalDisplacement(...)
@@ -206,7 +206,7 @@ void CMarkerSuperElementRigid::GetVelocity(const CSystemData& cSystemData, Vecto
 	Vector3D frameAngularVelocityLocal;
 	GetFloatingFrameNodeData(cSystemData, framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, configuration);
 
-	Vector3D localDisplacement = parameters.offset;
+	Vector3D localDisplacement = parameters.localHT.GetTranslation();
 	velocity.SetAll(0);
 
 	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
@@ -233,6 +233,7 @@ void CMarkerSuperElementRigid::GetRotationMatrix(const CSystemData& cSystemData,
 	Vector3D weightedRotations;
 	GetWeightedRotations(cSystemData, weightedRotations, configuration);
 	ComputeRotationMatrix(frameRotationMatrix, weightedRotations, rotationMatrix);
+	ApplyMarkerLocalRotation(parameters.localHT, rotationMatrix);
 }
 
 void CMarkerSuperElementRigid::ComputeRotationMatrix(const Matrix3D& frameRotationMatrix, const Vector3D& weightedRotations, Matrix3D& rotationMatrix) const
@@ -294,6 +295,7 @@ void CMarkerSuperElementRigid::GetAngularVelocityLocal(const CSystemData& cSyste
 		else if (parameters.rotationsExponentialMap == 6) { weightedAngularVelocity = EXUlie::ExpSO3(weightedRotations) * EXUlie::TExpSO3(weightedRotations)*weightedAngularVelocity; }
 	}
     angularVelocity = frameAngularVelocityLocal + weightedAngularVelocity;
+	ApplyMarkerLocalRotationToAngularVelocity(parameters.localHT, angularVelocity);
 }
 
 
@@ -315,7 +317,7 @@ static void ComputeJacobians(const CMarkerSuperElementRigid& marker, const CSyst
 	LinkedDataMatrix weightingMatrix(marker.GetParameters().weightingFactors.GetDataPointer(), nw, 1);
 
 	cObject.GetAccessFunctionSuperElement((AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement),
-		weightingMatrix, marker.GetParameters().meshNodeNumbers, marker.GetParameters().offset, positionJacobian, EXUmath::unitMatrix3D);
+		weightingMatrix, marker.GetParameters().meshNodeNumbers, marker.GetParameters().localHT.GetTranslation(), positionJacobian, EXUmath::unitMatrix3D);
 
 	//add special flag for alternative rotation mode (little hack, maybe this becomes a separate variable in future)
 	Index rotationMode = 0;
@@ -333,7 +335,7 @@ static void ComputeJacobians(const CMarkerSuperElementRigid& marker, const CSyst
 	else { rotationCorrection.SetScalarMatrix(3, 1.); }
 
 	cObject.GetAccessFunctionSuperElement((AccessFunctionType)(rotationMode + (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::SuperElement),
-		weightingMatrix, marker.GetParameters().meshNodeNumbers, marker.GetParameters().offset, rotationJacobian, rotationCorrection);
+		weightingMatrix, marker.GetParameters().meshNodeNumbers, marker.GetParameters().localHT.GetTranslation(), rotationJacobian, rotationCorrection);
 
 #ifdef verboseCMarkerSuperElementRigid
 	pout << "  markerdata.positionJacobian=" << positionJacobian << "\n";
@@ -415,7 +417,7 @@ void VisualizationMarkerSuperElementRigid::UpdateGraphics(const VisualizationSet
 	cMarker->GetFloatingFrameNodeData(cSystemData, framePosition, frameRotationMatrix, frameVelocity, frameAngularVelocityLocal, ConfigurationType::Visualization);
 
 	const ArrayIndex& nodeNumbers = cMarker->GetParameters().meshNodeNumbers;
-	Vector3D pos = cMarker->GetParameters().offset; //global marker position
+	Vector3D pos = cMarker->GetParameters().localHT.GetTranslation(); //global marker position
 	for (Index i = 0; i < nodeNumbers.NumberOfItems(); i++)
 	{
 		pos += cMarker->GetParameters().weightingFactors[i] * cSuperElement->GetMeshNodeLocalPositionVisualization(nodeNumbers[i], scaleFactor);

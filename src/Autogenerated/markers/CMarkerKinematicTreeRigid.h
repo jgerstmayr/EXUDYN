@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  22:48:27 (last modified)
+* @date         2026-10-03  00:32:23 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,13 +29,13 @@ class CMarkerKinematicTreeRigidParameters // AUTO:
 public: // AUTO:
     Index objectNumber;                           //!< AUTO: body number to which marker is attached to
     Index linkNumber;                             //!< AUTO: must be >= 0; number of link in KinematicTree to which marker is attached to
-    Vector3D localPosition;                       //!< AUTO: local (link-fixed) position of marker at link \f$n_l\f$, using the link (\f$n_l\f$) coordinate system
+    HomogeneousTransformation localHT;            //!< AUTO: the frame of the marker in the link frame, as homogeneous transformation: its translation is localPosition, its rotation turns the marker frame against the link; a 4x4 matrix, its 16 values row by row or an exu.HT; None: not given; given together with localPosition, both must agree
     //! AUTO: default constructor with parameter initialization
     CMarkerKinematicTreeRigidParameters()
     {
         objectNumber = EXUstd::InvalidIndex;
         linkNumber = EXUstd::InvalidIndex;
-        localPosition = Vector3D({0.,0.,0.});
+        localHT = HomogeneousTransformation();
     };
 };
 
