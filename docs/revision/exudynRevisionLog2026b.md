@@ -11859,3 +11859,20 @@ position or rotation.
 **Cost of (A)**: per HT parameter one more key, a check "not both" in the item's `SetWithDictionary` (generated: a
 declared pair in `definitions/`), and the composition in the item; the definitions gain a parameter type `HT` (4x4 numpy
 array in Python, `HomogeneousTransformation` in C++), once in the generators.
+
+<a id="rg16-2-decided"></a>
+### RG16.2 — decided (2026-10-02, #2781)
+
+The maintainer, on the proposal of the evaluation above:
+1. **Per item, `None` for "not given"** (option A) - "however, we have to see where it makes sense at all for the
+   interface and where it makes sense for the internal storage": **`ObjectGround`** stores the HT internally and keeps
+   `referencePosition`/`referenceRotation` in its get/set interface; **rigid bodies** take none - "internally, the rigid
+   body needs to use the current parameters" -, except **`CreateRigidBody`**: `referenceHT` and `initialHT`, the
+   transformation added to the reference; mostly the HT is for the **rigid body markers** (`localHT`) and the ground, for
+   initialization. Written into RG16.3.1 to RG16.3.3.
+2. **A 4x4 numpy array** in the dictionaries.
+3. **Names** `localHT`, `referenceHT`, `initialHT`, `jointHTs`.
+4. **The name `HT`**: the shortcut `rigidBodyUtilities.HT` of `HomogeneousTransformation` is removed (it was used mainly
+   internally) - done: `__all__` and the shortcut gone, the four calls in `kinematicTreeAndMBS.py` and
+   `serialRobotInverseKinematics.py` (both run) call `HomogeneousTransformation`, `revisions.md` says it under "What can
+   break a script". `HT` now means `exu.HT`.

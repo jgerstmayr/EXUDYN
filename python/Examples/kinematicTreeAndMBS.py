@@ -240,8 +240,8 @@ if useKT2:
             # T66prev = T66
             [A, v, rotAxis, transAxis] = JointTransformMotionSubspace(KT2.listOfJointTypes[i], q[i])
             XL = KT2.XL(i)
-            XLHT = HT(XL[0],XL[1])
-            T = T @ XLHT @ HT(A.T,v) #A is inverse transform
+            XLHT = HomogeneousTransformation(XL[0],XL[1])
+            T = T @ XLHT @ HomogeneousTransformation(A.T,v) #A is inverse transform
 
             p = HT2translation(T)
             A = HT2rotationMatrix(T)

@@ -2454,7 +2454,8 @@ the joints an HT means fewer variables and one way of doing things.
       variable HT wherever position and rotation are available.
 
 <a id="rg16-2"></a>
-**RG16.2** *(group RG16; maintainer 2026-10-02)* **EVALUATED 2026-10-02, for the maintainer's decisions** —
+**RG16.2** *(group RG16; maintainer 2026-10-02)* **DECIDED 2026-10-02** (the decisions in the
+    [log](exudynRevisionLog2026b.md#rg16-2-decided)) —
     [log](exudynRevisionLog2026b.md#rg16-2) - **The evaluation: HT in the user interface of the rigid items**
     (#2781), for the maintainer's decisions - unification, clarity, simplicity. The main cases: `ObjectRigidBody`,
     `ObjectGround`, the rigid body nodes, the `Marker...Rigid`. Can they take an HT instead of position and rotation, in
@@ -2464,8 +2465,16 @@ the joints an HT means fewer variables and one way of doing things.
     is given a position or a rotation matrix? The interface is not the performance question. What already exists (the
     `localHT` of RG14.2.15) is homogenized with it.
 
-**RG16.3** *(group RG16)* **The cases that break nothing for users**, as decided in RG16.2 - HT as an additional,
-    optional parameter and output, the internal storage.
+**RG16.3** *(group RG16)* **The cases that break nothing for users**, as decided in RG16.2 (2026-10-02): an HT
+    parameter next to the position and rotation of today, both `None` for "not given", giving both raises, a 4x4 numpy
+    array in the dictionary (an `exu.HT` accepted), only where it makes sense:
+    - **RG16.3.1** `ObjectGround`: the HT is the internal storage; `referenceHT` next to `referencePosition` and
+      `referenceRotation`, which the get/set interface keeps (and composes from the stored HT);
+    - **RG16.3.2** `CreateRigidBody` (and `CreateGround`): `referenceHT` and `initialHT` - the transformation added to the
+      reference -, translated into the node's reference and initial coordinates; rigid bodies and their nodes themselves
+      take no HT (their state is their coordinates);
+    - **RG16.3.3** the rigid body markers (`MarkerBodyRigid`, `MarkerNodeRigid`, `MarkerKinematicTreeRigid`): `localHT`,
+      the marker frame = body or node frame x `localHT` (RG14.2.15, RG16.5).
 
 **RG16.4** *(group RG16)* **The further steps** - the mode switch, the kinematic tree and the robotics utilities on
     HT -, planned after RG16.3.
@@ -2515,8 +2524,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG9.5.7 | #2784 | `ObjectALEANCFCable2D`: a marker on it - a material point or a point along the axis (for the maintainer's decision) |
-| RG16.1 | #2780 | homogeneous transformations: the C++ class fast, out of `exulie`, and `exudyn.HT` |
-| RG16.2 | #2781 | evaluation: HT in the user interface of the rigid items, `localHT` in the rigid markers (RG16.5) |
+| RG16.3 | #2781 | HT in the user interface as decided in RG16.2: `ObjectGround` (internal storage, `referenceHT`), `CreateRigidBody` (`referenceHT`, `initialHT`), the rigid body markers (`localHT`) |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG13.6.6 | #2732 | MiniExamples of `ObjectFFRF` and `ObjectFFRFreducedOrder`, once tetrahedral elements are part of Exudyn |
 

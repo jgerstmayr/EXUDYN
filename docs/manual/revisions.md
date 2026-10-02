@@ -145,6 +145,11 @@ derivatives; they were a least-squares fit of both slopes, which differs where t
 deforms. Joints and torques on these nodes converge as they should; the angular velocity output of a
 deformed cross section, and results with joints on slope nodes, change slightly (#2763).
 
+**`rigidBodyUtilities.HT` is gone; its name is `exudyn.HT` now.** The shortcut `HT` of the function
+`HomogeneousTransformation(A, r)`, which `from exudyn.utilities import *` brought into a script, is
+removed, so that `HT` means one thing - the class `exu.HT`. A script that called `HT(A, r)` for a 4x4
+array writes `HomogeneousTransformation(A, r)` (#2781).
+
 ### What is new to use
 
 **More markers on more bodies.** `ObjectRotationalMass1D` takes forces and connectors anywhere on
@@ -162,7 +167,7 @@ testing a model or an item of one's own (#2779).
 **`exudyn.HT`, the homogeneous transformation of the C++ core.** `exu.HT(rotation=A, translation=p)`
 composes with `*` (`H1*H2`, and `H*v` for a point), inverts (`Inverse()`), and converts to and from the
 4x4 matrix (`HT44()`, `exu.HT(T44)`) - faster than the 4x4 numpy arrays of
-`exudyn.rigidBodyUtilities`, whose function `HomogeneousTransformation` (shortcut `HT`) stays (#2780).
+`exudyn.rigidBodyUtilities`, whose function `HomogeneousTransformation` stays (#2780).
 
 **The output variable `HomogeneousTransformation`.** Every node, body point, marker and connector that
 gives `Position` and `RotationMatrix` also gives `HomogeneousTransformation`: the 4x4 matrix [A p; 0 1],

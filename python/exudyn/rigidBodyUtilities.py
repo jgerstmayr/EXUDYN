@@ -33,7 +33,7 @@ __all__ = [
     'RotationVector2GLocal', 'RotXYZ2RotationMatrix', 'RotationMatrix2RotXYZ', 'RotXYZ2G',
     'RotXYZ2G_t', 'RotXYZ2GLocal', 'RotXYZ2GLocal_t', 'AngularVelocity2RotXYZ_t',
     'RotXYZ2EulerParameters', 'RotationMatrix2RotZYZ', 'RotationMatrixX', 'RotationMatrixY',
-    'RotationMatrixZ', 'RotationMatrix2D', 'HomogeneousTransformation', 'HT', 'HTtranslate',
+    'RotationMatrixZ', 'RotationMatrix2D', 'HomogeneousTransformation', 'HTtranslate',
     'HTtranslateX', 'HTtranslateY', 'HTtranslateZ', 'HT0', 'HTrotateX', 'HTrotateY', 'HTrotateZ',
     'HT2translation', 'HT2rotationMatrix', 'InverseHT', 'RotationX2T66', 'RotationY2T66',
     'RotationZ2T66', 'Translation2T66', 'TranslationX2T66', 'TranslationY2T66', 'TranslationZ2T66',
@@ -735,7 +735,7 @@ def RotationMatrix2D(angleRad):
 def HomogeneousTransformation(A, r):
     """compute [HT](#HT) matrix from rotation matrix A and translation vector r, as a 4x4 numpy array;
     exudyn.HT is the C++ class of the same transformation, faster in products, inverses and transformed points:
-    exudyn.HT(rotation=A, translation=r) (#2780); the shortcut HT of this module is this function
+    exudyn.HT(rotation=A, translation=r) (#2780)
     """
     T = np.zeros((4,4))
     T[0:3,0:3] = A
@@ -743,7 +743,6 @@ def HomogeneousTransformation(A, r):
     T[3,3] = 1
     return T
 
-HT = HomogeneousTransformation #shortcut
 
 def HTtranslate(r):
     """[HT](#HT) for translation with vector r

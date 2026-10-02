@@ -116,9 +116,9 @@ HTlastJoint = jointHTs[-1]@HTtool
 #prescribed motion:
 #HTmove = HTtranslate([-0.25,0.,0.3])
 if motionCase == 1: 
-    HTmove = HT(RotationMatrixX(-0.3*pi),[-0.45,0.,0.]) #goes through singularity
+    HTmove = HomogeneousTransformation(RotationMatrixX(-0.3*pi),[-0.45,0.,0.]) #goes through singularity
 elif motionCase == 2: 
-    HTmove = HT(RotationMatrixX(0.3*pi),[0.,0.,-0.3])    #no singularity
+    HTmove = HomogeneousTransformation(RotationMatrixX(0.3*pi),[0.,0.,-0.3])    #no singularity
 else: 
     print('no valid motionCase provided')
 
