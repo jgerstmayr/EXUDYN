@@ -11110,3 +11110,55 @@ step only position and velocity) brought this part from 0.22 s to 0.20 s - **2 %
 bounding boxes and the loop, not in the marker data. Reverted. **Proposed**: `GeneralContact` keeps its precomputation
 (as RG14.1 said); the question returns when the bodies project forces themselves (RG9.3.4) and the stored Jacobians
 are no longer needed for the right-hand side.
+
+<a id="rg9-3-4"></a>
+### RG9.3.4 — the split of GetAccessFunctionBody (2026-10-02, #2744)
+
+**RG9.3.4.1, the class of access functions.** `CObjectBody` declares one virtual function per access type, documented
+there once: `GetPositionJacobian(localPosition, value)` (3 x n), `GetRotationJacobian(localPosition, value)`,
+`GetMassWeightedPositionJacobian(value)` - without a local position: the mass marker always passed the center of
+mass, so the four checks *"inconsistent localPosition"* compared the center of mass with itself and are gone -,
+`GetJacobianTransposedTimesVectorDerivative(localPosition, forceTorque, value)`, which takes the force and torque as
+an argument and returns false for "zero" instead of a 0 x 0 matrix, and `IsValidLocalPosition(localPosition, reason)`.
+The defaults raise *"this body provides no ..."*; `itemFunctions.py` has the five declarations.
+
+**RG9.3.4.2, the objects.** The switch of each of the 17 objects is split into its functions by a script
+(`splitAccess.py`, scratchpad): each case becomes the body of its function, the shared declarations before the
+switch go into the functions that use them. Removed: the cases an object does not declare - `AngularVelocity_qt` of
+`ObjectANCFCable` and `ObjectANCFBeam` (the latter raised *not implemented*), `DisplacementMassIntegral_q` of
+`ObjectRotationalMass1D` -, and the raising implementations of `ObjectGenericODE2` and `ObjectKinematicTree`, which
+now inherit the raising defaults. `ObjectBeamGeometricallyExact` provides all four types it declares (since #2730).
+`MarkerBodyCable2DShape` does not call the access functions (only a comment named them).
+
+**RG9.3.4.3, the callers.** `MarkerBodyPosition`, `MarkerBodyMass`, `MarkerBodyRigid` (through
+`ComputeRigidBodyMarkerData`), `MarkerKinematicTreeRigid`, the defaults `AddPositionForce`/`AddForceTorque` of the
+connector interface and `GeneralContact` (ANCF cable contact) call the single functions. `GetAccessFunctionBody` is
+gone, and with it the vector of `JacobianTtimesVector_q` travelling in row 0 of the output matrix: the markers pass
+`v6D` and set the 0 x 0 matrix that `CSystem` reads as "no dependency" when the function returns false.
+
+**The restricted local positions** (from RG9.3.4.1): `ObjectRotationalMass1D` on its axis, `ObjectANCFCable` at the
+centerline, `ObjectANCFThinPlate` at the midsurface, `ObjectBeamGeometricallyExact2D` at the axis declare
+`IsValidLocalPosition`. `CSystem::CheckSystemIntegrity` checks it for the markers through which a **connector or a
+load** acts - not for every marker: `distanceSensor.py` places a `MarkerBodyRigid` at the rim of a rotational mass
+for the contact and a sensor, where the position is defined and only the Jacobians are not. A marker reports its local
+position through `CMarker::GetLocalPosition` (`MarkerBodyPosition`, `MarkerBodyRigid`). The run-time checks in the
+functions stay.
+
+**RG9.3.4.4, in part.** Rule 7 of `definitionValidator.py`: an object declares an access function type exactly if it
+provides the function - in its definition or in a hand-written parent other than the raising base classes
+(`CObjectANCFCable2DBase`) -, and an object with `bodyMarkers=False` provides none. Deriving the flags instead is left
+open: the super elements use `TranslationalVelocity_qt` and the others also for their own markers, through
+`GetAccessFunctionSuperElement`, so the two meanings have to be separated first.
+
+Checked: build without warnings; the test suite with **all references unchanged** (the split computes what the switch
+computed); pytest. New: `accessFunctionsTest.py` (the table driven on its axis with a sensor at the rim, a cantilever
+cable against $F L^3/(3EI)$, and the two refusals with their messages) and `test_accessFunctionDeclarations.py`
+(rule 7 finds a type without its function and a function without its type).
+
+<a id="rg14-2-11-decision"></a>
+### RG14.2.11 — decided (2026-10-02, #2745)
+
+The maintainer: the special items stay on the old path. The path of the marker data is theirs, named
+`ConnectorInterface::MarkerData` when RG14.2.13 removes the switch `exu.experimental.connectorInterfaceLegacy`. The
+maintainer's question whether the dispatch belongs into the connector rather than into `CSystem` is answered in
+RG14.2.17 (proposed).

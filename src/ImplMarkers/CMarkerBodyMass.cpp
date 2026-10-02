@@ -32,9 +32,7 @@ void CMarkerBodyMass::ComputeMarkerData(const CSystemData& cSystemData, bool com
 	if (computeJacobian)
 	{
 		const CObjectBody* cBody = ((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]));
-		cBody->GetAccessFunctionBody(AccessFunctionType::DisplacementMassIntegral_q, 
-			cBody->GetLocalCenterOfMass(), 
-			markerData.positionJacobian); //use positionJacobian to keep compatibility with BodyPosition marker
+		cBody->GetMassWeightedPositionJacobian(markerData.positionJacobian); //use positionJacobian to keep compatibility with BodyPosition marker
 	}
 	markerData.velocityAvailable = false;
 

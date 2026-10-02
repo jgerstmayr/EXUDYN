@@ -87,6 +87,7 @@ geometricallyExactBeamCurvedTest
 geometricallyExactBeamRightAngleFrame
 rightAngleFrame
 energiesFlexibleBodiesTest
+accessFunctionsTest
 inspectTest
 energiesTest
 geometricallyExactBeamOutputTest

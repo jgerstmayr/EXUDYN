@@ -222,142 +222,32 @@ void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) 
 
 
 #define CObjectALEANCFCable2D_USE_ALE_MASSTERM 1 //0 or 1
-//! provide Jacobian at localPosition in "value" according to object access
-void CObjectALEANCFCable2D::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
+//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
+void CObjectALEANCFCable2D::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
 	Real L = GetParameters().physicsLength;
 
-	switch (accessType)
+	//const Index dim = 2;  //2D finite element
+	//const Index ns = 4;   //number of shape functions
+
+	Real x = localPosition[0]; //only x-coordinate
+	Vector4D SV = ComputeShapeFunctions(x, L);
+	value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
+
+	////OLD:
+	//value.SetAll(0.);
+	//value(0, 0) = SV[0];
+	//value(1, 1) = SV[0];
+	//value(0, 2) = SV[1];
+	//value(1, 3) = SV[1];
+	//value(0, 4) = SV[2];
+	//value(1, 5) = SV[2];
+	//value(0, 6) = SV[3];
+	//value(1, 7) = SV[3];
+
+	if (localPosition[1] == 0)
 	{
-	case AccessFunctionType::TranslationalVelocity_qt:
-	{
-		//const Index dim = 2;  //2D finite element
-		//const Index ns = 4;   //number of shape functions
-
-		Real x = localPosition[0]; //only x-coordinate
-		Vector4D SV = ComputeShapeFunctions(x, L);
-		value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
-
-		////OLD:
-		//value.SetAll(0.);
-		//value(0, 0) = SV[0];
-		//value(1, 1) = SV[0];
-		//value(0, 2) = SV[1];
-		//value(1, 3) = SV[1];
-		//value(0, 4) = SV[2];
-		//value(1, 5) = SV[2];
-		//value(0, 6) = SV[3];
-		//value(1, 7) = SV[3];
-
-		if (localPosition[1] == 0)
-		{
-			value.SetAll(0.);
-			value(0, 0) = SV[0];
-			value(1, 1) = SV[0];
-			value(0, 2) = SV[1];
-			value(1, 3) = SV[1];
-			value(0, 4) = SV[2];
-			value(1, 5) = SV[2];
-			value(0, 6) = SV[3];
-			value(1, 7) = SV[3];
-		}
-		else
-		{
-			Real y = localPosition[1];
-			Vector4D SV_x = ComputeShapeFunctions_x(x, L);
-			Vector2D r_x = ComputeSlopeVector(x, ConfigurationType::Current);
-			Real norm = r_x.GetL2Norm();
-			Real normInv = 0;
-			Vector2D n({ -r_x[1], r_x[0] });
-			if (norm != 0.)
-			{
-				normInv = 1. / norm;
-			}
-			else
-			{
-				CHECKandTHROWstring("CObjectANCFCable2DBase::GetPosition(...): slope vector has length 0!");
-			}
-			n *= normInv;
-			//p = r(localPosition[0]) + localPosition[1] * n; n=1/sqrt(rx^T*rx)*[-rx[1],rx[0]]
-			//dp/dq = S + (ry^T*S_x)/(rx^T*rx) (3/2) * n + 1/sqrt(rx^T*rx) * S_x^perpendicular
-			Real norm3 = norm * norm * norm; //could be SIMPLIFIED, because n also contains 1/norm ....
-
-			//pout << "  slope=" << r_x << ", norm=" << norm << ", n=" << n << "\n";
-			//
-			for (Index i = 0; i < 4; i++)
-			{
-				Vector2D Svec[2]; //SV_x
-				Svec[0] = Vector2D({ SV_x[i],0 });
-				Svec[1] = Vector2D({ 0, SV_x[i] });
-				Vector2D SvecP[2];
-				SvecP[0] = Vector2D({ 0., SV_x[i] });
-				SvecP[1] = Vector2D({ -SV_x[i], 0. });
-
-				for (Index j = 0; j < 2; j++)
-				{
-					Real u = -y * (r_x*Svec[j]) / norm3;
-					value(0, i * 2 + j) = u * n[0] + y * normInv * SvecP[j][0];
-					value(1, i * 2 + j) = u * n[1] + y * normInv * SvecP[j][1];
-
-					value(j, i * 2 + j) += SV[i];
-				}
-
-			}
-		}
-
-
-
-		break;
-	}
-	case AccessFunctionType::AngularVelocity_qt:
-	{
-		//const Index dim = 2;  //2D finite element
-		const Index ns = 4;   //number of shape functions
-
-		Real xLoc = localPosition[0]; //only x-coordinate
-		Vector2D slope = ComputeSlopeVector(xLoc, ConfigurationType::Current);
-		Real x = slope[0]; //x-slopex
-		Real y = slope[1]; //y-slopex
-
-		Vector4D SVx = ComputeShapeFunctions_x(xLoc, L);
-		Real fact0 = -y / (x*x + y * y);
-		Real fact1 = x / (x*x + y * y);
-
-		value.SetNumberOfRowsAndColumns(3, 8);
-		value.SetAll(0.); //last row not necessary to set to zero ... 
-		for (Index i = 0; i < ns; i++)
-		{
-			value(2, i*2) = SVx[i] * fact0; //last row of jacobian
-			value(2, i*2 + 1) = SVx[i] * fact1;
-		}
-
-		break;
-	}
-	case AccessFunctionType::DisplacementMassIntegral_q:
-	{
-		//const Index dim = 2;  //2D finite element
-		//const Index ns = 4;   //number of shape functions
-
-		value.SetNumberOfRowsAndColumns(3, 8 + CObjectALEANCFCable2D_USE_ALE_MASSTERM); //3D velocity, 8 coordinates qt
 		value.SetAll(0.);
-
-		Real L = GetParameters().physicsLength;
-		Real rhoA = GetParameters().physicsMassPerLength;
-
-		Index cnt = 0;
-		Real a = 0; //integration interval [a,b]
-		Real b = L;
-
-		Vector4D SV({ 0.,0.,0.,0. });
-		
-		for (auto item : EXUmath::gaussRuleOrder3Points)
-		{
-			Real x = 0.5*(b - a)*item + 0.5*(b + a);
-			Vector4D SVloc = ComputeShapeFunctions(x, L);
-			SVloc *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
-			SV += SVloc;
-		}
-
 		value(0, 0) = SV[0];
 		value(1, 1) = SV[0];
 		value(0, 2) = SV[1];
@@ -366,30 +256,131 @@ void CObjectALEANCFCable2D::GetAccessFunctionBody(AccessFunctionType accessType,
 		value(1, 5) = SV[2];
 		value(0, 6) = SV[3];
 		value(1, 7) = SV[3];
-
-		//additional term that drives the ALE coordinate if subjected to gravity in axial direction
-		if (CObjectALEANCFCable2D_USE_ALE_MASSTERM)
-		{
-			Vector2D SVale(0);
-			Index cnt = 0;
-			//perform numerical integration over rhoA * r'
-			for (auto item : EXUmath::gaussRuleOrder3Points)
-			{
-				Real x = 0.5*(b - a)*item + 0.5*(b + a);
-				Vector2D slope = ComputeSlopeVector(x, ConfigurationType::Current);
-				slope *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
-				SVale += slope;
-			}
-			value(0, 8) = SVale[0];
-			value(1, 8) = SVale[1];
-		}
-
-		break;
 	}
-	default:
-		SysError("CObjectALEANCFCable2D:GetAccessFunctionBody illegal accessType");
+	else
+	{
+		Real y = localPosition[1];
+		Vector4D SV_x = ComputeShapeFunctions_x(x, L);
+		Vector2D r_x = ComputeSlopeVector(x, ConfigurationType::Current);
+		Real norm = r_x.GetL2Norm();
+		Real normInv = 0;
+		Vector2D n({ -r_x[1], r_x[0] });
+		if (norm != 0.)
+		{
+			normInv = 1. / norm;
+		}
+		else
+		{
+			CHECKandTHROWstring("CObjectANCFCable2DBase::GetPosition(...): slope vector has length 0!");
+		}
+		n *= normInv;
+		//p = r(localPosition[0]) + localPosition[1] * n; n=1/sqrt(rx^T*rx)*[-rx[1],rx[0]]
+		//dp/dq = S + (ry^T*S_x)/(rx^T*rx) (3/2) * n + 1/sqrt(rx^T*rx) * S_x^perpendicular
+		Real norm3 = norm * norm * norm; //could be SIMPLIFIED, because n also contains 1/norm ....
+
+		//pout << "  slope=" << r_x << ", norm=" << norm << ", n=" << n << "\n";
+		//
+		for (Index i = 0; i < 4; i++)
+		{
+			Vector2D Svec[2]; //SV_x
+			Svec[0] = Vector2D({ SV_x[i],0 });
+			Svec[1] = Vector2D({ 0, SV_x[i] });
+			Vector2D SvecP[2];
+			SvecP[0] = Vector2D({ 0., SV_x[i] });
+			SvecP[1] = Vector2D({ -SV_x[i], 0. });
+
+			for (Index j = 0; j < 2; j++)
+			{
+				Real u = -y * (r_x*Svec[j]) / norm3;
+				value(0, i * 2 + j) = u * n[0] + y * normInv * SvecP[j][0];
+				value(1, i * 2 + j) = u * n[1] + y * normInv * SvecP[j][1];
+
+				value(j, i * 2 + j) += SV[i];
+			}
+
+		}
 	}
 }
+
+//! the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n (#2744)
+void CObjectALEANCFCable2D::GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const
+{
+	Real L = GetParameters().physicsLength;
+
+	//const Index dim = 2;  //2D finite element
+	const Index ns = 4;   //number of shape functions
+
+	Real xLoc = localPosition[0]; //only x-coordinate
+	Vector2D slope = ComputeSlopeVector(xLoc, ConfigurationType::Current);
+	Real x = slope[0]; //x-slopex
+	Real y = slope[1]; //y-slopex
+
+	Vector4D SVx = ComputeShapeFunctions_x(xLoc, L);
+	Real fact0 = -y / (x*x + y * y);
+	Real fact1 = x / (x*x + y * y);
+
+	value.SetNumberOfRowsAndColumns(3, 8);
+	value.SetAll(0.); //last row not necessary to set to zero ... 
+	for (Index i = 0; i < ns; i++)
+	{
+		value(2, i*2) = SVx[i] * fact0; //last row of jacobian
+		value(2, i*2 + 1) = SVx[i] * fact1;
+	}
+}
+
+//! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
+void CObjectALEANCFCable2D::GetMassWeightedPositionJacobian(Matrix& value) const
+{
+	//const Index dim = 2;  //2D finite element
+	//const Index ns = 4;   //number of shape functions
+
+	value.SetNumberOfRowsAndColumns(3, 8 + CObjectALEANCFCable2D_USE_ALE_MASSTERM); //3D velocity, 8 coordinates qt
+	value.SetAll(0.);
+
+	Real L = GetParameters().physicsLength;
+	Real rhoA = GetParameters().physicsMassPerLength;
+
+	Index cnt = 0;
+	Real a = 0; //integration interval [a,b]
+	Real b = L;
+
+	Vector4D SV({ 0.,0.,0.,0. });
+	
+	for (auto item : EXUmath::gaussRuleOrder3Points)
+	{
+		Real x = 0.5*(b - a)*item + 0.5*(b + a);
+		Vector4D SVloc = ComputeShapeFunctions(x, L);
+		SVloc *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
+		SV += SVloc;
+	}
+
+	value(0, 0) = SV[0];
+	value(1, 1) = SV[0];
+	value(0, 2) = SV[1];
+	value(1, 3) = SV[1];
+	value(0, 4) = SV[2];
+	value(1, 5) = SV[2];
+	value(0, 6) = SV[3];
+	value(1, 7) = SV[3];
+
+	//additional term that drives the ALE coordinate if subjected to gravity in axial direction
+	if (CObjectALEANCFCable2D_USE_ALE_MASSTERM)
+	{
+		Vector2D SVale(0);
+		Index cnt = 0;
+		//perform numerical integration over rhoA * r'
+		for (auto item : EXUmath::gaussRuleOrder3Points)
+		{
+			Real x = 0.5*(b - a)*item + 0.5*(b + a);
+			Vector2D slope = ComputeSlopeVector(x, ConfigurationType::Current);
+			slope *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
+			SVale += slope;
+		}
+		value(0, 8) = SVale[0];
+		value(1, 8) = SVale[1];
+	}
+}
+
 
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectALEANCFCable2D::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const

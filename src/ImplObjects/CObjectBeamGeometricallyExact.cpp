@@ -663,8 +663,8 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 }
 
 
-//! provide Jacobian at localPosition in 'value' according to object access
-void CObjectBeamGeometricallyExact::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
+//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
+void CObjectBeamGeometricallyExact::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
 	//the Jacobians of the velocities as GetVelocity and GetAngularVelocity compute them: the nodal velocities and
 	//angular velocities interpolated linearly along the axis, x = localPosition[0] in [-L/2, L/2] (#2730);
@@ -674,80 +674,84 @@ void CObjectBeamGeometricallyExact::GetAccessFunctionBody(AccessFunctionType acc
 	Index nCoordinates[2] = { GetCNode(0)->GetNumberOfODE2Coordinates(), GetCNode(1)->GetNumberOfODE2Coordinates() };
 	Index offset[2] = { 0, nCoordinates[0] };
 
-	switch (accessType)
+	value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
+	value.SetAll(0.);
+	for (Index i = 0; i < 2; i++)
 	{
-	case AccessFunctionType::TranslationalVelocity_qt:
+		for (Index k = 0; k < nDim3D; k++) { value(k, offset[i] + k) = SV[i]; }
+	}
+	//a point off the axis: v += R(x) * (omegaLocal(x) x pCS), omegaLocal interpolated from Glocal*theta_t of the nodes
+	Vector3D pCS({ 0., localPosition[1], localPosition[2] });
+	if (pCS[1] != 0. || pCS[2] != 0.)
 	{
-		value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
-		value.SetAll(0.);
+		Matrix3D A = GetLocalPositionFrame(localPosition, ConfigurationType::Current).GetRotation();
+		ConstSizeMatrix<9> pTilde = RigidBodyMath::Vector2SkewMatrix(-pCS); //omega x p = -pTilde*omega
+		ConstSizeMatrix<9> ApTilde;
+		EXUmath::MultMatrixMatrix(A, pTilde, ApTilde);
 		for (Index i = 0; i < 2; i++)
 		{
-			for (Index k = 0; k < nDim3D; k++) { value(k, offset[i] + k) = SV[i]; }
-		}
-		//a point off the axis: v += R(x) * (omegaLocal(x) x pCS), omegaLocal interpolated from Glocal*theta_t of the nodes
-		Vector3D pCS({ 0., localPosition[1], localPosition[2] });
-		if (pCS[1] != 0. || pCS[2] != 0.)
-		{
-			Matrix3D A = GetLocalPositionFrame(localPosition, ConfigurationType::Current).GetRotation();
-			ConstSizeMatrix<9> pTilde = RigidBodyMath::Vector2SkewMatrix(-pCS); //omega x p = -pTilde*omega
-			ConstSizeMatrix<9> ApTilde;
-			EXUmath::MultMatrixMatrix(A, pTilde, ApTilde);
-			for (Index i = 0; i < 2; i++)
+			ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * 3> Glocal;
+			((CNodeRigidBody*)GetCNode(i))->GetGlocal(Glocal);
+			for (Index k = 0; k < nDim3D; k++)
 			{
-				ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * 3> Glocal;
-				((CNodeRigidBody*)GetCNode(i))->GetGlocal(Glocal);
-				for (Index k = 0; k < nDim3D; k++)
+				for (Index j = 0; j < Glocal.NumberOfColumns(); j++)
 				{
-					for (Index j = 0; j < Glocal.NumberOfColumns(); j++)
-					{
-						Real sum = 0.;
-						for (Index m = 0; m < nDim3D; m++) { sum += ApTilde(k, m) * Glocal(m, j); }
-						value(k, offset[i] + nDim3D + j) += SV[i] * sum;
-					}
+					Real sum = 0.;
+					for (Index m = 0; m < nDim3D; m++) { sum += ApTilde(k, m) * Glocal(m, j); }
+					value(k, offset[i] + nDim3D + j) += SV[i] * sum;
 				}
 			}
 		}
-		break;
-	}
-	case AccessFunctionType::AngularVelocity_qt:
-	{
-		value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
-		value.SetAll(0.);
-		for (Index i = 0; i < 2; i++)
-		{
-			ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * 3> G;
-			((CNodeRigidBody*)GetCNode(i))->GetG(G);
-			for (Index k = 0; k < nDim3D; k++)
-			{
-				for (Index j = 0; j < G.NumberOfColumns(); j++) { value(k, offset[i] + nDim3D + j) = SV[i] * G(k, j); }
-			}
-		}
-		break;
-	}
-	case AccessFunctionType::JacobianTtimesVector_q:
-	{
-		//the derivative of the Jacobians is not computed: taken as zero, which is exact for the position
-		//part on the axis and an approximation for rotation parameters with a configuration dependent G
-		value.SetNumberOfRowsAndColumns(0, 0); //indicates that all entries are zero
-		break;
-	}
-	case AccessFunctionType::DisplacementMassIntegral_q:
-	{
-		//the mass of the element at its two nodes, half each, as the lumped mass matrix: a distributed
-		//load gives no nodal torques
-		value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
-		value.SetAll(0.);
-		Real halfMass = 0.5 * parameters.physicsMassPerLength * parameters.physicsLength;
-		for (Index i = 0; i < 2; i++)
-		{
-			for (Index k = 0; k < nDim3D; k++) { value(k, offset[i] + k) = halfMass; }
-		}
-		break;
-	}
-	default:
-		SysError("CObjectBeamGeometricallyExact:GetAccessFunctionBody illegal accessType");
 	}
 }
+
+//! the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n (#2744)
+void CObjectBeamGeometricallyExact::GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const
+{
+	const Index nDim3D = 3;
+	Vector2D SV = ComputeShapeFunctions(localPosition[0]);
+	Index nCoordinates[2] = { GetCNode(0)->GetNumberOfODE2Coordinates(), GetCNode(1)->GetNumberOfODE2Coordinates() };
+	Index offset[2] = { 0, nCoordinates[0] };
+
+	value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
+	value.SetAll(0.);
+	for (Index i = 0; i < 2; i++)
+	{
+		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * 3> G;
+		((CNodeRigidBody*)GetCNode(i))->GetG(G);
+		for (Index k = 0; k < nDim3D; k++)
+		{
+			for (Index j = 0; j < G.NumberOfColumns(); j++) { value(k, offset[i] + nDim3D + j) = SV[i] * G(k, j); }
+		}
+	}
+}
+
+//! d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n; false if it is zero (#2744)
+bool CObjectBeamGeometricallyExact::GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value) const
+{
+	//the derivative of the Jacobians is not computed: taken as zero, which is exact for the position
+	//part on the axis and an approximation for rotation parameters with a configuration dependent G
+	return false; //all entries are zero
+}
+
+//! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
+void CObjectBeamGeometricallyExact::GetMassWeightedPositionJacobian(Matrix& value) const
+{
+	const Index nDim3D = 3;
+	Index nCoordinates[2] = { GetCNode(0)->GetNumberOfODE2Coordinates(), GetCNode(1)->GetNumberOfODE2Coordinates() };
+	Index offset[2] = { 0, nCoordinates[0] };
+
+	//the mass of the element at its two nodes, half each, as the lumped mass matrix: a distributed
+	//load gives no nodal torques
+	value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
+	value.SetAll(0.);
+	Real halfMass = 0.5 * parameters.physicsMassPerLength * parameters.physicsLength;
+	for (Index i = 0; i < 2; i++)
+	{
+		for (Index k = 0; k < nDim3D; k++) { value(k, offset[i] + k) = halfMass; }
+	}
+}
+
 
 //! provide according output variable in 'value'
 void CObjectBeamGeometricallyExact::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const

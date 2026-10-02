@@ -78,7 +78,7 @@ in the generated headers.
 
 | kind | functions to implement |
 |---|---|
-| body | `ComputeMassMatrix`, `ComputeODE2LHS`, `GetAccessFunctionBody` (how a force or torque reaches the body; the types in `ItemAccessFunctionTypes`), `GetOutputVariableBody`, `GetPosition`, `GetVelocity`, ... as far as they apply, `GetAvailableJacobians` |
+| body | `ComputeMassMatrix`, `ComputeODE2LHS`, the access functions `GetPositionJacobian`, `GetRotationJacobian`, `GetMassWeightedPositionJacobian`, `GetJacobianTransposedTimesVectorDerivative` (how a force or torque reaches the body; one per type in `ItemAccessFunctionTypes`, which the validator checks) and `IsValidLocalPosition` where they are defined at restricted local positions only, `GetOutputVariableBody`, `GetPosition`, `GetVelocity`, ... as far as they apply, `GetAvailableJacobians` |
 | connector | `ComputeODE2LHS` (the forces on the markers), `ComputeJacobianODE2_ODE2` unless `GetAvailableJacobians` says it is not a function, `GetOutputVariableConnector` |
 | constraint | `ComputeAlgebraicEquations`, `ComputeJacobianAE`, `GetOutputVariableConnector` |
 | node | `GetPosition`, `GetVelocity`, ..., `GetOutputVariable` |

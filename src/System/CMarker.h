@@ -65,6 +65,9 @@ public: //
 	}
 
 	//! if marker is of coordinate type: return coordinate of node or body
+	//! the local position on the body, for markers that have one (#2744); false otherwise
+	virtual bool GetLocalPosition(Vector3D& localPosition) const { return false; }
+
 	virtual Index GetCoordinateNumber() const {
 		CHECKandTHROWstring("Invalid call to CMarker::GetCoordinateNumber");
 		return EXUstd::InvalidIndex;

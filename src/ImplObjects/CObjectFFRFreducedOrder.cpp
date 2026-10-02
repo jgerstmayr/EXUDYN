@@ -469,175 +469,164 @@ void CObjectFFRFreducedOrder::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber
 
 
 
-//! provide Jacobian at localPosition in "value" ONLY OF reference frame, according to configuration type
-//! however, DisplacementMassIntegral_q also works for the FFRF body!
-void CObjectFFRFreducedOrder::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
+//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
+void CObjectFFRFreducedOrder::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
 #ifndef __EXUDYN__APPLE__ //static_assert not supported by older MAC compilers
 	static_assert(CNodeRigidBody::nDim3D == CNodeRigidBody::maxDisplacementCoordinates); //add this code to raise compiler error, if max. number of displacement coordiantes changes in RigidBodyNode ==> requires reimplementation in this file!
 #endif
-	switch (accessType)
+
+	//this function relates a 3D translatory velocity to the time derivative of all coordinates: v_trans = Jac*q_dot
+	//Jac = -A*uLocalTilde*Glocal
+	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> Glocal;
+	((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
+
+	ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix(-localPosition); //negative sign in -A*uLocalTilde*Glocal
+	//uLocalTilde *= -1.;//moved into (-localPosition)
+
+	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> temp; //temporary matrix during computation
+	EXUmath::MultMatrixMatrix(uLocalTilde, Glocal, temp);
+	EXUmath::MultMatrixMatrix(((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(), temp, Glocal); //Glocal now is: A*(-uLocalTilde)*Glocal
+
+	value.SetNumberOfRowsAndColumns(CNodeRigidBody::nDim3D, GetODE2Size());
+	//unit matrix
+	value(0, 0) = 1.; value(0, 1) = 0.; value(0, 2) = 0.;
+	value(1, 0) = 0.; value(1, 1) = 1.; value(1, 2) = 0.;
+	value(2, 0) = 0.; value(2, 1) = 0.; value(2, 2) = 1.;
+
+	//-A*uLocalTilde*Glocal part (=L in this case
+	for (Index i = 0; i < CNodeRigidBody::nDim3D; i++)
 	{
-	case AccessFunctionType::TranslationalVelocity_qt: //global translational velocity at localPosition derivative w.r.t. qt = L-matrix = [I   -A*uLocalTilde*Glocal]
-	{
-		//this function relates a 3D translatory velocity to the time derivative of all coordinates: v_trans = Jac*q_dot
-		//Jac = -A*uLocalTilde*Glocal
-		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> Glocal;
-		((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
-
-		ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix(-localPosition); //negative sign in -A*uLocalTilde*Glocal
-		//uLocalTilde *= -1.;//moved into (-localPosition)
-
-		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> temp; //temporary matrix during computation
-		EXUmath::MultMatrixMatrix(uLocalTilde, Glocal, temp);
-		EXUmath::MultMatrixMatrix(((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(), temp, Glocal); //Glocal now is: A*(-uLocalTilde)*Glocal
-
-		value.SetNumberOfRowsAndColumns(CNodeRigidBody::nDim3D, GetODE2Size());
-		//unit matrix
-		value(0, 0) = 1.; value(0, 1) = 0.; value(0, 2) = 0.;
-		value(1, 0) = 0.; value(1, 1) = 1.; value(1, 2) = 0.;
-		value(2, 0) = 0.; value(2, 1) = 0.; value(2, 2) = 1.;
-
-		//-A*uLocalTilde*Glocal part (=L in this case
-		for (Index i = 0; i < CNodeRigidBody::nDim3D; i++)
+		for (Index j = 0; j < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); j++)
 		{
-			for (Index j = 0; j < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); j++)
-			{
-				value(i, CNodeRigidBody::nDim3D + j) = Glocal(i, j);
-			}
+			value(i, CNodeRigidBody::nDim3D + j) = Glocal(i, j);
 		}
-
-
-		break;
-	}
-	case AccessFunctionType::AngularVelocity_qt: //global angular velocity
-	{
-		//d(omega)/d(q_t): derivative of angular velocity w.r.t. all coordinates_t = [0_{3x3} G-matrix]
-		//ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> rot = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters();
-		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> G;
-		((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetG(G);// RigidBodyMath::EP2G(rot);
-
-		value.SetNumberOfRowsAndColumns(CNodeRigidBody::nDim3D, GetODE2Size());
-		for (Index i = 0; i < CNodeRigidBody::nDim3D; i++)
-		{
-			value(0, i) = 0;
-			value(1, i) = 0;
-			value(2, i) = 0;
-			for (Index j = 0; j < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); j++)
-			{
-				value(i, CNodeRigidBody::nDim3D + j) = G(i, j);
-			}
-		}
-		break;
-	}
-	case AccessFunctionType::DisplacementMassIntegral_q:
-	{
-		value.SetNumberOfRowsAndColumns(CNodeRigidBody::nDim3D, GetODE2Size());
-
-		Real m = physicsMass;
-
-		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> AuTildeGlocal;
-		((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(AuTildeGlocal);// RigidBodyMath::EP2Glocal(rot);
-		CHECKandTHROW(physicsCenterOfMass == localPosition, "CObjectFFRFreducedOrder::GetAccessFunctionBody:DisplacementMassIntegral_q: inconsistent localPosition");
-
-		//negative sign in -A*uLocalTilde*Glocal; transposed as compared to paper and earlier gravity force in FEM.py
-		ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*physicsCenterOfMass); 
-
-		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> temp; //temporary matrix during computation
-		EXUmath::MultMatrixMatrix(uLocalTilde, AuTildeGlocal, temp);
-		Matrix3D A = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix();
-		EXUmath::MultMatrixMatrix(A, temp, AuTildeGlocal); //AuTildeGlocal=A*(-m*uLocalTilde)*Glocal
-
-		//g.T @ (self.totalMass*np.eye(3))
-		value(0, 0) = m; value(0, 1) = 0.; value(0, 2) = 0.;
-		value(1, 0) = 0.; value(1, 1) = m; value(1, 2) = 0.;
-		value(2, 0) = 0.; value(2, 1) = 0.; value(2, 2) = m;
-
-		//m * Glocal.T @ (Skew(self.chiU) @ (A.T @ g)) ==> - m*g.T * A * Skew(self.chiU) * Glocal
-		//-m*A*uLocalTilde*Glocal part = m*Glocal^T uLocalTilde A^T
-		for (Index i = 0; i < CNodeRigidBody::nDim3D; i++)
-		{
-			for (Index j = 0; j < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); j++)
-			{
-				value(i, CNodeRigidBody::nDim3D + j) = AuTildeGlocal(i, j);
-			}
-		}
-		//pout << "value               =" << value.NumberOfRows() << " x " << value.NumberOfColumns() << "\n";
-		//pout << "parameters.mPhitTPsi=" << parameters.mPhitTPsi.NumberOfRows() << " x " << parameters.mPhitTPsi.NumberOfColumns() << "\n";
-
-		//self.mPhitTPsi.T @ (A.T * g) ==> g.T * A * self.mPhitTPsi
-		if (parameters.mPhitTPsi.NumberOfRows() != 0) //otherwise it uses the user function ...
-		{
-			Index nODE2Rigid = GetCNode(rigidBodyNodeNumber)->GetNumberOfODE2Coordinates(); //number of rigid body coordinates
-
-			CHECKandTHROW((parameters.mPhitTPsi.NumberOfRows() == CNodeRigidBody::nDim3D) &&
-				(parameters.mPhitTPsi.NumberOfColumns() == GetCNode(genericNodeNumber)->GetNumberOfODE2Coordinates()), 
-                "CObjectFFRFreducedOrder::GetAccessFunctionBody:DisplacementMassIntegral_q: inconsistent dimensions of matrix mPhitTPsi");
-
-			//EXUmath::MultMatrixTransposedMatrixTemplate<Matrix, Matrix3D, ResizableMatrix>(parameters.mPhitTPsi, A.GetTransposed(), tempMatrix);
-			EXUmath::MultMatrixMatrixTemplate<Matrix3D, Matrix, ResizableMatrix>(A, parameters.mPhitTPsi, tempMatrix);
-			//pout << "tempMatrix          =" << tempMatrix.NumberOfRows() << " x " << tempMatrix.NumberOfColumns() << "\n";
-
-			for (Index i = 0; i < tempMatrix.NumberOfRows(); i++)
-			{
-				for (Index j = 0; j < tempMatrix.NumberOfColumns(); j++)
-				{
-					value(i, nODE2Rigid + j) = tempMatrix(i, j);
-				}
-			}
-		}
-
-
-
-		////this is incomplete:
-		//if (physicsCenterOfMass == 0.)
-		//{
-		//	for (Index i = 0; i < CNodeRigidBody::nDim3D; i++)
-		//	{
-		//		for (Index j = 0; j < GetODE2Size(); j++)
-		//		{
-		//			if (i != j) { value(i, j) = 0.; }
-		//			else { value(i, j) = m; } //only diagonal 3x3 term!
-		//		}
-		//	}
-		//}
-		//else
-		//{
-
-		//	//gives m* \partial p_COM / \partial q
-		//	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> Glocal;
-		//	((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
-		//	CHECKandTHROW(physicsCenterOfMass == localPosition, "CObjectRigidBody::GetAccessFunctionBody: inconsistent localPosition");
-
-
-		//	ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*physicsCenterOfMass); //negative sign in -A*uLocalTilde*Glocal
-		//	//uLocalTilde *= -1.;//moved into ((-m)*parameters.physicsCenterOfMass)
-
-		//	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> temp; //temporary matrix during computation
-		//	EXUmath::MultMatrixMatrix(uLocalTilde, Glocal, temp);
-		//	EXUmath::MultMatrixMatrix(((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(), temp, Glocal); //Glocal=A*(-m*uLocalTilde)*Glocal
-
-		//	//unit matrix
-		//	value(0, 0) = m; value(0, 1) = 0.; value(0, 2) = 0.;
-		//	value(1, 0) = 0.; value(1, 1) = m; value(1, 2) = 0.;
-		//	value(2, 0) = 0.; value(2, 1) = 0.; value(2, 2) = m;
-
-		//	//-A*uLocalTilde*Glocal part (=L in this case
-		//	for (Index i = 0; i < CNodeRigidBody::nDim3D; i++)
-		//	{
-		//		for (Index j = 0; j < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); j++)
-		//		{
-		//			value(i, CNodeRigidBody::nDim3D + j) = Glocal(i, j);
-		//		}
-		//	}
-		//}
-
-		break;
-	}
-	default:
-		SysError("CObjectFFRFreducedOrder:GetAccessFunctionBody illegal accessType");
 	}
 }
+
+//! the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n (#2744)
+void CObjectFFRFreducedOrder::GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const
+{
+	//d(omega)/d(q_t): derivative of angular velocity w.r.t. all coordinates_t = [0_{3x3} G-matrix]
+	//ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> rot = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationParameters();
+	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> G;
+	((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetG(G);// RigidBodyMath::EP2G(rot);
+
+	value.SetNumberOfRowsAndColumns(CNodeRigidBody::nDim3D, GetODE2Size());
+	for (Index i = 0; i < CNodeRigidBody::nDim3D; i++)
+	{
+		value(0, i) = 0;
+		value(1, i) = 0;
+		value(2, i) = 0;
+		for (Index j = 0; j < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); j++)
+		{
+			value(i, CNodeRigidBody::nDim3D + j) = G(i, j);
+		}
+	}
+}
+
+//! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
+void CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian(Matrix& value) const
+{
+	value.SetNumberOfRowsAndColumns(CNodeRigidBody::nDim3D, GetODE2Size());
+
+	Real m = physicsMass;
+
+	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> AuTildeGlocal;
+	((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(AuTildeGlocal);// RigidBodyMath::EP2Glocal(rot);
+
+	//negative sign in -A*uLocalTilde*Glocal; transposed as compared to paper and earlier gravity force in FEM.py
+	ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*physicsCenterOfMass); 
+
+	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> temp; //temporary matrix during computation
+	EXUmath::MultMatrixMatrix(uLocalTilde, AuTildeGlocal, temp);
+	Matrix3D A = ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix();
+	EXUmath::MultMatrixMatrix(A, temp, AuTildeGlocal); //AuTildeGlocal=A*(-m*uLocalTilde)*Glocal
+
+	//g.T @ (self.totalMass*np.eye(3))
+	value(0, 0) = m; value(0, 1) = 0.; value(0, 2) = 0.;
+	value(1, 0) = 0.; value(1, 1) = m; value(1, 2) = 0.;
+	value(2, 0) = 0.; value(2, 1) = 0.; value(2, 2) = m;
+
+	//m * Glocal.T @ (Skew(self.chiU) @ (A.T @ g)) ==> - m*g.T * A * Skew(self.chiU) * Glocal
+	//-m*A*uLocalTilde*Glocal part = m*Glocal^T uLocalTilde A^T
+	for (Index i = 0; i < CNodeRigidBody::nDim3D; i++)
+	{
+		for (Index j = 0; j < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); j++)
+		{
+			value(i, CNodeRigidBody::nDim3D + j) = AuTildeGlocal(i, j);
+		}
+	}
+	//pout << "value               =" << value.NumberOfRows() << " x " << value.NumberOfColumns() << "\n";
+	//pout << "parameters.mPhitTPsi=" << parameters.mPhitTPsi.NumberOfRows() << " x " << parameters.mPhitTPsi.NumberOfColumns() << "\n";
+
+	//self.mPhitTPsi.T @ (A.T * g) ==> g.T * A * self.mPhitTPsi
+	if (parameters.mPhitTPsi.NumberOfRows() != 0) //otherwise it uses the user function ...
+	{
+		Index nODE2Rigid = GetCNode(rigidBodyNodeNumber)->GetNumberOfODE2Coordinates(); //number of rigid body coordinates
+
+		CHECKandTHROW((parameters.mPhitTPsi.NumberOfRows() == CNodeRigidBody::nDim3D) &&
+			(parameters.mPhitTPsi.NumberOfColumns() == GetCNode(genericNodeNumber)->GetNumberOfODE2Coordinates()), 
+            "CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian:DisplacementMassIntegral_q: inconsistent dimensions of matrix mPhitTPsi");
+
+		//EXUmath::MultMatrixTransposedMatrixTemplate<Matrix, Matrix3D, ResizableMatrix>(parameters.mPhitTPsi, A.GetTransposed(), tempMatrix);
+		EXUmath::MultMatrixMatrixTemplate<Matrix3D, Matrix, ResizableMatrix>(A, parameters.mPhitTPsi, tempMatrix);
+		//pout << "tempMatrix          =" << tempMatrix.NumberOfRows() << " x " << tempMatrix.NumberOfColumns() << "\n";
+
+		for (Index i = 0; i < tempMatrix.NumberOfRows(); i++)
+		{
+			for (Index j = 0; j < tempMatrix.NumberOfColumns(); j++)
+			{
+				value(i, nODE2Rigid + j) = tempMatrix(i, j);
+			}
+		}
+	}
+
+
+
+	////this is incomplete:
+	//if (physicsCenterOfMass == 0.)
+	//{
+	//	for (Index i = 0; i < CNodeRigidBody::nDim3D; i++)
+	//	{
+	//		for (Index j = 0; j < GetODE2Size(); j++)
+	//		{
+	//			if (i != j) { value(i, j) = 0.; }
+	//			else { value(i, j) = m; } //only diagonal 3x3 term!
+	//		}
+	//	}
+	//}
+	//else
+	//{
+
+	//	//gives m* \partial p_COM / \partial q
+	//	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> Glocal;
+	//	((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
+
+
+	//	ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*physicsCenterOfMass); //negative sign in -A*uLocalTilde*Glocal
+	//	//uLocalTilde *= -1.;//moved into ((-m)*parameters.physicsCenterOfMass)
+
+	//	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> temp; //temporary matrix during computation
+	//	EXUmath::MultMatrixMatrix(uLocalTilde, Glocal, temp);
+	//	EXUmath::MultMatrixMatrix(((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetRotationMatrix(), temp, Glocal); //Glocal=A*(-m*uLocalTilde)*Glocal
+
+	//	//unit matrix
+	//	value(0, 0) = m; value(0, 1) = 0.; value(0, 2) = 0.;
+	//	value(1, 0) = 0.; value(1, 1) = m; value(1, 2) = 0.;
+	//	value(2, 0) = 0.; value(2, 1) = 0.; value(2, 2) = m;
+
+	//	//-A*uLocalTilde*Glocal part (=L in this case
+	//	for (Index i = 0; i < CNodeRigidBody::nDim3D; i++)
+	//	{
+	//		for (Index j = 0; j < ((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetNumberOfRotationCoordinates(); j++)
+	//		{
+	//			value(i, CNodeRigidBody::nDim3D + j) = Glocal(i, j);
+	//		}
+	//	}
+	//}
+}
+
 
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++     REFERENCE FRAME FUNCTIONS     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

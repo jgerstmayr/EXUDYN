@@ -450,112 +450,77 @@ void CObjectANCFCable::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobi
 
 
 
-//! provide Jacobian at localPosition in "value" according to object access
-void CObjectANCFCable::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
+//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
+void CObjectANCFCable::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
 	Real L = GetLength();
 
-	switch (accessType)
-	{
-	case AccessFunctionType::TranslationalVelocity_qt:
-	{
-		const Index dim = 3;		//3D finite element
-		const Index ns = nShapeFunctions;			//number of shape functions
+	const Index dim = 3;		//3D finite element
+	const Index ns = nShapeFunctions;			//number of shape functions
 
-		Real x = localPosition[0]; //only x-coordinate
-		Vector4D SV = ComputeShapeFunctions(x, L);
-		value.SetNumberOfRowsAndColumns(dim, dim * ns); //3D velocity, 12 coordinates qt
-		//pout << "inside ..." << localPosition << "\n";
+	Real x = localPosition[0]; //only x-coordinate
+	Vector4D SV = ComputeShapeFunctions(x, L);
+	value.SetNumberOfRowsAndColumns(dim, dim * ns); //3D velocity, 12 coordinates qt
+	//pout << "inside ..." << localPosition << "\n";
 
-		CHECKandTHROW(localPosition[1] == 0 && localPosition[2] == 0,
-			"CObjectANCFCable: markers, forces and constraints can only act at the beam centerline at Y=Z=0; check your code", ExudynModelError);
+	CHECKandTHROW(localPosition[1] == 0 && localPosition[2] == 0,
+		"CObjectANCFCable: markers, forces and constraints can only act at the beam centerline at Y=Z=0; check your code", ExudynModelError);
 
-		value.SetAll(0.);
-		value(0, 0) = SV[0];
-		value(1, 1) = SV[0];
-		value(2, 2) = SV[0];
-		value(0, 3) = SV[1];
-		value(1, 4) = SV[1];
-		value(2, 5) = SV[1];
-		value(0, 6) = SV[2];
-		value(1, 7) = SV[2];
-		value(2, 8) = SV[2];
-		value(0, 9) = SV[3];
-		value(1,10) = SV[3];
-		value(2,11) = SV[3];
-
-		break;
-	}
-	//thin ancf 3D cable: torque cannot be applied in such a way: 
-	//case AccessFunctionType::AngularVelocity_qt: 
-	//{
-	//	//const Index dim = 3;		//3D finite element
-	//	const Index ns = nShapeFunctions;			//number of shape functions
-	//	//const Index nnc = nNodalCoordinates;  //number of node coordinates
-
-	//	Real xLoc = localPosition[0]; //only x-coordinate
-	//	Vector3D slope = ComputeSlopeVector(xLoc, ConfigurationType::Current);
-	//	Real x = slope[0]; //x-slopex
-	//	Real y = slope[1]; //y-slopex
-
-	//	Vector4D SVx = ComputeShapeFunctions_x(xLoc, L);
-	//	Real fact0 = -y / (x*x + y * y);
-	//	Real fact1 = x / (x*x + y * y);
-
-	//	value.SetNumberOfRowsAndColumns(3, 8);
-	//	value.SetAll(0.); //last row not necessary to set to zero ... 
-	//	for (Index i = 0; i < ns; i++)
-	//	{
-	//		value(2, i*2) = SVx[i] * fact0; //last row of jacobian
-	//		value(2, i * 2 + 1) = SVx[i] * fact1;
-	//		value(2, i * 2 + 1) = SVx[i] * fact1;
-	//	}
-
-	//	break;
-	//}
-	case AccessFunctionType::DisplacementMassIntegral_q:
-	{
-		const Index dim = 3;		//3D finite element
-		const Index ns = nShapeFunctions;			//number of shape functions
-
-		value.SetNumberOfRowsAndColumns(dim, dim * ns); //3D velocity, 12 coordinates qt
-		value.SetAll(0.);
-
-		Real L = parameters.physicsLength;
-		Real rhoA = parameters.physicsMassPerLength;
-
-		Index cnt = 0;
-		Real a = 0; //integration interval [a,b]
-		Real b = L;
-
-		Vector4D SV({0.,0.,0.,0.});
-
-		for (auto item : EXUmath::gaussRuleOrder3Points)
-		{
-			Real x = 0.5*(b - a)*item + 0.5*(b + a);
-			Vector4D SVloc = ComputeShapeFunctions(x, L);
-			SVloc *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
-			SV += SVloc;
-		}
-
-		value(0, 0) = SV[0];
-		value(1, 1) = SV[0];
-		value(2, 2) = SV[0];
-		value(0, 3) = SV[1];
-		value(1, 4) = SV[1];
-		value(2, 5) = SV[1];
-		value(0, 6) = SV[2];
-		value(1, 7) = SV[2];
-		value(2, 8) = SV[2];
-		value(0, 9) = SV[3];
-		value(1,10) = SV[3];
-		value(2,11) = SV[3];
-		break;
-	}
-	default:
-		SysError("CObjectANCFCable:GetAccessFunctionBody illegal accessType");
-	}
+	value.SetAll(0.);
+	value(0, 0) = SV[0];
+	value(1, 1) = SV[0];
+	value(2, 2) = SV[0];
+	value(0, 3) = SV[1];
+	value(1, 4) = SV[1];
+	value(2, 5) = SV[1];
+	value(0, 6) = SV[2];
+	value(1, 7) = SV[2];
+	value(2, 8) = SV[2];
+	value(0, 9) = SV[3];
+	value(1,10) = SV[3];
+	value(2,11) = SV[3];
 }
+
+//! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
+void CObjectANCFCable::GetMassWeightedPositionJacobian(Matrix& value) const
+{
+	const Index dim = 3;		//3D finite element
+	const Index ns = nShapeFunctions;			//number of shape functions
+
+	value.SetNumberOfRowsAndColumns(dim, dim * ns); //3D velocity, 12 coordinates qt
+	value.SetAll(0.);
+
+	Real L = parameters.physicsLength;
+	Real rhoA = parameters.physicsMassPerLength;
+
+	Index cnt = 0;
+	Real a = 0; //integration interval [a,b]
+	Real b = L;
+
+	Vector4D SV({0.,0.,0.,0.});
+
+	for (auto item : EXUmath::gaussRuleOrder3Points)
+	{
+		Real x = 0.5*(b - a)*item + 0.5*(b + a);
+		Vector4D SVloc = ComputeShapeFunctions(x, L);
+		SVloc *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
+		SV += SVloc;
+	}
+
+	value(0, 0) = SV[0];
+	value(1, 1) = SV[0];
+	value(2, 2) = SV[0];
+	value(0, 3) = SV[1];
+	value(1, 4) = SV[1];
+	value(2, 5) = SV[1];
+	value(0, 6) = SV[2];
+	value(1, 7) = SV[2];
+	value(2, 8) = SV[2];
+	value(0, 9) = SV[3];
+	value(1,10) = SV[3];
+	value(2,11) = SV[3];
+}
+
 
 //accurate integration: axialStrain = order9, curvature = order5
 //reduced order 1: axialStrain = order7, curvature = order3 (lower Gauss order not possible, becomes unstable or very inaccurate ...

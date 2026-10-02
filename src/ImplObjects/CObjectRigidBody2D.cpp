@@ -104,95 +104,86 @@ void CObjectRigidBody2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 }
 
 
-//! provide Jacobian at localPosition in "value" according to object access
-void CObjectRigidBody2D::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
+//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
+void CObjectRigidBody2D::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
-	switch (accessType)
+	//this function relates a 3D translatory velocity to the time derivative of all coordinates: v_trans = Jac*q_dot
+	Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
+
+	Real dAvxdphi = -sin(phi) * localPosition[0] - cos(phi) * localPosition[1];   //d(Av)x/dphi
+	Real dAvydphi = cos(phi) * localPosition[0] - sin(phi) * localPosition[1];   //d(Av)x/dphi
+	value.SetMatrix(3, 3, { 1.,0.,dAvxdphi, 0.,1.,dAvydphi, 0.,0.,0. }); //a 3D Vector (e.g. 3D ForceVector), acts in the (x,y)-plane on three coordinates (x,y,phi)
+}
+
+//! the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n (#2744)
+void CObjectRigidBody2D::GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const
+{
+	//this function relates a 3D angular velocity to the time derivative of all coordinates: omega = Jac*q_dot
+	value.SetMatrix(3, 3, {0.,0.,0., 0.,0.,0., 0.,0.,1.  }); //the 3D torque vector (only z-component) acts on the 3rd coordinate phi_t
+}
+
+//! d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n; false if it is zero (#2744)
+bool CObjectRigidBody2D::GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value) const
+{
+	Vector3D force({ forceTorque[0], forceTorque[1], forceTorque[2] });
+	//Vector3D torque({ forceTorque[3], forceTorque[4], forceTorque[5] }); //not needed, because this part is zero!
+
+	//this function relates a 3D translatory velocity to the time derivative of all coordinates: v_trans = Jac*q_dot
+	Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
+
+	//jacT = 
+	//  1., 0., 0.,
+	//	0., 1., 0.,
+	//	dAvxdphi, dAvydphi, 0. }); 
+	//jacT*f = Vector3D({
+	//        1.*f[0]+       0.*f[1]+ 0.*f[2],
+	//	      0.*f[0]+       1.*f[1]+ 0.*f[2],
+	//	dAvxdphi*f[0]+ dAvydphi*f[1]+ 0.*f[2] }); 
+	Real d2Avxdphi2 = -cos(phi) * localPosition[0] + sin(phi) * localPosition[1];   
+	Real d2Avydphi2 = -sin(phi) * localPosition[0] - cos(phi) * localPosition[1];   
+
+	//d(jacT*f)/dq:
+	value.SetMatrix(3, 3, {
+	    0., 0., 0.,
+		0., 0., 0.,
+		0., 0., d2Avxdphi2*force[0]+ d2Avydphi2*force[1]}); 
+
+	return true;
+}
+
+//! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
+void CObjectRigidBody2D::GetMassWeightedPositionJacobian(Matrix& value) const
+{
+	Real m = parameters.physicsMass;
+
+	if (parameters.physicsCenterOfMass == 0.)
 	{
-	case AccessFunctionType::TranslationalVelocity_qt:
+		value.SetMatrix(3, 3, { m,0.,0., 0.,m,0., 0.,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on three coordinates (x,y,phi)
+		//value.SetNumberOfRowsAndColumns(3, 3);
+		//value.SetAll(0.);
+		//value(0, 0) = m; value(1, 1) = m;
+	}
+	else
 	{
-		//this function relates a 3D translatory velocity to the time derivative of all coordinates: v_trans = Jac*q_dot
+		Vector2D com = parameters.physicsCenterOfMass;
+		value.SetNumberOfRowsAndColumns(3, 3);
+
 		Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
+		Real sinPhi = sin(phi);
+		Real cosPhi = cos(phi);
+		Matrix2D A(2, 2, { cosPhi, -sinPhi, sinPhi, cosPhi });
 
-		Real dAvxdphi = -sin(phi) * localPosition[0] - cos(phi) * localPosition[1];   //d(Av)x/dphi
-		Real dAvydphi = cos(phi) * localPosition[0] - sin(phi) * localPosition[1];   //d(Av)x/dphi
-		value.SetMatrix(3, 3, { 1.,0.,dAvxdphi, 0.,1.,dAvydphi, 0.,0.,0. }); //a 3D Vector (e.g. 3D ForceVector), acts in the (x,y)-plane on three coordinates (x,y,phi)
-		break;
-	}
-	case AccessFunctionType::AngularVelocity_qt:
-	{
-		//this function relates a 3D angular velocity to the time derivative of all coordinates: omega = Jac*q_dot
-		value.SetMatrix(3, 3, {0.,0.,0., 0.,0.,0., 0.,0.,1.  }); //the 3D torque vector (only z-component) acts on the 3rd coordinate phi_t
-		break;
-	}
-	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation; HACK: Matrix value(0,0:6) contains 3D force + 3D torque
-	{
-		//value(0,0:6) must always be set prior to this call!
-		Vector3D force({ value(0,0), value(0,1), value(0,2) });
-		//Vector3D torque({ value(0,3), value(0,4), value(0,5) }); //not needed, because this part is zero!
+		//A*(-m*uLocalTilde)*Glocal, see ObjectRigidBody
+		Vector2D mAuTildeTG = m * (A * Vector2D({ -com.Y(), com.X() }));
 
-		//this function relates a 3D translatory velocity to the time derivative of all coordinates: v_trans = Jac*q_dot
-		Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
+		//Force due to body-load is bodyLoad^T * value => no action due to F_Z
+		value(0, 0) = m; value(0, 1) = 0.; value(0, 2) = mAuTildeTG[0];
+		value(1, 0) = 0.; value(1, 1) = m; value(1, 2) = mAuTildeTG[1];
+		value(2, 0) = 0.; value(2, 1) = 0.; value(2, 2) = 0.;
 
-		//jacT = 
-		//  1., 0., 0.,
-		//	0., 1., 0.,
-		//	dAvxdphi, dAvydphi, 0. }); 
-		//jacT*f = Vector3D({
-		//        1.*f[0]+       0.*f[1]+ 0.*f[2],
-		//	      0.*f[0]+       1.*f[1]+ 0.*f[2],
-		//	dAvxdphi*f[0]+ dAvydphi*f[1]+ 0.*f[2] }); 
-		Real d2Avxdphi2 = -cos(phi) * localPosition[0] + sin(phi) * localPosition[1];   
-		Real d2Avydphi2 = -sin(phi) * localPosition[0] - cos(phi) * localPosition[1];   
-
-		//d(jacT*f)/dq:
-		value.SetMatrix(3, 3, {
-		    0., 0., 0.,
-			0., 0., 0.,
-			0., 0., d2Avxdphi2*force[0]+ d2Avydphi2*force[1]}); 
-
-		break;
-	}
-	case AccessFunctionType::DisplacementMassIntegral_q:
-	{
-
-		Real m = parameters.physicsMass;
-
-		if (parameters.physicsCenterOfMass == 0.)
-		{
-			value.SetMatrix(3, 3, { m,0.,0., 0.,m,0., 0.,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on three coordinates (x,y,phi)
-			//value.SetNumberOfRowsAndColumns(3, 3);
-			//value.SetAll(0.);
-			//value(0, 0) = m; value(1, 1) = m;
-		}
-		else
-		{
-			Vector2D com = parameters.physicsCenterOfMass;
-			value.SetNumberOfRowsAndColumns(3, 3);
-			CHECKandTHROW(com[0] == localPosition[0] && com[1] == localPosition[1], "CObjectRigidBody2D::GetAccessFunctionBody: inconsistent localPosition");
-
-			Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
-			Real sinPhi = sin(phi);
-			Real cosPhi = cos(phi);
-			Matrix2D A(2, 2, { cosPhi, -sinPhi, sinPhi, cosPhi });
-
-			//A*(-m*uLocalTilde)*Glocal, see ObjectRigidBody
-			Vector2D mAuTildeTG = m * (A * Vector2D({ -com.Y(), com.X() }));
-
-			//Force due to body-load is bodyLoad^T * value => no action due to F_Z
-			value(0, 0) = m; value(0, 1) = 0.; value(0, 2) = mAuTildeTG[0];
-			value(1, 0) = 0.; value(1, 1) = m; value(1, 2) = mAuTildeTG[1];
-			value(2, 0) = 0.; value(2, 1) = 0.; value(2, 2) = 0.;
-
-		}
-
-
-		break;
-	}
-	default:
-		SysError("CObjectRigidBody2D:GetAccessFunctionBody illegal accessType");
 	}
 }
+
 
 //! provide according output variable in "value"
 void CObjectRigidBody2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const

@@ -2561,7 +2561,7 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 		
 		//ANCF jacobian is computed manually-> use CSystem interface in future!
 		ConstSizeMatrix<3* DANCFmaxCoordinates> JACi; // *allPositionJacobians[gi + index2JacIndexI];
-		((CObjectBody*)cObject)->GetAccessFunctionBody(AccessFunctionType::TranslationalVelocity_qt,
+		((CObjectBody*)cObject)->GetPositionJacobian(
 			Vector3D({x,0.,0.}), temp);
 		CHECKandTHROW(temp.NumberOfColumns()*temp.NumberOfRows() <= 3 * DANCFmaxCoordinates,
 			"GeneralContact::JacobianODE2LHS: illegal jacobian of ANCF cable element");

@@ -318,11 +318,35 @@ objectFunctions = [
         args='AccessFunctionType accessType, Matrix& value',
         description="provide Jacobian at localPosition in 'value' according to object access"),
 
-    ItemFunctionLib(classType='Object', pythonName='GetAccessFunctionBody',
+    ItemFunctionLib(classType='Object', pythonName='GetPositionJacobian',
         type=Tvoid, destination=DestComp,
         cFlags=CFConst,
-        args='AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value',
-        description="provide Jacobian at localPosition in 'value' according to object access"),
+        args='const Vector3D& localPosition, Matrix& value',
+        description='the position Jacobian d(v)/d(q_t) at localPosition, 3 x n'),
+
+    ItemFunctionLib(classType='Object', pythonName='GetRotationJacobian',
+        type=Tvoid, destination=DestComp,
+        cFlags=CFConst,
+        args='const Vector3D& localPosition, Matrix& value',
+        description='the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n'),
+
+    ItemFunctionLib(classType='Object', pythonName='GetMassWeightedPositionJacobian',
+        type=Tvoid, destination=DestComp,
+        cFlags=CFConst,
+        args='Matrix& value',
+        description='the mass-weighted position Jacobian int(rho J_pos dV), 3 x n'),
+
+    ItemFunctionLib(classType='Object', pythonName='GetJacobianTransposedTimesVectorDerivative',
+        type=TBool, destination=DestComp,
+        cFlags=CFConst,
+        args='const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value',
+        description='d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n; false if it is zero'),
+
+    ItemFunctionLib(classType='Object', pythonName='IsValidLocalPosition',
+        type=TBool, destination=DestComp,
+        cFlags=CFConst,
+        args='const Vector3D& localPosition, STDstring& reason',
+        description='false if the access functions are not defined at localPosition, with the reason'),
 
     ItemFunctionLib(classType='Object', pythonName='GetAccessFunctionSuperElement',
         type=Tvoid, destination=DestComp,

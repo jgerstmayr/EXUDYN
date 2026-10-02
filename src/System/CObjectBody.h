@@ -59,6 +59,12 @@ inline void EnergyNotAvailable(const char* itemName, const char* reason)
 
 class CNode;
 
+//! raised by an access function a body does not provide (#2744)
+inline void AccessFunctionNotProvided(const char* accessName)
+{
+	CHECKandTHROWstring(STDstring("this body provides no ") + accessName, ExudynNotImplementedError);
+}
+
 class CObjectBody: public CObject 
 {
 protected:
@@ -94,7 +100,26 @@ public:
     // ACCESS FUNCTIONS
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    virtual void GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const { CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetAccessFunctionBody"); }
+	//the access functions of a body (#2744): the Jacobians with respect to the body's n ODE2 coordinates, at
+	//localPosition in the body frame; a body provides those that GetAccessFunctionTypes declares, the others raise
+	//(Assemble() refuses a marker that needs one of them)
+
+	//! the position Jacobian J_pos = d(v)/d(q_t) at localPosition, 3 x n; v = J_pos q_t is the global velocity there
+	virtual void GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const { AccessFunctionNotProvided("position Jacobian"); }
+	//! the rotation Jacobian J_rot = d(omega)/d(q_t), 3 x n, with omega the global angular velocity at localPosition
+	virtual void GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const { AccessFunctionNotProvided("rotation Jacobian"); }
+	//! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n: the generalized force of a load per unit mass
+	//! (LoadMassProportional) is its transpose times the load vector
+	virtual void GetMassWeightedPositionJacobian(Matrix& value) const { AccessFunctionNotProvided("mass-weighted position Jacobian"); }
+	//! the derivative d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n, with forceTorque = [force; torque] global;
+	//! returns false if it is zero, and value is then not set
+	virtual bool GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value) const
+	{
+		AccessFunctionNotProvided("derivative of the transposed Jacobian times a vector"); return false;
+	}
+	//! false if the access functions are not defined at localPosition, with the reason; checked at Assemble()
+	virtual bool IsValidLocalPosition(const Vector3D& localPosition, STDstring& reason) const { return true; }
+
     virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, 
 									   ConfigurationType configuration, Vector& value, Index objectNumber) const {
 		CHECKandTHROWstring("ERROR: illegal call to CObjectBody::GetOutputVariableBody");
@@ -155,8 +180,8 @@ public:
 
 		if (computeJacobian)
 		{
-			GetAccessFunctionBody(AccessFunctionType::TranslationalVelocity_qt, localPosition, markerData.positionJacobian);
-			GetAccessFunctionBody(AccessFunctionType::AngularVelocity_qt, localPosition, markerData.rotationJacobian);
+			GetPositionJacobian(localPosition, markerData.positionJacobian);
+			GetRotationJacobian(localPosition, markerData.rotationJacobian);
 		}
 
 	}
@@ -171,7 +196,7 @@ public:
 	//! access function, a body may project without forming it
 	virtual void AddPositionForce(const Vector3D& localPosition, const Vector3D& force, ResizableMatrix& tempMatrix, LinkedDataVector& ode2Lhs) const
 	{
-		GetAccessFunctionBody(AccessFunctionType::TranslationalVelocity_qt, localPosition, tempMatrix);
+		GetPositionJacobian(localPosition, tempMatrix);
 		EXUmath::MultMatrixTransposedVectorAdd(tempMatrix, force, ode2Lhs);
 	}
 
@@ -190,7 +215,7 @@ public:
 		LinkedDataVector& ode2Lhs) const
 	{
 		AddPositionForce(localPosition, force, temp.tempMatrix, ode2Lhs);
-		GetAccessFunctionBody(AccessFunctionType::AngularVelocity_qt, localPosition, temp.tempMatrix);
+		GetRotationJacobian(localPosition, temp.tempMatrix);
 		EXUmath::MultMatrixTransposedVectorAdd(temp.tempMatrix, torque, ode2Lhs);
 	}
 

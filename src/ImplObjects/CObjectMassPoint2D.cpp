@@ -47,30 +47,24 @@ void CObjectMassPoint2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 }
 
 
-//! provide Jacobian at localPosition in "value" according to object access
-void CObjectMassPoint2D::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
+//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
+void CObjectMassPoint2D::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
-	switch (accessType)
-	{
-	case AccessFunctionType::TranslationalVelocity_qt:
-	{
-		value.SetMatrix(3, 2, { 1.,0.,0.,1.,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on two coordinates (x,y)
-		break;
-	}
-	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation!!!
-	{
-		value.SetNumberOfRowsAndColumns(0, 0); //indicates that all entries are zero
-		break;
-	}
-	case AccessFunctionType::DisplacementMassIntegral_q:
-	{
-		value.SetMatrix(3, 2, { parameters.physicsMass,0.,0.,parameters.physicsMass,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on two coordinates (x,y)
-		break;
-	}
-	default:
-		SysError("CObjectMassPoint2D:GetAccessFunctionBody illegal accessType");
-	}
+	value.SetMatrix(3, 2, { 1.,0.,0.,1.,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on two coordinates (x,y)
 }
+
+//! d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n; false if it is zero (#2744)
+bool CObjectMassPoint2D::GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value) const
+{
+	return false; //all entries are zero
+}
+
+//! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
+void CObjectMassPoint2D::GetMassWeightedPositionJacobian(Matrix& value) const
+{
+	value.SetMatrix(3, 2, { parameters.physicsMass,0.,0.,parameters.physicsMass,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on two coordinates (x,y)
+}
+
 
 //! provide according output variable in "value"
 void CObjectMassPoint2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const

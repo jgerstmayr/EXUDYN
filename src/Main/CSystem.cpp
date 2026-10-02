@@ -429,6 +429,44 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 	if (!systemIsInteger) { return false; } //avoid crashes due to further checks!
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//the access functions of some bodies are defined at restricted local positions only, e.g. at the beam axis; checked for
+	//the markers through which a connector or load acts - a marker for a sensor may be anywhere (#2744)
+	auto CheckLocalPosition = [&mainSystem, &systemIsInteger](Index markerIndex, const STDstring& itemString)
+	{
+		const CMarker* marker = mainSystem.GetMainSystemData().GetMainMarkers()[markerIndex]->GetCMarker();
+		Vector3D localPosition;
+		if (!marker->GetLocalPosition(localPosition)) { return; }
+		Index bodyNumber = marker->GetObjectNumber();
+		const CObjectBody* body = (const CObjectBody*)mainSystem.GetMainSystemData().GetMainObjects()[bodyNumber]->GetCObject();
+		STDstring reason;
+		if (!body->IsValidLocalPosition(localPosition, reason))
+		{
+			PyError(itemString + " acts through marker " + EXUstd::ToString(markerIndex) + ", whose localPosition " +
+				EXUstd::ToString(localPosition) + " is not valid for object " + EXUstd::ToString(bodyNumber) + ": " + reason, PyErrorType::modelError);
+			systemIsInteger = false;
+		}
+	};
+	itemIndex = 0;
+	for (auto* item : mainSystem.GetMainSystemData().GetMainObjects())
+	{
+		if ((Index)item->GetCObject()->GetType() & (Index)CObjectType::Connector)
+		{
+			for (Index markerIndex : ((CObjectConnector*)item->GetCObject())->GetMarkerNumbers())
+			{
+				CheckLocalPosition(markerIndex, STDstring("Object ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "',");
+			}
+		}
+		itemIndex++;
+	}
+	itemIndex = 0;
+	for (auto* item : mainSystem.GetMainSystemData().GetMainLoads())
+	{
+		CheckLocalPosition(item->GetCLoad()->GetMarkerNumber(), STDstring("Load ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "',");
+		itemIndex++;
+	}
+	if (!systemIsInteger) { return false; }
+
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//check for valid sensors: valid node/object/... numbers and valid OutputVariableTypes
 
 	itemIndex = 0;

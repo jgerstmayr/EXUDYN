@@ -563,170 +563,22 @@ OutputVariableType CObjectANCFCable2DBase::GetOutputVariableTypes() const
 	return (OutputVariableType)((Index64)OutputVariableType::Position + (Index64)OutputVariableType::Velocity);
 }
 
-//! provide Jacobian at localPosition in "value" according to object access
-void CObjectANCFCable2DBase::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
+//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
+void CObjectANCFCable2DBase::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
 	Real L = GetLength();
 
-	switch (accessType)
+	const Index dim = 2;  //2D finite element
+	const Index ns = 4;   //number of shape functions
+
+	Real x = localPosition[0]; //only x-coordinate
+	Vector4D SV = ComputeShapeFunctions(x, L);
+	value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
+	//pout << "inside ..." << localPosition << "\n";
+
+	if (localPosition[1] == 0)
 	{
-	case AccessFunctionType::TranslationalVelocity_qt:
-	{
-		const Index dim = 2;  //2D finite element
-		const Index ns = 4;   //number of shape functions
-
-		Real x = localPosition[0]; //only x-coordinate
-		Vector4D SV = ComputeShapeFunctions(x, L);
-		value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
-		//pout << "inside ..." << localPosition << "\n";
-
-		if (localPosition[1] == 0)
-		{
-			value.SetAll(0.);
-			value(0, 0) = SV[0];
-			value(1, 1) = SV[0];
-			value(0, 2) = SV[1];
-			value(1, 3) = SV[1];
-			value(0, 4) = SV[2];
-			value(1, 5) = SV[2];
-			value(0, 6) = SV[3];
-			value(1, 7) = SV[3];
-		}
-		else
-		{
-			if (false)
-			{
-				//pout << "in\n";
-				value.SetAll(0.);
-				Real y = localPosition[1];
-				Vector4D SV_x = ComputeShapeFunctions_x(x, L);
-				Vector2D r_x = ComputeSlopeVector(x, ConfigurationType::Current);
-				Real norm = r_x.GetL2Norm();
-				Real normInv = 0;
-				Vector2D n({ -r_x[1], r_x[0] });
-				if (norm != 0.)
-				{
-					normInv = 1. / norm;
-				}
-				else
-				{
-					CHECKandTHROWstring("CObjectANCFCable2DBase::GetAccessFunctionBody(...): slope vector has length 0!");
-				}
-				n *= normInv;
-				//p = r(localPosition[0]) + localPosition[1] * n; n=1/sqrt(rx^T*rx)*[-rx[1],rx[0]]
-				//dp/dq = S + (ry^T*S_x)/(rx^T*rx) (3/2) * n + 1/sqrt(rx^T*rx) * S_x^perpendicular
-				Real norm3 = norm * norm * norm; //could be SIMPLIFIED, because n also contains 1/norm ....
-
-				//pout << "  slope=" << r_x << ", norm=" << norm << ", n=" << n << "\n";
-				//
-				for (Index i = 0; i < ns; i++)
-				{
-					Vector2D Svec[dim]; //SV_x
-					Svec[0] = Vector2D({ SV_x[i],0 });
-					Svec[1] = Vector2D({ 0, SV_x[i] });
-					Vector2D SvecP[2];
-					SvecP[0] = Vector2D({ 0., SV_x[i] });
-					SvecP[1] = Vector2D({ -SV_x[i], 0. });
-
-					for (Index j = 0; j < dim; j++)
-					{
-						Real u = -y * (r_x*Svec[j]) / norm3;
-						value(0, i * dim + j) = u * n[0] + y * normInv * SvecP[j][0];
-						value(1, i * dim + j) = u * n[1] + y * normInv * SvecP[j][1];
-
-						value(j, i * dim + j) += SV[i];
-					}
-
-				}
-			}
-			else
-			{
-				//simpler version:
-				Real y = localPosition[1];
-				Vector4D SV_x = ComputeShapeFunctions_x(x, L);
-				Vector2D r_x = ComputeSlopeVector(x, ConfigurationType::Current);
-				Real norm = r_x.GetL2Norm();
-				Real normInv = 0;
-				Vector2D n({ -r_x[1], r_x[0] });
-				if (norm != 0.)
-				{
-					normInv = 1. / norm;
-				}
-				else
-				{
-					CHECKandTHROWstring("CObjectANCFCable2DBase::GetAccessFunctionBody(...): slope vector has length 0!");
-				}
-				Vector2D t0 = normInv * r_x;
-
-				//v = r_t + (-y*omega)*t0
-				//omega = (n * r'_t)/(r')^2 = (-r'y*r'_xt + r'x*r'_yt)/(r')^2 //see CNodePoint2DSlope1::GetAngularVelocity
-				//dv/dq_t = [S-y*diadic(t0, omega_qt)] = [S - y/(r')^2 * diadic(t0, n) * S')
-
-				for (Index i = 0; i < ns; i++)
-				{
-					for (Index j = 0; j < dim; j++)
-					{
-						Real omega_qt = n[j] * SV_x[i] * (normInv*normInv);
-						value(0, i * dim + j) = -y * omega_qt * t0[0];
-						value(1, i * dim + j) = -y * omega_qt * t0[1];
-
-						value(j, i * dim + j) += SV[i];
-					}
-				}
-			}
-		}
-
-		break;
-	}
-	case AccessFunctionType::AngularVelocity_qt:
-	{
-		//const Index dim = 2;  //2D finite element
-		const Index ns = 4;   //number of shape functions
-
-		Real xLoc = localPosition[0]; //only x-coordinate
-		Vector2D slope = ComputeSlopeVector(xLoc, ConfigurationType::Current);
-		Real x = slope[0]; //x-slopex
-		Real y = slope[1]; //y-slopex
-
-		Vector4D SVx = ComputeShapeFunctions_x(xLoc, L);
-		Real fact0 = -y / (x*x + y * y);
-		Real fact1 = x / (x*x + y * y);
-
-		value.SetNumberOfRowsAndColumns(3, 8);
-		value.SetAll(0.); //last row not necessary to set to zero ... 
-		for (Index i = 0; i < ns; i++)
-		{
-			value(2, i*2) = SVx[i] * fact0; //last row of jacobian
-			value(2, i*2 + 1) = SVx[i] * fact1;
-		}
-
-		break;
-	}
-	case AccessFunctionType::DisplacementMassIntegral_q:
-	{
-		//const Index dim = 2;  //2D finite element
-		//const Index ns = 4;   //number of shape functions
-
-		value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
 		value.SetAll(0.);
-
-		Real L = GetLength();
-		Real rhoA = GetMassPerLength();
-
-		Index cnt = 0;
-		Real a = 0; //integration interval [a,b]
-		Real b = L;
-
-		Vector4D SV({0.,0.,0.,0.});
-
-		for (auto item : EXUmath::gaussRuleOrder3Points)
-		{
-			Real x = 0.5*(b - a)*item + 0.5*(b + a);
-			Vector4D SVloc = ComputeShapeFunctions(x, L);
-			SVloc *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
-			SV += SVloc;
-		}
-
 		value(0, 0) = SV[0];
 		value(1, 1) = SV[0];
 		value(0, 2) = SV[1];
@@ -735,12 +587,154 @@ void CObjectANCFCable2DBase::GetAccessFunctionBody(AccessFunctionType accessType
 		value(1, 5) = SV[2];
 		value(0, 6) = SV[3];
 		value(1, 7) = SV[3];
-		break;
 	}
-	default:
-		SysError("CObjectANCFCable2D:GetAccessFunctionBody illegal accessType");
+	else
+	{
+		if (false)
+		{
+			//pout << "in\n";
+			value.SetAll(0.);
+			Real y = localPosition[1];
+			Vector4D SV_x = ComputeShapeFunctions_x(x, L);
+			Vector2D r_x = ComputeSlopeVector(x, ConfigurationType::Current);
+			Real norm = r_x.GetL2Norm();
+			Real normInv = 0;
+			Vector2D n({ -r_x[1], r_x[0] });
+			if (norm != 0.)
+			{
+				normInv = 1. / norm;
+			}
+			else
+			{
+				CHECKandTHROWstring("CObjectANCFCable2DBase::GetPositionJacobian(...): slope vector has length 0!");
+			}
+			n *= normInv;
+			//p = r(localPosition[0]) + localPosition[1] * n; n=1/sqrt(rx^T*rx)*[-rx[1],rx[0]]
+			//dp/dq = S + (ry^T*S_x)/(rx^T*rx) (3/2) * n + 1/sqrt(rx^T*rx) * S_x^perpendicular
+			Real norm3 = norm * norm * norm; //could be SIMPLIFIED, because n also contains 1/norm ....
+
+			//pout << "  slope=" << r_x << ", norm=" << norm << ", n=" << n << "\n";
+			//
+			for (Index i = 0; i < ns; i++)
+			{
+				Vector2D Svec[dim]; //SV_x
+				Svec[0] = Vector2D({ SV_x[i],0 });
+				Svec[1] = Vector2D({ 0, SV_x[i] });
+				Vector2D SvecP[2];
+				SvecP[0] = Vector2D({ 0., SV_x[i] });
+				SvecP[1] = Vector2D({ -SV_x[i], 0. });
+
+				for (Index j = 0; j < dim; j++)
+				{
+					Real u = -y * (r_x*Svec[j]) / norm3;
+					value(0, i * dim + j) = u * n[0] + y * normInv * SvecP[j][0];
+					value(1, i * dim + j) = u * n[1] + y * normInv * SvecP[j][1];
+
+					value(j, i * dim + j) += SV[i];
+				}
+
+			}
+		}
+		else
+		{
+			//simpler version:
+			Real y = localPosition[1];
+			Vector4D SV_x = ComputeShapeFunctions_x(x, L);
+			Vector2D r_x = ComputeSlopeVector(x, ConfigurationType::Current);
+			Real norm = r_x.GetL2Norm();
+			Real normInv = 0;
+			Vector2D n({ -r_x[1], r_x[0] });
+			if (norm != 0.)
+			{
+				normInv = 1. / norm;
+			}
+			else
+			{
+				CHECKandTHROWstring("CObjectANCFCable2DBase::GetPositionJacobian(...): slope vector has length 0!");
+			}
+			Vector2D t0 = normInv * r_x;
+
+			//v = r_t + (-y*omega)*t0
+			//omega = (n * r'_t)/(r')^2 = (-r'y*r'_xt + r'x*r'_yt)/(r')^2 //see CNodePoint2DSlope1::GetAngularVelocity
+			//dv/dq_t = [S-y*diadic(t0, omega_qt)] = [S - y/(r')^2 * diadic(t0, n) * S')
+
+			for (Index i = 0; i < ns; i++)
+			{
+				for (Index j = 0; j < dim; j++)
+				{
+					Real omega_qt = n[j] * SV_x[i] * (normInv*normInv);
+					value(0, i * dim + j) = -y * omega_qt * t0[0];
+					value(1, i * dim + j) = -y * omega_qt * t0[1];
+
+					value(j, i * dim + j) += SV[i];
+				}
+			}
+		}
 	}
 }
+
+//! the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n (#2744)
+void CObjectANCFCable2DBase::GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const
+{
+	Real L = GetLength();
+
+	//const Index dim = 2;  //2D finite element
+	const Index ns = 4;   //number of shape functions
+
+	Real xLoc = localPosition[0]; //only x-coordinate
+	Vector2D slope = ComputeSlopeVector(xLoc, ConfigurationType::Current);
+	Real x = slope[0]; //x-slopex
+	Real y = slope[1]; //y-slopex
+
+	Vector4D SVx = ComputeShapeFunctions_x(xLoc, L);
+	Real fact0 = -y / (x*x + y * y);
+	Real fact1 = x / (x*x + y * y);
+
+	value.SetNumberOfRowsAndColumns(3, 8);
+	value.SetAll(0.); //last row not necessary to set to zero ... 
+	for (Index i = 0; i < ns; i++)
+	{
+		value(2, i*2) = SVx[i] * fact0; //last row of jacobian
+		value(2, i*2 + 1) = SVx[i] * fact1;
+	}
+}
+
+//! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
+void CObjectANCFCable2DBase::GetMassWeightedPositionJacobian(Matrix& value) const
+{
+	//const Index dim = 2;  //2D finite element
+	//const Index ns = 4;   //number of shape functions
+
+	value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
+	value.SetAll(0.);
+
+	Real L = GetLength();
+	Real rhoA = GetMassPerLength();
+
+	Index cnt = 0;
+	Real a = 0; //integration interval [a,b]
+	Real b = L;
+
+	Vector4D SV({0.,0.,0.,0.});
+
+	for (auto item : EXUmath::gaussRuleOrder3Points)
+	{
+		Real x = 0.5*(b - a)*item + 0.5*(b + a);
+		Vector4D SVloc = ComputeShapeFunctions(x, L);
+		SVloc *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
+		SV += SVloc;
+	}
+
+	value(0, 0) = SV[0];
+	value(1, 1) = SV[0];
+	value(0, 2) = SV[1];
+	value(1, 3) = SV[1];
+	value(0, 4) = SV[2];
+	value(1, 5) = SV[2];
+	value(0, 6) = SV[3];
+	value(1, 7) = SV[3];
+}
+
 
 //! compute local force for user function; axialPositionNormalized is in unit coordinates [-1, +1]
 Real CObjectANCFCable2DBase::ComputeAxialForceLocalUserFunction(Real axialPositionNormalized, 

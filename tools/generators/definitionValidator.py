@@ -224,6 +224,36 @@ def ValidatePybindDeclarations(counts):
     return violations
 
 
+#an access function type and the function of a body that provides it (#2744)
+accessFunctionOfType = {'TranslationalVelocity_qt': 'GetPositionJacobian',
+                        'AngularVelocity_qt': 'GetRotationJacobian',
+                        'DisplacementMassIntegral_q': 'GetMassWeightedPositionJacobian',
+                        'JacobianTtimesVector_q': 'GetJacobianTransposedTimesVectorDerivative'}
+
+
+def _CheckAccessFunctions(moduleName, definition, classes, counts):
+    """rule 7: an object declares an access function type (ItemAccessFunctionTypes) exactly if it provides the
+    function - in its definition, or in a hand-written parent class other than the base classes, which raise;
+    an object that serves only its own markers (bodyMarkers=False) provides none of them"""
+    accessMember = next((m for m in definition['members'] if 'accessFunctionTypes' in m), None)
+    if accessMember is None:
+        return []
+    declaredFunctions = set(m['pythonName'] for m in definition['members'] if 'Function' in m['kind'])
+    for c in _Chain(classes, definition.get('cParentClass', '')):
+        if c not in ('CObjectBody', 'CObjectSuperElement', 'CObject'):
+            declaredFunctions.update(classes[c][1].keys())
+    violations = []
+    for (accessType, function) in accessFunctionOfType.items():
+        counts['access'] += 1
+        declared = accessType in accessMember['accessFunctionTypes'] and accessMember.get('bodyMarkers', True)
+        if declared != (function in declaredFunctions):
+            violations.append(moduleName + '.py: ' + definition['className'] + ': ' +
+                              ('declares ' + accessType + ', but provides no ' + function if declared else
+                               'provides ' + function + ', but does not declare ' + accessType +
+                               (' (bodyMarkers=False: it serves its own markers only)' if not accessMember.get('bodyMarkers', True) else '')))
+    return violations
+
+
 def ValidateDefinitions(verbose=True):
     """Run every check over the loaded definitions; return the list of violations (strings)."""
     if definitionsDirectory not in sys.path:
@@ -321,6 +351,10 @@ def ValidateDefinitions(verbose=True):
                         if not any(name in classes[c][2] for c in chain):
                             violations.append(where + ': fromParent, but ' + (' -> '.join(chain)
                                               or repr(parentName)) + ' has no member ' + name)
+
+            #---- 7. the access functions a body declares are the ones it provides (#2744)
+            if isItem:
+                violations += _CheckAccessFunctions(moduleName, definition, classes, counts)
 
     violations += ValidatePybindDeclarations(counts)
 

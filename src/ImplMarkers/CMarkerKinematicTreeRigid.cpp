@@ -88,20 +88,11 @@ void CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative(const CSyste
 		CHECKandTHROWstring("CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative: object " + EXUstd::ToString(parameters.objectNumber) + " does not provide a jacobian derivative; use different markers or set newton.numericalDifferentiation.forODE2connectors = True or use explicit integrator for contact", ExudynNotImplementedError);
 	}
 
-	//**********************************************************
-	//==> just map this functio to a new KinematicTree function?
-	//**********************************************************
-
-
-	//v has always size 6, must be copied to markerData.jacobianDerivative
-	markerData.jacobianDerivative.SetNumberOfRowsAndColumns(1, 6);
-	for (Index i = 0; i < v6D.NumberOfItems(); i++)
+	if (!((CObjectBody*)(cSystemData.GetCObjects()[parameters.objectNumber]))->
+		GetJacobianTransposedTimesVectorDerivative(parameters.localPosition, v6D, markerData.jacobianDerivative))
 	{
-		markerData.jacobianDerivative(0, i) = v6D[i];
+		markerData.jacobianDerivative.SetNumberOfRowsAndColumns(0, 0); //signals that there is no dependency
 	}
-	//==>markerData.jacobianDerivative is input to GetAccessFunctionBody(...)
-	((CObjectBody*)(cSystemData.GetCObjects()[parameters.objectNumber]))->
-		GetAccessFunctionBody((AccessFunctionType)((Index)AccessFunctionType::JacobianTtimesVector_q+ (Index)AccessFunctionType::KinematicTree), parameters.localPosition, markerData.jacobianDerivative);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

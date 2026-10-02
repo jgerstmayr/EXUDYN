@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  07:42:08 (last modified)
+* @date         2026-10-02  07:45:50 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -128,6 +128,12 @@ public: // AUTO:
 
     //! AUTO:  add J_pos^T force + J_rot^T torque at the local position to ode2Lhs, through the body (#2745)
     virtual void AddGeneralizedForceTorque(const CSystemData& cSystemData, const Vector3D& force, const Vector3D& torque, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const override;
+
+    //! AUTO:  the local position on the body, for the check of IsValidLocalPosition at Assemble() (#2744)
+    virtual bool GetLocalPosition(Vector3D& localPosition) const override
+    {
+        localPosition = parameters.localPosition; return true;
+    }
 
 };
 

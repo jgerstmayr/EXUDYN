@@ -37,35 +37,30 @@ void CObjectGround::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 }
 
 
-//! provide Jacobian at localPosition in "value" according to object access
-void CObjectGround::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
+//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
+void CObjectGround::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
-	switch (accessType)
-	{
-	case AccessFunctionType::TranslationalVelocity_qt:
-	{
-		value.SetNumberOfRowsAndColumns(0, 0); // no action induced from ground joint!
-		break;
-	}
-	case AccessFunctionType::AngularVelocity_qt:
-	{
-		value.SetNumberOfRowsAndColumns(0, 0); // no action induced from ground joint!
-		break;
-	}
-	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation!!!
-	{
-		value.SetNumberOfRowsAndColumns(0, 0); //indicates that all entries are zero
-		break;
-	}
-	case AccessFunctionType::DisplacementMassIntegral_q:
-	{
-		value.SetNumberOfRowsAndColumns(0, 0); // no action induced from ground joint!
-		break;
-	}
-	default:
-		SysError("CObjectGround:GetAccessFunctionBody illegal accessType");
-	}
+	value.SetNumberOfRowsAndColumns(0, 0); // no action induced from ground joint!
 }
+
+//! the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n (#2744)
+void CObjectGround::GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const
+{
+	value.SetNumberOfRowsAndColumns(0, 0); // no action induced from ground joint!
+}
+
+//! d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n; false if it is zero (#2744)
+bool CObjectGround::GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value) const
+{
+	return false; //all entries are zero
+}
+
+//! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
+void CObjectGround::GetMassWeightedPositionJacobian(Matrix& value) const
+{
+	value.SetNumberOfRowsAndColumns(0, 0); // no action induced from ground joint!
+}
+
 
 //! provide according output variable in "value"
 void CObjectGround::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const

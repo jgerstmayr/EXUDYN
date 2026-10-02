@@ -1083,80 +1083,72 @@ void CObjectANCFThinPlate::PreComputeMassTerms() const
 }
 
 
-void CObjectANCFThinPlate::GetAccessFunctionBody(AccessFunctionType accessType, 
-                                                  const Vector3D& localPosition, 
-                                                  Matrix& value) const
+//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
+void CObjectANCFThinPlate::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
-    switch (accessType)
+    const Index dim = 3;		//3D finite element
+    const Index ns = 12;		//number of shape functions
+    //Real jacDet = GetElementJacobian();
+
+    Vector12D SV;
+    ComputeShapeFunctions(localPosition[0], localPosition[1], SV);
+
+    value.SetNumberOfRowsAndColumns(dim, dim * ns); 
+
+    CHECKandTHROW(localPosition[2] == 0,
+        "CObjectANCFThinPlate: markers, forces and constraints can only act at the plate midsurface at Z=0; check your code", ExudynModelError);
+
+    value.SetAll(0.);
+
+    for (Index i = 0; i < 12; i++)
     {
-    case AccessFunctionType::TranslationalVelocity_qt:
-    {
-        const Index dim = 3;		//3D finite element
-        const Index ns = 12;		//number of shape functions
-        //Real jacDet = GetElementJacobian();
-
-        Vector12D SV;
-        ComputeShapeFunctions(localPosition[0], localPosition[1], SV);
-
-        value.SetNumberOfRowsAndColumns(dim, dim * ns); 
-
-        CHECKandTHROW(localPosition[2] == 0,
-            "CObjectANCFThinPlate: markers, forces and constraints can only act at the plate midsurface at Z=0; check your code", ExudynModelError);
-
-        value.SetAll(0.);
-
-        for (Index i = 0; i < 12; i++)
-        {
-            value(0, i*3  ) = SV[i];
-            value(1, i*3+1) = SV[i];
-            value(2, i*3+2) = SV[i];
-        }
-        break;
-    }
-    case AccessFunctionType::DisplacementMassIntegral_q:
-    {
-        const Index dim = 3;		//3D finite element
-        const Index ns = 12;		//number of shape functions
-        Real jacDet = GetElementJacobian();
-
-
-        value.SetNumberOfRowsAndColumns(dim, dim * ns); //3D velocity, 12 coordinates qt
-        value.SetAll(0.);
-
-        Vector12D SVloc;
-        Vector12D SV(0.);
-
-        Real rho = parameters.physicsDensity;
-        // CHANGED: thickness evaluated per Gauss point for variable thickness support (MP/JG, 2026)
-        // OLD: Real rhoThickness = rho * parameters.physicsThickness;
-
-        Index cntEta = 0;
-        for (Real eta : EXUmath::gaussRuleOrder3Points)
-        {
-            Index cntXi = 0;
-            for (Real xi : EXUmath::gaussRuleOrder3Points)
-            {
-                // ADDED: compute thickness at current Gauss point (MP/JG, 2026)
-                Real h = ComputeThicknessAtPoint(xi, eta);
-                ComputeShapeFunctions(xi, eta, SVloc);
-                SVloc *= rho * h * jacDet * EXUmath::gaussRuleOrder3Weights[cntXi] * EXUmath::gaussRuleOrder3Weights[cntEta];
-                SV += SVloc;
-                cntXi++;
-            }
-        }
-
-        for (Index i = 0; i < 12; i++)
-        {
-            value(0, i * 3) = SV[i];
-            value(1, i * 3 + 1) = SV[i];
-            value(2, i * 3 + 2) = SV[i];
-        }
-        break;
-    }
-    default:
-        SysError("CObjectANCFThinPlate:GetAccessFunctionBody illegal accessType");
+        value(0, i*3  ) = SV[i];
+        value(1, i*3+1) = SV[i];
+        value(2, i*3+2) = SV[i];
     }
 }
+
+//! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
+void CObjectANCFThinPlate::GetMassWeightedPositionJacobian(Matrix& value) const
+{
+    const Index dim = 3;		//3D finite element
+    const Index ns = 12;		//number of shape functions
+    Real jacDet = GetElementJacobian();
+
+
+    value.SetNumberOfRowsAndColumns(dim, dim * ns); //3D velocity, 12 coordinates qt
+    value.SetAll(0.);
+
+    Vector12D SVloc;
+    Vector12D SV(0.);
+
+    Real rho = parameters.physicsDensity;
+    // CHANGED: thickness evaluated per Gauss point for variable thickness support (MP/JG, 2026)
+    // OLD: Real rhoThickness = rho * parameters.physicsThickness;
+
+    Index cntEta = 0;
+    for (Real eta : EXUmath::gaussRuleOrder3Points)
+    {
+        Index cntXi = 0;
+        for (Real xi : EXUmath::gaussRuleOrder3Points)
+        {
+            // ADDED: compute thickness at current Gauss point (MP/JG, 2026)
+            Real h = ComputeThicknessAtPoint(xi, eta);
+            ComputeShapeFunctions(xi, eta, SVloc);
+            SVloc *= rho * h * jacDet * EXUmath::gaussRuleOrder3Weights[cntXi] * EXUmath::gaussRuleOrder3Weights[cntEta];
+            SV += SVloc;
+            cntXi++;
+        }
+    }
+
+    for (Index i = 0; i < 12; i++)
+    {
+        value(0, i * 3) = SV[i];
+        value(1, i * 3 + 1) = SV[i];
+        value(2, i * 3 + 2) = SV[i];
+    }
+}
+
 
 void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType, 
                                                   const Vector3D& localPosition, 

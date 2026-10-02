@@ -108,7 +108,10 @@ public:
     virtual OutputVariableType GetOutputVariableTypes() const override;
 
     //!  provide Jacobian at localPosition in "value" according to object access
-    virtual void GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const override;
+    //! the access functions of a body (#2744)
+    virtual void GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const override;
+    virtual void GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const override;
+    virtual void GetMassWeightedPositionJacobian(Matrix& value) const override;
 
     //!  provide according output variable in "value"
     virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const override;

@@ -45,40 +45,35 @@ void CObjectMass1D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 }
 
 
-//! provide Jacobian at localPosition in "value" according to object access
-void CObjectMass1D::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
+//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
+void CObjectMass1D::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
-	switch (accessType)
-	{
-	case AccessFunctionType::TranslationalVelocity_qt:
-	{
-		//[fx,0,0] = A^T*F = F^T*A; global force F acts on local x-coordinate
-		//Vector3D v = parameters.referenceRotation * Vector3D({ 1.,0.,0. });
-		//value.SetMatrix(3, 1, { v[0], v[1], v[2] }); //a 3D Vector (e.g. 3D ForceVector) acts on 1 coordinate, rotated by reference rotation
-		value.SetMatrix(3, 1, { parameters.referenceRotation(0,0), parameters.referenceRotation(1,0), parameters.referenceRotation(2,0) }); //a 3D Vector (e.g. 3D ForceVector) acts on 1 coordinate, rotated by reference rotation
-		break;
-	}
-	case AccessFunctionType::AngularVelocity_qt:
-	{
-		//no action (but needed for application of rigid-body joints, similar to ground joints):
-		value.SetMatrix(3, 1, { 0, 0, 0 }); //a 3D torque vector acts on 1 coordinate
-		break;
-	}
-	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation!!!
-	{
-		value.SetNumberOfRowsAndColumns(0, 0); //indicates that all entries are zero
-		break;
-	}
-	case AccessFunctionType::DisplacementMassIntegral_q:
-	{
-		Vector3D v = parameters.referenceRotation * Vector3D({ parameters.physicsMass,0.,0. });
-		value.SetMatrix(3, 1, { v[0], v[1], v[2] }); //a 3D gravity Vector acts on 1 coordinate, rotated by reference rotation
-		break;
-	}
-	default:
-		SysError("CObjectMass1D:GetAccessFunctionBody illegal accessType");
-	}
+	//[fx,0,0] = A^T*F = F^T*A; global force F acts on local x-coordinate
+	//Vector3D v = parameters.referenceRotation * Vector3D({ 1.,0.,0. });
+	//value.SetMatrix(3, 1, { v[0], v[1], v[2] }); //a 3D Vector (e.g. 3D ForceVector) acts on 1 coordinate, rotated by reference rotation
+	value.SetMatrix(3, 1, { parameters.referenceRotation(0,0), parameters.referenceRotation(1,0), parameters.referenceRotation(2,0) }); //a 3D Vector (e.g. 3D ForceVector) acts on 1 coordinate, rotated by reference rotation
 }
+
+//! the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n (#2744)
+void CObjectMass1D::GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const
+{
+	//no action (but needed for application of rigid-body joints, similar to ground joints):
+	value.SetMatrix(3, 1, { 0, 0, 0 }); //a 3D torque vector acts on 1 coordinate
+}
+
+//! d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n; false if it is zero (#2744)
+bool CObjectMass1D::GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value) const
+{
+	return false; //all entries are zero
+}
+
+//! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
+void CObjectMass1D::GetMassWeightedPositionJacobian(Matrix& value) const
+{
+	Vector3D v = parameters.referenceRotation * Vector3D({ parameters.physicsMass,0.,0. });
+	value.SetMatrix(3, 1, { v[0], v[1], v[2] }); //a 3D gravity Vector acts on 1 coordinate, rotated by reference rotation
+}
+
 
 //! provide according output variable in "value"
 void CObjectMass1D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const

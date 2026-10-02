@@ -476,99 +476,93 @@ Real CObjectBeamGeometricallyExact2D::ComputeElasticEnergy(ConfigurationType con
     return energy;
 }
 
-//! provide Jacobian at localPosition in 'value' according to object access
-void CObjectBeamGeometricallyExact2D::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
+//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
+void CObjectBeamGeometricallyExact2D::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
-	//Real L = parameters.physicsLength;
     const Index ns = GetNumberOfNodes();   //number of shape functions / nodes
 
-	switch (accessType)
-	{
-	case AccessFunctionType::TranslationalVelocity_qt:
-	{
-		//const Index dim = 2;  //2D finite element
+	//const Index dim = 2;  //2D finite element
 
-		Real x = localPosition[0]; //only x-coordinate
-        ConstSizeVector<maxNNodes> SV = ComputeShapeFunctions(x);
-		value.SetNumberOfRowsAndColumns(3, GetODE2Size()); //3D velocity, 6 or 9 coordinates qt
-        
-		value.SetAll(0.);
-        for (Index i = 0; i < ns; i++)
-        {
-            value(0, 3*i) = SV[i];
-            value(1, 3*i+1) = SV[i];
-        }
-		CHECKandTHROW(localPosition[1] == 0, "CObjectBeamGeometricallyExact2D::GetAccessFunctionBody (for MarkerBody): only implemented if localPosition[1]==0");
-
-		break;
-	}
-	case AccessFunctionType::AngularVelocity_qt:
-	{
-		//const Index ns = 2;   //number of shape functions
-
-		Real x = localPosition[0]; //only x-coordinate
-
-		value.SetNumberOfRowsAndColumns(3, GetODE2Size()); //3D velocity, 6 coordinates qt
-		value.SetAll(0.); //last row not necessary to set to zero ... 
-		
-        ConstSizeVector<maxNNodes> SV = ComputeShapeFunctions(x);
-        for (Index i = 0; i < ns; i++)
-        {
-            value(2, 3*i+2) = SV[i];
-        }
-
-		break;
-	}
-	case AccessFunctionType::JacobianTtimesVector_q: //jacobian w.r.t. global position and global orientation!!!
-	{
-		CHECKandTHROW(localPosition[1] == 0, "CObjectBeamGeometricallyExact2D::GetAccessFunctionBody [JacobianTtimesVector_q] (for MarkerBody): only implemented if localPosition[1]==0");
-		value.SetNumberOfRowsAndColumns(0, 0); //indicates that all entries are zero
-		break;
-	}
-	case AccessFunctionType::DisplacementMassIntegral_q:
+	Real x = localPosition[0]; //only x-coordinate
+    ConstSizeVector<maxNNodes> SV = ComputeShapeFunctions(x);
+	value.SetNumberOfRowsAndColumns(3, GetODE2Size()); //3D velocity, 6 or 9 coordinates qt
+    
+	value.SetAll(0.);
+    for (Index i = 0; i < ns; i++)
     {
-        value.SetNumberOfRowsAndColumns(3, GetODE2Size()); //3D velocity, 6 coordinates qt
-        value.SetAll(0.);
+        value(0, 3*i) = SV[i];
+        value(1, 3*i+1) = SV[i];
+    }
+	CHECKandTHROW(localPosition[1] == 0, "CObjectBeamGeometricallyExact2D::GetPositionJacobian (for MarkerBody): only implemented if localPosition[1]==0");
+}
 
-        Real L = parameters.physicsLength;
-        Real rhoA = parameters.physicsMassPerLength;
+//! the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n (#2744)
+void CObjectBeamGeometricallyExact2D::GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const
+{
+    const Index ns = GetNumberOfNodes();   //number of shape functions / nodes
 
-        if (IsLinear())
+	//const Index ns = 2;   //number of shape functions
+
+	Real x = localPosition[0]; //only x-coordinate
+
+	value.SetNumberOfRowsAndColumns(3, GetODE2Size()); //3D velocity, 6 coordinates qt
+	value.SetAll(0.); //last row not necessary to set to zero ... 
+	
+    ConstSizeVector<maxNNodes> SV = ComputeShapeFunctions(x);
+    for (Index i = 0; i < ns; i++)
+    {
+        value(2, 3*i+2) = SV[i];
+    }
+}
+
+//! d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n; false if it is zero (#2744)
+bool CObjectBeamGeometricallyExact2D::GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value) const
+{
+	CHECKandTHROW(localPosition[1] == 0, "CObjectBeamGeometricallyExact2D::GetJacobianTransposedTimesVectorDerivative [JacobianTtimesVector_q] (for MarkerBody): only implemented if localPosition[1]==0");
+	return false; //all entries are zero
+}
+
+//! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
+void CObjectBeamGeometricallyExact2D::GetMassWeightedPositionJacobian(Matrix& value) const
+{
+    const Index ns = GetNumberOfNodes();   //number of shape functions / nodes
+
+    value.SetNumberOfRowsAndColumns(3, GetODE2Size()); //3D velocity, 6 coordinates qt
+    value.SetAll(0.);
+
+    Real L = parameters.physicsLength;
+    Real rhoA = parameters.physicsMassPerLength;
+
+    if (IsLinear())
+    {
+        ConstSizeVector<maxNNodes> SV = rhoA * L * ComputeShapeFunctions(0.); //0=midpoint at axis
+
+        value(0, 0) = SV[0];
+        value(1, 1) = SV[0];
+        value(0, 3) = SV[1];
+        value(1, 4) = SV[1];
+    }
+    else
+    {
+        const Real a = -0.5 * parameters.physicsLength;
+        const Real b = 0.5 * parameters.physicsLength;
+
+        Index cnt = 0;
+        for (auto item : EXUmath::gaussRuleOrder3Points)
         {
-            ConstSizeVector<maxNNodes> SV = rhoA * L * ComputeShapeFunctions(0.); //0=midpoint at axis
+            const Real x = 0.5 * (b - a) * item + 0.5 * (b + a);
+            const ConstSizeVector<maxNNodes> SV = ComputeShapeFunctions(x);
+            const Real factInt = (0.5 * (b - a) * EXUmath::gaussRuleOrder3Weights[cnt++]); // integration factor
 
-            value(0, 0) = SV[0];
-            value(1, 1) = SV[0];
-            value(0, 3) = SV[1];
-            value(1, 4) = SV[1];
-        }
-        else
-        {
-            const Real a = -0.5 * parameters.physicsLength;
-            const Real b = 0.5 * parameters.physicsLength;
-
-            Index cnt = 0;
-            for (auto item : EXUmath::gaussRuleOrder3Points)
+            for (Index i = 0; i < ns; ++i)
             {
-                const Real x = 0.5 * (b - a) * item + 0.5 * (b + a);
-                const ConstSizeVector<maxNNodes> SV = ComputeShapeFunctions(x);
-                const Real factInt = (0.5 * (b - a) * EXUmath::gaussRuleOrder3Weights[cnt++]); // integration factor
-
-                for (Index i = 0; i < ns; ++i)
-                {
-                    value(0, 3*i) += SV[i] * rhoA * factInt;
-                    value(1, 3*i+1) += SV[i] * rhoA * factInt;
-                }
+                value(0, 3*i) += SV[i] * rhoA * factInt;
+                value(1, 3*i+1) += SV[i] * rhoA * factInt;
             }
         }
-
-        break;
-	}
-	default:
-		SysError("CObjectBeamGeometricallyExact2D:GetAccessFunctionBody illegal accessType");
-	}
-
+    }
 }
+
 
 //! provide according output variable in 'value'
 void CObjectBeamGeometricallyExact2D::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, 

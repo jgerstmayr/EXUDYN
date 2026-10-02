@@ -761,12 +761,6 @@ void CObjectKinematicTree::GetOutputVariableKinematicTree(OutputVariableType var
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //AccessFunction:
 
-//! just make sure that this overwritten function is not called!
-void CObjectKinematicTree::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
-{
-	PyError("CObjectKinematicTree:GetAccessFunctionBody not available", PyErrorType::notImplementedError);
-}
-
 
 //! just make sure that this overwritten function is not called!
 void CObjectKinematicTree::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, 

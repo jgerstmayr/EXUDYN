@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  08:33:15 (last modified)
+* @date         2026-10-02  07:37:05 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -153,8 +153,14 @@ public: // AUTO:
         return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
     }
 
-    //! AUTO:  provide Jacobian at localPosition in 'value' according to object access
-    virtual void GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const override;
+    //! AUTO:  the position Jacobian d(v)/d(q_t) at localPosition, 3 x n
+    virtual void GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const override;
+
+    //! AUTO:  the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n
+    virtual void GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const override;
+
+    //! AUTO:  the mass-weighted position Jacobian int(rho J_pos dV), 3 x n
+    virtual void GetMassWeightedPositionJacobian(Matrix& value) const override;
 
     //! AUTO:  return the (global) velocity of 'localPosition' according to configuration type
     virtual Vector3D GetVelocity(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override;

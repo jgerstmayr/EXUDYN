@@ -121,4 +121,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(n1, exu.OutputVariableType.Displacemen
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`accessFunctionsTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/accessFunctionsTest.py) (TM), [`energiesFlexibleBodiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesFlexibleBodiesTest.py) (TM)

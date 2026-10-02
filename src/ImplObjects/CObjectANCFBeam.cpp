@@ -895,77 +895,61 @@ void CObjectANCFBeam::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 
 
 
-//! provide Jacobian at localPosition in "value" according to object access
-void CObjectANCFBeam::GetAccessFunctionBody(AccessFunctionType accessType, const Vector3D& localPosition, Matrix& value) const
+//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
+void CObjectANCFBeam::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
 	Real L = parameters.physicsLength;
 
-	switch (accessType)
-	{
-	case AccessFunctionType::TranslationalVelocity_qt:
-	{
-		SlimVector<CObjectANCFBeam::nSFperNode*CObjectANCFBeam::nNodes> SV = ComputeShapeFunctions(localPosition, L);
-		value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
-		//pout << "inside ..." << localPosition << "\n";
+	SlimVector<CObjectANCFBeam::nSFperNode*CObjectANCFBeam::nNodes> SV = ComputeShapeFunctions(localPosition, L);
+	value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
+	//pout << "inside ..." << localPosition << "\n";
 
-		value.SetAll(0.);
-		for (Index i = 0; i < EXUstd::dim3D; i++)
+	value.SetAll(0.);
+	for (Index i = 0; i < EXUstd::dim3D; i++)
+	{
+		for (Index j = 0; j < nSFperNode*nNodes; j++)
 		{
-			for (Index j = 0; j < nSFperNode*nNodes; j++)
-			{
-				value(i, j*EXUstd::dim3D + i) = SV[j];
-			}
+			value(i, j*EXUstd::dim3D + i) = SV[j];
 		}
-
-		break;
-	}
-	case AccessFunctionType::AngularVelocity_qt:
-	{
-		CHECKandTHROWstring("CObjectANCFBeam::GetAccessFunctionBody(AngularVelocity_qt): not implemented!", ExudynNotImplementedError);
-
-		break;
-	}
-	case AccessFunctionType::DisplacementMassIntegral_q:
-	{
-		//COM assumed to be at y=z=0 !!!
-
-		//CHECKandTHROW((localPosition[1] == 0 && localPosition[2] == 0),
-		//	"CObjectANCFBeam::GetAccessFunctionBody(DisplacementMassIntegral_q): only implemented for y=z=0!");
-
-		value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
-		value.SetAll(0.);
-
-		Real L = parameters.physicsLength;
-		Real rhoA = parameters.physicsMassPerLength;
-
-		Index cnt = 0;
-		Real a = 0; //integration interval [a,b]
-		Real b = L;
-
-		SlimVector<CObjectANCFBeam::nSFperNode*CObjectANCFBeam::nNodes> SV(0.);
-
-		for (auto item : EXUmath::gaussRuleOrder3Points)
-		{
-			Real x = 0.5*(b - a)*item + 0.5*(b + a);
-			SlimVector<CObjectANCFBeam::nSFperNode*CObjectANCFBeam::nNodes> SVloc = ComputeShapeFunctions(Vector3D({x,0.,0.}), L);
-			SVloc *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
-			SV += SVloc;
-		}
-
-		value.SetAll(0.);
-		for (Index i = 0; i < EXUstd::dim3D; i++)
-		{
-			for (Index j = 0; j < nSFperNode*nNodes; j++)
-			{
-				value(i, j*EXUstd::dim3D + i) = SV[j];
-			}
-		}
-		break;
-	}
-	default:
-		SysError("CObjectANCFBeam:GetAccessFunctionBody illegal accessType");
 	}
 }
+
+//! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
+void CObjectANCFBeam::GetMassWeightedPositionJacobian(Matrix& value) const
+{
+	//COM assumed to be at y=z=0 !!!
+
+
+	value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
+	value.SetAll(0.);
+
+	Real L = parameters.physicsLength;
+	Real rhoA = parameters.physicsMassPerLength;
+
+	Index cnt = 0;
+	Real a = 0; //integration interval [a,b]
+	Real b = L;
+
+	SlimVector<CObjectANCFBeam::nSFperNode*CObjectANCFBeam::nNodes> SV(0.);
+
+	for (auto item : EXUmath::gaussRuleOrder3Points)
+	{
+		Real x = 0.5*(b - a)*item + 0.5*(b + a);
+		SlimVector<CObjectANCFBeam::nSFperNode*CObjectANCFBeam::nNodes> SVloc = ComputeShapeFunctions(Vector3D({x,0.,0.}), L);
+		SVloc *= rhoA * (0.5*(b - a)*EXUmath::gaussRuleOrder3Weights[cnt++]);
+		SV += SVloc;
+	}
+
+	value.SetAll(0.);
+	for (Index i = 0; i < EXUstd::dim3D; i++)
+	{
+		for (Index j = 0; j < nSFperNode*nNodes; j++)
+		{
+			value(i, j*EXUstd::dim3D + i) = SV[j];
+		}
+	}
+}
+
 
 //! provide according output variable in "value"
 void CObjectANCFBeam::GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const

@@ -40,7 +40,7 @@ void CMarkerBodyPosition::ComputeMarkerData(const CSystemData& cSystemData, bool
 	if (computeJacobian)
 	{
 		((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->
-			GetAccessFunctionBody(AccessFunctionType::TranslationalVelocity_qt, parameters.localPosition, markerData.positionJacobian);
+			GetPositionJacobian(parameters.localPosition, markerData.positionJacobian);
 	}
 }
 
@@ -62,16 +62,11 @@ void CMarkerBodyPosition::ComputeMarkerDataJacobianDerivative(const CSystemData&
 		CHECKandTHROWstring("MarkerBodyPosition::ComputeMarkerDataJacobianDerivative: body " + EXUstd::ToString(parameters.bodyNumber) + " does not provide a jacobian derivative; use different markers or set newton.numericalDifferentiation.forODE2connectors = True or use explicit integrator for contact", ExudynNotImplementedError);
 	}
 
-	//v has size 6, must be copied to markerData.jacobianDerivative
-	markerData.jacobianDerivative.SetNumberOfRowsAndColumns(1, 6);
-	markerData.jacobianDerivative.SetAll(0.);
-	for (Index i = 0; i < v6D.NumberOfItems(); i++)
+	if (!((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->
+		GetJacobianTransposedTimesVectorDerivative(parameters.localPosition, v6D, markerData.jacobianDerivative))
 	{
-		markerData.jacobianDerivative(0, i) = v6D[i]; //only first 3 (position) components!
+		markerData.jacobianDerivative.SetNumberOfRowsAndColumns(0, 0); //signals that there is no dependency
 	}
-	//==>markerData.jacobianDerivative is input to GetAccessFunctionBody(...)
-	((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumber]))->
-		GetAccessFunctionBody(AccessFunctionType::JacobianTtimesVector_q, parameters.localPosition, markerData.jacobianDerivative);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

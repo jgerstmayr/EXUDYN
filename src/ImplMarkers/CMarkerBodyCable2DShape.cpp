@@ -155,7 +155,7 @@ void CMarkerBodyCable2DShape::ComputeMarkerData(const CSystemData& cSystemData, 
 			}
 			if (verticalOffset != 0.)
 			{
-				//see CObjectANCFCable2DBase::GetAccessFunctionBody
+				//see CObjectANCFCable2DBase::GetPositionJacobian
 				Vector2D n({ -r_x[1], r_x[0] }); //not normalized!
 				Vector2D t0 = rxNormInv * r_x;
 
