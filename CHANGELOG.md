@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 219 | 1.12.235 |
+| 1.12 | Metheney | 221 | 1.12.238 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.238** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` homogeneous transformations in the user interface of the rigid items: evaluation (#2781)
+  - description: Evaluate whether ObjectRigidBody, ObjectGround, rigid body nodes and rigid markers can take an HT instead of position and rotation (compatibility mode with None defaults, or a global/auto-detected mode flag), exporting both; localHT in the rigid markers and its deprecation path; homogenize with the localHT work (RG14.2.15); proposal and decisions for the maintainer.
+  - **notes:** Homogeneous transformations in the user interface: ObjectGround referenceHT, CreateGround/CreateRigidBody referenceHT and initialHT, localHT of the rigid markers - None for not given, an HT and its parts must agree.
+  - date resolved: **2026-10-03 01:43**, date raised: 2026-10-02
+- **1.12.236** `EXTENSION` `MEDIUM EFF` `resolved by: Claude-JG` OutputVariable (#2202)
+  - description: add kinetic and potential energy
+  - **notes:** Kinetic and potential energy are output variables of the bodies, beams, plates, superelements and spring-dampers (OutputVariableType.KineticEnergy, PotentialEnergy), and exudyn.advancedUtilities.SystemEnergy sums them for a system.
+  - date resolved: **2026-10-03 01:43**, date raised: 2026-01-07
 - **1.12.235** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a symbolic user function could not be created for an item whose signature an earlier item has (#2797)
   - description: found in revision2026b step RG12.4.7: the generated SetUserFunctionFromDict of PySymbolicUserFunctionSet.h had a branch only for the first user function of each signature - CreateSymbolicUserFunction for ObjectConnectorCoordinateSpringDamper (the signature of ObjectConnectorSpringDamper), LoadTorqueVector, LoadMassProportional, MainSystem postStepUserFunction and others raised 'invalid user object type'; 16 of 28 had a branch.
   - **notes:** CreateSymbolicUserFunction works for every user function, also for items whose signature an earlier item has (ObjectConnectorCoordinateSpringDamper, LoadTorqueVector, LoadMassProportional, the MainSystem's postStepUserFunction, ...).

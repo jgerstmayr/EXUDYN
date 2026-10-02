@@ -1,0 +1,15 @@
+{
+  "number": 2202,
+  "title": "OutputVariable",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add kinetic and potential energy",
+  "dateRaised": "2026-01-07",
+  "deadline": "2026-07-06",
+  "dateResolved": "2026-10-03 01:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Kinetic and potential energy are output variables of the bodies, beams, plates, superelements and spring-dampers (OutputVariableType.KineticEnergy, PotentialEnergy), and exudyn.advancedUtilities.SystemEnergy sums them for a system.",
+  "resolvedInVersion": "1.12.236"
+}

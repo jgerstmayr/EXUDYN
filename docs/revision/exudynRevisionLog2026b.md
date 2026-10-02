@@ -12088,3 +12088,16 @@ each signature - 16 of 28 -, so `CreateSymbolicUserFunction` raised "invalid use
 `LoadTorqueVector` and `LoadMassProportional` (that of `LoadForceVector`), the MainSystem's `postStepUserFunction`
 and more. Every user function has its branch now, onto the member of its signature. `symbolicUserFunctionTest.py`
 makes the three item functions symbolic and compares them with the Python ones (its reference unchanged).
+
+<a id="open-list-2026-10-03"></a>
+### The open list, and the tasks not decided to be resolved (2026-10-03)
+
+The maintainer: where only parts of an issue are open that are decided to be postponed - because there is no
+straightforward solution, or by decision - the issue can be closed, and the task kept in a list of its own, out of the
+todo list. The plan has the list [*Not decided to be resolved*](exudynRevisionPlan2026b.md#not-decided) under *Still
+open*: RG4.12, RG6.7.1 (a raytracer for curved geometry), RG6.7.2.1 (Hex20 faces), RG9.4.3.2, RG13.6.6, RG14.2.9.4,
+RG14.2.12 and RG16.3.4. The issues: **#2202 resolved** (the energies are done, RG9.4.3.2 is in the list), **#2732 closed**
+(the whole of what is left waits for tetrahedral elements), **#2781 resolved** (RG16.2 decided, RG16.3.1-.3 done with
+#2793-#2795, RG16.3.4 in the list); #2745 stays open, as RG14.2.15 is to be done (the deprecation of the joints'
+`rotationMarker0/1`). *Still open* lost RG6.7 and RG12.4.7 (done), RG9.4 and RG13.6.6; RG16.3 became RG16.4, the further
+steps of the HT.

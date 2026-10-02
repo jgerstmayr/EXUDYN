@@ -1340,7 +1340,8 @@ revision (info document D15).
       reachable from Python today; with `mbs.ComputeItem` and its numerical-derivative helper this test is short.
 
 <a id="rg9-4"></a>
-**RG9.4** *(group RG9; maintainer 2026-09-30)* **Kinetic and potential energy as output variables**
+**RG9.4** **DONE 2026-10-03** (#2202 resolved; RG9.4.3.2 is in the list
+    [*not decided to be resolved*](#not-decided)) *(group RG9; maintainer 2026-09-30)* **Kinetic and potential energy as output variables**
     (#2202). `OutputVariableType.KineticEnergy` and `PotentialEnergy` exist (bits 32 and 33) and no item
     provides them. They are added where they make sense - rigid bodies, flexible bodies, superelements
     and connectors - and nowhere else; a test then checks the conservation of energy of a free
@@ -2103,7 +2104,8 @@ What depends on it: the graphics regression test takes every item through its Mi
       markers, loads, sensors: every one has a MiniExample.
     - **RG13.6.5** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-6-5) - objects: all but
       three have a MiniExample.
-    - **RG13.6.6** *(maintainer 2026-09-29: later)* `ObjectFFRF` and `ObjectFFRFreducedOrder` get their
+    - **RG13.6.6** *(maintainer 2026-09-29: later; #2732 closed 2026-10-03, the step is in the list
+      [*not decided to be resolved*](#not-decided))* `ObjectFFRF` and `ObjectFFRFreducedOrder` get their
       MiniExamples when tetrahedral finite elements are part of Exudyn itself; until then a mesh comes from
       a file or from NGsolve, and their pages name a complete model instead (`NGsolveFFRF.py`,
       `NGsolveCMStutorial.py`, `objectFFRFreducedOrderTest.py`). `ObjectBeamGeometricallyExact` has its
@@ -2490,7 +2492,8 @@ the joints an HT means fewer variables and one way of doing things.
     is given a position or a rotation matrix? The interface is not the performance question. What already exists (the
     `localHT` of RG14.2.15) is homogenized with it.
 
-**RG16.3** *(group RG16)* **The cases that break nothing for users**, as decided in RG16.2 (2026-10-02): an HT
+**RG16.3** **DONE 2026-10-03** except RG16.3.4 (in the list [*not decided to be resolved*](#not-decided); #2781
+    resolved) *(group RG16)* **The cases that break nothing for users**, as decided in RG16.2 (2026-10-02): an HT
     parameter next to the position and rotation of today, both `None` for "not given", giving both raises, a 4x4 numpy
     array in the dictionary (an `exu.HT` accepted), only where it makes sense:
     - **RG16.3.1** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-3-1) (#2793) `ObjectGround`: the HT is the internal storage; `referenceHT` next to `referencePosition` and
@@ -2545,17 +2548,33 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG9.3 | #2744 | access functions as single functions of the objects: the split done (RG9.3.4.1-.3), the declarations checked (rule 7); open the flags derived instead of declared (RG9.3.4.4, after separating the super elements' own meaning); RG9.3.5 to RG9.3.7 done (hand-written Jacobians, AD for the derivative of `J^T f` of the cable and of the torque on `ObjectANCFBeam`, `ObjectRotationalMass1D` off its axis) |
-| RG9.4 | #2202 | kinetic and potential energy as output variables: done for all bodies, beams, plates, superelements and spring-dampers; RG9.4.3.2 (the contact and special objects) not now |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
-| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); done: the dispatch in the connector, the switch and the legacy functions (RG14.2.13, .17), sensors from a pool and the mixed rigid chain (.18), `PostNewtonStep` without Jacobians (.19), `MarkerTemp` without `MarkerData` (.14), `TemporaryComputationData` inventoried and named (.16) |
+| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures - done but RG14.2.15: the flag and the deprecation of the joints' `rotationMarker0/1`, the documentation and the examples moved to the markers' `localHT` (the parameter itself is in since RG16.3.3); RG14.2.9.4 and RG14.2.12 are in the list below |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG9.5.7 | #2784 | `ObjectALEANCFCable2D`: a marker on it - a material point or a point along the axis (for the maintainer's decision) |
-| RG16.3 | #2781 | HT in the user interface as decided in RG16.2: `ObjectGround` (internal storage, `referenceHT`), `CreateRigidBody` (`referenceHT`, `initialHT`), the rigid body markers (`localHT`) |
+| RG16.4 | - | HT further: the mode switch, `ObjectKinematicTree.jointHTs`, the deprecation of `rotationMarker0/1` in the joints, the robotics utilities on HT |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
-| RG13.6.6 | #2732 | MiniExamples of `ObjectFFRF` and `ObjectFFRFreducedOrder`, once tetrahedral elements are part of Exudyn |
+
+<a id="not-decided"></a>
+### Not decided to be resolved
+
+Tasks put off by a decision of the maintainer, or because there is no straightforward way, while the rest of their
+step is done. They are kept here, out of the list above; their issue is resolved for what is done, or closed with the
+reason, and a case that needs one of them opens a new issue that names the step.
+
+| step | issue | what it is | why not now |
+|---|---|---|---|
+| RG4.12 | #2736, closed | `NodeGenericAE` as the owner of Lagrange multipliers or of linear state space systems | on hold (maintainer, 2026-09-29): "it will be used in the future" - a case re-opens it |
+| RG6.7.1 | #2709, resolved | a raytracer for curved geometry (instead of the flat split) | not planned: the split is accurate as fine as the tiling angle asks |
+| RG6.7.2.1 | #2709, resolved | the faces of Hex20 meshes curved (`VolumeToSurfaceElements`) | an 8-node face has no node on a diagonal, which a 6-node triangle needs; it would need points that are not mesh nodes |
+| RG9.4.3.2 | #2202, resolved | energy of the contact and special objects | not now (maintainer, 2026-10-01); with friction it may be difficult |
+| RG13.6.6 | #2732, closed | MiniExamples of `ObjectFFRF` and `ObjectFFRFreducedOrder` | later (maintainer, 2026-09-29): when tetrahedral elements are part of Exudyn |
+| RG14.2.9.4 | #2745 | the term $\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ in the Newton matrix of the joints | on hold (maintainer, 2026-10-02): the gain is limited to large reaction forces at large rotations |
+| RG14.2.12 | #2745 | `GeneralContact` on the marker interface | measured, not now: no gain found that would pay for the change |
+| RG16.3.4 | - | a translation in the `localHT` of `MarkerNodeRigid` | when a case needs it: the position Jacobian and its derivative with an offset in the node; `MarkerBodyRigid` has it |
 
 Open in the tracker without a step: #2498 (nothing checks that an item type provides the member
 functions it must) and #2511 (the ROS examples were last run in 2023), both named in RG2.

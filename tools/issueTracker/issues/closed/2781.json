@@ -2,10 +2,14 @@
   "number": 2781,
   "title": "homogeneous transformations in the user interface of the rigid items: evaluation",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHECK",
   "effort": "MEDIUM",
   "description": "Evaluate whether ObjectRigidBody, ObjectGround, rigid body nodes and rigid markers can take an HT instead of position and rotation (compatibility mode with None defaults, or a global/auto-detected mode flag), exporting both; localHT in the rigid markers and its deprecation path; homogenize with the localHT work (RG14.2.15); proposal and decisions for the maintainer.",
   "dateRaised": "2026-10-02",
-  "deadline": "2027-03-31"
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-03 01:43",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Homogeneous transformations in the user interface: ObjectGround referenceHT, CreateGround/CreateRigidBody referenceHT and initialHT, localHT of the rigid markers - None for not given, an HT and its parts must agree.",
+  "resolvedInVersion": "1.12.238"
 }
