@@ -93,6 +93,31 @@ class InspectType(Enum):
     AccessFunctions = int
     """the access functions a body offers (AccessFunctionType), which decide the body markers it takes"""
 
+class ItemComputeType(Enum):
+    """The enumeration type ItemComputeType selects what mbs.ItemCompute(itemIndex, what, ...) computes for an item at the current state of the system; matrices and vectors refer to the coordinates of the item (its local-to-global ODE2 coordinates, mbs.systemData.GetObjectLTGODE2, or the coordinates of the node)."""
+    PositionJacobian = int
+    """the position Jacobian, d(velocity)/d(q_t): of a body at localPosition, of a node, of a marker"""
+    RotationJacobian = int
+    """the rotation Jacobian, d(angular velocity)/d(q_t), global: of a body at localPosition, of a node, of a rigid marker"""
+    JacobianTTimesVectorDerivative = int
+    """the derivative of the transposed Jacobian times a vector by the coordinates: of a body at localPosition and of a marker, d(J_pos^T f + J_rot^T tau)/dq with vector = [f, tau] (6 values); of a node, d(J_rot^T tau)/dq with vector = tau (3 values); an empty matrix where it is zero"""
+    MassWeightedPositionJacobian = int
+    """the integral of the density times the position Jacobian over a body, as the mass-proportional load uses it"""
+    ODE2LHS = int
+    """the left-hand side of the second order equations of an object - a body, or the forces of a connector projected on its markers -, with the sign of ComputeODE2LHS"""
+    MassMatrix = int
+    """the mass matrix of a body"""
+    AlgebraicEquations = int
+    """the algebraic equations of a constraint, or of a body with algebraic equations"""
+    ConstraintJacobian = int
+    """the Jacobian of the algebraic equations by the ODE2 coordinates (by the velocities for a constraint at velocity level)"""
+    ReactionForces = int
+    """the reaction forces C_q^T lambda of a constraint, with the current Lagrange multipliers"""
+    Kinematics = int
+    """the marker data of a marker, without Jacobians, as a dict: position, velocity, rotationMatrix and angularVelocityLocal where the marker has an orientation, value and value_t for a coordinate marker"""
+    CoordinateJacobian = int
+    """the Jacobian of a coordinate marker by the coordinates it acts on"""
+
 class ConfigurationType(Enum):
     """The enumeration type  ConfigurationType is used for selecting a configuration for reading or writing information to the module.
 

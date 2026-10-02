@@ -11592,3 +11592,45 @@ naming (3), and the marker structures, which shrink with RG14.2.14.
 into `GeneralContact`'s own per-thread temporaries (its only caller), `tempIndex`...`tempIndex4` as `tempIndex[4]`,
 `tempValue`/`tempValue2` as `postNewtonError`/`postNewtonStepSize`; the rest stays. The size of a
 `TemporaryComputationData` is not the question (one per thread, allocated once); readability is.
+
+<a id="rg9-5"></a>
+### RG9.5 — `mbs.ItemCompute` (2026-10-02, #2779), and RG9.3.8 — every body's access functions against finite differences (#2777)
+
+**RG9.5.1, the proposal - implemented in this form, for the maintainer's review** (each point can be changed without
+touching the C++ of the items):
+- **One function, like `mbs.Inspect`**: `mbs.ItemCompute(itemIndex, what=None, localPosition=[0,0,0], vector=None)`; the
+  typed index says the kind of item (object, node, marker); `what=None` returns the list of what applies; a `what` that
+  does not apply raises with that list. **`what`** is the new enumeration `exu.ItemComputeType`: `PositionJacobian`,
+  `RotationJacobian`, `JacobianTTimesVectorDerivative`, `MassWeightedPositionJacobian`, `ODE2LHS`, `MassMatrix`,
+  `AlgebraicEquations`, `ConstraintJacobian`, `ReactionForces`, `Kinematics`, `CoordinateJacobian`.
+- **At the current state** (`mbs.systemData`), after `Assemble()`; matrices and vectors in the coordinates of the item -
+  for an object its local-to-global ODE2 coordinates, for a node its own; numpy arrays, a dict for the kinematics of a
+  marker; an empty matrix where a derivative is zero.
+- **Through the functions the solver uses**, in their base classes: `CObjectBody` (access functions, mass matrix),
+  `CSystem::ComputeObjectODE2LHS` (a body, or a connector on the interface or on the path of the marker data - the
+  function is no longer `inline` for this), two new per-object functions of `CSystem`, `ComputeObjectAlgebraicEquations`
+  and `ComputeObjectReactionForces` (C_q^T lambda with the current multipliers, on the interface without C_q),
+  `ComputeObjectJacobianAE`, `CNodeODE2` (position and rotation Jacobians, `GetRotationJacobianTTimesVector_q`),
+  `CMarker::ComputeMarkerData`/`ComputeMarkerDataJacobianDerivative`. No item has a function of its own for it, so a new
+  item is reachable as soon as it implements the solver's functions.
+- **The numerical helper** in `exudyn.advancedUtilities`: `NumericalJacobian(mbs, function, coordinates,
+  velocities=False, epsilon=1e-6)` - central differences of any computation of the current state by global ODE2
+  coordinates or their velocities, the state restored -, and `ItemODE2Coordinates(mbs, itemIndex)`, the coordinates of an
+  object or node in the order `ItemCompute` uses.
+
+**Test model** `itemComputeTest.py` (a user's view): a double pendulum - what applies, mass matrix and right-hand side
+of a body, the forces of a spring-damper, the equations, C_q (against its numerical derivative, 2e-11) and reaction
+forces of a revolute joint, the position Jacobian against the derivative of the velocity (1e-10), the kinematics of a
+marker, the rotation Jacobian of a node.
+
+**RG9.3.8**, `python/testing/test_accessFunctionsAllBodies.py`: 15 bodies - mass points 3D/2D, `Mass1D`,
+`RotationalMass1D`, rigid bodies with Euler parameters, Tait-Bryan angles and the rotation vector, `RigidBody2D`, the
+ANCF cables 2D/3D, `ANCFBeam`, the geometrically exact beams 2D and 3D (Euler parameter and Tait-Bryan nodes),
+`ANCFThinPlate` - at random coordinates and velocities and several local positions: the position Jacobian is
+d(velocity)/d(q_t), the rotation Jacobian d(angular velocity)/d(q_t), and the derivative of J^T f the numerical
+derivative of the Jacobians times a random force and torque (Euler parameters on the tangent space, on the unit sphere).
+**Found and fixed: `ObjectBeamGeometricallyExact` declared the derivative of J^T f as zero** - "an approximation for
+rotation parameters with a configuration dependent G" -, which it is not: with a torque on the beam the Jacobian missed
+$\sum_i SV_i\,\partial(\Gm_i^T\tau)/\partial\qv_i$. It is now computed from the nodes' `GetGTv_q` (to 2e-11); all
+references unchanged. Not built yet (RG9.5.6): the FFRF bodies, the kinematic tree, `ALEANCFCable2D`, `GenericODE2`; the
+derivative of the Lie group node, whose increments are compositions.

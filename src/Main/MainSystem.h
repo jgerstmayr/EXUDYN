@@ -271,6 +271,8 @@ public:
 	py::object PyGetObjectOutputVariable(const py::object& itemIndex, OutputVariableType variableType, ConfigurationType configuration=ConfigurationType::Current) const;
 	//! what an item provides and requests, as lists of the exported enumeration members (#2203)
 	py::object PyInspect(const py::object& itemIndex, const py::object& what) const;
+	//! compute a function of an item at the current state (#2779)
+	py::object PyItemCompute(const py::object& itemIndex, const py::object& what, const std::vector<Real>& localPosition, const py::object& vector);
 	//! Get specific output variable with variable type; ONLY for bodies;
 	py::object PyGetObjectOutputVariableBody(const py::object& itemIndex, OutputVariableType variableType, 
 		const std::vector<Real>& localPosition, ConfigurationType configuration = ConfigurationType::Current) const;

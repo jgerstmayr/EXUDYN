@@ -1,0 +1,11 @@
+{
+  "number": 2782,
+  "title": "mbs.ItemCompute: the ODE2 Jacobian of an object, and the bodies not yet in the test of the access functions",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "What mbs.ItemCompute (#2779) does not compute yet: the ODE2 Jacobian of an object or connector (analytic where it has one, else numerical as the solver does), IsValidLocalPosition of a body, the Jacobians of a node with algebraic equations; and the bodies test_accessFunctionsAllBodies.py does not build yet: ObjectFFRF, ObjectFFRFreducedOrder, ObjectKinematicTree, ObjectALEANCFCable2D, ObjectGenericODE2, the derivative of the Lie group node by composed increments.",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31"
+}

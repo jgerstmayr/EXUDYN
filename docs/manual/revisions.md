@@ -151,6 +151,14 @@ deformed cross section, and results with joints on slope nodes, change slightly 
 its table, not only on its axis; `ObjectANCFBeam` takes `MarkerBodyRigid`, so torques and joints with
 rotations act on its cross sections (#2775).
 
+**What an item computes, from Python.** `mbs.ItemCompute(item, what)` computes, at the current state,
+what the solver computes for one object, node or marker - the position and rotation Jacobians of a
+body at a local position, its mass matrix and right-hand side, the forces of a connector, the
+equations, constraint Jacobian and reaction forces of a joint, the kinematics of a marker -, and
+`mbs.ItemCompute(item)` lists what applies (`exu.ItemComputeType`).
+`exudyn.advancedUtilities.NumericalJacobian` gives the numerical derivative to compare with, for
+testing a model or an item of one's own (#2779).
+
 **Curved shapes in GraphicsData.** 6-node (quadratic) triangles - the key `triangles6` of a
 `TriangleList` - quadratic lines (`Lines` with `shape` `'quadratic'`) and quadratic edges (`edges3`)
 are drawn curved: the renderers split them when they draw, as fine as

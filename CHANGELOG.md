@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 200 | 1.12.215 |
+| 1.12 | Metheney | 202 | 1.12.217 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.217** `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` mbs.ItemCompute: the computation functions of an item from Python (#2779)
+  - description: Python reaches an item's computation only through output variables. A general access at the current state - mbs.ItemCompute(itemIndex, what, \[optional parameters\]), like mbs.Inspect - to the access functions of bodies, ComputeODE2LHS and mass matrix, constraint equations and Jacobians, connector forces, node and marker Jacobians; functions defined once in base classes; plus a numerical-derivative helper for comparisons. For tests (\#2777), debugging and user items.
+  - **notes:** mbs.ItemCompute(item, what) computes what the solver computes for one object, node or marker at the current state - Jacobians, mass matrix, right-hand side, connector forces, constraint equations and Jacobians, reaction forces, marker kinematics; mbs.ItemCompute(item) lists what applies; exudyn.advancedUtilities.NumericalJacobian gives the numerical derivative to compare with.
+  - date resolved: **2026-10-02 18:27**, date raised: 2026-10-02
+- **1.12.216** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` every body's access functions against finite differences (#2777)
+  - description: A pytest that builds each body type with nontrivial (deformed, rotated) coordinates and checks, at several local positions, GetPositionJacobian and GetRotationJacobian against finite differences of the position and rotation matrix (via the output variables), and GetJacobianTransposedTimesVectorDerivative against the numerical derivative of J^T f. Two bugs of this kind were found by chance on 2026-10-02 (ObjectANCFBeam position Jacobian 3 x 8 for 18 coordinates; the rotation Jacobian of NodePointSlope23 not the derivative of its rotation, \#2763).
+  - **notes:** A test checks the position and rotation Jacobians and their derivatives of 15 body types against finite differences; ObjectBeamGeometricallyExact now computes the derivative of its rotation Jacobian times a torque, so torques and joints with rotations on these beams give a consistent Newton Jacobian.
+  - date resolved: **2026-10-02 18:26**, date raised: 2026-10-02
 - **1.12.215** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a sensor allocates its value vector per evaluation (#2778)
   - description: CSensor::GetSensorValues fills a Vector per call; with TemporaryMarkerDataStructure (\#2745) this is the remaining allocation of a sensor evaluation (measured 2026-10-02: 4 M allocations for 200 SensorObject over 20000 steps, one per evaluation). A ResizableVector kept per sensor, or the value written into the storage directly.
   - **notes:** Output variables of coordinate connectors, joints and contacts no longer allocate memory per evaluation, which makes sensors on them faster.

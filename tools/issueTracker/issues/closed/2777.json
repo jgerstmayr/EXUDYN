@@ -2,10 +2,14 @@
   "number": 2777,
   "title": "every body's access functions against finite differences",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "TESTING",
   "effort": "MEDIUM",
   "description": "A pytest that builds each body type with nontrivial (deformed, rotated) coordinates and checks, at several local positions, GetPositionJacobian and GetRotationJacobian against finite differences of the position and rotation matrix (via the output variables), and GetJacobianTransposedTimesVectorDerivative against the numerical derivative of J^T f. Two bugs of this kind were found by chance on 2026-10-02 (ObjectANCFBeam position Jacobian 3 x 8 for 18 coordinates; the rotation Jacobian of NodePointSlope23 not the derivative of its rotation, #2763).",
   "dateRaised": "2026-10-02",
-  "deadline": "2027-03-31"
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-02 18:26",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "A test checks the position and rotation Jacobians and their derivatives of 15 body types against finite differences; ObjectBeamGeometricallyExact now computes the derivative of its rotation Jacobian times a torque, so torques and joints with rotations on these beams give a consistent Newton Jacobian.",
+  "resolvedInVersion": "1.12.216"
 }

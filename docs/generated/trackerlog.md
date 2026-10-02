@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.215.dev1
+- Exudyn version = 1.12.217.dev1
 - last change = 2026-10-02
-- Number of issues = 2782
-- Number of resolved issues = 2529 (215 in current version)
+- Number of issues = 2783
+- Number of resolved issues = 2531 (217 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,17 +7568,14 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` mbs.ItemCompute: the ODE2 Jacobian of an object, and the bodies not yet in the test of the access functions (#2782)
+  - description: What mbs.ItemCompute (\#2779) does not compute yet: the ODE2 Jacobian of an object or connector (analytic where it has one, else numerical as the solver does), IsValidLocalPosition of a body, the Jacobians of a node with algebraic equations; and the bodies test\_accessFunctionsAllBodies.py does not build yet: ObjectFFRF, ObjectFFRFreducedOrder, ObjectKinematicTree, ObjectALEANCFCable2D, ObjectGenericODE2, the derivative of the Lie group node by composed increments.
+  - date raised: 2026-10-02
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` homogeneous transformations in the user interface of the rigid items: evaluation (#2781)
   - description: Evaluate whether ObjectRigidBody, ObjectGround, rigid body nodes and rigid markers can take an HT instead of position and rotation (compatibility mode with None defaults, or a global/auto-detected mode flag), exporting both; localHT in the rigid markers and its deprecation path; homogenize with the localHT work (RG14.2.15); proposal and decisions for the maintainer.
   - date raised: 2026-10-02
 - `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` homogeneous transformations: the C++ class and its Python binding (#2780)
   - description: HomogeneousTransformationBase into its own file, out of exulie; 12 numbers stored; fast H\*v, H^-1, H1\*H2, set/get with fixed-size loops and a no-rotation flag (global constexpr switch); tests and measurement; pybind exudyn.HT with operators; note in rigidBodyUtilities.HomogeneousTransformation; HT inside the rigid items and as output variable.
-  - date raised: 2026-10-02
-- `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` mbs.ItemCompute: the computation functions of an item from Python (#2779)
-  - description: Python reaches an item's computation only through output variables. A general access at the current state - mbs.ItemCompute(itemIndex, what, \[optional parameters\]), like mbs.Inspect - to the access functions of bodies, ComputeODE2LHS and mass matrix, constraint equations and Jacobians, connector forces, node and marker Jacobians; functions defined once in base classes; plus a numerical-derivative helper for comparisons. For tests (\#2777), debugging and user items.
-  - date raised: 2026-10-02
-- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` every body's access functions against finite differences (#2777)
-  - description: A pytest that builds each body type with nontrivial (deformed, rotated) coordinates and checks, at several local positions, GetPositionJacobian and GetRotationJacobian against finite differences of the position and rotation matrix (via the output variables), and GetJacobianTransposedTimesVectorDerivative against the numerical derivative of J^T f. Two bugs of this kind were found by chance on 2026-10-02 (ObjectANCFBeam position Jacobian 3 x 8 for 18 coordinates; the rotation Jacobian of NodePointSlope23 not the derivative of its rotation, \#2763).
   - date raised: 2026-10-02
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.

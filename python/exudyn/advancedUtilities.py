@@ -35,6 +35,7 @@ __all__ = [
     'ConvertDictToScipySparse', 'SaveDictToHDF5', 'LoadDictFromHDF5', 'ConvertFunctionToSymbolic',
     'CreateSymbolicUserFunction', 'TCPIPdata', 'CreateTCPIPconnection', 'TCPIPsendReceive',
     'CloseTCPIPconnection', 'LoadPotentialEnergy', 'CreateLoadEnergySensor', 'SystemEnergy',
+    'ItemODE2Coordinates', 'NumericalJacobian',
     ]
 
 def PlotLineCode(index):
@@ -1216,3 +1217,44 @@ class SystemEnergy:
             return self.ComputeSystemEnergies(configuration)
         return self.mbs.AddSensor(exudyn.itemInterface.SensorUserFunction(sensorUserFunction=UFsensor, storeInternal=storeInternal,
                                                                           writeToFile=writeToFile, fileName=fileName))
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#NUMERICAL DERIVATIVES OF ITEM COMPUTATIONS (#2779)
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+def ItemODE2Coordinates(mbs, itemIndex):
+    """the global ODE2 coordinate indices of an object (its local-to-global list) or of a node, in the order of
+    the matrices and vectors mbs.ItemCompute returns for it; the system must be assembled"""
+    if isinstance(itemIndex, exudyn.ObjectIndex):
+        return list(mbs.systemData.GetObjectLTGODE2(itemIndex))
+    if isinstance(itemIndex, exudyn.NodeIndex):
+        first = mbs.GetNodeODE2Index(itemIndex)
+        return list(range(first, first + len(mbs.GetNodeOutput(itemIndex, exudyn.OutputVariableType.Coordinates))))
+    raise ValueError('ItemODE2Coordinates: itemIndex must be an ObjectIndex or a NodeIndex, got ' + str(itemIndex))
+
+def NumericalJacobian(mbs, function, coordinates, velocities=False, epsilon=1e-6):
+    """the derivative of function() - any computation of the current state, e.g. an output variable or
+    mbs.ItemCompute - by the given global ODE2 coordinates (velocities=True: by their time derivatives), by central
+    differences with step epsilon; the state is restored afterwards; returns an array (number of values of function)
+    x (number of coordinates); with ItemODE2Coordinates, the comparison with mbs.ItemCompute is one line:
+    NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(oBody, exu.OutputVariableType.Velocity, localPosition),
+    ItemODE2Coordinates(mbs, oBody), velocities=True) against
+    mbs.ItemCompute(oBody, exu.ItemComputeType.PositionJacobian, localPosition)"""
+    Get = mbs.systemData.GetODE2Coordinates_t if velocities else mbs.systemData.GetODE2Coordinates
+    Set = mbs.systemData.SetODE2Coordinates_t if velocities else mbs.systemData.SetODE2Coordinates
+    q0 = np.array(Get())
+    columns = []
+    try:
+        for i in coordinates:
+            q = q0.copy()
+            q[i] += epsilon
+            Set(q)
+            fPlus = np.array(function(), dtype=float).flatten()
+            q[i] -= 2*epsilon
+            Set(q)
+            fMinus = np.array(function(), dtype=float).flatten()
+            columns.append((fPlus - fMinus)/(2*epsilon))
+    finally:
+        Set(q0)
+    return np.array(columns).T

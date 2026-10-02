@@ -729,9 +729,25 @@ void CObjectBeamGeometricallyExact::GetRotationJacobian(const Vector3D& localPos
 //! d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n; false if it is zero (#2744)
 bool CObjectBeamGeometricallyExact::GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value) const
 {
-	//the derivative of the Jacobians is not computed: taken as zero, which is exact for the position
-	//part on the axis and an approximation for rotation parameters with a configuration dependent G
-	return false; //all entries are zero
+	//the position on the axis is linear in the coordinates; the rotation Jacobian is SV_i G_i of the two nodes, so the
+	//derivative is SV_i d(G_i^T torque)/dq_i in the rotation coordinates of each node (#2777)
+	Vector3D torque({ forceTorque[3], forceTorque[4], forceTorque[5] });
+	if (torque[0] == 0. && torque[1] == 0. && torque[2] == 0.) { return false; }
+	const Index nDim3D = 3;
+	Vector2D SV = ComputeShapeFunctions(localPosition[0]);
+	Index offset[2] = { 0, GetCNode(0)->GetNumberOfODE2Coordinates() };
+	value.SetNumberOfRowsAndColumns(GetODE2Size(), GetODE2Size());
+	value.SetAll(0.);
+	for (Index i = 0; i < 2; i++)
+	{
+		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::maxRotationCoordinates> GTtorque_q;
+		((CNodeRigidBody*)GetCNode(i))->GetGTv_q(torque, GTtorque_q);
+		for (Index r = 0; r < GTtorque_q.NumberOfRows(); r++)
+		{
+			for (Index c = 0; c < GTtorque_q.NumberOfColumns(); c++) { value(offset[i] + nDim3D + r, offset[i] + nDim3D + c) = SV[i] * GTtorque_q(r, c); }
+		}
+	}
+	return true;
 }
 
 //! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)

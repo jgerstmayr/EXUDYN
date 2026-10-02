@@ -237,6 +237,41 @@ inline std::ostream& operator<<(std::ostream& os, InspectType value)
     }
 }
 
+//! what MainSystem::PyItemCompute computes (#2779)
+enum class ItemComputeType {
+    PositionJacobian = 1,               //!< the position Jacobian, d(velocity)/d(q_t): of a body at localPosition, of a node, of a marker
+    RotationJacobian = 2,               //!< the rotation Jacobian, d(angular velocity)/d(q_t), global: of a body at localPosition, of a node, of a rigid marker
+    JacobianTTimesVectorDerivative = 3, //!< the derivative of the transposed Jacobian times a vector by the coordinates: of a body at localPosition and of a marker, d(J_pos^T f + J_rot^T tau)/dq with vector = [f, tau] (6 values); of a node, d(J_rot^T tau)/dq with vector = tau (3 values); an empty matrix where it is zero
+    MassWeightedPositionJacobian = 4,   //!< the integral of the density times the position Jacobian over a body, as the mass-proportional load uses it
+    ODE2LHS = 5,                        //!< the left-hand side of the second order equations of an object - a body, or the forces of a connector projected on its markers -, with the sign of ComputeODE2LHS
+    MassMatrix = 6,                     //!< the mass matrix of a body
+    AlgebraicEquations = 7,             //!< the algebraic equations of a constraint, or of a body with algebraic equations
+    ConstraintJacobian = 8,             //!< the Jacobian of the algebraic equations by the ODE2 coordinates (by the velocities for a constraint at velocity level)
+    ReactionForces = 9,                 //!< the reaction forces C_q^T lambda of a constraint, with the current Lagrange multipliers
+    Kinematics = 10,                    //!< the marker data of a marker, without Jacobians, as a dict: position, velocity, rotationMatrix and angularVelocityLocal where the marker has an orientation, value and value_t for a coordinate marker
+    CoordinateJacobian = 11             //!< the Jacobian of a coordinate marker by the coordinates it acts on
+};
+
+//! ostream operator for printing of ItemComputeType
+inline std::ostream& operator<<(std::ostream& os, ItemComputeType value)
+{
+    switch (value)
+    {
+    case ItemComputeType::PositionJacobian: return os << "PositionJacobian";
+    case ItemComputeType::RotationJacobian: return os << "RotationJacobian";
+    case ItemComputeType::JacobianTTimesVectorDerivative: return os << "JacobianTTimesVectorDerivative";
+    case ItemComputeType::MassWeightedPositionJacobian: return os << "MassWeightedPositionJacobian";
+    case ItemComputeType::ODE2LHS: return os << "ODE2LHS";
+    case ItemComputeType::MassMatrix: return os << "MassMatrix";
+    case ItemComputeType::AlgebraicEquations: return os << "AlgebraicEquations";
+    case ItemComputeType::ConstraintJacobian: return os << "ConstraintJacobian";
+    case ItemComputeType::ReactionForces: return os << "ReactionForces";
+    case ItemComputeType::Kinematics: return os << "Kinematics";
+    case ItemComputeType::CoordinateJacobian: return os << "CoordinateJacobian";
+    default: return os << "ItemComputeType::invalid";
+    }
+}
+
 //! EndOfEnumList must remain the (consecutive) maximum of the list
 enum class ConfigurationType {
     _None = 0,         //!< no configuration; usually not valid, but may be used, e.g., if no configurationType is required

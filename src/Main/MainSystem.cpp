@@ -1102,6 +1102,220 @@ py::list InspectFlags(Index64 mask)
 	return result;
 }
 
+//! mbs.ItemCompute (#2779): what an item computes, at the current state; the typed index says the kind of item, as for
+//! mbs.Inspect, and the computation goes through the functions the solver uses
+py::object MainSystem::PyItemCompute(const py::object& itemIndex, const py::object& what, const std::vector<Real>& localPositionList,
+	const py::object& vector)
+{
+	const MainSystemData& data = GetMainSystemData();
+	ItemType itemType = ItemType::_None;
+	Index number = EXUstd::InvalidIndex;
+	Index numberOfItems = 0;
+	if (py::isinstance<ObjectIndex>(itemIndex)) { itemType = ItemType::Object; number = py::cast<ObjectIndex>(itemIndex).GetIndex(); numberOfItems = data.GetMainObjects().NumberOfItems(); }
+	else if (py::isinstance<NodeIndex>(itemIndex)) { itemType = ItemType::Node; number = py::cast<NodeIndex>(itemIndex).GetIndex(); numberOfItems = data.GetMainNodes().NumberOfItems(); }
+	else if (py::isinstance<MarkerIndex>(itemIndex)) { itemType = ItemType::Marker; number = py::cast<MarkerIndex>(itemIndex).GetIndex(); numberOfItems = data.GetMainMarkers().NumberOfItems(); }
+	else
+	{
+		PyError(STDstring("ItemCompute: itemIndex must be the typed index of an object, node or marker - an ObjectIndex, NodeIndex or MarkerIndex, as mbs.AddObject(...) and the other Add functions return it; got ")
+			+ STDstring(py::str(itemIndex)), PyErrorType::typeError);
+		return py::none();
+	}
+	if (!EXUstd::IndexIsInRange(number, 0, numberOfItems))
+	{
+		PyError("ItemCompute: " + EXUstd::ToString(itemType) + " number " + EXUstd::ToString(number) + " does not exist", PyErrorType::indexError);
+		return py::none();
+	}
+	data.RaiseIfNotConsistent("ItemCompute", number, itemType);
+	CHECKandTHROW(localPositionList.size() == 3, "ItemCompute: localPosition must have 3 components");
+	const Vector3D localPosition({ localPositionList[0], localPositionList[1], localPositionList[2] });
+	CSystemData& cSystemData = GetCSystem().GetSystemData();
+
+	//what applies to this item
+	std::vector<ItemComputeType> applicable;
+	CObject* object = nullptr;
+	CNodeODE2* node = nullptr;
+	const CMarker* marker = nullptr;
+	if (itemType == ItemType::Object)
+	{
+		object = cSystemData.GetCObjects()[number];
+		if (EXUstd::IsOfType(object->GetType(), CObjectType::Body))
+		{
+			Index access = (Index)object->GetAccessFunctionTypes();
+			if (access & (Index)AccessFunctionType::TranslationalVelocity_qt) { applicable.push_back(ItemComputeType::PositionJacobian); }
+			if (access & (Index)AccessFunctionType::AngularVelocity_qt) { applicable.push_back(ItemComputeType::RotationJacobian); }
+			if (access & (Index)AccessFunctionType::JacobianTtimesVector_q) { applicable.push_back(ItemComputeType::JacobianTTimesVectorDerivative); }
+			if (access & (Index)AccessFunctionType::DisplacementMassIntegral_q) { applicable.push_back(ItemComputeType::MassWeightedPositionJacobian); }
+			applicable.push_back(ItemComputeType::ODE2LHS);
+			applicable.push_back(ItemComputeType::MassMatrix);
+		}
+		else if (EXUstd::IsOfType(object->GetType(), CObjectType::Connector)
+			&& !EXUstd::IsOfType(object->GetType(), CObjectType::Constraint))
+		{
+			applicable.push_back(ItemComputeType::ODE2LHS);
+		}
+		if (object->GetAlgebraicEquationsSize() != 0)
+		{
+			applicable.push_back(ItemComputeType::AlgebraicEquations);
+			applicable.push_back(ItemComputeType::ConstraintJacobian);
+			applicable.push_back(ItemComputeType::ReactionForces);
+		}
+	}
+	else if (itemType == ItemType::Node)
+	{
+		CNode* cNode = cSystemData.GetCNodes()[number];
+		if ((Index)cNode->GetNodeGroup() & (Index)CNodeGroup::ODE2variables)
+		{
+			node = (CNodeODE2*)cNode;
+			if ((Index)node->GetType() & ((Index)Node::Position + (Index)Node::Position2D)) { applicable.push_back(ItemComputeType::PositionJacobian); }
+			if ((Index)node->GetType() & ((Index)Node::Orientation + (Index)Node::Orientation2D))
+			{
+				applicable.push_back(ItemComputeType::RotationJacobian);
+				if ((Index)node->GetType() & (Index)Node::Orientation) { applicable.push_back(ItemComputeType::JacobianTTimesVectorDerivative); }
+			}
+		}
+	}
+	else
+	{
+		marker = cSystemData.GetCMarkers()[number];
+		Index type = (Index)marker->GetType();
+		const bool special = type & ((Index)Marker::BodyMass + (Index)Marker::Beam3DShape + (Index)Marker::Coordinates + (Index)Marker::KinematicTree);
+		if (!special)
+		{
+			applicable.push_back(ItemComputeType::Kinematics);
+			if (type & (Index)Marker::Position) { applicable.push_back(ItemComputeType::PositionJacobian); }
+			if (type & (Index)Marker::Orientation) { applicable.push_back(ItemComputeType::RotationJacobian); }
+			if (type & (Index)Marker::Coordinate) { applicable.push_back(ItemComputeType::CoordinateJacobian); }
+			if (type & (Index)Marker::JacobianDerivativeAvailable) { applicable.push_back(ItemComputeType::JacobianTTimesVectorDerivative); }
+		}
+	}
+
+	py::list applicableList;
+	STDstring applicableNames;
+	for (ItemComputeType t : applicable)
+	{
+		applicableList.append(py::cast(t));
+		applicableNames += (applicableNames.size() ? ", " : "") + STDstring("ItemComputeType.") + EXUstd::ToString(t);
+	}
+	if (what.is_none()) { return applicableList; }
+	if (!py::isinstance<ItemComputeType>(what))
+	{
+		PyError("ItemCompute: what must be a member of exu.ItemComputeType or None; got " + STDstring(py::str(what)), PyErrorType::typeError);
+		return py::none();
+	}
+	ItemComputeType computeType = py::cast<ItemComputeType>(what);
+	if (std::find(applicable.begin(), applicable.end(), computeType) == applicable.end())
+	{
+		PyError("ItemCompute: ItemComputeType." + EXUstd::ToString(computeType) + " does not apply to " + EXUstd::ToString(itemType) + " "
+			+ EXUstd::ToString(number) + "; what applies: [" + applicableNames + "]", PyErrorType::valueError);
+		return py::none();
+	}
+
+	//the vector of a Jacobian derivative
+	Vector6D forceTorque(0.);
+	if (computeType == ItemComputeType::JacobianTTimesVectorDerivative)
+	{
+		std::vector<Real> values = vector.is_none() ? std::vector<Real>() : py::cast<std::vector<Real>>(vector);
+		const size_t size = (itemType == ItemType::Node) ? 3 : 6;
+		if (values.size() != size)
+		{
+			PyError("ItemCompute: JacobianTTimesVectorDerivative needs vector with " + EXUstd::ToString((Index)size)
+				+ (size == 3 ? " values, the torque" : " values, the force and the torque"), PyErrorType::valueError);
+			return py::none();
+		}
+		for (size_t i = 0; i < size; i++) { forceTorque[(Index)(i + 6 - size)] = values[i]; }
+	}
+
+	TemporaryComputationData temp;
+	Matrix matrix;
+	Vector local;
+	if (itemType == ItemType::Object)
+	{
+		const CObjectBody* body = (const CObjectBody*)object;
+		switch (computeType)
+		{
+		case ItemComputeType::PositionJacobian: body->GetPositionJacobian(localPosition, matrix); return EPyUtils::ToPython(matrix);
+		case ItemComputeType::RotationJacobian: body->GetRotationJacobian(localPosition, matrix); return EPyUtils::ToPython(matrix);
+		case ItemComputeType::JacobianTTimesVectorDerivative:
+			if (!body->GetJacobianTransposedTimesVectorDerivative(localPosition, forceTorque, matrix)) { matrix.SetNumberOfRowsAndColumns(0, 0); }
+			return EPyUtils::ToPython(matrix);
+		case ItemComputeType::MassWeightedPositionJacobian: body->GetMassWeightedPositionJacobian(matrix); return EPyUtils::ToPython(matrix);
+		case ItemComputeType::ODE2LHS:
+			GetCSystem().ComputeObjectODE2LHS(temp, object, local, number);
+			return EPyUtils::ToPython(local);
+		case ItemComputeType::MassMatrix:
+			temp.massMatrix.SetUseDenseMatrix(true);
+			body->ComputeMassMatrix(temp.massMatrix, cSystemData.GetLocalToGlobalODE2()[number], number);
+			return EPyUtils::ToPython(temp.massMatrix.GetInternalDenseMatrix());
+		case ItemComputeType::AlgebraicEquations:
+			GetCSystem().ComputeObjectAlgebraicEquations(temp, number, local);
+			return EPyUtils::ToPython(local);
+		case ItemComputeType::ConstraintJacobian:
+		{
+			bool usesVelocityLevel;
+			JacobianType::Type filledJacobians;
+			GetCSystem().ComputeObjectJacobianAE(number, temp, usesVelocityLevel, filledJacobians);
+			if ((filledJacobians & JacobianType::AE_ODE2) && !usesVelocityLevel) { return EPyUtils::ToPython(temp.localJacobianAE_ODE2); }
+			if (filledJacobians & JacobianType::AE_ODE2_t) { return EPyUtils::ToPython(temp.localJacobianAE_ODE2_t); }
+			matrix.SetNumberOfRowsAndColumns(0, 0); //an inactive constraint: no Jacobian by the coordinates
+			return EPyUtils::ToPython(matrix);
+		}
+		case ItemComputeType::ReactionForces:
+			GetCSystem().ComputeObjectReactionForces(temp, number, local);
+			return EPyUtils::ToPython(local);
+		default: break;
+		}
+	}
+	else if (itemType == ItemType::Node)
+	{
+		switch (computeType)
+		{
+		case ItemComputeType::PositionJacobian: node->GetPositionJacobian(matrix); return EPyUtils::ToPython(matrix);
+		case ItemComputeType::RotationJacobian: node->GetRotationJacobian(matrix); return EPyUtils::ToPython(matrix);
+		case ItemComputeType::JacobianTTimesVectorDerivative:
+			node->GetRotationJacobianTTimesVector_q(Vector3D({ forceTorque[3], forceTorque[4], forceTorque[5] }), matrix);
+			return EPyUtils::ToPython(matrix);
+		default: break;
+		}
+	}
+	else
+	{
+		MarkerData& markerData = temp.markerTemp[0].markerData;
+		marker->ComputeMarkerData(cSystemData, computeType != ItemComputeType::Kinematics, markerData);
+		switch (computeType)
+		{
+		case ItemComputeType::Kinematics:
+		{
+			py::dict kinematics;
+			Index type = (Index)marker->GetType();
+			if (type & (Index)Marker::Position)
+			{
+				kinematics["position"] = EPyUtils::ToPython(markerData.position);
+				kinematics["velocity"] = EPyUtils::ToPython(markerData.velocity);
+			}
+			if (type & (Index)Marker::Orientation)
+			{
+				kinematics["rotationMatrix"] = EPyUtils::ToPython(markerData.orientation);
+				kinematics["angularVelocityLocal"] = EPyUtils::ToPython(markerData.angularVelocityLocal);
+			}
+			if (type & (Index)Marker::Coordinate)
+			{
+				kinematics["value"] = EPyUtils::ToPython(markerData.vectorValue);
+				kinematics["value_t"] = EPyUtils::ToPython(markerData.vectorValue_t);
+			}
+			return kinematics;
+		}
+		case ItemComputeType::PositionJacobian: return EPyUtils::ToPython(markerData.positionJacobian);
+		case ItemComputeType::RotationJacobian: return EPyUtils::ToPython(markerData.rotationJacobian);
+		case ItemComputeType::CoordinateJacobian: return EPyUtils::ToPython(markerData.jacobian);
+		case ItemComputeType::JacobianTTimesVectorDerivative:
+			marker->ComputeMarkerDataJacobianDerivative(cSystemData, forceTorque, markerData);
+			return EPyUtils::ToPython(markerData.jacobianDerivative);
+		default: break;
+		}
+	}
+	return py::none();
+}
+
 //! mbs.Inspect (#2203): the typed index says the kind of item; the answers are lists of the exported enumerations
 py::object MainSystem::PyInspect(const py::object& itemIndex, const py::object& what) const
 {

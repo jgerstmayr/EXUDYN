@@ -1308,7 +1308,8 @@ revision (info document D15).
       depend on the angle, as for `ObjectRigidBody2D`; `Assemble()` refuses connector and load markers there today), and
       a rotation Jacobian of `ObjectANCFBeam` from its slopes (which slopes, which orthogonalization). For the
       maintainer's decision.
-    - **RG9.3.8** *(found in RG9.3.7 and RG4.17.1; needs no decision)* **every body's access functions against finite
+    - **RG9.3.8** **DONE 2026-10-02** (15 bodies; the rest in RG9.5.6) — [log](exudynRevisionLog2026b.md#rg9-5) -
+      *(found in RG9.3.7 and RG4.17.1; needs no decision)* **every body's access functions against finite
       differences** (#2777): one pytest that builds each body type at deformed, rotated coordinates and checks, at
       several local positions, `GetPositionJacobian` and `GetRotationJacobian` against finite differences of the
       position and the rotation matrix, and `GetJacobianTransposedTimesVectorDerivative` against the numerical
@@ -1400,17 +1401,23 @@ revision (info document D15).
     more complicated); as many functions as possible defined once in a base class (`CObjectBody`, `CObjectConnector`,
     `CNodeODE2`, `CMarker`), each kind adding only its Python interface; and a small Python helper for the numerical
     derivative (of a position, a rotation matrix, a residual) that makes the comparison of a computed Jacobian a line.
-    - **RG9.5.1** the evaluation and the proposal, for the maintainer's decisions: which functions per kind of item, the
+    - **RG9.5.1** **DONE 2026-10-02, implemented as proposed, for the maintainer's review** — [log](exudynRevisionLog2026b.md#rg9-5) -
+      the evaluation and the proposal, for the maintainer's decisions: which functions per kind of item, the
       names of `what`, the arguments (local position, force/torque, factors), what is returned (numpy arrays, dicts), how
       the current state is set (`mbs.systemData`), what a call on an item that does not provide a function raises, and
       the place of the numerical-derivative helper;
-    - **RG9.5.2** the access functions of the bodies (position and rotation Jacobians, the derivative of $\Jm^T\fv$, the
+    - **RG9.5.2** to **RG9.5.5** **DONE 2026-10-02** (#2779) - the access functions of the bodies (position and rotation Jacobians, the derivative of $\Jm^T\fv$, the
       mass-weighted position Jacobian, `IsValidLocalPosition`) and the helper; then RG9.3.8;
     - **RG9.5.3** the computation functions of the objects: `ComputeODE2LHS`, the mass matrix, the ODE2 Jacobians;
     - **RG9.5.4** connectors and constraints: the force on the interface, the algebraic equations, C_q, the reaction
       forces;
     - **RG9.5.5** nodes and markers: the node's position and rotation Jacobians and `GetRotationJacobianTTimesVector_q`,
       the marker's kinematics (L0) and its Jacobians.
+    - **RG9.5.6** *(found in RG9.5; needs no decision)* **what `mbs.ItemCompute` does not compute yet** (#2782): the ODE2
+      Jacobian of an object or connector (analytic where it has one, else numerical as the solver does),
+      `IsValidLocalPosition`, the Jacobians of a node with algebraic equations; and the bodies the test of RG9.3.8 does
+      not build yet - `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectKinematicTree`, `ObjectALEANCFCable2D`,
+      `ObjectGenericODE2` -, and the derivative of the Lie group node by composed increments.
 
 ## RG10 — Tooling and process
 
@@ -2484,7 +2491,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); RG14.2.17 and RG14.2.13 done (the dispatch in the connector, the switch and the legacy functions gone); RG14.2.18 done (sensors from a pool, the mixed chain of rigid markers); RG14.2.19 done (#241); then RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
-| RG9.5 | #2779 | `mbs.ItemCompute`: the computation functions of an item from Python (evaluation first), then RG9.3.8 |
+| RG9.5 | #2782 | `mbs.ItemCompute` done (#2779, RG9.3.8 with it); open RG9.5.6: the ODE2 Jacobian of an object, the FFRF bodies, kinematic tree, ALE cable, GenericODE2 in the test |
 | RG16.1 | #2780 | homogeneous transformations: the C++ class fast, out of `exulie`, and `exudyn.HT` |
 | RG16.2 | #2781 | evaluation: HT in the user interface of the rigid items, `localHT` in the rigid markers (RG16.5) |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
@@ -2514,14 +2521,12 @@ The title of each says what the step **does**; the sentence after it says why it
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Test every body's access functions against finite differences** (RG9.3.8, #2777). Two bugs of that kind turned
-   up by chance on one day; one test finds the rest.
-4. **Halve the large `nTiles` of the examples** (RG6.7.7.7, #2709). The round primitives and the FFRF meshes are
+3. **Halve the large `nTiles` of the examples** (RG6.7.7.7, #2709). The round primitives and the FFRF meshes are
    curved now (RG6.7.7.6, RG6.7.2.1); the examples that chose a large `nTiles` to hide the facets draw more than they
    need - checked by image.
-5. **Shrink `MarkerTemp` and `TemporaryComputationData`** (RG14.2.14, RG14.2.16, #2745). The legacy switch and the
+4. **Shrink `MarkerTemp` and `TemporaryComputationData`** (RG14.2.14, RG14.2.16, #2745). The legacy switch and the
    legacy functions are gone (RG14.2.13), and the contacts no longer need a path of their own (RG14.2.18).
-6. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
+5. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
-7. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
+6. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
    published documentation that is visibly wrong.

@@ -2,10 +2,14 @@
   "number": 2779,
   "title": "mbs.ItemCompute: the computation functions of an item from Python",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "HIGH",
   "description": "Python reaches an item's computation only through output variables. A general access at the current state - mbs.ItemCompute(itemIndex, what, [optional parameters]), like mbs.Inspect - to the access functions of bodies, ComputeODE2LHS and mass matrix, constraint equations and Jacobians, connector forces, node and marker Jacobians; functions defined once in base classes; plus a numerical-derivative helper for comparisons. For tests (#2777), debugging and user items.",
   "dateRaised": "2026-10-02",
-  "deadline": "2027-03-31"
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-02 18:27",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "mbs.ItemCompute(item, what) computes what the solver computes for one object, node or marker at the current state - Jacobians, mass matrix, right-hand side, connector forces, constraint equations and Jacobians, reaction forces, marker kinematics; mbs.ItemCompute(item) lists what applies; exudyn.advancedUtilities.NumericalJacobian gives the numerical derivative to compare with.",
+  "resolvedInVersion": "1.12.217"
 }

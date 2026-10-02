@@ -1469,7 +1469,7 @@ TimerStructureRegistrator TSRcomputeGeneralContact("Contact:Overall", TScomputeG
 
 //! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in RHS computation)
 //! return true, if object has localODE2Lhs, false otherwise
-inline bool CSystem::ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs, Index objectNumber)
+bool CSystem::ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs, Index objectNumber)
 {
 	if (object->IsActive()) //usually is active ...
 	{
@@ -3886,8 +3886,48 @@ void CSystem::UpdatePostProcessData(bool recordImage, bool visualizationStateUpd
 	EXUstd::ReleaseSemaphore(postProcessData.accessState); //clear PostProcessData
 }
 
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//the computation of one object at the current state, as the system loops do it, for mbs.ItemCompute (#2779)
 
+void CSystem::ComputeObjectAlgebraicEquations(TemporaryComputationData& temp, Index objectNumber, Vector& localAE, bool velocityLevel)
+{
+	CObject* object = cSystemData.GetCObjects()[objectNumber];
+	if (EXUstd::IsOfType(object->GetType(), CObjectType::Constraint))
+	{
+		CObjectConstraint* constraint = (CObjectConstraint*)object;
+		if (!constraint->ComputeAlgebraicEquationsConnector(cSystemData, temp, objectNumber, velocityLevel, localAE))
+		{
+			const bool computeJacobian = false;
+			cSystemData.ComputeMarkerDataStructure(constraint, computeJacobian, temp.markerDataStructure);
+			constraint->ComputeAlgebraicEquations(localAE, temp.markerDataStructure, cSystemData.GetCData().currentState.time,
+				objectNumber, velocityLevel);
+		}
+	}
+	else
+	{
+		object->ComputeAlgebraicEquations(localAE, velocityLevel);
+	}
+}
 
-
-
-
+void CSystem::ComputeObjectReactionForces(TemporaryComputationData& temp, Index objectNumber, Vector& localODE2)
+{
+	const CObject* object = cSystemData.GetCObjects()[objectNumber];
+	const Vector& lambda = cSystemData.GetCData().currentState.AECoords;
+	if (EXUstd::IsOfType(object->GetType(), CObjectType::Constraint) &&
+		((const CObjectConstraint*)object)->ComputeReactionForcesConnector(cSystemData, temp, objectNumber, lambda, localODE2))
+	{
+		return;
+	}
+	bool usesVelocityLevel;
+	JacobianType::Type filledJacobians;
+	ComputeObjectJacobianAE(objectNumber, temp, usesVelocityLevel, filledJacobians);
+	const ArrayIndex& ltgAE = cSystemData.GetLocalToGlobalAE()[objectNumber];
+	localODE2.SetNumberOfItems(cSystemData.GetLocalToGlobalODE2()[objectNumber].NumberOfItems());
+	localODE2.SetAll(0.);
+	if (!(filledJacobians & (JacobianType::AE_ODE2 + JacobianType::AE_ODE2_t))) { return; }
+	const ResizableMatrix& jacobian = ((filledJacobians & JacobianType::AE_ODE2) && !usesVelocityLevel) ? temp.localJacobianAE_ODE2 : temp.localJacobianAE_ODE2_t;
+	for (Index j = 0; j < jacobian.NumberOfColumns(); j++)
+	{
+		for (Index i = 0; i < jacobian.NumberOfRows(); i++) { localODE2[j] += lambda[ltgAE[i]] * jacobian(i, j); }
+	}
+}

@@ -12,7 +12,7 @@ Here, we gather special functions, which are depending on other modules and do n
 (sec-advancedutilities-plotlinecode)=
 ## Function: PlotLineCode
 
-[`PlotLineCode(index)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L40)
+[`PlotLineCode(index)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L41)
 
 - **function description**: helper functions for matplotlib, returns a list of 28 line codes to be used in plot, e.g. 'r-' for red solid line
 - **input**: index in range(0:28)
@@ -25,7 +25,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities-findobjectindex)=
 ## Function: FindObjectIndex
 
-[`FindObjectIndex(i, globalVariables)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L67)
+[`FindObjectIndex(i, globalVariables)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L68)
 
 - **function description**: simple function to find object index i within the local or global scope of variables
 - **input**: i, the integer object number and  globalVariables=globals()
@@ -42,7 +42,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities-findnodeindex)=
 ## Function: FindNodeIndex
 
-[`FindNodeIndex(i, globalVariables)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L87)
+[`FindNodeIndex(i, globalVariables)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L88)
 
 - **function description**: simple function to find node index i within the local or global scope of variables
 - **input**: i, the integer node number and  globalVariables=globals()
@@ -59,7 +59,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities-islistorarray)=
 ## Function: IsListOrArray
 
-[`IsListOrArray(data, checkIfNoneEmpty = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L107)
+[`IsListOrArray(data, checkIfNoneEmpty = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L108)
 
 - **function description**: checks, if data is of type list or np.array; used in functions to check input data
 - **input**:
@@ -71,7 +71,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities-raisetypeerror)=
 ## Function: RaiseTypeError
 
-[`RaiseTypeError(where = '', argumentName = '', received = None, expectedType = None, dim = None, cols = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L149)
+[`RaiseTypeError(where = '', argumentName = '', received = None, expectedType = None, dim = None, cols = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L150)
 
 - **function description**: internal function which is used to raise common errors in case of wrong types; dim is used for vectors and square matrices, cols is used for non-square matrices
 
@@ -82,7 +82,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isnone)=
 ## Function: IsNone
 
-[`IsNone(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L183)
+[`IsNone(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L184)
 
 - **function description**: return True, if x is None; works also for numpy arrays or structures
 
@@ -90,7 +90,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isnotnone)=
 ## Function: IsNotNone
 
-[`IsNotNone(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L188)
+[`IsNotNone(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L189)
 
 - **function description**: return True, if x is not None; works also for numpy arrays or structures
 
@@ -101,7 +101,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isvalidbool)=
 ## Function: IsValidBool
 
-[`IsValidBool(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L193)
+[`IsValidBool(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L194)
 
 - **function description**: return True, if x is int, float, np.double, np.integer or similar types that can be automatically casted to pybind11
 
@@ -109,7 +109,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isvalidrealint)=
 ## Function: IsValidRealInt
 
-[`IsValidRealInt(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L203)
+[`IsValidRealInt(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L204)
 
 - **function description**: return True, if x is int, float, np.double, np.integer or similar types that can be automatically casted to pybind11
 
@@ -117,7 +117,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isvalidint)=
 ## Function: IsValidInt
 
-[`IsValidInt(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L214)
+[`IsValidInt(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L215)
 
 - **function description**: return True, if x is int, np.integer or similar types that can be automatically casted to pybind11
 
@@ -128,7 +128,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isvalidprealint)=
 ## Function: IsValidPRealInt
 
-[`IsValidPRealInt(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L223)
+[`IsValidPRealInt(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L224)
 
 - **function description**: return True, if x is valid Real/Int and positive
 
@@ -136,7 +136,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isvalidurealint)=
 ## Function: IsValidURealInt
 
-[`IsValidURealInt(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L230)
+[`IsValidURealInt(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L231)
 
 - **function description**: return True, if x is valid Real/Int and unsigned (non-negative)
 
@@ -144,7 +144,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isreal)=
 ## Function: IsReal
 
-[`IsReal(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L237)
+[`IsReal(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L238)
 
 - **function description**: return True, if x is any python or numpy float type; could also be called IsFloat(), but Real has special meaning in Exudyn
 
@@ -152,7 +152,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isinteger)=
 ## Function: IsInteger
 
-[`IsInteger(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L245)
+[`IsInteger(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L246)
 
 - **function description**: return True, if x is any python or numpy float type
 
@@ -160,7 +160,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isvector)=
 ## Function: IsVector
 
-[`IsVector(v, expectedSize = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L253)
+[`IsVector(v, expectedSize = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L254)
 
 - **function description**: check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
 
@@ -168,7 +168,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isintvector)=
 ## Function: IsIntVector
 
-[`IsIntVector(v, expectedSize = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L268)
+[`IsIntVector(v, expectedSize = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L269)
 
 - **function description**: check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
 
@@ -176,7 +176,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-issquarematrix)=
 ## Function: IsSquareMatrix
 
-[`IsSquareMatrix(m, expectedSize = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L284)
+[`IsSquareMatrix(m, expectedSize = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L285)
 
 - **function description**: check if v is a valid vector with floats or ints; if expectedSize!=None, the length is also checked
 
@@ -184,7 +184,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isvalidobjectindex)=
 ## Function: IsValidObjectIndex
 
-[`IsValidObjectIndex(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L302)
+[`IsValidObjectIndex(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L303)
 
 - **function description**: return True, if x is valid exudyn object index
 
@@ -192,7 +192,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isvalidnodeindex)=
 ## Function: IsValidNodeIndex
 
-[`IsValidNodeIndex(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L309)
+[`IsValidNodeIndex(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L310)
 
 - **function description**: return True, if x is valid exudyn node index
 
@@ -200,7 +200,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isvalidmarkerindex)=
 ## Function: IsValidMarkerIndex
 
-[`IsValidMarkerIndex(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L316)
+[`IsValidMarkerIndex(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L317)
 
 - **function description**: return True, if x is valid exudyn marker index
 
@@ -208,7 +208,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-isemptylist)=
 ## Function: IsEmptyList
 
-[`IsEmptyList(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L323)
+[`IsEmptyList(x)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L324)
 
 - **function description**: return True, if x is an empty list (or empty list converted from numpy array), otherwise return False
 
@@ -216,7 +216,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`createSpher
 (sec-advancedutilities-fillinsubmatrix)=
 ## Function: FillInSubMatrix
 
-[`FillInSubMatrix(subMatrix, destinationMatrix, destRow, destColumn)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L332)
+[`FillInSubMatrix(subMatrix, destinationMatrix, destRow, destColumn)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L333)
 
 - **function description**: fill submatrix into given destinationMatrix; all matrices must be numpy arrays
 - **input**:
@@ -234,7 +234,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectFFRFT
 (sec-advancedutilities-sweepsin)=
 ## Function: SweepSin
 
-[`SweepSin(t, t1, f0, f1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L358)
+[`SweepSin(t, t1, f0, f1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L359)
 
 - **function description**: compute sin sweep at given time t
 - **input**:
@@ -251,7 +251,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectGener
 (sec-advancedutilities-sweepcos)=
 ## Function: SweepCos
 
-[`SweepCos(t, t1, f0, f1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L373)
+[`SweepCos(t, t1, f0, f1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L374)
 
 - **function description**: compute cos sweep at given time t
 - **input**:
@@ -268,7 +268,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidRotor3
 (sec-advancedutilities-frequencysweep)=
 ## Function: FrequencySweep
 
-[`FrequencySweep(t, t1, f0, f1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L388)
+[`FrequencySweep(t, t1, f0, f1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L389)
 
 - **function description**: frequency according to given sweep functions SweepSin, SweepCos
 - **input**:
@@ -285,7 +285,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`objectGener
 (sec-advancedutilities-smoothstep)=
 ## Function: SmoothStep
 
-[`SmoothStep(x, x0, x1, value0, value1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L402)
+[`SmoothStep(x, x0, x1, value0, value1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L403)
 
 - **function description**: step function with smooth transition from value0 to value1; transition is computed with cos function
 - **input**:
@@ -303,7 +303,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beamTutoria
 (sec-advancedutilities-smoothstepderivative)=
 ## Function: SmoothStepDerivative
 
-[`SmoothStepDerivative(x, x0, x1, value0, value1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L425)
+[`SmoothStepDerivative(x, x0, x1, value0, value1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L426)
 
 - **function description**: derivative of SmoothStep using same arguments
 - **input**:
@@ -321,7 +321,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`leggedRobot
 (sec-advancedutilities-indexfromvalue)=
 ## Function: IndexFromValue
 
-[`IndexFromValue(data, value, tolerance = 1e-7, assumeConstantSampleRate = False, rangeWarning = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L445)
+[`IndexFromValue(data, value, tolerance = 1e-7, assumeConstantSampleRate = False, rangeWarning = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L446)
 
 - **function description**: get index from value in given data vector (numpy array); usually used to get specific index of time vector; this function is slow (linear search), if sampling rate is non-constant; otherwise set assumeConstantSampleRate=True!
 - **input**:
@@ -336,7 +336,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`leggedRobot
 (sec-advancedutilities-roundmatrix)=
 ## Function: RoundMatrix
 
-[`RoundMatrix(matrix, treshold = 1e-14)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L488)
+[`RoundMatrix(matrix, treshold = 1e-14)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L489)
 
 - **function description**: set all entries in matrix to zero which are smaller than given treshold; operates directly on matrix
 - **input**: matrix as np.array, treshold as positive value
@@ -346,7 +346,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`leggedRobot
 (sec-advancedutilities-convertscipysparsetodict)=
 ## Function: ConvertScipySparseToDict
 
-[`ConvertScipySparseToDict(sparseMatrix)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L505)
+[`ConvertScipySparseToDict(sparseMatrix)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L506)
 
 - **function description**: Function to convert a scipy sparse matrix to a dictionary
 
@@ -354,7 +354,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`leggedRobot
 (sec-advancedutilities-convertdicttoscipysparse)=
 ## Function: ConvertDictToScipySparse
 
-[`ConvertDictToScipySparse(sparseDict)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L520)
+[`ConvertDictToScipySparse(sparseDict)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L521)
 
 - **function description**: Function to convert a dictionary back to a scipy sparse matrix
 
@@ -362,7 +362,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`leggedRobot
 (sec-advancedutilities-savedicttohdf5)=
 ## Function: SaveDictToHDF5
 
-[`SaveDictToHDF5(fileName, dataDict)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L527)
+[`SaveDictToHDF5(fileName, dataDict)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L528)
 
 - **function description**: recursively saves a hierarchical dictionary dataDict to a HDF5 file with given fileName; limitations for certain types and Python or symbolic user functions
 - **input**:
@@ -377,7 +377,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolvePist
 (sec-advancedutilities-loaddictfromhdf5)=
 ## Function: LoadDictFromHDF5
 
-[`LoadDictFromHDF5(fileName, callerGlobals = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L640)
+[`LoadDictFromHDF5(fileName, callerGlobals = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L641)
 
 - **function description**: recursively loads a hierarchical dictionary from a HDF5 file with given fileName
 - **input**:
@@ -392,7 +392,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities-convertfunctiontosymbolic)=
 ## Function: ConvertFunctionToSymbolic
 
-[`ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L762)
+[`ConvertFunctionToSymbolic(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L763)
 
 - **function description**: Internal function to convert a Python user function into a dictionary containing the symbolic representation; this function is under development and should be used with care
 - **input**:
@@ -409,7 +409,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-advancedutilities-createsymbolicuserfunction)=
 ## Function: CreateSymbolicUserFunction
 
-[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L894)
+[`CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex = None, itemTypeName = None, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L895)
 
 - **function description**: Helper function to convert a Python user function into a symbolic user function; this function is under development and should be used with care
 - **input**:
@@ -447,7 +447,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`cartesianSp
 (sec-advancedutilities-createtcpipconnection)=
 ## Function: CreateTCPIPconnection
 
-[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L951)
+[`CreateTCPIPconnection(sendSize, receiveSize, IPaddress = '127.0.0.1', port = 52421, bigEndian = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L952)
 
 - **function description**: function which has to be called before simulation to setup TCP/IP socket (server) for sending and receiving data; can be used to communicate with other Python interpreters or for communication with MATLAB/Simulink
 - **input**:
@@ -503,7 +503,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-tcpipsendreceive)=
 ## Function: TCPIPsendReceive
 
-[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1022)
+[`TCPIPsendReceive(TCPIPobject, sendData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1023)
 
 - **function description**: call this function at every simulation step at which you intend to communicate with other programs via TCPIP; e.g., call this function in preStepUserFunction of a mbs model
 - **input**:
@@ -527,7 +527,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-closetcpipconnection)=
 ## Function: CloseTCPIPconnection
 
-[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1050)
+[`CloseTCPIPconnection(TCPIPobject)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1051)
 
 - **function description**: close a previously created TCPIP connection
 
@@ -538,7 +538,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-loadpotentialenergy)=
 ## Function: LoadPotentialEnergy
 
-[`LoadPotentialEnergy(mbs, loadNumber, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1072)
+[`LoadPotentialEnergy(mbs, loadNumber, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1073)
 
 - **function description**: the potential energy of a constant load, zero in the reference configuration: $-\fv\tp \uv$ of the displacement $\uv$ of its marker point; None if the load has none that can be computed
 - **input**:
@@ -552,7 +552,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-createloadenergysensor)=
 ## Function: CreateLoadEnergySensor
 
-[`CreateLoadEnergySensor(mbs, loadNumber, storeInternal = True, writeToFile = False, fileName = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1119)
+[`CreateLoadEnergySensor(mbs, loadNumber, storeInternal = True, writeToFile = False, fileName = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1120)
 
 - **function description**: a SensorUserFunction that measures the potential energy of a constant load, LoadPotentialEnergy(...)
 - **input**:
@@ -562,6 +562,28 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
   - `writeToFile`: write the values to a file
   - `fileName`: the file, if written
 - **output**: the SensorIndex of the new sensor
+
+
+(sec-advancedutilities-itemode2coordinates)=
+## Function: ItemODE2Coordinates
+
+[`ItemODE2Coordinates(mbs, itemIndex)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1226)
+
+- **function description**: the global ODE2 coordinate indices of an object (its local-to-global list) or of a node, in the order of the matrices and vectors mbs.ItemCompute returns for it; the system must be assembled
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`itemComputeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/itemComputeTest.py) (TM)
+
+
+(sec-advancedutilities-numericaljacobian)=
+## Function: NumericalJacobian
+
+[`NumericalJacobian(mbs, function, coordinates, velocities = False, epsilon = 1e-6)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1236)
+
+- **function description**: the derivative of function() - any computation of the current state, e.g. an output variable or mbs.ItemCompute - by the given global ODE2 coordinates (velocities=True: by their time derivatives), by central differences with step epsilon; the state is restored afterwards; returns an array (number of values of function) x (number of coordinates); with ItemODE2Coordinates, the comparison with mbs.ItemCompute is one line: NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(oBody, exu.OutputVariableType.Velocity, localPosition), ItemODE2Coordinates(mbs, oBody), velocities=True) against mbs.ItemCompute(oBody, exu.ItemComputeType.PositionJacobian, localPosition)
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`itemComputeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/itemComputeTest.py) (TM)
 
 
 (sec-module-advancedutilities-class-expectedtype(enum))=
@@ -589,7 +611,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-systemenergy-computesystemenergies)=
 ### Class function: ComputeSystemEnergies
 
-[`ComputeSystemEnergies(self, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1195)
+[`ComputeSystemEnergies(self, configuration = exudyn.ConfigurationType.Current)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1196)
 
 - **class function description**: [kinetic, potential of the objects, potential of the loads, total] in the given configuration; the kinetic energy of bodies computed from their mass matrix is available in the current configuration only
 
@@ -597,7 +619,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 (sec-advancedutilities-systemenergy-addsensor)=
 ### Class function: AddSensor
 
-[`AddSensor(self, storeInternal = True, writeToFile = False, fileName = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1212)
+[`AddSensor(self, storeInternal = True, writeToFile = False, fileName = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/advancedUtilities.py#L1213)
 
 - **class function description**: a SensorUserFunction recording ComputeSystemEnergies(): [kinetic, potential of the objects, potential of the loads, total]; returns its SensorIndex
 
