@@ -2435,7 +2435,7 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 
 			if (connector->IsActive()) //usually is active ...
 			{
-				const bool computeJacobian = true; //why needed for PostNewtonStep?==> check Issue #241
+				const bool computeJacobian = false; //no PostNewtonStep reads the marker Jacobians (#241)
 				cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
 
 				Real objectRecomStepSize = -1;
@@ -3162,7 +3162,7 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 			return;
 		}
 
-		const bool computeJacobian = true; //why needed for PostNewtonStep?==> check Issue #241
+		const bool computeJacobian = true; //the marker Jacobians form the constraint Jacobian
 		cSystemData.ComputeMarkerDataStructure(&constraint, computeJacobian, temp.markerDataStructure);
 
 		if (filledJacobians & JacobianType::ALL_AE_DERIV)

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.213.dev1
+- Exudyn version = 1.12.214.dev1
 - last change = 2026-10-02
 - Number of issues = 2777
-- Number of resolved issues = 2527 (213 in current version)
+- Number of resolved issues = 2528 (214 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8277,9 +8277,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `CHANGE` `MEDIUM EFF` PostNewtonStep (#252)
   - description: post newton step object functions shall be called from solver including a ResizableVector& dataVariables to be changed; post newton function shall not use direct write access to nodal data coordinates
   - date raised: 2019-08-27
-- `CHECK` `LOW EFF` PostNewtonStep (#241)
-  - description: Check why markerData is computed with computeJacobian=true in CSystem::PostNewtonStep; is jacobian information really needed?
-  - date raised: 2019-08-22
 - `CHECK` `MEDIUM EFF` contact iteration (#209)
   - description: make simple example for contact to check changing jacobian matrices from ContactCoordinate
   - date raised: 2019-06-28

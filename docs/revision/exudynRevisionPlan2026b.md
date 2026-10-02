@@ -2161,7 +2161,8 @@ done.
       rigid, one position marker) would end that; (4) `ObjectConnectorCoordinate` at velocity level keeps its
       equations and Jacobian on the marker data - the interface at velocity level needs the Jacobian by the velocities
       (`AE_ODE2_t`).
-    - **RG14.2.19** *(found in RG14.2.18; #241, open since 2019, needs no decision)* **`PostNewtonStep` without the
+    - **RG14.2.19** **DONE 2026-10-02** (no reader found: no declaration needed) — [log](exudynRevisionLog2026b.md#rg14-2-19) -
+      *(found in RG14.2.18; #241, open since 2019, needs no decision)* **`PostNewtonStep` without the
       marker Jacobians**: `CSystem::PostNewtonStep` computes the marker data structure with `computeJacobian = true` for
       every connector with a discontinuous iteration, in every Newton iteration. 10 of the 16 implementations read no
       Jacobian (the contacts on spheres, triangles, tori, convex rolls, coordinates, the spring-dampers); the cable
@@ -2369,7 +2370,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
-| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); RG14.2.17 and RG14.2.13 done (the dispatch in the connector, the switch and the legacy functions gone); RG14.2.18 done (sensors from a pool, the mixed chain of rigid markers); then RG14.2.19 (#241), RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
+| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); RG14.2.17 and RG14.2.13 done (the dispatch in the connector, the switch and the legacy functions gone); RG14.2.18 done (sensors from a pool, the mixed chain of rigid markers); RG14.2.19 done (#241); then RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
@@ -2399,14 +2400,12 @@ The title of each says what the step **does**; the sentence after it says why it
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Compute the marker Jacobians for `PostNewtonStep` only where it reads them** (RG14.2.19, #241). Small, needs no
-   decision, and it is work every Newton iteration of every contact model does for nothing.
-4. **Halve the large `nTiles` of the examples** (RG6.7.7.7, #2709). The round primitives and the FFRF meshes are
+3. **Halve the large `nTiles` of the examples** (RG6.7.7.7, #2709). The round primitives and the FFRF meshes are
    curved now (RG6.7.7.6, RG6.7.2.1); the examples that chose a large `nTiles` to hide the facets draw more than they
    need - checked by image.
-5. **Shrink `MarkerTemp` and `TemporaryComputationData`** (RG14.2.14, RG14.2.16, #2745). The legacy switch and the
+4. **Shrink `MarkerTemp` and `TemporaryComputationData`** (RG14.2.14, RG14.2.16, #2745). The legacy switch and the
    legacy functions are gone (RG14.2.13), and the contacts no longer need a path of their own (RG14.2.18).
-6. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
+5. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
-7. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
+6. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
    published documentation that is visibly wrong.

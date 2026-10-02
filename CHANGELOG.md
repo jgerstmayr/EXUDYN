@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 198 | 1.12.213 |
+| 1.12 | Metheney | 199 | 1.12.214 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.214** `CHECK` `LOW EFF` `resolved by: Claude-JG` PostNewtonStep (#241)
+  - description: Check why markerData is computed with computeJacobian=true in CSystem::PostNewtonStep; is jacobian information really needed?
+  - **notes:** The discontinuous iteration (PostNewtonStep) of contacts and connectors no longer computes the Jacobians of their markers, which it never used.
+  - date resolved: **2026-10-02 13:26**, date raised: 2019-08-22
 - **1.12.213** `EXTENSION` `LOW` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` access functions: the position Jacobian of ObjectRotationalMass1D off its axis, a rotation Jacobian of ObjectANCFBeam (#2775)
   - description: Two access functions a body could provide but does not, each needing a decision: ObjectRotationalMass1D defines its position at any local position but its position Jacobian only on the axis (Assemble refuses connector and load markers elsewhere, \#2744); off the axis it would depend on the rotation angle, as ObjectRigidBody2D does it. ObjectANCFBeam declares no AngularVelocity\_qt, so a MarkerBodyRigid cannot be attached; a rotation could be defined from its slope vectors (which ones, and with which orthogonalization, is the decision). Found in the evaluation of \#2744 (RG9.3.1) and listed in \#2773.
   - **notes:** ObjectRotationalMass1D accepts connectors and loads at any point of the table, not only on its axis; ObjectANCFBeam accepts MarkerBodyRigid, so torques and joints with rotations act on it; a position marker on ObjectANCFBeam used in a connector no longer fails with 'request of invalid column'.

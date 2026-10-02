@@ -1,0 +1,15 @@
+{
+  "number": 241,
+  "title": "PostNewtonStep",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "Check why markerData is computed with computeJacobian=true in CSystem::PostNewtonStep; is jacobian information really needed?",
+  "dateRaised": "2019-08-22",
+  "deadline": "2019-10-21",
+  "dateResolved": "2026-10-02 13:26",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The discontinuous iteration (PostNewtonStep) of contacts and connectors no longer computes the Jacobians of their markers, which it never used.",
+  "resolvedInVersion": "1.12.214"
+}

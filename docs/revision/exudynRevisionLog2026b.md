@@ -11466,3 +11466,19 @@ extendability)*.
   interface (RG14.2.13); its Jacobian is the two marker Jacobians with the factors. Moving it would need a
   velocity-level branch in `CSystem` (the Jacobian into `AE_ODE2_t` with the velocity factor) for this one item - more
   code than it saves.
+
+<a id="rg14-2-19"></a>
+### RG14.2.19 — `PostNewtonStep` without the marker Jacobians (2026-10-02, #241)
+
+`CSystem::PostNewtonStep` computed the marker data of every connector with a discontinuous iteration with
+`computeJacobian = true` ("why needed?", #241, 2019). Read through, all 16 `PostNewtonStep` implementations and what they
+call (`ComputeGap`, `ComputeConnectorProperties`, `ComputeLocalSlidingCoordinate`, `GetMarkersRigid`, the friction and
+limit-stop functions): **none reads a marker Jacobian**. The cable contacts read the positions of the segment points from
+`vectorValue` and `GetHelper()`, which `MarkerBodyCable2DShape` fills with or without Jacobians (its `jacobian` holds the
+shape functions, which only `ComputeODE2LHS` projects with); `GetHelperMatrix()` is only in comments. So no declaration per
+connector is needed, as the plan step proposed: the flag is false. The comment of the same flag in the constraint
+Jacobian, a copy, now says why it is true there.
+
+Measured, 20 spheres on a triangle with friction, 1000 steps: `postNewton` is 0.65 % of the run, and the run takes the
+same time (1.33 s) either way - the work was small; the change removes it and the open question. The suite and pytest
+are unchanged (the results are bit-identical, as no reader existed).
