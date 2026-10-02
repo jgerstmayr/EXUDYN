@@ -176,7 +176,7 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
         addFaces: if False, no faces are added (only edges); ignored in case of hollow sphere
         majorAngleMin: starting angle for sphere to be drawn; if > -0.5*pi, it will be shortened at -Z coordinate
         majorAngleMax: final angle for sphere to be drawn; if < 0.5*pi, it will be shortened at +Z coordinate
-        innerRadius: draw hollow sphere in case of majorAngleMin or majorAngleMax do not have default values
+        innerRadius: draw hollow sphere in case of majorAngleMin or majorAngleMax do not have default values; a hollow sphere consists of flat triangles, a part of a sphere or one with edges of 6-node triangles (triangles6)
 
     Returns:
         graphicsData dictionary, to be used in visualization of EXUDYN objects
@@ -186,6 +186,10 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
         nTiles = 2
     if (not addEdges and addFaces and majorAngleMin == -0.5*pi and majorAngleMax == 0.5*pi and innerRadius is None):
         return Spheres(points=[point], radii=radius, colors=color, nTiles=nTiles)
+    if innerRadius is None: #6-node triangles (#2709)
+        return _SphereTriangles6(point=point, radius=radius, color=color, nTiles=nTiles, addEdges=addEdges,
+                                 edgeColor=edgeColor, addFaces=addFaces, majorAngleMin=majorAngleMin,
+                                 majorAngleMax=majorAngleMax)
     return _SphereTriangleList(point=point, radius=radius, color=color, nTiles=nTiles, addEdges=addEdges,
                                edgeColor=edgeColor, addFaces=addFaces, majorAngleMin=majorAngleMin,
                                majorAngleMax=majorAngleMax, innerRadius=innerRadius)
@@ -268,6 +272,51 @@ def SpheresToTriangleList(graphicsData):
         g = _SphereTriangleList(point=points[i], radius=radii[0] if len(radii) == 1 else radii[i],
                                 color=list(colors[0:4] if len(colors) == 4 else colors[4*i:4*i+4]), nTiles=nTiles)
         data = g if data is None else MergeTriangleLists(data, g)
+    return data
+
+
+def _SphereTriangles6(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
+                      addEdges = False, edgeColor=color.black, addFaces=True,
+                      majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi):
+    """a sphere or a part of it between two latitudes, of 6-node triangles (#2709): nTiles quadratic elements around
+    (the 2*nTiles flat segments of _SphereTriangleList) and ceil(nTiles/2) from majorAngleMin to majorAngleMax, the
+    latitudes and meridians of addEdges as edges3; see Sphere"""
+    if majorAngleMin < -0.5*pi or majorAngleMax > 0.5*pi or majorAngleMax <= majorAngleMin:
+        raise ValueError("graphics.Sphere: majorAngleMin must be > -0.5*pi and < majorAngleMax; majorAngleMax must > majorAngleMin")
+    p = np.array(point, dtype=float)
+    ne = nTiles #elements around
+    nv = _NumberOfQuadraticElements(nTiles) #elements from majorAngleMin to majorAngleMax
+    def PointAndNormal(u, v):
+        phi = 2*pi*u
+        theta = majorAngleMin + v*(majorAngleMax - majorAngleMin)
+        normal = np.array([cos(theta)*sin(phi), cos(theta)*cos(phi), sin(theta)])
+        return (p + radius*normal, normal)
+    (points, normals, triangles6, Index) = _QuadraticPatch(PointAndNormal, ne, nv, True, False)
+    data = {'type':'TriangleList', 'colors':np.array(list(color)*len(points)), 'points':np.array(points).flatten(),
+            'normals':np.array(normals).flatten(), 'triangles6':np.array(triangles6 if addFaces else [], dtype=int).flatten()}
+
+    if isinstance(addEdges, bool) and addEdges:
+        addEdges = 3
+    if addEdges > 0 and abs(majorAngleMax-majorAngleMin-pi) <= 1e-7:
+        data['edgeColor'] = np.array(edgeColor)
+        edges3 = []
+        nt = 2 #meridians
+        if addEdges > 1:
+            nt = 4
+        if addEdges > 3:
+            nt = 8
+        mu = 2*ne
+        for j in range(nt): #meridians
+            column = int(j*mu/nt)
+            for e in range(nv):
+                edges3 += [Index(column, 2*e), Index(column, 2*e+2), Index(column, 2*e+1)]
+        if addEdges > 1: #latitudes, as many as addEdges-1, starting at the south pole as _SphereTriangleList does
+            sTiles = max(addEdges-1, 1)
+            nStep = max(int(2*nv/sTiles), 1)
+            for row in range(nStep, 2*nv, nStep):
+                for e in range(ne):
+                    edges3 += [Index(2*e, row), Index(2*e+2, row), Index(2*e+1, row)]
+        data['edges3'] = np.array(edges3, dtype=int)
     return data
 
 
@@ -1032,7 +1081,7 @@ def Tube(points, axes, radius=0.1, color=[0.,0.,0.,1.], nTiles = 16):
         axes: list of 3D vectors (or numpy arrays) representing the axis according to the points
         radius: positive value representing radius of tube
         color: provided as list of 4 RGBA values
-        nTiles: used to determine resolution of cylinder >=3; use larger values for finer resolution
+        nTiles: used to determine resolution of cylinder >=3; use larger values for finer resolution; the tube consists of 6-node triangles (triangles6), ceil(nTiles/2) curved elements around, drawn with at least nTiles segments
 
     Returns:
         graphicsData dictionary, to be used in visualization of EXUDYN objects
@@ -1049,9 +1098,6 @@ def Tube(points, axes, radius=0.1, color=[0.,0.,0.,1.], nTiles = 16):
 
     nSegments = len(points)
 
-    vertices = []
-    normals = []
-    triangles = []
 
 
     n = len(points)
@@ -1087,38 +1133,28 @@ def Tube(points, axes, radius=0.1, color=[0.,0.,0.,1.], nTiles = 16):
         prev_x, prev_y, prev_z = x, y, z
 
 
-    # Generate circle vertices for each point
-    for i in range(nSegments):
-        p = points[i]
+    #6-node triangles (#2709): ceil(nTiles/2) quadratic elements around, one element between two points of the tube
+    #line, its mid row at the mid point, the normals there the mean of the normals at the two points
+    ne = _NumberOfQuadraticElements(nTiles)
+    def RingPointAndNormal(i, angle):
         [x, y, z] = frames[i]
-        for j in range(nTiles):
-            angle = 2 * np.pi * j / nTiles
-            normal = np.cos(angle) * x + np.sin(angle) * y
-            vertex = p + radius * normal
-            vertices.append(vertex)
-            normals.append(normal)
+        normal = np.cos(angle) * x + np.sin(angle) * y
+        return (np.array(points[i]) + radius * normal, normal)
+    def PointAndNormal(u, v):
+        angle = 2 * np.pi * u
+        row = int(round(v*2*(nSegments-1)))
+        if row % 2 == 0:
+            return RingPointAndNormal(row//2, angle)
+        (p0, n0) = RingPointAndNormal(row//2, angle)
+        (p1, n1) = RingPointAndNormal(row//2+1, angle)
+        return (0.5*(p0 + p1), ebu.Normalize(list(n0 + n1)))
+    (vertices, normals, triangles6, Index) = _QuadraticPatch(PointAndNormal, ne, nSegments-1, True, False)
 
-    # Generate triangle indices
-    for i in range(nSegments - 1):
-        for j in range(nTiles):
-            i0 = i * nTiles + j
-            i1 = i * nTiles + (j + 1) % nTiles
-            i2 = (i + 1) * nTiles + j
-            i3 = (i + 1) * nTiles + (j + 1) % nTiles
-
-            # two triangles per quad
-            triangles.append([i0, i2, i1])
-            triangles.append([i1, i2, i3])
-
-    colors = color*len(vertices)
-
-    data = {'type':'TriangleList', 
-            'colors':np.array(colors).flatten(), 
-            'points':np.array(vertices).flatten(), 
-            'normals':np.array(normals).flatten(), 
-            'triangles':np.array(triangles).flatten()}
-
-    return data
+    return {'type':'TriangleList',
+            'colors':np.array(list(color)*len(vertices)),
+            'points':np.array(vertices).flatten(),
+            'normals':np.array(normals).flatten(),
+            'triangles6':np.array(triangles6, dtype=int).flatten()}
 
 
 @_ReturnsRows

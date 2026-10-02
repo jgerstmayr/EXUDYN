@@ -11299,3 +11299,17 @@ that counts the edges of the triangles - 5.5497178858649 instead of 5.4869084309
 in the reference list of the fast module waits for the next fast build. `graphicsCurvedShapes.py`: the shapes of
 `exudyn.graphics` are curved now, a third row shows them flat (`Triangles6ToTriangles`). The note for users is in
 `revisions.md` (*Round primitives are curved*).
+
+<a id="rg6-7-7-6b"></a>
+### RG6.7.7.6 â€” Tube and the part of a sphere (2026-10-02, #2709)
+
+- `Tube`: `ceil(nTiles/2)` elements around, one element between two points of the tube line - its mid row at the mid
+  point, the normals there the mean of the normals of the two rings.
+- `Sphere` with edges, without faces or between two latitudes (`majorAngleMin`/`Max`): `_SphereTriangles6`, nTiles
+  elements around (the `2 nTiles` segments of before) and `ceil(nTiles/2)` along the meridian; the edges of `addEdges`
+  as `edges3` - 2, 4 or 8 meridians and the latitudes - without the ring of zero length at the pole the flat version
+  drew. The hollow sphere (`innerRadius`) keeps the flat triangles, and so does `SpheresToTriangleList`, which makes
+  contact meshes from spheres.
+
+Checked as the first part (normals of the split, raytraced image); `graphicsFunctions.json` re-recorded (SphereEdges,
+Tube).

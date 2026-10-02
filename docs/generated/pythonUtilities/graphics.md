@@ -28,7 +28,7 @@ GraphicsData helper functions generate dictionaries which contain line, text or 
   - `addFaces`: if False, no faces are added (only edges); ignored in case of hollow sphere
   - `majorAngleMin`: starting angle for sphere to be drawn; if > -0.5*pi, it will be shortened at -Z coordinate
   - `majorAngleMax`: final angle for sphere to be drawn; if < 0.5*pi, it will be shortened at +Z coordinate
-  - `innerRadius`: draw hollow sphere in case of majorAngleMin or majorAngleMax do not have default values
+  - `innerRadius`: draw hollow sphere in case of majorAngleMin or majorAngleMax do not have default values; a hollow sphere consists of flat triangles, a part of a sphere or one with edges of 6-node triangles (triangles6)
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
@@ -38,7 +38,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFsliding
 (sec-graphics-spheres)=
 ## Function: Spheres
 
-[`Spheres(points, radii = 0.1, colors = [0.,0.,0.,1.], nTiles = 8)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L195)
+[`Spheres(points, radii = 0.1, colors = [0.,0.,0.,1.], nTiles = 8)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L199)
 
 - **function description**: generate graphics data for many spheres at once, as one item of the type 'Spheres' - for particles or point clouds; the renderer draws each as a sphere, the raytracer intersects them exactly
 - **input**:
@@ -55,7 +55,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsCur
 (sec-graphics-triangles6totriangles)=
 ## Function: Triangles6ToTriangles
 
-[`Triangles6ToTriangles(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L220)
+[`Triangles6ToTriangles(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L224)
 
 - **function description**: convert the 6-node triangles (key 'triangles6') of a TriangleList into 4 flat triangles each, on the same points, and its quadratic edges (key 'edges3') into 2 straight edges each, for the functions that need flat triangles (STL export, ToPointsAndTrigs, ...); the renderer splits them finer, see visualizationSettings.openGL.advanced.curvedTriangleTilingAngle
 - **input**:
@@ -69,7 +69,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsCur
 (sec-graphics-spherestotrianglelist)=
 ## Function: SpheresToTriangleList
 
-[`SpheresToTriangleList(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L248)
+[`SpheresToTriangleList(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L252)
 
 - **function description**: convert graphics data of the type 'Spheres' into a 'TriangleList' with the triangles of graphics.Sphere, for the functions that need triangles (merging, STL export, ...); other types are returned unchanged
 - **input**:
@@ -77,10 +77,18 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsCur
 - **output**: a graphicsData dictionary of the type 'TriangleList', or graphicsData itself if it is not of the type 'Spheres'
 
 
+(sec-graphics--spheretriangles6)=
+## Function: _SphereTriangles6
+
+[`_SphereTriangles6(point = [0,0,0], radius = 0.1, color = [0.,0.,0.,1.], nTiles = 8, addEdges = False, edgeColor = color.black, addFaces = True, majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L278)
+
+- **function description**: a sphere or a part of it between two latitudes, of 6-node triangles (#2709): nTiles quadratic elements around (the 2*nTiles flat segments of _SphereTriangleList) and ceil(nTiles/2) from majorAngleMin to majorAngleMax, the latitudes and meridians of addEdges as edges3; see Sphere
+
+
 (sec-graphics--spheretrianglelist)=
 ## Function: _SphereTriangleList
 
-[`_SphereTriangleList(point = [0,0,0], radius = 0.1, color = [0.,0.,0.,1.], nTiles = 8, addEdges = False, edgeColor = color.black, addFaces = True, majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi, innerRadius = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L274)
+[`_SphereTriangleList(point = [0,0,0], radius = 0.1, color = [0.,0.,0.,1.], nTiles = 8, addEdges = False, edgeColor = color.black, addFaces = True, majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi, innerRadius = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L323)
 
 - **function description**: the triangles of a sphere, also a part of a sphere or hollow, with edges; see Sphere
 
@@ -88,7 +96,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsCur
 (sec-graphics-lines)=
 ## Function: Lines
 
-[`Lines(pList, color = [0.,0.,0.,1.], shape = 'linear')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L494)
+[`Lines(pList, color = [0.,0.,0.,1.], shape = 'linear')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L543)
 
 - **function description**: generate graphics data for a polyline, given by list of points and color; transforms to GraphicsData dictionary
 - **input**:
@@ -114,7 +122,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontact
 (sec-graphics-circle)=
 ## Function: Circle
 
-[`Circle(point = [0,0,0], radius = 1, color = [0.,0.,0.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L530)
+[`Circle(point = [0,0,0], radius = 1, color = [0.,0.,0.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L579)
 
 - **function description**: generate graphics data for a single circle; currently the plane normal = [0,0,1], just allowing to draw planar circles -- this may be extended in future!
 - **input**:
@@ -131,7 +139,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontact
 (sec-graphics-text)=
 ## Function: Text
 
-[`Text(point = [0,0,0], text = '', color = [0.,0.,0.,1.], fontSize = 0., offset = [0.,0.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L548)
+[`Text(point = [0,0,0], text = '', color = [0.,0.,0.,1.], fontSize = 0., offset = [0.,0.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L597)
 
 - **function description**: generate graphics data for a text drawn at a 3D position
 - **input**:
@@ -150,7 +158,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontact
 (sec-graphics-cuboid)=
 ## Function: Cuboid
 
-[`Cuboid(pList, color = [0.,0.,0.,1.], faces = [1,1,1,1,1,1], addNormals = False, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L573)
+[`Cuboid(pList, color = [0.,0.,0.,1.], faces = [1,1,1,1,1,1], addNormals = False, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L622)
 
 - **function description**: generate graphics data for general block with endpoints, according to given vertex definition
 - **input**:
@@ -167,7 +175,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcontact
 (sec-graphics-brickxyz)=
 ## Function: BrickXYZ
 
-[`BrickXYZ(xMin, yMin, zMin, xMax, yMax, zMax, color = [0.,0.,0.,1.], addNormals = False, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L673)
+[`BrickXYZ(xMin, yMin, zMin, xMax, yMax, zMax, color = [0.,0.,0.,1.], addNormals = False, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L722)
 
 - **function description**: generate graphics data for orthogonal 3D block with min and max dimensions
 - **input**: x/y/z/Min/Max: minimal and maximal cartesian coordinates for orthogonal cube color: list of 4 RGBA values addNormals: add face normals to triangle information addEdges: if True, edges are added in TriangleList of GraphicsData edgeColor: optional color for edges addFaces: if False, no faces are added (only edges)
@@ -181,7 +189,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`geneticOpti
 (sec-graphics-brick)=
 ## Function: Brick
 
-[`Brick(centerPoint = [0,0,0], size = [0.1,0.1,0.1], color = [0.,0.,0.,1.], addNormals = False, addEdges = False, edgeColor = color.black, addFaces = True, roundness = 0, nTiles = 12)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L697)
+[`Brick(centerPoint = [0,0,0], size = [0.1,0.1,0.1], color = [0.,0.,0.,1.], addNormals = False, addEdges = False, edgeColor = color.black, addFaces = True, roundness = 0, nTiles = 12)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L746)
 
 - **function description**: generate graphics data for orthogonal 3D box with center point and size; using roundness=1, it draws an ellipsoid inside the box and in case 0 < roundness < 1, it draws a body blended between box and ellipsoid
 - **input**:
@@ -203,7 +211,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 (sec-graphics--quadraticpatch)=
 ## Function: _QuadraticPatch
 
-[`_QuadraticPatch(PointAndNormal, nu, nv, closedU, closedV, offset = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L812)
+[`_QuadraticPatch(PointAndNormal, nu, nv, closedU, closedV, offset = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L861)
 
 - **function description**: 6-node triangles on a parametric patch (#2709): nu x nv quadratic elements, PointAndNormal(u, v) with u, v in [0,1] gives a point and its (outward) normal; the grid holds the corners and the mid nodes of the elements, (2nu (+1)) x (2nv (+1)) points; each element is two 6-node triangles, oriented so that their corners turn counterclockwise about the given normals. Returns (points, normals, triangles6, Index), Index(i, j) the number of the grid point i (along u) and j (along v), plus offset
 
@@ -211,7 +219,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 (sec-graphics--orienttriangle6)=
 ## Function: _OrientTriangle6
 
-[`_OrientTriangle6(t, points, normal)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L850)
+[`_OrientTriangle6(t, points, normal)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L899)
 
 - **function description**: the 6-node triangle t with its corners turned counterclockwise about normal
 
@@ -219,7 +227,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 (sec-graphics--orienttriangle)=
 ## Function: _OrientTriangle
 
-[`_OrientTriangle(t, points, normal)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L858)
+[`_OrientTriangle(t, points, normal)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L907)
 
 - **function description**: the flat triangle t with its corners turned counterclockwise about normal
 
@@ -227,7 +235,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 (sec-graphics--numberofquadraticelements)=
 ## Function: _NumberOfQuadraticElements
 
-[`_NumberOfQuadraticElements(nSegments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L866)
+[`_NumberOfQuadraticElements(nSegments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L915)
 
 - **function description**: the quadratic elements that replace nSegments flat segments: each covers two of them (#2709)
 
@@ -235,7 +243,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 (sec-graphics-cylinder)=
 ## Function: Cylinder
 
-[`Cylinder(pAxis = [0,0,0], vAxis = [0,0,1], radius = 0.1, color = [0.,0.,0.,1.], nTiles = 16, radiusInner = None, angleRange = [0,2*pi], lastFace = True, cutPlain = True, addEdges = False, edgeColor = color.black, addFaces = True, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L871)
+[`Cylinder(pAxis = [0,0,0], vAxis = [0,0,1], radius = 0.1, color = [0.,0.,0.,1.], nTiles = 16, radiusInner = None, angleRange = [0,2*pi], lastFace = True, cutPlain = True, addEdges = False, edgeColor = color.black, addFaces = True, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L920)
 
 - **function description**: generate graphics data for a cylinder with given axis, radius and color; nTiles gives the number of tiles (minimum=3); the cylinder consists of 6-node triangles (triangles6), ceil(nTiles/2) curved elements around, drawn with at least nTiles segments
 - **input**:
@@ -261,7 +269,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFsliding
 (sec-graphics-tube)=
 ## Function: Tube
 
-[`Tube(points, axes, radius = 0.1, color = [0.,0.,0.,1.], nTiles = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1027)
+[`Tube(points, axes, radius = 0.1, color = [0.,0.,0.,1.], nTiles = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1076)
 
 - **function description**: generate graphics data for a tube with given list of points and axes, radius and color; nTiles gives the number of tiles (minimum=3)
 - **input**:
@@ -269,14 +277,14 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFsliding
   - `axes`: list of 3D vectors (or numpy arrays) representing the axis according to the points
   - `radius`: positive value representing radius of tube
   - `color`: provided as list of 4 RGBA values
-  - `nTiles`: used to determine resolution of cylinder >=3; use larger values for finer resolution
+  - `nTiles`: used to determine resolution of cylinder >=3; use larger values for finer resolution; the tube consists of 6-node triangles (triangles6), ceil(nTiles/2) curved elements around, drawn with at least nTiles segments
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
 
 
 (sec-graphics-torus)=
 ## Function: Torus
 
-[`Torus(point, axis, radiusMajor = 0.5, radiusMinor = 0.1, color = [0., 0., 0., 1.], nTilesMajor = 24, nTilesMinor = 12, minorAngleStart = 0, minorAngleEnd = 2*np.pi, smoothNormals = True, invert = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1125)
+[`Torus(point, axis, radiusMajor = 0.5, radiusMinor = 0.1, color = [0., 0., 0., 1.], nTilesMajor = 24, nTilesMinor = 12, minorAngleStart = 0, minorAngleEnd = 2*np.pi, smoothNormals = True, invert = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1161)
 
 - **function description**: generate graphics data for a torus with given major and minor radius, center point and axis
 - **input**:
@@ -300,7 +308,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsCur
 (sec-graphics-rigidlink)=
 ## Function: RigidLink
 
-[`RigidLink(p0, p1, axis0 = [0,0,0], axis1 = [0,0,0], radius = [0.1,0.1], thickness = 0.05, width = [0.05,0.05], color = [0.,0.,0.,1.], nTiles = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1230)
+[`RigidLink(p0, p1, axis0 = [0,0,0], axis1 = [0,0,0], radius = [0.1,0.1], thickness = 0.05, width = [0.05,0.05], color = [0.,0.,0.,1.], nTiles = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1266)
 
 - **function description**: generate graphics data for a planar Link between the two joint positions, having two axes
 - **input**:
@@ -322,7 +330,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`fourBarMech
 (sec-graphics-solidofrevolution)=
 ## Function: SolidOfRevolution
 
-[`SolidOfRevolution(pAxis, vAxis, contour, color = [0.,0.,0.,1.], nTiles = 16, smoothContour = False, addEdges = False, edgeColor = color.black, addFaces = True, smoothingAngle = 2*np.pi, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1279)
+[`SolidOfRevolution(pAxis, vAxis, contour, color = [0.,0.,0.,1.], nTiles = 16, smoothContour = False, addEdges = False, edgeColor = color.black, addFaces = True, smoothingAngle = 2*np.pi, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1315)
 
 - **function description**: generate graphics data for a solid of revolution with given 3D point and axis, 2D point list for contour, (optional)2D normals and color;
 - **input**:
@@ -368,7 +376,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 (sec-graphics-arrow)=
 ## Function: Arrow
 
-[`Arrow(pAxis, vAxis, radius, color = [0.,0.,0.,1.], headFactor = 2, headStretch = 4, nTiles = 12)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1433)
+[`Arrow(pAxis, vAxis, radius, color = [0.,0.,0.,1.], headFactor = 2, headStretch = 4, nTiles = 12)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1469)
 
 - **function description**: generate graphics data for an arrow with given origin, axis, shaft radius, optional size factors for head and color; nTiles gives the number of tiles (minimum=3)
 - **input**:
@@ -388,7 +396,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-graphics-basis)=
 ## Function: Basis
 
-[`Basis(origin = [0,0,0], rotationMatrix = np.eye(3), length = 1, colors = [color.red, color.green, color.blue], headFactor = 2, headStretch = 4, nTiles = 12, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1455)
+[`Basis(origin = [0,0,0], rotationMatrix = np.eye(3), length = 1, colors = [color.red, color.green, color.blue], headFactor = 2, headStretch = 4, nTiles = 12, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1491)
 
 - **function description**: generate graphics data for three arrows representing an orthogonal basis with point of origin, shaft radius, optional size factors for head and colors; nTiles gives the number of tiles (minimum=3)
 - **input**:
@@ -410,7 +418,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 (sec-graphics-frame)=
 ## Function: Frame
 
-[`Frame(HT = np.eye(4), length = 1, colors = [color.red, color.green, color.blue], headFactor = 2, headStretch = 4, nTiles = 12, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1496)
+[`Frame(HT = np.eye(4), length = 1, colors = [color.red, color.green, color.blue], headFactor = 2, headStretch = 4, nTiles = 12, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1532)
 
 - **function description**: generate graphics data for frame (similar to Basis), showing three arrows representing an orthogonal basis for the homogeneous transformation HT; optional shaft radius, optional size factors for head and colors; nTiles gives the number of tiles (minimum=3)
 - **input**:
@@ -430,7 +438,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-graphics-quad)=
 ## Function: Quad
 
-[`Quad(pList, color = [0.,0.,0.,1.], **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1528)
+[`Quad(pList, color = [0.,0.,0.,1.], **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1564)
 
 - **function description**: generate graphics data for simple quad with option for checkerboard pattern; points are arranged counter-clock-wise, e.g.: p0=[0,0,0], p1=[1,0,0], p2=[1,1,0], p3=[0,1,0]
 - **input**:
@@ -459,7 +467,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`massSpringF
 (sec-graphics-checkerboard)=
 ## Function: CheckerBoard
 
-[`CheckerBoard(point = [0,0,0], normal = [0,0,1], size = 1, color = color.lightgrey, alternatingColor = color.lightgrey2, nTiles = 10, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1607)
+[`CheckerBoard(point = [0,0,0], normal = [0,0,1], size = 1, color = color.lightgrey, alternatingColor = color.lightgrey2, nTiles = 10, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1643)
 
 - **function description**: function to generate checkerboard background; points are arranged counter-clock-wise, e.g.:
 - **input**:
@@ -490,7 +498,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFrotatin
 (sec-graphics-solidextrusion)=
 ## Function: SolidExtrusion
 
-[`SolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]), pOff = [0,0,0], relRot = np.diag([1,1,1]), relOff = [0,0,0], color = [0,0,0,1], smoothNormals = False, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1656)
+[`SolidExtrusion(vertices, segments, height, rot = np.diag([1,1,1]), pOff = [0,0,0], relRot = np.diag([1,1,1]), relOff = [0,0,0], color = [0,0,0,1], smoothNormals = False, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1692)
 
 - **function description**: create graphicsData for solid extrusion based on 2D points and segments; by default, the extrusion is performed in z-direction; additional transformations are possible to translate and rotate the extruded body;
 - **input**:
@@ -528,7 +536,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chainDriveE
 (sec-graphics-linkedcylinders)=
 ## Function: LinkedCylinders
 
-[`LinkedCylinders(point0, point1, axisCylinder, radius0, radius1, radiusInner0 = 0, radiusInner1 = 0, nTiles = 32, color = [0,0,0,1], addEdges = 0, edgeColor = color.black, addFaces = True, smoothNormals = True, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1804)
+[`LinkedCylinders(point0, point1, axisCylinder, radius0, radius1, radiusInner0 = 0, radiusInner1 = 0, nTiles = 32, color = [0,0,0,1], addEdges = 0, edgeColor = color.black, addFaces = True, smoothNormals = True, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1840)
 
 - **function description**: generate graphics data for an extrusion solid linking two circles by their external tangents in a plane; the shape is extruded along axisCylinder with height equal to its norm; nTiles controls circle tessellation
 - **input**:
@@ -562,7 +570,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chainDriveE
 (sec-graphics-ballbearingrings)=
 ## Function: BallBearingRings
 
-[`BallBearingRings(axis, outsideDiameter, boreDiameter, width, radiusCage, innerRingShoulderRadius, outerRingShoulderRadius, widthCage, heightCage, innerEdgeChamfer, outerEdgeChamfer, innerGrooveRadius, outerGrooveRadius, innerGrooveTorusRadius, outerGrooveTorusRadius, nTilesRings = 32, nTilesGrooves = 12, colorCage = [0.6,0.5,0.5,0.4], colorInnerRing = [0.5,0.5,0.5,0.5], colorOuterRing = [0.5,0.5,0.5,0.5], **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1941)
+[`BallBearingRings(axis, outsideDiameter, boreDiameter, width, radiusCage, innerRingShoulderRadius, outerRingShoulderRadius, widthCage, heightCage, innerEdgeChamfer, outerEdgeChamfer, innerGrooveRadius, outerGrooveRadius, innerGrooveTorusRadius, outerGrooveTorusRadius, nTilesRings = 32, nTilesGrooves = 12, colorCage = [0.6,0.5,0.5,0.4], colorInnerRing = [0.5,0.5,0.5,0.5], colorOuterRing = [0.5,0.5,0.5,0.5], **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L1977)
 
 - **function description**: generate graphics for ball bearing rings, in particular for inner and outer rings; note that base parameters are identical as in function GetBallBearingData, assuming that the dictionary of the latter function is used as input for BallBearingRings
 - **input**:
@@ -594,7 +602,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 (sec-graphics-involutegear)=
 ## Function: InvoluteGear
 
-[`InvoluteGear(involuteGear, width, centerPoint = np.zeros(3), rotationMatrix = np.eye(3), helixAngleDeg = 0, radius = 0, relativeAngleOffset = 0, color = [0,0,0,1], nTilesCylinder = 32, smoothNormals = False, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2047)
+[`InvoluteGear(involuteGear, width, centerPoint = np.zeros(3), rotationMatrix = np.eye(3), helixAngleDeg = 0, radius = 0, relativeAngleOffset = 0, color = [0,0,0,1], nTilesCylinder = 32, smoothNormals = False, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2083)
 
 - **function description**: create graphics for involute gear, using data from machines.InvoluteGear
 - **input**:
@@ -619,7 +627,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`involuteGea
 (sec-graphics-toothedrack)=
 ## Function: ToothedRack
 
-[`ToothedRack(module, nTeeth, width, toothHeight, rackBaseHeight, pressureAngleDeg = 20, centerPoint = np.zeros(3), rotationMatrix = np.eye(3), color = [0,0,0,1], nTilesCylinder = 32, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2109)
+[`ToothedRack(module, nTeeth, width, toothHeight, rackBaseHeight, pressureAngleDeg = 20, centerPoint = np.zeros(3), rotationMatrix = np.eye(3), color = [0,0,0,1], nTilesCylinder = 32, addEdges = False, edgeColor = color.black, addFaces = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2145)
 
 - **function description**: create graphics for toothed rack
 - **input**:
@@ -645,7 +653,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`involuteGea
 (sec-graphics-boundingboxsingle)=
 ## Function: BoundingBoxSingle
 
-[`BoundingBoxSingle(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2179)
+[`BoundingBoxSingle(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2215)
 
 - **function description**: compute bounding box of single graphicsData
 - **input**:
@@ -656,7 +664,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`involuteGea
 (sec-graphics-boundingbox)=
 ## Function: BoundingBox
 
-[`BoundingBox(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2244)
+[`BoundingBox(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2280)
 
 - **function description**: compute bounding box of single GraphicsData or list of GraphicsData
 - **input**:
@@ -667,7 +675,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`involuteGea
 (sec-graphics-frompointsandtrigs)=
 ## Function: FromPointsAndTrigs
 
-[`FromPointsAndTrigs(points, triangles, color = [0.,0.,0.,1.], normals = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2275)
+[`FromPointsAndTrigs(points, triangles, color = [0.,0.,0.,1.], normals = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2311)
 
 - **function description**: convert triangles and points as returned from graphics.ToPointsAndTrigs(...) to GraphicsData; additionally, normals and color(s) can be provided
 - **input**:
@@ -684,7 +692,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveGeom
 (sec-graphics-topointsandtrigs)=
 ## Function: ToPointsAndTrigs
 
-[`ToPointsAndTrigs(g)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2316)
+[`ToPointsAndTrigs(g)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2352)
 
 - **function description**: convert graphics data into list of points and list of triangle indices (triplets)
 - **input**: g contains a GraphicsData with type TriangleList
@@ -697,7 +705,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecan
 (sec-graphics-transform)=
 ## Function: Transform
 
-[`Transform(graphicsData, translation = None, rotation = None, scale = 1, normalizeNormals = False, invertNormals = False, invertTriangles = False, warn = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2345)
+[`Transform(graphicsData, translation = None, rotation = None, scale = 1, normalizeNormals = False, invertNormals = False, invertTriangles = False, warn = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2381)
 
 - **function description**: transform a GraphicsData object in several ways: move, rotate, scale; furthermore, normals can be fixed and inverted, etc.
 - **input**:
@@ -715,7 +723,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`mobileMecan
 (sec-graphics-move)=
 ## Function: Move
 
-[`Move(g, pOff, Aoff = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2475)
+[`Move(g, pOff, Aoff = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2511)
 
 - **function description**: add rigid body transformation and possible scaling to GraphicsData, using position offset (global) pOff (list or np.array) and rotation Aoff (transforms local to global coordinates; list of lists or np.array)
 - **input**:
@@ -732,7 +740,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ballBearnin
 (sec-graphics-mergetrianglelists)=
 ## Function: MergeTriangleLists
 
-[`MergeTriangleLists(g1, g2)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2493)
+[`MergeTriangleLists(g1, g2)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2529)
 
 - **function description**: merge 2 different graphics data with triangle lists
 - **input**: graphicsData dictionaries g1 and g2 obtained from GraphicsData functions
@@ -745,7 +753,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDat
 (sec-graphics-inverttriangles)=
 ## Function: InvertTriangles
 
-[`InvertTriangles(graphicsData, invertTriangles = True, invertNormals = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2550)
+[`InvertTriangles(graphicsData, invertTriangles = True, invertNormals = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2586)
 
 - **function description**: invert triangle orientation and triangle normals (or only one of these tasks); can also check consistency of normals
 - **input**:
@@ -758,7 +766,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDat
 (sec-graphics-inconsistenttriangles)=
 ## Function: InconsistentTriangles
 
-[`InconsistentTriangles(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2605)
+[`InconsistentTriangles(graphicsData)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2641)
 
 - **function description**: check consistency of orientation of triangles and vertex (point) normals
 - **input**:
@@ -772,7 +780,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsDat
 (sec-graphics-ngsolvemesh2pointsandtrigs)=
 ## Function: NGsolveMesh2PointsAndTrigs
 
-[`NGsolveMesh2PointsAndTrigs(mesh = None, ngMesh = None, meshOrder = 2, scale = 1, addNormals = True, verbose = False, triangles6 = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2636)
+[`NGsolveMesh2PointsAndTrigs(mesh = None, ngMesh = None, meshOrder = 2, scale = 1, addNormals = True, verbose = False, triangles6 = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2672)
 
 - **function description**: convert NGsolve (surface) mesh into (surface) points and triangles; clearly, it requires to have ngsolve installed
 - **input**:
@@ -808,7 +816,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCb
 (sec-graphics-fromstlfileascii)=
 ## Function: FromSTLfileASCII
 
-[`FromSTLfileASCII(fileName, color = [0.,0.,0.,1.], verbose = False, invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2776)
+[`FromSTLfileASCII(fileName, color = [0.,0.,0.,1.], verbose = False, invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2812)
 
 - **function description**: generate graphics data from STL file (text format!) and use color for visualization; this function is slow, use stl binary files with FromSTLfile(...)
 - **input**:
@@ -826,7 +834,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`NGsolveOCCg
 (sec-graphics-frompymeshlabfile)=
 ## Function: FromPyMeshlabFile
 
-[`FromPyMeshlabFile(fileName, defaultColor = color.defaultBody, invertNormals = False, invertTriangles = False, normalizeNormals = True, useDefaultColor = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2875)
+[`FromPyMeshlabFile(fileName, defaultColor = color.defaultBody, invertNormals = False, invertTriangles = False, normalizeNormals = True, useDefaultColor = False, verbose = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2911)
 
 - **function description**: generate graphics data from any file that can be loaded with PyMeshLab (in particular .obj, .dae and .stl); either use defaultColor or given color in mesh.
 - **input**:
@@ -847,7 +855,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pymeshlabFi
 (sec-graphics-fromstlfile)=
 ## Function: FromSTLfile
 
-[`FromSTLfile(fileName, color = [0.,0.,0.,1.], verbose = False, density = 0., scale = 1., Aoff = [], pOff = [], invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2956)
+[`FromSTLfile(fileName, color = [0.,0.,0.,1.], verbose = False, density = 0., scale = 1., Aoff = [], pOff = [], invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L2992)
 
 - **function description**: generate graphics data from STL file, allowing text or binary format; requires numpy-stl to be installed; additionally can scale, rotate and translate
 - **input**:
@@ -868,7 +876,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-graphics-addedgesandsmoothennormals)=
 ## Function: AddEdgesAndSmoothenNormals
 
-[`AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle = 0.25*pi, addEdges = True, smoothNormals = True, roundDigits = 5, triangleColor = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3034)
+[`AddEdgesAndSmoothenNormals(graphicsData, edgeColor = color.black, edgeAngle = 0.25*pi, addEdges = True, smoothNormals = True, roundDigits = 5, triangleColor = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3070)
 
 - **function description**: compute and return GraphicsData with edges and smoothend normals for mesh consisting of points and triangles (e.g., as returned from GraphicsData2PointsAndTrigs); ignores stored normals graphicsData: single GraphicsData object of type TriangleList; existing edges are ignored edgeColor: optional color for edges edgeAngle: angle above which edges are added to geometry addEdges: if True, edges are added in TriangleList of GraphicsData smoothNormals: if True, algorithm tries to smoothen normals at vertices; otherwise, uses triangle normals roundDigits: number of digits, relative to max dimensions of object, at which points are assumed to be equal; too small or too larger number of digits may cause artifacts triangleColor: if triangleColor is set to a RGBA color, this color is used for the new triangle mesh throughout; otherwise, stored colors are unchanged
 - **output**: returns GraphicsData with added edges and smoothed normals
@@ -881,7 +889,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-graphics-exportstl)=
 ## Function: ExportSTL
 
-[`ExportSTL(graphicsData, fileName, solidName = 'ExudynSolid', invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3205)
+[`ExportSTL(graphicsData, fileName, solidName = 'ExudynSolid', invertNormals = True, invertTriangles = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphics.py#L3241)
 
 - **function description**: export given graphics data (only type TriangleList allowed!) to STL ascii file using fileName
 - **input**:

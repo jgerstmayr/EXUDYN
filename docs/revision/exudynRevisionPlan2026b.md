@@ -999,8 +999,10 @@ This group is that revision and what has to happen before it can start.
         partial `Sphere`, `Arrow`, ... built from 6-node triangles with `edges3` on their rims. **In part DONE
         2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-6): `Cylinder` (full, partial, hollow), `SolidOfRevolution`
         and with it `Arrow`, `Basis`, `Frame`, `RigidLink`, `BallBearingRings`, and `Torus`; the split with at least 2
-        subdivisions for a curved element and the edges of a 6-node triangle in its tiling. **Open**: `Tube`, the
-        partial `Sphere` (`_SphereTriangleList`), `LinkedCylinders`. *Compatibility of
+        subdivisions for a curved element and the edges of a 6-node triangle in its tiling; then `Tube` and the `Sphere`
+        with edges or between two latitudes. **Open**: `LinkedCylinders` (an extrusion of a polygon,
+        `SolidExtrusion`), the hollow `Sphere` (`innerRadius`, flat as before), and `SpheresToTriangleList`, which
+        stays flat on purpose - it makes contact meshes. *Compatibility of
         `nTiles`* (maintainer's question): `nTiles` keeps its meaning - **the number of flat segments around** - and
         the primitive uses $\lceil$`nTiles`/2$\rceil$ quadratic elements, each covering two of today's segments.
         For a script to never look coarser than today, the split of a *curved* 6-node triangle or 3-node line has
@@ -2325,7 +2327,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame - an inconsistent Jacobian to find |
 | RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
-| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges, rows done; open RG6.7.2.1 (superelements), RG6.7.5 (anisotropic tiling), RG6.7.7.6/.7 (the primitives on quadratic shapes) |
+| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges, rows done; RG6.7.2.1 and most of RG6.7.7.6 done (the round primitives of 6-node triangles); open RG6.7.5 (anisotropic tiling), the rest of RG6.7.7.6 (`LinkedCylinders`, hollow sphere), RG6.7.7.7 (the examples with large `nTiles`) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG9.3 | #2744 | access functions as single functions of the objects: the split done (RG9.3.4.1-.3), the declarations checked (rule 7); open the flags derived instead of declared (RG9.3.4.4, after separating the super elements' own meaning); RG9.3.5 evaluated with `exu.experimental.accessFunctionsByAD`, proposal for the maintainer's decision; RG9.3.6 the leftovers (#2773) |
 | RG9.4 | #2202 | kinetic and potential energy as output variables: done for all bodies, beams, plates, superelements and spring-dampers; RG9.4.3.2 (the contact and special objects) not now |
@@ -2365,9 +2367,9 @@ The title of each says what the step **does**; the sentence after it says why it
    the last condition of 1.13 that one person can meet alone.
 3. **Decide the proposal of RG9.3.5** (#2744): which access functions stay hand-written, where AD provides what is
    missing (the derivative of `J^T f` of cables and beams). Measured with the switch, the numbers are in the log.
-4. **Draw the primitives and the meshes curved** (RG6.7.7.6/.7, RG6.7.2.1, #2709). The 6-node triangles and
-   quadratic edges exist; `Cylinder`, `Torus`, `SolidOfRevolution` and the NGsolve/FFRF meshes do not use them yet,
-   which is where a user sees the difference.
+4. **Halve the large `nTiles` of the examples** (RG6.7.7.7, #2709). The round primitives and the FFRF meshes are
+   curved now (RG6.7.7.6, RG6.7.2.1); the examples that chose a large `nTiles` to hide the facets draw more than they
+   need - checked by image.
 5. **Remove the legacy switch** (RG14.2.13, #2745). The special items keep the path of the marker data (RG14.2.11), the
    dispatch is in the connector (RG14.2.17), so the switch and the duplicate legacy functions of the items on the
    interface go. Then `MarkerTemp` and `TemporaryComputationData` can shrink (RG14.2.14, RG14.2.16).
