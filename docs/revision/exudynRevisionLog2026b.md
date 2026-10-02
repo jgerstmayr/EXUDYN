@@ -11396,3 +11396,15 @@ templated where the Jacobian is by AD -, its L1 functions calling it, `GetAvaila
 no kinematics or forces are written twice. What still goes through the marker data structure is listed in RG14.2.18:
 the output variables and `PostNewtonStep` (the transport only, the physics are shared), the two contacts on markers
 without orientation, and `ObjectConnectorCoordinate` at velocity level.
+
+<a id="rg14-2-13-markers"></a>
+### RG14.2.13 — the markers, evaluated (2026-10-02, #2745)
+
+The markers keep two ways to their kinematics: the L0/L1 pair of the interface (`GetKinematics*`, `GetODE2Size`,
+`AddGeneralized*`) - own implementations in `MarkerBodyRigid`, `MarkerBodyPosition` (through the body),
+`MarkerNodeCoordinate` and the defaults of `CMarker` for the position markers -, and `ComputeMarkerData`, which the
+path of the marker data (RG14.2.11), the output variables (RG14.2.18) and **the Jacobian chains of the interface** read:
+`ConnectorJacobianODE2*Markers` and the constraint Jacobians take the marker Jacobians from `temp.markerTemp[k].markerData`
+(16 places in `CObjectConnector.cpp`). The two ways compute the same position and velocity through the same body or
+node functions in a few lines each - no duplicated physics -, so nothing was cleaned up here; making the Jacobians a
+marker function of their own, so that `MarkerTemp` no longer holds a `MarkerData`, is RG14.2.14, which is unblocked now.
