@@ -11184,3 +11184,59 @@ functions of `CSystem` are gone; `HasJacobianODE2MarkerData` (false for the rigi
 
 Checked: build without warnings, the test suite with all references unchanged, pytest (`test_connectorInterface.py`
 compares both paths).
+
+<a id="rg9-3-5"></a>
+### RG9.3.5 — hand-written access functions or automatic differentiation of a templated position (2026-10-02, #2744)
+
+**What was built.** `src/Utilities/AccessFunctionsAD.h` computes, from a body's position p(q) and rotation matrix A(q)
+given as generic functions of the number type: the position Jacobian dp/dq, the rotation Jacobian (column j the axial
+vector of dA/dq_j A^T) and d(J_pos^T f + J_rot^T tau)/dq by nested automatic differentiation (`AutoDiff<n, AutoDiff<n>>`).
+It holds where the velocity coordinates are the time derivatives of the coordinates - not for the Lie group nodes,
+which keep the hand-written functions. Three bodies provide their position as a template (15-30 lines each):
+`ObjectRigidBody` (Euler parameters - normalized, so that A does not change along them, as `Glocal e = 0` says - and
+Tait-Bryan angles), `ObjectRigidBody2D` and `ObjectANCFCable2D` (r(x) + y n(x)). The switch
+`exu.experimental.accessFunctionsByAD`: 1 = AD; 2 = the general path through the access functions with the
+hand-written ones - `ObjectRigidBody` otherwise projects forces and builds marker data without forming the Jacobians,
+and 2 tells that cost from the cost of AD; 0 (default) = as before.
+
+**The same results.** `test_accessFunctionsAD.py`: system Jacobian (with the derivative of `J^T f` of the rigid
+markers) and right-hand side agree to 1e-12 for all three bodies and both modes. For Euler parameters the derivative
+of the Jacobian differs **along the parameters themselves** - the AD of the normalized parameters has a component in
+that direction, the hand-written `d(Glocal^T v)/dq` another; projected on the tangent space of the constraint
+(e^T de = 0, which every Newton increment satisfies) the two agree to 1e-14, and the solutions to the Newton
+tolerance (perfAccessFunctionsAD: 1.552725088397863 against 1.5527250883908033).
+
+**Found on the way: #2774.** The comparison of the cable failed or passed at random: the position Jacobian of
+`ObjectANCFCable2D` (and `ObjectALEANCFCable2D`) at a point off the axis never set its third row, which held whatever
+the matrix held - garbage z-components in the projected forces, and a "singular Jacobian" in the implicit solver.
+Fixed (`SetAll(0.)`); no reference value moved.
+
+**Measured** (`perfAccessFunctionsAD.py`, solver time, Windows cp313, EigenSparse):
+
+| model | hand-written | general path (2) | AD (1) |
+|---|---|---|---|
+| 100 rigid bodies, Euler parameters, `RigidBodySpringDamper`, implicit | 0.231 s | 0.265 s | 0.413 s (+79 %) |
+| 100 rigid bodies, Tait-Bryan, implicit | 0.322 s | 0.366 s | 0.498 s (+55 %) |
+| 100 rigid bodies, Tait-Bryan, explicit RK44 | 0.393 s | 0.599 s | 0.686 s (+75 %) |
+| 200 2D rigid bodies, spring-dampers, implicit | 0.172 s | - | 0.245 s (+42 %) |
+| 200 2D rigid bodies, explicit | 0.335 s | - | 0.390 s (+16 %) |
+| ANCF cable, 200 elements on an elastic foundation (markers off the axis), implicit | 1.575 s | - | 1.606 s (+2 %) |
+
+In the explicit rigid run most of the difference is the general path (+52 %), not AD (+15 %): the hand-written
+rigid body projects a force without forming its Jacobian. In the implicit runs AD itself costs 35-55 %, most of it
+the nested AD of `J^T f` in 7 x 7 directions. Where the element itself dominates (the cable), AD is not visible.
+
+**What it would change in code.** Per body the templated position replaces the hand-written position and rotation
+Jacobians and their derivative: `ObjectRigidBody` about 170 lines of `GetPositionJacobian`, `GetRotationJacobian`,
+`GetJacobianTransposedTimesVectorDerivative` (and the node functions `GetGlocalTv_q`, `GetGTv_q` for this use) against
+about 40; and the bodies without a derivative of `J^T f` - the ANCF cables, whose markers in an implicit solve need
+`jacobianConnectorDerivative = False` today, and `ObjectBeamGeometricallyExact`, which takes it as zero - would get it
+exactly. A template cannot be virtual: the objects keep the virtual access functions as wrappers that call the AD of
+their own templated position (as built here); RG15 (objects computing from given coordinates) makes that position the
+natural single source.
+
+**Proposed** (for the maintainer's decision): (a) the hand-written functions stay for the bodies that are hot in
+connector-heavy models (rigid bodies, mass points); (b) AD provides what is missing or approximated - the derivative of
+`J^T f` of the cables and beams, and the access functions of new objects; (c) a cheaper AD seeds only the coordinates
+the position is nonlinear in (4 rotation parameters instead of 7 coordinates; for `J^T f` the nested part then
+4 x 4); (d) the switch goes once this is decided.

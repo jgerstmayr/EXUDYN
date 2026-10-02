@@ -294,6 +294,8 @@ pb.DefDataAccess('experimental.eigenFullPivotLUsolverDebugLevel','debug output o
                        dataType='int', isTopLevel = True)
 pb.DefDataAccess('experimental.connectorInterfaceLegacy','if nonzero, every connector computes its forces on the legacy path (the marker data structure and its own ComputeODE2LHS), not on the connector interface of RG14 (default 0); for comparisons while connectors move to the new interface',
                        dataType='int', isTopLevel = True)
+pb.DefDataAccess('experimental.accessFunctionsByAD','if nonzero, ObjectRigidBody (Euler parameters, Tait-Bryan angles), ObjectRigidBody2D and ObjectANCFCable2D compute their position and rotation Jacobians, and the derivative of the transposed Jacobian times a force, by automatic differentiation of their position and rotation instead of the hand-written functions (default 0); 2: ObjectRigidBody takes the general path through the access functions as with 1, but with the hand-written functions - so that the cost of automatic differentiation and the cost of the general path can be told apart; for the evaluation of #2744',
+                       dataType='int', isTopLevel = True)
 pb.DefDataAccess('experimental.markerSuperElementRigidTexpSO3','if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters',
                        dataType='int', isTopLevel = True)
 

@@ -1247,14 +1247,24 @@ revision (info document D15).
         flags derived instead of declared, `OwnMarkersOnly` and `SuperElementAlternativeRotationMode` - the super
         elements use the same flags for their own markers (`GetAccessFunctionSuperElement`), so deriving needs these
         two meanings separated first;
-    - **RG9.3.5** *(maintainer 2026-10-02; after RG9.3.4)* **evaluation: hand-written Jacobians or AD of a templated
-      `GetPosition`**. To answer: what changes - a template cannot be virtual, so the object would provide a templated
+    - **RG9.3.5** **EVALUATED 2026-10-02, with a switch; the proposal for the maintainer's decision** —
+      [log](exudynRevisionLog2026b.md#rg9-3-5) - *(maintainer 2026-10-02; after RG9.3.4; "with a switch, so performance can
+      be compared")* **evaluation: hand-written Jacobians or AD of a templated `GetPosition`**. To answer: what changes - a template cannot be virtual, so the object would provide a templated
       position function plus a virtual wrapper per number type (Real, the AD types of RG14), or the markers call
       object-specific templates; the impact on the implementation of each object (17), on the markers and on the
       definitions; what would be gained in performance (the Jacobian by AD costs a pass with n directions against a
       hand-written matrix today) and in code (the hand-written Jacobians and their derivatives
       `JacobianTtimesVector_q` disappear); and what RG15 (objects computing from given coordinates) changes about it.
-      The result is a proposal, not a migration.
+      The result is a proposal, not a migration. **Done**: `exu.experimental.accessFunctionsByAD` (1: AD, 2: the general
+      path with the hand-written functions) for `ObjectRigidBody` (Euler parameters, Tait-Bryan angles),
+      `ObjectRigidBody2D` and `ObjectANCFCable2D`; the same results (Euler parameters: to the Newton tolerance); AD costs
+      +40 % to +80 % solver time on chains of rigid bodies joined by connectors, +2 % on an ANCF cable; found #2774.
+      **Proposed**: (a) the hand-written Jacobians stay for the bodies that are hot in connector-heavy models (rigid
+      bodies, mass points) - their fast projections without forming a Jacobian matter more than AD; (b) AD provides
+      what is missing or approximated today - the derivative of `J^T f` of the ANCF cables and beams (none, or taken
+      as zero), and the access functions of new objects, from one templated position (with RG15); (c) a cheaper AD
+      seeds only the coordinates the position is nonlinear in (the rotation parameters: 4 directions instead of 7);
+      (d) the switch goes when (a)-(c) are decided.
     - **RG9.3.6** *(maintainer 2026-10-02)* **the leftovers found in the evaluation and the split** (#2773): (1) the
       check of a marker on a body without rotation access reports the marker index as the object number (and spells
       *orienation*); (2) dead code - the `if (false)` branch of `CObjectANCFCable2DBase::GetPositionJacobian` (the exact
@@ -2311,7 +2321,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges, rows done; open RG6.7.2.1 (superelements), RG6.7.5 (anisotropic tiling), RG6.7.7.6/.7 (the primitives on quadratic shapes) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
-| RG9.3 | #2744 | access functions as single functions of the objects: the split done (RG9.3.4.1-.3), the declarations checked (rule 7); open the flags derived instead of declared (RG9.3.4.4, after separating the super elements' own meaning), then RG9.3.5 (evaluation: hand-written Jacobians or AD) |
+| RG9.3 | #2744 | access functions as single functions of the objects: the split done (RG9.3.4.1-.3), the declarations checked (rule 7); open the flags derived instead of declared (RG9.3.4.4, after separating the super elements' own meaning); RG9.3.5 evaluated with `exu.experimental.accessFunctionsByAD`, proposal for the maintainer's decision; RG9.3.6 the leftovers (#2773) |
 | RG9.4 | #2202 | kinetic and potential energy as output variables: done for all bodies, beams, plates, superelements and spring-dampers; RG9.4.3.2 (the contact and special objects) not now |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
@@ -2347,8 +2357,8 @@ The title of each says what the step **does**; the sentence after it says why it
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Evaluate hand-written Jacobians against AD of a templated position** (RG9.3.5, #2744). The access functions are
-   single functions now, so the question can be answered object by object; the result is a proposal, not a migration.
+3. **Decide the proposal of RG9.3.5** (#2744): which access functions stay hand-written, where AD provides what is
+   missing (the derivative of `J^T f` of cables and beams). Measured with the switch, the numbers are in the log.
 4. **Draw the primitives and the meshes curved** (RG6.7.7.6/.7, RG6.7.2.1, #2709). The 6-node triangles and
    quadratic edges exist; `Cylinder`, `Torus`, `SolidOfRevolution` and the NGsolve/FFRF meshes do not use them yet,
    which is where a user sees the difference.

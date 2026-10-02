@@ -1,0 +1,18 @@
+{
+  "number": 2774,
+  "title": "ObjectANCFCable2D: the position Jacobian at a point off the axis leaves its third row uninitialized",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "LOW",
+  "description": "GetPositionJacobian (formerly the TranslationalVelocity_qt case of GetAccessFunctionBody) of ObjectANCFCable2D and ObjectANCFCable2D-based elements sets rows 0 and 1 for localPosition[1] != 0 but never row 2, which keeps whatever the matrix held; a MarkerBodyPosition at y != 0 on a cable then projects forces with garbage z-components and the implicit solver can report a singular Jacobian at random. Found by the comparison of the access functions by automatic differentiation (RG9.3.5): a cable on an elastic foundation with markers at y = 0.01 failed or passed depending on the memory.",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-02 08:51",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectANCFCable2D.cpp",
+  "line": "689",
+  "releaseNotes": "ObjectANCFCable2D and ObjectALEANCFCable2D: the position Jacobian at a point off the axis sets its third row to zero; before, it kept whatever the matrix held, which gave forces with random z-components and could make the implicit solver report a singular Jacobian",
+  "resolvedInVersion": "1.12.211"
+}

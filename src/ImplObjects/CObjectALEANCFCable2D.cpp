@@ -259,6 +259,7 @@ void CObjectALEANCFCable2D::GetPositionJacobian(const Vector3D& localPosition, M
 	}
 	else
 	{
+		value.SetAll(0.); //the third row is zero (#2774)
 		Real y = localPosition[1];
 		Vector4D SV_x = ComputeShapeFunctions_x(x, L);
 		Vector2D r_x = ComputeSlopeVector(x, ConfigurationType::Current);

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 195 | 1.12.210 |
+| 1.12 | Metheney | 196 | 1.12.211 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.211** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectANCFCable2D: the position Jacobian at a point off the axis leaves its third row uninitialized (#2774)
+  - description: GetPositionJacobian (formerly the TranslationalVelocity\_qt case of GetAccessFunctionBody) of ObjectANCFCable2D and ObjectANCFCable2D-based elements sets rows 0 and 1 for localPosition\[1\] != 0 but never row 2, which keeps whatever the matrix held; a MarkerBodyPosition at y != 0 on a cable then projects forces with garbage z-components and the implicit solver can report a singular Jacobian at random. Found by the comparison of the access functions by automatic differentiation (RG9.3.5): a cable on an elastic foundation with markers at y = 0.01 failed or passed depending on the memory.
+  - **notes:** ObjectANCFCable2D and ObjectALEANCFCable2D: the position Jacobian at a point off the axis sets its third row to zero; before, it kept whatever the matrix held, which gave forces with random z-components and could make the implicit solver report a singular Jacobian
+  - date resolved: **2026-10-02 08:51**, date raised: 2026-10-02
 - **1.12.210** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` graphics.MergeTriangleLists: the edges of g2 are not offset when g1 has no edges (#2769)
   - description: MergeTriangleLists appends the points of g2 after those of g1, but adds the offset nPoints to the edge indices of g2 only if g1 has edges as well; if g1 has none, the edges of g2 point to the points of g1. Found during revision2026b step RG6.7.7.5 (\#2709), whose edges3 merge offsets always.
   - **notes:** graphics.MergeTriangleLists: the edges of the second list are offset by the points of the first also when the first has no edges

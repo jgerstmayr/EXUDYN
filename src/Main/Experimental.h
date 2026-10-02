@@ -32,6 +32,7 @@ public:
     Index eigenFullPivotLUsolverDebugLevel; //!< debug: 0=off, 1=print rank and info, 2=print matrices
     Index markerSuperElementRigidTexpSO3; //!< True: use additional TexpSO3 for FFRF
     Index connectorInterfaceLegacy; //!< True: every connector takes the legacy path, not the connector interface of RG14 (#2745)
+    Index accessFunctionsByAD; //!< True: bodies that can compute their access functions by automatic differentiation of their position do so (#2744)
 
     PyExperimental()
     {
@@ -43,6 +44,7 @@ public:
         eigenFullPivotLUsolverDebugLevel = 0;
         markerSuperElementRigidTexpSO3 = true;
         connectorInterfaceLegacy = false;
+        accessFunctionsByAD = false;
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -52,6 +54,7 @@ public:
         os << "  eigenFullPivotLUsolverDebugLevel = " << eigenFullPivotLUsolverDebugLevel << "\n";
         os << "  markerSuperElementRigidTexpSO3 = " << markerSuperElementRigidTexpSO3 << "\n";
         os << "  connectorInterfaceLegacy = " << connectorInterfaceLegacy << "\n";
+        os << "  accessFunctionsByAD = " << accessFunctionsByAD << "\n";
         os << "\n";
     }
 

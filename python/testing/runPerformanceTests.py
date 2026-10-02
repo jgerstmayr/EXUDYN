@@ -200,6 +200,7 @@ testGroups = {
                 'perfObjectFFRFreducedOrder.py',
                 'perfLargeMassSpringChain.py',
                 'perfConnectorInterface.py',
+                'perfAccessFunctionsAD.py',
              ],
     }
 

@@ -535,6 +535,7 @@ def PerformanceTestsReferenceSolution():
         'perfSpringDamperExplicit.py':0.52,
         'perfSpringDamperUserFunction.py':0.5065575310983877,
         'perfConnectorInterface.py':1.8871766817354405, #new 2026-10-01 (#2745)
+        'perfAccessFunctionsAD.py':439.41627874357835, #new 2026-10-02 (#2744)
         'perfLargeMassSpringChain.py':0.01426191722384829, #2026-09-16: rigid body chain, last run n=20000; before (mass points): 0.03136079550415616
 
         #the single runs of the models that solve several sizes or thread counts. Measured
@@ -563,6 +564,24 @@ def PerformanceTestsReferenceSolution():
         'perfConnectorInterface:rigid-n100-implicit':              1.552725088397863,  #by AD: the same to the Newton tolerance
         'perfConnectorInterface:rigid-n100-explicit-legacy':       1.8871766817354405,
         'perfConnectorInterface:rigid-n100-explicit':              1.8871766817354405,
+        #the access functions by automatic differentiation (#2744): per model the hand-written functions, the general path
+        #with them (-general) and automatic differentiation (-AD) - measured 2026-10-02 on Windows cp313; they agree to
+        #the Newton tolerance (Euler parameters: the derivative of the Jacobian differs along the parameters)
+        'perfAccessFunctionsAD:rigidEP-n100-implicit':           1.552725088397863,
+        'perfAccessFunctionsAD:rigidEP-n100-implicit-general':   1.5527250883978632,
+        'perfAccessFunctionsAD:rigidEP-n100-implicit-AD':        1.5527250883908033,
+        'perfAccessFunctionsAD:rigidRxyz-n100-implicit':         38.06978409054861,
+        'perfAccessFunctionsAD:rigidRxyz-n100-implicit-general': 38.06978409054865,
+        'perfAccessFunctionsAD:rigidRxyz-n100-implicit-AD':      38.06978409054872,
+        'perfAccessFunctionsAD:rigidRxyz-n100-explicit':         39.70816787868968,
+        'perfAccessFunctionsAD:rigidRxyz-n100-explicit-general': 39.70816787868967,
+        'perfAccessFunctionsAD:rigidRxyz-n100-explicit-AD':      39.70816787868968,
+        'perfAccessFunctionsAD:rigid2D-n200-implicit':           333.2416865794323,
+        'perfAccessFunctionsAD:rigid2D-n200-implicit-AD':        333.2416865794323,
+        'perfAccessFunctionsAD:cable-n200-implicit':             0.005112208117751918,
+        'perfAccessFunctionsAD:cable-n200-implicit-AD':          0.0051122081178941224,
+        'perfAccessFunctionsAD:rigid2D-n200-explicit':           439.41627874357835,
+        'perfAccessFunctionsAD:rigid2D-n200-explicit-AD':        439.41627874357835,
         }
 
     return refSol
