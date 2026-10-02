@@ -58,26 +58,44 @@ void CMarkerSuperElementPosition::GetVelocity(const CSystemData& cSystemData, Ve
 	}
 }
 
+//! the position Jacobian of the weighted mesh nodes, 3 x n, through the superelement's access function
+static void ComputePositionJacobian(const CMarkerSuperElementPosition& marker, const CSystemData& cSystemData, Matrix& positionJacobian)
+{
+	const CMarkerSuperElementPositionParameters& parameters = marker.GetParameters();
+	const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(marker.GetObjectNumber())); //always possible
+	positionJacobian.SetNumberOfRowsAndColumns(3, cObject.GetODE2Size());
+	positionJacobian.SetAll(0.);
+	LinkedDataMatrix weightingMatrix(parameters.weightingFactors.GetDataPointer(), parameters.weightingFactors.NumberOfItems(), 1);
+	cObject.GetAccessFunctionSuperElement((AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement),
+		weightingMatrix, parameters.meshNodeNumbers, Vector3D(0.), positionJacobian, EXUmath::unitMatrix3D);
+}
+
 void CMarkerSuperElementPosition::ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const
 {
 	GetPosition(cSystemData, markerData.position, ConfigurationType::Current);
 	GetVelocity(cSystemData, markerData.velocity, ConfigurationType::Current);
 	markerData.velocityAvailable = true;
 
-	if (computeJacobian)
-	{
-		//const ArrayIndex& nodeNumbers = parameters.meshNodeNumbers;
-		const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(GetObjectNumber())); //always possible
+	if (computeJacobian) { ComputePositionJacobian(*this, cSystemData, markerData.positionJacobian); }
+}
 
-		markerData.positionJacobian.SetNumberOfRowsAndColumns(3, cObject.GetODE2Size());
-		markerData.positionJacobian.SetAll(0.);
+//! the L0 with the Jacobian for the Jacobian chains (#2745)
+void CMarkerSuperElementPosition::GetKinematicsJacobianPosition(const CSystemData& cSystemData, MarkerPosition<Real>& kinematics, MarkerTemp& temp) const
+{
+	GetPosition(cSystemData, kinematics.position, ConfigurationType::Current);
+	GetVelocity(cSystemData, kinematics.velocity, ConfigurationType::Current);
+	ComputePositionJacobian(*this, cSystemData, temp.positionJacobian);
+}
 
-		Index nw = parameters.weightingFactors.NumberOfItems();
-		LinkedDataMatrix weightingMatrix(parameters.weightingFactors.GetDataPointer(), nw, 1);
+Index CMarkerSuperElementPosition::GetODE2Size(const CSystemData& cSystemData, MarkerTemp& temp) const
+{
+	return cSystemData.GetCObjects()[GetObjectNumber()]->GetODE2Size();
+}
 
-		cObject.GetAccessFunctionSuperElement((AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement),
-			weightingMatrix, parameters.meshNodeNumbers, Vector3D(0.), markerData.positionJacobian, EXUmath::unitMatrix3D);
-	}
+void CMarkerSuperElementPosition::AddGeneralizedForce(const CSystemData& cSystemData, const Vector3D& force, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const
+{
+	ComputePositionJacobian(*this, cSystemData, temp.positionJacobian);
+	EXUmath::MultMatrixTransposedVectorAdd(temp.positionJacobian, force, ode2Lhs);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

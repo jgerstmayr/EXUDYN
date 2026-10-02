@@ -1279,7 +1279,9 @@ py::object MainSystem::PyItemCompute(const py::object& itemIndex, const py::obje
 	}
 	else
 	{
-		MarkerData& markerData = temp.markerTemp[0].markerData;
+		TemporaryMarkerDataStructure temporary;
+		temporary.Get().SetNumberOfMarkerData(1);
+		MarkerData& markerData = temporary.Get().GetMarkerData(0);
 		marker->ComputeMarkerData(cSystemData, computeType != ItemComputeType::Kinematics, markerData);
 		switch (computeType)
 		{

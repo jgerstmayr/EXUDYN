@@ -203,10 +203,13 @@ public:
 	//! frame and velocities at localPosition for a rigid marker (#2745); a body may keep in temp what AddForceTorque needs
 	virtual void GetKinematicsRigid(const Vector3D& localPosition, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const
 	{
-		ComputeRigidBodyMarkerData(localPosition, false, temp.markerData);
-		kinematics.frame = HomogeneousTransformation(temp.markerData.orientation, temp.markerData.position);
-		kinematics.velocity = temp.markerData.velocity;
-		kinematics.angularVelocityLocal = temp.markerData.angularVelocityLocal;
+		TemporaryMarkerDataStructure temporary;
+		temporary.Get().SetNumberOfMarkerData(1);
+		MarkerData& markerData = temporary.Get().GetMarkerData(0);
+		ComputeRigidBodyMarkerData(localPosition, false, markerData);
+		kinematics.frame = HomogeneousTransformation(markerData.orientation, markerData.position);
+		kinematics.velocity = markerData.velocity;
+		kinematics.angularVelocityLocal = markerData.angularVelocityLocal;
 	}
 
 	//! add J_pos^T force + J_rot^T torque at localPosition to ode2Lhs, the body's coordinates (#2745); force and torque global;

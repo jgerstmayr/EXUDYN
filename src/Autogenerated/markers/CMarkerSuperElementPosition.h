@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  22:48:27 (last modified)
+* @date         2026-10-02  19:23:07 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,6 +112,15 @@ public: // AUTO:
 
     //! AUTO:  Compute marker data (e.g. position and positionJacobian) for a marker
     virtual void ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const override;
+
+    //! AUTO:  position and velocity, and the position Jacobian into temp, without the marker data (#2745)
+    virtual void GetKinematicsJacobianPosition(const CSystemData& cSystemData, MarkerPosition<Real>& kinematics, MarkerTemp& temp) const override;
+
+    //! AUTO:  number of ODE2 coordinates of the superelement, without forming the Jacobian (#2745)
+    virtual Index GetODE2Size(const CSystemData& cSystemData, MarkerTemp& temp) const override;
+
+    //! AUTO:  add J_pos^T force to ode2Lhs; the Jacobian formed here, so that the kinematics alone do not form it (#2745)
+    virtual void AddGeneralizedForce(const CSystemData& cSystemData, const Vector3D& force, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const override;
 
 };
 

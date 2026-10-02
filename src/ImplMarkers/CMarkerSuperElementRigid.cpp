@@ -299,6 +299,48 @@ void CMarkerSuperElementRigid::GetAngularVelocityLocal(const CSystemData& cSyste
 
 
 
+//! the position and rotation Jacobians of the marker, 3 x n each, through the superelement's access functions (#2745)
+static void ComputeJacobians(const CMarkerSuperElementRigid& marker, const CSystemData& cSystemData, Matrix& positionJacobian,
+	Matrix& rotationJacobian)
+{
+	//const ArrayIndex& nodeNumbers = marker.GetParameters().meshNodeNumbers;
+	const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(marker.GetObjectNumber())); //always possible
+
+	//will be done in AccessFunctions ...
+	//positionJacobian.SetNumberOfRowsAndColumns(3, cObject.GetODE2Size());
+	//positionJacobian.SetAll(0.);
+
+	Index nw = marker.GetParameters().weightingFactors.NumberOfItems();
+
+	LinkedDataMatrix weightingMatrix(marker.GetParameters().weightingFactors.GetDataPointer(), nw, 1);
+
+	cObject.GetAccessFunctionSuperElement((AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement),
+		weightingMatrix, marker.GetParameters().meshNodeNumbers, marker.GetParameters().offset, positionJacobian, EXUmath::unitMatrix3D);
+
+	//add special flag for alternative rotation mode (little hack, maybe this becomes a separate variable in future)
+	Index rotationMode = 0;
+	if (marker.GetParameters().useAlternativeApproach)
+	{
+		rotationMode += (Index)AccessFunctionType::SuperElementAlternativeRotationMode;
+	}
+	Matrix3D rotationCorrection;
+	if (marker.GetParameters().rotationsExponentialMap > 0 && pyExperimental.markerSuperElementRigidTexpSO3)
+	{
+		Vector3D weightedRotations;
+		marker.GetWeightedRotations(cSystemData, weightedRotations, ConfigurationType::Current); //this computation could be saved in case that GetRotationMatrix() would also retrieve weightedRotations ...
+		rotationCorrection = EXUlie::TExpSO3(weightedRotations);
+	}
+	else { rotationCorrection.SetScalarMatrix(3, 1.); }
+
+	cObject.GetAccessFunctionSuperElement((AccessFunctionType)(rotationMode + (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::SuperElement),
+		weightingMatrix, marker.GetParameters().meshNodeNumbers, marker.GetParameters().offset, rotationJacobian, rotationCorrection);
+
+#ifdef verboseCMarkerSuperElementRigid
+	pout << "  markerdata.positionJacobian=" << positionJacobian << "\n";
+	pout << "  markerdata.rotationJacobian=" << rotationJacobian << "\n";
+#endif // verboseCMarkerSuperElementRigid
+}
+
 void CMarkerSuperElementRigid::ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const
 {
 	GetPosition(cSystemData, markerData.position, ConfigurationType::Current);
@@ -318,45 +360,35 @@ void CMarkerSuperElementRigid::ComputeMarkerData(const CSystemData& cSystemData,
 #endif // verboseCMarkerSuperElementRigid
 
 
-	if (computeJacobian)
-	{
-		//const ArrayIndex& nodeNumbers = parameters.meshNodeNumbers;
-		const CObjectSuperElement& cObject = (const CObjectSuperElement&)(cSystemData.GetCObjectBody(GetObjectNumber())); //always possible
+	if (computeJacobian) { ComputeJacobians(*this, cSystemData, markerData.positionJacobian, markerData.rotationJacobian); }
+}
 
-		//will be done in AccessFunctions ...
-		//markerData.positionJacobian.SetNumberOfRowsAndColumns(3, cObject.GetODE2Size());
-		//markerData.positionJacobian.SetAll(0.);
+//! the frame and velocities as ComputeMarkerData, without the Jacobians (#2745)
+Index CMarkerSuperElementRigid::GetKinematicsRigid(const CSystemData& cSystemData, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const
+{
+	Vector3D position;
+	GetPosition(cSystemData, position, ConfigurationType::Current);
+	GetRotationMatrix(cSystemData, temp.rotation, ConfigurationType::Current);
+	kinematics.frame = HomogeneousTransformation(temp.rotation, position);
+	GetVelocity(cSystemData, kinematics.velocity, ConfigurationType::Current);
+	GetAngularVelocityLocal(cSystemData, kinematics.angularVelocityLocal, ConfigurationType::Current);
+	return cSystemData.GetCObjects()[GetObjectNumber()]->GetODE2Size();
+}
 
-		Index nw = parameters.weightingFactors.NumberOfItems();
+//! the L0 with the Jacobians for the Jacobian chains (#2745)
+void CMarkerSuperElementRigid::GetKinematicsJacobianRigid(const CSystemData& cSystemData, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const
+{
+	GetKinematicsRigid(cSystemData, kinematics, temp);
+	ComputeJacobians(*this, cSystemData, temp.positionJacobian, temp.rotationJacobian);
+}
 
-		LinkedDataMatrix weightingMatrix(parameters.weightingFactors.GetDataPointer(), nw, 1);
-
-		cObject.GetAccessFunctionSuperElement((AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement),
-			weightingMatrix, parameters.meshNodeNumbers, parameters.offset, markerData.positionJacobian, EXUmath::unitMatrix3D);
-
-		//add special flag for alternative rotation mode (little hack, maybe this becomes a separate variable in future)
-		Index rotationMode = 0;
-		if (parameters.useAlternativeApproach)
-		{
-			rotationMode += (Index)AccessFunctionType::SuperElementAlternativeRotationMode;
-		}
-		Matrix3D rotationCorrection;
-		if (parameters.rotationsExponentialMap > 0 && pyExperimental.markerSuperElementRigidTexpSO3)
-		{
-			Vector3D weightedRotations;
-			GetWeightedRotations(cSystemData, weightedRotations, ConfigurationType::Current); //this computation could be saved in case that GetRotationMatrix() would also retrieve weightedRotations ...
-			rotationCorrection = EXUlie::TExpSO3(weightedRotations);
-		}
-		else { rotationCorrection.SetScalarMatrix(3, 1.); }
-
-		cObject.GetAccessFunctionSuperElement((AccessFunctionType)(rotationMode + (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::SuperElement),
-			weightingMatrix, parameters.meshNodeNumbers, parameters.offset, markerData.rotationJacobian, rotationCorrection);
-
-#ifdef verboseCMarkerSuperElementRigid
-		pout << "  markerdata.positionJacobian=" << markerData.positionJacobian << "\n";
-		pout << "  markerdata.rotationJacobian=" << markerData.rotationJacobian << "\n";
-#endif // verboseCMarkerSuperElementRigid
-	}
+//! the Jacobians formed here, so that the kinematics alone - the equations of a constraint - do not form them (#2745)
+void CMarkerSuperElementRigid::AddGeneralizedForceTorque(const CSystemData& cSystemData, const Vector3D& force, const Vector3D& torque, MarkerTemp& temp,
+	LinkedDataVector& ode2Lhs) const
+{
+	ComputeJacobians(*this, cSystemData, temp.positionJacobian, temp.rotationJacobian);
+	EXUmath::MultMatrixTransposedVectorAdd(temp.positionJacobian, force, ode2Lhs);
+	EXUmath::MultMatrixTransposedVectorAdd(temp.rotationJacobian, torque, ode2Lhs);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

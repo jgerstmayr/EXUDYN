@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-30  18:25:55 (last modified)
+* @date         2026-10-02  19:23:07 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -127,6 +127,15 @@ public: // AUTO:
 
     //! AUTO:  Compute marker data (e.g. position and positionJacobian) for a marker
     virtual void ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const override;
+
+    //! AUTO:  frame and velocities, and the position and rotation Jacobians into temp, without the marker data (#2745)
+    virtual void GetKinematicsJacobianRigid(const CSystemData& cSystemData, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const override;
+
+    //! AUTO:  frame and velocities, without the Jacobians, which AddGeneralizedForceTorque forms (#2745)
+    virtual Index GetKinematicsRigid(const CSystemData& cSystemData, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const override;
+
+    //! AUTO:  add J_pos^T force + J_rot^T torque to ode2Lhs; the Jacobians formed here (#2745)
+    virtual void AddGeneralizedForceTorque(const CSystemData& cSystemData, const Vector3D& force, const Vector3D& torque, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const override;
 
     //! AUTO:  return parameters of underlying floating frame node (or default values for case that no frame exists)
     void GetFloatingFrameNodeData(const CSystemData& cSystemData, Vector3D& framePosition, Matrix3D& frameRotationMatrix, Vector3D& frameVelocity, Vector3D& frameAngularVelocityLocal, ConfigurationType configuration = ConfigurationType::Current) const;

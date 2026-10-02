@@ -11651,3 +11651,29 @@ derivative of the Lie group node, whose increments are compositions.
   matrices of the contact of ANCF cables in `CContact`, are `tempMatrix` and `tempMatrix2`; `tempValue`/`tempValue2` of
   `PostNewtonStep` are `postNewtonError`/`postNewtonStepSize`. The four index arrays keep their generic names - they serve
   several functions.
+
+<a id="rg14-2-14-3"></a>
+### RG14.2.14.4 and RG14.2.14.3 — `MarkerTemp` without `MarkerData`; the superelement markers on L0/L1 (2026-10-02, #2745)
+
+**RG14.2.14.4.** `MarkerTemp` holds no `MarkerData` any more: besides the fixed-size state of a rigid frame and one
+scratch matrix it has the marker's **Jacobians** as three named matrices - `positionJacobian`, `rotationJacobian`,
+`coordinateJacobian`. Three new functions of `CMarker`, **the L0 with the Jacobians** - `GetKinematicsJacobianPosition`,
+`...Rigid`, `...Coordinate` - give the kinematics and fill those matrices; the Jacobian chains of the connectors and
+constraints (`ConnectorJacobianODE2*Markers`, `SeedConstraintEquations*`, `ConstraintJacobian*Markers`) call them
+instead of `ComputeMarkerData`, and the derivative of J^T f goes through `CMarker::AddJacobianDerivative`. Their default -
+and the default L0/L1 of the markers without their own (`GetODE2Size`/`AddGeneralizedForce`, `GetKinematicsRigid`/
+`AddGeneralizedForceTorque`, `GetKinematicsCoordinate`/`AddGeneralizedForceCoordinate`) - computes the marker data once
+into a structure of the thread's pool (`TemporaryMarkerDataStructure`, RG14.2.18) and copies the Jacobians into
+`MarkerTemp`. The `MarkerData` that remains is that of the path of the marker data (RG14.2.11) and of the pool.
+`CObjectBody::GetKinematicsRigid` and `mbs.ItemCompute` use the pool as well. Measured on a chain of 40 rigid bodies with
+`RigidBodySpringDamper` and `SpringDamper`, full Newton (a Jacobian per iteration): 0.587 s before, 0.588 s after - the
+copy of the Jacobians does not show.
+
+**RG14.2.14.3.** `MarkerSuperElementPosition` and `MarkerSuperElementRigid` have their own L0/L1 and L0 with Jacobians:
+the Jacobians are one function each (`ComputePositionJacobian`, `ComputeJacobians`, also called by `ComputeMarkerData`),
+the L0 forms **no** Jacobian - so the equations of a constraint on a superelement, evaluated in every Newton iteration,
+no longer form the dense 3 x n Jacobians -, and the L1 forms them when it projects. `MarkerKinematicTreeRigid` stays on
+the default: its kinematics and Jacobians come from one traversal of the tree (`ComputeRigidBodyMarkerDataKT`); separate
+L0 and L1 would traverse it twice for a connector; an L1 without the Jacobian needs a backward recursion of the tree - a
+step of its own if a model needs it. Measured `abaqusImportTest.py` (an FFRF body on a joint, the run dominated by the
+mesh import): 0.804 s before, 0.798 s after; results identical. All references of the suite and pytest unchanged.

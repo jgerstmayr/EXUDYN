@@ -2235,7 +2235,7 @@ done.
       no longer knows the kinds of connectors, a new kind touches one file, and the enum is gone; not gained:
       performance (a virtual call replaces a switch plus a virtual call). Proposed to be done with RG14.2.13; done before
       it, so that RG14.2.13 only removes the switch.
-    - **RG14.2.14** *(maintainer 2026-10-01)* **`MarkerTemp` without `MarkerData`.** Why it holds one today: the L0/L1
+    - **RG14.2.14** **DONE 2026-10-02** (.1-.4) *(maintainer 2026-10-01)* **`MarkerTemp` without `MarkerData`.** Why it holds one today: the L0/L1
       pair of a marker (`GetKinematicsRigid`/`AddGeneralizedForceTorque`, `GetODE2Size`/`AddGeneralizedForce`,
       `GetKinematicsCoordinate`/`AddGeneralizedForceCoordinate`) has a **default in `CMarker`** that calls the old
       `ComputeMarkerData` and keeps its Jacobians in `temp.markerData` between the two calls - so that every marker
@@ -2256,9 +2256,10 @@ done.
       - **RG14.2.14.2** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-14-2) - the coordinate markers
         that a coordinate connector takes: `MarkerNodeRotationCoordinate` on its own L0/L1; `MarkerNodeODE1Coordinate`,
         `MarkerNodeCoordinates` and the relative coordinate markers stay on the default (reasons in the log);
-      - **RG14.2.14.3** `MarkerSuperElementPosition`/`Rigid` and `MarkerKinematicTreeRigid` - their Jacobians are
+      - **RG14.2.14.3** **DONE 2026-10-02** (the superelement markers; the kinematic tree stays on the default) —
+        [log](exudynRevisionLog2026b.md#rg14-2-14-3) - `MarkerSuperElementPosition`/`Rigid` and `MarkerKinematicTreeRigid` - their Jacobians are
         dense in many coordinates, their own L1 projects without forming them where possible;
-      - **RG14.2.14.4** the Jacobian chains (`ConnectorJacobianODE2*Markers`, `ConstraintJacobian*Markers`) take the
+      - **RG14.2.14.4** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-14-3) - the Jacobian chains (`ConnectorJacobianODE2*Markers`, `ConstraintJacobian*Markers`) take the
         marker Jacobians from a function of the marker (`GetJacobiansRigid`/`Position`) instead of `ComputeMarkerData`;
         then the `MarkerData` of `MarkerTemp` serves only the markers that keep the path of the marker data
         (RG14.2.11) and moves to a per-thread structure (`TemporaryMarkerDataStructure`).
@@ -2492,7 +2493,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
-| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); RG14.2.17 and RG14.2.13 done (the dispatch in the connector, the switch and the legacy functions gone); RG14.2.18 done (sensors from a pool, the mixed chain of rigid markers); RG14.2.19 done (#241); then RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
+| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); done: the dispatch in the connector, the switch and the legacy functions (RG14.2.13, .17), sensors from a pool and the mixed rigid chain (.18), `PostNewtonStep` without Jacobians (.19), `MarkerTemp` without `MarkerData` (.14), `TemporaryComputationData` inventoried and named (.16) |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG9.5 | #2782 | `mbs.ItemCompute` done (#2779, RG9.3.8 with it); open RG9.5.6: the ODE2 Jacobian of an object, the FFRF bodies, kinematic tree, ALE cable, GenericODE2 in the test |
@@ -2528,9 +2529,7 @@ The title of each says what the step **does**; the sentence after it says why it
 3. **Halve the large `nTiles` of the examples** (RG6.7.7.7, #2709). The round primitives and the FFRF meshes are
    curved now (RG6.7.7.6, RG6.7.2.1); the examples that chose a large `nTiles` to hide the facets draw more than they
    need - checked by image.
-4. **Shrink `MarkerTemp` and `TemporaryComputationData`** (RG14.2.14, RG14.2.16, #2745). The legacy switch and the
-   legacy functions are gone (RG14.2.13), and the contacts no longer need a path of their own (RG14.2.18).
-5. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
+4. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
-6. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
+5. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
    published documentation that is visibly wrong.

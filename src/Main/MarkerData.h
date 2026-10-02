@@ -334,11 +334,13 @@ public:
 	Matrix3D rotation;
 	ConstSizeMatrix<RigidBodyMath::maxRotCoordinates * 3> G;
 	ConstSizeMatrix<RigidBodyMath::maxRotCoordinates * 3> Glocal;
-	//! a position or rotation Jacobian of a flexible body
+	//! a position or rotation Jacobian of a flexible body, a stacked Jacobian of the chains
 	ResizableMatrix tempMatrix;
-	//! the marker data with its Jacobians: the default L0/L1 of the markers without their own (CMarker), and the
-	//! Jacobian chains, which need the marker Jacobians
-	MarkerData markerData;
+	//! the Jacobians of the marker: filled by the L0 functions with Jacobians, for the Jacobian chains, and by the
+	//! default L0 for its L1 (CMarker); for a coordinate marker the 1 x n Jacobian of its coordinate
+	ResizableMatrix positionJacobian;
+	ResizableMatrix rotationJacobian;
+	ResizableMatrix coordinateJacobian;
 };
 
 //! the marker data structure from the kinematics of the connector interface (#2745): position, orientation and

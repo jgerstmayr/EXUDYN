@@ -124,59 +124,111 @@ public: //
 		kinematics.velocity = v;
 	}
 
-	//! number of ODE2 coordinates the marker acts on: the columns of its position Jacobian; the default computes the marker data
-	virtual Index GetODE2Size(const CSystemData& cSystemData, MarkerTemp& temp) const
+	//! L0 with the Jacobians, for the Jacobian chains (#2745): the kinematics of a position marker, and its position
+	//! Jacobian in temp.positionJacobian; the default computes the marker data, in a structure of the thread's pool
+	virtual void GetKinematicsJacobianPosition(const CSystemData& cSystemData, MarkerPosition<Real>& kinematics, MarkerTemp& temp) const
 	{
-		ComputeMarkerData(cSystemData, true, temp.markerData);
-		return temp.markerData.positionJacobian.NumberOfColumns();
+		TemporaryMarkerDataStructure temporary;
+		const MarkerData& markerData = ComputeMarkerDataInto(cSystemData, temporary);
+		kinematics.position = markerData.position;
+		kinematics.velocity = markerData.velocity;
+		temp.positionJacobian.CopyFrom(markerData.positionJacobian);
 	}
 
-	//! add J_pos^T force to ode2Lhs, the marker's part of the connector's vector (#2745); the default forms the Jacobian
+	//! L0 with the Jacobians of a rigid marker: frame and velocities, and the position and rotation Jacobians in temp
+	virtual void GetKinematicsJacobianRigid(const CSystemData& cSystemData, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const
+	{
+		TemporaryMarkerDataStructure temporary;
+		const MarkerData& markerData = ComputeMarkerDataInto(cSystemData, temporary);
+		CHECKandTHROW(markerData.velocityAvailable, "CMarker::GetKinematicsJacobianRigid: the marker provides no velocity");
+		kinematics.frame = HomogeneousTransformation(markerData.orientation, markerData.position);
+		kinematics.velocity = markerData.velocity;
+		kinematics.angularVelocityLocal = markerData.angularVelocityLocal;
+		temp.positionJacobian.CopyFrom(markerData.positionJacobian);
+		temp.rotationJacobian.CopyFrom(markerData.rotationJacobian);
+	}
+
+	//! L0 with the Jacobian of a coordinate marker: value and time derivative, and the 1 x n Jacobian in temp.coordinateJacobian
+	virtual void GetKinematicsJacobianCoordinate(const CSystemData& cSystemData, MarkerCoordinate<Real>& kinematics, MarkerTemp& temp) const
+	{
+		TemporaryMarkerDataStructure temporary;
+		const MarkerData& markerData = ComputeMarkerDataInto(cSystemData, temporary);
+		CHECKandTHROW(markerData.velocityAvailable, "CMarker::GetKinematicsJacobianCoordinate: the marker provides no velocity");
+		kinematics.value = markerData.vectorValue[0];
+		kinematics.value_t = markerData.vectorValue_t[0];
+		temp.coordinateJacobian.CopyFrom(markerData.jacobian);
+	}
+
+	//! number of ODE2 coordinates the marker acts on: the columns of its position Jacobian; the default forms the Jacobian
+	//! into temp, which the default AddGeneralizedForce then uses
+	virtual Index GetODE2Size(const CSystemData& cSystemData, MarkerTemp& temp) const
+	{
+		MarkerPosition<Real> kinematics;
+		GetKinematicsJacobianPosition(cSystemData, kinematics, temp);
+		return temp.positionJacobian.NumberOfColumns();
+	}
+
+	//! add J_pos^T force to ode2Lhs, the marker's part of the connector's vector (#2745); after GetODE2Size with the same temp
 	virtual void AddGeneralizedForce(const CSystemData& cSystemData, const Vector3D& force, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const
 	{
-		ComputeMarkerData(cSystemData, true, temp.markerData);
-		EXUmath::MultMatrixTransposedVectorAdd(temp.markerData.positionJacobian, force, ode2Lhs);
+		EXUmath::MultMatrixTransposedVectorAdd(temp.positionJacobian, force, ode2Lhs);
 	}
 
 	//! L0 of a rigid marker (#2745): its frame and velocities; returns the number of ODE2 coordinates it acts on; the default
-	//! computes the marker data with the Jacobians into temp, which AddGeneralizedForceTorque then uses
+	//! is the L0 with the Jacobians, which AddGeneralizedForceTorque then uses
 	virtual Index GetKinematicsRigid(const CSystemData& cSystemData, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const
 	{
-		ComputeMarkerData(cSystemData, true, temp.markerData);
-		CHECKandTHROW(temp.markerData.velocityAvailable, "CMarker::GetKinematicsRigid: the marker provides no velocity");
-		kinematics.frame = HomogeneousTransformation(temp.markerData.orientation, temp.markerData.position);
-		kinematics.velocity = temp.markerData.velocity;
-		kinematics.angularVelocityLocal = temp.markerData.angularVelocityLocal;
-		return temp.markerData.rotationJacobian.NumberOfColumns();
+		GetKinematicsJacobianRigid(cSystemData, kinematics, temp);
+		return temp.rotationJacobian.NumberOfColumns();
 	}
 
 	//! add J_pos^T force + J_rot^T torque (both global) to ode2Lhs (#2745); after GetKinematicsRigid with the same temp
 	virtual void AddGeneralizedForceTorque(const CSystemData& cSystemData, const Vector3D& force, const Vector3D& torque, MarkerTemp& temp,
 		LinkedDataVector& ode2Lhs) const
 	{
-		if (temp.markerData.positionJacobian.NumberOfColumns() != 0)
+		if (temp.positionJacobian.NumberOfColumns() != 0)
 		{
-			EXUmath::MultMatrixTransposedVectorAdd(temp.markerData.positionJacobian, force, ode2Lhs);
+			EXUmath::MultMatrixTransposedVectorAdd(temp.positionJacobian, force, ode2Lhs);
 		}
-		EXUmath::MultMatrixTransposedVectorAdd(temp.markerData.rotationJacobian, torque, ode2Lhs);
+		EXUmath::MultMatrixTransposedVectorAdd(temp.rotationJacobian, torque, ode2Lhs);
 	}
 
 	//! L0 of a coordinate marker (#2745): its value and time derivative; returns the number of ODE2 coordinates it acts on;
-	//! the default computes the marker data into temp, which AddGeneralizedForceCoordinate then uses
+	//! the default is the L0 with the Jacobian, which AddGeneralizedForceCoordinate then uses
 	virtual Index GetKinematicsCoordinate(const CSystemData& cSystemData, MarkerCoordinate<Real>& kinematics, MarkerTemp& temp) const
 	{
-		ComputeMarkerData(cSystemData, true, temp.markerData);
-		CHECKandTHROW(temp.markerData.velocityAvailable, "CMarker::GetKinematicsCoordinate: the marker provides no velocity");
-		kinematics.value = temp.markerData.vectorValue[0];
-		kinematics.value_t = temp.markerData.vectorValue_t[0];
-		return temp.markerData.jacobian.NumberOfColumns();
+		GetKinematicsJacobianCoordinate(cSystemData, kinematics, temp);
+		return temp.coordinateJacobian.NumberOfColumns();
 	}
 
 	//! add J^T force to ode2Lhs, the marker's part of the connector's vector (#2745); after GetKinematicsCoordinate with the same temp
 	virtual void AddGeneralizedForceCoordinate(const CSystemData& cSystemData, Real force, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const
 	{
-		const ResizableMatrix& jacobian = temp.markerData.jacobian;
+		const ResizableMatrix& jacobian = temp.coordinateJacobian;
 		for (Index i = 0; i < jacobian.NumberOfColumns(); i++) { ode2Lhs[i] += jacobian(0, i) * force; }
+	}
+
+	//! add factor * d(J^T v6D)/dq of the marker to jacobian at (offset, offset), for the Jacobian chains (#2745); nothing
+	//! where the derivative is zero
+	void AddJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, Real factor, Index offset, ResizableMatrix& jacobian) const
+	{
+		TemporaryMarkerDataStructure temporary;
+		temporary.Get().SetNumberOfMarkerData(1);
+		MarkerData& markerData = temporary.Get().GetMarkerData(0);
+		ComputeMarkerDataJacobianDerivative(cSystemData, v6D, markerData);
+		if (markerData.jacobianDerivative.NumberOfRows() != 0)
+		{
+			jacobian.AddSubmatrixWithFactor(markerData.jacobianDerivative, factor, offset, offset);
+		}
+	}
+
+	//! the marker data with the Jacobians, computed into a structure of the thread's pool, which lives as long as temporary
+	const MarkerData& ComputeMarkerDataInto(const CSystemData& cSystemData, TemporaryMarkerDataStructure& temporary) const
+	{
+		temporary.Get().SetNumberOfMarkerData(1);
+		MarkerData& markerData = temporary.Get().GetMarkerData(0);
+		ComputeMarkerData(cSystemData, true, markerData);
+		return markerData;
 	}
 
 	virtual void ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const {
