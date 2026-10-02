@@ -912,9 +912,11 @@ This group is that revision and what has to happen before it can start.
       dictionary (`TriangleList` with six indices per triangle and optional normals per point), the adaptive split
       with the two settings, `GetGraphicsData()` returning the split, `exudyn.graphics` helpers
       (`NGsolveMesh2PointsAndTrigs(..., triangles6=True)`, `FromPointsAndTrigs` with six columns);
-      - **RG6.7.2.1** *open* - the superelements with six columns in `triangleMesh` (the FFRF bodies and the FEM
-        surface of quadratic meshes, `FEMinterface`), whose points deform in every frame; and the contour colors on
-        6-node triangles (`AddBodyGraphicsDataColored` applies them to flat triangles only);
+      - **RG6.7.2.1** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-2-1) - the superelements with six
+        columns in `triangleMesh` (the FFRF bodies and the FEM surface of quadratic meshes, `FEMinterface`), whose points
+        deform in every frame; and the contour colors on 6-node triangles (`AddBodyGraphicsDataColored` applied them to
+        flat triangles only); *left*: the surfaces that `VolumeToSurfaceElements` builds for Tet10/Hex20 (Abaqus imports)
+        still take the corner nodes only;
       - **RG6.7.2.2** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-2-2) - **the split when drawing**, as
         decided in RG6.7.1 (the first implementation split when the graphics data was built, a misunderstanding):
         `GraphicsData` keeps `glTriangles6` only; OpenGL splits per frame, the raytracer per image,

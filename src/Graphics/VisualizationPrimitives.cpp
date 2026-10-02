@@ -263,6 +263,36 @@ namespace EXUvis {
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//! copy bodyGraphicsData (of body) into global graphicsData (of system)
+	//! the contour color of a point of a body that moves rigidly (#2709): locPoint in the body frame, point its current
+	//! position; the values as AddBodyGraphicsDataColored computes them for its flat triangles
+	inline void ContourColorOfBodyPoint(const Float3& locPoint, const Float3& point, const Float3& position, const Matrix3DF& rotation,
+		const Float3& refPosition, const Matrix3DF& refRotation, const Float3& velocity, const Float3& angularVelocity, bool applyRotation,
+		const VisualizationSettings& visualizationSettings, Float4& color)
+	{
+		Float3 value;
+		Float3 pRef;
+		switch (visualizationSettings.contour.outputVariable)
+		{
+		case OutputVariableType::Position: value = point; break;
+		case OutputVariableType::Displacement:
+			if (applyRotation) { EXUmath::RigidBodyTransformation(refRotation, refPosition, locPoint, pRef); value = point - pRef; }
+			else { value = point - refPosition; }
+			break;
+		case OutputVariableType::Velocity:
+			value = applyRotation ? velocity + angularVelocity.CrossProduct(rotation * locPoint) : velocity; break;
+		case OutputVariableType::VelocityLocal:
+			value = applyRotation ? (velocity + angularVelocity.CrossProduct(rotation * locPoint)) * rotation : velocity; break;
+		case OutputVariableType::AngularVelocity:
+			if (applyRotation) { value = angularVelocity; } else { value.SetAll(0); }
+			break;
+		case OutputVariableType::AngularVelocityLocal:
+			if (applyRotation) { value = angularVelocity * rotation; } else { value.SetAll(0); }
+			break;
+		default: value.SetAll(0); break;
+		}
+		EXUvis::ComputeContourColor(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, color);
+	}
+
 	void AddBodyGraphicsDataColored(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, 
 		const Float3& position, const Matrix3DF& rotation, const Float3& refPosition, const Matrix3DF& refRotation, const Float3& velocity, const Float3& angularVelocity,
 		Index itemID, const VisualizationSettings& visualizationSettings, bool contourColor)
@@ -318,12 +348,14 @@ namespace EXUvis {
 			item.itemID = itemID;
 			for (Index i = 0; i < 6; i++)
 			{
+				Float3 locPoint = item.points[i];
 				if (applyRotation)
 				{
 					EXUmath::RigidBodyTransformation(rotation, position, item.points[i], item.points[i]);
 					item.normals[i] = rotation * item.normals[i];
 				}
 				else { item.points[i] += position; }
+				if (contourColor) { ContourColorOfBodyPoint(locPoint, item.points[i], position, rotation, refPosition, refRotation, velocity, angularVelocity, applyRotation, visualizationSettings, item.colors[i]); }
 			}
 			graphicsData.glTriangles6.Append(item);
 		}

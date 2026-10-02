@@ -2567,7 +2567,7 @@ class VObjectGenericODE2:
 
         color: RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
-        triangleMesh: a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!; type: array_like
+        triangleMesh: a matrix of node numbers referring to the mesh nodes of the object, one triangle per row: 3 columns for flat triangles, or 6 for 6-node triangles drawn curved - the corners counterclockwise seen from outside, then the mid nodes of the edges 0-1, 1-2 and 2-0, as in GraphicsData triangles6; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!; type: array_like
 
         showNodes: set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'; type: bool
 
@@ -2859,7 +2859,7 @@ class VObjectFFRF:
 
         color: RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
-        triangleMesh: a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!; type: array_like
+        triangleMesh: a matrix of node numbers referring to the mesh nodes of the object, one triangle per row: 3 columns for flat triangles, or 6 for 6-node triangles drawn curved - the corners counterclockwise seen from outside, then the mid nodes of the edges 0-1, 1-2 and 2-0, as in GraphicsData triangles6; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!; type: array_like
 
         showNodes: set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'; type: bool
 
@@ -2952,7 +2952,7 @@ class VObjectFFRFreducedOrder:
 
         color: RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used; type: [float,float,float,float]
 
-        triangleMesh: a matrix, containg node number triples in every row, referring to the node numbers of the GenericODE2 object; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!; type: array_like
+        triangleMesh: a matrix of node numbers referring to the mesh nodes of the object, one triangle per row: 3 columns for flat triangles, or 6 for 6-node triangles drawn curved - the corners counterclockwise seen from outside, then the mid nodes of the edges 0-1, 1-2 and 2-0, as in GraphicsData triangles6; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame!; type: array_like
 
         showNodes: set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'; type: bool
 

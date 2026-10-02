@@ -11240,3 +11240,25 @@ connector-heavy models (rigid bodies, mass points); (b) AD provides what is miss
 `J^T f` of the cables and beams, and the access functions of new objects; (c) a cheaper AD seeds only the coordinates
 the position is nonlinear in (4 rotation parameters instead of 7 coordinates; for `J^T f` the nested part then
 4 x 4); (d) the switch goes once this is decided.
+
+<a id="rg6-7-2-1"></a>
+### RG6.7.2.1 — 6-node triangles on superelements, contour colors on 6-node triangles (2026-10-02, #2709)
+
+- **The superelements** (`ObjectGenericODE2`, `ObjectFFRF`, `ObjectFFRFreducedOrder`) accept a `triangleMesh` with 3 or
+  6 columns; with 6 they draw one 6-node triangle per row at the deformed mesh nodes - corners, then the mid nodes of
+  the edges 0-1, 1-2, 2-0, as `triangles6` -, the normals from the deformed geometry by the split, the contour colors per
+  node as for the flat mesh; the renderers split them when they draw (RG6.7.2.2), so the curvature follows the
+  deformation in every frame.
+- **`FEMinterface`**: `ImportMeshFromNGsolve(meshOrder=2)` keeps the 6-node surface triangles of NETGEN beside their
+  flat split, as `surface[...]['Trigs6']` (the flat `Trigs` stay - the node weights read them); `GetSurfaceTriangles6()`
+  returns them, and the FFRF interfaces (`ObjectFFRFinterface`, `ObjectFFRFreducedOrderInterface`) take them for the
+  `triangleMesh` where the mesh has them. `NGsolveOCCboundaries.py`: 1458 curved triangles instead of 5832 flat ones.
+- **Contour colors**: `AddBodyGraphicsDataColored` colors the 6-node triangles of a body's graphics as its flat ones
+  (one helper for both, `ContourColorOfBodyPoint`); and the contour pass of `VisualizationSystem` - the automatic range
+  and the mapping of the values to the color bar - now includes `glTriangles6` and `glLines3`: before, a 6-node
+  triangle with a contour value kept the raw value as its color.
+- **Left**: the surfaces built by `VolumeToSurfaceElements` (Tet10, Hex20 from Abaqus imports) still take the corner
+  nodes only.
+
+Checked: `test_superElementTriangles6.py` (both superelements, the deformed mid node, the contour colors of mesh and
+body), the test suite with all references unchanged, pytest, docs.

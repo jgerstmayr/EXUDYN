@@ -72,23 +72,16 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 
 	if (GetTriangleMesh().NumberOfRows() != 0)
 	{
-
-		//process triangles of mesh to draw
-		std::array<Float4, 3> colors;
-		colors[0] = currentColor;
-		colors[1] = currentColor;
-		colors[2] = currentColor;
-		//Vector contourValue; //memory allocation only in case of contour plot, but only once for whole mesh ...!
-		Vector& contourValue = vSystem->tempVector;
-
-		std::array<Vector3D, 3> nodes;
-		std::array<Vector3D, 3> normals;
-		//V, V, useFirstNodeAsReferenceFrame, , , bool, "false", , IO, "set true, if first node ($n_0$) is used as floating reference frame; all other nodes are interpreted relative to the reference frame; used to implement FFRF (floating frame of reference formulation); NOTE that in this case, nodes $[n_1,\,\ldots,\,n_n]\tp$ are still drawn without the reference frame"
-		//	V, V, showNodes, , , bool, "false", , IO, "set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False"
+		//the triangles of the mesh: 3 columns flat, 6 columns 6-node triangles, which the renderers split when they draw
+		//(#2709); points and contour colors at the deformed mesh nodes
+		const Index nColumns = GetTriangleMesh().NumberOfColumns();
+		Vector& contourValue = vSystem->tempVector; //memory allocation only in case of contour plot, but only once for whole mesh
+		std::array<Vector3D, 6> nodes;
+		std::array<Float4, 6> colors;
 
 		for (Index i = 0; i < GetTriangleMesh().NumberOfRows(); i++)
 		{
-			for (Index j = 0; j < 3; j++)
+			for (Index j = 0; j < nColumns; j++)
 			{
 				colors[j] = currentColor; //set back to default if some values are invalid
 				Index meshNodeIndex = (Index)GetTriangleMesh()(i, j);
@@ -98,22 +91,30 @@ void VisualizationObjectSuperElement::UpdateGraphics(const VisualizationSettings
 				if (EXUstd::IsOfTypeAndNotNone(cObject->GetOutputVariableTypesSuperElement(meshNodeIndex), visualizationSettings.contour.outputVariable))
 				{
 					cObject->GetOutputVariableSuperElement(visualizationSettings.contour.outputVariable, meshNodeIndex, ConfigurationType::Visualization, contourValue); //memory allocation!
-					EXUvis::ComputeContourColor< Vector>(contourValue, visualizationSettings.contour.outputVariable, 
+					EXUvis::ComputeContourColor< Vector>(contourValue, visualizationSettings.contour.outputVariable,
 						visualizationSettings.contour.outputVariableComponent, colors[j]);
 				}
-
 			}
-			//compute normals:
-			Vector3D v0 = nodes[1] - nodes[0];
-			Vector3D v1 = nodes[2] - nodes[0];
-			Vector3D n = v0.CrossProduct(v1);
-			Real len = n.GetL2Norm();
-			if (len != 0) { n *= 1. / len; }
-			normals[0] = n;
-			normals[1] = n;
-			normals[2] = n;
-
-			vSystem->graphicsData.AddTriangle(nodes, normals, colors, itemID, true);
+			if (nColumns == 6)
+			{
+				GLTriangle6 trig6;
+				trig6.itemID = itemID;
+				trig6.hasNormals = false; //the normals of the deformed geometry, computed by the split
+				trig6.isFiniteElement = true;
+				for (Index j = 0; j < 6; j++)
+				{
+					trig6.points[j] = Float3({ (float)nodes[j][0], (float)nodes[j][1], (float)nodes[j][2] });
+					trig6.normals[j] = Float3({ 0.f, 0.f, 0.f });
+					trig6.colors[j] = colors[j];
+				}
+				vSystem->graphicsData.glTriangles6.Append(trig6);
+			}
+			else
+			{
+				std::array<Vector3D, 3> points = { nodes[0], nodes[1], nodes[2] };
+				std::array<Float4, 3> colors3 = { colors[0], colors[1], colors[2] };
+				vSystem->graphicsData.AddTriangle(points, colors3, itemID, true); //normal of the flat triangle
+			}
 		}
 	}
 

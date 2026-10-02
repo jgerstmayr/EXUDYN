@@ -1112,9 +1112,9 @@ bool MainObjectFFRF::CheckPreAssembleConsistency(const MainSystem& mainSystem, S
 	VisualizationObjectFFRF* vObject = (VisualizationObjectFFRF*)GetVisualizationObject();
 	if (vObject->GetTriangleMesh().NumberOfRows() != 0)
 	{
-		if (vObject->GetTriangleMesh().NumberOfColumns() != 3)
+		if (vObject->GetTriangleMesh().NumberOfColumns() != 3 && vObject->GetTriangleMesh().NumberOfColumns() != 6)
 		{
-			errorString = "ObjectFFRF: number of columns in triangleMesh must be 3";
+			errorString = "ObjectFFRF: number of columns in triangleMesh must be 3 (flat triangles) or 6 (6-node triangles)";
 			return false;
 		}
 
@@ -1251,9 +1251,9 @@ bool MainObjectFFRFreducedOrder::CheckPreAssembleConsistency(const MainSystem& m
 	VisualizationObjectFFRFreducedOrder* vObject = (VisualizationObjectFFRFreducedOrder*)GetVisualizationObject();
 	if (vObject->GetTriangleMesh().NumberOfRows() != 0)
 	{
-		if (vObject->GetTriangleMesh().NumberOfColumns() != 3)
+		if (vObject->GetTriangleMesh().NumberOfColumns() != 3 && vObject->GetTriangleMesh().NumberOfColumns() != 6)
 		{
-			errorString = "ObjectFFRFreducedOrder: number of columns in triangleMesh must be 3";
+			errorString = "ObjectFFRFreducedOrder: number of columns in triangleMesh must be 3 (flat triangles) or 6 (6-node triangles)";
 			return false;
 		}
 
@@ -1376,9 +1376,9 @@ bool MainObjectGenericODE2::CheckPreAssembleConsistency(const MainSystem& mainSy
 	if (vObject->GetTriangleMesh().NumberOfRows() != 0)
 	{
 
-		if (vObject->GetTriangleMesh().NumberOfColumns() != 3)
+		if (vObject->GetTriangleMesh().NumberOfColumns() != 3 && vObject->GetTriangleMesh().NumberOfColumns() != 6)
 		{
-			errorString = "ObjectGenericODE2: number of columns in triangleMesh must be 3";
+			errorString = "ObjectGenericODE2: number of columns in triangleMesh must be 3 (flat triangles) or 6 (6-node triangles)";
 			return false;
 		}
 

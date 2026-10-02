@@ -976,7 +976,7 @@ class ObjectFFRFinterface:
         """
         self.modeBasis = femInterface.modeBasis['matrix']
         self.nodeArray = femInterface.GetNodePositionsAsArray()
-        self.trigList = femInterface.GetSurfaceTriangles()
+        self.trigList = femInterface.GetSurfaceTriangles6() or femInterface.GetSurfaceTriangles() #curved where the mesh is quadratic (#2709)
 
         #self.massMatrixCSR = CSRtoScipySparseCSR(femInterface.GetMassMatrix(sparse=True)) #for multiplications
         #stiffnessMatrixCSR = CSRtoScipySparseCSR(femInterface.GetStiffnessMatrix(sparse=True))
@@ -1274,7 +1274,7 @@ class ObjectFFRFreducedOrderInterface:
             #self.femInterface = femInterface #2023-04-20: removed in order to consistenly store class
             self.modeBasis = femInterface.modeBasis['matrix']
             nodeArray = femInterface.GetNodePositionsAsArray()
-            self.trigList = femInterface.GetSurfaceTriangles()
+            self.trigList = femInterface.GetSurfaceTriangles6() or femInterface.GetSurfaceTriangles() #curved where the mesh is quadratic (#2709)
             self.postProcessingModes = femInterface.postProcessingModes
     
             # stiffnessMatrixCSR = CSRtoScipySparseCSR(femInterface.GetStiffnessMatrix(sparse=True))
@@ -1953,6 +1953,7 @@ class FEMinterface:
             fem.stiffnessMatrix= None      # scipy csr_matrix
             surface sets with faces, usually for drawing:
             fem.surface = []               # [{'Name':'identifier', 'Trigs':np.array([[n0,n1,n2],...]), 'Quads':np.array([[n0,...,n3],...]),  },...]
+                                           # a quadratic mesh adds 'Trigs6':np.array([[n0,n1,n2,m01,m12,m20],...]), the 6-node triangles drawn curved
             node sets for boundary conditions, etc.
             fem.nodeSets = []              # [{'Name':'identifier', 'NodeNumbers':np.array([n_0,...,n_ns]), 'NodeWeights':np.array([w_0,...,w_ns])},...]
             element sets, e.g., for different domains, etc.
@@ -2495,7 +2496,7 @@ class FEMinterface:
             materials: dictionary of material dictionaries according to names in NGsolve mesh, containing youngsModulus, poissonsRatio and density per material, see example
             createBoundaryNodeSets: if True, during import named boundaries conditions of the mesh are transformed into node sets for further use during mode creation, etc.
             boundaryNamesList: given as list of boundary names to be used for boundary node sets or None (creating node sets for all boundaries)
-            meshOrder: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!)
+            meshOrder: use 1 for linear elements and 2 for second order elements (recommended to use 2 for much higher accuracy!); with 2, the surface also gets the 6-node triangles ('Trigs6'), which the FFRF objects draw curved
             verbose: set True to print out some status information
 
         Returns:
@@ -2602,6 +2603,7 @@ class FEMinterface:
         nodeList=[]
         tetList=[]
         surfaceTriangleList=[] #for drawing
+        surfaceTriangle6List=[] #order 2: the 6-node triangles, drawn curved
         NE = mesh.ne
         if verbose: exu.Print("number of tets=", NE)
 
@@ -2650,6 +2652,7 @@ class FEMinterface:
                 if len(w) != 6:
                     raise ValueError('ImportMeshFromNGsolve: expected second order 6-node surface elements')
 
+                surfaceTriangle6List += [[w[0],w[1],w[2],w[5],w[3],w[4]]] #corners, then the mid nodes of 0-1, 1-2, 2-0
                 surfaceTriangleList += [[w[0],w[5],w[4]]]
                 surfaceTriangleList += [[w[5],w[1],w[3]]]
                 surfaceTriangleList += [[w[5],w[3],w[4]]]
@@ -2664,6 +2667,8 @@ class FEMinterface:
         self.massMatrix = SparseTripletsToScipySparseCSR(M1)
         self.stiffnessMatrix = SparseTripletsToScipySparseCSR(K1)
         self.surface = [{'Name':'meshSurface','Trigs':trigList}]
+        if meshOrder == 2: #the 6-node triangles beside their flat split, for drawing (#2709)
+            self.surface[0]['Trigs6'] = surfaceTriangle6List
         self.ConvertSurfaceLists2Numpy() #avoid lists of lists
 
         if createBoundaryNodeSets:
@@ -3190,6 +3195,19 @@ class FEMinterface:
         for surface in self.surface:
             if 'Trigs' in surface:
                 trigList += self.NumpyArray2ListOfLists(surface['Trigs'])
+        return trigList
+
+    def GetSurfaceTriangles6(self):
+        """return the 6-node surface triangles of a quadratic mesh as node number list, six per triangle - the corners,
+        then the mid nodes of the edges 0-1, 1-2 and 2-0 - for drawing curved in EXUDYN (triangleMesh of the FFRF
+        objects); an empty list if a surface has no 6-node triangles (#2709)
+        """
+        trigList = []
+        for surface in self.surface:
+            if 'Trigs' in surface:
+                if 'Trigs6' not in surface:
+                    return []
+                trigList += self.NumpyArray2ListOfLists(surface['Trigs6'])
         return trigList
 
     def VolumeToSurfaceElements(self, verbose=False):

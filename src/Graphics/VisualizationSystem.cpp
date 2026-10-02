@@ -282,6 +282,28 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 							}
 						}
 					}
+					for (auto item : graphicsData.glTriangles6) //the 6-node triangles and quadratic lines as the flat ones (#2709)
+					{
+						if (item.colors[0][3] == contourPlotFlag) //just check color of first node
+						{
+							for (const Float4& color : item.colors)
+							{
+								minVal = EXUstd::Minimum(minVal, color[0]); //contour plot value is given in RED channel
+								maxVal = EXUstd::Maximum(maxVal, color[0]); //contour plot value is given in RED channel
+							}
+						}
+					}
+					for (auto item : graphicsData.glLines3)
+					{
+						if (item.colors[0][3] == contourPlotFlag)
+						{
+							for (const Float4& color : item.colors)
+							{
+								minVal = EXUstd::Minimum(minVal, color[0]);
+								maxVal = EXUstd::Maximum(maxVal, color[0]);
+							}
+						}
+					}
 
 					//std::cout << "range=" << minVal << ", " << maxVal << "\n";
 					if (minVal == EXUstd::_MAXFLOAT) { minVal = 0; } //introduce standard range if no items found!
@@ -325,6 +347,26 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 				for (auto& item : graphicsData.glTriangles)
 				{
 					if (item.colors[0][3] == contourPlotFlag) //just check color of first node
+					{
+						for (Float4& color : item.colors)
+						{
+							color = visualizationSystemContainer.ColorBarColor(minVal, maxVal, color[0], alphaTransparency);
+						}
+					}
+				}
+				for (auto& item : graphicsData.glTriangles6) //the 6-node triangles and quadratic lines as the flat ones (#2709)
+				{
+					if (item.colors[0][3] == contourPlotFlag) //just check color of first node
+					{
+						for (Float4& color : item.colors)
+						{
+							color = visualizationSystemContainer.ColorBarColor(minVal, maxVal, color[0], alphaTransparency);
+						}
+					}
+				}
+				for (auto& item : graphicsData.glLines3)
+				{
+					if (item.colors[0][3] == contourPlotFlag)
 					{
 						for (Float4& color : item.colors)
 						{
