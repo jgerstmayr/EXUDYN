@@ -145,8 +145,8 @@ void CObjectConnectorCoordinate::GetOutputVariableConnector(OutputVariableType v
 
 	switch (variableType)
 	{
-	case OutputVariableType::Displacement: value = Vector({ relPos }); break;
-	case OutputVariableType::Velocity: value = Vector({ relVel }); break;
+	case OutputVariableType::Displacement: value.SetVector({ relPos }); break;
+	case OutputVariableType::Velocity: value.SetVector({ relVel }); break;
 	case OutputVariableType::ConstraintEquation: 
 	{
 		Real t = GetCSystemData()->GetCData().GetCurrent().GetTime();

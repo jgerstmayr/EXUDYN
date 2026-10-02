@@ -80,7 +80,7 @@ void CObjectContactCoordinate::GetOutputVariableConnector(OutputVariableType var
 {
 	switch (variableType)
 	{
-		case OutputVariableType::Distance: value = Vector({ ComputeGap(markerData) }); break; //the gap (#2735)
+		case OutputVariableType::Distance: value.SetVector({ ComputeGap(markerData) }); break; //the gap (#2735)
 		default:
 			SysError("CObjectContactCoordinate::GetOutputVariable failed"); //error should not occur, because types are checked!
 	}

@@ -1,0 +1,11 @@
+{
+  "number": 2780,
+  "title": "homogeneous transformations: the C++ class and its Python binding",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "effort": "HIGH",
+  "description": "HomogeneousTransformationBase into its own file, out of exulie; 12 numbers stored; fast H*v, H^-1, H1*H2, set/get with fixed-size loops and a no-rotation flag (global constexpr switch); tests and measurement; pybind exudyn.HT with operators; note in rigidBodyUtilities.HomogeneousTransformation; HT inside the rigid items and as output variable.",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31"
+}

@@ -11517,3 +11517,19 @@ model has stretched and sheared slopes and a torque on a slope node; the analyti
 **The stall remains.** `rightAngleFrame.py` with ANCF stops at the same 3.3 % of the drive. With the analytic and with
 the system-wide numerical Jacobian alike the residual grows by 1.41 per iteration from load step 7; the condition
 number of the system Jacobian is 5e12. Recorded as RG4.17.2.
+
+<a id="rg14-2-20"></a>
+### RG14.2.20 — a sensor's value without allocation (2026-10-02, #2778)
+
+The remaining allocation was not the sensor's vector: the solver evaluates every sensor into `sensorValuesTemp`, a
+`ResizableVector` that keeps its memory. It was a temporary in the items' output functions, `value = Vector({ ... })`,
+which allocates and then copies - in 22 places (`CoordinateSpringDamper`, `ConnectorCoordinate`, `JointSliding`,
+`ContactCoordinate`, ...). They now write `value.SetVector({ ... })`, as 80 others already did; a
+`ResizableConstVectorBase` (the maintainer's suggestion, local storage up to a size) is not needed on this path. The
+Python-facing paths (`GetSensorValues`, `GetObjectOutput`) build a Python object anyway and keep their `Vector`.
+Measured, 200 `SensorObject` on `CoordinateSpringDamper`, 20000 steps: **68 -> 48 ns** per evaluation (171 ns before
+RG14.2.18), and the solver's warning of 4 M allocations per run is gone.
+
+The maintainer's answers of 2026-10-02 are planned: RG9.5 (`mbs.ItemCompute`, #2779, before RG9.3.8), and the new group
+RG16, homogeneous transformations: RG16.1 the C++ class and its binding (#2780), RG16.2 the evaluation of HT in the user
+interface (#2781), RG16.5 `localHT` in the rigid markers, with RG14.2.15.

@@ -102,13 +102,13 @@ void CObjectConnectorCoordinateSpringDamper::GetOutputVariableConnector(OutputVa
 
 	switch (variableType)
 	{
-	case OutputVariableType::Displacement: value = Vector({ relPos }); break;
-	case OutputVariableType::Velocity: value = Vector({ relVel }); break;
-	case OutputVariableType::Force: value = Vector({ force }); break;
+	case OutputVariableType::Displacement: value.SetVector({ relPos }); break;
+	case OutputVariableType::Velocity: value.SetVector({ relVel }); break;
+	case OutputVariableType::Force: value.SetVector({ force }); break;
 	case OutputVariableType::PotentialEnergy: {
 		if (!PotentialEnergyAvailable()) { EnergyNotAvailable("ObjectConnectorCoordinateSpringDamper", "its springForceUserFunction defines the force"); }
 		Real u = relPos - parameters.offset;
-		value = Vector({ parameters.activeConnector ? 0.5*parameters.stiffness*u*u : 0. }); break; }
+		value.SetVector({ parameters.activeConnector ? 0.5*parameters.stiffness*u*u : 0. }); break; }
 	default:
 		SysError("CObjectConnectorCoordinateSpringDamper::GetOutputVariable failed"); //error should not occur, because types are checked!
 	}

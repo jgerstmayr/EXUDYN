@@ -83,7 +83,7 @@ void CObjectConnectorDistance::GetOutputVariableConnector(OutputVariableType var
 	{
 		case OutputVariableType::Displacement: value.CopyFrom(vPos); break;
 		case OutputVariableType::Velocity: value.CopyFrom(vVel); break;
-		case OutputVariableType::Distance: value = Vector({ currentDistance }); break;
+		case OutputVariableType::Distance: value.SetVector({ currentDistance }); break;
 		case OutputVariableType::Force: value.CopyFrom(markerData.GetLagrangeMultipliers()); break;
 		default:
 			SysError("CObjectConnectorDistance::GetOutputVariable failed"); //error should not occur, because types are checked!

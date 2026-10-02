@@ -305,7 +305,7 @@ void CObjectJointSliding2D::GetOutputVariableConnector(OutputVariableType variab
 		Real forceX = GetCurrentAEcoordinate(forceXindex);
 		Real forceY = GetCurrentAEcoordinate(forceYindex);
 
-		value = Vector({forceX, forceY, 0.}); //as all output quantities, they are provided as 3D vectors for 2D objects
+		value.SetVector({forceX, forceY, 0.}); //as all output quantities, they are provided as 3D vectors for 2D objects
 		break; 
 	}
 	case OutputVariableType::SlidingCoordinate: 
@@ -313,7 +313,7 @@ void CObjectJointSliding2D::GetOutputVariableConnector(OutputVariableType variab
 		const Index slidingCoordinateIndex = 2;
 		Real slidingPos = GetCurrentAEcoordinate(slidingCoordinateIndex); //this is only the small increment in a solution step; zero when evaluated in python function?
 		slidingPos += GetCNode(0)->GetCurrentCoordinate(1); //this contains the startOfStep value of the sliding coordinate (or initial value); ranges from 0 to total length of sliding cables
-		value = Vector({ slidingPos });
+		value.SetVector({ slidingPos });
 		break;
 	}
 	default:

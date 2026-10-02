@@ -107,13 +107,13 @@ void CObjectJointPrismatic2D::GetOutputVariableConnector(OutputVariableType vari
 			Vector3D t0 = A0 * parameters.axisMarker0;
 			Real axisLength = t0.GetL2Norm();
 			CHECKandTHROW(axisLength != 0., "CObjectJointPrismatic2D: axisMarker0 must not be zero");
-			value = Vector({ (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position) * t0 / axisLength });
+			value.SetVector({ (markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position) * t0 / axisLength });
 			break;
 		}
 		case OutputVariableType::Rotation: //the rotation of marker 1 relative to marker 0 about z (#2735)
 		{
 			Matrix3D A01 = A0.GetTransposed() * A1;
-			value = Vector({ atan2(A01(1, 0), A01(0, 0)) });
+			value.SetVector({ atan2(A01(1, 0), A01(0, 0)) });
 			break;
 		}
 		default:

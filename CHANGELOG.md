@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 199 | 1.12.214 |
+| 1.12 | Metheney | 200 | 1.12.215 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.215** `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a sensor allocates its value vector per evaluation (#2778)
+  - description: CSensor::GetSensorValues fills a Vector per call; with TemporaryMarkerDataStructure (\#2745) this is the remaining allocation of a sensor evaluation (measured 2026-10-02: 4 M allocations for 200 SensorObject over 20000 steps, one per evaluation). A ResizableVector kept per sensor, or the value written into the storage directly.
+  - **notes:** Output variables of coordinate connectors, joints and contacts no longer allocate memory per evaluation, which makes sensors on them faster.
+  - date resolved: **2026-10-02 17:17**, date raised: 2026-10-02
 - **1.12.214** `CHECK` `LOW EFF` `resolved by: Claude-JG` PostNewtonStep (#241)
   - description: Check why markerData is computed with computeJacobian=true in CSystem::PostNewtonStep; is jacobian information really needed?
   - **notes:** The discontinuous iteration (PostNewtonStep) of contacts and connectors no longer computes the Jacobians of their markers, which it never used.

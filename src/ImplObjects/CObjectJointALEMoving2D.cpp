@@ -208,12 +208,12 @@ void CObjectJointALEMoving2D::GetOutputVariableConnector(OutputVariableType vari
 	case OutputVariableType::Velocity: value.CopyFrom(markerData.GetMarkerData(0).velocity); break;
 	case OutputVariableType::Coordinates:
 	{
-		value = Vector({ GetCNode(0)->GetCurrentCoordinate(0), GetCNode(1)->GetCurrentCoordinate(0) }); // slidingMarker and aleCoordinate (global)
+		value.SetVector({ GetCNode(0)->GetCurrentCoordinate(0), GetCNode(1)->GetCurrentCoordinate(0) }); // slidingMarker and aleCoordinate (global)
 		break;
 	}
 	case OutputVariableType::Coordinates_t:
 	{
-		value = Vector({ ComputeLocalSlidingCoordinate_t() }); // aleCoordinate velocity
+		value.SetVector({ ComputeLocalSlidingCoordinate_t() }); // aleCoordinate velocity
 		break;
 	}
 	case OutputVariableType::Force:
@@ -223,14 +223,14 @@ void CObjectJointALEMoving2D::GetOutputVariableConnector(OutputVariableType vari
 		Real forceX = GetCurrentAEcoordinate(forceXindex);
 		Real forceY = GetCurrentAEcoordinate(forceYindex);
 
-		value = Vector({ forceX, forceY, 0. }); //as all output quantities, they are provided as 3D vectors for 2D objects
+		value.SetVector({ forceX, forceY, 0. }); //as all output quantities, they are provided as 3D vectors for 2D objects
 		break;
 	}
 	case OutputVariableType::SlidingCoordinate:
 	{
 		Real slidingPos = GetCNode(1)->GetCurrentCoordinate(0) + parameters.slidingOffset; //this is the global (Eulerian) sliding position
 
-		value = Vector({ slidingPos });
+		value.SetVector({ slidingPos });
 		break;
 	}
 	default:

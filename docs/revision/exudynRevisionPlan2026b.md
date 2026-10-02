@@ -1314,7 +1314,8 @@ revision (info document D15).
       position and the rotation matrix, and `GetJacobianTransposedTimesVectorDerivative` against the numerical
       derivative of $\Jm^T\fv$. Both bugs of 2026-10-02 - the position Jacobian of `ObjectANCFBeam` sized for 8 of its
       18 coordinates, the rotation Jacobian of the slope nodes not the derivative of their rotation - were found by
-      chance; this test would have found them.
+      chance; this test would have found them. **After RG9.5** (maintainer 2026-10-02): the access functions are not
+      reachable from Python today; with `mbs.ItemCompute` and its numerical-derivative helper this test is short.
 
 <a id="rg9-4"></a>
 **RG9.4** *(group RG9; maintainer 2026-09-30)* **Kinetic and potential energy as output variables**
@@ -1387,6 +1388,29 @@ revision (info document D15).
       `test_connectorOutputVariables.py` became `connectorOutputVariablesTest.py`; the rule is in `CLAUDE.md` and
       `docs/dev/WORKFLOW.md` §5. **RG9.4.8.1** **CLOSED 2026-10-01** (maintainer): `test_specialBeams.py` and
       `test_computedParameters.py` stay in `python/testing/`.
+
+<a id="rg9-5"></a>
+**RG9.5** *(group RG9; maintainer 2026-10-02)* **`mbs.ItemCompute`: the computation functions of an item from Python**
+    (#2779). Python reaches an item's computation only through its output variables (position, velocity, ...). The
+    access functions of a body (`GetPositionJacobian`, `GetRotationJacobian`, `GetJacobianTransposedTimesVectorDerivative`),
+    its `ComputeODE2LHS` and mass matrix, the equations and Jacobians of a constraint, the forces of a connector, the
+    Jacobians of a node or marker are not reachable - which a test of them (RG9.3.8), the debugging of an item and a
+    user who implements one all need. Proposed by the maintainer: an interface like `mbs.Inspect`,
+    `mbs.ItemCompute(itemIndex, what, [optional parameters])`, computing **at the current state** (anything else is far
+    more complicated); as many functions as possible defined once in a base class (`CObjectBody`, `CObjectConnector`,
+    `CNodeODE2`, `CMarker`), each kind adding only its Python interface; and a small Python helper for the numerical
+    derivative (of a position, a rotation matrix, a residual) that makes the comparison of a computed Jacobian a line.
+    - **RG9.5.1** the evaluation and the proposal, for the maintainer's decisions: which functions per kind of item, the
+      names of `what`, the arguments (local position, force/torque, factors), what is returned (numpy arrays, dicts), how
+      the current state is set (`mbs.systemData`), what a call on an item that does not provide a function raises, and
+      the place of the numerical-derivative helper;
+    - **RG9.5.2** the access functions of the bodies (position and rotation Jacobians, the derivative of $\Jm^T\fv$, the
+      mass-weighted position Jacobian, `IsValidLocalPosition`) and the helper; then RG9.3.8;
+    - **RG9.5.3** the computation functions of the objects: `ComputeODE2LHS`, the mass matrix, the ODE2 Jacobians;
+    - **RG9.5.4** connectors and constraints: the force on the interface, the algebraic equations, C_q, the reaction
+      forces;
+    - **RG9.5.5** nodes and markers: the node's position and rotation Jacobians and `GetRotationJacobianTTimesVector_q`,
+      the marker's kinematics (L0) and its Jacobians.
 
 ## RG10 — Tooling and process
 
@@ -2188,7 +2212,8 @@ done.
       cable markers) through `ComputeGap` and similar. A declared function of the connector - *its PostNewtonStep needs
       the Jacobians* - with the default true, false for the ten, and a measurement on a contact model (expected: the
       Jacobians of rigid body markers are a few % of a contact model's step).
-    - **RG14.2.20** *(found in RG14.2.18; needs no decision)* **a sensor's value vector without allocation** (#2778):
+    - **RG14.2.20** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-20) - *(found in RG14.2.18; needs no
+      decision)* **a sensor's value vector without allocation** (#2778):
       after RG14.2.18 a sensor evaluation still allocates its value `Vector` once (4 M allocations for 200 sensors over
       20000 steps); a `ResizableVector` kept per sensor, or the value written into the storage directly.
     - **RG14.2.17** **DONE 2026-10-02** (maintainer: *yes, do the proposed way*) — [log](exudynRevisionLog2026b.md#rg14-2-17) -
@@ -2242,7 +2267,8 @@ done.
       and `ContactCurveCircles`) then have **two rotations in a row** - marker and
       connector - and the connector's ones are deprecated: internally a flag *rotation markers are not identity*,
       set at `CheckPreAssembleConsistency`, so that the extra products are computed only in that deprecated case.
-      Sub-steps when it starts: the parameter in the rigid markers (`MarkerBodyRigid`, `MarkerNodeRigid`,
+      *(2026-10-02: the parameter and its deprecation are planned together with the homogeneous transformations of
+      the user interface, RG16.5.)* Sub-steps when it starts: the parameter in the rigid markers (`MarkerBodyRigid`, `MarkerNodeRigid`,
       `MarkerSuperElementRigid`, `MarkerKinematicTreeRigid`) and their L0; the flag and the deprecation warning in
       the joints; the documentation and the examples moved to `localHT`. Until then, new marker and connector code
       takes the frame from `MarkerRigid` and does not add new uses of `rotationMarker0/1`.
@@ -2357,6 +2383,54 @@ objects would get their coordinates from the interface.
     differentiation needs. The result is a proposal for the maintainer, including whether RG14 and RG15
     are one interface.
 
+## RG16 — Homogeneous transformations
+
+*(Group created by the maintainer, 2026-10-02.)* A rigid frame - position and rotation - is one homogeneous
+transformation (HT). The C++ class exists (`HomogeneousTransformationBase` in `RigidBodyMath`, the frames of the
+connector interface since RG14.2.8), Python has `rigidBodyUtilities.HomogeneousTransformation` on 4x4 numpy arrays,
+and the items take a position and a rotation matrix. The group makes the C++ class fast and reachable from Python, and
+then lets the rigid items take and give an HT. **Why now** (maintainer): the user items to come - in Python (RG7) and
+in C++ (RG8) - shall meet the newer interfaces from the start, not deprecated ones; for robotics, the kinematic tree and
+the joints an HT means fewer variables and one way of doing things.
+
+<a id="rg16-1"></a>
+**RG16.1** *(group RG16; maintainer 2026-10-02; a step of its own, independent of the interface steps)* **The C++
+    class and its Python binding** (#2780).
+    - **RG16.1.1** the class into a file of its own, out of the `exulie` namespace; it stores only the 12 numbers it
+      needs (rotation and translation);
+    - **RG16.1.2** performance for what is hot - $\Hm\vv$, $\Hm^{-1}$, $\Hm_1\Hm_2$, set (from $\Am$ and $\vv$, or from
+      an HT) and get ($\Am$, $\vv$) -: fixed-size loops the compiler unrolls, and a flag *no rotation*, set when a frame
+      is set without one, so that products skip the rotation; setting the flag must not cost (AVX2 latencies), and a
+      global `constexpr` switches the behaviour, to measure both; the Lie group operators are not the hot cases;
+    - **RG16.1.3** tests of the operations, and a measurement against today's class;
+    - **RG16.1.4** the binding `exudyn.HT` with its operators, set and get, conversion from and to 4x4 arrays; a note
+      in `rigidBodyUtilities.HomogeneousTransformation` on the faster C++ class;
+    - **RG16.1.5** the HT used inside the rigid items (stored as in `ObjectGround` or `ObjectRigidBody`), and an output
+      variable HT wherever position and rotation are available.
+
+<a id="rg16-2"></a>
+**RG16.2** *(group RG16; maintainer 2026-10-02)* **The evaluation: HT in the user interface of the rigid items**
+    (#2781), for the maintainer's decisions - unification, clarity, simplicity. The main cases: `ObjectRigidBody`,
+    `ObjectGround`, the rigid body nodes, the `Marker...Rigid`. Can they take an HT instead of position and rotation, in
+    a compatibility mode: both initialized with `None` (can the interface tell which of them a user set?), the default
+    the zero position and the unit rotation, internally only the HT, and both still exported together with the HT? Or
+    a global flag that switches back to position and rotation - possibly set automatically as soon as an item interface
+    is given a position or a rotation matrix? The interface is not the performance question. What already exists (the
+    `localHT` of RG14.2.15) is homogenized with it.
+
+**RG16.3** *(group RG16)* **The cases that break nothing for users**, as decided in RG16.2 - HT as an additional,
+    optional parameter and output, the internal storage.
+
+**RG16.4** *(group RG16)* **The further steps** - the mode switch, the kinematic tree and the robotics utilities on
+    HT -, planned after RG16.3.
+
+<a id="rg16-5"></a>
+**RG16.5** *(group RG16; maintainer 2026-10-02)* **`localHT` in the rigid markers**, with RG14.2.15: a parameter
+    `localHT`, by default `exudyn.HT0()` or `None` (to decide later between `localPosition` and `localHT`); where the
+    change is made (the item interface); the break it would be - `localPosition` gone from `mbs.GetMarker()` and from
+    the parameters -, handled by the deprecation of item parameters (RG12.2), or started together with it: for the
+    maintainer's decision in RG16.2.
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where
@@ -2394,6 +2468,9 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); RG14.2.17 and RG14.2.13 done (the dispatch in the connector, the switch and the legacy functions gone); RG14.2.18 done (sensors from a pool, the mixed chain of rigid markers); RG14.2.19 done (#241); then RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
+| RG9.5 | #2779 | `mbs.ItemCompute`: the computation functions of an item from Python (evaluation first), then RG9.3.8 |
+| RG16.1 | #2780 | homogeneous transformations: the C++ class fast, out of `exulie`, and `exudyn.HT` |
+| RG16.2 | #2781 | evaluation: HT in the user interface of the rigid items, `localHT` in the rigid markers (RG16.5) |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG13.6.6 | #2732 | MiniExamples of `ObjectFFRF` and `ObjectFFRFreducedOrder`, once tetrahedral elements are part of Exudyn |
 

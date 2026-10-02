@@ -78,7 +78,7 @@ void CObjectJointSpherical::GetOutputVariableConnector(OutputVariableType variab
 	case OutputVariableType::Displacement: value.CopyFrom(markerData.GetMarkerData(1).position - markerData.GetMarkerData(0).position); break;
 	case OutputVariableType::Force:
 	{
-		value = Vector({ GetCurrentAEcoordinate(0), GetCurrentAEcoordinate(1), GetCurrentAEcoordinate(2) });
+		value.SetVector({ GetCurrentAEcoordinate(0), GetCurrentAEcoordinate(1), GetCurrentAEcoordinate(2) });
 		break;
 	}
 	default:

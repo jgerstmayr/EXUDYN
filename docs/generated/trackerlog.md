@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.214.dev1
+- Exudyn version = 1.12.215.dev1
 - last change = 2026-10-02
-- Number of issues = 2779
-- Number of resolved issues = 2528 (214 in current version)
+- Number of issues = 2782
+- Number of resolved issues = 2529 (215 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,8 +7568,14 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` a sensor allocates its value vector per evaluation (#2778)
-  - description: CSensor::GetSensorValues fills a Vector per call; with TemporaryMarkerDataStructure (\#2745) this is the remaining allocation of a sensor evaluation (measured 2026-10-02: 4 M allocations for 200 SensorObject over 20000 steps, one per evaluation). A ResizableVector kept per sensor, or the value written into the storage directly.
+- `CHECK` `MEDIUM EFF` `raised by: Claude-JG` homogeneous transformations in the user interface of the rigid items: evaluation (#2781)
+  - description: Evaluate whether ObjectRigidBody, ObjectGround, rigid body nodes and rigid markers can take an HT instead of position and rotation (compatibility mode with None defaults, or a global/auto-detected mode flag), exporting both; localHT in the rigid markers and its deprecation path; homogenize with the localHT work (RG14.2.15); proposal and decisions for the maintainer.
+  - date raised: 2026-10-02
+- `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` homogeneous transformations: the C++ class and its Python binding (#2780)
+  - description: HomogeneousTransformationBase into its own file, out of exulie; 12 numbers stored; fast H\*v, H^-1, H1\*H2, set/get with fixed-size loops and a no-rotation flag (global constexpr switch); tests and measurement; pybind exudyn.HT with operators; note in rigidBodyUtilities.HomogeneousTransformation; HT inside the rigid items and as output variable.
+  - date raised: 2026-10-02
+- `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` mbs.ItemCompute: the computation functions of an item from Python (#2779)
+  - description: Python reaches an item's computation only through output variables. A general access at the current state - mbs.ItemCompute(itemIndex, what, \[optional parameters\]), like mbs.Inspect - to the access functions of bodies, ComputeODE2LHS and mass matrix, constraint equations and Jacobians, connector forces, node and marker Jacobians; functions defined once in base classes; plus a numerical-derivative helper for comparisons. For tests (\#2777), debugging and user items.
   - date raised: 2026-10-02
 - `TESTING` `MEDIUM EFF` `raised by: Claude-JG` every body's access functions against finite differences (#2777)
   - description: A pytest that builds each body type with nontrivial (deformed, rotated) coordinates and checks, at several local positions, GetPositionJacobian and GetRotationJacobian against finite differences of the position and rotation matrix (via the output variables), and GetJacobianTransposedTimesVectorDerivative against the numerical derivative of J^T f. Two bugs of this kind were found by chance on 2026-10-02 (ObjectANCFBeam position Jacobian 3 x 8 for 18 coordinates; the rotation Jacobian of NodePointSlope23 not the derivative of its rotation, \#2763).

@@ -2,10 +2,14 @@
   "number": 2778,
   "title": "a sensor allocates its value vector per evaluation",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "LOW",
   "description": "CSensor::GetSensorValues fills a Vector per call; with TemporaryMarkerDataStructure (#2745) this is the remaining allocation of a sensor evaluation (measured 2026-10-02: 4 M allocations for 200 SensorObject over 20000 steps, one per evaluation). A ResizableVector kept per sensor, or the value written into the storage directly.",
   "dateRaised": "2026-10-02",
-  "deadline": "2027-03-31"
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-02 17:17",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Output variables of coordinate connectors, joints and contacts no longer allocate memory per evaluation, which makes sensors on them faster.",
+  "resolvedInVersion": "1.12.215"
 }

@@ -301,9 +301,9 @@ void CObjectConnectorCoordinateSpringDamperExt::GetOutputVariableConnector(Outpu
 
 	switch (variableType)
 	{
-	case OutputVariableType::Displacement: value = Vector({ relPos }); break;
-	case OutputVariableType::Velocity: value = Vector({ relVel }); break;
-	case OutputVariableType::Force: value = Vector({ force }); break;
+	case OutputVariableType::Displacement: value.SetVector({ relPos }); break;
+	case OutputVariableType::Velocity: value.SetVector({ relVel }); break;
+	case OutputVariableType::Force: value.SetVector({ force }); break;
 	default:
 		SysError("CObjectConnectorCoordinateSpringDamperExt::GetOutputVariable failed"); //error should not occur, because types are checked!
 	}

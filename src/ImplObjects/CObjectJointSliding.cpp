@@ -283,17 +283,17 @@ void CObjectJointSliding::GetOutputVariableConnector(OutputVariableType variable
 	case OutputVariableType::Velocity: value.CopyFrom(markerData.GetMarkerData(0).velocity); break;
 	case OutputVariableType::Force: 
 	{
-		value = Vector({
+		value.SetVector({
 			GetCurrentAEcoordinate(forcesStartIndex + 0),
 			GetCurrentAEcoordinate(forcesStartIndex + 1),
-			GetCurrentAEcoordinate(forcesStartIndex + 2)}); 
+			GetCurrentAEcoordinate(forcesStartIndex + 2)});
 		break; 
 	}
 	case OutputVariableType::SlidingCoordinate: 
 	{
 		Real slidingPos = GetCurrentAEcoordinate(slidingCoordinateIndex); //this is only the small increment in a solution step; zero when evaluated in python function?
 		slidingPos += GetCNode(0)->GetCurrentCoordinate(1); //this contains the startOfStep value of the sliding coordinate (or initial value); ranges from 0 to total length of sliding cables
-		value = Vector({ slidingPos });
+		value.SetVector({ slidingPos });
 		break;
 	}
 	default:
