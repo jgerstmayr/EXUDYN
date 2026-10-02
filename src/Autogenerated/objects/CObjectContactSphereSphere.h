@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Weyrer Sebastian
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  07:01:24 (last modified)
+* @date         2026-10-02  08:26:07 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -171,8 +171,8 @@ public: // AUTO:
         return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
     }
 
-    //! AUTO:  the interface of rigid markers (position markers without friction) or the legacy path, by its markers (#2745)
-    virtual ConnectorInterface GetConnectorInterface() const override;
+    //! AUTO:  on the connector interface of rigid markers, or of position markers without friction, by its markers (#2745)
+    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs, Index objectNumber) const override;
 
     //! AUTO:  the force and torque on each marker from the kinematics of the two markers (#2745)
     virtual void ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex, Vector3D* forces, Vector3D* torques) const override;

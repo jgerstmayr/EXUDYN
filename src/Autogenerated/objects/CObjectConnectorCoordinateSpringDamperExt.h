@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  07:01:23 (last modified)
+* @date         2026-10-02  08:26:07 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -171,20 +171,14 @@ public: // AUTO:
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override;
 
-    //! AUTO:  the connector implements the interface of coordinate markers (#2745)
-    virtual ConnectorInterface GetConnectorInterface() const override
+    //! AUTO:  the right-hand side on the connector interface of coordinate markers (#2745)
+    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs, Index objectNumber) const override
     {
-        return ConnectorInterface::CoordinateMarkers;
+        ConnectorODE2LHSCoordinateMarkers(systemData, temp, *this, localODE2Lhs, objectNumber); return true;
     }
 
     //! AUTO:  the generalized forces on the two coordinates, with factor0 and factor1 (#2745)
     virtual void ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real* forces) const override;
-
-    //! AUTO:  its Jacobian is the analytic one of the legacy path (#2745)
-    virtual bool ConnectorForceDiffAvailable() const override
-    {
-        return false;
-    }
 
     //! AUTO:  the force of the connector from relative position and velocity (#2745)
     void ComputeSpringForceRelative(Real relPos, Real relVel, Real t, Index itemIndex, Real& force) const;

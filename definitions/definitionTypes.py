@@ -635,7 +635,6 @@ TPyFunctionMbsScalarIndexScalar    = TypeSpec('PyFunctionMbsScalarIndexScalar')
 TPyFunctionMbsScalarIndexScalar9   = TypeSpec('PyFunctionMbsScalarIndexScalar9')
 TPyFunctionVector6DmbsScalarIndexVector6D = TypeSpec('PyFunctionVector6DmbsScalarIndexVector6D')
 TAccessFunctionType                = TypeSpec('AccessFunctionType')
-TConnectorInterface                = TypeSpec('ConnectorInterface')  #the path of a connector, RG14 (#2745)
 TBodyGraphicsDataList              = TypeSpec('BodyGraphicsDataList')
 TCNodeGroup                        = TypeSpec('CNodeGroup')
 TInertiaList                       = TypeSpec('InertiaList')
@@ -795,6 +794,53 @@ def ItemRequestedTypes(kind, types, conditional=(), description=None):
     member['requestedTypes'] = list(types)
     member['conditionalTypes'] = [tuple(c) for c in conditional]
     return member
+
+
+def ItemConnectorInterface(markers, constraint=False, jacobian=True):
+    """Use site: the connector computes on the connector interface (#2745) with the L2 chain of its kind of markers -
+    markers is 'Position', 'Rigid' or 'Coordinate'. Declares the overrides of CObjectConnector that call the chain
+    (ComputeODE2LHSConnector, ComputeJacobianODE2Connector), or for a constraint those of CObjectConstraint
+    (equations, C_q, reaction forces), as a list to unpack into the members: *ItemConnectorInterface('Position').
+    jacobian=False: the connector keeps the Jacobian of the path of the marker data. A rigid-marker connector has no
+    Jacobian of that path (HasJacobianODE2MarkerData), which only exu.experimental.connectorInterfaceLegacy asks."""
+    if markers not in ('Position', 'Rigid', 'Coordinate'):
+        raise ValueError('ItemConnectorInterface: markers must be Position, Rigid or Coordinate, not ' + repr(markers))
+    system = 'const CSystemData& systemData, TemporaryComputationData& temp, '
+    if constraint:
+        return [
+            ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='ComputeAlgebraicEquationsConnector',
+                args=system + 'Index objectNumber, bool velocityLevel, Vector& localAE',
+                implementation='if (!OnConnectorInterface()) { return false; } ConstraintEquations' + markers
+                    + 'Markers(systemData, temp, *this, objectNumber, velocityLevel, localAE); return true;',
+                description='the equations on the connector interface of ' + markers.lower() + ' markers (#2745)'),
+            ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='ComputeJacobianAEConnector',
+                args=system + 'Index objectNumber, ResizableMatrix& jacobianAE_ODE2',
+                implementation='if (!OnConnectorInterface()) { return false; } ConstraintJacobian' + markers
+                    + 'Markers(systemData, temp, *this, objectNumber, jacobianAE_ODE2); return true;',
+                description='C_q by automatic differentiation of the equations (#2745)'),
+            ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='ComputeReactionForcesConnector',
+                args=system + 'Index objectNumber, const Vector& reactionForces, Vector& localODE2',
+                implementation='if (!OnConnectorInterface()) { return false; } ConstraintReactionForces' + markers
+                    + 'Markers(systemData, temp, *this, objectNumber, reactionForces, localODE2); return true;',
+                description='C_q^T lambda per marker, without forming C_q (#2745)'),
+            ]
+    members = [
+        ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='ComputeODE2LHSConnector',
+            args=system + 'Vector& localODE2Lhs, Index objectNumber',
+            implementation='ConnectorODE2LHS' + markers + 'Markers(systemData, temp, *this, localODE2Lhs, objectNumber); return true;',
+            description='the right-hand side on the connector interface of ' + markers.lower() + ' markers (#2745)'),
+        ]
+    if jacobian:
+        members.append(ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='ComputeJacobianODE2Connector',
+            args=system + 'Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero',
+            implementation='ConnectorJacobianODE2' + markers
+                + 'Markers(systemData, temp, *this, factorODE2, factorODE2_t, objectNumber, jacobianDerivativeNonZero); return true;',
+            description='the Jacobian by automatic differentiation of the force (#2745)'))
+    if markers == 'Rigid':
+        members.append(ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='HasJacobianODE2MarkerData',
+            implementation='return false;',
+            description='no Jacobian on the path of the marker data (#2745)'))
+    return members
 
 
 def ItemTypes(kind, types, description):

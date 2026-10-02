@@ -11162,3 +11162,25 @@ The maintainer: the special items stay on the old path. The path of the marker d
 `ConnectorInterface::MarkerData` when RG14.2.13 removes the switch `exu.experimental.connectorInterfaceLegacy`. The
 maintainer's question whether the dispatch belongs into the connector rather than into `CSystem` is answered in
 RG14.2.17 (proposed).
+
+<a id="rg14-2-17"></a>
+### RG14.2.17 — the dispatch of the connector interface in the connector (2026-10-02, #2745)
+
+`CSystem` no longer knows the kinds of connectors. `CObjectConnector` has `ComputeODE2LHSConnector` and
+`ComputeJacobianODE2Connector`, `CObjectConstraint` `ComputeAlgebraicEquationsConnector`, `ComputeJacobianAEConnector`
+and `ComputeReactionForcesConnector`; each returns false by default, and the system then takes the path of the marker
+data - so that path is the default, and the items of RG14.2.11 need nothing. A connector on the interface overrides them
+with a call of the L2 chain of its kind of markers: 15 free functions (`ConnectorODE2LHSPositionMarkers`,
+`ConnectorJacobianODE2RigidMarkers`, `ConstraintEquationsCoordinateMarkers`, ...) moved unchanged from `CSystem.cpp` into
+`CObjectConnector.cpp`, the three functions that dispatched on the kind of a constraint split into one per kind.
+
+The definitions declare it with `*ItemConnectorInterface('Position')` (`'Rigid'`, `'Coordinate'`; `constraint=True`;
+`jacobian=False` for `ConnectorCoordinateSpringDamperExt`, whose analytic Jacobian stays - `ConnectorForceDiffAvailable`
+is gone). `ContactSphereSphere` and `ContactSphereTriangle`, which choose by their markers at run time, override
+`ComputeODE2LHSConnector` by hand. A constraint computes on the interface while `OnConnectorInterface()` - active and at
+position level. The enum `ConnectorInterface`, `GetConnectorInterface`, `ConstraintUsesInterface` and the nine member
+functions of `CSystem` are gone; `HasJacobianODE2MarkerData` (false for the rigid-marker connectors) serves only
+`exu.experimental.connectorInterfaceLegacy` and goes with it (RG14.2.13).
+
+Checked: build without warnings, the test suite with all references unchanged, pytest (`test_connectorInterface.py`
+compares both paths).

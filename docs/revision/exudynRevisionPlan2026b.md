@@ -1255,6 +1255,18 @@ revision (info document D15).
       hand-written matrix today) and in code (the hand-written Jacobians and their derivatives
       `JacobianTtimesVector_q` disappear); and what RG15 (objects computing from given coordinates) changes about it.
       The result is a proposal, not a migration.
+    - **RG9.3.6** *(maintainer 2026-10-02)* **the leftovers found in the evaluation and the split** (#2773): (1) the
+      check of a marker on a body without rotation access reports the marker index as the object number (and spells
+      *orienation*); (2) dead code - the `if (false)` branch of `CObjectANCFCable2DBase::GetPositionJacobian` (the exact
+      derivative of the normal, equal to the version in use; `ObjectALEANCFCable2D` uses the exact one), the
+      commented-out calls of `GetAccessFunctionBody` (relative coordinate markers, `CObjectRigidBody`,
+      `VisualizationObject.h`), the incomplete commented-out block of `CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian`,
+      the double `SetAll` in `CObjectANCFBeam::GetMassWeightedPositionJacobian`; (3)
+      `CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative` raises unconditionally, the code after it is
+      unreachable; (4) ideas: `ObjectRotationalMass1D` could provide the position Jacobian off its axis as
+      `ObjectRigidBody2D` does, `ObjectANCFBeam` a rotation Jacobian from its slopes. The three findings of section 7
+      of the evaluation (the beam that declared four types and provided none, the undeclared case of `ObjectANCFBeam`,
+      the commented-out cases) are done in RG9.3.4.2.
 
 <a id="rg9-4"></a>
 **RG9.4** *(group RG9; maintainer 2026-09-30)* **Kinetic and potential energy as output variables**
@@ -2098,15 +2110,15 @@ done.
       `ConnectorRollingDiscPenalty`, `ContactCoordinate`, `ConnectorCoordinateSpringDamperExt`;
     - **RG14.2.11** **DECIDED 2026-10-02** (maintainer: *these items stay on the old path*) — [log](exudynRevisionLog2026b.md#rg14-2-11) -
       the special markers (shape, cable, many markers): the items that stay on the path of the marker data, and why;
-      they keep that path as their own, named `ConnectorInterface::MarkerData` instead of `Legacy`; RG14.2.13 removes
-      the switch, not the path;
+      they keep that path as their own - since RG14.2.17 the default of the connector's functions of the interface;
+      RG14.2.13 removes the switch, not the path;
     - **RG14.2.12** **MEASURED 2026-10-02, not now** — [log](exudynRevisionLog2026b.md#rg14-2-12) - `GeneralContact` on
       L0: the gain is about 2 %, it keeps its precomputation (as RG14.1 proposed); to be looked at again when the
       projection comes from the bodies (RG9.3.4);
     - **RG14.2.13** output variables and sensors through the connector force, then the legacy switch and the
       unused temporaries removed; the path of the marker data stays for the items of RG14.2.11 (decided).
-    - **RG14.2.17** *(maintainer's question 2026-10-02; proposed, for the maintainer's decision)* **the dispatch in the
-      connector instead of in `CSystem`.** Today `CSystem` asks `GetConnectorInterface()` and switches on the enum to its
+    - **RG14.2.17** **DONE 2026-10-02** (maintainer: *yes, do the proposed way*) — [log](exudynRevisionLog2026b.md#rg14-2-17) -
+      **the dispatch in the connector instead of in `CSystem`.** Today `CSystem` asks `GetConnectorInterface()` and switches on the enum to its
       L2 functions (`ComputeODE2LHS*Markers`, `ComputeJacobianODE2*Markers`, the constraint functions). Proposed: one
       virtual function per operation in `CObjectConnector` - the right-hand side, the Jacobian, the constraint equations
       and their Jacobian, the reaction forces - whose default is the path of the marker data, and which a connector on
@@ -2115,8 +2127,8 @@ done.
       parent classes: a connector chooses its kind at run time (`ContactSphereSphere` on position or rigid markers),
       which a parent class cannot express, and the generator would need the parents in its headers. Gained: `CSystem`
       no longer knows the kinds of connectors, a new kind touches one file, and the enum is gone; not gained:
-      performance (a virtual call replaces a switch plus a virtual call). Done with RG14.2.13, which touches the same
-      dispatch when the switch goes.
+      performance (a virtual call replaces a switch plus a virtual call). Proposed to be done with RG14.2.13; done before
+      it, so that RG14.2.13 only removes the switch.
     - **RG14.2.14** *(maintainer 2026-10-01)* **`MarkerTemp` without `MarkerData`.** Why it holds one today: the L0/L1
       pair of a marker (`GetKinematicsRigid`/`AddGeneralizedForceTorque`, `GetODE2Size`/`AddGeneralizedForce`,
       `GetKinematicsCoordinate`/`AddGeneralizedForceCoordinate`) has a **default in `CMarker`** that calls the old
@@ -2305,7 +2317,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
-| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); RG14.2.17 proposed (the dispatch in the connector); then RG14.2.13 (the switch goes, with RG14.2.17 if decided), RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
+| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); RG14.2.17 done (the dispatch in the connector); then RG14.2.13 (the switch goes), RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
@@ -2340,9 +2352,9 @@ The title of each says what the step **does**; the sentence after it says why it
 4. **Draw the primitives and the meshes curved** (RG6.7.7.6/.7, RG6.7.2.1, #2709). The 6-node triangles and
    quadratic edges exist; `Cylinder`, `Torus`, `SolidOfRevolution` and the NGsolve/FFRF meshes do not use them yet,
    which is where a user sees the difference.
-5. **Decide RG14.2.17, then remove the legacy switch** (RG14.2.13, #2745). The special items keep the path of the
-   marker data (RG14.2.11, decided); whether the dispatch moves into the connector decides how the switch goes. Then
-   `MarkerTemp` and `TemporaryComputationData` can shrink (RG14.2.14, RG14.2.16).
+5. **Remove the legacy switch** (RG14.2.13, #2745). The special items keep the path of the marker data (RG14.2.11), the
+   dispatch is in the connector (RG14.2.17), so the switch and the duplicate legacy functions of the items on the
+   interface go. Then `MarkerTemp` and `TemporaryComputationData` can shrink (RG14.2.14, RG14.2.16).
 6. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
 7. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is

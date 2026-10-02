@@ -230,33 +230,6 @@ public:
 	bool HasConstantMassMatrix();
 	//void ComputeMassMatrixOLD(TemporaryComputationData& temp, Matrix& massMatrix);
 
-	//! compute left-hand-side (LHS) of second order ordinary differential equations (ODE) for every object (used in numerical differentiation and in LHS computation); return true, if object has localODE2Lhs, false otherwise
-	//! L2 of the connector interface for connectors on position markers (#2745)
-	void ComputeODE2LHSPositionMarkers(TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber);
-	//! the Jacobian of L2 for connectors on position markers, by automatic differentiation of the connector's force (#2745)
-	void ComputeJacobianODE2PositionMarkers(TemporaryComputationData& temp, const CObjectConnector& connector,
-		Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero);
-	//! L2 of the connector interface for connectors on rigid markers (#2745); the Jacobian is numerical
-	void ComputeODE2LHSRigidMarkers(TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber);
-	//! true, if a constraint goes the way of the connector interface (#2745): on the new path, active, and of a marker kind
-	//! CSystem implements; inactive ones and the legacy path take ComputeAlgebraicEquations/ComputeJacobianAE
-	bool ConstraintUsesInterface(const CObjectConstraint& constraint) const;
-	//! the algebraic equations of a constraint on the connector interface: position or coordinate markers (#2745)
-	void ComputeConstraintEquationsInterface(TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
-		bool velocityLevel, Vector& localAE);
-	//! C_q of a constraint on the connector interface by automatic differentiation (#2745)
-	void ComputeConstraintJacobianInterface(TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
-		ResizableMatrix& jacobian);
-	//! C_q^T lambda of a constraint on the connector interface, without forming C_q (#2745)
-	void ComputeConstraintReactionForcesInterface(TemporaryComputationData& temp, const CObjectConstraint& constraint, Index objectNumber,
-		const Vector& reactionForces, Vector& localODE2);
-	//! the Jacobian of L2 for connectors on rigid markers (#2745)
-	void ComputeJacobianODE2RigidMarkers(TemporaryComputationData& temp, const CObjectConnector& connector,
-		Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero);
-	//! L2 of the connector interface for connectors on coordinate markers, and its Jacobian (#2745)
-	void ComputeODE2LHSCoordinateMarkers(TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber);
-	void ComputeJacobianODE2CoordinateMarkers(TemporaryComputationData& temp, const CObjectConnector& connector,
-		Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero);
 
 	bool ComputeObjectODE2LHS(TemporaryComputationData& temp, CObject* object, Vector& localODE2Lhs, Index objectNumber);
 		

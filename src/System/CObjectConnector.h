@@ -35,6 +35,8 @@ namespace PostNewtonFlags {
 }
 
 class CMarker;
+class CSystemData;
+class TemporaryComputationData;
 
 class CObjectConnector : public CObject
 {
@@ -59,8 +61,20 @@ public:
     //! get an exact clone of *this, must be implemented in all derived classes! Necessary for better handling in ObjectContainer
     virtual CObjectConnector* GetClone() const { return new CObjectConnector(*this); }
 
-	//! the path the system takes for this connector (#2745): Legacy unless the connector implements the new interface
-	virtual ConnectorInterface GetConnectorInterface() const { return ConnectorInterface::Legacy; }
+	//! the connector interface (#2745): a connector on it computes its right-hand side here, by the L2 chain of its kind of
+	//! markers (ConnectorODE2LHSPositionMarkers, ...), into localODE2Lhs [marker 0, marker 1]; false: the system takes the
+	//! path of the marker data (ComputeMarkerDataStructure, ComputeODE2LHS), which is the default
+	virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs,
+		Index objectNumber) const { return false; }
+
+	//! the Jacobian of the connector interface into temp.jacobianODE2Container (#2745); false: the system takes the Jacobian
+	//! of the path of the marker data (ComputeJacobianODE2_ODE2), which is the default
+	virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2,
+		Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero) const { return false; }
+
+	//! false for a connector whose ComputeJacobianODE2_ODE2 exists only on the connector interface (the rigid-marker
+	//! connectors), so that exu.experimental.connectorInterfaceLegacy differentiates it numerically (#2745)
+	virtual bool HasJacobianODE2MarkerData() const { return true; }
 
 	//! L1 of a connector on position markers (#2745): its force on marker 1 from the kinematics of its two markers,
 	//! global; marker 0 gets the reaction; no system access and no Jacobians
@@ -108,10 +122,6 @@ public:
 		forces[0] = -force;
 		forces[1] = force;
 	}
-
-	//! true, if the connector computes its force with automatic differentiation for its Jacobian (the ...Diff functions);
-	//! false: the system takes the Jacobian of the legacy path (#2745)
-	virtual bool ConnectorForceDiffAvailable() const { return true; }
 
 	//! the same force with automatic differentiation, for the connector's Jacobian (#2745)
 	virtual void ComputeConnectorForceCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, Real t, Index itemIndex,
@@ -244,6 +254,23 @@ public:
 	//! Return true, if constraint currently is formulated at velocity level (e.g. coordinate constraint ==> this information is needed for correct jacobian computation)
 	virtual bool UsesVelocityLevel() const { return false; }
 
+	//! true if a constraint that implements the connector interface computes on it now: active and at position level;
+	//! otherwise it takes the path of the marker data (#2745)
+	bool OnConnectorInterface() const { return IsActive() && !UsesVelocityLevel(); }
+
+	//! the connector interface of a constraint (#2745): its algebraic equations into localAE, by the chain of its kind of
+	//! markers (ConstraintEquationsPositionMarkers, ...); false: the path of the marker data (ComputeAlgebraicEquations), the default
+	virtual bool ComputeAlgebraicEquationsConnector(const CSystemData& systemData, TemporaryComputationData& temp, Index objectNumber,
+		bool velocityLevel, Vector& localAE) const { return false; }
+
+	//! C_q by automatic differentiation of the equations on the connector interface (#2745); false: ComputeJacobianAE
+	virtual bool ComputeJacobianAEConnector(const CSystemData& systemData, TemporaryComputationData& temp, Index objectNumber,
+		ResizableMatrix& jacobianAE_ODE2) const { return false; }
+
+	//! C_q^T lambda on the connector interface, without forming C_q (#2745); false: the path of the marker data
+	virtual bool ComputeReactionForcesConnector(const CSystemData& systemData, TemporaryComputationData& temp, Index objectNumber,
+		const Vector& reactionForces, Vector& localODE2) const { return false; }
+
 	//! L1 of a constraint on position markers (#2745): its algebraic equations from the kinematics of its two markers -
 	//! the positions, or at velocityLevel the velocities - and its Lagrange multipliers (lambda_i = 0 for a free axis);
 	//! the system forms C_q from the same equations by automatic differentiation (ComputeConstraintEquationsPositionDiff)
@@ -312,5 +339,40 @@ public:
 
 };
 
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//the L2 chains of the connector interface (#2745), in CObjectConnector.cpp: the kinematics of the markers (L0), the force or
+//the equations of the connector (L1), and their projection by the markers; a connector on the interface calls the chain of
+//its kind of markers from the functions above
+void ConnectorODE2LHSPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
+	Vector& localODE2Lhs, Index objectNumber);
+void ConnectorJacobianODE2PositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
+	Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero);
+void ConstraintEquationsPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
+	Index objectNumber, bool velocityLevel, Vector& localAE);
+void ConstraintJacobianPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
+	Index objectNumber, ResizableMatrix& jacobian);
+void ConstraintReactionForcesPositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
+	Index objectNumber, const Vector& reactionForces, Vector& localODE2);
+void ConnectorODE2LHSRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
+	Vector& localODE2Lhs, Index objectNumber);
+void ConnectorJacobianODE2RigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
+	Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero);
+void ConstraintEquationsRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
+	Index objectNumber, bool velocityLevel, Vector& localAE);
+void ConstraintJacobianRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
+	Index objectNumber, ResizableMatrix& jacobian);
+void ConstraintReactionForcesRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
+	Index objectNumber, const Vector& reactionForces, Vector& localODE2);
+void ConnectorODE2LHSCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
+	Vector& localODE2Lhs, Index objectNumber);
+void ConnectorJacobianODE2CoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
+	Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero);
+void ConstraintEquationsCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
+	Index objectNumber, bool velocityLevel, Vector& localAE);
+void ConstraintJacobianCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
+	Index objectNumber, ResizableMatrix& jacobian);
+void ConstraintReactionForcesCoordinateMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConstraint& constraint,
+	Index objectNumber, const Vector& reactionForces, Vector& localODE2);
 
 #endif

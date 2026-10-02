@@ -338,9 +338,6 @@ inline void MarkerDataFromKinematics(const MarkerPosition<Real>& kinematics, Mar
 	markerData.velocityAvailable = true;
 }
 
-//! which path the system takes for a connector: Legacy is ComputeMarkerDataStructure and the connector's ComputeODE2LHS
-enum class ConnectorInterface { Legacy, PositionMarkers, RigidMarkers, CoordinateMarkers };
-
 //! the kinematics of the two rigid markers of a connector from the marker data of the legacy path (#2745)
 inline void GetMarkersRigid(const MarkerDataStructure& markerData, MarkerRigid<Real>* markers)
 {

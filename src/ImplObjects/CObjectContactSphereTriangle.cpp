@@ -196,16 +196,23 @@ void CObjectContactSphereTriangle::ComputeConnectorProperties(const MarkerDataSt
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //  MODEL: f
-//! rigid markers if both markers have an orientation, else the legacy path (#2745)
-ConnectorInterface CObjectContactSphereTriangle::GetConnectorInterface() const
+//! on the interface of rigid markers if both markers have an orientation,
+//! else the path of the marker data (#2745)
+bool CObjectContactSphereTriangle::ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs,
+	Index objectNumber) const
 {
 	const ArrayIndex& markerNumbers = GetMarkerNumbers();
 	bool rigid = true;
 	for (Index k = 0; k < 2; k++)
 	{
-		rigid &= (cSystemData->GetCMarkers()[markerNumbers[k]]->GetType() & Marker::Orientation) != 0;
+		rigid &= (systemData.GetCMarkers()[markerNumbers[k]]->GetType() & Marker::Orientation) != 0;
 	}
-	return rigid ? ConnectorInterface::RigidMarkers : ConnectorInterface::Legacy;
+	if (rigid)
+	{
+		ConnectorODE2LHSRigidMarkers(systemData, temp, *this, localODE2Lhs, objectNumber);
+		return true;
+	}
+	return false;
 }
 
 //! the forces and torques of the connector interface (#2745), as ComputeODE2LHS projects them: the contact force on the

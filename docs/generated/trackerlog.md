@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.210.dev1
 - last change = 2026-10-02
-- Number of issues = 2773
+- Number of issues = 2774
 - Number of resolved issues = 2524 (210 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `FIX` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` access functions: the leftovers found in the evaluation RG9.3.1 and the split RG9.3.4 (#2773)
+  - description: Found on the way and left alone, one step at a time: (1) CSystem::CheckSystemIntegrity reports the marker index as the object number when a body lacks the rotation access function, and spells orienation; (2) dead code: the if (false) branch of CObjectANCFCable2DBase::GetPositionJacobian (the exact derivative of the normal, equal to the simpler version in use; ObjectALEANCFCable2D uses the exact one), the commented-out calls of GetAccessFunctionBody in the relative coordinate markers, CObjectRigidBody and VisualizationObject.h, the incomplete commented-out block in CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian, the double SetAll in CObjectANCFBeam::GetMassWeightedPositionJacobian; (3) CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative raises unconditionally and the code after it is unreachable (the tree declares no JacobianTtimesVector\_q); (4) ideas, not bugs: ObjectRotationalMass1D could provide the position Jacobian off its axis as ObjectRigidBody2D does, ObjectANCFBeam a rotation Jacobian from its slopes. The three findings of section 7 of the evaluation are done in RG9.3.4.2.
+  - date raised: 2026-10-02
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
   - date raised: 2026-09-29

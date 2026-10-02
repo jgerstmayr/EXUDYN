@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  10:01:56 (last modified)
+* @date         2026-10-02  08:26:07 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -141,10 +141,16 @@ public: // AUTO:
         return CObjectType::Connector;
     }
 
-    //! AUTO:  the connector implements the interface of position markers (#2745)
-    virtual ConnectorInterface GetConnectorInterface() const override
+    //! AUTO:  the right-hand side on the connector interface of position markers (#2745)
+    virtual bool ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs, Index objectNumber) const override
     {
-        return ConnectorInterface::PositionMarkers;
+        ConnectorODE2LHSPositionMarkers(systemData, temp, *this, localODE2Lhs, objectNumber); return true;
+    }
+
+    //! AUTO:  the Jacobian by automatic differentiation of the force (#2745)
+    virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero) const override
+    {
+        ConnectorJacobianODE2PositionMarkers(systemData, temp, *this, factorODE2, factorODE2_t, objectNumber, jacobianDerivativeNonZero); return true;
     }
 
     //! AUTO:  the force on marker 1 from the kinematics of the two markers (#2745)
