@@ -11262,3 +11262,40 @@ the position is nonlinear in (4 rotation parameters instead of 7 coordinates; fo
 
 Checked: `test_superElementTriangles6.py` (both superelements, the deformed mid node, the contour colors of mesh and
 body), the test suite with all references unchanged, pytest, docs.
+
+<a id="rg6-7-7-6"></a>
+### RG6.7.7.6 — the primitives on quadratic shapes, first part (2026-10-02, #2709)
+
+**The split.** A curved 6-node triangle or 3-node line is split into **at least 2** subdivisions (an angle above
+0.01°), so that `ceil(nTiles/2)` elements never look coarser than `nTiles` flat segments; it gets more where
+`curvedTriangleTilingAngle` asks for them, at most `curvedTriangleMaxTiling`. The tiling of a 6-node triangle now also
+takes **the angles of its three edges** (between the end tangents of each quadratic edge, as for the 3-node lines):
+the face of a cylinder is flat, its normals are equal, but its rim is curved - before, it was drawn with one flat
+triangle and a chord, beside a mantle drawn curved.
+
+**The primitives** (`exudyn.graphics`), built by one helper, `_QuadraticPatch(PointAndNormal, nu, nv, closedU,
+closedV)`: a grid of corners and mid nodes, two 6-node triangles per element, oriented counterclockwise about the given
+normals (checked on the first triangle that is not degenerate - the apex of a cone has coinciding corners).
+- `Cylinder`: the mantle (one quadratic element along the axis), the two faces as fans of 6-node triangles about the
+  center - the mid nodes on the radii and on the rim -, the rims as `edges3`; partial (`angleRange`) with the
+  closing faces of before as flat `triangles` (the chord with `cutPlain`, the two radial faces without), and the lines
+  along the mantle (`addEdges` an integer) as straight `edges`; `alternatingColor` per half of the ring;
+- `SolidOfRevolution`: per contour segment a band of one element along it, the normals of `smoothContour` at both ends
+  and averaged at the mid row; the rings at the start of each segment as `edges3`, the lines along the segments as
+  `edges`. `Cylinder` with `radiusInner`, `Arrow`, `Basis`, `Frame`, `BallBearingRings` and `RigidLink` (whose own
+  merge of three lists is now `MergeTriangleLists`) follow;
+- `Torus` (`smoothNormals=True`, the default): `ceil(nTilesMajor/2) x ceil(nTilesMinor/2)` elements, open or closed in
+  the minor angle; `smoothNormals=False` keeps the flat triangles.
+
+`nTiles` keeps its meaning, the number of flat segments around: the data shrink to about half (a default cylinder,
+nTiles=16: 32 6-node triangles instead of 64 flat ones), the drawn triangles never fall below today's. Checked by a
+raytraced image of all of them from an oblique view (scratchpad `renderPrimitives.py`), by the normals of every flat
+triangle of the split against the stored ones (none points against them), and by `graphics.InconsistentTriangles`.
+
+**What it changed.** The graphics reference `graphicsFunctions.json` re-recorded (the counts move from `triangles` to
+`triangles6`). `generalContactCylinderTrigsTest.py`, which makes its contact mesh from a `graphics.Cylinder` with
+`ToPointsAndTrigs`: the same facets (`nTiles=64`, even), on twice as many triangles, and a sphere-triangle contact
+that counts the edges of the triangles - 5.5497178858649 instead of 5.48690843091258 (1.1 %), re-recorded; its value
+in the reference list of the fast module waits for the next fast build. `graphicsCurvedShapes.py`: the shapes of
+`exudyn.graphics` are curved now, a third row shows them flat (`Triangles6ToTriangles`). The note for users is in
+`revisions.md` (*Round primitives are curved*).

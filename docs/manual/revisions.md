@@ -130,6 +130,14 @@ read. A script that indexes a returned list as flat, `g['points'][3*i+1]`, resha
 `Spheres` for a whole sphere instead of a `TriangleList`; the functions of `exudyn.graphics` that need
 triangles convert it (#2709).
 
+**Round primitives are curved.** `graphics.Cylinder`, `SolidOfRevolution` (and with it `Arrow`, `Basis`,
+`Frame`, `RigidLink`, `BallBearingRings`) and `Torus` return 6-node triangles (`triangles6`) and curved
+rims (`edges3`) instead of flat triangles. `nTiles` keeps its meaning, the number of flat segments
+around: half as many curved elements carry them, and the renderer draws at least those segments. A
+script that reads `g['triangles']` of such a shape gets the flat ones with
+`graphics.Triangles6ToTriangles(g)`; `graphics.ToPointsAndTrigs` does this itself, so a contact mesh
+made from a cylinder with an even `nTiles` has the same facets as before, on more triangles (#2709).
+
 ### What is new to use
 
 **Curved shapes in GraphicsData.** 6-node (quadratic) triangles - the key `triangles6` of a

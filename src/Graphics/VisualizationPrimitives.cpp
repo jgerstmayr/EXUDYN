@@ -98,11 +98,22 @@ namespace EXUvis {
 		return (float)(180. / EXUstd::pi) * atan2(a.CrossProduct(b).GetL2Norm(), a * b);
 	}
 
-	//! the number of subdivisions for an angle in degrees
+	//! the number of subdivisions for an angle in degrees; a curved element gets at least 2, so that a primitive of
+	//! nTiles/2 quadratic elements never looks coarser than one of nTiles flat segments (#2709)
 	inline Index Tiling(float angleDegrees, float tilingAngleDegrees, Index maxTiling)
 	{
 		if (tilingAngleDegrees <= 0.f) { return 1; }
-		return EXUstd::Clamp((Index)ceil(angleDegrees / tilingAngleDegrees), (Index)1, EXUstd::Maximum((Index)1, maxTiling));
+		Index n = (Index)ceil(angleDegrees / tilingAngleDegrees);
+		if (angleDegrees > 0.01f) { n = EXUstd::Maximum(n, (Index)2); }
+		return EXUstd::Clamp(n, (Index)1, EXUstd::Maximum((Index)1, maxTiling));
+	}
+
+	//! the angle between the end tangents of the quadratic curve p0, p1 with mid node m, in degrees (#2709)
+	inline float QuadraticCurveAngleDegrees(const Float3& p0, const Float3& p1, const Float3& m)
+	{
+		Float3 t0 = 4.f*m - 3.f*p0 - p1;
+		Float3 t1 = 3.f*p1 + p0 - 4.f*m;
+		return AngleDegrees(t0, t1);
 	}
 
 	void Triangle6NodeNormals(const GLTriangle6& triangle, std::array<Float3, 6>& nodeNormals)
@@ -134,6 +145,12 @@ namespace EXUvis {
 			{
 				maxAngle = EXUstd::Maximum(maxAngle, AngleDegrees(nodeNormals[i], nodeNormals[j]));
 			}
+		}
+		//and the edges: a flat triangle with a curved edge (the cap of a cylinder) is split as its curved neighbour
+		const Index edgeNodes[3][3] = { {0, 1, 3}, {1, 2, 4}, {2, 0, 5} };
+		for (const auto& e : edgeNodes)
+		{
+			maxAngle = EXUstd::Maximum(maxAngle, QuadraticCurveAngleDegrees(triangle.points[e[0]], triangle.points[e[1]], triangle.points[e[2]]));
 		}
 		SplitTriangle6Uniform(triangle, Tiling(maxAngle, tilingAngleDegrees, maxTiling), triangles, edges);
 	}
@@ -245,9 +262,7 @@ namespace EXUvis {
 	void SplitLine3(const GLLine3& line, float tilingAngleDegrees, Index maxTiling, ResizableArray<GLLine>& lines)
 	{
 		//the tangents at the end points of p(s) = N0 p0 + N1 p1 + N2 m
-		Float3 t0 = 4.f*line.points[2] - 3.f*line.points[0] - line.points[1];
-		Float3 t1 = 3.f*line.points[1] + line.points[0] - 4.f*line.points[2];
-		SplitLine3Uniform(line, Tiling(AngleDegrees(t0, t1), tilingAngleDegrees, maxTiling), lines);
+		SplitLine3Uniform(line, Tiling(QuadraticCurveAngleDegrees(line.points[0], line.points[1], line.points[2]), tilingAngleDegrees, maxTiling), lines);
 	}
 
 	void SplitLines3(const ResizableArray<GLLine3>& lines3, const VisualizationSettings& visualizationSettings,

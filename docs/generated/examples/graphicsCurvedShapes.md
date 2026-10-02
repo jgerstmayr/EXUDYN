@@ -16,11 +16,13 @@ You can view and download this file on Github: [graphicsCurvedShapes.py](https:/
 #           shape of exudyn.graphics it compares to (#2709).
 #           Row y=0: cylinder, torus, sphere and vase of 6-node triangles - few, large elements (45 degrees),
 #           the renderer splits them when it draws; the cylinder and the vase carry red edges3 on their rims.
-#           Row y=-3: graphics.Cylinder, Torus, Sphere and SolidOfRevolution with flat triangles.
+#           Row y=-3: graphics.Cylinder, Torus, Sphere and SolidOfRevolution - curved as well, of 6-node
+#           triangles (the sphere with edges is a TriangleList of flat triangles); row y=-6: the same shapes as
+#           flat triangles (graphics.Triangles6ToTriangles), with their facets.
 #           Row y=3: quadratic lines (a circle of 4 segments, a helix), many spheres, a whole graphics.Sphere.
 #           At x=12: a rotating rigid body with a curved cylinder, its rims and a quadratic ring.
 #           What to look at:
-#           - the curved row is smooth, the flat row shows its facets; the red rims lie on the surfaces;
+#           - the curved rows are smooth, the flat row shows its facets; the red rims lie on the surfaces;
 #           - key V, openGL.advanced.curvedTriangleTilingAngle: 90 shows the coarse elements, 5 a fine split,
 #             and the change shows at once; curvedTriangleMaxTiling limits it;
 #           - key T (face edges): the edges of the 6-node triangles are curved, not those of the split;
@@ -89,7 +91,7 @@ rV = lambda z: 0.3 + 0.2*np.sin(2.5*z)
 gCurved += [graphics.Move(Surface6(lambda u, v: [rV(v)*np.cos(u), rV(v)*np.sin(u), v], [0, 2*np.pi], [0, 1.5], 8, 3,
                                    graphics.color.dodgerblue, rims=True), [9, 0, 0])]
 
-#the flat shapes of exudyn.graphics, for comparison
+#the shapes of exudyn.graphics, curved, and flat for comparison
 contour = [[z, rV(z)] for z in np.linspace(0, 1.5, 9)]
 gFlat = [graphics.Cylinder(pAxis=[0, -3, 0], vAxis=[0, 0, 1.5], radius=r, color=graphics.color.steelblue, nTiles=8, addEdges=True),
          graphics.Torus(point=[3, -3, 0.5], axis=[0, 0, 1], radiusMajor=R0, radiusMinor=r0, color=graphics.color.orange,
@@ -97,6 +99,7 @@ gFlat = [graphics.Cylinder(pAxis=[0, -3, 0], vAxis=[0, 0, 1.5], radius=r, color=
          graphics.Sphere(point=[6, -3, 0.5], radius=r, color=graphics.color.lawngreen, nTiles=8, addEdges=True), #with edges: a TriangleList
          graphics.SolidOfRevolution(pAxis=[9, -3, 0], vAxis=[0, 0, 1], contour=contour, color=graphics.color.dodgerblue,
                                     nTiles=12, addEdges=True)]
+gFlat += [graphics.Move(graphics.Triangles6ToTriangles(g), [0, -3, 0]) for g in gFlat]
 
 #lines, spheres
 s = np.sqrt(0.5)

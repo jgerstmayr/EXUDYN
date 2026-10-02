@@ -83,7 +83,7 @@ def TestExamplesReferenceSolution():
         'fourBarMechanismTest.py':-2.376335780518213,
         'fourBarMechanismIftomm.py':0.1721665271838613, #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 0.17216652717785863
         'generalContactCylinderTest.py':12.24658398056691,         #new 2024-03-17 (spurious trig-sphere contact forces)
-        'generalContactCylinderTrigsTest.py':5.48690843091258,     #new 2024-03-17 (internal sphere-sphere contact)
+        'generalContactCylinderTrigsTest.py':5.5497178858649,     #2026-10-02: the contact mesh of graphics.Cylinder from 6-node triangles - the same facets on more triangles (#2709), before 5.48690843091258; new 2024-03-17 (internal sphere-sphere contact)
         'generalContactFrictionTests.py':12.022654145378834,        #changed 2025-05-06 (seems to now be closer to linux; differences with object8); new 2024-03-17: 12.027740342293988 (doubled damping; fixed sphere-sphere and trig-sphere contact); old: 12.464092000879125,        #new 2022-07-11 (CState Parallel); #before 2022-01-25 (changed some velocity computation in GeneralContact): 10.133183086232139, #changed GeneralContact and implicit solver; before 2022-01-18: 10.132106712933348 , 
         'generalContactImplicit1.py':0.7758155402165082,             #new 2026-09-11
         'generalContactImplicit2.py':0.5000000537869635,             #new 2026-09-11

@@ -996,7 +996,11 @@ This group is that revision and what has to happen before it can start.
       - **RG6.7.7.8** **DONE 2026-10-02** (#2769) - `MergeTriangleLists` did not offset the `edges` of `g2` when `g1`
         had none; now as for `edges3`, test `testMergeOffsetsTheEdgesOfTheSecondList`.
       - **RG6.7.7.6** **the primitives on quadratic shapes** - `Cylinder`, `Tube`, `Torus`, `SolidOfRevolution`, the
-        partial `Sphere`, `Arrow`, ... built from 6-node triangles with `edges3` on their rims. *Compatibility of
+        partial `Sphere`, `Arrow`, ... built from 6-node triangles with `edges3` on their rims. **In part DONE
+        2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-6): `Cylinder` (full, partial, hollow), `SolidOfRevolution`
+        and with it `Arrow`, `Basis`, `Frame`, `RigidLink`, `BallBearingRings`, and `Torus`; the split with at least 2
+        subdivisions for a curved element and the edges of a 6-node triangle in its tiling. **Open**: `Tube`, the
+        partial `Sphere` (`_SphereTriangleList`), `LinkedCylinders`. *Compatibility of
         `nTiles`* (maintainer's question): `nTiles` keeps its meaning - **the number of flat segments around** - and
         the primitive uses $\lceil$`nTiles`/2$\rceil$ quadratic elements, each covering two of today's segments.
         For a script to never look coarser than today, the split of a *curved* 6-node triangle or 3-node line has

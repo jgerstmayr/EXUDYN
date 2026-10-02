@@ -809,11 +809,70 @@ def Brick(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0.,0.,0.,1.], addNorma
         return data
 
 
+def _QuadraticPatch(PointAndNormal, nu, nv, closedU, closedV, offset=0):
+    """6-node triangles on a parametric patch (#2709): nu x nv quadratic elements, PointAndNormal(u, v) with u, v in [0,1]
+    gives a point and its (outward) normal; the grid holds the corners and the mid nodes of the elements,
+    (2nu (+1)) x (2nv (+1)) points; each element is two 6-node triangles, oriented so that their corners turn
+    counterclockwise about the given normals. Returns (points, normals, triangles6, Index), Index(i, j) the number of the
+    grid point i (along u) and j (along v), plus offset"""
+    mu = 2*nu if closedU else 2*nu+1
+    mv = 2*nv if closedV else 2*nv+1
+    points = []
+    normals = []
+    for j in range(mv):
+        for i in range(mu):
+            (p, n) = PointAndNormal(i/(2*nu), j/(2*nv))
+            points += [np.array(p, dtype=float)]
+            normals += [np.array(n, dtype=float)]
+
+    def Index(i, j):
+        return offset + (j % mv if closedV else j)*mu + (i % mu if closedU else i)
+
+    triangles6 = []
+    for ej in range(nv):
+        for ei in range(nu):
+            (i0, j0) = (2*ei, 2*ej)
+            (a, b, c, d) = (Index(i0, j0), Index(i0+2, j0), Index(i0+2, j0+2), Index(i0, j0+2))
+            (ab, bc, cd, da, m) = (Index(i0+1, j0), Index(i0+2, j0+1), Index(i0+1, j0+2), Index(i0, j0+1), Index(i0+1, j0+1))
+            triangles6 += [[a, b, c, ab, bc, m], [a, c, d, m, cd, da]]
+
+    #the orientation, from the first triangle that is not degenerate (an apex of a cone has coinciding corners)
+    for t in triangles6:
+        (pa, pb, pc) = (points[t[0]-offset], points[t[1]-offset], points[t[2]-offset])
+        cross = np.cross(pb - pa, pc - pa)
+        if np.linalg.norm(cross) > 1e-12*max(1., np.linalg.norm(pb - pa)**2):
+            if cross @ (normals[t[0]-offset] + normals[t[1]-offset] + normals[t[2]-offset]) < 0:
+                triangles6 = [[t[0], t[2], t[1], t[5], t[4], t[3]] for t in triangles6]
+            break
+    return (points, normals, triangles6, Index)
+
+
+def _OrientTriangle6(t, points, normal):
+    """the 6-node triangle t with its corners turned counterclockwise about normal"""
+    (pa, pb, pc) = (np.array(points[t[0]]), np.array(points[t[1]]), np.array(points[t[2]]))
+    if np.cross(pb - pa, pc - pa) @ np.array(normal) < 0:
+        return [t[0], t[2], t[1], t[5], t[4], t[3]]
+    return list(t)
+
+
+def _OrientTriangle(t, points, normal):
+    """the flat triangle t with its corners turned counterclockwise about normal"""
+    (pa, pb, pc) = (np.array(points[t[0]]), np.array(points[t[1]]), np.array(points[t[2]]))
+    if np.cross(pb - pa, pc - pa) @ np.array(normal) < 0:
+        return [t[0], t[2], t[1]]
+    return list(t)
+
+
+def _NumberOfQuadraticElements(nSegments):
+    """the quadratic elements that replace nSegments flat segments: each covers two of them (#2709)"""
+    return max(1, int(np.ceil(nSegments/2)))
+
 @_ReturnsRows
 def Cylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTiles = 16, 
              radiusInner = None, angleRange=[0,2*pi], lastFace = True, cutPlain = True, 
              addEdges=False, edgeColor=color.black, addFaces=True, **kwargs):  
-    """generate graphics data for a cylinder with given axis, radius and color; nTiles gives the number of tiles (minimum=3)
+    """generate graphics data for a cylinder with given axis, radius and color; nTiles gives the number of tiles (minimum=3);
+    the cylinder consists of 6-node triangles (triangles6), ceil(nTiles/2) curved elements around, drawn with at least nTiles segments
 
     Args:
         pAxis: axis point of one face of cylinder (3D list or np.array)
@@ -848,182 +907,121 @@ def Cylinder(pAxis=[0,0,0], vAxis=[0,0,1], radius=0.1, color=[0.,0.,0.,1.], nTil
                                  addEdges=addEdges, addFaces=addFaces, edgeColor=edgeColor)
         
     
-    #create points at left and right face
-    points0=list(pAxis) #[pAxis[0],pAxis[1],pAxis[2]] #avoid change of pAxis
-    pAxis1=[pAxis[0]+vAxis[0],pAxis[1]+vAxis[1],pAxis[2]+vAxis[2]]
-    points1=list(pAxis1) #[pAxis[0]+vAxis[0],pAxis[1]+vAxis[1],pAxis[2]+vAxis[2]] #copy in order to avoid change of pAxis1 for use lateron
-    
-    p0 = np.array(pAxis)
-    p1 = np.array(pAxis) + np.array(vAxis)
-    
-    basis = ComputeOrthonormalBasisVectors(vAxis)
-    #v0 = basis[0]
-    n1 = basis[1]
-    n2 = basis[2]
-    r=radius
-    
-    nf = graphicsDataNormalsFactor #-1 original; -1 points inside
+    #the mantle and the two faces of 6-node triangles (#2709): nTiles flat segments around become
+    #ceil(nTiles/2) quadratic elements, each covering two of them; the renderer splits them when it draws
+    p0 = np.array(pAxis, dtype=float)
+    vAxis = np.array(vAxis, dtype=float)
+    p1 = p0 + vAxis
+    [axis, n1, n2] = ComputeOrthonormalBasisVectors(vAxis)
+    r = radius
 
-    #create normals at left and right face (pointing inwards)
-    normals0 = ebu.Normalize([-vAxis[0],-vAxis[1],-vAxis[2]])
-    normals1 = ebu.Normalize(vAxis)
-
-    points2 = []
-    points3 = []
-    
     alpha = angleRange[1]-angleRange[0] #angular range
     alpha0 = angleRange[0]
+    fullCircle = alpha >= 2.*pi - 1e-12
+    ne = _NumberOfQuadraticElements(nTiles if fullCircle else nTiles-1)
+    mRing = 2*ne if fullCircle else 2*ne+1 #points on a ring
 
-    fact = nTiles #create correct part of cylinder
-    if alpha < 2.*pi: 
-        fact = nTiles-1
+    def Radial(k):
+        phi = alpha0 + k*alpha/(2*ne)
+        return sin(phi)*n1 + cos(phi)*n2
 
-    # pointsCyl0 = []
-    # pointsCyl1 = []
-    
-    for i in range(nTiles):
-        phi = alpha0 + i*alpha/fact
-        x = r*sin(phi)
-        y = r*cos(phi)
-        vv = x*n1 + y*n2
-        pz0 = p0 + vv
-        pz1 = p1 + vv
-        points0 += list(pz0)
-        points1 += list(pz1)
-        points2 += list(pz0) #other points for side faces (different normals)
-        points3 += list(pz1) #other points for side faces (different normals)
-        # pointsCyl0 += list(pz0) #for edges
-        # pointsCyl1 += list(pz1) #for edges
-        n = ebu.Normalize(list(nf*vv))
-        normals0 = normals0 + n
-        normals1 = normals1 + n
-        
-    
-    points0 += points1+points2+points3
-    normals0 += normals1
-
-    for i in range(nTiles):
-        normals0 += ebu.Normalize([-nf*vAxis[0],-nf*vAxis[1],-nf*vAxis[2]])
-    for i in range(nTiles):
-        normals0 += ebu.Normalize([nf*vAxis[0],nf*vAxis[1],nf*vAxis[2]])
-
-    n = nTiles+1 #number of points of one ring+midpoint
     color2 = list(color) #alternating color
     if 'alternatingColor' in kwargs:
         color2 = list(kwargs['alternatingColor'])
+    def RingColor(k):
+        return list(color) if k < mRing/2 else color2
 
-    colors=[]
-    #for i in range(2*n+2*nTiles):
-    #    colors += color
-    n2 = int(nTiles/2)    
-    for i in range(2):
+    #mantle: one quadratic element along the axis, the mid row at half length
+    (points, normals, triangles6, Mantle) = _QuadraticPatch(lambda u, v: (p0 + v*vAxis + r*Radial(u*2*ne), Radial(u*2*ne)),
+                                                           ne, 1, fullCircle, False)
+    colors = []
+    for j in range(3):
+        for k in range(mRing):
+            colors += RingColor(k)
+
+    #the faces: a fan of 6-node triangles about the center, the mid nodes on the radii and on the rim
+    faceRing = [[], []]
+    triangles = [] #flat closing faces of a partial cylinder
+    for (side, pCenter, normal) in [(0, p0, -axis), (1, p1, axis)]:
+        iCenter = len(points)
+        points += [pCenter]
+        normals += [normal]
         colors += list(color)
-    for j in range(4):
-        for i in range(n2):
-            colors += list(color)
-        for i in range(nTiles-n2):
-            colors += color2
+        iRing = len(points)
+        for k in range(mRing):
+            points += [pCenter + r*Radial(k)]
+            normals += [normal]
+            colors += RingColor(k)
+        iRadial = len(points) #mid nodes on the radii to the even ring points
+        for k in range(0, mRing, 2):
+            points += [pCenter + 0.5*r*Radial(k)]
+            normals += [normal]
+            colors += RingColor(k)
+        faceRing[side] = list(range(iRing, iRing+mRing))
+        for e in range(ne):
+            k0 = 2*e
+            k2 = (2*e+2) % mRing
+            t = [iCenter, iRing+k0, iRing+k2, iRadial+k0//2, iRing+k0+1, iRadial+k2//2]
+            triangles6 += [_OrientTriangle6(t, points, normal)]
+        if not fullCircle and cutPlain: #the rest of the face, up to the chord
+            triangles += [_OrientTriangle([iCenter, iRing+mRing-1, iRing], points, normal)]
 
-    triangles = []
-    #circumference:
-    for i in range(nTiles):
-        if graphicsDataSwitchTriangleOrder:
-            if i != nTiles-1:
-                triangles += [1+i,n+1+i+1,n+1+i]
-                triangles += [1+i,1+i+1,n+1+i+1]
-            else:
-                if lastFace and cutPlain:
-                    triangles += [1+i,n+1,n+1+i]
-                    triangles += [1+i,1,n+1]
-        else:
-            if i != nTiles-1:
-                triangles += [1+i,n+1+i,n+1+i+1]
-                triangles += [1+i,n+1+i+1,1+i+1]
-            else:
-                if lastFace and cutPlain:
-                    triangles += [1+i,n+1+i,n+1]
-                    triangles += [1+i,n+1,1]
-            
-    #sides faces left and right:
-    nn=2*n #offset
-    for i in range(nTiles):
-        if graphicsDataSwitchTriangleOrder:
-            if i != nTiles-1:
-                triangles += [0,nn+i,nn+i+1]
-                triangles += [n,nn+nTiles+i+1,nn+nTiles+i]
-            else:
-                if cutPlain:
-                    triangles += [0,nn+i,nn]
-                    triangles += [n,nn+nTiles,nn+nTiles+i]
-        else:
-            if i != nTiles-1:
-                triangles += [0,nn+i,nn+i+1]
-                triangles += [n,nn+nTiles+i+1,nn+nTiles+i]
-            else:
-                if cutPlain:
-                    triangles += [0,nn+i,nn]
-                    triangles += [n,nn+nTiles,nn+nTiles+i]
-
-    #if angles are not 2*pi, add closing face
-    if lastFace and not(cutPlain):
-        s = int(len(points0)/3) #starting index for side triangles
-        p2 = points2[0:3]
-        p3 = points3[0:3]
-        p4 = points2[len(points2)-3:len(points2)]
-        p5 = points3[len(points3)-3:len(points3)]
-        points0 += list(pAxis) + pAxis1 + p2 + p3 + list(pAxis) + pAxis1 + p4 + p5
-        n1=np.cross((np.array(pAxis) - pAxis1),(np.array(p3) - pAxis))
-        n1=list(ebu.Normalize(-nf*n1))
-        n2=np.cross((np.array(pAxis1) - pAxis),(np.array(p4) - pAxis))
-        n2=list(ebu.Normalize(-nf*n2))
-        normals0 += n1+n1+n1+n1+n2+n2+n2+n2  #8 additional normals
-        if graphicsDataSwitchTriangleOrder:
-            triangles += [s+0,s+3,s+1, s+0,s+2,s+3, 
-                          s+5,s+6,s+4, s+5,s+7,s+6]
-        else:
-            triangles += [s+0,s+1,s+3, s+0,s+3,s+2, 
-                          s+5,s+4,s+6, s+5,s+6,s+7]
-            
-        for i in range(8): #8 additional colors
-            colors += color
+    if not fullCircle and lastFace:
+        if cutPlain: #the plane through the chord
+            (a, b, c, d) = (Mantle(mRing-1, 0), Mantle(0, 0), Mantle(0, 2), Mantle(mRing-1, 2))
+            pa, pb, pd = points[a], points[b], points[d]
+            normalChord = np.cross(pb - pa, pd - pa)
+            normalChord = ebu.Normalize(list(normalChord if normalChord @ (pa - p0) > 0 or normalChord @ (pb-p0) > 0 else -normalChord))
+            s = len(points)
+            points += [pa, pb, points[c], pd]
+            normals += [normalChord]*4
+            colors += list(color)*4
+            triangles += [_OrientTriangle([s, s+1, s+2], points, normalChord), _OrientTriangle([s, s+2, s+3], points, normalChord)]
+        else: #cake shape: two faces from the axis to the first and to the last radius
+            for k in [0, mRing-1]:
+                pr0 = p0 + r*Radial(k)
+                pr1 = p1 + r*Radial(k)
+                normalCut = np.cross(vAxis, Radial(k))
+                if k == 0:
+                    normalCut = -normalCut
+                normalCut = ebu.Normalize(list(normalCut))
+                s = len(points)
+                points += [p0, p1, pr1, pr0]
+                normals += [normalCut]*4
+                colors += list(color)*4
+                triangles += [_OrientTriangle([s, s+1, s+2], points, normalCut), _OrientTriangle([s, s+2, s+3], points, normalCut)]
 
     if not addFaces:
+        triangles6 = []
         triangles = []
 
-    #triangle normals point inwards to object ...
-    data = {'type':'TriangleList', 'colors':np.array(colors), 
-            'points':np.array(points0), 'normals':np.array(normals0), 'triangles':np.array(triangles)}
+    data = {'type':'TriangleList', 'colors':np.array(colors), 'points':np.array(points).flatten(),
+            'normals':np.array(normals).flatten(), 'triangles6':np.array(triangles6, dtype=int).flatten()}
+    if len(triangles) != 0:
+        data['triangles'] = np.array(triangles, dtype=int).flatten()
 
     if addEdges:
         data['edgeColor'] = np.array(edgeColor)
-        
-        faceEdges = 0
-        if type(addEdges) != bool:
-            faceEdges = int(addEdges)
-        
+        edges3 = []
         edges = []
-        pLast = nTiles
-        for i in range(nTiles):
-            edges += [pLast, i+1]
-            pLast = i+1
-        
-        pLast = nTiles + (nTiles+1)
-        for i in range(nTiles):
-            edges += [pLast, i+1+(nTiles+1)]
-            pLast = i+1+(nTiles+1)
-        
-        if faceEdges > 0:
-            nStep = int(nTiles/faceEdges)
-            pLast0 = 1
-            pLast1 = 1+(nTiles+1)
+        for side in range(2): #the rims, curved
+            ring = faceRing[side]
+            for e in range(ne):
+                edges3 += [ring[2*e], ring[(2*e+2) % mRing], ring[2*e+1]]
+            if not fullCircle:
+                edges += [ring[-1], ring[0]]
+        if type(addEdges) != bool: #lines along the mantle
+            faceEdges = int(addEdges)
+            nStep = max(1, int((2*ne)/faceEdges))
             for i in range(faceEdges):
-                edges += [pLast0, pLast1]
-                pLast0 += nStep
-                pLast1 += nStep
-        
-        data['edges'] = np.array(edges)
+                k = (i*nStep) % mRing
+                edges += [faceRing[0][k], faceRing[1][k]]
+        data['edges3'] = np.array(edges3, dtype=int)
+        if len(edges) != 0:
+            data['edges'] = np.array(edges, dtype=int)
 
     return data
+
 
 @_ReturnsRows
 def Tube(points, axes, radius=0.1, color=[0.,0.,0.,1.], nTiles = 16):  
@@ -1139,7 +1137,7 @@ def Torus(point, axis, radiusMajor=0.5, radiusMinor=0.1, color=[0., 0., 0., 1.],
         nTilesMinor: used to for resolution of circle with minor radius; use larger values for finer resolution
         minorAngleStart: starting angle for minor radius; 0 is the angle at outmost radius of torus, pi is at inside
         minorAngleEnd: end angle for minor radius; use -0.5*pi / 0.5*pi to draw only the outer half of the torus
-        smoothNormals: if True, the normals are added to create a smooth contour, otherwise triangles are flat
+        smoothNormals: if True, the torus consists of 6-node triangles (triangles6), ceil(nTilesMajor/2) x ceil(nTilesMinor/2) curved elements, drawn with at least the given numbers of segments; otherwise of flat triangles
         invert: if False, the outside faces are visible; if invert=True, the inside faces are visible (influences reflections, light, etc.)
 
     Returns:
@@ -1152,22 +1150,34 @@ def Torus(point, axis, radiusMajor=0.5, radiusMinor=0.1, color=[0., 0., 0., 1.],
         exudyn.Print("WARNING: graphics.Torus: nTilesMinor < 3: setting nTilesMinor=3")
         nTilesMinor = 3
 
-    vertices = []
-    normals = []
-    triangles = []
-
     #create orthonormal basis for torus
     [ex,ey,ez] = ComputeOrthonormalBasisVectors(axis) #ex=axis
     A = np.vstack([ey,ez,ex]).T
-    
-    isOpen=False #open circle
-    isOpen = (minorAngleEnd-minorAngleStart) < 2*np.pi-1e-10
-    
-    nTilesMinor1 = nTilesMinor+isOpen
-    invertSign = (1.-2.*int(invert) )
 
     if minorAngleStart >= minorAngleEnd:
         raise ValueError('Torus: ensure that minorAngleStart < minorAngleEnd !')
+    isOpen = (minorAngleEnd-minorAngleStart) < 2*np.pi-1e-10 #open circle
+    invertSign = (1.-2.*int(invert))
+
+    if smoothNormals: #6-node triangles (#2709): nTiles flat segments become ceil(nTiles/2) quadratic elements
+        neMajor = _NumberOfQuadraticElements(nTilesMajor)
+        neMinor = _NumberOfQuadraticElements(nTilesMinor)
+        def PointAndNormal(u, v):
+            phi = 2*np.pi*u
+            theta = minorAngleStart + (minorAngleEnd-minorAngleStart)*v
+            localNormal = np.array([np.cos(phi)*np.cos(theta), np.sin(phi)*np.cos(theta), np.sin(theta)])
+            center = np.array([np.cos(phi)*radiusMajor, np.sin(phi)*radiusMajor, 0.])
+            return (A @ (center + radiusMinor*localNormal) + point, invertSign*(A @ localNormal))
+        (vertices, normals, triangles6, Index) = _QuadraticPatch(PointAndNormal, neMajor, neMinor, True, not isOpen)
+        return {'type':'TriangleList', 'colors':np.array(list(color)*len(vertices)),
+                'points':np.array(vertices).flatten(), 'normals':np.array(normals).flatten(),
+                'triangles6':np.array(triangles6, dtype=int).flatten()}
+
+    #flat triangles
+    vertices = []
+    normals = []
+    triangles = []
+    nTilesMinor1 = nTilesMinor+isOpen
 
     for i in range(nTilesMajor):
         phi = 2 * np.pi * i / nTilesMajor  # major angle
@@ -1207,19 +1217,13 @@ def Torus(point, axis, radiusMajor=0.5, radiusMinor=0.1, color=[0., 0., 0., 1.],
             else:
                 triangles.append([idx0, idx2, idx1])
                 triangles.append([idx1, idx2, idx3])
-            
+
     colors = color*len(vertices)
 
-    data = {'type':'TriangleList', 
-            'colors':np.array(colors).flatten(), 
-            #'normals':np.array(normals).flatten(), #just don't add in case it shall not be smooth
-            'points':np.array(vertices).flatten(), 
+    return {'type':'TriangleList',
+            'colors':np.array(colors).flatten(),
+            'points':np.array(vertices).flatten(),
             'triangles':np.array(triangles).flatten()}
-    if smoothNormals: 
-        data['normals'] = np.array(normals).flatten()
-    
-    return data
-
 
 
 @_ReturnsRows
@@ -1265,27 +1269,8 @@ def RigidLink(p0,p1,axis0=[0,0,0], axis1=[0,0,0], radius=[0.1,0.1],
         data2 = Cylinder(list(np.array(p1)-0.5*width[1]*np.array(a1)), 
                                      list(width[1]*np.array(a1)), radius[1], color, nTiles)
 
-    (data0, data1, data2) = (_Flat(data0), _Flat(data1), _Flat(data2))
-    #now merge lists, including appropriate indices of triangle points!
-    np0 = int(len(data0['points'])/3) #number of points of first point list ==> this is the offset for next list
-    np1 = np0 + int(len(data1['points'])/3) #number of points of first point list ==> this is the offset for next list
-
-    triangles = data0['triangles']
-    trigs1 = np.array(data1['triangles'])
-    trigs1 += np0
-    triangles = np.append(triangles,trigs1)
-    
-    trigs2 = np.array(data2['triangles'])
-    trigs2 += np1
-    triangles = np.append(triangles,trigs2)
-    
-    points = np.concatenate((data0['points'], data1['points'], data2['points']))
-    normals = np.concatenate((data0['normals'], data1['normals'], data2['normals']))
-    colors = np.concatenate((data0['colors'], data1['colors'], data2['colors']))
-    
-    data = {'type':'TriangleList', 'colors':colors,
-            'points':points, 'normals':normals, 'triangles':np.array(triangles)}
-    return data
+    #the cylinders of 6-node triangles and the flat triangles of the spheres in one list (#2709)
+    return MergeTriangleLists(MergeTriangleLists(data0, data1), data2)
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1300,7 +1285,7 @@ def SolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, s
         vAxis: vector representing the solid of revolution's axis (3D list or np.array)
         contour: a list of 2D-points, specifying the contour (x=axis, y=radius), e.g.: [[0,0],[0,0.1],[1,0.1]]
         color: provided as list of 4 RGBA values
-        nTiles: used to determine resolution of solid; use larger values for finer resolution
+        nTiles: used to determine resolution of solid; use larger values for finer resolution; the solid consists of 6-node triangles (triangles6), ceil(nTiles/2) curved elements around, drawn with at least nTiles segments
         smoothContour: if True, the contour is made smooth by auto-computing normals to the contour
         addEdges: True or number of edges along revolution mantle; for optimal drawing, nTiles shall be multiple addEdges
         edgeColor: optional color for edges
@@ -1371,98 +1356,75 @@ def SolidOfRevolution(pAxis, vAxis, contour, color=[0.,0.,0.,1.], nTiles = 16, s
         contourNormalsNext += [contourNormals[-1]]
         contourNormals = contourNormalsAvg
 
+    #per contour segment a band of 6-node triangles (#2709): nTiles flat segments around become ceil(nTiles/2)
+    #quadratic elements, each covering two of them; along the segment one element, straight, its mid row at half length
+    nf = graphicsDataNormalsFactor #factor for normals (inwards/outwards)
+    v_ = v #the axis; v is the parameter along the contour below
+    ne = _NumberOfQuadraticElements(nTiles)
+    mRing = 2*ne #points on a ring
+
+    def Radial(k):
+        phi = k*2*pi/mRing
+        return sin(phi)*n1 + cos(phi)*n2
+
+    def RingColor(k):
+        return list(color) if k < mRing/2 else list(color2)
+
     points = []
     normals = []
     colors = []
-    nT2 = int(nTiles/2)
-    nf = graphicsDataNormalsFactor #factor for normals (inwards/outwards)
-
+    triangles6 = []
+    segmentRings = [] #the index of the first point of each segment's start ring
     for j in range(len(contour)-1):
         pc0 = np.array(contour[j])
         pc1 = np.array(contour[j+1])
-        points0 = []
-        points1 = []
-        normals0 = []
-        normals1 = []
-        for i in range(nTiles):
-            phi = i*2*pi/nTiles
-            x0 = pc0[1]*sin(phi)
-            y0 = pc0[1]*cos(phi)
-            vv0 = x0*n1 + y0*n2
+        nc0 = np.array(contourNormals[j])
+        nc1 = np.array(contourNormalsNext[j]) if smoothContour else nc0
+        ncMid = np.array(ebu.Normalize(list(nc0 + nc1))) if np.linalg.norm(nc0 + nc1) > 1e-12 else nc0
 
-            x1 = pc1[1]*sin(phi)
-            y1 = pc1[1]*cos(phi)
-            vv1 = x1*n1 + y1*n2
+        def PointAndNormal(u, v):
+            k = u*mRing
+            if v == 0:
+                (pc, nc) = (pc0, nc0)
+            elif v == 1:
+                (pc, nc) = (pc1, nc1)
+            else:
+                (pc, nc) = (0.5*(pc0 + pc1), ncMid)
+            radial = Radial(k)
+            return (p0 + pc[1]*radial + pc[0]*v_, ebu.Normalize(list(nf*nc[1]*radial + nf*nc[0]*v_)))
 
-            pz0 = p0 + vv0 + pc0[0]*v
-            pz1 = p0 + vv1 + pc1[0]*v
-            points0 += list(pz0)
-            points1 += list(pz1)
+        (pointsJ, normalsJ, triangles6J, Index) = _QuadraticPatch(PointAndNormal, ne, 1, True, False, offset=len(points))
+        segmentRings += [len(points)]
+        points += pointsJ
+        normals += normalsJ
+        for row in range(3):
+            for k in range(mRing):
+                colors += RingColor(k)
+        if addFaces:
+            triangles6 += triangles6J
 
-            #vc = pc1-pc0
-            #nc = [-vc[1],vc[0]]
-            nc0 = contourNormals[j]
-            nUnit0 = ebu.Normalize(nf*nc0[1]*sin(phi)*n1 + nf*nc0[1]*cos(phi)*n2+nf*nc0[0]*v)
-            nUnit1 = nUnit0
-            if smoothContour:
-                #nc1 = contourNormals[j+1]
-                nc1 = contourNormalsNext[j]
-                nUnit1 = ebu.Normalize(nf*nc1[1]*sin(phi)*n1 + nf*nc1[1]*cos(phi)*n2+nf*nc1[0]*v)
-
-            normals0 = normals0 + nUnit0
-            normals1 = normals1 + nUnit1
-
-        cList = list(color)*nT2 + list(color2)*(nTiles-nT2)
-        colors += cList+cList
-        points += points0 + points1
-        normals += normals0 + normals1
-    
-    triangles = []
-    n = nTiles
-    #circumference:
-    if addFaces:
-        for j in range(len(contour)-1):
-            k = j*2*n
-            for i in range(nTiles):
-                if i < nTiles-1:
-                    triangles += [i+k,n+i+k,n+i+k+1]
-                    triangles += [i+k,n+i+k+1,i+1+k]
-                else:
-                    triangles += [i+k,n+i+k,n+k]
-                    triangles += [i+k,n+k,k]
-
-    #triangle normals point inwards to object ...
-    data = {'type':'TriangleList', 'colors':np.array(colors),
-            'points':np.array(points), 'normals':np.array(normals), 'triangles':np.array(triangles)}
-
+    data = {'type':'TriangleList', 'colors':np.array(colors), 'points':np.array(points).flatten(),
+            'normals':np.array(normals).flatten(), 'triangles6':np.array(triangles6, dtype=int).flatten()}
 
     if addEdges > 0:
         data['edgeColor'] = np.array(edgeColor)
-        edges = []
-
-        cntEdges = 0        
-        nSteps = nTiles
+        edges3 = [] #the rings at the start of each segment, curved
+        edges = [] #lines along the segments, straight
+        cntEdges = 0
+        nSteps = mRing
         if type(addEdges) != bool and addEdges > 0:
             cntEdges = int(addEdges)
-            nSteps = int(nTiles/cntEdges)
-        
-        hEdges = []
-        for j in range(cntEdges):
-            hEdges += [[]]
-
-        for j in range(len(contour)-1):
-            k = j*2*n
-            for i in range(nTiles):
-                edges += [i+k, (i+1)%nTiles+k]
-                if i%nSteps==0:
-                    j=int(i/nSteps)
-                    if j < cntEdges:
-                        hEdges[j] += [i+k, i+k+n]
-
-        for j in range(cntEdges):
-            edges += hEdges[j]
-
-        data['edges'] = np.array(edges)
+            nSteps = max(1, int(mRing/cntEdges))
+        for s in segmentRings:
+            for e in range(ne):
+                edges3 += [s + 2*e, s + (2*e+2) % mRing, s + 2*e+1]
+        for i in range(cntEdges):
+            k = (i*nSteps) % mRing
+            for s in segmentRings:
+                edges += [s + k, s + 2*mRing + k]
+        data['edges3'] = np.array(edges3, dtype=int)
+        if len(edges) != 0:
+            data['edges'] = np.array(edges, dtype=int)
 
     return data
 
