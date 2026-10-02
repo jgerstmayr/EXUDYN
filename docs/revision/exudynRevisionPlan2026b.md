@@ -1291,7 +1291,8 @@ revision (info document D15).
       `ObjectRigidBody2D` does, `ObjectANCFBeam` a rotation Jacobian from its slopes. The three findings of section 7
       of the evaluation (the beam that declared four types and provided none, the undeclared case of `ObjectANCFBeam`,
       the commented-out cases) are done in RG9.3.4.2.
-    - **RG9.3.7** *(maintainer 2026-10-02: the leftovers that need a decision go into a step of their own)* **two access
+    - **RG9.3.7** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg9-3-7) - *(maintainer 2026-10-02: the
+      leftovers that need a decision go into a step of their own; done as proposed)* **two access
       functions a body could provide** (#2775): the position Jacobian of `ObjectRotationalMass1D` off its axis (it would
       depend on the angle, as for `ObjectRigidBody2D`; `Assemble()` refuses connector and load markers there today), and
       a rotation Jacobian of `ObjectANCFBeam` from its slopes (which slopes, which orthogonalization). For the
@@ -2352,7 +2353,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges, rows done; RG6.7.2.1 and most of RG6.7.7.6 done (the round primitives of 6-node triangles); open RG6.7.5 (anisotropic tiling), the rest of RG6.7.7.6 (`LinkedCylinders`, hollow sphere), RG6.7.7.7 (the examples with large `nTiles`) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
-| RG9.3 | #2744 | access functions as single functions of the objects: the split done (RG9.3.4.1-.3), the declarations checked (rule 7); open the flags derived instead of declared (RG9.3.4.4, after separating the super elements' own meaning); RG9.3.5 and RG9.3.6 done (hand-written Jacobians, AD for the derivative of `J^T f` of the cable); RG9.3.7 (#2775) for the maintainer's decision |
+| RG9.3 | #2744 | access functions as single functions of the objects: the split done (RG9.3.4.1-.3), the declarations checked (rule 7); open the flags derived instead of declared (RG9.3.4.4, after separating the super elements' own meaning); RG9.3.5 to RG9.3.7 done (hand-written Jacobians, AD for the derivative of `J^T f` of the cable and of the torque on `ObjectANCFBeam`, `ObjectRotationalMass1D` off its axis) |
 | RG9.4 | #2202 | kinetic and potential energy as output variables: done for all bodies, beams, plates, superelements and spring-dampers; RG9.4.3.2 (the contact and special objects) not now |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |

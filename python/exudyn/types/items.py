@@ -607,7 +607,7 @@ items = {
     'kind': 'Object',
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position', 'Orientation', 'PointSlope23'],
-    'accessFunctionTypes': ['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
+    'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
     'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'Rotation', 'RotationMatrix', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},

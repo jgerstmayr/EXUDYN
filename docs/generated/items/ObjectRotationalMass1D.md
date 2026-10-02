@@ -84,13 +84,12 @@ $$
 ### Marker interfaces
 
 $$
-\LU{0}{\Jm_{pos}} = \Null , \quad
+\LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}}{\partial \dot \theta_0} = \LU{0b}{\Rot} \left( \LU{b}{\vr{0}{0}{1}} \times \LU{b}{\pv} \right) , \quad
 \LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}}{\partial \dot \theta_0} = \LU{0i}{\Rot_{0}} \LU{i}{\vr{0}{0}{1}} :
 $$
 
-a torque acts with its component about the axis, a force has no effect. A marker must lie on the
-axis - a local position with $x = y = 0$ -, which the object checks; there is no mass-proportional
-load on it.
+a torque acts with its component about the axis, a force at the local position $\LU{b}{\pv}$ with its moment
+about the axis - on the axis, $x = y = 0$, it has no effect; there is no mass-proportional load on it.
 
 (miniexample-objectrotationalmass1d)=
 ## Mini example

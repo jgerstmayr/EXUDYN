@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 197 | 1.12.212 |
+| 1.12 | Metheney | 198 | 1.12.213 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.213** `EXTENSION` `LOW` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` access functions: the position Jacobian of ObjectRotationalMass1D off its axis, a rotation Jacobian of ObjectANCFBeam (#2775)
+  - description: Two access functions a body could provide but does not, each needing a decision: ObjectRotationalMass1D defines its position at any local position but its position Jacobian only on the axis (Assemble refuses connector and load markers elsewhere, \#2744); off the axis it would depend on the rotation angle, as ObjectRigidBody2D does it. ObjectANCFBeam declares no AngularVelocity\_qt, so a MarkerBodyRigid cannot be attached; a rotation could be defined from its slope vectors (which ones, and with which orthogonalization, is the decision). Found in the evaluation of \#2744 (RG9.3.1) and listed in \#2773.
+  - **notes:** ObjectRotationalMass1D accepts connectors and loads at any point of the table, not only on its axis; ObjectANCFBeam accepts MarkerBodyRigid, so torques and joints with rotations act on it; a position marker on ObjectANCFBeam used in a connector no longer fails with 'request of invalid column'.
+  - date resolved: **2026-10-02 12:47**, date raised: 2026-10-02
 - **1.12.212** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` access functions: the leftovers found in the evaluation RG9.3.1 and the split RG9.3.4 (#2773)
   - description: Found on the way and left alone, one step at a time: (1) CSystem::CheckSystemIntegrity reports the marker index as the object number when a body lacks the rotation access function, and spells orienation; (2) dead code: the if (false) branch of CObjectANCFCable2DBase::GetPositionJacobian (the exact derivative of the normal, equal to the simpler version in use; ObjectALEANCFCable2D uses the exact one), the commented-out calls of GetAccessFunctionBody in the relative coordinate markers, CObjectRigidBody and VisualizationObject.h, the incomplete commented-out block in CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian, the double SetAll in CObjectANCFBeam::GetMassWeightedPositionJacobian; (3) CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative raises unconditionally and the code after it is unreachable (the tree declares no JacobianTtimesVector\_q); (4) ideas, not bugs: ObjectRotationalMass1D could provide the position Jacobian off its axis as ObjectRigidBody2D does, ObjectANCFBeam a rotation Jacobian from its slopes. The three findings of section 7 of the evaluation are done in RG9.3.4.2.
   - **notes:** Fixed the leftovers of the access functions: the message of the integrity check named the marker index as the object number; dead and commented-out code of the split removed; the unreachable code of MarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative removed. The two extensions that need a decision are \#2775.

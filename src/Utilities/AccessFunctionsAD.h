@@ -30,7 +30,7 @@ namespace AccessFunctionsAD {
 
 	template<int nDiff> using DReal = EXUmath::AutoDiff<nDiff, Real>;
 	template<int nDiff> using DDReal = EXUmath::AutoDiff<nDiff, EXUmath::AutoDiff<nDiff, Real>>;
-	const Index maxCoordinates = 16; //of a body that uses these functions
+	const Index maxCoordinates = 32; //of a body that uses these functions
 
 	//! the number of differentiated coordinates
 	template<int nDiff>
@@ -55,6 +55,23 @@ namespace AccessFunctionsAD {
 		{
 			qAD[first + i].Value().DValue((int)i) = 1.;
 			qAD[first + i].DValue((int)i) = DReal<nDiff>(1.);
+		}
+	}
+
+	//! the derivative dg/dq, m x n, of a vector function g(q) with m <= maxCoordinates components, in the columns of the
+	//! differentiated coordinates; function(q, g) computes g from the coordinates q, a generic lambda
+	template<int nDiff, class TFunction>
+	inline void Derivative(const Real* q, Index n, Index first, Index m, const TFunction& function, Matrix& value)
+	{
+		DReal<nDiff> qAD[maxCoordinates];
+		Seed<nDiff>(q, n, first, qAD);
+		DReal<nDiff> g[maxCoordinates];
+		function(qAD, g);
+		value.SetNumberOfRowsAndColumns(m, n);
+		value.SetAll(0.);
+		for (Index i = 0; i < m; i++)
+		{
+			for (Index j = 0; j < Directions<nDiff>(n, first); j++) { value(i, first + j) = g[i].DValue((int)j); }
 		}
 	}
 

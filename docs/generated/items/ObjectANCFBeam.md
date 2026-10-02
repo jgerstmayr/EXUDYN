@@ -12,7 +12,7 @@ A 3D beam finite element based on the absolute nodal coordinate formulation, usi
 
 - Python names: `ObjectANCFBeam` or `ANCFBeam`, and `VANCFBeam` for its visualization
 - Nodes it takes: [](#sec-item-nodepointslope23)
-- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition)
+- Body markers that can be placed on it: [](#sec-item-markerbodymass), [](#sec-item-markerbodyposition), [](#sec-item-markerbodyrigid)
 
 ## Parameters
 
@@ -112,7 +112,13 @@ the curvature and the axial and shear terms, and with a Lobatto rule for the cro
 ### Marker interfaces
 
 The position Jacobian is the interpolation above at the local position, so a force may act at any
-point of the cross section. The element provides no rotation Jacobian.
+point of the cross section. The rotation of the cross section and its angular velocity follow from the slopes
+$\rv_{,y}$ and $\rv_{,z}$ at $x$ (the output variables `Rotation`, `AngularVelocity`):
+$\tomega = \Wm^{-1} \left( \tilde \rv_{,y} \dot \rv_{,y} + \tilde \rv_{,z} \dot \rv_{,z} \right)$ with
+$\Wm = -\left( \tilde \rv_{,y} \tilde \rv_{,y} + \tilde \rv_{,z} \tilde \rv_{,z} \right)$, and the rotation Jacobian is
+its derivative by $\dot \qv$, so a torque or a rigid marker may act on the element. The position is linear in the
+coordinates; the derivative of the transposed rotation Jacobian times a torque is computed by automatic
+differentiation.
 
 ### Limitations
 

@@ -11408,3 +11408,23 @@ path of the marker data (RG14.2.11), the output variables (RG14.2.18) and **the 
 (16 places in `CObjectConnector.cpp`). The two ways compute the same position and velocity through the same body or
 node functions in a few lines each - no duplicated physics -, so nothing was cleaned up here; making the Jacobians a
 marker function of their own, so that `MarkerTemp` no longer holds a `MarkerData`, is RG14.2.14, which is unblocked now.
+
+<a id="rg9-3-7"></a>
+### RG9.3.7 — two access functions a body could provide (2026-10-02, #2775)
+
+- **`ObjectRotationalMass1D` off its axis.** The position Jacobian is the velocity of the point by the angular velocity,
+  $\LU{0b}{\Rot}(\LU{b}{\vr{0}{0}{1}} \times \LU{b}{\pv})$, as for `ObjectRigidBody2D`; the derivative of $\Jm^T \fv$ is
+  $-\fv \cdot \LU{0b}{\Rot}[p_x, p_y, 0]^T$ (false on the axis). `IsValidLocalPosition` is gone, so a connector or a
+  load acts anywhere on the table. `accessFunctionsTest.py`: the table is now also driven by a body-fixed tangential
+  force at its rim (total torque 1.2, 1.2 rad after 1 s, exact); its reference is re-recorded (1.2555465...).
+- **`ObjectANCFBeam` gets a rotation Jacobian** consistent with its `GetAngularVelocity`: $\omega = \Wm^{-1}(\tilde y
+  \dot y + \tilde z \dot z)$ with $\Wm = -(\tilde y \tilde y + \tilde z \tilde z)$ of the slopes $y$, $z$ of the cross
+  section - the least-squares rotation of the two slopes, no orthogonalization chosen. The type `AngularVelocity_qt` is
+  declared, so `MarkerBodyRigid` and torques act on the beam. The derivative of $\Jm_{rot}^T \tau$ is by automatic
+  differentiation of a template ($u = \Wm^{-1}\tau$ by the adjugate), with the generic
+  `AccessFunctionsAD::Derivative` (`maxCoordinates` 32, the beam has 18).
+- **Bug found on the way**: `CObjectANCFBeam::GetPositionJacobian` sized its result 3 x 8 and wrote 18 columns - any
+  position marker on the beam through a connector raised `request of invalid column` (and wrote past the matrix in
+  the fast module); now 3 x 18.
+- **Test**: `test_accessFunctionsAD.py` has a beam of two elements under torsional spring-dampers on rigid markers and
+  spring-dampers on position markers: the system Jacobian equals the numerical one.

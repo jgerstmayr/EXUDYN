@@ -46,14 +46,12 @@ void CObjectRotationalMass1D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber
 }
 
 
-//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
+//! the position Jacobian d(v)/d(q_t) at localPosition, 3 x 1 (#2744, #2775): p = A_ref R_z(phi) localPosition, so
+//! dp/dphi = A (e_z x localPosition), A = A_ref R_z(phi); zero on the axis
 void CObjectRotationalMass1D::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
-	CHECKandTHROW((localPosition[0] == 0) && (localPosition[1] == 0), "ObjectRotationalMass1D::GetPositionJacobian: BodyMarkers and Loads to ObjectRotationalMass1D can only act at localPosition[0]==0 and localPosition[1]==0; otherwise use ObjectRigidBody2D", ExudynModelError);
-	//would require to compute action on axis: similar to ObjectRigidBody2D, then depends on coordinates (sin/cos)?
-	//v = GetRotationMatrix(...) * (Vector3D({ 0.,0.,omegaLocal }) x localPosition)
-	//dv/dq_t = ...
-	value.SetMatrix(3, 1, { 0.,0.,0. }); //a ForceVector has no action on RotationalMass1D
+	Vector3D v = GetRotationMatrix(localPosition, ConfigurationType::Current) * Vector3D({ -localPosition[1], localPosition[0], 0. });
+	value.SetMatrix(3, 1, { v[0], v[1], v[2] });
 }
 
 //! the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n (#2744)
@@ -64,11 +62,14 @@ void CObjectRotationalMass1D::GetRotationJacobian(const Vector3D& localPosition,
 	value.SetMatrix(3, 1, {v[0], v[1], v[2]}); //the 3D torque vector (only z-component) acts on the 3rd coordinate phi_t
 }
 
-//! d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n; false if it is zero (#2744)
+//! d(J_pos^T force + J_rot^T torque)/dq at localPosition, 1 x 1; false if it is zero (#2744, #2775): J_rot is constant,
+//! d(J_pos^T force)/dphi = force . A (e_z x (e_z x localPosition)) = -force . A [x, y, 0]
 bool CObjectRotationalMass1D::GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque, Matrix& value) const
 {
-	CHECKandTHROW((localPosition[0] == 0) && (localPosition[1] == 0), "ObjectRotationalMass1D::GetJacobianTransposedTimesVectorDerivative [JacobianTtimesVector_q]: BodyMarkers and Loads to ObjectRotationalMass1D can only act at localPosition[0]==0 and localPosition[1]==0; otherwise use ObjectRigidBody2D", ExudynModelError);
-	return false; //all entries are zero
+	if (localPosition[0] == 0. && localPosition[1] == 0.) { return false; } //on the axis
+	Vector3D v = GetRotationMatrix(localPosition, ConfigurationType::Current) * Vector3D({ localPosition[0], localPosition[1], 0. });
+	value.SetMatrix(1, 1, { -(forceTorque[0] * v[0] + forceTorque[1] * v[1] + forceTorque[2] * v[2]) });
+	return true;
 }
 
 

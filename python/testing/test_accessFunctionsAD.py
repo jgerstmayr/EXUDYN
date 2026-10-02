@@ -6,7 +6,8 @@
 #           ObjectANCFCable, ObjectANCFBeam and ObjectANCFThinPlate state that it is zero, which is exact where
 #           their markers may act. Cables on spring-dampers attached at points off the axis and on it, and with
 #           a torque on a rigid marker: the system Jacobian of the implicit solver, with these derivatives, must be
-#           the numerical Jacobian of the right-hand side.
+#           the numerical Jacobian of the right-hand side. ObjectANCFBeam under a torque: its rotation Jacobian, from
+#           the slopes, and the derivative of J_rot^T tau by automatic differentiation (#2775).
 #
 # Usage:    pytest python/testing/test_accessFunctionsAD.py
 #
@@ -21,7 +22,8 @@ import pytest
 
 import exudyn as exu
 from exudyn.utilities import (ObjectGround, NodePoint2DSlope1, ObjectANCFCable2D, NodePointSlope1, ObjectANCFCable,
-                              MarkerBodyPosition, MarkerBodyRigid, SpringDamper, TorsionalSpringDamper)
+                              NodePointSlope23, ObjectANCFBeam, MarkerBodyPosition, MarkerBodyRigid, SpringDamper,
+                              TorsionalSpringDamper)
 
 exu.special.userInterface.SuppressAll(True)
 
@@ -64,6 +66,31 @@ def BuildCable3D():
     return mbs
 
 
+def BuildBeam():
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    oGround = mbs.AddObject(ObjectGround())
+    L = 0.5
+    section = exu.BeamSection()
+    section.stiffnessMatrix = np.diag([1000, 400, 400, 2, 3, 3])
+    section.inertia = np.diag([0.02, 0.01, 0.01])
+    section.massPerLength = 1
+    c, s = np.cos(0.2), np.sin(0.2)
+    nodes = [mbs.AddNode(NodePointSlope23(referenceCoordinates=[i*L, 0, 0, 0, 1, 0, 0, 0, 1],
+                                          initialCoordinates=[0, 0.02*i, 0.01*i, 0.03*i, (c-1)*i/2, s*i/2, 0, -s*i/2, (c-1)*i/2]))
+             for i in range(3)]
+    for i in range(2):
+        e = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=L, sectionData=section))
+        mRigid = mbs.AddMarker(MarkerBodyRigid(bodyNumber=e, localPosition=[0.3*L, 0, 0]))
+        mbs.AddObject(TorsionalSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround)), mRigid],
+                                            stiffness=2, offset=0.3))
+        mCable = mbs.AddMarker(MarkerBodyPosition(bodyNumber=e, localPosition=[0.7*L, 0, 0]))
+        mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[(i+0.7)*L, -0.09, 0.05]))
+        mbs.AddObject(SpringDamper(markerNumbers=[mGround, mCable], referenceLength=0.12, stiffness=100))
+    mbs.Assemble()
+    return mbs
+
+
 def Jacobian(mbs, numerical):
     """the ODE2 stiffness part of the system Jacobian, analytic or numerical, at zero velocities"""
     s = exu.SimulationSettings()
@@ -90,4 +117,10 @@ def test_theDerivativeOfTheCable2DByADIsTheNumericalOne(offset, torsion):
 def test_theCable3DHasAZeroDerivativeAtItsCenterline():
     analytic = Jacobian(BuildCable3D(), False)
     numerical = Jacobian(BuildCable3D(), True)
+    assert np.abs(analytic - numerical).max() <= 1e-5 * np.abs(numerical).max()
+
+
+def test_theBeamUnderATorqueHasTheNumericalJacobian():
+    analytic = Jacobian(BuildBeam(), False)
+    numerical = Jacobian(BuildBeam(), True)
     assert np.abs(analytic - numerical).max() <= 1e-5 * np.abs(numerical).max()

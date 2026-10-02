@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.212.dev1
+- Exudyn version = 1.12.213.dev1
 - last change = 2026-10-02
 - Number of issues = 2777
-- Number of resolved issues = 2526 (212 in current version)
+- Number of resolved issues = 2527 (213 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,9 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `EXTENSION` <span class="textblue">`LOW`</span> `MEDIUM EFF` `raised by: Claude-JG` access functions: the position Jacobian of ObjectRotationalMass1D off its axis, a rotation Jacobian of ObjectANCFBeam (#2775)
-  - description: Two access functions a body could provide but does not, each needing a decision: ObjectRotationalMass1D defines its position at any local position but its position Jacobian only on the axis (Assemble refuses connector and load markers elsewhere, \#2744); off the axis it would depend on the rotation angle, as ObjectRigidBody2D does it. ObjectANCFBeam declares no AngularVelocity\_qt, so a MarkerBodyRigid cannot be attached; a rotation could be defined from its slope vectors (which ones, and with which orthogonalization, is the decision). Found in the evaluation of \#2744 (RG9.3.1) and listed in \#2773.
-  - date raised: 2026-10-02
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
   - date raised: 2026-09-29

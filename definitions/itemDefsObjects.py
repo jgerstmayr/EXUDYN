@@ -656,13 +656,12 @@ definitions.append(ItemDefinition(
     #### Marker interfaces
 
     $$
-    \LU{0}{\Jm_{pos}} = \Null , \quad
+    \LU{0}{\Jm_{pos}} = \frac{\partial \LU{0}{\vv}}{\partial \dot \theta_0} = \LU{0b}{\Rot} \left( \LU{b}{\vr{0}{0}{1}} \times \LU{b}{\pv} \right) , \quad
     \LU{0}{\Jm_{rot}} = \frac{\partial \LU{0}{\tomega}}{\partial \dot \theta_0} = \LU{0i}{\Rot_{0}} \LU{i}{\vr{0}{0}{1}} :
     $$
 
-    a torque acts with its component about the axis, a force has no effect. A marker must lie on the
-    axis - a local position with $x = y = 0$ -, which the object checks; there is no mass-proportional
-    load on it.
+    a torque acts with its component about the axis, a force at the local position $\LU{b}{\pv}$ with its moment
+    about the axis - on the axis, $x = y = 0$, it has no effect; there is no mass-proportional load on it.
     """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    node = mbs.AddNode(Node1D(referenceCoordinates = [1], #\psi_0ref
@@ -722,8 +721,6 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetRotationJacobian'),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
-        ItemFunctionDef('IsValidLocalPosition',
-            implementation='if (localPosition[0] == 0. && localPosition[1] == 0.) { return true; } reason = "it acts on its axis only, localPosition[0] = localPosition[1] = 0; otherwise use ObjectRigidBody2D"; return false;'),
         ItemFunctionDef('GetOutputVariableBody'),
         ItemFunction(type=TReal, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='GetRotationAngle',
@@ -4844,7 +4841,13 @@ definitions.append(ItemDefinition(
     #### Marker interfaces
 
     The position Jacobian is the interpolation above at the local position, so a force may act at any
-    point of the cross section. The element provides no rotation Jacobian.
+    point of the cross section. The rotation of the cross section and its angular velocity follow from the slopes
+    $\rv_{,y}$ and $\rv_{,z}$ at $x$ (the output variables `Rotation`, `AngularVelocity`):
+    $\tomega = \Wm^{-1} \left( \tilde \rv_{,y} \dot \rv_{,y} + \tilde \rv_{,z} \dot \rv_{,z} \right)$ with
+    $\Wm = -\left( \tilde \rv_{,y} \tilde \rv_{,y} + \tilde \rv_{,z} \tilde \rv_{,z} \right)$, and the rotation Jacobian is
+    its derivative by $\dot \qv$, so a torque or a rigid marker may act on the element. The position is linear in the
+    coordinates; the derivative of the transposed rotation Jacobian times a torque is computed by automatic
+    differentiation.
 
     #### Limitations
 
@@ -4925,11 +4928,11 @@ definitions.append(ItemDefinition(
             description=r"Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'"),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q']),
+        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q']),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetMassWeightedPositionJacobian'),
-        ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative',
-            implementation='return false; //the position is linear in the coordinates and there is no rotation (#2744)'),
+        ItemFunctionDef('GetRotationJacobian'),
+        ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
         ItemFunctionDef('GetOutputVariableBody'),
         ItemFunction(type=TReal, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='ComputeElasticEnergy',

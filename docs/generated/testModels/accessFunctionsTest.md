@@ -12,14 +12,13 @@ You can view and download this file on Github: [accessFunctionsTest.py](https://
 #
 # Details:  A body marker places a force, a torque or a connector at a local position of a body, and the
 #           body computes the Jacobians there (its access functions, #2744). Some bodies define them at
-#           restricted local positions only: ObjectRotationalMass1D on its axis, ObjectANCFCable at the
-#           centerline, ObjectANCFThinPlate at the midsurface, ObjectBeamGeometricallyExact2D at the axis.
-#           Assemble() checks the markers through which a connector or a load acts:
-#           (1) a rotating table, ObjectRotationalMass1D, driven by a torque on its axis; a marker at the
-#               rim measures the position of the rim, which a sensor may do anywhere;
+#           restricted local positions only: ObjectANCFCable at the centerline, ObjectANCFThinPlate at the
+#           midsurface, ObjectBeamGeometricallyExact2D at the axis. Assemble() checks the markers through which
+#           a connector or a load acts:
+#           (1) a rotating table, ObjectRotationalMass1D, driven by a torque on its axis and by a force at its
+#               rim, fixed to the table and tangential, whose moment about the axis it takes (#2775);
 #           (2) a cantilever ANCF cable under a force at its tip, on the centerline;
-#           (3) what Assemble() refuses: a force at the rim of the table, and a force off the centerline
-#               of the cable.
+#           (3) what Assemble() refuses: a force off the centerline of the cable.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-02
@@ -34,8 +33,9 @@ import numpy as np
 
 testIsActive = exu.sys.get('testIsActive', False)
 
-def TableModel(forceAtRim):
-    """a rotating table with inertia 0.5, driven by a torque 1 about its axis; with forceAtRim, a force acts at the rim"""
+def TableModel():
+    """a rotating table with inertia 0.5, driven by a torque 1 about its axis and a tangential force 1, fixed to the
+    table, at its rim at radius 0.2"""
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     nTable = mbs.AddNode(Node1D(referenceCoordinates=[0]))
@@ -43,8 +43,7 @@ def TableModel(forceAtRim):
     mAxis = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oTable, localPosition=[0, 0, 0]))
     mRim = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oTable, localPosition=[0.2, 0, 0]))
     mbs.AddLoad(LoadTorqueVector(markerNumber=mAxis, loadVector=[0, 0, 1]))
-    if forceAtRim:
-        mbs.AddLoad(LoadForceVector(markerNumber=mRim, loadVector=[0, 1, 0]))
+    mbs.AddLoad(LoadForceVector(markerNumber=mRim, loadVector=[0, 1, 0], bodyFixed=True))
     sRim = mbs.AddSensor(SensorMarker(markerNumber=mRim, outputVariableType=exu.OutputVariableType.Position, storeInternal=True))
     mbs.Assemble()
     return (mbs, sRim)
@@ -68,14 +67,14 @@ def CableModel(offset):
     mbs.Assemble()
     return (mbs, nodes[-1])
 
-#(1) the table turns by phi = t^2/2 * 1/0.5 = 1 rad after 1 s; the rim follows
-(mbs, sRim) = TableModel(forceAtRim=False)
+#(1) the torque 1 + 0.2*1 turns the table by phi = t^2/2 * 1.2/0.5 = 1.2 rad after 1 s; the rim follows
+(mbs, sRim) = TableModel()
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 100
 simulationSettings.timeIntegration.endTime = 1
 mbs.SolveDynamic(simulationSettings)
 rim = mbs.GetSensorValues(sRim)
-exu.Print('position of the rim after 1 s:', rim, ', expected', 0.2*np.array([np.cos(1), np.sin(1), 0]))
+exu.Print('position of the rim after 1 s:', rim, ', expected', 0.2*np.array([np.cos(1.2), np.sin(1.2), 0]))
 
 #(2) the tip deflection, F L^3/(3 EI) = 0.01/3 for the Euler-Bernoulli beam
 (mbs, nTip) = CableModel(offset=0)
@@ -85,8 +84,7 @@ exu.Print('tip deflection of the cable:', tip[1], ', expected', -0.01/3)
 
 #(3) refused at Assemble(), with the reason
 refused = 0
-for (name, Build) in [('force at the rim of the table', lambda: TableModel(forceAtRim=True)),
-                      ('force off the centerline of the cable', lambda: CableModel(offset=0.1))]:
+for (name, Build) in [('force off the centerline of the cable', lambda: CableModel(offset=0.1))]:
     try:
         Build()
         exu.Print(name + ': accepted')
