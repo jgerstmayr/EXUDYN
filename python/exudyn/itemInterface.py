@@ -2099,7 +2099,7 @@ class VObjectGround:
     Args:
         show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        graphicsDataUserFunction: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; type: PyFunctionGraphicsData
+        graphicsDataUserFunction: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; type: ObjectGroundGraphicsDataUserFunction
 
         graphicsData: Structure contains data for body visualization; data is defined in special list / dictionary structure; type: BodyGraphicsData
 
@@ -2417,7 +2417,7 @@ class VObjectRigidBody:
     Args:
         show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        graphicsDataUserFunction: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates; type: PyFunctionGraphicsData
+        graphicsDataUserFunction: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates; type: ObjectRigidBodyGraphicsDataUserFunction
 
         graphicsData: Structure contains data for body visualization; data is defined in special list / dictionary structure; type: BodyGraphicsData
 
@@ -2495,7 +2495,7 @@ class VObjectRigidBody2D:
     Args:
         show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        graphicsDataUserFunction: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates; type: PyFunctionGraphicsData
+        graphicsDataUserFunction: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates; type: ObjectRigidBody2DGraphicsDataUserFunction
 
         graphicsData: Structure contains data for body visualization; data is defined in special list / dictionary structure; type: BodyGraphicsData
 
@@ -2575,7 +2575,7 @@ class VObjectGenericODE2:
 
         showNodes: set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF'; type: bool
 
-        graphicsDataUserFunction: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization; type: PyFunctionGraphicsData
+        graphicsDataUserFunction: A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization; type: ObjectGenericODE2GraphicsDataUserFunction
 
     """
     def __init__(self, show = True, color = [-1.,-1.,-1.,-1.], triangleMesh = [], showNodes = False, graphicsDataUserFunction: Union[ObjectGenericODE2GraphicsDataUserFunction, int] = 0):
@@ -2613,11 +2613,11 @@ class ObjectGenericODE2:
 
         forceVector: generalized force vector added to RHS; type: array_like
 
-        forceUserFunction: A Python user function which computes the generalized user force vector for the ODE2 equations; see description below; type: PyFunctionVectorMbsScalarIndex2Vector
+        forceUserFunction: A Python user function which computes the generalized user force vector for the ODE2 equations; see description below; type: ObjectGenericODE2ForceUserFunction
 
-        massMatrixUserFunction: A Python user function which computes the mass matrix instead of the constant mass matrix given in :math:`\Mm`; return numpy array or MatrixContainer; see description below; type: PyFunctionMatrixContainerMbsScalarIndex2Vector
+        massMatrixUserFunction: A Python user function which computes the mass matrix instead of the constant mass matrix given in :math:`\Mm`; return numpy array or MatrixContainer; see description below; type: ObjectGenericODE2MassMatrixUserFunction
 
-        jacobianUserFunction: A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times :math:`f_{ODE2}`) and w.r.t. the velocities (times :math:`f_{ODE2_t}`). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below; type: PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar
+        jacobianUserFunction: A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times :math:`f_{ODE2}`) and w.r.t. the velocities (times :math:`f_{ODE2_t}`). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below; type: ObjectGenericODE2JacobianUserFunction
 
         visualization: visualization data, see VObjectGenericODE2
 
@@ -2687,7 +2687,7 @@ class ObjectGenericODE1:
 
         rhsVector: a constant rhs vector (e.g., for constant input); type: array_like
 
-        rhsUserFunction: A Python user function which computes the right-hand-side (rhs) of the first order ODE; see description below; type: PyFunctionVectorMbsScalarIndexVector
+        rhsUserFunction: A Python user function which computes the right-hand-side (rhs) of the first order ODE; see description below; type: ObjectGenericODE1RhsUserFunction
 
         visualization: visualization data, see VObjectGenericODE1
 
@@ -2789,7 +2789,7 @@ class ObjectKinematicTree:
 
         jointDControlVector: derivative (D) control values per joint (multiplied with velocity error between joint velocity and velocity offset :math:`\vv_o`); note that more complicated control laws must be implemented with user functions; must be either empty list/array :math:`[]` (default) or have size :math:`n`; type: array_like
 
-        forceUserFunction: A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below; type: PyFunctionVectorMbsScalarIndex2Vector
+        forceUserFunction: A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below; type: ObjectKinematicTreeForceUserFunction
 
         visualization: visualization data, see VObjectKinematicTree
 
@@ -2901,9 +2901,9 @@ class ObjectFFRF:
 
         forceVector: generalized, force vector added to RHS; the rigid body part :math:`\fv_r` is directly applied to rigid body coordinates while the flexible part :math:`\fv\indf` is transformed from global to local coordinates; note that this force vector only allows to add gravity forces for bodies with COM at the origin of the reference frame; type: array_like
 
-        forceUserFunction: A Python user function which computes the generalized user force vector for the ODE2 equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q_t; see description below; type: PyFunctionVectorMbsScalarIndex2Vector
+        forceUserFunction: A Python user function which computes the generalized user force vector for the ODE2 equations; note the different coordinate systems for rigid body and flexible part; The function args are mbs, time, objectNumber, coordinates q (without reference values) and coordinate velocities q_t; see description below; type: ObjectFFRFForceUserFunction
 
-        massMatrixUserFunction: A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the FFRF mass matrix; see description below; type: PyFunctionMatrixMbsScalarIndex2Vector
+        massMatrixUserFunction: A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; note the different coordinate systems as described in the FFRF mass matrix; see description below; type: ObjectFFRFMassMatrixUserFunction
 
         computeFFRFterms: flag decides whether the standard FFRF terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector; type: bool
 
@@ -2992,9 +2992,9 @@ class ObjectFFRFreducedOrder:
 
         dampingMatrixReduced: body-fixed and ONLY flexible coordinates part of reduced damping matrix; provided as MatrixContainer(sparse/dense matrix); type: PyMatrixContainer
 
-        forceUserFunction: A Python user function which computes the generalized user force vector for the ODE2 equations; see description below; type: PyFunctionVectorMbsScalarIndex2Vector
+        forceUserFunction: A Python user function which computes the generalized user force vector for the ODE2 equations; see description below; type: ObjectFFRFreducedOrderForceUserFunction
 
-        massMatrixUserFunction: A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below; type: PyFunctionMatrixMbsScalarIndex2Vector
+        massMatrixUserFunction: A Python user function which computes the TOTAL mass matrix (including reference node) and adds the local constant mass matrix; see description below; type: ObjectFFRFreducedOrderMassMatrixUserFunction
 
         computeFFRFterms: flag decides whether the standard FFRF/CMS terms are computed; use this flag for user-defined definition of FFRF terms in mass matrix and quadratic velocity vector; type: bool
 
@@ -3249,9 +3249,9 @@ class ObjectANCFCable2D:
 
         useReducedOrderIntegration: 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/True: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments; 2: use mixed Lobatto/Gauss integration with exceptional quality of axial strain, however, spurious (hourglass) modes may occur!
 
-        axialForceUserFunction: A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local axial force; see description below; type: PyFunctionMbsScalarIndexScalar9
+        axialForceUserFunction: A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local axial force; see description below; type: ObjectANCFCable2DAxialForceUserFunction
 
-        bendingMomentUserFunction: A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below; type: PyFunctionMbsScalarIndexScalar9
+        bendingMomentUserFunction: A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below; type: ObjectANCFCable2DBendingMomentUserFunction
 
         visualization: visualization data, see VObjectANCFCable2D
 
@@ -3799,7 +3799,7 @@ class ObjectConnectorSpringDamper:
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        springForceUserFunction: A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below; type: PyFunctionMbsScalarIndexScalar5
+        springForceUserFunction: A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below; type: ObjectConnectorSpringDamperSpringForceUserFunction
 
         visualization: visualization data, see VObjectConnectorSpringDamper
 
@@ -3881,7 +3881,7 @@ class ObjectConnectorCartesianSpringDamper:
 
         offset: offset between two springs; type: [float,float,float]
 
-        springForceUserFunction: A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below; type: PyFunctionVector3DmbsScalarIndexScalar4Vector3D
+        springForceUserFunction: A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below; type: ObjectConnectorCartesianSpringDamperSpringForceUserFunction
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -3973,9 +3973,9 @@ class ObjectConnectorRigidBodySpringDamper:
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        springForceTorqueUserFunction: A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below; type: PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D
+        springForceTorqueUserFunction: A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below; type: ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction
 
-        postNewtonStepUserFunction: A Python function which computes the error of the PostNewtonStep; see description below; type: PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D
+        postNewtonStepUserFunction: A Python function which computes the error of the PostNewtonStep; see description below; type: ObjectConnectorRigidBodySpringDamperPostNewtonStepUserFunction
 
         visualization: visualization data, see VObjectConnectorRigidBodySpringDamper
 
@@ -4079,7 +4079,7 @@ class ObjectConnectorLinearSpringDamper:
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        springForceUserFunction: A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in :math:`m0` coordinates, if activeConnector=True; see description below; type: PyFunctionMbsScalarIndexScalar5
+        springForceUserFunction: A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in :math:`m0` coordinates, if activeConnector=True; see description below; type: ObjectConnectorLinearSpringDamperSpringForceUserFunction
 
         visualization: visualization data, see VObjectConnectorLinearSpringDamper
 
@@ -4178,7 +4178,7 @@ class ObjectConnectorTorsionalSpringDamper:
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        springTorqueUserFunction: A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below; type: PyFunctionMbsScalarIndexScalar5
+        springTorqueUserFunction: A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below; type: ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction
 
         visualization: visualization data, see VObjectConnectorTorsionalSpringDamper
 
@@ -4272,7 +4272,7 @@ class ObjectConnectorCoordinateSpringDamper:
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        springForceUserFunction: A Python function which defines the spring force with 8 parameters, see equations section / see description below; type: PyFunctionMbsScalarIndexScalar5
+        springForceUserFunction: A Python function which defines the spring force with 8 parameters, see equations section / see description below; type: ObjectConnectorCoordinateSpringDamperSpringForceUserFunction
 
         visualization: visualization data, see VObjectConnectorCoordinateSpringDamper
 
@@ -4386,7 +4386,7 @@ class ObjectConnectorCoordinateSpringDamperExt:
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
-        springForceUserFunction: A Python function which defines the spring force with 8 parameters, see equations section / see description below; type: PyFunctionMbsScalarIndexScalar11
+        springForceUserFunction: A Python function which defines the spring force with 8 parameters, see equations section / see description below; type: ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction
 
         visualization: visualization data, see VObjectConnectorCoordinateSpringDamperExt
 
@@ -4925,9 +4925,9 @@ class ObjectConnectorCoordinate:
 
         velocityLevel: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored; type: bool
 
-        offsetUserFunction: A Python function which defines the time-dependent offset; see description below; type: PyFunctionMbsScalarIndexScalar
+        offsetUserFunction: A Python function which defines the time-dependent offset; see description below; type: ObjectConnectorCoordinateOffsetUserFunction
 
-        offsetUserFunction_t: time derivative of offsetUserFunction; needed for velocity level constraints; see description below; type: PyFunctionMbsScalarIndexScalar
+        offsetUserFunction_t: time derivative of offsetUserFunction; needed for velocity level constraints; see description below; type: ObjectConnectorCoordinateOffsetUserFunction_t
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -5013,9 +5013,9 @@ class ObjectConnectorCoordinateVector:
 
         velocityLevel: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored; type: bool
 
-        constraintUserFunction: A Python user function which computes the constraint equations; to define the number of algebraic equations, set scalingMarker0 as a numpy.zeros((nAE,1)) array with nAE being the number algebraic equations; see description below; type: PyFunctionVectorMbsScalarIndex2VectorBool
+        constraintUserFunction: A Python user function which computes the constraint equations; to define the number of algebraic equations, set scalingMarker0 as a numpy.zeros((nAE,1)) array with nAE being the number algebraic equations; see description below; type: ObjectConnectorCoordinateVectorConstraintUserFunction
 
-        jacobianUserFunction: A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times :math:`f_{ODE2}`) and w.r.t. the velocities (times :math:`f_{ODE2_t}`). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below; type: PyFunctionMatrixContainerMbsScalarIndex2VectorBool
+        jacobianUserFunction: A Python user function which computes the jacobian, i.e., the derivative of the left-hand-side object equation w.r.t. the coordinates (times :math:`f_{ODE2}`) and w.r.t. the velocities (times :math:`f_{ODE2_t}`). Terms on the RHS must be subtracted from the LHS equation; the respective terms for the stiffness matrix and damping matrix are automatically added; see description below; type: ObjectConnectorCoordinateVectorJacobianUserFunction
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -6063,9 +6063,9 @@ class ObjectJointGeneric:
 
         offsetUserFunctionParameters: vector of 6 parameters for joint's offsetUserFunction; type: array_like
 
-        offsetUserFunction: A Python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters); type: PyFunctionVector6DmbsScalarIndexVector6D
+        offsetUserFunction: A Python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters); type: ObjectJointGenericOffsetUserFunction
 
-        offsetUserFunction_t: (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters; type: PyFunctionVector6DmbsScalarIndexVector6D
+        offsetUserFunction_t: (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters; type: ObjectJointGenericOffsetUserFunction_t
 
         alternativeConstraints: this is an experimental flag, may change in future: if uses alternative contraint equations for rotations, currently in case of 3 locked rotations: :math:`{}^{0}{\mathbf{t}}_{x0}\tp ({}^{0}{\mathbf{t}}_{y1} \times {}^{0}{\mathbf{t}}_{z0})`, :math:`{}^{0}{\mathbf{t}}_{y0}\tp ({}^{0}{\mathbf{t}}_{z1} \times {}^{0}{\mathbf{t}}_{x0})`, :math:`{}^{0}{\mathbf{t}}_{z0}\tp ({}^{0}{\mathbf{t}}_{x1} \times {}^{0}{\mathbf{t}}_{y0})`; this avoids 180° flips of the standard configuration in static computations, but leads to different values in Lagrange multipliers; type: bool
 
@@ -7819,7 +7819,7 @@ class LoadForceVector:
 
         bodyFixed: if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used; type: bool
 
-        loadVectorUserFunction: A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object; type: PyFunctionVector3DmbsScalarVector3D
+        loadVectorUserFunction: A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object; type: LoadForceVectorLoadVectorUserFunction
 
         visualization: visualization data, see VLoadForceVector
 
@@ -7879,7 +7879,7 @@ class LoadTorqueVector:
 
         bodyFixed: if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower torque; if false: global coordinates are used; type: bool
 
-        loadVectorUserFunction: A Python function which defines the time-dependent load and replaces loadVector; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]; type: PyFunctionVector3DmbsScalarVector3D
+        loadVectorUserFunction: A Python function which defines the time-dependent load and replaces loadVector; see description below; see also notes on loadFactor and drawing in LoadForceVector! Example for Python function: def f(mbs, t, loadVector): return [loadVector[0]*np.sin(t*10*2*3.1415),0,0]; type: LoadTorqueVectorLoadVectorUserFunction
 
         visualization: visualization data, see VLoadTorqueVector
 
@@ -7937,7 +7937,7 @@ class LoadMassProportional:
 
         loadVector: vector-valued load [SI:N/kg = m/s:math:`^2`]; typically, this will be the gravity vector in global coordinates; in case of a user function, this v is ignored; type: [float,float,float]
 
-        loadVectorUserFunction: A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!; type: PyFunctionVector3DmbsScalarVector3D
+        loadVectorUserFunction: A Python function which defines the time-dependent load; see description below; see also notes on loadFactor and drawing in LoadForceVector!; type: LoadMassProportionalLoadVectorUserFunction
 
         visualization: visualization data, see VLoadMassProportional
 
@@ -7993,7 +7993,7 @@ class LoadCoordinate:
 
         load: scalar load [SI:N]; in case of a user function, this value is ignored; type: float
 
-        loadUserFunction: A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector!; type: PyFunctionMbsScalar2
+        loadUserFunction: A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector!; type: LoadCoordinateLoadUserFunction
 
         visualization: visualization data, see VLoadCoordinate
 
@@ -8464,7 +8464,7 @@ class SensorUserFunction:
 
         fileName: directory and file name for sensor file output; empty: no file is written; a relative name is placed in ``exudyn.config.outputDirectory`` if that is set; the directory is created if it does not exist; type: str
 
-        sensorUserFunction: A Python function which defines the time-dependent user function, which usually evaluates one or several sensors and computes a new sensor value, see example; type: PyFunctionVectorMbsScalarArrayIndexVectorConfiguration
+        sensorUserFunction: A Python function which defines the time-dependent user function, which usually evaluates one or several sensors and computes a new sensor value, see example; type: SensorUserFunctionSensorUserFunction
 
         storeInternal: true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available; type: bool
 

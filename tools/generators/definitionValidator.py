@@ -292,7 +292,9 @@ def ValidateDefinitions(verbose=True):
 
                 #---- 5. a bare type name must be known
                 typeName = str(member.get('type', ''))
-                if re.match(r'^[A-Za-z_]\w*$', typeName) and typeName not in knownTypeNames:
+                #(the type of an item's user function is added by ItemDefinition from its def, #2664)
+                if (re.match(r'^[A-Za-z_]\w*$', typeName) and typeName not in knownTypeNames
+                        and typeName not in definitionTypes.userFunctionSignatures):
                     violations.append(where + ': type ' + repr(typeName) + ' is neither a type'
                                       + ' constant nor a structure defined in definitions/')
 

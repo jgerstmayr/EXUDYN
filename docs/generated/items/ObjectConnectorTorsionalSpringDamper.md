@@ -36,7 +36,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorTorsionalSpri
 | **velocityOffset** | Real |  | 0. | (symbol: $\omega_\mathrm{off}$) angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!) |
 | **torque** | Real |  | 0. | (symbol: $\tau_c$) additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control) |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
-| **springTorqueUserFunction** | PyFunctionMbsScalarIndexScalar5 |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below |
+| **springTorqueUserFunction** | ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below |
 | **visualization** | VObjectConnectorTorsionalSpringDamper |  |  | parameters for visualization of item |
 
 ## Visualization parameters

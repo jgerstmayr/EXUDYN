@@ -24,7 +24,7 @@ The parameters of the item; in a dictionary, its type is 'Coordinate':
 | **name** | String |  | '' | load's unique name |
 | **markerNumber** | MarkerIndex |  | invalid (-1) | marker's number to which load is applied |
 | **load** | Real |  | 0. | (symbol: $f$) scalar load [SI:N]; in case of a user function, this value is ignored |
-| **loadUserFunction** | PyFunctionMbsScalar2 |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector! |
+| **loadUserFunction** | LoadCoordinateLoadUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector! |
 | **visualization** | VLoadCoordinate |  |  | parameters for visualization of item |
 
 ## Visualization parameters

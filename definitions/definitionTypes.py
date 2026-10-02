@@ -623,64 +623,26 @@ TLinkedDataVector                  = TypeSpec('LinkedDataVector')
 TLoadType                          = TypeSpec('LoadType')
 TMatrix3DList                      = TypeSpec('Matrix3DList')
 TNumpyMatrixI                      = TypeSpec('NumpyMatrixI')
-TPyFunctionGraphicsData            = TypeSpec('PyFunctionGraphicsData')
-TPyFunctionMbsScalarIndexScalar5   = TypeSpec('PyFunctionMbsScalarIndexScalar5')
-TPyFunctionVectorMbsScalarIndex2Vector = TypeSpec('PyFunctionVectorMbsScalarIndex2Vector')
-TPyFunctionVector3DmbsScalarVector3D = TypeSpec('PyFunctionVector3DmbsScalarVector3D')
 TTransformation66List              = TypeSpec('Transformation66List')
 TBeamSection                       = TypeSpec('BeamSection')
 THomogeneousTransformation         = TypeSpec('HomogeneousTransformation')
-TPyFunctionMatrixMbsScalarIndex2Vector = TypeSpec('PyFunctionMatrixMbsScalarIndex2Vector')
-TPyFunctionMbsScalarIndexScalar    = TypeSpec('PyFunctionMbsScalarIndexScalar')
-TPyFunctionMbsScalarIndexScalar9   = TypeSpec('PyFunctionMbsScalarIndexScalar9')
-TPyFunctionVector6DmbsScalarIndexVector6D = TypeSpec('PyFunctionVector6DmbsScalarIndexVector6D')
 TAccessFunctionType                = TypeSpec('AccessFunctionType')
 TBodyGraphicsDataList              = TypeSpec('BodyGraphicsDataList')
 TCNodeGroup                        = TypeSpec('CNodeGroup')
 TInertiaList                       = TypeSpec('InertiaList')
 TJointTypeList                     = TypeSpec('JointTypeList')
-TPyFunctionMatrixContainerMbsScalarIndex2Vector = TypeSpec('PyFunctionMatrixContainerMbsScalarIndex2Vector')
-TPyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar = TypeSpec('PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar')
-TPyFunctionMatrixContainerMbsScalarIndex2VectorBool = TypeSpec('PyFunctionMatrixContainerMbsScalarIndex2VectorBool')
-TPyFunctionMbsScalar2              = TypeSpec('PyFunctionMbsScalar2')
-TPyFunctionMbsScalarIndexScalar11  = TypeSpec('PyFunctionMbsScalarIndexScalar11')
-TPyFunctionVector3DmbsScalarIndexScalar4Vector3D = TypeSpec('PyFunctionVector3DmbsScalarIndexScalar4Vector3D')
-TPyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D = TypeSpec('PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D')
-TPyFunctionVectorMbsScalarArrayIndexVectorConfiguration = TypeSpec('PyFunctionVectorMbsScalarArrayIndexVectorConfiguration')
-TPyFunctionVectorMbsScalarIndex2VectorBool = TypeSpec('PyFunctionVectorMbsScalarIndex2VectorBool')
-TPyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D = TypeSpec('PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D')
-TPyFunctionVectorMbsScalarIndexVector = TypeSpec('PyFunctionVectorMbsScalarIndexVector')
 TSTDstring                         = TypeSpec('STDstring')
 
 #--------------------------------------------------------------------- user-function signatures
 #the C++ std::function each PyFunction... type stands for; the generators render the stored
 #member (PythonUserFunctionBase< ... >), the Python interface and the docs from it. Names must
-#start with 'PyFunction'
+#start with 'PyFunction'. The user functions of the ITEMS are not listed: each is a def in its
+#definition file, and ItemDefinition adds 'PyFunction<Item><Parameter>' with the std::function of the
+#def's annotations (UserFunctionSignature, #2664); what stays here is the MainSystem's
 userFunctionSignatures = {'KeyPressUserFunction': 'std::function<bool(int, int, int)>', #renderer key press (VisualizationSettings.interactive)
                           #for MainSystem => see other MainSystemUserFunctions
                           'PyFunctionBoolMbsScalar': 'std::function<bool(const MainSystem&,Real)>',#PreStepUserFunction, PostStepUserFunction
                           'PyFunctionVector2DMbsScalar': 'std::function<StdVector2D(const MainSystem&,Real)>',#PreStepUserFunction, PostStepUserFunction
-                          #for items:
-                          'PyFunctionGraphicsData': 'std::function<py::object(const MainSystem&,Index)>',
-                          'PyFunctionMbsScalar2': 'std::function<Real(const MainSystem&,Real,Real)>',#LoadCoordinate
-                          'PyFunctionVector3DmbsScalarVector3D': 'std::function<StdVector3D(const MainSystem&,Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
-                          'PyFunctionMbsScalarIndexScalar': 'std::function<Real(const MainSystem&,Real,Index,Real)>', #ConnectorCoordinate
-                          'PyFunctionMbsScalarIndexScalar5': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)>', #ConnectorSpringDamper, CoordinateSpringDamper, several others
-                          'PyFunctionMbsScalarIndexScalar9': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real)>', #ANCFCable2D
-                          'PyFunctionMbsScalarIndexScalar11': 'std::function<Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real,Real)>', #CoordinateSpringDamperExt
-                          'PyFunctionVector6DmbsScalarIndexVector6D': 'std::function<StdVector6D(const MainSystem&,Real,Index,StdVector6D)>', #GenericJoint
-                          'PyFunctionVector3DmbsScalarIndexScalar4Vector3D': 'std::function<StdVector3D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdVector3D)>', #CartesianSpringDamper
-                          'PyFunctionVectorMbsScalarIndex2Vector': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2, ObjectFFRF...
-                          'PyFunctionMatrixMbsScalarIndex2Vector': 'std::function<NumpyMatrix(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2, ObjectFFRF...
-                          'PyFunctionMatrixContainerMbsScalarIndex2Vector': 'std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector)>', #ObjectGenericODE2 #changed from PyFunctionMatrixMbsScalarIndex2Vector 2021-09-27
-                          'PyFunctionMatrixContainerMbsScalarIndex2Vector2Scalar': 'std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,Real,Real)>', #ObjectGenericODE2 #Jacobian
-                          'PyFunctionVectorMbsScalarIndexVector': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector)>', #ObjectGenericODE1
-                          'PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector6D(const MainSystem&,Real,Index,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)>', #RigidBodySpringDamper
-                          'PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D': 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector3D,StdVector3D,StdVector3D,StdVector3D,StdMatrix6D,StdMatrix6D,StdMatrix3D,StdMatrix3D,StdVector6D)>', #RigidBodySpringDamper, postNewtonStep
-                          'PyFunctionVectorMbsScalarIndex2VectorBool' : 'std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector,bool)>', #CoordinateVectorConstraint
-                          'PyFunctionMatrixContainerMbsScalarIndex2VectorBool': 'std::function<py::object(const MainSystem&,Real,Index,StdVector,StdVector,bool)>', #CoordinateVectorConstraint
-                          'PyFunctionVectorMbsScalarArrayIndexVectorConfiguration': 'std::function<StdVector(const MainSystem&,Real,StdArrayIndex,StdVector,ConfigurationType)>', #SensorUserFunction
-#StdVector3D=std::array<Real,3> does not accept numpy::array                            'PyFunctionVector3DScalarVector3D': 'std::function<StdVector3D(Real,StdVector3D)>', #LoadForceVector, LoadTorqueVector, LoadMassProportional
                           }
 
 
@@ -694,10 +656,41 @@ def ItemParameter(type=Required, destination=Required, pythonName=Required,
     #writes its share of it; the HT and its parts default to None, "not given" (#2793)
     #userFunction: for a parameter that IS a user function, the Python def that says what its
     #arguments are called, what they are, and what they mean - see the header of
-    #tools/generators/userFunctionModel.py (#2664)
+    #tools/generators/userFunctionModel.py (#2664); such a parameter has no type=: its C++ signature is
+    #that of the def, see ItemDefinition
     #userFunctionExample: the Python code shown under the generated block, as text; it is a script
     #and not a function, so it cannot be a def, and it is fenced as python by the emitter
+    if userFunction is not None:
+        if not isinstance(type, _Required):
+            raise ValueError('ItemParameter ' + repr(pythonName) + ': a user function takes its type from its def; '
+                             'leave type= out')
+        type = TypeSpec('PyFunction') #completed by ItemDefinition, which knows the item
     return _member('ItemParameter', locals())
+
+
+#the C++ type of each annotation a user function def may carry: the std::function of an item's user
+#function is derived from its def (#2664)
+annotationToCpp = {'MainSystem': 'const MainSystem&', 'Real': 'Real', 'Index': 'Index', 'Bool': 'bool',
+                   'Vector': 'StdVector', 'Vector2D': 'StdVector2D', 'Vector3D': 'StdVector3D', 'Vector6D': 'StdVector6D',
+                   'Matrix3D': 'StdMatrix3D', 'Matrix6D': 'StdMatrix6D', 'NumpyMatrix': 'NumpyMatrix',
+                   'Array': 'StdArrayIndex', 'ConfigurationType': 'ConfigurationType',
+                   'BodyGraphicsData': 'py::object', 'MatrixContainer': 'py::object'}
+
+
+def UserFunctionSignature(function):
+    """the std::function<...> of a user function def, from its annotations as they are written"""
+    import ast
+    import inspect
+    import textwrap
+    node = ast.parse(textwrap.dedent(inspect.getsource(function))).body[0]
+    def Cpp(annotation):
+        name = ast.unparse(annotation) if annotation is not None else 'None'
+        if name not in annotationToCpp:
+            raise ValueError(function.__name__ + ': the annotation ' + repr(name) + ' has no C++ type - use one of '
+                             + ', '.join(annotationToCpp))
+        return annotationToCpp[name]
+    return ('std::function<' + Cpp(node.returns) + '(' + ','.join(Cpp(argument.annotation) for argument in node.args.args)
+            + ')>')
 
 
 #%%************************************************************************************************
@@ -953,6 +946,12 @@ def ItemDefinition(className, members, **header):
                for m in members]
     header['className'] = className
     header['members'] = members
+    #a user function's type is its own, PyFunction<Item><Parameter>, with the std::function of its def (#2664)
+    for member in members:
+        if member.get('userFunction') is not None:
+            name = 'PyFunction' + className + member['pythonName'][0].upper() + member['pythonName'][1:]
+            member['type'] = TypeSpec(name)
+            userFunctionSignatures[name] = UserFunctionSignature(member['userFunction'])
 
     return header
 

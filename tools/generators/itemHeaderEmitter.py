@@ -881,34 +881,31 @@ def CreateStringSymbolicUserFunctionSet(pySymbolicUserFunction):
 
 		//now cast items to set user function
 """
-    functionTypeList = []
-    sFunctionsStr = '' #collect all kinds of user functions
-    classTypeList = []
     useElse = ''
     stdFunctionElse = ''
-    previousList = []
+    memberOfSignature = {} #one member per signature, named after the first user function with it (#2664)
     for item in pySymbolicUserFunction:
         if len(item) == 0: continue
-        
+
         itemType = item['itemType'] #ConnectorSpringDamper
-    
+
         classType = item['classType']   #Object, Node
         userFunctionName = item['userFunctionName']
         pyUserFunctionType = item['pyUserFunctionType']
-        userFunctionType = pyUserFunctionType.replace('PyFunction','')
-        userFunctionType = userFunctionType[0].lower()+userFunctionType[1:]
         stdFunctionType = pyFunctionTypeConversion[pyUserFunctionType]
-        
-        if stdFunctionType in previousList: 
-            # print('double: ',stdFunctionType)
-            continue
-        previousList.append(stdFunctionType)
-        
-        sSTDfunction += '        '+stdFunctionElse+sSTDfunctionTemplate.replace('{varName}',userFunctionType).replace('{stdFunction}',stdFunctionType)
-        stdFunctionElse = 'else '
-        
-        sTemplateInstantiation += 'template class PythonUserFunctionBase<{stdFunction}>;\n'.replace('{stdFunction}',stdFunctionType)
-        stdFunctionMember += ' '*4+stdFunctionType+' ' + userFunctionType + ';\n'
+
+        if stdFunctionType not in memberOfSignature:
+            userFunctionType = pyUserFunctionType.replace('PyFunction','')
+            userFunctionType = userFunctionType[0].lower()+userFunctionType[1:]
+            memberOfSignature[stdFunctionType] = userFunctionType
+
+            sSTDfunction += '        '+stdFunctionElse+sSTDfunctionTemplate.replace('{varName}',userFunctionType).replace('{stdFunction}',stdFunctionType)
+            stdFunctionElse = 'else '
+
+            sTemplateInstantiation += 'template class PythonUserFunctionBase<{stdFunction}>;\n'.replace('{stdFunction}',stdFunctionType)
+            stdFunctionMember += ' '*4+stdFunctionType+' ' + userFunctionType + ';\n'
+        #every user function gets its branch, also one whose signature an earlier one has
+        userFunctionType = memberOfSignature[stdFunctionType]
 
         if not FitsSymbolicUF(pyUserFunctionType, stdFunctionType): continue
         

@@ -35,8 +35,8 @@ The parameters of the item; in a dictionary, its type is 'ConnectorRigidBodySpri
 | **offset** | Vector6D | 6 | [0.,0.,0.,0.,0.,0.] | translational and rotational offset considered in the spring force calculation |
 | **intrinsicFormulation** | Bool |  | False | if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
-| **springForceTorqueUserFunction** | PyFunctionVector6DmbsScalarIndex4Vector3D2Matrix6D2Matrix3DVector6D |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^6$) A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below |
-| **postNewtonStepUserFunction** | PyFunctionVectorMbsScalarIndex4VectorVector3D2Matrix6D2Matrix3DVector6D |  | 0 | (symbol: $\mathrm{UF}_{PN} \in \Rcal$) A Python function which computes the error of the PostNewtonStep; see description below |
+| **springForceTorqueUserFunction** | ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^6$) A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below |
+| **postNewtonStepUserFunction** | ObjectConnectorRigidBodySpringDamperPostNewtonStepUserFunction |  | 0 | (symbol: $\mathrm{UF}_{PN} \in \Rcal$) A Python function which computes the error of the PostNewtonStep; see description below |
 | **visualization** | VObjectConnectorRigidBodySpringDamper |  |  | parameters for visualization of item |
 
 ## Visualization parameters

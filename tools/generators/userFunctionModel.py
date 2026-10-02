@@ -161,22 +161,22 @@ def ReadUserFunction(function, name=None):
 #what the argument table of a user function says and what the C++ signature needs. A size that is not
 #fixed is a formula in the argument's description, which is where a formula renders. py::object says
 #nothing about what it carries, so it accepts the two things that are passed as one.
-cppToAnnotation = {'MainSystem': ['MainSystem'],
-                   'Real': ['Real'],
-                   'Index': ['Index'],
-                   'int': ['Index'],
-                   'bool': ['Bool'],
-                   'StdVector': ['Vector'],
-                   'StdVector2D': ['Vector2D'],
-                   'StdVector3D': ['Vector3D'],
-                   'StdVector6D': ['Vector6D'],
-                   'StdMatrix3D': ['Matrix3D'],
-                   'StdMatrix6D': ['Matrix6D'],
-                   'NumpyMatrix': ['NumpyMatrix'],
-                   'StdArrayIndex': ['Array'],
-                   'ConfigurationType': ['ConfigurationType'],
-                   'py::object': ['BodyGraphicsData', 'MatrixContainer'],
-                   }
+#The table is the inverse of definitionTypes.annotationToCpp, from which the std::function of an
+#item's user function is derived (#2664); 'int' is the renderer's key press function.
+def _CppToAnnotation():
+    import os
+    import sys
+    definitions = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'definitions')
+    if definitions not in sys.path:
+        sys.path.insert(0, definitions)
+    import definitionTypes
+    table = {'int': ['Index']}
+    for (annotation, cpp) in definitionTypes.annotationToCpp.items():
+        table.setdefault(cpp.replace('const', '').replace('&', '').strip(), []).append(annotation)
+    return table
+
+
+cppToAnnotation = _CppToAnnotation()
 
 
 #the runtime Python type of an annotation, for the generated Protocol in itemInterface.py: there the

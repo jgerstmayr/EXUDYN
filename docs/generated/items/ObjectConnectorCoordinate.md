@@ -29,8 +29,8 @@ The parameters of the item; in a dictionary, its type is 'ConnectorCoordinate':
 | **offset** | Real |  | 0. | (symbol: $l_\mathrm{off}$) An offset between the two values |
 | **factorValue1** | Real |  | 1. | (symbol: $k_{m1}$) An additional factor multiplied with value1 used in algebraic equation |
 | **velocityLevel** | Bool |  | False | If true: connector constrains velocities (only works for {ref}`ODE2 <ODE2>` coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored |
-| **offsetUserFunction** | PyFunctionMbsScalarIndexScalar |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the time-dependent offset; see description below |
-| **offsetUserFunction_t** | PyFunctionMbsScalarIndexScalar |  | 0 | (symbol: $\mathrm{UF}_t \in \Rcal$) time derivative of offsetUserFunction; needed for velocity level constraints; see description below |
+| **offsetUserFunction** | ObjectConnectorCoordinateOffsetUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the time-dependent offset; see description below |
+| **offsetUserFunction_t** | ObjectConnectorCoordinateOffsetUserFunction_t |  | 0 | (symbol: $\mathrm{UF}_t \in \Rcal$) time derivative of offsetUserFunction; needed for velocity level constraints; see description below |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorCoordinate |  |  | parameters for visualization of item |
 

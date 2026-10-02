@@ -804,7 +804,7 @@ definitions.append(ItemDefinition(
             pythonName='fileName',
             defaultValue=NoDefaultValue,
             description=r'directory and file name for sensor file output; empty: no file is written; a relative name is placed in `exudyn.config.outputDirectory` if that is set; the directory is created if it does not exist'),
-        ItemParameter(type=TPyFunctionVectorMbsScalarArrayIndexVectorConfiguration, destination=DestComp+DestParam,
+        ItemParameter(destination=DestComp+DestParam,
             pythonName='sensorUserFunction',
             defaultValue=0,
             description=r'A Python function which defines the time-dependent user function, which usually evaluates one or several sensors and computes a new sensor value, see example',

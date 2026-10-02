@@ -144,7 +144,7 @@ def ItemDocstrings(definition):
         if im.IsInterfaceParameter(member) and not im.IsReadOnly(member): #the __init__ arguments
             [parameterDescription, mathSymbol] = ExtractMathSymbol(im.Description(member))
             thisDataDocString = dataDocstringV if 'V' in im.Destination(member) else dataDocstring
-            typeHint = tm.Render(im.TypeName(member), 'pyTyping', 'items')
+            typeHint = tm.Render(im.TypeNameShown(member), 'pyTyping', 'items')
             description = CleanStringForPyiDescription(parameterDescription).strip()
             if typeHint and typeHint not in description: #the type stays readable; Args have no '(type)'
                 description += ('' if description == '' else ';') + ' type: ' + typeHint

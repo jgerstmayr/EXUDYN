@@ -43,7 +43,7 @@ The parameters of the item; in a dictionary, its type is 'KinematicTree':
 | **jointVelocityOffsetVector** | Vector |  | [] | (symbol: $\vv_o \in \Rcal^{n}$) velocity offset for joint coordinates used in (P)D control; acts in positive joint direction similar to jointForceVector; should be modified, e.g., in preStepUserFunction; must be either empty list/array $[]$ (default) or have size $n$ |
 | **jointPControlVector** | Vector |  | [] | (symbol: $\Pm \in \Rcal^{n}$) proportional (P) control values per joint (multiplied with position error between joint value and offset $\uv_o$); note that more complicated control laws must be implemented with user functions; must be either empty list/array $[]$ (default) or have size $n$ |
 | **jointDControlVector** | Vector |  | [] | (symbol: $\Dm \in \Rcal^{n}$) derivative (D) control values per joint (multiplied with velocity error between joint velocity and velocity offset $\vv_o$); note that more complicated control laws must be implemented with user functions; must be either empty list/array $[]$ (default) or have size $n$ |
-| **forceUserFunction** | PyFunctionVectorMbsScalarIndex2Vector |  | 0 | (symbol: $\fv_{user} \in \Rcal^{n}$) A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below |
+| **forceUserFunction** | ObjectKinematicTreeForceUserFunction |  | 0 | (symbol: $\fv_{user} \in \Rcal^{n}$) A Python user function which computes the generalized force vector on RHS with identical action as jointForceVector; see description below |
 | **visualization** | VObjectKinematicTree |  |  | parameters for visualization of item |
 
 ## Visualization parameters

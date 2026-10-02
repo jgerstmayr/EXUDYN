@@ -28,7 +28,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorCoordinateSpr
 | **damping** | Real |  | 0. | (symbol: $d$) damping [SI:N/(m s)] of damper; acts against relative velocity of coordinates |
 | **offset** | Real |  | 0. | (symbol: $l_\mathrm{off}$) offset between two coordinates (reference length of springs), see equation |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
-| **springForceUserFunction** | PyFunctionMbsScalarIndexScalar5 |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the spring force with 8 parameters, see equations section / see description below |
+| **springForceUserFunction** | ObjectConnectorCoordinateSpringDamperSpringForceUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the spring force with 8 parameters, see equations section / see description below |
 | **visualization** | VObjectConnectorCoordinateSpringDamper |  |  | parameters for visualization of item |
 
 ## Visualization parameters

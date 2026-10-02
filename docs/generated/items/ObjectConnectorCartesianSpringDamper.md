@@ -29,7 +29,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorCartesianSpri
 | **stiffness** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\kv$) stiffness [SI:N/m] of springs; act against relative displacements in 0, 1, and 2-direction |
 | **damping** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\dv$) damping [SI:N/(m s)] of dampers; act against relative velocities in 0, 1, and 2-direction |
 | **offset** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\vv_{\mathrm{off}}$) offset between two springs |
-| **springForceUserFunction** | PyFunctionVector3DmbsScalarIndexScalar4Vector3D |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^3$) A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below |
+| **springForceUserFunction** | ObjectConnectorCartesianSpringDamperSpringForceUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^3$) A Python function which computes the 3D force vector between the two marker points, if activeConnector=True; see description below |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorCartesianSpringDamper |  |  | parameters for visualization of item |
 

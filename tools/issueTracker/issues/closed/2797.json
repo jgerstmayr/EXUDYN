@@ -1,0 +1,15 @@
+{
+  "number": 2797,
+  "title": "a symbolic user function could not be created for an item whose signature an earlier item has",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "found in revision2026b step RG12.4.7: the generated SetUserFunctionFromDict of PySymbolicUserFunctionSet.h had a branch only for the first user function of each signature - CreateSymbolicUserFunction for ObjectConnectorCoordinateSpringDamper (the signature of ObjectConnectorSpringDamper), LoadTorqueVector, LoadMassProportional, MainSystem postStepUserFunction and others raised 'invalid user object type'; 16 of 28 had a branch.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 01:40",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "CreateSymbolicUserFunction works for every user function, also for items whose signature an earlier item has (ObjectConnectorCoordinateSpringDamper, LoadTorqueVector, LoadMassProportional, the MainSystem's postStepUserFunction, ...).",
+  "resolvedInVersion": "1.12.235"
+}

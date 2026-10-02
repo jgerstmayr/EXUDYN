@@ -45,7 +45,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorCoordinateSpr
 | **limitStopsDamping** | UReal |  | 0. | (symbol: $d_\mathrm{limits}$) damping [SI:N/(m/s)] of limit stop (contact damping); following a linear contact model |
 | **useLimitStops** | bool |  | False | if True, limit stops are considered and parameters must be set accordingly; furthermore, the NodeGenericData must have 3 data coordinates |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
-| **springForceUserFunction** | PyFunctionMbsScalarIndexScalar11 |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the spring force with 8 parameters, see equations section / see description below |
+| **springForceUserFunction** | ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the spring force with 8 parameters, see equations section / see description below |
 | **visualization** | VObjectConnectorCoordinateSpringDamperExt |  |  | parameters for visualization of item |
 
 ## Visualization parameters

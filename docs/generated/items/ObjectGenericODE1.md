@@ -25,7 +25,7 @@ The parameters of the item; in a dictionary, its type is 'GenericODE1':
 | **nodeNumbers** | ArrayNodeIndex |  | [] | (symbol: $\mathbf{n}_n = [n_0,\,\ldots,\,n_n]\tp$) node numbers which provide the coordinates for the object (consecutively as provided in this list) |
 | **systemMatrix** | NumpyMatrix |  | [] | (symbol: $\Am \in \Rcal^{n \times n}$) system matrix (state space matrix) of first order ODE |
 | **rhsVector** | NumpyVector |  | [] | (symbol: $\fv \in \Rcal^{n}$) a constant rhs vector (e.g., for constant input) |
-| **rhsUserFunction** | PyFunctionVectorMbsScalarIndexVector |  | 0 | (symbol: $\fv_{user} \in \Rcal^{n}$) A Python user function which computes the right-hand-side (rhs) of the first order ODE; see description below |
+| **rhsUserFunction** | ObjectGenericODE1RhsUserFunction |  | 0 | (symbol: $\fv_{user} \in \Rcal^{n}$) A Python user function which computes the right-hand-side (rhs) of the first order ODE; see description below |
 | **coordinateIndexPerNode** | ArrayIndex |  | [] | this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed |
 | **tempCoordinates** | NumpyVector |  | [] | (symbol: $\cv_{temp} \in \Rcal^{n}$) temporary vector containing coordinates |
 | **tempCoordinates_t** | NumpyVector |  | [] | (symbol: $\dot \cv_{temp} \in \Rcal^{n}$) temporary vector containing velocity coordinates |

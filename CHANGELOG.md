@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 217 | 1.12.233 |
+| 1.12 | Metheney | 219 | 1.12.235 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.235** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a symbolic user function could not be created for an item whose signature an earlier item has (#2797)
+  - description: found in revision2026b step RG12.4.7: the generated SetUserFunctionFromDict of PySymbolicUserFunctionSet.h had a branch only for the first user function of each signature - CreateSymbolicUserFunction for ObjectConnectorCoordinateSpringDamper (the signature of ObjectConnectorSpringDamper), LoadTorqueVector, LoadMassProportional, MainSystem postStepUserFunction and others raised 'invalid user object type'; 16 of 28 had a branch.
+  - **notes:** CreateSymbolicUserFunction works for every user function, also for items whose signature an earlier item has (ObjectConnectorCoordinateSpringDamper, LoadTorqueVector, LoadMassProportional, the MainSystem's postStepUserFunction, ...).
+  - date resolved: **2026-10-03 01:40**, date raised: 2026-10-03
+- **1.12.234** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the TPyFunction group types leave the definitions: a user function's signature is that of its def (#2796)
+  - description: revision2026b step RG12.4.7 (maintainer 2025-09-25): the 24 group names of definitionTypes.userFunctionSignatures were a lookup key stated next to the def; checked first that the std::function derived from each def's annotations equals the group's for all 34 user functions (RG12.4.7.1), then the type= removed: ItemDefinition gives each user function the type PyFunction\<Item\>\<Parameter\> with the std::function of its def, the documentation shows the Protocol name, the symbolic set has one member per signature named after its first user function.
+  - **notes:** A user function of an item takes its C++ signature from its def in the definitions; the reference manual shows the name of its Protocol as its type.
+  - date resolved: **2026-10-03 01:40**, date raised: 2026-10-03
 - **1.12.233** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GraphicsData gets a Sphere and a CurvedTriangleList (#2709)
   - description: The maintainer, 2026-09-27: GraphicsData will be extended by two classes, Sphere and CurvedTriangleList. Bigger than it sounds: the GraphicsData dictionary, the OpenGL renderer and the raytracer have to be adapted (at least with temporary workarounds), the pybind interfaces, SC.renderer.GetGraphicsData(), the documentation - so even the minimal implementation takes time. Known limitation to resolve with it: the OpenGL renderer already treats spheres separately for nodes (large node numbers); the raytracer does not draw glSpheres at all, while GetGraphicsData() does return them. The graphics regression test (RG2.3.3, \#2704) is extended when this lands. revision2026b step RG6.7.
   - **notes:** 6-node triangles are split per edge by its own curvature, so a surface curved in one direction is not split along the other; LinkedCylinders and the hollow Sphere consist of 6-node triangles; Tet10 surfaces of FEMinterface are drawn curved; OpenGL keeps the split while the graphics and the settings do not change.

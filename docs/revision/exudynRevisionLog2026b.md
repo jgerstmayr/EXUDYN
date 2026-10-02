@@ -12061,3 +12061,30 @@ thread.
 
 The documentation of `curvedTriangleTilingAngle` and of the key `triangles6` says the per-edge rule (and no longer that
 `GetGraphicsData()` splits by it, which it has not done since RG6.7.7.4); `revisions.md`.
+
+<a id="rg12-4-7"></a>
+### RG12.4.7 — the `TPyFunction...` group types leave the definitions (2026-10-03, #2796, #2797)
+
+**RG12.4.7.1, the proof**: the `std::function` derived from each def's annotations (the table
+`definitionTypes.annotationToCpp`, `UserFunctionSignature` reads the def with `ast`) equals the group's
+`userFunctionSignatures[type]` for **all 34** user functions of the items - no disagreement, so nothing to settle
+before the removal.
+
+**RG12.4.7.2, the removal**: the 34 `ItemParameter`s lose `type=`; giving one with a `userFunction` raises now.
+`ItemDefinition` - where the item is known - gives each the type `PyFunction<Item><Parameter>` and enters the
+`std::function` of its def into `userFunctionSignatures`; the 19 item groups and their `TPyFunction...` constants
+are gone, the dictionary keeps the MainSystem's two and the renderer's key press. The emitters are unchanged where
+they read the type and the signature by name; the validator accepts a type that `ItemDefinition` entered. **What
+shows**: the documentation table, the docstrings of `itemInterface` and `exudyn.types` give the type of a user
+function as the name of its `Protocol` (`ObjectConnectorSpringDamperSpringForceUserFunction`, `TypeNameShown`)
+instead of `PyFunctionMbsScalarIndexScalar5`; `notation.md` says so. `userFunctionModel.cppToAnnotation` is the
+inverse of `annotationToCpp` now, one table. The generated C++ is the same except `PySymbolicUserFunctionSet.h`:
+**one member per signature** (maintainer, 2026-09-30: identical signatures collapse), named after the first user
+function that has it (`objectConnectorSpringDamperSpringForceUserFunction`), 21 as before.
+
+**A bug found on the way (#2797)**: `SetUserFunctionFromDict` got its branch only for the first user function of
+each signature - 16 of 28 -, so `CreateSymbolicUserFunction` raised "invalid user object type" for
+`ObjectConnectorCoordinateSpringDamper.springForceUserFunction` (the signature of `ObjectConnectorSpringDamper`),
+`LoadTorqueVector` and `LoadMassProportional` (that of `LoadForceVector`), the MainSystem's `postStepUserFunction`
+and more. Every user function has its branch now, onto the member of its signature. `symbolicUserFunctionTest.py`
+makes the three item functions symbolic and compares them with the Python ones (its reference unchanged).

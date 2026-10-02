@@ -51,7 +51,7 @@ structureModules = ['structureDefsOther', 'structureDefsSimulationSettings',
 
 from itemModel import Mangle as _Mangle, LineType as _LineType, Size as _Size, \
     DefaultValueString as _DefaultValue, DefaultValueDocument as _DefaultValueDocument, \
-    Flags as _Flags, OutputVariablesString as _OutputVariables, booleanHeaderKeys
+    Flags as _Flags, OutputVariablesString as _OutputVariables, booleanHeaderKeys, TypeNameShown as _TypeNameShown
 
 
 def _Member(member, lineDefinition, source, structureClassNames):
@@ -60,7 +60,7 @@ def _Member(member, lineDefinition, source, structureClassNames):
               'pythonName': member['pythonName'],
               'cplusplusName': member.get('cplusplusName', '') or member['pythonName'],
               'size': _Size(member),
-              'type': str(member.get('type', '')),
+              'type': _TypeNameShown(member),
               'defaultValue': _DefaultValue(member),
               'args': member.get('args', '') or '',
               'cFlags': _Flags(member, source, structureClassNames),

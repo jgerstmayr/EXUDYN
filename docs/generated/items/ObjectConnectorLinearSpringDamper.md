@@ -31,7 +31,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorLinearSpringD
 | **velocityOffset** | Real |  | 0. | (symbol: $v_\mathrm{off}$) velocity offset considered in the damper force calculation (this can be used as velocity control input!) |
 | **force** | Real |  | 0. | (symbol: $f_c$) additional constant force [SI:Nm] added to spring-damper; this can be used to prescribe a force between the two attached bodies (e.g., for actuation and control) |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
-| **springForceUserFunction** | PyFunctionMbsScalarIndexScalar5 |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in $m0$ coordinates, if activeConnector=True; see description below |
+| **springForceUserFunction** | ObjectConnectorLinearSpringDamperSpringForceUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which computes the scalar force between the two rigid body markers along axisMarker0 in $m0$ coordinates, if activeConnector=True; see description below |
 | **visualization** | VObjectConnectorLinearSpringDamper |  |  | parameters for visualization of item |
 
 ## Visualization parameters

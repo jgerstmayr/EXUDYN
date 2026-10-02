@@ -1608,7 +1608,7 @@ find out about the settings of a model. It is the group a user notices most and 
 **RG12.3** **DONE 2026-09-24** (#2590) — [log](exudynRevisionLog2026b.md#rg12-3) · [plan text](exudynRevisionLog2026b.md#plan-rg12-3) — What did this model actually change?
 
 <a id="rg12-4"></a>
-**RG12.4** *(group RG12; maintainer 2026-09-25)* **DONE 2026-09-26 except RG12.4.7** (#2664, resolved) —
+**RG12.4** *(group RG12; maintainer 2026-09-25)* **DONE 2026-09-26, RG12.4.7 2026-10-03** (#2664, resolved; #2796, #2797) —
     **A user function is one typed Python function, and
     everything else is generated from it** (#2664). **After RG3.14** - the descriptions have to be
     Markdown first, because this step makes the documentation block an output rather than a text.
@@ -1708,8 +1708,8 @@ find out about the settings of a model. It is the group a user notices most and 
       redundant: the argument table is generated for every user function, the `\_` escapes are
       gone with RG3.14, and `advancedUtilities`' hand-built `F(...)` message now also names the
       generated `Protocol`, which is carried in `userFunctionArgsDict` as a fourth entry.
-    - **RG12.4.7** *(maintainer, 2026-09-25)* — **the `TPyFunction...` group type disappears from a
-      definition**. *"Can the types like `TPyFunctionMbsScalarIndexScalar5` then also be eliminated?
+    - **RG12.4.7** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg12-4-7) (#2796, #2797) *(maintainer,
+      2026-09-25)* — **the `TPyFunction...` group type disappears from a definition**. *"Can the types like `TPyFunctionMbsScalarIndexScalar5` then also be eliminated?
       They are common interfaces also for the C++-side, but if the automatic mechanisms allow to also
       generate the appropriate function signatures ... then it would be removed. One could just define
       every different user function in `PySymbolicUserFunctionSet.h`, instead of having the current
@@ -2549,7 +2549,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
-| RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
 | RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); done: the dispatch in the connector, the switch and the legacy functions (RG14.2.13, .17), sensors from a pool and the mixed rigid chain (.18), `PostNewtonStep` without Jacobians (.19), `MarkerTemp` without `MarkerData` (.14), `TemporaryComputationData` inventoried and named (.16) |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |

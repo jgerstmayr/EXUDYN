@@ -42,7 +42,7 @@ The parameters of `VObjectRigidBody2D`, given as `visualization`:
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-| **graphicsDataUserFunction** | PyFunctionGraphicsData |  | 0 | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates |
+| **graphicsDataUserFunction** | ObjectRigidBody2DGraphicsDataUserFunction |  | 0 | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates |
 | **graphicsData** | BodyGraphicsData |  |  | Structure contains data for body visualization; data is defined in special list / dictionary structure |
 
 ## Output variables

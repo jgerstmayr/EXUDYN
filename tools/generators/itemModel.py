@@ -405,6 +405,14 @@ def TypeName(member):
     return str(member.get('type', ''))
 
 
+def TypeNameShown(member):
+    """the type as the documentation and exudyn.types show it: for a user function the name of its Protocol in
+    exudyn.itemInterface, which its type PyFunction<Item><Parameter> carries (#2664)"""
+    if member.get('userFunction') is not None:
+        return TypeName(member)[len('PyFunction'):]
+    return TypeName(member)
+
+
 def Destination(member):
     return str(member.get('destination', ''))
 

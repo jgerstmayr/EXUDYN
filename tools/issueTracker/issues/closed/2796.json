@@ -1,0 +1,15 @@
+{
+  "number": 2796,
+  "title": "the TPyFunction group types leave the definitions: a user function's signature is that of its def",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "revision2026b step RG12.4.7 (maintainer 2025-09-25): the 24 group names of definitionTypes.userFunctionSignatures were a lookup key stated next to the def; checked first that the std::function derived from each def's annotations equals the group's for all 34 user functions (RG12.4.7.1), then the type= removed: ItemDefinition gives each user function the type PyFunction<Item><Parameter> with the std::function of its def, the documentation shows the Protocol name, the symbolic set has one member per signature named after its first user function.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 01:40",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "A user function of an item takes its C++ signature from its def in the definitions; the reference manual shows the name of its Protocol as its type.",
+  "resolvedInVersion": "1.12.234"
+}

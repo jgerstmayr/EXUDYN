@@ -72,7 +72,7 @@ def TypeNames(definition):
 
 def Parameter(member):
     [description, mathSymbol] = ExtractMathSymbol(im.Description(member))
-    typeName = im.TypeName(member)
+    typeName = im.TypeNameShown(member)
     return {'type': typeName,
             'size': im.Size(member),
             'range': tm.ConstraintNote(typeName).replace('must be ', '').replace('; ', ''),

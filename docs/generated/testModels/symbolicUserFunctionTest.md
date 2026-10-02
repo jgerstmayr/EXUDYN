@@ -10,7 +10,7 @@ You can view and download this file on Github: [symbolicUserFunctionTest.py](htt
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Tests for symbolic user function
+# Details:  Tests for symbolic user function; also those of items whose signature an earlier item has (#2664)
 #
 # Author:   Johannes Gerstmayr
 # Date:     2023-11-28
@@ -115,6 +115,21 @@ if not testIsActive:
 n = mbs.GetObject(oMassPoint)['nodeNumber']
 p = mbs.GetNodeOutput(n, exu.OutputVariableType.Position)
 u = np.linalg.norm(p)
+
+#every user function can be made symbolic, also one whose signature an earlier item has (#2664): the coordinate
+#spring-damper shares it with the spring-damper, the torque and the mass-proportional load with the force vector
+def UFcoordinate(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset):
+    return stiffness*(displacement-offset) + damping*velocity
+def UFvector(mbs, t, loadVector):
+    return [loadVector[0]*t, loadVector[1], loadVector[2]]
+symbolicCoordinate = CreateSymbolicUserFunction(mbs, UFcoordinate, 'springForceUserFunction',
+                                                itemTypeName='ObjectConnectorCoordinateSpringDamper')
+uErrors = abs(symbolicCoordinate.Evaluate(mbs, 0., 0, 0.1, 0.2, 100., 2., 0.05) - UFcoordinate(mbs, 0., 0, 0.1, 0.2, 100., 2., 0.05))
+for itemTypeName in ['LoadTorqueVector', 'LoadMassProportional']:
+    symbolicVector = CreateSymbolicUserFunction(mbs, UFvector, 'loadVectorUserFunction', itemTypeName=itemTypeName)
+    uErrors += np.linalg.norm(np.array(symbolicVector.Evaluate(mbs, 2., [1., 2., 3.])) - UFvector(mbs, 2., [1., 2., 3.]))
+exu.Print('symbolic user functions with a shared signature, errors:', uErrors)
+u += uErrors
 
 exu.Print('u=',u)
 exu.Print('solution of symbolicUserFunctionTest=',u)

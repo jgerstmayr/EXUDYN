@@ -39,7 +39,7 @@ The parameters of `VObjectGround`, given as `visualization`:
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-| **graphicsDataUserFunction** | PyFunctionGraphicsData |  | 0 | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function |
+| **graphicsDataUserFunction** | ObjectGroundGraphicsDataUserFunction |  | 0 | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function |
 | **graphicsData** | BodyGraphicsData |  |  | Structure contains data for body visualization; data is defined in special list / dictionary structure |
 
 ## Output variables

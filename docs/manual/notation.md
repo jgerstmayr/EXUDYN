@@ -40,8 +40,7 @@ and they usually include some range or size check (e.g., `PReal` is checked for 
 - `NumpyMatrix` $\ldots$ a 2D `numpy` array (matrix) with real numbers (size given by according object)
 - `NumpyMatrixI` $\ldots$ a 2D `numpy` array (matrix) with integer numbers (size given by according object)
 - `MatrixContainer` $\ldots$ a versatile representation for dense and sparse matrices, see {ref}`sec-matrixcontainer`
-- `PyFunctionGraphicsData` $\ldots$ a user function providing GraphicsData, see the user function description of the according object
-- `PyFunctionMbsScalar...` $\ldots$ a user function for the according object; the name is chosen according to the interface (arguments containing scalars, vectors, etc.) and is only used internally for code generation; see the according user function description
+- `ObjectConnectorSpringDamperSpringForceUserFunction`, ... $\ldots$ a user function: the type is the name of its `Protocol` in `exudyn.itemInterface`, the item and the parameter, against which an editor checks the function; its arguments are in the user function description of the item
 
 Note that for integers, there is also the `exu.InvalidIndex()` which is used to uniquely mark invalid indices, e.g., for default values of node numbers in objects or for other functions, often marked as `invalid (-1)` in the documentation. Currently, the invalid index is set to -1, but it may change in the future!
 

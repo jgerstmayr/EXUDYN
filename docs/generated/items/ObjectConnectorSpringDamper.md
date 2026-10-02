@@ -32,7 +32,7 @@ The parameters of the item; in a dictionary, its type is 'ConnectorSpringDamper'
 | **force** | Real |  | 0. | (symbol: $f_{a}$) added constant force [SI:N] of spring; scalar force; f=1 is equivalent to reducing initialLength by 1/stiffness; f > 0: tension; f < 0: compression; can be used to model actuator force |
 | **velocityOffset** | Real |  | 0. | (symbol: $\dot L_0$) velocity offset [SI:m/s] of damper, being equivalent to time change of reference length |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
-| **springForceUserFunction** | PyFunctionMbsScalarIndexScalar5 |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below |
+| **springForceUserFunction** | ObjectConnectorSpringDamperSpringForceUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the spring force with parameters; the Python function will only be evaluated, if activeConnector is true, otherwise the SpringDamper is inactive; see description below |
 | **visualization** | VObjectConnectorSpringDamper |  |  | parameters for visualization of item |
 
 ## Visualization parameters
