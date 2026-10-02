@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 213 | 1.12.229 |
+| 1.12 | Metheney | 215 | 1.12.231 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.231** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` CreateRigidBody and CreateGround take referenceHT and initialHT (#2794)
+  - description: revision2026b step RG16.3.2 (decided in RG16.2, \#2781): referenceHT next to referencePosition/referenceRotationMatrix, initialHT (the transformation added to the reference) next to initialDisplacement/initialRotationMatrix; None for not given, both raises.
+  - **notes:** CreateGround takes referenceHT, CreateRigidBody referenceHT and initialHT for the reference and the initial position and rotation matrix.
+  - date resolved: **2026-10-03 00:26**, date raised: 2026-10-03
+- **1.12.230** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectGround stores its frame as HT; referenceHT next to referencePosition and referenceRotation (#2793)
+  - description: revision2026b step RG16.3.1 (decided in RG16.2, \#2781): ObjectGround stores one HomogeneousTransformation; the parameters referencePosition, referenceRotation and the new referenceHT (a 4x4 array, its 16 values or an exu.HT) are views of it, None for not given; the HT and a part given together must agree. The generator gets the HT parameter with its parts, for the rigid markers to follow.
+  - **notes:** ObjectGround stores its frame as one homogeneous transformation: referenceHT (a 4x4 matrix, its 16 values or an exu.HT) next to referencePosition and referenceRotation, None meaning not given.
+  - date resolved: **2026-10-03 00:26**, date raised: 2026-10-03
 - **1.12.229** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exu.HT from 16 values (#2792)
   - description: Maintainer 2026-10-02: exu.HT also takes the 16 values of the 4x4 matrix row by row - as a sensor stores the output variable HomogeneousTransformation - instead of exu.HT(values.reshape(4,4)).
   - **notes:** exu.HT also takes the 16 values of a 4x4 matrix row by row, as a sensor of the output variable HomogeneousTransformation stores them.

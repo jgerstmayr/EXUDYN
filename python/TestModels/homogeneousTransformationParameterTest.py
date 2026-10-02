@@ -1,0 +1,100 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The HT parameters of the items (#2793): ObjectGround takes its frame as referencePosition and
+#           referenceRotation or at once as referenceHT - a 4x4 matrix, its 16 values or an exu.HT. A parameter left
+#           None is not given; GetObject lists all three, and such a dictionary can be added again; an HT and a part
+#           given together must agree, else the item raises. SetObjectParameter of a part keeps the other part.
+#           CreateGround and CreateRigidBody take referenceHT and initialHT for the position and rotation matrix;
+#           for the three rigid body nodes they give the same coordinates, and an HT with one of its parts raises.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-03
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+
+A = RotXYZ2RotationMatrix([0.3, -0.2, 0.7])
+p = np.array([1., 2., 3.])
+H44 = HomogeneousTransformation(A, p)
+localPosition = [0.5, -0.1, 0.2]
+pointExpected = A @ localPosition + p
+
+errors = []
+#the same ground frame in four ways
+grounds = [mbs.AddObject(ObjectGround(referencePosition=p, referenceRotation=A)),
+           mbs.AddObject(ObjectGround(referenceHT=H44)),
+           mbs.AddObject(ObjectGround(referenceHT=H44.flatten())),       #16 values, as a sensor stores an HT
+           mbs.AddObject(ObjectGround(referenceHT=exu.HT(A, p)))]
+for g in grounds:
+    errors += [np.abs(mbs.GetObjectOutputBody(g, exu.OutputVariableType.Position, localPosition,
+                                               exu.ConfigurationType.Reference) - pointExpected).max()]
+
+#the dictionary lists the frame three times; it can be added again
+d = mbs.GetObject(grounds[1])
+errors += [np.abs(d['referencePosition'] - p).max(), np.abs(d['referenceRotation'] - A).max(),
+           np.abs(d['referenceHT'] - H44).max()]
+d = {key: d[key] for key in ['objectType', 'referencePosition', 'referenceRotation', 'referenceHT']}
+gCopy = mbs.AddObject(d)
+errors += [np.abs(mbs.GetObjectParameter(gCopy, 'referenceHT') - H44).max()]
+
+#default: the identity
+gDefault = mbs.AddObject(ObjectGround())
+errors += [np.abs(mbs.GetObjectParameter(gDefault, 'referenceHT') - np.eye(4)).max()]
+
+#a part keeps the other part
+mbs.SetObjectParameter(gDefault, 'referencePosition', p)
+mbs.SetObjectParameter(gDefault, 'referenceRotation', A)
+errors += [np.abs(mbs.GetObjectParameter(gDefault, 'referenceHT') - H44).max()]
+mbs.SetObjectParameter(gDefault, 'referenceHT', np.eye(4))
+errors += [np.abs(mbs.GetObjectParameter(gDefault, 'referencePosition')).max()]
+
+#an HT and a part that differ: the item raises
+raised = 0
+for parameters in [{'referenceHT': H44, 'referencePosition': [0, 0, 0]},
+                   {'referenceHT': H44, 'referenceRotation': np.eye(3)},
+                   {'referenceHT': A}]: #not a 4x4 matrix
+    try:
+        mbs.AddObject(ObjectGround(**parameters))
+    except Exception:
+        raised += 1
+errors += [3 - raised]
+
+#CreateGround and CreateRigidBody: referenceHT and initialHT for the position and rotation matrix (#2794)
+gCreated = mbs.CreateGround(referenceHT=H44)
+errors += [np.abs(mbs.GetObjectParameter(gCreated, 'referenceHT') - H44).max()]
+Ainit = RotXYZ2RotationMatrix([0.1, 0.2, -0.3])
+dInit = np.array([0.1, -0.2, 0.05])
+inertia = InertiaCuboid(density=1000, sideLengths=[0.4, 0.2, 0.1])
+for nodeType in [exu.NodeType.RotationEulerParameters, exu.NodeType.RotationRxyz, exu.NodeType.RotationRotationVector]:
+    bParts = mbs.CreateRigidBody(inertia=inertia, nodeType=nodeType, referencePosition=p, referenceRotationMatrix=A,
+                                 initialDisplacement=dInit, initialRotationMatrix=Ainit, returnDict=True)
+    bHT = mbs.CreateRigidBody(inertia=inertia, nodeType=nodeType, referenceHT=exu.HT(A, p),
+                              initialHT=HomogeneousTransformation(Ainit, dInit), returnDict=True)
+    for key in ['referenceCoordinates', 'initialCoordinates']:
+        errors += [np.abs(np.array(mbs.GetNodeParameter(bParts['nodeNumber'], key))
+                          - mbs.GetNodeParameter(bHT['nodeNumber'], key)).max()]
+raised = 0
+for parameters in [{'referenceHT': H44, 'referencePosition': p}, {'initialHT': H44, 'initialRotationMatrix': A},
+                   {'referenceHT': A}]:
+    try:
+        mbs.CreateRigidBody(inertia=inertia, **parameters)
+    except Exception:
+        raised += 1
+errors += [3 - raised]
+
+exu.Print('homogeneousTransformationParameterTest: errors', np.round(errors, 15))
+u = sum(errors) + np.sum(mbs.GetObjectParameter(gCopy, 'referenceHT'))
+exu.Print('solution of homogeneousTransformationParameterTest=', u)
+
+exu.sys['testResult'] = u

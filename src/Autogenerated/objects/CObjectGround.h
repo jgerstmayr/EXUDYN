@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  22:10:14 (last modified)
+* @date         2026-10-03  00:11:07 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,13 +30,11 @@ namespace py = pybind11;            //! AUTO: "py" used throughout in code
 class CObjectGroundParameters // AUTO:
 {
 public: // AUTO:
-    Vector3D referencePosition;                   //!< AUTO: reference point = reference position for ground object; local position is added on top of reference position for a ground object
-    Matrix3D referenceRotation;                   //!< AUTO: the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates
+    HomogeneousTransformation referenceHT;        //!< AUTO: the reference frame of the ground as homogeneous transformation, composed of referenceRotation and referencePosition: a 4x4 matrix, its 16 values row by row or an exu.HT; given together with one of them, both must agree
     //! AUTO: default constructor with parameter initialization
     CObjectGroundParameters()
     {
-        referencePosition = Vector3D({0.,0.,0.});
-        referenceRotation = EXUmath::unitMatrix3D;
+        referenceHT = HomogeneousTransformation();
     };
 };
 
@@ -127,7 +125,7 @@ public: // AUTO:
     //! AUTO:  return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect
     virtual Matrix3D GetRotationMatrix(const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current) const override
     {
-        return parameters.referenceRotation;
+        return parameters.referenceHT.GetRotation();
     }
 
     //! AUTO:  return configuration dependent angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect

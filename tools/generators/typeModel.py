@@ -93,9 +93,11 @@ names = {
     'stub': {
         'ArrayIndex': 'List[int]', 'ArrayFloat': 'List[float]', 'Index2': 'Tuple[int,int]',
         'void': 'None', 'std::string': 'str',
+        'HomogeneousTransformation': 'Any',         #a 4x4 array, its 16 values or an exu.HT (#2793)
     },
     'pyTyping': {
         'Vector': 'array_like', 'ArrayIndex': 'array_like',
+        'HomogeneousTransformation': 'array_like (4x4) or exudyn.HT',
     },
 }
 

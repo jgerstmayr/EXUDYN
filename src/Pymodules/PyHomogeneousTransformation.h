@@ -15,6 +15,7 @@
 
 #include "Linalg/RigidBodyMath.h"
 #include "Pymodules/PyConversion.h"
+#include "Pymodules/PybindUtilities.h"
 
 class PyHT : public HomogeneousTransformation
 {
@@ -137,6 +138,81 @@ public:
 		return "HT(rotation=" + EXUstd::ToString(GetRotation()) + ", translation=" + EXUstd::ToString(GetTranslation()) + ")";
 	}
 };
+
+//! the HT parameters of items (#2793): an HT parameter, e.g. referenceHT, and its parts, a position and a rotation
+//! parameter (referencePosition, referenceRotation), are views of one stored HomogeneousTransformation
+namespace EPyUtils
+{
+	//! the HT as 4x4 numpy array, as the dictionary of an item holds it
+	inline py::array_t<Real> ToPython(const HomogeneousTransformation& ht) { return ToPython(ht.GetHT44()); }
+
+	//! an HT from an exu.HT, a 4x4 matrix or its 16 values row by row
+	inline void HTFromPython(const py::object& value, HomogeneousTransformation& ht, const char* context)
+	{
+		if (py::isinstance<PyHT>(value)) { ht = py::cast<const PyHT&>(value); }
+		else
+		{
+			Index size = -1;
+			if (py::isinstance<py::sequence>(value) || py::isinstance<py::array>(value)) { size = (Index)py::len(value); }
+			if (size != 4 && size != 16)
+			{
+				PyError(STDstring(context) + ": an HT must be an exu.HT, a 4x4 matrix or its 16 values", PyErrorType::typeError);
+				return;
+			}
+			ht = PyHT(value, py::none());
+		}
+		ht.UpdateNoRotationFlag();
+	}
+
+	//! the position part of an HT; its rotation is kept
+	inline void HTPositionFromPython(const py::object& value, HomogeneousTransformation& ht, const char* context)
+	{
+		FromPython(value, ht.GetTranslation());
+	}
+
+	//! the rotation part of an HT; its position is kept
+	inline void HTRotationFromPython(const py::object& value, HomogeneousTransformation& ht, const char* context)
+	{
+		Matrix3D rotation;
+		FromPython<Real, 3, 3>(value, rotation);
+		ht.SetRotationMatrix(rotation);
+		ht.UpdateNoRotationFlag();
+	}
+
+	//! the HT and its parts from a dictionary: what is given (and not None) is written; the HT and a part given
+	//! together must agree, as in a dictionary read from the item; positionName or rotationName may be nullptr
+	inline void HTFromDictionary(const py::dict& d, const char* htName, const char* positionName, const char* rotationName,
+		HomogeneousTransformation& ht, const char* className)
+	{
+		auto Given = [&d](const char* name) { return name != nullptr && DictItemExists(d, name) && !d[name].is_none(); };
+		if (Given(htName))
+		{
+			HomogeneousTransformation value;
+			HTFromPython(d[htName], value, (STDstring(className) + "." + htName).c_str());
+			HomogeneousTransformation part = value;
+			if (Given(positionName)) { HTPositionFromPython(d[positionName], part, className); }
+			if (Given(rotationName)) { HTRotationFromPython(d[rotationName], part, className); }
+			Real difference = (part.GetTranslation() - value.GetTranslation()).GetL2Norm();
+			for (Index i = 0; i < 3; i++)
+			{
+				for (Index j = 0; j < 3; j++) { difference += fabs(part.Rotation(i, j) - value.Rotation(i, j)); }
+			}
+			if (difference > 1e-12 * (1. + value.GetTranslation().GetL2Norm()))
+			{
+				PyError(STDstring(className) + ": " + htName + " and " + (positionName ? positionName : "") +
+					(positionName && rotationName ? " or " : "") + (rotationName ? rotationName : "") +
+					" are given and differ; give one of them, the other None", PyErrorType::valueError);
+				return;
+			}
+			ht = value;
+		}
+		else
+		{
+			if (Given(positionName)) { HTPositionFromPython(d[positionName], ht, className); }
+			if (Given(rotationName)) { HTRotationFromPython(d[rotationName], ht, className); }
+		}
+	}
+}
 
 //! an output variable as Python object (#2789): HomogeneousTransformation as exu.HT, from its 16 values row by row; a single
 //! value as float; else a numpy array

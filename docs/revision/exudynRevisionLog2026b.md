@@ -11942,3 +11942,39 @@ co-moving point makes sense only along a list of beams, as the sliding joints do
 
 So: done for the Jacobian; for the velocity a decision: the marker's velocity without the Eulerian term (a function of
 the body for markers, `GetVelocity` kept for the output variable), or as it is.
+
+<a id="rg16-3-1"></a>
+### RG16.3.1 — `ObjectGround` stores its frame as HT (2026-10-03, #2793)
+
+**The generator** has a frame now, so that the markers of RG16.3.3 take it the same way: a parameter of type
+`THomogeneousTransformation` (`referenceHT`), which C++ stores, and its parts - a `TVectorND(3)` and a
+`TMatrixND(3, 3)` parameter with the new field `partOfHT='referenceHT'` -, which are not stored. The generated code:
+the parameter structure holds only the HT; `GetDictionary` and `GetParameter` read the parts from it
+(`referenceHT.GetTranslation()`, `.GetRotation()`) and the HT as 4x4 numpy array; `SetParameter` of a part writes its
+share and keeps the other (`EPyUtils::HTPositionFromPython`, `HTRotationFromPython`), of the HT the whole
+(`HTFromPython`: an `exu.HT`, a 4x4 matrix or its 16 values); `SetWithDictionary` writes all three in one call,
+`EPyUtils::HTFromDictionary`: what is given and not `None` is written, and an HT given together with a part must agree
+with it (1e-12) - so the dictionary of `GetObject`, which lists all three, can be added again, while
+`referenceHT=H, referencePosition=[0,0,0]` raises. The Python item class has `None` as default for the three (a vector
+part becomes `None if x is None else np.array(x)`). The helpers are in `Pymodules/PyHomogeneousTransformation.h`; the
+generated header includes it where an item has an HT. A rotation set from Python is checked once for the unit matrix
+(`HomogeneousTransformation::UpdateNoRotationFlag`), so that a frame without rotation skips it in its products.
+`definitions/README.md` (Members) says how to declare a frame.
+
+**ObjectGround**: `referenceHT` next to `referencePosition` and `referenceRotation`; `GetPosition` is
+`referenceHT * localPosition`, `GetRotationMatrix` its rotation. Test model `homogeneousTransformationParameterTest.py`:
+the same frame given four ways (parts, 4x4, 16 values, `exu.HT`) gives the same point; the dictionary round trip; the
+default identity; a part set keeps the other; three wrong cases raise. (Adding the whole dictionary of `GetObject`
+fails on `VgraphicsData`, which `GetObject` returns as `'<not requested>'` - as before, not part of this step.)
+
+<a id="rg16-3-2"></a>
+### RG16.3.2 — `CreateGround` and `CreateRigidBody` take `referenceHT` and `initialHT` (2026-10-03, #2794)
+
+`CreateGround(referenceHT=...)`, `CreateRigidBody(referenceHT=..., initialHT=...)`: an `exu.HT`, a 4x4 matrix or its 16
+values; the new arguments are last, so a call with positional arguments is unchanged. `referencePosition` and
+`referenceRotationMatrix` default to `None` now (meaning zero and the unit matrix, as before). **`initialHT` is
+`initialRotationMatrix` and `initialDisplacement` at once**, with their meaning: the rotation superimposed to the
+reference rotation, the displacement added to the reference position (global) - not the product
+$\Hm_{ref}\Hm_{init}$, which would rotate the displacement; so an HT and its parts mean the same, as for the ground.
+An HT with one of its parts raises (`_FrameFromHT` in `mainSystemExtensions.py`, one helper for both functions). The
+test model compares the node coordinates of the parts and of the HT for the three rigid body nodes.

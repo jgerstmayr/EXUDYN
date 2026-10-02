@@ -472,6 +472,23 @@ def IsOwnVariable(member):
     return IsVariable(member) and not FromParent(member) and not member.get('isLinked', False)
 
 
+def HTPartOf(member):
+    """the HT parameter whose position or rotation this parameter is (#2793), '' otherwise"""
+    return member.get('partOfHT', '') or ''
+
+
+def HTParts(definition, htName):
+    """the python names of the position and the rotation parameter of an HT parameter, None if it has none"""
+    position, rotation = None, None
+    for member in definition['members']:
+        if HTPartOf(member) == htName:
+            if str(member.get('type', '')) == 'Matrix3D':
+                rotation = member['pythonName']
+            else:
+                position = member['pythonName']
+    return position, rotation
+
+
 def IsVirtualFunction(member):
     return IsFunction(member) and bool(member.get('isVirtual', False))
 

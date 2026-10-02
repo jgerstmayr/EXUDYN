@@ -96,7 +96,8 @@ definitions.append(ItemDefinition(
     $$
 
     with the reference point $\pRefG$ = `referencePosition` and the rotation $\LU{0b}{\Rot}$ =
-    `referenceRotation`.
+    `referenceRotation`. The two are one frame, which `referenceHT` gives at once as homogeneous
+    transformation; a parameter left `None` is not given, and the item stores the frame.
 
     #### Marker interfaces
 
@@ -120,12 +121,18 @@ definitions.append(ItemDefinition(
             description=r"objects's unique name"),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
             pythonName='referencePosition',
-            defaultValue=DVZeroVector3D,
-            description=r"""$\pRefG$reference point = reference position for ground object; local position is added on top of reference position for a ground object"""),
+            defaultValue=CppValue('Vector3D({0.,0.,0.})', 'None', 'None (zero)'),
+            description=r"""$\pRefG$reference point = reference position for ground object; local position is added on top of reference position for a ground object; the translation of referenceHT""",
+            partOfHT='referenceHT'),
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
             pythonName='referenceRotation',
-            defaultValue='EXUmath::unitMatrix3D',
-            description=r"""$\LU{0b}{\Rot} \in \Rcal^{3 \times 3}$the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates"""),
+            defaultValue=CppValue('EXUmath::unitMatrix3D', 'None', 'None (unit matrix)'),
+            description=r"""$\LU{0b}{\Rot} \in \Rcal^{3 \times 3}$the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates; the rotation of referenceHT""",
+            partOfHT='referenceHT'),
+        ItemParameter(type=THomogeneousTransformation, destination=DestComp+DestParam,
+            pythonName='referenceHT',
+            defaultValue=CppValue('HomogeneousTransformation()', 'None', 'None (identity)'),
+            description=r"""$\LU{0b}{\Hm} \in \Rcal^{4 \times 4}$the reference frame of the ground as homogeneous transformation, composed of referenceRotation and referencePosition: a 4x4 matrix, its 16 values row by row or an exu.HT; given together with one of them, both must agree"""),
         ItemFunctionDef('ComputeMassMatrix'),
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians',
@@ -142,7 +149,7 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('GetVelocity',
             implementation='return Vector3D({ 0.,0.,0. });'),
         ItemFunctionDef('GetRotationMatrix',
-            implementation='return parameters.referenceRotation;',
+            implementation='return parameters.referenceHT.GetRotation();',
             description='return configuration dependent rotation matrix of node; returns always a 3D Matrix, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect'),
         ItemFunctionDef('GetAngularVelocity',
             implementation='return Vector3D({ 0.,0.,0. });'),

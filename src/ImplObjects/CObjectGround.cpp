@@ -84,7 +84,7 @@ void CObjectGround::GetOutputVariableBody(OutputVariableType variableType, const
 //!  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectGround::GetPosition(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	return parameters.referenceRotation * localPosition + parameters.referencePosition; //always the reference position!
+	return parameters.referenceHT * localPosition; //always the reference position!
 }
 
 

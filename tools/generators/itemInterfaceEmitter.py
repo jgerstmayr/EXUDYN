@@ -249,6 +249,8 @@ def ItemClasses(definition):
                     parameterWithCheck = 'CheckForValidNumpyArray('+parameterWithCheck+')'
                 elif typeName == 'NumpyMatrix':
                     parameterWithCheck = 'CheckForValidNumpyArray('+parameterWithCheck+')'
+                elif defaultValueStr == 'None': #None means not given, e.g. the parts of an HT (#2793)
+                    parameterWithCheck = 'None if ' + pythonName + ' is None else np.array(' + pythonName + ')'
                 else:
                     parameterWithCheck = 'np.array('+parameterWithCheck+')'
             elif (IsAArrayIndex(typeName)

@@ -1,0 +1,11 @@
+{
+  "number": 2795,
+  "title": "the rigid body markers take localHT, a frame with position and rotation",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "revision2026b step RG16.3.3 (decided in RG16.2, #2781; RG14.2.15, RG16.5): MarkerBodyRigid, MarkerNodeRigid, MarkerKinematicTreeRigid and MarkerSuperElementRigid (localHT replaces offset and adds a rotation) get localHT; the marker frame is the body or node frame times localHT; None for not given.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01"
+}

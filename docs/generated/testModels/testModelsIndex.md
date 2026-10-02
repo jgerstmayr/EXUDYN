@@ -90,6 +90,7 @@ energiesFlexibleBodiesTest
 accessFunctionsTest
 computeItemTest
 emptySystemTest
+homogeneousTransformationParameterTest
 homogeneousTransformationTest
 inspectTest
 energiesTest

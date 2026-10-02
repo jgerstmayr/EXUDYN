@@ -24,8 +24,9 @@ The parameters of the item; in a dictionary, its type is 'Ground':
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **referencePosition** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\pRefG$) reference point = reference position for ground object; local position is added on top of reference position for a ground object |
-| **referenceRotation** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{0b}{\Rot} \in \Rcal^{3 \times 3}$) the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates |
+| **referencePosition** | Vector3D | 3 | None (zero) | (symbol: $\pRefG$) reference point = reference position for ground object; local position is added on top of reference position for a ground object; the translation of referenceHT |
+| **referenceRotation** | Matrix3D | 9 | None (unit matrix) | (symbol: $\LU{0b}{\Rot} \in \Rcal^{3 \times 3}$) the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates; the rotation of referenceHT |
+| **referenceHT** | HomogeneousTransformation |  | None (identity) | (symbol: $\LU{0b}{\Hm} \in \Rcal^{4 \times 4}$) the reference frame of the ground as homogeneous transformation, composed of referenceRotation and referencePosition: a 4x4 matrix, its 16 values row by row or an exu.HT; given together with one of them, both must agree |
 | **visualization** | VObjectGround |  |  | parameters for visualization of item |
 
 ## Visualization parameters
@@ -75,7 +76,8 @@ $$
 $$
 
 with the reference point $\pRefG$ = `referencePosition` and the rotation $\LU{0b}{\Rot}$ =
-`referenceRotation`.
+`referenceRotation`. The two are one frame, which `referenceHT` gives at once as homogeneous
+transformation; a parameter left `None` is not given, and the item stores the frame.
 
 ### Marker interfaces
 

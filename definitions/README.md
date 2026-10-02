@@ -48,6 +48,12 @@ ItemFunctionDef('GetNumberOfNodes', implementation='return 1;')
   default, write `defaultValue=NoDefaultValue`.
 - Default values are real values (`True`, `0.`, `1e-8`); C++ constants and constructor calls are
   `CppValue`s (`DVInvalidIndex`, `DVDefaultColor`, `DVZeroVector3D`).
+- **A frame** is one parameter of type `THomogeneousTransformation` (e.g. `referenceHT`), which C++
+  stores, and optionally its parts: a `TVectorND(3)` and a `TMatrixND(3, 3)` parameter with
+  `partOfHT='referenceHT'`, which are not stored but read and write their share of the HT. All
+  three default to `CppValue(<C++ default>, 'None', ...)`: `None` is "not given"; the dictionary
+  holds all three, and an HT and a part given together must agree (`EPyUtils::HTFromDictionary`,
+  #2793).
 - A function with `implementation=None` is a declaration whose body is in the hand-written `.cpp`;
   `''` is an empty body. `isVirtual` defaults to `True`.
 

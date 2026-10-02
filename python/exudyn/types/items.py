@@ -266,8 +266,9 @@ items = {
     'outputVariables': ['Position', 'Displacement', 'Velocity', 'AngularVelocity', 'RotationMatrix', 'HomogeneousTransformation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
-      'referencePosition': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'reference point = reference position for ground object; local position is added on top of reference position for a ground object'},
-      'referenceRotation': {'type': 'Matrix3D', 'size': '9', 'range': '', 'default': 'IIDiagMatrix(rowsColumns=3,value=1)', 'mustBeGiven': False, 'description': 'the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates'},
+      'referencePosition': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': 'None', 'mustBeGiven': False, 'description': 'reference point = reference position for ground object; local position is added on top of reference position for a ground object; the translation of referenceHT'},
+      'referenceRotation': {'type': 'Matrix3D', 'size': '9', 'range': '', 'default': 'None', 'mustBeGiven': False, 'description': 'the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates; the rotation of referenceHT'},
+      'referenceHT': {'type': 'HomogeneousTransformation', 'size': '', 'range': '', 'default': 'None', 'mustBeGiven': False, 'description': 'the reference frame of the ground as homogeneous transformation, composed of referenceRotation and referencePosition: a 4x4 matrix, its 16 values row by row or an exu.HT; given together with one of them, both must agree'},
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},

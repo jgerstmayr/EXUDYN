@@ -304,21 +304,40 @@ def JointTypeToAxis(jointType):
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def _FrameFromHT(where, htName, ht, positionName, position, rotationName, rotation):
+    """position and rotation matrix from an HT argument and its two parts, None meaning not given (#2794):
+    the HT (a 4x4 matrix, its 16 values or an exu.HT) or the parts, not both; returns (position, rotation),
+    each None if not given"""
+    if ht is None:
+        return position, rotation
+    if position is not None or rotation is not None:
+        raise ValueError(where + ': ' + htName + ' and ' + positionName + ' or ' + rotationName
+                         + ' are given; give one of them, the other None')
+    if not isinstance(ht, exu.HT):
+        if np.array(ht).shape not in [(4, 4), (16,)]:
+            raise ValueError(where + ': ' + htName + ' must be an exu.HT, a 4x4 matrix or its 16 values')
+        ht = exu.HT(ht)
+    return ht.translation, ht.rotation
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
 def MainSystemCreateGround(mbs,
                            name = '',   
-                           referencePosition = [0.,0.,0.],
-                           referenceRotationMatrix = np.eye(3),
+                           referencePosition = None,
+                           referenceRotationMatrix = None,
                            graphicsDataList = [],
                            graphicsDataUserFunction = 0,
-                           show = True): 
+                           show = True,
+                           referenceHT = None): 
     """helper function to create a ground object, using arguments of ObjectGround; this function is mainly added for consistency with other mainSystemExtensions
 
     Args:
         mbs: the MainSystem where items are created
         name: name string for object
-        referencePosition: reference coordinates for point node (always a 3D vector, no matter if 2D or 3D mass)
-        referenceRotationMatrix: reference rotation matrix for rigid body node (always 3D matrix, no matter if 2D or 3D body)
+        referencePosition: reference position of the ground (a 3D vector); None: zero
+        referenceRotationMatrix: reference rotation matrix of the ground (a 3D matrix); None: the unit matrix
+        referenceHT: referenceRotationMatrix and referencePosition at once, as homogeneous transformation: an exu.HT, a 4x4 matrix or its 16 values; None: not given; it raises if given together with referencePosition or referenceRotationMatrix
         graphicsDataList: list of GraphicsData for optional ground visualization
         graphicsDataUserFunction: a user function graphicsDataUserFunction(mbs, itemNumber)->BodyGraphicsData (list of GraphicsData), which can be used to draw user-defined graphics; this is much slower than regular GraphicsData
         color: color of node
@@ -336,7 +355,14 @@ def MainSystemCreateGround(mbs,
         ground=mbs.CreateGround(referencePosition = [2,0,0],
                                 graphicsDataList = [exu.graphics.CheckerBoard(point=[0,0,0], normal=[0,1,0],size=4)])
     """
-    #error checks:        
+    referencePosition, referenceRotationMatrix = _FrameFromHT('MainSystem.CreateGround(...)', 'referenceHT', referenceHT,
+        'referencePosition', referencePosition, 'referenceRotationMatrix', referenceRotationMatrix)
+    if referencePosition is None:
+        referencePosition = [0.,0.,0.]
+    if referenceRotationMatrix is None:
+        referenceRotationMatrix = np.eye(3)
+
+    #error checks:
     if not exudyn.__useExudynFast:
         where='MainSystem.CreateGround(...)'
         if not isinstance(name, str):
@@ -493,8 +519,8 @@ def MainSystemCreateMassPoint(mbs,
 @extends(exudyn.MainSystem)
 def MainSystemCreateRigidBody(mbs,
                            name = '',
-                           referencePosition = [0.,0.,0.],
-                           referenceRotationMatrix = np.eye(3),
+                           referencePosition = None,
+                           referenceRotationMatrix = None,
                            initialVelocity = [0.,0.,0.],
                            initialAngularVelocity = [0.,0.,0.],
                            initialDisplacement = None,
@@ -508,14 +534,16 @@ def MainSystemCreateRigidBody(mbs,
                            color =  [-1.,-1.,-1.,-1.],
                            show = True, 
                            create2D = False, 
-                           returnDict = False): 
+                           returnDict = False,
+                           referenceHT = None,
+                           initialHT = None): 
     """helper function to create 3D (or 2D) rigid body object and node; all quantities are global (angular velocity, etc.); use this function to easily create a rigid body; graphics can be directly obtained from inertia object, e.g. in case of cylindrical or cuboid shape
 
     Args:
         mbs: the MainSystem where items are created
         name: name string for object, node is 'Node:'+name
-        referencePosition: reference position vector for rigid body node (always a 3D vector, no matter if 2D or 3D body)
-        referenceRotationMatrix: reference rotation matrix for rigid body node (always 3D matrix, no matter if 2D or 3D body)
+        referencePosition: reference position vector for rigid body node (always a 3D vector, no matter if 2D or 3D body); None: zero
+        referenceRotationMatrix: reference rotation matrix for rigid body node (always 3D matrix, no matter if 2D or 3D body); None: the unit matrix
         initialVelocity: initial translational velocity vector for node (always a 3D vector, no matter if 2D or 3D body)
         initialAngularVelocity: initial angular velocity vector for node (always a 3D vector, no matter if 2D or 3D body)
         initialDisplacement: initial translational displacement vector for node (always a 3D vector, no matter if 2D or 3D body); these displacements are deviations from reference position, e.g. for a finite element node [None: unused]
@@ -530,6 +558,8 @@ def MainSystemCreateRigidBody(mbs,
         show: True: if graphicsData list is empty, node is shown, otherwise body is shown; False: nothing is shown
         create2D: if True, create NodeRigidBody2D and ObjectRigidBody2D
         returnDict: if False, returns object index; if True, returns dict of all information on created object and node
+        referenceHT: referenceRotationMatrix and referencePosition at once, as homogeneous transformation: an exu.HT, a 4x4 matrix or its 16 values; None: not given; it raises if given together with referencePosition or referenceRotationMatrix
+        initialHT: initialRotationMatrix and initialDisplacement at once, the transformation added to the reference (the rotation superimposed to the reference rotation, the displacement added to the reference position); an exu.HT, a 4x4 matrix or its 16 values; None: not given; it raises if given together with initialDisplacement or initialRotationMatrix
 
     Returns:
         :Union[dict, ObjectIndex]: returns rigid body object index (or dict with 'nodeNumber', 'objectNumber' and possibly 'loadNumber' and 'markerBodyMass' if returnDict=True)
@@ -554,9 +584,18 @@ def MainSystemCreateRigidBody(mbs,
         simulationSettings.timeIntegration.endTime = 2
         mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
-    #error checks:        
+    where='MainSystem.CreateRigidBody(...)'
+    referencePosition, referenceRotationMatrix = _FrameFromHT(where, 'referenceHT', referenceHT,
+        'referencePosition', referencePosition, 'referenceRotationMatrix', referenceRotationMatrix)
+    initialDisplacement, initialRotationMatrix = _FrameFromHT(where, 'initialHT', initialHT,
+        'initialDisplacement', initialDisplacement, 'initialRotationMatrix', initialRotationMatrix)
+    if referencePosition is None:
+        referencePosition = [0.,0.,0.]
+    if referenceRotationMatrix is None:
+        referenceRotationMatrix = np.eye(3)
+
+    #error checks:
     if not exudyn.__useExudynFast:
-        where='MainSystem.CreateRigidBody(...)'
         if not isinstance(name, str):
             RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
         if not IsVector(referencePosition, 3):

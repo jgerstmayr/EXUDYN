@@ -1,0 +1,15 @@
+{
+  "number": 2794,
+  "title": "CreateRigidBody and CreateGround take referenceHT and initialHT",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "revision2026b step RG16.3.2 (decided in RG16.2, #2781): referenceHT next to referencePosition/referenceRotationMatrix, initialHT (the transformation added to the reference) next to initialDisplacement/initialRotationMatrix; None for not given, both raises.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 00:26",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "CreateGround takes referenceHT, CreateRigidBody referenceHT and initialHT for the reference and the initial position and rotation matrix.",
+  "resolvedInVersion": "1.12.231"
+}

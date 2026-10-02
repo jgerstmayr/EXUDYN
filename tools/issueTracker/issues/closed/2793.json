@@ -1,0 +1,15 @@
+{
+  "number": 2793,
+  "title": "ObjectGround stores its frame as HT; referenceHT next to referencePosition and referenceRotation",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026b step RG16.3.1 (decided in RG16.2, #2781): ObjectGround stores one HomogeneousTransformation; the parameters referencePosition, referenceRotation and the new referenceHT (a 4x4 array, its 16 values or an exu.HT) are views of it, None for not given; the HT and a part given together must agree. The generator gets the HT parameter with its parts, for the rigid markers to follow.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 00:26",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectGround stores its frame as one homogeneous transformation: referenceHT (a 4x4 matrix, its 16 values or an exu.HT) next to referencePosition and referenceRotation, None meaning not given.",
+  "resolvedInVersion": "1.12.230"
+}

@@ -2487,9 +2487,9 @@ the joints an HT means fewer variables and one way of doing things.
 **RG16.3** *(group RG16)* **The cases that break nothing for users**, as decided in RG16.2 (2026-10-02): an HT
     parameter next to the position and rotation of today, both `None` for "not given", giving both raises, a 4x4 numpy
     array in the dictionary (an `exu.HT` accepted), only where it makes sense:
-    - **RG16.3.1** `ObjectGround`: the HT is the internal storage; `referenceHT` next to `referencePosition` and
+    - **RG16.3.1** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-3-1) (#2793) `ObjectGround`: the HT is the internal storage; `referenceHT` next to `referencePosition` and
       `referenceRotation`, which the get/set interface keeps (and composes from the stored HT);
-    - **RG16.3.2** `CreateRigidBody` (and `CreateGround`): `referenceHT` and `initialHT` - the transformation added to the
+    - **RG16.3.2** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-3-2) (#2794) `CreateRigidBody` (and `CreateGround`): `referenceHT` and `initialHT` - the transformation added to the
       reference -, translated into the node's reference and initial coordinates; rigid bodies and their nodes themselves
       take no HT (their state is their coordinates);
     - **RG16.3.3** the rigid body markers (`MarkerBodyRigid`, `MarkerNodeRigid`, `MarkerKinematicTreeRigid`): `localHT`,

@@ -139,7 +139,9 @@ script that reads `g['triangles']` of such a shape gets the flat ones with
 made from a cylinder with an even `nTiles` has the same facets as before, on more triangles (#2709).
 
 **The rotation of an ANCF slope node is one frame.** `NodePointSlope23` and the cross section of
-`ObjectANCFBeam` rotate with the orthonormal frame of their slopes ($v_z$ normalized, $v_y$
+`ObjectANCFBeam` rotate with the orthonormal frame of their slopes ($
+v_z$ normalized, $
+v_y$
 orthogonalized against it), and their angular velocity and rotation Jacobian are now its
 derivatives; they were a least-squares fit of both slopes, which differs where the cross section
 deforms. Joints and torques on these nodes converge as they should; the angular velocity output of a
@@ -173,6 +175,18 @@ composes with `*` (`H1*H2`, and `H*v` for a point), inverts (`Inverse()`), and c
 gives `Position` and `RotationMatrix` also gives `HomogeneousTransformation`, the 4x4 matrix [A p; 0 1]:
 `GetNodeOutput`, `GetObjectOutputBody` and `GetMarkerOutput` return it as an `exu.HT`, a sensor stores
 its 16 values row by row, from which `exu.HT(values)` makes the HT (#2780, #2789, #2792).
+
+**A frame as one parameter.** `ObjectGround` takes its frame as `referencePosition` and
+`referenceRotation` or at once as `referenceHT` - a 4x4 matrix, its 16 values or an `exu.HT`; a
+parameter left `None` is not given, and an HT given with one of its parts must agree with it.
+`CreateGround` and `CreateRigidBody` take `referenceHT`, and `CreateRigidBody` also `initialHT` for
+`initialRotationMatrix` and `initialDisplacement` (#2793, #2794).
+
+**A system without coordinates** - only ground, sensors and user functions - is solved by every
+solver: time advances, the user functions are called and the sensors record (#2790).
+
+**The frame of a rigid marker** is drawn with `visualizationSettings.markers.showBasis` and
+`basisSize`: three lines in red, green and blue, or three arrows with short heads (#2791).
 
 **Curved shapes in GraphicsData.** 6-node (quadratic) triangles - the key `triangles6` of a
 `TriangleList` - quadratic lines (`Lines` with `shape` `'quadratic'`) and quadratic edges (`edges3`)

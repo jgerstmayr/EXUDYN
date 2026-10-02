@@ -2125,9 +2125,11 @@ class ObjectGround:
     Args:
         name: objects's unique name; type: str
 
-        referencePosition: reference point = reference position for ground object; local position is added on top of reference position for a ground object; type: [float,float,float]
+        referencePosition: reference point = reference position for ground object; local position is added on top of reference position for a ground object; the translation of referenceHT; type: [float,float,float]
 
-        referenceRotation: the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates; type: array_like
+        referenceRotation: the constant ground rotation matrix, which transforms body-fixed (b) to global (0) coordinates; the rotation of referenceHT; type: array_like
+
+        referenceHT: the reference frame of the ground as homogeneous transformation, composed of referenceRotation and referencePosition: a 4x4 matrix, its 16 values row by row or an exu.HT; given together with one of them, both must agree; type: array_like (4x4) or exudyn.HT
 
         visualization: visualization data, see VObjectGround
 
@@ -2135,10 +2137,11 @@ class ObjectGround:
         Object has/provides the following types: ``Ground``, ``Body``
 
     """
-    def __init__(self, name = '', referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
+    def __init__(self, name = '', referencePosition = None, referenceRotation = None, referenceHT = None, visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
-        self.referencePosition = np.array(referencePosition)
-        self.referenceRotation = np.array(referenceRotation)
+        self.referencePosition = None if referencePosition is None else np.array(referencePosition)
+        self.referenceRotation = None if referenceRotation is None else np.array(referenceRotation)
+        self.referenceHT = referenceHT
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -2146,6 +2149,7 @@ class ObjectGround:
         yield 'name', self.name
         yield 'referencePosition', self.referencePosition
         yield 'referenceRotation', self.referenceRotation
+        yield 'referenceHT', self.referenceHT
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]

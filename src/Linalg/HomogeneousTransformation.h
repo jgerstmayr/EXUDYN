@@ -82,6 +82,13 @@ public:
 		noRotation = false;
 	}
 
+	//! set the flag of no rotation if the rotation is exactly the unit matrix; for parameters, which are set once (#2793)
+	void UpdateNoRotationFlag()
+	{
+		noRotation = homogeneousTransformationUseIdentityFlag && R[0] == (T)1. && R[1] == (T)0. && R[2] == (T)0. && R[3] == (T)0.
+			&& R[4] == (T)1. && R[5] == (T)0. && R[6] == (T)0. && R[7] == (T)0. && R[8] == (T)1.;
+	}
+
 	//! set a rotation and zero translation
 	void SetRotation(const ConstSizeMatrixBase<T, 9>& rotation)
 	{

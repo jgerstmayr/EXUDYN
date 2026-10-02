@@ -15,12 +15,16 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectFFRFreducedOrder: nodeNumbers(class,dict,set)
   ObjectGenericODE1: nodeNumbers(class,dict,set)
   ObjectGenericODE2: nodeNumbers(class,dict,set)
+  ObjectGround: referenceHT(set)
   ObjectJointALEMoving2D: nodeNumbers(class,dict,set)
   SensorUserFunction: sensorNumbers(class,dict,set)
   SimulationSettings: linearSolverType(attribute,dict)
   SimulationSettings.timeIntegration.explicitIntegration: dynamicSolverType(attribute,dict)
   VisualizationSettings.contour: outputVariable(attribute,dict)
   VisualizationSettings.interactive: highlightItemType(attribute,dict)
+
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError numpy4x4f
+  ObjectGround: referenceHT(class,dict)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError list2:MarkerIndex !ExudynTypeError
   ObjectConnectorCartesianSpringDamper: markerNumbers(class,dict,set)
@@ -93,12 +97,15 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectConnectorTorsionalSpringDamper: rotationMarker0(class,dict,set) rotationMarker1(class,dict,set)
   ObjectContactCurveCircles: rotationMarker0(class,dict,set)
   ObjectFFRFreducedOrder: physicsCenterOfMassTilde(class,dict,set) physicsInertia(class,dict,set)
-  ObjectGround: referenceRotation(class,dict,set)
+  ObjectGround: referenceRotation(set)
   ObjectJointGeneric: rotationMarker0(class,dict,set) rotationMarker1(class,dict,set)
   ObjectJointPrismaticX: rotationMarker0(class,dict,set) rotationMarker1(class,dict,set)
   ObjectJointRevoluteZ: rotationMarker0(class,dict,set) rotationMarker1(class,dict,set)
   ObjectMass1D: referenceRotation(class,dict,set)
   ObjectRotationalMass1D: referenceRotation(class,dict,set)
+
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynTypeError !ExudynValueError !ExudynTypeError !ExudynValueError !ExudynTypeError !ExudynTypeError !ExudynValueError numpy3x3f
+  ObjectGround: referenceRotation(class,dict)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynValueError !ExudynValueError !ExudynValueError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError !ExudynTypeError
   NodePointSlope1: initialCoordinates(class,dict,set) initialVelocities(class,dict,set) referenceCoordinates(class,dict,set)
@@ -231,7 +238,7 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectConnectorRollingDiscPenalty: discAxis(class,dict,set) planeNormal(class,dict,set)
   ObjectContactSphereTorus: torusAxis(class,dict,set)
   ObjectFFRFreducedOrder: physicsCenterOfMass(class,dict,set)
-  ObjectGround: referencePosition(class,dict,set)
+  ObjectGround: referencePosition(set)
   ObjectJointPrismatic2D: axisMarker0(class,dict,set) normalMarker1(class,dict,set)
   ObjectJointRollingDisc: discAxis(class,dict,set) planeNormal(class,dict,set)
   ObjectKinematicTree: baseOffset(class,dict,set) gravity(class,dict,set)
@@ -240,6 +247,9 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectRotationalMass1D: referencePosition(class,dict,set)
   SensorBody: localPosition(class,dict,set)
   SensorKinematicTree: localPosition(class,dict,set)
+
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError numpy3f=[1.0,2.0,3.0] !ExudynValueError numpy3f=[1.0,2.0,3.0] !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynValueError numpy3f=[0.0,0.0,0.0]
+  ObjectGround: referencePosition(class,dict)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError list0=[] list0=[] list0=[] list0=[] list0=[] !ExudynTypeError !ExudynTypeError list0=[] !ExudynTypeError
   ObjectGround: VgraphicsData(class,dict,set)
@@ -1045,7 +1055,7 @@ outcome: str=default
   ObjectFFRFreducedOrder: Vcolor(omit) Vshow(omit) VshowNodes(omit) VtriangleMesh(omit) computeFFRFterms(omit) dampingMatrixReduced(omit) forceUserFunction(omit) mPhitTPsi(omit) mPhitTPsiTilde(omit) mPsiTildePsi(omit) mPsiTildePsiTilde(omit) mXRefTildePsi(omit) mXRefTildePsiTilde(omit) massMatrixReduced(omit) massMatrixUserFunction(omit) modeBasis(omit) nodeNumbers(omit) objectIsInitialized(omit) outputVariableModeBasis(omit) outputVariableTypeModeBasis(omit) physicsCenterOfMass(omit) physicsCenterOfMassTilde(omit) physicsInertia(omit) physicsMass(omit) referencePositions(omit) stiffnessMatrixReduced(omit)
   ObjectGenericODE1: Vshow(omit) nodeNumbers(omit) rhsUserFunction(omit) rhsVector(omit) systemMatrix(omit)
   ObjectGenericODE2: Vcolor(omit) VgraphicsDataUserFunction(omit) Vshow(omit) VshowNodes(omit) VtriangleMesh(omit) dampingMatrix(omit) forceUserFunction(omit) forceVector(omit) jacobianUserFunction(omit) massMatrix(omit) massMatrixUserFunction(omit) nodeNumbers(omit) stiffnessMatrix(omit)
-  ObjectGround: VgraphicsData(omit) VgraphicsDataUserFunction(omit) Vshow(omit) referencePosition(omit) referenceRotation(omit)
+  ObjectGround: VgraphicsData(omit) VgraphicsDataUserFunction(omit) Vshow(omit) referenceHT(omit) referencePosition(omit) referenceRotation(omit)
   ObjectJointALEMoving2D: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) markerNumbers(omit) nodeNumbers(omit) penaltyStiffness(omit) slidingMarkerNumbers(omit) slidingMarkerOffsets(omit) slidingOffset(omit) usePenaltyFormulation(omit)
   ObjectJointGeneric: VaxesLength(omit) VaxesRadius(omit) Vcolor(omit) Vshow(omit) activeConnector(omit) alternativeConstraints(omit) constrainedAxes(omit) markerNumbers(omit) offsetUserFunction(omit) offsetUserFunctionParameters(omit) offsetUserFunction_t(omit) rotationMarker0(omit) rotationMarker1(omit)
   ObjectJointPrismatic2D: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) axisMarker0(omit) constrainRotation(omit) markerNumbers(omit) normalMarker1(omit)
