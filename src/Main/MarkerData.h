@@ -324,14 +324,21 @@ inline ConstSizeMatrixBase<TReal, 9> Matrix3DAs(const Matrix3D& matrix)
 	return result;
 }
 
-//! temporaries of one marker on the new path, per thread (TemporaryComputationData); the markers without their own
-//! functions of the new path fill markerData through ComputeMarkerData
+//! temporaries of one marker on the connector interface, per thread (TemporaryComputationData), kept between its L0
+//! and L1 functions (#2745)
 class MarkerTemp
 {
 public:
-	MarkerData markerData;
+	//! the state of a rigid frame of a rigid body or rigid body node: its rotation and the matrices G (global) and
+	//! G_local of its rotation parameters; fixed in size
+	Matrix3D rotation;
+	ConstSizeMatrix<RigidBodyMath::maxRotCoordinates * 3> G;
+	ConstSizeMatrix<RigidBodyMath::maxRotCoordinates * 3> Glocal;
+	//! a position or rotation Jacobian of a flexible body
 	ResizableMatrix tempMatrix;
-	ResizableMatrix tempMatrix2;
+	//! the marker data with its Jacobians: the default L0/L1 of the markers without their own (CMarker), and the
+	//! Jacobian chains, which need the marker Jacobians
+	MarkerData markerData;
 };
 
 //! the marker data structure from the kinematics of the connector interface (#2745): position, orientation and

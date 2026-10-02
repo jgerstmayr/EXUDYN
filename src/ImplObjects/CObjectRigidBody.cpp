@@ -572,15 +572,11 @@ void CObjectRigidBody::AddPositionForce(const Vector3D& localPosition, const Vec
 
 void CObjectRigidBody::GetKinematicsRigid(const Vector3D& localPosition, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const
 {
-	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
-	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> G;
 	Vector3D pos0, vel0;
-	Matrix3D& A = temp.markerData.orientation;
-	((CNodeRigidBody*)GetCNode(0))->CollectCurrentNodeMarkerData(Glocal, G, pos0, vel0, A, kinematics.angularVelocityLocal);
+	const Matrix3D& A = temp.rotation;
+	((CNodeRigidBody*)GetCNode(0))->CollectCurrentNodeMarkerData(temp.Glocal, temp.G, pos0, vel0, temp.rotation, kinematics.angularVelocityLocal);
 	kinematics.frame = HomogeneousTransformation(A, pos0 + A * localPosition);
 	kinematics.velocity = vel0 + A * kinematics.angularVelocityLocal.CrossProduct(localPosition);
-	temp.tempMatrix.CopyFrom(Glocal);
-	temp.tempMatrix2.CopyFrom(G);
 }
 
 void CObjectRigidBody::AddForceTorque(const Vector3D& localPosition, const Vector3D& force, const Vector3D& torque, MarkerTemp& temp,
@@ -590,9 +586,9 @@ void CObjectRigidBody::AddForceTorque(const Vector3D& localPosition, const Vecto
 
 	//the moment of the force at localPosition in body coordinates, projected by G_local, and the torque projected by G - as
 	//the rotation Jacobian of the marker data, also where the rotation parameters are not exactly normalized
-	const Matrix3D& A = temp.markerData.orientation;
-	const ResizableMatrix& Glocal = temp.tempMatrix;
-	const ResizableMatrix& G = temp.tempMatrix2;
+	const Matrix3D& A = temp.rotation;
+	const ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D>& Glocal = temp.Glocal;
+	const ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D>& G = temp.G;
 	Vector3D momentLocal = localPosition.CrossProduct(A.GetTransposed() * force);
 	for (Index j = 0; j < Glocal.NumberOfColumns(); j++)
 	{

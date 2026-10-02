@@ -11533,3 +11533,62 @@ RG14.2.18), and the solver's warning of 4 M allocations per run is gone.
 The maintainer's answers of 2026-10-02 are planned: RG9.5 (`mbs.ItemCompute`, #2779, before RG9.3.8), and the new group
 RG16, homogeneous transformations: RG16.1 the C++ class and its binding (#2780), RG16.2 the evaluation of HT in the user
 interface (#2781), RG16.5 `localHT` in the rigid markers, with RG14.2.15.
+
+<a id="rg14-2-14-1"></a>
+### RG14.2.14.1 — the state of a rigid frame in `MarkerTemp`; `MarkerNodeRigid` on L0/L1 (2026-10-02, #2745)
+
+**The markers today** (type, and whether they have their own L0/L1 or use the default of `CMarker`, which computes the
+marker data **with its Jacobians** in every evaluation of the right-hand side):
+
+| marker | type | own L0/L1 |
+|---|---|---|
+| `MarkerBodyPosition`, `MarkerNodePosition` | position | yes (`GetODE2Size`, `AddGeneralizedForce`) |
+| `MarkerBodyRigid` | rigid | yes, through the body (`GetKinematicsRigid`, `AddForceTorque`) |
+| `MarkerNodeRigid` | rigid | **yes, now**, for the 3D rigid body nodes; the slope and 2D nodes keep the default |
+| `MarkerNodeCoordinate` | coordinate | yes |
+| `MarkerNodeRotationCoordinate`, `MarkerNodeODE1Coordinate`, `MarkerNodeCoordinates` | coordinate(s) | no - RG14.2.14.2 |
+| `MarkerBodiesRelativeRotationCoordinate`, `...TranslationCoordinate` | coordinate | no - RG14.2.14.2 |
+| `MarkerSuperElementPosition`, `MarkerSuperElementRigid`, `MarkerKinematicTreeRigid` | position, rigid | no - RG14.2.14.3 |
+| `MarkerBodyCable2DShape`, `...Cable2DCoordinates`, `MarkerBodyBeamShape`, `MarkerObjectODE2Coordinates` | special | stay on the path of the marker data (RG14.2.11) |
+| `MarkerBodyMass` | body mass | loads only (mass-proportional), through the body |
+
+**Changed.** `MarkerTemp` holds the state a rigid frame keeps between L0 and L1 in fixed size - the rotation matrix and
+the matrices G (global) and G_local of the rotation parameters (`ConstSizeMatrix<4*3>`) -, so `ObjectRigidBody` no
+longer copies them into two `ResizableMatrix` (and `tempMatrix2` is gone); `tempMatrix` stays for the position and
+rotation Jacobians of the flexible bodies. `MarkerNodeRigid` gets its L0/L1: for a 3D rigid body node (`Node::RigidBody`
+with `Node::Orientation`; `NodeRigidBody2D` also carries `RigidBody`) the frame, the velocities and G from
+`CollectCurrentNodeMarkerData`, the force on the three displacement coordinates and the torque projected by G - no
+marker Jacobians formed; other nodes (`NodePointSlope23`, `NodeRigidBody2D`) keep the default. All references of the
+suite and pytest unchanged. Measured on a chain of 20 rigid bodies with `RigidBodySpringDamper` (RK4, 2000 steps): no
+difference beyond the noise - the run is dominated by the mass matrix of the Tait-Bryan nodes; what is gained is that
+the force path of a node marker forms no Jacobians.
+
+**What `MarkerTemp` still needs `MarkerData` for**: the default L0/L1 of the markers not yet migrated
+(RG14.2.14.2, .3), and the Jacobian chains, which read the marker Jacobians from it (RG14.2.14.4).
+
+<a id="rg14-2-16-1"></a>
+### RG14.2.16.1 — the inventory of `TemporaryComputationData` (2026-10-02, #2745)
+
+26 members per thread. Read from the sources (who uses each member, `CSystem`/`CContact`/`CObjectConnector` and two
+items), grouped by what they serve; the plan per group in the last column. **No member serves the legacy path any
+more** - RG14.2.13 removed its users -, so step (2) of RG14.2.16 has nothing left to remove; what remains is sharing and
+naming (3), and the marker structures, which shrink with RG14.2.14.
+
+| group | members | used by | plan |
+|---|---|---|---|
+| local vectors of the system loops | `localODE2LHS`, `localODE1RHS`, `localAE` | `ComputeSystemODE2RHS`, `ComputeODE2ProjectedReactionForces`, the three `ComputeContact...` of `GeneralContact`; `ComputeSystemODE1RHS`; `ComputeAlgebraicEquations` | keep - one per loop, never used together except ODE2 with the reaction forces; one generic `localVector` possible, small gain |
+| mass matrix | `massMatrix` (`MatrixContainer`) | `ComputeMassMatrix` | keep |
+| ODE2 Jacobian of an item | `localJacobian`, `jacobianTemp`, `jacobianODE2Container`, `numericalJacobianf0/f1` | `JacobianODE2RHS` (analytic, AD and numerical), `JacobianODE2Loads`, `NumericalJacobianODE1RHS`, `ComputeConstraintJacobianDerivative`, the chains `ChainConnectorJacobian`/`ConnectorJacobianODE2RigidMarkers`, `CoordinateSpringDamperExt` | keep - the numerical differentiation of objects and connectors stays |
+| matrices of one caller | `localJacobian_t`, `loadJacobian` | both only `CContact::ComputeContactJacobianANCFcableCircleContact` (`loadJacobian` is misnamed: no load uses it) | rename to generic local matrices, or move into `GeneralContact`'s own temporaries |
+| constraint Jacobians | `localJacobianAE_ODE2`, `_ODE2_t`, `_ODE1`, `_AE` | `JacobianAE`, `ComputeObjectJacobianAE`, `ComputeConstraintJacobianTimesVector`, `NumericalConstraintJacobianTimesVector`, `ComputeODE2ProjectedReactionForces`; `_ODE2` also by the interface (C_q by AD) | keep - the special constraints (RG14.2.11), velocity level (`_ODE2_t`: `ConnectorCoordinate`, `ConnectorCoordinateVector`, `JointRollingDisc`) and bodies with algebraic equations (`_ODE1`, `_AE`: Euler parameters) need them |
+| loads | `generalizedLoad`, `tempIndex4` | `ComputeODE2SingleLoad`, `ComputeODE1Loads` | keep |
+| index arrays | `tempIndex`, `tempIndex2`, `tempIndex3` | `JacobianODE2Loads` (all three), `ComputeConstraintJacobianDerivative` (2, 3), `PostNewtonStep` (the rebuilt LTG list) | keep, generic names already; share with `tempIndex4` as one array of four |
+| sparse buffers | `sparseVector`, `sparseTriplets` | the right-hand side, loads, AE and reaction forces of `CSystem`, `GeneralContact` | keep |
+| the path of the marker data | `markerDataStructure` | the special connectors and constraints (RG14.2.11), `PostNewtonStep`, the ODE1 loads, the marker-based spheres and triangles of `GeneralContact` (RG14.2.12) | keep while those exist |
+| the connector interface | `markerTemp[2]` | every L2 chain in `CObjectConnector.cpp`, `ComputeODE2SingleLoad` | shrinks with RG14.2.14: a fixed-size rigid state since RG14.2.14.1; its `MarkerData` remains for the default L0/L1 of the markers not migrated and for the Jacobian chains |
+| two numbers | `tempValue`, `tempValue2` | `PostNewtonStep` only (its error and the recommended step size) | rename to what they are |
+
+**Proposed for (3)**, needs no decision unless the maintainer wants it otherwise: `loadJacobian` and `localJacobian_t`
+into `GeneralContact`'s own per-thread temporaries (its only caller), `tempIndex`...`tempIndex4` as `tempIndex[4]`,
+`tempValue`/`tempValue2` as `postNewtonError`/`postNewtonStepSize`; the rest stays. The size of a
+`TemporaryComputationData` is not the question (one per thread, allocated once); readability is.

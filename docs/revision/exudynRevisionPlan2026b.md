@@ -2242,6 +2242,18 @@ done.
       fixed size instead of a `MarkerData` with two `ResizableMatrix`; the `MarkerData` of the fallback moves to
       the legacy path (a per-thread `MarkerDataStructure` that exists anyway) and disappears with it
       (RG14.2.13). Done marker by marker, together with RG14.2.11; nothing to gain from doing it before.
+      *Sub-steps (2026-10-02; the inventory of the markers in the [log](exudynRevisionLog2026b.md#rg14-2-14-1)):*
+      - **RG14.2.14.1** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-14-1) - `MarkerTemp` gets the
+        fixed-size state of a rigid frame (rotation, G, G_local); `ObjectRigidBody` keeps it there instead of two
+        `ResizableMatrix`; `MarkerNodeRigid` gets its own L0/L1 for the 3D rigid body nodes;
+      - **RG14.2.14.2** the coordinate markers that a coordinate connector takes: `MarkerNodeRotationCoordinate`,
+        `MarkerNodeODE1Coordinate`, `MarkerNodeCoordinates`, the relative coordinate markers;
+      - **RG14.2.14.3** `MarkerSuperElementPosition`/`Rigid` and `MarkerKinematicTreeRigid` - their Jacobians are
+        dense in many coordinates, their own L1 projects without forming them where possible;
+      - **RG14.2.14.4** the Jacobian chains (`ConnectorJacobianODE2*Markers`, `ConstraintJacobian*Markers`) take the
+        marker Jacobians from a function of the marker (`GetJacobiansRigid`/`Position`) instead of `ComputeMarkerData`;
+        then the `MarkerData` of `MarkerTemp` serves only the markers that keep the path of the marker data
+        (RG14.2.11) and moves to a per-thread structure (`TemporaryMarkerDataStructure`).
     - **RG14.2.16** *(maintainer 2026-10-02)* **`TemporaryComputationData` smaller**: it holds 22 members per thread
       (measured 2026-10-02), most for the legacy path and its matrices: `markerDataStructure` (connectors, constraints and
       loads on the legacy path, `GeneralContact`), `localJacobianAE_ODE2/_ODE2_t/_ODE1/_AE` (the hand-written constraint
@@ -2257,6 +2269,10 @@ done.
       remaining constraints (`JointRollingDisc`, `ConnectorCoordinateVector`, the sliding joints); the numerical
       differentiation of objects and connectors, which stays; and the objects' own `ComputeODE2LHS`/mass matrix
       temporaries until RG15.
+      - **RG14.2.16.1** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-16-1) - the inventory, member by
+        member, grouped: no member serves the legacy path any more, so (2) has nothing left to remove; (3) proposed -
+        the two matrices of one `GeneralContact` caller into its own temporaries, `tempIndex[4]`, `tempValue`/`2`
+        named for `PostNewtonStep`.
     - **RG14.2.15** *(maintainer 2026-10-01; to be considered in all marker and connector work from now on)*
       **Markers with a rotation; the joints' `rotationMarker0/1` deprecated.** A rigid marker gets a local frame:
       **`localHT`** (a homogeneous transformation in the body) as the alternative to `localPosition`, which is

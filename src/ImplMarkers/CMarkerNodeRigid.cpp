@@ -66,6 +66,45 @@ void CMarkerNodeRigid::ComputeMarkerData(const CSystemData& cSystemData, bool co
 
 }
 
+//! a 3D rigid body node (CNodeRigidBody): NodeRigidBody2D is a rigid body node too, without its G matrices
+static bool IsRigidBodyNode3D(const CNodeODE2* node)
+{
+	return (node->GetType() & Node::RigidBody) && (node->GetType() & Node::Orientation);
+}
+
+//! frame and velocities for the connector interface (#2745): a rigid body node gives them together with its G
+//! matrices, which temp keeps for AddGeneralizedForceTorque; other nodes (the slope nodes, ...) go through the marker data
+Index CMarkerNodeRigid::GetKinematicsRigid(const CSystemData& cSystemData, MarkerRigid<Real>& kinematics, MarkerTemp& temp) const
+{
+	const CNodeODE2* node = (const CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]);
+	if (!IsRigidBodyNode3D(node)) { return CMarker::GetKinematicsRigid(cSystemData, kinematics, temp); }
+	Vector3D position, velocity;
+	((const CNodeRigidBody*)node)->CollectCurrentNodeMarkerData(temp.Glocal, temp.G, position, velocity, temp.rotation,
+		kinematics.angularVelocityLocal);
+	kinematics.frame = HomogeneousTransformation(temp.rotation, position);
+	kinematics.velocity = velocity;
+	return node->GetNumberOfODE2Coordinates();
+}
+
+//! a rigid body node: the force on its displacement coordinates, the torque projected by G (global); after
+//! GetKinematicsRigid with the same temp (#2745)
+void CMarkerNodeRigid::AddGeneralizedForceTorque(const CSystemData& cSystemData, const Vector3D& force, const Vector3D& torque,
+	MarkerTemp& temp, LinkedDataVector& ode2Lhs) const
+{
+	const CNodeODE2* node = (const CNodeODE2*)(cSystemData.GetCNodes()[parameters.nodeNumber]);
+	if (!IsRigidBodyNode3D(node))
+	{
+		CMarker::AddGeneralizedForceTorque(cSystemData, force, torque, temp, ode2Lhs);
+		return;
+	}
+	for (Index i = 0; i < 3; i++) { ode2Lhs[i] += force[i]; }
+	const ConstSizeMatrix<RigidBodyMath::maxRotCoordinates * 3>& G = temp.G;
+	for (Index j = 0; j < G.NumberOfColumns(); j++)
+	{
+		ode2Lhs[3 + j] += G(0, j)*torque[0] + G(1, j)*torque[1] + G(2, j)*torque[2];
+	}
+}
+
 //! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(J.T @ v)/dq
 void CMarkerNodeRigid::ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const
 {
