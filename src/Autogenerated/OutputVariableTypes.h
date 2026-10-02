@@ -50,7 +50,7 @@ enum class OutputVariableType : Index64 {
     ConstraintEquation        = 1ull << 31, //!< evaluates constraint equation (=current deviation or drift of constraint equation)
     KineticEnergy             = 1ull << 32, //!< measure kinetic energy of a body, position independent
     PotentialEnergy           = 1ull << 33, //!< measure potential (=elastic) energy of a body or connector, position independent
-    HomogeneousTransformation = 1ull << 34, //!< measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1], 16 components row by row; every item with Position and RotationMatrix provides it
+    HomogeneousTransformation = 1ull << 34, //!< measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1]; the Get...Output functions return it as exu.HT, a sensor stores its 16 components row by row; every item with Position and RotationMatrix provides it
 
     //bits below are ALLOCATED and must not be reused:
     //Strain                  = 1ull << 26, //!< considered for finite elements or fluids; never implemented

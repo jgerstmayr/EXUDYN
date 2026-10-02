@@ -2441,6 +2441,9 @@ the joints an HT means fewer variables and one way of doing things.
     class and its Python binding** (#2780).
     - **RG16.1.1** to **RG16.1.5** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg16-1),
       [RG16.1.5](exudynRevisionLog2026b.md#rg16-1-5) (the HT as an item parameter waits for RG16.2)
+    - **RG16.1.6** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg16-1-6) - *(maintainer 2026-10-02: "make
+      this the standard way")* **the output variable `HomogeneousTransformation` as `exu.HT`** (#2789): the
+      Get...Output functions return an `exu.HT`; a sensor stores the 16 values row by row.
     - **RG16.1.1** the class into a file of its own, out of the `exulie` namespace; it stores only the 12 numbers it
       needs (rotation and translation);
     - **RG16.1.2** performance for what is hot - $\Hm\vv$, $\Hm^{-1}$, $\Hm_1\Hm_2$, set (from $\Am$ and $\vv$, or from
@@ -2474,7 +2477,9 @@ the joints an HT means fewer variables and one way of doing things.
       reference -, translated into the node's reference and initial coordinates; rigid bodies and their nodes themselves
       take no HT (their state is their coordinates);
     - **RG16.3.3** the rigid body markers (`MarkerBodyRigid`, `MarkerNodeRigid`, `MarkerKinematicTreeRigid`): `localHT`,
-      the marker frame = body or node frame x `localHT` (RG14.2.15, RG16.5).
+      the marker frame = body or node frame x `localHT` (RG14.2.15, RG16.5); and `MarkerSuperElementRigid`
+      *(maintainer 2026-10-02)*, where `localHT` replaces `offset` and adds a rotation - needed when the joints'
+      `rotationMarker0/1` are deprecated, as a joint on a superelement then has no other place for its rotation.
 
 **RG16.4** *(group RG16)* **The further steps** - the mode switch, the kinematic tree and the robotics utilities on
     HT -, planned after RG16.3.

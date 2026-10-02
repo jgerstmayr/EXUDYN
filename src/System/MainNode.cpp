@@ -16,6 +16,7 @@
 ************************************************************************************************ */
 
 #include "Main/MainSystem.h"
+#include "Pymodules/PyHomogeneousTransformation.h"
 #include "Linalg/RigidBodyMath.h"
 //#include "Pymodules/PybindUtilities.h"
 
@@ -35,8 +36,7 @@ py::object MainNode::GetOutputVariable(OutputVariableType variableType, Configur
 		else { GetCNode()->GetOutputVariable(variableType, configuration, value); }
 
 		//now check if it is scalar or a vector-valued:
-		if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
-		else { return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer()); }
+		return OutputVariableToPython(variableType, value); //exu.HT for HomogeneousTransformation (#2789)
 	}
 	else
 	{
@@ -53,6 +53,7 @@ py::object MainMarker::GetOutputVariable(const CSystemData& cSystemData, OutputV
 	Vector values;
 	if (GetCMarker()->GetOutputVariable(cSystemData, variableType, configuration, values))
 	{
+		if (variableType == OutputVariableType::HomogeneousTransformation) { return OutputVariableToPython(variableType, values); } //exu.HT (#2789)
 		return py::array_t<Real>(values.NumberOfItems(), values.GetDataPointer());
 	}
 	else

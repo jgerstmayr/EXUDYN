@@ -1,0 +1,15 @@
+{
+  "number": 2789,
+  "title": "the output variable HomogeneousTransformation as exu.HT",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-02: GetNodeOutput, GetObjectOutputBody, GetObjectOutput, GetMarkerOutput and GetObjectOutputSuperElement return an exu.HT for OutputVariableType.HomogeneousTransformation instead of 16 numbers - the standard way; sensors keep storing the 16 numbers row by row (a sensor stores rows of numbers), from which exu.HT(values.reshape(4,4)) makes the HT.",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-02 23:33",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "GetNodeOutput, GetObjectOutputBody and GetMarkerOutput return the output variable HomogeneousTransformation as an exu.HT; a sensor stores its 16 values row by row.",
+  "resolvedInVersion": "1.12.225"
+}

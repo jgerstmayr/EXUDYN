@@ -38,7 +38,7 @@
 		.value("ConstraintEquation", OutputVariableType::ConstraintEquation, "evaluates constraint equation (=current deviation or drift of constraint equation)")
 		.value("KineticEnergy", OutputVariableType::KineticEnergy, "measure kinetic energy of a body, position independent")
 		.value("PotentialEnergy", OutputVariableType::PotentialEnergy, "measure potential (=elastic) energy of a body or connector, position independent")
-		.value("HomogeneousTransformation", OutputVariableType::HomogeneousTransformation, "measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1], 16 components row by row; every item with Position and RotationMatrix provides it")
+		.value("HomogeneousTransformation", OutputVariableType::HomogeneousTransformation, "measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1]; the Get...Output functions return it as exu.HT, a sensor stores its 16 components row by row; every item with Position and RotationMatrix provides it")
 		;
 
   py::enum_<InspectType>(m, "InspectType")

@@ -62,7 +62,7 @@ The class **OutputVariableType** has the following **functions and structures**:
 - **`ConstraintEquation`**: evaluates constraint equation (=current deviation or drift of constraint equation)
 - **`KineticEnergy`**: measure kinetic energy of a body, position independent
 - **`PotentialEnergy`**: measure potential (=elastic) energy of a body or connector, position independent
-- **`HomogeneousTransformation`**: measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1], 16 components row by row; every item with Position and RotationMatrix provides it
+- **`HomogeneousTransformation`**: measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1]; the Get...Output functions return it as exu.HT, a sensor stores its 16 components row by row; every item with Position and RotationMatrix provides it
 
 
 (sec-inspecttype)=

@@ -11876,3 +11876,20 @@ The maintainer, on the proposal of the evaluation above:
    internally) - done: `__all__` and the shortcut gone, the four calls in `kinematicTreeAndMBS.py` and
    `serialRobotInverseKinematics.py` (both run) call `HomogeneousTransformation`, `revisions.md` says it under "What can
    break a script". `HT` now means `exu.HT`.
+
+<a id="rg16-1-6"></a>
+### RG16.1.6 — the output variable `HomogeneousTransformation` as `exu.HT` (2026-10-02, #2789)
+
+The maintainer asked whether the output variable should return the `exu.HT` itself and, if so, to make it the standard
+way. **Yes, for the functions that return one value to Python** - `GetNodeOutput`, `GetObjectOutputBody`,
+`GetObjectOutput` (objects and connectors), `GetObjectOutputSuperElement` and `GetMarkerOutput` return an `exu.HT`: it
+composes, inverts and transforms points at once, where 16 numbers first need a `reshape` and a constructor. **Not for
+the sensors**: a sensor stores rows of numbers over time (`storeInternal`, the sensor file, `PlotSensor`), so it keeps
+the 16 values row by row, and `exu.HT(values.reshape(4,4))` makes the HT of one of them. One function decides it,
+`OutputVariableToPython` (`Pymodules/PyHomogeneousTransformation.h`), used by every place that returned the value of an
+output variable to Python (a single value as float, else a numpy array, as before). `homogeneousTransformationTest.py`
+reads the HT of the node, the body point and the marker as `exu.HT` and the sensor's as 16 values - its reference
+unchanged. The description of the output variable says both.
+
+**Noted for RG16.3.3** (maintainer): for `MarkerSuperElementRigid` the `localHT` replaces `offset` and adds a rotation,
+which joints on superelements need once `rotationMarker0/1` are deprecated.

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 209 | 1.12.224 |
+| 1.12 | Metheney | 210 | 1.12.225 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.225** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the output variable HomogeneousTransformation as exu.HT (#2789)
+  - description: Maintainer 2026-10-02: GetNodeOutput, GetObjectOutputBody, GetObjectOutput, GetMarkerOutput and GetObjectOutputSuperElement return an exu.HT for OutputVariableType.HomogeneousTransformation instead of 16 numbers - the standard way; sensors keep storing the 16 numbers row by row (a sensor stores rows of numbers), from which exu.HT(values.reshape(4,4)) makes the HT.
+  - **notes:** GetNodeOutput, GetObjectOutputBody and GetMarkerOutput return the output variable HomogeneousTransformation as an exu.HT; a sensor stores its 16 values row by row.
+  - date resolved: **2026-10-02 23:33**, date raised: 2026-10-02
 - **1.12.224** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectANCFBeam: the output variable RotationMatrix returns the potential energy (#2788)
   - description: The case RotationMatrix of CObjectANCFBeam::GetOutputVariableBody has no break and falls through to PotentialEnergy (added with \#2202), so GetObjectOutputBody(beam, RotationMatrix) and a SensorBody return a scalar; found by the output variable HomogeneousTransformation (\#2780), which reads RotationMatrix.
   - **notes:** The output variable RotationMatrix of ObjectANCFBeam returned the potential energy; it returns the rotation matrix again.

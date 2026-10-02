@@ -113,7 +113,7 @@ outputVariableTypes = [
     OutputVariable('PotentialEnergy', 33,
                    'measure potential (=elastic) energy of a body or connector, position independent'),
     OutputVariable('HomogeneousTransformation', 34,
-                   'measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1], 16 components row by row; every item with Position and RotationMatrix provides it',
+                   'measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1]; the Get...Output functions return it as exu.HT, a sensor stores its 16 components row by row; every item with Position and RotationMatrix provides it',
                    referenceConfiguration=True),
     ]
 

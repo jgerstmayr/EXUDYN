@@ -23,6 +23,7 @@
 #include "System/MainLoad.h"
 #include "System/MainNode.h"
 #include "System/MainObject.h"
+#include "Pymodules/PyHomogeneousTransformation.h"
 
 
 //! GetOutputVariable with type and return value; copies values==>slow!; can be scalar or vector-valued! maps to CObject GetOutputVariable(...)
@@ -45,8 +46,7 @@ py::object MainObject::GetOutputVariable(OutputVariableType variableType, Config
 		}
 		else { GetCObject()->GetOutputVariable(variableType, value, configuration, objectNumber); }
 		//now check if it is scalar or a vector-valued:
-		if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
-		else { return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer()); }
+		return OutputVariableToPython(variableType, value); //exu.HT for HomogeneousTransformation (#2789)
 	}
 	else
 	{
@@ -74,8 +74,7 @@ py::object MainObject::GetOutputVariableConnector(OutputVariableType variableTyp
 			else { connector->GetOutputVariableConnector(variableType, markerData, objectNumber, value); }
 
 			//now check if it is scalar or a vector-valued:
-			if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
-			else { return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer()); }
+			return OutputVariableToPython(variableType, value); //exu.HT for HomogeneousTransformation (#2789)
 		}
 		else
 		{ SysError("GetOutputVariableConnector may only be called for Connector"); return py::object(); }
@@ -108,8 +107,7 @@ py::object MainObject::GetOutputVariableBody(OutputVariableType variableType, co
 			}
 			else { cObjectBody->GetOutputVariableBody(variableType, localPosition, configuration, value, objectNumber); }
 			//now check if it is scalar or a vector-valued:
-			if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
-			else { return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer()); }
+			return OutputVariableToPython(variableType, value); //exu.HT for HomogeneousTransformation (#2789)
 		}
 		else
 		{
@@ -141,8 +139,7 @@ py::object MainObject::GetOutputVariableSuperElement(OutputVariableType variable
 
 			cObjectSuperElement->GetOutputVariableSuperElement(variableType, meshNodeNumber, configuration, value);
 			//now check if it is scalar or a vector-valued:
-			if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
-			else { return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer()); }
+			return OutputVariableToPython(variableType, value); //exu.HT for HomogeneousTransformation (#2789)
 		}
 		else
 		{

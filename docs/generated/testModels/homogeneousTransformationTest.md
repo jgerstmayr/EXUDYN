@@ -14,8 +14,8 @@ You can view and download this file on Github: [homogeneousTransformationTest.py
 #           of exudyn.rigidBodyUtilities: for random rotations and translations, the composition H1*H2, the
 #           transformed point H*v, the inverse, the 4x4 matrix in both directions, and the transformations set
 #           without rotation (identity, SetTranslation), whose products skip the rotation. The output variable
-#           HomogeneousTransformation of a node, a body point, a marker and a sensor: the 4x4 matrix of the rotation
-#           matrix and the position, 16 values row by row, exu.HT(values.reshape(4,4)).
+#           HomogeneousTransformation of a node, a body point, a marker and a sensor: an exu.HT of the rotation matrix
+#           and the position; a sensor stores its 16 values row by row, exu.HT(values.reshape(4,4)).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-02
@@ -81,11 +81,11 @@ mbs.SolveDynamic(simulationSettings)
 
 A = mbs.GetObjectOutputBody(body['bodyNumber'], exu.OutputVariableType.RotationMatrix, localPosition=pLocal).reshape(3, 3)
 p = mbs.GetObjectOutputBody(body['bodyNumber'], exu.OutputVariableType.Position, localPosition=pLocal)
-HTbody = exu.HT(mbs.GetObjectOutputBody(body['bodyNumber'], OVHT, localPosition=pLocal).reshape(4, 4))
+HTbody = mbs.GetObjectOutputBody(body['bodyNumber'], OVHT, localPosition=pLocal) #an exu.HT
 errors += [np.abs(HTbody.HT44() - HomogeneousTransformation(A, p)).max(),
-           np.abs(mbs.GetMarkerOutput(marker, OVHT) - HTbody.HT44().flatten()).max(),
-           np.abs(mbs.GetSensorValues(sensor) - HTbody.HT44().flatten()).max(),
-           np.abs(exu.HT(mbs.GetNodeOutput(body['nodeNumber'], OVHT).reshape(4, 4)) * pLocal - p).max()]
+           np.abs(mbs.GetMarkerOutput(marker, OVHT).HT44() - HTbody.HT44()).max(),
+           np.abs(exu.HT(mbs.GetSensorValues(sensor).reshape(4, 4)).HT44() - HTbody.HT44()).max(),
+           np.abs(mbs.GetNodeOutput(body['nodeNumber'], OVHT) * pLocal - p).max()]
 total += np.abs(HTbody.HT44()).sum()
 
 exu.Print('largest difference to rigidBodyUtilities:', max(errors), ', flags as expected:', all(flags))

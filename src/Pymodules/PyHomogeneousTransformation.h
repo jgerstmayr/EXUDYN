@@ -128,4 +128,20 @@ public:
 	}
 };
 
+//! an output variable as Python object (#2789): HomogeneousTransformation as exu.HT, from its 16 values row by row; a single
+//! value as float; else a numpy array
+inline py::object OutputVariableToPython(OutputVariableType variableType, const Vector& value)
+{
+	if (variableType == OutputVariableType::HomogeneousTransformation)
+	{
+		ConstSizeMatrix<16> matrix44(4, 4);
+		for (Index i = 0; i < 16; i++) { matrix44.GetDataPointer()[i] = value[i]; }
+		PyHT ht;
+		ht.SetHT44(matrix44);
+		return py::cast(ht);
+	}
+	if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
+	return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer());
+}
+
 #endif
