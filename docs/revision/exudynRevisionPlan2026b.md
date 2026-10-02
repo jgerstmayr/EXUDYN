@@ -905,8 +905,8 @@ This group is that revision and what has to happen before it can start.
 **RG6.6** **DONE 2026-09-24** (#2643) — [log](exudynRevisionLog2026b.md#rg6-6) · [plan text](exudynRevisionLog2026b.md#plan-rg6-6) — macOS: the settings dialog aborted the process.
 
 <a id="rg6-7"></a>
-**RG6.7** *(group RG6; maintainer 2026-09-27)* **GraphicsData gets a Sphere and a
-    CurvedTriangleList** (#2709). Bigger than it sounds, because every consumer of the graphics data
+**RG6.7** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg6-7-done) *(group RG6; maintainer 2026-09-27)*
+    **GraphicsData gets a Sphere and a CurvedTriangleList** (#2709). Bigger than it sounds, because every consumer of the graphics data
     has to follow - even the minimal implementation with temporary workarounds: the GraphicsData
     classes and their dictionary, the OpenGL renderer, the raytracer, the pybind interfaces,
     `SC.renderer.GetGraphicsData()`, the documentation, and the graphics regression test (RG2.3.3).
@@ -937,15 +937,18 @@ This group is that revision and what has to happen before it can start.
       - **RG6.7.2.1** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-2-1) - the superelements with six
         columns in `triangleMesh` (the FFRF bodies and the FEM surface of quadratic meshes, `FEMinterface`), whose points
         deform in every frame; and the contour colors on 6-node triangles (`AddBodyGraphicsDataColored` applied them to
-        flat triangles only); *left*: the surfaces that `VolumeToSurfaceElements` builds for Tet10/Hex20 (Abaqus imports)
-        still take the corner nodes only;
+        flat triangles only); the surfaces that `VolumeToSurfaceElements` builds for Tet10 (Abaqus imports) get their
+        6-node triangles (2026-10-03, [log](exudynRevisionLog2026b.md#rg6-7-done)); a Hex20 face is drawn by its corners -
+        its 8 nodes have none on the diagonals a split into triangles needs (*not decided to be resolved*, see the list
+        below);
       - **RG6.7.2.2** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-2-2) - **the split when drawing**, as
         decided in RG6.7.1 (the first implementation split when the graphics data was built, a misunderstanding):
         `GraphicsData` keeps `glTriangles6` only; OpenGL splits per frame, the raytracer per image,
         `GetGraphicsData()` per call, each with the settings of that moment - a change of
         `curvedTriangleTilingAngle` shows at once. The edges (`showFaceEdges`) are the curved edges, not those of the
         split. Defaults **15°** (24 segments around a full cylinder) and at most **8** subdivisions;
-      - **RG6.7.2.3** *open, only if measured* - the cost of the split per frame for large quadratic meshes (an NGsolve
+      - **RG6.7.2.3** **DONE 2026-10-03, measured** — [log](exudynRevisionLog2026b.md#rg6-7-done) - the split cached per
+        GraphicsData for OpenGL (`SplitTriangles6Cached`), 60 ms per frame for $9\cdot10^4$ triangles6 saved - the cost of the split per frame for large quadratic meshes (an NGsolve
         surface of $10^5$ triangles6 at 15°: up to 64 flat triangles each); if it shows, cache the split per
         GraphicsData, invalidated by the graphics update and by the two settings;
     - **RG6.7.3** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-3) - the sphere type in GraphicsData,
@@ -957,7 +960,8 @@ This group is that revision and what has to happen before it can start.
     - **RG6.7.4** the graphics tests (RG2.3.3) and the documentation grow with both - **DONE with RG6.7.2 and
       RG6.7.3**: the cases `Sphere`, `Spheres` and `Triangles6` of `testEveryGraphicsFunction`, the manual
       (*GraphicsData: Spheres*, the key `triangles6` of *GraphicsData: TriangleList*).
-    - **RG6.7.5** *proposed (maintainer 2026-10-01), feasible* - **anisotropic tiling**: a cylinder patch is curved in
+    - **RG6.7.5** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg6-7-done) *(proposed by the maintainer
+      2026-10-01)* - **anisotropic tiling**: a cylinder patch is curved in
       one direction only, but the split subdivides both, $n^2$ triangles where $2n$ would do. The way: a number of
       subdivisions **per edge**, $n_{01}, n_{12}, n_{20}$, each from the angle between the normals of that edge's three
       nodes; the interior triangulated to match the three edge counts (rows of strips between the two most subdivided
@@ -1022,9 +1026,9 @@ This group is that revision and what has to happen before it can start.
         2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-6): `Cylinder` (full, partial, hollow), `SolidOfRevolution`
         and with it `Arrow`, `Basis`, `Frame`, `RigidLink`, `BallBearingRings`, and `Torus`; the split with at least 2
         subdivisions for a curved element and the edges of a 6-node triangle in its tiling; then `Tube` and the `Sphere`
-        with edges or between two latitudes. **Open**: `LinkedCylinders` (an extrusion of a polygon,
-        `SolidExtrusion`), the hollow `Sphere` (`innerRadius`, flat as before), and `SpheresToTriangleList`, which
-        stays flat on purpose - it makes contact meshes. *Compatibility of
+        with edges or between two latitudes. **The rest DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg6-7-done):
+        `LinkedCylinders` (arcs, tangents and bores) and the hollow `Sphere`; `SpheresToTriangleList` stays flat on
+        purpose - it makes contact meshes - and so does `SolidExtrusion` of a polygon. *Compatibility of
         `nTiles`* (maintainer's question): `nTiles` keeps its meaning - **the number of flat segments around** - and
         the primitive uses $\lceil$`nTiles`/2$\rceil$ quadratic elements, each covering two of today's segments.
         For a script to never look coarser than today, the split of a *curved* 6-node triangle or 3-node line has
@@ -2539,7 +2543,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame - the inconsistent rotation Jacobian of the slope nodes fixed (RG4.17.1); the stall remains with a consistent Jacobian (RG4.17.2) |
 | RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
-| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges, rows done; RG6.7.2.1 and most of RG6.7.7.6 done (the round primitives of 6-node triangles); open RG6.7.5 (anisotropic tiling), the rest of RG6.7.7.6 (`LinkedCylinders`, hollow sphere), RG6.7.7.10 (single bright pixels of the raytracer, #2787); RG6.7.7.7 done |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG9.3 | #2744 | access functions as single functions of the objects: the split done (RG9.3.4.1-.3), the declarations checked (rule 7); open the flags derived instead of declared (RG9.3.4.4, after separating the super elements' own meaning); RG9.3.5 to RG9.3.7 done (hand-written Jacobians, AD for the derivative of `J^T f` of the cable and of the torque on `ObjectANCFBeam`, `ObjectRotationalMass1D` off its axis) |
 | RG9.4 | #2202 | kinetic and potential energy as output variables: done for all bodies, beams, plates, superelements and spring-dampers; RG9.4.3.2 (the contact and special objects) not now |

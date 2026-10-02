@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.232.dev1
+- Exudyn version = 1.12.233.dev1
 - last change = 2026-10-03
 - Number of issues = 2796
-- Number of resolved issues = 2546 (232 in current version)
+- Number of resolved issues = 2547 (233 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7592,10 +7592,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-09-27
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` exudev scripts runs the user scripts too: copies in a local space, with a timeout (#2713)
   - description: The maintainer, 2026-09-27, the future half of RG10.1: copy the scripts into a local space and execute them, as the examples are run, with a timeout. Before a script is run it has to be checked for paths that do not travel - absolute ones such as 'C:\\' and relative ones such as '../' or '..\\' - because a copied script with such a path reads or writes somewhere else, or fails for a reason that is not the Exudyn version. revision2026b step RG10.1.1.
-  - date raised: 2026-09-27
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` GraphicsData gets a Sphere and a CurvedTriangleList (#2709)
-  - description: The maintainer, 2026-09-27: GraphicsData will be extended by two classes, Sphere and CurvedTriangleList. Bigger than it sounds: the GraphicsData dictionary, the OpenGL renderer and the raytracer have to be adapted (at least with temporary workarounds), the pybind interfaces, SC.renderer.GetGraphicsData(), the documentation - so even the minimal implementation takes time. Known limitation to resolve with it: the OpenGL renderer already treats spheres separately for nodes (large node numbers); the raytracer does not draw glSpheres at all, while GetGraphicsData() does return them. The graphics regression test (RG2.3.3, \#2704) is extended when this lands. revision2026b step RG6.7.
-  - **remarks:** revision2026b step RG6.7.7 planned (maintainer 2026-10-01): 3-node edges (TriangleList key edges3), Lines with key shape ('linear' default, 'quadratic'), GLLine3 split when drawn, GetGraphicsData(flatShapes=False) returning the native shapes, the primitives on quadratic shapes with nTiles = flat segments around (ceil(nTiles/2) elements, a curved element split at least twice)
   - date raised: 2026-09-27
 - `CHECK` `raised by: Claude-JG` fourteen figure files in docs/figures are referenced by nothing (#2594)
   - description: Twelve .pdf and two .eps files in docs/figures/ are referenced by no page, no definition and no tool: CommonTangents3D.eps, DrawSystemGraphExample.pdf, RotationAxisAngle.pdf, RotationAxisAngleDerivation.pdf, degrees\_of\_freedom.pdf, elementaryRotationX.pdf, elementaryRotationY.pdf, generalContactANCF2Dcircle.pdf, generalContactSpheres.pdf, open\_closed\_loop.pdf, plotSpringDamper.pdf, spectralRadiusZeta0.pdf, triangleNormal.eps, triangleNormal.pdf. They are the vector originals of the LaTeX era; most have a .png twin that IS used. Copies are in tmp/unusedFigures for the maintainer to look at (that directory is git-ignored, so nothing left version control). What has to be decided: delete them, or keep them as the editable source of the png twins - in which case they belong somewhere that says so. NOTE eleven further .pdf figures ARE referenced, but only inside \\ignoreRST{} blocks in definitions/itemDefsObjects.py, i.e. only by the LaTeX build that no longer exists; the Markdown and the new PDF of revision2026b step RG3.3 use their png twins.

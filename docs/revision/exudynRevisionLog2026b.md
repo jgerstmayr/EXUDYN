@@ -12009,3 +12009,55 @@ axis) whose axis is turned by `localHT` of its two markers moves exactly as the 
 with body markers and with a node marker - 200 steps, difference 0. `MarkerSuperElementRigid` is covered by its
 existing test models with `offset` (unchanged results) and by the same code path for the rotation. The reference pages
 say the frames (`detailedDescription` of the four markers).
+
+<a id="rg6-7-done"></a>
+### RG6.7 — the open sub-steps: anisotropic split, the last round shapes, Tet10 surfaces, the split cached (2026-10-03, #2709)
+
+**RG6.7.5, the anisotropic split** (`SplitTriangle6Anisotropic`, `VisualizationPrimitives.cpp`). Each edge of a 6-node
+triangle gets its own count, `Triangle6EdgeTiling`: the angle between its end tangents and - if the triangle has
+normals - between the given normals of its three nodes; both are data the two neighbours of the edge share, so they
+split it alike. Its points are evaluated by `QuadraticEdgePoint` in an order that does not depend on the triangle
+(the end points sorted), so the two sides get the same floats. The inside: rows from the corner P opposite the least
+subdivided edge to that edge, each a straight line in $(u,v)$ between the two other edges, their end points snapped to
+the edge points, the strip between two rows closed by a zipper - the triangle whose next point is nearer along the
+rows, unless it has three points on one edge (a row that ends in P lies on the edge; in space the edge is curved and the
+triangle would be a fin) and the other has not. This replaces the per-item uniform tiling of #2787, which a uniform
+split needed to stay watertight. Measured (raytracer, 25 shapes, 400x400): **identical images** (a cylinder's straight
+direction gains nothing from points on a straight line), and the flat triangles a cylinder of `nTiles` 64 needs drop
+from 13232 to 8432, of `nTiles` 16 from 7632 to 3632, a `SolidOfRevolution` from 10032 to 7632; the raytracer itself is
+about 10 % slower on the long triangles (8.4 ms against 7.6 ms), OpenGL draws fewer. A first version oriented every
+triangle by its $(u,v)$ area, which the fin along a cap's rim has not - 8 wrong normals per cap, found by the
+raytracer's own count -, so the strip avoids it now and orients a remaining one by its normal.
+
+**RG6.7.7.6, the rest**: `LinkedCylinders` builds its own 6-node triangles - per segment of the outline (the long arcs of
+the two circles, their two tangents, the bores) one quadratic element along the axis, mid nodes on the arcs, normals
+radial or of the tangent plane; the two faces triangulate the polygon of the element corners
+(`ComputeTriangularMesh`, as before) and take the mid nodes of the boundary from its segments. With `addEdges` the rims
+are `edges3`, with 2 also the lines where an arc meets a tangent. With arguments only `SolidExtrusion` takes (`kwargs`)
+or `smoothNormals=False` it is the flat extrusion as before (`_LinkedCylindersFlat`). The **hollow `Sphere`**
+(`_SphereHollowTriangles6`): the outer and the inner sphere between the cut planes as `_SphereTriangles6`, the faces at
+the cuts a ring between the two circles - or a **disc** where the plane does not reach the inner sphere; the flat
+version left that face out (its hollow branch removed from `_SphereTriangleList`, which stays for
+`SpheresToTriangleList` and `RigidLink`). `_QuadraticPatch` closes a pole, the apex of a cone or the center of a disc
+with **one** triangle per element whose sides run along $v$; before, an element there gave a triangle with two
+coinciding corners, whose mid node bent the other's edge off the meridian (a star on a disc). Checked by raytracer
+images (no bright pixel, no wrong normal); `testCurvedSurfacesHaveNoCracks` takes a cylinder, a sphere with a pole, the
+hollow sphere and linked cylinders with a bore; the graphics reference re-recorded (a pole element 2 -> 1 triangles6,
+`LinkedCylinders` 56 flat -> 32 triangles6); `graphicsCurvedShapes.py` shows both.
+
+**RG6.7.2.1, the rest**: `FEMinterface.VolumeToSurfaceElements` gives a surface of Tet10 elements its 6-node triangles
+(`Trigs6`, the Abaqus C3D10 mid nodes 4 to 9), which the FFRF objects draw curved; one Tet10 checked by hand. A Hex20
+face keeps its corners: its 8 nodes have none on a diagonal, and a 6-node triangle needs one - *not decided to be
+resolved*.
+
+**RG6.7.2.3, measured**: a partial sphere of 90000 triangles6 through the raytracer at 16x16 pixels takes 139 ms, the
+same 360000 flat triangles 79 ms - **the split costs about 60 ms per image** (0.7 µs per element), which OpenGL paid
+every frame. So the split is cached per `GraphicsData` (`triangles6SplitCache`, `triangles6EdgesCache`,
+`EXUvis::SplitTriangles6Cached`), kept while its key holds: the data version (`GraphicsData::FlushData` increases it,
+and every graphics update starts with it), the number of 6-node triangles, the two tiling settings and the two edge
+flags - a frame that only turns the view does not split again, a change of `curvedTriangleTilingAngle` still shows at
+once. The raytracer keeps splitting per image: it runs in the thread of the script, the cache belongs to the render
+thread.
+
+The documentation of `curvedTriangleTilingAngle` and of the key `triangles6` says the per-edge rule (and no longer that
+`GetGraphicsData()` splits by it, which it has not done since RG6.7.7.4); `revisions.md`.

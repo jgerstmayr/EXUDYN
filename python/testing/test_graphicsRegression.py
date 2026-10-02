@@ -414,13 +414,21 @@ def testMergeOffsetsTheEdgesOfTheSecondList():
 
 
 def testCurvedSurfacesHaveNoCracks():
-    """a solid of revolution and a half sphere of 6-node triangles through the raytracer: no single bright pixel on the
+    """solids of 6-node triangles - a solid of revolution, a half sphere, a cylinder, a sphere with a pole, a hollow sphere
+    and linked cylinders - through the raytracer: no single bright pixel on the
     surface, which a ray passing between two neighbouring curved triangles leaves when they split their shared edge at
     different points (#2787)"""
     from exudyn.rigidBodyUtilities import RotXYZ2RotationMatrix
     shapes = [graphics.SolidOfRevolution(pAxis=[0, 0, -0.5], vAxis=[0, 0, 1], contour=[[0, 0.2], [0.3, 0.5], [0.6, 0.3], [1, 0.4]],
                                          nTiles=32, color=graphics.color.green),
-              graphics.Sphere(point=[0, 0, 0], radius=0.5, nTiles=16, color=graphics.color.lightgrey, majorAngleMin=0)]
+              graphics.Sphere(point=[0, 0, 0], radius=0.5, nTiles=16, color=graphics.color.lightgrey, majorAngleMin=0),
+              #the anisotropic split, a pole, a hollow sphere and an extrusion of arcs and tangents (#2709)
+              graphics.Cylinder(pAxis=[0, 0, -0.5], vAxis=[0, 0, 1], radius=0.4, nTiles=12, color=graphics.color.steelblue),
+              graphics.Sphere(point=[0, 0, 0], radius=0.5, nTiles=12, color=graphics.color.orange, majorAngleMax=0.3*np.pi),
+              graphics.Sphere(point=[0, 0, 0], radius=0.5, innerRadius=0.4, nTiles=16, color=graphics.color.orange,
+                              majorAngleMin=-0.3*np.pi, majorAngleMax=0.2*np.pi),
+              graphics.LinkedCylinders(point0=[0, 0, 0], point1=[0.8, 0.2, 0], axisCylinder=[0, 0, 0.5], radius0=0.25,
+                                       radius1=0.15, radiusInner0=0.1, nTiles=32, color=graphics.color.steelblue)]
     for shape in shapes:
         SC = exu.SystemContainer()
         mbs = SC.AddSystem()

@@ -87,19 +87,25 @@ namespace EXUvis {
 		if (edges) { edges->SetNumberOfItems(0); }
 		const float tilingAngle = visualizationSettings.openGL.advanced.curvedTriangleTilingAngle;
 		const Index maxTiling = visualizationSettings.openGL.advanced.curvedTriangleMaxTiling;
-		//the finest tiling per item: a uniform split per triangle, chosen by the triangle alone, gives two neighbours of
-		//different curvature different points on their shared edge - cracks the raytracer's rays pass through (#2787)
-		std::unordered_map<Index, Index> itemTiling;
-		for (const GLTriangle6& triangle : triangles6)
-		{
-			Index& n = itemTiling[triangle.itemID];
-			n = EXUstd::Maximum(n, Triangle6Tiling(triangle, tilingAngle, maxTiling));
-		}
 		for (const GLTriangle6& triangle : triangles6)
 		{
 			bool showEdges = triangle.isFiniteElement ? meshEdges : faceEdges;
-			SplitTriangle6Uniform(triangle, itemTiling[triangle.itemID], triangles, showEdges ? edges : nullptr);
+			SplitTriangle6(triangle, tilingAngle, maxTiling, triangles, showEdges ? edges : nullptr);
 		}
+	}
+
+	void SplitTriangles6Cached(GraphicsData& data, const VisualizationSettings& visualizationSettings, bool faceEdges, bool meshEdges)
+	{
+		Triangles6SplitKey key;
+		key.dataVersion = data.GetDataVersion();
+		key.numberOfTriangles6 = data.glTriangles6.NumberOfItems();
+		key.tilingAngle = visualizationSettings.openGL.advanced.curvedTriangleTilingAngle;
+		key.maxTiling = visualizationSettings.openGL.advanced.curvedTriangleMaxTiling;
+		key.faceEdges = faceEdges;
+		key.meshEdges = meshEdges;
+		if (key == data.triangles6SplitKey) { return; }
+		SplitTriangles6(data.glTriangles6, visualizationSettings, data.triangles6SplitCache, &data.triangles6EdgesCache, faceEdges, meshEdges);
+		data.triangles6SplitKey = key;
 	}
 
 	//! the angle between two vectors, in degrees; exact and cheap; 0 if one of them is zero
@@ -142,10 +148,197 @@ namespace EXUvis {
 		}
 	}
 
+	//! the corner and mid nodes of the three edges of a 6-node triangle, in the order of its corners
+	const Index triangle6EdgeNodes[3][3] = { {0, 1, 3}, {1, 2, 4}, {2, 0, 5} };
+
+	Index Triangle6EdgeTiling(const GLTriangle6& triangle, Index edge, float tilingAngleDegrees, Index maxTiling)
+	{
+		const Index* e = triangle6EdgeNodes[edge];
+		float angle = QuadraticCurveAngleDegrees(triangle.points[e[0]], triangle.points[e[1]], triangle.points[e[2]]);
+		if (triangle.hasNormals) //the given normals of the edge's nodes, which a smooth neighbour shares
+		{
+			Float3 n[3] = { triangle.normals[e[0]], triangle.normals[e[1]], triangle.normals[e[2]] };
+			angle = EXUstd::Maximum(angle, EXUstd::Maximum(AngleDegrees(n[0], n[1]), EXUstd::Maximum(AngleDegrees(n[0], n[2]), AngleDegrees(n[1], n[2]))));
+		}
+		return Tiling(angle, tilingAngleDegrees, maxTiling);
+	}
+
+	//! the point k of n on the quadratic edge pa, pb with mid node pm, evaluated in an order that does not depend on the
+	//! triangle: two neighbours that run along their shared edge in opposite directions get the same float values, so the
+	//! surface has no cracks (#2787)
+	inline Float3 QuadraticEdgePoint(const Float3& pa, const Float3& pb, const Float3& pm, Index k, Index n)
+	{
+		bool swap = (pb[0] < pa[0]) || (pb[0] == pa[0] && (pb[1] < pa[1] || (pb[1] == pa[1] && pb[2] < pa[2])));
+		const Float3& p0 = swap ? pb : pa;
+		const Float3& p1 = swap ? pa : pb;
+		if (swap) { k = n - k; }
+		float s = (float)k / (float)n;
+		return ((1.f - s)*(1.f - 2.f*s))*p0 + (s*(2.f*s - 1.f))*p1 + (4.f*s*(1.f - s))*pm;
+	}
+
 	void SplitTriangle6(const GLTriangle6& triangle, float tilingAngleDegrees, Index maxTiling,
 		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges)
 	{
-		SplitTriangle6Uniform(triangle, Triangle6Tiling(triangle, tilingAngleDegrees, maxTiling), triangles, edges);
+		const Index nEdge[3] = { Triangle6EdgeTiling(triangle, 0, tilingAngleDegrees, maxTiling),
+			Triangle6EdgeTiling(triangle, 1, tilingAngleDegrees, maxTiling), Triangle6EdgeTiling(triangle, 2, tilingAngleDegrees, maxTiling) };
+		SplitTriangle6Anisotropic(triangle, nEdge, triangles, edges);
+	}
+
+	void SplitTriangle6Anisotropic(const GLTriangle6& triangle, const Index nEdge[3],
+		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges)
+	{
+		std::array<float, 6> N, Nu, Nv;
+		std::array<Float3, 6> nodeNormals;
+		if (triangle.hasNormals) { Triangle6NodeNormals(triangle, nodeNormals); }
+		const float cornerU[3] = { 0.f, 1.f, 0.f };
+		const float cornerV[3] = { 0.f, 0.f, 1.f };
+
+		//the vertices: the corners, the points inside the edges, then the points inside the triangle; per thread, so that
+		//a split of many triangles allocates once
+		thread_local std::vector<Float3> points, normals;
+		thread_local std::vector<Float4> colors;
+		thread_local std::vector<float> us, vs;
+		points.clear(); normals.clear(); colors.clear(); us.clear(); vs.clear();
+		auto AddVertex = [&](float u, float v, const Float3* point)
+		{
+			Triangle6ShapeFunctions(u, v, N, Nu, Nv);
+			Float3 p(0.f), normal(0.f);
+			Float4 color(0.f);
+			for (Index k = 0; k < 6; k++)
+			{
+				p += N[k] * triangle.points[k];
+				if (triangle.hasNormals) { normal += N[k] * nodeNormals[k]; }
+				color += N[k] * triangle.colors[k];
+			}
+			if (triangle.hasNormals) { normal.NormalizeSafe(); }
+			else { normal = Triangle6GeometricNormal(triangle, Nu, Nv); }
+			for (Index c = 0; c < 3; c++) { color[c] = EXUstd::Clamp(color[c], 0.f, 1.f); }
+			color[3] = triangle.colors[0][3]; //the alpha channel may carry a material index: not interpolated
+			points.push_back(point ? *point : p);
+			normals.push_back(normal);
+			colors.push_back(color);
+			us.push_back(u);
+			vs.push_back(v);
+			return (Index)points.size() - 1;
+		};
+		for (Index c = 0; c < 3; c++) { AddVertex(cornerU[c], cornerV[c], &triangle.points[c]); }
+		Index edgeStart[3];
+		for (Index e = 0; e < 3; e++)
+		{
+			const Index* nodes = triangle6EdgeNodes[e];
+			edgeStart[e] = (Index)points.size();
+			for (Index k = 1; k < nEdge[e]; k++)
+			{
+				float s = (float)k / (float)nEdge[e];
+				Float3 p = QuadraticEdgePoint(triangle.points[nodes[0]], triangle.points[nodes[1]], triangle.points[nodes[2]], k, nEdge[e]);
+				AddVertex((1.f - s)*cornerU[nodes[0]] + s * cornerU[nodes[1]], (1.f - s)*cornerV[nodes[0]] + s * cornerV[nodes[1]], &p);
+			}
+		}
+		//the vertex k of edge e, counted from its first corner
+		auto EdgeVertex = [&](Index e, Index k)
+		{
+			if (k == 0) { return triangle6EdgeNodes[e][0]; }
+			if (k == nEdge[e]) { return triangle6EdgeNodes[e][1]; }
+			return edgeStart[e] + k - 1;
+		};
+
+		GLTriangle flat;
+		flat.itemID = triangle.itemID;
+		flat.isFiniteElement = triangle.isFiniteElement;
+		//three points on one edge are on a straight line in (u,v), but not in space, where the edge is curved
+		auto AreaUV = [&](Index a, Index b, Index c) { return (us[b] - us[a])*(vs[c] - vs[a]) - (vs[b] - vs[a])*(us[c] - us[a]); };
+		const float areaTolerance = 1e-6f;
+		auto AddFlat = [&](Index a, Index b, Index c)
+		{
+			if (a == b || b == c || c == a) { return; } //where a row ends in the same edge point as the next
+			float area = AreaUV(a, b, c);
+			if (fabs(area) <= areaTolerance) //a sliver along a curved edge, which the strip could not avoid: oriented
+			{                                //as the normal of its first point
+				Float3 normal = (points[b] - points[a]).CrossProduct(points[c] - points[a]);
+				if (normal.GetL2NormSquared() == 0.f) { return; }
+				area = normal * normals[a];
+			}
+			if (area < 0.f) { EXUstd::Swap(b, c); } //counter-clockwise as the 6-node triangle
+			flat.points = { points[a], points[b], points[c] };
+			flat.normals = { normals[a], normals[b], normals[c] };
+			flat.colors = { colors[a], colors[b], colors[c] };
+			triangles.Append(flat);
+		};
+
+		//rows from the corner P opposite the least subdivided edge to that edge, each a straight line in (u,v) between
+		//the edges PQ and RP; a cylinder patch, curved one way, gets 2n flat triangles instead of n^2 (#2709)
+		Index pCorner = 0;
+		for (Index c = 1; c < 3; c++) { if (nEdge[(c + 1) % 3] < nEdge[(pCorner + 1) % 3]) { pCorner = c; } }
+		const Index ePQ = pCorner, eQR = (pCorner + 1) % 3, eRP = (pCorner + 2) % 3;
+		const Index na = nEdge[ePQ], nb = nEdge[eRP], nc = nEdge[eQR];
+		const Index nRows = EXUstd::Maximum(na, nb);
+		thread_local std::vector<Index> rowA, rowB;
+		rowA.clear();
+		rowA.push_back(pCorner);
+		for (Index s = 1; s <= nRows; s++)
+		{
+			Index ia = (Index)floor((float)(s * na) / (float)nRows + 0.5f); //along PQ from P
+			Index ib = (Index)floor((float)(s * nb) / (float)nRows + 0.5f); //along RP from P
+			Index left = EdgeVertex(ePQ, ia);
+			Index right = EdgeVertex(eRP, nb - ib);
+			rowB.clear();
+			if (s == nRows)
+			{
+				for (Index k = 0; k <= nc; k++) { rowB.push_back(EdgeVertex(eQR, k)); }
+			}
+			else
+			{
+				Index r = EXUstd::Maximum((Index)1, (Index)floor((float)(s * nc) / (float)nRows + 0.5f));
+				rowB.push_back(left);
+				for (Index j = 1; j < r; j++)
+				{
+					float t = (float)j / (float)r;
+					rowB.push_back(AddVertex((1.f - t)*us[left] + t * us[right], (1.f - t)*vs[left] + t * vs[right], nullptr));
+				}
+				rowB.push_back(right);
+			}
+			//the strip between the two rows, closing the triangle whose next point is nearer along the rows, unless that
+			//triangle has three points on one edge (a row ending in P lies on the edge) and the other one has not
+			Index p = (Index)rowA.size() - 1, q = (Index)rowB.size() - 1;
+			Index i = 0, j = 0;
+			while (i < p || j < q)
+			{
+				bool advanceA = (j == q || (i < p && (float)(i + 1) * (float)q <= (float)(j + 1) * (float)p));
+				if (i < p && j < q)
+				{
+					bool degenerateA = fabs(AreaUV(rowA[i], rowA[i + 1], rowB[j])) <= areaTolerance;
+					bool degenerateB = fabs(AreaUV(rowA[i], rowB[j + 1], rowB[j])) <= areaTolerance;
+					if (advanceA && degenerateA && !degenerateB) { advanceA = false; }
+					else if (!advanceA && degenerateB && !degenerateA) { advanceA = true; }
+				}
+				if (advanceA)
+				{
+					AddFlat(rowA[i], rowA[i + 1], rowB[j]);
+					i++;
+				}
+				else
+				{
+					AddFlat(rowA[i], rowB[j + 1], rowB[j]);
+					j++;
+				}
+			}
+			rowA.swap(rowB);
+		}
+
+		if (edges) //the three curved edges, split as the triangle, so that they lie on its boundary
+		{
+			GLLine3 edge;
+			edge.itemID = triangle.itemID;
+			for (Index e = 0; e < 3; e++)
+			{
+				for (Index k = 0; k < 3; k++)
+				{
+					edge.points[k] = triangle.points[triangle6EdgeNodes[e][k]];
+					edge.colors[k] = triangle.colors[triangle6EdgeNodes[e][k]];
+				}
+				SplitLine3Uniform(edge, nEdge[e], *edges);
+			}
+		}
 	}
 
 	Index Triangle6Tiling(const GLTriangle6& triangle, float tilingAngleDegrees, Index maxTiling)

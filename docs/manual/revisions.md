@@ -195,7 +195,11 @@ solver: time advances, the user functions are called and the sensors record (#27
 `TriangleList` - quadratic lines (`Lines` with `shape` `'quadratic'`) and quadratic edges (`edges3`)
 are drawn curved: the renderers split them when they draw, as fine as
 `visualizationSettings.openGL.advanced.curvedTriangleTilingAngle` asks, and a change of it shows at
-once. The type `Spheres` draws many spheres at once, and the raytracer intersects them exactly.
+once; each edge is split by its own curvature, so a surface curved in one direction is not split along the
+other. The type `Spheres` draws many spheres at once, and the raytracer intersects them exactly. The round
+shapes of `exudyn.graphics` - `Cylinder`, `Sphere` (also partial and hollow), `Torus`, `SolidOfRevolution`,
+`Tube`, `LinkedCylinders` and the shapes built from them - consist of 6-node triangles, as do the surfaces of
+quadratic NGsolve meshes and of Tet10 meshes (`FEMinterface.VolumeToSurfaceElements`) in the FFRF objects.
 `python/Examples/graphicsCurvedShapes.py` shows them all (#2709).
 
 **A command line for the installed package**: `python -m exudyn info` prints the version, where

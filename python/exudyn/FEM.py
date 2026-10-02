@@ -3213,7 +3213,9 @@ class FEMinterface:
     def VolumeToSurfaceElements(self, verbose=False):
         """generate surface elements from volume elements
         stores the surface in self.surface
-        only works for one element list and only for element types 'Hex8', 'Hex20', 'Tet4' and 'Tet10'
+        only works for one element list and only for element types 'Hex8', 'Hex20', 'Tet4' and 'Tet10';
+        a surface of Tet10 elements also gets its 6-node triangles ('Trigs6', the faces with their mid nodes), which the FFRF
+        objects draw curved; a Hex20 face has no node on its diagonals and is drawn by its corners
         """
         if verbose: exu.Print("create surface from volume elements")
 #        self.elements = []              # [{'Name':'identifier', 'Tet4':[[n0,n1,n2,n3],...], 'Hex8':[[n0,...,n7],...],  },...]        #there may be several element sets
@@ -3222,7 +3224,9 @@ class FEMinterface:
         hex8QuadIndices = [[0,1,2,3],[7,6,5,4],[0,4,5,1],[1,5,6,2],[2,6,7,3],[3,7,4,0]]
         hex20QuadIndices = [[0,1,2,3],[7,6,5,4],[0,4,5,1],[1,5,6,2],[2,6,7,3],[3,7,4,0]] #without midnodes, works for now
         tet4TrigIndices = [[0,1,2],[0,3,1],[1,3,2],[2,3,0]]
-        tet10TrigIndices = [[0,1,2],[0,3,1],[1,3,2],[2,3,0]] #without midnodes, works for now
+        tet10TrigIndices = [[0,1,2],[0,3,1],[1,3,2],[2,3,0]]
+        #the mid nodes of the edges of a Tet10 (Abaqus C3D10): 4 on 0-1, 5 on 1-2, 6 on 2-0, 7 on 0-3, 8 on 1-3, 9 on 2-3 (#2709)
+        tet10EdgeMid = {(0,1):4, (1,2):5, (0,2):6, (0,3):7, (1,3):8, (2,3):9}
         
         elementTypes = ['Hex8','Hex20','Tet4','Tet10']
 
@@ -3231,6 +3235,8 @@ class FEMinterface:
                              'Tet4': tet4TrigIndices,
                              'Tet10':tet10TrigIndices}
         surfaceListTrigs = []
+        surfaceListTrigs6 = [] #the 6-node triangles of the Tet10 faces, as long as all faces are Tet10 faces
+        allTrigs6 = True
         surfaceListQuads = [] #list of surface quads, will be converted to trigs
         nodes2elements = [[]]*nNodes #element to node list
 
@@ -3311,8 +3317,14 @@ class FEMinterface:
                                 #exu.Print("      not found!")
                                 if lenSurface == 4:
                                     surfaceListQuads += [actSurface]
+                                    allTrigs6 = False
                                 else:
                                     surfaceListTrigs += [actSurface]
+                                    if elementType == 'Tet10':
+                                        mids = [element[tet10EdgeMid[tuple(sorted((surface[a], surface[b])))]] for (a, b) in [(0, 1), (1, 2), (2, 0)]]
+                                        surfaceListTrigs6 += [actSurface + mids]
+                                    else:
+                                        allTrigs6 = False
                         elementCnt += 1
         
         if verbose: exu.Print("surfaceListQuad length=",len(surfaceListQuads))
@@ -3327,10 +3339,16 @@ class FEMinterface:
             if surf['Name'] == 'meshSurface':
                 surfaceExists = True
                 surf['Trigs'] = surfaceListTrigs
+                if allTrigs6 and len(surfaceListTrigs6) != 0:
+                    surf['Trigs6'] = surfaceListTrigs6
+                elif 'Trigs6' in surf:
+                    del surf['Trigs6']
 
         #otherwise add new surface
         if not surfaceExists:
             self.surface += [{'Name':'meshSurface', 'Trigs':surfaceListTrigs}]
+            if allTrigs6 and len(surfaceListTrigs6) != 0:
+                self.surface[-1]['Trigs6'] = surfaceListTrigs6
         
         self.ConvertSurfaceLists2Numpy()
         

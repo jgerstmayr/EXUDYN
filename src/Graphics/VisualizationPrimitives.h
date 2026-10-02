@@ -82,10 +82,20 @@ namespace EXUvis {
 	void SplitTriangle6Uniform(const GLTriangle6& triangle, Index n,
 		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges = nullptr);
 
-	//! split a 6-node triangle into flat triangles, appended to triangles (#2709); the number of subdivisions per edge follows
-	//! the largest angle between the normals of its nodes (given, or of the geometry) against tilingAngleDegrees, at most
-	//! maxTiling; with edges, its three curved edges are appended as lines
+	//! split a 6-node triangle into flat triangles, appended to triangles (#2709); each edge is split by its own count
+	//! (Triangle6EdgeTiling), the inside triangulated to match the three; with edges, its three curved edges are appended
+	//! as lines
 	void SplitTriangle6(const GLTriangle6& triangle, float tilingAngleDegrees, Index maxTiling,
+		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges = nullptr);
+
+	//! the number of subdivisions of the edge 0 (nodes 0, 1, 3), 1 (nodes 1, 2, 4) or 2 (nodes 2, 0, 5) of a 6-node triangle:
+	//! the angle between the tangents at its ends, and between the given normals of its three nodes, against
+	//! tilingAngleDegrees, at most maxTiling - what two neighbours share, so that they split their common edge alike
+	Index Triangle6EdgeTiling(const GLTriangle6& triangle, Index edge, float tilingAngleDegrees, Index maxTiling);
+
+	//! split a 6-node triangle with nEdge[e] subdivisions of its edge e: rows from the corner opposite the least subdivided
+	//! edge, a curved strip of n rows gets about 2n flat triangles where a uniform split has n^2 (#2709)
+	void SplitTriangle6Anisotropic(const GLTriangle6& triangle, const Index nEdge[3],
 		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges = nullptr);
 
 	//! the number of subdivisions per edge SplitTriangle6 chooses for a triangle
@@ -106,11 +116,14 @@ namespace EXUvis {
 
 	//! split all 6-node triangles of a list with visualizationSettings.openGL.advanced (curvedTriangleTilingAngle,
 	//! curvedTriangleMaxTiling); triangles and edges are reset first; what the renderers draw (#2709); edges only of the
-	//! triangles whose edges are shown: faceEdges for the others, meshEdges for those of finite elements; all triangles of
-	//! one item get the same subdivision - the finest any of them needs -, so two neighbours split their shared edge at
-	//! the same points and the surface has no cracks (#2787)
+	//! triangles whose edges are shown: faceEdges for the others, meshEdges for those of finite elements; each edge is split
+	//! by what its two triangles share, at the same points on both sides, so the surface has no cracks (#2787)
 	void SplitTriangles6(const ResizableArray<GLTriangle6>& triangles6, const VisualizationSettings& visualizationSettings,
 		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges = nullptr, bool faceEdges = true, bool meshEdges = true);
+
+	//! SplitTriangles6 of data.glTriangles6 into data.triangles6SplitCache and data.triangles6EdgesCache, only if the data
+	//! (GraphicsData::GetDataVersion, the number of triangles) or the settings changed since the last split (#2709)
+	void SplitTriangles6Cached(GraphicsData& data, const VisualizationSettings& visualizationSettings, bool faceEdges, bool meshEdges);
 
 	//! copy bodyGraphicsData (of body) into global graphicsData (of system)
 	void AddBodyGraphicsDataColored(const BodyGraphicsData& bodyGraphicsData, GraphicsData& graphicsData, 

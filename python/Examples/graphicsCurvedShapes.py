@@ -7,7 +7,8 @@
 #           shape of exudyn.graphics it compares to (#2709).
 #           Row y=0: cylinder, torus, sphere and vase of 6-node triangles - few, large elements (45 degrees),
 #           the renderer splits them when it draws; the cylinder and the vase carry red edges3 on their rims.
-#           Row y=-3: graphics.Cylinder, Torus, Sphere and SolidOfRevolution - curved as well, of 6-node
+#           Row y=-3: graphics.Cylinder, Torus, Sphere, SolidOfRevolution, LinkedCylinders (with a bore) and a hollow
+#           Sphere - curved as well, of 6-node
 #           triangles (the sphere with edges is a TriangleList of flat triangles); row y=-6: the same shapes as
 #           flat triangles (graphics.Triangles6ToTriangles), with their facets.
 #           Row y=3: quadratic lines (a circle of 4 segments, a helix), many spheres, a whole graphics.Sphere.
@@ -89,7 +90,11 @@ gFlat = [graphics.Cylinder(pAxis=[0, -3, 0], vAxis=[0, 0, 1.5], radius=r, color=
                         nTilesMajor=12, nTilesMinor=8),
          graphics.Sphere(point=[6, -3, 0.5], radius=r, color=graphics.color.lawngreen, nTiles=8, addEdges=True), #with edges: a TriangleList
          graphics.SolidOfRevolution(pAxis=[9, -3, 0], vAxis=[0, 0, 1], contour=contour, color=graphics.color.dodgerblue,
-                                    nTiles=12, addEdges=True)]
+                                    nTiles=12, addEdges=True),
+         graphics.LinkedCylinders(point0=[12, -3, 0], point1=[13, -3, 0], axisCylinder=[0, 0, 0.5], radius0=0.4,
+                                  radius1=0.25, radiusInner0=0.2, nTiles=16, color=graphics.color.steelblue, addEdges=True),
+         graphics.Sphere(point=[15, -3, 0.5], radius=r, innerRadius=0.7*r, majorAngleMin=-0.3*np.pi, majorAngleMax=0.2*np.pi,
+                         color=graphics.color.orange, nTiles=12, addEdges=True)]
 gFlat += [graphics.Move(graphics.Triangles6ToTriangles(g), [0, -3, 0]) for g in gFlat]
 
 #lines, spheres

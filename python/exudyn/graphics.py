@@ -176,7 +176,7 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
         addFaces: if False, no faces are added (only edges); ignored in case of hollow sphere
         majorAngleMin: starting angle for sphere to be drawn; if > -0.5*pi, it will be shortened at -Z coordinate
         majorAngleMax: final angle for sphere to be drawn; if < 0.5*pi, it will be shortened at +Z coordinate
-        innerRadius: draw hollow sphere in case of majorAngleMin or majorAngleMax do not have default values; a hollow sphere consists of flat triangles, a part of a sphere or one with edges of 6-node triangles (triangles6)
+        innerRadius: draw hollow sphere in case of majorAngleMin or majorAngleMax do not have default values; the outer and the inner sphere and the flat faces at the cuts; a sphere that is not whole consists of 6-node triangles (triangles6)
 
     Returns:
         graphicsData dictionary, to be used in visualization of EXUDYN objects
@@ -190,9 +190,9 @@ def Sphere(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
         return _SphereTriangles6(point=point, radius=radius, color=color, nTiles=nTiles, addEdges=addEdges,
                                  edgeColor=edgeColor, addFaces=addFaces, majorAngleMin=majorAngleMin,
                                  majorAngleMax=majorAngleMax)
-    return _SphereTriangleList(point=point, radius=radius, color=color, nTiles=nTiles, addEdges=addEdges,
-                               edgeColor=edgeColor, addFaces=addFaces, majorAngleMin=majorAngleMin,
-                               majorAngleMax=majorAngleMax, innerRadius=innerRadius)
+    return _SphereHollowTriangles6(point=point, radius=radius, color=color, nTiles=nTiles, addEdges=addEdges,
+                                   edgeColor=edgeColor, majorAngleMin=majorAngleMin, majorAngleMax=majorAngleMax,
+                                   innerRadius=innerRadius)
 
 
 @_ReturnsRows
@@ -320,10 +320,73 @@ def _SphereTriangles6(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8
     return data
 
 
+def _SphereHollowTriangles6(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8, addEdges = False,
+                            edgeColor=color.black, majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi, innerRadius = 0.05):
+    """a hollow sphere between two latitudes, of 6-node triangles (#2709): the outer sphere as _SphereTriangles6, the inner
+    one between the cut planes - or closed where a plane does not reach it -, and the flat faces at the cuts, a ring
+    between the two spheres or a disc where the inner sphere is closed; with addEdges, the circles of the cuts as edges3;
+    see Sphere"""
+    if majorAngleMin < -0.5*pi or majorAngleMax > 0.5*pi or majorAngleMax <= majorAngleMin:
+        raise ValueError("graphics.Sphere: majorAngleMin must be > -0.5*pi and < majorAngleMax; majorAngleMax must > majorAngleMin")
+    if innerRadius <= 0 or innerRadius >= radius:
+        raise ValueError("graphics.Sphere: innerRadius is invalid")
+    p = np.array(point, dtype=float)
+    ne = nTiles #elements around
+    nv = _NumberOfQuadraticElements(nTiles) #elements from the lower to the upper latitude
+    def Direction(phi, theta):
+        return np.array([cos(theta)*sin(phi), cos(theta)*cos(phi), sin(theta)])
+
+    #the latitudes at which the cut planes z = radius*sin(angle) meet the inner sphere; +-pi/2 where they do not
+    def InnerAngle(angle):
+        s = radius*sin(angle)/innerRadius
+        return np.sign(angle)*0.5*pi if abs(s) >= 1 else asin(s)
+    (innerMin, innerMax) = (InnerAngle(majorAngleMin), InnerAngle(majorAngleMax))
+
+    points, normals, triangles6 = [], [], []
+    rims = [] #the cut circles, as rows of grid points
+    for (r, angleMin, angleMax, sign) in [(radius, majorAngleMin, majorAngleMax, 1.), (innerRadius, innerMin, innerMax, -1.)]:
+        def PointAndNormal(u, v, r=r, angleMin=angleMin, angleMax=angleMax, sign=sign):
+            d = Direction(2*pi*u, angleMin + v*(angleMax - angleMin))
+            return (p + r*d, sign*d)
+        (pts, nrm, trigs, Grid) = _QuadraticPatch(PointAndNormal, ne, nv, True, False, offset=len(points))
+        points += pts
+        normals += nrm
+        triangles6 += trigs
+
+    #the faces at the cuts: a ring between the circles of the two spheres, or a disc if the inner sphere is closed there
+    for (angle, innerAngle, sign) in [(majorAngleMin, innerMin, -1.), (majorAngleMax, innerMax, 1.)]:
+        if abs(angle) >= 0.5*pi - 1e-14:
+            continue #the pole: no cut
+        z = radius*sin(angle)
+        rOuter = radius*cos(angle)
+        rInner = innerRadius*cos(innerAngle) if abs(innerAngle) < 0.5*pi - 1e-14 else 0.
+        normal = np.array([0., 0., sign])
+        def PointAndNormal(u, v, z=z, rOuter=rOuter, rInner=rInner, normal=normal):
+            radial = Direction(2*pi*u, 0.)
+            return (p + np.array([0., 0., z]) + ((1-v)*rOuter + v*rInner)*radial, normal)
+        (pts, nrm, trigs, Grid) = _QuadraticPatch(PointAndNormal, ne, 1, True, False, offset=len(points))
+        points += pts
+        normals += nrm
+        triangles6 += trigs
+        rims += [[Grid(i, 0) for i in range(2*ne)]]
+
+    data = {'type':'TriangleList', 'colors':np.array(list(color)*len(points)), 'points':np.array(points).flatten(),
+            'normals':np.array(normals).flatten(), 'triangles6':np.array(triangles6, dtype=int).flatten()}
+    if addEdges and len(rims) != 0:
+        data['edgeColor'] = np.array(edgeColor)
+        edges3 = []
+        for rim in rims:
+            for e in range(ne):
+                edges3 += [rim[2*e], rim[(2*e+2) % (2*ne)], rim[2*e+1]]
+        data['edges3'] = np.array(edges3, dtype=int)
+    return data
+
+
 def _SphereTriangleList(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles = 8,
            addEdges = False, edgeColor=color.black, addFaces=True,
-           majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi, innerRadius = None):
-    """the triangles of a sphere, also a part of a sphere or hollow, with edges; see Sphere"""
+           majorAngleMin = -0.5*pi, majorAngleMax = 0.5*pi):
+    """the flat triangles of a sphere, also a part of a sphere, with edges - for SpheresToTriangleList and RigidLink; see
+    Sphere"""
     nTilesPhi = 2*nTiles
     if majorAngleMin < -0.5*pi or majorAngleMax > 0.5*pi or majorAngleMax <= majorAngleMin:
         raise ValueError("graphics.Sphere: majorAngleMin must be > -0.5*pi and < majorAngleMax; majorAngleMax must > majorAngleMin")
@@ -358,74 +421,6 @@ def _SphereTriangleList(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles =
             
             colors += color
 
-    nOffOuter = len(points)//3
-    innerSphereClosedMin = False
-    innerSphereClosedMax = False
-    if innerRadius is not None:
-        if innerRadius <= 0 or innerRadius >= radius:
-            raise ValueError("graphics.Sphere: innerRadius is invalid")
-
-        r0 = r
-        angleMin = majorAngleMin
-        angleMax = majorAngleMax
-        if r*sin(majorAngleMax) >= innerRadius:
-            angleMax = 0.5*pi
-            innerSphereClosedMax = True
-        else:
-            angleMax = asin(r*sin(majorAngleMax)/innerRadius)
-
-        if r*sin(-majorAngleMin) >= innerRadius:
-            angleMin =-0.5*pi
-            innerSphereClosedMin = True
-        else:
-            angleMin = -asin(r*sin(-majorAngleMin)/innerRadius)
-
-        for i0 in range(nTiles+1):
-            z = innerRadius*sin(angleMax - i0/nTiles*(angleMax-angleMin))    #runs from -r .. r (this is the coordinate of the axis of circles)
-
-            for iphi in range(nTilesPhi):
-                phi = 2*pi*iphi/nTilesPhi #angle
-                fact = sin(0.5*pi + angleMax - i0/nTiles*(angleMax-angleMin))
-
-                x = fact*innerRadius*sin(phi)
-                y = fact*innerRadius*cos(phi)
-
-                vv = x*e0 + y*e1 + z*e2
-                points += list(p + vv)
-            
-                n = ebu.Normalize(-vv) 
-                normals += n
-            
-                colors += color
-        
-        nOffCircles = len(points)//3
-        #draw plane circular rings:
-        for iCircle in range(4):
-            d = (iCircle < 2)
-            angle = majorAngleMin if d else majorAngleMax
-            nFact = -1 if d else 1
-            
-            z = r*sin(angle)
-            angle2 = angle
-            if r*sin(angle) < innerRadius and iCircle%2 == 1-int(d):
-                angle2 = asin(r*sin(angle)/innerRadius)
-
-            r0 = innerRadius if iCircle%2 == 1-int(d) else r
-            for iphi in range(nTilesPhi):
-                phi = 2*pi*iphi/nTilesPhi #angle
-                fact = sin(0.5*pi + angle2)
-
-                x = fact*r0*sin(phi)
-                y = fact*r0*cos(phi)
-
-                vv = x*e0 + y*e1 + z*e2
-                points += list(p + vv)
-            
-                n = ebu.Normalize(nFact*e2)
-                normals += n
-            
-                colors += color
-    
     if addFaces:
         for i0 in range(nTiles):
             for iphi in range(nTilesPhi):
@@ -443,42 +438,6 @@ def _SphereTriangleList(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles =
                     else:
                         triangles += [p0,p1,p3, p0,p3,p2]
 
-        if innerRadius is not None:
-            for i0 in range(nTiles):
-                for iphi in range(nTilesPhi):
-                    p0 = i0*nTilesPhi+iphi
-                    p1 = (i0+1)*nTilesPhi+iphi
-                    iphi1 = iphi + 1
-                    if iphi1 >= nTilesPhi: 
-                        iphi1 = 0
-                    p2 = i0*nTilesPhi+iphi1
-                    p3 = (i0+1)*nTilesPhi+iphi1
-    
-                    if graphicsDataSwitchTriangleOrder:
-                        triangles += [nOffOuter+p0,nOffOuter+p3,nOffOuter+p1, nOffOuter+p0,nOffOuter+p2,nOffOuter+p3]
-                    else:
-                        triangles += [nOffOuter+p0,nOffOuter+p1,nOffOuter+p3, nOffOuter+p0,nOffOuter+p3,nOffOuter+p2]
-
-            #draw plane circular rings:
-            for iCircle in range(2):
-                i0 = iCircle*2 #offset for second circle
-                if iCircle == 0 and innerSphereClosedMin: continue
-                if iCircle == 1 and innerSphereClosedMax: continue
-
-                for iphi in range(nTilesPhi):
-                    p0 = i0*nTilesPhi+iphi
-                    p1 = (i0+1)*nTilesPhi+iphi
-                    iphi1 = iphi + 1
-                    if iphi1 >= nTilesPhi: 
-                        iphi1 = 0
-                    p2 = i0*nTilesPhi+iphi1
-                    p3 = (i0+1)*nTilesPhi+iphi1
-    
-                    if graphicsDataSwitchTriangleOrder:
-                        triangles += [nOffCircles+p0,nOffCircles+p3,nOffCircles+p1, nOffCircles+p0,nOffCircles+p2,nOffCircles+p3]
-                    else:
-                        triangles += [nOffCircles+p0,nOffCircles+p1,nOffCircles+p3, nOffCircles+p0,nOffCircles+p3,nOffCircles+p2]
-            
     data = {'type':'TriangleList', 'colors':np.array(colors), 
             'points':np.array(points), 
             'normals':np.array(normals), 
@@ -487,7 +446,7 @@ def _SphereTriangleList(point=[0,0,0], radius=0.1, color=[0.,0.,0.,1.], nTiles =
     if type(addEdges) == bool and addEdges:
         addEdges = 3
 
-    if addEdges > 0 and abs(majorAngleMax-majorAngleMin-pi) <= 1e-7 and innerRadius is None:
+    if addEdges > 0 and abs(majorAngleMax-majorAngleMin-pi) <= 1e-7:
         data['edgeColor'] = np.array(edgeColor)
 
         edges = []
@@ -877,15 +836,23 @@ def _QuadraticPatch(PointAndNormal, nu, nv, closedU, closedV, offset=0):
     def Index(i, j):
         return offset + (j % mv if closedV else j)*mu + (i % mu if closedU else i)
 
+    def Coincide(i, j):
+        return np.linalg.norm(points[i-offset] - points[j-offset]) <= 1e-12*(1. + np.linalg.norm(points[i-offset]))
+
     triangles6 = []
     for ej in range(nv):
         for ei in range(nu):
             (i0, j0) = (2*ei, 2*ej)
             (a, b, c, d) = (Index(i0, j0), Index(i0+2, j0), Index(i0+2, j0+2), Index(i0, j0+2))
             (ab, bc, cd, da, m) = (Index(i0+1, j0), Index(i0+2, j0+1), Index(i0+1, j0+2), Index(i0, j0+1), Index(i0+1, j0+1))
-            triangles6 += [[a, b, c, ab, bc, m], [a, c, d, m, cd, da]]
+            if Coincide(c, d): #a pole, the apex of a cone or the center of a disc: one triangle, its sides along v
+                triangles6 += [[a, b, c, ab, bc, da]]
+            elif Coincide(a, b):
+                triangles6 += [[b, c, d, bc, cd, da]]
+            else:
+                triangles6 += [[a, b, c, ab, bc, m], [a, c, d, m, cd, da]]
 
-    #the orientation, from the first triangle that is not degenerate (an apex of a cone has coinciding corners)
+    #the orientation, from the first triangle that is not degenerate
     for t in triangles6:
         (pa, pb, pc) = (points[t[0]-offset], points[t[1]-offset], points[t[2]-offset])
         cross = np.cross(pb - pa, pc - pa)
@@ -1910,6 +1877,119 @@ def LinkedCylinders(point0, point1, axisCylinder, radius0, radius1,
     theta1_u = np.pi - theta
     theta1_l = np.pi + theta  # equivalent to 2*np.pi - theta
 
+    if len(kwargs) != 0 or not smoothNormals: #the flat extrusion, which takes the further arguments of SolidExtrusion
+        return _LinkedCylindersFlat(c1, radius0, radius1, theta, radiusInner0, radiusInner1, nTiles, p0, rot, height,
+                                    color, addEdges, edgeColor, addFaces, smoothNormals, **kwargs)
+
+    #the outline of 6-node triangles (#2709): loops of corners, each segment with its mid node - on the arc, or halfway
+    #on a tangent - and the outward normals at its three nodes (in the plane)
+    def ArcSegments(center, r, a0, delta, outward):
+        """the segments of an arc from angle a0 over delta (> 0 counterclockwise, < 0 clockwise), elements of two of
+        today's segments each; outward: +1 if the material is inside the circle, -1 for a bore"""
+        nSeg = max(2, int(np.ceil(nTiles * (abs(delta) / (2*np.pi)))))
+        ne = _NumberOfQuadraticElements(nSeg)
+        segs = []
+        for e in range(ne):
+            angles = [a0 + delta*e/ne, a0 + delta*(e+1)/ne, a0 + delta*(e+0.5)/ne]
+            nodes = [np.array([np.cos(a), np.sin(a)]) for a in angles]
+            segs += [[center + r*n for n in nodes] + [outward*n for n in nodes]]
+        return segs
+
+    def StraightSegment(pa, pb, outward):
+        return [pa, pb, 0.5*(pa+pb), outward, outward, outward]
+
+    loops = []
+    arc1 = ArcSegments(c1, radius1, theta1_l, (theta1_u - theta1_l) % (2*np.pi), 1)
+    arc0 = ArcSegments(c0, radius0, theta0_u, (theta0_l - theta0_u) % (2*np.pi), 1)
+    normalUpper = np.array([np.cos(theta0_u), np.sin(theta0_u)])
+    normalLower = np.array([np.cos(theta0_l), np.sin(theta0_l)])
+    loops += [arc1 + [StraightSegment(arc1[-1][1], arc0[0][0], normalUpper)]
+              + arc0 + [StraightSegment(arc0[-1][1], arc1[0][0], normalLower)]]
+    for (center, rInner, rOuter) in [(c0, radiusInner0, radius0), (c1, radiusInner1, radius1)]:
+        if rInner > 0 and rInner < rOuter: #a bore, clockwise
+            loops += [ArcSegments(center, rInner, 0., -2*np.pi, -1)]
+
+    #2D corners and their numbers, the segments and their mid nodes
+    vertices2D = []
+    segments = []
+    segmentMid = {}
+    for loop in loops:
+        iFirst = len(vertices2D)
+        for (k, seg) in enumerate(loop):
+            vertices2D += [list(seg[0])]
+            iNext = iFirst + (k+1) % len(loop)
+            segments += [[iFirst+k, iNext]]
+            segmentMid[(iFirst+k, iNext)] = seg[2]
+            segmentMid[(iNext, iFirst+k)] = seg[2]
+
+    def IsStraight(seg):
+        return np.linalg.norm(seg[2] - 0.5*(seg[0] + seg[1])) <= 1e-14*(1. + np.linalg.norm(seg[0]))
+
+    e3 = rot[:, 2]
+    def Point3D(p2D, z):
+        return p0 + rot @ np.array([p2D[0], p2D[1], z])
+
+    points = []
+    normals = []
+    triangles6 = []
+    rims = [[], []] #edges3 of the bottom and the top
+    mantleLines = []
+    #the mantle: per segment one quadratic element along the axis
+    for loop in loops:
+        for (k, seg) in enumerate(loop):
+            (pa, pb, pm, na, nb, nm) = seg
+            def PointAndNormal(u, v, pa=pa, pb=pb, pm=pm, na=na, nb=nb, nm=nm):
+                N = [(1-u)*(1-2*u), u*(2*u-1), 4*u*(1-u)]
+                p2D = N[0]*pa + N[1]*pb + N[2]*pm
+                n2D = N[0]*na + N[1]*nb + N[2]*nm
+                return (Point3D(p2D, v*height), rot @ np.array([n2D[0], n2D[1], 0.]))
+            (pts, nrm, trigs, Grid) = _QuadraticPatch(PointAndNormal, 1, 1, False, False, offset=len(points))
+            points += pts
+            normals += nrm
+            triangles6 += trigs
+            rims[0] += [Grid(0, 0), Grid(2, 0), Grid(1, 0)]
+            rims[1] += [Grid(0, 2), Grid(2, 2), Grid(1, 2)]
+            nextSeg = loop[(k+1) % len(loop)]
+            if IsStraight(seg) != IsStraight(nextSeg):
+                mantleLines += [[Grid(2, 0), Grid(2, 2)]] #where an arc and a tangent meet
+
+    #the two faces: the corner polygon triangulated, the mid nodes on the boundary taken from the segments
+    tri = gdu.ComputeTriangularMesh(vertices2D, segments)
+    for (z, normal) in [(0., -e3), (height, e3)]:
+        iCorner = len(points)
+        for v in vertices2D:
+            points += [Point3D(v, z)]
+            normals += [normal]
+        midIndex = {}
+        for trig in tri.simplices:
+            t6 = [iCorner + int(trig[0]), iCorner + int(trig[1]), iCorner + int(trig[2])]
+            for (a, b) in [(trig[0], trig[1]), (trig[1], trig[2]), (trig[2], trig[0])]:
+                key = (min(a, b), max(a, b))
+                if key not in midIndex:
+                    pm = segmentMid.get((int(a), int(b)), 0.5*(np.array(vertices2D[a]) + np.array(vertices2D[b])))
+                    midIndex[key] = len(points)
+                    points += [Point3D(pm, z)]
+                    normals += [normal]
+                t6 += [midIndex[key]]
+            triangles6 += [_OrientTriangle6(t6, points, normal)]
+
+    if not addFaces:
+        triangles6 = []
+    data = {'type':'TriangleList', 'colors':np.array(list(color)*len(points)), 'points':np.array(points).flatten(),
+            'normals':np.array(normals).flatten(), 'triangles6':np.array(triangles6, dtype=int).flatten()}
+    if addEdges:
+        data['edgeColor'] = np.array(edgeColor)
+        data['edges3'] = np.array(rims[0] + rims[1], dtype=int)
+        if not isinstance(addEdges, bool) and int(addEdges) >= 2 and len(mantleLines) != 0:
+            data['edges'] = np.array(mantleLines, dtype=int).flatten()
+    return data
+
+
+def _LinkedCylindersFlat(c1, radius0, radius1, theta, radiusInner0, radiusInner1, nTiles, p0, rot, height,
+                         color, addEdges, edgeColor, addFaces, smoothNormals, **kwargs):
+    """LinkedCylinders as flat extrusion (SolidExtrusion), for the arguments that only SolidExtrusion takes"""
+    c0 = np.array([0.0, 0.0])
+    (theta0_u, theta0_l, theta1_u, theta1_l) = (np.pi - theta, np.pi + theta, np.pi - theta, np.pi + theta)
     # helper to wrap CCW and sample the outer (long) arc
     def _sample_arc(center, r, a0, a1, nTiles_local, out, addLastVertex=True):
         delta = a1 - a0

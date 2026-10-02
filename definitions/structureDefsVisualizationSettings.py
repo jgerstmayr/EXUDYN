@@ -1620,7 +1620,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tfloat(minimum=0),
             pythonName='curvedTriangleTilingAngle',
             defaultValue=15.,
-            description=r'6-node (curved) triangles of a TriangleList (key triangles6) are drawn as flat triangles, split when they are drawn: an edge is subdivided until the angle between the normals of its nodes falls below this angle (in degrees), at most curvedTriangleMaxTiling times - 15 degrees give 24 segments around a full cylinder; 0 draws each as 1 flat triangle; used by the raytracer and GetGraphicsData() as well'),
+            description=r'6-node (curved) triangles of a TriangleList (key triangles6) are drawn as flat triangles, split when they are drawn: each edge is subdivided until the angle between its end tangents, and between the given normals of its nodes, falls below this angle (in degrees), at most curvedTriangleMaxTiling times, and the inside follows its three edges - 15 degrees give 24 segments around a full cylinder, and a surface curved in one direction is not subdivided along the other; 0 draws each as 1 flat triangle; used by the raytracer as well'),
         StructureParameter(type=TIndex(minimum=1),
             pythonName='curvedTriangleMaxTiling',
             defaultValue=8,
