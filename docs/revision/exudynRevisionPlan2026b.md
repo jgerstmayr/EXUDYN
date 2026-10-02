@@ -1316,7 +1316,7 @@ revision (info document D15).
       derivative of $\Jm^T\fv$. Both bugs of 2026-10-02 - the position Jacobian of `ObjectANCFBeam` sized for 8 of its
       18 coordinates, the rotation Jacobian of the slope nodes not the derivative of their rotation - were found by
       chance; this test would have found them. **After RG9.5** (maintainer 2026-10-02): the access functions are not
-      reachable from Python today; with `mbs.ItemCompute` and its numerical-derivative helper this test is short.
+      reachable from Python today; with `mbs.ComputeItem` and its numerical-derivative helper this test is short.
 
 <a id="rg9-4"></a>
 **RG9.4** *(group RG9; maintainer 2026-09-30)* **Kinetic and potential energy as output variables**
@@ -1391,17 +1391,17 @@ revision (info document D15).
       `test_computedParameters.py` stay in `python/testing/`.
 
 <a id="rg9-5"></a>
-**RG9.5** *(group RG9; maintainer 2026-10-02)* **`mbs.ItemCompute`: the computation functions of an item from Python**
+**RG9.5** *(group RG9; maintainer 2026-10-02)* **`mbs.ComputeItem`: the computation functions of an item from Python**
     (#2779). Python reaches an item's computation only through its output variables (position, velocity, ...). The
     access functions of a body (`GetPositionJacobian`, `GetRotationJacobian`, `GetJacobianTransposedTimesVectorDerivative`),
     its `ComputeODE2LHS` and mass matrix, the equations and Jacobians of a constraint, the forces of a connector, the
     Jacobians of a node or marker are not reachable - which a test of them (RG9.3.8), the debugging of an item and a
     user who implements one all need. Proposed by the maintainer: an interface like `mbs.Inspect`,
-    `mbs.ItemCompute(itemIndex, what, [optional parameters])`, computing **at the current state** (anything else is far
+    `mbs.ComputeItem(itemIndex, what, [optional parameters])`, computing **at the current state** (anything else is far
     more complicated); as many functions as possible defined once in a base class (`CObjectBody`, `CObjectConnector`,
     `CNodeODE2`, `CMarker`), each kind adding only its Python interface; and a small Python helper for the numerical
     derivative (of a position, a rotation matrix, a residual) that makes the comparison of a computed Jacobian a line.
-    - **RG9.5.1** **DONE 2026-10-02, implemented as proposed, for the maintainer's review** — [log](exudynRevisionLog2026b.md#rg9-5) -
+    - **RG9.5.1** **DECIDED 2026-10-02** (maintainer: the name `mbs.ComputeItem`/`exu.ComputeItemType`, renamed from `ItemCompute` (#2783); the helper in `exudyn.advancedUtilities`; `what=None` the list of what applies to the item; one `vector` for force and torque) — [log](exudynRevisionLog2026b.md#rg9-5) -
       the evaluation and the proposal, for the maintainer's decisions: which functions per kind of item, the
       names of `what`, the arguments (local position, force/torque, factors), what is returned (numpy arrays, dicts), how
       the current state is set (`mbs.systemData`), what a call on an item that does not provide a function raises, and
@@ -1413,7 +1413,7 @@ revision (info document D15).
       forces;
     - **RG9.5.5** nodes and markers: the node's position and rotation Jacobians and `GetRotationJacobianTTimesVector_q`,
       the marker's kinematics (L0) and its Jacobians.
-    - **RG9.5.6** *(found in RG9.5; needs no decision)* **what `mbs.ItemCompute` does not compute yet** (#2782): the ODE2
+    - **RG9.5.6** *(found in RG9.5; needs no decision)* **what `mbs.ComputeItem` does not compute yet** (#2782): the ODE2
       Jacobian of an object or connector (analytic where it has one, else numerical as the solver does),
       `IsValidLocalPosition`, the Jacobians of a node with algebraic equations; and the bodies the test of RG9.3.8 does
       not build yet - `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectKinematicTree`, `ObjectALEANCFCable2D`,
@@ -2496,7 +2496,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); done: the dispatch in the connector, the switch and the legacy functions (RG14.2.13, .17), sensors from a pool and the mixed rigid chain (.18), `PostNewtonStep` without Jacobians (.19), `MarkerTemp` without `MarkerData` (.14), `TemporaryComputationData` inventoried and named (.16) |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
-| RG9.5 | #2782 | `mbs.ItemCompute` done (#2779, RG9.3.8 with it); open RG9.5.6: the ODE2 Jacobian of an object, the FFRF bodies, kinematic tree, ALE cable, GenericODE2 in the test |
+| RG9.5 | #2782 | `mbs.ComputeItem` done (#2779, RG9.3.8 with it); open RG9.5.6: the ODE2 Jacobian of an object, the FFRF bodies, kinematic tree, ALE cable, GenericODE2 in the test |
 | RG16.1 | #2780 | homogeneous transformations: the C++ class fast, out of `exulie`, and `exudyn.HT` |
 | RG16.2 | #2781 | evaluation: HT in the user interface of the rigid items, `localHT` in the rigid markers (RG16.5) |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |

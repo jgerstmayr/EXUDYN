@@ -11677,3 +11677,13 @@ the default: its kinematics and Jacobians come from one traversal of the tree (`
 L0 and L1 would traverse it twice for a connector; an L1 without the Jacobian needs a backward recursion of the tree - a
 step of its own if a model needs it. Measured `abaqusImportTest.py` (an FFRF body on a joint, the run dominated by the
 mesh import): 0.804 s before, 0.798 s after; results identical. All references of the suite and pytest unchanged.
+
+<a id="rg9-5-1-decided"></a>
+### RG9.5.1 — decided by the maintainer (2026-10-02, #2783)
+
+The review of the proposal implemented in RG9.5: the function is **`mbs.ComputeItem`** and its enumeration
+**`exu.ComputeItemType`** - verb first, like `mbs.AddObject` -; renamed from `ItemCompute` (C++ `MainSystem::PyComputeItem`,
+the test files, the plan; the entry of RG9.5 above keeps the name it was written with). The rest stays as proposed: the
+helper `NumericalJacobian`/`ItemODE2Coordinates` in `exudyn.advancedUtilities`, `what=None` returns the list of what
+applies to the item, one `vector` argument for force and torque. The test model keeps its file name
+`itemComputeTest.py` (a tracked file is renamed only with the maintainer's approval).

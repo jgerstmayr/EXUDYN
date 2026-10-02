@@ -237,8 +237,8 @@ inline std::ostream& operator<<(std::ostream& os, InspectType value)
     }
 }
 
-//! what MainSystem::PyItemCompute computes (#2779)
-enum class ItemComputeType {
+//! what MainSystem::PyComputeItem computes (#2779)
+enum class ComputeItemType {
     PositionJacobian = 1,               //!< the position Jacobian, d(velocity)/d(q_t): of a body at localPosition, of a node, of a marker
     RotationJacobian = 2,               //!< the rotation Jacobian, d(angular velocity)/d(q_t), global: of a body at localPosition, of a node, of a rigid marker
     JacobianTTimesVectorDerivative = 3, //!< the derivative of the transposed Jacobian times a vector by the coordinates: of a body at localPosition and of a marker, d(J_pos^T f + J_rot^T tau)/dq with vector = [f, tau] (6 values); of a node, d(J_rot^T tau)/dq with vector = tau (3 values); an empty matrix where it is zero
@@ -252,23 +252,23 @@ enum class ItemComputeType {
     CoordinateJacobian = 11             //!< the Jacobian of a coordinate marker by the coordinates it acts on
 };
 
-//! ostream operator for printing of ItemComputeType
-inline std::ostream& operator<<(std::ostream& os, ItemComputeType value)
+//! ostream operator for printing of ComputeItemType
+inline std::ostream& operator<<(std::ostream& os, ComputeItemType value)
 {
     switch (value)
     {
-    case ItemComputeType::PositionJacobian: return os << "PositionJacobian";
-    case ItemComputeType::RotationJacobian: return os << "RotationJacobian";
-    case ItemComputeType::JacobianTTimesVectorDerivative: return os << "JacobianTTimesVectorDerivative";
-    case ItemComputeType::MassWeightedPositionJacobian: return os << "MassWeightedPositionJacobian";
-    case ItemComputeType::ODE2LHS: return os << "ODE2LHS";
-    case ItemComputeType::MassMatrix: return os << "MassMatrix";
-    case ItemComputeType::AlgebraicEquations: return os << "AlgebraicEquations";
-    case ItemComputeType::ConstraintJacobian: return os << "ConstraintJacobian";
-    case ItemComputeType::ReactionForces: return os << "ReactionForces";
-    case ItemComputeType::Kinematics: return os << "Kinematics";
-    case ItemComputeType::CoordinateJacobian: return os << "CoordinateJacobian";
-    default: return os << "ItemComputeType::invalid";
+    case ComputeItemType::PositionJacobian: return os << "PositionJacobian";
+    case ComputeItemType::RotationJacobian: return os << "RotationJacobian";
+    case ComputeItemType::JacobianTTimesVectorDerivative: return os << "JacobianTTimesVectorDerivative";
+    case ComputeItemType::MassWeightedPositionJacobian: return os << "MassWeightedPositionJacobian";
+    case ComputeItemType::ODE2LHS: return os << "ODE2LHS";
+    case ComputeItemType::MassMatrix: return os << "MassMatrix";
+    case ComputeItemType::AlgebraicEquations: return os << "AlgebraicEquations";
+    case ComputeItemType::ConstraintJacobian: return os << "ConstraintJacobian";
+    case ComputeItemType::ReactionForces: return os << "ReactionForces";
+    case ComputeItemType::Kinematics: return os << "Kinematics";
+    case ComputeItemType::CoordinateJacobian: return os << "CoordinateJacobian";
+    default: return os << "ComputeItemType::invalid";
     }
 }
 

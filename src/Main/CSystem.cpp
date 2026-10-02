@@ -3887,7 +3887,7 @@ void CSystem::UpdatePostProcessData(bool recordImage, bool visualizationStateUpd
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//the computation of one object at the current state, as the system loops do it, for mbs.ItemCompute (#2779)
+//the computation of one object at the current state, as the system loops do it, for mbs.ComputeItem (#2779)
 
 void CSystem::ComputeObjectAlgebraicEquations(TemporaryComputationData& temp, Index objectNumber, Vector& localAE, bool velocityLevel)
 {

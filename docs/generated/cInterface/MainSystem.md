@@ -1862,13 +1862,13 @@ The class **MainSystem** has the following **functions and structures** regardin
   mbs.Inspect(oSpringDamper) #all that apply
   ```
 
-- **`ItemCompute(itemIndex, what = None, localPosition = [0.,0.,0.], vector = None)`**: compute a function of an item at the current state of the system (#2779) - for tests and the debugging of items: for the typed index of an object, node or marker and a what of type exu.ItemComputeType, a numpy array (a dict for the kinematics of a marker), in the coordinates of the item; localPosition is the position in a body, vector the force and torque of a Jacobian derivative; with what=None the list of what applies to the item; a what that does not apply raises with that list; the system must be assembled; exudyn.advancedUtilities.NumericalJacobian gives the numerical derivative to compare with
+- **`ComputeItem(itemIndex, what = None, localPosition = [0.,0.,0.], vector = None)`**: compute a function of an item at the current state of the system (#2779) - for tests and the debugging of items: for the typed index of an object, node or marker and a what of type exu.ComputeItemType, a numpy array (a dict for the kinematics of a marker), in the coordinates of the item; localPosition is the position in a body, vector the force and torque of a Jacobian derivative; with what=None the list of what applies to the item; a what that does not apply raises with that list; the system must be assembled; exudyn.advancedUtilities.NumericalJacobian gives the numerical derivative to compare with
 
   *Example*:
 
   ```python
-  mbs.ItemCompute(oBody, exu.ItemComputeType.PositionJacobian, localPosition=[0.1,0,0])
-  mbs.ItemCompute(oBody) #what applies
+  mbs.ComputeItem(oBody, exu.ComputeItemType.PositionJacobian, localPosition=[0.1,0,0])
+  mbs.ComputeItem(oBody) #what applies
   ```
 
 - **`GetObjectOutputBody(objectNumber, variableType, localPosition = [0,0,0], configuration = exu.ConfigurationType.Current)`**: get body's output variable from object number (type ObjectIndex) and OutputVariableType, using the localPosition as defined in the body, and as used in MarkerBody and SensorBody

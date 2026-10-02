@@ -1,7 +1,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test file
 #
-# Details:  The access functions of every body against finite differences (#2777), through mbs.ItemCompute and
+# Details:  The access functions of every body against finite differences (#2777), through mbs.ComputeItem and
 #           exudyn.advancedUtilities.NumericalJacobian (#2779): at random coordinates and velocities and at several
 #           local positions, the position Jacobian is d(velocity)/d(q_t), the rotation Jacobian d(angular velocity)/d(q_t),
 #           and the derivative of J_pos^T f + J_rot^T tau the numerical derivative of the Jacobians times f and tau.
@@ -29,7 +29,7 @@ from exudyn.shells import ShellMesh
 
 exu.special.userInterface.SuppressAll(True)
 OV = exu.OutputVariableType
-IC = exu.ItemComputeType
+IC = exu.ComputeItemType
 
 
 def Section():
@@ -124,15 +124,15 @@ def test_theAccessFunctionsAreTheNumericalDerivatives(name):
     for (k, ep) in eulerParameterBlocks:
         kk = coordinates.index(k)
         tangent[kk:kk+4, kk:kk+4] -= np.outer(ep, ep)
-    applies = mbs.ItemCompute(body)
+    applies = mbs.ComputeItem(body)
     outputs = mbs.Inspect(body, exu.InspectType.OutputVariables)
     assert IC.PositionJacobian in applies
     for p in localPositions:
-        jacobian = mbs.ItemCompute(body, IC.PositionJacobian, localPosition=p)
+        jacobian = mbs.ComputeItem(body, IC.PositionJacobian, localPosition=p)
         numerical = NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(body, OV.Velocity, localPosition=p), coordinates, velocities=True)
         assert np.abs(jacobian[:numerical.shape[0]] - numerical).max() < 1e-8
         if IC.RotationJacobian in applies and OV.AngularVelocity in outputs:
-            jacobian = mbs.ItemCompute(body, IC.RotationJacobian, localPosition=p)
+            jacobian = mbs.ComputeItem(body, IC.RotationJacobian, localPosition=p)
             numerical = NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(body, OV.AngularVelocity, localPosition=p), coordinates, velocities=True)
             assert np.abs(jacobian - numerical).max() < 1e-8
         if IC.JacobianTTimesVectorDerivative in applies and name != 'RigidBodyRotVecLG':
@@ -142,13 +142,13 @@ def test_theAccessFunctionsAreTheNumericalDerivatives(name):
                 forceTorque[3:] = [0, 0, 0]
 
             def JacobiansTimesForceTorque():
-                positionJacobian = mbs.ItemCompute(body, IC.PositionJacobian, localPosition=p)
+                positionJacobian = mbs.ComputeItem(body, IC.PositionJacobian, localPosition=p)
                 result = positionJacobian.T @ np.array(forceTorque[:positionJacobian.shape[0]])
                 if withRotation:
-                    result = result + mbs.ItemCompute(body, IC.RotationJacobian, localPosition=p).T @ np.array(forceTorque[3:])
+                    result = result + mbs.ComputeItem(body, IC.RotationJacobian, localPosition=p).T @ np.array(forceTorque[3:])
                 return result
             numerical = NumericalJacobian(mbs, JacobiansTimesForceTorque, coordinates) @ tangent
-            derivative = mbs.ItemCompute(body, IC.JacobianTTimesVectorDerivative, localPosition=p, vector=forceTorque)
+            derivative = mbs.ComputeItem(body, IC.JacobianTTimesVectorDerivative, localPosition=p, vector=forceTorque)
             if derivative.size == 0: #declared zero
                 derivative = np.zeros_like(numerical)
             assert np.abs(derivative @ tangent - numerical).max() < 1e-7 * max(1, np.abs(numerical).max())

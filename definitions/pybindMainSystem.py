@@ -581,12 +581,12 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='Inspect', cName='PyInspect',
                                 returnType='Any',
                                 )
 
-pb.DefPyFunctionAccess(cClass=classStr, pyName='ItemCompute', cName='PyItemCompute',
-                                description="compute a function of an item at the current state of the system (#2779) - for tests and the debugging of items: for the typed index of an object, node or marker and a what of type exu.ItemComputeType, a numpy array (a dict for the kinematics of a marker), in the coordinates of the item; localPosition is the position in a body, vector the force and torque of a Jacobian derivative; with what=None the list of what applies to the item; a what that does not apply raises with that list; the system must be assembled; exudyn.advancedUtilities.NumericalJacobian gives the numerical derivative to compare with",
+pb.DefPyFunctionAccess(cClass=classStr, pyName='ComputeItem', cName='PyComputeItem',
+                                description="compute a function of an item at the current state of the system (#2779) - for tests and the debugging of items: for the typed index of an object, node or marker and a what of type exu.ComputeItemType, a numpy array (a dict for the kinematics of a marker), in the coordinates of the item; localPosition is the position in a body, vector the force and torque of a Jacobian derivative; with what=None the list of what applies to the item; a what that does not apply raises with that list; the system must be assembled; exudyn.advancedUtilities.NumericalJacobian gives the numerical derivative to compare with",
                                 argList=['itemIndex', 'what', 'localPosition', 'vector'],
-                                argTypes=['Any', 'ItemComputeType', 'Vector3D', 'Any'],
+                                argTypes=['Any', 'ComputeItemType', 'Vector3D', 'Any'],
                                 defaultArgs=['', 'py::none()', '(std::vector<Real>)Vector3D({0.,0.,0.})', 'py::none()'],
-                                example = r"""mbs.ItemCompute(oBody, exu.ItemComputeType.PositionJacobian, localPosition=[0.1,0,0])\\mbs.ItemCompute(oBody) \#what applies""",
+                                example = r"""mbs.ComputeItem(oBody, exu.ComputeItemType.PositionJacobian, localPosition=[0.1,0,0])\\mbs.ComputeItem(oBody) \#what applies""",
                                 returnType='Any',
                                 )
 

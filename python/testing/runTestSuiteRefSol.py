@@ -111,7 +111,7 @@ def TestExamplesReferenceSolution():
         'rightAngleFrame.py':4.3718231979938, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 4.371823197993865; #the same frame driven by displacement, past the buckling point (#2762)
         'energiesFlexibleBodiesTest.py':5.850170604919896, #elastic energy of beams, plate and kinematic tree in free oscillations (#2202)
         'accessFunctionsTest.py':1.255546526424125, #new 2026-10-02: the access functions of a body at a local position, and what Assemble() refuses (#2744); 2026-10-02: a force at the rim of ObjectRotationalMass1D (#2775)
-        'itemComputeTest.py':71.26280786574209, #new 2026-10-02: mbs.ItemCompute and NumericalJacobian on a double pendulum (#2779)
+        'itemComputeTest.py':71.26280786574209, #new 2026-10-02: mbs.ComputeItem and NumericalJacobian on a double pendulum (#2779)
         'inspectTest.py':45, #2026-10-02: a rigid body reports PotentialEnergy = 0 (#2202), before 44; new 2026-10-01: mbs.Inspect (#2203); the number of listed members, refusals included
         'energiesTest.py':17.614884358875663, #kinetic and potential energy of simple bodies and spring-dampers (#2202); 2026-10-01 with what the energies refuse and the gravity connector; before 8.724884363749222
         'geometricallyExactBeamOutputTest.py':-6.079487513916353, #section forces, moments and strains of the 3D beam (#2753)

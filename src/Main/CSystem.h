@@ -328,11 +328,11 @@ public:
 		GeneralMatrix& jacobianGM, Real factorODE2 = 1., Real factorODE2_t = 0., Real factorODE1 = 1.) {}; //used in future!
 
 	//! the algebraic equations of one object - a constraint or a body with algebraic equations - at the current state,
-	//! into localAE (mbs.ItemCompute, #2779)
+	//! into localAE (mbs.ComputeItem, #2779)
 	void ComputeObjectAlgebraicEquations(TemporaryComputationData& temp, Index objectNumber, Vector& localAE, bool velocityLevel = false);
 
 	//! the reaction forces C_q^T lambda of one object with algebraic equations, with the current Lagrange multipliers, in
-	//! its local ODE2 coordinates (mbs.ItemCompute, #2779)
+	//! its local ODE2 coordinates (mbs.ComputeItem, #2779)
 	void ComputeObjectReactionForces(TemporaryComputationData& temp, Index objectNumber, Vector& localODE2);
 
 	//!compute per-object jacobians for object j, providing TemporaryComputationData;

@@ -1,0 +1,15 @@
+{
+  "number": 2783,
+  "title": "mbs.ItemCompute renamed mbs.ComputeItem",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "Maintainer's review of RG9.5.1 (2026-10-02): the function is mbs.ComputeItem and its enumeration exu.ComputeItemType, verb first like mbs.AddObject; the rest of the proposal stays (helper in exudyn.advancedUtilities, what=None lists what applies, one vector argument).",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-02 19:49",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "mbs.ItemCompute and exu.ItemComputeType, new in this release, are named mbs.ComputeItem and exu.ComputeItemType.",
+  "resolvedInVersion": "1.12.218"
+}

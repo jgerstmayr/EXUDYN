@@ -1225,7 +1225,7 @@ class SystemEnergy:
 
 def ItemODE2Coordinates(mbs, itemIndex):
     """the global ODE2 coordinate indices of an object (its local-to-global list) or of a node, in the order of
-    the matrices and vectors mbs.ItemCompute returns for it; the system must be assembled"""
+    the matrices and vectors mbs.ComputeItem returns for it; the system must be assembled"""
     if isinstance(itemIndex, exudyn.ObjectIndex):
         return list(mbs.systemData.GetObjectLTGODE2(itemIndex))
     if isinstance(itemIndex, exudyn.NodeIndex):
@@ -1235,12 +1235,12 @@ def ItemODE2Coordinates(mbs, itemIndex):
 
 def NumericalJacobian(mbs, function, coordinates, velocities=False, epsilon=1e-6):
     """the derivative of function() - any computation of the current state, e.g. an output variable or
-    mbs.ItemCompute - by the given global ODE2 coordinates (velocities=True: by their time derivatives), by central
+    mbs.ComputeItem - by the given global ODE2 coordinates (velocities=True: by their time derivatives), by central
     differences with step epsilon; the state is restored afterwards; returns an array (number of values of function)
-    x (number of coordinates); with ItemODE2Coordinates, the comparison with mbs.ItemCompute is one line:
+    x (number of coordinates); with ItemODE2Coordinates, the comparison with mbs.ComputeItem is one line:
     NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(oBody, exu.OutputVariableType.Velocity, localPosition),
     ItemODE2Coordinates(mbs, oBody), velocities=True) against
-    mbs.ItemCompute(oBody, exu.ItemComputeType.PositionJacobian, localPosition)"""
+    mbs.ComputeItem(oBody, exu.ComputeItemType.PositionJacobian, localPosition)"""
     Get = mbs.systemData.GetODE2Coordinates_t if velocities else mbs.systemData.GetODE2Coordinates
     Set = mbs.systemData.SetODE2Coordinates_t if velocities else mbs.systemData.SetODE2Coordinates
     q0 = np.array(Get())

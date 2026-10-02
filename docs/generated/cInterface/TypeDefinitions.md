@@ -81,13 +81,13 @@ The class **InspectType** has the following **functions and structures**:
 - **`AccessFunctions`**: the access functions a body offers (AccessFunctionType), which decide the body markers it takes
 
 
-(sec-itemcomputetype)=
-## ItemComputeType
+(sec-computeitemtype)=
+## ComputeItemType
 
-The enumeration type ItemComputeType selects what mbs.ItemCompute(itemIndex, what, ...) computes for an item at the current state of the system; matrices and vectors refer to the coordinates of the item (its local-to-global ODE2 coordinates, mbs.systemData.GetObjectLTGODE2, or the coordinates of the node).
+The enumeration type ComputeItemType selects what mbs.ComputeItem(itemIndex, what, ...) computes for an item at the current state of the system; matrices and vectors refer to the coordinates of the item (its local-to-global ODE2 coordinates, mbs.systemData.GetObjectLTGODE2, or the coordinates of the node).
 
 
-The class **ItemComputeType** has the following **functions and structures**:
+The class **ComputeItemType** has the following **functions and structures**:
 
 - **`PositionJacobian`**: the position Jacobian, d(velocity)/d(q_t): of a body at localPosition, of a node, of a marker
 - **`RotationJacobian`**: the rotation Jacobian, d(angular velocity)/d(q_t), global: of a body at localPosition, of a node, of a rigid marker

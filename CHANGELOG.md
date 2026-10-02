@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 202 | 1.12.217 |
+| 1.12 | Metheney | 203 | 1.12.218 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.218** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` mbs.ItemCompute renamed mbs.ComputeItem (#2783)
+  - description: Maintainer's review of RG9.5.1 (2026-10-02): the function is mbs.ComputeItem and its enumeration exu.ComputeItemType, verb first like mbs.AddObject; the rest of the proposal stays (helper in exudyn.advancedUtilities, what=None lists what applies, one vector argument).
+  - **notes:** mbs.ItemCompute and exu.ItemComputeType, new in this release, are named mbs.ComputeItem and exu.ComputeItemType.
+  - date resolved: **2026-10-02 19:49**, date raised: 2026-10-02
 - **1.12.217** `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` mbs.ItemCompute: the computation functions of an item from Python (#2779)
   - description: Python reaches an item's computation only through output variables. A general access at the current state - mbs.ItemCompute(itemIndex, what, \[optional parameters\]), like mbs.Inspect - to the access functions of bodies, ComputeODE2LHS and mass matrix, constraint equations and Jacobians, connector forces, node and marker Jacobians; functions defined once in base classes; plus a numerical-derivative helper for comparisons. For tests (\#2777), debugging and user items.
   - **notes:** mbs.ItemCompute(item, what) computes what the solver computes for one object, node or marker at the current state - Jacobians, mass matrix, right-hand side, connector forces, constraint equations and Jacobians, reaction forces, marker kinematics; mbs.ItemCompute(item) lists what applies; exudyn.advancedUtilities.NumericalJacobian gives the numerical derivative to compare with.

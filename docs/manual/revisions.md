@@ -151,11 +151,11 @@ deformed cross section, and results with joints on slope nodes, change slightly 
 its table, not only on its axis; `ObjectANCFBeam` takes `MarkerBodyRigid`, so torques and joints with
 rotations act on its cross sections (#2775).
 
-**What an item computes, from Python.** `mbs.ItemCompute(item, what)` computes, at the current state,
+**What an item computes, from Python.** `mbs.ComputeItem(item, what)` computes, at the current state,
 what the solver computes for one object, node or marker - the position and rotation Jacobians of a
 body at a local position, its mass matrix and right-hand side, the forces of a connector, the
 equations, constraint Jacobian and reaction forces of a joint, the kinematics of a marker -, and
-`mbs.ItemCompute(item)` lists what applies (`exu.ItemComputeType`).
+`mbs.ComputeItem(item)` lists what applies (`exu.ComputeItemType`).
 `exudyn.advancedUtilities.NumericalJacobian` gives the numerical derivative to compare with, for
 testing a model or an item of one's own (#2779).
 

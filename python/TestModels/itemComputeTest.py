@@ -1,11 +1,11 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  mbs.ItemCompute computes what the solver computes for one item, at the current state (#2779) - for
+# Details:  mbs.ComputeItem computes what the solver computes for one item, at the current state (#2779) - for
 #           tests and for the debugging of a model or of a user's item; exudyn.advancedUtilities.NumericalJacobian
 #           gives the numerical derivative to compare with. A double pendulum of two rigid bodies, the first on
 #           a revolute joint to the ground, the second on a spring-damper:
-#           (1) mbs.ItemCompute(item) lists what applies to the item;
+#           (1) mbs.ComputeItem(item) lists what applies to the item;
 #           (2) the mass matrix and the right-hand side of a body, the forces of the spring-damper on its markers;
 #           (3) the algebraic equations of the joint and its constraint Jacobian, which equals the numerical
 #               derivative of the equations, and its reaction forces C_q^T lambda;
@@ -25,7 +25,7 @@ from exudyn.advancedUtilities import NumericalJacobian, ItemODE2Coordinates
 import numpy as np
 
 testIsActive = exu.sys.get('testIsActive', False)
-IC = exu.ItemComputeType
+IC = exu.ComputeItemType
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
@@ -50,35 +50,35 @@ mbs.SolveDynamic(simulationSettings) #some state that is not the initial one
 
 body = b0['bodyNumber']
 #(1) what applies
-exu.Print('ItemCompute applies to the body:', [str(t) for t in mbs.ItemCompute(body)])
-exu.Print('ItemCompute applies to the joint:', [str(t) for t in mbs.ItemCompute(oJoint)])
+exu.Print('ComputeItem applies to the body:', [str(t) for t in mbs.ComputeItem(body)])
+exu.Print('ComputeItem applies to the joint:', [str(t) for t in mbs.ComputeItem(oJoint)])
 
 #(2) the body and the spring-damper
-massMatrix = mbs.ItemCompute(body, IC.MassMatrix)
-lhsBody = mbs.ItemCompute(body, IC.ODE2LHS)
-lhsSpring = mbs.ItemCompute(oSpring, IC.ODE2LHS)
+massMatrix = mbs.ComputeItem(body, IC.MassMatrix)
+lhsBody = mbs.ComputeItem(body, IC.ODE2LHS)
+lhsSpring = mbs.ComputeItem(oSpring, IC.ODE2LHS)
 exu.Print('mass of the body from its mass matrix:', massMatrix[0, 0], ', expected', inertia.Mass())
 
 #(3) the joint
-equations = mbs.ItemCompute(oJoint, IC.AlgebraicEquations)
-constraintJacobian = mbs.ItemCompute(oJoint, IC.ConstraintJacobian)
+equations = mbs.ComputeItem(oJoint, IC.AlgebraicEquations)
+constraintJacobian = mbs.ComputeItem(oJoint, IC.ConstraintJacobian)
 coordinates = ItemODE2Coordinates(mbs, oJoint)
-numerical = NumericalJacobian(mbs, lambda: mbs.ItemCompute(oJoint, IC.AlgebraicEquations), coordinates)
+numerical = NumericalJacobian(mbs, lambda: mbs.ComputeItem(oJoint, IC.AlgebraicEquations), coordinates)
 errorCq = np.abs(constraintJacobian - numerical).max()
 exu.Print('joint equations', np.round(equations, 8), ', C_q against its numerical derivative:', errorCq)
-reactionForces = mbs.ItemCompute(oJoint, IC.ReactionForces)
+reactionForces = mbs.ComputeItem(oJoint, IC.ReactionForces)
 
 #(4) the position Jacobian at a point of the body
-positionJacobian = mbs.ItemCompute(body, IC.PositionJacobian, localPosition=p)
+positionJacobian = mbs.ComputeItem(body, IC.PositionJacobian, localPosition=p)
 numerical = NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(body, exu.OutputVariableType.Velocity, localPosition=p),
                               ItemODE2Coordinates(mbs, body), velocities=True)
 errorJpos = np.abs(positionJacobian - numerical).max()
 exu.Print('position Jacobian against the derivative of the velocity:', errorJpos)
 
 #(5) a marker and a node
-kinematics = mbs.ItemCompute(marker, IC.Kinematics)
+kinematics = mbs.ComputeItem(marker, IC.Kinematics)
 exu.Print('marker position', np.round(kinematics['position'], 6))
-rotationJacobian = mbs.ItemCompute(b0['nodeNumber'], IC.RotationJacobian)
+rotationJacobian = mbs.ComputeItem(b0['nodeNumber'], IC.RotationJacobian)
 
 testResult = (np.abs(massMatrix).sum() + np.abs(lhsBody).sum() + np.abs(lhsSpring).sum() + np.abs(constraintJacobian).sum()
               + np.abs(reactionForces).sum() + np.abs(kinematics['position']).sum() + np.abs(rotationJacobian).sum())

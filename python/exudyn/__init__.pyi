@@ -273,8 +273,8 @@ class InspectType(Enum):
     """the access functions a body offers (AccessFunctionType), which decide the body markers it takes"""
 
 
-class ItemComputeType(Enum):
-    """The enumeration type ItemComputeType selects what mbs.ItemCompute(itemIndex, what, ...) computes for an item at the current state of the system; matrices and vectors refer to the coordinates of the item (its local-to-global ODE2 coordinates, mbs.systemData.GetObjectLTGODE2, or the coordinates of the node)."""
+class ComputeItemType(Enum):
+    """The enumeration type ComputeItemType selects what mbs.ComputeItem(itemIndex, what, ...) computes for an item at the current state of the system; matrices and vectors refer to the coordinates of the item (its local-to-global ODE2 coordinates, mbs.systemData.GetObjectLTGODE2, or the coordinates of the node)."""
     PositionJacobian = int
     """the position Jacobian, d(velocity)/d(q_t): of a body at localPosition, of a node, of a marker"""
     RotationJacobian = int
@@ -3399,12 +3399,12 @@ class MainSystem:
         """
         ...
     @overload
-    def ItemCompute(self, itemIndex: Any, what: ItemComputeType=None, localPosition: Vector3D=[0.,0.,0.], vector: Any=None) -> Any: 
-        """Compute a function of an item at the current state of the system (#2779) - for tests and the debugging of items: for the typed index of an object, node or marker and a what of type exu.ItemComputeType, a numpy array (a dict for the kinematics of a marker), in the coordinates of the item; localPosition is the position in a body, vector the force and torque of a Jacobian derivative; with what=None the list of what applies to the item; a what that does not apply raises with that list; the system must be assembled; exudyn.advancedUtilities.NumericalJacobian gives the numerical derivative to compare with.
+    def ComputeItem(self, itemIndex: Any, what: ComputeItemType=None, localPosition: Vector3D=[0.,0.,0.], vector: Any=None) -> Any: 
+        """Compute a function of an item at the current state of the system (#2779) - for tests and the debugging of items: for the typed index of an object, node or marker and a what of type exu.ComputeItemType, a numpy array (a dict for the kinematics of a marker), in the coordinates of the item; localPosition is the position in a body, vector the force and torque of a Jacobian derivative; with what=None the list of what applies to the item; a what that does not apply raises with that list; the system must be assembled; exudyn.advancedUtilities.NumericalJacobian gives the numerical derivative to compare with.
         
         Examples:
-            mbs.ItemCompute(oBody, exu.ItemComputeType.PositionJacobian, localPosition=[0.1,0,0])
-            mbs.ItemCompute(oBody) #what applies
+            mbs.ComputeItem(oBody, exu.ComputeItemType.PositionJacobian, localPosition=[0.1,0,0])
+            mbs.ComputeItem(oBody) #what applies
         """
         ...
     @overload

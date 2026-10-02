@@ -93,8 +93,8 @@ class InspectType(Enum):
     AccessFunctions = int
     """the access functions a body offers (AccessFunctionType), which decide the body markers it takes"""
 
-class ItemComputeType(Enum):
-    """The enumeration type ItemComputeType selects what mbs.ItemCompute(itemIndex, what, ...) computes for an item at the current state of the system; matrices and vectors refer to the coordinates of the item (its local-to-global ODE2 coordinates, mbs.systemData.GetObjectLTGODE2, or the coordinates of the node)."""
+class ComputeItemType(Enum):
+    """The enumeration type ComputeItemType selects what mbs.ComputeItem(itemIndex, what, ...) computes for an item at the current state of the system; matrices and vectors refer to the coordinates of the item (its local-to-global ODE2 coordinates, mbs.systemData.GetObjectLTGODE2, or the coordinates of the node)."""
     PositionJacobian = int
     """the position Jacobian, d(velocity)/d(q_t): of a body at localPosition, of a node, of a marker"""
     RotationJacobian = int
