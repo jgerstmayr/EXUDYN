@@ -550,19 +550,12 @@ def PerformanceTestsReferenceSolution():
         'perfLargeMassSpringChain:rigid-n5000-explicit' : 0.03706120534025104,
         'perfLargeMassSpringChain:rigid-n5000-implicit' : 0.01663000270673365,
         'perfLargeMassSpringChain:rigid-n20000-explicit': 0.01426191722384829,
-        #the connector interface (#2745): each pair of runs, legacy path and new one, shares its value - measured
-        #2026-10-01 on Windows cp313; the pairs agree to round-off (the implicit ones to 1e-15 relative)
-        'perfConnectorInterface:spring-n200-implicit-legacy':      8.222900073211406,
+        #the connector interface (#2745) - measured 2026-10-01 on Windows cp313
         'perfConnectorInterface:spring-n200-implicit':             8.222900073211406,
-        'perfConnectorInterface:spring-n200-explicit-legacy':      6.071378919533291,
         'perfConnectorInterface:spring-n200-explicit':             6.071378919533291,
-        'perfConnectorInterface:gravity-n200-implicit-legacy':     17.452516360952007,
         'perfConnectorInterface:gravity-n200-implicit':            17.452516360952007,
-        'perfConnectorInterface:coordinate-n1000-explicit-legacy': 0.9526968492542502,
         'perfConnectorInterface:coordinate-n1000-explicit':        0.9526968492542502,
-        'perfConnectorInterface:rigid-n100-implicit-legacy':       1.5527250883085153, #numerical Jacobian
-        'perfConnectorInterface:rigid-n100-implicit':              1.552725088397863,  #by AD: the same to the Newton tolerance
-        'perfConnectorInterface:rigid-n100-explicit-legacy':       1.8871766817354405,
+        'perfConnectorInterface:rigid-n100-implicit':              1.552725088397863,
         'perfConnectorInterface:rigid-n100-explicit':              1.8871766817354405,
         #the access functions of the bodies (#2744): hand-written, and for the cable the derivative of J^T f by automatic
         #differentiation - measured 2026-10-02 on Windows cp313

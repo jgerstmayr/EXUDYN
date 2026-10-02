@@ -266,7 +266,7 @@ const Index maxConstraintEquations = 6;
 
 //! frame and velocities of a rigid marker (#2745): the frame as a homogeneous transformation (rotation local to global,
 //! position global), the velocity global and the angular velocity in the marker's frame - what the bodies deliver
-//! without an extra product, and what the legacy marker data holds
+//! without an extra product, and what the marker data structure holds
 template<class TReal>
 class MarkerRigid
 {
@@ -316,7 +316,7 @@ public:
 	ResizableMatrix tempMatrix2;
 };
 
-//! the marker data of the legacy path from the kinematics of the connector interface (#2745): position, orientation and
+//! the marker data structure from the kinematics of the connector interface (#2745): position, orientation and
 //! velocities, no Jacobians - for connectors whose physics read a MarkerDataStructure (the contact connectors)
 inline void MarkerDataFromKinematics(const MarkerRigid<Real>& kinematics, MarkerData& markerData)
 {
@@ -338,7 +338,7 @@ inline void MarkerDataFromKinematics(const MarkerPosition<Real>& kinematics, Mar
 	markerData.velocityAvailable = true;
 }
 
-//! the kinematics of the two rigid markers of a connector from the marker data of the legacy path (#2745)
+//! the kinematics of the two rigid markers of a connector from the marker data structure (#2745)
 inline void GetMarkersRigid(const MarkerDataStructure& markerData, MarkerRigid<Real>* markers)
 {
 	for (Index k = 0; k < 2; k++)

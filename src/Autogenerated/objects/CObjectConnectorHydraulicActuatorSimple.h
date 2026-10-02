@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  08:26:07 (last modified)
+* @date         2026-10-02  12:15:38 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -125,9 +125,6 @@ public: // AUTO:
         return true;
     }
 
-    //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
-    virtual void ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const override;
-
     //! AUTO:  Computational function: compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs'
     virtual void ComputeODE1RHS(Vector& ode1Rhs, const MarkerDataStructure& markerData, Index objectNumber) const override;
 
@@ -194,7 +191,7 @@ public: // AUTO:
     //! AUTO:  the force on marker 1 from the kinematics of the two markers (#2745)
     virtual void ComputeConnectorForcePosition(const MarkerPosition<Real>* markers, Real t, Index itemIndex, Vector3D& force) const override;
 
-    //! AUTO:  the force of the actuator from the kinematics of its markers and the pressures of its node, shared by the legacy path, the new one and the output variables (#2745)
+    //! AUTO:  the force of the actuator from the kinematics of its markers and the pressures of its node, shared by the connector interface and the output variables (#2745)
     void ComputeActuatorForce(const Vector3D& position0, const Vector3D& position1, const Vector3D& velocity0, const Vector3D& velocity1, Vector3D& relPos, Vector3D& relVel, Real& linearVelocity, Real& force, Vector3D& forceDirection) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override

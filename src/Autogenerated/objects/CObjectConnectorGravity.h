@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  08:26:07 (last modified)
+* @date         2026-10-02  12:15:38 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -104,9 +104,6 @@ public: // AUTO:
         return true;
     }
 
-    //! AUTO:  Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'
-    virtual void ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const override;
-
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override;
 
@@ -152,7 +149,7 @@ public: // AUTO:
     //! AUTO:  the same force with automatic differentiation, for the Jacobian (#2745)
     virtual void ComputeConnectorForcePositionDiff(const MarkerPosition<DRealPositionMarkers>* markers, Real t, Index itemIndex, SlimVectorBase<DRealPositionMarkers, 3>& force) const override;
 
-    //! AUTO:  the physics of the connector, shared by the legacy path, the new one, its Jacobian and the output variables (#2745)
+    //! AUTO:  the physics of the connector, shared by the connector interface, its Jacobian and the output variables (#2745)
     template<class TReal> void ComputeGravityForce(const SlimVectorBase<TReal, 3>& position0, const SlimVectorBase<TReal, 3>& position1, SlimVectorBase<TReal, 3>& relPos, TReal& force, SlimVectorBase<TReal, 3>& forceDirection) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override

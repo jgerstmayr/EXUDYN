@@ -204,7 +204,7 @@ static void ChainConnectorJacobian(const CSystemData& cSystemData, const ArrayIn
 //! differentiation, the directions [marker 0, marker 1] x 3 seeded with factorODE2 at the positions and factorODE2_t at the
 //! velocities, which gives K_k = factorODE2*dF/dp_k + factorODE2_t*dF/dv_k; chained with the position Jacobians as
 //! J_i^T s_i K_k J_k (s_0 = -1, s_1 = 1), plus the derivative of J_i^T f for markers whose Jacobian depends on the
-//! coordinates; dense, into temp.jacobianODE2Container; dv/dq is neglected, as on the legacy path
+//! coordinates; dense, into temp.jacobianODE2Container; dv/dq is neglected
 void ConnectorJacobianODE2PositionMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector,
 	Real factorODE2, Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero)
 {

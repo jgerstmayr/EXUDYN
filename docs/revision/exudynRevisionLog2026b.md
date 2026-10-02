@@ -11362,3 +11362,37 @@ Left: `ObjectBeamGeometricallyExact` takes the derivative as zero off its axis -
 a template; `ObjectALEANCFCable2D` (9 coordinates) has no derivative yet.
 
 `perfAccessFunctionsAD.py` measures the hand-written functions and the cable's derivative now (one run per model).
+
+<a id="rg14-2-13"></a>
+### RG14.2.13 — the switch and the legacy functions removed (2026-10-02, #2745)
+
+`exu.experimental.connectorInterfaceLegacy` is gone, and with it what only it reached:
+- **`CSystem`**: the right-hand side, the Jacobian, the constraint equations, their Jacobian and the reaction forces
+  ask the connector, which computes on the interface or returns false for the path of the marker data;
+  `HasJacobianODE2MarkerData` (its only question) is gone; **the loads** go through the marker functions always - the
+  three branches with `ComputeMarkerData` and the marker Jacobians are gone (a body-fixed load on a marker without
+  orientation is refused at `Assemble()` before); `ConnectorGravity` declares its Jacobian by AD unconditionally.
+- **The legacy functions of the items on the interface, 2069 lines**: `ComputeODE2LHS` of 13 connectors (all on the
+  interface except `ContactSphereSphere`/`ContactSphereTriangle`, which choose by their markers), the hand-written
+  Jacobians `ComputeJacobianODE2_ODE2`/`ComputeJacobianForce6D` of `SpringDamper`, `CartesianSpringDamper` and
+  `CoordinateSpringDamper` (their Jacobian is by AD), `ComputeAlgebraicEquations`/`ComputeJacobianAE` of 7 constraints
+  (`JointGeneric` 512 lines, `JointRevoluteZ` 251, `JointPrismaticX` 179 ...). An inactive constraint still takes the
+  path of the marker data - lambda = 0 -, so `ItemConnectorInterface(constraint=True)` declares those two functions
+  for it, generated, which raise for an active one; `ObjectConnectorCoordinate` keeps its own (`markerDataPath=True`):
+  it also works at velocity level, and its equation there now calls the same template as the interface instead of a
+  copy. `CoordinateSpringDamperExt` keeps its analytic Jacobian (`jacobian=False`).
+- **Comments and descriptions** that named the legacy path now name the path of the marker data or the interface.
+
+**The tests.** The comparisons with the legacy path cannot run any more; what they established is recorded in the
+logs of RG14.2.4 to RG14.2.10 and kept by the references of the test suite (unchanged by this step).
+`test_connectorInterface.py` now checks what does not need the legacy path: the connector Jacobians by AD against the
+numerical ones (zero velocities, Tait-Bryan nodes, without the connectors of zero length, whose direction the finite
+differences flip), C_q by AD against finite differences of the equations (Euler parameters on the unit sphere, the
+columns projected on its tangent space), and the reaction forces without C_q against C_q^T lambda.
+`perfConnectorInterface.py` has one run per model.
+
+**Evaluated: the code of the items on the interface.** Each connector and constraint now has one physics function -
+templated where the Jacobian is by AD -, its L1 functions calling it, `GetAvailableJacobians` and its output variables;
+no kinematics or forces are written twice. What still goes through the marker data structure is listed in RG14.2.18:
+the output variables and `PostNewtonStep` (the transport only, the physics are shared), the two contacts on markers
+without orientation, and `ObjectConnectorCoordinate` at velocity level.

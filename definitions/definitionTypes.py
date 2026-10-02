@@ -796,13 +796,15 @@ def ItemRequestedTypes(kind, types, conditional=(), description=None):
     return member
 
 
-def ItemConnectorInterface(markers, constraint=False, jacobian=True):
+def ItemConnectorInterface(markers, constraint=False, jacobian=True, markerDataPath=False):
     """Use site: the connector computes on the connector interface (#2745) with the L2 chain of its kind of markers -
     markers is 'Position', 'Rigid' or 'Coordinate'. Declares the overrides of CObjectConnector that call the chain
     (ComputeODE2LHSConnector, ComputeJacobianODE2Connector), or for a constraint those of CObjectConstraint
     (equations, C_q, reaction forces), as a list to unpack into the members: *ItemConnectorInterface('Position').
-    jacobian=False: the connector keeps the Jacobian of the path of the marker data. A rigid-marker connector has no
-    Jacobian of that path (HasJacobianODE2MarkerData), which only exu.experimental.connectorInterfaceLegacy asks."""
+    jacobian=False: the connector keeps the Jacobian of the path of the marker data. A constraint computes on the
+    interface while it is active and at position level; for the inactive one - lambda = 0 - its functions of the path of
+    the marker data are declared here, unless markerDataPath=True: the constraint has its own, because it also works at
+    velocity level (ObjectConnectorCoordinate)."""
     if markers not in ('Position', 'Rigid', 'Coordinate'):
         raise ValueError('ItemConnectorInterface: markers must be Position, Rigid or Coordinate, not ' + repr(markers))
     system = 'const CSystemData& systemData, TemporaryComputationData& temp, '
@@ -823,7 +825,17 @@ def ItemConnectorInterface(markers, constraint=False, jacobian=True):
                 implementation='if (!OnConnectorInterface()) { return false; } ConstraintReactionForces' + markers
                     + 'Markers(systemData, temp, *this, objectNumber, reactionForces, localODE2); return true;',
                 description='C_q^T lambda per marker, without forming C_q (#2745)'),
-            ]
+            ] + ([] if markerDataPath else [
+            ItemFunctionDef('ComputeAlgebraicEquations',
+                args='Vector& algebraicEquations, const MarkerDataStructure& markerData, Real t, Index itemIndex, bool velocityLevel = false',
+                implementation='CHECKandTHROW(!IsActive(), "ComputeAlgebraicEquations: an active constraint computes on the connector interface"); '
+                    'algebraicEquations.CopyFrom(markerData.GetLagrangeMultipliers());',
+                description='the equations of the inactive constraint, lambda = 0; the active one computes on the connector interface (#2745)'),
+            ItemFunctionDef('ComputeJacobianAE',
+                implementation='CHECKandTHROW(!IsActive(), "ComputeJacobianAE: an active constraint computes on the connector interface"); '
+                    'jacobian_AE.SetScalarMatrix(GetAlgebraicEquationsSize(), 1.);',
+                description='the Jacobian of the inactive constraint, d(lambda)/d(lambda); the active one computes on the connector interface (#2745)'),
+            ])
     members = [
         ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='ComputeODE2LHSConnector',
             args=system + 'Vector& localODE2Lhs, Index objectNumber',
@@ -836,10 +848,6 @@ def ItemConnectorInterface(markers, constraint=False, jacobian=True):
             implementation='ConnectorJacobianODE2' + markers
                 + 'Markers(systemData, temp, *this, factorODE2, factorODE2_t, objectNumber, jacobianDerivativeNonZero); return true;',
             description='the Jacobian by automatic differentiation of the force (#2745)'))
-    if markers == 'Rigid':
-        members.append(ItemFunction(type=TBool, destination=DestComp, cFlags=CFConst, pythonName='HasJacobianODE2MarkerData',
-            implementation='return false;',
-            description='no Jacobian on the path of the marker data (#2745)'))
     return members
 
 

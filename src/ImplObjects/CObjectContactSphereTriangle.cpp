@@ -222,7 +222,7 @@ void CObjectContactSphereTriangle::ComputeConnectorForceRigid(const MarkerRigid<
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
-	static thread_local MarkerDataStructure markerData; //the physics read the marker data of the legacy path, without Jacobians; one per thread
+	static thread_local MarkerDataStructure markerData; //the physics read a marker data structure, without Jacobians; one per thread
 	markerData.SetNumberOfMarkerData(2);
 	markerData.SetTime(t);
 	MarkerDataFromKinematics(markers[0], markerData.GetMarkerData(0));

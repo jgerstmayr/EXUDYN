@@ -123,7 +123,7 @@ void CObjectConnectorRollingDiscPenalty::ComputeConnectorForceRigid(const Marker
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
-	static thread_local MarkerDataStructure markerData; //the physics read the marker data of the legacy path, without Jacobians; one per thread
+	static thread_local MarkerDataStructure markerData; //the physics read a marker data structure, without Jacobians; one per thread
 	markerData.SetNumberOfMarkerData(2);
 	markerData.SetTime(t);
 	MarkerDataFromKinematics(markers[0], markerData.GetMarkerData(0));
@@ -146,79 +146,6 @@ void CObjectConnectorRollingDiscPenalty::ComputeConnectorForceRigid(const Marker
 	forces[0] = -fPos;
 	torques[0] = -fRotGround;
 }
-
-void CObjectConnectorRollingDiscPenalty::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
-{
-	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectConnectorRollingDiscPenalty::ComputeODE2LHS: marker do not provide velocityLevel information");
-
-	//link separate vectors to result (ode2Lhs) vector
-	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-	ode2Lhs.SetAll(0.);
-
-	//pout << "test\n";
-	if (parameters.activeConnector)
-	{
-		Vector3D pC; //deviation of contact conditions
-		Vector3D vC; //deviation of velocity at contact point
-		Vector3D w2; //normalized vector in longitudinal direction
-		Vector3D n0; //current plane normal
-		Vector3D w3; //normalized vector from wheel center to contact point
-		Vector3D wLateral; //normalized vector from wheel center to contact point
-		Vector3D fContact; //contact force (0=lateral, 1=longitudinal, 2=normal direction), local coordinates
-		Vector2D localSlipVelocity;
-		ComputeContactForces(markerData, parameters, false, pC, vC, wLateral, w2, n0, w3, fContact, localSlipVelocity);
-
-		//compute contact force
-		Vector3D fPos = -(fContact[0]* wLateral + fContact[1] * w2 + fContact[2] * n0); //in global coordinates now
-
-		//compute contact torques: 
-		//NOTE: in regular joints or connectors, connector forces are applied at marker position, using the respective positionJacobian of marker
-		//HERE, torques appear, because forces are not applied at marker position, but with some offset (which is different for both markers!)
-		Vector3D fRotDisc = (parameters.discRadius*w3).CrossProduct(fPos);
-		Vector3D fRotGround = pC.CrossProduct(fPos); //CHECK sign as soon as ground can rotate!!!
-
-		if (parameters.rollingFrictionViscous) //not acting on rotation!
-		{
-			//this is the rolling friction approximated for disc axis parallel to ground:
-			//OLD, only for plane normal in Z-direction:
-			//Vector3D velGround = markerData.GetMarkerData(1).velocity;
-			//velGround[2] = 0;
-
-			//relative velocity on ground, without rolling; plane rotation should have small effect (only in case of rotating table ...)
-			Vector3D omega0 = markerData.GetMarkerData(0).orientation*markerData.GetMarkerData(0).angularVelocityLocal;
-			Vector3D velGround = markerData.GetMarkerData(1).velocity - (markerData.GetMarkerData(0).velocity + omega0.CrossProduct(pC));
-			
-			velGround -= (velGround*n0)*n0; //subtract normal velocity, as it is not part of rolling friction
-
-			fPos += parameters.rollingFrictionViscous*fabs(fContact[2])*velGround;
-		}
-
-
-
-		//now link ode2Lhs Vector to partial result using the two jacobians
-		if (markerData.GetMarkerData(1).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			//positionJacobian.NumberOfColumns() == rotationJacobian.NumberOfColumns()
-			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).positionJacobian, fPos, ldv1);
-			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(1).rotationJacobian, fRotDisc, ldv1);
-		}
-
-		if (markerData.GetMarkerData(0).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			fPos *= -1.;
-			//fRot *= -1.; //this would be wrong; torque is different on both bodies, due to different center point!
-			fRotGround *= -1.;
-			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).positionJacobian, fPos, ldv0);
-			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(0).rotationJacobian, fRotGround, ldv0);
-		}
-		//pout << "  ode2Lhs=" << ode2Lhs << "\n";
-	}
-
-}
-
 
 //! provide according output variable in "value"
 void CObjectConnectorRollingDiscPenalty::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const

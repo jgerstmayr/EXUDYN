@@ -4089,8 +4089,6 @@ class Experimental:
     """Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental"""
     eigenFullPivotLUsolverDebugLevel:int
     """debug output of the EigenDense solver with full pivoting: 0 (default) = none, 1 = rank and information, 2 = also the matrices."""
-    connectorInterfaceLegacy:int
-    """if nonzero, every connector computes its forces on the legacy path (the marker data structure and its own ComputeODE2LHS), not on the connector interface of RG14 (default 0); for comparisons while connectors move to the new interface."""
     markerSuperElementRigidTexpSO3:int
     """if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters."""
 

@@ -1,17 +1,12 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Performance test of the connector interface (#2745) against the legacy path of the
-#           connectors: chains of bodies joined by connectors of the three marker kinds - position
-#           (ObjectConnectorSpringDamper on body markers at offset points of rigid bodies,
-#           ObjectConnectorGravity on mass points), coordinate (ObjectConnectorCoordinateSpringDamper
-#           on Mass1D) and rigid (ObjectConnectorRigidBodySpringDamper) - each solved twice, with
-#           exu.experimental.connectorInterfaceLegacy = 1 and = 0, so that the summary of the
-#           performance run shows the two solver times side by side. The two runs of a pair compute
-#           the same result to round-off and share their reference value - except the implicit rigid
-#           pair, whose Jacobians differ (numerical on the legacy path, by AD on the new one) and whose
-#           results agree to the Newton tolerance. The legacy runs go when the
-#           legacy path goes (#2745).
+# Details:  Performance test of the connector interface (#2745): chains of bodies joined by connectors of the three
+#           marker kinds - position (ObjectConnectorSpringDamper on body markers at offset points of rigid bodies,
+#           ObjectConnectorGravity on mass points), coordinate (ObjectConnectorCoordinateSpringDamper on Mass1D) and
+#           rigid (ObjectConnectorRigidBodySpringDamper) -, implicit with the Jacobians by automatic differentiation
+#           and explicit. The legacy path these runs were measured against is gone (revision2026b step RG14.2.13);
+#           the measurements are in the log of steps RG14.2.4 to RG14.2.8.1.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-01
@@ -85,34 +80,31 @@ runList = [
     {'connector': 'spring',     'nBodies': 200,  'explicit': True,  'numberOfSteps': 400},
     {'connector': 'gravity',    'nBodies': 200,  'explicit': False, 'numberOfSteps': 800},
     {'connector': 'coordinate', 'nBodies': 1000, 'explicit': True,  'numberOfSteps': 1200},
-    {'connector': 'rigid',      'nBodies': 100,  'explicit': False, 'numberOfSteps': 100},  #legacy: numerical Jacobian; new: by AD
+    {'connector': 'rigid',      'nBodies': 100,  'explicit': False, 'numberOfSteps': 100},
     {'connector': 'rigid',      'nBodies': 100,  'explicit': True,  'numberOfSteps': 900},
     ]
 
 result = 0
 for run in runList:
-    for legacy in [1, 0]:
-        exu.experimental.connectorInterfaceLegacy = legacy
-        SC = exu.SystemContainer()
-        mbs = SC.AddSystem()
-        lastNode = BuildChain(mbs, run['connector'], run['nBodies'], run['explicit'])
-        mbs.Assemble()
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    lastNode = BuildChain(mbs, run['connector'], run['nBodies'], run['explicit'])
+    mbs.Assemble()
 
-        h = 1e-4 if run['explicit'] else 1e-3
-        simulationSettings = exu.SimulationSettings()
-        simulationSettings.timeIntegration.numberOfSteps = run['numberOfSteps']
-        simulationSettings.timeIntegration.endTime = run['numberOfSteps']*h
-        simulationSettings.solutionSettings.writeSolutionToFile = False
-        simulationSettings.timeIntegration.verboseMode = 1
-        simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-        mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44 if run['explicit']
-                         else exu.DynamicSolverType.GeneralizedAlpha)
+    h = 1e-4 if run['explicit'] else 1e-3
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = run['numberOfSteps']
+    simulationSettings.timeIntegration.endTime = run['numberOfSteps']*h
+    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.timeIntegration.verboseMode = 1
+    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44 if run['explicit']
+                     else exu.DynamicSolverType.GeneralizedAlpha)
 
-        result = float(np.abs(mbs.systemData.GetODE2Coordinates()).sum())
-        runName = ('perfConnectorInterface:' + run['connector'] + '-n' + str(run['nBodies'])
-                   + ('-explicit' if run['explicit'] else '-implicit') + ('-legacy' if legacy else ''))
-        exu.Print('result ' + runName + '=', result)
-        testRunnerTools.AddTiming(runName, mbs, result)
+    result = float(np.abs(mbs.systemData.GetODE2Coordinates()).sum())
+    runName = ('perfConnectorInterface:' + run['connector'] + '-n' + str(run['nBodies'])
+               + ('-explicit' if run['explicit'] else '-implicit'))
+    exu.Print('result ' + runName + '=', result)
+    testRunnerTools.AddTiming(runName, mbs, result)
 
-exu.experimental.connectorInterfaceLegacy = 0
 exu.sys['testResult'] = result

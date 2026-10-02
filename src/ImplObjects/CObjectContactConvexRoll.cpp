@@ -250,7 +250,7 @@ void CObjectContactConvexRoll::ComputeConnectorForceRigid(const MarkerRigid<Real
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
-	static thread_local MarkerDataStructure markerData; //the physics read the marker data of the legacy path, without Jacobians; one per thread
+	static thread_local MarkerDataStructure markerData; //the physics read a marker data structure, without Jacobians; one per thread
 	markerData.SetNumberOfMarkerData(2);
 	markerData.SetTime(t);
 	MarkerDataFromKinematics(markers[0], markerData.GetMarkerData(0));
@@ -259,49 +259,6 @@ void CObjectContactConvexRoll::ComputeConnectorForceRigid(const MarkerRigid<Real
 	ComputeContactForces(markerData, parameters, pC, vC, forces[1], torques[1], false);
 	forces[0] = -forces[1];
 	torques[0] = -torques[1];
-}
-
-void CObjectContactConvexRoll::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
-{
-	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectContactConvexRoll::ComputeODE2LHS: marker do not provide velocityLevel information");
-
-	//link separate vectors to result (ode2Lhs) vector
-	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-	ode2Lhs.SetAll(0.);
-
-	//pout << "test\n";
-	if (parameters.activeConnector)
-	{
-		Vector3D pC; //deviation of contact conditions
-		Vector3D vC; //deviation of velocity at contact point
-		Vector3D fContact; //contact force (0=lateral, 1=longitudinal, 2=normal direction), local coordinates
-		Vector3D mContact;  // torque in the contact point
-		
-		ComputeContactForces(markerData, parameters, pC, vC, fContact, mContact, false);
-		// pout << "pC=" << pC << "\t fContact" << fContact << std::endl; 
-		
-		
-		//now link ode2Lhs Vector to partial result using the two jacobians
-		if (markerData.GetMarkerData(1).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			//positionJacobian.NumberOfColumns() == rotationJacobian.NumberOfColumns()
-			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).positionJacobian, fContact, ldv1);
-			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(1).rotationJacobian, mContact, ldv1);
-		}
-
-		if (markerData.GetMarkerData(0).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{ 
-			fContact *= -1.; // on marker 0 (ground) the sign is flipped 
-			mContact *= -1.;
-			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).positionJacobian, fContact, ldv0);
-			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(0).rotationJacobian, mContact, ldv0);
-		}
-		// pout << "fContact" << fContact <<"\tode2Lhs=" << ode2Lhs << "\n";
-	}
-
 }
 
 //! provide according output variable in "value"

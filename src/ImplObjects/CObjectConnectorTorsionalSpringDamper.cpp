@@ -113,50 +113,6 @@ void CObjectConnectorTorsionalSpringDamper::ComputeConnectorForceRigidDiff(const
 }
 
 
-//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-void CObjectConnectorTorsionalSpringDamper::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
-{
-	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectConnectorTorsionalSpringDamper::ComputeODE2LHS: marker do not provide velocityLevel information");
-
-	//link separate vectors to result (ode2Lhs) vector
-	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).rotationJacobian.NumberOfColumns() + markerData.GetMarkerData(1).rotationJacobian.NumberOfColumns());
-	ode2Lhs.SetAll(0.);
-
-	if (parameters.activeConnector)
-	{
-		Real angle, omega, torque;
-		Matrix3D A0all;
-
-		//compute local torque
-		MarkerRigid<Real> markers[2];
-		GetMarkersRigid(markerData, markers);
-		ComputeSpringTorque(markers, markerData.GetTime(), objectNumber, A0all, angle, omega, torque);
-		Vector3D fRotLoc({0.,0.,torque}); //torque around joint0 Z-axis
-
-		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-		//transform to global coordinates (application of forces/torques always global):
-		Vector3D fRot;
-		EXUmath::MultMatrixVector(A0all, fRotLoc, fRot);
-
-		//now link ode2Lhs Vector to partial result using the two jacobians
-		if (markerData.GetMarkerData(1).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).rotationJacobian.NumberOfColumns(), markerData.GetMarkerData(1).rotationJacobian.NumberOfColumns());
-			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(1).rotationJacobian, fRot, ldv1);
-		}
-
-		if (markerData.GetMarkerData(0).rotationJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			fRot *= -1.;
-			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).rotationJacobian.NumberOfColumns());
-			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(0).rotationJacobian, fRot, ldv0);
-		}
-	}
-
-}
-
-
 //! provide according output variable in "value"
 void CObjectConnectorTorsionalSpringDamper::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
 {

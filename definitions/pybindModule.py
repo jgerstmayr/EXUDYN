@@ -292,8 +292,6 @@ pb.DefDataAccess('experimental','Experimental features, not intended for regular
 
 pb.DefDataAccess('experimental.eigenFullPivotLUsolverDebugLevel','debug output of the EigenDense solver with full pivoting: 0 (default) = none, 1 = rank and information, 2 = also the matrices',
                        dataType='int', isTopLevel = True)
-pb.DefDataAccess('experimental.connectorInterfaceLegacy','if nonzero, every connector computes its forces on the legacy path (the marker data structure and its own ComputeODE2LHS), not on the connector interface of RG14 (default 0); for comparisons while connectors move to the new interface',
-                       dataType='int', isTopLevel = True)
 pb.DefDataAccess('experimental.markerSuperElementRigidTexpSO3','if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters',
                        dataType='int', isTopLevel = True)
 

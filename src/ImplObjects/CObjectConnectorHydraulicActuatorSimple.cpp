@@ -84,45 +84,6 @@ void CObjectConnectorHydraulicActuatorSimple::ComputeActuatorForce(const Vector3
 	}
 }
 
-//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-//  MODEL: f
-void CObjectConnectorHydraulicActuatorSimple::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
-{
-	//relative position, spring length and inverse spring length
-	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectConnectorHydraulicActuatorSimple::ComputeODE2LHS: marker do not provide velocityLevel information");
-
-	//link separate vectors to result (ode2Lhs) vector
-	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-	ode2Lhs.SetAll(0.); //this is the default; used if !activeConnector
-
-	if (parameters.activeConnector)
-	{
-		Real force, linearVelocity;
-		Vector3D relPos, relVel, forceDirection;
-		ComputeConnectorProperties(markerData, objectNumber, relPos, relVel, linearVelocity, force, forceDirection);
-		Vector3D fVec = force * forceDirection;
-
-		//now link ode2Lhs Vector to partial result using the two jacobians
-		if (markerData.GetMarkerData(1).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-
-			//ldv1 = (1.)*(markerData.GetMarkerData(1).positionJacobian.GetTransposed()*f); //slow version		
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).positionJacobian, fVec, ldv1);
-		}
-
-		if (markerData.GetMarkerData(0).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
-
-			//ldv0 = (-1.)*(jacobian0.GetTransposed()*f); //SLOW version
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).positionJacobian, fVec, ldv0);
-			ldv0 *= -1.;
-		}
-	}
-}
-
 //! Computational function: compute right-hand-side (RHS) of first order ordinary differential equations (ODE) to 'ode1Rhs'
 void CObjectConnectorHydraulicActuatorSimple::ComputeODE1RHS(Vector& ode1Rhs, const MarkerDataStructure& markerData, Index objectNumber) const
 {

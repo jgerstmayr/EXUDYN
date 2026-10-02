@@ -69,53 +69,6 @@ void CObjectContactCoordinate::ComputeConnectorForceCoordinate(const MarkerCoord
 	force = ComputeContactForce(markers[1].value - markers[0].value - parameters.offset, markers[1].value_t - markers[0].value_t);
 }
 
-//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-//  MODEL: f
-void CObjectContactCoordinate::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
-{
-	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectContactCoordinate::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
-
-	//gap>0: no contact, gap<0: contact
-	//Real gap = (markerData.GetMarkerData(1).value - markerData.GetMarkerData(0).value - parameters.offset);
-	Real gap = ComputeGap(markerData);
-
-	//velocity in dynamic computation:
-	Real gap_t = (markerData.GetMarkerData(1).vectorValue_t[0] - markerData.GetMarkerData(0).vectorValue_t[0]);
-
-	//if (gap_t != 0.) { pout << "error: gap_t=" << gap_t << "\n"; }
-
-	Real fContact = ComputeContactForce(gap, gap_t);
-	if (!parameters.activeConnector) { fContact = 0.; } //an inactive connector adds no force (#2735)
-
-	////link separate vectors to result (ode2Lhs) vector
-	//ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-	//ode2Lhs.SetAll(0.);
-
-	Vector1D fVec({ fContact });
-	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).jacobian.NumberOfColumns() + markerData.GetMarkerData(1).jacobian.NumberOfColumns());
-	ode2Lhs.SetAll(0.);
-
-	//now link ode2Lhs Vector to partial result using the two jacobians
-	if (markerData.GetMarkerData(1).jacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-	{
-		LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).jacobian.NumberOfColumns(), markerData.GetMarkerData(1).jacobian.NumberOfColumns());
-
-		//positive force on marker1
-		EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).jacobian, fVec, ldv1);
-	}
-
-	if (markerData.GetMarkerData(0).jacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-	{
-		LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).jacobian.NumberOfColumns());
-
-		fVec *= -1; //negative force on marker0
-		EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).jacobian, fVec, ldv0);
-	}
-
-}
-
-
 //! Flags to determine, which output variables are available (displacment, velocity, stress, ...)
 OutputVariableType CObjectContactCoordinate::GetOutputVariableTypes() const
 {

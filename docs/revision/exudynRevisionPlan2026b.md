@@ -2144,8 +2144,20 @@ done.
     - **RG14.2.12** **MEASURED 2026-10-02, not now** — [log](exudynRevisionLog2026b.md#rg14-2-12) - `GeneralContact` on
       L0: the gain is about 2 %, it keeps its precomputation (as RG14.1 proposed); to be looked at again when the
       projection comes from the bodies (RG9.3.4);
-    - **RG14.2.13** output variables and sensors through the connector force, then the legacy switch and the
-      unused temporaries removed; the path of the marker data stays for the items of RG14.2.11 (decided).
+    - **RG14.2.13** **DONE 2026-10-02** (the switch and the legacy functions; the output variables moved to RG14.2.18) —
+      [log](exudynRevisionLog2026b.md#rg14-2-13) - output variables and sensors through the connector force, then the
+      legacy switch and the unused temporaries removed; the path of the marker data stays for the items of RG14.2.11
+      (decided).
+    - **RG14.2.18** *(found in RG14.2.13, for the maintainer's decision)* **what still goes through the marker data
+      structure on the interface items**: (1) the output variables and sensors - `GetOutputVariableConnector` of every
+      connector reads a `MarkerDataStructure`, which `CSensorObject::GetSensorValues` and `MainSystem::GetObjectOutput`
+      allocate per call; the physics are shared with the interface, so it is the transport, not duplicated code - the
+      output variables from the kinematics of the interface, and a per-thread structure for the rest; (2) `PostNewtonStep`
+      of the contact and spring-damper connectors, the same; (3) `ContactSphereSphere` with friction and
+      `ContactSphereTriangle` on markers without orientation keep their own `ComputeODE2LHS` - a mixed interface (one
+      rigid, one position marker) would end that; (4) `ObjectConnectorCoordinate` at velocity level keeps its
+      equations and Jacobian on the marker data - the interface at velocity level needs the Jacobian by the velocities
+      (`AE_ODE2_t`).
     - **RG14.2.17** **DONE 2026-10-02** (maintainer: *yes, do the proposed way*) — [log](exudynRevisionLog2026b.md#rg14-2-17) -
       **the dispatch in the connector instead of in `CSystem`.** Today `CSystem` asks `GetConnectorInterface()` and switches on the enum to its
       L2 functions (`ComputeODE2LHS*Markers`, `ComputeJacobianODE2*Markers`, the constraint functions). Proposed: one
@@ -2346,7 +2358,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
-| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); RG14.2.17 done (the dispatch in the connector); then RG14.2.13 (the switch goes), RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
+| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); RG14.2.17 and RG14.2.13 done (the dispatch in the connector, the switch and the legacy functions gone); RG14.2.18 for the maintainer's decision; then RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
@@ -2381,9 +2393,8 @@ The title of each says what the step **does**; the sentence after it says why it
 4. **Halve the large `nTiles` of the examples** (RG6.7.7.7, #2709). The round primitives and the FFRF meshes are
    curved now (RG6.7.7.6, RG6.7.2.1); the examples that chose a large `nTiles` to hide the facets draw more than they
    need - checked by image.
-5. **Remove the legacy switch** (RG14.2.13, #2745). The special items keep the path of the marker data (RG14.2.11), the
-   dispatch is in the connector (RG14.2.17), so the switch and the duplicate legacy functions of the items on the
-   interface go. Then `MarkerTemp` and `TemporaryComputationData` can shrink (RG14.2.14, RG14.2.16).
+5. **Shrink `MarkerTemp` and `TemporaryComputationData`** (RG14.2.14, RG14.2.16, #2745), and decide RG14.2.18. The legacy
+   switch and the legacy functions are gone (RG14.2.13), which was what blocked them.
 6. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
 7. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is

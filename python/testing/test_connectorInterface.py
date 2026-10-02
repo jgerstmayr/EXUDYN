@@ -1,10 +1,12 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN test file
 #
-# Details:  The connector interface (#2745) computes what the legacy path computes: models with the connectors
-#           that implement it, on node markers and on body markers at an offset point, solved and differentiated with
-#           exu.experimental.connectorInterfaceLegacy = 1 and = 0; the coordinates of an implicit and an explicit
-#           solve and the system Jacobians must agree to round-off.
+# Details:  The connector interface (#2745): connectors and constraints compute their forces and equations from the
+#           kinematics of their markers, and their Jacobians by automatic differentiation of them. Models with the
+#           connectors and constraints on it, on node markers and on body markers at offset points: the Jacobians
+#           must be the numerical ones, and the reaction forces of the constraints C_q^T lambda without forming C_q.
+#           That the results are those of the path of the marker data was checked while both existed (revision2026b
+#           steps RG14.2.4 to RG14.2.10); the references of the test suite keep them.
 #
 # Usage:    pytest python/testing/test_connectorInterface.py
 #
@@ -14,8 +16,6 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-import os
-import sys
 import numpy as np
 import pytest
 
@@ -165,10 +165,11 @@ def Builder(connector):
     return BuildModel
 
 
-def BuildModel(connector, explicit=False, eulerParameters=True):
+def BuildModel(connector, explicit=False, eulerParameters=True, zeroLength=True):
     """a chain of mass points and rigid bodies, a connector of zero length with and without relative velocity, and a
     marker on a 2D rigid body, whose Jacobian depends on the coordinates"""
-    addConnector, zeroLength = connectors[connector][0:2]
+    addConnector = connectors[connector][0]
+    zeroLength = zeroLength and connectors[connector][1]
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     oGround = mbs.AddObject(ObjectGround())
@@ -211,89 +212,36 @@ def BuildModel(connector, explicit=False, eulerParameters=True):
     return mbs
 
 
-def Solve(connector, legacy, explicit):
-    exu.experimental.connectorInterfaceLegacy = legacy
-    mbs = Builder(connector)(connector, explicit)
+def Jacobian(connector, numerical, factorODE2, factorODE2_t):
+    """the system Jacobian at zero velocities - the Jacobian by automatic differentiation neglects dv/dq and domega/dq of
+    the markers, which the numerical one contains -, on Tait-Bryan angles, whose numerical derivative has no
+    normalization direction of Euler parameters, and without the connectors of zero length, whose direction the
+    finite differences flip"""
+    builder = Builder(connector)
+    mbs = (BuildModel(connector, eulerParameters=False, zeroLength=False) if builder == BuildModel else
+           builder(connector, eulerParameters=False))
     s = exu.SimulationSettings()
-    s.timeIntegration.numberOfSteps = 200
-    s.timeIntegration.endTime = 0.02 if explicit else 0.2
-    s.timeIntegration.verboseMode = 0
-    s.timeIntegration.newton.relativeTolerance = 1e-12    #Jacobians that differ converge to the same solution
-    s.timeIntegration.newton.absoluteTolerance = 1e-14
-    s.solutionSettings.writeSolutionToFile = False
-    mbs.SolveDynamic(s, solverType=exu.DynamicSolverType.RK44 if explicit else exu.DynamicSolverType.GeneralizedAlpha)
-    return mbs.systemData.GetODE2Coordinates()
-
-
-def Jacobian(connector, legacy, factorODE2, factorODE2_t):
-    """the rigid-marker connectors at zero velocities: their Jacobian by automatic differentiation neglects dv/dq and
-    domega/dq (#2745), which the numerical one of the legacy path contains"""
-    exu.experimental.connectorInterfaceLegacy = legacy
-    mbs = Builder(connector)(connector, eulerParameters=connectors[connector][2])
-    s = exu.SimulationSettings()
+    s.timeIntegration.newton.numericalDifferentiation.forODE2connectors = numerical
     solver = exu.MainSolverImplicitSecondOrder()
     solver.InitializeSolver(mbs, s)
-    if connector in rigidConnectors:
-        mbs.systemData.SetODE2Coordinates_t(0*mbs.systemData.GetODE2Coordinates_t())
+    mbs.systemData.SetODE2Coordinates_t(0*mbs.systemData.GetODE2Coordinates_t())
     solver.ComputeJacobianODE2RHS(mbs, scalarFactor_ODE2=factorODE2, scalarFactor_ODE2_t=factorODE2_t)
     jacobian = np.array(solver.GetSystemJacobian())
     solver.FinalizeSolver(mbs, s)
     return jacobian
 
 
-def RightHandSide(connector, legacy):
-    """the ODE2 right-hand side at perturbed coordinates and velocities - Euler parameters off their norm included"""
-    exu.experimental.connectorInterfaceLegacy = legacy
-    mbs = Builder(connector)(connector)
-    s = exu.SimulationSettings()
-    solver = exu.MainSolverImplicitSecondOrder()
-    solver.InitializeSolver(mbs, s)
-    q = mbs.systemData.GetODE2Coordinates()
-    rng = np.random.default_rng(1)
-    mbs.systemData.SetODE2Coordinates(q + 0.05*rng.standard_normal(len(q)))
-    mbs.systemData.SetODE2Coordinates_t(rng.standard_normal(len(q)))
-    solver.ComputeODE2RHS(mbs)
-    rhs = np.array(solver.GetSystemResidual())[:len(q)]
-    solver.FinalizeSolver(mbs, s)
-    return rhs
-
-
-@pytest.fixture(autouse=True)
-def RestoreSwitch():
-    yield
-    exu.experimental.connectorInterfaceLegacy = 0
-
-
-@pytest.mark.parametrize('connector', connectors)
-@pytest.mark.parametrize('explicit', [False, True])
-def test_theNewPathComputesWhatTheLegacyPathComputes(connector, explicit):
-    legacy = Solve(connector, 1, explicit)
-    new = Solve(connector, 0, explicit)
-    tolerance = 1e-12 if (explicit or connectors[connector][2]) else 1e-7
-    assert np.abs(legacy).max() > 1e-3     #something moved
-    assert np.abs(new - legacy).max() < tolerance * (1 + np.abs(legacy).max())
-
-
 @pytest.mark.parametrize('connector', connectors)
 @pytest.mark.parametrize('factors', [(1., 0.), (0., 1.), (0.7, 0.3)])
-def test_theJacobianOfTheNewPathIsTheLegacyJacobian(connector, factors):
-    legacy = Jacobian(connector, 1, *factors)
-    new = Jacobian(connector, 0, *factors)
-    tolerance = 1e-12 if connectors[connector][2] else 1e-6
-    assert np.abs(new - legacy).max() <= tolerance * np.abs(legacy).max() + (0 if connectors[connector][2] else 1e-7) #the noise of numerical differentiation
-
-
-@pytest.mark.parametrize('connector', connectors)
-def test_theRightHandSideOfTheNewPathIsTheLegacyOne(connector):
-    legacy = RightHandSide(connector, 1)
-    new = RightHandSide(connector, 0)
-    assert np.abs(legacy).max() > 1e-3
-    assert np.abs(new - legacy).max() < 1e-13 * np.abs(legacy).max()
+def test_theJacobianByADIsTheNumericalOne(connector, factors):
+    numerical = Jacobian(connector, True, *factors)
+    analytic = Jacobian(connector, False, *factors)
+    assert np.abs(analytic - numerical).max() <= 1e-5 * np.abs(numerical).max() + 1e-7 #the noise of numerical differentiation
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #constraints on the connector interface (#2745): equations as templates of the marker kinematics, C_q by automatic
-#differentiation, the reaction forces without C_q; both paths are analytic, so they agree to round-off
+#differentiation, the reaction forces without C_q
 def BuildConstraintModel(kind):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
@@ -387,188 +335,87 @@ def BuildConstraintModel(kind):
 constraintKinds = ['Spherical', 'Distance', 'Revolute2D', 'Coordinate', 'RevoluteZ', 'PrismaticX', 'Prismatic2D', 'Generic']
 
 
-def SolveConstraintModel(kind, legacy):
-    exu.experimental.connectorInterfaceLegacy = legacy
-    mbs = BuildConstraintModel(kind)
-    s = exu.SimulationSettings()
-    s.timeIntegration.numberOfSteps = 200
-    s.timeIntegration.endTime = 0.2
-    s.timeIntegration.verboseMode = 0
-    s.solutionSettings.writeSolutionToFile = False
-    mbs.SolveDynamic(s)
-    return (mbs.systemData.GetODE2Coordinates(), mbs.systemData.GetAECoordinates())
+def PerturbedCoordinates(mbs):
+    """the coordinates perturbed at random, the Euler parameters back on the unit sphere, where the Jacobians are
+    defined; and the Euler parameter blocks (first index, reference values)"""
+    rng = np.random.default_rng(1)
+    q = mbs.systemData.GetODE2Coordinates() + 0.02*rng.standard_normal(len(mbs.systemData.GetODE2Coordinates()))
+    eulerParameterBlocks = [(mbs.GetNodeODE2Index(i) + 3, np.array(mbs.GetNode(i)['referenceCoordinates'])[3:7])
+                            for i in range(mbs.systemData.NumberOfNodes()) if mbs.GetNode(i)['nodeType'] == 'RigidBodyEP']
+    for (k, reference) in eulerParameterBlocks:
+        ep = q[k:k+4] + reference
+        q[k:k+4] = ep/np.linalg.norm(ep) - reference
+    return (q, eulerParameterBlocks)
 
 
-def ConstraintJacobianAndResidual(kind, legacy, numerical=False):
-    """the Jacobian of the algebraic equations and their residual, at perturbed coordinates and Lagrange multipliers"""
-    exu.experimental.connectorInterfaceLegacy = legacy
+def ConstraintJacobians(kind):
+    """at perturbed coordinates and Lagrange multipliers: C_q by automatic differentiation, C_q by finite differences
+    of the algebraic equations, and the projection of the columns on the tangent space of the Euler parameters, along
+    which the two differ by the normalization (a direction the Euler parameter constraint keeps out of every Newton
+    increment)"""
     mbs = BuildConstraintModel(kind)
     s = exu.SimulationSettings()
-    s.timeIntegration.newton.numericalDifferentiation.forAE = numerical
     solver = exu.MainSolverImplicitSecondOrder()
     solver.InitializeSolver(mbs, s)
+    (q, eulerParameterBlocks) = PerturbedCoordinates(mbs)
     rng = np.random.default_rng(1)
-    q = mbs.systemData.GetODE2Coordinates()
-    mbs.systemData.SetODE2Coordinates(q + 0.02*rng.standard_normal(len(q)))
-    mbs.systemData.SetAECoordinates(rng.standard_normal(len(mbs.systemData.GetAECoordinates())))
+    n = len(q)
+    nAE = len(mbs.systemData.GetAECoordinates())
+    mbs.systemData.SetODE2Coordinates(q)
+    mbs.systemData.SetAECoordinates(rng.standard_normal(nAE))
     jacobian0 = np.array(solver.GetSystemJacobian())  #ComputeJacobianAE adds to what the solver holds
     solver.ComputeJacobianAE(mbs, scalarFactor_ODE2=1., scalarFactor_ODE2_t=0., scalarFactor_ODE1=1., velocityLevel=False)
-    jacobian = np.array(solver.GetSystemJacobian()) - jacobian0
-    solver.ComputeAlgebraicEquations(mbs)
-    residual = np.array(solver.GetSystemResidual())[-len(mbs.systemData.GetAECoordinates()):]  #the algebraic part
+    jacobianAD = (np.array(solver.GetSystemJacobian()) - jacobian0)[-nAE:, :n]
+
+    def Equations(qq):
+        mbs.systemData.SetODE2Coordinates(qq)
+        solver.ComputeAlgebraicEquations(mbs)
+        return np.array(solver.GetSystemResidual())[-nAE:]
+    h = 1e-6
+    jacobianFD = np.array([(Equations(q + h*np.eye(n)[j]) - Equations(q - h*np.eye(n)[j]))/(2*h) for j in range(n)]).T
+    mbs.systemData.SetODE2Coordinates(q)
+
+    tangent = np.eye(n)
+    for (k, reference) in eulerParameterBlocks:
+        ep = q[k:k+4] + reference
+        tangent[k:k+4, k:k+4] -= np.outer(ep, ep)
     solver.FinalizeSolver(mbs, s)
-    return jacobian, residual
+    return jacobianAD, jacobianFD, tangent
 
 
-def ConstraintNewtonResidual(kind, legacy):
-    """the static residual with the reaction forces C_q^T lambda, at perturbed coordinates and Lagrange multipliers"""
-    exu.experimental.connectorInterfaceLegacy = legacy
+def ConstraintNewtonResidual(kind, multipliers):
+    """the ODE2 part of the static residual - with the reaction forces C_q^T lambda - at the perturbed coordinates of
+    ConstraintJacobians and the given Lagrange multipliers"""
     mbs = BuildConstraintModel(kind)
     s = exu.SimulationSettings()
     solver = exu.MainSolverStatic()
     solver.InitializeSolver(mbs, s)
-    rng = np.random.default_rng(1)
-    q = mbs.systemData.GetODE2Coordinates()
-    mbs.systemData.SetODE2Coordinates(q + 0.02*rng.standard_normal(len(q)))
-    mbs.systemData.SetAECoordinates(rng.standard_normal(len(mbs.systemData.GetAECoordinates())))
+    (q, eulerParameterBlocks) = PerturbedCoordinates(mbs)
+    mbs.systemData.SetODE2Coordinates(q)
+    lam = multipliers(len(mbs.systemData.GetAECoordinates()))
+    mbs.systemData.SetAECoordinates(lam)
     solver.ComputeNewtonResidual(mbs, s)
-    residual = np.array(solver.GetSystemResidual())
+    residual = np.array(solver.GetSystemResidual())[:len(q)]
     solver.FinalizeSolver(mbs, s)
-    return residual
-
-
-@pytest.mark.parametrize('kind', constraintKinds)
-def test_constraintsOnTheNewPathComputeWhatTheLegacyPathComputes(kind):
-    """the coordinates to round-off; the Lagrange multipliers to the Newton tolerance, as the reaction forces differ in the
-    order of their sums"""
-    (qLegacy, lambdaLegacy) = SolveConstraintModel(kind, 1)
-    (qNew, lambdaNew) = SolveConstraintModel(kind, 0)
-    assert np.abs(qLegacy).max() > 1e-3 and np.abs(lambdaLegacy).max() > 1e-3
-    assert np.abs(qNew - qLegacy).max() < 1e-12 * np.abs(qLegacy).max()
-    assert np.abs(lambdaNew - lambdaLegacy).max() < 1e-7 * np.abs(lambdaLegacy).max()
+    return residual, lam
 
 
 @pytest.mark.parametrize('kind', constraintKinds)
 def test_theReactionForcesWithoutCqAreCqTimesLambda(kind):
-    legacy = ConstraintNewtonResidual(kind, 1)
-    new = ConstraintNewtonResidual(kind, 0)
-    assert np.abs(legacy).max() > 1
-    assert np.abs(new - legacy).max() < 1e-14 * np.abs(legacy).max()
+    """the reaction forces, projected per marker without C_q, are C_q^T lambda with C_q by automatic differentiation"""
+    rng = np.random.default_rng(2)
+    (residual0, zero) = ConstraintNewtonResidual(kind, lambda n: np.zeros(n))
+    (residual, lam) = ConstraintNewtonResidual(kind, lambda n: rng.standard_normal(n))
+    (jacobianAD, jacobianFD, tangent) = ConstraintJacobians(kind)
+    reaction = residual - residual0
+    assert np.abs(reaction).max() > 0.1
+    assert min(np.abs(reaction - jacobianAD.T @ lam).max(), np.abs(reaction + jacobianAD.T @ lam).max()) < 1e-12 * np.abs(reaction).max()
 
 
-def test_theAlternativeConstraintsOfTheGenericJointHaveTheirOwnJacobian():
-    """the hand-written Jacobian of JointGeneric is the one of the default constraints (#2772): the one by automatic
-    differentiation is compared with the numerical one"""
-    (jacobianNumerical, residual) = ConstraintJacobianAndResidual('GenericAlternative', 1, numerical=True)
-    (jacobianNew, residual) = ConstraintJacobianAndResidual('GenericAlternative', 0)
-    nAE = len(residual)   #the numerical Jacobian fills the rows of the algebraic equations only: C_q
-    (jacobianNumerical, jacobianNew) = (jacobianNumerical[-nAE:, :-nAE], jacobianNew[-nAE:, :-nAE])
-    assert np.abs(jacobianNumerical).max() > 0.1
-    assert np.abs(jacobianNew - jacobianNumerical).max() < 1e-6 * np.abs(jacobianNumerical).max()
-
-
-@pytest.mark.parametrize('kind', constraintKinds)
-def test_theConstraintJacobianByADIsTheHandWrittenOne(kind):
-    (jacobianLegacy, residualLegacy) = ConstraintJacobianAndResidual(kind, 1)
-    (jacobianNew, residualNew) = ConstraintJacobianAndResidual(kind, 0)
-    assert np.abs(jacobianLegacy).max() > 0.1
-    assert np.abs(jacobianNew - jacobianLegacy).max() < 1e-14 * np.abs(jacobianLegacy).max()
-    assert np.abs(residualNew - residualLegacy).max() < 1e-14 * (1 + np.abs(residualLegacy).max())
-
-
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#loads through the marker functions of the connector interface (#2745): the same generalized forces as the legacy path
-def BuildLoadModel():
-    from exudyn.utilities import (LoadForceVector, LoadTorqueVector, LoadMassProportional, LoadCoordinate, MarkerBodyMass,
-                                  Cable2D)
-    from exudyn.beams import GenerateStraightLineANCFCable2D
-    SC = exu.SystemContainer()
-    mbs = SC.AddSystem()
-    inertia = InertiaCuboid(density=1000, sideLengths=[0.2, 0.05, 0.05])
-    for (k, Node) in enumerate([NodeRigidBodyEP, NodeRigidBodyRxyz]):
-        if Node == NodeRigidBodyEP:
-            ep = RotationMatrix2EulerParameters(RotXYZ2RotationMatrix([0.3, 0.2, 0.1]))
-            n = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[k, 0, 0] + list(ep)))
-        else:
-            n = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[k, 0, 0, 0.3, 0.2, 0.1]))
-        b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D(),
-                                          physicsCenterOfMass=[0.01, 0.02, 0]))
-        mRigid = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[0.1, 0.02, 0.01]))
-        mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=b, localPosition=[0.1, 0, 0.02])), loadVector=[1, 2, 3]))
-        mbs.AddLoad(LoadForceVector(markerNumber=mRigid, loadVector=[3, -1, 2], bodyFixed=True))
-        mbs.AddLoad(LoadTorqueVector(markerNumber=mRigid, loadVector=[0.3, 0.2, -0.1]))
-        mbs.AddLoad(LoadTorqueVector(markerNumber=mRigid, loadVector=[0.1, -0.2, 0.4], bodyFixed=True))
-        mbs.AddLoad(LoadTorqueVector(markerNumber=mbs.AddMarker(MarkerNodeRigid(nodeNumber=n)), loadVector=[0.2, 0.1, 0.3]))
-        mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=b)), loadVector=[0, -9.81, 1]))
-    nPoint = mbs.AddNode(NodePoint(referenceCoordinates=[2, 0, 0]))
-    mbs.AddObject(MassPoint(nodeNumber=nPoint, physicsMass=1))
-    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=nPoint)), loadVector=[1, 0, 2]))
-    mbs.AddLoad(LoadCoordinate(markerNumber=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nPoint, coordinate=1)), load=0.7))
-    n2D = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[3, 0, 0.4]))
-    b2D = mbs.AddObject(ObjectRigidBody2D(nodeNumber=n2D, physicsMass=1, physicsInertia=0.1))
-    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=b2D, localPosition=[0.2, 0.1, 0])), loadVector=[1, 2, 0]))
-    mbs.AddLoad(LoadTorqueVector(markerNumber=mbs.AddMarker(MarkerBodyRigid(bodyNumber=b2D, localPosition=[0.2, 0, 0])), loadVector=[0, 0, 0.5], bodyFixed=True))
-    cable = Cable2D(physicsMassPerLength=1, physicsBendingStiffness=1, physicsAxialStiffness=100)
-    (nodes, objects, loadList, nodeList, markers) = GenerateStraightLineANCFCable2D(mbs, [4, 0, 0], [5, 0, 0], 2, cable)
-    mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=objects[0], localPosition=[0.3, 0, 0])), loadVector=[0, -1, 0]))
-    mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=objects[1])), loadVector=[0, -9.81, 0]))
-    mbs.Assemble()
-    return mbs
-
-
-def LoadRightHandSide(legacy):
-    exu.experimental.connectorInterfaceLegacy = legacy
-    mbs = BuildLoadModel()
-    s = exu.SimulationSettings()
-    solver = exu.MainSolverImplicitSecondOrder()
-    solver.InitializeSolver(mbs, s)
-    q = mbs.systemData.GetODE2Coordinates()
-    rng = np.random.default_rng(1)
-    mbs.systemData.SetODE2Coordinates(q + 0.05*rng.standard_normal(len(q)))
-    solver.ComputeODE2RHS(mbs)
-    rhs = np.array(solver.GetSystemResidual())[:len(q)]
-    solver.FinalizeSolver(mbs, s)
-    return rhs
-
-
-def test_theLoadsOnTheNewPathAreTheLegacyLoads():
-    """forces (also fixed to the body), torques (global and fixed), mass-proportional and coordinate loads on rigid
-    bodies with Euler parameters and Tait-Bryan angles, a mass point, a 2D body and ANCF cable elements"""
-    legacy = LoadRightHandSide(1)
-    new = LoadRightHandSide(0)
-    assert np.abs(legacy).max() > 1
-    assert np.abs(new - legacy).max() < 1e-14 * np.abs(legacy).max()
-
-
-#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the contact connectors on the connector interface (#2745): the models that use them, solved on both paths in their own
-#interpreter; the contact physics are the same functions, the projection is the markers'
-contactModels = ['MiniExamples/ObjectContactSphereSphere.py', 'MiniExamples/ObjectContactSphereTriangle.py',
-                 'MiniExamples/ObjectContactSphereTorus.py', 'MiniExamples/ObjectConnectorRollingDiscPenalty.py',
-                 'MiniExamples/ObjectContactCoordinate.py', 'MiniExamples/ObjectConnectorCoordinateSpringDamperExt.py',
-                 'TestModels/ConvexContactTest.py', 'TestModels/contactSphereSphereTest.py', 'TestModels/ballBearingTest.py',
-                 'TestModels/sphereTriangleTest2.py', 'TestModels/rollingCoinPenaltyTest.py']
-runModelCode = """
-import exudyn as exu, sys, os
-exu.special.userInterface.SuppressAll(True)
-exu.experimental.connectorInterfaceLegacy = int(sys.argv[2])
-exu.sys['testIsActive'] = True
-os.chdir(os.path.dirname(sys.argv[1]))
-exec(open(sys.argv[1], encoding='utf-8').read(), {'__name__': '__main__'})
-print('RESULT=%r' % float(exu.sys['testResult']))
-"""
-
-
-@pytest.mark.parametrize('model', contactModels)
-def test_theContactConnectorsOnTheNewPathComputeWhatTheLegacyPathComputes(model, tmp_path):
-    import subprocess
-    fileName = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), model)
-    results = []
-    for legacy in ['1', '0']:
-        run = subprocess.run([sys.executable, '-c', runModelCode, fileName, legacy], capture_output=True, text=True,
-                             encoding='utf-8', errors='replace', timeout=600,
-                             env=dict(os.environ, EXUDYN_SUPPRESS_UI_WINDOW_OPEN='1', EXUDYN_OUTPUTDIRECTORY=str(tmp_path)))
-        lines = [line for line in run.stdout.splitlines() if line.startswith('RESULT=')]
-        assert lines, run.stderr[-2000:]
-        results.append(float(lines[-1][7:]))
-    assert abs(results[1] - results[0]) <= 1e-9 * (1 + abs(results[0]))
+@pytest.mark.parametrize('kind', constraintKinds + ['GenericAlternative'])
+def test_theConstraintJacobianByADIsTheNumericalOne(kind):
+    """C_q by automatic differentiation against finite differences of the equations, on the tangent space of the
+    Euler parameters; GenericAlternative: the alternative constraints of JointGeneric on Rxyz nodes (#2772)"""
+    (jacobianAD, jacobianFD, tangent) = ConstraintJacobians(kind)
+    assert np.abs(jacobianFD).max() > 0.1
+    assert np.abs((jacobianAD - jacobianFD) @ tangent).max() < 1e-6 * np.abs(jacobianFD).max()

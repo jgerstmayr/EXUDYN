@@ -72,9 +72,6 @@ public:
 	virtual bool ComputeJacobianODE2Connector(const CSystemData& systemData, TemporaryComputationData& temp, Real factorODE2,
 		Real factorODE2_t, Index objectNumber, bool jacobianDerivativeNonZero) const { return false; }
 
-	//! false for a connector whose ComputeJacobianODE2_ODE2 exists only on the connector interface (the rigid-marker
-	//! connectors), so that exu.experimental.connectorInterfaceLegacy differentiates it numerically (#2745)
-	virtual bool HasJacobianODE2MarkerData() const { return true; }
 
 	//! L1 of a connector on position markers (#2745): its force on marker 1 from the kinematics of its two markers,
 	//! global; marker 0 gets the reaction; no system access and no Jacobians

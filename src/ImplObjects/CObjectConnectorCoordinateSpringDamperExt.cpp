@@ -243,47 +243,6 @@ void CObjectConnectorCoordinateSpringDamperExt::ComputeConnectorForcesCoordinate
 	forces[0] = -parameters.factor0 * force;
 }
 
-void CObjectConnectorCoordinateSpringDamperExt::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
-{
-	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectConnectorCoordinateSpringDamperExt::ComputeODE2LHS: marker do not provide velocityLevel information");
-
-	//link separate vectors to result (ode2Lhs) vector
-	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).jacobian.NumberOfColumns() + markerData.GetMarkerData(1).jacobian.NumberOfColumns());
-	ode2Lhs.SetAll(0.);
-
-	if (parameters.activeConnector)
-	{
-		Real relPos;
-		Real relVel;
-		Real force;
-		ComputeSpringForce(markerData, objectNumber, relPos, relVel, force);
-
-
-		Vector1D fVec(force); //convert to vector to allow matrix-multiplication as usual ...
-
-		//now link ode2Lhs Vector to partial result using the two jacobians
-		if (markerData.GetMarkerData(1).jacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).jacobian.NumberOfColumns(), markerData.GetMarkerData(1).jacobian.NumberOfColumns());
-
-			//factor added according to virtual work; gives e.g. larger torque on gear with slower angular velocity
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).jacobian, parameters.factor1*fVec, ldv1);
-		}
-
-		if (markerData.GetMarkerData(0).jacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).jacobian.NumberOfColumns());
-
-			fVec *= -1.;
-			//factor added according to virtual work; gives e.g. larger torque on gear with slower angular velocity
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).jacobian, parameters.factor0*fVec, ldv0);
-
-		}
-	}
-
-}
-
 //FUTURE: needed if MarkerNodeRotationCoordinate has jacDerivative: 
 void CObjectConnectorCoordinateSpringDamperExt::ComputeJacobianForce6D(const MarkerDataStructure& markerData, Index objectNumber, Vector6D& force6D) const
 {

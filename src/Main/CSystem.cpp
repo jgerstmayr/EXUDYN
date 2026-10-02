@@ -42,7 +42,6 @@
 //#include "Utilities/AdvancedMath.h"
 #include "Utilities/Differentiation.h" //include after 
 #include "Main/Experimental.h"
-extern PyExperimental pyExperimental; //the switch of the connector interface (#2745)
 
 
 //! Prepare a newly created System of nodes, objects, loads, ... for computation
@@ -1482,7 +1481,7 @@ inline bool CSystem::ComputeObjectODE2LHS(TemporaryComputationData& temp, CObjec
 		{
 			CObjectConnector* connector = (CObjectConnector*)object;
 			//the connector computes on the connector interface, or the path of the marker data follows (#2745)
-			if (pyExperimental.connectorInterfaceLegacy || !connector->ComputeODE2LHSConnector(cSystemData, temp, localODE2Lhs, objectNumber))
+			if (!connector->ComputeODE2LHSConnector(cSystemData, temp, localODE2Lhs, objectNumber))
 			{
 				//compute MarkerData for connector:
 				const bool computeJacobian = true; //jacobian needed for connectors, to add correct projection of forces!
@@ -1868,92 +1867,49 @@ void CSystem::ComputeODE2SingleLoad(Index loadIndex, TemporaryComputationData& t
 			bodyFixed = true;
 		}
 
-		//the connector interface (#2745): the marker projects the load itself - its own functions, or its default through
-		//ComputeMarkerData; a force fixed to a marker without orientation keeps the marker data of the legacy path
-		const bool useInterface = !pyExperimental.connectorInterfaceLegacy
-			&& !(loadType != LoadType::Coordinate && bodyFixed && !(marker->GetType() & Marker::Orientation));
-		if (useInterface)
+		//the marker projects the load itself (#2745) - its own functions, or its default through ComputeMarkerData; a
+		//body-fixed load on a marker without orientation is refused at Assemble()
+		MarkerTemp& markerTemp = temp.markerTemp[0];
+		Index n;
+		if (loadType == LoadType::Coordinate)
 		{
-			MarkerTemp& markerTemp = temp.markerTemp[0];
-			Index n;
-			if (loadType == LoadType::Coordinate)
+			CHECKandTHROW(loadVector1Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 1D load)", ExudynValueError);
+			MarkerCoordinate<Real> kinematics;
+			n = marker->GetKinematicsCoordinate(cSystemData, kinematics, markerTemp);
+			temp.generalizedLoad.SetNumberOfItems(n);
+			temp.generalizedLoad.SetAll(0.);
+			LinkedDataVector generalizedLoad(temp.generalizedLoad, 0, n);
+			marker->AddGeneralizedForceCoordinate(cSystemData, loadVector1D[0], markerTemp, generalizedLoad);
+		}
+		else
+		{
+			CHECKandTHROW(loadVector3Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 3D load)", ExudynValueError);
+			if (loadType == LoadType::Torque || bodyFixed) //the frame of the marker: a torque, or a force fixed to it
 			{
-				CHECKandTHROW(loadVector1Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 1D load)", ExudynValueError);
-				MarkerCoordinate<Real> kinematics;
-				n = marker->GetKinematicsCoordinate(cSystemData, kinematics, markerTemp);
-				temp.generalizedLoad.SetNumberOfItems(n);
-				temp.generalizedLoad.SetAll(0.);
-				LinkedDataVector generalizedLoad(temp.generalizedLoad, 0, n);
-				marker->AddGeneralizedForceCoordinate(cSystemData, loadVector1D[0], markerTemp, generalizedLoad);
+				MarkerRigid<Real> kinematics;
+				n = marker->GetKinematicsRigid(cSystemData, kinematics, markerTemp);
+				if (bodyFixed) { loadVector3D = kinematics.frame.GetRotation() * loadVector3D; }
 			}
 			else
 			{
-				CHECKandTHROW(loadVector3Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 3D load)", ExudynValueError);
-				if (loadType == LoadType::Torque || bodyFixed) //the frame of the marker: a torque, or a force fixed to it
-				{
-					MarkerRigid<Real> kinematics;
-					n = marker->GetKinematicsRigid(cSystemData, kinematics, markerTemp);
-					if (bodyFixed) { loadVector3D = kinematics.frame.GetRotation() * loadVector3D; }
-				}
-				else
-				{
-					n = marker->GetODE2Size(cSystemData, markerTemp);
-				}
-				temp.generalizedLoad.SetNumberOfItems(n);
-				temp.generalizedLoad.SetAll(0.);
-				LinkedDataVector generalizedLoad(temp.generalizedLoad, 0, n);
-				if (loadType == LoadType::Torque)
-				{
-					marker->AddGeneralizedForceTorque(cSystemData, Vector3D(0.), loadVector3D, markerTemp, generalizedLoad);
-				}
-				else if (bodyFixed)
-				{
-					marker->AddGeneralizedForceTorque(cSystemData, loadVector3D, Vector3D(0.), markerTemp, generalizedLoad);
-				}
-				else
-				{
-					marker->AddGeneralizedForce(cSystemData, loadVector3D, markerTemp, generalizedLoad);
-				}
+				n = marker->GetODE2Size(cSystemData, markerTemp);
+			}
+			temp.generalizedLoad.SetNumberOfItems(n);
+			temp.generalizedLoad.SetAll(0.);
+			LinkedDataVector generalizedLoad(temp.generalizedLoad, 0, n);
+			if (loadType == LoadType::Torque)
+			{
+				marker->AddGeneralizedForceTorque(cSystemData, Vector3D(0.), loadVector3D, markerTemp, generalizedLoad);
+			}
+			else if (bodyFixed)
+			{
+				marker->AddGeneralizedForceTorque(cSystemData, loadVector3D, Vector3D(0.), markerTemp, generalizedLoad);
+			}
+			else
+			{
+				marker->AddGeneralizedForce(cSystemData, loadVector3D, markerTemp, generalizedLoad);
 			}
 		}
-		else if (loadType == LoadType::Force || loadType == LoadType::ForcePerMass)
-		{
-			const bool computeJacobian = true;
-			CHECKandTHROW(loadVector3Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 3D load)", ExudynValueError);
-			//STARTGLOBALTIMER(TScomputeLoadsMarkerData);
-			marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
-			//STOPGLOBALTIMER(TScomputeLoadsMarkerData);
-			if (bodyFixed) { loadVector3D = temp.markerDataStructure.GetMarkerData(0).orientation * loadVector3D; }
-			EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).positionJacobian, loadVector3D, temp.generalizedLoad); //generalized load: Q = (dPos/dq)^T * Force
-
-			//marker->GetPositionJacobian(cSystemData, temp.loadJacobian);
-			//EXUmath::MultMatrixVector(temp.loadJacobian, loadVector3D, temp.generalizedLoad);
-		}
-		else if (loadType == LoadType::Torque)
-		{
-			const bool computeJacobian = true;
-			CHECKandTHROW(loadVector3Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 3D torque)", ExudynValueError);
-			//STARTGLOBALTIMER(TScomputeLoadsMarkerData);
-			marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
-			//STOPGLOBALTIMER(TScomputeLoadsMarkerData);
-			if (bodyFixed) { loadVector3D = temp.markerDataStructure.GetMarkerData(0).orientation * loadVector3D; }
-			EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).rotationJacobian, loadVector3D, temp.generalizedLoad); //generalized load: Q = (dRot/dq)^T * Torque
-			//pout << "rotationJacobian=" << temp.markerDataStructure.GetMarkerData(0).rotationJacobian << "\n";
-			//pout << "loadVector3D=" << loadVector3D << "\n";
-		}
-		else if (loadType == LoadType::Coordinate)
-		{
-			const bool computeJacobian = true;
-			CHECKandTHROW(loadVector1Ddefined, "ComputeODE2SingleLoad(...): illegal force vector format (expected 1D load)", ExudynValueError);
-			//STARTGLOBALTIMER(TScomputeLoadsMarkerData);
-			marker->ComputeMarkerData(cSystemData, computeJacobian, temp.markerDataStructure.GetMarkerData(0)); //currently, too much is computed; but could be pre-processed in parallel
-			//STOPGLOBALTIMER(TScomputeLoadsMarkerData);
-			EXUmath::MultMatrixTransposedVector(temp.markerDataStructure.GetMarkerData(0).jacobian, loadVector1D, temp.generalizedLoad); //generalized load: Q = (dRot/dq)^T * Torque
-			//pout << "jacobian=" << temp.markerDataStructure.GetMarkerData(0).jacobian << "\n";
-			//pout << "generalizedLoad=" << temp.generalizedLoad << "\n";
-			//pout << "loadVector1D=" << loadVector1D << "\n";
-		}
-		else { CHECKandTHROWstring("ERROR: CSystem::ComputeODE2SingleLoad, LoadType not implemented!", ExudynNotImplementedError); }
 
 		//ResizableArray<CObject*>& objectList = cSystemData.GetCObjects();
 		//pout << "genLoad=" << temp.generalizedLoad << "\n";
@@ -2346,7 +2302,7 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationDataArray& tempArray
 					CObjectConstraint* constraint = (CObjectConstraint*)(cSystemData.GetCObjects()[i]);
 					ArrayIndex& ltg = cSystemData.GetLocalToGlobalAE()[i];
 
-					if (pyExperimental.connectorInterfaceLegacy || !constraint->ComputeAlgebraicEquationsConnector(cSystemData, temp, i, velocityLevel, temp.localAE))
+					if (!constraint->ComputeAlgebraicEquationsConnector(cSystemData, temp, i, velocityLevel, temp.localAE))
 					{
 						const bool computeJacobian = false;
 						cSystemData.ComputeMarkerDataStructure(constraint, computeJacobian, temp.markerDataStructure);
@@ -2414,7 +2370,7 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationDataArray& tempArray
 			CObjectConstraint* constraint = (CObjectConstraint*)(cSystemData.GetCObjects()[i]);
 			ArrayIndex& ltg = cSystemData.GetLocalToGlobalAE()[i];
 
-			if (pyExperimental.connectorInterfaceLegacy || !constraint->ComputeAlgebraicEquationsConnector(cSystemData, temp, i, velocityLevel, temp.localAE))
+			if (!constraint->ComputeAlgebraicEquationsConnector(cSystemData, temp, i, velocityLevel, temp.localAE))
 			{
 				const bool computeJacobian = false;
 				cSystemData.ComputeMarkerDataStructure(constraint, computeJacobian, temp.markerDataStructure);
@@ -2658,15 +2614,10 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 								}
 							}
 
-							if (pyExperimental.connectorInterfaceLegacy && !connector->HasJacobianODE2MarkerData())
-							{
-								jacobianComputed = false; //on the legacy path, the rigid-marker connectors have no Jacobian of their own: numerical
-							}
 							if (jacobianComputed)
 							{
 								//the connector computes its Jacobian on the connector interface, or the path of the marker data follows (#2745)
-								if (pyExperimental.connectorInterfaceLegacy ||
-									!connector->ComputeJacobianODE2Connector(cSystemData, temp, -factorODE2, -factorODE2_t, j, jacDerivNonZero))
+								if (!connector->ComputeJacobianODE2Connector(cSystemData, temp, -factorODE2, -factorODE2_t, j, jacDerivNonZero))
 								{
 									//compute MarkerData for connector:
 									const bool computeJacobian = true; //jacobian needed for jacobian computation ...
@@ -3205,7 +3156,7 @@ void CSystem::ComputeObjectJacobianAE(Index j, TemporaryComputationData& temp,
 		CObjectConstraint& constraint = (CObjectConstraint&)object;
 		filledJacobians = constraint.GetAvailableJacobians();
 
-		if (!pyExperimental.connectorInterfaceLegacy && constraint.ComputeJacobianAEConnector(cSystemData, temp, j, temp.localJacobianAE_ODE2)) //C_q by automatic differentiation of the constraint's equations (#2745)
+		if (constraint.ComputeJacobianAEConnector(cSystemData, temp, j, temp.localJacobianAE_ODE2)) //C_q by automatic differentiation of the constraint's equations (#2745)
 		{
 			if (filledJacobians & JacobianType::AE_AE) { constraint.ComputeJacobianAE_AE(temp.localJacobianAE_AE); }
 			return;
@@ -3387,7 +3338,7 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& 
 				//ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[i];
 
 				const CObject* object = cSystemData.GetCObjects()[i];
-				if (((Index)object->GetType() & (Index)CObjectType::Constraint) && !pyExperimental.connectorInterfaceLegacy &&
+				if (((Index)object->GetType() & (Index)CObjectType::Constraint) &&
 					((const CObjectConstraint*)object)->ComputeReactionForcesConnector(cSystemData, temp, i, reactionForces, temp.localODE2LHS))
 				{
 					for (Index jj = 0; jj < temp.localODE2LHS.NumberOfItems(); jj++)
@@ -3490,7 +3441,7 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& 
 			//ArrayIndex& ltgODE1 = cSystemData.GetLocalToGlobalODE1()[i];
 
 			const CObject* object = cSystemData.GetCObjects()[i];
-			if (((Index)object->GetType() & (Index)CObjectType::Constraint) && !pyExperimental.connectorInterfaceLegacy &&
+			if (((Index)object->GetType() & (Index)CObjectType::Constraint) &&
 				((const CObjectConstraint*)object)->ComputeReactionForcesConnector(cSystemData, temp, i, reactionForces, temp.localODE2LHS))
 			{
 				for (Index jj = 0; jj < temp.localODE2LHS.NumberOfItems(); jj++)

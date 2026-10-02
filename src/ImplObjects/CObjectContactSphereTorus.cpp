@@ -187,7 +187,7 @@ void CObjectContactSphereTorus::ComputeConnectorForceRigid(const MarkerRigid<Rea
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
-	static thread_local MarkerDataStructure markerData; //the physics read the marker data of the legacy path, without Jacobians; one per thread
+	static thread_local MarkerDataStructure markerData; //the physics read a marker data structure, without Jacobians; one per thread
 	markerData.SetNumberOfMarkerData(2);
 	markerData.SetTime(t);
 	MarkerDataFromKinematics(markers[0], markerData.GetMarkerData(0));
@@ -201,61 +201,6 @@ void CObjectContactSphereTorus::ComputeConnectorForceRigid(const MarkerRigid<Rea
 	forces[0] = -fVec;
 	if (frictionCoeff != 0) { torques[0] = (-(parameters.radiusSphere + 0.5 * gap) * n0).CrossProduct(fVec); }
 }
-
-void CObjectContactSphereTorus::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
-{
-	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectContactSphereTorus::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
-
-	LinkedDataVector data = GetCNode(0)->GetCurrentCoordinateVector();
-	Vector3D deltaP;
-	Vector3D deltaV;
-	Vector3D pCircle1;
-	Vector3D contactPoint;
-	Vector3D fVec;
-	Vector3D fFriction;
-	Vector3D n0;
-
-	Real frictionCoeff;
-	Real gap;
-
-	ComputeConnectorProperties(markerData, objectNumber, data, 
-		frictionCoeff, gap, deltaP, deltaV, pCircle1, contactPoint, fVec, fFriction, n0);
-
-	//link separate vectors to result (ode2Lhs) vector
-	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-	ode2Lhs.SetAll(0.);
-
-	if (parameters.activeConnector)
-	{
-		//marker 1 / torus / J (positive):    (according to computation of relative position)
-		//now link ode2Lhs Vector to partial result using the two jacobians
-		if (markerData.GetMarkerData(1).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			//positionJacobian.NumberOfColumns() == rotationJacobian.NumberOfColumns()
-			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).positionJacobian, fVec, ldv1); //fVec = f_m1
-			//the torus is loaded at the contact point, away from its marker: also the normal force has a torque (#2127)
-			Vector3D torque = (contactPoint - markerData.GetMarkerData(1).position).CrossProduct(fVec); //fVec = f_m1
-			EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(1).rotationJacobian, torque, ldv1);
-		}
-
-
-		////marker 0 / sphere / I (negative):
-		if (markerData.GetMarkerData(0).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).positionJacobian, -fVec, ldv0); //fVec = f_m1
-			if (frictionCoeff != 0) //the normal force acts through the center of the sphere and has no torque
-			{
-				Vector3D torque = (-(parameters.radiusSphere + 0.5 * gap) * n0).CrossProduct(fVec); //fVec = f_m1
-				EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(0).rotationJacobian, torque, ldv0);
-			}
-		}
-	}
-
-}
-
 
 //! provide according output variable in "value"
 void CObjectContactSphereTorus::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const
