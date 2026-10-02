@@ -98,6 +98,10 @@ exemptImports = {
     'itemCompatibility': 'a module of tools/generators/, imported by name by '
                      'python/testing/test_itemCompatibility.py, which checks its rules against '
                      'the C++ (#2727)',
+    'definitionValidator': 'a module of tools/generators/, imported by name by '
+                     'python/testing/test_accessFunctionDeclarations.py, which checks its rule 7 (#2744)',
+    'itemDefsObjects': 'a module of definitions/, imported by name by the same test, for the '
+                     'definitions it checks (#2744)',
     'pytest':        'a DEV tool, declared in [dependency-groups] lint/dev of pyproject.toml and '
                      'not in any extra: the test suite runs without it (runTestSuite.py), and '
                      'test_testModels.py is the optional pytest collector of the test models. '
