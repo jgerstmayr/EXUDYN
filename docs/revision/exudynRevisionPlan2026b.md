@@ -1308,6 +1308,13 @@ revision (info document D15).
       depend on the angle, as for `ObjectRigidBody2D`; `Assemble()` refuses connector and load markers there today), and
       a rotation Jacobian of `ObjectANCFBeam` from its slopes (which slopes, which orthogonalization). For the
       maintainer's decision.
+    - **RG9.3.8** *(found in RG9.3.7 and RG4.17.1; needs no decision)* **every body's access functions against finite
+      differences** (#2777): one pytest that builds each body type at deformed, rotated coordinates and checks, at
+      several local positions, `GetPositionJacobian` and `GetRotationJacobian` against finite differences of the
+      position and the rotation matrix, and `GetJacobianTransposedTimesVectorDerivative` against the numerical
+      derivative of $\Jm^T\fv$. Both bugs of 2026-10-02 - the position Jacobian of `ObjectANCFBeam` sized for 8 of its
+      18 coordinates, the rotation Jacobian of the slope nodes not the derivative of their rotation - were found by
+      chance; this test would have found them.
 
 <a id="rg9-4"></a>
 **RG9.4** *(group RG9; maintainer 2026-09-30)* **Kinetic and potential energy as output variables**
@@ -2181,6 +2188,9 @@ done.
       cable markers) through `ComputeGap` and similar. A declared function of the connector - *its PostNewtonStep needs
       the Jacobians* - with the default true, false for the ten, and a measurement on a contact model (expected: the
       Jacobians of rigid body markers are a few % of a contact model's step).
+    - **RG14.2.20** *(found in RG14.2.18; needs no decision)* **a sensor's value vector without allocation** (#2778):
+      after RG14.2.18 a sensor evaluation still allocates its value `Vector` once (4 M allocations for 200 sensors over
+      20000 steps); a `ResizableVector` kept per sensor, or the value written into the storage directly.
     - **RG14.2.17** **DONE 2026-10-02** (maintainer: *yes, do the proposed way*) — [log](exudynRevisionLog2026b.md#rg14-2-17) -
       **the dispatch in the connector instead of in `CSystem`.** Today `CSystem` asks `GetConnectorInterface()` and switches on the enum to its
       L2 functions (`ComputeODE2LHS*Markers`, `ComputeJacobianODE2*Markers`, the constraint functions). Proposed: one
@@ -2411,12 +2421,14 @@ The title of each says what the step **does**; the sentence after it says why it
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Halve the large `nTiles` of the examples** (RG6.7.7.7, #2709). The round primitives and the FFRF meshes are
+3. **Test every body's access functions against finite differences** (RG9.3.8, #2777). Two bugs of that kind turned
+   up by chance on one day; one test finds the rest.
+4. **Halve the large `nTiles` of the examples** (RG6.7.7.7, #2709). The round primitives and the FFRF meshes are
    curved now (RG6.7.7.6, RG6.7.2.1); the examples that chose a large `nTiles` to hide the facets draw more than they
    need - checked by image.
-4. **Shrink `MarkerTemp` and `TemporaryComputationData`** (RG14.2.14, RG14.2.16, #2745). The legacy switch and the
+5. **Shrink `MarkerTemp` and `TemporaryComputationData`** (RG14.2.14, RG14.2.16, #2745). The legacy switch and the
    legacy functions are gone (RG14.2.13), and the contacts no longer need a path of their own (RG14.2.18).
-5. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
+6. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
-6. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
+7. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
    published documentation that is visibly wrong.

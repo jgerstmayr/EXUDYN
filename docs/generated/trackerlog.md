@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.214.dev1
 - last change = 2026-10-02
-- Number of issues = 2777
+- Number of issues = 2779
 - Number of resolved issues = 2528 (214 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IMPROVEMENT` `LOW EFF` `raised by: Claude-JG` a sensor allocates its value vector per evaluation (#2778)
+  - description: CSensor::GetSensorValues fills a Vector per call; with TemporaryMarkerDataStructure (\#2745) this is the remaining allocation of a sensor evaluation (measured 2026-10-02: 4 M allocations for 200 SensorObject over 20000 steps, one per evaluation). A ResizableVector kept per sensor, or the value written into the storage directly.
+  - date raised: 2026-10-02
+- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` every body's access functions against finite differences (#2777)
+  - description: A pytest that builds each body type with nontrivial (deformed, rotated) coordinates and checks, at several local positions, GetPositionJacobian and GetRotationJacobian against finite differences of the position and rotation matrix (via the output variables), and GetJacobianTransposedTimesVectorDerivative against the numerical derivative of J^T f. Two bugs of this kind were found by chance on 2026-10-02 (ObjectANCFBeam position Jacobian 3 x 8 for 18 coordinates; the rotation Jacobian of NodePointSlope23 not the derivative of its rotation, \#2763).
+  - date raised: 2026-10-02
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
   - date raised: 2026-09-29
