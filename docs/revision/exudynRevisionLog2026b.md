@@ -11313,3 +11313,52 @@ in the reference list of the fast module waits for the next fast build. `graphic
 
 Checked as the first part (normals of the split, raytraced image); `graphicsFunctions.json` re-recorded (SphereEdges,
 Tube).
+
+<a id="rg9-3-6"></a>
+### RG9.3.6 — the leftovers of the access functions (2026-10-02, #2773)
+
+Fixed without a decision: the message of `CSystem::CheckSystemIntegrity` for a marker that needs a rotation named the
+marker index as the object number (and spelled *orienation*); the branch `if (false)` of
+`CObjectANCFCable2DBase::GetPositionJacobian` - the exact derivative of the normal, equal to the one in use - is gone,
+the one in use says in one line why it is right; the commented-out calls of `GetAccessFunctionBody` in the relative
+coordinate markers, `CObjectRigidBody` and `VisualizationObject.h`, the incomplete commented-out block of
+`CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian` and the second `SetAll` of
+`CObjectANCFBeam::GetMassWeightedPositionJacobian` are gone; `CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative`
+raises with what to do instead and no unreachable code after it. The two ideas went to RG9.3.7 (#2775). Nothing moved
+in the test suite.
+
+<a id="rg9-3-5-decided"></a>
+### RG9.3.5 — decided and done: (a)-(c), the switch removed (2026-10-02, #2744)
+
+The maintainer: *(a)-(c) is good to go; then measure and decide on the switch* - the switch goes with (a).
+
+**(c) first: AD of the coordinates the position is nonlinear in.** `AccessFunctionsAD.h` differentiates only the
+coordinates `first ... first+nDiff-1` - for `ObjectRigidBody` the rotation parameters (4 directions instead of 7; the
+displacement adds the identity), for `ObjectRigidBody2D` the angle (1 instead of 3). Measured (`perfAccessFunctionsAD.py`,
+solver time; the machine was about 30 % slower than at the first measurement, the ratios count):
+
+| model | hand-written | general path | AD, all coordinates (before) | AD, rotation only (c) |
+|---|---|---|---|---|
+| 100 rigid bodies, Euler parameters, implicit | 0.236 s | 0.269 s | +79 % | 0.318 s (+35 %) |
+| 100 rigid bodies, Tait-Bryan, implicit | 0.324 s | 0.365 s | +55 % | 0.412 s (+27 %) |
+| 200 2D rigid bodies, implicit | 0.240 s | - | +42 % | 0.289 s (+20 %) |
+
+The explicit runs scattered by more than the difference on this machine (0.39 s to 0.92 s for the same run) and are
+not counted; the first measurement put AD there at +15 % over the general path.
+
+**(a) the hand-written functions stay** for `ObjectRigidBody`, `ObjectRigidBody2D` (and the mass points, which have no
+AD variant), and for the position and rotation Jacobians of `ObjectANCFCable2D` (AD +2 %). The AD variants stay in the
+code, compiled and visible, behind `static const bool accessFunctionsByAD = false` with a comment that says what was
+measured; the general path for the measurement (mode 2) is gone, and so is `exu.experimental.accessFunctionsByAD`.
+
+**(b) AD provides what was missing.** `ObjectANCFCable2D` gets `GetJacobianTransposedTimesVectorDerivative` by AD of its
+templated position and rotation (zero on the axis without a torque, where its position is linear); it declares
+`JacobianTtimesVector_q` now, so a `MarkerBodyPosition` or `MarkerBodyRigid` on it no longer needs
+`jacobianConnectorDerivative = False` in an implicit solve. `ObjectANCFCable`, `ObjectANCFBeam` and `ObjectANCFThinPlate`
+declare it as exactly zero: where their markers may act (the centerline, the midsurface; the beam everywhere) the
+position is linear in the coordinates and they have no rotation. `test_accessFunctionsAD.py`: the system Jacobian
+equals the numerical one to 7e-10 (without the derivative the difference was 3e-4, with a torsional spring 3e-3).
+Left: `ObjectBeamGeometricallyExact` takes the derivative as zero off its axis - AD would need its interpolated frame as
+a template; `ObjectALEANCFCable2D` (9 coordinates) has no derivative yet.
+
+`perfAccessFunctionsAD.py` measures the hand-written functions and the cable's derivative now (one run per model).

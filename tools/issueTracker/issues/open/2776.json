@@ -1,0 +1,13 @@
+{
+  "number": 2776,
+  "title": "the raytracer can hang in RedrawAndGetImage when tests run in parallel",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "priority": "HIGH",
+  "effort": "MEDIUM",
+  "description": "Twice on 2026-10-02 the full pytest run (pytest -n 8 python/testing) hung in test_graphicsRegression.py::testRaytracerImages, in SC.renderer.RedrawAndGetImage(useRaytracer=True) (faulthandler traceback), with all workers idle - a wait, not a loop; a third and fourth run passed, and 8 processes rendering the same images 15 times each in parallel did not hang. The raytracer starts the TaskManager for its ParallelFor (Raytracer::SoftwareRenderer, ExuThreading::EnterTaskManager) unless it is already running; a deadlock there, or a TaskManager left running by a previous test in the same worker, are the candidates. The hung processes stayed and could not be ended from the session.",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31",
+  "file": "src/Graphics/Raytracing.cpp"
+}

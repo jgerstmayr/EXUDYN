@@ -525,7 +525,7 @@ items = {
     'kind': 'Object',
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position', 'PointSlope1'],
-    'accessFunctionTypes': ['TranslationalVelocity_qt', 'DisplacementMassIntegral_q'],
+    'accessFunctionTypes': ['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
     'outputVariables': ['Position', 'Displacement', 'Velocity', 'Director1', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'Acceleration', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
@@ -550,7 +550,7 @@ items = {
     'kind': 'Object',
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position2D', 'Orientation2D', 'Point2DSlope1'],
-    'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q'],
+    'accessFunctionTypes': ['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'AngularVelocity_qt', 'DisplacementMassIntegral_q'],
     'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'Rotation', 'Director1', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'AngularVelocity', 'Acceleration', 'AngularAcceleration', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
@@ -607,7 +607,7 @@ items = {
     'kind': 'Object',
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position', 'Orientation', 'PointSlope23'],
-    'accessFunctionTypes': ['TranslationalVelocity_qt', 'DisplacementMassIntegral_q'],
+    'accessFunctionTypes': ['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
     'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'Rotation', 'RotationMatrix', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
@@ -672,7 +672,7 @@ items = {
     'kind': 'Object',
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position', 'PointSlope12'],
-    'accessFunctionTypes': ['TranslationalVelocity_qt', 'DisplacementMassIntegral_q'],
+    'accessFunctionTypes': ['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
     'outputVariables': ['Position', 'Displacement', 'Velocity', 'Director1', 'Director2', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'StressLocal', 'Acceleration', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.211.dev1
+- Exudyn version = 1.12.212.dev1
 - last change = 2026-10-02
-- Number of issues = 2775
-- Number of resolved issues = 2525 (211 in current version)
+- Number of issues = 2777
+- Number of resolved issues = 2526 (212 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,8 +7568,8 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `FIX` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` access functions: the leftovers found in the evaluation RG9.3.1 and the split RG9.3.4 (#2773)
-  - description: Found on the way and left alone, one step at a time: (1) CSystem::CheckSystemIntegrity reports the marker index as the object number when a body lacks the rotation access function, and spells orienation; (2) dead code: the if (false) branch of CObjectANCFCable2DBase::GetPositionJacobian (the exact derivative of the normal, equal to the simpler version in use; ObjectALEANCFCable2D uses the exact one), the commented-out calls of GetAccessFunctionBody in the relative coordinate markers, CObjectRigidBody and VisualizationObject.h, the incomplete commented-out block in CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian, the double SetAll in CObjectANCFBeam::GetMassWeightedPositionJacobian; (3) CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative raises unconditionally and the code after it is unreachable (the tree declares no JacobianTtimesVector\_q); (4) ideas, not bugs: ObjectRotationalMass1D could provide the position Jacobian off its axis as ObjectRigidBody2D does, ObjectANCFBeam a rotation Jacobian from its slopes. The three findings of section 7 of the evaluation are done in RG9.3.4.2.
+- `EXTENSION` <span class="textblue">`LOW`</span> `MEDIUM EFF` `raised by: Claude-JG` access functions: the position Jacobian of ObjectRotationalMass1D off its axis, a rotation Jacobian of ObjectANCFBeam (#2775)
+  - description: Two access functions a body could provide but does not, each needing a decision: ObjectRotationalMass1D defines its position at any local position but its position Jacobian only on the axis (Assemble refuses connector and load markers elsewhere, \#2744); off the axis it would depend on the rotation angle, as ObjectRigidBody2D does it. ObjectANCFBeam declares no AngularVelocity\_qt, so a MarkerBodyRigid cannot be attached; a rotation could be defined from its slope vectors (which ones, and with which orthogonalization, is the decision). Found in the evaluation of \#2744 (RG9.3.1) and listed in \#2773.
   - date raised: 2026-10-02
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
@@ -8325,6 +8325,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> <span class="textred">`HIGH`</span> `MEDIUM EFF` `raised by: Claude-JG` the raytracer can hang in RedrawAndGetImage when tests run in parallel (#2776)
+  - description: Twice on 2026-10-02 the full pytest run (pytest -n 8 python/testing) hung in test\_graphicsRegression.py::testRaytracerImages, in SC.renderer.RedrawAndGetImage(useRaytracer=True) (faulthandler traceback), with all workers idle - a wait, not a loop; a third and fourth run passed, and 8 processes rendering the same images 15 times each in parallel did not hang. The raytracer starts the TaskManager for its ParallelFor (Raytracer::SoftwareRenderer, ExuThreading::EnterTaskManager) unless it is already running; a deadlock there, or a TaskManager left running by a previous test in the same worker, are the candidates. The hung processes stayed and could not be ended from the session.
+  - date raised: 2026-10-02
 - <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectANCFBeam: the Newton iteration stalls near 2e-7 in the right-angle frame (#2763)
   - description: rightAngleFrame.py with ObjectANCFBeam (useGeometricallyExact = False), displacement-driven: from load step 7 on, Newton stagnates at a relative error of 1e-7 to 3e-7 (tolerance 1e-8; with 1e-6 the same at 1e-6 to 2e-6) and the static solver fails at 3 % of the drive; the geometrically exact beam converges in 4.7 iterations per step. Found 2026-10-01 in RG4.8.13; an inconsistent Jacobian of the ANCF beam is the first suspect (the original header said: very bad convergence for ANCFBeam).
   - date raised: 2026-09-30

@@ -1,0 +1,12 @@
+{
+  "number": 2775,
+  "title": "access functions: the position Jacobian of ObjectRotationalMass1D off its axis, a rotation Jacobian of ObjectANCFBeam",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "LOW",
+  "effort": "MEDIUM",
+  "description": "Two access functions a body could provide but does not, each needing a decision: ObjectRotationalMass1D defines its position at any local position but its position Jacobian only on the axis (Assemble refuses connector and load markers elsewhere, #2744); off the axis it would depend on the rotation angle, as ObjectRigidBody2D does it. ObjectANCFBeam declares no AngularVelocity_qt, so a MarkerBodyRigid cannot be attached; a rotation could be defined from its slope vectors (which ones, and with which orthogonalization, is the decision). Found in the evaluation of #2744 (RG9.3.1) and listed in #2773.",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31"
+}

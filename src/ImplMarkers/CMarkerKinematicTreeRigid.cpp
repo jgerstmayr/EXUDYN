@@ -75,24 +75,9 @@ void CMarkerKinematicTreeRigid::ComputeMarkerData(const CSystemData& cSystemData
 //! compute markerdata: fill in according data for derivative of jacobian times vector v, e.g.: d(J.T @ v)/dq
 void CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const
 {
-	////for test only:
-	//Index n = ((CObjectKinematicTree*)(cSystemData.GetCObjects()[parameters.objectNumber]))->NumberOfLinks();
-	//markerData.jacobianDerivative.SetNumberOfRowsAndColumns(n, n);
-	//markerData.jacobianDerivative.SetAll(0.);
-	//return;
-
-	CHECKandTHROWstring("CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative: this function is needed by some connector, but is not implemented yet!", ExudynNotImplementedError);
-
-	if (!EXUstd::IsOfType(cSystemData.GetCObjects()[parameters.objectNumber]->GetAccessFunctionTypes(), AccessFunctionType::JacobianTtimesVector_q))
-	{
-		CHECKandTHROWstring("CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative: object " + EXUstd::ToString(parameters.objectNumber) + " does not provide a jacobian derivative; use different markers or set newton.numericalDifferentiation.forODE2connectors = True or use explicit integrator for contact", ExudynNotImplementedError);
-	}
-
-	if (!((CObjectBody*)(cSystemData.GetCObjects()[parameters.objectNumber]))->
-		GetJacobianTransposedTimesVectorDerivative(parameters.localPosition, v6D, markerData.jacobianDerivative))
-	{
-		markerData.jacobianDerivative.SetNumberOfRowsAndColumns(0, 0); //signals that there is no dependency
-	}
+	//the kinematic tree declares no derivative of its transposed Jacobian (JacobianTtimesVector_q); a connector that
+	//needs it differentiates numerically (newton.numericalDifferentiation.forODE2connectors) or is solved explicitly
+	CHECKandTHROWstring("CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative: the derivative of the Jacobian of a kinematic tree is not implemented; use newton.numericalDifferentiation.forODE2connectors = True or an explicit solver", ExudynNotImplementedError);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

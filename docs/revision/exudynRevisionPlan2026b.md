@@ -325,6 +325,11 @@ NOT cover, and about the testing that no suite can do.
         The evaluation run of 2026-09-30 (`tmp/miniExampleImages/`) showed what the MiniExamples need first:
         the raytracer draws no spheres (RG6.7.3), most bodies have no graphics of their own, and the node
         frames and load arrows dominate.
+      - **RG2.3.3.8** *(found 2026-10-02)* **the raytracer can hang in `RedrawAndGetImage`** (#2776): twice the full
+        pytest run hung in `testRaytracerImages`, all workers idle - a wait, not a loop; two later runs and a stress run
+        of 8 processes did not. Candidates: the start of the `TaskManager` for the raytracer's `ParallelFor`, or a
+        `TaskManager` left running by a previous test in the same worker. To find before a release; until then a hung
+        test run is this, not a new failure.
 
       When GraphicsData gets its sphere and curved triangles (RG6.7, #2709), the test grows with it.
 
@@ -1255,8 +1260,8 @@ revision (info document D15).
         flags derived instead of declared, `OwnMarkersOnly` and `SuperElementAlternativeRotationMode` - the super
         elements use the same flags for their own markers (`GetAccessFunctionSuperElement`), so deriving needs these
         two meanings separated first;
-    - **RG9.3.5** **EVALUATED 2026-10-02, with a switch; the proposal for the maintainer's decision** —
-      [log](exudynRevisionLog2026b.md#rg9-3-5) - *(maintainer 2026-10-02; after RG9.3.4; "with a switch, so performance can
+    - **RG9.3.5** **DONE 2026-10-02** (evaluated with a switch; (a)-(c) decided by the maintainer and done, the switch
+      removed) — [log](exudynRevisionLog2026b.md#rg9-3-5), [decision](exudynRevisionLog2026b.md#rg9-3-5-decided) - *(maintainer 2026-10-02; after RG9.3.4; "with a switch, so performance can
       be compared")* **evaluation: hand-written Jacobians or AD of a templated `GetPosition`**. To answer: what changes - a template cannot be virtual, so the object would provide a templated
       position function plus a virtual wrapper per number type (Real, the AD types of RG14), or the markers call
       object-specific templates; the impact on the implementation of each object (17), on the markers and on the
@@ -1273,7 +1278,8 @@ revision (info document D15).
       as zero), and the access functions of new objects, from one templated position (with RG15); (c) a cheaper AD
       seeds only the coordinates the position is nonlinear in (the rotation parameters: 4 directions instead of 7);
       (d) the switch goes when (a)-(c) are decided.
-    - **RG9.3.6** *(maintainer 2026-10-02)* **the leftovers found in the evaluation and the split** (#2773): (1) the
+    - **RG9.3.6** **DONE 2026-10-02** (1)-(3), (4) moved to RG9.3.7 — [log](exudynRevisionLog2026b.md#rg9-3-6) -
+      *(maintainer 2026-10-02)* **the leftovers found in the evaluation and the split** (#2773): (1) the
       check of a marker on a body without rotation access reports the marker index as the object number (and spells
       *orienation*); (2) dead code - the `if (false)` branch of `CObjectANCFCable2DBase::GetPositionJacobian` (the exact
       derivative of the normal, equal to the version in use; `ObjectALEANCFCable2D` uses the exact one), the
@@ -1285,6 +1291,11 @@ revision (info document D15).
       `ObjectRigidBody2D` does, `ObjectANCFBeam` a rotation Jacobian from its slopes. The three findings of section 7
       of the evaluation (the beam that declared four types and provided none, the undeclared case of `ObjectANCFBeam`,
       the commented-out cases) are done in RG9.3.4.2.
+    - **RG9.3.7** *(maintainer 2026-10-02: the leftovers that need a decision go into a step of their own)* **two access
+      functions a body could provide** (#2775): the position Jacobian of `ObjectRotationalMass1D` off its axis (it would
+      depend on the angle, as for `ObjectRigidBody2D`; `Assemble()` refuses connector and load markers there today), and
+      a rotation Jacobian of `ObjectANCFBeam` from its slopes (which slopes, which orthogonalization). For the
+      maintainer's decision.
 
 <a id="rg9-4"></a>
 **RG9.4** *(group RG9; maintainer 2026-09-30)* **Kinetic and potential energy as output variables**
@@ -2329,7 +2340,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges, rows done; RG6.7.2.1 and most of RG6.7.7.6 done (the round primitives of 6-node triangles); open RG6.7.5 (anisotropic tiling), the rest of RG6.7.7.6 (`LinkedCylinders`, hollow sphere), RG6.7.7.7 (the examples with large `nTiles`) |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
-| RG9.3 | #2744 | access functions as single functions of the objects: the split done (RG9.3.4.1-.3), the declarations checked (rule 7); open the flags derived instead of declared (RG9.3.4.4, after separating the super elements' own meaning); RG9.3.5 evaluated with `exu.experimental.accessFunctionsByAD`, proposal for the maintainer's decision; RG9.3.6 the leftovers (#2773) |
+| RG9.3 | #2744 | access functions as single functions of the objects: the split done (RG9.3.4.1-.3), the declarations checked (rule 7); open the flags derived instead of declared (RG9.3.4.4, after separating the super elements' own meaning); RG9.3.5 and RG9.3.6 done (hand-written Jacobians, AD for the derivative of `J^T f` of the cable); RG9.3.7 (#2775) for the maintainer's decision |
 | RG9.4 | #2202 | kinetic and potential energy as output variables: done for all bodies, beams, plates, superelements and spring-dampers; RG9.4.3.2 (the contact and special objects) not now |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
@@ -2365,8 +2376,8 @@ The title of each says what the step **does**; the sentence after it says why it
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Decide the proposal of RG9.3.5** (#2744): which access functions stay hand-written, where AD provides what is
-   missing (the derivative of `J^T f` of cables and beams). Measured with the switch, the numbers are in the log.
+3. **Decide RG9.3.7** (#2775): the position Jacobian of `ObjectRotationalMass1D` off its axis and a rotation Jacobian
+   of `ObjectANCFBeam` - two small extensions that wait only for a decision.
 4. **Halve the large `nTiles` of the examples** (RG6.7.7.7, #2709). The round primitives and the FFRF meshes are
    curved now (RG6.7.7.6, RG6.7.2.1); the examples that chose a large `nTiles` to hide the facets draw more than they
    need - checked by image.

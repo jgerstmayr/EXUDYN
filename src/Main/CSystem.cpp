@@ -353,7 +353,7 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 						if (!EXUstd::IsOfType(afType, AccessFunctionType::AngularVelocity_qt))
 						{
 							PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-								" requires an object with orienation (rotation) information, but object number " + EXUstd::ToString(itemIndex) + " does not provide this", PyErrorType::modelError);
+								" requires an object with orientation (rotation) information, but object number " + EXUstd::ToString(objectIndex) + " does not provide this", PyErrorType::modelError);
 							systemIsInteger = false;
 						}
 					}

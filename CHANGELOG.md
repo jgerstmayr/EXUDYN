@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 196 | 1.12.211 |
+| 1.12 | Metheney | 197 | 1.12.212 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.212** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` access functions: the leftovers found in the evaluation RG9.3.1 and the split RG9.3.4 (#2773)
+  - description: Found on the way and left alone, one step at a time: (1) CSystem::CheckSystemIntegrity reports the marker index as the object number when a body lacks the rotation access function, and spells orienation; (2) dead code: the if (false) branch of CObjectANCFCable2DBase::GetPositionJacobian (the exact derivative of the normal, equal to the simpler version in use; ObjectALEANCFCable2D uses the exact one), the commented-out calls of GetAccessFunctionBody in the relative coordinate markers, CObjectRigidBody and VisualizationObject.h, the incomplete commented-out block in CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian, the double SetAll in CObjectANCFBeam::GetMassWeightedPositionJacobian; (3) CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative raises unconditionally and the code after it is unreachable (the tree declares no JacobianTtimesVector\_q); (4) ideas, not bugs: ObjectRotationalMass1D could provide the position Jacobian off its axis as ObjectRigidBody2D does, ObjectANCFBeam a rotation Jacobian from its slopes. The three findings of section 7 of the evaluation are done in RG9.3.4.2.
+  - **notes:** Fixed the leftovers of the access functions: the message of the integrity check named the marker index as the object number; dead and commented-out code of the split removed; the unreachable code of MarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative removed. The two extensions that need a decision are \#2775.
+  - date resolved: **2026-10-02 12:03**, date raised: 2026-10-02
 - **1.12.211** <span class="textred">`BUG`</span> `HIGH` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectANCFCable2D: the position Jacobian at a point off the axis leaves its third row uninitialized (#2774)
   - description: GetPositionJacobian (formerly the TranslationalVelocity\_qt case of GetAccessFunctionBody) of ObjectANCFCable2D and ObjectANCFCable2D-based elements sets rows 0 and 1 for localPosition\[1\] != 0 but never row 2, which keeps whatever the matrix held; a MarkerBodyPosition at y != 0 on a cable then projects forces with garbage z-components and the implicit solver can report a singular Jacobian at random. Found by the comparison of the access functions by automatic differentiation (RG9.3.5): a cable on an elastic foundation with markers at y = 0.01 failed or passed depending on the memory.
   - **notes:** ObjectANCFCable2D and ObjectALEANCFCable2D: the position Jacobian at a point off the axis sets its third row to zero; before, it kept whatever the matrix held, which gave forces with random z-components and could make the implicit solver report a singular Jacobian

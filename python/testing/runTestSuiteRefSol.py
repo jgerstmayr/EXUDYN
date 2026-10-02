@@ -564,24 +564,14 @@ def PerformanceTestsReferenceSolution():
         'perfConnectorInterface:rigid-n100-implicit':              1.552725088397863,  #by AD: the same to the Newton tolerance
         'perfConnectorInterface:rigid-n100-explicit-legacy':       1.8871766817354405,
         'perfConnectorInterface:rigid-n100-explicit':              1.8871766817354405,
-        #the access functions by automatic differentiation (#2744): per model the hand-written functions, the general path
-        #with them (-general) and automatic differentiation (-AD) - measured 2026-10-02 on Windows cp313; they agree to
-        #the Newton tolerance (Euler parameters: the derivative of the Jacobian differs along the parameters)
+        #the access functions of the bodies (#2744): hand-written, and for the cable the derivative of J^T f by automatic
+        #differentiation - measured 2026-10-02 on Windows cp313
         'perfAccessFunctionsAD:rigidEP-n100-implicit':           1.552725088397863,
-        'perfAccessFunctionsAD:rigidEP-n100-implicit-general':   1.5527250883978632,
-        'perfAccessFunctionsAD:rigidEP-n100-implicit-AD':        1.5527250883908033,
         'perfAccessFunctionsAD:rigidRxyz-n100-implicit':         38.06978409054861,
-        'perfAccessFunctionsAD:rigidRxyz-n100-implicit-general': 38.06978409054865,
-        'perfAccessFunctionsAD:rigidRxyz-n100-implicit-AD':      38.06978409054872,
         'perfAccessFunctionsAD:rigidRxyz-n100-explicit':         39.70816787868968,
-        'perfAccessFunctionsAD:rigidRxyz-n100-explicit-general': 39.70816787868967,
-        'perfAccessFunctionsAD:rigidRxyz-n100-explicit-AD':      39.70816787868968,
         'perfAccessFunctionsAD:rigid2D-n200-implicit':           333.2416865794323,
-        'perfAccessFunctionsAD:rigid2D-n200-implicit-AD':        333.2416865794323,
-        'perfAccessFunctionsAD:cable-n200-implicit':             0.005112208117751918,
-        'perfAccessFunctionsAD:cable-n200-implicit-AD':          0.0051122081178941224,
+        'perfAccessFunctionsAD:cable-n200-implicit':             0.005112208211437852,
         'perfAccessFunctionsAD:rigid2D-n200-explicit':           439.41627874357835,
-        'perfAccessFunctionsAD:rigid2D-n200-explicit-AD':        439.41627874357835,
         }
 
     return refSol

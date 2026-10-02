@@ -121,25 +121,6 @@ void CMarkerBodiesRelativeRotationCoordinate::ComputeMarkerDataJacobianDerivativ
 {
 	//should not be called, because flags not set
 	CHECKandTHROWstring("CMarkerBodiesRelativeRotationCoordinate::ComputeMarkerDataJacobianDerivative NOT implemented", ExudynNotImplementedError);
-
-	//if (!EXUstd::IsOfType(cSystemData.GetCObjects()[parameters.bodyNumbers[0]]->GetAccessFunctionTypes(), AccessFunctionType::JacobianTtimesVector_q))
-	//{
-	//	CHECKandTHROWstring("CMarkerBodiesRelativeRotationCoordinate::ComputeMarkerDataJacobianDerivative: body " + EXUstd::ToString(parameters.bodyNumbers[0]) + " does not provide a jacobian derivative; use different markers or set newton.numericalDifferentiation.forODE2connectors = True or use explicit integrator for contact");
-	//}
-	//if (!EXUstd::IsOfType(cSystemData.GetCObjects()[parameters.bodyNumbers[1]]->GetAccessFunctionTypes(), AccessFunctionType::JacobianTtimesVector_q))
-	//{
-	//	CHECKandTHROWstring("CMarkerBodiesRelativeRotationCoordinate::ComputeMarkerDataJacobianDerivative: body " + EXUstd::ToString(parameters.bodyNumbers[1]) + " does not provide a jacobian derivative; use different markers or set newton.numericalDifferentiation.forODE2connectors = True or use explicit integrator for contact");
-	//}
-
-	////v has always size 6, must be copied to markerData.jacobianDerivative
-	//markerData.jacobianDerivative.SetNumberOfRowsAndColumns(1, 6);
-	//for (Index i = 0; i < v6D.NumberOfItems(); i++)
-	//{
-	//	markerData.jacobianDerivative(0, i) = v6D[i];
-	//}
-	////==>markerData.jacobianDerivative is input to GetAccessFunctionBody(...)
-	//((CObjectBody*)(cSystemData.GetCObjects()[parameters.bodyNumbers[0]]))->
-	//	GetAccessFunctionBody(AccessFunctionType::JacobianTtimesVector_q, parameters.localPosition0, markerData.jacobianDerivative);
 }
 
 void CMarkerBodiesRelativeRotationCoordinate::PostNewtonStep(CSystemData& cSystemData, const MarkerData& markerData)

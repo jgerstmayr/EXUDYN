@@ -2,13 +2,17 @@
   "number": 2773,
   "title": "access functions: the leftovers found in the evaluation RG9.3.1 and the split RG9.3.4",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "FIX",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "Found on the way and left alone, one step at a time: (1) CSystem::CheckSystemIntegrity reports the marker index as the object number when a body lacks the rotation access function, and spells orienation; (2) dead code: the if (false) branch of CObjectANCFCable2DBase::GetPositionJacobian (the exact derivative of the normal, equal to the simpler version in use; ObjectALEANCFCable2D uses the exact one), the commented-out calls of GetAccessFunctionBody in the relative coordinate markers, CObjectRigidBody and VisualizationObject.h, the incomplete commented-out block in CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian, the double SetAll in CObjectANCFBeam::GetMassWeightedPositionJacobian; (3) CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative raises unconditionally and the code after it is unreachable (the tree declares no JacobianTtimesVector_q); (4) ideas, not bugs: ObjectRotationalMass1D could provide the position Jacobian off its axis as ObjectRigidBody2D does, ObjectANCFBeam a rotation Jacobian from its slopes. The three findings of section 7 of the evaluation are done in RG9.3.4.2.",
   "dateRaised": "2026-10-02",
   "deadline": "2027-03-31",
+  "dateResolved": "2026-10-02 12:03",
+  "resolvedAuthor": "Claude-JG",
   "file": "src/Main/CSystem.cpp",
-  "line": "356"
+  "line": "356",
+  "releaseNotes": "Fixed the leftovers of the access functions: the message of the integrity check named the marker index as the object number; dead and commented-out code of the split removed; the unreachable code of MarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative removed. The two extensions that need a decision are #2775.",
+  "resolvedInVersion": "1.12.212"
 }

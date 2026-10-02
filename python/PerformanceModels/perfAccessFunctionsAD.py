@@ -1,17 +1,15 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Performance test of the access functions of a body by automatic differentiation of its position and
-#           rotation (#2744) against the hand-written ones: models whose markers ask the bodies for their
+# Details:  Performance test of the access functions of a body (#2744): models whose markers ask the bodies for their
 #           Jacobians in every step - rigid bodies (Euler parameters and Tait-Bryan angles) joined by
 #           ObjectConnectorRigidBodySpringDamper on body markers at offset points (position and rotation
 #           Jacobians, and the derivative of the transposed Jacobian times the force in the implicit run),
 #           2D rigid bodies joined by spring-dampers, and an ANCF cable on an elastic foundation of spring-dampers
-#           at points off its axis - each solved twice, with exu.experimental.accessFunctionsByAD = 0 and = 1,
-#           so that the summary of the performance run shows the two solver times side by side; the 3D rigid bodies
-#           also with = 2, the general path through the access functions with the hand-written ones (ObjectRigidBody
-#           otherwise projects without forming the Jacobians), which tells the cost of the general path from the cost of
-#           automatic differentiation. The runs of a model agree to the Newton tolerance.
+#           at points off its axis, whose derivative of the transposed Jacobian times the force is computed by
+#           automatic differentiation of its position. The access functions by automatic differentiation of the
+#           rigid bodies were measured against the hand-written ones here (revision2026b step RG9.3.5): the same
+#           results, 20-35 % slower implicit solves.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-02
@@ -91,37 +89,32 @@ runList = [
 
 result = 0
 for run in runList:
-    for byAD in ([0, 2, 1] if run['model'] in ['rigidEP', 'rigidRxyz'] else [0, 1]):
-        exu.experimental.accessFunctionsByAD = byAD
-        SC = exu.SystemContainer()
-        mbs = SC.AddSystem()
-        if run['model'] == 'rigidEP':
-            BuildRigidChain(mbs, run['size'], 'EP')
-        elif run['model'] == 'rigidRxyz':
-            BuildRigidChain(mbs, run['size'], 'Rxyz')
-        elif run['model'] == 'rigid2D':
-            BuildRigid2DChain(mbs, run['size'])
-        else:
-            BuildCable(mbs, run['size'])
-        mbs.Assemble()
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    if run['model'] == 'rigidEP':
+        BuildRigidChain(mbs, run['size'], 'EP')
+    elif run['model'] == 'rigidRxyz':
+        BuildRigidChain(mbs, run['size'], 'Rxyz')
+    elif run['model'] == 'rigid2D':
+        BuildRigid2DChain(mbs, run['size'])
+    else:
+        BuildCable(mbs, run['size'])
+    mbs.Assemble()
 
-        h = 1e-4 if run['explicit'] else 1e-3
-        simulationSettings = exu.SimulationSettings()
-        simulationSettings.timeIntegration.numberOfSteps = run['numberOfSteps']
-        simulationSettings.timeIntegration.endTime = run['numberOfSteps']*h
-        simulationSettings.solutionSettings.writeSolutionToFile = False
-        simulationSettings.timeIntegration.verboseMode = 1
-        simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-        if run['model'] == 'cable': #the cable provides no derivative of its transposed Jacobian times a force
-            simulationSettings.timeIntegration.newton.numericalDifferentiation.jacobianConnectorDerivative = False
-        mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44 if run['explicit']
-                         else exu.DynamicSolverType.GeneralizedAlpha)
+    h = 1e-4 if run['explicit'] else 1e-3
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = run['numberOfSteps']
+    simulationSettings.timeIntegration.endTime = run['numberOfSteps']*h
+    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.timeIntegration.verboseMode = 1
+    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44 if run['explicit']
+                     else exu.DynamicSolverType.GeneralizedAlpha)
 
-        result = float(np.abs(mbs.systemData.GetODE2Coordinates()).sum())
-        runName = ('perfAccessFunctionsAD:' + run['model'] + '-n' + str(run['size'])
-                   + ('-explicit' if run['explicit'] else '-implicit') + ['', '-AD', '-general'][byAD])
-        exu.Print('result ' + runName + '=', result)
-        testRunnerTools.AddTiming(runName, mbs, result)
+    result = float(np.abs(mbs.systemData.GetODE2Coordinates()).sum())
+    runName = ('perfAccessFunctionsAD:' + run['model'] + '-n' + str(run['size'])
+               + ('-explicit' if run['explicit'] else '-implicit'))
+    exu.Print('result ' + runName + '=', result)
+    testRunnerTools.AddTiming(runName, mbs, result)
 
-exu.experimental.accessFunctionsByAD = 0
 exu.sys['testResult'] = result

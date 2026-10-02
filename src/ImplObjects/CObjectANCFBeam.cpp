@@ -917,9 +917,7 @@ void CObjectANCFBeam::GetPositionJacobian(const Vector3D& localPosition, Matrix&
 //! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
 void CObjectANCFBeam::GetMassWeightedPositionJacobian(Matrix& value) const
 {
-	//COM assumed to be at y=z=0 !!!
-
-
+	//the mass at the axis, y = z = 0
 	value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
 	value.SetAll(0.);
 
@@ -940,7 +938,6 @@ void CObjectANCFBeam::GetMassWeightedPositionJacobian(Matrix& value) const
 		SV += SVloc;
 	}
 
-	value.SetAll(0.);
 	for (Index i = 0; i < EXUstd::dim3D; i++)
 	{
 		for (Index j = 0; j < nSFperNode*nNodes; j++)

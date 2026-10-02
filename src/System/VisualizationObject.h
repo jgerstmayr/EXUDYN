@@ -76,10 +76,6 @@ public:
 	//	return false; 
 	//};
 	virtual const MatrixI& GetTriangleMesh() const = 0;
-	//{ 
-	//	CHECKandTHROWstring("ERROR: illegal call to VisualizationObjectSuperElement::GetAccessFunctionBody"); 
-	//	return EXUmath::unitMatrixI; 
-	//};
 	virtual const Float4& GetColor() const = 0;
 	//{ 
 	//	CHECKandTHROWstring("ERROR: illegal call to VisualizationObjectSuperElement::GetColor"); 
