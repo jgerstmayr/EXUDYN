@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-29  21:13:53 (last modified)
+* @date         2026-10-02  07:01:24 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -143,6 +143,18 @@ public: // AUTO:
     {
         return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);
     }
+
+    //! AUTO:  the connector implements the interface of coordinate markers (#2745)
+    virtual ConnectorInterface GetConnectorInterface() const override
+    {
+        return ConnectorInterface::CoordinateMarkers;
+    }
+
+    //! AUTO:  the contact force on marker 1 from the values of the two markers (#2745)
+    virtual void ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real& force) const override;
+
+    //! AUTO:  the contact force on marker 1 for gap and its time derivative, with the contact state of the data node (#2745)
+    Real ComputeContactForce(Real gap, Real gap_t) const;
 
     //! AUTO:  flag to be set for connectors, which use DiscontinuousIteration
     virtual bool HasDiscontinuousIteration() const override

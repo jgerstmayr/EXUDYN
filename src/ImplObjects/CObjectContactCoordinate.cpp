@@ -27,22 +27,9 @@ Real CObjectContactCoordinate::ComputeGap(const MarkerDataStructure& markerData)
 	return (markerData.GetMarkerData(1).vectorValue[0] - markerData.GetMarkerData(0).vectorValue[0] - parameters.offset);
 }
 
-//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-//  MODEL: f
-void CObjectContactCoordinate::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
+//! the contact force on marker 1 for gap and its time derivative (#2745); the contact state is the data variable
+Real CObjectContactCoordinate::ComputeContactForce(Real gap, Real gap_t) const
 {
-	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectContactCoordinate::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
-
-	//gap>0: no contact, gap<0: contact
-	//Real gap = (markerData.GetMarkerData(1).value - markerData.GetMarkerData(0).value - parameters.offset);
-	Real gap = ComputeGap(markerData);
-
-	//velocity in dynamic computation:
-	Real gap_t = (markerData.GetMarkerData(1).vectorValue_t[0] - markerData.GetMarkerData(0).vectorValue_t[0]);
-
-	//if (gap_t != 0.) { pout << "error: gap_t=" << gap_t << "\n"; }
-
 	//decision upon contact is not gap, but the dataVariable ==> "active set strategy", needed for Newton solver to converge
 	Real hasContact = 0; //1 for contact, 0 else
 	if (GetCNode(0)->GetCurrentCoordinate(0) <= 0) { hasContact = 1; }; //this is the contact state: 1=contact/use contact force, 0=no contact
@@ -71,6 +58,34 @@ void CObjectContactCoordinate::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataS
 		}
 		fContact = -fNormal;
 	}
+	return fContact;
+}
+
+//! the force of the connector interface on coordinate markers (#2745), as ComputeODE2LHS: on marker 1, the reaction on marker 0
+void CObjectContactCoordinate::ComputeConnectorForceCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real& force) const
+{
+	force = 0.;
+	if (!parameters.activeConnector) { return; } //an inactive connector adds no force (#2735)
+	force = ComputeContactForce(markers[1].value - markers[0].value - parameters.offset, markers[1].value_t - markers[0].value_t);
+}
+
+//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
+//  MODEL: f
+void CObjectContactCoordinate::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
+{
+	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
+		"CObjectContactCoordinate::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
+
+	//gap>0: no contact, gap<0: contact
+	//Real gap = (markerData.GetMarkerData(1).value - markerData.GetMarkerData(0).value - parameters.offset);
+	Real gap = ComputeGap(markerData);
+
+	//velocity in dynamic computation:
+	Real gap_t = (markerData.GetMarkerData(1).vectorValue_t[0] - markerData.GetMarkerData(0).vectorValue_t[0]);
+
+	//if (gap_t != 0.) { pout << "error: gap_t=" << gap_t << "\n"; }
+
+	Real fContact = ComputeContactForce(gap, gap_t);
 	if (!parameters.activeConnector) { fContact = 0.; } //an inactive connector adds no force (#2735)
 
 	////link separate vectors to result (ode2Lhs) vector

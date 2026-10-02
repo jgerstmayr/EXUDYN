@@ -117,6 +117,36 @@ void CObjectConnectorRollingDiscPenalty::ComputeContactForces(const MarkerDataSt
 
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
+//! the forces and torques of the connector interface (#2745), as ComputeODE2LHS projects them
+void CObjectConnectorRollingDiscPenalty::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex,
+	Vector3D* forces, Vector3D* torques) const
+{
+	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
+	if (!parameters.activeConnector) { return; }
+	static thread_local MarkerDataStructure markerData; //the physics read the marker data of the legacy path, without Jacobians; one per thread
+	markerData.SetNumberOfMarkerData(2);
+	markerData.SetTime(t);
+	MarkerDataFromKinematics(markers[0], markerData.GetMarkerData(0));
+	MarkerDataFromKinematics(markers[1], markerData.GetMarkerData(1));
+	Vector3D pC, vC, w2, n0, w3, wLateral, fContact;
+	Vector2D localSlipVelocity;
+	ComputeContactForces(markerData, parameters, false, pC, vC, wLateral, w2, n0, w3, fContact, localSlipVelocity);
+	Vector3D fPos = -(fContact[0] * wLateral + fContact[1] * w2 + fContact[2] * n0);
+	Vector3D fRotDisc = (parameters.discRadius*w3).CrossProduct(fPos);
+	Vector3D fRotGround = pC.CrossProduct(fPos);
+	if (parameters.rollingFrictionViscous)
+	{
+		Vector3D omega0 = markerData.GetMarkerData(0).orientation*markerData.GetMarkerData(0).angularVelocityLocal;
+		Vector3D velGround = markerData.GetMarkerData(1).velocity - (markerData.GetMarkerData(0).velocity + omega0.CrossProduct(pC));
+		velGround -= (velGround*n0)*n0;
+		fPos += parameters.rollingFrictionViscous*fabs(fContact[2])*velGround;
+	}
+	forces[1] = fPos;
+	torques[1] = fRotDisc;
+	forces[0] = -fPos;
+	torques[0] = -fRotGround;
+}
+
 void CObjectConnectorRollingDiscPenalty::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
 {
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,

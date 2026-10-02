@@ -167,7 +167,12 @@ inline void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForce(const 
 	Real& relPos, Real& relVel, Real& force) const
 {
 	ComputePosVel(markerData, parameters, relPos, relVel);
+	ComputeSpringForceRelative(relPos, relVel, markerData.GetTime(), itemIndex, force);
+}
 
+//! the force of the connector from its relative position and velocity (#2745)
+void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForceRelative(Real relPos, Real relVel, Real t, Index itemIndex, Real& force) const
+{
 	force = 0; //default; necessary, e.g. if computed in GetOutputVariable...
 	if (parameters.activeConnector)
 	{
@@ -213,7 +218,7 @@ inline void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForce(const 
         }
 		else
 		{
-			EvaluateUserFunctionForce(force, cSystemData->GetMainSystemBacklink(), markerData.GetTime(), 
+			EvaluateUserFunctionForce(force, cSystemData->GetMainSystemBacklink(), t, 
                 itemIndex, relPos, relVel);
 		}
 	}
@@ -223,6 +228,21 @@ inline void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForce(const 
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //  MODEL: f
+//! the forces of the connector interface on coordinate markers (#2745), as ComputeODE2LHS: factor1 times the force on
+//! marker 1, -factor0 times it on marker 0
+void CObjectConnectorCoordinateSpringDamperExt::ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex,
+	Real* forces) const
+{
+	forces[0] = forces[1] = 0.;
+	if (!parameters.activeConnector) { return; }
+	Real relPos = parameters.factor1 * markers[1].value - parameters.factor0 * markers[0].value;
+	Real relVel = parameters.factor1 * markers[1].value_t - parameters.factor0 * markers[0].value_t;
+	Real force;
+	ComputeSpringForceRelative(relPos, relVel, t, itemIndex, force);
+	forces[1] = parameters.factor1 * force;
+	forces[0] = -parameters.factor0 * force;
+}
+
 void CObjectConnectorCoordinateSpringDamperExt::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
 {
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,

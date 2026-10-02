@@ -2088,9 +2088,18 @@ done.
       gravity (+6 % Newton steps there). Checked against the numerical legacy Jacobian ($10^{-6}$) and in
       `perfConnectorInterface.py` with an implicit rigid run.
     - **RG14.2.9** constraints and joints on L0/L1/L2 - see [RG14.2.9 in detail](#rg14-2-9) below.
-    - **RG14.2.10** the contact connectors (with RG4.16); **RG14.2.11** the special markers (shape, cable, many
-      markers); **RG14.2.12** `GeneralContact` on L0; **RG14.2.13** output variables and sensors through the
-      connector force, then the legacy path, the switch and the unused temporaries removed.
+    - **RG14.2.10** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-10) - the contact connectors (with
+      RG4.16): `ContactSphereSphere`, `ContactSphereTriangle`, `ContactSphereTorus`, `ContactConvexRoll`,
+      `ConnectorRollingDiscPenalty`, `ContactCoordinate`, `ConnectorCoordinateSpringDamperExt`;
+    - **RG14.2.11** **EVALUATED 2026-10-02, for the maintainer's decision** — [log](exudynRevisionLog2026b.md#rg14-2-11) -
+      the special markers (shape, cable, many markers): the items that stay on the path of the marker data, and why;
+      **proposed**: they keep that path as their own (`ConnectorInterface::MarkerData`), RG14.2.13 removes the switch,
+      not the path;
+    - **RG14.2.12** **MEASURED 2026-10-02, not now** — [log](exudynRevisionLog2026b.md#rg14-2-12) - `GeneralContact` on
+      L0: the gain is about 2 %, it keeps its precomputation (as RG14.1 proposed); to be looked at again when the
+      projection comes from the bodies (RG9.3.4);
+    - **RG14.2.13** output variables and sensors through the connector force, then the legacy switch and the
+      unused temporaries removed (the path of the marker data stays for the items of RG14.2.11, if so decided).
     - **RG14.2.14** *(maintainer 2026-10-01)* **`MarkerTemp` without `MarkerData`.** Why it holds one today: the L0/L1
       pair of a marker (`GetKinematicsRigid`/`AddGeneralizedForceTorque`, `GetODE2Size`/`AddGeneralizedForce`,
       `GetKinematicsCoordinate`/`AddGeneralizedForceCoordinate`) has a **default in `CMarker`** that calls the old
@@ -2279,7 +2288,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
-| RG14.2 | #2745 | connectors, constraints and loads compute from small marker structures: the force connectors with Jacobians by AD, the eight constraints of RG14.2.9 and the loads done; RG14.2.9.4 on hold; next RG14.2.11 (special markers), RG14.2.10/.12 (contact), then RG14.2.13 (the legacy path goes), RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
+| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 for the maintainer's decision (the special items keep the path of the marker data); then RG14.2.13 (the switch goes), RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
@@ -2314,8 +2323,9 @@ The title of each says what the step **does**; the sentence after it says why it
 4. **Draw the primitives and the meshes curved** (RG6.7.7.6/.7, RG6.7.2.1, #2709). The 6-node triangles and
    quadratic edges exist; `Cylinder`, `Torus`, `SolidOfRevolution` and the NGsolve/FFRF meshes do not use them yet,
    which is where a user sees the difference.
-5. **Bring the rest onto the connector interface, then remove the legacy path** (RG14.2.11, RG14.2.10/.12, RG14.2.13,
-   #2745). Only then can `MarkerTemp` and `TemporaryComputationData` shrink (RG14.2.14, RG14.2.16).
+5. **Decide RG14.2.11, then remove the legacy switch** (RG14.2.13, #2745). The contact connectors are on the interface;
+   the special items (shape and cable markers, many markers, the rolling disc joint) are proposed to keep the path of
+   the marker data as their own. Then `MarkerTemp` and `TemporaryComputationData` can shrink (RG14.2.14, RG14.2.16).
 6. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
 7. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is

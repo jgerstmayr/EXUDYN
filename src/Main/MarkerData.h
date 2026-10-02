@@ -316,6 +316,28 @@ public:
 	ResizableMatrix tempMatrix2;
 };
 
+//! the marker data of the legacy path from the kinematics of the connector interface (#2745): position, orientation and
+//! velocities, no Jacobians - for connectors whose physics read a MarkerDataStructure (the contact connectors)
+inline void MarkerDataFromKinematics(const MarkerRigid<Real>& kinematics, MarkerData& markerData)
+{
+	markerData.position = kinematics.frame.GetTranslation();
+	markerData.orientation = kinematics.frame.GetRotation();
+	markerData.velocity = kinematics.velocity;
+	markerData.angularVelocityLocal = kinematics.angularVelocityLocal;
+	markerData.velocityAvailable = true;
+}
+
+//! the same for position markers: the orientation is the unit matrix and the angular velocity zero, as the contact
+//! connectors read them only for friction, which needs rigid markers
+inline void MarkerDataFromKinematics(const MarkerPosition<Real>& kinematics, MarkerData& markerData)
+{
+	markerData.position = kinematics.position;
+	markerData.orientation = EXUmath::unitMatrix3D;
+	markerData.velocity = kinematics.velocity;
+	markerData.angularVelocityLocal.SetAll(0.);
+	markerData.velocityAvailable = true;
+}
+
 //! which path the system takes for a connector: Legacy is ComputeMarkerDataStructure and the connector's ComputeODE2LHS
 enum class ConnectorInterface { Legacy, PositionMarkers, RigidMarkers, CoordinateMarkers };
 

@@ -180,6 +180,28 @@ void CObjectContactSphereTorus::ComputeConnectorProperties(const MarkerDataStruc
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
 //  MODEL: f
+//! the forces and torques of the connector interface (#2745), as ComputeODE2LHS projects them: the contact force on the
+//! torus at the contact point and its reaction on the sphere, with friction its torque
+void CObjectContactSphereTorus::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex,
+	Vector3D* forces, Vector3D* torques) const
+{
+	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
+	if (!parameters.activeConnector) { return; }
+	static thread_local MarkerDataStructure markerData; //the physics read the marker data of the legacy path, without Jacobians; one per thread
+	markerData.SetNumberOfMarkerData(2);
+	markerData.SetTime(t);
+	MarkerDataFromKinematics(markers[0], markerData.GetMarkerData(0));
+	MarkerDataFromKinematics(markers[1], markerData.GetMarkerData(1));
+	LinkedDataVector data = GetCNode(0)->GetCurrentCoordinateVector();
+	Vector3D deltaP, deltaV, pCircle1, contactPoint, fVec, fFriction, n0;
+	Real frictionCoeff, gap;
+	ComputeConnectorProperties(markerData, itemIndex, data, frictionCoeff, gap, deltaP, deltaV, pCircle1, contactPoint, fVec, fFriction, n0);
+	forces[1] = fVec;
+	torques[1] = (contactPoint - markerData.GetMarkerData(1).position).CrossProduct(fVec);
+	forces[0] = -fVec;
+	if (frictionCoeff != 0) { torques[0] = (-(parameters.radiusSphere + 0.5 * gap) * n0).CrossProduct(fVec); }
+}
+
 void CObjectContactSphereTorus::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
 {
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,

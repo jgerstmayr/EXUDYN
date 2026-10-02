@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  09:23:36 (last modified)
+* @date         2026-10-02  07:01:23 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -170,6 +170,24 @@ public: // AUTO:
 
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override;
+
+    //! AUTO:  the connector implements the interface of coordinate markers (#2745)
+    virtual ConnectorInterface GetConnectorInterface() const override
+    {
+        return ConnectorInterface::CoordinateMarkers;
+    }
+
+    //! AUTO:  the generalized forces on the two coordinates, with factor0 and factor1 (#2745)
+    virtual void ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real* forces) const override;
+
+    //! AUTO:  its Jacobian is the analytic one of the legacy path (#2745)
+    virtual bool ConnectorForceDiffAvailable() const override
+    {
+        return false;
+    }
+
+    //! AUTO:  the force of the connector from relative position and velocity (#2745)
+    void ComputeSpringForceRelative(Real relPos, Real relVel, Real t, Index itemIndex, Real& force) const;
 
     //! AUTO:  Computational function: compute Jacobian of ABRV:ODE2 ABRV:LHS equations w.r.t. ODE2 coordinates and ODE2 velocities; write either dense local jacobian into dense matrix of MatrixContainer or ADD sparse triplets INCLUDING ltg mapping to sparse matrix of MatrixContainer
     virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg, const MarkerDataStructure& markerData) const override;

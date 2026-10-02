@@ -1999,17 +1999,17 @@ void CSystem::ComputeODE2LHSCoordinateMarkers(TemporaryComputationData& temp, co
 	localODE2Lhs.SetNumberOfItems(n0 + n1);
 	localODE2Lhs.SetAll(0.);
 
-	Real force;
-	connector.ComputeConnectorForceCoordinate(kinematics, cSystemData.GetCData().currentState.time, objectNumber, force);
+	Real forces[2];
+	connector.ComputeConnectorForcesCoordinate(kinematics, cSystemData.GetCData().currentState.time, objectNumber, forces);
 	if (n1 != 0)
 	{
 		LinkedDataVector ode2Lhs1(localODE2Lhs, n0, n1);
-		marker1->AddGeneralizedForceCoordinate(cSystemData, force, temp.markerTemp[1], ode2Lhs1);
+		marker1->AddGeneralizedForceCoordinate(cSystemData, forces[1], temp.markerTemp[1], ode2Lhs1);
 	}
 	if (n0 != 0)
 	{
 		LinkedDataVector ode2Lhs0(localODE2Lhs, 0, n0);
-		marker0->AddGeneralizedForceCoordinate(cSystemData, -force, temp.markerTemp[0], ode2Lhs0);
+		marker0->AddGeneralizedForceCoordinate(cSystemData, forces[0], temp.markerTemp[0], ode2Lhs0);
 	}
 }
 
@@ -3256,6 +3256,7 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 							{
 								//pout << "  continue\n";
 								ConnectorInterface connectorInterface = pyExperimental.connectorInterfaceLegacy ? ConnectorInterface::Legacy : connector->GetConnectorInterface();
+								if (!connector->ConnectorForceDiffAvailable()) { connectorInterface = ConnectorInterface::Legacy; } //its analytic Jacobian of the legacy path (#2745)
 								if (connectorInterface == ConnectorInterface::PositionMarkers)
 								{
 									ComputeJacobianODE2PositionMarkers(temp, *connector, -factorODE2, -factorODE2_t, j, jacDerivNonZero);

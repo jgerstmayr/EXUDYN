@@ -99,6 +99,20 @@ public:
 		CHECKandTHROWstring("CObjectConnector::ComputeConnectorForceCoordinate: not implemented for this connector");
 	}
 
+	//! the generalized forces on the coordinates of the two markers (#2745); by default the force of
+	//! ComputeConnectorForceCoordinate on marker 1 and its reaction on marker 0; a connector with factors overrides it
+	virtual void ComputeConnectorForcesCoordinate(const MarkerCoordinate<Real>* markers, Real t, Index itemIndex, Real* forces) const
+	{
+		Real force;
+		ComputeConnectorForceCoordinate(markers, t, itemIndex, force);
+		forces[0] = -force;
+		forces[1] = force;
+	}
+
+	//! true, if the connector computes its force with automatic differentiation for its Jacobian (the ...Diff functions);
+	//! false: the system takes the Jacobian of the legacy path (#2745)
+	virtual bool ConnectorForceDiffAvailable() const { return true; }
+
 	//! the same force with automatic differentiation, for the connector's Jacobian (#2745)
 	virtual void ComputeConnectorForceCoordinateDiff(const MarkerCoordinate<DRealCoordinateMarkers>* markers, Real t, Index itemIndex,
 		DRealCoordinateMarkers& force) const

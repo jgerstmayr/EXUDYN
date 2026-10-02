@@ -14,6 +14,8 @@
 #
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+import os
+import sys
 import numpy as np
 import pytest
 
@@ -536,3 +538,37 @@ def test_theLoadsOnTheNewPathAreTheLegacyLoads():
     new = LoadRightHandSide(0)
     assert np.abs(legacy).max() > 1
     assert np.abs(new - legacy).max() < 1e-14 * np.abs(legacy).max()
+
+
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the contact connectors on the connector interface (#2745): the models that use them, solved on both paths in their own
+#interpreter; the contact physics are the same functions, the projection is the markers'
+contactModels = ['MiniExamples/ObjectContactSphereSphere.py', 'MiniExamples/ObjectContactSphereTriangle.py',
+                 'MiniExamples/ObjectContactSphereTorus.py', 'MiniExamples/ObjectConnectorRollingDiscPenalty.py',
+                 'MiniExamples/ObjectContactCoordinate.py', 'MiniExamples/ObjectConnectorCoordinateSpringDamperExt.py',
+                 'TestModels/ConvexContactTest.py', 'TestModels/contactSphereSphereTest.py', 'TestModels/ballBearingTest.py',
+                 'TestModels/sphereTriangleTest2.py', 'TestModels/rollingCoinPenaltyTest.py']
+runModelCode = """
+import exudyn as exu, sys, os
+exu.special.userInterface.SuppressAll(True)
+exu.experimental.connectorInterfaceLegacy = int(sys.argv[2])
+exu.sys['testIsActive'] = True
+os.chdir(os.path.dirname(sys.argv[1]))
+exec(open(sys.argv[1], encoding='utf-8').read(), {'__name__': '__main__'})
+print('RESULT=%r' % float(exu.sys['testResult']))
+"""
+
+
+@pytest.mark.parametrize('model', contactModels)
+def test_theContactConnectorsOnTheNewPathComputeWhatTheLegacyPathComputes(model, tmp_path):
+    import subprocess
+    fileName = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), model)
+    results = []
+    for legacy in ['1', '0']:
+        run = subprocess.run([sys.executable, '-c', runModelCode, fileName, legacy], capture_output=True, text=True,
+                             encoding='utf-8', errors='replace', timeout=600,
+                             env=dict(os.environ, EXUDYN_SUPPRESS_UI_WINDOW_OPEN='1', EXUDYN_OUTPUTDIRECTORY=str(tmp_path)))
+        lines = [line for line in run.stdout.splitlines() if line.startswith('RESULT=')]
+        assert lines, run.stderr[-2000:]
+        results.append(float(lines[-1][7:]))
+    assert abs(results[1] - results[0]) <= 1e-9 * (1 + abs(results[0]))

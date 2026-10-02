@@ -11051,3 +11051,62 @@ So: the warning that the solver already gives above 1000 unknowns with a dense s
 explicit integrators and names `exu.LinearSolverType.EigenSparse`; the description of
 `computeMassMatrixInversePerBody` says that it needs a sparse solver; the manual (*performance*) says both, with the
 factor measured in #2398. Both issues resolved.
+
+<a id="rg14-2-10"></a>
+### RG14.2.10 — the contact connectors on the connector interface (2026-10-02, #2745)
+
+Seven connectors compute their forces through the interface; their contact physics - force laws, data variables,
+PostNewton states - are unchanged and shared with the legacy path:
+- **rigid markers**: `ContactSphereSphere` (also position markers without friction), `ContactSphereTriangle`,
+  `ContactSphereTorus`, `ContactConvexRoll`, `ConnectorRollingDiscPenalty` - `ComputeConnectorForceRigid` gives force and
+  torque per marker exactly as their `ComputeODE2LHS` projects them (the torques of the contact point, the reaction on
+  marker 0, the rolling resistance). Their physics read a `MarkerDataStructure`, so it is filled from the kinematics of
+  the markers - position, orientation, velocities, no Jacobians - by `MarkerDataFromKinematics` (`MarkerData.h`), in a
+  `static thread_local` structure (constructing one per call cost 5 %). Which interface: `GetConnectorInterface` looks at
+  the markers - rigid if both have an orientation; `ContactSphereSphere` on position markers takes the position
+  interface without friction; anything else stays on the legacy path, as before.
+- **coordinate markers**: `ContactCoordinate` (its force law now in `ComputeContactForce(gap, gap_t)`, used by both
+  paths) and `ConnectorCoordinateSpringDamperExt`, whose two factors make the forces unequal: the interface gets
+  `ComputeConnectorForcesCoordinate` (a force per marker; by default the force and its reaction) and
+  `ConnectorForceDiffAvailable` - false for this connector, whose Jacobian stays the analytic one of the legacy path.
+- The contacts have no Jacobian of their own; the numerical one now differentiates the interface path.
+
+Checked: `test_theContactConnectorsOnTheNewPathComputeWhatTheLegacyPathComputes` solves eleven models (the six mini
+examples of these connectors, `ConvexContactTest`, `contactSphereSphereTest`, `ballBearingTest`, `sphereTriangleTest2`,
+`rollingCoinPenaltyTest`) on both paths: the results agree to 1e-10 or exactly. No reference value moved. Measured:
+300 spheres with friction on a large sphere, RK44: 0.79 s on both paths - the contact law dominates, the gain here is
+that no `MarkerData` with Jacobians is formed.
+
+<a id="rg14-2-11"></a>
+### RG14.2.11 — the special markers: what stays on the path of the marker data (2026-10-02, #2745)
+
+After RG14.2.10, these connectors and constraints remain on the path of `ComputeMarkerDataStructure`, each for a reason
+of its markers:
+
+| item | markers | why the interface does not fit |
+|---|---|---|
+| `ContactCircleCable2D`, `ContactFrictionCircleCable2D` | `MarkerBodyCable2DShape` + a position marker | the shape marker delivers the coordinates of the cable element and its shape functions; the contact projects on segments of it |
+| `ContactCurveCircles`, `ConnectorReevingSystemSprings` | 1 + n markers | the interface has two markers; many markers would need a kind of their own |
+| `ConnectorCoordinateVector` | `MarkerObjectODE2Coordinates`, `MarkerNodeCoordinates` | vector values with matrix Jacobians; the constraint works on them directly |
+| `JointSliding`, `JointSliding2D`, `JointALEMoving2D` | cable markers with a sliding coordinate and data nodes | the marker data of the cable element, as for the shape marker |
+| `JointRollingDisc` | rigid markers | a non-holonomic constraint at velocity level (`UsesVelocityLevel`), excluded as all of them (RG14.2.9) |
+| `ConnectorCoordinateSpringDamperExt` (Jacobian only) | coordinate markers | its analytic Jacobian reads the marker data (`ConnectorForceDiffAvailable` = false) |
+
+For all of them the marker data with its Jacobians *is* what they compute with: a small structure per marker would be
+the same data under another name, and nothing would be gained. **Proposed**: they keep this path as their own - named
+for what it is, `ConnectorInterface::MarkerData` instead of `Legacy` -, and RG14.2.13 removes the switch
+`exu.experimental.connectorInterfaceLegacy` and the legacy functions of the items that have the interface, not the path.
+The special markers keep their defaults through `ComputeMarkerData`; their own L0/L1 functions belong to RG14.2.14.
+
+<a id="rg14-2-12"></a>
+### RG14.2.12 — GeneralContact on L0, measured (2026-10-02, #2745)
+
+`GeneralContact` precomputes a `MarkerData` with Jacobians for every sphere and rigid body each step, keeps the
+Jacobians, and projects the contact forces - and builds its own Jacobian - with them. Measured on
+`generalContactSpheresTest` with 4000 spheres on `MarkerNodePosition` (explicit, `displayComputationTime`): the
+precomputation with the bounding boxes is 21 % of the run, the contact itself 89 %. A trial with the kinematics of
+the interface for markers whose Jacobian is constant (no `JacobianDerivativeNonZero`, no orientation: after the first
+step only position and velocity) brought this part from 0.22 s to 0.20 s - **2 % of the run**: the cost is in the
+bounding boxes and the loop, not in the marker data. Reverted. **Proposed**: `GeneralContact` keeps its precomputation
+(as RG14.1 said); the question returns when the bodies project forces themselves (RG9.3.4) and the stored Jacobians
+are no longer needed for the right-hand side.

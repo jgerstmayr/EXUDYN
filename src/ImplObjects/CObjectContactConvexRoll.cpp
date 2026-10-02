@@ -244,6 +244,23 @@ void CObjectContactConvexRoll::ComputeContactForces(const MarkerDataStructure& m
 
 
 //! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
+//! the forces and torques of the connector interface (#2745), as ComputeODE2LHS projects them
+void CObjectContactConvexRoll::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex,
+	Vector3D* forces, Vector3D* torques) const
+{
+	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
+	if (!parameters.activeConnector) { return; }
+	static thread_local MarkerDataStructure markerData; //the physics read the marker data of the legacy path, without Jacobians; one per thread
+	markerData.SetNumberOfMarkerData(2);
+	markerData.SetTime(t);
+	MarkerDataFromKinematics(markers[0], markerData.GetMarkerData(0));
+	MarkerDataFromKinematics(markers[1], markerData.GetMarkerData(1));
+	Vector3D pC, vC;
+	ComputeContactForces(markerData, parameters, pC, vC, forces[1], torques[1], false);
+	forces[0] = -forces[1];
+	torques[0] = -torques[1];
+}
+
 void CObjectContactConvexRoll::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
 {
 	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
