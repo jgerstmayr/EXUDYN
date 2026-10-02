@@ -38,7 +38,12 @@ py::object MainObject::GetOutputVariable(OutputVariableType variableType, Config
 	//check if type is valid:
 	if ((Index64)GetCObject()->GetOutputVariableTypes() & (Index64)variableType)
 	{
-		GetCObject()->GetOutputVariable(variableType, value, configuration, objectNumber);
+		if (variableType == OutputVariableType::HomogeneousTransformation)
+		{
+			OutputVariableHomogeneousTransformation([this, configuration, objectNumber](OutputVariableType type, Vector& v)
+				{ GetCObject()->GetOutputVariable(type, v, configuration, objectNumber); }, value);
+		}
+		else { GetCObject()->GetOutputVariable(variableType, value, configuration, objectNumber); }
 		//now check if it is scalar or a vector-valued:
 		if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
 		else { return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer()); }
@@ -61,7 +66,12 @@ py::object MainObject::GetOutputVariableConnector(OutputVariableType variableTyp
 		if ((Index)GetCObject()->GetType() & (Index)CObjectType::Connector)
 		{
 			const CObjectConnector* connector = (CObjectConnector*)GetCObject();
-			connector->GetOutputVariableConnector(variableType, markerData, objectNumber, value);
+			if (variableType == OutputVariableType::HomogeneousTransformation)
+			{
+				OutputVariableHomogeneousTransformation([connector, &markerData, objectNumber](OutputVariableType type, Vector& v)
+					{ connector->GetOutputVariableConnector(type, markerData, objectNumber, v); }, value);
+			}
+			else { connector->GetOutputVariableConnector(variableType, markerData, objectNumber, value); }
 
 			//now check if it is scalar or a vector-valued:
 			if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
@@ -91,7 +101,12 @@ py::object MainObject::GetOutputVariableBody(OutputVariableType variableType, co
 		{
 			const CObjectBody* cObjectBody = (const CObjectBody*)GetCObject();
 
-			cObjectBody->GetOutputVariableBody(variableType, localPosition, configuration, value, objectNumber);
+			if (variableType == OutputVariableType::HomogeneousTransformation)
+			{
+				OutputVariableHomogeneousTransformation([cObjectBody, &localPosition, configuration, objectNumber](OutputVariableType type, Vector& v)
+					{ cObjectBody->GetOutputVariableBody(type, localPosition, configuration, v, objectNumber); }, value);
+			}
+			else { cObjectBody->GetOutputVariableBody(variableType, localPosition, configuration, value, objectNumber); }
 			//now check if it is scalar or a vector-valued:
 			if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
 			else { return py::array_t<Real>(value.NumberOfItems(), value.GetDataPointer()); }

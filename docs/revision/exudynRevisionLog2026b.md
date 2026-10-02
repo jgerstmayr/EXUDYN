@@ -11775,3 +11775,41 @@ of `publications/CND2022PieberNtarladimaGerstmayr` failed with a size mismatch -
 rotation Jacobians of `ObjectALEANCFCable2D` had 8 columns for its 9 coordinates, which the path of the marker data had
 hidden and RG14.2.13 exposed; they get the ALE coordinate as a zero column, as before; and the NGsolve examples fail
 when they run in parallel ("could not allocate localheap", 3.2 GB each) and pass alone.
+
+<a id="rg16-1-5"></a>
+### RG16.1.5 — the output variable `HomogeneousTransformation` (2026-10-02, #2780, #2788)
+
+- **`OutputVariableType.HomogeneousTransformation`** (bit 34): the rotation matrix and the position as the 4x4 matrix
+  [A p; 0 1], 16 values row by row. **Declared by no item by hand**: the generator adds it to every item that declares
+  `Position` and `RotationMatrix` (`itemModel.AddHomogeneousTransformationOutput`, after `RotationMatrix`, with the shared
+  description) - 17 nodes and objects, among them all rigid body nodes, `ObjectRigidBody`, `ObjectGround`, the beams, the
+  rolling discs -, and `CMarker::GetOutputVariableTypes` adds it for a marker with position and orientation.
+- **Computed by no item either**: `OutputVariableHomogeneousTransformation` (`Main/OutputVariable.h`) composes it from the
+  item's own `Position` and `RotationMatrix`, at the places that dispatch an output variable - `MainNode`,
+  `MainObject` (body, object, connector), `CMarker::GetOutputVariable`, and the node, body and object sensors. So the HT of
+  an item is by construction the one of its position and rotation outputs, in every configuration they allow.
+- **Found on the way, #2788 fixed**: the case `RotationMatrix` of `ObjectANCFBeam` had no `break` and fell through to
+  `PotentialEnergy` (added with #2202): `GetObjectOutputBody(beam, RotationMatrix)` and a sensor returned the potential
+  energy. `test_inspectOutputVariables.py` reads every listed output variable of the MiniExamples and found it through the
+  new variable, which checks the size of the rotation matrix.
+- **Tests**: `homogeneousTransformationTest.py` reads it for a rotating rigid body - body point, marker, sensor, node -
+  against `HomogeneousTransformation(A, p)` of `rigidBodyUtilities` (reference re-recorded); `inspectTest.py` lists 2 more
+  output variables (reference 45 -> 47).
+- **Not done here: the HT stored inside the rigid items** (as the parameter of `ObjectGround`, of the rigid markers):
+  that is a parameter of the user interface, which RG16.2 evaluates and the maintainer decides; done in RG16.3.
+
+<a id="rg6-7-7-8"></a>
+### RG6.7.7.8 — no cracks between curved triangles (2026-10-02, #2787)
+
+**The cause**: `SplitTriangles6` split each 6-node triangle uniformly into n x n flat ones, n chosen by the triangle's own
+curvature (the angles between its node normals and of its curved edges). Two neighbours of different curvature - the rows
+of a solid of revolution, the pole and the equator of a sphere - got different n and so different points on their shared
+edge: a crack, through which a ray of the raytracer reaches the background (single white pixels; OpenGL hides most of it
+by rasterization). **The fix**: all 6-node triangles of one item get the same n, the finest any of them needs
+(`Triangle6Tiling` per triangle, the maximum per `itemID`), so shared edges are split at the same points; the split of a
+single triangle (`SplitTriangle6`) is unchanged. Measured with the speckle count of the image check (a pixel brighter than
+all four neighbours by more than 150 levels, at 240 x 240): the solid of revolution 4/2 at `nTiles` 32/16 before, 0 after;
+the six primitives 0 without edges. The remaining isolated pixels with `addEdges=True` are the staircase of the edge lines
+along the silhouette, not cracks. **Test**: `test_graphicsRegression.py::testCurvedSurfacesHaveNoCracks` - fails without
+the fix, passes with it. The cost: an item whose triangles differ much in curvature is split finer where it is flat (the
+cap of a cylinder as its side), bounded by `curvedTriangleMaxTiling`.

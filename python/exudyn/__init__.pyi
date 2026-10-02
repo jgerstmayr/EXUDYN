@@ -253,6 +253,8 @@ class OutputVariableType(Enum):
     """measure kinetic energy of a body, position independent"""
     PotentialEnergy = int
     """measure potential (=elastic) energy of a body or connector, position independent"""
+    HomogeneousTransformation = int
+    """measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1], 16 components row by row; every item with Position and RotationMatrix provides it"""
 
 
 class InspectType(Enum):

@@ -367,11 +367,25 @@ mainSystemUserFunctions = [
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #per-item accessors over definitions/
 def ItemDefinitions():
-    """all item definitions in generation order"""
+    """all item definitions in generation order; an item with the output variables Position and RotationMatrix also
+    provides HomogeneousTransformation, composed of the two in C++ (#2780), so it is not declared by hand"""
     definitions = []
     for moduleName in itemModules:
         definitions += __import__(moduleName).definitions
+    for definition in definitions:
+        AddHomogeneousTransformationOutput(definition)
     return definitions
+
+
+def AddHomogeneousTransformationOutput(definition):
+    """append the output variable HomogeneousTransformation after RotationMatrix, once"""
+    entries = definition.get('outputVariables', []) or []
+    names = [entry['outputVariable'].name for entry in entries]
+    if 'Position' in names and 'RotationMatrix' in names and 'HomogeneousTransformation' not in names:
+        import outputVariableTypes
+        import outputVariableDescriptions
+        entries.insert(names.index('RotationMatrix') + 1, {'outputVariable': outputVariableTypes.OVHomogeneousTransformation,
+                                                          'description': outputVariableDescriptions.OVDHomogeneousTransformation})
 
 
 def IsParameter(member):

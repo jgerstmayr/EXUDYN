@@ -19,6 +19,8 @@ OVDZeroVectorForCompleteness = r"""$[0,0,0]$ (only for completeness)"""
 OVDCoordinatesTotalNode = 'displacement plus reference coordinates of node'
 
 #used by 6 items
+OVDHomogeneousTransformation = r'$[A_{00},\,A_{01},\,A_{02},\,p_0,\,A_{10},\,\ldots,\,0,\,0,\,0,\,1]\cConfig\tp$vector with 16 components of the homogeneous transformation $[\LU{0b}{\Rot}\;\LU{0}{\pv};\;\Null\tp\;1]\cConfig$ (rotation matrix and position, as the output variables RotationMatrix and Position), row by row; reshape(4,4) gives the 4x4 matrix'
+
 OVDRotationMatrixRowMajor = r'$[A_{00},\,A_{01},\,A_{02},\,A_{10},\,\ldots,\,A_{21},\,A_{22}]\cConfig\tp$vector with 9 components of the rotation matrix $\LU{0b}{\Rot}\cConfig$ in row-major format, in any configuration; the rotation matrix transforms local ($b$) to global (0) coordinates'
 
 #used by 5 items

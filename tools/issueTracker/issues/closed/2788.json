@@ -1,0 +1,15 @@
+{
+  "number": 2788,
+  "title": "ObjectANCFBeam: the output variable RotationMatrix returns the potential energy",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "The case RotationMatrix of CObjectANCFBeam::GetOutputVariableBody has no break and falls through to PotentialEnergy (added with #2202), so GetObjectOutputBody(beam, RotationMatrix) and a SensorBody return a scalar; found by the output variable HomogeneousTransformation (#2780), which reads RotationMatrix.",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-02 22:38",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The output variable RotationMatrix of ObjectANCFBeam returned the potential energy; it returns the rotation matrix again.",
+  "resolvedInVersion": "1.12.224"
+}

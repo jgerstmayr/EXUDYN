@@ -88,6 +88,9 @@ namespace EXUvis {
 	void SplitTriangle6(const GLTriangle6& triangle, float tilingAngleDegrees, Index maxTiling,
 		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges = nullptr);
 
+	//! the number of subdivisions per edge SplitTriangle6 chooses for a triangle
+	Index Triangle6Tiling(const GLTriangle6& triangle, float tilingAngleDegrees, Index maxTiling);
+
 	//! split a quadratic line into n straight lines, appended to lines (#2709)
 	void SplitLine3Uniform(const GLLine3& line, Index n, ResizableArray<GLLine>& lines);
 
@@ -103,7 +106,9 @@ namespace EXUvis {
 
 	//! split all 6-node triangles of a list with visualizationSettings.openGL.advanced (curvedTriangleTilingAngle,
 	//! curvedTriangleMaxTiling); triangles and edges are reset first; what the renderers draw (#2709); edges only of the
-	//! triangles whose edges are shown: faceEdges for the others, meshEdges for those of finite elements
+	//! triangles whose edges are shown: faceEdges for the others, meshEdges for those of finite elements; all triangles of
+	//! one item get the same subdivision - the finest any of them needs -, so two neighbours split their shared edge at
+	//! the same points and the surface has no cracks (#2787)
 	void SplitTriangles6(const ResizableArray<GLTriangle6>& triangles6, const VisualizationSettings& visualizationSettings,
 		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges = nullptr, bool faceEdges = true, bool meshEdges = true);
 

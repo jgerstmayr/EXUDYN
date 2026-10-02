@@ -189,6 +189,19 @@ public:
 		return HT;
 	}
 
+	//! the 4x4 matrix row by row, 16 values, into any vector type (the output variable HomogeneousTransformation)
+	template<typename VectorT>
+	void GetHT44RowByRow(VectorT& value) const
+	{
+		value.SetNumberOfItems(16);
+		for (Index i = 0; i < 3; i++)
+		{
+			for (Index j = 0; j < 3; j++) { value[4 * i + j] = R[3 * i + j]; }
+			value[4 * i + 3] = p[i];
+		}
+		value[12] = (T)0.; value[13] = (T)0.; value[14] = (T)0.; value[15] = (T)1.;
+	}
+
 	//! set with any 4x4 matrix type
 	template<typename MatrixT>
 	void SetHT44(const MatrixT& HT)

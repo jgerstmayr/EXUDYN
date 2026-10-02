@@ -28,7 +28,11 @@ py::object MainNode::GetOutputVariable(OutputVariableType variableType, Configur
 	//check if type is valid:
 	if ((Index64)GetCNode()->GetOutputVariableTypes() & (Index64)variableType)
 	{
-		GetCNode()->GetOutputVariable(variableType, configuration, value);
+		if (variableType == OutputVariableType::HomogeneousTransformation)
+		{
+			OutputVariableHomogeneousTransformation([this, configuration](OutputVariableType type, Vector& v) { GetCNode()->GetOutputVariable(type, configuration, v); }, value);
+		}
+		else { GetCNode()->GetOutputVariable(variableType, configuration, value); }
 
 		//now check if it is scalar or a vector-valued:
 		if (value.NumberOfItems() == 1) { return py::float_(value[0]); }
@@ -165,6 +169,16 @@ bool CMarker::GetOutputVariable(const CSystemData& cSystemData, OutputVariableTy
 		else { isSuccess = false; }
 		break;
 	}
+	case OutputVariableType::HomogeneousTransformation:
+	{
+		if (EXUstd::IsOfType(GetType(), Marker::Position) && EXUstd::IsOfType(GetType(), Marker::Orientation))
+		{
+			OutputVariableHomogeneousTransformation([this, &cSystemData, configuration](OutputVariableType type, Vector& v)
+				{ GetOutputVariable(cSystemData, type, configuration, v); }, value);
+		}
+		else { isSuccess = false; }
+		break;
+	}
 	default: {isSuccess = false; }
 	}
 
@@ -183,6 +197,7 @@ OutputVariableType CMarker::GetOutputVariableTypes() const
 	{
 		ovt += (Index64)OutputVariableType::AngularVelocity + (Index64)OutputVariableType::AngularVelocityLocal +
 			(Index64)OutputVariableType::RotationMatrix + (Index64)OutputVariableType::Rotation;
+		if (EXUstd::IsOfType(GetType(), Marker::Position)) { ovt += (Index64)OutputVariableType::HomogeneousTransformation; } //#2780
 	}
 	if (EXUstd::IsOfType(GetType(), Marker::Coordinate) || EXUstd::IsOfType(GetType(), Marker::Coordinates))
 	{

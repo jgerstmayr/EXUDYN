@@ -15,6 +15,7 @@
 *
 ************************************************************************************************ */
 
+#include <unordered_map>
 #include "Linalg/RigidBodyMath.h"
 #include "Graphics/VisualizationSystemContainer.h"
 #include "Graphics/VisualizationPrimitives.h"
@@ -84,11 +85,20 @@ namespace EXUvis {
 	{
 		triangles.SetNumberOfItems(0);
 		if (edges) { edges->SetNumberOfItems(0); }
+		const float tilingAngle = visualizationSettings.openGL.advanced.curvedTriangleTilingAngle;
+		const Index maxTiling = visualizationSettings.openGL.advanced.curvedTriangleMaxTiling;
+		//the finest tiling per item: a uniform split per triangle, chosen by the triangle alone, gives two neighbours of
+		//different curvature different points on their shared edge - cracks the raytracer's rays pass through (#2787)
+		std::unordered_map<Index, Index> itemTiling;
+		for (const GLTriangle6& triangle : triangles6)
+		{
+			Index& n = itemTiling[triangle.itemID];
+			n = EXUstd::Maximum(n, Triangle6Tiling(triangle, tilingAngle, maxTiling));
+		}
 		for (const GLTriangle6& triangle : triangles6)
 		{
 			bool showEdges = triangle.isFiniteElement ? meshEdges : faceEdges;
-			SplitTriangle6(triangle, visualizationSettings.openGL.advanced.curvedTriangleTilingAngle,
-				visualizationSettings.openGL.advanced.curvedTriangleMaxTiling, triangles, showEdges ? edges : nullptr);
+			SplitTriangle6Uniform(triangle, itemTiling[triangle.itemID], triangles, showEdges ? edges : nullptr);
 		}
 	}
 
@@ -135,6 +145,11 @@ namespace EXUvis {
 	void SplitTriangle6(const GLTriangle6& triangle, float tilingAngleDegrees, Index maxTiling,
 		ResizableArray<GLTriangle>& triangles, ResizableArray<GLLine>* edges)
 	{
+		SplitTriangle6Uniform(triangle, Triangle6Tiling(triangle, tilingAngleDegrees, maxTiling), triangles, edges);
+	}
+
+	Index Triangle6Tiling(const GLTriangle6& triangle, float tilingAngleDegrees, Index maxTiling)
+	{
 		//the normals at the nodes, given or of the geometry, decide the tiling
 		std::array<Float3, 6> nodeNormals;
 		Triangle6NodeNormals(triangle, nodeNormals);
@@ -152,7 +167,7 @@ namespace EXUvis {
 		{
 			maxAngle = EXUstd::Maximum(maxAngle, QuadraticCurveAngleDegrees(triangle.points[e[0]], triangle.points[e[1]], triangle.points[e[2]]));
 		}
-		SplitTriangle6Uniform(triangle, Tiling(maxAngle, tilingAngleDegrees, maxTiling), triangles, edges);
+		return Tiling(maxAngle, tilingAngleDegrees, maxTiling);
 	}
 
 	void SplitTriangle6Uniform(const GLTriangle6& triangle, Index n,

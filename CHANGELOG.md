@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 206 | 1.12.221 |
+| 1.12 | Metheney | 209 | 1.12.224 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.224** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectANCFBeam: the output variable RotationMatrix returns the potential energy (#2788)
+  - description: The case RotationMatrix of CObjectANCFBeam::GetOutputVariableBody has no break and falls through to PotentialEnergy (added with \#2202), so GetObjectOutputBody(beam, RotationMatrix) and a SensorBody return a scalar; found by the output variable HomogeneousTransformation (\#2780), which reads RotationMatrix.
+  - **notes:** The output variable RotationMatrix of ObjectANCFBeam returned the potential energy; it returns the rotation matrix again.
+  - date resolved: **2026-10-02 22:38**, date raised: 2026-10-02
+- **1.12.223** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` raytracer: single bright pixels on curved triangles at coarse tiling (#2787)
+  - description: Seen in the images of RG6.7.7.7 (2026-10-02): at nTiles 32 and below, a SolidOfRevolution and a half sphere through the raytracer (160 x 160 pixels) show a few single white pixels on the surface, not at 64 - rays passing between neighbouring curved triangles, or between the flat triangles the raytracer splits them into. To check: watertightness of the split of 6-node triangles along shared edges (the same subdivision on both sides).
+  - **notes:** Curved surfaces (6-node triangles) no longer show single bright pixels in the raytracer: the triangles of one item are split at the same points along shared edges.
+  - date resolved: **2026-10-02 22:38**, date raised: 2026-10-02
+- **1.12.222** `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` homogeneous transformations: the C++ class and its Python binding (#2780)
+  - description: HomogeneousTransformationBase into its own file, out of exulie; 12 numbers stored; fast H\*v, H^-1, H1\*H2, set/get with fixed-size loops and a no-rotation flag (global constexpr switch); tests and measurement; pybind exudyn.HT with operators; note in rigidBodyUtilities.HomogeneousTransformation; HT inside the rigid items and as output variable.
+  - **notes:** exudyn.HT is the homogeneous transformation of the C++ core (composition, inverse, transformed points, 4x4 matrix); every node, body point, marker and connector with Position and RotationMatrix gives the output variable HomogeneousTransformation (16 values, the 4x4 matrix row by row).
+  - date resolved: **2026-10-02 22:38**, date raised: 2026-10-02
 - **1.12.221** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectALEANCFCable2D: a connector or load through a body marker fails with a size mismatch (#2786)
   - description: Since the legacy path is gone (RG14.2.13, \#2745), connectors and loads act through the marker functions, which size the generalized force by the body's 9 coordinates; the position and rotation Jacobians of ObjectALEANCFCable2D have 8 columns (the ANCF coordinates) - 'MultMatrixTransposedVectorAddTemplate: Size mismatch' in the first step (the three CND2022 ALE examples). Fix: the Jacobians get the ALE coordinate as 9th column, zero, which is what the legacy path did implicitly; whether it should be nonzero is \#2784.
   - **notes:** Connectors and loads acting through a body marker on ObjectALEANCFCable2D work again; they failed with a size mismatch in the first step.

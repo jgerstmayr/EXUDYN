@@ -1029,7 +1029,8 @@ This group is that revision and what has to happen before it can start.
       - **RG6.7.7.7** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-7) - the examples and test models
         with very large `nTiles` (chosen to hide the facets) are revised, most to about half the value, once RG6.7.7.6
         is in - checked by image, not by rule.
-      - **RG6.7.7.8** *(found in RG6.7.7.7; needs no decision)* **single bright pixels of the raytracer on curved
+      - **RG6.7.7.8** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-8) - *(found in RG6.7.7.7; needs no
+        decision)* **single bright pixels of the raytracer on curved
         triangles at coarse tiling** (#2787): at `nTiles` 32 and below a few pixels of a `SolidOfRevolution` and a half
         sphere are white - rays between neighbouring curved triangles or their flat split; the split along a shared
         edge is to be checked for watertightness.
@@ -2438,7 +2439,8 @@ the joints an HT means fewer variables and one way of doing things.
 <a id="rg16-1"></a>
 **RG16.1** *(group RG16; maintainer 2026-10-02; a step of its own, independent of the interface steps)* **The C++
     class and its Python binding** (#2780).
-    - **RG16.1.1** to **RG16.1.4** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg16-1) (RG16.1.5 open)
+    - **RG16.1.1** to **RG16.1.5** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg16-1),
+      [RG16.1.5](exudynRevisionLog2026b.md#rg16-1-5) (the HT as an item parameter waits for RG16.2)
     - **RG16.1.1** the class into a file of its own, out of the `exulie` namespace; it stores only the 12 numbers it
       needs (rotation and translation);
     - **RG16.1.2** performance for what is hot - $\Hm\vv$, $\Hm^{-1}$, $\Hm_1\Hm_2$, set (from $\Am$ and $\vv$, or from

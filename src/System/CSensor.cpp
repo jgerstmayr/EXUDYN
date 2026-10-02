@@ -74,6 +74,11 @@ py::array_t<Real> MainSensor::GetInternalStorage()
 void CSensorNode::GetSensorValues(const CSystemData& cSystemData, Vector& values, ConfigurationType configuration) const
 {
 	const CNode& cNode = cSystemData.GetCNode(parameters.nodeNumber);
+	if (parameters.outputVariableType == OutputVariableType::HomogeneousTransformation)
+	{
+		OutputVariableHomogeneousTransformation([&cNode, configuration](OutputVariableType type, Vector& v) { cNode.GetOutputVariable(type, configuration, v); }, values);
+		return;
+	}
 	cNode.GetOutputVariable(parameters.outputVariableType, configuration, values);
 }
 
@@ -88,7 +93,12 @@ void CSensorObject::GetSensorValues(const CSystemData& cSystemData, Vector& valu
 	if (((Index)cObject->GetType() & (Index)CObjectType::Connector) == 0)
 	{
 		//must be object ==> may leed to illegal call, if not implemented
-		cObject->GetOutputVariable(parameters.outputVariableType, values, configuration, parameters.objectNumber);
+		if (parameters.outputVariableType == OutputVariableType::HomogeneousTransformation)
+		{
+			OutputVariableHomogeneousTransformation([this, cObject, configuration](OutputVariableType type, Vector& v)
+				{ cObject->GetOutputVariable(type, v, configuration, parameters.objectNumber); }, values);
+		}
+		else { cObject->GetOutputVariable(parameters.outputVariableType, values, configuration, parameters.objectNumber); }
 	}
 	else
 	{
@@ -99,7 +109,12 @@ void CSensorObject::GetSensorValues(const CSystemData& cSystemData, Vector& valu
 		const bool computeJacobian = false; //not needed for OutputVariables
 		cSystemData.ComputeMarkerDataStructure(cConnector, computeJacobian, markerDataStructure);
 
-		cConnector->GetOutputVariableConnector(parameters.outputVariableType, markerDataStructure, parameters.objectNumber, values);
+		if (parameters.outputVariableType == OutputVariableType::HomogeneousTransformation)
+		{
+			OutputVariableHomogeneousTransformation([this, cConnector, &markerDataStructure](OutputVariableType type, Vector& v)
+				{ cConnector->GetOutputVariableConnector(type, markerDataStructure, parameters.objectNumber, v); }, values);
+		}
+		else { cConnector->GetOutputVariableConnector(parameters.outputVariableType, markerDataStructure, parameters.objectNumber, values); }
 
 	}
 }
@@ -108,6 +123,12 @@ void CSensorObject::GetSensorValues(const CSystemData& cSystemData, Vector& valu
 void CSensorBody::GetSensorValues(const CSystemData& cSystemData, Vector& values, ConfigurationType configuration) const
 {
 	const CObjectBody& cObject = cSystemData.GetCObjectBody(parameters.bodyNumber);
+	if (parameters.outputVariableType == OutputVariableType::HomogeneousTransformation)
+	{
+		OutputVariableHomogeneousTransformation([this, &cObject, configuration](OutputVariableType type, Vector& v)
+			{ cObject.GetOutputVariableBody(type, parameters.localPosition, configuration, v, parameters.bodyNumber); }, values);
+		return;
+	}
 	cObject.GetOutputVariableBody(parameters.outputVariableType, parameters.localPosition, configuration, values, parameters.bodyNumber);
 }
 

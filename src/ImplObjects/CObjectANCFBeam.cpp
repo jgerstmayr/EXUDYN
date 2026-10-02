@@ -1075,6 +1075,7 @@ void CObjectANCFBeam::GetOutputVariableBody(OutputVariableType variableType, con
 	{
 		Matrix3D A = GetRotationMatrix(localPosition, configuration);
 		value.SetVector(9, A.GetDataPointer());
+		break; //#2788
 	}
 	//case OutputVariableType::Director1: {
 	//	//CHECKandTHROW(y == 0., "CObjectANCFBeam::GetOutputVariableBody: Y-component of localPosition must be zero for Director1");

@@ -112,6 +112,9 @@ outputVariableTypes = [
                    'measure kinetic energy of a body, position independent'),
     OutputVariable('PotentialEnergy', 33,
                    'measure potential (=elastic) energy of a body or connector, position independent'),
+    OutputVariable('HomogeneousTransformation', 34,
+                   'measure the homogeneous transformation of a node, body point or marker: its rotation matrix A and position p as the 4x4 matrix [A p; 0 1], 16 components row by row; every item with Position and RotationMatrix provides it',
+                   referenceConfiguration=True),
     ]
 
 #bits allocated to variables that were considered and are not implemented. They are listed so

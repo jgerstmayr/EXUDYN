@@ -17,7 +17,7 @@ items = {
   'NodePoint': {
     'kind': 'Node',
     'types': ['Position'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "node's unique name"},
       'referenceCoordinates': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'reference coordinates of node, e.g. ref. coordinates for finite elements; global position of node without displacement'},
@@ -33,7 +33,7 @@ items = {
   'NodePoint2D': {
     'kind': 'Node',
     'types': ['Position2D'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "node's unique name"},
       'referenceCoordinates': {'type': 'Vector2D', 'size': '2', 'range': '', 'default': '[0.,0.]', 'mustBeGiven': False, 'description': 'reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement'},
@@ -49,7 +49,7 @@ items = {
   'NodeRigidBodyEP': {
     'kind': 'Node',
     'types': ['Position', 'Orientation', 'RigidBody', 'RotationEulerParameters'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'AngularAcceleration'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'AngularAcceleration'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "node's unique name"},
       'referenceCoordinates': {'type': 'Vector7D', 'size': '7', 'range': '', 'default': '[0.,0.,0., 0.,0.,0.,0.]', 'mustBeGiven': False, 'description': 'reference coordinates (3 position coordinates and 4 Euler parameters) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)'},
@@ -66,7 +66,7 @@ items = {
   'NodeRigidBodyRxyz': {
     'kind': 'Node',
     'types': ['Position', 'Orientation', 'RigidBody', 'RotationRxyz'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'AngularAcceleration'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'AngularAcceleration'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "node's unique name"},
       'referenceCoordinates': {'type': 'Vector6D', 'size': '6', 'range': '', 'default': '[0.,0.,0., 0.,0.,0.]', 'mustBeGiven': False, 'description': 'reference coordinates (3 position and 3 xyz Euler angles) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)'},
@@ -82,7 +82,7 @@ items = {
   'NodeRigidBodyRotVecLG': {
     'kind': 'Node',
     'types': ['Position', 'Orientation', 'RigidBody', 'RotationRotationVector', 'LieGroupWithDirectUpdate'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "node's unique name"},
       'referenceCoordinates': {'type': 'Vector6D', 'size': '6', 'range': '', 'default': '[0.,0.,0., 0.,0.,0.]', 'mustBeGiven': False, 'description': 'reference coordinates (position and rotation vector :math:`\\nu`) of node ==> e.g. ref. coordinates for finite elements or reference position of rigid body (e.g. for definition of joints)'},
@@ -98,7 +98,7 @@ items = {
   'NodeRigidBody2D': {
     'kind': 'Node',
     'types': ['Position2D', 'Orientation2D', 'RigidBody'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'AngularVelocity', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'Rotation', 'AngularVelocityLocal', 'AngularAcceleration'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'AngularVelocity', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocityLocal', 'AngularAcceleration'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "node's unique name"},
       'referenceCoordinates': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'reference coordinates (x-pos,y-pos and rotation) of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement'},
@@ -160,7 +160,7 @@ items = {
   'NodePointSlope12': {
     'kind': 'Node',
     'types': ['Position', 'Orientation', 'PointSlope12'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "node's unique name"},
       'referenceCoordinates': {'type': 'Vector9D', 'size': '9', 'range': '', 'default': '[0.,0.,0.,1.,0.,0.,0.,1.,0.]', 'mustBeGiven': False, 'description': 'reference coordinates (x-pos,y-pos,z-pos; x-slopeX, y-slopeX, z-slopeX; x-slopeY, y-slopeY, z-slopeY) of node; global position of node without displacement'},
@@ -176,7 +176,7 @@ items = {
   'NodePointSlope23': {
     'kind': 'Node',
     'types': ['Position', 'Orientation', 'PointSlope23'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'Coordinates_tt', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "node's unique name"},
       'referenceCoordinates': {'type': 'Vector9D', 'size': '9', 'range': '', 'default': '[0.,0.,0.,0.,1.,0.,0.,0.,1.]', 'mustBeGiven': False, 'description': 'reference coordinates (x-pos,y-pos,z-pos; x-slopey, y-slopey, z-slopey; x-slopez, y-slopez, z-slopez) of node; global position of node without displacement'},
@@ -248,7 +248,7 @@ items = {
   'NodePointGround': {
     'kind': 'Node',
     'types': ['Position', 'Position2D', 'Orientation', 'GenericODE2', 'Ground'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'CoordinatesTotal', 'Coordinates', 'Coordinates_t', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "node's unique name"},
       'referenceCoordinates': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'reference coordinates of node ==> e.g. ref. coordinates for finite elements; global position of node without displacement'},
@@ -263,7 +263,7 @@ items = {
     'kind': 'Object',
     'types': ['Body', 'Ground'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'AngularVelocity', 'RotationMatrix'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'AngularVelocity', 'RotationMatrix', 'HomogeneousTransformation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'referencePosition': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'reference point = reference position for ground object; local position is added on top of reference position for a ground object'},
@@ -280,7 +280,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['Position'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy', 'PotentialEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of mass point'},
@@ -296,7 +296,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['Position2D'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy', 'PotentialEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Acceleration', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of mass point'},
@@ -312,7 +312,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['GenericODE2'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy', 'PotentialEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of mass'},
@@ -330,7 +330,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['GenericODE2'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy', 'PotentialEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsInertia': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'inertia components [SI:kgm:math:`^2`] of rotor / rotational mass'},
@@ -348,7 +348,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['Position', 'Orientation', 'RigidBody'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'AccelerationLocal', 'AngularAcceleration', 'AngularAccelerationLocal', 'KineticEnergy', 'PotentialEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'AccelerationLocal', 'AngularAcceleration', 'AngularAccelerationLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of rigid body'},
@@ -367,7 +367,7 @@ items = {
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['Position2D', 'Orientation2D'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'JacobianTtimesVector_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'RotationMatrix', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'AccelerationLocal', 'AngularAcceleration', 'AngularAccelerationLocal', 'KineticEnergy', 'PotentialEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'AccelerationLocal', 'AngularAcceleration', 'AngularAccelerationLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'physicsMass': {'type': 'UReal', 'size': '', 'range': '>= 0', 'default': '0.', 'mustBeGiven': False, 'description': 'mass [SI:kg] of rigid body'},
@@ -608,7 +608,7 @@ items = {
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position', 'Orientation', 'PointSlope23'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'Rotation', 'RotationMatrix', 'KineticEnergy', 'PotentialEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'Rotation', 'RotationMatrix', 'HomogeneousTransformation', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'nodeNumbers': {'type': 'NodeIndex2', 'size': '2', 'range': '', 'default': '[exudyn.InvalidIndex(), exudyn.InvalidIndex()]', 'mustBeGiven': False, 'description': 'two node numbers for beam element'},
@@ -655,7 +655,7 @@ items = {
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position', 'Orientation'],
     'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
-    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Rotation', 'RotationMatrix', 'AngularVelocity', 'AngularVelocityLocal', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'KineticEnergy', 'PotentialEnergy'],
+    'outputVariables': ['Position', 'Displacement', 'Velocity', 'Rotation', 'RotationMatrix', 'HomogeneousTransformation', 'AngularVelocity', 'AngularVelocityLocal', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
       'nodeNumbers': {'type': 'NodeIndex2', 'size': '2', 'range': '', 'default': '[exudyn.InvalidIndex(), exudyn.InvalidIndex()]', 'mustBeGiven': False, 'description': 'two node numbers for beam element'},
@@ -1020,7 +1020,7 @@ items = {
     'types': ['Connector'],
     'requestedNodeTypes': ['GenericData'],
     'requestedMarkerTypes': ['Position', 'Orientation'],
-    'outputVariables': ['Position', 'Velocity', 'VelocityLocal', 'ForceLocal', 'RotationMatrix'],
+    'outputVariables': ['Position', 'Velocity', 'VelocityLocal', 'ForceLocal', 'RotationMatrix', 'HomogeneousTransformation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector; :math:`m0` represents a point at the plane surface (normal of surface plane defined by planeNormal); the ground can also be a moving rigid body; :math:`m1` represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point'},
@@ -1345,7 +1345,7 @@ items = {
     'kind': 'Object',
     'types': ['Connector', 'Constraint'],
     'requestedMarkerTypes': ['Position', 'Orientation'],
-    'outputVariables': ['Position', 'Velocity', 'ForceLocal', 'RotationMatrix'],
+    'outputVariables': ['Position', 'Velocity', 'ForceLocal', 'RotationMatrix', 'HomogeneousTransformation'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "constraints's unique name"},
       'markerNumbers': {'type': 'ArrayMarkerIndex', 'size': '2', 'range': '', 'default': '[ exudyn.InvalidIndex(), exudyn.InvalidIndex() ]', 'mustBeGiven': False, 'description': 'list of markers used in connector; :math:`m0` represents the ground and :math:`m1` represents the rolling body, which has its reference point (=local position [0,0,0]) at the disc center point'},

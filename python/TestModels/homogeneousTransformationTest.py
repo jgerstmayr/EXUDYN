@@ -4,7 +4,9 @@
 # Details:  exudyn.HT, the homogeneous transformation of Exudyn's C++ core (#2780), against the 4x4 numpy matrices
 #           of exudyn.rigidBodyUtilities: for random rotations and translations, the composition H1*H2, the
 #           transformed point H*v, the inverse, the 4x4 matrix in both directions, and the transformations set
-#           without rotation (identity, SetTranslation), whose products skip the rotation.
+#           without rotation (identity, SetTranslation), whose products skip the rotation. The output variable
+#           HomogeneousTransformation of a node, a body point, a marker and a sensor: the 4x4 matrix of the rotation
+#           matrix and the position, 16 values row by row, exu.HT(values.reshape(4,4)).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-02
@@ -50,6 +52,32 @@ errors += [np.abs((Htranslation*Hrotation).HT44() - HTtranslate([1, 2, 3]) @ HTr
            np.abs(Htranslation.Inverse().HT44() - HTtranslate([-1, -2, -3])).max()]
 flags = [HT0.HasNoRotation(), Htranslation.HasNoRotation(), not Hrotation.HasNoRotation(),
          (Htranslation*HT0).HasNoRotation(), not (Htranslation*Hrotation).HasNoRotation()]
+
+#the output variable HomogeneousTransformation of a rotating rigid body, after a few steps
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+body = mbs.CreateRigidBody(inertia=InertiaCuboid(1000, [0.1, 0.2, 0.3]), referencePosition=[1, 2, 3],
+                           referenceRotationMatrix=RotationMatrixZ(0.4), initialAngularVelocity=[0.3, 0.2, 1],
+                           initialVelocity=[0.1, 0, 0], returnDict=True)
+pLocal = [0.1, 0.05, 0]
+marker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body['bodyNumber'], localPosition=pLocal))
+OVHT = exu.OutputVariableType.HomogeneousTransformation
+sensor = mbs.AddSensor(SensorBody(bodyNumber=body['bodyNumber'], localPosition=pLocal, outputVariableType=OVHT, storeInternal=True))
+mbs.Assemble()
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 100
+simulationSettings.timeIntegration.endTime = 0.5
+simulationSettings.solutionSettings.writeSolutionToFile = False
+mbs.SolveDynamic(simulationSettings)
+
+A = mbs.GetObjectOutputBody(body['bodyNumber'], exu.OutputVariableType.RotationMatrix, localPosition=pLocal).reshape(3, 3)
+p = mbs.GetObjectOutputBody(body['bodyNumber'], exu.OutputVariableType.Position, localPosition=pLocal)
+HTbody = exu.HT(mbs.GetObjectOutputBody(body['bodyNumber'], OVHT, localPosition=pLocal).reshape(4, 4))
+errors += [np.abs(HTbody.HT44() - HomogeneousTransformation(A, p)).max(),
+           np.abs(mbs.GetMarkerOutput(marker, OVHT) - HTbody.HT44().flatten()).max(),
+           np.abs(mbs.GetSensorValues(sensor) - HTbody.HT44().flatten()).max(),
+           np.abs(exu.HT(mbs.GetNodeOutput(body['nodeNumber'], OVHT).reshape(4, 4)) * pLocal - p).max()]
+total += np.abs(HTbody.HT44()).sum()
 
 exu.Print('largest difference to rigidBodyUtilities:', max(errors), ', flags as expected:', all(flags))
 testResult = total + (max(errors) < 1e-12) + sum(flags)

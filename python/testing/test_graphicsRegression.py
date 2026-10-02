@@ -411,3 +411,31 @@ def testMergeOffsetsTheEdgesOfTheSecondList():
     nPoints1 = len(g1['points'])
     assert np.array_equal(merged['edges'], np.array(g2['edges']) + nPoints1)
     assert np.allclose(merged['points'][merged['edges'].flatten()], np.array(g2['points'])[np.array(g2['edges']).flatten()])
+
+
+def testCurvedSurfacesHaveNoCracks():
+    """a solid of revolution and a half sphere of 6-node triangles through the raytracer: no single bright pixel on the
+    surface, which a ray passing between two neighbouring curved triangles leaves when they split their shared edge at
+    different points (#2787)"""
+    from exudyn.rigidBodyUtilities import RotXYZ2RotationMatrix
+    shapes = [graphics.SolidOfRevolution(pAxis=[0, 0, -0.5], vAxis=[0, 0, 1], contour=[[0, 0.2], [0.3, 0.5], [0.6, 0.3], [1, 0.4]],
+                                         nTiles=32, color=graphics.color.green),
+              graphics.Sphere(point=[0, 0, 0], radius=0.5, nTiles=16, color=graphics.color.lightgrey, majorAngleMin=0)]
+    for shape in shapes:
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem()
+        mbs.CreateGround(graphicsDataList=[shape])
+        mbs.Assemble()
+        SC.visualizationSettings.view0.window.renderWindowSize = [240, 240]
+        SC.visualizationSettings.raytracer.advanced.showText = False
+        SC.visualizationSettings.view0.scene.drawWorldBasis = False
+        SC.visualizationSettings.view0.scene.drawCoordinateSystem = 0
+        SC.renderer.ZoomAll()
+        state = SC.renderer.GetState()
+        state['modelRotation'] = RotXYZ2RotationMatrix([1.1, 0.3, 0.4])
+        SC.renderer.SetState(state)
+        SC.renderer.ZoomAll()
+        brightness = SC.renderer.RedrawAndGetImage(useRaytracer=True).astype(int).sum(axis=2)
+        center = brightness[1:-1, 1:-1]
+        neighbours = np.stack([brightness[:-2, 1:-1], brightness[2:, 1:-1], brightness[1:-1, :-2], brightness[1:-1, 2:]])
+        assert int(((center - neighbours.max(axis=0)) > 150).sum()) == 0

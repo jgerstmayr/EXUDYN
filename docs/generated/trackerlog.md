@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.221.dev1
+- Exudyn version = 1.12.224.dev1
 - last change = 2026-10-02
-- Number of issues = 2788
-- Number of resolved issues = 2535 (221 in current version)
+- Number of issues = 2789
+- Number of resolved issues = 2538 (224 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,17 +7568,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHECK` `LOW EFF` `raised by: Claude-JG` raytracer: single bright pixels on curved triangles at coarse tiling (#2787)
-  - description: Seen in the images of RG6.7.7.7 (2026-10-02): at nTiles 32 and below, a SolidOfRevolution and a half sphere through the raytracer (160 x 160 pixels) show a few single white pixels on the surface, not at 64 - rays passing between neighbouring curved triangles, or between the flat triangles the raytracer splits them into. To check: watertightness of the split of 6-node triangles along shared edges (the same subdivision on both sides).
-  - date raised: 2026-10-02
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` ObjectALEANCFCable2D: the position Jacobian and the velocity output disagree (#2784)
   - description: Found by test\_accessFunctionsAllBodies.py (RG9.5.6): the position Jacobian of ObjectALEANCFCable2D is 3 x 8, the ANCF coordinates only, while the object has 9 (with the ALE coordinate) and its velocity output - the material velocity - depends on the ALE velocity (column r\_x); off the axis (localPosition\[1\] != 0) the Jacobian also differs from the derivative of the velocity output by the ANCF velocities (7e-3 against 0.35). To decide: is a marker on the ALE cable a material point (then the Jacobian needs the ALE column, and the forces act on the ALE coordinate) or a point fixed along the axis (then the velocity output of a marker is not J q\_t); and which normal derivative is right off the axis.
   - date raised: 2026-10-02
 - `CHECK` `MEDIUM EFF` `raised by: Claude-JG` homogeneous transformations in the user interface of the rigid items: evaluation (#2781)
   - description: Evaluate whether ObjectRigidBody, ObjectGround, rigid body nodes and rigid markers can take an HT instead of position and rotation (compatibility mode with None defaults, or a global/auto-detected mode flag), exporting both; localHT in the rigid markers and its deprecation path; homogenize with the localHT work (RG14.2.15); proposal and decisions for the maintainer.
-  - date raised: 2026-10-02
-- `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` homogeneous transformations: the C++ class and its Python binding (#2780)
-  - description: HomogeneousTransformationBase into its own file, out of exulie; 12 numbers stored; fast H\*v, H^-1, H1\*H2, set/get with fixed-size loops and a no-rotation flag (global constexpr switch); tests and measurement; pybind exudyn.HT with operators; note in rigidBodyUtilities.HomogeneousTransformation; HT inside the rigid items and as output variable.
   - date raised: 2026-10-02
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.

@@ -2,10 +2,14 @@
   "number": 2780,
   "title": "homogeneous transformations: the C++ class and its Python binding",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "HIGH",
   "description": "HomogeneousTransformationBase into its own file, out of exulie; 12 numbers stored; fast H*v, H^-1, H1*H2, set/get with fixed-size loops and a no-rotation flag (global constexpr switch); tests and measurement; pybind exudyn.HT with operators; note in rigidBodyUtilities.HomogeneousTransformation; HT inside the rigid items and as output variable.",
   "dateRaised": "2026-10-02",
-  "deadline": "2027-03-31"
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-02 22:38",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exudyn.HT is the homogeneous transformation of the C++ core (composition, inverse, transformed points, 4x4 matrix); every node, body point, marker and connector with Position and RotationMatrix gives the output variable HomogeneousTransformation (16 values, the 4x4 matrix row by row).",
+  "resolvedInVersion": "1.12.222"
 }
