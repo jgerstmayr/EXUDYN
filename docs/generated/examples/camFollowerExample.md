@@ -58,8 +58,8 @@ oCam = mbs.CreateRigidBody(
                             initialAngularVelocity=[0,0,omegaCam],
                             inertia=InertiaCylinder(2800, wDisc, rDisc, axis=2),
                             gravity = [0,-g,0],
-                            graphicsDataList=[graphics.Cylinder(pAxis=[0,0,-0.5*wDisc], vAxis=[0,0,wDisc],radius=rDisc, nTiles=64, color=graphics.color.orange),
-                                              graphics.Cylinder(pAxis=[deltaCam,0,-0.5*wDisc], vAxis=[0,0,wDisc],radius=rCam, nTiles=64, color=graphics.color.orange),
+                            graphicsDataList=[graphics.Cylinder(pAxis=[0,0,-0.5*wDisc], vAxis=[0,0,wDisc],radius=rDisc, nTiles=32, color=graphics.color.orange),
+                                              graphics.Cylinder(pAxis=[deltaCam,0,-0.5*wDisc], vAxis=[0,0,wDisc],radius=rCam, nTiles=32, color=graphics.color.orange),
                                               graphics.Basis(length=rDisc*1.5)],
                             create2D=True, #not possible here, as COM must be 0 with 2D
                             )

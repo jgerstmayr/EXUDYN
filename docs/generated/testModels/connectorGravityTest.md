@@ -51,7 +51,7 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
                                    visualization=VObjectGround(graphicsData=[background])))
 # nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 node0 = mbs.AddNode(NodePoint(referenceCoordinates = [0,0,0])) #planet
-gMass0 = graphics.Sphere(radius=1e5, color=graphics.color.blue, nTiles=64)
+gMass0 = graphics.Sphere(radius=1e5, color=graphics.color.blue, nTiles=32)
 oMassPoint0 = mbs.AddObject(MassPoint(nodeNumber = node0, physicsMass=massStar,
                                       visualization=VMassPoint(graphicsData=[gMass0])))
 m0 = mbs.AddMarker(MarkerNodePosition(nodeNumber=node0))

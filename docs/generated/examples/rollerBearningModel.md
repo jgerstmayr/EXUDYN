@@ -72,7 +72,7 @@ for i in range(nSpheres-0):
     mbs.SetNodeParameter(nMassPoint, 'Vshow', True)
 
 gHollow = graphics.Cylinder(pAxis=[0,0,-0.5*w], vAxis=[0,0,w], radius=radiusOuter+radius,
-                            radiusInner=radiusOuter, color=[0.6,0.6,0.6,0.4], nTiles=2*64)
+                            radiusInner=radiusOuter, color=[0.6,0.6,0.6,0.4], nTiles=64)
 
 gBack = graphics.CheckerBoard([0,0,-w*2], size=radiusOuter*2.5)
 oGround = mbs.CreateGround(referencePosition=[0,0,0], graphicsDataList=[gHollow,gBack])
@@ -81,7 +81,7 @@ bodyInner = mbs.CreateRigidBody(referencePosition=[0,0,0],
                             inertia=InertiaCylinder(7800, w, radiusInner, axis=2),
                             initialAngularVelocity=[0,0,2*pi*2],
                             gravity = [0,-g,0],
-                            graphicsDataList=[graphics.Cylinder(pAxis=[0,0,-w*2], vAxis=[0,0,4*w], radius=radiusInner, color=graphics.color.dodgerblue, nTiles=64),
+                            graphicsDataList=[graphics.Cylinder(pAxis=[0,0,-w*2], vAxis=[0,0,4*w], radius=radiusInner, color=graphics.color.dodgerblue, nTiles=32),
                                               graphics.Basis(origin=[0,0,2.1*w],length=2*radius),
                                               ],
                             )

@@ -215,7 +215,7 @@ if True: #add cup
     contour = list(contour)
     contour.reverse()
     gCup = graphics.SolidOfRevolution(pAxis=[xOffTool,0,zOffTool], vAxis=[-1,0,0],
-            contour=contour, color=colorCup, nTiles = 64)
+            contour=contour, color=colorCup, nTiles=32)
 
     gCupAdd = graphics.Cylinder(pAxis=[0,0,0], vAxis=[0,0,zOffTool-cupRI*1.01], radius=0.02, color=colorCup)
     gCup = graphics.MergeTriangleLists(gCup, gCupAdd)

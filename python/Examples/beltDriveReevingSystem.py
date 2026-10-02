@@ -294,7 +294,7 @@ if useContact:
         rot0 = 0 #initial rotation
         pRef = [p[0], p[1], rot0]
         gList = [graphics.Cylinder(pAxis=[0,0,-dimZ],vAxis=[0,0,-dimZ], radius=r,
-                                      color= graphics.color.dodgerblue, nTiles=64),
+                                      color= graphics.color.dodgerblue, nTiles=32),
                  graphics.Arrow(pAxis=[0,0,0], vAxis=[-0.9*r,0,0], radius=0.01*r, color=graphics.color.orange),
                  graphics.Arrow(pAxis=[0,0,0], vAxis=[0.9*r,0,0], radius=0.01*r, color=graphics.color.orange)]
 

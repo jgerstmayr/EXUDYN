@@ -160,7 +160,7 @@ for iWheel in range(nWheels):
     #additional graphics for visualization of rotation:
     graphicsWheel = []
     graphicsWheel += [graphics.Brick(centerPoint=[0,0,0],size=[wWheel*1.1,0.7*rWheel,0.7*rWheel], color=graphics.color.lightred)]
-    graphicsWheel += [graphics.Cylinder(pAxis=[-0.5*wWheel,0,0],vAxis=[wWheel,0,0],radius=rWheel, color=graphics.color.darkgrey,nTiles=64)]
+    graphicsWheel += [graphics.Cylinder(pAxis=[-0.5*wWheel,0,0],vAxis=[wWheel,0,0],radius=rWheel, color=graphics.color.darkgrey,nTiles=32)]
 
     dx = -pWheel[0]
     dy = -pWheel[1]
@@ -351,10 +351,10 @@ if doSimulatorCoupling:
     gContact.SetSearchTreeCellSize(numberOfCells=stCells)
     
     graphicsWheels = []
-    graphicsWheels += [graphics.Cylinder(pAxis=[-0.5*wWheel+pWheel[0], pWheel[1],0],vAxis=[wWheel,0,0],radius=rWheel, color=graphics.color.darkgrey,nTiles=64)]
-    graphicsWheels += [graphics.Cylinder(pAxis=[-0.5*wWheel+pWheel[0],-pWheel[1],0],vAxis=[wWheel,0,0],radius=rWheel, color=graphics.color.darkgrey,nTiles=64)]
-    graphicsWheels += [graphics.Cylinder(pAxis=[-0.5*wWheel-pWheel[0], pWheel[1],0],vAxis=[wWheel,0,0],radius=rWheel, color=graphics.color.darkgrey,nTiles=64)]
-    graphicsWheels += [graphics.Cylinder(pAxis=[-0.5*wWheel-pWheel[0],-pWheel[1],0],vAxis=[wWheel,0,0],radius=rWheel, color=graphics.color.darkgrey,nTiles=64)]
+    graphicsWheels += [graphics.Cylinder(pAxis=[-0.5*wWheel+pWheel[0], pWheel[1],0],vAxis=[wWheel,0,0],radius=rWheel, color=graphics.color.darkgrey,nTiles=32)]
+    graphicsWheels += [graphics.Cylinder(pAxis=[-0.5*wWheel+pWheel[0],-pWheel[1],0],vAxis=[wWheel,0,0],radius=rWheel, color=graphics.color.darkgrey,nTiles=32)]
+    graphicsWheels += [graphics.Cylinder(pAxis=[-0.5*wWheel-pWheel[0], pWheel[1],0],vAxis=[wWheel,0,0],radius=rWheel, color=graphics.color.darkgrey,nTiles=32)]
+    graphicsWheels += [graphics.Cylinder(pAxis=[-0.5*wWheel-pWheel[0],-pWheel[1],0],vAxis=[wWheel,0,0],radius=rWheel, color=graphics.color.darkgrey,nTiles=32)]
     
     #+++++++++++++++++++++++++++++++++++
     #copy of car, which is then mapped:

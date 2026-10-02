@@ -48,7 +48,7 @@ for case in caseList:
                                 physicsMass=mass,
                                 graphicsDataList=[graphics.Sphere(radius=0.2, 
                                                                   color=graphics.color.dodgerblue, 
-                                                                  nTiles=64)]
+                                                                  nTiles=32)]
                                 )
     
     oCSD = mbs.CreateCartesianSpringDamper(bodyNumbers=[ground, mass0],
@@ -63,7 +63,7 @@ for case in caseList:
                                  physicsMass=mass*0.5, referencePosition=[0,L,0],
                                  visualization=VMass1D(graphicsData=[graphics.Sphere(radius=0.15,
                                                                      color=graphics.color.green, 
-                                                                     nTiles=64)])))
+                                                                     nTiles=32)])))
     
     
     #ground node

@@ -238,8 +238,8 @@ def test_theKinematicTreeMarkerHasTheNumericalJacobians():
 
 
 def test_theALECableHasTheNumericalPositionJacobianInItsANCFCoordinates():
-    """the position Jacobian of ObjectALEANCFCable2D on its axis, in the 8 columns of the ANCF coordinates; the velocity
-    output also depends on the axial velocity of the ALE coordinate, which the Jacobian leaves out, and off the axis it
+    """the position Jacobian of ObjectALEANCFCable2D on its axis, in the 8 columns of the ANCF coordinates; its column of
+    the ALE coordinate is zero (#2786), while the velocity output also depends on the axial velocity, and off the axis it
     differs from the derivative of the velocity output (#2784)"""
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
@@ -253,7 +253,8 @@ def test_theALECableHasTheNumericalPositionJacobianInItsANCFCoordinates():
     for p in [[0.3, 0, 0], [0.6, 0, 0]]:
         jacobian = mbs.ComputeItem(cable, IC.PositionJacobian, localPosition=p)
         numerical = NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(cable, OV.Velocity, localPosition=p), coordinates, velocities=True)
-        assert np.abs(jacobian[:2] - numerical[:2]).max() < 1e-8
+        assert jacobian.shape[1] == 9 and np.abs(jacobian[:, 8]).max() == 0 #the ALE coordinate: a zero column (#2786)
+        assert np.abs(jacobian[:2, :8] - numerical[:2]).max() < 1e-8
 
 
 def Connectors():

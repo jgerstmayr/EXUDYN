@@ -37,7 +37,7 @@ g = 50*0
 exu.Print('impact vel=', np.sqrt(2*yInit*g))
 
 mbs.CreateGround(referencePosition=[0,-2*radius,0],
-                graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.green, nTiles=64)])
+                graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.green, nTiles=32)])
 #ground node
 nGround1=mbs.AddNode(NodePointGround(referenceCoordinates = [0,-2*radius,0]))
 nGround2=mbs.AddNode(NodePointGround(referenceCoordinates = [0,1+2*radius,0]))
@@ -47,7 +47,7 @@ massPoint = mbs.CreateRigidBody(referencePosition=[0,yInit,0],
                                 initialVelocity=[0,vyInit,0],
                                 inertia=InertiaSphere(mass, radius),
                                 gravity = [0,-g,0],
-                                graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.orange, nTiles=64)])
+                                graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.orange, nTiles=32)])
 nMassPoint = mbs.GetObject(massPoint)['nodeNumber']
 
 mGround1 = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround1))
@@ -66,7 +66,7 @@ oSSC = mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[mGround1, mMass],
                                                ))
 if use2contacts:
     mbs.CreateGround(referencePosition=[0,1+2*radius,0],
-                    graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.green, nTiles=64)])
+                    graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.green, nTiles=32)])
     mGround2 = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround2))
     nData2 = mbs.AddNode(NodeGenericData(initialCoordinates=[0.1,0,0,0],
                                         numberOfDataCoordinates=4))

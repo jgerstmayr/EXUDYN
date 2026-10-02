@@ -246,7 +246,7 @@ for cnt, circleList in enumerate(reevingSystems):
             rot0 = 0 #initial rotation
             pRef = [p[0], p[1], rot0]
             gList = [graphics.Cylinder(pAxis=[0,0,-0.5*dimZ],vAxis=[0,0,dimZ], radius=r-h,
-                                          color= graphics.color.dodgerblue, nTiles=64),
+                                          color= graphics.color.dodgerblue, nTiles=32),
                      graphics.Arrow(pAxis=[0,0,dimZ], vAxis=[0.9*r,0,0], radius=0.01*r, color=graphics.color.orange)]
 
             if i == 1+hasTensioner:

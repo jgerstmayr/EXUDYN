@@ -49,7 +49,7 @@ pos2 = [ rb+H,0,0]
 posList=[pos0,pos1,pos2]
 for pos in posList:
     #gDataList += [{'type':'Circle','position':pos,'radius':rb, 'color':graphics.color.grey}]
-    gDataList += [graphics.Cylinder(pAxis=pos, vAxis=[0,0,0.1], radius=rb, color= graphics.color.grey, nTiles=200)]
+    gDataList += [graphics.Cylinder(pAxis=pos, vAxis=[0,0,0.1], radius=rb, color= graphics.color.grey, nTiles=100)]
     #gDataList += [GraphicsDataRectangle(-1.2*H,-H*0.75,1.2*H,10*H,color=graphics.color.red)]
     nMass = mbs.AddNode(NodePointGround(referenceCoordinates=pos))
     #oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass))

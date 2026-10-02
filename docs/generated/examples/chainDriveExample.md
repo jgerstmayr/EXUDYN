@@ -133,7 +133,7 @@ mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
 
 #ground node
 gListSprocket = [graphics.Cylinder([0,0,-0.5*wSprocket],[0,0,wSprocket],
-                 radius=rSprocketPitch, color=graphics.color.grey, nTiles=64)]
+                 radius=rSprocketPitch, color=graphics.color.grey, nTiles=32)]
 
 pList = []
 nSprocket = nTeeth*4 #8

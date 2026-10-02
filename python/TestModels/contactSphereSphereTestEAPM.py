@@ -49,7 +49,7 @@ else:
 
 #+++++++++++++++++++++++++++++++++++++++++++++
 # create ground (with marker) that is needed for every test case
-mbs.CreateGround(referencePosition=[0, 0, 0], graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.red, nTiles=64)])
+mbs.CreateGround(referencePosition=[0, 0, 0], graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.red, nTiles=32)])
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates = [0, 0, 0]))
 mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround))
 
@@ -59,7 +59,7 @@ massPoint = mbs.CreateRigidBody(referencePosition=[xInit, yInit, 0],
                                 initialVelocity=[0, vyInit, 0],
                                 inertia=InertiaSphere(mass, radius),
                                 gravity=[0, 0, 0],
-                                graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.green, nTiles=64)])
+                                graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.green, nTiles=32)])
 mMass = mbs.AddMarker(MarkerBodyRigid(bodyNumber=massPoint))
 nMassPoint = mbs.GetObject(massPoint)['nodeNumber']
 
@@ -104,7 +104,7 @@ else:
                                                    minimumImpactVelocity=0))
     if use2Contacts:
         # add this ground object with a gap of 0.5m above the moving spehere
-        mbs.CreateGround(referencePosition=[0, 1+4*radius, 0], graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.red, nTiles=64)])
+        mbs.CreateGround(referencePosition=[0, 1+4*radius, 0], graphicsDataList=[graphics.Sphere(radius=radius, color=graphics.color.red, nTiles=32)])
         nGround1 = mbs.AddNode(NodePointGround(referenceCoordinates = [0, 1+4*radius, 0]))
         mGround1 = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround1))
         nData1 = mbs.AddNode(NodeGenericData(initialCoordinates=[0, 0, 0, 0], numberOfDataCoordinates=4))

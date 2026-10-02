@@ -11750,3 +11750,28 @@ of the Lie group node by composed increments stays out of the test.
   The docstring of `rigidBodyUtilities.HomogeneousTransformation` points to it; note that the shortcut `HT` of that
   module (the function, star-imported by `exudyn.utilities`) and `exudyn.HT` (the class) share a name.
 - **Open: RG16.1.5** - the HT inside the rigid items and as an output variable.
+
+<a id="rg6-7-7-7"></a>
+### RG6.7.7.7 — the large `nTiles` of the examples halved, checked by image (2026-10-02, #2709)
+
+**The image check first.** The curved primitives - `Cylinder` (full, hollow), `Torus`, `SolidOfRevolution`, `Arrow`, a
+half `Sphere` - through the raytracer at 160 x 160 pixels, without a window, at `nTiles` 64 and 32 against a half and a
+quarter of it: from 64 to 32 at most 0.35 % of the pixels differ by more than the tolerance of the graphics regression
+(24 levels; the cylinder's silhouette and edges), from 64 to 16 at most 0.72 %; only the torus at 8 differs visibly
+(6 %). A look at the montage of the four columns (64, 32, 16, 8) shows no difference down to 16 - the renderers split
+the curved elements by `curvedTriangleTilingAngle`, not by `nTiles`. Seen on the way: a few single white pixels on the
+solid of revolution and the half sphere at 32 and below (#2787, RG6.7.7.8).
+
+**Halved**: every `nTiles` of 48 and more of a curved primitive in `python/Examples` and `python/TestModels`, 49 calls
+in 31 files - 64 to 32 mostly, 128 to 64, 200 to 100, 100 to 50, 48 to 24 (a script, listed in the commit). Left as
+they are: `CheckerBoard` and `Quad` (their `nTiles` is the pattern, not a curve), the graphics that are the geometry of a
+computation - the laser scanner and lidar meshes (`laserScannerTest.py`, `mobileMecanumWheelRobotWithLidar.py`), the
+distance sensor (`distanceSensor.py`), the contact meshes of `generalContactCylinderTest.py` and
+`generalContactCylinderTrigsTest.py` -, and the commented lines. All references of the test suite unchanged.
+
+**The examples' run** (`runTestExamples.py`) found three things not caused by this step: `graphicsDataExample.py` read
+`g['triangles']` of a cylinder, which is curved since RG6.7.7.6 (fixed: `Triangles6ToTriangles`); the three ALE examples
+of `publications/CND2022PieberNtarladimaGerstmayr` failed with a size mismatch - **#2786, fixed**: the position and
+rotation Jacobians of `ObjectALEANCFCable2D` had 8 columns for its 9 coordinates, which the path of the marker data had
+hidden and RG14.2.13 exposed; they get the ALE coordinate as a zero column, as before; and the NGsolve examples fail
+when they run in parallel ("could not allocate localheap", 3.2 GB each) and pass alone.

@@ -127,12 +127,12 @@ mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 vSlider = graphics.Cylinder([0.05,0,0], [-0.1,0,0],
-                               0.05, [1,0,0,1], nTiles=64)
+                               0.05, [1,0,0,1], nTiles=32)
 vRod = graphics.BrickXYZ(-L_B/2, -h_B/2, -h_B/2, L_B/2,
                              h_B/2, h_B/2, [0,1,0,1])
 
 vCrank0 = graphics.Cylinder([0,0,-2*ba_1], [0,0,0.01],
-                               r1+a/2,color=[0.3,0.3,0.9,1], nTiles=128)
+                               r1+a/2,color=[0.3,0.3,0.9,1], nTiles=64)
 vCrank1 = graphics.Cylinder([0,0,0.01], [0,0,-ba_0-0.01],
                                0.01,color=[0.3,0.3,0.9,1])
 vCrank2 = graphics.Cylinder([0,0,ba_1-0.01], [0,0,ba_2+0.01],
@@ -154,7 +154,7 @@ vDisk_line0 = graphics.Lines([[0,-0.001,0], [r0,-0.001,0], [r0,0.001,0], [0,0.00
 vDisk_line1 = graphics.Lines([[0,-0.001,0], [r1,-0.001,0], [r1,0.001,0], [0,0.001,0], [0,-0.001,0]])
 
 cylDisc0 = graphics.Cylinder([0,0,-0.005], [0,0,0.01],
-                               r0+a/2,color=[0.3,0.3,0.9,1], nTiles=64)
+                               r0+a/2,color=[0.3,0.3,0.9,1], nTiles=32)
 
 #Generate Nodes and Objects
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

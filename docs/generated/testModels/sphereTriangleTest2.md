@@ -114,7 +114,7 @@ for solverNum, solver in enumerate(solverList):
                                         gravity = [0,0,-g],
                                         graphicsDataList=[graphics.Sphere(radius=radius,
                                                                           color=graphics.colorList[cnt][0:3]+[graphics.material.indexDefault], 
-                                                                          nTiles=48)],
+                                                                          nTiles=24)],
                                         )
             listMasses.append(oMass)
             mMass = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oMass))

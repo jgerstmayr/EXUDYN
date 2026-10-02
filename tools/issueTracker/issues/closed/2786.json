@@ -1,0 +1,15 @@
+{
+  "number": 2786,
+  "title": "ObjectALEANCFCable2D: a connector or load through a body marker fails with a size mismatch",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "Since the legacy path is gone (RG14.2.13, #2745), connectors and loads act through the marker functions, which size the generalized force by the body's 9 coordinates; the position and rotation Jacobians of ObjectALEANCFCable2D have 8 columns (the ANCF coordinates) - 'MultMatrixTransposedVectorAddTemplate: Size mismatch' in the first step (the three CND2022 ALE examples). Fix: the Jacobians get the ALE coordinate as 9th column, zero, which is what the legacy path did implicitly; whether it should be nonzero is #2784.",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-02 21:32",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Connectors and loads acting through a body marker on ObjectALEANCFCable2D work again; they failed with a size mismatch in the first step.",
+  "resolvedInVersion": "1.12.221"
+}

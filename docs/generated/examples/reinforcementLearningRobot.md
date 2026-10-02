@@ -133,7 +133,7 @@ def DifferentialDriveRobot(SC, mbs,
     
     #+++++++++++++++++++++++++++++++++++++++++++
     #create kinematic tree for wheeled robot    
-    ddr.gPlatform = [graphics.Cylinder([0,0,platformGroundOffset], [0,0,platformHeight], platformRadius, color=graphics.color.steelblue, nTiles=64, addEdges=True, addFaces=False)]
+    ddr.gPlatform = [graphics.Cylinder([0,0,platformGroundOffset], [0,0,platformHeight], platformRadius, color=graphics.color.steelblue, nTiles=32, addEdges=True, addFaces=False)]
     ddr.gPlatform += [graphics.Cylinder([0,platformRadius*0.8,platformGroundOffset*1.5], [0,0,platformHeight], platformRadius*0.2, color=graphics.color.grey)]
     ddr.gPlatform += [graphics.Basis(length=0.1)]
     ddr.gWheel = [graphics.Cylinder([-wheelThickness*0.5,0,0], [wheelThickness,0,0], wheelRadius, color=graphics.color.red, nTiles=32)]

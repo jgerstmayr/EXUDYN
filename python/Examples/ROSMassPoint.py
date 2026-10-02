@@ -105,7 +105,7 @@ def main():
     graphicsSphere = graphics.Sphere(point=[0,0,0],
                                     radius=r,
                                     color=(1,0,0,1),
-                                    nTiles=64)
+                                    nTiles=32)
 
     origin = [0, 0, 0]
     bGround = mbs.AddObject(ObjectGround(referencePosition=origin,

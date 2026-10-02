@@ -198,7 +198,7 @@ if useContact:
         rot0 = 0 #initial rotation
         pRef = [p[0], p[1], rot0]
         gList = [graphics.Cylinder(vAxis=[0,0,dimZ], radius=r*0.99, #draw smaller to see cable element 
-                                      color= graphics.color.dodgerblue, nTiles=32*2),
+                                      color= graphics.color.dodgerblue, nTiles=32),
                  graphics.Arrow(pAxis=[0,0,0.02*r], vAxis=[r,0,0], radius=0.02*r, color=graphics.color.orange)]
 
         omega0 = 0 #initial angular velocity

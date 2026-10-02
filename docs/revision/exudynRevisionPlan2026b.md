@@ -1026,8 +1026,13 @@ This group is that revision and what has to happen before it can start.
         where `curvedTriangleTilingAngle` asks for them. So a default cylinder (`nTiles=16`: 8 elements of 45°) shows
         24 segments at 15°, and a script with `nTiles=64` shows at least its 64. The data (points, triangles) shrink
         to about half, the drawn triangles never fall below today's.
-      - **RG6.7.7.7** the examples and test models with very large `nTiles` (chosen to hide the facets) are revised,
-        most to about half the value, once RG6.7.7.6 is in - checked by image, not by rule.
+      - **RG6.7.7.7** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-7) - the examples and test models
+        with very large `nTiles` (chosen to hide the facets) are revised, most to about half the value, once RG6.7.7.6
+        is in - checked by image, not by rule.
+      - **RG6.7.7.8** *(found in RG6.7.7.7; needs no decision)* **single bright pixels of the raytracer on curved
+        triangles at coarse tiling** (#2787): at `nTiles` 32 and below a few pixels of a `SolidOfRevolution` and a half
+        sphere are white - rays between neighbouring curved triangles or their flat split; the split along a shared
+        edge is to be checked for watertightness.
 
     <a id="rg6-7-sketch"></a>
     **The interface, sketched 2026-10-01** (for the maintainer; nothing implemented). What exists, read in the code:
@@ -1421,7 +1426,8 @@ revision (info document D15).
       not build yet - `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectKinematicTree`, `ObjectALEANCFCable2D`,
       `ObjectGenericODE2` -, and the derivative of the Lie group node by composed increments.
     - **RG9.5.7** *(found in RG9.5.6, for the maintainer's decision)* **`ObjectALEANCFCable2D`: what a marker on it is**
-      (#2784): its position Jacobian has the 8 columns of the ANCF coordinates, not the ALE coordinate, while its velocity
+      (#2784): its position Jacobian has a zero column for the ALE coordinate (since #2786, before 8 columns, which failed
+      every connector and load through a body marker after RG14.2.13), while its velocity
       output - the material velocity - depends on the ALE velocity; off the axis the Jacobian also differs from the
       derivative of the velocity output by 2 %. Either a marker is a material point (the Jacobian gets the ALE column, and
       forces act on the ALE coordinate), or a point fixed along the axis (its velocity is J q_t, without the ALE term);
@@ -2494,7 +2500,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame - the inconsistent rotation Jacobian of the slope nodes fixed (RG4.17.1); the stall remains with a consistent Jacobian (RG4.17.2) |
 | RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
-| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges, rows done; RG6.7.2.1 and most of RG6.7.7.6 done (the round primitives of 6-node triangles); open RG6.7.5 (anisotropic tiling), the rest of RG6.7.7.6 (`LinkedCylinders`, hollow sphere), RG6.7.7.7 (the examples with large `nTiles`) |
+| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges, rows done; RG6.7.2.1 and most of RG6.7.7.6 done (the round primitives of 6-node triangles); open RG6.7.5 (anisotropic tiling), the rest of RG6.7.7.6 (`LinkedCylinders`, hollow sphere), RG6.7.7.8 (single bright pixels of the raytracer, #2787); RG6.7.7.7 done |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG9.3 | #2744 | access functions as single functions of the objects: the split done (RG9.3.4.1-.3), the declarations checked (rule 7); open the flags derived instead of declared (RG9.3.4.4, after separating the super elements' own meaning); RG9.3.5 to RG9.3.7 done (hand-written Jacobians, AD for the derivative of `J^T f` of the cable and of the torque on `ObjectANCFBeam`, `ObjectRotationalMass1D` off its axis) |
 | RG9.4 | #2202 | kinetic and potential energy as output variables: done for all bodies, beams, plates, superelements and spring-dampers; RG9.4.3.2 (the contact and special objects) not now |
@@ -2535,10 +2541,7 @@ The title of each says what the step **does**; the sentence after it says why it
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Halve the large `nTiles` of the examples** (RG6.7.7.7, #2709). The round primitives and the FFRF meshes are
-   curved now (RG6.7.7.6, RG6.7.2.1); the examples that chose a large `nTiles` to hide the facets draw more than they
-   need - checked by image.
-4. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
+3. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
-5. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
+4. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
    published documentation that is visibly wrong.

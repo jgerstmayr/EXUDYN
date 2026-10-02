@@ -66,7 +66,7 @@ pLast = [0,0,0]
 for i, pos in enumerate(posList):
     r = rList[i]
 
-    graphicsRoll = graphics.Cylinder(pAxis=[0,0,-0.5*t], vAxis=[0,0,t], nTiles=64, radius=r, color=graphics.color.dodgerblue, alternatingColor=graphics.color.darkgrey)
+    graphicsRoll = graphics.Cylinder(pAxis=[0,0,-0.5*t], vAxis=[0,0,t], nTiles=32, radius=r, color=graphics.color.dodgerblue, alternatingColor=graphics.color.darkgrey)
     
     inertiaRoll = InertiaCylinder(density=1000,length=t,outerRadius=r, axis=2)
     inertiaRoll = inertiaRoll.Translated([0,-r,0])

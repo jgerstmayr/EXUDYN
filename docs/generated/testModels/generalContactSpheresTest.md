@@ -66,7 +66,7 @@ posList=[pos0,pos1,pos2,pos3,pos4]
 for pos in posList:
     colBG = graphics.color.grey
     colBG[3] = 0.05
-    gDataList += [graphics.Sphere(point=pos, radius=rb, color= colBG, nTiles=50)]
+    gDataList += [graphics.Sphere(point=pos, radius=rb, color= colBG, nTiles=25)]
     nMass = mbs.AddNode(NodePointGround(referenceCoordinates=pos,
                         visualization=VNodePointGround(show=False)))
 

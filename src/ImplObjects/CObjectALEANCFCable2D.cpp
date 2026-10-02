@@ -232,7 +232,7 @@ void CObjectALEANCFCable2D::GetPositionJacobian(const Vector3D& localPosition, M
 
 	Real x = localPosition[0]; //only x-coordinate
 	Vector4D SV = ComputeShapeFunctions(x, L);
-	value.SetNumberOfRowsAndColumns(3, 8); //3D velocity, 8 coordinates qt
+	value.SetNumberOfRowsAndColumns(3, 9); //3D velocity, the 8 ANCF coordinates and the ALE coordinate, whose column is zero (#2786)
 
 	////OLD:
 	//value.SetAll(0.);
@@ -320,7 +320,7 @@ void CObjectALEANCFCable2D::GetRotationJacobian(const Vector3D& localPosition, M
 	Real fact0 = -y / (x*x + y * y);
 	Real fact1 = x / (x*x + y * y);
 
-	value.SetNumberOfRowsAndColumns(3, 8);
+	value.SetNumberOfRowsAndColumns(3, 9); //the ALE coordinate last, its column zero (#2786)
 	value.SetAll(0.); //last row not necessary to set to zero ... 
 	for (Index i = 0; i < ns; i++)
 	{

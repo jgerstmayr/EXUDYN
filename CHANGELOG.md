@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 205 | 1.12.220 |
+| 1.12 | Metheney | 206 | 1.12.221 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.221** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectALEANCFCable2D: a connector or load through a body marker fails with a size mismatch (#2786)
+  - description: Since the legacy path is gone (RG14.2.13, \#2745), connectors and loads act through the marker functions, which size the generalized force by the body's 9 coordinates; the position and rotation Jacobians of ObjectALEANCFCable2D have 8 columns (the ANCF coordinates) - 'MultMatrixTransposedVectorAddTemplate: Size mismatch' in the first step (the three CND2022 ALE examples). Fix: the Jacobians get the ALE coordinate as 9th column, zero, which is what the legacy path did implicitly; whether it should be nonzero is \#2784.
+  - **notes:** Connectors and loads acting through a body marker on ObjectALEANCFCable2D work again; they failed with a size mismatch in the first step.
+  - date resolved: **2026-10-02 21:32**, date raised: 2026-10-02
 - **1.12.220** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` MarkerSuperElementRigid on ObjectFFRF is accepted by Assemble() and fails in the first evaluation (#2785)
   - description: Found by test\_accessFunctionsAllBodies.py (RG9.5.6): GetAccessFunctionSuperElement raises 'AngularVelocity\_qt, only possible for ObjectGenericODE2 and ObjectFFRFreducedOrder' when the Jacobian of a MarkerSuperElementRigid on an ObjectFFRF is formed - at the first Newton iteration, not at Assemble(). The consistency check of the marker (or the declared access functions of ObjectFFRF) should refuse it with that reason.
   - **notes:** Assemble() refuses a connector or load acting through a MarkerSuperElementRigid on ObjectFFRF, which has no rotation Jacobian; before, the simulation failed in its first step.

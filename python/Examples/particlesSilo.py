@@ -181,7 +181,7 @@ if True: #add Silo
     contour = list(contour)
     # contour.reverse()
     gSilo = graphics.SolidOfRevolution(pAxis=[0,0,3*L], vAxis=[0,0,1],
-            contour=contour, color=[0.8,0.1,0.1,0.5], nTiles = 64)
+            contour=contour, color=[0.8,0.1,0.1,0.5], nTiles=32)
     
     [meshPoints, meshTrigs] = graphics.ToPointsAndTrigs(gSilo)
     gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mGround, contactStiffness=k, contactDamping=d, frictionMaterialIndex=0,

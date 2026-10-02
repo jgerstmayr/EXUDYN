@@ -36,7 +36,7 @@ oDisc = mbs.CreateRigidBody(inertia = InertiaCylinder(density=5000, length=0.02,
                           initialAngularVelocity = [-3*2*pi,10,0],
                           initialVelocity = [0,r*3*2*pi,0],
                           gravity = [0,0,-9.81],
-                          graphicsDataList = [exu.graphics.Cylinder(pAxis = [-0.01,0,0], vAxis = [0.02,0,0], radius = r*0.99, nTiles=64,
+                          graphicsDataList = [exu.graphics.Cylinder(pAxis = [-0.01,0,0], vAxis = [0.02,0,0], radius = r*0.99, nTiles=32,
                                                                     color=exu.graphics.color.blue),
                                               exu.graphics.Basis(length=2*r)])
 oGround = mbs.CreateGround(graphicsDataList=[exu.graphics.CheckerBoard(size=8)])

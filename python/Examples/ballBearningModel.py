@@ -72,7 +72,7 @@ shaftGraphics = graphics.SolidOfRevolution([0,0,0], axis,
                             contour=[[-0.5*shaftLength,0],[-0.5*shaftLength,shaftRadius-f],
                                      [-0.5*shaftLength+f,shaftRadius],[0.5*shaftLength-f,shaftRadius],
                                      [0.5*shaftLength,shaftRadius-f],[0.5*shaftLength,0],], 
-                            nTiles=64, color=graphics.color.steelblue)
+                            nTiles=32, color=graphics.color.steelblue)
 
 bodyInner = mbs.CreateRigidBody(referencePosition=[0,0,0],
                                 nodeType=exu.NodeType.RotationRxyz,

@@ -1,0 +1,11 @@
+{
+  "number": 2787,
+  "title": "raytracer: single bright pixels on curved triangles at coarse tiling",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "Seen in the images of RG6.7.7.7 (2026-10-02): at nTiles 32 and below, a SolidOfRevolution and a half sphere through the raytracer (160 x 160 pixels) show a few single white pixels on the surface, not at 64 - rays passing between neighbouring curved triangles, or between the flat triangles the raytracer splits them into. To check: watertightness of the split of 6-node triangles along shared edges (the same subdivision on both sides).",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31"
+}

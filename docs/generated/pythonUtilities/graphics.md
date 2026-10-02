@@ -63,7 +63,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsCur
 - **output**: a graphicsData dictionary of the type 'TriangleList' with 'triangles' only, or graphicsData itself if it has no 'triangles6'
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsCurvedShapes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsCurvedShapes.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`graphicsCurvedShapes.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsCurvedShapes.py) (Ex), [`graphicsDataExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/graphicsDataExample.py) (Ex)
 
 
 (sec-graphics-spherestotrianglelist)=

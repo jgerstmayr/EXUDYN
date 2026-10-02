@@ -55,7 +55,7 @@ for pos in posList:
     #gDataList += [graphics.Cylinder(pAxis=pos, vAxis=[0,0,0.1], radius=rb, color= graphics.color.grey, nTiles=200)]
     colBG = graphics.color.grey
     colBG[3] = 0.05
-    gDataList += [graphics.Sphere(point=pos, radius=rb, color= colBG, nTiles=100)]
+    gDataList += [graphics.Sphere(point=pos, radius=rb, color= colBG, nTiles=50)]
     #gDataList += [GraphicsDataRectangle(-1.2*H,-H*0.75,1.2*H,16*H,color=graphics.color.red)]
     nMass = mbs.AddNode(NodePointGround(referenceCoordinates=pos,
                         visualization=VNodePointGround(show=False)))
