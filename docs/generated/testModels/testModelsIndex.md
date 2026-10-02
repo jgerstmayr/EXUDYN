@@ -88,7 +88,7 @@ geometricallyExactBeamRightAngleFrame
 rightAngleFrame
 energiesFlexibleBodiesTest
 accessFunctionsTest
-itemComputeTest
+computeItemTest
 inspectTest
 energiesTest
 geometricallyExactBeamOutputTest

@@ -428,11 +428,22 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 	if (!systemIsInteger) { return false; } //avoid crashes due to further checks!
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++
-	//the access functions of some bodies are defined at restricted local positions only, e.g. at the beam axis; checked for
-	//the markers through which a connector or load acts - a marker for a sensor may be anywhere (#2744)
+	//the access functions of some bodies are defined at restricted local positions only, e.g. at the beam axis, and the rigid
+	//marker on ObjectFFRF has no rotation Jacobian; checked for the markers through which a connector or load acts - a marker
+	//for a sensor or the graphics may be anywhere (#2744, #2785)
 	auto CheckLocalPosition = [&mainSystem, &systemIsInteger](Index markerIndex, const STDstring& itemString)
 	{
 		const CMarker* marker = mainSystem.GetMainSystemData().GetMainMarkers()[markerIndex]->GetCMarker();
+		//the rotation Jacobian of the mesh nodes of ObjectFFRF is not provided: a rigid superelement marker may show the
+		//rotation, but no connector or load can act through it (#2785)
+		if (EXUstd::IsOfType(marker->GetType(), (Marker::Type)(Marker::SuperElement + Marker::Orientation))
+			&& STDstring(mainSystem.GetMainSystemData().GetMainObjects()[marker->GetObjectNumber()]->GetTypeName()) == "FFRF")
+		{
+			PyError(itemString + " acts through marker " + EXUstd::ToString(markerIndex) + ", a MarkerSuperElementRigid on ObjectFFRF, "
+				"which provides no rotation Jacobian of its mesh nodes; use ObjectFFRFreducedOrder or ObjectGenericODE2, or a MarkerSuperElementPosition", PyErrorType::modelError);
+			systemIsInteger = false;
+			return;
+		}
 		Vector3D localPosition;
 		if (!marker->GetLocalPosition(localPosition)) { return; }
 		Index bodyNumber = marker->GetObjectNumber();
@@ -2523,6 +2534,69 @@ void CSystem::PostDiscontinuousIterationStep()
 //                          JACOBIANS
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+//! the analytic ODE2 Jacobian of object j, factorODE2 d(LHS)/dq + factorODE2_t d(LHS)/dq_t, into temp.jacobianODE2Container:
+//! its own (ComputeJacobianODE2_ODE2), or for a connector the one on the interface or on the path of the marker data; false
+//! if it has none - or the settings ask for the numerical one -, then the caller differentiates numerically; used by
+//! JacobianODE2RHS and mbs.ComputeItem (#2782)
+bool CSystem::ComputeObjectJacobianODE2(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff, Index j,
+	Real factorODE2, Real factorODE2_t)
+{
+	CObject* object = cSystemData.GetCObjects()[j];
+	ArrayIndex& ltgODE2 = cSystemData.GetLocalToGlobalODE2()[j];
+	JacobianType::Type jacType = object->GetAvailableJacobians();
+	if (!(jacType & (JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE1))) { return false; } //no ODE2 dependency
+	if (numDiff.forODE2 || (jacType & (JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function)) == 0) { return false; }
+
+	if (!EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
+	{   //the object's Jacobian, e.g., finite element or rigid body
+		object->ComputeJacobianODE2_ODE2(temp.jacobianODE2Container, temp.jacobianTemp, factorODE2, factorODE2_t, j, ltgODE2);
+		return true;
+	}
+	if (numDiff.forODE2connectors) { return false; }
+
+	CObjectConnector* connector = (CObjectConnector*)object;
+	const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
+	bool jacobianComputed = true;
+	bool jacDerivNonZero = false;
+	if (numDiff.jacobianConnectorDerivative) //if ignored, it will not be considered
+	{
+		for (Index k = 0; k < markerNumbers.NumberOfItems(); k++)
+		{
+			jacobianComputed &= ((cSystemData.GetCMarker(markerNumbers[k]).GetType() & Marker::JacobianDerivativeAvailable) != 0);
+			jacDerivNonZero |= ((cSystemData.GetCMarker(markerNumbers[k]).GetType() & Marker::JacobianDerivativeNonZero) != 0);
+		}
+	}
+	if (!jacobianComputed) { return false; }
+
+	//the connector computes its Jacobian on the connector interface, or the path of the marker data follows (#2745)
+	if (!connector->ComputeJacobianODE2Connector(cSystemData, temp, factorODE2, factorODE2_t, j, jacDerivNonZero))
+	{
+		const bool computeJacobian = true;
+		cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
+		if (jacDerivNonZero) //call needed, if one marker has non-zero derivative ==> compute jacobianForce for both cases
+		{
+			Vector6D jacobianForce;
+			connector->ComputeJacobianForce6D(temp.markerDataStructure, j, jacobianForce);
+			for (Index k = 0; k < markerNumbers.NumberOfItems(); k++)
+			{
+				cSystemData.GetCMarkers()[markerNumbers[k]]->ComputeMarkerDataJacobianDerivative(cSystemData,
+					jacobianForce, temp.markerDataStructure.GetMarkerData(k));
+			}
+		}
+		else
+		{
+			for (Index k = 0; k < markerNumbers.NumberOfItems(); k++)
+			{
+				temp.markerDataStructure.GetMarkerData(k).jacobianDerivative.SetNumberOfRowsAndColumns(0, 0);
+			}
+		}
+		connector->ComputeJacobianODE2_ODE2(temp.jacobianODE2Container, temp.jacobianTemp,
+			factorODE2, factorODE2_t, j, ltgODE2, temp.markerDataStructure);
+	}
+	return true;
+}
+
+
 //! compute numerical differentiation of ODE2RHS w.r.t. ODE2 and ODE2_t quantities; 
 //! multiply (before added to jacobianGM) ODE2 with factorODE2 and ODE2_t with factorODE2_t
 //! the jacobian is ADDed to jacobianGM, which needs to have according size; set entries to zero beforehand in order to obtain only the jacobian
@@ -2572,97 +2646,21 @@ void CSystem::JacobianODE2RHS(TemporaryComputationDataArray& tempArray, const Nu
 
 				JacobianType::Type jacType = object->GetAvailableJacobians();
 
-				bool jacobianComputed = false;
 				if (jacType & (JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE1)) //any ODE2 dependency
 				{
-					//pout << "jacobian object " << j << "\n";
-					if (!numDiff.forODE2 && ((jacType & (JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function/* + JacobianType::ODE2_ODE1_function*/)) != 0))
+					//the analytic Jacobian of the object, if it has one; else the numerical one below
+					bool jacobianComputed = ComputeObjectJacobianODE2(temp, numDiff, j, -factorODE2, -factorODE2_t); //minus (-): RHS = -LHS
+					if (jacobianComputed)
 					{
-						if (!EXUstd::IsOfType(object->GetType(), CObjectType::Connector))
-						{   // ++++++++++++++ compute object jacobian, e.g., finite element or rigid body
-							jacobianComputed = true;
-
-							//matrix size set inside object
-							object->ComputeJacobianODE2_ODE2(temp.jacobianODE2Container, temp.jacobianTemp,
-								-factorODE2, -factorODE2_t, j, ltgODE2); //minus (-) because in numerical mode, f0-f1 leads to negative sign (RHS ==> LHS)
-							//ODE2_ODE1 missing here!
-							if (temp.jacobianODE2Container.UseDenseMatrix())
-							{
-								jacobianGM.AddSubmatrix(temp.jacobianODE2Container.GetInternalDenseMatrix(), 1., ltgODE2, ltgODE2);
-							}
-							else
-							{
-								jacobianGM.AddSparseTriplets(temp.jacobianODE2Container.GetInternalSparseTripletMatrix().GetTriplets());
-								//sparse matrix container cannot be reset in jacobian function for future implementations
-								//==>replace this by directly adding values to jacobianGM sparse triplets in object jacobian
-								temp.jacobianODE2Container.GetInternalSparseTripletMatrix().SetAllZero();
-							}
-						} //if (!EXUstd::IsOfType(object->GetType(), CObjectType::Connector)
-						else if (!numDiff.forODE2connectors)
-						{	// ++++++++++++++ go the lengthier way: compute connector jacobian, e.g., spring-damper
-							CObjectConnector* connector = (CObjectConnector*)object;
-							//pout << "analytic jac connector \n";
-							const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();
-							jacobianComputed = true;
-							bool jacDerivNonZero = false;
-							if (numDiff.jacobianConnectorDerivative) //if ignored, it will not be considered
-							{
-								for (Index k = 0; k < markerNumbers.NumberOfItems(); k++)
-								{
-									jacobianComputed &= ((cSystemData.GetCMarker(markerNumbers[k]).GetType() & Marker::JacobianDerivativeAvailable) != 0);
-									jacDerivNonZero |= ((cSystemData.GetCMarker(markerNumbers[k]).GetType() & Marker::JacobianDerivativeNonZero) != 0);
-								}
-							}
-
-							if (jacobianComputed)
-							{
-								//the connector computes its Jacobian on the connector interface, or the path of the marker data follows (#2745)
-								if (!connector->ComputeJacobianODE2Connector(cSystemData, temp, -factorODE2, -factorODE2_t, j, jacDerivNonZero))
-								{
-									//compute MarkerData for connector:
-									const bool computeJacobian = true; //jacobian needed for jacobian computation ...
-									cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
-									//pout << "compute connector " << j << " jacobian \n";
-									if (jacDerivNonZero) //call needed, if one marker has non-zero derivative ==> compute jacobianForce for both cases
-									{
-										Vector6D jacobianForce;
-										connector->ComputeJacobianForce6D(temp.markerDataStructure, j, jacobianForce);
-										//even though that force on marker0 acts with negative sign, 
-										//  the different signs are accounted for in connector->ComputeJacobianODE2_ODE2(...)
-										//  ==> but this could also be done here !
-										//pout << "  jacobian force = " << temp.jacobianForce << " \n";
-										for (Index k = 0; k < markerNumbers.NumberOfItems(); k++)
-										{
-											cSystemData.GetCMarkers()[markerNumbers[k]]->ComputeMarkerDataJacobianDerivative(cSystemData,
-												jacobianForce, temp.markerDataStructure.GetMarkerData(k));
-											//pout << "  compute non-zero jacobian derivative" << k << ": " << temp.markerDataStructure.GetMarkerData(k).jacobianDerivative << " \n";
-										}
-									}
-									else
-									{
-										//clear jacobianDerivative!!!
-										for (Index k = 0; k < markerNumbers.NumberOfItems(); k++)
-										{
-											temp.markerDataStructure.GetMarkerData(k).jacobianDerivative.SetNumberOfRowsAndColumns(0, 0);
-										}
-									}
-
-									connector->ComputeJacobianODE2_ODE2(temp.jacobianODE2Container, temp.jacobianTemp, 
-										-factorODE2, -factorODE2_t, j, ltgODE2, temp.markerDataStructure);
-								}
-
-
-								if (temp.jacobianODE2Container.UseDenseMatrix())
-								{
-									jacobianGM.AddSubmatrix(temp.jacobianODE2Container.GetInternalDenseMatrix(), 1., ltgODE2, ltgODE2);
-									//pout << "jacA" << j << "=np.array(" << temp.jacobianODE2Container.GetInternalDenseMatrix() << ")\n";
-								}
-								else
-								{
-									jacobianGM.AddSparseTriplets(temp.jacobianODE2Container.GetInternalSparseTripletMatrix().GetTriplets());
-								}
-							}
-						} //if (numDiff.forODE2connectors)
+						if (temp.jacobianODE2Container.UseDenseMatrix())
+						{
+							jacobianGM.AddSubmatrix(temp.jacobianODE2Container.GetInternalDenseMatrix(), 1., ltgODE2, ltgODE2);
+						}
+						else
+						{
+							jacobianGM.AddSparseTriplets(temp.jacobianODE2Container.GetInternalSparseTripletMatrix().GetTriplets());
+							temp.jacobianODE2Container.GetInternalSparseTripletMatrix().SetAllZero();
+						}
 					}
 
 

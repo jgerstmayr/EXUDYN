@@ -327,6 +327,11 @@ public:
 	void JacobianODE1RHS(TemporaryComputationDataArray& tempArray, const NumericalDifferentiationSettings& numDiff,
 		GeneralMatrix& jacobianGM, Real factorODE2 = 1., Real factorODE2_t = 0., Real factorODE1 = 1.) {}; //used in future!
 
+	//! the analytic ODE2 Jacobian of one object, factorODE2 d(LHS)/dq + factorODE2_t d(LHS)/dq_t, into
+	//! temp.jacobianODE2Container; false if it has none for these settings (#2782)
+	bool ComputeObjectJacobianODE2(TemporaryComputationData& temp, const NumericalDifferentiationSettings& numDiff, Index objectNumber,
+		Real factorODE2, Real factorODE2_t);
+
 	//! the algebraic equations of one object - a constraint or a body with algebraic equations - at the current state,
 	//! into localAE (mbs.ComputeItem, #2779)
 	void ComputeObjectAlgebraicEquations(TemporaryComputationData& temp, Index objectNumber, Vector& localAE, bool velocityLevel = false);

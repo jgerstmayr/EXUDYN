@@ -572,7 +572,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`TCPIPexudyn
 - **function description**: the global ODE2 coordinate indices of an object (its local-to-global list) or of a node, in the order of the matrices and vectors mbs.ComputeItem returns for it; the system must be assembled
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`itemComputeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/itemComputeTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`computeItemTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/computeItemTest.py) (TM)
 
 
 (sec-advancedutilities-numericaljacobian)=
@@ -583,7 +583,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`itemCompute
 - **function description**: the derivative of function() - any computation of the current state, e.g. an output variable or mbs.ComputeItem - by the given global ODE2 coordinates (velocities=True: by their time derivatives), by central differences with step epsilon; the state is restored afterwards; returns an array (number of values of function) x (number of coordinates); with ItemODE2Coordinates, the comparison with mbs.ComputeItem is one line: NumericalJacobian(mbs, lambda: mbs.GetObjectOutputBody(oBody, exu.OutputVariableType.Velocity, localPosition), ItemODE2Coordinates(mbs, oBody), velocities=True) against mbs.ComputeItem(oBody, exu.ComputeItemType.PositionJacobian, localPosition)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`itemComputeTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/itemComputeTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`computeItemTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/computeItemTest.py) (TM)
 
 
 (sec-module-advancedutilities-class-expectedtype(enum))=

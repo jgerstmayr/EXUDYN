@@ -249,7 +249,9 @@ enum class ComputeItemType {
     ConstraintJacobian = 8,             //!< the Jacobian of the algebraic equations by the ODE2 coordinates (by the velocities for a constraint at velocity level)
     ReactionForces = 9,                 //!< the reaction forces C_q^T lambda of a constraint, with the current Lagrange multipliers
     Kinematics = 10,                    //!< the marker data of a marker, without Jacobians, as a dict: position, velocity, rotationMatrix and angularVelocityLocal where the marker has an orientation, value and value_t for a coordinate marker
-    CoordinateJacobian = 11             //!< the Jacobian of a coordinate marker by the coordinates it acts on
+    CoordinateJacobian = 11,            //!< the Jacobian of a coordinate marker by the coordinates it acts on
+    JacobianODE2 = 12,                  //!< the analytic Jacobian d(ODE2LHS)/dq of a body or connector, where it has one - the one the solver uses; for the others, NumericalJacobian of ODE2LHS
+    JacobianODE2_t = 13                 //!< the analytic Jacobian d(ODE2LHS)/dq_t of a body or connector, where it has one
 };
 
 //! ostream operator for printing of ComputeItemType
@@ -268,6 +270,8 @@ inline std::ostream& operator<<(std::ostream& os, ComputeItemType value)
     case ComputeItemType::ReactionForces: return os << "ReactionForces";
     case ComputeItemType::Kinematics: return os << "Kinematics";
     case ComputeItemType::CoordinateJacobian: return os << "CoordinateJacobian";
+    case ComputeItemType::JacobianODE2: return os << "JacobianODE2";
+    case ComputeItemType::JacobianODE2_t: return os << "JacobianODE2_t";
     default: return os << "ComputeItemType::invalid";
     }
 }

@@ -1141,9 +1141,12 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 		if (EXUstd::IsOfType(object->GetType(), CObjectType::Body))
 		{
 			Index access = (Index)object->GetAccessFunctionTypes();
-			if (access & (Index)AccessFunctionType::TranslationalVelocity_qt) { applicable.push_back(ComputeItemType::PositionJacobian); }
-			if (access & (Index)AccessFunctionType::AngularVelocity_qt) { applicable.push_back(ComputeItemType::RotationJacobian); }
-			if (access & (Index)AccessFunctionType::JacobianTtimesVector_q) { applicable.push_back(ComputeItemType::JacobianTTimesVectorDerivative); }
+			//a superelement or kinematic tree is reached through its own markers, not at a local position of the body
+			const bool atLocalPosition = !(access & ((Index)AccessFunctionType::SuperElement + (Index)AccessFunctionType::KinematicTree
+				+ (Index)AccessFunctionType::OwnMarkersOnly));
+			if (atLocalPosition && (access & (Index)AccessFunctionType::TranslationalVelocity_qt)) { applicable.push_back(ComputeItemType::PositionJacobian); }
+			if (atLocalPosition && (access & (Index)AccessFunctionType::AngularVelocity_qt)) { applicable.push_back(ComputeItemType::RotationJacobian); }
+			if (atLocalPosition && (access & (Index)AccessFunctionType::JacobianTtimesVector_q)) { applicable.push_back(ComputeItemType::JacobianTTimesVectorDerivative); }
 			if (access & (Index)AccessFunctionType::DisplacementMassIntegral_q) { applicable.push_back(ComputeItemType::MassWeightedPositionJacobian); }
 			applicable.push_back(ComputeItemType::ODE2LHS);
 			applicable.push_back(ComputeItemType::MassMatrix);
@@ -1152,6 +1155,12 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 			&& !EXUstd::IsOfType(object->GetType(), CObjectType::Constraint))
 		{
 			applicable.push_back(ComputeItemType::ODE2LHS);
+		}
+		Index jacobianTypes = (Index)object->GetAvailableJacobians();
+		if (!EXUstd::IsOfType(object->GetType(), CObjectType::Constraint))
+		{
+			if (jacobianTypes & (Index)JacobianType::ODE2_ODE2_function) { applicable.push_back(ComputeItemType::JacobianODE2); }
+			if (jacobianTypes & (Index)JacobianType::ODE2_ODE2_t_function) { applicable.push_back(ComputeItemType::JacobianODE2_t); }
 		}
 		if (object->GetAlgebraicEquationsSize() != 0)
 		{
@@ -1178,7 +1187,7 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 	{
 		marker = cSystemData.GetCMarkers()[number];
 		Index type = (Index)marker->GetType();
-		const bool special = type & ((Index)Marker::BodyMass + (Index)Marker::Beam3DShape + (Index)Marker::Coordinates + (Index)Marker::KinematicTree);
+		const bool special = type & ((Index)Marker::BodyMass + (Index)Marker::Beam3DShape + (Index)Marker::Coordinates);
 		if (!special)
 		{
 			applicable.push_back(ComputeItemType::Kinematics);
@@ -1262,6 +1271,32 @@ py::object MainSystem::PyComputeItem(const py::object& itemIndex, const py::obje
 		case ComputeItemType::ReactionForces:
 			GetCSystem().ComputeObjectReactionForces(temp, number, local);
 			return EPyUtils::ToPython(local);
+		case ComputeItemType::JacobianODE2:
+		case ComputeItemType::JacobianODE2_t:
+		{
+			const bool byVelocities = computeType == ComputeItemType::JacobianODE2_t;
+			NumericalDifferentiationSettings numDiff; //the defaults: analytic Jacobians where available
+			temp.jacobianODE2Container.SetUseDenseMatrix(true);
+			if (!GetCSystem().ComputeObjectJacobianODE2(temp, numDiff, number, byVelocities ? 0. : 1., byVelocities ? 1. : 0.))
+			{
+				PyError("ComputeItem: " + EXUstd::ToString(itemType) + " " + EXUstd::ToString(number) + " has no analytic Jacobian here (a marker without the derivative of its Jacobian); "
+					"exudyn.advancedUtilities.NumericalJacobian of ComputeItemType.ODE2LHS gives the numerical one", PyErrorType::valueError);
+				return py::none();
+			}
+			if (temp.jacobianODE2Container.UseDenseMatrix()) { return EPyUtils::ToPython(temp.jacobianODE2Container.GetInternalDenseMatrix()); }
+			//sparse, in global indices: back to the coordinates of the object
+			const ArrayIndex& ltg = cSystemData.GetLocalToGlobalODE2()[number];
+			matrix.SetNumberOfRowsAndColumns(ltg.NumberOfItems(), ltg.NumberOfItems());
+			matrix.SetAll(0.);
+			for (const EXUmath::Triplet& item : temp.jacobianODE2Container.GetInternalSparseTripletMatrix().GetTriplets())
+			{
+				Index row = ltg.GetIndexOfItem(item.row());
+				Index column = ltg.GetIndexOfItem(item.col());
+				CHECKandTHROW(row != EXUstd::InvalidIndex && column != EXUstd::InvalidIndex, "ComputeItem: JacobianODE2 outside the coordinates of the object");
+				matrix(row, column) += item.value();
+			}
+			return EPyUtils::ToPython(matrix);
+		}
 		default: break;
 		}
 	}

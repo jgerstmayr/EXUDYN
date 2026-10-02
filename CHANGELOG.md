@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 203 | 1.12.218 |
+| 1.12 | Metheney | 205 | 1.12.220 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.220** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` MarkerSuperElementRigid on ObjectFFRF is accepted by Assemble() and fails in the first evaluation (#2785)
+  - description: Found by test\_accessFunctionsAllBodies.py (RG9.5.6): GetAccessFunctionSuperElement raises 'AngularVelocity\_qt, only possible for ObjectGenericODE2 and ObjectFFRFreducedOrder' when the Jacobian of a MarkerSuperElementRigid on an ObjectFFRF is formed - at the first Newton iteration, not at Assemble(). The consistency check of the marker (or the declared access functions of ObjectFFRF) should refuse it with that reason.
+  - **notes:** Assemble() refuses a connector or load acting through a MarkerSuperElementRigid on ObjectFFRF, which has no rotation Jacobian; before, the simulation failed in its first step.
+  - date resolved: **2026-10-02 20:47**, date raised: 2026-10-02
+- **1.12.219** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` mbs.ItemCompute: the ODE2 Jacobian of an object, and the bodies not yet in the test of the access functions (#2782)
+  - description: What mbs.ItemCompute (\#2779) does not compute yet: the ODE2 Jacobian of an object or connector (analytic where it has one, else numerical as the solver does), IsValidLocalPosition of a body, the Jacobians of a node with algebraic equations; and the bodies test\_accessFunctionsAllBodies.py does not build yet: ObjectFFRF, ObjectFFRFreducedOrder, ObjectKinematicTree, ObjectALEANCFCable2D, ObjectGenericODE2, the derivative of the Lie group node by composed increments.
+  - **notes:** mbs.ComputeItem computes the analytic ODE2 Jacobian of a body or connector (ComputeItemType.JacobianODE2, JacobianODE2\_t); for superelements and kinematic trees it computes through their markers.
+  - date resolved: **2026-10-02 20:47**, date raised: 2026-10-02
 - **1.12.218** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` mbs.ItemCompute renamed mbs.ComputeItem (#2783)
   - description: Maintainer's review of RG9.5.1 (2026-10-02): the function is mbs.ComputeItem and its enumeration exu.ComputeItemType, verb first like mbs.AddObject; the rest of the proposal stays (helper in exudyn.advancedUtilities, what=None lists what applies, one vector argument).
   - **notes:** mbs.ItemCompute and exu.ItemComputeType, new in this release, are named mbs.ComputeItem and exu.ComputeItemType.

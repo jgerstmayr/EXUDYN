@@ -89,6 +89,8 @@ enumTypes = [
               EnumValue('ReactionForces', 9, 'the reaction forces C_q^T lambda of a constraint, with the current Lagrange multipliers'),
               EnumValue('Kinematics', 10, 'the marker data of a marker, without Jacobians, as a dict: position, velocity, rotationMatrix and angularVelocityLocal where the marker has an orientation, value and value_t for a coordinate marker'),
               EnumValue('CoordinateJacobian', 11, 'the Jacobian of a coordinate marker by the coordinates it acts on'),
+              EnumValue('JacobianODE2', 12, 'the analytic Jacobian d(ODE2LHS)/dq of a body or connector, where it has one - the one the solver uses; for the others, NumericalJacobian of ODE2LHS'),
+              EnumValue('JacobianODE2_t', 13, 'the analytic Jacobian d(ODE2LHS)/dq_t of a body or connector, where it has one'),
               ],
              stringFunction='operator<<',
              cppNote='what MainSystem::PyComputeItem computes (#2779)'),

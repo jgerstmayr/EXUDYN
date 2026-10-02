@@ -1413,11 +1413,19 @@ revision (info document D15).
       forces;
     - **RG9.5.5** nodes and markers: the node's position and rotation Jacobians and `GetRotationJacobianTTimesVector_q`,
       the marker's kinematics (L0) and its Jacobians.
-    - **RG9.5.6** *(found in RG9.5; needs no decision)* **what `mbs.ComputeItem` does not compute yet** (#2782): the ODE2
+    - **RG9.5.6** **DONE 2026-10-02** (the ODE2 Jacobian and all bodies; `IsValidLocalPosition` and the node Jacobians of
+      algebraic equations left out, see the log) — [log](exudynRevisionLog2026b.md#rg9-5-6) - *(found in RG9.5; needs no
+      decision)* **what `mbs.ComputeItem` does not compute yet** (#2782): the ODE2
       Jacobian of an object or connector (analytic where it has one, else numerical as the solver does),
       `IsValidLocalPosition`, the Jacobians of a node with algebraic equations; and the bodies the test of RG9.3.8 does
       not build yet - `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectKinematicTree`, `ObjectALEANCFCable2D`,
       `ObjectGenericODE2` -, and the derivative of the Lie group node by composed increments.
+    - **RG9.5.7** *(found in RG9.5.6, for the maintainer's decision)* **`ObjectALEANCFCable2D`: what a marker on it is**
+      (#2784): its position Jacobian has the 8 columns of the ANCF coordinates, not the ALE coordinate, while its velocity
+      output - the material velocity - depends on the ALE velocity; off the axis the Jacobian also differs from the
+      derivative of the velocity output by 2 %. Either a marker is a material point (the Jacobian gets the ALE column, and
+      forces act on the ALE coordinate), or a point fixed along the axis (its velocity is J q_t, without the ALE term);
+      and which derivative of the normal is right off the axis.
 
 ## RG10 — Tooling and process
 
@@ -2496,7 +2504,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); done: the dispatch in the connector, the switch and the legacy functions (RG14.2.13, .17), sensors from a pool and the mixed rigid chain (.18), `PostNewtonStep` without Jacobians (.19), `MarkerTemp` without `MarkerData` (.14), `TemporaryComputationData` inventoried and named (.16) |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
-| RG9.5 | #2782 | `mbs.ComputeItem` done (#2779, RG9.3.8 with it); open RG9.5.6: the ODE2 Jacobian of an object, the FFRF bodies, kinematic tree, ALE cable, GenericODE2 in the test |
+| RG9.5.7 | #2784 | `ObjectALEANCFCable2D`: a marker on it - a material point or a point along the axis (for the maintainer's decision) |
 | RG16.1 | #2780 | homogeneous transformations: the C++ class fast, out of `exulie`, and `exudyn.HT` |
 | RG16.2 | #2781 | evaluation: HT in the user interface of the rigid items, `localHT` in the rigid markers (RG16.5) |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |

@@ -1,0 +1,11 @@
+{
+  "number": 2784,
+  "title": "ObjectALEANCFCable2D: the position Jacobian and the velocity output disagree",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "Found by test_accessFunctionsAllBodies.py (RG9.5.6): the position Jacobian of ObjectALEANCFCable2D is 3 x 8, the ANCF coordinates only, while the object has 9 (with the ALE coordinate) and its velocity output - the material velocity - depends on the ALE velocity (column r_x); off the axis (localPosition[1] != 0) the Jacobian also differs from the derivative of the velocity output by the ANCF velocities (7e-3 against 0.35). To decide: is a marker on the ALE cable a material point (then the Jacobian needs the ALE column, and the forces act on the ALE coordinate) or a point fixed along the axis (then the velocity output of a marker is not J q_t); and which normal derivative is right off the axis.",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31"
+}

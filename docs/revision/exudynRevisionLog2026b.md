@@ -11687,3 +11687,38 @@ the test files, the plan; the entry of RG9.5 above keeps the name it was written
 helper `NumericalJacobian`/`ItemODE2Coordinates` in `exudyn.advancedUtilities`, `what=None` returns the list of what
 applies to the item, one `vector` argument for force and torque. The test model keeps its file name
 `itemComputeTest.py` (a tracked file is renamed only with the maintainer's approval).
+
+<a id="rg9-5-6"></a>
+### RG9.5.6 — the ODE2 Jacobian in `mbs.ComputeItem`; every body in the test (2026-10-02, #2782, #2785)
+
+**`ComputeItemType.JacobianODE2` and `JacobianODE2_t`**: the analytic Jacobian of a body or connector, d(ODE2LHS)/dq and
+d(ODE2LHS)/dq_t - the one the solver uses -, where the item has one (`ODE2_ODE2_function`: `ANCFCable`, `ANCFThinPlate`,
+`BeamGeometricallyExact`, the connectors on the interface); for the others `NumericalJacobian` of `ODE2LHS` is the
+answer, and `ComputeItem` says so. So that the solver and `ComputeItem` compute it the same way, the analytic part of
+`CSystem::JacobianODE2RHS` is one function now, `CSystem::ComputeObjectJacobianODE2` (the object's own Jacobian, or a
+connector's on the interface or the path of the marker data; false where there is none, then the numerical one); a
+sparse Jacobian is mapped back to the coordinates of the object. All references unchanged.
+
+**`ComputeItem` on superelements and the kinematic tree**: their access functions are reached through their own
+markers (`AccessFunctionType.SuperElement`, `KinematicTree`, `OwnMarkersOnly`), so the functions at a local position
+are no longer listed for them; `MarkerKinematicTreeRigid` is no longer left out of what a marker computes.
+
+**`test_accessFunctionsAllBodies.py`** (28 cases now): the superelements `ObjectFFRFreducedOrder`, `ObjectFFRF`,
+`ObjectGenericODE2` - on a cube of 8 mesh nodes built in the test (bars as stiffness, scipy) - through
+`MarkerSuperElementPosition` and `MarkerSuperElementRigid` (2e-11 to 3e-10); the kinematic tree through
+`MarkerKinematicTreeRigid`; `ObjectALEANCFCable2D` on its axis, in its ANCF columns; and the ODE2 Jacobian of 4 bodies
+and 4 connectors (`SpringDamper`, `RigidBodySpringDamper`, `TorsionalSpringDamper`, `CoordinateSpringDamper`; at zero
+velocities, as the chain neglects dv/dq) against the numerical derivative of `ODE2LHS`.
+
+**Found**:
+- **#2785, fixed**: a `MarkerSuperElementRigid` on `ObjectFFRF` was accepted by `Assemble()` and raised in the first
+  evaluation ("AngularVelocity_qt only possible for ObjectGenericODE2 and ObjectFFRFreducedOrder"). The marker alone stays
+  allowed - it shows the rotation of the mesh nodes (`test_superElementMarkerGraphics.py` uses it) -; `Assemble()` refuses a
+  connector or load through it, in the check of the markers through which forces act (with the local positions of
+  #2744) - tested in the same file (the FFRF body needs scipy).
+- **#2784, for the maintainer's decision (RG9.5.7)**: `ObjectALEANCFCable2D` - the position Jacobian leaves out the ALE
+  coordinate, on which the velocity output depends, and differs off the axis.
+
+**Left out**: `IsValidLocalPosition` (the check of `Assemble()` already reports it), the Jacobians of a node with
+algebraic equations (the Euler parameter constraint, which `ConstraintJacobian` of a body with it gives); the derivative
+of the Lie group node by composed increments stays out of the test.

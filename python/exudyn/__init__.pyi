@@ -297,6 +297,10 @@ class ComputeItemType(Enum):
     """the marker data of a marker, without Jacobians, as a dict: position, velocity, rotationMatrix and angularVelocityLocal where the marker has an orientation, value and value_t for a coordinate marker"""
     CoordinateJacobian = int
     """the Jacobian of a coordinate marker by the coordinates it acts on"""
+    JacobianODE2 = int
+    """the analytic Jacobian d(ODE2LHS)/dq of a body or connector, where it has one - the one the solver uses; for the others, NumericalJacobian of ODE2LHS"""
+    JacobianODE2_t = int
+    """the analytic Jacobian d(ODE2LHS)/dq_t of a body or connector, where it has one"""
 
 
 class ConfigurationType(Enum):

@@ -62,6 +62,8 @@
 		.value("ReactionForces", ComputeItemType::ReactionForces, "the reaction forces C_q^T lambda of a constraint, with the current Lagrange multipliers")
 		.value("Kinematics", ComputeItemType::Kinematics, "the marker data of a marker, without Jacobians, as a dict: position, velocity, rotationMatrix and angularVelocityLocal where the marker has an orientation, value and value_t for a coordinate marker")
 		.value("CoordinateJacobian", ComputeItemType::CoordinateJacobian, "the Jacobian of a coordinate marker by the coordinates it acts on")
+		.value("JacobianODE2", ComputeItemType::JacobianODE2, "the analytic Jacobian d(ODE2LHS)/dq of a body or connector, where it has one - the one the solver uses; for the others, NumericalJacobian of ODE2LHS")
+		.value("JacobianODE2_t", ComputeItemType::JacobianODE2_t, "the analytic Jacobian d(ODE2LHS)/dq_t of a body or connector, where it has one")
 		;
 
   py::enum_<ConfigurationType>(m, "ConfigurationType")

@@ -1,0 +1,15 @@
+{
+  "number": 2785,
+  "title": "MarkerSuperElementRigid on ObjectFFRF is accepted by Assemble() and fails in the first evaluation",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "Found by test_accessFunctionsAllBodies.py (RG9.5.6): GetAccessFunctionSuperElement raises 'AngularVelocity_qt, only possible for ObjectGenericODE2 and ObjectFFRFreducedOrder' when the Jacobian of a MarkerSuperElementRigid on an ObjectFFRF is formed - at the first Newton iteration, not at Assemble(). The consistency check of the marker (or the declared access functions of ObjectFFRF) should refuse it with that reason.",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-02 20:47",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Assemble() refuses a connector or load acting through a MarkerSuperElementRigid on ObjectFFRF, which has no rotation Jacobian; before, the simulation failed in its first step.",
+  "resolvedInVersion": "1.12.220"
+}
