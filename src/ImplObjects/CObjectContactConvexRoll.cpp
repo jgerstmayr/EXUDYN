@@ -250,11 +250,9 @@ void CObjectContactConvexRoll::ComputeConnectorForceRigid(const MarkerRigid<Real
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
-	static thread_local MarkerDataStructure markerData; //the physics read a marker data structure, without Jacobians; one per thread
-	markerData.SetNumberOfMarkerData(2);
-	markerData.SetTime(t);
-	MarkerDataFromKinematics(markers[0], markerData.GetMarkerData(0));
-	MarkerDataFromKinematics(markers[1], markerData.GetMarkerData(1));
+	TemporaryMarkerDataStructure temporary; //the physics read a marker data structure, without Jacobians
+	MarkerDataStructure& markerData = temporary.Get();
+	MarkerDataFromKinematics(markers, t, markerData);
 	Vector3D pC, vC;
 	ComputeContactForces(markerData, parameters, pC, vC, forces[1], torques[1], false);
 	forces[0] = -forces[1];

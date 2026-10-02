@@ -225,29 +225,42 @@ void ConnectorJacobianODE2PositionMarkers(const CSystemData& cSystemData, Tempor
 		temp.markerTemp[1].markerData.positionJacobian, factorODE2, jacobianDerivativeNonZero, temp);
 }
 
+//! L0 for the chain of rigid markers: a marker without orientation - the contact connectors take one where they need no
+//! torque on it - gives its position and velocity with the unit matrix as rotation and no angular velocity (#2745)
+static Index GetKinematicsRigidOrPosition(const CSystemData& cSystemData, const CMarker& marker, MarkerRigid<Real>& kinematics, MarkerTemp& markerTemp)
+{
+	if (marker.GetType() & Marker::Orientation) { return marker.GetKinematicsRigid(cSystemData, kinematics, markerTemp); }
+	MarkerPosition<Real> position;
+	marker.GetKinematicsPosition(cSystemData, position);
+	kinematics.frame = HomogeneousTransformation(EXUmath::unitMatrix3D, position.position);
+	kinematics.velocity = position.velocity;
+	kinematics.angularVelocityLocal.SetAll(0.);
+	return marker.GetODE2Size(cSystemData, markerTemp);
+}
+
 //! L2 of the connector interface for connectors on rigid markers (#2745): the frames and velocities of the two markers
-//! (L0), the connector's forces and torques (L1), and their projection by each marker, into [marker 0, marker 1]
+//! (L0), the connector's forces and torques (L1), and their projection by each marker, into [marker 0, marker 1]; a
+//! marker without orientation takes the force only
 void ConnectorODE2LHSRigidMarkers(const CSystemData& cSystemData, TemporaryComputationData& temp, const CObjectConnector& connector, Vector& localODE2Lhs, Index objectNumber)
 {
-	const CMarker* marker0 = cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[0]];
-	const CMarker* marker1 = cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[1]];
+	const CMarker* markers[2] = { cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[0]], cSystemData.GetCMarkers()[connector.GetMarkerNumbers()[1]] };
 	MarkerRigid<Real> kinematics[2];
-	Index n0 = marker0->GetKinematicsRigid(cSystemData, kinematics[0], temp.markerTemp[0]);
-	Index n1 = marker1->GetKinematicsRigid(cSystemData, kinematics[1], temp.markerTemp[1]);
-	localODE2Lhs.SetNumberOfItems(n0 + n1);
+	Index n[2];
+	for (Index k = 0; k < 2; k++) { n[k] = GetKinematicsRigidOrPosition(cSystemData, *markers[k], kinematics[k], temp.markerTemp[k]); }
+	localODE2Lhs.SetNumberOfItems(n[0] + n[1]);
 	localODE2Lhs.SetAll(0.);
 
 	Vector3D forces[2], torques[2];
 	connector.ComputeConnectorForceRigid(kinematics, cSystemData.GetCData().currentState.time, objectNumber, forces, torques);
-	if (n1 != 0)
+	for (Index k = 0; k < 2; k++)
 	{
-		LinkedDataVector ode2Lhs1(localODE2Lhs, n0, n1);
-		marker1->AddGeneralizedForceTorque(cSystemData, forces[1], torques[1], temp.markerTemp[1], ode2Lhs1);
-	}
-	if (n0 != 0)
-	{
-		LinkedDataVector ode2Lhs0(localODE2Lhs, 0, n0);
-		marker0->AddGeneralizedForceTorque(cSystemData, forces[0], torques[0], temp.markerTemp[0], ode2Lhs0);
+		if (n[k] == 0) { continue; }
+		LinkedDataVector ode2Lhs(localODE2Lhs, k == 0 ? 0 : n[0], n[k]);
+		if (markers[k]->GetType() & Marker::Orientation)
+		{
+			markers[k]->AddGeneralizedForceTorque(cSystemData, forces[k], torques[k], temp.markerTemp[k], ode2Lhs);
+		}
+		else { markers[k]->AddGeneralizedForce(cSystemData, forces[k], temp.markerTemp[k], ode2Lhs); }
 	}
 }
 

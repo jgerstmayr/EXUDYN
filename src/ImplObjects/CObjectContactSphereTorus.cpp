@@ -187,11 +187,9 @@ void CObjectContactSphereTorus::ComputeConnectorForceRigid(const MarkerRigid<Rea
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
-	static thread_local MarkerDataStructure markerData; //the physics read a marker data structure, without Jacobians; one per thread
-	markerData.SetNumberOfMarkerData(2);
-	markerData.SetTime(t);
-	MarkerDataFromKinematics(markers[0], markerData.GetMarkerData(0));
-	MarkerDataFromKinematics(markers[1], markerData.GetMarkerData(1));
+	TemporaryMarkerDataStructure temporary; //the physics read a marker data structure, without Jacobians
+	MarkerDataStructure& markerData = temporary.Get();
+	MarkerDataFromKinematics(markers, t, markerData);
 	LinkedDataVector data = GetCNode(0)->GetCurrentCoordinateVector();
 	Vector3D deltaP, deltaV, pCircle1, contactPoint, fVec, fFriction, n0;
 	Real frictionCoeff, gap;

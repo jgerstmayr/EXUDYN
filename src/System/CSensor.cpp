@@ -94,7 +94,8 @@ void CSensorObject::GetSensorValues(const CSystemData& cSystemData, Vector& valu
 	{
 		const CObjectConnector* cConnector = (const CObjectConnector*)cObject;
 
-		MarkerDataStructure markerDataStructure;
+		TemporaryMarkerDataStructure temporary; //no allocation per call (#2745)
+		MarkerDataStructure& markerDataStructure = temporary.Get();
 		const bool computeJacobian = false; //not needed for OutputVariables
 		cSystemData.ComputeMarkerDataStructure(cConnector, computeJacobian, markerDataStructure);
 

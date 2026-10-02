@@ -419,3 +419,50 @@ def test_theConstraintJacobianByADIsTheNumericalOne(kind):
     (jacobianAD, jacobianFD, tangent) = ConstraintJacobians(kind)
     assert np.abs(jacobianFD).max() > 0.1
     assert np.abs((jacobianAD - jacobianFD) @ tangent).max() < 1e-6 * np.abs(jacobianFD).max()
+
+
+def DropOnContact(kind, ballRigid, groundRigid):
+    """a ball, a rigid body, dropped onto a ground sphere or triangle without friction, through rigid markers or
+    markers without orientation; returns the position of the ball after the impact"""
+    from exudyn.utilities import NodeGenericData, ObjectContactSphereSphere, ObjectContactSphereTriangle, LoadForceVector
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    oGround = mbs.AddObject(ObjectGround())
+    r = 0.1
+    inertia = InertiaCuboid(1000, [0.1, 0.12, 0.14])
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.02, 0.01, r + 0.05] + list(RotationMatrix2EulerParameters(RotXYZ2RotationMatrix([0.3, 0.2, 0.1]))),
+                                       initialVelocities=[0.3, 0, 0] + list(AngularVelocity2EulerParameters_t([1, 2, 3], RotationMatrix2EulerParameters(RotXYZ2RotationMatrix([0.3, 0.2, 0.1]))))))
+    oBall = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.mass, physicsInertia=inertia.GetInertia6D()))
+    Marker = lambda rigid: MarkerBodyRigid if rigid else MarkerBodyPosition
+    mBall = mbs.AddMarker(Marker(ballRigid)(bodyNumber=oBall))
+    mbs.AddLoad(LoadForceVector(markerNumber=mBall, loadVector=[0, 0, -9.81*inertia.mass]))
+    law = dict(contactStiffness=1e6, contactDamping=1e3, dynamicFriction=0)
+    nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0, 0, 0, 0]))
+    if kind == 'sphere':
+        R = 1
+        mGround = mbs.AddMarker(Marker(groundRigid)(bodyNumber=oGround, localPosition=[0.1, 0.1, -R]))
+        mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[mGround, mBall], nodeNumber=nData, spheresRadii=[R, r], **law))
+    else:
+        mGround = mbs.AddMarker(Marker(groundRigid)(bodyNumber=oGround))
+        mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, radiusSphere=r,
+                                                  trianglePoints=exu.Vector3DList([[-1, -1, 0], [1, -1, 0], [0, 1, 0]]), **law))
+    mbs.Assemble()
+    s = exu.SimulationSettings()
+    s.timeIntegration.numberOfSteps = 400
+    s.timeIntegration.endTime = 0.2
+    s.solutionSettings.writeSolutionToFile = False
+    s.timeIntegration.verboseMode = 0
+    mbs.SolveDynamic(s)
+    return np.array(mbs.GetNodeOutput(node, exu.OutputVariableType.Position))
+
+
+@pytest.mark.parametrize('kind', ['sphere', 'triangle'])
+def test_theContactsTakeMarkersWithoutOrientation(kind):
+    """without friction a contact needs no torque: on markers without orientation - on either side of the spheres, on the
+    sphere of the triangle contact, whose triangle is given in the frame of its marker - the ball moves as on rigid
+    markers (#2745)"""
+    reference = DropOnContact(kind, True, True)
+    assert reference[2] > 0.09 #the ball bounced, it did not fall through
+    cases = [(False, True), (True, False), (False, False)] if kind == 'sphere' else [(False, True)]
+    for (ballRigid, groundRigid) in cases:
+        assert np.abs(DropOnContact(kind, ballRigid, groundRigid) - reference).max() < 1e-12

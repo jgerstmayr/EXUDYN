@@ -11428,3 +11428,41 @@ marker function of their own, so that `MarkerTemp` no longer holds a `MarkerData
   the fast module); now 3 x 18.
 - **Test**: `test_accessFunctionsAD.py` has a beam of two elements under torsional spring-dampers on rigid markers and
   spring-dampers on position markers: the system Jacobian equals the numerical one.
+
+<a id="rg14-2-18"></a>
+### RG14.2.18 — what still goes through the marker data structure (2026-10-02, #2745)
+
+The maintainer: *do as suggested, but keep implementation overheads and duplication small (think about future
+extendability)*.
+
+- **(1) Output variables and sensors: the transport from a pool, not new output functions.** Converting the ~20
+  `GetOutputVariableConnector` to the kinematics of the interface would write each of them a second time for no
+  physics gained. What cost was the transport: `CSensorObject::GetSensorValues` and `MainSystem::GetObjectOutput`
+  constructed a `MarkerDataStructure` per call, whose vectors a coordinate marker allocates. New in `MarkerData.h`:
+  **`TemporaryMarkerDataStructure`**, a structure from a pool per thread, one level per nested use (a Python user
+  function of a connector may evaluate another connector's sensor meanwhile; deeper than 4 levels it owns one). The
+  six `static thread_local MarkerDataStructure` of the contact connectors (`ContactSphereSphere` 2x, `SphereTriangle`,
+  `SphereTorus`, `ConvexRoll`, `RollingDiscPenalty`) use it too, with one helper
+  `MarkerDataFromKinematics(markers, t, markerData)` for their four lines of preamble - one mechanism instead of eight
+  copies. Measured, 200 `SensorObject` on 50 connectors, 20000 steps, explicit: on `CoordinateSpringDamper`
+  **171 ns -> 68 ns per sensor evaluation** (the allocations per step drop from 20 M to 4 M in total, the rest is the
+  sensor's own value vector); on `SpringDamper` (position markers, no allocation before either) 255-305 ns -> 193-237 ns,
+  within the noise.
+- **(2) `PostNewtonStep`: stays.** It already uses the structure of `TemporaryComputationData`, no allocation; the
+  physics are shared with the interface. What it costs is that `CSystem` computes the markers' Jacobians for it (#241,
+  open since 2019) - raised as **RG14.2.19**, it needs no decision.
+- **(3) The contacts on markers without orientation: on the interface.** The chain of rigid markers
+  (`ConnectorODE2LHSRigidMarkers`) takes a marker without orientation with the unit matrix as rotation and no angular
+  velocity (`GetKinematicsRigidOrPosition`) and projects only the force on it - so `ContactSphereSphere` and
+  `ContactSphereTriangle` declare `ItemConnectorInterface('Rigid', jacobian=False)` like every other connector, and
+  their own `ComputeODE2LHS` (61 and 57 lines), their hand-written dispatch and `ComputeConnectorForcePosition` of
+  `ContactSphereSphere` are gone. Reachable before: `ContactSphereTriangle` with a position marker on the sphere (the
+  triangle needs a rigid marker, its points are in the marker's frame), `ContactSphereSphere` only on the position
+  chain (with friction both markers must be rigid). A new connector that takes either kind of marker needs nothing
+  more. The Jacobian chain of rigid markers still requires orientations - the contacts use the numerical one.
+  `test_connectorInterface.py`: a ball dropped onto a sphere and onto a triangle, without friction, moves the same on
+  rigid markers and on markers without orientation (all combinations the consistency checks allow), to 1e-12.
+- **(4) `ObjectConnectorCoordinate` at velocity level: stays.** Its equation is already the template of the
+  interface (RG14.2.13); its Jacobian is the two marker Jacobians with the factors. Moving it would need a
+  velocity-level branch in `CSystem` (the Jacobian into `AE_ODE2_t` with the velocity factor) for this one item - more
+  code than it saves.

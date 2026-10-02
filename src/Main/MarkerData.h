@@ -202,6 +202,24 @@ public:
 	//ResizableVector& GetConnectorForceJac() { return connectorForceJac; }
 };
 
+//! a MarkerDataStructure for one evaluation outside the system loop - an output variable, a sensor, the physics of a
+//! contact connector -, taken from a pool per thread, so that its vectors are allocated once (#2745); a level per nested
+//! use, as a Python user function may evaluate another connector meanwhile; deeper than the pool, it owns one
+class TemporaryMarkerDataStructure
+{
+	static const Index poolSize = 4;
+	static Index& Depth() { static thread_local Index depth = 0; return depth; }
+	static MarkerDataStructure* Pool() { static thread_local MarkerDataStructure pool[poolSize]; return pool; }
+	Index level;
+	MarkerDataStructure* owned = nullptr;
+public:
+	TemporaryMarkerDataStructure() : level(Depth()++) { if (level >= poolSize) { owned = new MarkerDataStructure(); } }
+	~TemporaryMarkerDataStructure() { delete owned; Depth()--; }
+	TemporaryMarkerDataStructure(const TemporaryMarkerDataStructure&) = delete;
+	TemporaryMarkerDataStructure& operator=(const TemporaryMarkerDataStructure&) = delete;
+	MarkerDataStructure& Get() { return owned ? *owned : Pool()[level]; }
+};
+
 
 //DELETE:
 //OLD const-sized MarkerData:
@@ -336,6 +354,16 @@ inline void MarkerDataFromKinematics(const MarkerPosition<Real>& kinematics, Mar
 	markerData.velocity = kinematics.velocity;
 	markerData.angularVelocityLocal.SetAll(0.);
 	markerData.velocityAvailable = true;
+}
+
+//! the marker data structure of the two markers of a connector from their kinematics, at time t
+template<class TMarker>
+inline void MarkerDataFromKinematics(const TMarker* markers, Real t, MarkerDataStructure& markerData)
+{
+	markerData.SetNumberOfMarkerData(2);
+	markerData.SetTime(t);
+	MarkerDataFromKinematics(markers[0], markerData.GetMarkerData(0));
+	MarkerDataFromKinematics(markers[1], markerData.GetMarkerData(1));
 }
 
 //! the kinematics of the two rigid markers of a connector from the marker data structure (#2745)

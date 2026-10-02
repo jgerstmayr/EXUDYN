@@ -194,39 +194,17 @@ void CObjectContactSphereTriangle::ComputeConnectorProperties(const MarkerDataSt
 }
 
 
-//! Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to "ode2Lhs"
-//  MODEL: f
-//! on the interface of rigid markers if both markers have an orientation,
-//! else the path of the marker data (#2745)
-bool CObjectContactSphereTriangle::ComputeODE2LHSConnector(const CSystemData& systemData, TemporaryComputationData& temp, Vector& localODE2Lhs,
-	Index objectNumber) const
-{
-	const ArrayIndex& markerNumbers = GetMarkerNumbers();
-	bool rigid = true;
-	for (Index k = 0; k < 2; k++)
-	{
-		rigid &= (systemData.GetCMarkers()[markerNumbers[k]]->GetType() & Marker::Orientation) != 0;
-	}
-	if (rigid)
-	{
-		ConnectorODE2LHSRigidMarkers(systemData, temp, *this, localODE2Lhs, objectNumber);
-		return true;
-	}
-	return false;
-}
-
-//! the forces and torques of the connector interface (#2745), as ComputeODE2LHS projects them: the contact force on the
-//! triangle at the contact point and its reaction on the sphere, with friction its torque
+//! the forces and torques of the connector interface (#2745): the contact force on the
+//! triangle at the contact point and its reaction on the sphere, with friction its torque; a marker without orientation
+//! takes the force only
 void CObjectContactSphereTriangle::ComputeConnectorForceRigid(const MarkerRigid<Real>* markers, Real t, Index itemIndex,
 	Vector3D* forces, Vector3D* torques) const
 {
 	for (Index k = 0; k < 2; k++) { forces[k].SetAll(0.); torques[k].SetAll(0.); }
 	if (!parameters.activeConnector) { return; }
-	static thread_local MarkerDataStructure markerData; //the physics read a marker data structure, without Jacobians; one per thread
-	markerData.SetNumberOfMarkerData(2);
-	markerData.SetTime(t);
-	MarkerDataFromKinematics(markers[0], markerData.GetMarkerData(0));
-	MarkerDataFromKinematics(markers[1], markerData.GetMarkerData(1));
+	TemporaryMarkerDataStructure temporary; //the physics read a marker data structure, without Jacobians
+	MarkerDataStructure& markerData = temporary.Get();
+	MarkerDataFromKinematics(markers, t, markerData);
 	LinkedDataVector data = GetCNode(0)->GetCurrentCoordinateVector();
 	Vector3D deltaP, deltaV, fVec, fFriction, n0;
 	Real frictionCoeff, gap;
@@ -237,64 +215,6 @@ void CObjectContactSphereTriangle::ComputeConnectorForceRigid(const MarkerRigid<
 	forces[0] = -fVec;
 	if (frictionCoeff != 0) { torques[0] = (-(parameters.radiusSphere + 0.5 * gap) * n0).CrossProduct(fVec); }
 }
-
-void CObjectContactSphereTriangle::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDataStructure& markerData, Index objectNumber) const
-{
-	CHECKandTHROW(markerData.GetMarkerData(1).velocityAvailable && markerData.GetMarkerData(0).velocityAvailable,
-		"CObjectContactSphereTriangle::ComputeAlgebraicEquations: marker do not provide velocityLevel information");
-
-	LinkedDataVector data = GetCNode(0)->GetCurrentCoordinateVector();
-	Vector3D deltaP;
-	Vector3D deltaV;
-	//Vector3D contactPoint;
-	Vector3D fVec;
-	Vector3D fFriction;
-	Vector3D n0;
-
-	Real frictionCoeff;
-	Real gap;
-
-	ComputeConnectorProperties(markerData, objectNumber, data,
-		frictionCoeff, gap, deltaP, deltaV, fVec, fFriction, n0);
-
-	//link separate vectors to result (ode2Lhs) vector
-	ode2Lhs.SetNumberOfItems(markerData.GetMarkerData(0).positionJacobian.NumberOfColumns() + markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-	ode2Lhs.SetAll(0.);
-
-	if (parameters.activeConnector)
-	{
-		//marker 1 / triangle / J (positive):    (according to computation of relative position)
-		//now link ode2Lhs Vector to partial result using the two jacobians
-		if (markerData.GetMarkerData(1).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			//positionJacobian.NumberOfColumns() == rotationJacobian.NumberOfColumns()
-			LinkedDataVector ldv1(ode2Lhs, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns(), markerData.GetMarkerData(1).positionJacobian.NumberOfColumns());
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(1).positionJacobian, fVec, ldv1); //fVec = f_m1
-			//if (frictionCoeff != 0) //this torque is always acting, as it acts not on GetMarkerData(1).position !!!!
-			{
-				//==>trigPP = p0 + deltaP = p0 + n0*(radius+gap); //for torque use gap*0.5
-				Vector3D contactPoint = markerData.GetMarkerData(0).position + (parameters.radiusSphere + 0.5 * gap) * n0;
-
-				Vector3D torque = (contactPoint - markerData.GetMarkerData(1).position).CrossProduct(fVec); //fVec = f_m1
-				EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(1).rotationJacobian, torque, ldv1);
-			}
-		}
-
-
-		////marker 0 / sphere / I (negative):
-		if (markerData.GetMarkerData(0).positionJacobian.NumberOfColumns()) //special case: COGround has (0,0) Jacobian
-		{
-			LinkedDataVector ldv0(ode2Lhs, 0, markerData.GetMarkerData(0).positionJacobian.NumberOfColumns());
-			EXUmath::MultMatrixTransposedVector(markerData.GetMarkerData(0).positionJacobian, -fVec, ldv0); //fVec = f_m1
-			if (frictionCoeff != 0)
-			{
-				Vector3D torque = (-(parameters.radiusSphere + 0.5 * gap) * n0).CrossProduct(fVec); //fVec = f_m1
-				EXUmath::MultMatrixTransposedVectorAdd(markerData.GetMarkerData(0).rotationJacobian, torque, ldv0);
-			}
-		}
-	}
-}
-
 
 //! provide according output variable in "value"
 void CObjectContactSphereTriangle::GetOutputVariableConnector(OutputVariableType variableType, const MarkerDataStructure& markerData, Index itemIndex, Vector& value) const

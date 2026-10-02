@@ -2149,7 +2149,9 @@ done.
       [log](exudynRevisionLog2026b.md#rg14-2-13) - output variables and sensors through the connector force, then the
       legacy switch and the unused temporaries removed; the path of the marker data stays for the items of RG14.2.11
       (decided).
-    - **RG14.2.18** *(found in RG14.2.13, for the maintainer's decision)* **what still goes through the marker data
+    - **RG14.2.18** **DONE 2026-10-02** ((1) and (3) done, (2) and (4) stay, with reasons; maintainer: *do as
+      suggested, keep overheads and duplication small*) — [log](exudynRevisionLog2026b.md#rg14-2-18) -
+      *(found in RG14.2.13)* **what still goes through the marker data
       structure on the interface items**: (1) the output variables and sensors - `GetOutputVariableConnector` of every
       connector reads a `MarkerDataStructure`, which `CSensorObject::GetSensorValues` and `MainSystem::GetObjectOutput`
       allocate per call; the physics are shared with the interface, so it is the transport, not duplicated code - the
@@ -2159,6 +2161,14 @@ done.
       rigid, one position marker) would end that; (4) `ObjectConnectorCoordinate` at velocity level keeps its
       equations and Jacobian on the marker data - the interface at velocity level needs the Jacobian by the velocities
       (`AE_ODE2_t`).
+    - **RG14.2.19** *(found in RG14.2.18; #241, open since 2019, needs no decision)* **`PostNewtonStep` without the
+      marker Jacobians**: `CSystem::PostNewtonStep` computes the marker data structure with `computeJacobian = true` for
+      every connector with a discontinuous iteration, in every Newton iteration. 10 of the 16 implementations read no
+      Jacobian (the contacts on spheres, triangles, tori, convex rolls, coordinates, the spring-dampers); the cable
+      contacts, `ContactCurveCircles` and the sliding joints read their markers' `jacobian` (the shape functions of the
+      cable markers) through `ComputeGap` and similar. A declared function of the connector - *its PostNewtonStep needs
+      the Jacobians* - with the default true, false for the ten, and a measurement on a contact model (expected: the
+      Jacobians of rigid body markers are a few % of a contact model's step).
     - **RG14.2.17** **DONE 2026-10-02** (maintainer: *yes, do the proposed way*) — [log](exudynRevisionLog2026b.md#rg14-2-17) -
       **the dispatch in the connector instead of in `CSystem`.** Today `CSystem` asks `GetConnectorInterface()` and switches on the enum to its
       L2 functions (`ComputeODE2LHS*Markers`, `ComputeJacobianODE2*Markers`, the constraint functions). Proposed: one
@@ -2359,7 +2369,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG12.4.7 | - | the `TPyFunction...` group type disappears from a definition (#2664 was resolved without it) |
-| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); RG14.2.17 and RG14.2.13 done (the dispatch in the connector, the switch and the legacy functions gone); RG14.2.18 for the maintainer's decision; then RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
+| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures; RG14.2.9.4 on hold, RG14.2.12 measured (not now); RG14.2.11 decided (the special items keep the path of the marker data); RG14.2.17 and RG14.2.13 done (the dispatch in the connector, the switch and the legacy functions gone); RG14.2.18 done (sensors from a pool, the mixed chain of rigid markers); then RG14.2.19 (#241), RG14.2.14 (`MarkerTemp`), RG14.2.16 (`TemporaryComputationData`) |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
@@ -2389,13 +2399,13 @@ The title of each says what the step **does**; the sentence after it says why it
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Decide RG9.3.7** (#2775): the position Jacobian of `ObjectRotationalMass1D` off its axis and a rotation Jacobian
-   of `ObjectANCFBeam` - two small extensions that wait only for a decision.
+3. **Compute the marker Jacobians for `PostNewtonStep` only where it reads them** (RG14.2.19, #241). Small, needs no
+   decision, and it is work every Newton iteration of every contact model does for nothing.
 4. **Halve the large `nTiles` of the examples** (RG6.7.7.7, #2709). The round primitives and the FFRF meshes are
    curved now (RG6.7.7.6, RG6.7.2.1); the examples that chose a large `nTiles` to hide the facets draw more than they
    need - checked by image.
-5. **Shrink `MarkerTemp` and `TemporaryComputationData`** (RG14.2.14, RG14.2.16, #2745), and decide RG14.2.18. The legacy
-   switch and the legacy functions are gone (RG14.2.13), which was what blocked them.
+5. **Shrink `MarkerTemp` and `TemporaryComputationData`** (RG14.2.14, RG14.2.16, #2745). The legacy switch and the
+   legacy functions are gone (RG14.2.13), and the contacts no longer need a path of their own (RG14.2.18).
 6. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
 7. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is

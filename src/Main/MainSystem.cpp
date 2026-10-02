@@ -1225,7 +1225,8 @@ py::object MainSystem::PyGetObjectOutputVariable(const py::object& itemIndex, Ou
 		if ((Index)mainSystemData.GetMainObjects().GetItem(itemNumber)->GetCObject()->GetType() & (Index)CObjectType::Connector)
 		{
 			CHECKandTHROW(configuration == ConfigurationType::Current, "GetObjectOutput: may only be called for connectors with Current configuration", ExudynValueError);
-			MarkerDataStructure markerDataStructure;
+			TemporaryMarkerDataStructure temporary; //no allocation per call (#2745)
+			MarkerDataStructure& markerDataStructure = temporary.Get();
 			const bool computeJacobian = false; //not needed for OutputVariables
 			CObjectConnector* connector = (CObjectConnector*)(mainSystemData.GetMainObjects().GetItem(itemNumber)->GetCObject());
 			GetCSystem().GetSystemData().ComputeMarkerDataStructure(connector, computeJacobian, markerDataStructure);
