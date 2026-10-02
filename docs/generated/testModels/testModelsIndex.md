@@ -89,6 +89,7 @@ rightAngleFrame
 energiesFlexibleBodiesTest
 accessFunctionsTest
 computeItemTest
+emptySystemTest
 homogeneousTransformationTest
 inspectTest
 energiesTest

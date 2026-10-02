@@ -1490,6 +1490,8 @@ class VSettingsConnectors:
 
 class VSettingsMarkers:
     """Visualization settings for markers."""
+    basisSize: float
+    """size of the frame of the markers."""
     defaultColor: Tuple[float,float,float,float]
     """default RGBA color for markers; 4th value is alpha-transparency."""
     defaultSize: float
@@ -1498,6 +1500,8 @@ class VSettingsMarkers:
     """draw markers with simplified symbols."""
     show: bool
     """flag to decide, whether the markers are shown."""
+    showBasis: bool
+    """show the frame (three axes) of the markers with position and orientation; with drawSimplified as three lines in red, green and blue, else as three arrows, whose heads are half as long as those of a node basis."""
     showNumbers: bool
     """flag to decide, whether the marker numbers are shown."""
     def GetDictionary(self) -> dict: ...

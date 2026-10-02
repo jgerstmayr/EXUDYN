@@ -6,7 +6,7 @@
 #           transformed point H*v, the inverse, the 4x4 matrix in both directions, and the transformations set
 #           without rotation (identity, SetTranslation), whose products skip the rotation. The output variable
 #           HomogeneousTransformation of a node, a body point, a marker and a sensor: an exu.HT of the rotation matrix
-#           and the position; a sensor stores its 16 values row by row, exu.HT(values.reshape(4,4)).
+#           and the position; a sensor stores its 16 values row by row, exu.HT(values).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-02
@@ -75,7 +75,7 @@ p = mbs.GetObjectOutputBody(body['bodyNumber'], exu.OutputVariableType.Position,
 HTbody = mbs.GetObjectOutputBody(body['bodyNumber'], OVHT, localPosition=pLocal) #an exu.HT
 errors += [np.abs(HTbody.HT44() - HomogeneousTransformation(A, p)).max(),
            np.abs(mbs.GetMarkerOutput(marker, OVHT).HT44() - HTbody.HT44()).max(),
-           np.abs(exu.HT(mbs.GetSensorValues(sensor).reshape(4, 4)).HT44() - HTbody.HT44()).max(),
+           np.abs(exu.HT(mbs.GetSensorValues(sensor)).HT44() - HTbody.HT44()).max(),
            np.abs(mbs.GetNodeOutput(body['nodeNumber'], OVHT) * pLocal - p).max()]
 total += np.abs(HTbody.HT44()).sum()
 

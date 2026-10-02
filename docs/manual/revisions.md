@@ -172,7 +172,7 @@ composes with `*` (`H1*H2`, and `H*v` for a point), inverts (`Inverse()`), and c
 **The output variable `HomogeneousTransformation`.** Every node, body point, marker and connector that
 gives `Position` and `RotationMatrix` also gives `HomogeneousTransformation`, the 4x4 matrix [A p; 0 1]:
 `GetNodeOutput`, `GetObjectOutputBody` and `GetMarkerOutput` return it as an `exu.HT`, a sensor stores
-its 16 values row by row - `exu.HT(values.reshape(4,4))` (#2780, #2789).
+its 16 values row by row, from which `exu.HT(values)` makes the HT (#2780, #2789, #2792).
 
 **Curved shapes in GraphicsData.** 6-node (quadratic) triangles - the key `triangles6` of a
 `TriangleList` - quadratic lines (`Lines` with `shape` `'quadratic'`) and quadratic edges (`edges3`)

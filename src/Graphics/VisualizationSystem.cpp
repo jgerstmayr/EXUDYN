@@ -23,6 +23,7 @@
 
 #include "Linalg/RigidBodyMath.h"
 #include "Graphics/VisualizationSystemContainer.h"  //includes everything needed
+#include "Graphics/VisualizationPrimitives.h" //the frame of the markers (#2791)
 
 #include "Main/MainSystemData.h"	//for backlink to main system
 #include "Main/MainSystem.h"		//for backlink to main system
@@ -381,9 +382,26 @@ void VisualizationSystem::UpdateGraphicsData(VisualizationSystemContainer& visua
 			if (visualizationSystemContainer.settings.markers.show)
 			{
 				cnt = 0;
+				const VisualizationSettings& settings = visualizationSystemContainer.GetVisualizationSettings();
 				for (auto item : vSystemData.GetVisualizationMarkers())
 				{
-					if (item->GetShow()) { item->UpdateGraphics(visualizationSystemContainer.GetVisualizationSettings(), this, cnt); }
+					if (item->GetShow())
+					{
+						item->UpdateGraphics(settings, this, cnt);
+						//the frame of a marker with position and orientation, for all such markers in one place (#2791)
+						const CMarker* cMarker = systemData->GetCMarkers()[cnt];
+						if (settings.markers.showBasis && EXUstd::IsOfType(cMarker->GetType(), (Marker::Type)(Marker::Position + Marker::Orientation)))
+						{
+							Vector3D position;
+							Matrix3D rotation;
+							cMarker->GetPosition(*systemData, position, ConfigurationType::Visualization);
+							cMarker->GetRotationMatrix(*systemData, rotation, ConfigurationType::Visualization);
+							Index itemID = Index2ItemID(cnt, ItemType::Marker, GetSystemID());
+							EXUvis::DrawOrthonormalBasis(position, rotation, settings.markers.basisSize, 0.025*settings.markers.basisSize,
+								graphicsData, itemID, 1.f, !settings.markers.drawSimplified, settings.general.axesTiling, 2.5,
+								settings.markers.showNumbers ? cnt : EXUstd::InvalidIndex, settings.markers.showNumbers ? "M" : nullptr, 0.5);
+						}
+					}
 					cnt++; //synchronize itemNumber with item!!!
 				}
 			}

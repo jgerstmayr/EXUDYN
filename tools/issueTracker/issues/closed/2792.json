@@ -1,0 +1,15 @@
+{
+  "number": 2792,
+  "title": "exu.HT from 16 values",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-02: exu.HT also takes the 16 values of the 4x4 matrix row by row - as a sensor stores the output variable HomogeneousTransformation - instead of exu.HT(values.reshape(4,4)).",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-03 00:02",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exu.HT also takes the 16 values of a 4x4 matrix row by row, as a sensor of the output variable HomogeneousTransformation stores them.",
+  "resolvedInVersion": "1.12.229"
+}

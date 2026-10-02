@@ -1,0 +1,15 @@
+{
+  "number": 2790,
+  "title": "a system without coordinates is solved",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-02: allow a zero-sized system (nODE2 = nODE1 = 0) at least in explicit integration, and check where it would break. The solvers refused it in InitializeSolverPreChecks ('cannot solve for system size = 0'); without that check the explicit, implicit and static solvers run with the dense linear solver; the sparse solvers crash for a system of size 0, and the error estimate of the automatic step size control divided by the number of coordinates (ODE23, DOPRI5).",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-03 00:02",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "A system without coordinates (no ODE2, ODE1 or algebraic coordinates) is solved by the explicit, implicit and static solvers; time, user functions and sensors advance.",
+  "resolvedInVersion": "1.12.227"
+}

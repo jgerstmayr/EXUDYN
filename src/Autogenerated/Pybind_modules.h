@@ -698,10 +698,12 @@
     //++++++++++++++++++++++++++++++++
     py::class_<VSettingsMarkers>(m, "VSettingsMarkers", "VSettingsMarkers class") // AUTO: 
         .def(py::init<>())
+        .def_property("basisSize", EPyUtils::MemberGetter(&VSettingsMarkers::basisSize), EPyUtils::MemberSetter(&VSettingsMarkers::basisSize, "VSettingsMarkers.basisSize"), "size of the frame of the markers")
         .def_property("defaultColor", EPyUtils::MemberGetter(&VSettingsMarkers::defaultColor), EPyUtils::MemberSetter(&VSettingsMarkers::defaultColor, "VSettingsMarkers.defaultColor"), "default RGBA color for markers; 4th value is alpha-transparency")
         .def_property("defaultSize", EPyUtils::MemberGetter(&VSettingsMarkers::defaultSize), EPyUtils::MemberSetter(&VSettingsMarkers::defaultSize, "VSettingsMarkers.defaultSize"), "global marker size; if -1.f, marker size is relative to maxSceneSize")
         .def_property("drawSimplified", EPyUtils::MemberGetter(&VSettingsMarkers::drawSimplified), EPyUtils::MemberSetter(&VSettingsMarkers::drawSimplified, "VSettingsMarkers.drawSimplified"), "draw markers with simplified symbols")
         .def_property("show", EPyUtils::MemberGetter(&VSettingsMarkers::show), EPyUtils::MemberSetter(&VSettingsMarkers::show, "VSettingsMarkers.show"), "flag to decide, whether the markers are shown")
+        .def_property("showBasis", EPyUtils::MemberGetter(&VSettingsMarkers::showBasis), EPyUtils::MemberSetter(&VSettingsMarkers::showBasis, "VSettingsMarkers.showBasis"), "show the frame (three axes) of the markers with position and orientation; with drawSimplified as three lines in red, green and blue, else as three arrows, whose heads are half as long as those of a node basis")
         .def_property("showNumbers", EPyUtils::MemberGetter(&VSettingsMarkers::showNumbers), EPyUtils::MemberSetter(&VSettingsMarkers::showNumbers, "VSettingsMarkers.showNumbers"), "flag to decide, whether the marker numbers are shown")
         // AUTO: access functions for VSettingsMarkers
         .def("__repr__", [](const VSettingsMarkers &item) { return "<VSettingsMarkers:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator

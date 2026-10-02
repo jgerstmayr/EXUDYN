@@ -1204,7 +1204,8 @@ namespace EXUvis {
 	//! length defines the length of each axis; radius is the radius of the shaft; arrowSize is diameter relative to radius
 	//! colorfactor: 1=rgb color, 0=grey color (and any value between)
 	void DrawOrthonormalBasis(const Vector3D& p, const Matrix3D& rot, Real length, Real radius, 
-		GraphicsData& graphicsData, Index itemID, float colorFactor, bool draw3D, Index nTiles, Real arrowSizeRelative, Index showNumber, const char* preText)
+		GraphicsData& graphicsData, Index itemID, float colorFactor, bool draw3D, Index nTiles, Real arrowSizeRelative, Index showNumber, const char* preText,
+		Real headLengthFactor)
 	{
 
 		for (Index i = 0; i < 3; i++)
@@ -1214,7 +1215,7 @@ namespace EXUvis {
 			if (draw3D)
 			{
 				DrawCylinder(p, length*v, radius, color, graphicsData, itemID, nTiles);
-				DrawCone(p + length * v, (radius*arrowSizeRelative * 3)*v, arrowSizeRelative*radius, color, graphicsData, itemID, nTiles);
+				DrawCone(p + length * v, (radius*arrowSizeRelative * 3 * headLengthFactor)*v, arrowSizeRelative*radius, color, graphicsData, itemID, nTiles);
 			} else //draw as simple line
 			{
 				graphicsData.AddLine(p, p + length * v, color, color, itemID);

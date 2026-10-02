@@ -249,10 +249,12 @@ VSettingsMarkers has the following items:
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
+| `basisSize`<br>`SC.visualizationSettings.markers.basisSize` | float |  | 0.2 | size of the frame of the markers |
 | `defaultColor`<br>`SC.visualizationSettings.markers.defaultColor` | Float4 | 4 | [0.1,0.5,0.1,1.] | default RGBA color for markers; 4th value is alpha-transparency |
 | `defaultSize`<br>`SC.visualizationSettings.markers.defaultSize` | float |  | -1. | global marker size; if -1.f, marker size is relative to maxSceneSize |
 | `drawSimplified`<br>`SC.visualizationSettings.markers.drawSimplified` | bool |  | True | draw markers with simplified symbols |
 | `show`<br>`SC.visualizationSettings.markers.show` | bool |  | True | flag to decide, whether the markers are shown |
+| `showBasis`<br>`SC.visualizationSettings.markers.showBasis` | bool |  | False | show the frame (three axes) of the markers with position and orientation; with drawSimplified as three lines in red, green and blue, else as three arrows, whose heads are half as long as those of a node basis |
 | `showNumbers`<br>`SC.visualizationSettings.markers.showNumbers` | bool |  | False | flag to decide, whether the marker numbers are shown |
 
 

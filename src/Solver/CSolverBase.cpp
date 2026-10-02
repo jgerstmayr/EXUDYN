@@ -281,11 +281,8 @@ bool CSolverBase::InitializeSolverPreChecks(CSystem& computationalSystem, const 
         PyWarning("StaticSolver: system contains ODE1 equations, which is untested", file.solverFile);
     }
 
-	if (data.nSys == 0)
-	{
-		PyError("Solver: cannot solve for system size = 0", PyErrorType::modelError);
-		return false;
-	}
+	//a system without coordinates (nSys = 0) is solved as well: time, user functions and sensors advance; the linear
+	//solver is then dense, see InitializeSolverData (#2790)
 
 	if (EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolverType))
 	{
@@ -327,7 +324,9 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
         (simulationSettings.linearSolverType == LinearSolverType::EigenDense)
         )
 	{
-		data.SetLinearSolverType(simulationSettings.linearSolverType, simulationSettings.linearSolverSettings.reuseAnalyzedPattern, 
+		//a system without coordinates has nothing to solve, and the sparse solvers do not take one of size 0 (#2790)
+		LinearSolverType linearSolverType = (data.nSys == 0) ? LinearSolverType::EXUdense : simulationSettings.linearSolverType;
+		data.SetLinearSolverType(linearSolverType, simulationSettings.linearSolverSettings.reuseAnalyzedPattern, 
             simulationSettings.linearSolverSettings.ignoreSingularJacobian);
 	}
 	//else if (simulationSettings.linearSolverType == LinearSolverType::EigenSparse)

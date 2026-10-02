@@ -95,6 +95,7 @@ H = H1 * H2                                                #composition, an HT
 p = H1 * [0.1,0,0]                                         #a point transformed, a numpy array
 A, t = H.Get()                                             #rotation and translation
 H44 = H.HT44()                                             #4x4 numpy array
+H3 = exu.HT(H44)                                           #from a 4x4 matrix, or its 16 values as a sensor stores them
 Hinv = H.Inverse()
 H.translation = [0,0,1]                                    #write access, the rotation is kept
 ```

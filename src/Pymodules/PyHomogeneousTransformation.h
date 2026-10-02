@@ -23,13 +23,23 @@ public:
 	PyHT() : HomogeneousTransformation() {}
 	PyHT(const HomogeneousTransformation& other) : HomogeneousTransformation(other) {}
 
-	//! from a 3x3 rotation matrix and a translation, either of them None for the unit matrix or zero; or from a 4x4 matrix
-	//! given as rotation (translation then None)
+	//! from a 3x3 rotation matrix and a translation, either of them None for the unit matrix or zero; or from a 4x4 matrix,
+	//! or its 16 values row by row (as a sensor stores the output variable HomogeneousTransformation, #2792), given as
+	//! rotation (translation then None)
 	PyHT(const py::object& rotation, const py::object& translation) : HomogeneousTransformation()
 	{
 		if (!rotation.is_none())
 		{
 			std::vector<py::object> rows = py::cast<std::vector<py::object>>(rotation);
+			if (rows.size() == 16)
+			{
+				CHECKandTHROW(translation.is_none(), "HT: with the 16 values of a 4x4 matrix, translation must be None");
+				std::vector<Real> values = py::cast<std::vector<Real>>(rotation);
+				ConstSizeMatrix<16> matrix44(4, 4);
+				for (Index i = 0; i < 16; i++) { matrix44.GetDataPointer()[i] = values[i]; }
+				SetHT44(matrix44);
+				return;
+			}
 			if (rows.size() == 4)
 			{
 				CHECKandTHROW(translation.is_none(), "HT: with a 4x4 matrix, translation must be None");

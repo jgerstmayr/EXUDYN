@@ -1,0 +1,15 @@
+{
+  "number": 2791,
+  "title": "the frame of a rigid marker in the visualization: markers.showBasis, markers.basisSize",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "Maintainer 2026-10-02: rigid body markers get an own rotation (localHT, RG16.3.3), so visualizationSettings.markers gets showBasis and basisSize (the names of nodes); a rigid marker draws its frame: simplified as 3 RGB lines, otherwise 3 arrows as the node basis, with heads 50 % shorter to tell them from a node basis.",
+  "dateRaised": "2026-10-02",
+  "deadline": "2027-03-31",
+  "dateResolved": "2026-10-03 00:02",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "visualizationSettings.markers.showBasis and basisSize draw the frame of markers with position and orientation: three RGB lines with drawSimplified, else three arrows with short heads.",
+  "resolvedInVersion": "1.12.228"
+}

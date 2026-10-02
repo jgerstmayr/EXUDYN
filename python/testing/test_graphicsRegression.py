@@ -439,3 +439,23 @@ def testCurvedSurfacesHaveNoCracks():
         center = brightness[1:-1, 1:-1]
         neighbours = np.stack([brightness[:-2, 1:-1], brightness[2:, 1:-1], brightness[1:-1, :-2], brightness[1:-1, 2:]])
         assert int(((center - neighbours.max(axis=0)) > 150).sum()) == 0
+
+
+def testMarkerFrames():
+    """markers.showBasis draws the frame of every marker with position and orientation (#2791): three lines when
+    drawSimplified, else three arrows; a position marker gets none"""
+    from exudyn.utilities import InertiaCuboid, MarkerBodyRigid, MarkerBodyPosition
+    counts = {}
+    for (showBasis, simplified) in [(False, True), (True, True), (False, False), (True, False)]:
+        SC = exu.SystemContainer()
+        mbs = SC.AddSystem()
+        body = mbs.CreateRigidBody(inertia=InertiaCuboid(1000, [0.1, 0.2, 0.3]), returnDict=True)['bodyNumber']
+        mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0.1, 0, 0]))
+        mbs.AddMarker(MarkerBodyPosition(bodyNumber=body))
+        mbs.Assemble()
+        SC.visualizationSettings.markers.showBasis = showBasis
+        SC.visualizationSettings.markers.drawSimplified = simplified
+        data = SC.renderer.GetGraphicsData()
+        counts[(showBasis, simplified)] = (len(data['lines']['items']), len(data['triangles']['items']))
+    assert counts[(True, True)][0] - counts[(False, True)][0] == 3       #three lines for the one rigid marker
+    assert counts[(True, False)][1] > counts[(False, False)][1]          #three arrows of triangles

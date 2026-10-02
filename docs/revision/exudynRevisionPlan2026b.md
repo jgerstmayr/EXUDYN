@@ -656,7 +656,8 @@ The steps are numbered in the order they were raised and stand here in the order
 **RG4.11** **DONE 2026-09-29** (#2735) — [log](exudynRevisionLog2026b.md#rg4-10) · [plan text](exudynRevisionLog2026b.md#plan-rg4-11) — `ObjectContactCoordinate` ignores `activeConnector`, and its output variable `Distance` raises.
 
 <a id="rg4-12"></a>
-**RG4.12** *(group RG4; from RG13.6.1, 2026-09-29)* **`NodeGenericAE` cannot be used** (#2736): it
+**RG4.12** **CLOSED 2026-10-02** (maintainer: closed, so it stays visible; a case that needs it re-opens the topic with a
+    new issue) *(group RG4; from RG13.6.1, 2026-09-29)* **`NodeGenericAE` cannot be used** (#2736): it
     provides only `GenericAE`, no object requests that type, no node marker attaches to it, and no
     example, test model or module of the package uses it - a node with algebraic coordinates and no
     object to write their equations. Either an object takes it (its description names linear state
@@ -745,6 +746,11 @@ The steps are numbered in the order they were raised and stand here in the order
       $w/h = 1/50$, with `crossSectionPenaltyFactor = [1,1,1]`). Next: the eigenvalues of the tangent stiffness at the
       stall against those of the geometrically exact beam - a zero or negative one is a bifurcation of the ANCF model
       (a cross-section mode), not a solver problem -, then the penalty factor and the number of elements.
+
+<a id="rg4-18"></a>
+**RG4.18** *(group RG4; maintainer 2026-10-02)* **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg4-18) - **A system
+    without coordinates is solved** (#2790): nODE2 = nODE1 = 0 (and no algebraic equations) - at least the explicit
+    solvers; check where it breaks.
 
 ## RG5 — Performance
 
@@ -1029,7 +1035,12 @@ This group is that revision and what has to happen before it can start.
       - **RG6.7.7.7** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-7) - the examples and test models
         with very large `nTiles` (chosen to hide the facets) are revised, most to about half the value, once RG6.7.7.6
         is in - checked by image, not by rule.
-      - **RG6.7.7.8** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-8) - *(found in RG6.7.7.7; needs no
+      - **RG6.7.7.11** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-11) - *(maintainer 2026-10-02)* **the
+        frame of the rigid markers**: `visualizationSettings.markers.showBasis` and `basisSize` (the names of the
+        nodes); simplified three RGB lines, else three arrows as the node basis with heads half as long (#2791) - the
+        rigid markers get their own rotation with `localHT` (RG16.3.3).
+      - **RG6.7.7.10** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-8) (written up there as RG6.7.7.8,
+        a number taken by #2769) - *(found in RG6.7.7.7; needs no
         decision)* **single bright pixels of the raytracer on curved
         triangles at coarse tiling** (#2787): at `nTiles` 32 and below a few pixels of a `SolidOfRevolution` and a half
         sphere are white - rays between neighbouring curved triangles or their flat split; the split along a shared
@@ -1426,7 +1437,10 @@ revision (info document D15).
       `IsValidLocalPosition`, the Jacobians of a node with algebraic equations; and the bodies the test of RG9.3.8 does
       not build yet - `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectKinematicTree`, `ObjectALEANCFCable2D`,
       `ObjectGenericODE2` -, and the derivative of the Lie group node by composed increments.
-    - **RG9.5.7** *(found in RG9.5.6, for the maintainer's decision)* **`ObjectALEANCFCable2D`: what a marker on it is**
+    - **RG9.5.7** *(found in RG9.5.6; maintainer 2026-10-02: the marker stays fixed to the beam, not co-moving with the
+      axial displacement - co-moving makes sense only along a list of beams, as the sliding joints do; observed: the
+      Jacobian agrees, the velocity of the marker does not - [log](exudynRevisionLog2026b.md#rg9-5-7), open)*
+      **`ObjectALEANCFCable2D`: what a marker on it is**
       (#2784): its position Jacobian has a zero column for the ALE coordinate (since #2786, before 8 columns, which failed
       every connector and load through a body marker after RG14.2.13), while its velocity
       output - the material velocity - depends on the ALE velocity; off the axis the Jacobian also differs from the
@@ -2441,6 +2455,8 @@ the joints an HT means fewer variables and one way of doing things.
     class and its Python binding** (#2780).
     - **RG16.1.1** to **RG16.1.5** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg16-1),
       [RG16.1.5](exudynRevisionLog2026b.md#rg16-1-5) (the HT as an item parameter waits for RG16.2)
+    - **RG16.1.7** **DONE 2026-10-02** - *(maintainer 2026-10-02)* `exu.HT` also takes the 16 values of a 4x4 matrix row
+      by row, as a sensor stores the output variable (#2792): `exu.HT(values)`.
     - **RG16.1.6** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg16-1-6) - *(maintainer 2026-10-02: "make
       this the standard way")* **the output variable `HomogeneousTransformation` as `exu.HT`** (#2789): the
       Get...Output functions return an `exu.HT`; a sensor stores the 16 values row by row.
@@ -2511,13 +2527,12 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models |
 | RG2.4 | #2748 | the manual GUI check, per release and platform (list and model done) |
-| RG4.12 | #2736 | `NodeGenericAE`: **on hold** - the future owner of a constraint's Lagrange multipliers and of the unknowns of algebraic equations |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame - the inconsistent rotation Jacobian of the slope nodes fixed (RG4.17.1); the stall remains with a consistent Jacobian (RG4.17.2) |
 | RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
-| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges, rows done; RG6.7.2.1 and most of RG6.7.7.6 done (the round primitives of 6-node triangles); open RG6.7.5 (anisotropic tiling), the rest of RG6.7.7.6 (`LinkedCylinders`, hollow sphere), RG6.7.7.8 (single bright pixels of the raytracer, #2787); RG6.7.7.7 done |
+| RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges, rows done; RG6.7.2.1 and most of RG6.7.7.6 done (the round primitives of 6-node triangles); open RG6.7.5 (anisotropic tiling), the rest of RG6.7.7.6 (`LinkedCylinders`, hollow sphere), RG6.7.7.10 (single bright pixels of the raytracer, #2787); RG6.7.7.7 done |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG9.3 | #2744 | access functions as single functions of the objects: the split done (RG9.3.4.1-.3), the declarations checked (rule 7); open the flags derived instead of declared (RG9.3.4.4, after separating the super elements' own meaning); RG9.3.5 to RG9.3.7 done (hand-written Jacobians, AD for the derivative of `J^T f` of the cable and of the torque on `ObjectANCFBeam`, `ObjectRotationalMass1D` off its axis) |
 | RG9.4 | #2202 | kinetic and potential energy as output variables: done for all bodies, beams, plates, superelements and spring-dampers; RG9.4.3.2 (the contact and special objects) not now |

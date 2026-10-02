@@ -2660,6 +2660,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsMarkers& data) {
     structureDict["structureDescription"] = "Visualization settings for markers.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.basisSize;
+    d["type"] = "float";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "size of the frame of the markers";
+    structureDict["basisSize"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = EPyUtils::ToPythonMember(data.defaultColor);
     d["type"] = "VectorFloat";
     d["size"] = std::vector<int>{4};
@@ -2692,6 +2700,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsMarkers& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.showBasis;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "show the frame (three axes) of the markers with position and orientation; with drawSimplified as three lines in red, green and blue, else as three arrows, whose heads are half as long as those of a node basis";
+    structureDict["showBasis"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.showNumbers;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
@@ -2704,20 +2720,24 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsMarkers& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const VSettingsMarkers& data) {
     auto structureDict = py::dict();
+    structureDict["basisSize"] = data.basisSize;
     structureDict["defaultColor"] = EPyUtils::ToPythonMember(data.defaultColor);
     structureDict["defaultSize"] = data.defaultSize;
     structureDict["drawSimplified"] = data.drawSimplified;
     structureDict["show"] = data.show;
+    structureDict["showBasis"] = data.showBasis;
     structureDict["showNumbers"] = data.showNumbers;
     return structureDict;
 }
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(VSettingsMarkers& data, const py::dict& d) {
+    EPyUtils::FromPython(d["basisSize"], data.basisSize, "VSettingsMarkers.basisSize");
     EPyUtils::FromPython(d["defaultColor"], data.defaultColor, "VSettingsMarkers.defaultColor");
     EPyUtils::FromPython(d["defaultSize"], data.defaultSize, "VSettingsMarkers.defaultSize");
     EPyUtils::FromPython(d["drawSimplified"], data.drawSimplified, "VSettingsMarkers.drawSimplified");
     EPyUtils::FromPython(d["show"], data.show, "VSettingsMarkers.show");
+    EPyUtils::FromPython(d["showBasis"], data.showBasis, "VSettingsMarkers.showBasis");
     EPyUtils::FromPython(d["showNumbers"], data.showNumbers, "VSettingsMarkers.showNumbers");
 }
 

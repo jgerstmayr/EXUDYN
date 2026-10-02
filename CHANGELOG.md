@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 210 | 1.12.225 |
+| 1.12 | Metheney | 213 | 1.12.229 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.229** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exu.HT from 16 values (#2792)
+  - description: Maintainer 2026-10-02: exu.HT also takes the 16 values of the 4x4 matrix row by row - as a sensor stores the output variable HomogeneousTransformation - instead of exu.HT(values.reshape(4,4)).
+  - **notes:** exu.HT also takes the 16 values of a 4x4 matrix row by row, as a sensor of the output variable HomogeneousTransformation stores them.
+  - date resolved: **2026-10-03 00:02**, date raised: 2026-10-02
+- **1.12.228** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the frame of a rigid marker in the visualization: markers.showBasis, markers.basisSize (#2791)
+  - description: Maintainer 2026-10-02: rigid body markers get an own rotation (localHT, RG16.3.3), so visualizationSettings.markers gets showBasis and basisSize (the names of nodes); a rigid marker draws its frame: simplified as 3 RGB lines, otherwise 3 arrows as the node basis, with heads 50 % shorter to tell them from a node basis.
+  - **notes:** visualizationSettings.markers.showBasis and basisSize draw the frame of markers with position and orientation: three RGB lines with drawSimplified, else three arrows with short heads.
+  - date resolved: **2026-10-03 00:02**, date raised: 2026-10-02
+- **1.12.227** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a system without coordinates is solved (#2790)
+  - description: Maintainer 2026-10-02: allow a zero-sized system (nODE2 = nODE1 = 0) at least in explicit integration, and check where it would break. The solvers refused it in InitializeSolverPreChecks ('cannot solve for system size = 0'); without that check the explicit, implicit and static solvers run with the dense linear solver; the sparse solvers crash for a system of size 0, and the error estimate of the automatic step size control divided by the number of coordinates (ODE23, DOPRI5).
+  - **notes:** A system without coordinates (no ODE2, ODE1 or algebraic coordinates) is solved by the explicit, implicit and static solvers; time, user functions and sensors advance.
+  - date resolved: **2026-10-03 00:02**, date raised: 2026-10-02
 - **1.12.225** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the output variable HomogeneousTransformation as exu.HT (#2789)
   - description: Maintainer 2026-10-02: GetNodeOutput, GetObjectOutputBody, GetObjectOutput, GetMarkerOutput and GetObjectOutputSuperElement return an exu.HT for OutputVariableType.HomogeneousTransformation instead of 16 numbers - the standard way; sensors keep storing the 16 numbers row by row (a sensor stores rows of numbers), from which exu.HT(values.reshape(4,4)) makes the HT.
   - **notes:** GetNodeOutput, GetObjectOutputBody and GetMarkerOutput return the output variable HomogeneousTransformation as an exu.HT; a sensor stores its 16 values row by row.

@@ -172,8 +172,10 @@ namespace EXUvis {
 	//! red=axisX, green=axisY, blue=axisZ
 	//! length defines the length of each axis; radius is the radius of the shaft; arrowSize is diameter relative to radius
 	//! colorfactor: 1=rgb color, 0=grey color (and any value between)
+	//! headLengthFactor scales the length of the arrow heads (0.5 for the frame of a marker, #2791)
 	void DrawOrthonormalBasis(const Vector3D& p, const Matrix3D& rot, Real length, Real radius, GraphicsData& graphicsData, Index itemID,
-		float colorFactor = 1.f, bool draw3D = true, Index nTiles = 12, Real arrowSizeRelative = 2.5, Index showNumber = EXUstd::InvalidIndex, const char* preText = nullptr);
+		float colorFactor = 1.f, bool draw3D = true, Index nTiles = 12, Real arrowSizeRelative = 2.5, Index showNumber = EXUstd::InvalidIndex, const char* preText = nullptr,
+		Real headLengthFactor = 1.);
 
 	//! draw arraw (for forces, etc.); doubleArrow for torques
 	void DrawArrow(const Vector3D& p, const Vector3D& v, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,

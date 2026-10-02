@@ -11893,3 +11893,52 @@ unchanged. The description of the output variable says both.
 
 **Noted for RG16.3.3** (maintainer): for `MarkerSuperElementRigid` the `localHT` replaces `offset` and adds a rotation,
 which joints on superelements need once `rotationMarker0/1` are deprecated.
+
+<a id="rg4-18"></a>
+### RG4.18 — a system without coordinates (2026-10-02, #2790)
+
+**Where it broke**: only in one check - `CSolverBase::InitializeSolverPreChecks` refused `nSys == 0` ("cannot solve for
+system size = 0") for every solver. Without it (the module with range checks): the explicit solvers (Euler, RK4), the
+implicit ones (generalized alpha, trapezoidal) and the static solver run with the dense linear solver - time, the
+PreStepUserFunction and the sensors advance, the solution file is written; two further places broke: **the sparse
+linear solvers** crash for a system of size 0 (Eigen; all solvers, at their initialization), and **the error estimate
+of the automatic step size control** (ODE23, DOPRI5) divided by the number of coordinates, behind a check of its own
+("total number of ODE1 and ODE2 coordinates must not be zero"). **Changed**: the check is gone; a system without
+coordinates gets the dense linear solver whatever the settings say (`InitializeSolverData`, there is nothing to solve);
+the error estimate is 0 without coordinates, so the step size grows to its maximum. **Test model**
+`emptySystemTest.py`: a ground, a `PreStepUserFunction` and a `SensorUserFunction` through Euler, RK4, ODE23,
+generalized alpha, trapezoidal and the static solver, dense and sparse - every step is taken, the sensor records it.
+
+<a id="rg6-7-7-11"></a>
+### RG6.7.7.11 — the frame of the rigid markers (2026-10-02, #2791)
+
+`visualizationSettings.markers.showBasis` (default False) and `markers.basisSize` (default 0.2, as for the nodes). The
+frame is drawn in one place for every marker with position and orientation - after the marker's own `UpdateGraphics`
+in `VisualizationSystem` -, from its position and rotation matrix in the visualization configuration: with
+`markers.drawSimplified` three lines in red, green and blue, else three arrows as `DrawOrthonormalBasis` draws a node
+basis, with the new argument `headLengthFactor` = 0.5 (heads half as long, to tell a marker frame from a node basis); with
+`markers.showNumbers` the axes are labelled `M` and the number. Test: `test_graphicsRegression.py::testMarkerFrames` -
+three lines for the one rigid marker of a body, none for its position marker, arrows when not simplified.
+
+**Note on a number**: the raytracer cracks (#2787) were written up above as RG6.7.7.8, a number RG6.7.7.8 already had
+(#2769, `MergeTriangleLists`); in the plan they are RG6.7.7.10, their log entry keeps its heading.
+
+<a id="rg9-5-7"></a>
+### RG9.5.7 — the marker on the ALE cable, compared with the maintainer's view (2026-10-02, #2784)
+
+The maintainer: the marker shall stay **fixed to the beam**, not co-moving with the axial (ALE) displacement; a
+co-moving point makes sense only along a list of beams, as the sliding joints do. What the code does:
+- **The position Jacobian agrees**: its column of the ALE coordinate is zero (#2786) - a force at the marker does no work
+  on the axial motion, as for a point fixed to the beam.
+- **The velocity does not**: `CObjectALEANCFCable2D::GetVelocity` adds the Eulerian term `vALE * r_x` - it is the
+  **material** velocity, not the velocity of the point fixed to the beam (which is `J q_t`, without the term). The marker
+  takes its velocity from there (`MarkerBodyPosition` -> `GetVelocity`), so a damper or a velocity constraint on such a
+  marker sees the axial motion while its force cannot act on it: the damping force is not the derivative of a
+  dissipation of the same point, and energy is not consistent. (The output variable `Velocity` of the body may well
+  stay the material velocity; the question is what the marker gets.) The function also reads `vALE` of the current
+  configuration whatever configuration it is asked for.
+- **Off the axis** (`localPosition[1] != 0`) the Jacobian differs from the derivative of the velocity by 2 % - with the
+  velocity of the fixed point this is to be checked again.
+
+So: done for the Jacobian; for the velocity a decision: the marker's velocity without the Eulerian term (a function of
+the body for markers, `GetVelocity` kept for the output variable), or as it is.

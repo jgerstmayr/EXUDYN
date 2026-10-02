@@ -456,8 +456,6 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 		Real rtol = simulationSettings.timeIntegration.relativeTolerance;
 		CHECKandTHROW(atol > 0, "SolverExplicit: absolute tolerance must be > 0", ExudynValueError);
 		
-		CHECKandTHROW(data.nODE1 + data.nODE2 > 0, "SolverExplicit: total number of ODE1 and ODE2 coordinates must not be zero", ExudynModelError);
-
 		Real scODE1, scODE2;
 		Real err = 0;
 		for (Index i = 0; i < data.nODE1; i++)
@@ -473,7 +471,8 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 			scODE2 = atol + EXUstd::Maximum(rk.solutionSecondApproxODE2_t[i], rk.startOfStepODE2_t[i])*rtol;	//velocity error
 			err += EXUstd::Square((rk.solutionSecondApproxODE2_t[i] - solutionODE2_t[i]) / scODE2);				//==> add up to error
 		}
-		err = sqrt(err / (data.nODE1 + 2*data.nODE2)); //ODE2 displacements, ODE2 velocities and ODE1 coordinates
+		const Index nError = data.nODE1 + 2*data.nODE2; //ODE2 displacements, ODE2 velocities and ODE1 coordinates
+		err = (nError != 0) ? sqrt(err / nError) : 0.; //a system without coordinates has no error: the step size grows to its maximum (#2790)
 		it.automaticStepSizeError = err;			
 		if (err == 0.) { err = 1e-12; } //set err to a very small error (based on atol and rtol, this is very small) and would lead to significant step size increase
 
