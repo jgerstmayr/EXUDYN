@@ -138,7 +138,18 @@ script that reads `g['triangles']` of such a shape gets the flat ones with
 `graphics.Triangles6ToTriangles(g)`; `graphics.ToPointsAndTrigs` does this itself, so a contact mesh
 made from a cylinder with an even `nTiles` has the same facets as before, on more triangles (#2709).
 
+**The rotation of an ANCF slope node is one frame.** `NodePointSlope23` and the cross section of
+`ObjectANCFBeam` rotate with the orthonormal frame of their slopes ($v_z$ normalized, $v_y$
+orthogonalized against it), and their angular velocity and rotation Jacobian are now its
+derivatives; they were a least-squares fit of both slopes, which differs where the cross section
+deforms. Joints and torques on these nodes converge as they should; the angular velocity output of a
+deformed cross section, and results with joints on slope nodes, change slightly (#2763).
+
 ### What is new to use
+
+**More markers on more bodies.** `ObjectRotationalMass1D` takes forces and connectors anywhere on
+its table, not only on its axis; `ObjectANCFBeam` takes `MarkerBodyRigid`, so torques and joints with
+rotations act on its cross sections (#2775).
 
 **Curved shapes in GraphicsData.** 6-node (quadratic) triangles - the key `triangles6` of a
 `TriangleList` - quadratic lines (`Lines` with `shape` `'quadratic'`) and quadratic edges (`edges3`)

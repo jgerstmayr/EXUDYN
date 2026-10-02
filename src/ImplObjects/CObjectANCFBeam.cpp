@@ -915,83 +915,66 @@ void CObjectANCFBeam::GetPositionJacobian(const Vector3D& localPosition, Matrix&
 	}
 }
 
-//! the rotation Jacobian d(omega)/d(q_t), 3 x n (#2775), consistent with GetAngularVelocity: omega = W^-1 (y~ y_t + z~ z_t)
-//! with W = -(y~ y~ + z~ z~), y and z the slopes of the cross section at localPosition[0]
-void CObjectANCFBeam::GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const
+//! the slopes s = [r_y, r_z] of the cross section at localPosition[0], current configuration, and the shape functions
+//! that map the coordinates to them, s_c = SVy[j] q[3j+c], s_(3+c) = SVz[j] q[3j+c]
+static void ANCFBeamSlopes(const CObjectANCFBeam& beam, const Vector3D& localPosition, Real* s,
+	SlimVector<CObjectANCFBeam::nSFperNode*CObjectANCFBeam::nNodes>& SVy, SlimVector<CObjectANCFBeam::nSFperNode*CObjectANCFBeam::nNodes>& SVz)
 {
 	Vector3D slopeX, slopeY, slopeZ;
-	ComputeSlopeVectors(localPosition[0], ConfigurationType::Current, slopeX, slopeY, slopeZ);
+	beam.ComputeSlopeVectors(localPosition[0], ConfigurationType::Current, slopeX, slopeY, slopeZ);
+	for (Index c = 0; c < 3; c++) { s[c] = slopeY[c]; s[3 + c] = slopeZ[c]; }
 	Vector3D position({ localPosition[0], 0., 0. });
-	SlimVector<nSFperNode*nNodes> SVy = ComputeShapeFunctions_y(position, parameters.physicsLength);
-	SlimVector<nSFperNode*nNodes> SVz = ComputeShapeFunctions_z(position, parameters.physicsLength);
-	Matrix3D slopeYskew = RigidBodyMath::Vector2SkewMatrix(slopeY);
-	Matrix3D slopeZskew = RigidBodyMath::Vector2SkewMatrix(slopeZ);
-	Matrix3D Winv = (-1.*(slopeYskew*slopeYskew + slopeZskew*slopeZskew)).GetInverse();
-	Matrix3D WY = Winv * slopeYskew;
-	Matrix3D WZ = Winv * slopeZskew;
+	SVy = beam.ComputeShapeFunctions_y(position, beam.GetParameters().physicsLength);
+	SVz = beam.ComputeShapeFunctions_z(position, beam.GetParameters().physicsLength);
+}
+
+//! the rotation Jacobian d(omega)/d(q_t), 3 x n (#2775, #2763): the derivative of the frame of the slopes r_y, r_z of the
+//! cross section (GetRotationMatrix), chained with their shape functions
+void CObjectANCFBeam::GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const
+{
+	Real s[6];
+	SlimVector<nSFperNode*nNodes> SVy, SVz;
+	ANCFBeamSlopes(*this, localPosition, s, SVy, SVz);
+	Matrix slopesJacobian;
+	AccessFunctionsAD::SlopesRotationJacobian(s, slopesJacobian);
 	value.SetNumberOfRowsAndColumns(EXUstd::dim3D, nODE2coordinates);
 	for (Index j = 0; j < nSFperNode*nNodes; j++) //coordinate c of shape function j is j*3+c
 	{
 		for (Index c = 0; c < EXUstd::dim3D; c++)
 		{
-			for (Index r = 0; r < EXUstd::dim3D; r++) { value(r, j*EXUstd::dim3D + c) = SVy[j] * WY(r, c) + SVz[j] * WZ(r, c); }
+			for (Index r = 0; r < EXUstd::dim3D; r++) { value(r, j*EXUstd::dim3D + c) = SVy[j] * slopesJacobian(r, c) + SVz[j] * slopesJacobian(r, 3 + c); }
 		}
 	}
 }
 
-//! J_rot^T torque as a template of the coordinates (#2775): with u = W^-1 torque, component j*3+c is
-//! SVy[j] (u x y)_c + SVz[j] (u x z)_c, y and z the slopes of the cross section
-template<class TReal>
-static void ANCFBeamRotationJacobianTransposedTorque(const TReal* q, const SlimVector<6>& SVy, const SlimVector<6>& SVz,
-	const Vector3D& torque, TReal* result)
-{
-	TReal y[3], z[3];
-	for (Index c = 0; c < 3; c++)
-	{
-		y[c] = 0.; z[c] = 0.;
-		for (Index j = 0; j < 6; j++) { y[c] = y[c] + SVy[j] * q[3 * j + c]; z[c] = z[c] + SVz[j] * q[3 * j + c]; }
-	}
-	TReal W[3][3]; //W = (|y|^2 + |z|^2) I - y y^T - z z^T, symmetric
-	TReal s = y[0]*y[0] + y[1]*y[1] + y[2]*y[2] + z[0]*z[0] + z[1]*z[1] + z[2]*z[2];
-	for (Index r = 0; r < 3; r++)
-	{
-		for (Index c = 0; c < 3; c++) { W[r][c] = (r == c ? s : TReal(0.)) - y[r]*y[c] - z[r]*z[c]; }
-	}
-	//u = W^-1 torque, by the adjugate
-	TReal A[3][3];
-	for (Index r = 0; r < 3; r++)
-	{
-		for (Index c = 0; c < 3; c++)
-		{
-			const Index r1 = (r + 1) % 3, r2 = (r + 2) % 3, c1 = (c + 1) % 3, c2 = (c + 2) % 3;
-			A[c][r] = W[r1][c1]*W[r2][c2] - W[r1][c2]*W[r2][c1];
-		}
-	}
-	TReal det = W[0][0]*A[0][0] + W[0][1]*A[1][0] + W[0][2]*A[2][0];
-	TReal u[3];
-	for (Index r = 0; r < 3; r++) { u[r] = (A[r][0]*torque[0] + A[r][1]*torque[1] + A[r][2]*torque[2]) / det; }
-	TReal uy[3] = { u[1]*y[2] - u[2]*y[1], u[2]*y[0] - u[0]*y[2], u[0]*y[1] - u[1]*y[0] };
-	TReal uz[3] = { u[1]*z[2] - u[2]*z[1], u[2]*z[0] - u[0]*z[2], u[0]*z[1] - u[1]*z[0] };
-	for (Index j = 0; j < 6; j++)
-	{
-		for (Index c = 0; c < 3; c++) { result[3 * j + c] = SVy[j] * uy[c] + SVz[j] * uz[c]; }
-	}
-}
-
-//! d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n (#2744, #2775): J_pos is constant - the position is
-//! linear in the coordinates -, the derivative of J_rot^T torque by automatic differentiation; false without torque
+//! d(J_pos^T force + J_rot^T torque)/dq at localPosition, n x n (#2744, #2775, #2763): J_pos is constant - the position is
+//! linear in the coordinates -, the derivative of J_rot^T torque by the slopes chained with their shape functions; false
+//! without torque
 bool CObjectANCFBeam::GetJacobianTransposedTimesVectorDerivative(const Vector3D& localPosition, const Vector6D& forceTorque,
 	Matrix& value) const
 {
 	Vector3D torque({ forceTorque[3], forceTorque[4], forceTorque[5] });
 	if (torque[0] == 0. && torque[1] == 0. && torque[2] == 0.) { return false; }
-	ConstSizeVector<nODE2coordinates> q;
-	ComputeCurrentObjectCoordinates(q);
-	Vector3D position({ localPosition[0], 0., 0. });
-	SlimVector<nSFperNode*nNodes> SVy = ComputeShapeFunctions_y(position, parameters.physicsLength);
-	SlimVector<nSFperNode*nNodes> SVz = ComputeShapeFunctions_z(position, parameters.physicsLength);
-	AccessFunctionsAD::Derivative<nODE2coordinates>(q.GetDataPointer(), nODE2coordinates, 0, nODE2coordinates,
-		[&SVy, &SVz, &torque](const auto* qq, auto* g) { ANCFBeamRotationJacobianTransposedTorque(qq, SVy, SVz, torque, g); }, value);
+	Real s[6];
+	SlimVector<nSFperNode*nNodes> SVy, SVz;
+	ANCFBeamSlopes(*this, localPosition, s, SVy, SVz);
+	Matrix H; //by the slopes, 6 x 6
+	AccessFunctionsAD::SlopesRotationJacobianTTimesTorqueDerivative(s, torque, H);
+	value.SetNumberOfRowsAndColumns(nODE2coordinates, nODE2coordinates);
+	for (Index i = 0; i < nSFperNode*nNodes; i++)
+	{
+		for (Index j = 0; j < nSFperNode*nNodes; j++)
+		{
+			for (Index a = 0; a < EXUstd::dim3D; a++)
+			{
+				for (Index b = 0; b < EXUstd::dim3D; b++)
+				{
+					value(i*EXUstd::dim3D + a, j*EXUstd::dim3D + b) = SVy[i] * (SVy[j] * H(a, b) + SVz[j] * H(a, 3 + b))
+						+ SVz[i] * (SVy[j] * H(3 + a, b) + SVz[j] * H(3 + a, 3 + b));
+				}
+			}
+		}
+	}
 	return true;
 }
 
@@ -1242,8 +1225,7 @@ HomogeneousTransformation CObjectANCFBeam::GetLocalPositionFrame(const Vector3D&
 }
 
 
-//! the angular velocity of the cross section at localPosition: the rotation that fits the velocities of the slope vectors
-//! y and z in the least-squares sense, as NodePointSlope23 computes it (#2768)
+//! the angular velocity of the cross section, omega = J_rot q_t, consistent with GetRotationMatrix (#2763)
 Vector3D CObjectANCFBeam::GetAngularVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
 	Vector3D slopeX, slopeY, slopeZ;
@@ -1255,11 +1237,9 @@ Vector3D CObjectANCFBeam::GetAngularVelocity(const Vector3D& localPosition, Conf
 		ComputeShapeFunctions_y(position, parameters.physicsLength), q0_t, q1_t);
 	Vector3D slopeZ_t = ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(
 		ComputeShapeFunctions_z(position, parameters.physicsLength), q0_t, q1_t);
-
-	Matrix3D slopeYskew = RigidBodyMath::Vector2SkewMatrix(slopeY);
-	Matrix3D slopeZskew = RigidBodyMath::Vector2SkewMatrix(slopeZ);
-	Matrix3D W = -1.*(slopeYskew*slopeYskew + slopeZskew * slopeZskew);
-	return W.GetInverse() * (slopeYskew*slopeY_t + slopeZskew * slopeZ_t);
+	const Real s[6] = { slopeY[0], slopeY[1], slopeY[2], slopeZ[0], slopeZ[1], slopeZ[2] };
+	const Real s_t[6] = { slopeY_t[0], slopeY_t[1], slopeY_t[2], slopeZ_t[0], slopeZ_t[1], slopeZ_t[2] };
+	return AccessFunctionsAD::SlopesAngularVelocity(s, s_t);
 }
 
 //! the angular velocity in the frame of the cross section (#2768)

@@ -734,6 +734,17 @@ The steps are numbered in the order they were raised and stand here in the order
     the analytic Jacobian of the element against a numerical one in a deformed, twisted state (as RG4.8.5 did for
     the geometrically exact beam), then the corner - a `GenericJoint` between two slope nodes, whose rotation the
     marker derives from the slopes.
+    - **RG4.17.1** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg4-17-1) - **the corner: the rotation Jacobian of
+      the slope nodes was not the derivative of their rotation** - found and made consistent (`NodePointSlope23`, and
+      `ObjectANCFBeam` of RG9.3.7, through one set of functions); C_q of the corner joint now equals the numerical one.
+      The stall is **not** gone: it remains with the numerical system Jacobian too, so it is no longer an
+      inconsistent Jacobian.
+    - **RG4.17.2** *(open, needs no decision)* **the stall with a consistent Jacobian**: from load step 7 (3 % of the
+      drive) the residual grows by a constant factor 1.41 per Newton iteration, with the analytic and with the
+      system-wide numerical Jacobian alike; the condition number of the system Jacobian is 5e12 (the thin section,
+      $w/h = 1/50$, with `crossSectionPenaltyFactor = [1,1,1]`). Next: the eigenvalues of the tangent stiffness at the
+      stall against those of the geometrically exact beam - a zero or negative one is a bifurcation of the ANCF model
+      (a cross-section mode), not a solver problem -, then the penalty factor and the number of elements.
 
 ## RG5 — Performance
 
@@ -2359,7 +2370,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.12 | #2736 | `NodeGenericAE`: **on hold** - the future owner of a constraint's Lagrange multipliers and of the unknowns of algebraic equations |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
 | RG5.2 | - | make the hot linear algebra vectorizable |
-| RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame - an inconsistent Jacobian to find |
+| RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame - the inconsistent rotation Jacobian of the slope nodes fixed (RG4.17.1); the stall remains with a consistent Jacobian (RG4.17.2) |
 | RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG6.7 | #2709 | GraphicsData gets a Sphere and a curved triangle list: spheres, 6-node triangles, quadratic lines and edges, rows done; RG6.7.2.1 and most of RG6.7.7.6 done (the round primitives of 6-node triangles); open RG6.7.5 (anisotropic tiling), the rest of RG6.7.7.6 (`LinkedCylinders`, hollow sphere), RG6.7.7.7 (the examples with large `nTiles`) |

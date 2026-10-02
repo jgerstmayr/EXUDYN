@@ -28,7 +28,8 @@ from exudyn.utilities import (ObjectGround, NodePoint, MassPoint, NodeRigidBodyE
                               MarkerBodyRigid, MarkerNodeRigid, InertiaCuboid, RotXYZ2RotationMatrix, RotationMatrix2EulerParameters,
                               AngularVelocity2EulerParameters_t, ObjectJointSpherical, ObjectConnectorDistance,
                               ObjectJointRevolute2D, Force, ObjectConnectorCoordinate,
-                              ObjectJointRevoluteZ, ObjectJointPrismaticX, ObjectJointPrismatic2D, ObjectJointGeneric)
+                              ObjectJointRevoluteZ, ObjectJointPrismaticX, ObjectJointPrismatic2D, ObjectJointGeneric,
+                              NodePointSlope23, ObjectANCFBeam)
 
 exu.special.userInterface.SuppressAll(True)
 
@@ -294,6 +295,20 @@ def BuildConstraintModel(kind):
                                              rotationMarker0=rotation, rotationMarker1=rotation))
             mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[0.1, 0, 0]))
             mbs.AddLoad(Force(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=b)), loadVector=[1, -9.81*inertia.Mass(), 0.5]))
+    elif kind == 'GenericSlopes': #two ANCF beams at a right angle, clamped and joined at the corner by generic joints
+        #between slope nodes, whose rotation is the frame of their slopes (#2763)
+        section = exu.BeamSection()
+        section.stiffnessMatrix = np.diag([1000, 400, 400, 2, 3, 3])
+        section.inertia = np.diag([0.02, 0.01, 0.01])
+        section.massPerLength = 1
+        nodes = [mbs.AddNode(NodePointSlope23(referenceCoordinates=p+slopes)) for (p, slopes) in
+                 [([0, 0, 0], [0, 1, 0, 0, 0, 1]), ([0.3, 0, 0], [0, 1, 0, 0, 0, 1]), ([0.3, 0, 0], [-1, 0, 0, 0, 0, 1]), ([0.3, 0.3, 0], [-1, 0, 0, 0, 0, 1])]]
+        for k in [0, 2]:
+            mbs.AddObject(ObjectANCFBeam(nodeNumbers=[nodes[k], nodes[k+1]], physicsLength=0.3, sectionData=section))
+        mbs.AddObject(ObjectJointGeneric(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround)), mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodes[0]))]))
+        mbs.AddObject(ObjectJointGeneric(markerNumbers=[mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodes[1])), mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodes[2]))],
+                                         rotationMarker1=RotXYZ2RotationMatrix([0, 0, -0.5*np.pi])))
+        mbs.AddLoad(Force(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=nodes[3])), loadVector=[0, 0, -1]))
     elif kind == 'Prismatic2D': #2D bodies sliding on each other, one with a free rotation
         mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
         for i in range(3):
@@ -332,7 +347,7 @@ def BuildConstraintModel(kind):
     return mbs
 
 
-constraintKinds = ['Spherical', 'Distance', 'Revolute2D', 'Coordinate', 'RevoluteZ', 'PrismaticX', 'Prismatic2D', 'Generic']
+constraintKinds = ['Spherical', 'Distance', 'Revolute2D', 'Coordinate', 'RevoluteZ', 'PrismaticX', 'Prismatic2D', 'Generic', 'GenericSlopes']
 
 
 def PerturbedCoordinates(mbs):

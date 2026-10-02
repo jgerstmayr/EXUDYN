@@ -1548,6 +1548,14 @@ definitions.append(ItemDefinition(
 
     All nine coordinates are global (absolute nodal coordinates). The node is used by `ObjectANCFBeam`.
 
+    #### Rotation
+
+    `MarkerNodeRigid` and the output variables of the rotation take the orthonormal frame of the slopes:
+    $\rv_z$ normalized is its $z$-axis, $\rv_y$ orthogonalized against it and normalized its $y$-axis, and the
+    $x$-axis is their cross product. The angular velocity $\tomega$ and the rotation Jacobian
+    $\Jm_{rot} = \partial \tomega / \partial \dot \qv$ are the derivatives of this frame, so joints and torques act
+    consistently with it (#2763).
+
     #### Action on the equations of motion
 
     The nine coordinates lead to nine ABRV:ODE2 equations, which the element provides; a force at the

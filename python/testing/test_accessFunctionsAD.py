@@ -6,8 +6,9 @@
 #           ObjectANCFCable, ObjectANCFBeam and ObjectANCFThinPlate state that it is zero, which is exact where
 #           their markers may act. Cables on spring-dampers attached at points off the axis and on it, and with
 #           a torque on a rigid marker: the system Jacobian of the implicit solver, with these derivatives, must be
-#           the numerical Jacobian of the right-hand side. ObjectANCFBeam under a torque: its rotation Jacobian, from
-#           the slopes, and the derivative of J_rot^T tau by automatic differentiation (#2775).
+#           the numerical Jacobian of the right-hand side. ObjectANCFBeam and NodePointSlope23 under a torque, with
+#           slopes that are stretched and sheared: the rotation Jacobian of the frame of the slopes and the derivative of
+#           J_rot^T tau by automatic differentiation (#2775, #2763).
 #
 # Usage:    pytest python/testing/test_accessFunctionsAD.py
 #
@@ -22,7 +23,7 @@ import pytest
 
 import exudyn as exu
 from exudyn.utilities import (ObjectGround, NodePoint2DSlope1, ObjectANCFCable2D, NodePointSlope1, ObjectANCFCable,
-                              NodePointSlope23, ObjectANCFBeam, MarkerBodyPosition, MarkerBodyRigid, SpringDamper,
+                              NodePointSlope23, ObjectANCFBeam, MarkerBodyPosition, MarkerBodyRigid, MarkerNodeRigid, SpringDamper,
                               TorsionalSpringDamper)
 
 exu.special.userInterface.SuppressAll(True)
@@ -77,7 +78,7 @@ def BuildBeam():
     section.massPerLength = 1
     c, s = np.cos(0.2), np.sin(0.2)
     nodes = [mbs.AddNode(NodePointSlope23(referenceCoordinates=[i*L, 0, 0, 0, 1, 0, 0, 0, 1],
-                                          initialCoordinates=[0, 0.02*i, 0.01*i, 0.03*i, (c-1)*i/2, s*i/2, 0, -s*i/2, (c-1)*i/2]))
+                                          initialCoordinates=[0, 0.02*i, 0.01*i, 0.03*i, (c-1)*i/2+0.04*i, s*i/2, 0.02*i, -s*i/2+0.05*i, (c-1)*i/2-0.03*i]))
              for i in range(3)]
     for i in range(2):
         e = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=L, sectionData=section))
@@ -87,6 +88,9 @@ def BuildBeam():
         mCable = mbs.AddMarker(MarkerBodyPosition(bodyNumber=e, localPosition=[0.7*L, 0, 0]))
         mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[(i+0.7)*L, -0.09, 0.05]))
         mbs.AddObject(SpringDamper(markerNumbers=[mGround, mCable], referenceLength=0.12, stiffness=100))
+    #a torque on the last node, through the frame of its slopes
+    mbs.AddObject(TorsionalSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround)),
+                                                       mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodes[-1]))], stiffness=3, offset=0.2))
     mbs.Assemble()
     return mbs
 

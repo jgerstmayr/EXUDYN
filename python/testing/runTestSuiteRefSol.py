@@ -37,9 +37,9 @@ def TestExamplesReferenceSolution():
         'SwitchingConstraintsTest.py': 0.,
         'abaqusImportTest.py': 0.0005885208722206048,               #new 2023-04-20; 5 modes as 8 modes have sensitive "half mode included"
         'allExudynModulesTest.py': 1.0,                               #new 2026-02-03; test all modules (if some major error is contained...)
-        'ANCFBeamTest.py': 1.0104863123004104,                       #new 2023-04-04, after resolving local kappa bug
+        'ANCFBeamTest.py': 1.010486312035481,                        #new 2023-04-04, after resolving local kappa bug; 2026-10-02: the rotation of the slope nodes consistent (#2763), -2.6e-10
         'ANCFcable2DuserFunction.py': 0.6015588367721973,           #new 2023-12-13
-        'ANCFCableBeamDampingTest.py': 0.18992335572077274,         #new 2026-03-25, checking damping between ANCFCable2D and ANCFBeam
+        'ANCFCableBeamDampingTest.py': 0.1899233557201726,          #new 2026-03-25, checking damping between ANCFCable2D and ANCFBeam; 2026-10-02: the rotation of the slope nodes consistent (#2763)
         'ANCFbeltDrive.py': -0.0011715885324992126,               #new 2026-09-17: the model was retuned (16 elements
                                                                 #per section, tEnd=0.1) and the result now comes from the
                                                                 #sensor rather than an ODE2 coordinate (#2368)

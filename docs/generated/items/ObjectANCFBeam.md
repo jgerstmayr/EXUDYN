@@ -112,13 +112,12 @@ the curvature and the axial and shear terms, and with a Lobatto rule for the cro
 ### Marker interfaces
 
 The position Jacobian is the interpolation above at the local position, so a force may act at any
-point of the cross section. The rotation of the cross section and its angular velocity follow from the slopes
-$\rv_{,y}$ and $\rv_{,z}$ at $x$ (the output variables `Rotation`, `AngularVelocity`):
-$\tomega = \Wm^{-1} \left( \tilde \rv_{,y} \dot \rv_{,y} + \tilde \rv_{,z} \dot \rv_{,z} \right)$ with
-$\Wm = -\left( \tilde \rv_{,y} \tilde \rv_{,y} + \tilde \rv_{,z} \tilde \rv_{,z} \right)$, and the rotation Jacobian is
-its derivative by $\dot \qv$, so a torque or a rigid marker may act on the element. The position is linear in the
-coordinates; the derivative of the transposed rotation Jacobian times a torque is computed by automatic
-differentiation.
+point of the cross section. The rotation of the cross section is the orthonormal frame of the slopes
+$\rv_{,y}$ and $\rv_{,z}$ at $x$: $\rv_{,z}$ normalized is its $z$-axis, $\rv_{,y}$ orthogonalized against it and
+normalized its $y$-axis (the output variable `Rotation`). The angular velocity $\tomega$ and the rotation Jacobian
+$\Jm_{rot} = \partial \tomega / \partial \dot \qv$ are the derivatives of this frame (#2763), so a torque or a rigid
+marker may act on the element. The position is linear in the coordinates; the derivative of the transposed
+rotation Jacobian times a torque is computed by automatic differentiation.
 
 ### Limitations
 

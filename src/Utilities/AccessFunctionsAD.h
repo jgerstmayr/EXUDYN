@@ -162,6 +162,57 @@ namespace AccessFunctionsAD {
 		}
 	}
 
+	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	//the frame of two slopes, s = [y, z] (NodePointSlope23, ObjectANCFBeam; #2763): z normalized, y orthogonalized
+	//against it, x = y x z - EXUmath::OrthogonalBasisFromVectorsZY; the rotation Jacobian, the angular velocity and the
+	//derivative of the transposed Jacobian times a torque are its derivatives, so all agree with the rotation matrix
+
+	//! the rotation matrix of the slopes s = [y, z], the operations of EXUmath::OrthogonalBasisFromVectorsZY written out,
+	//! so that they also take the nested automatic differentiation
+	template<class TReal>
+	inline void SlopesRotation(const TReal* s, ConstSizeMatrixBase<TReal, 9>& A)
+	{
+		using std::sqrt;
+		TReal z[3] = { s[3], s[4], s[5] };
+		TReal zNorm = sqrt(z[0] * z[0] + z[1] * z[1] + z[2] * z[2]);
+		for (Index c = 0; c < 3; c++) { z[c] = z[c] / zNorm; }
+		TReal h = s[0] * z[0] + s[1] * z[1] + s[2] * z[2];
+		TReal y[3] = { s[0] - h * z[0], s[1] - h * z[1], s[2] - h * z[2] };
+		TReal yNorm = sqrt(y[0] * y[0] + y[1] * y[1] + y[2] * y[2]);
+		for (Index c = 0; c < 3; c++) { y[c] = y[c] / yNorm; }
+		const TReal x[3] = { y[1] * z[2] - y[2] * z[1], y[2] * z[0] - y[0] * z[2], y[0] * z[1] - y[1] * z[0] };
+		A.SetNumberOfRowsAndColumns(3, 3);
+		for (Index r = 0; r < 3; r++) { A(r, 0) = x[r]; A(r, 1) = y[r]; A(r, 2) = z[r]; }
+	}
+
+	//! d(omega)/d(s_t), 3 x 6: column j is the axial vector of dA/ds_j A^T
+	inline void SlopesRotationJacobian(const Real* s, Matrix& value)
+	{
+		RotationJacobian<6>(s, 6, 0, [](const auto* ss, auto& A) { SlopesRotation(ss, A); }, value);
+	}
+
+	//! the angular velocity of the slopes s at the rates s_t, J_rot s_t
+	inline Vector3D SlopesAngularVelocity(const Real* s, const Real* s_t)
+	{
+		Matrix jacobian;
+		SlopesRotationJacobian(s, jacobian);
+		Vector3D omega(0.);
+		for (Index r = 0; r < 3; r++)
+		{
+			for (Index j = 0; j < 6; j++) { omega[r] += jacobian(r, j) * s_t[j]; }
+		}
+		return omega;
+	}
+
+	//! d(J_rot^T torque)/ds, 6 x 6
+	inline void SlopesRotationJacobianTTimesTorqueDerivative(const Real* s, const Vector3D& torque, Matrix& value)
+	{
+		Vector6D torqueOnly({ 0., 0., 0., torque[0], torque[1], torque[2] });
+		JacobianTransposedTimesVectorDerivative<6>(s, 6, 0,
+			[](const auto* ss, auto* p) { for (Index i = 0; i < 3; i++) { p[i] = 0. * ss[0]; } }, //no position: no force acts
+			[](const auto* ss, auto& A) { SlopesRotation(ss, A); }, true, torqueOnly, value);
+	}
+
 } //namespace AccessFunctionsAD
 
 #endif

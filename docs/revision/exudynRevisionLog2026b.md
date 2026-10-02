@@ -11482,3 +11482,38 @@ Jacobian, a copy, now says why it is true there.
 Measured, 20 spheres on a triangle with friction, 1000 steps: `postNewton` is 0.65 % of the run, and the run takes the
 same time (1.33 s) either way - the work was small; the change removes it and the open question. The suite and pytest
 are unchanged (the results are bit-identical, as no reader existed).
+
+<a id="rg4-17-1"></a>
+### RG4.17.1 — the rotation of the slope nodes and its Jacobian (2026-10-02, #2763)
+
+**Found.** In `rightAngleFrame.py` with `ObjectANCFBeam`, at the stall: the analytic system Jacobian against the
+numerical one - the ODE2 part identical, **C_q of the corner joint different in four entries, 0.5 against 0 and 1**.
+The corner is a `GenericJoint` between two `MarkerNodeRigid` on `NodePointSlope23`. The node's rotation matrix is the
+orthonormal frame of its slopes (`OrthogonalBasisFromVectorsZY`: $\rv_z$ normalized, $\rv_y$ orthogonalized against
+it), but its rotation Jacobian and angular velocity were the least-squares fit
+$\tomega = \Wm^{-1}(\tilde\rv_y\dot\rv_y + \tilde\rv_z\dot\rv_z)$. The two agree for a rigid motion of orthonormal slopes,
+not for the derivative by each coordinate: at $\rv_y = \ev_2$, $\rv_z = \ev_3$ the fit gives
+$\partial\omega_x/\partial\dot q = \pm 0.5$ for both slopes, the frame $0$ and $\pm 1$. So C_q and the projection of
+the reaction torques were not the derivative of the constraint. `GetRotationJacobianTTimesVector_q` of the node raised
+*not implemented* (a penalty connector with a torque on the node could not run). `ObjectANCFBeam` had taken the same fit
+for its new rotation Jacobian in RG9.3.7 - the choice recorded there ("consistent with `GetAngularVelocity`") is
+corrected here: consistent with the rotation matrix.
+
+**Changed.** `AccessFunctionsAD.h` gets the frame of two slopes as a template (`SlopesRotation`, the operations of
+`OrthogonalBasisFromVectorsZY` written out so that they take nested automatic differentiation) and three functions
+from it: the rotation Jacobian by the slopes (3 x 6), the angular velocity $\Jm_{rot}\dot\sv$, and the derivative of
+$\Jm_{rot}^T\tau$ (6 x 6). `NodePointSlope23` uses them for `GetRotationJacobian`, `GetAngularVelocity` and
+`GetRotationJacobianTTimesVector_q`; `ObjectANCFBeam` chains them with the shape functions of the slopes (the 6-direction
+derivative instead of the 18-direction one of RG9.3.7, and the hand-written least-squares template is gone). The
+descriptions of both say what the rotation is.
+
+**Tests.** `test_connectorInterface.py`: a constraint model `GenericSlopes` (two ANCF beams at a right angle, clamped
+and joined by generic joints between slope nodes) - C_q by AD against finite differences of the equations, and the
+reaction forces against C_q^T lambda, at perturbed (non-orthonormal) slopes. `test_accessFunctionsAD.py`: the beam
+model has stretched and sheared slopes and a torque on a slope node; the analytic Jacobian matches the numerical one to
+3e-9 (without the derivative of $\Jm^T\tau$: 3.4e-4). Two references re-recorded: `ANCFBeamTest.py` (a torque on a tip
+`MarkerNodeRigid`, -2.6e-10) and `ANCFCableBeamDampingTest.py` (a generic joint on a slope node, -6e-13).
+
+**The stall remains.** `rightAngleFrame.py` with ANCF stops at the same 3.3 % of the drive. With the analytic and with
+the system-wide numerical Jacobian alike the residual grows by 1.41 per iteration from load step 7; the condition
+number of the system Jacobian is 5e12. Recorded as RG4.17.2.
