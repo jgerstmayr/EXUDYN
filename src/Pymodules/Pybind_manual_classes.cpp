@@ -46,6 +46,7 @@ using namespace pybind11::literals; //brings in the '_a' literals; e.g. for shor
 //
 #include "Pymodules/PyMatrixContainer.h"
 #include "Pymodules/PyMatrixVector.h"
+#include "Pymodules/PyHomogeneousTransformation.h" //exudyn.HT (#2780)
 #include "Pymodules/PyGeneralContact.h"
 //
 #include "Main/SystemContainer.h"

@@ -112,6 +112,7 @@ def TestExamplesReferenceSolution():
         'energiesFlexibleBodiesTest.py':5.850170604919896, #elastic energy of beams, plate and kinematic tree in free oscillations (#2202)
         'accessFunctionsTest.py':1.255546526424125, #new 2026-10-02: the access functions of a body at a local position, and what Assemble() refuses (#2744); 2026-10-02: a force at the rim of ObjectRotationalMass1D (#2775)
         'computeItemTest.py':71.26280786574209, #new 2026-10-02: mbs.ComputeItem and NumericalJacobian on a double pendulum (#2779)
+        'homogeneousTransformationTest.py':167.50373559511516, #new 2026-10-02: exudyn.HT against the 4x4 matrices of rigidBodyUtilities (#2780)
         'inspectTest.py':45, #2026-10-02: a rigid body reports PotentialEnergy = 0 (#2202), before 44; new 2026-10-01: mbs.Inspect (#2203); the number of listed members, refusals included
         'energiesTest.py':17.614884358875663, #kinetic and potential energy of simple bodies and spring-dampers (#2202); 2026-10-01 with what the energies refuse and the gravity connector; before 8.724884363749222
         'geometricallyExactBeamOutputTest.py':-6.079487513916353, #section forces, moments and strains of the 3D beam (#2753)

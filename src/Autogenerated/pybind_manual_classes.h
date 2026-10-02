@@ -499,6 +499,33 @@
         ; // end of MatrixContainer pybind definitions
 
 
+    py::class_<PyHT>(m, "HT")
+        .def(py::init<>())
+        .def(py::init<const py::object&, const py::object&>(), py::arg("rotation") = py::none(), py::arg("translation") = py::none())
+        .def_property("rotation", &PyHT::GetRotationPy, &PyHT::SetRotationPy)
+        .def_property("translation", &PyHT::GetTranslationPy, &PyHT::SetTranslationPy)
+        .def("Get", &PyHT::GetPy, "[rotation, translation] as numpy arrays")
+        .def("Set", &PyHT::SetPy, "set the 3x3 rotation matrix and the translation", py::arg("rotation"), py::arg("translation"))
+        .def("SetIdentity", &PyHT::SetIdentity, "set the identity: unit rotation, zero translation")
+        .def("SetTranslation", &PyHT::SetTranslationOnlyPy, "set a translation and the unit rotation", py::arg("translation"))
+        .def("SetRotationX", &PyHT::SetRotationX, "set a rotation about the x-axis by angle (in radians) and zero translation", py::arg("angle"))
+        .def("SetRotationY", &PyHT::SetRotationY, "set a rotation about the y-axis by angle (in radians) and zero translation", py::arg("angle"))
+        .def("SetRotationZ", &PyHT::SetRotationZ, "set a rotation about the z-axis by angle (in radians) and zero translation", py::arg("angle"))
+        .def("HT44", &PyHT::GetHT44Py, "the 4x4 matrix [A p; 0 1] as numpy array")
+        .def("Inverse", &PyHT::GetInversePy, "the inverse transformation [A^T, -A^T p], an HT")
+        .def("Invert", &PyHT::Invert, "invert the transformation in place")
+        .def("RotateVector", &PyHT::RotateVectorPy, "the rotated vector A*v, without the translation", py::arg("vector"))
+        .def("RotateVectorTransposed", &PyHT::RotateVectorTransposedPy, "the vector rotated back, A^T*v", py::arg("vector"))
+        .def("HasNoRotation", &PyHT::HasNoRotation, "True if the transformation was set without rotation (identity, SetTranslation, or a product of such), which its products then skip; a given unit matrix does not set this")
+        .def("__mul__", [](const PyHT &item, const py::object &other) {
+            return item.Multiply(other); }, "H1*H2, the composition of two transformations, an HT; H*v, the transformed point A*v+p of a 3D vector, a numpy array", py::arg("other"))
+        .def("__eq__", [](const PyHT &item, const PyHT &other) {
+            return (const HomogeneousTransformation&)item == (const HomogeneousTransformation&)other; }, "True if rotation and translation are equal, component by component", py::arg("other"))
+        .def("__repr__", [](const PyHT &item) {
+            return item.ToString(); }, "the string representation of the HT")
+        ; // end of HT pybind definitions
+
+
     py::class_<MainGraphicsMaterialList>(m, "GraphicsMaterialList")
         .def(py::init<>())
         .def("Reset", &MainGraphicsMaterialList::Reset, "reset materials to 10 default materials")

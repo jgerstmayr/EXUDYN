@@ -632,6 +632,82 @@ class MatrixContainer:
         ...
 
 
+class HT:
+    """The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint.
+
+    It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation set without rotation (identity, SetTranslation) skips the rotation in its products
+    Examples:
+    """
+    rotation:ArrayLike
+    """the 3x3 rotation matrix as numpy array; setting it keeps the translation."""
+    translation:ArrayLike
+    """the translation as numpy array; setting it keeps the rotation."""
+    @overload
+    def Get(self) -> List[ArrayLike]: 
+        """[rotation, translation] as numpy arrays."""
+        ...
+    @overload
+    def Set(self, rotation: ArrayLike, translation: ArrayLike) -> None: 
+        """Set the 3x3 rotation matrix and the translation."""
+        ...
+    @overload
+    def SetIdentity(self) -> None: 
+        """Set the identity: unit rotation, zero translation."""
+        ...
+    @overload
+    def SetTranslation(self, translation: ArrayLike) -> None: 
+        """Set a translation and the unit rotation."""
+        ...
+    @overload
+    def SetRotationX(self, angle: float) -> None: 
+        """Set a rotation about the x-axis by angle (in radians) and zero translation."""
+        ...
+    @overload
+    def SetRotationY(self, angle: float) -> None: 
+        """Set a rotation about the y-axis by angle (in radians) and zero translation."""
+        ...
+    @overload
+    def SetRotationZ(self, angle: float) -> None: 
+        """Set a rotation about the z-axis by angle (in radians) and zero translation."""
+        ...
+    @overload
+    def HT44(self) -> ArrayLike: 
+        """The 4x4 matrix [A p; 0 1] as numpy array."""
+        ...
+    @overload
+    def Inverse(self) -> HT: 
+        """The inverse transformation [A^T, -A^T p], an HT."""
+        ...
+    @overload
+    def Invert(self) -> None: 
+        """Invert the transformation in place."""
+        ...
+    @overload
+    def RotateVector(self, vector: ArrayLike) -> ArrayLike: 
+        """The rotated vector A*v, without the translation."""
+        ...
+    @overload
+    def RotateVectorTransposed(self, vector: ArrayLike) -> ArrayLike: 
+        """The vector rotated back, A^T*v."""
+        ...
+    @overload
+    def HasNoRotation(self) -> bool: 
+        """True if the transformation was set without rotation (identity, SetTranslation, or a product of such), which its products then skip; a given unit matrix does not set this."""
+        ...
+    @overload
+    def __mul__(self, other: Union[HT, ArrayLike]) -> Union[HT, ArrayLike]: 
+        """H1*H2, the composition of two transformations, an HT; H*v, the transformed point A*v+p of a 3D vector, a numpy array."""
+        ...
+    @overload
+    def __eq__(self, other: HT) -> bool: 
+        """True if rotation and translation are equal, component by component."""
+        ...
+    @overload
+    def __repr__(self) -> str: 
+        """The string representation of the HT."""
+        ...
+
+
 class GraphicsMaterialList:
     """The GraphicsMaterialList contains the list of materials (material properties) for visualization; currently, only the raytracer uses materials.
 

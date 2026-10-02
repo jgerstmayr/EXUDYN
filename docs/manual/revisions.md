@@ -159,6 +159,11 @@ equations, constraint Jacobian and reaction forces of a joint, the kinematics of
 `exudyn.advancedUtilities.NumericalJacobian` gives the numerical derivative to compare with, for
 testing a model or an item of one's own (#2779).
 
+**`exudyn.HT`, the homogeneous transformation of the C++ core.** `exu.HT(rotation=A, translation=p)`
+composes with `*` (`H1*H2`, and `H*v` for a point), inverts (`Inverse()`), and converts to and from the
+4x4 matrix (`HT44()`, `exu.HT(T44)`) - faster than the 4x4 numpy arrays of
+`exudyn.rigidBodyUtilities`, whose function `HomogeneousTransformation` (shortcut `HT`) stays (#2780).
+
 **Curved shapes in GraphicsData.** 6-node (quadratic) triangles - the key `triangles6` of a
 `TriangleList` - quadratic lines (`Lines` with `shape` `'quadratic'`) and quadratic edges (`edges3`)
 are drawn curved: the renderers split them when they draw, as fine as

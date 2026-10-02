@@ -16,6 +16,7 @@ exudyn.ExplicitIntegrationSettings
 exudyn.GeneralContact
 exudyn.GeneralizedAlphaSettings
 exudyn.GraphicsMaterialList
+exudyn.HT
 exudyn.LinearSolverSettings
 exudyn.MainSolverExplicit
 exudyn.MainSolverImplicitSecondOrder

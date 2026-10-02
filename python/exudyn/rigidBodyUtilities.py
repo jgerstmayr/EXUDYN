@@ -733,7 +733,9 @@ def RotationMatrix2D(angleRad):
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #functions for homogeneous transformations (HT)
 def HomogeneousTransformation(A, r):
-    """compute [HT](#HT) matrix from rotation matrix A and translation vector r
+    """compute [HT](#HT) matrix from rotation matrix A and translation vector r, as a 4x4 numpy array;
+    exudyn.HT is the C++ class of the same transformation, faster in products, inverses and transformed points:
+    exudyn.HT(rotation=A, translation=r) (#2780); the shortcut HT of this module is this function
     """
     T = np.zeros((4,4))
     T[0:3,0:3] = A

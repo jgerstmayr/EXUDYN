@@ -11722,3 +11722,31 @@ velocities, as the chain neglects dv/dq) against the numerical derivative of `OD
 **Left out**: `IsValidLocalPosition` (the check of `Assemble()` already reports it), the Jacobians of a node with
 algebraic equations (the Euler parameter constraint, which `ConstraintJacobian` of a body with it gives); the derivative
 of the Lie group node by composed increments stays out of the test.
+
+<a id="rg16-1"></a>
+### RG16.1.1 to RG16.1.4 — the C++ homogeneous transformation and `exudyn.HT` (2026-10-02, #2780)
+
+- **RG16.1.1** `HomogeneousTransformationBase` is in `src/Linalg/HomogeneousTransformation.h` (it was in
+  `RigidBodyMath.h`, outside the `EXUlie` namespace already; its Lie group functions - `SetRotation` of a rotation
+  vector, `GetRelativeMotionTo`, `LogSE3` - stay in `RigidBodyMath.h` with the exponential and logarithmic maps). It
+  stores **12 numbers** - the rotation row by row and the translation - and a flag, instead of a `ConstSizeMatrix` with
+  its sizes. `GetRotation()` returns a copy (no call site wrote through it except `LogSE3`, now `SetRotationMatrix`);
+  `GetTranslation()` stays a reference.
+- **RG16.1.2** the hot operations written out with fixed-size loops: `H*v`, `RotateVector`/`RotateVectorTransposed`,
+  `Invert`/`GetInverse` (a transpose in place), `H1*H2`, `Set(A, p)`/`Get(A, p)`. **The flag**: a transformation set
+  without rotation (the identity, `SetTranslation`) skips the rotation in its products and inverse, and a product of two
+  such keeps it; it is set only by those functions, never by comparing a given matrix, so setting costs nothing;
+  `homogeneousTransformationUseIdentityFlag` (a global `constexpr`) switches it off, to measure both.
+- **RG16.1.3** the test model `homogeneousTransformationTest.py`: 20 random transformations against the 4x4 numpy
+  matrices of `rigidBodyUtilities` - composition, transformed point, inverse, the 4x4 matrix both ways (to 4e-16) -
+  and the flag through products. All references of the suite and pytest unchanged (the class is used by the connector
+  interface, the rigid markers and the graphics). **Measured**: a kinematic tree of 60 links (RK4, 1000 steps) 0.747 s
+  before, 0.733 s after; the chain of 40 rigid bodies with full Newton 0.586 s, 0.584 s - the HT is not what is hot in
+  these models; a C++ micro-benchmark of the operations themselves belongs to the maintained benchmark of RG5.1.
+- **RG16.1.4** `exudyn.HT` (`src/Pymodules/PyHomogeneousTransformation.h`, bound in
+  `definitions/pybindDataStructures.py`): `HT(rotation=None, translation=None)` or `HT(T44)`, the properties
+  `rotation` and `translation`, `Get`/`Set`, `SetIdentity`, `SetTranslation`, `SetRotationX/Y/Z`, `HT44`, `Inverse`,
+  `Invert`, `RotateVector`, `RotateVectorTransposed`, `HasNoRotation`, `*` (an HT times an HT, or a 3D point), `==`.
+  The docstring of `rigidBodyUtilities.HomogeneousTransformation` points to it; note that the shortcut `HT` of that
+  module (the function, star-imported by `exudyn.utilities`) and `exudyn.HT` (the class) share a name.
+- **Open: RG16.1.5** - the HT inside the rigid items and as an output variable.

@@ -169,6 +169,132 @@ pb.DefPyFinishClass('MatrixContainer')
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#documentation and pybindings for HT, the homogeneous transformation (#2780)
+classStr = 'PyHT'
+pyClassStr = 'HT'
+
+pb.DefPyStartClass(classStr, pyClassStr, 'The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint. It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation set without rotation (identity, SetTranslation) skips the rotation in its products. Examples:',
+                    subSection=True, labelName='sec:HT')
+
+pb.AddDocuCodeBlock(code="""
+import exudyn as exu
+from exudyn.rigidBodyUtilities import RotationMatrixZ
+H0 = exu.HT()                                              #identity
+H1 = exu.HT(rotation=RotationMatrixZ(0.5), translation=[1,0,0])
+H2 = exu.HT(translation=[0,2,0])                           #translation only
+H = H1 * H2                                                #composition, an HT
+p = H1 * [0.1,0,0]                                         #a point transformed, a numpy array
+A, t = H.Get()                                             #rotation and translation
+H44 = H.HT44()                                             #4x4 numpy array
+Hinv = H.Inverse()
+H.translation = [0,0,1]                                    #write access, the rotation is kept
+""")
+
+pb.DefStartTable(pyClassStr)
+
+pb.CppCode('        .def(py::init<const py::object&, const py::object&>(), py::arg("rotation") = py::none(), py::arg("translation") = py::none())\n')
+
+pb.CppCode('        .def_property("rotation", &PyHT::GetRotationPy, &PyHT::SetRotationPy)\n')
+pb.DefDataAccess('rotation', 'the 3x3 rotation matrix as numpy array; setting it keeps the translation', dataType='ArrayLike')
+pb.CppCode('        .def_property("translation", &PyHT::GetTranslationPy, &PyHT::SetTranslationPy)\n')
+pb.DefDataAccess('translation', 'the translation as numpy array; setting it keeps the rotation', dataType='ArrayLike')
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='Get', cName='GetPy',
+                       description="[rotation, translation] as numpy arrays",
+                       returnType='List[ArrayLike]',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='Set', cName='SetPy',
+                       argList=['rotation', 'translation'],
+                       description="set the 3x3 rotation matrix and the translation",
+                       argTypes=['ArrayLike', 'ArrayLike'],
+                       returnType='None',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='SetIdentity', cName='SetIdentity',
+                       description="set the identity: unit rotation, zero translation",
+                       returnType='None',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='SetTranslation', cName='SetTranslationOnlyPy',
+                       argList=['translation'],
+                       description="set a translation and the unit rotation",
+                       argTypes=['ArrayLike'],
+                       returnType='None',
+                       )
+
+for axis in ['X', 'Y', 'Z']:
+    pb.DefPyFunctionAccess(cClass=classStr, pyName='SetRotation' + axis, cName='SetRotation' + axis,
+                           argList=['angle'],
+                           description="set a rotation about the " + axis.lower() + "-axis by angle (in radians) and zero translation",
+                           argTypes=['float'],
+                           returnType='None',
+                           )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='HT44', cName='GetHT44Py',
+                       description="the 4x4 matrix [A p; 0 1] as numpy array",
+                       returnType='ArrayLike',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='Inverse', cName='GetInversePy',
+                       description="the inverse transformation [A^T, -A^T p], an HT",
+                       returnType='HT',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='Invert', cName='Invert',
+                       description="invert the transformation in place",
+                       returnType='None',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='RotateVector', cName='RotateVectorPy',
+                       argList=['vector'],
+                       description="the rotated vector A*v, without the translation",
+                       argTypes=['ArrayLike'],
+                       returnType='ArrayLike',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='RotateVectorTransposed', cName='RotateVectorTransposedPy',
+                       argList=['vector'],
+                       description="the vector rotated back, A^T*v",
+                       argTypes=['ArrayLike'],
+                       returnType='ArrayLike',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='HasNoRotation', cName='HasNoRotation',
+                       description="True if the transformation was set without rotation (identity, SetTranslation, or a product of such), which its products then skip; a given unit matrix does not set this",
+                       returnType='bool',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__mul__',
+                       cName='[](const PyHT &item, const py::object &other) {\n            return item.Multiply(other); }',
+                       description="H1*H2, the composition of two transformations, an HT; H*v, the transformed point A*v+p of a 3D vector, a numpy array",
+                       argList=['other'], argTypes=['Union[HT, ArrayLike]'],
+                       returnType='Union[HT, ArrayLike]',
+                       isLambdaFunction = True,
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__eq__',
+                       cName='[](const PyHT &item, const PyHT &other) {\n            return (const HomogeneousTransformation&)item == (const HomogeneousTransformation&)other; }',
+                       description="True if rotation and translation are equal, component by component",
+                       argList=['other'], argTypes=['HT'],
+                       returnType='bool',
+                       isLambdaFunction = True,
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__repr__',
+                       cName='[](const PyHT &item) {\n            return item.ToString(); }',
+                       description="the string representation of the HT",
+                       returnType='str',
+                       isLambdaFunction = True,
+                       )
+
+#++++++++++++++++
+pb.DefPyFinishClass('HT')
+
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #documentation and pybindings for GraphicsMaterialList
 
 

@@ -79,6 +79,50 @@ The class **MatrixContainer** has the following **functions and structures**:
 
 
 
+(sec-ht)=
+## HT
+
+The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint. It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation set without rotation (identity, SetTranslation) skips the rotation in its products. Examples:
+
+
+```python
+import exudyn as exu
+from exudyn.rigidBodyUtilities import RotationMatrixZ
+H0 = exu.HT()                                              #identity
+H1 = exu.HT(rotation=RotationMatrixZ(0.5), translation=[1,0,0])
+H2 = exu.HT(translation=[0,2,0])                           #translation only
+H = H1 * H2                                                #composition, an HT
+p = H1 * [0.1,0,0]                                         #a point transformed, a numpy array
+A, t = H.Get()                                             #rotation and translation
+H44 = H.HT44()                                             #4x4 numpy array
+Hinv = H.Inverse()
+H.translation = [0,0,1]                                    #write access, the rotation is kept
+```
+
+
+The class **HT** has the following **functions and structures**:
+
+- **`rotation`**: the 3x3 rotation matrix as numpy array; setting it keeps the translation
+- **`translation`**: the translation as numpy array; setting it keeps the rotation
+- **`Get()`**: [rotation, translation] as numpy arrays
+- **`Set(rotation, translation)`**: set the 3x3 rotation matrix and the translation
+- **`SetIdentity()`**: set the identity: unit rotation, zero translation
+- **`SetTranslation(translation)`**: set a translation and the unit rotation
+- **`SetRotationX(angle)`**: set a rotation about the x-axis by angle (in radians) and zero translation
+- **`SetRotationY(angle)`**: set a rotation about the y-axis by angle (in radians) and zero translation
+- **`SetRotationZ(angle)`**: set a rotation about the z-axis by angle (in radians) and zero translation
+- **`HT44()`**: the 4x4 matrix [A p; 0 1] as numpy array
+- **`Inverse()`**: the inverse transformation [A^T, -A^T p], an HT
+- **`Invert()`**: invert the transformation in place
+- **`RotateVector(vector)`**: the rotated vector A*v, without the translation
+- **`RotateVectorTransposed(vector)`**: the vector rotated back, A^T*v
+- **`HasNoRotation()`**: True if the transformation was set without rotation (identity, SetTranslation, or a product of such), which its products then skip; a given unit matrix does not set this
+- **`__mul__(other)`**: H1*H2, the composition of two transformations, an HT; H*v, the transformed point A*v+p of a 3D vector, a numpy array
+- **`__eq__(other)`**: True if rotation and translation are equal, component by component
+- **`__repr__()`**: the string representation of the HT
+
+
+
 (sec-graphicsmateriallist)=
 ## GraphicsMaterialList
 
