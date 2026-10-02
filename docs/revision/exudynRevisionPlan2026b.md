@@ -2454,7 +2454,8 @@ the joints an HT means fewer variables and one way of doing things.
       variable HT wherever position and rotation are available.
 
 <a id="rg16-2"></a>
-**RG16.2** *(group RG16; maintainer 2026-10-02)* **The evaluation: HT in the user interface of the rigid items**
+**RG16.2** *(group RG16; maintainer 2026-10-02)* **EVALUATED 2026-10-02, for the maintainer's decisions** —
+    [log](exudynRevisionLog2026b.md#rg16-2) - **The evaluation: HT in the user interface of the rigid items**
     (#2781), for the maintainer's decisions - unification, clarity, simplicity. The main cases: `ObjectRigidBody`,
     `ObjectGround`, the rigid body nodes, the `Marker...Rigid`. Can they take an HT instead of position and rotation, in
     a compatibility mode: both initialized with `None` (can the interface tell which of them a user set?), the default

@@ -11813,3 +11813,49 @@ the six primitives 0 without edges. The remaining isolated pixels with `addEdges
 along the silhouette, not cracks. **Test**: `test_graphicsRegression.py::testCurvedSurfacesHaveNoCracks` - fails without
 the fix, passes with it. The cost: an item whose triangles differ much in curvature is split finer where it is flat (the
 cap of a cylinder as its side), bounded by `curvedTriangleMaxTiling`.
+
+<a id="rg16-2"></a>
+### RG16.2 — the evaluation: HT in the user interface of the rigid items (2026-10-02, #2781), for the maintainer's decisions
+
+**What the interface has today** (read from the defaults of the items and `mainSystemExtensions.py`):
+
+| item | frame parameters today | where an HT would go |
+|---|---|---|
+| `ObjectGround` | `referencePosition`, `referenceRotation` | `referenceHT` |
+| `NodeRigidBodyEP`/`Rxyz`/`RotVecLG`, `NodeRigidBody2D` | `referenceCoordinates`, `initialCoordinates` - position and rotation *parameters*, not a matrix | none in the node: the parameters are its coordinates; the HT belongs to the Create functions |
+| `ObjectRigidBody` | none - its frame is its node's | none |
+| `MarkerBodyRigid`, `MarkerKinematicTreeRigid` | `localPosition` | `localHT` (RG14.2.15, RG16.5) |
+| `MarkerNodeRigid` | none | `localHT` (new: a frame offset in the node) |
+| `MarkerSuperElementRigid` | `offset` | `localHT`? (the rotation of a superelement marker is a weighted one - an offset rotation is new) |
+| `JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, `ConnectorRigidBodySpringDamper`, `ConnectorTorsionalSpringDamper` | `rotationMarker0/1` | the marker's `localHT`; `rotationMarker0/1` deprecated (RG14.2.15) |
+| `ObjectKinematicTree` | `jointTransformations` (rotations), `jointOffsets`, `baseOffset` | `jointHTs`? (a list of HTs: one parameter instead of two lists) |
+| `CreateRigidBody`, `CreateGround`, `CreateRevoluteJoint`, ... | `referencePosition`, `referenceRotationMatrix`, `initialDisplacement`, `initialRotationMatrix` | `referenceHT`, `initialHT` |
+
+**What the interface can tell.** A dictionary passed to `mbs.AddMarker(...)` may leave keys out - the item gets the C++
+default (checked: `{'markerType':'BodyRigid','bodyNumber':g}` works, and `GetMarker` then lists `localPosition`). So the
+generated `SetWithDictionary` knows which keys a user gave; the Python item classes (`MarkerBodyRigid(...)`) pass every
+key, with its default - they would need `None` as default to tell. So both ways of a compatibility mode are possible:
+**(A) both parameters, `None` meaning "not given"** - `localPosition=None, localHT=None`, the defaults zero and unit; giving
+both raises; the item stores one HT; `GetMarker()` lists what was given (or both, the unset one as `None`); **(B) a global
+mode** - `exu.config` says whether items take position/rotation or HT; or (B') detected as soon as an item is given a
+position or rotation.
+
+**The proposal** (to decide):
+1. **(A), per item, not a global mode**: a script reads the same in every context; a global or auto-detected mode makes a
+   model depend on what ran before (another library, a notebook cell) - the kind of hidden state the revision removed
+   elsewhere. (A) also lets old and new parameters coexist until the deprecation of item parameters (RG12.2) retires the
+   old ones in 2.0.
+2. **The HT in a dictionary is a 4x4 numpy array** (what `GetMarker()` returns, what JSON and pickles keep, what
+   `rigidBodyUtilities` builds); an `exu.HT` is accepted where an HT is given. Names: `localHT`, `referenceHT`,
+   `initialHT`, `jointHTs` - short, as the rotation parameters are (`referenceRotation`).
+3. **The order of RG16.3** (nothing breaks): `ObjectGround.referenceHT`; `MarkerBodyRigid`, `MarkerNodeRigid`,
+   `MarkerKinematicTreeRigid` `.localHT` (the frame of RG14.2.15, internally the marker frame = body frame x localHT, so
+   the connectors and joints see it in `MarkerRigid.frame` without change); the Create functions `referenceHT`/`initialHT`.
+   Then RG16.4: `ObjectKinematicTree.jointHTs`, the deprecation of `rotationMarker0/1`, the robotics utilities on HT.
+4. **The name `HT`**: `exudyn.rigidBodyUtilities.HT` (the shortcut of the function that builds a 4x4 array) and `exu.HT`
+   (the class) share a name; `from exudyn.utilities import *` brings the function as `HT`. Proposed: keep both for 1.13,
+   with a note in both docstrings (done), and deprecate the shortcut with RG12.2 for 2.0.
+
+**Cost of (A)**: per HT parameter one more key, a check "not both" in the item's `SetWithDictionary` (generated: a
+declared pair in `definitions/`), and the composition in the item; the definitions gain a parameter type `HT` (4x4 numpy
+array in Python, `HomogeneousTransformation` in C++), once in the generators.
