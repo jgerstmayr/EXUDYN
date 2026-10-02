@@ -68,3 +68,29 @@ void CMarkerNodeRotationCoordinate::ComputeMarkerData(const CSystemData& cSystem
 	}
 }
 
+//! the value and its time derivative for the connector interface (#2745), as ComputeMarkerData: the Tait-Bryan angle of the
+//! node's rotation and the global angular velocity component; the rotation Jacobian of the node into temp.tempMatrix
+Index CMarkerNodeRotationCoordinate::GetKinematicsCoordinate(const CSystemData& cSystemData, MarkerCoordinate<Real>& kinematics, MarkerTemp& temp) const
+{
+	const CNodeODE2& cNode = (const CNodeODE2&)(*cSystemData.GetCNodes()[parameters.nodeNumber]);
+	Index n = cNode.GetNumberOfODE2Coordinates();
+	if (n == 0) //ground node: the value 0, acting on nothing
+	{
+		kinematics.value = 0.;
+		kinematics.value_t = 0.;
+		return 0;
+	}
+	kinematics.value = RigidBodyMath::RotationMatrix2RotXYZ(cNode.GetRotationMatrix())[parameters.rotationCoordinate];
+	kinematics.value_t = cNode.GetAngularVelocity()[parameters.rotationCoordinate];
+	cNode.GetRotationJacobian(temp.tempMatrix);
+	return n;
+}
+
+//! the force, a torque about the axis, projected by the row of the rotation Jacobian; after GetKinematicsCoordinate with
+//! the same temp (#2745)
+void CMarkerNodeRotationCoordinate::AddGeneralizedForceCoordinate(const CSystemData& cSystemData, Real force, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const
+{
+	const ResizableMatrix& rotationJacobian = temp.tempMatrix;
+	for (Index i = 0; i < rotationJacobian.NumberOfColumns(); i++) { ode2Lhs[i] += rotationJacobian(parameters.rotationCoordinate, i) * force; }
+}
+

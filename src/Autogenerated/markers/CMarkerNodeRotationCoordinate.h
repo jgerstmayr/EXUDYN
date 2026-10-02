@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  22:48:27 (last modified)
+* @date         2026-10-02  18:30:01 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -107,6 +107,12 @@ public: // AUTO:
 
     //! AUTO:  Compute marker data (e.g. position and positionJacobian) for a marker
     virtual void ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const override;
+
+    //! AUTO:  the rotation coordinate and its angular velocity, and the rotation Jacobian of the node into temp for AddGeneralizedForceCoordinate, without the marker data (#2745)
+    virtual Index GetKinematicsCoordinate(const CSystemData& cSystemData, MarkerCoordinate<Real>& kinematics, MarkerTemp& temp) const override;
+
+    //! AUTO:  add the torque about the axis of the rotation coordinate, projected by its row of the rotation Jacobian (#2745)
+    virtual void AddGeneralizedForceCoordinate(const CSystemData& cSystemData, Real force, MarkerTemp& temp, LinkedDataVector& ode2Lhs) const override;
 
 };
 

@@ -2253,8 +2253,9 @@ done.
       - **RG14.2.14.1** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-14-1) - `MarkerTemp` gets the
         fixed-size state of a rigid frame (rotation, G, G_local); `ObjectRigidBody` keeps it there instead of two
         `ResizableMatrix`; `MarkerNodeRigid` gets its own L0/L1 for the 3D rigid body nodes;
-      - **RG14.2.14.2** the coordinate markers that a coordinate connector takes: `MarkerNodeRotationCoordinate`,
-        `MarkerNodeODE1Coordinate`, `MarkerNodeCoordinates`, the relative coordinate markers;
+      - **RG14.2.14.2** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-14-2) - the coordinate markers
+        that a coordinate connector takes: `MarkerNodeRotationCoordinate` on its own L0/L1; `MarkerNodeODE1Coordinate`,
+        `MarkerNodeCoordinates` and the relative coordinate markers stay on the default (reasons in the log);
       - **RG14.2.14.3** `MarkerSuperElementPosition`/`Rigid` and `MarkerKinematicTreeRigid` - their Jacobians are
         dense in many coordinates, their own L1 projects without forming them where possible;
       - **RG14.2.14.4** the Jacobian chains (`ConnectorJacobianODE2*Markers`, `ConstraintJacobian*Markers`) take the
@@ -2280,6 +2281,9 @@ done.
         member, grouped: no member serves the legacy path any more, so (2) has nothing left to remove; (3) proposed -
         the two matrices of one `GeneralContact` caller into its own temporaries, `tempIndex[4]`, `tempValue`/`2`
         named for `PostNewtonStep`.
+      - **RG14.2.16.2** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-14-2) - (3) as proposed: the two
+        matrices of `GeneralContact` are `tempMatrix`/`tempMatrix2`, the two numbers `postNewtonError`/`postNewtonStepSize`;
+        the index arrays keep their generic names. 25 members remain, each with a user.
     - **RG14.2.15** *(maintainer 2026-10-01; to be considered in all marker and connector work from now on)*
       **Markers with a rotation; the joints' `rotationMarker0/1` deprecated.** A rigid marker gets a local frame:
       **`localHT`** (a homogeneous transformation in the body) as the alternative to `localPosition`, which is

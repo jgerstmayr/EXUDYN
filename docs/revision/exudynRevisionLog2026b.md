@@ -11634,3 +11634,20 @@ rotation parameters with a configuration dependent G" -, which it is not: with a
 $\sum_i SV_i\,\partial(\Gm_i^T\tau)/\partial\qv_i$. It is now computed from the nodes' `GetGTv_q` (to 2e-11); all
 references unchanged. Not built yet (RG9.5.6): the FFRF bodies, the kinematic tree, `ALEANCFCable2D`, `GenericODE2`; the
 derivative of the Lie group node, whose increments are compositions.
+
+<a id="rg14-2-14-2"></a>
+### RG14.2.14.2 and RG14.2.16.2 — the rotation coordinate marker on L0/L1; the temporaries named (2026-10-02, #2745)
+
+- **`MarkerNodeRotationCoordinate`** has its own L0/L1: the Tait-Bryan angle of the node's rotation and the global
+  angular velocity component, as `ComputeMarkerData`; the node's rotation Jacobian kept in `temp.tempMatrix`, and the
+  force - a torque about the axis - projected by its row. No `MarkerData` on this path; the approximation of the marker
+  (the angle is a Tait-Bryan angle, the Jacobian row the global angular velocity) is unchanged. All references unchanged
+  (`driveTrainTest.py`, `sliderCrank3Dbenchmark.py`, `test_connectorInterface.py` use it).
+- **Stay on the default L0/L1**: `MarkerNodeODE1Coordinate` - the coordinate chain projects on ODE2 coordinates, an ODE1
+  coordinate has none; `MarkerNodeCoordinates` - a vector of coordinates, which only `ConnectorCoordinateVector` (on the
+  path of the marker data, RG14.2.11) takes; `MarkerBodiesRelativeRotationCoordinate`/`TranslationCoordinate` - their
+  Jacobian spans two bodies and is formed by the marker data function; they are special markers in the sense of RG14.2.11.
+- **`TemporaryComputationData`** (RG14.2.16 (3)): `localJacobian_t` and `loadJacobian`, used only as two temporary
+  matrices of the contact of ANCF cables in `CContact`, are `tempMatrix` and `tempMatrix2`; `tempValue`/`tempValue2` of
+  `PostNewtonStep` are `postNewtonError`/`postNewtonStepSize`. The four index arrays keep their generic names - they serve
+  several functions.

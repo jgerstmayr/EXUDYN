@@ -750,8 +750,8 @@ inline void AddJacobianTerms(TemporaryComputationData& tempArrayThreadID,
 	SparseTripletVector& triplets)
 {
 	ResizableMatrix& m = tempArrayThreadID.localJacobian;
-	ResizableMatrix& temp = tempArrayThreadID.localJacobian_t; //used as temporary matrix
-	ResizableMatrix& temp2 = tempArrayThreadID.loadJacobian;   //used as temporary matrix
+	ResizableMatrix& temp = tempArrayThreadID.tempMatrix; //used as temporary matrix
+	ResizableMatrix& temp2 = tempArrayThreadID.tempMatrix2;  //used as temporary matrix
 
 	if (columnsj) //in case of ground elements ...
 	{
@@ -2458,8 +2458,8 @@ void GeneralContact::ComputeContactJacobianANCFcableCircleContact(Index gi, Inde
 	}
 
 	ResizableMatrix& locJac = tempData.localJacobian;
-	ResizableMatrix& temp = tempData.localJacobian_t; //used as temporary matrix
-	ResizableMatrix& temp2 = tempData.loadJacobian;   //used as temporary matrix
+	ResizableMatrix& temp = tempData.tempMatrix; //used as temporary matrix
+	ResizableMatrix& temp2 = tempData.tempMatrix2;  //used as temporary matrix
 
 	for (Index i = 0; i < integrationPoints.NumberOfItems(); i++)
 	{

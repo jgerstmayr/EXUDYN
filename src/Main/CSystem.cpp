@@ -2414,8 +2414,8 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 		}
 		for (Index k=0; k<nThreads; k++)
 		{
-			tempArray[k].tempValue = 0; //PNerror
-			tempArray[k].tempValue2 = recommendedStepSize; //recommended step size
+			tempArray[k].postNewtonError = 0; //PNerror
+			tempArray[k].postNewtonStepSize = recommendedStepSize; //recommended step size
 			tempArray[k].tempIndex.SetNumberOfItems0(); //stores object indices which shall get a ltg-rebuild
 		}
 
@@ -2427,7 +2427,7 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 			PostNewtonFlags::Type postNewtonFlags;
 
 			TemporaryComputationData& temp = tempArray[threadID];
-			Real& recommendedStepSizeLocal = temp.tempValue2;
+			Real& recommendedStepSizeLocal = temp.postNewtonStepSize;
 			
 			//for (Index i : cSystemData.listDiscontinuousIteration) //serial
 			//{
@@ -2439,8 +2439,8 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 				cSystemData.ComputeMarkerDataStructure(connector, computeJacobian, temp.markerDataStructure);
 
 				Real objectRecomStepSize = -1;
-				temp.tempValue = EXUstd::Maximum(connector->PostNewtonStep(temp.markerDataStructure, i, 
-					postNewtonFlags, objectRecomStepSize), temp.tempValue);
+				temp.postNewtonError = EXUstd::Maximum(connector->PostNewtonStep(temp.markerDataStructure, i, 
+					postNewtonFlags, objectRecomStepSize), temp.postNewtonError);
 				if (objectRecomStepSize >= 0 && (objectRecomStepSize < recommendedStepSizeLocal || recommendedStepSizeLocal == -1))
 				{
 					recommendedStepSizeLocal = objectRecomStepSize;
@@ -2459,9 +2459,9 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 		for (Index k = 0; k < nThreads; k++)
 		{
 			TemporaryComputationData& temp = tempArray[k];
-			PNerror = EXUstd::Maximum(temp.tempValue, PNerror);
+			PNerror = EXUstd::Maximum(temp.postNewtonError, PNerror);
 
-			Real recommendedStepSizeThread = temp.tempValue2;
+			Real recommendedStepSizeThread = temp.postNewtonStepSize;
 			if (recommendedStepSizeThread >= 0 && (recommendedStepSizeThread < recommendedStepSize || recommendedStepSize == -1))
 			{
 				recommendedStepSize = recommendedStepSizeThread;

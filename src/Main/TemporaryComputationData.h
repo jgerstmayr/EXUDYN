@@ -34,14 +34,14 @@ public:
 	ResizableVector localAE;			//!< object (local) algebraic equations evaluation
 
 	ResizableMatrix localJacobian;      //!< local (object)-jacobian during numerical/automatic differentiation
-	ResizableMatrix localJacobian_t;    //!< local velocity (object)-jacobian during numerical/automatic differentiation
 
 	JacobianTemp jacobianTemp;          //!< additional temporary data needed for jacobian computation
 	//ResizableVector jacobianForce;      //!< for computation of jacobian derivative
 	EXUmath::MatrixContainer jacobianODE2Container;  //!< DENSE: local object jacobian matrix, SPARSE: (linked) system jacobian
 
 	ResizableVector generalizedLoad;    //!< generalized load vector added to ODE2 right-hand-side
-	ResizableMatrix loadJacobian;       //!< Jacobian for application of load
+	ResizableMatrix tempMatrix;         //!< a temporary matrix of a single computation (the contact of ANCF cables, GeneralContact)
+	ResizableMatrix tempMatrix2;        //!< a second temporary matrix of a single computation
 	ResizableMatrix localJacobianAE_ODE1;//!< local constraint Jacobian (w.r.t. ODE2 part) during constraint jacobian computation
 	ResizableMatrix localJacobianAE_ODE2;    //!< local constraint Jacobian (w.r.t. ODE2 part) during constraint jacobian computation
 	ResizableMatrix localJacobianAE_ODE2_t;  //!< local constraint Jacobian (w.r.t. ODE2_t part) during constraint jacobian computation
@@ -62,8 +62,8 @@ public:
 
 	MarkerDataStructure markerDataStructure;
 	MarkerTemp markerTemp[2];				//!< the two markers of a connector on the new path (#2745)
-	Real tempValue; //!< used for PostNewton PNerror, maybe also for other procedures in future
-	Real tempValue2; //!< used for PostNewton recommendedStepSize, maybe also for other procedures in future
+	Real postNewtonError;    //!< the error of the discontinuous iteration (PostNewtonStep), per thread
+	Real postNewtonStepSize; //!< the step size the discontinuous iteration recommends (PostNewtonStep), per thread
 };
 
 //! array of temporary data used for parallelized (multithreaded) computations
