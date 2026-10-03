@@ -397,6 +397,13 @@ def BuildParsers():
     scripts.add_argument('--check', action='store_true', help='fail if anything was found')
     scripts.set_defaults(function=commands.Scripts)
 
+    figures = subParsers.add_parser('figures', parents=[globalParser, versionParser],
+        help='compile the TikZ flow charts of the documentation that changed (needs LaTeX)',
+        description='Compiles every chart in docs/figures/tikz/ whose source changed into '
+                    'docs/figures/<name>.pdf and .svg, with pdflatex and pdftocairo (#2812).')
+    figures.add_argument('--all', action='store_true', help='compile every chart')
+    figures.set_defaults(function=commands.Figures)
+
     linux = subParsers.add_parser('linux', parents=[globalParser, versionParser, fastParser],
         help='build the linux wheels through WSL',
         description='The manylinux wheels are built in the docker image quay.io/pypa/'

@@ -1,0 +1,18 @@
+% SolveSystem() (solver.md); compiled by tools/buildFigures.py ("exudev figures") into ../solverTimeIntegration.pdf and ../solverTimeIntegration.svg (#2812)
+\documentclass[border=3pt]{standalone}
+\usepackage{flowcharts}
+\begin{document}
+\begin{tikzpicture}[node distance = 2cm, auto, thick, scale=0.7, every node/.style={scale=0.7}]
+    \node [cloud] (solveSystem) {SolveSystem()};
+    \node [decision, below of=solveSystem] (decisionInitSolver) {InitializeSolver()?};
+    \node [wideblock, right of=decisionInitSolver, node distance=6cm] (initFailed) {InitializeSolver() failed};
+    \node [wideblock, below of=decisionInitSolver, node distance=2.5cm] (solveSteps) {SolveSteps()};
+    \node [wideblock, below of=solveSteps] (finalizeSolver) {FinalizeSolver()};
+
+    \path [arrow] (solveSystem) -- (decisionInitSolver);
+    \path [arrow] (decisionInitSolver) -- node [near start] {failed} (initFailed);
+    \path [arrow] (decisionInitSolver) -- node [near start] {ok} (solveSteps);
+    \path [arrow] (solveSteps) -- (finalizeSolver);
+    \path [arrow] (initFailed) |- (finalizeSolver);
+\end{tikzpicture}
+\end{document}

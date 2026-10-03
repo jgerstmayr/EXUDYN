@@ -1,0 +1,25 @@
+% InitializeSolver() (solver.md); compiled by tools/buildFigures.py ("exudev figures") into ../solverInitializeSolver.pdf and ../solverInitializeSolver.svg (#2812)
+\documentclass[border=3pt]{standalone}
+\usepackage{flowcharts}
+\begin{document}
+\begin{tikzpicture}[node distance = 2cm, auto, thick, scale=0.6, every node/.style={scale=0.6}]
+    \node [cloud] (initializeSolver) {InitializeSolver()};
+    \node [wideblock, text width=5cm, below of=initializeSolver] (pre) {PreInitializeSolverSpecific()};
+    \node [wideblock, text width=5cm, below of=pre] (output) {InitializeSolverOutput()};
+    \node [decision, aspect=4, text width=6cm, below of=output] (preChecks) {InitializeSolverPreChecks()?};
+    \node [wideblock, right of=preChecks, node distance=8cm] (initFailed) {return False};
+    \node [wideblock, text width=5cm, below of=preChecks, node distance=2.5cm] (data) {InitializeSolverData()};
+    \node [wideblock, text width=6cm, below of=data] (initialConditions) {InitializeSolverInitialConditions()};
+    \node [wideblock, text width=5cm, below of=initialConditions] (post) {PostInitializeSolverSpecific()};
+    \node [wideblock, below of=post] (finished) {return True};
+
+    \path [arrow] (initializeSolver) -- (pre);
+    \path [arrow] (pre) -- (output);
+    \path [arrow] (output) -- (preChecks);
+    \path [arrow] (preChecks) -- node [near start] {failed} (initFailed);
+    \path [arrow] (preChecks) -- node [near start] {ok} (data);
+    \path [arrow] (data) -- (initialConditions);
+    \path [arrow] (initialConditions) -- (post);
+    \path [arrow] (post) -- (finished);
+\end{tikzpicture}
+\end{document}

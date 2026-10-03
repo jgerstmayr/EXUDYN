@@ -1,0 +1,54 @@
+% Newton(), for newtonResidualMode = 0 (solver.md); compiled by tools/buildFigures.py ("exudev figures") into ../solverNewton.pdf and ../solverNewton.svg (#2812)
+\documentclass[border=3pt]{standalone}
+\usepackage{flowcharts}
+\begin{document}
+\begin{tikzpicture}[node distance = 2cm, auto, thick, scale=0.6, every node/.style={scale=0.6}]
+    \node [cloud] (newtonIteration) {Newton()};
+    \node [wideblock, text width=4.2cm, below of=newtonIteration] (initNewton) {state.current = state.startOfStep\\current.AEcoords = 0};
+    \node [wideblock, text width=4.2cm, below of=initNewton] (residual) {R = ComputeResidual()\\res = $|$R$|$ / nCoords};
+    \node [wideblock, below of=residual] (initResidual) {initRes = res};
+    \node [decision, aspect=2.5, text width=4cm, below of=initResidual, yshift = -0.25cm] (newtonLoop) {converged, failed,\\or iteration count at the maximum?};
+    \node [wideblock, left of=newtonLoop, node distance=6cm, xshift=-1cm] (newtonTerminate) {return True if successful, otherwise False};
+    \node [block, right of=newtonLoop, node distance=6cm] (continueNewton) {continue Newton};
+    \node [decision, below of=newtonLoop, yshift = -0.75cm] (jacUpdate) {jacobian requested?};
+    \node [wideblock, text width = 5cm, left of=jacUpdate, node distance=7cm] (updateJacobian) {ComputeNewtonJacobian()};
+    \node [decision, text width = 4cm, below of=updateJacobian] (factorizeJacobian) {jacobian.Factorize()?};
+    \node [wideblock, below of=factorizeJacobian, yshift = -1.0cm] (jacFactorizeFailed) {return False};
+    \node [wideblock, text width=4.2cm, below of=jacUpdate, yshift = -0.5cm] (jacobianSolve) {sol = jacobian.Solve(res)};
+    \node [wideblock, below of=jacobianSolve, text width=4.5cm] (newtonUpdate) {ComputeNewtonUpdate() with sol};
+    \node [wideblock, text width=4.2cm, below of=newtonUpdate] (residual2) {R = ComputeResidual()\\res = $|$R$|$ / nCoords};
+    \node [decision, text width=4.5cm, below of=residual2] (evalTolerances) {res $\le$ absTol,\\or res / initRes $\le$ relTol?};
+    \node [wideblock, left of=evalTolerances, node distance=6.5cm] (newtonConverged) {newtonSuccess = True;\\continue Newton};
+    \node [wideblock, text width=4.2cm, below of=evalTolerances, yshift=-1cm] (checkDivergence) {if the coordinates are NaN:\\restart or stop Newton};
+    \node [wideblock, text width=4.2cm, below of=checkDivergence, yshift=-0.25cm] (checkIterations) {beyond maxModNewtonIt:\\update the jacobian and restart};
+    \node [wideblock, text width=4.2cm, below of=checkIterations, yshift=-0.25cm] (checkIterations2) {beyond maxModNewtonIt + maxModRestartIt:\\full Newton};
+    \node [wideblock, text width=4.2cm, below of=checkIterations2] (checkContractivity) {contractivity = res / lastRes\\lastRes = res};
+    \node [decision, text width=4.5cm, below of=checkContractivity, yshift=-0.5cm] (restartNewton) {contractivity, diverged or restart flag?};
+    \node [wideblock, text width=4.2cm, below of=restartNewton, yshift=-1.25cm] (restartNewtonIteration) {state.current = state.startOfStep\\state.AEcoords = 0\\ComputeResidual()};
+
+    \path [arrow] (newtonIteration) -- (initNewton);
+    \path [arrow] (initNewton) -- (residual);
+    \path [arrow] (residual) -- (initResidual);
+    \path [arrow] (initResidual) -- (newtonLoop);
+    \path [arrow] (newtonLoop) -- node [near start] {no} (jacUpdate);
+    \path [arrow] (newtonLoop) -- node [near start] {yes} (newtonTerminate);
+    \path [arrow] (jacUpdate) -- node [near start] {no} (jacobianSolve);
+    \path [arrow] (jacUpdate) -- node [near start] {yes} (updateJacobian);
+    \path [arrow] (updateJacobian) -- (factorizeJacobian);
+    \path [arrow] (factorizeJacobian) -- node [near start] {failed} (jacFactorizeFailed);
+    \path [arrow] (factorizeJacobian) -- node [near start] {ok} (jacobianSolve);
+    \path [arrow] (jacobianSolve) -- (newtonUpdate);
+    \path [arrow] (newtonUpdate) -- (residual2);
+    \path [arrow] (residual2) -- (evalTolerances);
+    \path [arrow] (evalTolerances) -- node [near start] {yes} (newtonConverged);
+    \path [arrow] (evalTolerances) -- node [near start] {no} (checkDivergence);
+    \path [arrow] (checkDivergence) -- (checkIterations);
+    \path [arrow] (checkIterations) -- (checkIterations2);
+    \path [arrow] (checkIterations2) -- (checkContractivity);
+    \path [arrow] (checkContractivity) -- (restartNewton);
+    \path [arrow] (restartNewton) -- node [near start] {restart} (restartNewtonIteration);
+    \path [arrow] (restartNewton) -| node [near start] {continue} (continueNewton);
+    \path [arrow] (restartNewtonIteration) -| (continueNewton);
+    \path [arrow] (continueNewton) -- (newtonLoop);
+\end{tikzpicture}
+\end{document}

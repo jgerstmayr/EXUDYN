@@ -494,7 +494,8 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 **RG3.21** **DONE 2026-09-27** (#2673) — [log](exudynRevisionLog2026b.md#rg3-21) · [plan text](exudynRevisionLog2026b.md#plan-rg3-21) — The pages that still describe the state before a step that is done.
 
 <a id="rg3-30"></a>
-**RG3.30** *(maintainer 2026-10-03)* **The flow charts as TikZ again** (#2812). The mermaid charts of `introduction.md`,
+**RG3.30** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg3-30) *(maintainer 2026-10-03)* **The flow charts as
+TikZ again** (#2812). The mermaid charts of `introduction.md`,
     `solver.md` and `theoryContact.md` are of low quality next to the TikZ figures of the old LaTeX documentation
     (`tmp/oldDocs/theDoc`, ten `tikzpicture`s in `introduction.tex` and `solver.tex`): arrows, colors and fonts, and
     they fit the page. **Their current content stays** (the charts were brought up to date with the solver), only the
@@ -2874,7 +2875,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
-| RG3.30 | #2812 | the flow charts as TikZ again: vector graphics in the PDF, images on the web |
 | RG17.1 | #2811 | notebooks for tutorials and examples: the evaluation |
 | RG12.34 | #2813 | the simulation settings renamed and restructured as decided in RG12.31, with scripts, documentation and tests |
 | RG12.31 | #2802 | settings and item parameters that could be renamed: a list for the maintainer's decision |

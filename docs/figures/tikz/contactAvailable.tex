@@ -1,0 +1,15 @@
+% Contact: possible coupling of geometrical objects (theoryContact.md); compiled by tools/buildFigures.py ("exudev figures") into ../contactAvailable.pdf and ../contactAvailable.svg (#2812)
+\documentclass[border=3pt]{standalone}
+\usepackage{flowcharts}
+\begin{document}
+\begin{tikzpicture}[node distance = 2cm, auto, thick, scale=0.7, every node/.style={scale=0.7}]
+    \node [cloud] (availableContacts) {\mybold{available contacts}};
+    \node [wideblock, below of=availableContacts, node distance=3cm, xshift = -9cm] (spherical) {sphere--sphere, circle--circle};
+    \node [wideblock, right of=spherical, node distance=4.5cm] (clustered) {clustered sphere--\{sphere, triangle\}};
+    \node [wideblock, right of=clustered, node distance=4.5cm] (sphereTriangle) {sphere--triangle};
+    \node [wideblock, right of=sphereTriangle, node distance=4.5cm] (triangleTriangle) {triangle--triangle};
+    \node [wideblock, right of=triangleTriangle, node distance=4.5cm] (circleCable) {circle--ANCFCable2D};
+    \foreach \target in {spherical, clustered, sphereTriangle, triangleTriangle, circleCable}
+      {\path [line] (availableContacts) -- (\target);}
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,26 @@
+% DiscontinuousIteration() (solver.md); compiled by tools/buildFigures.py ("exudev figures") into ../solverDiscontinuousIteration.pdf and ../solverDiscontinuousIteration.svg (#2812)
+\documentclass[border=3pt]{standalone}
+\usepackage{flowcharts}
+\begin{document}
+\begin{tikzpicture}[node distance = 2cm, auto, thick, scale=0.7, every node/.style={scale=0.7}]
+    \node [cloud] (discontinuousIteration) {DiscontinuousIteration()};
+    \node [decision, aspect=4, text width=5cm, below of=discontinuousIteration] (loop) {converged,\\or iteration count at the maximum?};
+    \node [wideblock, text width=4.5cm, left of=loop, node distance=8.5cm] (terminate) {return True if successful, False if the maximum was reached};
+    \node [decision, below of=loop, yshift = -0.5cm] (newton) {Newton()?};
+    \node [wideblock, left of=newton, node distance=6cm] (newtonFailed) {return False};
+    \node [wideblock, below of=newton, yshift = -0.5cm] (postNewton) {discontinuous iteration counter++\\PostNewtonStep()};
+    \node [decision, below of=postNewton] (error) {error $\le$ tolerance?};
+    \node [wideblock, right of=error, node distance=6cm] (reset) {state.current = state.startOfStep};
+    \node [wideblock, below of=error, yshift = -0.5cm] (successful) {successful; return True};
+
+    \path [arrow] (discontinuousIteration) -- (loop);
+    \path [arrow] (loop) -- node [near start] {no} (newton);
+    \path [arrow] (loop) -- node [near start] {yes} (terminate);
+    \path [arrow] (newton) -- node [near start] {failed} (newtonFailed);
+    \path [arrow] (newton) -- node [near start] {ok} (postNewton);
+    \path [arrow] (postNewton) -- (error);
+    \path [arrow] (error) -- node [near start] {no} (reset);
+    \path [arrow] (error) -- node [near start] {yes} (successful);
+    \path [arrow] (reset) |- (loop);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,24 @@
+% GeneticOptimization (solver.md); compiled by tools/buildFigures.py ("exudev figures") into ../geneticOptimization.pdf and ../geneticOptimization.svg (#2812)
+\documentclass[border=3pt]{standalone}
+\usepackage{flowcharts}
+\begin{document}
+\begin{tikzpicture}[node distance = 2cm, auto, thick, scale=0.7, every node/.style={scale=0.7}]
+    \node [cloud] (geneticOptimization) {\texttt{GeneticOptimization(...)}};
+    \node [wideblock, below of=geneticOptimization, node distance=2cm] (initial) {1.\ create the initial population $S_i$ with $n_{pi}$ individuals};
+    \node [wideblock, below of=initial, node distance=2.5cm] (fitness) {2.\ evaluate the fitness of the population};
+    \node [wideblock, below of=fitness] (surviving) {3.\ select the surviving individuals $S_s$};
+    \node [wideblock, below of=surviving] (crossover) {4.\ create the crossover population $S_c$};
+    \node [wideblock, below of=crossover] (mutation) {5.\ create the mutated population $S_m$};
+    \node [decision, below of=mutation, node distance=3cm] (decision) {6.\ fitness goal reached, or $n_g$ generations computed?};
+    \node [wideblock, below of=decision, node distance=3.5cm] (end) {END};
+
+    \path [arrow] (geneticOptimization) -- (initial);
+    \path [arrow] (initial) -- (fitness);
+    \path [arrow] (fitness) -- (surviving);
+    \path [arrow] (surviving) -- (crossover);
+    \path [arrow] (crossover) -- (mutation);
+    \path [arrow] (mutation) -- (decision);
+    \path [arrow] (decision) -- node [near start] {no} +(6cm,0) |- (fitness);
+    \path [arrow] (decision) -- node [near start] {yes} (end);
+\end{tikzpicture}
+\end{document}

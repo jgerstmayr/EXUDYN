@@ -1,0 +1,32 @@
+% Overview on Exudyn C++ module (introduction.md); compiled by tools/buildFigures.py ("exudev figures") into ../overviewExudynCppModule.pdf and ../overviewExudynCppModule.svg (#2812)
+\documentclass[border=3pt]{standalone}
+\usepackage{flowcharts}
+\begin{document}
+\begin{tikzpicture}[node distance = 2cm, auto, thick, scale=0.8, every node/.style={scale=0.8}]
+    \node [cloud] (exu) {exudynCPP};
+    \node [wideblock, below of=exu] (systemContainer) {SystemContainer};
+    \node [wideblock, below of=systemContainer] (system) {MainSystem (e.g.\ 'mbs')};
+    \node [wideblock, right of=systemContainer, node distance=6cm] (visualizationSettings) {visualizationSettings};
+    \node [block, below of=system] (systemData) {systemData};
+    \node [wideblock, below of=systemData] (systemStates) {system states (initial, current, ...)};
+    \node [wideblock, left of=systemContainer, node distance=6cm] (solver) {static and dynamic solver interfaces};
+    \node [wideblock, below of=solver] (renderer) {basic renderer interface (start/stop)};
+    \node [wideblock, below of=renderer] (misc) {data types, local dictionaries, system-wide settings};
+
+    \node [wideblock, dashed, fill=gray!10, right of=system, node distance=6cm] (anotherSystem) {MainSystem (e.g.\ 'anotherMbs')};
+    \node [block, dashed, fill=gray!10, below of=anotherSystem] (anotherSystemData) {systemData};
+    \node [wideblock, dashed, fill=gray!10, below of=anotherSystemData] (anotherSystemStates) {system states (initial, current, ...)};
+
+    \path [arrow] (exu) -- (systemContainer);
+    \path [arrow] (systemContainer) -- (system);
+    \path [arrow] (systemContainer) -- (visualizationSettings);
+    \path [arrow] (system) -- (systemData);
+    \path [arrow] (systemData) -- (systemStates);
+    \path [arrow] (exu) -| (solver);
+    \path [arrow] (solver) -- (renderer);
+    \path [arrow] (renderer) -- (misc);
+    \path [arrow, dashed] (systemContainer) -- (anotherSystem);
+    \path [arrow, dashed] (anotherSystem) -- (anotherSystemData);
+    \path [arrow, dashed] (anotherSystemData) -- (anotherSystemStates);
+\end{tikzpicture}
+\end{document}

@@ -1,0 +1,27 @@
+% Interaction of items in a multibody system (introduction.md); compiled by tools/buildFigures.py ("exudev figures") into ../itemsMultibodySystem.pdf and ../itemsMultibodySystem.svg (#2812)
+\documentclass[border=3pt]{standalone}
+\usepackage{flowcharts}
+\begin{document}
+\begin{tikzpicture}[node distance = 2cm, auto, thick, scale=0.7, every node/.style={scale=0.7}]
+    \node [nodeBlock] (node0) {node 0};
+    \node [nodeBlock, below of=node0, node distance=2cm] (node1) {node 1};
+    \node [nodeBlock, below of=node1, node distance=2cm] (node2) {node 2};
+    \node [objectBlock, right of=node0] (object0) {object 0 (body)};
+    \node [objectBlock, right of=node1, yshift = -1cm] (object1) {object 1 (body)};
+    \node [markerBlock, right of=object0] (marker0) {marker 0};
+    \node [loadBlock, right of=marker0, node distance=3cm] (load0) {load 0};
+    \node [markerBlock, left of=node2, yshift = -2cm, xshift = 1cm] (marker1) {marker 1};
+    \node [markerBlock, right of=node2, yshift = -2cm] (marker2) {marker 2};
+    \node [connectorBlock, below of=node2, node distance=4cm] (connector) {connector};
+
+    \path [arrow] (object0) -- (node0);
+    \path [arrow] (marker0) -- (object0);
+    \path [arrow] (load0) -- (marker0);
+    \path [arrow] (object1) -- (node1);
+    \path [arrow] (object1) -- (node2);
+    \path [arrow] (marker1.west) -- ++(-1.2cm,0) |- (node0.west);
+    \path [arrow] (marker2) -- (object1);
+    \path [arrow] (connector) -- (marker1);
+    \path [arrow] (connector) -- (marker2);
+\end{tikzpicture}
+\end{document}

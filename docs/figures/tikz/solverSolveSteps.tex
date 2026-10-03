@@ -1,0 +1,30 @@
+% SolveSteps(), the inner loop of the solver (solver.md); compiled by tools/buildFigures.py ("exudev figures") into ../solverSolveSteps.pdf and ../solverSolveSteps.svg (#2812)
+\documentclass[border=3pt]{standalone}
+\usepackage{flowcharts}
+\begin{document}
+\begin{tikzpicture}[node distance = 2cm, auto, thick, scale=0.6, every node/.style={scale=0.6}]
+    \node [cloud] (solveSteps) {SolveSteps()};
+    \node [decision, aspect=4, text width=5cm, below of=solveSteps] (loop) {simulation finished,\\or solver failed or stopped?};
+    \node [wideblock, text width=4.5cm, right of=loop, node distance=7.5cm] (loopFinished) {return True if the end time was reached, otherwise False};
+    \node [wideblock, below of=loop, node distance=2.5cm] (startOfStep) {state.startOfStep = state.current};
+    \node [decision, below of=startOfStep] (stepReduction) {step finished?};
+    \node [wideblock, text width=4cm, left of=stepReduction, node distance=6cm] (finishStep) {increment the step counter};
+    \node [wideblock, below of=stepReduction, yshift = -0.5cm] (initializeStep) {update the current time\\InitializeStep()};
+    \node [decision, aspect=4, text width=5cm, below of=initializeStep] (discontinuous) {DiscontinuousIteration()?};
+    \node [wideblock, text width=6cm, right of=discontinuous, node distance=8cm] (reduce) {reduce the step (return False at the minimum step size)\\state.current = state.startOfStep};
+    \node [wideblock, text width=4.5cm, below of=discontinuous, node distance=2.5cm] (finishDiscontinuous) {FinishStep(); check whether the step size may grow};
+
+    \path [arrow] (solveSteps) -- (loop);
+    \path [arrow] (loop) -- node [near start] {no} (startOfStep);
+    \path [arrow] (loop) -- node [near start] {yes} (loopFinished);
+    \path [arrow] (startOfStep) -- (stepReduction);
+    \path [arrow] (stepReduction) -- node [near start] {no} (initializeStep);
+    \path [arrow] (stepReduction) -- node [near start] {yes} (finishStep);
+    \path [arrow] (finishStep) |- (loop);
+    \path [arrow] (initializeStep) -- (discontinuous);
+    \path [arrow] (discontinuous) -- node [near start] {failed} (reduce);
+    \path [arrow] (discontinuous) -- node [near start] {ok} (finishDiscontinuous);
+    \path [arrow] (reduce) |- (stepReduction);
+    \path [arrow] (finishDiscontinuous) -| (finishStep);
+\end{tikzpicture}
+\end{document}

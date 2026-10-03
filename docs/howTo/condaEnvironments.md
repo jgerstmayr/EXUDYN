@@ -48,10 +48,10 @@ pip install --pre --find-links=dist "exudyn[tests]"   #the local wheel plus what
 | group | contains | used by |
 |---|---|---|
 | `docs` | sphinx and its theme and extensions | `sphinx-build`, the CI `docs` jobs, readthedocs |
-| `pdf` | `mermaidx`, which renders the flow charts without Node | `exudev docs --pdf`, which also needs a LaTeX installation |
+| `pdf` | nothing from pip; the flow charts are committed as PDF and SVG | `exudev docs --pdf`, which needs a LaTeX installation; `exudev figures`, which compiles a changed flow chart, too |
 | `lint` | `pydoclint` (pinned; the baseline holds its messages) | CI `check_docstrings` |
 | `build` | `setuptools>=77`, `wheel`, `pybind11<3.0`, `tomli`, `cibuildwheel` | a direct `python setup.py bdist_wheel`, which has no build isolation; a local CI-identical wheel |
-| `test` | `pytest`, `pytest-xdist` | `pytest -n 8`; the suite itself runs without them |
+| `test` | `pytest`, `pytest-xdist`, `quickjs` | `pytest -n 8`; the suite itself runs without them |
 | `ide` | `spyder-kernels`, `ipykernel`, `ipywidgets` | Spyder and Jupyter |
 | `dev` | all of the above, plus `scipy==1.15.2`, `jinja2`, `griffe` | the development environment |
 

@@ -12407,3 +12407,30 @@ long as those of a node - is #2791. No new steps for them.
 in the entry of RG12.33; and the two functions of `robotics/mobile.py` (`MecanumXYphi2WheelVelocities`,
 `MecanumWheelVelocity2XYphi`, use `MobileKinematics`; docstrings added) and the mode `'NPY'` of the FEM files (reported as
 `FEM.mode='NPY'`, use `'NPZ'`, at the line that called the Save or Load function) are deprecated as well.
+
+<a id="rg3-30"></a>
+### RG3.30 — the flow charts as TikZ again (2026-10-03, #2812)
+
+*(Maintainer 2026-10-03, reversing decision D9 of revision2026 step R7.1.9; noted at D9 in the info document.)* The
+twelve flow charts - four in `introduction.md`, seven in `solver.md`, one in `theoryContact.md` - are TikZ again:
+`docs/figures/tikz/<name>.tex`, each a `standalone` document, with the styles of the old `theDoc.tex` (`decision`,
+`block`, `wideblock`, `cloud`, the item ellipses) in `flowcharts.sty`. The layouts are those of the old figures
+(`tmp/oldDocs/theDoc`), **the text is that of the current mermaid charts**, which had been brought up to date with the
+solver (`failed`/`ok`, "reduce the step", the Newton loop as the code runs it); `<=` is $\le$, names of functions are not
+hyphenated (`flowcharts.sty`), long ones got wider boxes, and in `Newton()` the converged branch says "continue Newton"
+instead of an arrow that crossed the Jacobian branch. The file names are those of the old PNG twins
+(`solverNewton`, `overviewSystemData`, ...).
+
+**`exudev figures`** (`tools/buildFigures.py`) compiles a chart with pdflatex (in a temporary directory,
+`SOURCE_DATE_EPOCH` fixed) into `docs/figures/<name>.pdf` and with `pdftocairo -svg` into `docs/figures/<name>.svg`, only
+when its source or the styles changed (`docs/figures/tikz/figures.json` holds the hash each output was made from);
+`--all` compiles all. Both outputs are committed, so the documentation builds without LaTeX; the pages reference
+`/docs/figures/<name>.*` and Sphinx takes the SVG for html and the PDF for LaTeX - vector graphics in both. **`exudev
+generate --all-checks`** runs `buildFigures.py --check`, which needs no LaTeX and fails for a chart changed but not
+compiled. `solverNewton` has `:height: 880`, so that it and its caption fit a PDF page; the others a width as before.
+
+**Gone**: `sphinxcontrib-mermaid` (docs group, `conf.py`), `mermaidx` (pdf group, `mermaid_cmd`); `quickjs`, which came
+with `mermaidx` and a test of the issue tracker uses, is in the test group. `ARCHITECTURE.md` and
+`condaEnvironments.md` say so. Checked: the html build (the SVGs on the pages, no mermaid left) and `exudev docs --pdf`
+(the charts as vector graphics, `Newton()` on one page with its caption). Test: `test_buildFigures.py` (every chart
+compiled from its current source; a changed one is stale).

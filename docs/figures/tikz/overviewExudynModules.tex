@@ -1,0 +1,24 @@
+% Overview on Exudyn C++ and Python modules (introduction.md); compiled by tools/buildFigures.py ("exudev figures") into ../overviewExudynModules.pdf and ../overviewExudynModules.svg (#2812)
+\documentclass[border=3pt]{standalone}
+\usepackage{flowcharts}
+\begin{document}
+\begin{tikzpicture}[node distance = 2cm, auto, thick, scale=0.7, every node/.style={scale=0.7}]
+    \node [cloud] (exu) {exudyn};
+    \node [wideblock, above of=exu, xshift = 1cm] (exudynCPP) {\mybold{exudynCPP}: C++ module};
+    \node [wideblock, below of=exu, xshift = 1cm] (exudynPython) {exudyn Python modules};
+    \node [wideblock, right of=exudynPython, node distance=6cm, text width=5cm] (itemInterface) {\mybold{itemInterface}: main interface to the C++ items};
+    \node [wideblock, below of=itemInterface, text width=5cm] (solver) {\mybold{solver}: interface to the C++ solvers};
+    \node [wideblock, below of=solver, text width=5cm] (utilities) {\mybold{utilities}};
+    \node [wideblock, below of=utilities, text width=5cm] (FEM) {\mybold{FEM}: FEM import and preprocessing};
+    \node [wideblock, below of=FEM, text width=5cm] (plot) {\mybold{plot}: interface to matplotlib};
+    \node [wideblock, below of=plot, text width=5cm] (processing) {\mybold{processing}: parallelisation and optimization};
+    \node [wideblock, below of=processing, text width=5cm] (robotics) {\mybold{robotics} submodule};
+    \node [wideblock, below of=robotics, text width=5cm] (etc) {...};
+
+    \path [arrow] (exu) -- (exudynCPP);
+    \path [arrow] (exu) -- (exudynPython);
+    \path [arrow] (exudynPython) -- (itemInterface);
+    \foreach \target in {solver, utilities, FEM, plot, processing, robotics, etc}
+      {\path [arrow] (exudynPython) |- (\target);}
+\end{tikzpicture}
+\end{document}

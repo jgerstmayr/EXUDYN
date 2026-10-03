@@ -1,0 +1,29 @@
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+% the styles of the flow charts of the documentation (#2812): one standalone .tex per chart in this
+% folder includes this file; tools/buildFigures.py ("exudev figures") compiles them into
+% docs/figures/<name>.pdf (the PDF documentation) and docs/figures/<name>.svg (the web).
+% The styles are those of the LaTeX documentation up to Exudyn 1.11 (theDoc.tex).
+%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{flowcharts}
+\RequirePackage{tikz}
+\usetikzlibrary{shapes,arrows}
+\tikzset{>=latex}
+\tikzset{
+  decision/.style={diamond, aspect=2, draw, fill=orange!30, text width=8em, text badly centered,
+                   node distance=2.5cm, inner sep=0pt},
+  block/.style={rectangle, draw, fill=blue!20, text width=5em, text centered, rounded corners, minimum height=3em},
+  wideblock/.style={rectangle, draw, fill=blue!20, text width=10em, text centered, rounded corners,
+                    minimum height=3em},
+  arrow/.style={draw, -latex, line width=1pt},
+  line/.style={draw, line width=1pt},
+  cloud/.style={draw, ellipse, fill=red!20, node distance=5cm, minimum height=2em},
+  nodeBlock/.style={draw, ellipse, fill=green!20, node distance=4cm, minimum height=2em},
+  objectBlock/.style={draw, ellipse, fill=blue!20, node distance=4cm, minimum height=2em},
+  connectorBlock/.style={draw, ellipse, fill=red!20, node distance=4cm, minimum height=2em},
+  markerBlock/.style={draw, ellipse, fill=gray!20, node distance=4cm, minimum height=2em},
+  loadBlock/.style={draw, ellipse, fill=orange!30, node distance=4cm, minimum height=2em},
+}
+\newcommand{\mybold}[1]{\textbf{#1}}
+%no hyphenation inside the boxes: the name of a function is not split, a long one gets a wider box
+\AtBeginDocument{\hyphenpenalty=10000\exhyphenpenalty=10000}

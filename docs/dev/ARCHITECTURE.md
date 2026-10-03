@@ -186,7 +186,6 @@ which is exactly the wrong conclusion.
 | understand the time loop | `src/Solver/CSolverImplicitSecondOrder.cpp` |
 | debug Python→C++ | VS2022, `Debug|x64`, breakpoint in a `ComputeODE2LHS` |
 
-Those four overview diagrams are in the user manual, as mermaid: the module overview and the
-C++ module in `docs/manual/introduction.md`, `systemData` and the interaction of items in
-the same chapter. They used to be tikz pictures with a
-hand-made PNG beside them.
+Those four overview diagrams are in the user manual: the module overview and the C++ module in
+`docs/manual/introduction.md`, `systemData` and the interaction of items in the same chapter. They
+are TikZ in `docs/figures/tikz/`, compiled into a PDF and an SVG by `exudev figures`.

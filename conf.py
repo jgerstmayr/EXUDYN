@@ -155,9 +155,6 @@ extensions = [
    'sphinx_copybutton',
    'myst_parser',             #Markdown sources (#2546); the migration of
                               #step R7.1 converts the .tex chapters into this format
-   'sphinxcontrib.mermaid',   #the flow charts of the manual:
-                              #text rather than a hand-made PNG beside a tikz source that
-                              #only the PDF ever rendered
 ]
 
 #a .md file is a document, a .rst file is a document; nothing else changes
@@ -497,11 +494,8 @@ latex_elements = {
 latex_documents = [('pdfIndex', 'exudynDocumentation.tex',
                     'Exudyn \u2014 Documentation', 'Johannes Gerstmayr', 'manual')]
 
-#the diagrams: sphinxcontrib.mermaid renders each one to a PDF through this command for the LaTeX
-#build (its html output stays 'raw', i.e. rendered in the browser and needing nothing installed).
-#mermaidx is a pure-Python renderer - no Node, no browser - and is the maintained successor of the
-#package that used to be called mmdc; it is in the 'pdf' dependency group of pyproject.toml.
-mermaid_cmd = 'mermaidx'
+#the flow charts are TikZ in docs/figures/tikz/, compiled by tools/buildFigures.py into a PDF (taken by
+#the LaTeX build) and an SVG (taken by html) beside the other figures; nothing to configure here (#2812)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #CITATIONS (#2550)

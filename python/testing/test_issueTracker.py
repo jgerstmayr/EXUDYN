@@ -917,7 +917,7 @@ def testThePageScriptParses(server):
     Defining a function PARSES its body without running it, so a missing 'document' is not an
     error here and a misplaced brace is."""
     quickjs = pytest.importorskip('quickjs',
-                                  reason='quickjs comes with mermaidx, in the pdf dependency group')
+                                  reason='quickjs is in the test dependency group')
     (status, page) = Call(server, 'GET', '/')
     assert status == 200
     script = re.search(r'<script>(.*?)</script>', page, re.S)

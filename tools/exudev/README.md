@@ -24,6 +24,7 @@ three from any platform.
 |---|---|
 | `exudev generate [--check] [--no-run] [--all-checks]` | `tools/regenerate.py`; with `--all-checks` also every `tools/check*.py` - `checkTocs` among them, which holds `index.md` and `pdfIndex.md` together - and `gen_sources`, each with `--check` |
 | `exudev scripts <folder> [...] [--check]` | `tools/checkUserScripts.py`: every `.py` under the folders that imports exudyn, checked for what changed in Exudyn - names a star import no longer provides, removed and deprecated names, settings and arguments, submodules used without their import, files written beside the script - with the line to write instead. It parses and never runs; `--check` fails if anything was found |
+| `exudev figures [--all]` | `tools/buildFigures.py`: the TikZ flow charts of `docs/figures/tikz/` that changed, compiled into `docs/figures/<name>.pdf` (the PDF documentation) and `.svg` (html); needs pdflatex and pdftocairo. `exudev generate --all-checks` fails for a chart changed and not compiled |
 | `exudev build [--py P313] [--fast] [--complete]` | `pip wheel . -w dist --no-deps`, then installs exactly that wheel. **No clean, no regeneration, no docs, no tests** unless `--complete` |
 | `exudev test [--py] [--fast] [--parallel [N]]` | `runTestSuite.py`, always with `--exit-code` |
 | `exudev examples [--py] [--timeout S]` | `runTestExamples.py` (slow; default `venvP312`) |

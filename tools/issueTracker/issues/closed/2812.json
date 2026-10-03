@@ -2,10 +2,14 @@
   "number": 2812,
   "title": "the flow charts of the documentation as TikZ again: vector graphics in the PDF, images on the web",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "effort": "MEDIUM",
   "description": "The mermaid charts of introduction.md, solver.md and theoryContact.md are of low quality compared to the TikZ figures of the old LaTeX documentation (tmp/oldDocs/theDoc): arrows, colors, fonts, and they did not fit the page. Keep the current content of the charts, draw them in TikZ again: one small standalone .tex per figure, compiled only when a figure changes (an exudev command, needs LaTeX), giving a PDF for the PDF build and an image for the web (maintainer 2026-10-03).",
   "dateRaised": "2026-10-03",
-  "deadline": "2027-04-01"
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 16:38",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the flow charts of the documentation are TikZ again: vector graphics in the PDF and SVG on the web, compiled by exudev figures when a chart changes",
+  "resolvedInVersion": "1.12.256"
 }

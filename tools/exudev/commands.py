@@ -201,6 +201,7 @@ def Generate(options):
                   (['python', 'tools/checkTocs.py', '--check'],           'checkTocs'),
                   (['python', 'tools/checkIssues.py', '--check'],           'checkIssues'),
                   (['python', 'tools/checkDeprecations.py', '--check'],     'checkDeprecations'),
+                  (['python', 'tools/buildFigures.py', '--check'],          'buildFigures (check)'),
                   (['python', 'tools/checkPython.py', '--check'],             'checkPython (ruff)'),
                   (['python', 'tools/checkPython.py', '--stubs', '--check'],  'checkPython (stubs)'),
                   (['pydoclint', '--config=pyproject.toml', 'python/exudyn'],  'pydoclint'),   #the CI job check_docstrings (#2747)
@@ -990,6 +991,16 @@ def Scripts(options):
     if options.check:
         argv += ['--check']
     return [Step('check user scripts (' + environment + ')',
+                 argv=runner.InEnvironment(environment, argv, options), cwd=root)]
+
+
+def Figures(options):
+    """The TikZ flow charts of the documentation compiled into PDF and SVG: tools/buildFigures.py (#2812); only
+    what changed, or all with --all. Needs pdflatex and pdftocairo, which the LaTeX installation brings."""
+    root = runner.RepositoryRoot()
+    environment = options.env or runner.generatorEnvironment
+    argv = ['python', 'tools/buildFigures.py'] + (['--all'] if options.all else [])
+    return [Step('compile the flow charts (' + environment + ')',
                  argv=runner.InEnvironment(environment, argv, options), cwd=root)]
 
 

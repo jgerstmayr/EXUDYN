@@ -10,15 +10,10 @@ provides a simple, efficient and versatile interface to a general contact module
 Note that there are currently only simplistic contact models, such as linear contact and simple damping, which are not representing realistic Hertzian contact (which will be implemented in near future). Furthermore, read the notes in `GeneralContact` carefully, how stiffness and damping is realized -- e.g., stiffness may be a serial spring against the other object, while damping is implemented as parallel damper.
 
 (fig-available-contact)=
-```{mermaid}
-:caption: Contact: possible coupling of geometrical objects in Exudyn.
+```{figure} /docs/figures/contactAvailable.*
+:width: 650
 
-flowchart TD
-    available([<b>available contacts</b>]) --> spherical["sphere - sphere, circle - circle"]
-    available --> clustered["clustered sphere - {sphere, triangle}"]
-    available --> sphereTriangle["sphere - triangle"]
-    available --> triangleTriangle["triangle - triangle"]
-    available --> circleCable["circle - ANCFCable2D"]
+Contact: possible coupling of geometrical objects in Exudyn.
 ```
 
 The implemented and possible couplings of contact objects are:

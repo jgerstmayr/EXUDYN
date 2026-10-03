@@ -130,17 +130,13 @@ docs = [
     "readthedocs-sphinx-search",
     "sphinx-copybutton",
     "myst-parser",          #Markdown sources (revision2026 step R7.1.4); RST stays readable too
-    "sphinxcontrib-mermaid",#the flow charts (revision2026 step R7.1.9); they were tikz,
-                            #which the HTML never rendered - it showed a hand-made PNG of it
     ]
 #the printable documentation, "exudev docs --pdf" (revision2026b step RG3.3, #2586). NOT in the
 #docs group: Read the Docs builds html only, and this group also needs a LaTeX installation
 #(MiKTeX or TeX Live with xelatex), which pip cannot provide.
 pdf = [
-    "mermaidx",             #renders the mermaid diagrams to PDF for the LaTeX build. Pure Python -
-                            #no Node, no headless browser - which is why it is acceptable here at
-                            #all; the html build renders the same diagrams in the browser and
-                            #needs none of it
+    #nothing from pip: the flow charts are committed as PDF and SVG (tools/buildFigures.py, #2812),
+    #and recompiling one needs the LaTeX installation this group already assumes
     ]
 lint = [
     "pydoclint==0.9.1",     #the baseline tools/ci/pydoclintBaseline.txt holds this version's messages
@@ -164,6 +160,7 @@ build = [
 test = [
     "pytest>=8",
     "pytest-xdist>=3",      #'pytest -n 8'; the models run in separate processes anyway
+    "quickjs",              #test_issueTracker parses the script of the issue page (it came with mermaidx before #2812)
     ]
 ide = [
     "spyder-kernels==3.*",  #must match the Spyder version, see docs/howTo/condaEnvironments.md

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 237 | 1.12.255 |
+| 1.12 | Metheney | 238 | 1.12.256 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.256** `DOCU` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the flow charts of the documentation as TikZ again: vector graphics in the PDF, images on the web (#2812)
+  - description: The mermaid charts of introduction.md, solver.md and theoryContact.md are of low quality compared to the TikZ figures of the old LaTeX documentation (tmp/oldDocs/theDoc): arrows, colors, fonts, and they did not fit the page. Keep the current content of the charts, draw them in TikZ again: one small standalone .tex per figure, compiled only when a figure changes (an exudev command, needs LaTeX), giving a PDF for the PDF build and an image for the web (maintainer 2026-10-03).
+  - **notes:** the flow charts of the documentation are TikZ again: vector graphics in the PDF and SVG on the web, compiled by exudev figures when a chart changes
+  - date resolved: **2026-10-03 16:38**, date raised: 2026-10-03
 - **1.12.255** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exu.HT: the functions of the accepted proposal, with examples in its documentation and tests (#2810)
   - description: Realization of the HT proposal: the bindings on the existing C++ conversions, examples in the data structures section (rotation, position, the node coordinates), a test model.
   - **notes:** exu.HT converts from and to Euler parameters, Tait-Bryan angles, rotation vector and the coordinates of the rigid body nodes, gives Relative, InterpolateSO3, InterpolateSE3, RotationAngle and RotationAxis; its Set functions return it
