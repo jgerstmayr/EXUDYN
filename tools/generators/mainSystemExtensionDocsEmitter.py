@@ -32,6 +32,7 @@ def main():
     #the Create* functions go into their own fragment, so that the reference manual can put them
     #in front of everything else
     markdownExtensionsMainSystem = ''
+    stubImports = []         #the functions assigned in the stub, imported at its top
 
     for fileName in filesParsed:
         [functionList,classList,header] = ParsePythonFile(fileDir+fileName)
@@ -52,7 +53,12 @@ def main():
             funcDict['function'] = functionDescription+' - NOTE that this function is added to MainSystem via Python function '+funcDict['functionName']+'.'
             funcDict['functionName'] = funcDict['functionName'].replace(belongsTo,'') 
             
-            sPyi = FunctionStub(funcDict)
+            #the stub assigns the function itself to the class, so that an editor's go to definition and a type
+            #checker reach the Python function, its signature and its docstring, instead of a copy of them (#2825)
+            pythonName = functionName.replace(chr(92) + '_', '_')
+            stubName = funcDict['functionName'].replace(chr(92) + '_', '_')
+            stubImports.append('from exudyn.' + moduleName.replace('/', '.') + ' import ' + pythonName + ' as _' + pythonName + '\n')
+            sPyi = ' '*4 + stubName + ' = _' + pythonName + '\n'
             
             #written from the parsed dictionary; the heading is one
             #level below the class section that pybindEmitter puts it into
@@ -89,7 +95,7 @@ def main():
             file.write(content)
         written.append(fileName)
 
-    stubContent = ''
+    stubContent = ''.join(stubImports)
     for key in markdownExtensions:
         Write(paths.generatedDir + key + 'Ext.md', markdownExtensions[key])
         #ONE stub file for all keys: the original opened it with 'w' inside the loop, so only the

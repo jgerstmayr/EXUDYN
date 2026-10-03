@@ -131,7 +131,6 @@ filesParsed=[
 docuTags = ['classFunction','class','function','input','output','author','date','notes','example','status','belongsTo']
 headerTags = ['Details','Author','Date','Copyright','References','Notes','Example']
 
-argListMBSconvert = {'mbs':'self', 'mainSystem':'self'} #for conversion to class function
 
 #function = basic/brief notes on function
 #additionally, there are the following dictionary items:
@@ -425,45 +424,6 @@ def ParsePythonFile(fileName):
     """[functionList, classList, headerDict] of a utility module, from its docstrings and its comment header"""
     [functionList, classList] = _ParseDocstrings(fileName)
     return [functionList, classList, _ParseModuleHeader(fileName)]
-
-#*****************************************************
-#convert tags of tagList in functionDict to latex and RST
-mycnt = 0
-def FunctionStub(functionDict):
-    """The .pyi overload of one MainSystem extension function: the stub half.
-    The documentation half is FunctionDescription2Markdown below."""
-    argList = functionDict['argumentsList']
-    argDefault = functionDict['defaultArgumentsList']
-    functionName = functionDict['functionName'].replace(chr(92) + '_', '_')
-
-    sPyi = ' '*4 + '@overload' + chr(10)
-    sPyi += ' '*4 + 'def ' + functionName + '('
-
-    separator = ''
-    for (i, argument) in enumerate(argList):
-        if len(argument.strip()) == 0:
-            continue
-        #mbs and mainSystem become self: the function is added to the class
-        modifiedArgument = argument
-        for (key, value) in argListMBSconvert.items():
-            modifiedArgument = modifiedArgument.replace(key, value)
-        sPyi += separator + modifiedArgument.replace(chr(92) + '_', '_')
-        if len(argDefault[i]) != 0:
-            sPyi += '=' + argDefault[i]
-        separator = ', '
-
-    (outputType, dummy) = TagString2TypeAndString('output', functionDict['output'].strip())
-    if outputType is None:
-        print('missing outputType in function ', functionDict['functionName'])
-        outputType = 'Any'
-
-    sPyi += ') -> ' + outputType + ': '
-    if ADD_DOCSTRINGS:
-        sPyi += chr(10) + DocStringGoogleFromPlainText(
-            functionDict['functionDescriptionClean'], addSpaces=' '*8) + ' '*4
-    sPyi += '...' + chr(10)*2
-    return sPyi
-
 
 def Tags2Markdown(itemDict, tags):
     """the documented tags of a function or of a class, as Markdown;

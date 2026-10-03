@@ -95,7 +95,7 @@ else:
         mbs.AddObject(CoordinateConstraint(markerNumbers=[mCoordinateGround,
                                                           mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nInit, coordinate=i))]))
 mbs.AddObject(GenericJoint(markerNumbers=[mbs.AddMarker(MarkerNodeRigid(nodeNumber=n1)),
-                                          mbs.AddMarker(MarkerNodeRigid(nodeNumber=nInitB, localHT=HomogeneousTransformation(rotZ, [0,0,0])))],
+                                          mbs.AddMarker(MarkerNodeRigid(nodeNumber=nInitB, localHT=exu.HT(rotation=rotZ)))],
                            visualization=VGenericJoint(axesRadius=2*w, axesLength=2*w)))
 
 #the tip is driven along x; the reaction force of the constraint is the load P

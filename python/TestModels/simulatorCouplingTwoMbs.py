@@ -235,8 +235,8 @@ for iWheel in range(nWheels):
         #damping here represents a P-control on andular velocity using the offset
         #its markers are turned, so that z is the wheel axis
         mCarAxleDrive = mbs0.AddMarker(MarkerBodyRigid(bodyNumber=bCar,
-                                                       localHT=HomogeneousTransformation(RotationMatrixY(0.5*pi)@initialRotation, pOff)))
-        mWheelDrive = mbs0.AddMarker(MarkerBodyRigid(bodyNumber=b0, localHT=HomogeneousTransformation(RotationMatrixY(0.5*pi), [0,0,0])))
+                                                       localHT=exu.HT(rotation=RotationMatrixY(0.5*pi)@initialRotation, translation=pOff)))
+        mWheelDrive = mbs0.AddMarker(MarkerBodyRigid(bodyNumber=b0, localHT=exu.HT().SetRotationY(0.5*pi)))
         oTSD = mbs0.AddObject(TorsionalSpringDamper(markerNumbers=[mCarAxleDrive, mWheelDrive],
                                                     damping=kDrive,
                                                     velocityOffset=omegaDriveSet

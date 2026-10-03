@@ -113,7 +113,7 @@ if True:
     #the marker with the rotation of the joint r0B, which its marker 0 carries
     rotationJoint0 = np.array(mbs.GetMarker(mbs.GetObject(r0B)['markerNumbers'][0])['localHT'])[0:3,0:3]
     mb1B = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b1B, 
-                                            localHT=HomogeneousTransformation(rotationJoint0, [0.1,-0.05,0.05]), #global position
+                                            localHT=exu.HT(rotation=rotationJoint0, translation=[0.1,-0.05,0.05]), #global position
                                             ) )
 
     #just build joint from one marker:

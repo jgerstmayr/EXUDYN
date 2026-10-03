@@ -1043,7 +1043,7 @@ class TreeLink:
     """
     def __init__(self, linkInertia, 
                  jointType=exu.JointType.RevoluteZ,
-                 jointHT=HT0(),
+                 jointHT=None,
                  parent=None, 
                  PDcontrol=None, 
                  graphicsDataList=None):
@@ -1051,14 +1051,14 @@ class TreeLink:
 
         Args:
             linkInertia: RigidBodyInertia class, containing mass, inertia, and COM
-            jointHT: transformation from previous link to this link's joint
+            jointHT: transformation from previous link to this link's joint, an exu.HT or a 4x4 matrix; None for the identity
             parent: index to parent link; if parent link is ground, use -1; if all parents in a serial kinematic tree are None, parent indices are computed automatically
             PDcontrol: tuple of PD control parameters
             graphicsData: graphicsDataList link; None automatically adds a suitable graphical object from next joint to this joint; use empty list [] to add no graphics for link
         """
         self.jointType = jointType
         self.linkInertia = linkInertia
-        self.jointHT = jointHT
+        self.jointHT = exu.HT() if jointHT is None else exu.HT(jointHT) #an exu.HT (#2824)
         self.parent = parent
         self.PDcontrol = PDcontrol
         self.graphicsDataList = graphicsDataList

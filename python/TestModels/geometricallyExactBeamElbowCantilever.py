@@ -52,10 +52,10 @@ for nodes in [nodesLeg1, nodesLeg2]:
 mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=mbs.AddNode(NodePointGround())))
 #the clamping in the frame of the first leg, the corner turned back: rotations of the markers (localHT)
 mGroundLeg1 = mbs.AddMarker(MarkerNodeRigid(nodeNumber=mbs.GetMarker(mGround)['nodeNumber'],
-                                            localHT=HomogeneousTransformation(rotationLeg1, [0,0,0])))
+                                            localHT=exu.HT(rotation=rotationLeg1)))
 mbs.AddObject(GenericJoint(markerNumbers=[mGroundLeg1, mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesLeg1[0]))]))
 mbs.AddObject(GenericJoint(markerNumbers=[mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesLeg1[-1],
-                                                                        localHT=HomogeneousTransformation(rotationLeg1.T, [0,0,0]))),
+                                                                        localHT=exu.HT(rotation=rotationLeg1.T))),
                                           mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesLeg2[0]))]))
 
 def LoadElbow(mbs, t, loadVector):

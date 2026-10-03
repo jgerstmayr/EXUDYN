@@ -30,6 +30,13 @@ public:
 	PyHT(const py::object& rotation, const py::object& translation, const py::object& eulerParameters,
 		const py::object& Rxyz, const py::object& rotationVector) : HomogeneousTransformation()
 	{
+		if (py::isinstance<PyHT>(rotation)) //a copy of an exu.HT, so that exu.HT(H) takes an HT as it takes a 4x4 matrix (#2824)
+		{
+			CHECKandTHROW(translation.is_none() && eulerParameters.is_none() && Rxyz.is_none() && rotationVector.is_none(),
+				"HT: with an HT, the other arguments must be None");
+			*this = py::cast<const PyHT&>(rotation);
+			return;
+		}
 		if (!rotation.is_none())
 		{
 			std::vector<py::object> rows = py::cast<std::vector<py::object>>(rotation);

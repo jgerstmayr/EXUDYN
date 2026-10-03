@@ -10,14 +10,15 @@ You can view and download this file on Github: [homogeneousTransformationInterpo
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Four bodies moved by a PreStepUserFunction alone - the system has no coordinates and
-#           nothing is integrated - along homogeneous transformations of exudyn.HT. Each pair of
-#           bodies goes from the same start frame to the same end frame: one with InterpolateSO3
-#           (the translation along a straight line, the rotation about one fixed axis), the other
-#           with InterpolateSE3 (a screw motion, translation and rotation coupled, as a body moving
-#           with constant twist). The first pair turns by a quarter, the second by a half turn about
-#           a skew axis. The bodies are ObjectGround items whose referenceHT the user function sets;
-#           their frames and the twist LogSE3() of each pair are written into the render window.
+# Details:  Four rigid bodies driven along homogeneous transformations of exudyn.HT. Each body is
+#           fixed by a generic joint, all axes constrained, to a ground object, whose frame
+#           (referenceHT) a PreStepUserFunction sets at every step; the grounds only prescribe the
+#           motion and are not drawn. Each pair of bodies goes from the same start frame H0 to the
+#           same end frame H1: one with InterpolateSO3 (the translation along a straight line, the
+#           rotation about one fixed axis), the other with InterpolateSE3 (a screw motion, translation
+#           and rotation coupled). The first pair turns by a quarter about z, the second by a half turn
+#           about a skew axis. The solution is stored every 5 ms and shown with the SolutionViewer,
+#           forward and backward.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-04
@@ -27,6 +28,7 @@ You can view and download this file on Github: [homogeneousTransformationInterpo
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import exudyn as exu
+from exudyn.utilities import InertiaCuboid
 import exudyn.graphics as graphics
 import numpy as np
 
@@ -42,55 +44,44 @@ pairs = [(exu.HT(translation=[-2, 1.5, 0]),
          (exu.HT(translation=[-2, -1.5, 0]),
           exu.HT().SetRotationAxis([1, 1, 1], np.pi).Set(translation=[2, -1.5, 0]))] #a half turn about a skew axis
 
-#start and end frames drawn on one ground: a transparent brick and the basis of each
-ghosts = []
+#each body is fixed to a ground object; the ground is moved, the body follows through the joint
+drivers = [] #(ground, body, H0, H1, interpolation)
 for (H0, H1) in pairs:
-    for H in [H0, H1]:
-        ghosts += [graphics.Move(graphics.Brick(size=size, color=graphics.color.lightgrey[0:3]+[0.3]), H.translation, H.rotation),
-                   graphics.Basis(origin=H.translation, rotationMatrix=H.rotation, length=0.5, radius=0.01)]
-mbs.CreateGround(graphicsDataList=ghosts)
-
-#the moving bodies: ObjectGround with a referenceHT that the user function sets
-bodies = []
-for (i, (H0, H1)) in enumerate(pairs):
-    for (method, color) in [('InterpolateSO3', graphics.color.red), ('InterpolateSE3', graphics.color.blue)]:
-        oBody = mbs.AddObject(exu.itemInterface.ObjectGround(referenceHT=H0,
-                    visualization=exu.itemInterface.VObjectGround(graphicsData=[graphics.Brick(size=size, color=color),
-                                                                                graphics.Basis(length=0.5, radius=0.01)])))
-        bodies += [('pair ' + str(i) + ', ' + method, oBody, H0, H1, method)]
+    for (interpolation, color) in [('InterpolateSO3', graphics.color.red), ('InterpolateSE3', graphics.color.blue)]:
+        oGround = mbs.CreateGround(referenceHT=H0)
+        oBody = mbs.CreateRigidBody(inertia=InertiaCuboid(density=1000, sideLengths=size),
+                                    referenceHT=H0,
+                                    graphicsDataList=[graphics.Brick(size=size, color=color),
+                                                      graphics.Basis(length=0.5, radius=0.01)])
+        mbs.CreateGenericJoint(bodyNumbers=[oGround, oBody], position=H0.translation,
+                               constrainedAxes=[1,1,1, 1,1,1], show=False)
+        drivers += [(oGround, oBody, H0, H1, interpolation)]
 
 def PreStepUserFunction(mbs, t):
     factor = 0.5 - 0.5*np.cos(np.pi*min(t/tEnd, 1.)) #from 0 to 1, starting and ending at rest
-    text = 't = {:.2f} s, factor = {:.3f}\n'.format(t, factor)
-    for (name, oBody, H0, H1, method) in bodies:
-        H = getattr(H0, method)(H1, factor)
-        mbs.SetObjectParameter(oBody, 'referenceHT', H)
-        text += name + ': translation = ' + str(np.round(H.translation, 3)) + ', rotation vector = ' + str(np.round(H.GetRotationVector(), 3)) + '\n'
-    for (i, (H0, H1)) in enumerate(pairs):
-        text += 'pair ' + str(i) + ': twist LogSE3 = ' + str(np.round(H0.Relative(H1).LogSE3(), 3)) + '\n'
-    SC.visualizationSettings.general.renderWindowString = text
+    for (oGround, oBody, H0, H1, interpolation) in drivers:
+        mbs.SetObjectParameter(oGround, 'referenceHT', getattr(H0, interpolation)(H1, factor))
     return True
 
 mbs.SetPreStepUserFunction(PreStepUserFunction)
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.timeIntegration.numberOfSteps = 400
+simulationSettings.timeIntegration.numberOfSteps = 800
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.timeIntegration.realtime.active = True #to see the motion
-simulationSettings.solution.file.write = False
+simulationSettings.solution.file.writePeriod = 0.005
 
+SC.visualizationSettings.general.renderWindowString = ('H(t) = H0.InterpolateSO3(H1, f(t)) (red), H0.InterpolateSE3(H1, f(t)) (blue)\n'
+                                                       'f(t) = (1 - cos(pi*t/tEnd))/2: from H0 at t=0 to H1 at t=tEnd')
 SC.visualizationSettings.view0.window.renderWindowSize = [1200, 800]
 
-SC.renderer.Start()
-SC.renderer.DoIdleTasks()
 mbs.SolveDynamic(simulationSettings)
-SC.renderer.DoIdleTasks()
-SC.renderer.Stop()
+mbs.SolutionViewer() #the motion, forward and backward
 
 #at the end, both bodies of a pair are in the end frame
 error = 0
-for (name, oBody, H0, H1, method) in bodies:
-    error += np.linalg.norm(exu.HT(mbs.GetObjectParameter(oBody, 'referenceHT')).HT44() - H1.HT44())
-exu.Print('homogeneousTransformationInterpolation: distance to the end frames =', error)
+for (oGround, oBody, H0, H1, interpolation) in drivers:
+    H = mbs.GetObjectOutputBody(oBody, exu.OutputVariableType.HomogeneousTransformation, localPosition=[0,0,0])
+    error += np.linalg.norm(H.HT44() - H1.HT44())
+exu.Print('homogeneousTransformationInterpolation: distance of the bodies to the end frames =', error)
 ```

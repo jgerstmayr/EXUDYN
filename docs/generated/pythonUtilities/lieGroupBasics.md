@@ -152,7 +152,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 - **author**: Stefan Holzinger
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`homogeneousTransformationInterpolation.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/homogeneousTransformationInterpolation.py) (Ex), [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`homogeneousTransformationInterfaceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotInverseKinematics.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInverseKinematics.py) (Ex), [`homogeneousTransformationInterfaceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationInterfaceTest.py) (TM)
 
 
 (sec-liegroupbasics-texpse3)=

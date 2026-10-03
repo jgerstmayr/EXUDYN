@@ -2,12 +2,16 @@
   "number": 2822,
   "title": "examples and test models use exu.HT instead of the HT functions of rigidBodyUtilities",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "The maintainer, 2026-10-04: 'whenever rigidbody transformations are used - in particular with kinematic trees and with more complicated kinematics, the exudyn.HT feature should be used'. 23 examples, 20 test models and the library modules graphics, plot and lieGroupBasics call HomogeneousTransformation, HTtranslate, HTrotateX/Y/Z, HT2translation, HT2rotationMatrix, InverseHT or HT0; a test model whose result shall stay exactly the same is converted only where the numbers do not change. revision2026b step RG16.11.",
   "dateRaised": "2026-10-03",
   "deadline": "2027-04-01",
-  "file": "python/Examples"
+  "dateResolved": "2026-10-03 22:27",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/Examples",
+  "releaseNotes": "Examples and test models that build the frame of a marker give its localHT with exu.HT.",
+  "resolvedInVersion": "1.12.266"
 }

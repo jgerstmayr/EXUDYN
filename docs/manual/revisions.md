@@ -191,7 +191,8 @@ parameters, Tait-Bryan angles and the rotation vector, and the reference coordin
 interpolates (`InterpolateSO3`, `InterpolateSE3`) and the angle and axis of its rotation; its Set functions return it,
 so that `exu.HT().SetRotationAxis(axis, angle)` is one line (#2810). `LogSE3()` and `SetExpSE3(v)` give and take the
 motion vector of a screw motion, `LogR3xSO3()` and `SetExpR3xSO3(v)` the translation and the rotation vector (#2819).
-The example `homogeneousTransformationInterpolation.py` moves bodies along both interpolations.
+The example `homogeneousTransformationInterpolation.py` drives rigid bodies along both interpolations; `exu.HT(H)`
+copies an HT (#2824).
 
 **The output variable `HomogeneousTransformation`.** Every node, body point, marker and connector that
 gives `Position` and `RotationMatrix` also gives `HomogeneousTransformation`, the 4x4 matrix [A p; 0 1]:

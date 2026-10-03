@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 247 | 1.12.265 |
+| 1.12 | Metheney | 249 | 1.12.267 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.267** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` go to definition of mbs.CreateRigidBody reaches the Python function, not only the stub (#2825)
+  - description: The maintainer, 2026-10-04: 'The Create... functions are injected into MainSystem, thus the direct navigation to these functions is not possible. If I use spyder or VS Code and I click on CreateRigidBody, it directs me to the .pyi file. Is there a fix for that?' The stub declares each added function as a method of MainSystem with its own copy of the signature and the first sentence of the docstring; the function itself is MainSystemCreateRigidBody in exudyn/misc/mainSystemExtensions.py. revision2026b step RG16.14. \[2026-10-03, Claude-JG\]: The step is revision2026b step RG12.37, not RG16.14 (it is not about the HT). Tried on a copy of the package with jedi 0.20 and mypy: (a) CreateRigidBody = \_MainSystemCreateRigidBody in the stub - mypy types it from the function, jedi's go to definition lands on that stub line and its inference reaches the source; (b) a class-scoped import in the stub - jedi goes straight to the source, mypy refuses it; (c) the stub docstring names the function. Recommended (a) with return annotations on the functions; the maintainer decides after a look in VS Code.
+  - **notes:** Go to definition of mbs.CreateRigidBody and the other functions added to MainSystem reaches the Python function: the stub assigns the function itself, and type checkers take its signature from it.
+  - date resolved: **2026-10-03 22:27**, date raised: 2026-10-03
+- **1.12.266** `CHANGE` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` examples and test models use exu.HT instead of the HT functions of rigidBodyUtilities (#2822)
+  - description: The maintainer, 2026-10-04: 'whenever rigidbody transformations are used - in particular with kinematic trees and with more complicated kinematics, the exudyn.HT feature should be used'. 23 examples, 20 test models and the library modules graphics, plot and lieGroupBasics call HomogeneousTransformation, HTtranslate, HTrotateX/Y/Z, HT2translation, HT2rotationMatrix, InverseHT or HT0; a test model whose result shall stay exactly the same is converted only where the numbers do not change. revision2026b step RG16.11.
+  - **notes:** Examples and test models that build the frame of a marker give its localHT with exu.HT.
+  - date resolved: **2026-10-03 22:27**, date raised: 2026-10-03
 - **1.12.265** `CHANGE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the library builds the frames of markers with exu.HT, and the Create functions no longer pass rotationMarker0/1 (#2820)
   - description: The maintainer, 2026-10-04: 'ObjectJointPrismaticX.py uses localHT, but uses HomogeneousTransformation from rigidBodyUtilities, not the exudyn function =\> check whether other scripts / files in the library use HomogeneousTransformation'; 'robotics.CreateRedundantCoordinateMBS uses rotationMarker; CreateFunctions still use rotationMarker'. Since \#2804 the rotation of a joint is in its markers' localHT, and the Create functions pass a unit rotationMarker0/1 - the deprecated parameter, which a reader of the library takes as the way to do it. The library and the definitions (MiniExamples, the advice of the deprecated rotationMarker parameters) build the localHT with exu.HT. revision2026b step RG16.9.
   - **notes:** The Create functions and robotics.Robot.CreateRedundantCoordinateMBS give the rotation of a joint to its markers only (localHT built with exu.HT) and no longer pass rotationMarker0/1.

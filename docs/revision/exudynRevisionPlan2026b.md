@@ -1246,8 +1246,9 @@ its own defaults - above all `timeIntegration.newton.useModifiedNewton = True`, 
 the results of many test models (iterations, step sizes): the test suite is evaluated again, model by model, before.
 
 <a id="rg12-37"></a>
-**RG12.37** *(group RG12; maintainer 2026-10-04: "If I use spyder or VS Code and I click on CreateRigidBody, it directs
-me to the .pyi file. Is there a fix for that?")* **Go to definition of `mbs.CreateRigidBody` reaches the Python
+**RG12.37** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg12-37) *(group RG12; maintainer 2026-10-04: "If I
+use spyder or VS Code and I click on CreateRigidBody, it directs me to the .pyi file. Is there a fix for that?"; then:
+"ok, do (a)")* **Go to definition of `mbs.CreateRigidBody` reaches the Python
 function** (#2825). The stub `exudyn/__init__.pyi` declares each function added to `MainSystem` (the 25 Create
 functions, `SolveDynamic`, `PlotSensor`, `SolutionViewer`, ... - 32) as a method with a copy of its signature and
 the first sentence of its docstring; the function is `MainSystemCreateRigidBody` in
@@ -1263,8 +1264,17 @@ mypy (the gate's stubtest):
       the method as `Any`;
     - (c) today's stub, its docstring naming the module and the function: nothing breaks, nothing is clickable.
     VS Code (Pylance) could not be tried here. **Recommended**: (a) with return annotations on the functions (the
-    stub generator then writes one line per function instead of a copied signature); **the maintainer decides**,
-    after a look in VS Code.
+    stub generator then writes one line per function instead of a copied signature). **Decided (a)**, the return
+    annotations RG12.38.
+
+<a id="rg12-38"></a>
+**RG12.38** *(group RG12; maintainer 2026-10-04: "add a step to add return annotations for the Create functions")*
+**Return annotations for the functions added to `MainSystem`** (#2826). Since RG12.37 the stub assigns the functions
+themselves, so their return types are those of the functions - unannotated today, while the copied stub had them
+(`ObjectIndex`, `NodeIndex`, `Union[dict, ObjectIndex]` for `returnDict`, ...). The 25 Create functions and the others
+(`SolveDynamic`, `SolveStatic`, `PlotSensor`, `SolutionViewer`, `ComputeLinearizedSystem`, `ComputeODE2Eigenvalues`,
+`ComputeSystemDegreeOfFreedom`, `CreateDistanceSensor...`, `DrawSystemGraph`) get them, from the `Returns:` of their
+docstrings; argument annotations only where they help a reader; a check that every function added to a class has one.
 
 <a id="rg12-35"></a>
 **RG12.35** **DONE 2026-10-04** (#2814) — [log](exudynRevisionLog2026b.md#rg12-35) · [plan text](exudynRevisionLog2026b.md#plan-rg12-35) — The item parameters renamed as decided in RG12.31.
@@ -1406,79 +1416,71 @@ Create functions, `GetJointArgs`, `robotics.Robot.CreateRedundantCoordinateMBS`,
 
 <a id="rg16-10"></a>
 **RG16.10** *(group RG16; maintainer 2026-10-04: "the robotics.Robot class (and the related classes) still use the
-Python HomogeneousTransformation")* **The robotics classes on `exu.HT`** (#2821). `Robot`, `RobotLink`, `RobotBase`,
-`RobotTool`, the DH conversions `StdDH2HT`/`ModDHKK2HT`, `LinkHT`/`JointHT`/`COMHT`, `Jacobian`,
-`CreateKinematicTree`, `CreateRedundantCoordinateMBS`, `InverseKinematicsNumerical`, and `robotics.models`, `mobile`,
-`special`, `future`, `utilities` work on 4x4 numpy arrays and `HTtranslate`/`HTrotateX`/`HT0` (about 120 places);
-a user gives `RobotBase(HT=HTtranslate([0,0,1]))` and reads `robot.LinkHT(q)` as numpy arrays.
-    - **RG16.10.1** *proposal first*: what a user gives and gets - the attributes and arguments (`HT`, `localHT`,
-      `preHT`, `baseHT`, `toolHT`) take an `exu.HT` and, as today, a 4x4 array (converted once on input); what
-      `LinkHT`/`JointHT`/`COMHT` return - `exu.HT` (`H @ A` keeps working through `np.array(H)`, `H[0:3,3]` does not)
-      or numpy as today with an `exu.HT` variant; the `jointType` table `dictJointType2HT`;
-    - **RG16.10.2** the internals of `roboticsCore.py` on `exu.HT` (`*`, `Inverse`, `translation`, `rotation`), the
-      forward kinematics and the Jacobian measured against today's (`runMiniExamplePerformance`, a robot of 6 and
-      of 20 links);
+Python HomogeneousTransformation")* **The robotics classes on `exu.HT`** (#2821). Since RG16.4.2 every HT a user gives
+(`RobotBase(HT=)`, `RobotTool(HT=)`, `RobotLink(localHT=, preHT=)`) may be an `exu.HT` or a 4x4 matrix, and is stored
+as a numpy array; the computations (`LinkHT`, `JointHT`, `COMHT`, `Jacobian`, the DH conversions `StdDH2HT`/`ModDHKK2HT`,
+`dictJointType2HT`, `InverseKinematicsNumerical`) are numpy products with `HTtranslate`/`HTrotateX`/`HT0` (about 120
+places in `roboticsCore`, `models`, `mobile`, `special`, `future`, `utilities`), and what they return are numpy
+arrays, which scripts read as `HT[-1][0:3,3]` or with `HT2translation(HT[-1])`.
+    - **RG16.10.1** **Proposal, for the maintainer's decision**: the robotics classes store and compute with `exu.HT`
+      (products in C++), and `LinkHT`/`JointHT`/`COMHT` return lists of `exu.HT`. So that scripts keep working,
+      `exu.HT` gets `__getitem__` on its 4x4 matrix (`H[0:3,3]`, `H[2][3]`; reading only), `H @ x` keeps working through
+      `__array__`, and `HT2translation`/`HT2rotationMatrix` take an `exu.HT` already (RG16.4.2). The alternative: keep
+      numpy outputs and use `exu.HT` inside only - less gain for the user, no break at all;
+    - **RG16.10.2** after the decision: `roboticsCore.py` on `exu.HT`, the forward kinematics and the Jacobian measured
+      against today's (a robot of 6 and of 20 links);
     - **RG16.10.3** `models.py` (the robot definitions: DH parameters, `preHT`, tool frames), `mobile.py`, `special.py`,
       `future.py`, `utilities.py`;
-    - **RG16.10.4** the examples with the Robot class (`serialRobot*.py`, `humanRobotInteraction.py`,
-      `InverseKinematicsNumericalExample.py`, `ROSMobileManipulator.py`, `mobileMecanumWheelRobotWithLidar.py`,
-      `openAIgymNLink*.py`, `kinematicTree*`, `FurtherExamples/fourBarKinematicTree*.py`, `spotModel.py`) and the test
-      models (`serialRobotTest.py`, `movingGroundRobotTest.py`, `kinematicTreeAndMBStest.py`,
-      `kinematicTreeConstraintTest.py`), each with its result unchanged.
+    - **RG16.10.4** the scripts with the Robot class or the kinematic tree, each with its result unchanged: the examples
+      `serialRobot*.py` (8), `humanRobotInteraction.py`, `InverseKinematicsNumericalExample.py`, `ROSMobileManipulator.py`,
+      `mobileMecanumWheelRobotWithLidar.py`, `openAIgymNLink*.py`, `kinematicTreeAndMBS.py`, `kinematicTreePendulum.py`,
+      `FurtherExamples/fourBarKinematicTree*.py`, `spotModel.py`, and the test models `serialRobotTest.py`,
+      `movingGroundRobotTest.py`, `kinematicTreeAndMBStest.py`, `kinematicTreeConstraintTest.py`,
+      `createKinematicTreeTest.py` (24 of the 42 scripts that used the HT functions of `rigidBodyUtilities`);
+    - **RG16.10.5** the HT functions of `rigidBodyUtilities` (`HomogeneousTransformation`, `HTtranslate`, ...): kept as
+      numpy helpers or deprecated with `exu.HT` as advice - the maintainer's decision once RG16.10.4 is done.
 
 <a id="rg16-11"></a>
-**RG16.11** *(group RG16; maintainer 2026-10-04: "whenever rigidbody transformations are used ... the exudyn.HT feature
-should be used")* **Examples, test models and the rest of the library on `exu.HT`** (#2822), after RG16.10 for what
-uses the robotics classes. Today 23 examples, 20 test models and the modules `graphics` (`Move`, the HT argument of
-`Basis`-like functions), `plot`, `lieGroupBasics` and `mainSystemExtensions.CreateKinematicTree` (with RG16.13) call
-`HomogeneousTransformation`, `HTtranslate`, `HTrotateX/Y/Z`, `HT2translation`, `HT2rotationMatrix`, `InverseHT` or
-`HT0`.
-    - **RG16.11.1** the library functions that take an HT take an `exu.HT` as well (`graphics`, `plot`);
-    - **RG16.11.2** the examples not covered by RG16.10, one commit per handful, each run before and after;
-    - **RG16.11.3** the test models, only where the result stays the same to the tolerance of the test (otherwise the
-      test model stays as it is and is listed);
-    - **RG16.11.4** the HT functions of `rigidBodyUtilities` (`HomogeneousTransformation`, `HTtranslate`, ...) - kept
-      as numpy helpers, or deprecated with `exu.HT` as advice: a decision of the maintainer once nothing of Exudyn uses
-      them.
+**RG16.11** **DONE 2026-10-04** (#2822) — [log](exudynRevisionLog2026b.md#rg16-11) *(group RG16; maintainer 2026-10-04:
+"I mean like in the solutionViewerTest.py. These are few examples or test models ... a couple of scripts are
+definitely sufficient - don't make the scripts more complicated than necessary")* **Scripts that build rigid frames
+use `exu.HT`**: the 18 scripts that used the HT functions of `rigidBodyUtilities` without the robotics classes did so
+mostly for the `localHT` of a marker, one or two lines each; 14 of them give it with `exu.HT` now, every result unchanged
+(`solutionViewerTest.py` with RG16.12.2). Not changed: the two `homogeneousTransformation*Test.py`, which compare
+`exu.HT` with those functions on purpose, and the `HT` argument of `PlotImage` in two NGsolve examples (a numpy
+function). The other 24 scripts use the robotics classes or the kinematic tree: RG16.10.4.
 
 <a id="rg16-12"></a>
 **RG16.12** *(group RG16; maintainer 2026-10-04: "a couple of examples and test models (like 4+4) should use
 referenceHT / localHT, just to show how it works and for the tests")* **Examples and test models that show
 `referenceHT`, `localHT` and `exu.HT`** (#2823).
-    - **RG16.12.1** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-12) the new example
-      `homogeneousTransformationInterpolation.py`: four bodies moved by a PreStepUserFunction alone, `InterpolateSO3`
-      and `InterpolateSE3` between the same frames, the frames and `LogSE3` written into the render window;
+    - **RG16.12.1** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-12-1) the new example
+      `homogeneousTransformationInterpolation.py`: four rigid bodies, each held by a generic joint to a ground whose
+      `referenceHT` a PreStepUserFunction sets with `InterpolateSO3` and `InterpolateSE3`, the solution stored every
+      5 ms for the SolutionViewer (reworked after the maintainer's look, 2026-10-04: bodies, not grounds);
     - **RG16.12.2** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-12) `solutionViewerTest.py`: the chain
-      of 100 bodies built from `exu.HT` products, the bodies with `referenceHT`, the joints on markers with `localHT`
-      (same result to 1e-13);
-    - **RG16.12.3** two more examples, e.g. a mechanism whose joint frames are given as `localHT`
-      (`sliderCrank3D`-like) and a rigid body on a moving frame with the output variable `HomogeneousTransformation`;
-    - **RG16.12.4** four test models: `referenceHT` of `CreateRigidBody` against the node coordinates
-      (`GetCoordinatesEP`), `localHT` of `MarkerNodeRigid`/`MarkerSuperElementRigid`/`MarkerKinematicTreeRigid`
-      with a joint, `referenceHT` of `ObjectGround` changed during a simulation, and a sensor of
-      `HomogeneousTransformation` read back with `exu.HT(values)`;
+      of 100 bodies built from `exu.HT` products, the bodies with `referenceHT`, the joints on markers with `localHT`;
+    - **RG16.12.3, .4** **DONE 2026-10-04 by RG16.11** — the examples `mouseInteractionExample.py` and
+      `bicycleIftommBenchmarkMarkerBasedJoints.py` and twelve test models give `localHT` with `exu.HT` now; the
+      parameters themselves are tested by `homogeneousTransformationParameterTest.py` (referenceHT of ground and bodies,
+      localHT of the rigid markers, jointHTs) and `homogeneousTransformationTest.py` (the output variable and sensor);
     - **RG16.12.5** `rigidBodyTutorial3.py` with `exu.HT`, as a notebook - after the evaluation of RG17.1.
 
 <a id="rg16-13"></a>
 **RG16.13** *(group RG16; maintainer 2026-10-04: "ObjectKinematicTree still has only jointTransformations and
 jointOffsets, but I believe that jointHTs would be much more convenient and could also boost the internal
-computations (?)")* **`ObjectKinematicTree` takes its joints as `jointHTs`** (#2824). Today a joint is a rotation
-`jointTransformations` (`Matrix3DList`) and an offset `jointOffsets` (`Vector3DList`), the C++ composes them into an
-HT per link and evaluation, and `CreateKinematicTree` splits the `jointHT` of each `TreeLink` (a 4x4 numpy array) into
-the two lists. Proposed transition, sub-step by sub-step:
-    - **RG16.13.1** *evaluation*: where the C++ of `CObjectKinematicTree` builds the link HTs (`ComputeTreeTransformations`
-      and the Jacobians), what it costs per step today, and whether a stored HT per joint saves the composition - a
-      measurement on a tree of 6 and of 50 links before anything is decided;
-    - **RG16.13.2** an item parameter type for a list of HTs - `HTList` in C++ and in the definitions, beside
-      `Vector3DList`/`Matrix3DList`, with the conversions from a list of `exu.HT` or 4x4 arrays (as `localHT`
-      takes one) and back; in the generators (`typeModel`, the emitters, the stubs);
-    - **RG16.13.3** `jointHTs` in `ObjectKinematicTree`: one parameter for both, `jointTransformations`/`jointOffsets`
-      forwarding to it (views of the stored HTs, as `referencePosition` is of `referenceHT` since RG16.3), deprecated
-      later or kept - introduced after 1.11.0, so a rename needs no deprecation until 1.13;
-    - **RG16.13.4** the C++ implementation on the stored HTs, measured against RG16.13.1;
-    - **RG16.13.5** `TreeLink` (`jointHT`, `preHT`) on `exu.HT`, `CreateKinematicTree` passing `jointHTs`, and
-      `robotics.Robot.CreateKinematicTree` with RG16.10;
-    - **RG16.13.6** the documentation of the item, its MiniExample and the test models of the kinematic tree.
+computations (?)")* **`ObjectKinematicTree` and its `jointHTs`** (#2824). The parameter exists since RG16.4.1 (#2798):
+`jointHTs` takes a list of `exu.HT` or 4x4 matrices (the type `HomogeneousTransformationList` of the definitions) and
+is a view of the two stored lists `jointTransformations` and `jointOffsets`; `Robot.CreateKinematicTree` gives it.
+    - **RG16.13.1** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-13) `mbs.CreateKinematicTree` passes
+      `jointHTs`, `TreeLink.jointHT` is an `exu.HT` (given as `exu.HT` or 4x4 matrix), `exu.HT(H)` copies an HT, and
+      the MiniExample of `ObjectKinematicTree` gives `jointHTs=[exu.HT()]`;
+    - **RG16.13.2** *evaluation*: whether storing one HT per joint in `CObjectKinematicTree` instead of the rotation and
+      the offset saves time - the C++ composes them into an HT per link and evaluation (`ComputeTreeTransformations`,
+      the Jacobians); a measurement on a tree of 6 and of 50 links before anything changes, then the decision whether
+      `jointTransformations`/`jointOffsets` become views of `jointHTs` (introduced after 1.11.0: no deprecation
+      needed until 1.13);
+    - **RG16.13.3** the robotics part with RG16.10.
 
 ## RG17 — Notebooks
 
@@ -1520,13 +1522,12 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
-| RG12.37 | #2825 | go to definition of the Create functions reaches the Python function: options tried, the maintainer decides |
+| RG12.38 | #2826 | return annotations for the functions added to `MainSystem` |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
-| RG16.10 | #2821 | the robotics classes on `exu.HT`: a proposal of what users give and get first |
-| RG16.11 | #2822 | examples, test models and the rest of the library on `exu.HT` |
-| RG16.12 | #2823 | examples and test models showing `referenceHT`, `localHT`, `exu.HT`: two done, two examples and four test models open |
-| RG16.13 | #2824 | `ObjectKinematicTree` with `jointHTs`: an evaluation and measurement first |
+| RG16.10 | #2821 | the robotics classes on `exu.HT`: the proposal RG16.10.1 waits for the maintainer |
+| RG16.12.5 | #2823 | `rigidBodyTutorial3.py` with `exu.HT` as a notebook, after RG17.1 |
+| RG16.13.2 | #2824 | `ObjectKinematicTree`: whether stored joint HTs save time, measured first |
 | RG15 | #2746 | objects computing from coordinates passed in: the work after the evaluation of RG15.1, not planned yet |
 | RG17.1 | #2811 | notebooks for tutorials and examples: the evaluation |
 

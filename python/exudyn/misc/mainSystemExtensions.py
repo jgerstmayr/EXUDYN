@@ -28,7 +28,7 @@ from exudyn.basicUtilities import Normalize
 from exudyn.rigidBodyUtilities import _MarkerWithRotation, _RotationMarkerArgs
 from exudyn.rigidBodyUtilities import ComputeOrthonormalBasis, \
     RotationMatrix2EulerParameters, AngularVelocity2EulerParameters_t, RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, \
-    RotationMatrix2RotationVector, HT2translation, HT2rotationMatrix
+    RotationMatrix2RotationVector
 
 import exudyn.itemInterface as eii
 from exudyn.itemInterface import ObjectGround, VObjectGround, SensorUserFunction
@@ -2713,8 +2713,7 @@ def MainSystemCreateKinematicTree(mbs,
     linkInertiasCOM=exu.Matrix3DList()
     
     jointTypes = []
-    jointTransformations=exu.Matrix3DList()
-    jointOffsets = exu.Vector3DList()
+    jointHTs = [] #the joint transformations and offsets, one exu.HT per link (#2824)
 
     graphicsDataList = []
     autoComputeBaseGraphics = True if baseGraphicsDataList is None else False
@@ -2780,8 +2779,7 @@ def MainSystemCreateKinematicTree(mbs,
         linkMasses.append(link.linkInertia.Mass())
         linkCOMs.Append(link.linkInertia.COM())
         linkInertiasCOM.Append(link.linkInertia.InertiaCOM())
-        jointTransformations.Append(HT2rotationMatrix(link.jointHT) )
-        jointOffsets.Append(HT2translation(link.jointHT) )
+        jointHTs.append(exu.HT(link.jointHT))
     
         if link.PDcontrol is not None:
             hasPDcontrol = True
@@ -2827,7 +2825,7 @@ def MainSystemCreateKinematicTree(mbs,
             parentAxis = JointTypeToAxis(listOfTreeLinks[linkParents[i]].jointType)
             linkColor = linkColors[linkParents[i]]
             
-        v = HT2translation(link.jointHT)
+        v = jointHTs[i].translation
         if addGraphics:
             #joints:
             if listOfTreeLinks[i].graphicsDataList is None:
@@ -2892,8 +2890,7 @@ def MainSystemCreateKinematicTree(mbs,
                                                 nodeNumber=nGeneric, 
                                                 jointTypes=jointTypes, 
                                                 linkParents=linkParents,
-                                                jointTransformations=jointTransformations, 
-                                                jointOffsets=jointOffsets,
+                                                jointHTs=jointHTs,
                                                 linkInertiasCOM=linkInertiasCOM, 
                                                 linkCOMs=linkCOMs, 
                                                 linkMasses=linkMasses,

@@ -366,7 +366,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 - **function description**: compute {ref}`HT <HT>` matrix from rotation matrix A and translation vector r, as a 4x4 numpy array; exudyn.HT is the C++ class of the same transformation, faster in products, inverses and transformed points: exudyn.HT(rotation=A, translation=r) (#2780)
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py) (Ex), [`mouseInteractionExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mouseInteractionExample.py) (Ex), [`carRollingDiscTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/carRollingDiscTest.py) (TM), [`geometricallyExactBeamElbowCantilever.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamElbowCantilever.py) (TM), [`geometricallyExactBeamRightAngleFrame.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/geometricallyExactBeamRightAngleFrame.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`mobileMecanumWheelRobotWithLidar.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/mobileMecanumWheelRobotWithLidar.py) (Ex), [`NGsolveCraigBampton.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/NGsolveCraigBampton.py) (Ex), [`homogeneousTransformationParameterTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py) (TM), [`homogeneousTransformationTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationTest.py) (TM), ...
 
 
 (sec-rigidbodyutilities-httranslate)=
@@ -748,12 +748,12 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 (sec-rigidbodyutilities-treelink---init--)=
 ### Class function: __init__
 
-[`__init__(self, linkInertia, jointType = exu.JointType.RevoluteZ, jointHT = HT0(), parent = None, PDcontrol = None, graphicsDataList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1044)
+[`__init__(self, linkInertia, jointType = exu.JointType.RevoluteZ, jointHT = None, parent = None, PDcontrol = None, graphicsDataList = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1044)
 
 - **class function description**: initialize inertia
 - **input**:
   - `linkInertia`: RigidBodyInertia class, containing mass, inertia, and COM
-  - `jointHT`: transformation from previous link to this link's joint
+  - `jointHT`: transformation from previous link to this link's joint, an exu.HT or a 4x4 matrix; None for the identity
   - `parent`: index to parent link; if parent link is ground, use -1; if all parents in a serial kinematic tree are None, parent indices are computed automatically
   - `PDcontrol`: tuple of PD control parameters
   - `graphicsData`: graphicsDataList link; None automatically adds a suitable graphical object from next joint to this joint; use empty list [] to add no graphics for link

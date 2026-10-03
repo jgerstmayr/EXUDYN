@@ -100,6 +100,12 @@ try:
 except Exception:
     pass
 
+#a copy of an HT (#2824)
+H5 = exu.HT(H)
+H5.translation = [0, 0, 0]
+Check(H.translation, p, what='HT(H) is a copy')
+Check(H5.rotation, A, what='HT(H) rotation')
+
 #chained Set functions, keywords that keep the other part, HasNoRotation
 H4 = exu.HT().SetRotationZ(0.5).Set(translation=[1, 2, 3])
 Check(H4.HT44(), HTtranslate([1, 2, 3]) @ HTrotateZ(0.5), what='chained Set')

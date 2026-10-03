@@ -146,7 +146,7 @@ for iWheel in range(nWheels):
     mWheel = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0,0,0]))
     markerWheels += [mWheel]
 
-    mCarAxle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bCar, localHT=HomogeneousTransformation(initialRotation, pOff))) #the joint frame on the car
+    mCarAxle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bCar, localHT=exu.HT(rotation=initialRotation, translation=pOff))) #the joint frame on the car
     markerCarAxles += [mCarAxle]
 
     lockedAxis0 = 0

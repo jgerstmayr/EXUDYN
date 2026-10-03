@@ -18,14 +18,19 @@ __all__ = [
     'extends', 'install',
     ]
 
+from typing import Callable, TypeVar
+
 _registry = [] #(class, method name, function) in registration order
 
+_Function = TypeVar('_Function', bound=Callable)
 
-def extends(cls, name=None):
+
+def extends(cls, name=None) -> Callable[[_Function], _Function]:
     """Mark a function to become method 'name' of class cls. Without name, the method name is the
     function name with the class name removed from its front (MainSystemCreateMassPoint ->
-    CreateMassPoint, PlotSensor -> PlotSensor). The function itself is returned unchanged."""
-    def Register(function):
+    CreateMassPoint, PlotSensor -> PlotSensor). The function itself is returned unchanged - and so
+    typed, so that a type checker sees its signature through the stub (#2825)."""
+    def Register(function: _Function) -> _Function:
         methodName = name
         if methodName is None:
             methodName = function.__name__

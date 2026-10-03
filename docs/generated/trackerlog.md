@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.265.dev1
+- Exudyn version = 1.12.267.dev1
 - last change = 2026-10-03
-- Number of issues = 2826
-- Number of resolved issues = 2579 (265 in current version)
+- Number of issues = 2827
+- Number of resolved issues = 2581 (267 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,17 +7568,14 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` go to definition of mbs.CreateRigidBody reaches the Python function, not only the stub (#2825)
-  - description: The maintainer, 2026-10-04: 'The Create... functions are injected into MainSystem, thus the direct navigation to these functions is not possible. If I use spyder or VS Code and I click on CreateRigidBody, it directs me to the .pyi file. Is there a fix for that?' The stub declares each added function as a method of MainSystem with its own copy of the signature and the first sentence of the docstring; the function itself is MainSystemCreateRigidBody in exudyn/misc/mainSystemExtensions.py. revision2026b step RG16.14. \[2026-10-03, Claude-JG\]: The step is revision2026b step RG12.37, not RG16.14 (it is not about the HT). Tried on a copy of the package with jedi 0.20 and mypy: (a) CreateRigidBody = \_MainSystemCreateRigidBody in the stub - mypy types it from the function, jedi's go to definition lands on that stub line and its inference reaches the source; (b) a class-scoped import in the stub - jedi goes straight to the source, mypy refuses it; (c) the stub docstring names the function. Recommended (a) with return annotations on the functions; the maintainer decides after a look in VS Code.
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the functions added to MainSystem have return annotations (#2826)
+  - description: The maintainer, 2026-10-04, choosing option (a) of \#2825: add a step to add return annotations for the Create functions. Since \#2825 the stub assigns the Python functions to MainSystem, so a type checker and an editor take their signature from the functions themselves; the return types that the copied stub had (ObjectIndex, NodeIndex, dict for returnDict=True, ...) must therefore be annotations of the functions: the 25 Create functions and the other functions added to MainSystem (SolveDynamic, SolveStatic, PlotSensor, SolutionViewer, ComputeLinearizedSystem, ...). revision2026b step RG12.38.
   - date raised: 2026-10-03
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` ObjectKinematicTree takes its joints as jointHTs (#2824)
   - description: The maintainer, 2026-10-04: 'ObjectKinematicTree still has only jointTransformations and jointOffsets, but I believe that jointHTs would be much more convenient and could also boost the internal computations (?). Put there a step in the plan with substeps to suggest a transition to jointHTs, like adapting the CreateKinematicTree function, requiring a HTList (similar to Vector3DList) for the C++ interface, adapting the C++ implementation, also adapting the TreeLink to exudyn.HT'. revision2026b step RG16.13.
   - date raised: 2026-10-03
 - `EXAMPLE` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` examples and test models that show referenceHT, localHT and exu.HT (#2823)
   - description: The maintainer, 2026-10-04: 'referenceHT, localHT, etc. is rarely used'; 'a couple of examples and test models (like 4+4) should use referenceHT / localHT, just to show how it works and for the tests' - solutionViewerTest.py, rigidBodyTutorial3.py (better as Jupyter tutorial, RG17), and 'a pure prestepuserfunction example showing 4 bodies transformed with the InterpolateSE3/SO3 features, writing the transformations into the renderer (with the solution information string)'. revision2026b step RG16.12. \[2026-10-03, Claude-JG\]: Done 2026-10-04: the example homogeneousTransformationInterpolation.py (RG16.12.1) and solutionViewerTest.py on exu.HT with referenceHT and localHT (RG16.12.2); open: two examples, four test models, rigidBodyTutorial3 as notebook (RG16.12.3 to .5).
-  - date raised: 2026-10-03
-- `CHANGE` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` examples and test models use exu.HT instead of the HT functions of rigidBodyUtilities (#2822)
-  - description: The maintainer, 2026-10-04: 'whenever rigidbody transformations are used - in particular with kinematic trees and with more complicated kinematics, the exudyn.HT feature should be used'. 23 examples, 20 test models and the library modules graphics, plot and lieGroupBasics call HomogeneousTransformation, HTtranslate, HTrotateX/Y/Z, HT2translation, HT2rotationMatrix, InverseHT or HT0; a test model whose result shall stay exactly the same is converted only where the numbers do not change. revision2026b step RG16.11.
   - date raised: 2026-10-03
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` the robotics classes use exu.HT instead of the 4x4 numpy arrays of rigidBodyUtilities (#2821)
   - description: The maintainer, 2026-10-04: 'the robotics.Robot class (and the related classes) still use the Python HomogeneousTransformation', and the examples using the Robot class. Robot, RobotLink, RobotBase, RobotTool, the DH conversions, LinkHT/JointHT/COMHT, the inverse kinematics and robotics.models/mobile/special/future work on numpy 4x4 arrays and HTtranslate/HTrotate; a user gives HT=HTtranslate(...). The transition keeps scripts working that give numpy arrays. revision2026b step RG16.10.

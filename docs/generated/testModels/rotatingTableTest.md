@@ -90,7 +90,7 @@ for mode in range(2):
                                 visualization=VObjectJointGeneric(axesRadius=0.01, axesLength=0.12)))
     
     #the torsional spring-damper acts about z: its markers are turned, so that z is the y-axis
-    HTsupport = HomogeneousTransformation(RotationMatrixX(0.5*pi), [0,0,0])
+    HTsupport = exu.HT().SetRotationX(0.5*pi)
     oTSD = mbs.AddObject(TorsionalSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HTsupport)),
                                                               mbs.AddMarker(MarkerBodyRigid(bodyNumber=bPlane, localHT=HTsupport))],
                                                stiffness=0, damping=0,

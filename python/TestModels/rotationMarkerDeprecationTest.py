@@ -47,8 +47,8 @@ def Simulate(useLocalHT, connector):
     mbs = SC.AddSystem()
     (oGround, node, body) = Model(mbs)
     if useLocalHT:
-        m0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HomogeneousTransformation(A0, [0, 0, 0])))
-        m1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localHT=HomogeneousTransformation(A1, [-0.2, 0, 0])))
+        m0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=exu.HT(rotation=A0)))
+        m1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localHT=exu.HT(rotation=A1, translation=[-0.2, 0, 0])))
         rotations = {}
     else:
         m0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0, 0, 0]))

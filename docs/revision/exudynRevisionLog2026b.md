@@ -14313,3 +14313,50 @@ Both run in `runTestExamples.py`.
 
 **RG12.37** (#2825): the options for go to definition tried with jedi and mypy on a copy of the package; written into
 the step, the decision is the maintainer's.
+
+<a id="rg16-11"></a>
+### RG16.11, RG16.12.1 reworked, RG16.13.1, RG12.37 — scripts on `exu.HT`, the example with bodies, `jointHTs` in CreateKinematicTree, the stub (2026-10-04, #2822, #2823, #2824, #2825)
+
+*(Maintainer 2026-10-04: the example "only uses ground objects that do not record their coordinates ... it should be
+rigid bodies that are driven by generic joints (all axes fixed to the ground objects) ... solution is stored like every
+5 milliseconds. The renderWindowString should only sketch the transformations (function of t) ... Then I can use the
+SolutionViewer"; RG16.11: "a couple of scripts are definitely sufficient"; RG12.37: "ok, do (a) and add a step to add
+return annotations"; "Then continue with RG16 steps that can be completed.")*
+
+<a id="rg16-12-1"></a>
+**RG16.12.1 reworked**: `homogeneousTransformationInterpolation.py` - four rigid bodies (`CreateRigidBody` with
+`referenceHT`), each held by `CreateGenericJoint` with all axes constrained to a ground of its own; the
+PreStepUserFunction sets the grounds' `referenceHT` with `InterpolateSO3`/`InterpolateSE3` and a factor
+f(t) = (1 - cos(pi t/tEnd))/2, which starts and ends at rest, so the bodies start consistently; the grounds are not
+drawn. 800 steps, the solution every 5 ms, then `mbs.SolutionViewer()`. `renderWindowString` is fixed: the two
+formulas of H(t) and f(t). At the end the bodies are in the end frames to 3.4e-15.
+
+**RG16.11** (#2822): the 42 scripts that called the HT functions of `rigidBodyUtilities`, sorted: 25 use the
+robotics classes or the kinematic tree (RG16.10.4), 18 do not, and of those, 14 built the `localHT` of a marker in
+one or two lines. All 14 give it with `exu.HT` now - `exu.HT(rotation=A, translation=p)`, `exu.HT().SetRotationY(0.5*pi)`,
+`exu.HT(data['localHT']) * exu.HT(rotation=rotation)` - in `mouseInteractionExample.py`,
+`bicycleIftommBenchmarkMarkerBasedJoints.py` and the test models `carRollingDiscTest`, `mecanumWheelRollingDiscTest`,
+`laserScannerTest`, `geometricallyExactBeamRightAngleFrame`, `geometricallyExactBeamElbowCantilever`, `jointArgsTest`,
+`revoluteJointPrismaticJointTest`, `rightAngleFrame`, `rotatingTableTest`, `rotationMarkerDeprecationTest`, `simulatorCouplingTwoMbs`,
+`sliderCrank3Dbenchmark`; the test suite passes with the references unchanged. Left: the two
+`homogeneousTransformation*Test.py` (they compare with those functions on purpose) and `PlotImage(HT=...)` in two NGsolve
+examples.
+
+<a id="rg16-13"></a>
+**RG16.13.1** (#2824): `ObjectKinematicTree.jointHTs` exists since RG16.4.1 (#2798) - the maintainer's message took it
+for missing, and so did the first text of RG16.13; corrected. `mbs.CreateKinematicTree` passes `jointHTs` (one
+`exu.HT` per link) instead of splitting each `jointHT` into a rotation and an offset; `TreeLink(jointHT=None)` stores an
+`exu.HT` (identity for None, a copy of an `exu.HT` or a 4x4 matrix). That needed `exu.HT(H)` for an `exu.HT` H, which
+raised: the constructor copies an HT now (with the other arguments None), tested in
+`homogeneousTransformationInterfaceTest.py`. The MiniExample of `ObjectKinematicTree` gives `jointHTs=[exu.HT()]`
+instead of a `Matrix3DList` and a `Vector3DList`. Whether storing HTs in C++ pays off: RG16.13.2.
+
+<a id="rg12-37"></a>
+**RG12.37** (#2825), option (a): `mainSystemExtensionDocsEmitter` writes for each function added to a class one line
+`CreateRigidBody = _MainSystemCreateRigidBody` into the class of the stub and the import
+`from exudyn.misc.mainSystemExtensions import MainSystemCreateRigidBody as _MainSystemCreateRigidBody` at its top,
+instead of a copied signature and docstring (`FunctionStub` of `utilityDocsModel` removed). For mypy to see through,
+the decorator `extensionRegistry.extends` is typed (a `TypeVar` bound to `Callable`: it returns the function unchanged)
+- untyped, it made every added function `Any`. Checked with the installed package: mypy types `mbs.SolveDynamic` with
+its argument names and refuses an unknown keyword of `mbs.CreateRigidBody`; jedi goes to the stub line and infers the
+source function with its full docstring. The return types the old stub had come back with RG12.38 (#2826).

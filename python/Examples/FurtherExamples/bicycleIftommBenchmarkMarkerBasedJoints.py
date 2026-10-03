@@ -220,7 +220,7 @@ def RotatedMarker(marker, rotation):
     """a marker on the same body, its frame turned by rotation: the frame of a joint"""
     data = mbs.GetMarker(marker)
     return mbs.AddMarker(MarkerBodyRigid(bodyNumber=data['bodyNumber'],
-                                         localHT=np.array(data['localHT']) @ HomogeneousTransformation(rotation, [0,0,0])))
+                                         localHT=exu.HT(data['localHT']) * exu.HT(rotation=rotation)))
 if useJoints:
     oJointRW = mbs.AddObject(GenericJoint(markerNumbers=[RotatedMarker(markerR, RotationMatrixZ(pi*0.5)), markerB1],
                                           constrainedAxes=[1,1,1,1,0,1],
