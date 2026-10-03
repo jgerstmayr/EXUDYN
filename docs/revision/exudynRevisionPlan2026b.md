@@ -2604,5 +2604,3 @@ The title of each says what the step **does**; the sentence after it says why it
    the last condition of 1.13 that one person can meet alone.
 3. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
    `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
-4. **Place or drop the figures that no page references** (RG3.8.5, #2594). Small, and it is
-   published documentation that is visibly wrong.
