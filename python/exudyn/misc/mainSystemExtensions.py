@@ -24,6 +24,7 @@ import exudyn.interactive
 import exudyn.graphics
 from exudyn.basicUtilities import Normalize
 
+from exudyn.rigidBodyUtilities import _MarkerWithRotation
 from exudyn.rigidBodyUtilities import ComputeOrthonormalBasis, \
     RotationMatrix2EulerParameters, AngularVelocity2EulerParameters_t, RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, \
     RotationMatrix2RotationVector, HT2translation, HT2rotationMatrix, HomogeneousTransformation
@@ -287,8 +288,8 @@ def GetMarkersPosRot(mbs, name, internBodyNodeMarkerList, localPosition0, localP
 
 def _RotationIntoMarker(mbs, marker, bodyNodeMarker, localPosition, rotation):
     """the rotation of a joint or connector on its side, given to the marker as localHT if the marker was created here
-    (a MarkerBodyRigid or MarkerNodeRigid); returns what remains for rotationMarker0/1, which is deprecated (#2745): the unit
-    matrix, or the rotation itself for a marker the caller gave, which is not changed"""
+    (a MarkerBodyRigid or MarkerNodeRigid); returns the unit matrix, or the rotation itself for a marker the caller gave,
+    which is not changed - _MarkerWithRotation then adds a turned copy of it (#2745, #2804)"""
     if isinstance(bodyNodeMarker, exudyn.MarkerIndex):
         return rotation
     if isinstance(bodyNodeMarker, exudyn.NodeIndex):
@@ -1085,6 +1086,8 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
     #the rotations are the markers' (#2745)
     MR0 = _RotationIntoMarker(mbs, mBody0, internBodyNodeMarkerList[0], localPosition0, MR0)
     MR1 = _RotationIntoMarker(mbs, mBody1, internBodyNodeMarkerList[1], localPosition1, MR1)
+    (mBody0, MR0) = _MarkerWithRotation(mbs, mBody0, MR0) #a marker the caller gave: a copy turned by the rotation (#2804)
+    (mBody1, MR1) = _MarkerWithRotation(mbs, mBody1, MR1)
 
     oConnector = mbs.AddObject(eii.ObjectConnectorRigidBodySpringDamper(name=name,markerNumbers = [mBody0,mBody1],
                                                                         stiffness = stiffness, damping = damping, 
@@ -1223,6 +1226,8 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
     if mBody1 is None:
         mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localHT=HomogeneousTransformation(MR1, pJ1)))
         MR1 = np.eye(3)
+    (mBody0, MR0) = _MarkerWithRotation(mbs, mBody0, MR0) #a marker the caller gave: a copy turned by the rotation (#2804)
+    (mBody1, MR1) = _MarkerWithRotation(mbs, mBody1, MR1)
 
     if unlimitedRotations:
         nGeneric = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[0], 
@@ -1346,6 +1351,8 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
     if mBody1 is None:
         mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localHT=HomogeneousTransformation(MR1, pJ1)))
         MR1 = np.eye(3)
+    (mBody0, MR0) = _MarkerWithRotation(mbs, mBody0, MR0) #a marker the caller gave: a copy turned by the rotation (#2804)
+    (mBody1, MR1) = _MarkerWithRotation(mbs, mBody1, MR1)
     
     oJoint = mbs.AddObject(eii.ObjectJointRevoluteZ(name=name,markerNumbers=[mBody0,mBody1],
                                                 rotationMarker0=MR0,
@@ -1444,6 +1451,8 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
     if mBody1 is None:
         mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localHT=HomogeneousTransformation(MR1, pJ1)))
         MR1 = np.eye(3)
+    (mBody0, MR0) = _MarkerWithRotation(mbs, mBody0, MR0) #a marker the caller gave: a copy turned by the rotation (#2804)
+    (mBody1, MR1) = _MarkerWithRotation(mbs, mBody1, MR1)
     
     oJoint = mbs.AddObject(eii.ObjectJointPrismaticX(name=name,markerNumbers=[mBody0,mBody1],
                                                 rotationMarker0=MR0,
@@ -1629,6 +1638,8 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
     if mBody1 is None:
         mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localHT=HomogeneousTransformation(MR1, pJ1)))
         MR1 = np.eye(3)
+    (mBody0, MR0) = _MarkerWithRotation(mbs, mBody0, MR0) #a marker the caller gave: a copy turned by the rotation (#2804)
+    (mBody1, MR1) = _MarkerWithRotation(mbs, mBody1, MR1)
     
     oJoint = mbs.AddObject(eii.ObjectJointGeneric(name=name,markerNumbers=[mBody0,mBody1],
                                                   constrainedAxes = constrainedAxes,

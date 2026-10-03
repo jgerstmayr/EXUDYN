@@ -232,8 +232,14 @@ def WriteFile(parseInfo, parameterList):
 
 
         deprecatedNames = [] #renamed parameters: listed below the table, not in it (#2589)
+        deprecatedUse = [] #parameters that stay but are deprecated: in the table, and listed below it (#2804)
         for parameter in parameterList:
-            if parameter.get('deprecated') is not None and parameter['lineType'].find('V') != -1:
+            if (parameter.get('deprecated') is not None and getattr(parameter['deprecated'], 'advice', None)
+                    and parameter['lineType'].find('V') != -1):
+                deprecatedUse.append('`' + parameter['pythonName'] + '` (deprecated since ' + str(parameter['deprecated'].since)
+                                     + ', removed in ' + str(parameter['deprecated'].expires) + '): '
+                                     + parameter['deprecated'].advice)
+            if parameter.get('deprecated') is not None and parameter['deprecated'].advice is None and parameter['lineType'].find('V') != -1:
                 deprecatedNames.append('`' + parameter['pythonName'] + '` (deprecated since ' + str(parameter['deprecated'].since)
                                        + ', removed in ' + str(parameter['deprecated'].expires) + '): use `'
                                        + parameter['parameterDescription'] + '`')
@@ -293,6 +299,9 @@ def WriteFile(parseInfo, parameterList):
         vWriter.DefFinishTable()
         if len(deprecatedNames) != 0:
             cWriter.sMarkdown += chr(10) + 'Renamed parameters, still taken with a `DeprecationWarning`: ' + '; '.join(deprecatedNames) + '.' + chr(10)
+        if len(deprecatedUse) != 0:
+            cWriter.sMarkdown += (chr(10) + 'Deprecated parameters, which still work and give a `DeprecationWarning` when set other than their default: '
+                                  + '; '.join(deprecatedUse) + '.' + chr(10))
 
         #now assemble visualization and computation tables:
 

@@ -114,7 +114,7 @@ Index GetInvalidIndex() { return EXUstd::InvalidIndex; }
 //! set flag to write (true) or not write to console; default = true
 void PySetWriteToConsole(bool flag) 
 { 
-	PyDeprecated("exudyn.SetWriteToConsole(): function is deprecated; use set exudyn.config.printToConsole instead");
+	PyDeprecated("functions", "exudyn.SetWriteToConsole", "exudyn.SetWriteToConsole(): function is deprecated; use set exudyn.config.printToConsole instead");
 	outputBuffer.SetWriteToConsole(flag);
 }
 
@@ -162,7 +162,7 @@ void PyPrint(py::args args, py::kwargs kwargs) {
 //! retrieve current version as m.attr is not passed trough package
 py::str PyGetVersionString(bool addDetails = false)
 {
-	PyDeprecated("exudyn.GetVersionString(): function is deprecated; use set exudyn.config.Version() instead");
+	PyDeprecated("functions", "exudyn.GetVersionString", "exudyn.GetVersionString(): function is deprecated; use set exudyn.config.Version() instead");
 	return GetExudynBuildVersionString(addDetails);
 }
 
@@ -170,7 +170,7 @@ extern bool suppressWarnings; //!< global flag to suppress warnings
 //! set flag to suppress (=true) or enable (=false) warnings
 void PySuppressWarningsOld(bool flag)
 {
-	PyDeprecated("exudyn.SuppressWarnings(): function is deprecated; use set exudyn.config.suppressWarnings instead");
+	PyDeprecated("functions", "exudyn.SuppressWarnings", "exudyn.SuppressWarnings(): function is deprecated; use set exudyn.config.suppressWarnings instead");
 	suppressWarnings = flag;
 }
 
@@ -178,7 +178,7 @@ void PySuppressWarningsOld(bool flag)
 //! add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0
 void PySetPrintDelayMilliSeconds(Index delayMilliSeconds)
 {
-	PyDeprecated("SetPrintDelayMilliSeconds(): function is deprecated; use set exudyn.config.printDelayMilliSeconds instead");
+	PyDeprecated("functions", "exudyn.SetPrintDelayMilliSeconds", "SetPrintDelayMilliSeconds(): function is deprecated; use set exudyn.config.printDelayMilliSeconds instead");
 	outputBuffer.SetDelayMilliSeconds(delayMilliSeconds);
 }
 
@@ -191,7 +191,7 @@ void PySetOutputPrecision(Index precision)
 
 void PySetOutputPrecisionOld(Index precision)
 {
-	PyDeprecated("SetOutputPrecision(): function is deprecated; use set exudyn.config.precision instead");
+	PyDeprecated("functions", "exudyn.SetOutputPrecision", "SetOutputPrecision(): function is deprecated; use set exudyn.config.precision instead");
 	PySetOutputPrecision(precision);
 }
 
@@ -206,7 +206,7 @@ extern bool linalgPrintUsePythonFormat; //!< true: use python format for output 
 //! true: use python format for output of vectors and matrices; false: use matlab format
 void PySetLinalgOutputFormatPython(bool flagPythonFormat)
 {
-	PyDeprecated("SetLinalgOutputFormatPython(): function is deprecated; use set exudyn.config.linalgOutputFormatPython instead");
+	PyDeprecated("functions", "exudyn.SetLinalgOutputFormatPython", "SetLinalgOutputFormatPython(): function is deprecated; use set exudyn.config.linalgOutputFormatPython instead");
 	linalgPrintUsePythonFormat = flagPythonFormat;
 }
 
@@ -266,7 +266,7 @@ py::list PythonInfoStat(bool writeOutput = true)
 
 py::list PythonInfoStatOld(bool writeOutput = true)
 {
-	PyDeprecated("exudyn.InfoStat(): function is deprecated; use set exudyn.special.InfoStat() instead");
+	PyDeprecated("functions", "exudyn.InfoStat", "exudyn.InfoStat(): function is deprecated; use set exudyn.special.InfoStat() instead");
 	return PythonInfoStat(writeOutput);
 }
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -275,7 +275,7 @@ py::list PythonInfoStatOld(bool writeOutput = true)
 //! start glfw renderer; return true if successful
 bool PyStartOpenGLRenderer(Index verbose = true, bool deprecationWarning = false)
 {
-	if (deprecationWarning) { PyDeprecated("exudyn.StartRenderer(): function is deprecated; for SystemContainer SC use set SC.renderer.Start() instead"); }
+	if (deprecationWarning) { PyDeprecated("functions", "exudyn.StartRenderer", "exudyn.StartRenderer(): function is deprecated; for SystemContainer SC use set SC.renderer.Start() instead"); }
 #ifdef USE_GLFW_GRAPHICS
 #if defined(__EXUDYN__APPLE__)
 	//on APPLE, tkinter must be imported before start of OpenGL - workaround for BUG, #1339
@@ -301,7 +301,7 @@ bool PyStartOpenGLRenderer(Index verbose = true, bool deprecationWarning = false
 //! stop glfw renderer; return true if successful
 void PyStopOpenGLRenderer(bool deprecationWarning = false)
 {
-	if (deprecationWarning) { PyDeprecated("exudyn.StopRenderer(): function is deprecated; for SystemContainer SC use set SC.renderer.Stop() instead"); }
+	if (deprecationWarning) { PyDeprecated("functions", "exudyn.StopRenderer", "exudyn.StopRenderer(): function is deprecated; for SystemContainer SC use set SC.renderer.Stop() instead"); }
 
 #ifdef USE_GLFW_GRAPHICS
 	try
@@ -352,7 +352,7 @@ void PyCloseViewWindow(Index viewID)
 //! start glfw renderer; return true if successful
 bool PyIsRendererActive(bool deprecationWarning = false)
 {
-	if (deprecationWarning) { PyDeprecated("exudyn.IsRendererActive(): function is deprecated; for SystemContainer SC use set SC.renderer.IsActive() instead"); }
+	if (deprecationWarning) { PyDeprecated("functions", "exudyn.IsRendererActive", "exudyn.IsRendererActive(): function is deprecated; for SystemContainer SC use set SC.renderer.IsActive() instead"); }
 #ifdef USE_GLFW_GRAPHICS
 	return glfwRenderer.IsGlfwInitAndRendererActive();
 #else
@@ -375,7 +375,7 @@ Index PyGetRendererUpdateCount()
 //! run renderer idle for certain amount of time; use this for single-threaded, interactive animations
 void PyDoRendererIdleTasks(Real waitSeconds, bool deprecationWarning = false)
 {
-	if (deprecationWarning) { PyDeprecated("exudyn.DoRendererIdleTasks(): function is deprecated; for SystemContainer SC use set SC.renderer.DoIdleTasks() instead"); }
+	if (deprecationWarning) { PyDeprecated("functions", "exudyn.DoRendererIdleTasks", "exudyn.DoRendererIdleTasks(): function is deprecated; for SystemContainer SC use set SC.renderer.DoIdleTasks() instead"); }
 #ifdef USE_GLFW_GRAPHICS
 	glfwRenderer.DoRendererIdleTasks(waitSeconds);
 #else
@@ -589,6 +589,21 @@ void Init_Pybind_manual_classes(py::module& m) {
 			}, "return the string representation of SpecialBeams class")
 		;
 
+	//Python version of SpecialDeprecations class
+	py::class_<PySpecialDeprecations>(m, "SpecialDeprecations", "how a deprecated name is reported: once per session or on every use, and recorded in exudyn.sys['deprecationUse']")
+		.def(py::init<>())
+		.def_readwrite("warnOnce", &PySpecialDeprecations::warnOnce)
+		.def_readwrite("recordUse", &PySpecialDeprecations::recordUse)
+		.def("Reset", &PySpecialDeprecations::Reset, "forget which names were warned about in this session, so that each one warns once more")
+		.def("Warn", [](const PySpecialDeprecations&, const STDstring& source, const STDstring& name, const STDstring& message, int stackLevel) {
+			PyDeprecated(source, name, message, stackLevel);
+			}, "report the use of a deprecated name from Python: a DeprecationWarning, once per session unless warnOnce is False, and a count in exudyn.sys['deprecationUse'][source][name]; stackLevel=2 attributes it to the caller of the function that calls Warn",
+			py::arg("source"), py::arg("name"), py::arg("message"), py::arg("stackLevel") = 2)
+		.def("__repr__", [](const PySpecialDeprecations& item) {
+		return STDstring(EXUstd::ToString(item));
+			}, "return the string representation of SpecialDeprecations class")
+		;
+
 	//Python version of Special class
 	py::class_<PySpecial>(m, "Special", "Special features, to be handled with care")
 		.def(py::init<>())
@@ -597,6 +612,7 @@ void Init_Pybind_manual_classes(py::module& m) {
 		.def_readwrite("exceptions", &PySpecial::exceptions)
 		.def_readwrite("userInterface", &PySpecial::userInterface)
 		.def_readwrite("beams", &PySpecial::beams)
+		.def_readwrite("deprecations", &PySpecial::deprecations)
 		.def_property_readonly("currentRendererSystemContainer", [](const PySpecial&) -> py::object {
 			//py::cast of the POINTER returns the Python object that already wraps it, so a script
 			//gets the very SystemContainer it created; None when no renderer is attached

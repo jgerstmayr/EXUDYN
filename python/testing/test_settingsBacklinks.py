@@ -51,7 +51,17 @@ def SettingsGroups(settings):
 
 
 def ReadEveryMember(settings):
-    """read every member of every sub-structure; returns (read, deprecated, problems)"""
+    """read every member of every sub-structure; returns (read, deprecated, problems); every deprecated member
+    warns here, not only the first of the session (#2804)"""
+    warnOnceStored = exudyn.special.deprecations.warnOnce
+    exudyn.special.deprecations.warnOnce = False
+    try:
+        return ReadGroups(settings)
+    finally:
+        exudyn.special.deprecations.warnOnce = warnOnceStored
+
+
+def ReadGroups(settings):
     (read, deprecated, problems) = (0, 0, [])
     for (groupName, group) in SettingsGroups(settings):
         for name in dir(group):

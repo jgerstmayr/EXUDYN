@@ -217,6 +217,7 @@ def test_deprecationIsAWarning():
 def test_deprecationCanBePromotedToAnError():
     """-W error::DeprecationWarning must find them; that is how a user prepares for a release that
     removes the old name"""
+    exu.special.deprecations.Reset() #it may have warned already in this session (#2804)
     with warnings.catch_warnings():
         warnings.simplefilter('error', DeprecationWarning)
         with pytest.raises(DeprecationWarning):
@@ -225,14 +226,20 @@ def test_deprecationCanBePromotedToAnError():
 
 def test_deprecationIsReportedOncePerLocation():
     """the point of the change: a deprecated setting read in a time-step loop used to print one line
-    per call"""
+    per call; it warns once per session and name (#2804), also under the filter 'always', and every use is
+    counted (#2806)"""
     systemContainer = exu.SystemContainer()
+    exu.special.deprecations.Reset()
+    def Uses():
+        return exu.sys.get('deprecationUse', {}).get('visualizationSettings', {}).get('general.drawWorldBasis', 0)
+    used = Uses()
     with warnings.catch_warnings(record=True) as caught:
-        warnings.simplefilter('default')
+        warnings.simplefilter('always')
         for _ in range(500):
             systemContainer.visualizationSettings.general.drawWorldBasis = True
 
     assert len(caught) == 1
+    assert Uses() == used + 500
 
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

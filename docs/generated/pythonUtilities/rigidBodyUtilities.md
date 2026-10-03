@@ -696,7 +696,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 (sec-rigidbodyutilities-addrevolutejoint)=
 ## Function: AddRevoluteJoint
 
-[`AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame = True, showJoint = True, axisRadius = 0.1, axisLength = 0.4)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1622)
+[`AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame = True, showJoint = True, axisRadius = 0.1, axisLength = 0.4)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1638)
 
 - **function description**: DEPRECATED (use MainSystem function instead): add revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
 - **input**:
@@ -713,7 +713,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`rigidBodyAs
 (sec-rigidbodyutilities-addprismaticjoint)=
 ## Function: AddPrismaticJoint
 
-[`AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame = True, showJoint = True, axisRadius = 0.1, axisLength = 0.4)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1710)
+[`AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame = True, showJoint = True, axisRadius = 0.1, axisLength = 0.4)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/rigidBodyUtilities.py#L1726)
 
 - **function description**: DEPRECATED (use MainSystem function instead): add prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
 - **input**:

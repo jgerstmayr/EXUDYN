@@ -30,14 +30,17 @@ The parameters of the item; in a dictionary, its type is 'ConnectorTorsionalSpri
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData with 1 dataCoordinate for continuous rotation reconstruction; if this node is left to invalid index, it will not be used |
 | **stiffness** | Real |  | 0. | (symbol: $k$) torsional stiffness [SI:Nm/rad] against relative rotation |
 | **damping** | Real |  | 0. | (symbol: $d$) torsional damping [SI:Nm/(rad/s)] |
-| **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 0; transforms joint into marker coordinates; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT |
-| **rotationMarker1** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 1; transforms joint into marker coordinates; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT |
+| **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 0; transforms joint into marker coordinates |
+| **rotationMarker1** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 1; transforms joint into marker coordinates |
 | **offset** | Real |  | 0. | (symbol: $\theta_\mathrm{off}$) rotational offset considered in the spring torque calculation (this can be used as rotation control input!) |
 | **velocityOffset** | Real |  | 0. | (symbol: $\omega_\mathrm{off}$) angular velocity offset considered in the damper torque calculation (this can be used as angular velocity control input!) |
 | **torque** | Real |  | 0. | (symbol: $\tau_c$) additional constant torque [SI:Nm] added to spring-damper; this can be used to prescribe a torque between the two attached bodies (e.g., for actuation and control) |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **springTorqueUserFunction** | ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which computes the scalar torque between the two rigid body markers in local joint0 coordinates, if activeConnector=True; see description below |
 | **visualization** | VObjectConnectorTorsionalSpringDamper |  |  | parameters for visualization of item |
+
+
+Deprecated parameters, which still work and give a `DeprecationWarning` when set other than their default: `rotationMarker0` (deprecated since 1.12.244, removed in 2031): give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)); `rotationMarker1` (deprecated since 1.12.244, removed in 2031): give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)).
 
 ## Visualization parameters
 

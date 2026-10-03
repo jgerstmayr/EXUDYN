@@ -38,6 +38,8 @@
 #include <atomic> //for output buffer semaphore
 
 #include "Utilities/TimerStructure.h"
+#include "Main/Experimental.h"
+extern PySpecial pySpecial; //special.deprecations: once per session, recorded use (#2804, #2806)
 
 namespace py = pybind11;
 using namespace pybind11::literals; //brings in the '_a' literals; e.g. for short arguments definition
@@ -515,13 +517,30 @@ void PyWarning(std::string warning_msg)
 //! PyErr_WarnEx does the per-location bookkeeping itself, from the Python frame, so unlike
 //! PyWarning this does not call PyGetCurrentFileInformation (#2423) and costs nothing per call.
 //! The GIL is held: every call site is a pybind-bound getter, setter or function.
+//! Python's own once-per-location is not enough: a test runner or a filter set to "always" shows every use, and a model
+//! with many joints repeats the same message; so each name warns once per session (exudyn.special.deprecations.warnOnce),
+//! and every use is counted in exudyn.sys['deprecationUse'], so that a test sees what a script used without catching
+//! warnings (#2804, #2806).
 extern bool suppressWarnings;   //defined below, next to PyWarning, which is its other reader
 
-void PyDeprecated(std::string message)
+void PyDeprecated(const std::string& source, const std::string& name, const std::string& message, int stackLevel)
 {
-	if (suppressWarnings) { return; } //an explicit request for silence is honoured here as well
+	PySpecialDeprecations& deprecations = pySpecial.deprecations;
+	if (deprecations.recordUse)
+	{
+		py::dict sys = py::module::import("exudyn").attr("sys").cast<py::dict>();
+		if (!sys.contains("deprecationUse")) { sys["deprecationUse"] = py::dict(); }
+		py::dict use = sys["deprecationUse"].cast<py::dict>();
+		if (!use.contains(source.c_str())) { use[source.c_str()] = py::dict(); }
+		py::dict group = use[source.c_str()].cast<py::dict>();
+		Index count = group.contains(name.c_str()) ? py::cast<Index>(group[name.c_str()]) : 0;
+		group[name.c_str()] = count + 1;
+	}
 
-	if (PyErr_WarnEx(PyExc_DeprecationWarning, message.c_str(), 1) != 0)
+	if (suppressWarnings) { return; } //an explicit request for silence is honoured here as well
+	if (deprecations.warnOnce && !deprecations.warned.insert(source + ":" + name).second) { return; }
+
+	if (PyErr_WarnEx(PyExc_DeprecationWarning, message.c_str(), stackLevel) != 0)
 	{
 		//the user turned this warning into an error; the Python exception is already set
 		throw py::error_already_set();

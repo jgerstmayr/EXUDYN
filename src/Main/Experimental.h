@@ -17,6 +17,7 @@
 #define PYEXPERIMENTAL__H
 
 #include "Tests/UnitTestBase.h" //for unit tests
+#include <set>
 
 
 //to use, do 
@@ -225,6 +226,48 @@ public:
 
 };
 
+//!how a deprecated name is reported (#2804, #2806): every deprecation of Exudyn - settings, item parameters,
+//!functions - goes through PyDeprecated(source, name, message), which reads these flags
+class PySpecialDeprecations
+{
+public:
+    bool warnOnce;      //!< true: each deprecated name warns once per session; false: every use warns, for debugging a script
+    bool recordUse;     //!< true: every use is counted in exudyn.sys['deprecationUse'][source][name], also when no warning is shown
+
+    std::set<std::string> warned; //!< the names warned about in this session, as "source:name"; not exposed to Python
+
+    PySpecialDeprecations()
+    {
+        Initialize();
+    }
+
+    void Initialize()
+    {
+        warnOnce = true;
+        recordUse = true;
+        warned.clear();
+    }
+
+    //! forget which names were warned about, so that each warns once more
+    void Reset() { warned.clear(); }
+
+    //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    virtual void Print(std::ostream& os) const
+    {
+        os << "  warnOnce = " << warnOnce << "\n";
+        os << "  recordUse = " << recordUse << "\n";
+        os << "  names warned about = " << warned.size() << "\n";
+        os << "\n";
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, const PySpecialDeprecations& item)
+    {
+        item.Print(os);
+        return os;
+    }
+
+};
+
 //!class with according structure in PybindModule.cpp which can be accessed from Python and inside C++
 //!used for special features and global settings
 class PySpecial
@@ -234,6 +277,7 @@ public:
     PySpecialExceptions exceptions;
     PySpecialUserInterface userInterface;
     PySpecialBeams beams;
+    PySpecialDeprecations deprecations;
 
     PySpecial()
     {
@@ -246,6 +290,7 @@ public:
         exceptions.Initialize();
         userInterface.Initialize();
         beams.Initialize();
+        deprecations.Initialize();
     }
 
     //! put RunCppUnitTests into special class
@@ -268,6 +313,7 @@ public:
         os << "exceptions:\n" << exceptions;
         os << "userInterface:\n" << userInterface;
         os << "beams:\n" << beams;
+        os << "deprecations:\n" << deprecations;
         //os << "  InfoStat() = " << InfoStat(false) << "\n";
         os << "\n";
     }

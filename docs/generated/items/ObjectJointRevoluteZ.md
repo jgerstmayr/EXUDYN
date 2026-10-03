@@ -34,10 +34,13 @@ The parameters of the item; in a dictionary, its type is 'JointRevoluteZ':
 |---|---|---|---|---|
 | **name** | String |  | '' | constraints's unique name |
 | **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
-| **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{m0,J0}{\Rot}$) local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT |
-| **rotationMarker1** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{m1,J1}{\Rot}$) local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT |
+| **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{m0,J0}{\Rot}$) local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0 |
+| **rotationMarker1** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{m1,J1}{\Rot}$) local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1 |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectJointRevoluteZ |  |  | parameters for visualization of item |
+
+
+Deprecated parameters, which still work and give a `DeprecationWarning` when set other than their default: `rotationMarker0` (deprecated since 1.12.244, removed in 2031): give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)); `rotationMarker1` (deprecated since 1.12.244, removed in 2031): give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)).
 
 ## Visualization parameters
 

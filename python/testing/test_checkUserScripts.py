@@ -31,7 +31,7 @@ spec.loader.exec_module(checker)
 @pytest.fixture(scope='module')
 def tables():
     return {'functions': checker.DeprecatedFunctions(), 'settings': checker.DeprecatedSettings(),
-            'submodules': checker.SubmodulesNotLoaded()}
+            'submodules': checker.SubmodulesNotLoaded(), 'itemParameters': checker.DeprecatedItemParameters()}
 
 
 def Findings(source, tables):
@@ -74,7 +74,26 @@ def testDeprecatedFunctionsAndSettings(tables):
                      'SC.visualizationSettings.general.drawWorldBasis = True\n', tables)
     assert "'exu.SolveDynamic' is deprecated: use mbs.SolveDynamic(...)" in found
     assert "'SC.GetRenderState' is deprecated: use SC.renderer.GetState()" in found
-    assert "'general.drawWorldBasis' is deprecated; use view0.scene.drawWorldBasis" in found
+    assert "'general.drawWorldBasis' is deprecated since 1.10.80; use view0.scene.drawWorldBasis" in found
+
+
+def testDeprecatedAndRemovedItemParameters(tables):
+    """as keyword of the item class, its short name and as key of a dictionary (#2805); the settings renamed by #2800
+    are found as all deprecated settings"""
+    found = Findings('import exudyn as exu\nfrom exudyn.utilities import *\n'
+                     'mbs.AddObject(ObjectJointGeneric(markerNumbers=[0,1], rotationMarker0=A))\n'
+                     'mbs.AddObject(RigidBodySpringDamper(markerNumbers=[0,1], rotationMarker1=A))\n'
+                     "mbs.AddObject({'objectType': 'JointRevoluteZ', 'markerNumbers': [0,1], 'rotationMarker0': A})\n"
+                     'mbs.AddObject(ObjectContactCurveCircles(markerNumbers=[0,1], rotationMarker0=A))\n'
+                     'mbs.AddObject(ObjectJointSpherical(markerNumbers=[0,1]))\n'
+                     's = exu.SimulationSettings()\ns.parallel.multithreadedLLimitLoads = 10\n', tables)
+    assert any(text.startswith('ObjectJointGeneric(rotationMarker0=...): the parameter is deprecated since') and
+               'give the rotation to marker 0 as its localHT' in text for text in found)
+    assert any(text.startswith('RigidBodySpringDamper(rotationMarker1=...): the parameter is deprecated') for text in found)
+    assert any(text.startswith("'rotationMarker0' of JointRevoluteZ: the parameter is deprecated") for text in found)
+    assert any(text.startswith('ObjectContactCurveCircles(rotationMarker0=...): the parameter is removed') for text in found)
+    assert "'parallel.multithreadedLLimitLoads' is deprecated since 1.12.244; use multithreadedLowerLimitLoads" in found
+    assert len(found) == 5
 
 
 def testTheWindowOfAViewIsNotTheDeprecatedWindow(tables):

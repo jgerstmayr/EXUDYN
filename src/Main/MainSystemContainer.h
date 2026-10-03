@@ -86,7 +86,6 @@ class MainRenderer
 {
 private:
 	MainSystemContainer* mainSystemContainer;
-	mutable Index warnRendererCount;			//!< this is used to limit warnings during transition to new renderer functionality
 public:
 	//public access to alleviate pybind interface:
 	MainGraphicsMaterialList materials;			//!< also accessible with Pybind11
@@ -100,18 +99,13 @@ public:
 	void Initialize(MainSystemContainer* backlink) 
 	{
 		mainSystemContainer = backlink; 
-		warnRendererCount = 0;
 		materials.Initialize(backlink);
 	}
 
 	void DeprecationWarning(const STDstring& oldFunctionName, const STDstring& newFunctionName) const
 	{
-		if (warnRendererCount < 3)
-		{
-			warnRendererCount++;
-			PyDeprecated("The call to SystemContainer function " + oldFunctionName + 
-				" is deprecated. For SystemContainer SC use SC.renderer." + newFunctionName + " instead!\n");
-		}
+		PyDeprecated("functions", "SystemContainer." + oldFunctionName, "The call to SystemContainer function " + oldFunctionName +
+			" is deprecated. For SystemContainer SC use SC.renderer." + newFunctionName + " instead!");
 	}
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

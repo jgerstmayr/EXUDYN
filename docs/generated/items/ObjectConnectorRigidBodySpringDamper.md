@@ -30,14 +30,17 @@ The parameters of the item; in a dictionary, its type is 'ConnectorRigidBodySpri
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData (size depends on application) for dataCoordinates for user functions (e.g., implementing contact/friction user function) |
 | **stiffness** | Matrix6D | 36 | np.zeros((6,6)) | stiffness [SI:N/m or Nm/rad] of translational, torsional and coupled springs; act against relative displacements in x, y, and z-direction as well as the relative angles (calculated as Euler angles); in the simplest case, the first 3 diagonal values correspond to the local stiffness in x,y,z direction and the last 3 diagonal values correspond to the rotational stiffness around x,y and z axis |
 | **damping** | Matrix6D | 36 | np.zeros((6,6)) | damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector |
-| **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT |
-| **rotationMarker1** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT |
+| **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0 |
+| **rotationMarker1** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1 |
 | **offset** | Vector6D | 6 | [0.,0.,0.,0.,0.,0.] | translational and rotational offset considered in the spring force calculation |
 | **intrinsicFormulation** | Bool |  | False | if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **springForceTorqueUserFunction** | ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^6$) A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below |
 | **postNewtonStepUserFunction** | ObjectConnectorRigidBodySpringDamperPostNewtonStepUserFunction |  | 0 | (symbol: $\mathrm{UF}_{PN} \in \Rcal$) A Python function which computes the error of the PostNewtonStep; see description below |
 | **visualization** | VObjectConnectorRigidBodySpringDamper |  |  | parameters for visualization of item |
+
+
+Deprecated parameters, which still work and give a `DeprecationWarning` when set other than their default: `rotationMarker0` (deprecated since 1.12.244, removed in 2031): give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)); `rotationMarker1` (deprecated since 1.12.244, removed in 2031): give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)).
 
 ## Visualization parameters
 

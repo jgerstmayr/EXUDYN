@@ -31,14 +31,17 @@ The parameters of the item; in a dictionary, its type is 'JointGeneric':
 | **name** | String |  | '' | constraints's unique name |
 | **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
 | **constrainedAxes** | ArrayIndex | 6 | [1,1,1,1,1,1] | (symbol: $\jv=[j_0,\,\ldots,\,j_5]$) flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for $j_i$, two values are possible: 0=free axis, 1=constrained axis |
-| **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{m0,J0}{\Rot}$) local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT |
-| **rotationMarker1** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{m1,J1}{\Rot}$) local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT |
+| **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{m0,J0}{\Rot}$) local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0 |
+| **rotationMarker1** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{m1,J1}{\Rot}$) local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1 |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **offsetUserFunctionParameters** | Vector6D | 6 | [0.,0.,0.,0.,0.,0.] | (symbol: $\pv_{par}$) vector of 6 parameters for joint's offsetUserFunction |
 | **offsetUserFunction** | ObjectJointGenericOffsetUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^6$) A Python function which defines the time-dependent (fixed) offset of translation (indices 0,1,2) and rotation (indices 3,4,5) joint coordinates with parameters (mbs, t, offsetUserFunctionParameters) |
 | **offsetUserFunction_t** | ObjectJointGenericOffsetUserFunction_t |  | 0 | (symbol: $\mathrm{UF} \in \Rcal^6$) (NOT IMPLEMENTED YET)time derivative of offsetUserFunction using the same parameters |
 | **alternativeConstraints** | Bool |  | False | this is an experimental flag, may change in future: if uses alternative contraint equations for rotations, currently in case of 3 locked rotations: $\LU{0}{\tv}_{x0}\tp (\LU{0}{\tv}_{y1} \times \LU{0}{\tv}_{z0})$, $\LU{0}{\tv}_{y0}\tp (\LU{0}{\tv}_{z1} \times \LU{0}{\tv}_{x0})$, $\LU{0}{\tv}_{z0}\tp (\LU{0}{\tv}_{x1} \times \LU{0}{\tv}_{y0})$; this avoids 180° flips of the standard configuration in static computations, but leads to different values in Lagrange multipliers |
 | **visualization** | VObjectJointGeneric |  |  | parameters for visualization of item |
+
+
+Deprecated parameters, which still work and give a `DeprecationWarning` when set other than their default: `rotationMarker0` (deprecated since 1.12.244, removed in 2031): give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)); `rotationMarker1` (deprecated since 1.12.244, removed in 2031): give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)).
 
 ## Visualization parameters
 

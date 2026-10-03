@@ -259,7 +259,7 @@ def GetJointArgs(mbs, markerNumber0=None, markerNumber1=None,
         bodyNumber1: existing body used to create new marker
 
     Returns:
-        returns dict with the 'markerNumbers' list, ready to be used as args; the new marker carries the joint's rotation as its localHT; a rotationMarker0/1 given for the existing marker is passed on as the joint's (deprecated) rotationMarker0/1
+        returns dict with the 'markerNumbers' list, ready to be used as args; the new marker carries the joint's rotation as its localHT; for a rotationMarker0/1 given, the existing marker is replaced by a copy turned by it
 
     Example:
         #oBody0 = mbs.CreateRigidBody(...)
@@ -310,9 +310,12 @@ def GetJointArgs(mbs, markerNumber0=None, markerNumber1=None,
     localHT[0:3,3] = pLocal
     markerNumberNew = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bodyNumber, localHT=localHT))
 
-    args = {'markerNumbers': [markerNumber0, markerNumberNew] if markerNumber0 is not None else [markerNumberNew, markerNumber1]}
-    if np.linalg.norm(np.array(rotationMarkerThis) - np.eye(3)) != 0: #the existing marker cannot take it: the deprecated way
-        args['rotationMarker0' if markerNumber0 is not None else 'rotationMarker1'] = rotationMarkerThis
+    #the existing marker: a copy turned by the rotation, so that the joint takes no deprecated rotationMarker0/1 (#2804)
+    from exudyn.rigidBodyUtilities import _MarkerWithRotation
+    (existingTurned, rotationMarkerRemaining) = _MarkerWithRotation(mbs, existingMarker, rotationMarkerThis)
+    args = {'markerNumbers': [existingTurned, markerNumberNew] if markerNumber0 is not None else [markerNumberNew, existingTurned]}
+    if np.linalg.norm(rotationMarkerRemaining - np.eye(3)) != 0: #a marker without localHT: only the deprecated way remains
+        args['rotationMarker0' if markerNumber0 is not None else 'rotationMarker1'] = rotationMarkerRemaining
     return args
 
 

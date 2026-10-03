@@ -3967,9 +3967,9 @@ class ObjectConnectorRigidBodySpringDamper:
 
         damping: damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector; type: array_like
 
-        rotationMarker0: local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT; type: array_like
+        rotationMarker0: local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))
 
-        rotationMarker1: local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT; type: array_like
+        rotationMarker1: local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))
 
         offset: translational and rotational offset considered in the spring force calculation; type: array_like
 
@@ -4170,9 +4170,9 @@ class ObjectConnectorTorsionalSpringDamper:
 
         damping: torsional damping [SI:Nm/(rad/s)]; type: float
 
-        rotationMarker0: local rotation matrix for marker 0; transforms joint into marker coordinates; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT; type: array_like
+        rotationMarker0: local rotation matrix for marker 0; transforms joint into marker coordinates; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))
 
-        rotationMarker1: local rotation matrix for marker 1; transforms joint into marker coordinates; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT; type: array_like
+        rotationMarker1: local rotation matrix for marker 1; transforms joint into marker coordinates; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))
 
         offset: rotational offset considered in the spring torque calculation (this can be used as rotation control input!); type: float
 
@@ -6055,9 +6055,9 @@ class ObjectJointGeneric:
 
         constrainedAxes: flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for :math:`j_i`, two values are possible: 0=free axis, 1=constrained axis; type: array_like
 
-        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT; type: array_like
+        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))
 
-        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT; type: array_like
+        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -6161,9 +6161,9 @@ class ObjectJointRevoluteZ:
 
         markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT; type: array_like
+        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))
 
-        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT; type: array_like
+        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -6244,9 +6244,9 @@ class ObjectJointPrismaticX:
 
         markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT; type: array_like
+        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))
 
-        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT; type: array_like
+        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; type: array_like; deprecated since 1.12.244, removed in 2031: give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 

@@ -288,7 +288,7 @@ def DefaultValueString(member):
         implementation = member.get('implementation', None)
         return '' if implementation is None else implementation
     deprecated = member.get('deprecated', None)
-    if deprecated is not None:
+    if deprecated is not None and getattr(deprecated, 'advice', None) is None: #a deprecated parameter that stays keeps its default
         return deprecated.ToCpp()
     value = member.get('defaultValue', '')
     if value is definitionTypes.NoDefaultValue or value is None or value == '':
@@ -301,7 +301,7 @@ def _DefaultValueRendering(member, Literal):
     same three cases as DefaultValueString, so that the three renderings cannot drift apart"""
     if 'Function' in member['kind']:
         return ''                    #a function's implementation is C++ and is never a default
-    if member.get('deprecated', None) is not None:
+    if member.get('deprecated', None) is not None and getattr(member['deprecated'], 'advice', None) is None:
         return ''                    #a deprecated member has no default value; the field carries
                                      #the version it went out in, which the C++ emitter reads
     value = member.get('defaultValue', '')
@@ -488,7 +488,16 @@ def HTPartOf(member):
 def IsDeprecatedItemParameter(member):
     """a renamed item parameter: its old name, kept with deprecated=Deprecated(since, expires) and the new name as
     its description; not stored, forwarded to the new one, searched last (#2589)"""
-    return 'Function' not in member['kind'] and member.get('deprecated', None) is not None
+    return ('Function' not in member['kind'] and member.get('deprecated', None) is not None
+            and member['deprecated'].advice is None)
+
+
+def DeprecatedUseAdvice(member):
+    """for an item parameter that stays but is deprecated - deprecated=Deprecated(since, expires, advice=...) - the
+    advice what to do instead; '' for every other parameter (#2804)"""
+    if 'Function' in member['kind'] or member.get('deprecated', None) is None:
+        return ''
+    return member['deprecated'].advice or ''
 
 
 def HTListOf(member):

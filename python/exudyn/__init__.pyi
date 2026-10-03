@@ -4160,6 +4160,21 @@ class SpecialUserInterface:
         """Set all four suppress flags at once; a run either wants windows or does not."""
         ...
 
+class SpecialDeprecations:
+    """how a deprecated name - a setting, an item parameter, a function - is reported: a DeprecationWarning once per session and name, or on every use, and a count of every use in the dictionary exudyn.sys[deprecationUse], by source (simulationSettings, visualizationSettings, items, functions) and name; see the C++ code class PySpecialDeprecations"""
+    warnOnce:bool
+    """if True (=default), each deprecated name warns once per session; if False, every use warns, e.g. to find all places in a script that use it."""
+    recordUse:bool
+    """if True (=default), every use of a deprecated name is counted in exudyn.sys[deprecationUse], by source and name, also when no warning is shown; a test reads it instead of catching warnings."""
+    @overload
+    def Reset(self) -> None: 
+        """Forget which names were warned about in this session, so that each one warns once more."""
+        ...
+    @overload
+    def Warn(self, source: str, name: str, message: str, stackLevel: int=2) -> None: 
+        """Report the use of a deprecated name from Python, as the C++ side does: a DeprecationWarning, once per session unless warnOnce is False, and a count in exudyn.sys[deprecationUse]; stackLevel=2 attributes the warning to the caller of the function that calls Warn."""
+        ...
+
 class Config:
     """global config settings, like precision, print behavior, warnings, etc."""
     suppressWarnings:int
@@ -4229,6 +4244,8 @@ class Special:
     """switches of the beam elements, for tests and comparisons; a model keeps the defaults; for available features, see the C++ code class PySpecialBeams."""
     userInterface:SpecialUserInterface
     """flags that stop Exudyn from opening windows; meant for automated runs (test runners, CI, AI-assisted development), where a window that waits for a human stops everything; not intended for regular users; for available features, see the C++ code class PySpecialUserInterface."""
+    deprecations:SpecialDeprecations
+    """how a deprecated name - a setting, an item parameter, a function - is reported: a DeprecationWarning once per session and name, or on every use, and a count of every use in the dictionary exudyn.sys[deprecationUse], by source (simulationSettings, visualizationSettings, items, functions) and name; see the C++ code class PySpecialDeprecations."""
     @property
     def currentRendererSystemContainer(self) -> Any:
         """the ``SystemContainer`` the renderer is attached to, or ``None``; the render engine can hold one at a time, which is why this is module-wide. It is set when a container attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of ``exudyn.misc.GUI`` ask for; not intended for regular users."""

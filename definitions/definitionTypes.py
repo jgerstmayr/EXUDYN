@@ -1018,18 +1018,24 @@ class Deprecated:
     defaultValue as the string 'version;EXP=year' - a deprecated member has no default value, so
     the field was free - and the generator that reads it says "workaround" in its own comment
     (pythonAutoGenerateSystemStructures.py:149). Two facts in one string, parsed by splitting on
-    a semicolon, are now two fields."""
+    a semicolon, are now two fields.
 
-    def __init__(self, since, expires):
+    advice: only for an item parameter that STAYS a parameter but is deprecated - there is no new name to forward
+    to (rotationMarker0/1 of the joints, #2804): what to do instead, for the warning, the page and exudev scripts. Without
+    advice, a deprecated item parameter is a rename and its description is the new name (#2589)."""
+
+    def __init__(self, since, expires, advice=None):
         self.since = since
         self.expires = expires
+        self.advice = advice
 
     def ToCpp(self):
         """the single string the old format stored"""
         return str(self.since) + ';EXP=' + str(self.expires)
 
     def __repr__(self):
-        return 'Deprecated(' + repr(self.since) + ', ' + repr(self.expires) + ')'
+        return ('Deprecated(' + repr(self.since) + ', ' + repr(self.expires)
+                + ('' if self.advice is None else ', advice=' + repr(self.advice)) + ')')
 
 
 #--------------------------------------------------------------------- one-off types used only by structures

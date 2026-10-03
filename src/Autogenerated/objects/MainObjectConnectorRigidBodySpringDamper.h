@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  10:53:12 (last modified)
+* @date         2026-10-03  13:23:06 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -102,9 +102,6 @@ public: // AUTO:
         return Node::GenericData;
     }
 
-    //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
-    virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const override;
-
     //! AUTO:  Get type name of node (without keyword 'Object'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
     {
@@ -119,8 +116,8 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectConnectorRigidBodySpringDamper->GetParameters().nodeNumber); }
         if (EPyUtils::DictItemExists(d, "stiffness")) { EPyUtils::FromPython<Real, 6, 6>(d["stiffness"], cObjectConnectorRigidBodySpringDamper->GetParameters().stiffness); }
         if (EPyUtils::DictItemExists(d, "damping")) { EPyUtils::FromPython<Real, 6, 6>(d["damping"], cObjectConnectorRigidBodySpringDamper->GetParameters().damping); }
-        if (EPyUtils::DictItemExists(d, "rotationMarker0")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0); }
-        if (EPyUtils::DictItemExists(d, "rotationMarker1")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); }
+        if (EPyUtils::DictItemExists(d, "rotationMarker0")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0); if (!(cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectConnectorRigidBodySpringDamper.rotationMarker0", "ObjectConnectorRigidBodySpringDamper: the parameter rotationMarker0 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } }
+        if (EPyUtils::DictItemExists(d, "rotationMarker1")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); if (!(cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectConnectorRigidBodySpringDamper.rotationMarker1", "ObjectConnectorRigidBodySpringDamper: the parameter rotationMarker1 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } }
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cObjectConnectorRigidBodySpringDamper->GetParameters().offset); }
         if (EPyUtils::DictItemExists(d, "intrinsicFormulation")) { EPyUtils::FromPython(d["intrinsicFormulation"], cObjectConnectorRigidBodySpringDamper->GetParameters().intrinsicFormulation, "ObjectConnectorRigidBodySpringDamper.intrinsicFormulation"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector, "ObjectConnectorRigidBodySpringDamper.activeConnector"); }
@@ -187,8 +184,8 @@ public: // AUTO:
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().nodeNumber); } //! AUTO: set parameter
         else if (parameterName.compare("stiffness") == 0) { EPyUtils::FromPython<Real, 6, 6>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().stiffness); } //! AUTO: set parameter
         else if (parameterName.compare("damping") == 0) { EPyUtils::FromPython<Real, 6, 6>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().damping); } //! AUTO: set parameter
-        else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0); } //! AUTO: set parameter
-        else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); } //! AUTO: set parameter
+        else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0); if (!(cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectConnectorRigidBodySpringDamper.rotationMarker0", "ObjectConnectorRigidBodySpringDamper: the parameter rotationMarker0 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } } //! AUTO: set parameter
+        else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); if (!(cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectConnectorRigidBodySpringDamper.rotationMarker1", "ObjectConnectorRigidBodySpringDamper: the parameter rotationMarker1 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } } //! AUTO: set parameter
         else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cObjectConnectorRigidBodySpringDamper->GetParameters().offset); } //! AUTO: set parameter
         else if (parameterName.compare("intrinsicFormulation") == 0) { EPyUtils::FromPython(value, cObjectConnectorRigidBodySpringDamper->GetParameters().intrinsicFormulation, "ObjectConnectorRigidBodySpringDamper.intrinsicFormulation"); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector, "ObjectConnectorRigidBodySpringDamper.activeConnector"); } //! AUTO: set parameter

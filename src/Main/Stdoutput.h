@@ -113,7 +113,12 @@ void PyWarning(std::string warning_msg); //!< prints a formated python warning m
 
 void StopRendererOnError(); //!< raise globalPyRuntimeErrorFlag, which shuts the renderer down, unless the renderer itself asked for errors to be survivable (#2531)
 
-void PyDeprecated(std::string message); //!< raises a Python DeprecationWarning: filterable, promotable with -W error::DeprecationWarning, and reported once per source location instead of on every call (#2522)
+//! the use of a deprecated name: source is "simulationSettings", "visualizationSettings", "items" or "functions", name the
+//! deprecated name; raises a Python DeprecationWarning - filterable, promotable with -W error::DeprecationWarning (#2522) -
+//! once per session and name unless exudyn.special.deprecations.warnOnce is False, and counts the use in
+//! exudyn.sys['deprecationUse'][source][name] unless recordUse is False (#2804, #2806); stackLevel 1 is the Python frame
+//! that called into Exudyn
+void PyDeprecated(const std::string& source, const std::string& name, const std::string& message, int stackLevel = 1);
 
 //NOTE there is no PyError/SysError overload taking an ofstream any more (#2538): an error that
 //ends a solver run is written to the solver file by CSolverBase::SolveSystem,

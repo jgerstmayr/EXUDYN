@@ -90,18 +90,6 @@ dictJointType2coordinate6D = {
 #preerb.HT must be added for joint axes definitions and for currentHT
 #inertia and COM need to be converted by localHT of StdDH into ModDH configuration!!!
 
-def _MarkerWithRotation(mbs, marker, rotation):
-    """a marker with the frame of the given marker turned by rotation, added as a copy with its localHT (#2745); returns
-    (marker, rotationMarker): the copy and the unit matrix, or - for a marker without localHT - the marker itself and
-    the rotation, for the deprecated rotationMarker0 of the joint"""
-    data = mbs.GetMarker(marker)
-    if 'localHT' not in data or np.linalg.norm(np.array(rotation) - np.eye(3)) == 0:
-        return (marker, np.array(rotation))
-    data = {key: value for (key, value) in data.items() if key not in ['name', 'localPosition', 'offset'] and key[0] != 'V'}
-    data['localHT'] = np.array(data['localHT']) @ erb.HomogeneousTransformation(rotation, [0., 0., 0.])
-    return (mbs.AddMarker(data), np.eye(3))
-
-
 class VRobotLink:
     """class to define visualization of RobotLink
     """
@@ -842,7 +830,7 @@ class Robot:
 
             if i == 0:
                 lastMarkerRotation = erb.HT2rotationMatrix(link.preHT)@lastMarkerRotation #is rotationMarkerBase
-                (mLink0LastBody, rotationMarker0) = _MarkerWithRotation(mbs, baseMarker, lastMarkerRotation)
+                (mLink0LastBody, rotationMarker0) = erb._MarkerWithRotation(mbs, baseMarker, lastMarkerRotation)
             else:
                 lastMarkerRotation = erb.HT2rotationMatrix(link.preHT)
                 marker0Position = erb.HT2translation(link.preHT) #this is defined in the parent link!

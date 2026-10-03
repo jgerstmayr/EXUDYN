@@ -1988,7 +1988,8 @@ after). *Status: a list, nothing decided.* Settings:
     - **RG12.31.8** `ObjectJointGeneric.axesRadius/axesLength` against `axisRadius/axisLength` of
       `JointRevoluteZ`/`JointPrismaticX` (visualization) - one spelling;
     - **RG12.31.9** radii: `radiusSphere` (`ContactSphereTorus`, `ContactSphereTriangle`) - `sphereRadius`, as
-      `circleRadius`, `discRadius`, `cylinderRadius`; `ContactConvexRoll.rBoundingSphere` - `boundingSphereRadius`;
+      `circleRadius`, `discRadius`, `cylinderRadius` (`ContactConvexRoll.rBoundingSphere` is read-only and computed, no
+      longer given by a user, and needs no deprecation);
     - **RG12.31.10** the friction of `ObjectConnectorCoordinateSpringDamperExt`: `fDynamicFriction`,
       `fStaticFrictionOffset`, `fViscousFriction` - without the `f`, as in `ContactConvexRoll`;
     - **RG12.31.11** `constrainRotation` (`JointPrismatic2D`, `JointSliding2D`) against `constrainRotations`
@@ -2010,8 +2011,9 @@ after). *Status: a list, nothing decided.* Settings:
   an axis and not a rotation, which stays.
 
 <a id="rg12-32"></a>
-**RG12.32** *(group RG12; maintainer 2026-10-03: "think about the user"; **proposal, waits for the maintainer's
-decision**)* **A deprecation warns where the user wrote the deprecated name** (#2804). The warning about
+**RG12.32** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg12-32) *(group RG12; maintainer 2026-10-03: "think
+about the user"; proposal **accepted** 2026-10-03, with .5 added)* **A deprecation warns where the user wrote the
+deprecated name** (#2804). The warning about
 `rotationMarker0/1` (RG14.2.15) comes from `CheckPreAssembleConsistency`, so Python attributes it to the line of
 `mbs.Assemble()`, and the message has to say which item - the user still searches for the line that wrote it.
 *Proposal:*
@@ -2032,11 +2034,48 @@ decision**)* **A deprecation warns where the user wrote the deprecated name** (#
     - **RG12.32.3** **no warning from the library itself**: a `Create...` function given a `MarkerIndex` with a
       rotation adds a copy of that marker with the composed `localHT` (as `_MarkerWithRotation` of the robotics),
       instead of passing the rotation on in the deprecated parameter.
-    - **RG12.32.4** **`exudev scripts` reports deprecated item parameters** (#2805): `checkUserScripts.py` reads
+    - **RG12.32.4** **`exudev scripts` reports deprecated item parameters** (#2805, **DONE**): `checkUserScripts.py` reads
       the declarations of RG12.32.2 and RG12.2 from `definitions/` and reports a keyword of an item class
       (`ObjectJointGeneric(rotationMarker0=...)`, also through `GenericJoint`) and a key of an item dictionary
       (`'rotationMarker0':`) with the advice; and the removed `ObjectContactCurveCircles.rotationMarker0` (#2803) in
       its table of removed names. Independent of .1-.3 for the reading part.
+    - **RG12.32.5** *(maintainer 2026-10-03)* **every use is recorded** (#2806, **DONE**): `exu.sys['deprecationUse']`,
+      grouped by source (`simulationSettings`, `visualizationSettings`, `items`, `functions`), a count per name;
+      always written, `exu.special.deprecations.recordUse = False` turns it off. A test reads it instead of catching
+      warnings.
+
+  *Done as proposed (.1-.5), with one change in .2*: the warning of an item parameter is generated into
+  `SetWithDictionary`/`SetParameter` only, not also into the Python item class - the class only builds the dictionary,
+  so warning there too would warn twice for one use; since `AddObject` is called from the user's script, the warning
+  names that line all the same.
+
+<a id="rg12-33"></a>
+**RG12.33** *(group RG12; maintainer 2026-10-03: "deprecation also in the library ... outdated parameters rejected by
+some build check"; **proposal, waits for the maintainer's decision**)* **Deprecations of the Python library, declared
+and checked** (#2807). The C++ side declares each deprecation with `Deprecated(since, expires)` in `definitions/`; the
+Python library does it by hand - a docstring saying DEPRECATED, an `exu.Print('WARNING: ...')` - about 20 places
+(`AddRevoluteJoint`, `AddPrismaticJoint`, `AddRigidBody`, `AddSensorRecorder`, `bodyList` and `eulerParametersRef` of
+the `Create...`/FEM functions, two arguments of `GeneticOptimization`, `GenerateStraightLine...` of `beams`,
+`ReadNodesFromAbaqusInp`, ...), without a version, without a year of removal and with nothing that finds them.
+*Proposal:*
+    - **RG12.33.1** **one notion, the same everywhere**: every deprecation carries `since` and `expires` (a year), and
+      is found by the one word `Deprecated(`. In the library: `exudyn.misc.deprecation` with `Deprecated(since, expires,
+      use=...)` as a **decorator** of a function (`@Deprecated('1.9', 2031, use='mbs.CreateRevoluteJoint')`) and a
+      function `DeprecatedArgument(name, value, since, expires, use=...)` for an argument; both call
+      `exu.special.deprecations.Warn('library', '<module>.<function>[.<argument>]', ...)` - so the library warns, once
+      per session, counted in `deprecationUse['library']`, like the C++. The docstring line is written by the decorator
+      (no second place). The hand-written C++ deprecations (`PyDeprecated` of the renderer and the module functions)
+      get `since`/`expires` too, as arguments.
+    - **RG12.33.2** **the existing ones moved to it**, with `since` from the history (the release that deprecated
+      them; the version where unknown: 1.12) and `expires` five years after that, at least 2027 - each one listed in
+      the step for the maintainer to confirm or remove at once.
+    - **RG12.33.3** **a build check**, `tools/checkDeprecations.py`, part of `exudev generate --all-checks`: collects
+      all deprecations - `definitions/` (settings, item parameters, functions), the decorators and `DeprecatedArgument`
+      calls of `python/exudyn` (AST), the `PyDeprecated` calls of `src/` - and **fails** for one whose year has come
+      (outdated: to be removed), **warns** for one in its last year, and **fails** for a deprecation without `expires`;
+      it writes the list as a page of the developer documentation (what, where, since, expires), generated.
+    - **RG12.33.4** `exudev scripts` reads the library's deprecations from the same collection, so a user script that
+      calls `AddRevoluteJoint` or passes `bodyList` is reported as well.
 
 ## RG13 — Item documentation
 
@@ -2640,6 +2679,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
+| RG12.33 | #2807 | deprecations of the Python library declared like the C++ ones, and a build check for expired ones: a proposal |
 | RG12.31 | #2802 | settings and item parameters that could be renamed: a list for the maintainer's decision |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |

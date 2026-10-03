@@ -12267,3 +12267,39 @@ contact forces were always computed in the frame of marker 0, only the drawing t
 deprecation warning of RG14.2.15 for it is gone with it (the entry above lists it; this replaces that). The page says
 the curve lies in the $x$-$y$ plane of marker 0, which takes a rotation as `localHT`. The reference of
 `parameterConversionTest.py` loses the parameter.
+
+<a id="rg12-32"></a>
+### RG12.32 — a deprecation warns where the user wrote it, once, and is counted (2026-10-03, #2804, #2805, #2806)
+
+**One function** for every deprecation: `PyDeprecated(source, name, message, stackLevel=1)` (`Stdoutput.cpp`), and
+from Python `exu.special.deprecations.Warn(source, name, message, stackLevel=2)`. It counts the use in
+`exu.sys['deprecationUse'][source][name]` unless `exu.special.deprecations.recordUse` is False, and raises the
+`DeprecationWarning` once per session and `source:name` unless `warnOnce` is False; `Reset()` forgets what was warned
+about. The flags are `PySpecialDeprecations` in `Experimental.h`, with the other `special` switches. Callers: the
+settings (`structureHeaderEmitter`, source and the member path), the item renames (`itemHeaderEmitter`), the module and
+renderer functions (`Pybind_manual_classes.cpp`, `MainSystemContainer.h` - its limit of three warnings per container is
+gone, the switch does it), `MainSystem`, `MainSystemData`.
+
+**The item parameter that stays but is deprecated**: `Deprecated(since, expires, advice=...)` (`definitionTypes.py`);
+without advice a deprecated item parameter is a rename as before. `rotationMarker0/1` of the five joints and connectors
+are declared so; the generated `SetWithDictionary` and `SetParameter` warn when the value differs from the default
+(`!(value == EXUmath::unitMatrix3D)`), so the warning names the line of `mbs.AddObject(...)` or
+`SetObjectParameter(...)`, not `Assemble()`; the hand-written warnings in `CheckPreAssembleConsistency` of RG14.2.15 and
+those five functions are gone again. The page lists the parameter below the table with the advice, the Python docstring
+says it. Changed from the proposal: no second warning in the Python item class, which only builds the dictionary.
+
+**The library uses none**: `_MarkerWithRotation` moved from the robotics to `rigidBodyUtilities` and is used by the
+robotics, the five `Create...` functions and `GetJointArgs`: a marker given by the caller with a rotation is replaced by
+a copy turned by it, and only a marker without `localHT` would still need the deprecated parameter.
+
+**`exudev scripts`** (`checkUserScripts.py`) reads the deprecated item parameters from `definitions/` - renames and the
+ones that stay - and reports them as keyword of the item class or its short name and as key of an item dictionary, and
+the removed `ObjectContactCurveCircles.rotationMarker0`; the deprecated settings now say since when (the field was read
+as `version`, which does not exist). Over `python/Examples`, `TestModels`, `MiniExamples`: four findings, all intended
+(the two deprecation tests and the comparison in `homogeneousTransformationParameterTest.py`).
+
+**Tests**: `simulationSettingsDeprecationTest.py` sets `warnOnce = False` for its loop and checks the counts (result
+unchanged, 126); `rotationMarkerDeprecationTest.py` rewritten: the motion as before, the counts of the localHT and the
+deprecated variant, three joints added with `warnOnce` True and False give 1 and 3 warnings pointing outside the
+package, and `GetJointArgs` with a rotation records no use (result unchanged); `test_checkUserScripts.py` gets the item
+parameters. `SpecialDeprecations` joins the other `Special...` classes in the stubtest baseline (pybind metaclass).

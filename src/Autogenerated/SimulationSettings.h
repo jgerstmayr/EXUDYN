@@ -1036,38 +1036,38 @@ public: // AUTO:
 //! implementation:
 
 inline void Parallel::PySetMultithreadedLLimitJacobians(const Index& multithreadedLowerLimitJacobiansInit) { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitJacobians is deprecated! use parallel.multithreadedLowerLimitJacobians instead!");
+    PyDeprecated("simulationSettings", "parallel.multithreadedLLimitJacobians", "SimulationSettings parameter parallel.multithreadedLLimitJacobians is deprecated! use parallel.multithreadedLowerLimitJacobians instead!");
     multithreadedLowerLimitJacobians= (const Index&)multithreadedLowerLimitJacobiansInit; 
     }
 inline Index Parallel::PyGetMultithreadedLLimitJacobians() const { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitJacobians is deprecated! use parallel.multithreadedLowerLimitJacobians instead!");
+    PyDeprecated("simulationSettings", "parallel.multithreadedLLimitJacobians", "SimulationSettings parameter parallel.multithreadedLLimitJacobians is deprecated! use parallel.multithreadedLowerLimitJacobians instead!");
     return Index(multithreadedLowerLimitJacobians); 
     }
 
 inline void Parallel::PySetMultithreadedLLimitLoads(const Index& multithreadedLowerLimitLoadsInit) { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitLoads is deprecated! use parallel.multithreadedLowerLimitLoads instead!");
+    PyDeprecated("simulationSettings", "parallel.multithreadedLLimitLoads", "SimulationSettings parameter parallel.multithreadedLLimitLoads is deprecated! use parallel.multithreadedLowerLimitLoads instead!");
     multithreadedLowerLimitLoads= (const Index&)multithreadedLowerLimitLoadsInit; 
     }
 inline Index Parallel::PyGetMultithreadedLLimitLoads() const { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitLoads is deprecated! use parallel.multithreadedLowerLimitLoads instead!");
+    PyDeprecated("simulationSettings", "parallel.multithreadedLLimitLoads", "SimulationSettings parameter parallel.multithreadedLLimitLoads is deprecated! use parallel.multithreadedLowerLimitLoads instead!");
     return Index(multithreadedLowerLimitLoads); 
     }
 
 inline void Parallel::PySetMultithreadedLLimitMassMatrices(const Index& multithreadedLowerLimitMassMatricesInit) { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitMassMatrices is deprecated! use parallel.multithreadedLowerLimitMassMatrices instead!");
+    PyDeprecated("simulationSettings", "parallel.multithreadedLLimitMassMatrices", "SimulationSettings parameter parallel.multithreadedLLimitMassMatrices is deprecated! use parallel.multithreadedLowerLimitMassMatrices instead!");
     multithreadedLowerLimitMassMatrices= (const Index&)multithreadedLowerLimitMassMatricesInit; 
     }
 inline Index Parallel::PyGetMultithreadedLLimitMassMatrices() const { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitMassMatrices is deprecated! use parallel.multithreadedLowerLimitMassMatrices instead!");
+    PyDeprecated("simulationSettings", "parallel.multithreadedLLimitMassMatrices", "SimulationSettings parameter parallel.multithreadedLLimitMassMatrices is deprecated! use parallel.multithreadedLowerLimitMassMatrices instead!");
     return Index(multithreadedLowerLimitMassMatrices); 
     }
 
 inline void Parallel::PySetMultithreadedLLimitResiduals(const Index& multithreadedLowerLimitResidualsInit) { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitResiduals is deprecated! use parallel.multithreadedLowerLimitResiduals instead!");
+    PyDeprecated("simulationSettings", "parallel.multithreadedLLimitResiduals", "SimulationSettings parameter parallel.multithreadedLLimitResiduals is deprecated! use parallel.multithreadedLowerLimitResiduals instead!");
     multithreadedLowerLimitResiduals= (const Index&)multithreadedLowerLimitResidualsInit; 
     }
 inline Index Parallel::PyGetMultithreadedLLimitResiduals() const { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitResiduals is deprecated! use parallel.multithreadedLowerLimitResiduals instead!");
+    PyDeprecated("simulationSettings", "parallel.multithreadedLLimitResiduals", "SimulationSettings parameter parallel.multithreadedLLimitResiduals is deprecated! use parallel.multithreadedLowerLimitResiduals instead!");
     return Index(multithreadedLowerLimitResiduals); 
     }
 

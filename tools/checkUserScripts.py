@@ -9,8 +9,9 @@
 #     graphics, ... - with the import line that provides it;
 #   - a name that is gone, with its replacement: the eleven vector helpers of basicUtilities and the
 #     GraphicsData... aliases of exudyn.utilities;
-#   - a function, method or setting that is DEPRECATED, with what to use instead - read from
-#     definitions/, so that the list is the one the documentation is generated from;
+#   - a function, method, setting or item parameter that is DEPRECATED, with what to use instead -
+#     read from definitions/, so that the list is the one the documentation is generated from; an item
+#     parameter is found as the keyword of its item class and as the key of an item dictionary;
 #   - a setting or a function that is REMOVED;
 #   - a submodule used through 'exu.<submodule>' that 'import exudyn' does not load;
 #   - a file the script writes without naming a directory - a solution file, a sensor file, the
@@ -172,6 +173,12 @@ removedKeywords = {
     'rBoundingSphere': 'ObjectContactConvexRoll computes it from coefficientsHull; leave it out',
     }
 
+#ITEM PARAMETERS THAT ARE GONE, by item: (item class, parameter) -> what to do instead
+removedItemParameters = {
+    ('ObjectContactCurveCircles', 'rotationMarker0'): 'the curve lies in the x-y plane of marker 0; give a rotation '
+                                                      'to marker 0 as its localHT (#2803)',
+    }
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #what definitions/ says is deprecated
@@ -239,9 +246,40 @@ def DeprecatedSettings():
             deprecated = member.get('deprecated')
             if deprecated:
                 found[(owner, member['pythonName'])] = (member['description'].strip(),
-                                                        getattr(deprecated, 'version', ''),
+                                                        str(getattr(deprecated, 'since', '')),
                                                         parentMember)
     DeprecatedSettings.structureMembers = set(memberOf.values())
+    return found
+
+
+def DeprecatedItemParameters():
+    """{parameter: {name of the item class, its short name or its dictionary type: (what to do instead, the version
+    it was deprecated in, the year it is removed)}}: the renamed item parameters (#2589) and those that stay but are
+    deprecated (#2804), from definitions/; and the removed ones of removedItemParameters, with version ''"""
+    sys.path.insert(0, os.path.join(root, 'tools', 'generators'))
+    import itemModel                                                        # noqa: PLC0415
+
+    def Names(className, shortName):
+        names = [className] + ([shortName] if shortName else [])
+        for prefix in ['Object', 'Node', 'Marker', 'Load', 'Sensor']:   #the type string of a dictionary
+            if className.startswith(prefix):
+                names.append(prefix.lower() + 'Type:' + className[len(prefix):])
+        return names
+
+    found = {}
+    shortNames = {}
+    for definition in itemModel.ItemDefinitions():
+        shortNames[definition['className']] = definition.get('pythonShortName', '')
+        for member in definition['members']:
+            deprecated = member.get('deprecated')
+            if deprecated is None or 'Function' in member['kind']:
+                continue
+            advice = deprecated.advice or ('use ' + str(member['description']).strip())
+            for name in Names(definition['className'], definition.get('pythonShortName', '')):
+                found.setdefault(member['pythonName'], {})[name] = (advice, str(deprecated.since), str(deprecated.expires))
+    for ((className, parameter), advice) in removedItemParameters.items():
+        for name in Names(className, shortNames.get(className, '')):
+            found.setdefault(parameter, {})[name] = (advice, '', '')
     return found
 
 
@@ -428,6 +466,29 @@ def CheckTree(tree, tables):
                                + "' is deprecated: " + tables['functions'][(receiver, chain[-1])])
                         break
 
+        elif isinstance(node, ast.Call) and tables.get('itemParameters'):
+            #a deprecated item parameter as keyword of its item class (#2805)
+            className = getattr(node.func, 'attr', getattr(node.func, 'id', ''))
+            for keyword in node.keywords:
+                entry = tables['itemParameters'].get(keyword.arg, {}).get(className)
+                if entry is not None:
+                    Report(keyword.value.lineno, ('itemParameter', className, keyword.arg),
+                           ItemParameterFinding(className + '(' + keyword.arg + '=...)', entry))
+
+        elif isinstance(node, ast.Dict) and tables.get('itemParameters'):
+            #and as key of an item dictionary: {'objectType': 'JointGeneric', 'rotationMarker0': ...}
+            keys = [key.value if isinstance(key, ast.Constant) else None for key in node.keys]
+            typeName = None
+            for (key, value) in zip(keys, node.values):
+                if isinstance(key, str) and key.endswith('Type') and isinstance(value, ast.Constant):
+                    typeName = key + ':' + str(value.value)
+            if typeName is not None:
+                for (key, value) in zip(keys, node.values):
+                    entry = tables['itemParameters'].get(key, {}).get(typeName) if isinstance(key, str) else None
+                    if entry is not None:
+                        Report(value.lineno, ('itemParameter', typeName, key),
+                               ItemParameterFinding("'" + key + "' of " + typeName.split(':')[1], entry))
+
         elif isinstance(node, ast.keyword) and node.arg in removedKeywords:
             Report(node.value.lineno, ('keyword', node.arg), "argument '" + node.arg
                    + "' is removed: " + removedKeywords[node.arg])
@@ -463,6 +524,14 @@ def CheckTree(tree, tables):
     return sorted(findings)
 
 
+def ItemParameterFinding(where, entry):
+    """the text of a deprecated or removed item parameter"""
+    (advice, since, expires) = entry
+    if since == '':
+        return where + ': the parameter is removed; ' + advice
+    return where + ': the parameter is deprecated since ' + since + ' and removed in ' + expires + '; ' + advice
+
+
 def PythonFiles(paths):
     files = []
     for path in paths:
@@ -483,7 +552,7 @@ def main():
     args = parser.parse_args()
 
     tables = {'functions': DeprecatedFunctions(), 'settings': DeprecatedSettings(),
-              'submodules': SubmodulesNotLoaded()}
+              'submodules': SubmodulesNotLoaded(), 'itemParameters': DeprecatedItemParameters()}
 
     (checked, skipped, withFindings, total, unreadable) = (0, 0, 0, 0, [])
     for path in PythonFiles(args.paths):

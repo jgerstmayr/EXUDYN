@@ -59,6 +59,10 @@ ItemFunctionDef('GetNumberOfNodes', implementation='return 1;')
   defaultValue=NoDefaultValue, description=r'<new>')`. It is not stored: the dictionary,
   `Get`/`SetObjectParameter` and the keyword of the Python item class forward it to the new one with
   a `DeprecationWarning`, tested after every current name; the page lists it below the table (#2589).
+- **A deprecated parameter that stays** - no new name to forward to (`rotationMarker0/1` of the joints) - keeps its
+  definition and adds `deprecated=Deprecated('<version>', <year>, advice='<what to do instead>')`: it is stored and
+  works as before, setting it other than its default warns, the page lists it below the table with the advice, and
+  `exudev scripts` reports it (#2804, #2805).
 - A function with `implementation=None` is a declaration whose body is in the hand-written `.cpp`;
   `''` is an empty body. `isVirtual` defaults to `True`.
 

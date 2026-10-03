@@ -1619,6 +1619,22 @@ def AddRigidBody(mainSys, inertia,
     return [nodeNumber, bodyNumber]
 
 
+@docmeta(public=False)
+def _MarkerWithRotation(mbs, marker, rotation):
+    """a marker whose frame is the frame of the given marker turned by rotation, so that a joint takes no deprecated
+    rotationMarker0/1 (#2745, #2804); returns (marker, rotationMarker): the marker itself and the unit matrix for a unit
+    rotation, a copy with the composed localHT and the unit matrix for a rigid marker with localHT, and the marker with
+    the rotation only for a marker without localHT"""
+    if np.linalg.norm(np.array(rotation) - np.eye(3)) == 0:
+        return (marker, np.eye(3))
+    data = mbs.GetMarker(marker)
+    if 'localHT' not in data:
+        return (marker, np.array(rotation))
+    data = {key: value for (key, value) in data.items() if key not in ['name', 'localPosition', 'offset'] and key[0] != 'V'}
+    data['localHT'] = np.array(data['localHT']) @ HomogeneousTransformation(rotation, [0., 0., 0.])
+    return (mbs.AddMarker(data), np.eye(3))
+
+
 def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
                      showJoint=True, axisRadius=0.1, axisLength=0.4):
     """DEPRECATED (use MainSystem function instead): add revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed

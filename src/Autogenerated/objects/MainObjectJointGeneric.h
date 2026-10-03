@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  11:06:22 (last modified)
+* @date         2026-10-03  13:23:06 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -101,9 +101,6 @@ public: // AUTO:
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
     virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectJointGeneric = (VisualizationObjectJointGeneric*)pVisualizationObject; }
 
-    //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
-    virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const override;
-
     //! AUTO:  Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
     {
@@ -116,8 +113,8 @@ public: // AUTO:
     {
         if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointGeneric->GetParameters().markerNumbers); }
         if (EPyUtils::DictItemExists(d, "constrainedAxes")) { EPyUtils::FromPython(d["constrainedAxes"], cObjectJointGeneric->GetParameters().constrainedAxes, "ObjectJointGeneric.constrainedAxes"); }
-        if (EPyUtils::DictItemExists(d, "rotationMarker0")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectJointGeneric->GetParameters().rotationMarker0); }
-        if (EPyUtils::DictItemExists(d, "rotationMarker1")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectJointGeneric->GetParameters().rotationMarker1); }
+        if (EPyUtils::DictItemExists(d, "rotationMarker0")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectJointGeneric->GetParameters().rotationMarker0); if (!(cObjectJointGeneric->GetParameters().rotationMarker0 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectJointGeneric.rotationMarker0", "ObjectJointGeneric: the parameter rotationMarker0 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } }
+        if (EPyUtils::DictItemExists(d, "rotationMarker1")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectJointGeneric->GetParameters().rotationMarker1); if (!(cObjectJointGeneric->GetParameters().rotationMarker1 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectJointGeneric.rotationMarker1", "ObjectJointGeneric: the parameter rotationMarker1 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectJointGeneric->GetParameters().activeConnector, "ObjectJointGeneric.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "offsetUserFunctionParameters")) { EPyUtils::FromPython(d["offsetUserFunctionParameters"], cObjectJointGeneric->GetParameters().offsetUserFunctionParameters); }
         if (EPyUtils::DictItemExists(d, "offsetUserFunction")) { cObjectJointGeneric->GetParameters().offsetUserFunction = d["offsetUserFunction"]; }
@@ -181,8 +178,8 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectJointGeneric->GetParameters().markerNumbers); } //! AUTO: set parameter
         else if (parameterName.compare("constrainedAxes") == 0) { EPyUtils::FromPython(value, cObjectJointGeneric->GetParameters().constrainedAxes, "ObjectJointGeneric.constrainedAxes"); } //! AUTO: set parameter
-        else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectJointGeneric->GetParameters().rotationMarker0); } //! AUTO: set parameter
-        else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectJointGeneric->GetParameters().rotationMarker1); } //! AUTO: set parameter
+        else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectJointGeneric->GetParameters().rotationMarker0); if (!(cObjectJointGeneric->GetParameters().rotationMarker0 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectJointGeneric.rotationMarker0", "ObjectJointGeneric: the parameter rotationMarker0 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } } //! AUTO: set parameter
+        else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectJointGeneric->GetParameters().rotationMarker1); if (!(cObjectJointGeneric->GetParameters().rotationMarker1 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectJointGeneric.rotationMarker1", "ObjectJointGeneric: the parameter rotationMarker1 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectJointGeneric->GetParameters().activeConnector, "ObjectJointGeneric.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("offsetUserFunctionParameters") == 0) { EPyUtils::FromPython(value, cObjectJointGeneric->GetParameters().offsetUserFunctionParameters); } //! AUTO: set parameter
         else if (parameterName.compare("offsetUserFunction") == 0) { cObjectJointGeneric->GetParameters().offsetUserFunction = value; } //! AUTO: set parameter

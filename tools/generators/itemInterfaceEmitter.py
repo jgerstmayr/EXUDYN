@@ -151,6 +151,9 @@ def ItemDocstrings(definition):
             if im.IsDeprecatedItemParameter(member): #a renamed parameter (#2589)
                 description = ('deprecated since ' + str(member['deprecated'].since) + ', removed in '
                                + str(member['deprecated'].expires) + ': use ' + im.Description(member))
+            elif im.DeprecatedUseAdvice(member): #a parameter that stays but is deprecated (#2804)
+                description += ('; deprecated since ' + str(member['deprecated'].since) + ', removed in '
+                                + str(member['deprecated'].expires) + ': ' + im.DeprecatedUseAdvice(member))
             thisDataDocString['inputs'].append({'name': member['pythonName'],
                                                 'description': description.strip()})
         elif member['pythonName'] == 'GetRequestedMarkerType':

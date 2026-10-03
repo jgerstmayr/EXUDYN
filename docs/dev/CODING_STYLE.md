@@ -311,9 +311,13 @@ be registered first: pybind11 tries translators in reverse order of registration
 
 ### 10.5 Deprecating something
 
-Use `PyDeprecated(message)`, never `PyWarning`. It raises a real Python `DeprecationWarning`, so
-`-W error::DeprecationWarning` finds every use before a release removes the old name, and Python
-shows it once per call site instead of once per call.
+Use `PyDeprecated(source, name, message)`, never `PyWarning`; from Python, `exu.special.deprecations.Warn(source,
+name, message)`. `source` is `simulationSettings`, `visualizationSettings`, `items` or `functions`, `name` the deprecated
+name. It raises a real Python `DeprecationWarning`, so `-W error::DeprecationWarning` finds every use before a release
+removes the old name; each name warns once per session (`exu.special.deprecations.warnOnce = False`: on every use), and
+every use is counted in `exu.sys['deprecationUse'][source][name]` (`recordUse`), which is what a test reads (#2804,
+#2806). The warning is raised where the user's script calls into Exudyn - `mbs.AddObject(...)`, the setter of a setting -
+so it names the line that wrote the name.
 
 A **setting** (`simulationSettings`, `visualizationSettings`) is renamed or moved in its definition
 file: the new member takes the place of the old, and the old name stays as a
@@ -322,7 +326,11 @@ defaultValue=NoDefaultValue, description=r'<new>')`; `<new>` is the new name if 
 its structure, else its path from the top structure (`view0.scene.drawWorldBasis`). The generator
 writes the forwarding, the warning and the line of the reference manual (#2588). An **item
 parameter** is renamed the same way, with `ItemParameter(..., deprecated=Deprecated(...),
-description=r'<new name>')` - see `definitions/README.md`, *Members* (#2589).
+description=r'<new name>')` - see `definitions/README.md`, *Members* (#2589). An item parameter that **stays** but is
+deprecated - there is no new name, as for `rotationMarker0/1`, whose rotation moves to the markers - keeps its
+definition and gets `deprecated=Deprecated(since, expires, advice='<what to do instead>')`: the generated
+`SetWithDictionary` and `SetParameter` warn when it is set other than its default, the page lists it below the table, and
+`exudev scripts` reports it (#2804, #2805). The library itself uses no deprecated name.
 
 ### 10.6 Writing the message
 

@@ -332,8 +332,11 @@ def StructureCppHeader(parseInfo):
                 #a real Python DeprecationWarning, not a printed line (#2522): the user can filter
                 #it, promote it with -W error::DeprecationWarning, and
                 #sees it once per source location instead of on every read of the setting
-                deprecationWarning = 'PyDeprecated("' + (TopClassName(Header(parseInfo, 'class')) or Header(parseInfo, 'class')) + ' parameter '
-                deprecationWarning += ConvertClassName2member(Header(parseInfo, 'class'))+'.'+parameter['pythonName']
+                #source and name for exudyn.special.deprecations and exudyn.sys['deprecationUse'] (#2804, #2806)
+                topClass = TopClassName(Header(parseInfo, 'class')) or Header(parseInfo, 'class')
+                deprecatedPath = ConvertClassName2member(Header(parseInfo, 'class'))+'.'+parameter['pythonName']
+                deprecationWarning = ('PyDeprecated("' + topClass[0].lower() + topClass[1:] + '", "' + deprecatedPath + '", "'
+                                      + topClass + ' parameter ' + deprecatedPath)
                 newName = Description(parameter) #a rename in the same structure is named with its structure (#2588)
                 if DeprecatedForwardsInStructure(parameter):
                     newName = ConvertClassName2member(Header(parseInfo, 'class')) + '.' + newName

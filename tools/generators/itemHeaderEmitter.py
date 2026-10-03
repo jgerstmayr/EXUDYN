@@ -596,8 +596,16 @@ def ItemCppHeaders(definition):
                     dictListWrite[i]+=space8
                     #a parameter left out of the dict keeps its current value, the default on Add;
                     #a must-be-given parameter left out raises if its value is still the placeholder
+                    #a parameter that stays but is deprecated warns when it is given other than its default (#2804)
+                    deprecatedUse = ''
+                    if DeprecatedUseAdvice(parameter):
+                        deprecatedUse = (' if (!(' + destStr + ' == ' + DefaultValueString(parameter) + ')) { PyDeprecated("items", "'
+                                         + classStr + '.' + pyName + '", "' + classStr + ': the parameter ' + pyName + ' is deprecated since '
+                                         + str(parameter['deprecated'].since) + ' and removed in ' + str(parameter['deprecated'].expires)
+                                         + '; ' + DeprecatedUseAdvice(parameter) + '"); }')
                     dictListWrite[i]+='if (EPyUtils::DictItemExists(d, "' +  pyName + '")) { '
                     dictListWrite[i] += ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDictionary=True, className=classStr)
+                    dictListWrite[i] += deprecatedUse
                     dictListWrite[i]+=' }'
                     if HasFlag(parameter, 'Q'):
                         dictListWrite[i]+=(' else { EPyUtils::RequireGiven(py::cast(' + destStr + '), ' + DefaultValueString(parameter)
@@ -608,6 +616,7 @@ def ItemCppHeaders(definition):
                     #parameter write
                     #if (TypeName(parameter) == 'String') | (TypeName(parameter) == 'Vector2D') | (TypeName(parameter) == 'Vector3D') | (TypeName(parameter) == 'Vector4D') | (TypeName(parameter) == 'Vector6D') | (TypeName(parameter) == 'Vector7D'):
                     parWrite += ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDictionary=False, className=classStr)
+                    parWrite += deprecatedUse
 
                 parameterAccess[pyName] = (parameter, typeCastStr, destStr, parRead)
                 #+++++++++++++++++
@@ -678,8 +687,8 @@ def ItemCppHeaders(definition):
         if HTPartOf(target) or HTListOf(target) or TypeName(target) == 'HomogeneousTransformation' or 'PyFunction' in TypeName(target):
             raise ValueError(classStr + '.' + oldName + ': a deprecated name cannot forward to ' + newName + ' of type ' + TypeName(target))
         (since, expires) = (parameter['deprecated'].since, parameter['deprecated'].expires)
-        warning = ('PyDeprecated("' + classStr + ': the parameter ' + oldName + ' is deprecated since ' + str(since)
-                   + ' and removed in ' + str(expires) + '; use ' + newName + '"); ')
+        warning = ('PyDeprecated("items", "' + classStr + '.' + oldName + '", "' + classStr + ': the parameter ' + oldName
+                   + ' is deprecated since ' + str(since) + ' and removed in ' + str(expires) + '; use ' + newName + '"); ')
         deprecatedDictWrite += (space8 + 'if (EPyUtils::DictItemExists(d, "' + oldName + '") && !d["' + oldName + '"].is_none()) { ' + warning
                                 + ParameterWriteStatement(target, targetCast, targetDest, oldName, fromDictionary=True, className=classStr)
                                 + ' } //! AUTO: deprecated, forwards to ' + newName + '\n')

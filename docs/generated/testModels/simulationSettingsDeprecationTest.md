@@ -14,6 +14,8 @@ You can view and download this file on Github: [simulationSettingsDeprecationTes
 #           the new one (#2588): parallel.multithreadedLLimitLoads (and ...Residuals, ...Jacobians,
 #           ...MassMatrices) is parallel.multithreadedLowerLimitLoads now. Writing the old name writes the new one,
 #           reading it reads the new one - also in a copy of the settings and in settings constructed on their own.
+#           Every use is counted in exu.sys['deprecationUse']; with exu.special.deprecations.warnOnce = False, every
+#           use also warns, not only the first one of the session (#2804, #2806).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-03
@@ -28,10 +30,17 @@ import warnings
 
 testIsActive = exu.sys.get('testIsActive', False)
 
+def UseCount(name):
+    return exu.sys.get('deprecationUse', {}).get('simulationSettings', {}).get('parallel.' + name, 0)
+
+deprecations = exu.special.deprecations
+warnOnceStored = deprecations.warnOnce
+deprecations.warnOnce = False #every use warns
 errors = 0
 total = 0
 for (k, name) in enumerate(['Loads', 'Residuals', 'Jacobians', 'MassMatrices']):
     simulationSettings = exu.SimulationSettings()
+    used = UseCount('multithreadedLLimit' + name)
     with warnings.catch_warnings(record=True) as caught:
         warnings.simplefilter('always')
         setattr(simulationSettings.parallel, 'multithreadedLLimit' + name, 30 + k) #the old name
@@ -42,7 +51,10 @@ for (k, name) in enumerate(['Loads', 'Residuals', 'Jacobians', 'MassMatrices']):
         errors += 1
     if len(warned) != 2 or ('parallel.multithreadedLowerLimit' + name) not in warned[0]:
         errors += 1
+    if UseCount('multithreadedLLimit' + name) != used + 2: #written and read: two uses recorded
+        errors += 1
     total += newValue
+deprecations.warnOnce = warnOnceStored
 
 #a copy has its own values, and the old name forwards in it as well
 simulationSettings = exu.SimulationSettings()

@@ -1,0 +1,15 @@
+{
+  "number": 2806,
+  "title": "every use of a deprecated name is recorded in exudyn.sys['deprecationUse']",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "Grouped by source - simulationSettings, visualizationSettings, items, functions - with a count per name; always written, a flag in exudyn.special.deprecations turns it off. A test or a user sees whether a script used anything deprecated without catching warnings (maintainer 2026-10-03).",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 13:55",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "every use of a deprecated name is counted in exu.sys['deprecationUse'], by source and name; exu.special.deprecations.recordUse = False turns it off",
+  "resolvedInVersion": "1.12.251"
+}

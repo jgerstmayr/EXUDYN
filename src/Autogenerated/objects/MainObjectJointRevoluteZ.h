@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  11:06:22 (last modified)
+* @date         2026-10-03  13:23:06 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -105,9 +105,6 @@ public: // AUTO:
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
     virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectJointRevoluteZ = (VisualizationObjectJointRevoluteZ*)pVisualizationObject; }
 
-    //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
-    virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const override;
-
     //! AUTO:  Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override
     {
@@ -119,8 +116,8 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectJointRevoluteZ->GetParameters().markerNumbers); }
-        if (EPyUtils::DictItemExists(d, "rotationMarker0")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectJointRevoluteZ->GetParameters().rotationMarker0); }
-        if (EPyUtils::DictItemExists(d, "rotationMarker1")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectJointRevoluteZ->GetParameters().rotationMarker1); }
+        if (EPyUtils::DictItemExists(d, "rotationMarker0")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectJointRevoluteZ->GetParameters().rotationMarker0); if (!(cObjectJointRevoluteZ->GetParameters().rotationMarker0 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectJointRevoluteZ.rotationMarker0", "ObjectJointRevoluteZ: the parameter rotationMarker0 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } }
+        if (EPyUtils::DictItemExists(d, "rotationMarker1")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectJointRevoluteZ->GetParameters().rotationMarker1); if (!(cObjectJointRevoluteZ->GetParameters().rotationMarker1 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectJointRevoluteZ.rotationMarker1", "ObjectJointRevoluteZ: the parameter rotationMarker1 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectJointRevoluteZ->GetParameters().activeConnector, "ObjectJointRevoluteZ.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectJointRevoluteZ->GetShow(), "ObjectJointRevoluteZ.Vshow"); }
@@ -169,8 +166,8 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectJointRevoluteZ->GetParameters().markerNumbers); } //! AUTO: set parameter
-        else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectJointRevoluteZ->GetParameters().rotationMarker0); } //! AUTO: set parameter
-        else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectJointRevoluteZ->GetParameters().rotationMarker1); } //! AUTO: set parameter
+        else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectJointRevoluteZ->GetParameters().rotationMarker0); if (!(cObjectJointRevoluteZ->GetParameters().rotationMarker0 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectJointRevoluteZ.rotationMarker0", "ObjectJointRevoluteZ: the parameter rotationMarker0 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } } //! AUTO: set parameter
+        else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectJointRevoluteZ->GetParameters().rotationMarker1); if (!(cObjectJointRevoluteZ->GetParameters().rotationMarker1 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectJointRevoluteZ.rotationMarker1", "ObjectJointRevoluteZ: the parameter rotationMarker1 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectJointRevoluteZ->GetParameters().activeConnector, "ObjectJointRevoluteZ.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectJointRevoluteZ->GetShow(), "ObjectJointRevoluteZ.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("VaxisRadius") == 0) { EPyUtils::FromPython(value, visualizationObjectJointRevoluteZ->GetAxisRadius(), "ObjectJointRevoluteZ.VaxisRadius"); } //! AUTO: set parameter

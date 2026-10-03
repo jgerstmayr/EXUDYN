@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 230 | 1.12.248 |
+| 1.12 | Metheney | 233 | 1.12.251 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.251** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` every use of a deprecated name is recorded in exudyn.sys\['deprecationUse'\] (#2806)
+  - description: Grouped by source - simulationSettings, visualizationSettings, items, functions - with a count per name; always written, a flag in exudyn.special.deprecations turns it off. A test or a user sees whether a script used anything deprecated without catching warnings (maintainer 2026-10-03).
+  - **notes:** every use of a deprecated name is counted in exu.sys\['deprecationUse'\], by source and name; exu.special.deprecations.recordUse = False turns it off
+  - date resolved: **2026-10-03 13:55**, date raised: 2026-10-03
+- **1.12.250** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev scripts reports deprecated item parameters (#2805)
+  - description: checkUserScripts reads the deprecated settings and functions from definitions/, but not the deprecated item parameters: the renames of RG12.2 and the deprecated rotationMarker0/1 of the joints and connectors, given as keyword of an item class or as key of an item dictionary.
+  - **notes:** exudev scripts reports deprecated and removed item parameters, as keyword of the item class and as key of an item dictionary
+  - date resolved: **2026-10-03 13:55**, date raised: 2026-10-03
+- **1.12.249** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` deprecation warnings where the user writes the deprecated name, switched in exudyn.special (#2804)
+  - description: A deprecated item parameter (rotationMarker0/1) warns at Assemble today, so the warning points at mbs.Assemble() and not at the line that wrote it. Proposal: warn in the item class (itemInterface) and in the dictionary path, declared in definitions/, with one switch in exudyn.special for once per session or always (debugging).
+  - **notes:** a deprecated setting, item parameter or function warns once per session and name, at the line of the script that uses it; exu.special.deprecations.warnOnce = False shows every use
+  - date resolved: **2026-10-03 13:55**, date raised: 2026-10-03
 - **1.12.248** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactCurveCircles: rotationMarker0 removed (#2803)
   - description: The parameter was never applied to the contact, only to the drawing, and Assemble refused any value other than the unit matrix; the frame of the curve is the frame of marker 0, which takes a rotation as localHT. Removed without deprecation (maintainer 2026-10-03).
   - **notes:** ObjectContactCurveCircles has no rotationMarker0 any more: it was used only for drawing, and Assemble refused any value other than the unit matrix; the curve lies in the frame of marker 0, which takes a rotation as localHT

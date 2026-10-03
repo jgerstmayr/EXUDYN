@@ -48,7 +48,7 @@ def test_theOldNameForwardsLastInEveryPath():
     dictionaryWrite = mainHeader[mainHeader.index('SetWithDictionary'):mainHeader.index('GetDictionary(')]
     #the old name, after the new one, written into the new one's storage, with the warning
     assert dictionaryWrite.index('"physicsMass"') < dictionaryWrite.index('"mass"')
-    assert 'PyDeprecated("ObjectMassPoint: the parameter mass is deprecated' in dictionaryWrite
+    assert 'PyDeprecated("items", "ObjectMassPoint.mass", "ObjectMassPoint: the parameter mass is deprecated' in dictionaryWrite
     assert 'EPyUtils::FromPython(d["mass"], cObjectMassPoint->GetParameters().physicsMass' in dictionaryWrite
     #not stored, not in the dictionary that is read
     assert 'd["mass"] =' not in mainHeader
