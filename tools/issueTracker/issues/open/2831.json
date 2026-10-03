@@ -1,0 +1,13 @@
+{
+  "number": 2831,
+  "title": "tutorials as Jupyter notebooks: build, test and the first notebook",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The realization of the evaluation of revision2026b step RG17.1 (#2811): notebooks without stored outputs, rendered by myst-nb in the documentation, run by runTestExamples.py, images of the scene with the raytracer; the first notebook is rigidBodyTutorial3 with exu.HT (RG16.12.5). revision2026b step RG17.2.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "file": "conf.py"
+}

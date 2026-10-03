@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.270.dev1
-- last change = 2026-10-03
-- Number of issues = 2828
-- Number of resolved issues = 2584 (270 in current version)
+- Exudyn version = 1.12.273.dev1
+- last change = 2026-10-04
+- Number of issues = 2832
+- Number of resolved issues = 2587 (273 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,14 +7568,17 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` tutorials as Jupyter notebooks: build, test and the first notebook (#2831)
+  - description: The realization of the evaluation of revision2026b step RG17.1 (\#2811): notebooks without stored outputs, rendered by myst-nb in the documentation, run by runTestExamples.py, images of the scene with the raytracer; the first notebook is rigidBodyTutorial3 with exu.HT (RG16.12.5). revision2026b step RG17.2.
+  - date raised: 2026-10-04
+- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` representative images for the item pages that lack one (#2830)
+  - description: The maintainer, 2026-10-04: 'I think that most of them are too difficult to do them automatically. Suggestion: check which items (mostly bodies, loads, joints) would make sense to have a representative image - and which ones do not yet have one ... add a couple of images, some maybe from a Testmodel or within 1-2 scripts that are hand-made and which extract the images for the missing cases ... use the non-simplified drawing modes for springs, basis vectors, etc.; extract images with raytracer and try to adjust them yourself.' Replaces RG2.3.3.7, an automatic image per item. revision2026b step RG3.31.
+  - date raised: 2026-10-04
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` ObjectKinematicTree computes directly with homogeneous transformations (#2829)
+  - description: The maintainer, 2026-10-04: 'check the main relevant functions in KinematicTree (I suppose ComputeTreeTransformations and ComputeMassMatrixAndODE2LHS); make two local implementations in C++, with a exudyn.experimental switch for the testing. Probably, the evaluations need to be slightly adjusted, as the Featherstone version uses an inverse of the HTs. Most functions like Translation2T66 are just wrappers that did the T66 and the HT path, but with an optimized version just with the HTs, it should be easier to implement and faster. If comparison shows that the new path with HTs works, the old T66 functions could mostly go; probably some 6D motion and force computations will stay - possibly in a more suitable/faster form.' revision2026b step RG16.13.6 to RG16.13.9.
+  - date raised: 2026-10-04
 - `EXAMPLE` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` examples and test models that show referenceHT, localHT and exu.HT (#2823)
   - description: The maintainer, 2026-10-04: 'referenceHT, localHT, etc. is rarely used'; 'a couple of examples and test models (like 4+4) should use referenceHT / localHT, just to show how it works and for the tests' - solutionViewerTest.py, rigidBodyTutorial3.py (better as Jupyter tutorial, RG17), and 'a pure prestepuserfunction example showing 4 bodies transformed with the InterpolateSE3/SO3 features, writing the transformations into the renderer (with the solution information string)'. revision2026b step RG16.12. \[2026-10-03, Claude-JG\]: Done 2026-10-04: the example homogeneousTransformationInterpolation.py (RG16.12.1) and solutionViewerTest.py on exu.HT with referenceHT and localHT (RG16.12.2); open: two examples, four test models, rigidBodyTutorial3 as notebook (RG16.12.3 to .5).
-  - date raised: 2026-10-03
-- `CHANGE` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` the robotics classes use exu.HT instead of the 4x4 numpy arrays of rigidBodyUtilities (#2821)
-  - description: The maintainer, 2026-10-04: 'the robotics.Robot class (and the related classes) still use the Python HomogeneousTransformation', and the examples using the Robot class. Robot, RobotLink, RobotBase, RobotTool, the DH conversions, LinkHT/JointHT/COMHT, the inverse kinematics and robotics.models/mobile/special/future work on numpy 4x4 arrays and HTtranslate/HTrotate; a user gives HT=HTtranslate(...). The transition keeps scripts working that give numpy arrays. revision2026b step RG16.10.
-  - date raised: 2026-10-03
-- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Jupyter notebooks for the tutorials and some examples: an evaluation first (#2811)
-  - description: Tutorials, and some sections of examples, as notebooks (Jupyter or similar): what it takes in the docs build (myst-nb or nbsphinx), in the test runners, the renderer and plots inside a notebook, and the size of the repository (maintainer 2026-10-03).
   - date raised: 2026-10-03
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.

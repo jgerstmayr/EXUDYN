@@ -2,10 +2,14 @@
   "number": 2811,
   "title": "Jupyter notebooks for the tutorials and some examples: an evaluation first",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IDEA",
   "effort": "MEDIUM",
   "description": "Tutorials, and some sections of examples, as notebooks (Jupyter or similar): what it takes in the docs build (myst-nb or nbsphinx), in the test runners, the renderer and plots inside a notebook, and the size of the repository (maintainer 2026-10-03).",
   "dateRaised": "2026-10-03",
-  "deadline": "2027-04-01"
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-04 00:48",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The evaluation of notebooks for tutorials and examples is done; the recommendation (notebooks without outputs, myst-nb in the documentation, run by runTestExamples.py, images with the raytracer) is planned as revision2026b step RG17.2.",
+  "resolvedInVersion": "1.12.271"
 }

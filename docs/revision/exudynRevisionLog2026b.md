@@ -14407,3 +14407,53 @@ Create functions with `returnDict`, `bool` for the solvers, `list`, `dict`, `int
 checks that every registered function has one and that it is the documented type. mypy gives `bool` for
 `mbs.SolveDynamic()` now; the item indices stay `Any` for mypy, because the stub imports them from the module itself
 (as for `mbs.AddObject`).
+
+<a id="rg16-13-5"></a>
+### RG16.13.5, RG16.10.5, RG3.31.1, RG17.1, the RG3 group in order — 2026-10-04 (#2811, #2821, #2828, #2830)
+
+*(Maintainer 2026-10-04: "RG16.10.5: keep"; RG2.3.3.7 "close that substep, and restart it as a new step in RG3 (note that
+RG3 got mixed up in the last revision plan cleanup) ... the first substep of the new RG3 step evaluates the status and
+suggests a list of items"; RG16.13.2: "the kinematic tree uses the C++ HT, it is a typedef in KinematicsBasics.h ... first
+remove the unused T66 Pluecker transformations ... then add substeps"; "Then also do RG17.1".)*
+
+**Correction to the entry of RG16.13.2 above** (2026-10-04): it says the tree works with 6x6 spatial transformations.
+It does not: `Transformation66` is `HomogeneousTransformation` (`#define USE_EFFICIENT_TRANSFORMATION66`), and the
+functions named after the Pluecker matrices (`RotationTranslation2T66Inverse`, `T66Mult`, ...) compute with the HT. The
+measurement stands - caching `XL` gains nothing.
+
+**RG16.13.5** (#2828): `KinematicsBasics.h` loses the `#ifndef USE_EFFICIENT_TRANSFORMATION66` branch - the 6x6 matrix
+versions of the transformations, the inertia and the vector operations, 305 lines that the always-defined switch
+excluded - and the switch; `typedef HomogeneousTransformation Transformation66;` stays, with a comment. 634 → 320 lines;
+build, test suite and pytest unchanged. RG16.13.6 to RG16.13.9 (#2829) are planned: the HT path of the two main
+functions beside the old one, an `exudyn.experimental` switch, the comparison, then the T66 wrappers go.
+
+**RG16.10.5** (#2821): the HT functions of `rigidBodyUtilities` are kept, as numpy helpers (maintainer).
+
+**The RG3 group**: the plan cleanup of 2026-10-03 had left RG3.23 to RG3.27 among the steps of RG12 and the others out of
+order, under a line "No steps yet"; the 32 blocks are now in number order in their group.
+
+<a id="rg3-31-1"></a>
+**RG3.31.1** (#2830): the item pages with an image, from the definitions: rendered images for `ObjectRigidBody` and the
+four joints `ObjectJointGeneric` (universal joint), `ObjectJointRevoluteZ` (two), `ObjectJointPrismaticX`,
+`ObjectJointSpherical`; sketches of quantities (TikZ or drawn) for `ObjectFFRF`, `ObjectJointRollingDisc`,
+`ObjectContactConvexRoll`, `ObjectContactFrictionCircleCable2D` (three), `ObjectContactSphereSphere` (two),
+`ObjectContactCurveCircles` (common tangents), `ObjectJointALEMoving2D`, `MarkerSuperElementRigid`; no node, load or
+sensor page has one. The list proposed for the maintainer's choice is in the plan. What changed since RG2.3.3.7's
+evaluation of 2026-09-30: the raytracer draws spheres and curved shapes (RG6.7), so the images can come from it.
+
+<a id="rg17-1"></a>
+**RG17.1** (#2811), measured in `venvExuP313`:
+- installed: `IPython`, `ipykernel`, `ipywidgets`, `jupyter_core`; not installed: `myst-nb`, `nbsphinx`, `nbformat`,
+  `nbclient`, `nbconvert`, `jupytext`, `nbval`. The docs build uses `myst_parser` (with `dollarmath`, `amsmath`);
+  `myst-nb` is its notebook extension, and pulls `nbformat`/`nbclient` - dev only, as rule 6 allows; `nbsphinx` would
+  need pandoc in addition.
+- the repository: `.git` 145 MB; one notebook, `python/Examples/CMSexampleCourseJupyter.ipynb`, 120 kB with 11 stored
+  outputs and a linked image - outputs dominate the size and make every rerun a diff, hence notebooks without outputs.
+- the scene without a window: `SC.renderer.RedrawAndGetImage(useRaytracer=True)` on a rigid body and a checkerboard,
+  400 x 300: an `ndarray` (300, 400, 3) in 0.02 s; without the raytracer it needs `renderer.Start()`, i.e. a window -
+  not usable in a documentation build; the view needs `ZoomAll()` or `SetModelView` first.
+- testing: a notebook is JSON; its code cells joined are a script, which `runTestExamples.py` can run like an example
+  with the same flags (`EXUDYN_SUPPRESS_UI_WINDOW_OPEN`) - no `nbval`, no new dependency.
+- the tutorials: six manual pages (`tutorial*.md`), each naming its script in `python/Examples/`
+  (`springDamperTutorial*.py`, `rigidBodyTutorial3.py`, `beamTutorial.py`, ...).
+The recommendation is in the plan (RG17.1), its realization RG17.2 (#2831).

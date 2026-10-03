@@ -1,0 +1,13 @@
+{
+  "number": 2830,
+  "title": "representative images for the item pages that lack one",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The maintainer, 2026-10-04: 'I think that most of them are too difficult to do them automatically. Suggestion: check which items (mostly bodies, loads, joints) would make sense to have a representative image - and which ones do not yet have one ... add a couple of images, some maybe from a Testmodel or within 1-2 scripts that are hand-made and which extract the images for the missing cases ... use the non-simplified drawing modes for springs, basis vectors, etc.; extract images with raytracer and try to adjust them yourself.' Replaces RG2.3.3.7, an automatic image per item. revision2026b step RG3.31.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "file": "docs/figures"
+}

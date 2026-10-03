@@ -320,7 +320,8 @@ NOT cover, and about the testing that no suite can do.
         MiniExample's positions and orientations are not all zero, so some MiniExamples get a reference
         position or rotation (their test results move and are re-recorded). The references stay as the
         test writes them.
-      - **RG2.3.3.7** *(maintainer 2026-09-30)* **an image per item for its page**: 800 x 600, generated
+      - **RG2.3.3.7** **CLOSED 2026-10-04**, restarted as RG3.31 (#2830) *(maintainer 2026-10-04: "most of them are too
+        difficult to do them automatically")* *(maintainer 2026-09-30)* **an image per item for its page**: 800 x 600, generated
         automatically by the raytracer, the white border cropped, a 3D view; selected by hand where the image
         fits the description - the others stay without one for now. The definition of the item names the
         file (a field such as `image='itemImages/ObjectRigidBody.png'`), stored in `docs/figures/itemImages/`.
@@ -357,10 +358,8 @@ here is what is still wrong, still missing, or newly wrong because something cha
 
 Its starting list is [`documentationImpact2026.md`](documentationImpact2026.md), written in
 revision2026 step R7.2.2: section C of that file says which feature is documented where, and the
-gaps it names are the first candidates. The maintainer's own findings go here as steps.
-
-*No steps yet.*
-
+gaps it names are the first candidates. The maintainer's own findings go here as steps. *(The steps are in number
+order since 2026-10-04; the cleanup of 2026-10-03 had left some of them among RG12.)*
 
 <a id="rg3-1"></a>
 **RG3.1** **DONE 2026-09-22** (#2584) — [log](exudynRevisionLog2026b.md#rg3-1) · [plan text](exudynRevisionLog2026b.md#plan-rg3-1) — The section structure of the user manual was wrong.
@@ -404,17 +403,14 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 <a id="rg3-12"></a>
 **RG3.12** **DONE 2026-09-24** (#2646) — [log](exudynRevisionLog2026b.md#rg3-12-1) · [plan text](exudynRevisionLog2026b.md#plan-rg3-12) — Building from source and the development workflow are told three times and never from the start.
 
-
 <a id="rg3-13"></a>
 **RG3.13** **DONE 2026-09-24** (#2648, #2646) — [log](exudynRevisionLog2026b.md#rg3-13) · [plan text](exudynRevisionLog2026b.md#plan-rg3-13) — The tree told the reader about the revision instead of about itself.
-
 
 <a id="rg3-13-1"></a>
 **RG3.13.1** **DONE 2026-09-27** (#2649) — [log](exudynRevisionLog2026b.md#rg3-13-1) · [plan text](exudynRevisionLog2026b.md#plan-rg3-13-1) — 235 references to the plan are left in comments, each inside a sentence.
 
 <a id="rg3-14"></a>
 **RG3.14** **DONE 2026-09-26** (#2655) — [plan text](exudynRevisionLog2026b.md#plan-rg3-14) — The item and settings descriptions are written in LaTeX.
-
 
 <a id="rg3-15"></a>
 **RG3.15** **DONE 2026-09-25** (#2657, #2661, #2662) — [log](exudynRevisionLog2026b.md#rg3-15) · [plan text](exudynRevisionLog2026b.md#plan-rg3-15) — The chapters of the user manual.
@@ -425,28 +421,75 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 <a id="rg3-17"></a>
 **RG3.17** **DONE 2026-09-25** (#2663) — [log](exudynRevisionLog2026b.md#rg3-17) · [plan text](exudynRevisionLog2026b.md#plan-rg3-17) — A comment in a description is an HTML comment.
 
-
 <a id="rg3-18"></a>
 **RG3.18** **DONE 2026-09-26** (#2660) — [log](exudynRevisionLog2026b.md#rg3-18) · [plan text](exudynRevisionLog2026b.md#plan-rg3-18) — The pages of the Python-C++ interface repeat their own title, and it costs the MainSystem extensions their place in the table of contents.
 
-
-<a id="rg3-28"></a>
-**RG3.28** **DONE 2026-09-29** (#2743) — [log](exudynRevisionLog2026b.md#rg3-28) · [plan text](exudynRevisionLog2026b.md#plan-rg3-28) — The developer documentation named paths of the old `main/` directory.
+<a id="rg3-19"></a>
+**RG3.19** **DONE 2026-09-26** (#2665) — [log](exudynRevisionLog2026b.md#rg3-19) · [plan text](exudynRevisionLog2026b.md#plan-rg3-19) — The arguments of a documented function are one per line, with the name in code.
 
 <a id="rg3-21"></a>
 **RG3.21** **DONE 2026-09-27** (#2673) — [log](exudynRevisionLog2026b.md#rg3-21) · [plan text](exudynRevisionLog2026b.md#plan-rg3-21) — The pages that still describe the state before a step that is done.
 
-<a id="rg3-30"></a>
-**RG3.30** **DONE 2026-10-03** (#2812) — [log](exudynRevisionLog2026b.md#rg3-30) · [plan text](exudynRevisionLog2026b.md#plan-rg3-30) — The flow charts as TikZ again.
+<a id="rg3-22"></a>
+**RG3.22** **DONE 2026-09-27** (#2659) — [log](exudynRevisionLog2026b.md#rg3-22) · [plan text](exudynRevisionLog2026b.md#plan-rg3-22) — The simulation settings section says how to look a setting up.
+
+<a id="rg3-23"></a>
+**RG3.23** **DONE 2026-09-26** (#2680) — [log](exudynRevisionLog2026b.md#rg3-23) · [plan text](exudynRevisionLog2026b.md#plan-rg3-23) — The override settings are documented where the module is.
+
+<a id="rg3-24"></a>
+**RG3.24** **DONE 2026-09-27** (#2681) — [log](exudynRevisionLog2026b.md#rg3-24) · [plan text](exudynRevisionLog2026b.md#plan-rg3-24) — The generator API still says "Latex".
+
+<a id="rg3-25"></a>
+**RG3.25** **DONE 2026-09-27** (#2683) — [log](exudynRevisionLog2026b.md#rg3-25) · [plan text](exudynRevisionLog2026b.md#plan-rg3-25) — a TAB instead of a backslash put `exttt{...}` on three pages of the Symbolic manual.
+
+<a id="rg3-26"></a>
+**RG3.26** **DONE 2026-09-27** (#2697) — [log](exudynRevisionLog2026b.md#rg3-26) · [plan text](exudynRevisionLog2026b.md#plan-rg3-26) — `index.md` and `pdfIndex.md` are two hand-written tables of contents that must agree - the maintainer chose option B, the check.
+
+<a id="rg3-27"></a>
+**RG3.27** **DONE 2026-09-27** (#2708) — [log](exudynRevisionLog2026b.md#rg3-27) · [plan text](exudynRevisionLog2026b.md#plan-rg3-27) — The mass-spring-damper tutorial comes first.
+
+<a id="rg3-28"></a>
+**RG3.28** **DONE 2026-09-29** (#2743) — [log](exudynRevisionLog2026b.md#rg3-28) · [plan text](exudynRevisionLog2026b.md#plan-rg3-28) — The developer documentation named paths of the old `main/` directory.
 
 <a id="rg3-29"></a>
 **RG3.29** **DONE 2026-10-03** (#2808) — [log](exudynRevisionLog2026b.md#rg3-29) · [plan text](exudynRevisionLog2026b.md#plan-rg3-29) — The Python-C++ command interface in sections.
 
-<a id="rg3-22"></a>
-**RG3.22** **DONE 2026-09-27** (#2659) — [log](exudynRevisionLog2026b.md#rg3-22) · [plan text](exudynRevisionLog2026b.md#plan-rg3-22) — The simulation settings section says how to look a setting up.
+<a id="rg3-30"></a>
+**RG3.30** **DONE 2026-10-03** (#2812) — [log](exudynRevisionLog2026b.md#rg3-30) · [plan text](exudynRevisionLog2026b.md#plan-rg3-30) — The flow charts as TikZ again.
 
-<a id="rg3-19"></a>
-**RG3.19** **DONE 2026-09-26** (#2665) — [log](exudynRevisionLog2026b.md#rg3-19) · [plan text](exudynRevisionLog2026b.md#plan-rg3-19) — The arguments of a documented function are one per line, with the name in code.
+<a id="rg3-31"></a>
+**RG3.31** *(group RG3; maintainer 2026-10-04: "I think that most of them are too difficult to do them automatically
+... check which items (mostly bodies, loads, joints) would make sense to have a representative image - and which ones
+do not yet have one")* **Representative images for the item pages** (#2830), in place of RG2.3.3.7 (an image per item,
+generated automatically from its MiniExample). A few images, made by hand-written scripts (one or two, or a test model
+where one fits), for the items whose page gains from a picture.
+    - **RG3.31.1** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg3-31-1) *the status and a list, for the
+      maintainer's choice*: of the 97 item pages, five have a rendered image of the item (`ObjectRigidBody`,
+      `ObjectJointGeneric`, `ObjectJointRevoluteZ`, `ObjectJointPrismaticX`, `ObjectJointSpherical`) and eight a sketch
+      of its quantities (FFRF, rolling disc, convex roll, curve-circles, the circle-cable and sphere contacts, ALE moving joint,
+      `MarkerSuperElementRigid`). **Proposed** - a picture says what the item is or does at one look:
+        - bodies: `ObjectGround` (a checkerboard with a basis), `ObjectMassPoint` (a sphere on a spring), `ObjectRigidBody2D`,
+          `ObjectKinematicTree` (a 3-link arm with its joint axes), `ObjectANCFCable2D` and `ObjectBeamGeometricallyExact`
+          (a bent cantilever), `ObjectANCFThinPlate` (a deformed plate), `ObjectFFRFreducedOrder` (a flexible body with
+          stresses, from an NGsolve example);
+        - loads: `LoadForceVector` and `LoadTorqueVector` (arrows on a body), `LoadMassProportional` (gravity on a body);
+        - connectors: `ObjectConnectorSpringDamper`, `ObjectConnectorCartesianSpringDamper`,
+          `ObjectConnectorRigidBodySpringDamper`, `ObjectConnectorTorsionalSpringDamper`, `ObjectConnectorDistance`,
+          `ObjectConnectorReevingSystemSprings` (a rope over sheaves), `ObjectConnectorRollingDiscPenalty` and
+          `ObjectJointRollingDisc` (a wheel on the ground), `ObjectJointRevolute2D`, `ObjectJointSliding2D` (a mass sliding
+          on a cable);
+        - contacts: `ObjectContactSphereSphere` (beside the sketch it has);
+        - markers: `MarkerBodyRigid` (a body with the marker frame, `localHT`), the only marker whose frame is worth a picture.
+      **Not proposed**: the generic nodes and objects (`NodeGeneric*`, `ObjectGenericODE1/2`), the coordinate markers and
+      constraints, `ObjectConnectorCoordinate*`, `ObjectContactCoordinate`, the sensors, `LoadCoordinate`, the 1D masses -
+      what they do is a number, not a shape.
+    - **RG3.31.2** after the choice: one or two scripts in `tools/itemImages/` (or a test model where one fits) that build
+      each chosen item in a small scene and write its image with the raytracer (`SC.renderer.RedrawAndGetImage(
+      useRaytracer=True)`, no window), 800 x 600, white border cropped; the **non-simplified** drawing modes (springs as
+      helices, the basis vectors of markers and nodes as arrows, joints with their axes); view, light and material
+      adjusted by hand, image by image;
+    - **RG3.31.3** the images in `docs/figures/`, each named on the page of its item (`{image}` in the
+      `detailedDescription`, as the joints do), and a look at every page.
 
 
 ## RG4 — Implementation problems and bugs
@@ -1105,12 +1148,6 @@ find out about the settings of a model. It is the group a user notices most and 
 <a id="rg12-12"></a>
 **RG12.12** **DONE 2026-09-27** (#2588) — [log](exudynRevisionLog2026b.md#rg12-12) · [plan text](exudynRevisionLog2026b.md#plan-rg12-12) — PlotSensor takes its defaults from the override settings.
 
-<a id="rg3-23"></a>
-**RG3.23** **DONE 2026-09-26** (#2680) — [log](exudynRevisionLog2026b.md#rg3-23) · [plan text](exudynRevisionLog2026b.md#plan-rg3-23) — The override settings are documented where the module is.
-
-<a id="rg3-24"></a>
-**RG3.24** **DONE 2026-09-27** (#2681) — [log](exudynRevisionLog2026b.md#rg3-24) · [plan text](exudynRevisionLog2026b.md#plan-rg3-24) — The generator API still says "Latex".
-
 <a id="rg12-13"></a>
 **RG12.13** **DONE 2026-09-26** (#2686) — [log](exudynRevisionLog2026b.md#rg12-13) · [plan text](exudynRevisionLog2026b.md#plan-rg12-13) — A stored dialog geometry is used.
 
@@ -1128,15 +1165,6 @@ find out about the settings of a model. It is the group a user notices most and 
 
 <a id="rg12-20"></a>
 **RG12.20** **DONE 2026-09-27** (#2694) — [log](exudynRevisionLog2026b.md#rg12-20) · [plan text](exudynRevisionLog2026b.md#plan-rg12-20) — Where the render window is, and what happens when the file and the session disagree.
-
-<a id="rg3-25"></a>
-**RG3.25** **DONE 2026-09-27** (#2683) — [log](exudynRevisionLog2026b.md#rg3-25) · [plan text](exudynRevisionLog2026b.md#plan-rg3-25) — a TAB instead of a backslash put `exttt{...}` on three pages of the Symbolic manual.
-
-<a id="rg3-26"></a>
-**RG3.26** **DONE 2026-09-27** (#2697) — [log](exudynRevisionLog2026b.md#rg3-26) · [plan text](exudynRevisionLog2026b.md#plan-rg3-26) — `index.md` and `pdfIndex.md` are two hand-written tables of contents that must agree - the maintainer chose option B, the check.
-
-<a id="rg3-27"></a>
-**RG3.27** **DONE 2026-09-27** (#2708) — [log](exudynRevisionLog2026b.md#rg3-27) · [plan text](exudynRevisionLog2026b.md#plan-rg3-27) — The mass-spring-damper tutorial comes first.
 
 <a id="rg12-21"></a>
 **RG12.21** **DONE 2026-09-27** (#2695) — [log](exudynRevisionLog2026b.md#rg12-21) · [plan text](exudynRevisionLog2026b.md#plan-rg12-21) — `python -m exudyn info` prints the home directory.
@@ -1416,7 +1444,7 @@ Create functions, `GetJointArgs`, `robotics.Robot.CreateRedundantCoordinateMBS`,
 `rigidBodyUtilities` in the library are RG16.10 (robotics) and RG16.11 (the rest).
 
 <a id="rg16-10"></a>
-**RG16.10** **DONE 2026-10-04**, but RG16.10.5 — [log](exudynRevisionLog2026b.md#rg16-10) *(group RG16; maintainer
+**RG16.10** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-10) *(group RG16; maintainer
 2026-10-04: "the robotics.Robot class (and the related classes) still use the Python HomogeneousTransformation"; on
 RG16.10.1: "do as suggested. Could also be read/write indexing, if possible, but would fail on writing in the last
 row")* **The robotics classes on `exu.HT`** (#2821). Since RG16.4.2 every HT a user gives
@@ -1441,7 +1469,7 @@ arrays, which scripts read as `HT[-1][0:3,3]` or with `HT2translation(HT[-1])`.
       `movingGroundRobotTest.py`, `kinematicTreeAndMBStest.py`, `kinematicTreeConstraintTest.py`,
       `createKinematicTreeTest.py` (24 of the 42 scripts that used the HT functions of `rigidBodyUtilities`);
     - **RG16.10.5** the HT functions of `rigidBodyUtilities` (`HomogeneousTransformation`, `HTtranslate`, ...): kept as
-      numpy helpers or deprecated with `exu.HT` as advice - **the maintainer decides**: nothing of the library and of the
+      numpy helpers or deprecated with `exu.HT` as advice - **DECIDED 2026-10-04: kept** (maintainer), as numpy helpers; nothing of the library and of the
       scripts uses them now but `rigidBodyUtilities` itself, `graphics`, `plot`, `lieGroupBasics`, `robotics.mobile`,
       `special`, `future` and `utilities` (on numpy input from users) and the two `homogeneousTransformation*Test.py`.
 
@@ -1472,7 +1500,7 @@ referenceHT / localHT, just to show how it works and for the tests")* **Examples
     - **RG16.12.5** `rigidBodyTutorial3.py` with `exu.HT`, as a notebook - after the evaluation of RG17.1.
 
 <a id="rg16-13"></a>
-**RG16.13** **DONE 2026-10-04** *(group RG16; maintainer 2026-10-04: "ObjectKinematicTree still has only jointTransformations and
+**RG16.13** *(group RG16; maintainer 2026-10-04: "ObjectKinematicTree still has only jointTransformations and
 jointOffsets, but I believe that jointHTs would be much more convenient and could also boost the internal
 computations (?)")* **`ObjectKinematicTree` and its `jointHTs`** (#2824). The parameter exists since RG16.4.1 (#2798):
 `jointHTs` takes a list of `exu.HT` or 4x4 matrices (the type `HomogeneousTransformationList` of the definitions) and
@@ -1480,14 +1508,35 @@ is a view of the two stored lists `jointTransformations` and `jointOffsets`; `Ro
     - **RG16.13.1** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-13) `mbs.CreateKinematicTree` passes
       `jointHTs`, `TreeLink.jointHT` is an `exu.HT` (given as `exu.HT` or 4x4 matrix), `exu.HT(H)` copies an HT, and
       the MiniExample of `ObjectKinematicTree` gives `jointHTs=[exu.HT()]`;
-    - **RG16.13.2** **DONE 2026-10-04**, *evaluated: no change* — [log](exudynRevisionLog2026b.md#rg16-13-2) whether
-      storing one HT per joint in `CObjectKinematicTree` saves time: the C++ works with 6x6 spatial transformations
-      (Featherstone), built per joint and evaluation from the rotation and the offset; computing them once instead
-      changed nothing measurable on a tree of 6 and of 50 links, so the two lists stay the storage and `jointHTs` their
-      view;
+    - **RG16.13.2** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-13-2) whether storing one HT per joint
+      in `CObjectKinematicTree` saves time: computing the joint transformations `XL` once instead of per evaluation
+      changed nothing measurable on a tree of 6 and of 50 links. *(Corrected 2026-10-04, the maintainer: `Transformation66`
+      is not a 6x6 matrix but the C++ HT, a typedef in `KinematicsBasics.h` - the tree already computes with HTs, through
+      wrappers named after the Pluecker matrices; the work is RG16.13.5 to RG16.13.9.)*
     - **RG16.13.3** **DONE 2026-10-04** with RG16.10: `Robot.CreateKinematicTree` gives `jointHTs` of `exu.HT`;
     - **RG16.13.4** **DONE 2026-10-04** (#2827) `mbs.CreateKinematicTree` with automatic graphics failed for a link
       without offset (`UnboundLocalError: gLink`), found by the measurement of RG16.13.2.
+    - **RG16.13.5** **DONE 2026-10-04** (#2828) — [log](exudynRevisionLog2026b.md#rg16-13-5) the unused 6x6 Pluecker
+      matrices removed from `KinematicsBasics.h`: the `#ifndef USE_EFFICIENT_TRANSFORMATION66` branch (about 300 lines,
+      never compiled, the switch always defined) and the switch itself; `Transformation66` is `HomogeneousTransformation`.
+    - **RG16.13.6** *(maintainer 2026-10-04)* the functions that matter (#2829): `ComputeTreeTransformations` (positions,
+      velocities and accelerations of all links: the output variables, markers and sensors) and
+      `ComputeMassMatrixAndODE2LHS` (the composite rigid body algorithm and the recursive Newton-Euler terms), with
+      `ComputeJacobian`, `AddExternalForces6D` and the `Get...KinematicTree` functions; what they use of
+      `RigidBodyMath` today: `T66toRotationTranslationInverse` (12x), `T66Mult` (6x), `RotationTranslation2T66` (6x),
+      `RotationTranslation2T66Inverse` (4x), `T66MultTransposed`, `T66MultInertia`, `MultT66SkewMotion` (2x each),
+      `T66TransformInertia`, `T66SkewForce`, `T66MultTransposedInverse`, `T66MotionInverse`, `MultT66SkewForce`,
+      `InertiaT66FromInertiaParameters` - written down per function: which transformation it needs, in which direction
+      (Featherstone's `Xup` maps from the parent to the link, the inverse of the HT that places the link);
+    - **RG16.13.7** two local implementations of those two functions in `CObjectKinematicTree.cpp` on the HT directly:
+      positions and rotations with `HomogeneousTransformation` products, motion and force vectors as pairs of `Vector3D`
+      (no `Vector6D`, no wrappers), selected by a flag of `exudyn.experimental` (a switch for the testing, not a
+      setting), the old path as it is;
+    - **RG16.13.8** the comparison: every test model and MiniExample of the kinematic tree with both paths (equal to
+      round-off), and the time per evaluation on trees of 6 and of 50 links;
+    - **RG16.13.9** if the HT path agrees and is not slower: it becomes the only one, the switch goes, and the T66
+      functions of `KinematicsBasics.h` go with it - except what the 6D motion and force algebra still needs, possibly in a
+      more suitable form.
 
 ## RG17 — Notebooks
 
@@ -1495,12 +1544,37 @@ is a view of the two stored lists `jointTransformations` and `jointOffsets`; `Ro
 (Jupyter or similar) - a tutorial is read and run step by step, which a notebook shows and a script does not.
 
 <a id="rg17-1"></a>
-**RG17.1** *(group RG17; maintainer 2026-10-03: "evaluation step first")* **Evaluate notebooks for tutorials and
-examples** (#2811), before anything is converted: what the documentation build needs (`myst-nb` or `nbsphinx`, executed
+**RG17.1** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg17-1) *(group RG17; maintainer 2026-10-03:
+"evaluation step first")* **Evaluate notebooks for tutorials and examples** (#2811), before anything is converted: what the documentation build needs (`myst-nb` or `nbsphinx`, executed
 or stored output, the PDF), how a notebook is tested (`runTestExamples.py`, `nbval`, or a converted `.py`), the renderer
 and `PlotSensor` inside a notebook (no window: images, or an interactive viewer), the size of the repository with stored
 outputs, and which tutorials and example sections first. Ends with a recommendation for the maintainer. A first
 candidate: `rigidBodyTutorial3.py` with `exu.HT` (RG16.12.5).
+    **Recommendation** (the measurements in the log), **for the maintainer's decision** - the points marked (?):
+    - **format**: Jupyter `.ipynb`, stored **without outputs** (a check in `exudev generate --all-checks` refuses a
+      notebook with outputs; the one notebook in the repository, `CMSexampleCourseJupyter.ipynb`, holds 120 kB with 11
+      outputs); one file per tutorial, no paired `.py` (one place, rule 10);
+    - **place** (?): `python/Notebooks/`, beside `Examples/` - or the tutorial pages themselves as notebooks in
+      `docs/manual/`, which would make the page and the script one file;
+    - **documentation**: `myst-nb` (dev only), which extends the `myst_parser` the build uses already, the notebooks
+      executed at build time with a cache (`nb_execution_mode = "cache"`, with the installed exudyn of `venvExuP313`),
+      so that the pages show current outputs and the repository holds none; the PDF takes the same output (the LaTeX
+      builder of myst-nb), checked once;
+    - **test**: `runTestExamples.py` runs the code cells of each notebook as a script, read with `json` (no new
+      dependency, the same environment flags and log as the examples); `nbval` is not needed;
+    - **the scene in a notebook**: no window - `SC.renderer.RedrawAndGetImage(useRaytracer=True)` after `ZoomAll()` or
+      `SetModelView`, shown with `matplotlib.pyplot.imshow` (400 x 300 in 0.02 s, measured); a small helper (?) in
+      `exudyn.interactive` (`ShowImage(SC)`), and a sequence of such images for a motion; the OpenGL renderer and the
+      SolutionViewer open their own window when the notebook runs locally, and are skipped in the documentation build;
+      `PlotSensor` shows inline as matplotlib does;
+    - **first**: `rigidBodyTutorial3` (RG16.12.5), then the spring-damper tutorial (the first one a reader meets, RG3.27);
+      the others after the first two have been looked at.
+    RG17.2 realizes it after the decision.
+
+<a id="rg17-2"></a>
+**RG17.2** *(group RG17; after the decision on RG17.1)* **Tutorials as notebooks** (#2831): `myst-nb` in `conf.py` and
+the dev environments, the check against stored outputs, the notebooks in `runTestExamples.py`, the image helper, and
+the first notebook `rigidBodyTutorial3` with `exu.HT`.
 
 ## Next steps recommended
 
@@ -1519,7 +1593,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG1.4 | - | **the 1.13 release** - the first public one after the revision |
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
-| RG2.3 | #2582, #2776 | the graphics regression suite - open: RG2.3.3.7 an image per item for its page, RG2.3.3.8 the raytracer that can hang in `RedrawAndGetImage` |
+| RG2.3 | #2582, #2776 | the graphics regression suite - open: RG2.3.3.8 the raytracer that can hang in `RedrawAndGetImage` |
+| RG3.31 | #2830 | images for the item pages: the list of RG3.31.1 waits for the maintainer's choice |
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #1848, #1947 | the open bugs before 1.13: RG4.15.8 `GeneralContact` against the sphere contact |
@@ -1531,10 +1606,10 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
-| RG16.10.5 | #2821 | the HT functions of `rigidBodyUtilities`: kept or deprecated (maintainer) |
 | RG16.12.5 | #2823 | `rigidBodyTutorial3.py` with `exu.HT` as a notebook, after RG17.1 |
 | RG15 | #2746 | objects computing from coordinates passed in: the work after the evaluation of RG15.1, not planned yet |
-| RG17.1 | #2811 | notebooks for tutorials and examples: the evaluation |
+| RG16.13 | #2828, #2829 | `ObjectKinematicTree` on the HT directly: RG16.13.6 to RG16.13.9 |
+| RG17.2 | #2831 | tutorials as notebooks: the recommendation of RG17.1 waits for the maintainer |
 
 <a id="not-decided"></a>
 ### Not decided to be resolved

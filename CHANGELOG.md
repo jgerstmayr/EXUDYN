@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 252 | 1.12.270 |
+| 1.12 | Metheney | 254 | 1.12.273 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.273** `CHANGE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the unused 6x6 Pluecker matrices of the kinematic tree are removed (#2828)
+  - description: The maintainer, 2026-10-04: 'the kinematic tree uses the C++ HT, it is a typedef in KinematicsBasics.h ... first remove the unused T66 Pluecker transformations (inside \#ifndef USE\_EFFICIENT\_TRANSFORMATION66 ...)'. USE\_EFFICIENT\_TRANSFORMATION66 was always defined, so Transformation66 is HomogeneousTransformation and the 300 lines of Matrix6D implementations were never compiled. revision2026b step RG16.13.5.
+  - **notes:** The unused 6x6 Pluecker matrix implementation of the kinematic tree was removed; the tree computes with homogeneous transformations.
+  - date resolved: **2026-10-04 00:48**, date raised: 2026-10-04
+- **1.12.272** `CHANGE` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the robotics classes use exu.HT instead of the 4x4 numpy arrays of rigidBodyUtilities (#2821)
+  - description: The maintainer, 2026-10-04: 'the robotics.Robot class (and the related classes) still use the Python HomogeneousTransformation', and the examples using the Robot class. Robot, RobotLink, RobotBase, RobotTool, the DH conversions, LinkHT/JointHT/COMHT, the inverse kinematics and robotics.models/mobile/special/future work on numpy 4x4 arrays and HTtranslate/HTrotate; a user gives HT=HTtranslate(...). The transition keeps scripts working that give numpy arrays. revision2026b step RG16.10.
+  - **notes:** The robotics classes compute with exu.HT; the HT helpers of rigidBodyUtilities are kept as numpy helpers.
+  - date resolved: **2026-10-04 00:48**, date raised: 2026-10-03
 - **1.12.270** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` CreateKinematicTree fails when a link with automatic graphics has no offset (#2827)
   - description: mbs.CreateKinematicTree with automatic graphics (graphicsDataList=None of the parent, or the base graphics) raised UnboundLocalError: gLink, or added the graphics of an earlier link again, when the jointHT of a link has zero translation: the link graphics was created only for a translation of some length, but appended in any case. Found with the measurement of revision2026b step RG16.13.2 (a tree whose first link is at the base). The append moved into the branch that creates it.
   - **notes:** mbs.CreateKinematicTree with automatic graphics no longer fails for a link whose jointHT has no translation.

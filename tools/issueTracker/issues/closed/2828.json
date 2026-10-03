@@ -1,0 +1,17 @@
+{
+  "number": 2828,
+  "title": "the unused 6x6 Pluecker matrices of the kinematic tree are removed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-10-04: 'the kinematic tree uses the C++ HT, it is a typedef in KinematicsBasics.h ... first remove the unused T66 Pluecker transformations (inside #ifndef USE_EFFICIENT_TRANSFORMATION66 ...)'. USE_EFFICIENT_TRANSFORMATION66 was always defined, so Transformation66 is HomogeneousTransformation and the 300 lines of Matrix6D implementations were never compiled. revision2026b step RG16.13.5.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "dateResolved": "2026-10-04 00:48",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Linalg/KinematicsBasics.h",
+  "releaseNotes": "The unused 6x6 Pluecker matrix implementation of the kinematic tree was removed; the tree computes with homogeneous transformations.",
+  "resolvedInVersion": "1.12.273"
+}
