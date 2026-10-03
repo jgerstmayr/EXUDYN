@@ -1,0 +1,12 @@
+{
+  "number": 2804,
+  "title": "deprecation warnings where the user writes the deprecated name, switched in exudyn.special",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "effort": "MEDIUM",
+  "description": "A deprecated item parameter (rotationMarker0/1) warns at Assemble today, so the warning points at mbs.Assemble() and not at the line that wrote it. Proposal: warn in the item class (itemInterface) and in the dictionary path, declared in definitions/, with one switch in exudyn.special for once per session or always (debugging).",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "workingRemarks": "proposal in plan step RG12.32.1-.3, waits for the maintainer's decision"
+}

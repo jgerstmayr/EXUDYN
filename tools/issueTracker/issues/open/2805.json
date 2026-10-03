@@ -1,0 +1,12 @@
+{
+  "number": 2805,
+  "title": "exudev scripts reports deprecated item parameters",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "checkUserScripts reads the deprecated settings and functions from definitions/, but not the deprecated item parameters: the renames of RG12.2 and the deprecated rotationMarker0/1 of the joints and connectors, given as keyword of an item class or as key of an item dictionary.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "workingRemarks": "plan step RG12.32.4"
+}

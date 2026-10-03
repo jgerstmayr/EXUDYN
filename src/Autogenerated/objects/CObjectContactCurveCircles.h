@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  11:20:23 (last modified)
+* @date         2026-10-03  12:58:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -34,7 +34,6 @@ public: // AUTO:
     Vector circlesRadii;                          //!< AUTO: Vector containing radii of \f$n_c\f$ circles [SI:m]; number according to size of markerNumbers-1
     PyMatrixContainer segmentsData;               //!< AUTO: matrix containing a set of two planar point coordinates in each row, representing segments attached to marker \f$m0\f$ and undergoing contact with the circles; for segment \f$s0\f$ row 0 reads \f$[p_{0x,s0},\,p_{0y,s0},\,p_{1x,s0},\,p_{1y,s0}]\f$; note that the segments must be ordered such that going from \f$\pv_0\f$ to \f$\pv_1\f$, the exterior lies on the right (positive) side. MatrixContainer has to be provided in dense mode!
     PyMatrixContainer polynomialData;             //!< AUTO: matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode!
-    Matrix3D rotationMarker0;                     //!< AUTO: local rotation matrix for marker 0, used only for drawing the curve - the contact is computed in the frame of marker 0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT
     Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)
     Real frictionProportionalZone;                //!< AUTO: must be >= 0; limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics)
     Real contactStiffness;                        //!< AUTO: normal contact stiffness [SI:N/(m*m)]
@@ -49,7 +48,6 @@ public: // AUTO:
         circlesRadii = Vector();
         segmentsData = PyMatrixContainer();
         polynomialData = PyMatrixContainer();
-        rotationMarker0 = EXUmath::unitMatrix3D;
         dynamicFriction = 0.;
         frictionProportionalZone = 0.001;
         contactStiffness = 0.;

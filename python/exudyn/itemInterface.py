@@ -5950,8 +5950,6 @@ class ObjectContactCurveCircles:
 
         polynomialData: matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode!; type: PyMatrixContainer
 
-        rotationMarker0: local rotation matrix for marker 0, used only for drawing the curve - the contact is computed in the frame of marker 0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT; type: array_like
-
         dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
 
         frictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), sec-module-physics; type: float
@@ -5974,14 +5972,13 @@ class ObjectContactCurveCircles:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), circlesRadii = [], segmentsData = None, polynomialData = None, rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactModel = 0, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), circlesRadii = [], segmentsData = None, polynomialData = None, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactModel = 0, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
         self.circlesRadii = CheckForValidNumpyArray(circlesRadii)
         self.segmentsData = segmentsData
         self.polynomialData = polynomialData
-        self.rotationMarker0 = np.array(rotationMarker0)
         self.dynamicFriction = dynamicFriction
         self.frictionProportionalZone = frictionProportionalZone
         self.contactStiffness = contactStiffness
@@ -5998,7 +5995,6 @@ class ObjectContactCurveCircles:
         yield 'circlesRadii', self.circlesRadii
         yield 'segmentsData', self.segmentsData
         yield 'polynomialData', self.polynomialData
-        yield 'rotationMarker0', self.rotationMarker0
         yield 'dynamicFriction', self.dynamicFriction
         yield 'frictionProportionalZone', self.frictionProportionalZone
         yield 'contactStiffness', self.contactStiffness

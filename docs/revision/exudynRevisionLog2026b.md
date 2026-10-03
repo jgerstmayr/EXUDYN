@@ -12257,3 +12257,13 @@ needs ROS). `homogeneousTransformationParameterTest.py` keeps one use, as the co
 `rotationMarkerDeprecationTest.py`: a `GenericJoint` and a `RigidBodySpringDamper`, each turned by `rotationMarker0/1`
 and by `localHT`, move the same (difference 0 and 1e-16), and two `Assemble()` give at most one warning. The
 references of `geometricallyExactBeamRightAngleFrame.py` and `rightAngleFrame.py` stay.
+
+<a id="rg14-2-15-2"></a>
+### RG14.2.15.2 — ObjectContactCurveCircles without rotationMarker0 (2026-10-03, #2803)
+
+*(Maintainer 2026-10-03.)* `rotationMarker0` of `ObjectContactCurveCircles` is removed, without deprecation: the
+contact forces were always computed in the frame of marker 0, only the drawing turned the curve by it, and
+`CheckPreAssembleConsistency` refused any value other than the unit matrix - so no model could have used it. The
+deprecation warning of RG14.2.15 for it is gone with it (the entry above lists it; this replaces that). The page says
+the curve lies in the $x$-$y$ plane of marker 0, which takes a rotation as `localHT`. The reference of
+`parameterConversionTest.py` loses the parameter.

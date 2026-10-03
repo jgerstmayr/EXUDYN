@@ -2009,6 +2009,35 @@ after). *Status: a list, nothing decided.* Settings:
   names of the internal members (`temp...`, RG14.2.16), and `axisMarker0` of `LinearSpringDamper`/`JointPrismatic2D`,
   an axis and not a rotation, which stays.
 
+<a id="rg12-32"></a>
+**RG12.32** *(group RG12; maintainer 2026-10-03: "think about the user"; **proposal, waits for the maintainer's
+decision**)* **A deprecation warns where the user wrote the deprecated name** (#2804). The warning about
+`rotationMarker0/1` (RG14.2.15) comes from `CheckPreAssembleConsistency`, so Python attributes it to the line of
+`mbs.Assemble()`, and the message has to say which item - the user still searches for the line that wrote it.
+*Proposal:*
+    - **RG12.32.1** **one switch**, `exudyn.special.deprecations` (a small module, like `exudyn.special.userInterface`):
+      `warnOnce = True` (default) - each deprecated name warns once per session, a set of the names already warned
+      about; `warnOnce = False` - every use warns, for debugging a script; one function `Warn(key, message,
+      stacklevel)` that all deprecations call, from Python and - through `PyDeprecated`, which imports it - from C++:
+      the settings of RG12.1, the item renames of RG12.2, the renderer functions and the deprecated parameters. The
+      one-per-session flag in C++ (RG14.2.15) goes. Changes RG12.1/RG12.2 from "every use" to "once per name", and
+      their two test models count accordingly.
+    - **RG12.32.2** **declared, not hand-written**: an item parameter that stays but is deprecated (no new name:
+      `rotationMarker0/1`) gets `deprecated=Deprecated(since, expires, stays=True)` and its advice as
+      `deprecatedAdvice`; RG12.2's renames keep theirs. The generators emit the warning **in the item class of
+      `itemInterface.py`**, when the argument differs from the default, with the stacklevel of the user's call - so
+      the warning names the line `ObjectJointGeneric(..., rotationMarker0=A)` - and in the generated
+      `SetWithDictionary`/`SetParameter` for the dictionary and `SetObjectParameter` paths (one warning per
+      call path, the switch decides). `CheckPreAssembleConsistency` of the five items goes back to what it was.
+    - **RG12.32.3** **no warning from the library itself**: a `Create...` function given a `MarkerIndex` with a
+      rotation adds a copy of that marker with the composed `localHT` (as `_MarkerWithRotation` of the robotics),
+      instead of passing the rotation on in the deprecated parameter.
+    - **RG12.32.4** **`exudev scripts` reports deprecated item parameters** (#2805): `checkUserScripts.py` reads
+      the declarations of RG12.32.2 and RG12.2 from `definitions/` and reports a keyword of an item class
+      (`ObjectJointGeneric(rotationMarker0=...)`, also through `GenericJoint`) and a key of an item dictionary
+      (`'rotationMarker0':`) with the advice; and the removed `ObjectContactCurveCircles.rotationMarker0` (#2803) in
+      its table of removed names. Independent of .1-.3 for the reading part.
+
 ## RG13 — Item documentation
 
 *(Group created by the maintainer, 2026-09-27.)* **Every item gets a full documentation and a
@@ -2393,6 +2422,9 @@ done.
       - **RG14.2.15.1** **DONE 2026-10-03** (#2801) — [log](exudynRevisionLog2026b.md#rg14-2-15) - found while
         moving the Create functions: `RigidBodySpringDamper` multiplied `rotationMarker0` from the left of the marker
         frame, all joints and its own page from the right.
+      - **RG14.2.15.2** **DONE 2026-10-03** (#2803) — [log](exudynRevisionLog2026b.md#rg14-2-15-2) - *(maintainer
+        2026-10-03: "what for?")* `ObjectContactCurveCircles.rotationMarker0` **removed without deprecation**: the
+        contact never used it, only the drawing, and `Assemble()` refused any value but the unit matrix.
 
 <a id="rg14-2-9"></a>
 **RG14.2.9 in detail** *(proposed 2026-10-01; **decided as proposed by the maintainer, 2026-10-01**: (a) the term

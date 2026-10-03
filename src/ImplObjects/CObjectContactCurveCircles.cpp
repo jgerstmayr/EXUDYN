@@ -68,7 +68,6 @@ void CObjectContactCurveCircles::ComputeConnectorProperties(const MarkerDataStru
 	Vector3D v0 = markerData.GetMarkerData(0).velocity;
 	Vector3D omega0local = markerData.GetMarkerData(0).angularVelocityLocal;
 	
-	//NOTE: here we need to include the rotationMarker0!
 	Matrix3D A0 = markerData.GetMarkerData(0).orientation; //all quantities are rotated into the A0 frame!
 	Matrix3D A0T = A0.GetTransposed();
 	Vector3D v0Local = A0T * v0;
@@ -267,7 +266,6 @@ void CObjectContactCurveCircles::ComputeODE2LHS(Vector& ode2Lhs, const MarkerDat
 	{
 		Matrix3D A0 = markerData.GetMarkerData(0).orientation; //all quantities are rotated into the A0 frame!
 		Vector3D p0 = markerData.GetMarkerData(0).position;
-		//A0 should be A0*rotationMarker0
 
 		//marker 1+iCircle / J (positive):    (according to computation of relative position)
 		//now link ode2Lhs Vector to partial result using the two jacobians
@@ -409,7 +407,6 @@ void VisualizationObjectContactCurveCircles::UpdateGraphics(const VisualizationS
 	Matrix3D refRot;
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetPosition(*vSystem->systemData, refPos, ConfigurationType::Visualization);
 	vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[0]]->GetRotationMatrix(*vSystem->systemData, refRot, ConfigurationType::Visualization);
-	refRot = refRot * cItem->GetParameters().rotationMarker0;
 
 	//draw segments:
 	Index nSegments = cItem->GetNumberOfSegments();

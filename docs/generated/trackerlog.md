@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.247.dev1
+- Exudyn version = 1.12.248.dev1
 - last change = 2026-10-03
-- Number of issues = 2803
-- Number of resolved issues = 2561 (247 in current version)
+- Number of issues = 2806
+- Number of resolved issues = 2562 (248 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,14 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `LOW EFF` `raised by: Claude-JG` exudev scripts reports deprecated item parameters (#2805)
+  - description: checkUserScripts reads the deprecated settings and functions from definitions/, but not the deprecated item parameters: the renames of RG12.2 and the deprecated rotationMarker0/1 of the joints and connectors, given as keyword of an item class or as key of an item dictionary.
+  - **remarks:** plan step RG12.32.4
+  - date raised: 2026-10-03
+- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` deprecation warnings where the user writes the deprecated name, switched in exudyn.special (#2804)
+  - description: A deprecated item parameter (rotationMarker0/1) warns at Assemble today, so the warning points at mbs.Assemble() and not at the line that wrote it. Proposal: warn in the item class (itemInterface) and in the dictionary path, declared in definitions/, with one switch in exudyn.special for once per session or always (debugging).
+  - **remarks:** proposal in plan step RG12.32.1-.3, waits for the maintainer's decision
+  - date raised: 2026-10-03
 - `DOCU` `LOW EFF` `raised by: Claude-JG` settings and item parameters that could be renamed or restructured, for the maintainer's decision (#2802)
   - description: maintainer 2026-10-03: search simulation settings and item parameter names that could be renamed or restructured; listed as revision2026b step RG12.31 for decision.
   - **remarks:** the list is plan step RG12.31 (16 candidates); waits for the maintainer's decision, each decided one gets its own issue

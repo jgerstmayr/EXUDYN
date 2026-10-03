@@ -200,14 +200,14 @@ as its 4x4 matrix (`np.array(H)`), so the HT functions of `exudyn.rigidBodyUtili
 `exu.HT` wherever they take a 4x4 array (#2798, #2799).
 
 **The rotation of a joint is its markers'.** `rotationMarker0/1` of `ObjectJointGeneric`, `ObjectJointRevoluteZ`,
-`ObjectJointPrismaticX`, `ObjectConnectorRigidBodySpringDamper`, `ObjectConnectorTorsionalSpringDamper` and
-`rotationMarker0` of `ObjectContactCurveCircles` are deprecated and removed in 2031: the rotation is given to the
+`ObjectJointPrismaticX`, `ObjectConnectorRigidBodySpringDamper` and `ObjectConnectorTorsionalSpringDamper` are deprecated and removed in 2031: the rotation is given to the
 markers as `localHT`, e.g. `MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))`. `Assemble()`
 warns once per session about an item that still has one other than the unit matrix. The `Create...` functions,
 `AddRevoluteJoint`, `AddPrismaticJoint`, `GetJointArgs` and the robotics classes put the rotation into the markers
 they create (#2745). `ObjectConnectorRigidBodySpringDamper` applies `rotationMarker0` after the frame of marker 0,
 as the joints do and as its page says; a model with a `rotationMarker0` other than the unit matrix moves differently
-than before (#2801).
+than before (#2801). `ObjectContactCurveCircles` has no `rotationMarker0` any more: it was used only for drawing,
+and `Assemble()` refused any value other than the unit matrix; the curve lies in the frame of marker 0 (#2803).
 
 **A system without coordinates** - only ground, sensors and user functions - is solved by every
 solver: time advances, the user functions are called and the sensors record (#2790).

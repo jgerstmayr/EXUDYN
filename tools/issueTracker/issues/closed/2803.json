@@ -1,0 +1,15 @@
+{
+  "number": 2803,
+  "title": "ObjectContactCurveCircles: rotationMarker0 removed",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The parameter was never applied to the contact, only to the drawing, and Assemble refused any value other than the unit matrix; the frame of the curve is the frame of marker 0, which takes a rotation as localHT. Removed without deprecation (maintainer 2026-10-03).",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 13:06",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectContactCurveCircles has no rotationMarker0 any more: it was used only for drawing, and Assemble refused any value other than the unit matrix; the curve lies in the frame of marker 0, which takes a rotation as localHT",
+  "resolvedInVersion": "1.12.248"
+}

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 229 | 1.12.247 |
+| 1.12 | Metheney | 230 | 1.12.248 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.248** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactCurveCircles: rotationMarker0 removed (#2803)
+  - description: The parameter was never applied to the contact, only to the drawing, and Assemble refused any value other than the unit matrix; the frame of the curve is the frame of marker 0, which takes a rotation as localHT. Removed without deprecation (maintainer 2026-10-03).
+  - **notes:** ObjectContactCurveCircles has no rotationMarker0 any more: it was used only for drawing, and Assemble refused any value other than the unit matrix; the curve lies in the frame of marker 0, which takes a rotation as localHT
+  - date resolved: **2026-10-03 13:06**, date raised: 2026-10-03
 - **1.12.247** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectConnectorRigidBodySpringDamper multiplies rotationMarker0 from the wrong side (#2801)
   - description: found in revision2026b step RG14.2.15: the connector computes A0all = rotationMarker0\*A0, its documentation, CreateRigidBodySpringDamper (MR0 = A0^T R) and all other joints use A0\*rotationMarker0; a rotationMarker0 different from the unit matrix on a rotated marker 0 gave the wrong frame.
   - **notes:** ObjectConnectorRigidBodySpringDamper applies rotationMarker0 after the frame of marker 0, as the joints do and as documented; models with a rotationMarker0 other than the unit matrix move differently

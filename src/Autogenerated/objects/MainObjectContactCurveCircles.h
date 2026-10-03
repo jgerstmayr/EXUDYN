@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-03  12:58:29 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -119,7 +119,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "circlesRadii")) { EPyUtils::FromPython(d["circlesRadii"], cObjectContactCurveCircles->GetParameters().circlesRadii); }
         if (EPyUtils::DictItemExists(d, "segmentsData")) { EPyUtils::SetPyMatrixContainerSafely(d["segmentsData"], cObjectContactCurveCircles->GetParameters().segmentsData); }
         if (EPyUtils::DictItemExists(d, "polynomialData")) { EPyUtils::SetPyMatrixContainerSafely(d["polynomialData"], cObjectContactCurveCircles->GetParameters().polynomialData); }
-        if (EPyUtils::DictItemExists(d, "rotationMarker0")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectContactCurveCircles->GetParameters().rotationMarker0); }
         if (EPyUtils::DictItemExists(d, "dynamicFriction")) { EPyUtils::FromPython(d["dynamicFriction"], cObjectContactCurveCircles->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactCurveCircles.dynamicFriction"); }
         if (EPyUtils::DictItemExists(d, "frictionProportionalZone")) { EPyUtils::FromPython(d["frictionProportionalZone"], cObjectContactCurveCircles->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactCurveCircles.frictionProportionalZone"); }
         if (EPyUtils::DictItemExists(d, "contactStiffness")) { EPyUtils::FromPython(d["contactStiffness"], cObjectContactCurveCircles->GetParameters().contactStiffness, "ObjectContactCurveCircles.contactStiffness"); }
@@ -142,7 +141,6 @@ public: // AUTO:
         d["circlesRadii"] = EPyUtils::ToPython(cObjectContactCurveCircles->GetParameters().circlesRadii);
         d["segmentsData"] = (PyMatrixContainer)cObjectContactCurveCircles->GetParameters().segmentsData;
         d["polynomialData"] = (PyMatrixContainer)cObjectContactCurveCircles->GetParameters().polynomialData;
-        d["rotationMarker0"] = EPyUtils::ToPython(cObjectContactCurveCircles->GetParameters().rotationMarker0);
         d["dynamicFriction"] = (Real)cObjectContactCurveCircles->GetParameters().dynamicFriction;
         d["frictionProportionalZone"] = (Real)cObjectContactCurveCircles->GetParameters().frictionProportionalZone;
         d["contactStiffness"] = (Real)cObjectContactCurveCircles->GetParameters().contactStiffness;
@@ -168,7 +166,6 @@ public: // AUTO:
         else if (parameterName.compare("circlesRadii") == 0) { return EPyUtils::ToPython(cObjectContactCurveCircles->GetParameters().circlesRadii); } //! AUTO: get parameter
         else if (parameterName.compare("segmentsData") == 0) { return py::cast((PyMatrixContainer)cObjectContactCurveCircles->GetParameters().segmentsData); } //! AUTO: get parameter
         else if (parameterName.compare("polynomialData") == 0) { return py::cast((PyMatrixContainer)cObjectContactCurveCircles->GetParameters().polynomialData); } //! AUTO: get parameter
-        else if (parameterName.compare("rotationMarker0") == 0) { return EPyUtils::ToPython(cObjectContactCurveCircles->GetParameters().rotationMarker0); } //! AUTO: get parameter
         else if (parameterName.compare("dynamicFriction") == 0) { return py::cast((Real)cObjectContactCurveCircles->GetParameters().dynamicFriction); } //! AUTO: get parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { return py::cast((Real)cObjectContactCurveCircles->GetParameters().frictionProportionalZone); } //! AUTO: get parameter
         else if (parameterName.compare("contactStiffness") == 0) { return py::cast((Real)cObjectContactCurveCircles->GetParameters().contactStiffness); } //! AUTO: get parameter
@@ -195,7 +192,6 @@ public: // AUTO:
         else if (parameterName.compare("circlesRadii") == 0) { EPyUtils::FromPython(value, cObjectContactCurveCircles->GetParameters().circlesRadii); } //! AUTO: set parameter
         else if (parameterName.compare("segmentsData") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectContactCurveCircles->GetParameters().segmentsData); } //! AUTO: set parameter
         else if (parameterName.compare("polynomialData") == 0) { EPyUtils::SetPyMatrixContainerSafely(value, cObjectContactCurveCircles->GetParameters().polynomialData); } //! AUTO: set parameter
-        else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectContactCurveCircles->GetParameters().rotationMarker0); } //! AUTO: set parameter
         else if (parameterName.compare("dynamicFriction") == 0) { EPyUtils::FromPython(value, cObjectContactCurveCircles->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactCurveCircles.dynamicFriction"); } //! AUTO: set parameter
         else if (parameterName.compare("frictionProportionalZone") == 0) { EPyUtils::FromPython(value, cObjectContactCurveCircles->GetParameters().frictionProportionalZone, EPyUtils::RangeCheck::nonNegative, "ObjectContactCurveCircles.frictionProportionalZone"); } //! AUTO: set parameter
         else if (parameterName.compare("contactStiffness") == 0) { EPyUtils::FromPython(value, cObjectContactCurveCircles->GetParameters().contactStiffness, "ObjectContactCurveCircles.contactStiffness"); } //! AUTO: set parameter

@@ -967,7 +967,6 @@ bool MainObjectContactCurveCircles::CheckPreAssembleConsistency(const MainSystem
 {
 	CObjectContactCurveCircles* cObject = (CObjectContactCurveCircles*)GetCObject();
 	Index node = cObject->GetNodeNumber(0);
-	WarnRotationMarkersDeprecated(cObject->GetParameters().rotationMarker0, EXUmath::unitMatrix3D, "ObjectContactCurveCircles");
 
 	if (cObject->GetParameters().nodeNumber == EXUstd::InvalidIndex ||
 		cObject->GetParameters().nodeNumber >= mainSystem.GetMainSystemData().GetMainNodes().NumberOfItems())
@@ -998,13 +997,6 @@ bool MainObjectContactCurveCircles::CheckPreAssembleConsistency(const MainSystem
 	if (!EXUstd::IsOfTypeAndNotNone((Index)mainSystem.GetCSystem().GetSystemData().GetCMarker(nMarkers[0]).GetType(), Marker::Position + Marker::Orientation))
 	{
 		errorString = STDstring("CObjectContactCurveCircles: Marker 0 must generally be of type = 'Rigid' (Position + Orientation)");
-		return false;
-	}
-
-	Matrix3D rotationMarker0 = cObject->GetParameters().rotationMarker0;
-	if (!(rotationMarker0(0, 0) == 1. && rotationMarker0(1, 1) == 1. && rotationMarker0(2, 2)))
-	{
-		errorString = STDstring("CObjectContactCurveCircles: currently only implemented for case that rotationMarker0 is a unit matrix");
 		return false;
 	}
 
