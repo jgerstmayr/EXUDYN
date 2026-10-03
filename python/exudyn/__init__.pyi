@@ -1697,7 +1697,7 @@ class VSettingsWindow:
     maximize: bool
     """True: render window of respective view will be maximized at startup."""
     renderWindowPosition: Tuple[int,int]
-    """position of the top left corner of the render window of this view, in pixels; a NEGATIVE coordinate - which is the default - means that the window manager places the window, as it did before this setting existed. Set both to place the window, or store them in ``~/.exudyn/config.json`` to have every run start there, see Section sec-overridesettings. NOTE: this is the position of the OpenGL area, not of the title bar, so a small value hides part of the title bar and 0 hides it completely - which still leaves the escape key, and is a way to have a view without one. The position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it."""
+    """position of the top left corner of the render window of this view, in pixels; a NEGATIVE coordinate - which is the default - means that the window manager places the window, as it did before this setting existed. Set both to place the window, or store them in ``~/.exudyn/config.json`` to have every run start there, see Section sec-usersettings. NOTE: this is the position of the OpenGL area, not of the title bar, so a small value hides part of the title bar and 0 hides it completely - which still leaves the escape key, and is a way to have a view without one. The position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it."""
     renderWindowSize: Tuple[int,int]
     """initial size of the render window of this view, in pixels."""
     showComputationInfo: bool
@@ -1709,7 +1709,7 @@ class VSettingsWindow:
     showWindow: bool
     """True: render window of respective view is shown when created; False: window will be iconified when created (e.g. if you are starting multiple computations automatically)."""
     storeRenderWindowGeometry: bool
-    """True: when the render window of this view closes, where it was is written into ``renderWindowSize`` and ``renderWindowPosition`` - so that storing the settings keeps the window where you left it, see Section sec-overridesettings. False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run."""
+    """True: when the render window of this view closes, where it was is written into ``renderWindowSize`` and ``renderWindowPosition`` - so that storing the settings keeps the window where you left it, see Section sec-usersettings. False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run."""
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 
@@ -1751,7 +1751,7 @@ class VSettingsDialogs:
     openTreeView: bool
     """True: all sub-trees of the visusalization dialog are opened when opening the dialog; False: only some sub-trees are opened."""
     storeDialogPositions: bool
-    """True: a dialog stores its size and position in ``~/.exudyn/config.json`` when it closes, so that the next dialog of the same kind starts with them. A geometry that IS stored - by this flag, by the store button of the settings dialog, or by a script - is used whenever such a dialog opens, whatever this flag says: the size always, the position only if the window would still be reachable on the current screen. See Section sec-overridesettings."""
+    """True: a dialog stores its size and position in ``~/.exudyn/config.json`` when it closes, so that the next dialog of the same kind starts with them. A geometry that IS stored - by this flag, by the store button of the settings dialog, or by a script - is used whenever such a dialog opens, whatever this flag says: the size always, the position only if the window would still be reachable on the current screen. See Section sec-usersettings."""
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 
@@ -4236,6 +4236,14 @@ class Special:
     def InfoStat(self, writeOutput=True) -> List[int]: 
         """Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag."""
         ...
+    @property
+    def currentRendererSystemContainer(self) -> Any:
+        """the ``SystemContainer`` the renderer is attached to, or ``None``; the render engine can hold one at a time, which is why this is module-wide. It is set when a container attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of ``exudyn.misc.GUI`` ask for; not intended for regular users."""
+        ...
+    @property
+    def overrideSettings(self) -> dict:
+        """the settings that persist between runs, read once by ``import exudyn`` from ``~/.exudyn/config.json``: a dictionary with one key per section, ``config``, ``visualizationSettings``, ``dialogs`` and ``resultsMonitor``; it is empty unless something was stored, and both Python and the C++ side read it. See Section sec-usersettings."""
+        ...
     solver:SpecialSolver
     """special solver attributes and functions; not intended for regular users; for available features, see the C++ code class PySpecialSolver."""
     exceptions:SpecialExceptions
@@ -4246,11 +4254,3 @@ class Special:
     """flags that stop Exudyn from opening windows; meant for automated runs (test runners, CI, AI-assisted development), where a window that waits for a human stops everything; not intended for regular users; for available features, see the C++ code class PySpecialUserInterface."""
     deprecations:SpecialDeprecations
     """how a deprecated name - a setting, an item parameter, a function - is reported: a DeprecationWarning once per session and name, or on every use, and a count of every use in the dictionary exudyn.sys[deprecationUse], by source (simulationSettings, visualizationSettings, items, functions) and name; see the C++ code class PySpecialDeprecations."""
-    @property
-    def currentRendererSystemContainer(self) -> Any:
-        """the ``SystemContainer`` the renderer is attached to, or ``None``; the render engine can hold one at a time, which is why this is module-wide. It is set when a container attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of ``exudyn.misc.GUI`` ask for; not intended for regular users."""
-        ...
-    @property
-    def overrideSettings(self) -> dict:
-        """the settings that persist between runs, read once by ``import exudyn`` from ``~/.exudyn/config.json``: a dictionary with one key per section, ``config``, ``visualizationSettings``, ``dialogs`` and ``resultsMonitor``; it is empty unless something was stored, and both Python and the C++ side read it. See Section sec-overridesettings."""
-        ...

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.251.dev1
+- Exudyn version = 1.12.252.dev1
 - last change = 2026-10-03
-- Number of issues = 2808
-- Number of resolved issues = 2565 (251 in current version)
+- Number of issues = 2812
+- Number of resolved issues = 2566 (252 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,15 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Jupyter notebooks for the tutorials and some examples: an evaluation first (#2811)
+  - description: Tutorials, and some sections of examples, as notebooks (Jupyter or similar): what it takes in the docs build (myst-nb or nbsphinx), in the test runners, the renderer and plots inside a notebook, and the size of the repository (maintainer 2026-10-03).
+  - date raised: 2026-10-03
+- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` exu.HT: the functions of the accepted proposal, with examples in its documentation and tests (#2810)
+  - description: Realization of the HT proposal: the bindings on the existing C++ conversions, examples in the data structures section (rotation, position, the node coordinates), a test model.
+  - date raised: 2026-10-03
+- `DOCU` `LOW EFF` `raised by: Claude-JG` exu.HT as the place for rigid body transformations: a proposal for its functions and names (#2809)
+  - description: The coordinates of the rigid body nodes from and to an HT (position with Euler parameters, Tait-Bryan angles Rxyz or rotation vector), more functions that nodes, markers and items need, and the names of the class (translation or position) - for the maintainer's decision (2026-10-03).
+  - date raised: 2026-10-03
 - `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` deprecations of the Python library declared like those of the C++, and a build check for expired ones (#2807)
   - description: The Python library deprecates functions and arguments by hand - a docstring saying DEPRECATED, an exu.Print('WARNING: ...'), about 20 places (AddRevoluteJoint, bodyList of the Create functions, GeneticOptimization arguments, ...) - with no version, no year of removal and nothing that finds them. Proposal: one declaration with since and expires for every deprecation, the library warning through exudyn.special.deprecations, and a check in exudev generate --all-checks that lists all deprecations and fails for one past its year (maintainer 2026-10-03).
   - **remarks:** proposal in plan step RG12.33, waits for the maintainer's decision

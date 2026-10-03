@@ -1534,6 +1534,14 @@ class Special:
     def InfoStat(self, writeOutput=True) -> List[int]: 
         """Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag."""
         ...
+    @property
+    def currentRendererSystemContainer(self) -> Any:
+        """the ``SystemContainer`` the renderer is attached to, or ``None``; the render engine can hold one at a time, which is why this is module-wide. It is set when a container attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of ``exudyn.misc.GUI`` ask for; not intended for regular users."""
+        ...
+    @property
+    def overrideSettings(self) -> dict:
+        """the settings that persist between runs, read once by ``import exudyn`` from ``~/.exudyn/config.json``: a dictionary with one key per section, ``config``, ``visualizationSettings``, ``dialogs`` and ``resultsMonitor``; it is empty unless something was stored, and both Python and the C++ side read it. See Section sec-usersettings."""
+        ...
     solver:SpecialSolver
     """special solver attributes and functions; not intended for regular users; for available features, see the C++ code class PySpecialSolver."""
     exceptions:SpecialExceptions
@@ -1544,14 +1552,6 @@ class Special:
     """flags that stop Exudyn from opening windows; meant for automated runs (test runners, CI, AI-assisted development), where a window that waits for a human stops everything; not intended for regular users; for available features, see the C++ code class PySpecialUserInterface."""
     deprecations:SpecialDeprecations
     """how a deprecated name - a setting, an item parameter, a function - is reported: a DeprecationWarning once per session and name, or on every use, and a count of every use in the dictionary exudyn.sys[deprecationUse], by source (simulationSettings, visualizationSettings, items, functions) and name; see the C++ code class PySpecialDeprecations."""
-    @property
-    def currentRendererSystemContainer(self) -> Any:
-        """the ``SystemContainer`` the renderer is attached to, or ``None``; the render engine can hold one at a time, which is why this is module-wide. It is set when a container attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of ``exudyn.misc.GUI`` ask for; not intended for regular users."""
-        ...
-    @property
-    def overrideSettings(self) -> dict:
-        """the settings that persist between runs, read once by ``import exudyn`` from ``~/.exudyn/config.json``: a dictionary with one key per section, ``config``, ``visualizationSettings``, ``dialogs`` and ``resultsMonitor``; it is empty unless something was stored, and both Python and the C++ side read it. See Section sec-overridesettings."""
-        ...
 config:Config
 """global config settings, like precision, print behavior, warnings, etc."""
 experimental:Experimental

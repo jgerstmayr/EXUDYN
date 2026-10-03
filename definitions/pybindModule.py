@@ -231,6 +231,7 @@ pb.DefDataAccess('symbolic','the symbolic submodule for creating symbolic variab
                        dataType='', isTopLevel = True,
                        )
 
+pb.AddDocu('', section='exudyn.config', sectionLevel=1, sectionLabel='sec-exudyn-config')
 #++++++++++
 #config
 pb.BeginNoStub() #this would not work directly! 
@@ -285,6 +286,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='config.GetDefaults', cName='unused',
                         )
 pb.EndCppWrittenByHand()
 
+pb.AddDocu('', section='exudyn.experimental', sectionLevel=1, sectionLabel='sec-exudyn-experimental')
 #++++++++++
 pb.CppCode('        m.attr("experimental") = py::cast(&pyExperimental);\n') 
 pb.DefDataAccess('experimental','Experimental features, not intended for regular users; for available features, see the C++ code class PyExperimental',
@@ -295,6 +297,7 @@ pb.DefDataAccess('experimental.eigenFullPivotLUsolverDebugLevel','debug output o
 pb.DefDataAccess('experimental.markerSuperElementRigidTexpSO3','if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters',
                        dataType='int', isTopLevel = True)
 
+pb.AddDocu('', section='exudyn.special', sectionLevel=1, sectionLabel='sec-exudyn-special')
 pb.CppCode('        m.attr("special") = py::cast(&pySpecial);\n') 
 pb.DefDataAccess('special','special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial',
                         dataType='Special', isTopLevel = True)
@@ -309,6 +312,13 @@ pb.DefPyFunctionAccess(cClass='', pyName='special.InfoStat', cName='unused',
                         )
 pb.EndCppWrittenByHand()
 
+pb.DefDataAccess('special.currentRendererSystemContainer',r'the `SystemContainer` the renderer is attached to, or `None`; the render engine can hold one at a time, which is why this is module-wide. It is set when a container attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of `exudyn.misc.GUI` ask for; not intended for regular users',
+                        dataType='Any', isTopLevel = True, readOnly = True)
+
+pb.DefDataAccess('special.overrideSettings',r'the settings that persist between runs, read once by `import exudyn` from `~/.exudyn/config.json`: a dictionary with one key per section, `config`, `visualizationSettings`, `dialogs` and `resultsMonitor`; it is empty unless something was stored, and both Python and the C++ side read it. See Section [](#sec-usersettings)',
+                        dataType='dict', isTopLevel = True, readOnly = True)
+
+pb.AddDocu('', section='exudyn.special.solver', sectionLevel=2, sectionLabel='sec-exudyn-special-solver')
 pb.DefDataAccess('special.solver','special solver attributes and functions; not intended for regular users; for available features, see the C++ code class PySpecialSolver',
                         dataType='SpecialSolver', isTopLevel = True)
 
@@ -319,6 +329,7 @@ pb.DefDataAccess('special.solver.throwErrorWithCtrlC','if True, pressing CTRL-C 
 pb.DefDataAccess('special.solver.multiThreadingLoadBalancing','if True (=default), multithreaded code parts (in particular solver and raytracing) use load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform significantly better without load balancing',
                         dataType='bool', isTopLevel = True)
 
+pb.AddDocu('', section='exudyn.special.exceptions', sectionLevel=2, sectionLabel='sec-exudyn-special-exceptions')
 pb.DefDataAccess('special.exceptions','special flags for exceptions and checks; not intended for regular users; for available features, see the C++ code class PySpecialExceptions',
                         dataType='SpecialExceptions', isTopLevel = True)
 pb.DefDataAccess('special.exceptions.dictionaryVersionMismatch','if True (=default), SetDictionary(...) of a settings structure warns if the dictionary comes from another version of Exudyn',
@@ -328,11 +339,13 @@ pb.DefDataAccess('special.exceptions.dictionaryNonCopyable','if True (=default),
 pb.DefDataAccess('special.exceptions.parameterRangeChecks','if True (=default), writing an item or settings parameter outside its range (e.g. a negative mass or a non-positive number of steps) raises an error, on every write path (item classes, dictionaries, SetObjectParameter, ...); set False to accept any value, e.g. if a range limit turns out to be wrong',
                         dataType='bool', isTopLevel = True)
 
+pb.AddDocu('', section='exudyn.special.beams', sectionLevel=2, sectionLabel='sec-exudyn-special-beams')
 pb.DefDataAccess('special.beams','switches of the beam elements, for tests and comparisons; a model keeps the defaults; for available features, see the C++ code class PySpecialBeams',
                         dataType='SpecialBeams', isTopLevel = True)
 pb.DefDataAccess('special.beams.geometricallyExactLumpedMass','if True, ObjectBeamGeometricallyExact uses the lumped mass matrix of its nodes and their quadratic velocity vector instead of the element-consistent ones (default False); for comparisons and tests',
                         dataType='bool', isTopLevel = True)
 
+pb.AddDocu('', section='exudyn.special.userInterface', sectionLevel=2, sectionLabel='sec-exudyn-special-userinterface')
 pb.DefDataAccess('special.userInterface','flags that stop Exudyn from opening windows; meant for automated runs (test runners, CI, AI-assisted development), where a window that waits for a human stops everything; not intended for regular users; for available features, see the C++ code class PySpecialUserInterface',
                         dataType='SpecialUserInterface', isTopLevel = True)
 pb.DefDataAccess('special.userInterface.suppressRenderer','if True, SC.renderer.Start() returns immediately without opening a window, IsActive() is False - so that a "while SC.renderer.IsActive()" loop ends at once - and DoIdleTasks() does nothing; default=False',
@@ -354,6 +367,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='special.userInterface.SuppressAll', cN
                         )
 pb.EndCppWrittenByHand()
 
+pb.AddDocu('', section='exudyn.special.deprecations', sectionLevel=2, sectionLabel='sec-exudyn-special-deprecations')
 pb.DefDataAccess('special.deprecations','how a deprecated name - a setting, an item parameter, a function - is reported: a DeprecationWarning once per session and name, or on every use, and a count of every use in the dictionary exudyn.sys[deprecationUse], by source (simulationSettings, visualizationSettings, items, functions) and name; see the C++ code class PySpecialDeprecations',
                         dataType='SpecialDeprecations', isTopLevel = True)
 pb.DefDataAccess('special.deprecations.warnOnce','if True (=default), each deprecated name warns once per session; if False, every use warns, e.g. to find all places in a script that use it',
@@ -378,14 +392,9 @@ pb.DefPyFunctionAccess(cClass='', pyName='special.deprecations.Warn', cName='unu
                         )
 pb.EndCppWrittenByHand()
 
-pb.DefDataAccess('special.currentRendererSystemContainer',r'the `SystemContainer` the renderer is attached to, or `None`; the render engine can hold one at a time, which is why this is module-wide. It is set when a container attaches to the render engine and cleared when it detaches or is destroyed, and it is what the dialogs of `exudyn.misc.GUI` ask for; not intended for regular users',
-                        dataType='Any', isTopLevel = True, readOnly = True)
-
-pb.DefDataAccess('special.overrideSettings',r'the settings that persist between runs, read once by `import exudyn` from `~/.exudyn/config.json`: a dictionary with one key per section, `config`, `visualizationSettings`, `dialogs` and `resultsMonitor`; it is empty unless something was stored, and both Python and the C++ side read it. See Section [](#sec-overridesettings)',
-                        dataType='dict', isTopLevel = True, readOnly = True)
-
 pb.EndNoStub()
 
+pb.AddDocu('', section='exudyn.variables and exudyn.sys', sectionLevel=1, sectionLabel='sec-exudyn-variables')
 pb.CppCode('        m.attr("variables") = exudynVariables;\n') 
 pb.DefDataAccess('variables','this dictionary may be used by the user to store exudyn-wide data in order to avoid global Python variables; usage: exu.variables["myvar"] = 42; can be used in particular to exchange data between different mbs or between packages by importing exudyn.variables wherever needed.',
                        dataType='dict', isTopLevel = True)
@@ -396,255 +405,6 @@ pb.DefDataAccess('sys',"this dictionary is used and reserved by the system, e.g.
 
 
 pb.DefPyFinishClass('')
-
-
-#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#the override settings and the environment variables: the mechanisms that change what the module
-#does before a script says anything (#2680)
-pb.AddDocu(r"""A setting that is changed on every start - the output directory, the multi-sampling of
-the renderer, the size of the basis vectors - is stored once and taken by every run afterwards.
-Exudyn reads one file for that, `~/.exudyn/config.json`:""",
-           section='Settings that persist between runs', sectionLevel=2,
-           sectionLabel='sec-overridesettings')
-
-pb.AddDocuCodeBlock(pythonStyle=False, code="""
-{
-  "version": 1,
-  "config": {"outputDirectory": "solution/"},
-  "visualizationSettings": {"openGL.multiSampling": 4, "nodes.basisSize": 0.5}
-}
-""")
-
-pb.AddDocu(r"""Nothing writes this file by itself. A script that behaves differently on another
-machine, because something was stored there, is the one thing a settings file must not cause, so
-storing is always asked for:""")
-
-pb.AddDocuCodeBlock(code="""
-from exudyn.misc import overrideSettings
-
-SC.visualizationSettings.openGL.multiSampling = 4
-overrideSettings.Store(SC)         #every run from now on starts with it
-""")
-
-pb.AddDocu(r"""`Store(SC)` writes the settings that differ from the defaults - the same list
-the settings dialog shows as *changed* - and `Store(config=exudyn.config)` does the same for
-`exudyn.config`. `overrideSettings.Clear()` deletes the file.
-
-**The `version` is the format of the file**, and it has to match: a file of another version is
-ignored, with one note naming both. It is a plain integer that moves only when Exudyn has been
-released *and* the meaning of something in this file has changed - not with the Exudyn version, which
-moves on every resolved issue. Store your settings again to write a current file.
-
-#### What happens when the file is there
-
-`import exudyn` reads it once into `exudyn.special.overrideSettings` and prints
-**one note** naming how many settings it took:""")
-
-pb.AddDocuCodeBlock(pythonStyle=False, code="""
-NOTE: 1 config settings and 2 visualizationSettings read from ~/.exudyn/config.json
-""")
-
-pb.AddDocu(r"""A count that is 0 is left out. `overrideSettings.Print()` lists what came from the file, which
-is the answer to *why does this script behave differently here*, `overrideSettings.Applied()` gives
-the same as a list, for a script that wants to print it into its own output, and
-`EXUDYN_NO_USER_SETTINGS=1` runs a script as if there were no file.
-
-**A file that should stay quiet** says so itself, beside its `version`:
-
-```
-{
-  "version": 1,
-  "suppressOverrideSettingsWarning": true,
-  "visualizationSettings": {"openGL.multiSampling": 4}
-}
-```
-
-The key does not exist unless it is written, and without it the note is printed. It suppresses the
-note only: a setting that could not be applied is still reported, because that is a defect and not
-information.
-
-**What happens, in order:**
-
-1. the whole file is read into `exudyn.special.overrideSettings`, once, by `import exudyn`;
-2. what can be applied at once is applied at once, which is the `config` section;
-3. the rest stays in the dictionary, because the things it sets do not exist yet;
-4. every `VisualizationSettings` structure applies the stored settings **when it is created** - the
-   one a `SystemContainer` builds, and one built by `exu.VisualizationSettings()`. A setting that
-   names nothing is reported and changes nothing;
-5. a dialog reads its size and position from the `dialogs` section when it opens, and the results
-   monitor its own settings from `resultsMonitor`;
-6. nothing writes the file unless it is asked to.
-
-**The file is read once**, so a file you edit while a session is running - or one that another
-session stored - has no effect until you read it again. That is what makes a stored setting look as
-if it had not been stored in a console that keeps its kernel, such as Spyder:
-
-```python
-from exudyn.misc import overrideSettings
-overrideSettings.Reload()          #read it again and apply what can be applied
-overrideSettings.Print()           #what came from it now
-```
-
-A reload does not **undo**: a setting that already reached `exudyn.config`, and a structure that
-already exists, keep what they were given. A setting you removed from the file is seen by the
-structures created after the reload; for everything else, start a new session.
-
-A stored `visualizationSetting` is **not** a new default: `exu.VisualizationSettings()` carries it,
-and the defaults the settings dialog compares against are still the defaults of Exudyn, so *diff to
-default* shows a stored setting as a difference. That is the point - it is what the file changed.
-
-**What may be stored are plain values**: a number, a flag, a string, or a list of numbers - and an
-enum setting, `contour.outputVariable`, as the name of its value, `"StressLocal"`, which is read back
-by that name; `interactive.highlightItemType` is the state of a highlight and is not stored. A setting
-that holds graphics data, a user function or a matrix container is refused with a message and
-changes nothing - such a value cannot be carried honestly by a JSON file. A key that names no
-setting, a section nobody reads, a file that is not valid JSON: each of them is reported and none of
-them stops `import exudyn`.
-
-#### Storing from the dialog
-
-The settings dialog has a **store settings** button. It writes the `visualizationSettings` that
-differ from the defaults, and the size and position of the dialog itself, and **nothing else** - not
-`exudyn.config`, not the simulation settings - and it shows exactly what it is about to write before
-it writes anything. It is the way to keep a look you have just made without switching
-`storeDialogPositions` on.
-
-**diff to default** stays a difference to the *default*, and a setting that the file already stores
-is listed with the others and then named again under a comment line that says so. Comparing against
-the defaults plus the file instead would hide exactly the settings the file is about.
-
-#### Placing a dialog, and a window, from a script
-
-A script can say where a dialog opens, which is the same mechanism the dialogs use for themselves:
-
-```python
-from exudyn.misc import overrideSettings
-
-#the visualization settings dialog, 1024x768 at (100, 80):
-overrideSettings.StoreDialogGeometry('Visualization Settings', [1024, 768], [100, 80])
-```
-
-The name is the **title** of the dialog, and `overrideSettings.DialogKey(name)` is the key it is
-stored under, so the same call places the solution viewer (`'Solution Viewer'`) or any other dialog.
-The **size comes back always and the position only if the window would still be reachable** on the
-screen you have now - a monitor that is gone must not put a dialog where its title bar cannot be
-grabbed. This writes `~/.exudyn/config.json`, so it holds for every run afterwards.
-
-The **render window** is not a dialog and is placed by its own settings, per view:
-
-```python
-SC.visualizationSettings.view0.window.renderWindowSize = [1024, 768]
-SC.visualizationSettings.view0.window.renderWindowPosition = [100, 80]
-```
-
-A negative coordinate - the default - means the window manager places it. The position is that of the
-OpenGL area rather than the title bar, so a small value hides part of the title bar and 0 hides it
-completely, which is a way to have a view without one.
-
-**The render window is the one window whose geometry lives in two places**: these settings, and -
-because they are ordinary settings - the `visualizationSettings` section of the file. The file is
-applied when the settings structure is created and a script speaks afterwards, so **what the script
-sets wins**, and `SC.renderer.Start()` says so once when the two differ:
-
-```
-Python WARNING: the render window geometry stored in the settings file differs from what this session
-set, and what the session set is used:
-  view0.window.renderWindowPosition: the file says [100,80] and this session uses [500,400]
-store the settings again to change the file, or remove them from it
-```
-
-It says nothing when they agree, which is the normal case for someone who stored the geometry and has
-not touched it since. `view*.window.storeRenderWindowGeometry` writes where the window was back into
-these settings when it closes, and `SC.renderer.GetState()['currentWindowPosition']` is where it is
-while it is open.
-
-#### The plot windows of PlotSensor
-
-A plot window is remembered by its **sequence**, the order `PlotSensor` made it in, because plot
-windows have no title of their own: the first one of a run is stored as `'PlotSensor 1'`, the second
-as `'PlotSensor 2'`, and `PlotSensor(..., closeAll=True)` starts that order over. They are stored in
-the same `dialogs` section, with the same rules - the size comes back always, the position only if the
-window would still be reachable - so the next run opens the plots where they were arranged.
-
-Storing them is asked for, once the windows are where they should be:
-
-```python
-from exudyn.plot import StorePlotWindowGeometry
-
-#after arranging the plot windows on the screen:
-StorePlotWindowGeometry()          #returns how many windows it stored
-```
-
-This is the call to use when the plots are made after `SC.renderer.Stop()`, when the settings dialog
-is gone; while it is open, its **store positions** button stores the plot windows together with the
-other windows. `PlotSensorDefaults().storeWindowPositions
-= True` in addition stores each window when it closes, one window at a time, which asks nothing but
-also keeps whatever a window happened to be when it was closed.
-
-A plot window is only placed by a backend that has one: with matplotlib on `Agg` - which
-`EXUDYN_SUPPRESS_UI_WINDOW_OPEN` selects - there is no window, nothing is placed and nothing is
-stored.
-
-**For this run only**, a script can write into `exudyn.special.overrideSettings` instead of the file:
-
-```python
-exudyn.special.overrideSettings['dialogs'] = {
-    'visualizationsettings': {'size': [1024, 768], 'position': [100, 80]}}
-```
-
-That is read by the next dialog that opens and the file is not touched. It is **not the recommended
-way**: nothing checks what is put there, and a value of the wrong shape is simply not used - the
-functions above are what say what they mean, and what a later Exudyn will keep working.
-
-#### Remembering a dialog, its columns and its font
-
-`visualizationSettings.dialogs.storeDialogPositions = True` makes a settings dialog remember
-where it was left, under `"dialogs"`, one entry per dialog. **The size comes back always; the
-position only when the window would still be reachable.** A monitor that is unplugged, a laptop
-undocked, a screen resolution that changed: each of them would otherwise put the dialog where nobody
-can reach its title bar, and a dialog that cannot be closed is a stuck session. When the stored
-position is not usable, the dialog opens where it would have opened anyway, at its remembered size.
-
-The three fixed columns of a settings dialog take a share of its width, each a fraction in
-`visualizationSettings.dialogs` - `columnWidthName`, `columnWidthValue`,
-`columnWidthType` - and the description column takes what they leave; if the three together
-would leave the description less than a tenth of the dialog, all three are scaled down to leave it
-that much. **Ctrl and the mouse wheel change the font size** of an open dialog, about 10\% per notch;
-the wheel alone still scrolls.
-
-(sec-environmentvariables)=
-#### The environment variables
-
-These change what Exudyn does before a script says anything, which is what makes them worth knowing
-when a run behaves differently than it reads:
-
-| variable | what it does |
-|---|---|
-| `EXUDYN_NO_USER_SETTINGS` | anything but empty or `0` ignores `~/.exudyn/config.json` completely, so that a run starts from the defaults. `runTestSuite.py`, `runTestExamples.py`, `runPerformanceTests.py` and `pytest` set it for themselves, so a stored setting can never move a test result |
-| `EXUDYN_CONFIG_FILE` | names a different settings file, for a second configuration or for a test |
-| `EXUDYN_OUTPUTDIRECTORY` | the initial value of `exudyn.config.outputDirectory`: every solution and sensor file a model writes goes there, which is how a model is run without writing into the working directory |
-| `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` | switches on all of `exudyn.special.userInterface`: no renderer, no solution viewer, no plot window and no dialog, and matplotlib is switched to its non-interactive backend. Meant for automated runs, where a window that waits for a human stops everything |
-| `EXUDYN_MODULE` | `fast` loads `exudynCPPfast` - no range checks, AVX2 - instead of the regular module; it belongs to release testing, because without range checks a wrong index is undefined behaviour instead of an exception |
-| `EXUDYN_IMPORT_VERBOSE` | 1 prints which compiled module was tried and what came of it, which is the whole answer to *it imports the wrong one* |
-
-**Setting one for every run in Spyder**: Spyder starts its consoles itself, so a variable is set
-where a console starts. In *Tools > Preferences > IPython console > Startup*, under *Run code*, the
-lines
-
-```python
-import os; os.environ['EXUDYN_OUTPUTDIRECTORY'] = 'solution'
-```
-
-make every run of a restarted console write its output into `solution/` beside the script it runs -
-with the working directory set to the directory of the file being executed, which is Spyder's
-default. A script that writes to `solution/...` itself then writes to `solution/solution/...`.
-Outside Spyder, `setx EXUDYN_OUTPUTDIRECTORY solution` sets the variable for every program the user
-starts afterwards.
-
-`EXUDYN_NO_USER_SETTINGS=1` is also what makes a problem reproducible on a machine that has
-stored something: run the script with the variable set and the difference is either gone (the
-stored setting caused it) or still there (it did not).
-""")
 
 
 pb.EndStubSection()

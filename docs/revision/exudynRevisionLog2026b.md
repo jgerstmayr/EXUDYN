@@ -12303,3 +12303,25 @@ unchanged, 126); `rotationMarkerDeprecationTest.py` rewritten: the motion as bef
 deprecated variant, three joints added with `warnOnce` True and False give 1 and 3 warnings pointing outside the
 package, and `GetJointArgs` with a rotation records no use (result unchanged); `test_checkUserScripts.py` gets the item
 parameters. `SpecialDeprecations` joins the other `Special...` classes in the stubtest baseline (pybind metaclass).
+
+<a id="rg3-29"></a>
+### RG3.29 — the Python-C++ command interface in sections (2026-10-03, #2808)
+
+*(Maintainer 2026-10-03.)* The Exudyn module page listed every member under one heading, so the table of contents showed
+*Exudyn* and, below it, the settings section. **The groups are sections now**, declared where the members are: an
+`AddDocu('', section=...)` before each group in `definitions/pybindModule.py` - *Module functions* (the heading of the
+module itself, which was `\codeName`, in `autoGenerateHelper.DefPyStartClass`), `exudyn.config`,
+`exudyn.experimental`, `exudyn.special` with its five groups one level below, and `exudyn.variables and exudyn.sys`;
+`special.currentRendererSystemContainer` and `special.overrideSettings` moved up to `special` itself. Each has a label
+(`sec-exudyn-config`, ...).
+
+**Settings that persist between runs** is `docs/manual/userSettings.md` again, hand-written, its text taken unchanged
+from the generated section (headings one level up): it is a tool of the user, not an interface function, and its
+subsection on the plot windows of `PlotSensor` was the part the maintainer saw out of place. This reverses the move of
+RG3.23, which had put it under the module with the manual page as a pointer. The label is `sec-usersettings`; the
+references to `sec-overridesettings` (three descriptions of `visualizationSettings`, `GUI.md`, `performanceErrors.md`,
+`resultsMonitor.md`, `revisions.md`, the description of `special.overrideSettings`) point at it.
+
+**The environment variables** are the last page of the chapter, after the type definitions:
+`definitions/pybindEnvironment.py`, replayed by `pybindEmitter` after the enums, label `sec-environmentvariables`
+unchanged.

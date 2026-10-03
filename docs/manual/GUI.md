@@ -127,7 +127,7 @@ dialog opens, so that a model's own settings can be told from the rest. Four but
   `view0.window.renderWindowSize` and `renderWindowPosition` in the file and in this dialog.
 
 Both storing buttons show exactly what they will write, and ask, before anything is written; see
-[](#sec-overridesettings). A geometry that **is** stored is used whenever a dialog opens, whatever
+[](#sec-usersettings). A geometry that **is** stored is used whenever a dialog opens, whatever
 `visualizationSettings.dialogs.storeDialogPositions` says — that flag decides whether a dialog stores
 *itself* when it closes.
 

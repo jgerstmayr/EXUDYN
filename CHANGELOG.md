@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 233 | 1.12.251 |
+| 1.12 | Metheney | 234 | 1.12.252 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.252** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Python-C++ command interface: the Exudyn module page in sections, the persisted settings a manual page, the environment variables a page of their own (#2808)
+  - description: The module page had one section with every member; its groups (config, experimental, special and its parts, variables and sys) become sections from the definitions. The settings that persist between runs, with the plot windows of PlotSensor, move to the manual page userSettings.md; the environment variables become the last page of the chapter, after the type definitions (maintainer 2026-10-03).
+  - **notes:** the Exudyn module page has a section per group of members; the settings that persist between runs are a page of the user manual, the environment variables the last page of the Python-C++ command interface
+  - date resolved: **2026-10-03 14:37**, date raised: 2026-10-03
 - **1.12.251** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` every use of a deprecated name is recorded in exudyn.sys\['deprecationUse'\] (#2806)
   - description: Grouped by source - simulationSettings, visualizationSettings, items, functions - with a count per name; always written, a flag in exudyn.special.deprecations turns it off. A test or a user sees whether a script used anything deprecated without catching warnings (maintainer 2026-10-03).
   - **notes:** every use of a deprecated name is counted in exu.sys\['deprecationUse'\], by source and name; exu.special.deprecations.recordUse = False turns it off

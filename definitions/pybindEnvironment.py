@@ -1,0 +1,55 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN definition file
+#
+# Details:  the environment variables that change what the module does (documentation only); the last page
+#           of the Python-C++ command interface, after the type definitions (#2680).
+#           The calls are recorded by PybindInterface (pybindTypes.py) and replayed by
+#           tools/generators/pybindEmitter.py into pybind_manual_classes.h, the stub fragments and
+#           the Python-C++ interface documentation.
+#
+#           DESCRIPTIONS: read definitions/README.md, section "Writing a
+#           description", before writing or changing one - what the text may
+#           contain, and how it is checked.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-03 (from pybindModule.py)
+# Copyright:This file is part of Exudyn. Exudyn is free software: see 'LICENSE.txt'
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+from pybindTypes import *
+
+pb = PybindInterface()
+
+pb.CreateNewRSTfile('EnvironmentVariables')
+pb.AddDocu(r"""These change what Exudyn does before a script says anything, which is what makes them worth knowing
+when a run behaves differently than it reads:
+
+| variable | what it does |
+|---|---|
+| `EXUDYN_NO_USER_SETTINGS` | anything but empty or `0` ignores `~/.exudyn/config.json` completely, so that a run starts from the defaults. `runTestSuite.py`, `runTestExamples.py`, `runPerformanceTests.py` and `pytest` set it for themselves, so a stored setting can never move a test result |
+| `EXUDYN_CONFIG_FILE` | names a different settings file, for a second configuration or for a test |
+| `EXUDYN_OUTPUTDIRECTORY` | the initial value of `exudyn.config.outputDirectory`: every solution and sensor file a model writes goes there, which is how a model is run without writing into the working directory |
+| `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` | switches on all of `exudyn.special.userInterface`: no renderer, no solution viewer, no plot window and no dialog, and matplotlib is switched to its non-interactive backend. Meant for automated runs, where a window that waits for a human stops everything |
+| `EXUDYN_MODULE` | `fast` loads `exudynCPPfast` - no range checks, AVX2 - instead of the regular module; it belongs to release testing, because without range checks a wrong index is undefined behaviour instead of an exception |
+| `EXUDYN_IMPORT_VERBOSE` | 1 prints which compiled module was tried and what came of it, which is the whole answer to *it imports the wrong one* |
+
+**Setting one for every run in Spyder**: Spyder starts its consoles itself, so a variable is set
+where a console starts. In *Tools > Preferences > IPython console > Startup*, under *Run code*, the
+lines
+
+```python
+import os; os.environ['EXUDYN_OUTPUTDIRECTORY'] = 'solution'
+```
+
+make every run of a restarted console write its output into `solution/` beside the script it runs -
+with the working directory set to the directory of the file being executed, which is Spyder's
+default. A script that writes to `solution/...` itself then writes to `solution/solution/...`.
+Outside Spyder, `setx EXUDYN_OUTPUTDIRECTORY solution` sets the variable for every program the user
+starts afterwards.
+
+`EXUDYN_NO_USER_SETTINGS=1` is also what makes a problem reproducible on a machine that has
+stored something: run the script with the variable set and the difference is either gone (the
+stored setting caused it) or still there (it did not).
+""",
+           section='Environment variables', sectionLevel=1, sectionLabel='sec-environmentvariables')

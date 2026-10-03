@@ -94,7 +94,7 @@ in one line and draws the plot without the panel.
 
 What you set in the panel is stored in `~/.exudyn/config.json`, under `resultsMonitor` — update
 period, log scales, autoscale, window size, whether the panel is shown, and the directory last used.
-It is the one file Exudyn remembers anything in ([](#sec-overridesettings)). The next monitor starts
+It is the one file Exudyn remembers anything in ([](#sec-usersettings)). The next monitor starts
 the way the last one ended. `--no-settings` neither reads nor writes it, which is what a reproducible
 script or a test wants.
 

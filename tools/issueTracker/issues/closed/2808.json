@@ -1,0 +1,15 @@
+{
+  "number": 2808,
+  "title": "Python-C++ command interface: the Exudyn module page in sections, the persisted settings a manual page, the environment variables a page of their own",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The module page had one section with every member; its groups (config, experimental, special and its parts, variables and sys) become sections from the definitions. The settings that persist between runs, with the plot windows of PlotSensor, move to the manual page userSettings.md; the environment variables become the last page of the chapter, after the type definitions (maintainer 2026-10-03).",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 14:37",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the Exudyn module page has a section per group of members; the settings that persist between runs are a page of the user manual, the environment variables the last page of the Python-C++ command interface",
+  "resolvedInVersion": "1.12.252"
+}

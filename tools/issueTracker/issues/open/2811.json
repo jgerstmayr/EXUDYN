@@ -1,0 +1,11 @@
+{
+  "number": 2811,
+  "title": "Jupyter notebooks for the tutorials and some examples: an evaluation first",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IDEA",
+  "effort": "MEDIUM",
+  "description": "Tutorials, and some sections of examples, as notebooks (Jupyter or similar): what it takes in the docs build (myst-nb or nbsphinx), in the test runners, the renderer and plots inside a notebook, and the size of the repository (maintainer 2026-10-03).",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01"
+}

@@ -110,7 +110,7 @@ on this machine. Exudyn keeps such settings in one folder, `~/.exudyn`, and
 To find out whether it is the cause without deleting anything, run the script with
 `EXUDYN_NO_USER_SETTINGS=1`: the difference is either gone (a stored setting caused it) or still
 there (it did not). What was read is listed by `exudyn.misc.overrideSettings.Print()`, and the whole
-mechanism is [](#sec-overridesettings).
+mechanism is [](#sec-usersettings).
 
 (sec-overview-basics-errors-switches)=
 ### Switches

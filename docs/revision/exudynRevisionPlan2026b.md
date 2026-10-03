@@ -493,6 +493,16 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 <a id="rg3-21"></a>
 **RG3.21** **DONE 2026-09-27** (#2673) — [log](exudynRevisionLog2026b.md#rg3-21) · [plan text](exudynRevisionLog2026b.md#plan-rg3-21) — The pages that still describe the state before a step that is done.
 
+<a id="rg3-29"></a>
+**RG3.29** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg3-29) *(maintainer 2026-10-03)* **The Python-C++
+    command interface in sections** (#2808): the Exudyn module page has a section per group of members -
+    *Module functions*, `exudyn.config`, `exudyn.experimental`, `exudyn.special` with `solver`, `exceptions`, `beams`,
+    `userInterface` and `deprecations`, `exudyn.variables and exudyn.sys` - declared in `definitions/pybindModule.py`, so
+    they are in the table of contents; *Settings that persist between runs*, with *The plot windows of PlotSensor*, is
+    the manual page `userSettings.md` again (outside the interface chapter; it reverses the move of RG3.23, which
+    put it under the module); *The environment variables* is the last page of the chapter, after the type definitions,
+    from `definitions/pybindEnvironment.py`.
+
 <a id="rg3-22"></a>
 **RG3.22** **DONE 2026-09-27** (#2659) — [log](exudynRevisionLog2026b.md#rg3-22) · [plan text](exudynRevisionLog2026b.md#plan-rg3-22) — The simulation settings section says how to look a setting up.
 
@@ -2653,6 +2663,63 @@ the joints an HT means fewer variables and one way of doing things.
     the parameters -, handled by the deprecation of item parameters (RG12.2), or started together with it: for the
     maintainer's decision in RG16.2.
 
+<a id="rg16-6"></a>
+**RG16.6** *(group RG16; maintainer 2026-10-03: "the premier place for rigid body transformations"; **proposal, waits
+for the maintainer's decision**)* **What `exu.HT` offers, and how its parts are named** (#2809). Everything about the
+HT was introduced after 1.11.0, so names change without deprecation until 1.13.
+*Today*: `HT(rotation=None, translation=None)` (also a 4x4 matrix or its 16 values), the properties `rotation` and
+`translation`, `Get()`, `Set(rotation, translation)`, `SetIdentity()`, `SetTranslation(t)` (with the unit rotation),
+`SetRotationX/Y/Z(angle)`, `HT44()`, `Inverse()`, `Invert()`, `RotateVector(v)`, `RotateVectorTransposed(v)`,
+`HasNoRotation()`, `H1*H2`, `H*v`, `==`, `np.array(H)`.
+*Proposal:*
+    - **RG16.6.1** **`position` instead of `translation`**: the word of the items (`referencePosition`,
+      `localPosition`, the `Position` output variable) and of the node coordinates below; the property `position`, the
+      constructor `HT(rotation=None, position=None)`, `Set(rotation, position)`, `SetPosition(p)` (keeps the rotation;
+      today's `SetTranslation` also resets it, which a name does not say - `HT(position=p)` does that). `Get()` returns
+      `[rotation, position]`.
+    - **RG16.6.2** **the node coordinates, both ways**, on the C++ conversions of `RigidBodyMath.h`
+      (`RotationMatrix2EP`/`EP2RotationMatrix`, `RotationMatrix2RotXYZ`/`RotXYZ2RotationMatrix`,
+      `LogSO3`/`ExpSO3` for the rotation vector); the rotation parameters with the names of the nodes:
+        - `GetEP()` (4 Euler parameters), `GetRxyz()` (3 Tait-Bryan angles, the parameters of `NodeRigidBodyRxyz`),
+          `GetRotationVector()` (3, of `NodeRigidBodyRotVecLG`);
+        - `GetPositionEP()` (7 = position and Euler parameters, the reference coordinates of `NodeRigidBodyEP`),
+          `GetPositionRxyz()` (6), `GetPositionRotationVector()` (6), each a numpy array;
+        - the other way, one function with keywords, as the constructor: `Set(rotation=None, position=None,
+          eulerParameters=None, Rxyz=None, rotationVector=None)` - at most one of the rotation parameters, a part not
+          given stays as it is; and the same keywords for `HT(...)`, so that `exu.HT(position=p, Rxyz=[0,0,0.5])` is one
+          line; `SetPositionEP(q7)`, `SetPositionRxyz(q6)`, `SetPositionRotationVector(q6)` for node coordinates
+          as they come from `mbs.GetNodeOutput(n, exu.OutputVariableType.Coordinates)` plus the reference.
+    - **RG16.6.3** further functions that nodes, markers and items need, each to keep or drop:
+        - `Relative(H1)` = $\Hm_0^{-1}\Hm_1$, the frame of `H1` seen from this one - what a joint computes between its
+          two markers; cheaper than `Inverse()*H1`;
+        - `GetRotationXY()` / `GetPosition2D()`: the angle and the position of a planar frame (`NodeRigidBody2D`,
+          `referenceCoordinates=[x, y, phi]`), and `HT(position2D=, angle=)` - only if 2D models should use HT;
+        - `Interpolate(H1, factor)` - position linear, rotation on SO(3) - for animations and the robotics
+          trajectories;
+        - `RotationAngle()` and `RotationAxis()` of the rotation, the size of a frame error in a test or a controller;
+        - `exu.HT.FromRotationAxis(axis, angle)` (Rodrigues) as a second static constructor beside `SetRotationX/Y/Z`.
+    - **RG16.6.4** **names kept**: `rotation` (not `A`), `HT44()`, `Inverse()`/`Invert()`, `RotateVector...`,
+      `HasNoRotation()`; `SetRotationX/Y/Z` keep their meaning (the rotation and zero position).
+
+**RG16.7** *(group RG16; after the decision of RG16.6)* **`exu.HT` as decided in RG16.6** (#2810): the bindings on the
+existing C++ functions (no second implementation of a conversion), the names changed where decided; **examples in the
+documentation** of the HT (`definitions/pybindDataStructures.py`, section *HT*): `.rotation` and `.position` read and
+written, a product and a point, the node coordinates of a rigid body from an HT and back
+(`CreateRigidBody(referenceHT=...)` and `GetPositionEP()` giving the same reference coordinates), and a test model of
+the whole interface against `rigidBodyUtilities`.
+
+## RG17 — Notebooks
+
+*(Group created by the maintainer, 2026-10-03.)* Tutorials, and some sections of examples, as notebooks
+(Jupyter or similar) - a tutorial is read and run step by step, which a notebook shows and a script does not.
+
+<a id="rg17-1"></a>
+**RG17.1** *(group RG17; maintainer 2026-10-03: "evaluation step first")* **Evaluate notebooks for tutorials and
+examples** (#2811), before anything is converted: what the documentation build needs (`myst-nb` or `nbsphinx`, executed
+or stored output, the PDF), how a notebook is tested (`runTestExamples.py`, `nbval`, or a converted `.py`), the renderer
+and `PlotSensor` inside a notebook (no window: images, or an interactive viewer), the size of the repository with stored
+outputs, and which tutorials and example sections first. Ends with a recommendation for the maintainer.
+
 ## Next steps recommended
 
 *A reading of the groups above, updated from time to time. It is **not** a second place where
@@ -2679,6 +2746,9 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
+| RG16.6 | #2809 | `exu.HT` as the place for rigid body transformations: the proposal for its functions and names |
+| RG16.7 | #2810 | `exu.HT` as decided in RG16.6, with examples in its documentation and a test model |
+| RG17.1 | #2811 | notebooks for tutorials and examples: the evaluation |
 | RG12.33 | #2807 | deprecations of the Python library declared like the C++ ones, and a build check for expired ones: a proposal |
 | RG12.31 | #2802 | settings and item parameters that could be renamed: a list for the maintainer's decision |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |

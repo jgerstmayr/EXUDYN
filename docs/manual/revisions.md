@@ -103,7 +103,7 @@ or its current value, where it used to raise `KeyError`.
 import into `exudyn.special.overrideSettings` and can override `exudyn.config`, any plain
 `visualizationSettings` — in **every** such structure that is created, not only in a
 `SystemContainer` — the size and position of a dialog, and the settings of the results monitor, which
-has no file of its own ([](#sec-overridesettings)). Nothing writes it by itself, `import exudyn`
+has no file of its own ([](#sec-usersettings)). Nothing writes it by itself, `import exudyn`
 prints one note naming what came from it, and `EXUDYN_NO_USER_SETTINGS=1` ignores it — which is what
 a bug report needs. The test suites set that variable for themselves.
 
@@ -252,7 +252,7 @@ them.
 (`view0.window.renderWindowSize` and `renderWindowPosition`), and
 `exudyn.plot.StorePlotWindowGeometry()` keeps the plot windows of `PlotSensor` where they are
 arranged. Everything goes into `~/.exudyn/config.json`, after showing what will be written
-([](#sec-overridesettings)).
+([](#sec-usersettings)).
 
 **The scene as data**: `SC.renderer.GetGraphicsData()` returns every line, sphere, circle, text and
 triangle the renderer would draw, each with the item that drew it, and needs no window - for a test

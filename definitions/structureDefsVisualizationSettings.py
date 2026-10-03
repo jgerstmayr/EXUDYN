@@ -1030,11 +1030,11 @@ definitions.append(StructureDefinition(
         StructureParameter(type=TIndexND(2), 
             pythonName='renderWindowPosition',
             defaultValue='Index2({-1,-1})',
-            description=r'position of the top left corner of the render window of this view, in pixels; a NEGATIVE coordinate - which is the default - means that the window manager places the window, as it did before this setting existed. Set both to place the window, or store them in `~/.exudyn/config.json` to have every run start there, see Section [](#sec-overridesettings). NOTE: this is the position of the OpenGL area, not of the title bar, so a small value hides part of the title bar and 0 hides it completely - which still leaves the escape key, and is a way to have a view without one. The position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it'),
+            description=r'position of the top left corner of the render window of this view, in pixels; a NEGATIVE coordinate - which is the default - means that the window manager places the window, as it did before this setting existed. Set both to place the window, or store them in `~/.exudyn/config.json` to have every run start there, see Section [](#sec-usersettings). NOTE: this is the position of the OpenGL area, not of the title bar, so a small value hides part of the title bar and 0 hides it completely - which still leaves the escape key, and is a way to have a view without one. The position is only used while the window is created, and one that lies outside the screens you have now puts the window where you cannot reach it'),
         StructureParameter(type=Tbool,
             pythonName='storeRenderWindowGeometry',
             defaultValue=False,
-            description=r'True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition` - so that storing the settings keeps the window where you left it, see Section [](#sec-overridesettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run'),
+            description=r'True: when the render window of this view closes, where it was is written into `renderWindowSize` and `renderWindowPosition` - so that storing the settings keeps the window where you left it, see Section [](#sec-usersettings). False (default): the settings are only ever what you set, which is why *diff to default* does not report a window position after every run'),
         StructureParameter(type=Tbool, 
             pythonName='showWindow',
             defaultValue=True,
@@ -1219,7 +1219,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tbool,
             pythonName='storeDialogPositions',
             defaultValue=False,
-            description=r'True: a dialog stores its size and position in `~/.exudyn/config.json` when it closes, so that the next dialog of the same kind starts with them. A geometry that IS stored - by this flag, by the store button of the settings dialog, or by a script - is used whenever such a dialog opens, whatever this flag says: the size always, the position only if the window would still be reachable on the current screen. See Section [](#sec-overridesettings)'),
+            description=r'True: a dialog stores its size and position in `~/.exudyn/config.json` when it closes, so that the next dialog of the same kind starts with them. A geometry that IS stored - by this flag, by the store button of the settings dialog, or by a script - is used whenever such a dialog opens, whatever this flag says: the size always, the position only if the window would still be reachable on the current screen. See Section [](#sec-usersettings)'),
         ],
     ))
 
