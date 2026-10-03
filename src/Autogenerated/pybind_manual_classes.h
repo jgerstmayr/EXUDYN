@@ -552,6 +552,16 @@
             return item.Multiply(other); }, "H1*H2, the composition of two transformations, an HT; H*v, the transformed point A*v+p of a 3D vector, a numpy array", py::arg("other"))
         .def("__eq__", [](const PyHT &item, const PyHT &other) {
             return (const HomogeneousTransformation&)item == (const HomogeneousTransformation&)other; }, "True if rotation and translation are equal, component by component", py::arg("other"))
+        .def("__matmul__", [](const PyHT &item, const py::object &other) {
+            return item.MatMul(other); }, "H1@H2, the composition of two transformations as H1*H2, an HT; H@x for any other x as numpy computes it with the 4x4 matrix, e.g. H@[x,y,z,1]", py::arg("other"))
+        .def("__copy__", [](const PyHT &item) {
+            return PyHT(item); }, "a copy, for copy.copy(H)")
+        .def("__deepcopy__", [](const PyHT &item, const py::object& memo) {
+            return PyHT(item); }, "a copy, for copy.deepcopy(H) and objects holding an HT", py::arg("memo"))
+        .def("__getitem__", [](const PyHT &item, const py::object& key) {
+            return item.GetItemPy(key); }, "H[key]: numpy indexing of the 4x4 matrix [A p; 0 1], e.g. H[0:3,3] for the translation; the result is a copy", py::arg("key"))
+        .def("__setitem__", [](PyHT &item, const py::object& key, const py::object& value) {
+            item.SetItemPy(key, value); }, "H[key] = value: numpy indexing of the 4x4 matrix for writing the rotation and the translation, e.g. H[0:3,3] = p; writing the last row [0,0,0,1] raises", py::arg("key"), py::arg("value"))
         .def("__array__", [](const PyHT &item, const py::object& dtype, const py::object& copy) {
             return item.GetHT44Py(); }, "the 4x4 matrix [A p; 0 1] as numpy array, for np.array(H) and wherever numpy takes the HT", py::arg("dtype") = py::none(), py::arg("copy") = py::none())
         .def("__repr__", [](const PyHT &item) {

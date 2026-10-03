@@ -92,7 +92,7 @@ def CompareKinematicTreeAndRobot(newRobot, locPos):
                                             outputVariableType=exu.OutputVariableType.AngularVelocity))
         mbs.systemIsConsistent = True #adding new sensor requires re-assemble, which is not done here
 
-        jacobian = newRobot.Jacobian(allHT[0:i+1], toolPosition=HT2translation(allHT[i]@HTtranslate(locPos)), mode='all')
+        jacobian = newRobot.Jacobian(allHT[0:i+1], toolPosition=HT2translation(allHT[i]@exu.HT(translation=locPos)), mode='all')
         #print('jac=', jacobian.round(3))
 
         vOmegaRobot = jacobian @ q_t[0:i+1]
@@ -126,14 +126,14 @@ if case == '3Dmechanism' or performTest:
     
     newRobot = Robot(gravity=gravity3D,
                   base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
-                  tool = RobotTool(HT=HTtranslate([0,0.5*L,0]), visualization=VRobotTool(graphicsData=[
+                  tool = RobotTool(HT=exu.HT(translation=[0,0.5*L,0]), visualization=VRobotTool(graphicsData=[
                       graphics.Brick(size=[w, L, w], color=graphics.color.orange)])),
                   referenceConfiguration = []) #referenceConfiguration created with 0s automatically
     
     #cart:
     Jlink = InertiaCuboid(density=5000, sideLengths=[L,w,w]) #w.r.t. reference center of mass
     link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                     jointType='Px', preHT=HT0(), 
+                     jointType='Px', preHT=exu.HT(), 
                      PDcontrol=(pControl, dControl),
                      visualization=VRobotLink(linkColor=graphics.color.lawngreen))
     newRobot.AddLink(link)
@@ -142,7 +142,7 @@ if case == '3Dmechanism' or performTest:
         Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
         Jlink = Jlink.Translated([0,0.5*L,0])
         link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                         jointType='Rz', preHT=HT0(), 
+                         jointType='Rz', preHT=exu.HT(), 
                          PDcontrol=(pControl, dControl),
                          visualization=VRobotLink(linkColor=graphics.color.blue))
         newRobot.AddLink(link)
@@ -153,7 +153,7 @@ if case == '3Dmechanism' or performTest:
             Jlink = Jlink.Translated([0,0.5*L,0])
             link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                              # jointType='Rz', preHT=HTtranslateY(L),
-                             jointType='Rz', preHT=HTtranslateY(L)@HTrotateY(0.25*pi),
+                             jointType='Rz', preHT=exu.HT(translation=[0,L,0])@exu.HT().SetRotationY(0.25*pi),
                              PDcontrol=(pControl, dControl), 
                              visualization=VRobotLink(linkColor=graphics.color.red))
             newRobot.AddLink(link)
@@ -162,7 +162,7 @@ if case == '3Dmechanism' or performTest:
             Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
             Jlink = Jlink.Translated([0,0.5*L,0])
             link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                             jointType='Px', preHT=HT0(), 
+                             jointType='Px', preHT=exu.HT(), 
                              PDcontrol=(pControl, dControl),
                              visualization=VRobotLink(linkColor=graphics.color.lawngreen))
             newRobot.AddLink(link)
@@ -171,7 +171,7 @@ if case == '3Dmechanism' or performTest:
             Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
             Jlink = Jlink.Translated([0,0.5*L,0])
             link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                             jointType='Rz', preHT=HTtranslateY(L)@HTrotateZ(-0.5*pi),
+                             jointType='Rz', preHT=exu.HT(translation=[0,L,0])@exu.HT().SetRotationZ(-0.5*pi),
                              PDcontrol=(pControl, dControl), 
                              #visualization=VRobotLink(linkColor=graphics.color.brown))
                              visualization=VRobotLink(linkColor=[-1,-1,-1,1]))
@@ -181,7 +181,7 @@ if case == '3Dmechanism' or performTest:
             Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
             Jlink = Jlink.Translated([0,0.5*L,0])
             link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                             jointType='Rz', preHT=HTtranslateY(L)@HTrotateZ(-0.5*pi),
+                             jointType='Rz', preHT=exu.HT(translation=[0,L,0])@exu.HT().SetRotationZ(-0.5*pi),
                              PDcontrol=(pControl, dControl), 
                              visualization=VRobotLink(linkColor=graphics.color.brown))
             newRobot.AddLink(link)
@@ -189,7 +189,7 @@ if case == '3Dmechanism' or performTest:
             Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
             Jlink = Jlink.Translated([0,0.5*L,0])
             link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                             jointType='Rz', preHT=HTtranslateY(L)@HTrotateZ(-0.5*pi),
+                             jointType='Rz', preHT=exu.HT(translation=[0,L,0])@exu.HT().SetRotationZ(-0.5*pi),
                              PDcontrol=(pControl, dControl), 
                              visualization=VRobotLink(linkColor=graphics.color.brown))
             newRobot.AddLink(link)
@@ -197,7 +197,7 @@ if case == '3Dmechanism' or performTest:
             Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
             Jlink = Jlink.Translated([0,0.5*L,0])
             link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                             jointType='Rz', preHT=HTtranslateY(L)@HTrotateZ(-0.5*pi),
+                             jointType='Rz', preHT=exu.HT(translation=[0,L,0])@exu.HT().SetRotationZ(-0.5*pi),
                              PDcontrol=(pControl, dControl), 
                              visualization=VRobotLink(linkColor=graphics.color.brown))
             newRobot.AddLink(link)
@@ -375,14 +375,14 @@ if case == 'invertedPendulum' or performTest:
     
     newRobot = Robot(gravity=gravity3D,
                   base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
-                  tool = RobotTool(HT=HTtranslate([0,0.5*L,0]), visualization=VRobotTool(graphicsData=[
+                  tool = RobotTool(HT=exu.HT(translation=[0,0.5*L,0]), visualization=VRobotTool(graphicsData=[
                       graphics.Brick(size=[w, L, w], color=graphics.color.orange)])),
                   referenceConfiguration = []) #referenceConfiguration created with 0s automatically
     
     #cart:
     Jlink = InertiaCuboid(density=5000, sideLengths=[L,w,w]) #w.r.t. reference center of mass
     link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                     jointType='Px', preHT=HT0(), 
+                     jointType='Px', preHT=exu.HT(), 
                      PDcontrol=(pControl, dControl),
                      visualization=VRobotLink(linkColor=graphics.color.lawngreen))
     newRobot.AddLink(link)
@@ -392,9 +392,9 @@ if case == 'invertedPendulum' or performTest:
     for i in range(nChainLinks):
         Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
         Jlink = Jlink.Translated([0,0.5*L,0])
-        preHT = HT0()
+        preHT = exu.HT()
         if i > 0:
-            preHT = HTtranslateY(L)
+            preHT = exu.HT(translation=[0,L,0])
 
         link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                          jointType='Rz', preHT=preHT, 
@@ -523,7 +523,7 @@ if case == 'treeStructure' or performTest:
     #cart:
     Jlink = InertiaCuboid(density=5000, sideLengths=[L,w,w]) #w.r.t. reference center of mass
     link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                     jointType='Px', preHT=HT0(),
+                     jointType='Px', preHT=exu.HT(),
                      parent = -1,
                      PDcontrol=(pControl, dControl),
                      visualization=VRobotLink(linkColor=graphics.color.lawngreen))
@@ -535,9 +535,9 @@ if case == 'treeStructure' or performTest:
     for i in range(nChainLinks):
         Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
         Jlink = Jlink.Translated([0,0.5*L,0])
-        preHT = HTtranslateX(0.5*L)
+        preHT = exu.HT(translation=[0.5*L,0,0])
         if i > 0:
-            preHT = HTtranslateY(L)@HTrotateZ(-5*(2*pi/360))
+            preHT = exu.HT(translation=[0,L,0])@exu.HT().SetRotationZ(-5*(2*pi/360))
 
         link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                          jointType='Rz', preHT=preHT, 
@@ -550,9 +550,9 @@ if case == 'treeStructure' or performTest:
     for i in range(nChainLinks):
         Jlink = InertiaCuboid(density=1000, sideLengths=[w,L,w]) #w.r.t. reference center of mass
         Jlink = Jlink.Translated([0,0.5*L,0])
-        preHT = HTtranslateX(-0.5*L)
+        preHT = exu.HT(translation=[-0.5*L,0,0])
         if i > 0:
-            preHT = HTtranslateY(L)@HTrotateZ(5*(2*pi/360))
+            preHT = exu.HT(translation=[0,L,0])@exu.HT().SetRotationZ(5*(2*pi/360))
 
         link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                          jointType='Rz', preHT=preHT, 

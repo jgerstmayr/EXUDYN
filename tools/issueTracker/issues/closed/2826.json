@@ -2,12 +2,16 @@
   "number": 2826,
   "title": "the functions added to MainSystem have return annotations",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "The maintainer, 2026-10-04, choosing option (a) of #2825: add a step to add return annotations for the Create functions. Since #2825 the stub assigns the Python functions to MainSystem, so a type checker and an editor take their signature from the functions themselves; the return types that the copied stub had (ObjectIndex, NodeIndex, dict for returnDict=True, ...) must therefore be annotations of the functions: the 25 Create functions and the other functions added to MainSystem (SolveDynamic, SolveStatic, PlotSensor, SolutionViewer, ComputeLinearizedSystem, ...). revision2026b step RG12.38.",
   "dateRaised": "2026-10-03",
   "deadline": "2027-04-01",
-  "file": "python/exudyn/misc/mainSystemExtensions.py"
+  "dateResolved": "2026-10-03 23:23",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/mainSystemExtensions.py",
+  "releaseNotes": "The functions added to MainSystem (Create functions, solvers, PlotSensor, ...) have return annotations, so that editors and type checkers know what they return.",
+  "resolvedInVersion": "1.12.269"
 }

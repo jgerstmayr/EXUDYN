@@ -73,7 +73,7 @@ graphicsBaseList = [graphics.Brick(size=[L, 0.8*w, 0.8*w], color=graphics.color.
 
 newRobot = Robot(gravity=gravity3D,
               base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
-              tool = RobotTool(HT=HTtranslate([0,0.5*Lengths[-1],0]), visualization=VRobotTool(graphicsData=[
+              tool = RobotTool(HT=exu.HT(translation=[0,0.5*Lengths[-1],0]), visualization=VRobotTool(graphicsData=[
                   graphics.Brick(size=[w, Lengths[-1], w], color=graphics.color.orange)])),
               referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
@@ -84,11 +84,11 @@ nChainLinks = 3
 for i in range(nChainLinks):
     Jlink = InertiaCuboid(density=1000, sideLengths=[w,Lengths[i],w]) #w.r.t. reference center of mass
     Jlink = Jlink.Translated([0,0.5*Lengths[i],0])
-    preHT = HT0()
+    preHT = exu.HT()
     if i == 0:
-        preHT = HTrotateZ(zLinkRots[i])
+        preHT = exu.HT().SetRotationZ(zLinkRots[i])
     else:
-        preHT = HTtranslateY(Lengths[i-1])@HTrotateZ(zLinkRots[i])
+        preHT = exu.HT(translation=[0,Lengths[i-1],0])@exu.HT().SetRotationZ(zLinkRots[i])
         
     if i == 0:
         link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 

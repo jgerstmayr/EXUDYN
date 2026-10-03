@@ -144,6 +144,23 @@ public:
 
 	py::array_t<Real> GetHT44Py() const { return EPyUtils::ToPython(GetHT44()); }
 
+	//! numpy indexing of the 4x4 matrix for reading, H[0:3,3], H[2][3]; the result does not refer back to the HT (#2821)
+	py::object GetItemPy(const py::object& key) const { return GetHT44Py().attr("__getitem__")(key); }
+
+	//! numpy indexing of the 4x4 matrix for writing the rotation and the translation, H[0:3,3] = p; the last row
+	//! [0,0,0,1] cannot change (#2821)
+	void SetItemPy(const py::object& key, const py::object& value)
+	{
+		py::array_t<Real> matrix = GetHT44Py();
+		matrix.attr("__setitem__")(key, value);
+		ConstSizeMatrix<16> matrix44(4, 4);
+		EPyUtils::FromPython<Real, 4, 4>(matrix, matrix44);
+		CHECKandTHROW(matrix44(3, 0) == 0. && matrix44(3, 1) == 0. && matrix44(3, 2) == 0. && matrix44(3, 3) == 1.,
+			"HT[...] = value: the last row of an HT is [0,0,0,1] and cannot be written");
+		SetHT44(matrix44);
+		UpdateNoRotationFlag();
+	}
+
 	PyHT GetInversePy() const { return PyHT(GetInverse()); }
 
 	//! H1*H2
@@ -154,6 +171,14 @@ public:
 	{
 		if (py::isinstance<PyHT>(other)) { return py::cast(MultiplyHT(py::cast<const PyHT&>(other))); }
 		return MultiplyVector(other);
+	}
+
+	//! H1@H2, an HT as H1*H2; H@x for anything else as numpy computes it with the 4x4 matrix, so that scripts written
+	//! for 4x4 numpy arrays keep working (#2821)
+	py::object MatMul(const py::object& other) const
+	{
+		if (py::isinstance<PyHT>(other)) { return py::cast(MultiplyHT(py::cast<const PyHT&>(other))); }
+		return GetHT44Py().attr("__matmul__")(other);
 	}
 
 	//! H*v, a point transformed

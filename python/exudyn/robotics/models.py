@@ -19,8 +19,7 @@ import numpy as np
 import exudyn
 import exudyn.graphics as graphics
 import exudyn.robotics as rob
-from exudyn.rigidBodyUtilities import HTtranslate, InverseHT,\
-                                      HTrotateY, HTrotateX, RigidBodyInertia
+from exudyn.rigidBodyUtilities import RigidBodyInertia
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -117,8 +116,8 @@ def Manipulator4Rsimple():
            'jointType':[1,1,1], #1=revolute, 0=prismatic
            'jointStiffnessMatrix':   np.diag(JointStiffness),
            'joinTorqueMaxMatrix':    np.diag(Tmax),
-           'base':{'HT':HTtranslate([0,0,0])},
-           'tool':{'HT':HTtranslate([0,0,0]) @HTrotateX(np.pi/2)   @HTrotateY(np.pi/2)},
+           'base':{'HT':exudyn.HT()},
+           'tool':{'HT':exudyn.HT().SetRotationX(np.pi/2) * exudyn.HT().SetRotationY(np.pi/2)},
            'gravity':[0,0,-9.81],
            'referenceConfiguration':[0]*3, #reference configuration for bodies; at which the myRobot is built
            'dhMode':'stdDH', #this mode prescribes the default DH mode to be used; 
@@ -212,8 +211,8 @@ def Manipulator3RSimple():
            'jointType':[1,1,1], #1=revolute, 0=prismatic
            'jointStiffnessMatrix':   np.diag(JointStiffness),
            'joinTorqueMaxMatrix':    np.diag(Tmax),
-           'base':{'HT':HTtranslate([0,0,0])},
-           'tool':{'HT':HTtranslate([0,0,l3])},
+           'base':{'HT':exudyn.HT()},
+           'tool':{'HT':exudyn.HT(translation=[0,0,l3])},
            'gravity':[0,0,-9.81],
            'referenceConfiguration':[0]*3, #reference configuration for bodies; at which the myRobot is built
            'dhMode':'stdDH', #this mode prescribes the default DH mode to be used; 
@@ -356,8 +355,8 @@ def ManipulatorPANDA():
            'jointType':[1,1,1,1,1,1,1], #1=revolute, 0=prismatic
            'jointStiffnessMatrix':   np.diag(JointStiffness),
            'joinTorqueMaxMatrix':    np.diag(Tmax),
-           'base':{'HT':HTtranslate([0,0,0])},
-           'tool':{'HT':HTtranslate([0,0,0.11])},
+           'base':{'HT':exudyn.HT()},
+           'tool':{'HT':exudyn.HT(translation=[0,0,0.11])},
            'gravity':[0,0,-9.81],
            'referenceConfiguration':[0]*7, #reference configuration for bodies; at which the myRobot is built
            'dhMode':'modDHKK', #this mode prescribes the default DH mode to be used; 
@@ -450,8 +449,8 @@ def ManipulatorUR5():
            'jointType':[1,1,1,1,1,1], #1=revolute, 0=prismatic
            'jointStiffnessMatrix':   np.diag(JointStiffness),
            'joinTorqueMaxMatrix':    np.diag(Tmax),
-           'base':{'HT':HTtranslate([0,0,0])},
-           'tool':{'HT':HTtranslate([0,0,0])},
+           'base':{'HT':exudyn.HT()},
+           'tool':{'HT':exudyn.HT()},
            'gravity':[0,0,-9.81],
            'referenceConfiguration':[0]*6, #reference configuration for bodies; at which the myRobot is built
            'dhMode':'stdDH', #this mode prescribes the default DH mode to be used; 
@@ -543,8 +542,8 @@ def ManipulatorPuma560():
            'jointType':[1,1,1,1,1,1], #1=revolute, 0=prismatic
            'jointStiffnessMatrix':   np.diag(JointStiffness),
            'joinTorqueMaxMatrix':    np.diag(Tmax),
-           'base':{'HT':HTtranslate([0,0,0])},
-           'tool':{'HT':HTtranslate([0,0,0])},
+           'base':{'HT':exudyn.HT()},
+           'tool':{'HT':exudyn.HT()},
            'gravity':[0,0,-9.81],
            'referenceConfiguration':[0]*6, #reference configuration for bodies; at which the myRobot is built
            'dhMode':'stdDH', #this mode prescribes the default DH mode to be used; 
@@ -600,8 +599,6 @@ def LinkDict2Robot(robotLinkDict, robotClass=None):
 
     if dhMode=='stdDH':
         for i, link in enumerate(robotLinkDict['links']):
-            stdLocalHT =  rob.StdDH2HT(link['stdDH'])
-            com = HTtranslate(link['COM'])
             PDcontrol = (None, None)
             if 'Pcontrol' in robotLinkDict and 'Dcontrol' in robotLinkDict :
                 PDcontrol = (robotLinkDict['Pcontrol'][i], robotLinkDict['Dcontrol'][i])
@@ -669,12 +666,12 @@ def LinkDictModDHKK2Robot(robotLinkDict, robotClass=None):
 
             [preHT, localHT] =  rob.ModDHKK2HT(link['modDHKK'])
             stdLocalHT =  rob.StdDH2HT(link['stdDH'])
-            HT = InverseHT(stdLocalHT) @ (localHT) #from stdHT back and forward in localHT of ModDHKK
+            HT = stdLocalHT.Inverse() * localHT #from stdHT back and forward in localHT of ModDHKK
             
             rbi = RigidBodyInertia()
             rbi.SetWithCOMinertia(link['mass'], link['inertia'], link['COM'])
     
-            rbi = rbi.Transformed(InverseHT(HT)) #inertia parameters need to be transformed to new modDHKK link frame
+            rbi = rbi.Transformed(HT.Inverse()) #inertia parameters need to be transformed to new modDHKK link frame
             
             robotClass.AddLink(rob.RobotLink(mass=rbi.mass,
                                            COM=rbi.COM(), 

@@ -58,11 +58,9 @@
 1	python/exudyn/robotics/models.py	F403	`from exudyn.rigidBodyUtilities import *` used; unable to detect undefined names
 1	python/exudyn/robotics/models.py	F403	`from exudyn.robotics import *` used; unable to detect undefined names
 1	python/exudyn/robotics/models.py	F403	`from exudyn.utilities import *` used; unable to detect undefined names
-1	python/exudyn/robotics/models.py	F841	Local variable `com` is assigned to but never used
 1	python/exudyn/robotics/models.py	F841	Local variable `link3` is assigned to but never used
 1	python/exudyn/robotics/models.py	F841	Local variable `massRobotArm` is assigned to but never used
 1	python/exudyn/robotics/models.py	F841	Local variable `stdDHparameter` is assigned to but never used
-1	python/exudyn/robotics/models.py	F841	Local variable `stdLocalHT` is assigned to but never used
 1	python/exudyn/robotics/models.py	F841	Local variable `stiffness` is assigned to but never used
 1	python/exudyn/robotics/models.py	F841	Local variable `torqueMax` is assigned to but never used
 1	python/exudyn/robotics/roboticsCore.py	E721	Use `is` and `is not` for type comparisons, or `isinstance()` for isinstance checks

@@ -259,8 +259,8 @@ graphicsToolList+= [gCup]
 
 #changed to new robot structure July 2021:
 robot = Robot(gravity=gravity,
-              base = RobotBase(HT=HTtranslate(pBase), visualization=VRobotBase(graphicsData=graphicsBaseList)),
-              tool = RobotTool(HT=HTtranslate([0,0,0]), visualization=VRobotTool(graphicsData=graphicsToolList)),
+              base = RobotBase(HT=exu.HT(translation=pBase), visualization=VRobotBase(graphicsData=graphicsBaseList)),
+              tool = RobotTool(HT=exu.HT(), visualization=VRobotTool(graphicsData=graphicsToolList)),
               referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
 
@@ -334,7 +334,7 @@ def ComputeMBSstaticRobotTorques(robot):
 #++++++++++++++++++++++++++++++++++++++++++++++++
 #base, graphics, object and marker:
 
-objectGround = mbs.AddObject(ObjectGround(referencePosition=HT2translation(robot.GetBaseHT()), 
+objectGround = mbs.AddObject(ObjectGround(referencePosition=robot.GetBaseHT().translation, 
                                       #visualization=VObjectGround(graphicsData=graphicsBaseList)
                                           ))
 

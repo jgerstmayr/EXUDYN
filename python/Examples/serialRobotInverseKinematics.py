@@ -68,10 +68,10 @@ graphicsToolList+= [graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color
 robotDef = ManipulatorPuma560()
 # robotDef = ManipulatorUR5()
 # robotDef = ManipulatorPANDA()
-HTtool = HTtranslate([0,0,0.08])
+HTtool = exu.HT(translation=[0,0,0.08])
 
 robot = Robot(gravity=[0,0,-9.81],
-              base = RobotBase(HT=HTtranslate([0,0,0]), visualization=VRobotBase(graphicsData=graphicsBaseList)),
+              base = RobotBase(HT=exu.HT(), visualization=VRobotBase(graphicsData=graphicsBaseList)),
               tool = RobotTool(HT=HTtool, visualization=VRobotTool(graphicsData=graphicsToolList)),
               referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
@@ -107,9 +107,9 @@ HTlastJoint = jointHTs[-1]@HTtool
 #prescribed motion:
 #HTmove = HTtranslate([-0.25,0.,0.3])
 if motionCase == 1: 
-    HTmove = HomogeneousTransformation(RotationMatrixX(-0.3*pi),[-0.45,0.,0.]) #goes through singularity
+    HTmove = exu.HT(rotation=RotationMatrixX(-0.3*pi), translation=[-0.45,0.,0.]) #goes through singularity
 elif motionCase == 2: 
-    HTmove = HomogeneousTransformation(RotationMatrixX(0.3*pi),[0.,0.,-0.3])    #no singularity
+    HTmove = exu.HT(rotation=RotationMatrixX(0.3*pi), translation=[0.,0.,-0.3])    #no singularity
 else: 
     print('no valid motionCase provided')
 

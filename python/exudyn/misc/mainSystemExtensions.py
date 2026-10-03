@@ -15,6 +15,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #import exudyn #does not work out of exudyn.__init__.py
+from typing import Union
 from exudyn.misc.docmeta import docmeta
 from exudyn.misc.deprecation import DeprecatedArgument #the deprecations of the library (#2807)
 import exudyn as exu
@@ -345,7 +346,7 @@ def MainSystemCreateGround(mbs,
                            graphicsDataList = [],
                            graphicsDataUserFunction = 0,
                            show = True,
-                           referenceHT = None): 
+                           referenceHT = None) -> exudyn.ObjectIndex: 
     """helper function to create a ground object, using arguments of ObjectGround; this function is mainly added for consistency with other mainSystemExtensions
 
     Args:
@@ -418,7 +419,7 @@ def MainSystemCreateMassPoint(mbs,
                            color =  [-1.,-1.,-1.,-1.],
                            show = True, 
                            create2D = False, 
-                           returnDict = False, physicsMass=None): 
+                           returnDict = False, physicsMass=None) -> Union[dict, exudyn.ObjectIndex]: 
     """helper function to create 2D or 3D mass point object and node, using arguments as in NodePoint and MassPoint
 
     Args:
@@ -556,7 +557,7 @@ def MainSystemCreateRigidBody(mbs,
                            create2D = False, 
                            returnDict = False,
                            referenceHT = None,
-                           initialHT = None): 
+                           initialHT = None) -> Union[dict, exudyn.ObjectIndex]: 
     """helper function to create 3D (or 2D) rigid body object and node; all quantities are global (angular velocity, etc.); use this function to easily create a rigid body; graphics can be directly obtained from inertia object, e.g. in case of cylindrical or cuboid shape
 
     Args:
@@ -799,7 +800,7 @@ def MainSystemCreateSpringDamper(mbs,
                                  springForceUserFunction = 0,
                                  bodyOrNodeList=[None, None], 
                                  bodyList=[None, None],
-                                 show=True, drawSize=-1, color=exudyn.graphics.color.default):
+                                 show=True, drawSize=-1, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
     """helper function to create SpringDamper connector, using arguments from ObjectConnectorSpringDamper; similar interface as CreateDistanceConstraint(...), see there for for further information
 
     Args:
@@ -911,7 +912,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
                                  springForceUserFunction = 0,
                                  bodyOrNodeList=[None, None],
                                  bodyList=[None, None],
-                                 show=True, drawSize=-1, color=exudyn.graphics.color.default):
+                                 show=True, drawSize=-1, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
     """helper function to create CartesianSpringDamper connector, using arguments from ObjectConnectorCartesianSpringDamper
 
     Args:
@@ -1011,7 +1012,7 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
                                  postNewtonStepUserFunction=0,
                                  bodyOrNodeList=[None, None],
                                  bodyList=[None, None],
-                                 show=True, drawSize=-1, color=exudyn.graphics.color.default, intrinsicFormulation=None):
+                                 show=True, drawSize=-1, color=exudyn.graphics.color.default, intrinsicFormulation=None) -> exudyn.ObjectIndex:
     """helper function to create RigidBodySpringDamper connector, using arguments from ObjectConnectorRigidBodySpringDamper, see there for the full documentation
 
     Args:
@@ -1130,7 +1131,7 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
                                           useGlobalFrame=True,
                                           springTorqueUserFunction=0,
                                           unlimitedRotations = True,
-                                          show=True, drawSize=-1, color=exudyn.graphics.color.default):
+                                          show=True, drawSize=-1, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
     """helper function to create TorsionalSpringDamper connector, using arguments from ObjectConnectorTorsionalSpringDamper, see there for the full documentation
 
     Args:
@@ -1268,7 +1269,7 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
 @extends(exudyn.MainSystem)
 def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None], 
                                   position=[], axis=[], useGlobalFrame=True, 
-                                  show=True, axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default):
+                                  show=True, axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
     """Create revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
 
     Args:
@@ -1373,7 +1374,7 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
 @extends(exudyn.MainSystem)
 def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None], 
                                   position=[], axis=[], useGlobalFrame=True, 
-                                  show=True, axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default):
+                                  show=True, axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
     """Create prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
 
     Args:
@@ -1472,7 +1473,7 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
 @extends(exudyn.MainSystem)
 def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None], 
                                   position=[], constrainedAxes=[1,1,1], useGlobalFrame=True, 
-                                  show=True, jointRadius=0.1, color=exudyn.graphics.color.default):
+                                  show=True, jointRadius=0.1, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
     """Create spherical joint between two bodies; definition of joint position in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers are automatically computed
 
     Args:
@@ -1555,7 +1556,7 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
                                  constrainedAxes=[1,1,1, 1,1,1], 
                                  useGlobalFrame=True,
                                  offsetUserFunction=0, offsetUserFunction_t=0,
-                                 show=True, axesRadius=0.1, axesLength=0.4, color=exudyn.graphics.color.default):
+                                 show=True, axesRadius=0.1, axesLength=0.4, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
     """Create generic joint between two bodies; definition of joint position (position) and axes (rotationMatrixAxes) in global coordinates (useGlobalFrame=True) or in local coordinates of body0 (useGlobalFrame=False), where rotationMatrixAxes is an additional rotation to body0; all markers, markerRotation and other quantities are automatically computed
 
     Args:
@@ -1666,7 +1667,7 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
                                        distance=None, 
                                        bodyOrNodeList=[None, None],
                                        bodyList=[None, None],
-                                       show=True, drawSize=-1., color=exudyn.graphics.color.default):
+                                       show=True, drawSize=-1., color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
     """Create distance joint between two bodies; definition of joint positions in local coordinates of bodies or nodes; if distance=None, it is computed automatically from reference length; all markers are automatically computed
 
     Args:
@@ -1807,7 +1808,7 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
                                         velocityLevel = False,
                                         offsetUserFunction = 0,
                                         offsetUserFunction_t = 0,
-                                        show=True, drawSize=-1., color=exudyn.graphics.color.default, factorValue1=None):
+                                        show=True, drawSize=-1., color=exudyn.graphics.color.default, factorValue1=None) -> exudyn.ObjectIndex:
     """Create coordinate constraint for two bodies, or body on ground; markers and NodePointGround are automatically created when needed
 
     Args:
@@ -1948,7 +1949,7 @@ def MainSystemCreateRollingDisc(mbs, name='', bodyNumbers=[None, None],
                                 discRadius = 0., planePosition = [0,0,0], planeNormal = [0,0,1], 
                                 constrainedAxes = [1,1,1],
                                 activeConnector = True,
-                                show=True, discWidth=0.1, color=exudyn.graphics.color.default):
+                                show=True, discWidth=0.1, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
     """Create an ideal rolling disc joint between wheel rigid body and ground; the disc is infinitely thin and the ground is a perfectly flat plane; the wheel may lift off; definition of joint position and axis in global coordinates (alternatively in wheel (body1) local coordinates) for reference configuration of bodies; all markers and other quantities are automatically computed; some constraint conditions may be deactivated, e.g. to resolve redundancy of constraints for multi-wheel vehicles
 
     Args:
@@ -2058,7 +2059,7 @@ def MainSystemCreateRollingDiscPenalty(mbs, name='', bodyNumbers=[None, None],
                                   dryFrictionProportionalZone = 0., viscousFriction = [0,0], 
                                   rollingViscousFriction = 0., useLinearProportionalZone = False, 
                                   activeConnector = True, 
-                                  show=True, discWidth=0.1, color=exudyn.graphics.color.default, rollingFrictionViscous=None):
+                                  show=True, discWidth=0.1, color=exudyn.graphics.color.default, rollingFrictionViscous=None) -> exudyn.ObjectIndex:
     """Create penalty-based rolling disc joint between wheel rigid body and ground; the disc is infinitely thin and the ground is a perfectly flat plane; the wheel may lift off; definition of joint position and axis in global coordinates (alternatively in wheel (body1) local coordinates) for reference configuration of bodies; all markers and other quantities are automatically computed
 
     Args:
@@ -2197,7 +2198,7 @@ def MainSystemCreateSphereSphereContact(mbs, name='', bodyNumbers=[None, None],
                                        dataInitialCoordinates = [0,0,0,0],
                                        activeConnector=True,
                                        bodyOrNodeList=[None, None], 
-                                       show=False, color=exudyn.graphics.color.default):
+                                       show=False, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
     """Create penalty-based sphere-sphere contact between two rigid bodies, mass points (if friction coefficient is zero) or according nodes; the contact is based on ObjectContactSphereSphere; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
 
     Args:
@@ -2341,7 +2342,7 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
                                        activeConnector=True,
                                        bodyOrNodeList=[None, None], 
                                        localPosition1 = [0.,0.,0.], 
-                                       show=False, color=exudyn.graphics.color.default, radiusSphere=None):
+                                       show=False, color=exudyn.graphics.color.default, radiusSphere=None) -> dict:
     """Create penalty-based sphere-quad contact between two rigid bodies, mass points or according nodes; the contact is based on two ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
 
     Args:
@@ -2485,7 +2486,7 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None]
                                        activeConnector=True,
                                        bodyOrNodeList=[None, None], 
                                        localPosition1 = [0.,0.,0.], 
-                                       show=False, color=exudyn.graphics.color.default, radiusSphere=None):
+                                       show=False, color=exudyn.graphics.color.default, radiusSphere=None) -> exudyn.ObjectIndex:
     """Create penalty-based sphere-triangle contact between two rigid bodies, mass points or according nodes; the contact is based on ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
 
     Args:
@@ -2629,7 +2630,7 @@ def MainSystemCreateKinematicTree(mbs,
                            baseGraphicsDataList = None,
                            linkRoundness = 0.2,
                            show = True, 
-                           ): 
+                           ) -> exudyn.ObjectIndex: 
     """helper function to create 2D or 3D mass point object and node, using arguments as in NodePoint and MassPoint; uses TreeLink as defined in exudyn.rigidBodyUtilities
 
     Args:
@@ -2853,9 +2854,7 @@ def MainSystemCreateKinematicTree(mbs,
                     gLink = exudyn.graphics.Cylinder(pAxis=[0,0,0], vAxis=v, 
                                                      radius=jointWidth/1.2,
                                                      color=linkColor)
-
-
-            gDataList.append(gLink)
+                gDataList.append(gLink) #only a link of some length is drawn (#2827)
                 
     if parentsNoneType and parentsNumberType:
         raise ValueError(where+': either all TreeLink parents are None and automatically computed or all parents are given as number')
@@ -2923,7 +2922,7 @@ def MainSystemCreateFFRFReducedOrderObject(mbs, name, femInterface,
                                            color=exudyn.graphics.color.defaultFFRF,
                                            superElementRigidMarkersOffsets=None,
                                            showMarkers=True,
-                                           verbose=False):
+                                           verbose=False) -> dict:
     """Create an FFRF reduced order object; the function adds SuperElementRigid markers if boundaries are defined in the given femInterface and thus enables straightforward integration of flexible bodies into a multibody system
 
     Args:
@@ -3114,7 +3113,7 @@ def MainSystemCreateForce(mbs,
                 localPosition = [0.,0.,0.], 
                 bodyFixed = False,
                 loadVectorUserFunction = 0,
-                show = True):
+                show = True) -> exudyn.LoadIndex:
     """helper function to create force applied to given body
 
     Args:
@@ -3201,7 +3200,7 @@ def MainSystemCreateTorque(mbs,
                 localPosition = [0.,0.,0.], 
                 bodyFixed = False,
                 loadVectorUserFunction = 0,
-                show = True):
+                show = True) -> exudyn.LoadIndex:
     """helper function to create torque applied to given body
 
     Args:
@@ -3348,7 +3347,7 @@ def __UFsensorDistance(mbs, t, sensorNumbers, factors, configuration):
 
 
 @extends(exudyn.MainSystem)
-def CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize=[8,8,8]):
+def CreateDistanceSensorGeometry(mbs, meshPoints, meshTrigs, rigidBodyMarkerIndex, searchTreeCellSize=[8,8,8]) -> int:
     """Add geometry for distance sensor given by points and triangles (point indices) to mbs; use a rigid body marker where the geometry is put on;
     Creates a GeneralContact for efficient search on background. If you have several sets of points and trigs, first merge them or add them manually to the contact
 
@@ -3385,7 +3384,7 @@ def CreateDistanceSensor(mbs, generalContactIndex,
                       maxDistance=1e7, cylinderRadius=0, 
                       selectedTypeIndex=exudyn.ContactTypeIndex.IndexEndOfEnumList,
                       storeInternal = False, fileName = '', measureVelocity = False,
-                      addGraphicsObject=False, drawDisplaced=True, color=exudyn.graphics.color.red):
+                      addGraphicsObject=False, drawDisplaced=True, color=exudyn.graphics.color.red) -> exudyn.SensorIndex:
     """Function to create distance sensor based on GeneralContact in mbs; sensor can be either placed on absolute position or attached to rigid body marker; in case of marker, dirSensor is relative to the marker
 
     Args:
@@ -3458,7 +3457,7 @@ def CreateDistanceSensor(mbs, generalContactIndex,
 def DrawSystemGraph(mbs, showLoads=True, showSensors=True, useItemNames = False, 
                     useItemTypes = False, addItemTypeNames=True, multiLine=True, fontSizeFactor=1., 
                     layoutDistanceFactor=3., layoutIterations=100, showLegend = True, tightLayout = True, 
-                    showGraph = True, addItemData = False, addAnnotations = False):
+                    showGraph = True, addItemData = False, addAnnotations = False) -> list:
     """helper function which draws system graph of a MainSystem (mbs); several options let adjust the appearance of the graph; the graph visualization uses randomizer, which results in different graphs after every run!
 
     Args:

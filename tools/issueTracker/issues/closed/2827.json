@@ -1,0 +1,17 @@
+{
+  "number": 2827,
+  "title": "CreateKinematicTree fails when a link with automatic graphics has no offset",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "mbs.CreateKinematicTree with automatic graphics (graphicsDataList=None of the parent, or the base graphics) raised UnboundLocalError: gLink, or added the graphics of an earlier link again, when the jointHT of a link has zero translation: the link graphics was created only for a translation of some length, but appended in any case. Found with the measurement of revision2026b step RG16.13.2 (a tree whose first link is at the base). The append moved into the branch that creates it.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 23:23",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/mainSystemExtensions.py",
+  "releaseNotes": "mbs.CreateKinematicTree with automatic graphics no longer fails for a link whose jointHT has no translation.",
+  "resolvedInVersion": "1.12.270"
+}

@@ -47,12 +47,12 @@ pdControl = (2e4,4e2)
 #create tree links:
 link0 = TreeLink(linkInertia=link0Inertia,
                  jointType=exu.JointType.RevoluteZ,
-                 jointHT=HTtranslate([0,0,0.5]),
+                 jointHT=exu.HT(translation=[0,0,0.5]),
                  PDcontrol=pdControl,
                  )
 link1 = TreeLink(linkInertia=link0Inertia,
                  jointType=exu.JointType.RevoluteY,
-                 jointHT=HTtranslate([0.5,0,0.]),
+                 jointHT=exu.HT(translation=[0.5,0,0.]),
                  PDcontrol=pdControl
                  )
 #create kinematic tree:
@@ -70,46 +70,46 @@ oKT0 = mbs.CreateKinematicTree(
 link0 = TreeLink(linkInertia=link0Inertia,
                  jointType=exu.JointType.PrismaticX,
                  parent=-1,
-                 jointHT=HTtranslate([0,0,0.1]),
+                 jointHT=exu.HT(translation=[0,0,0.1]),
                  PDcontrol=(10*pdControl[0],10*pdControl[1]),
                  )
 
 link1 = TreeLink(linkInertia=link0Inertia,
                  jointType=exu.JointType.RevoluteZ,
                  parent=0,
-                 jointHT=HTtranslate([-0.25,0,0.4]),
+                 jointHT=exu.HT(translation=[-0.25,0,0.4]),
                  PDcontrol=pdControl,
                  )
 link2 = TreeLink(linkInertia=link0Inertia,
                  jointType=exu.JointType.RevoluteZ,
                  parent=0,
-                 jointHT=HTtranslate([0.25,0,0.4]),
+                 jointHT=exu.HT(translation=[0.25,0,0.4]),
                  PDcontrol=pdControl,
                  )
 link3 = TreeLink(linkInertia=link0Inertia,
                  jointType=exu.JointType.RevoluteX,
                  parent=1,
-                 jointHT=HTtranslate([0,0.5,0.]),
+                 jointHT=exu.HT(translation=[0,0.5,0.]),
                  PDcontrol=pdControl
                  )
 link4 = TreeLink(linkInertia=link0Inertia,
                  jointType=exu.JointType.RevoluteX,
                  parent=3,
-                 jointHT=HTtranslate([0,0.5,0.]),
+                 jointHT=exu.HT(translation=[0,0.5,0.]),
                  PDcontrol=pdControl
                  )
 
 link5 = TreeLink(linkInertia=link0Inertia,
                  jointType=exu.JointType.RevoluteX,
                  parent=2,
-                 jointHT=HTtranslate([0,0.5,0.]),
+                 jointHT=exu.HT(translation=[0,0.5,0.]),
                  PDcontrol=pdControl
                  )
                  
 link6 = TreeLink(linkInertia=link0Inertia,
                  jointType=exu.JointType.RevoluteX,
                  parent=5,
-                 jointHT=HTtranslate([0,0.5,0.]),
+                 jointHT=exu.HT(translation=[0,0.5,0.]),
                  PDcontrol=pdControl
                  )
 

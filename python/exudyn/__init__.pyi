@@ -821,6 +821,26 @@ class HT:
         """True if rotation and translation are equal, component by component."""
         ...
     @overload
+    def __matmul__(self, other: Union[HT, ArrayLike]) -> Union[HT, ArrayLike]: 
+        """H1@H2, the composition of two transformations as H1*H2, an HT; H@x for any other x as numpy computes it with the 4x4 matrix, e.g. H@[x,y,z,1]."""
+        ...
+    @overload
+    def __copy__(self) -> HT: 
+        """A copy, for copy.copy(H)."""
+        ...
+    @overload
+    def __deepcopy__(self, memo: Any) -> HT: 
+        """A copy, for copy.deepcopy(H) and objects holding an HT."""
+        ...
+    @overload
+    def __getitem__(self, key: Any) -> Any: 
+        """H[key]: numpy indexing of the 4x4 matrix [A p; 0 1], e.g. H[0:3,3] for the translation; the result is a copy."""
+        ...
+    @overload
+    def __setitem__(self, key: Any, value: Any) -> None: 
+        """H[key] = value: numpy indexing of the 4x4 matrix for writing the rotation and the translation, e.g. H[0:3,3] = p; writing the last row [0,0,0,1] raises."""
+        ...
+    @overload
     def __array__(self, dtype: Any=None, copy: Any=None) -> ArrayLike: 
         """The 4x4 matrix [A p; 0 1] as numpy array, for np.array(H) and wherever numpy takes the HT."""
         ...

@@ -2,12 +2,16 @@
   "number": 2824,
   "title": "ObjectKinematicTree takes its joints as jointHTs",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "priority": "NORMAL",
   "effort": "HIGH",
   "description": "The maintainer, 2026-10-04: 'ObjectKinematicTree still has only jointTransformations and jointOffsets, but I believe that jointHTs would be much more convenient and could also boost the internal computations (?). Put there a step in the plan with substeps to suggest a transition to jointHTs, like adapting the CreateKinematicTree function, requiring a HTList (similar to Vector3DList) for the C++ interface, adapting the C++ implementation, also adapting the TreeLink to exudyn.HT'. revision2026b step RG16.13.",
   "dateRaised": "2026-10-03",
   "deadline": "2027-04-01",
-  "file": "definitions/itemDefsObjects.py"
+  "dateResolved": "2026-10-03 23:23",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/itemDefsObjects.py",
+  "releaseNotes": "mbs.CreateKinematicTree passes jointHTs and TreeLink.jointHT is an exu.HT; exu.HT(H) copies an HT; storing the joint HTs in ObjectKinematicTree was measured and brings no gain, so the two lists stay with jointHTs as their view.",
+  "resolvedInVersion": "1.12.268"
 }

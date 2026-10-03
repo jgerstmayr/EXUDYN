@@ -106,9 +106,9 @@ for modelCnt, modelName in enumerate(robotModels):
     
     #changed to new robot structure July 2021:
     mbsRobot = Robot(gravity=[0,0,9.81],
-                  base = RobotBase(HT = HTtranslate(offsetPosition),
+                  base = RobotBase(HT = exu.HT(translation=offsetPosition),
                                    visualization=VRobotBase(graphicsData=graphicsBaseList)),
-                  tool = RobotTool(HT=HTtranslate([0,0,0]), visualization=VRobotTool(graphicsData=graphicsToolList)),
+                  tool = RobotTool(HT=exu.HT(), visualization=VRobotTool(graphicsData=graphicsToolList)),
                   referenceConfiguration = []) #referenceConfiguration created with 0s automatically
     
     

@@ -125,7 +125,7 @@ def GetModel(addShoulderContact = False):
     # referenceConfiguration = [18]*0
     referenceConfiguration = [0]*6 + legsInit*4
     mbsRobot = Robot(gravity=g,
-                  base = RobotBase(HT = HTtranslate(offsetPosition)),                  
+                  base = RobotBase(HT = exu.HT(translation=offsetPosition)),                  
                   referenceConfiguration = referenceConfiguration) #referenceConfiguration created with 0s automatically
     
     #++++++++++++++++++++++++++
@@ -169,7 +169,7 @@ def GetModel(addShoulderContact = False):
                         parent=-1 if cnt == 0 else linkNumbers[floatingBaseLinks[cnt - 1]['name']],
                         COM=[0, 0, 0],
                         inertia=0*InertiaSphere(0.1, 0.01).InertiaCOM() if cnt < 5 else inertia_base,
-                        preHT=HTtranslate([0, 0, 0]),  # No offset
+                        preHT=exu.HT(),  # No offset
                         jointType=baseLink['jointType'],
                         PDcontrol=(0, 0),
                         visualization= vis

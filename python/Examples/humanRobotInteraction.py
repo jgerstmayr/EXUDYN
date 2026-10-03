@@ -192,7 +192,7 @@ if useKT:
 
     articulatedBody.AddLink(RobotLink(jointType='Rx',
                                       mass = 0, COM=[0,0,0], inertia = 0*np.eye(3),
-                                      preHT=HomogeneousTransformation(np.eye(3), leftShoulder),
+                                      preHT=exu.HT(translation=leftShoulder),
                                       PDcontrol=(Pcontrol[0], Dcontrol[0]),
                                       visualization=VRobotLink(showCOM=showCOM, jointRadius=jointRadius, jointWidth=jointWidth, linkWidth=linkWidth, showMBSjoint=showMBSjoint)
                                       ))
@@ -232,7 +232,7 @@ if useKT:
                                       mass=link['mass'],
                                       COM=link['COM']-leftElbow,
                                       inertia=link['inertia'],
-                                      preHT=HomogeneousTransformation(np.eye(3), leftElbow-leftShoulder),
+                                      preHT=exu.HT(translation=leftElbow-leftShoulder),
                                       PDcontrol=(Pcontrol[3], Dcontrol[3]),
                                       visualization=VRobotLink(showCOM=showCOM, jointRadius=jointRadius, jointWidth=jointWidth, linkWidth=linkWidth, showMBSjoint=showMBSjoint,
                                                                graphicsData=gList)
@@ -248,7 +248,7 @@ if useKT:
 
         articulatedBody.AddLink(RobotLink(jointType='Rx',
                                           mass = 0, COM=[0,0,0], inertia = 0*np.eye(3),
-                                          preHT=HomogeneousTransformation(np.eye(3), leftHand-leftElbow),
+                                          preHT=exu.HT(translation=leftHand-leftElbow),
                                           PDcontrol=(Pcontrol[4], Dcontrol[4]),
                                           visualization=VRobotLink(showCOM=showCOM, jointRadius=jointRadius, jointWidth=jointWidth, linkWidth=linkWidth, showMBSjoint=showMBSjoint)
                                           ))
@@ -362,8 +362,8 @@ if addRobot:
     
     #changed to new robot structure July 2021:
     robot = Robot(gravity=gravity,
-                  base = RobotBase(HT=HTtranslate(pBase), visualization=VRobotBase(graphicsData=graphicsBaseList)),
-                  tool = RobotTool(HT=HTtranslate([0,0,0]), visualization=VRobotTool(graphicsData=graphicsToolList)),
+                  base = RobotBase(HT=exu.HT(translation=pBase), visualization=VRobotBase(graphicsData=graphicsBaseList)),
+                  tool = RobotTool(HT=exu.HT(), visualization=VRobotTool(graphicsData=graphicsToolList)),
                   referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
     for cnt, link in enumerate(robotDef['links']):

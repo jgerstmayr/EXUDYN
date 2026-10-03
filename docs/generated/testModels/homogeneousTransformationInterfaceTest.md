@@ -15,7 +15,8 @@ You can view and download this file on Github: [homogeneousTransformationInterfa
 #           the coordinates of the rigid body nodes, the same as CreateRigidBody(referenceHT=...) gives its
 #           node; Relative, InterpolateSO3 and InterpolateSE3, RotationAngle and RotationAxis,
 #           SetRotationAxis, the Set functions returning the HT, and HasNoRotation for a unit matrix;
-#           LogSE3/SetExpSE3 against exudyn.lieGroupBasics and LogR3xSO3/SetExpR3xSO3 (#2819).
+#           LogSE3/SetExpSE3 against exudyn.lieGroupBasics and LogR3xSO3/SetExpR3xSO3 (#2819); numpy
+#           indexing H[0:3,3] for reading and writing, H1@H2 and copies, as for a 4x4 numpy array (#2821).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-03
@@ -105,6 +106,22 @@ H5 = exu.HT(H)
 H5.translation = [0, 0, 0]
 Check(H.translation, p, what='HT(H) is a copy')
 Check(H5.rotation, A, what='HT(H) rotation')
+
+#numpy indexing, @ and copies, as for a 4x4 numpy array (#2821)
+import copy
+Check(H[0:3,3], p, what='H[0:3,3]')
+Check(H[2][3], p[2], what='H[2][3]')
+H6 = exu.HT(H)
+H6[0:3,3] = [1, 2, 3]
+Check(H6.translation, [1, 2, 3], what='H[0:3,3] = value')
+try:
+    H6[3,3] = 2
+    errors += 1 #the last row must raise
+except Exception:
+    pass
+Check((H @ H1).HT44(), H.HT44() @ H1.HT44(), what='H@H1')
+Check(H @ [0.1, 0.2, 0.3, 1], H.HT44() @ [0.1, 0.2, 0.3, 1], what='H@x')
+Check(copy.deepcopy([H])[0].HT44(), H.HT44(), what='deepcopy')
 
 #chained Set functions, keywords that keep the other part, HasNoRotation
 H4 = exu.HT().SetRotationZ(0.5).Set(translation=[1, 2, 3])

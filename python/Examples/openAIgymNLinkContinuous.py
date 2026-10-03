@@ -160,14 +160,14 @@ class InvertedNPendulumEnv(OpenAIGymInterfaceEnv):
         
         newRobot = Robot(gravity=gravity3D,
                       base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
-                      tool = RobotTool(HT=HTtranslate([0,0.5*L,0]), visualization=VRobotTool(graphicsData=[
+                      tool = RobotTool(HT=exu.HT(translation=[0,0.5*L,0]), visualization=VRobotTool(graphicsData=[
                           graphics.Brick(size=[w, L, w], color=graphics.color.orange)])),
                       referenceConfiguration = []) #referenceConfiguration created with 0s automatically
         
         #cart:
         Jlink = RigidBodyInertia(masscart, np.diag([0.1*masscart,0.1*masscart,0.1*masscart]), [0,0,0])
         link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
-                         jointType='Px', preHT=HT0(), 
+                         jointType='Px', preHT=exu.HT(), 
                          # PDcontrol=(pControl, dControl),
                          visualization=VRobotLink(linkColor=graphics.color.lawngreen))
         newRobot.AddLink(link)
@@ -178,9 +178,9 @@ class InvertedNPendulumEnv(OpenAIGymInterfaceEnv):
             
             Jlink = RigidBodyInertia(massarm, np.diag([armInertia,0.1*armInertia,armInertia]), [0,0.5*L,0]) #only inertia_ZZ is important
             #Jlink = Jlink.Translated([0,0.5*L,0])
-            preHT = HT0()
+            preHT = exu.HT()
             if i > 0:
-                preHT = HTtranslateY(L)
+                preHT = exu.HT(translation=[0,L,0])
     
             link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                              jointType='Rz', preHT=preHT, 

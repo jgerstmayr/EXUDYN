@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 249 | 1.12.267 |
+| 1.12 | Metheney | 252 | 1.12.270 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.270** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` CreateKinematicTree fails when a link with automatic graphics has no offset (#2827)
+  - description: mbs.CreateKinematicTree with automatic graphics (graphicsDataList=None of the parent, or the base graphics) raised UnboundLocalError: gLink, or added the graphics of an earlier link again, when the jointHT of a link has zero translation: the link graphics was created only for a translation of some length, but appended in any case. Found with the measurement of revision2026b step RG16.13.2 (a tree whose first link is at the base). The append moved into the branch that creates it.
+  - **notes:** mbs.CreateKinematicTree with automatic graphics no longer fails for a link whose jointHT has no translation.
+  - date resolved: **2026-10-03 23:23**, date raised: 2026-10-03
+- **1.12.269** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the functions added to MainSystem have return annotations (#2826)
+  - description: The maintainer, 2026-10-04, choosing option (a) of \#2825: add a step to add return annotations for the Create functions. Since \#2825 the stub assigns the Python functions to MainSystem, so a type checker and an editor take their signature from the functions themselves; the return types that the copied stub had (ObjectIndex, NodeIndex, dict for returnDict=True, ...) must therefore be annotations of the functions: the 25 Create functions and the other functions added to MainSystem (SolveDynamic, SolveStatic, PlotSensor, SolutionViewer, ComputeLinearizedSystem, ...). revision2026b step RG12.38.
+  - **notes:** The functions added to MainSystem (Create functions, solvers, PlotSensor, ...) have return annotations, so that editors and type checkers know what they return.
+  - date resolved: **2026-10-03 23:23**, date raised: 2026-10-03
+- **1.12.268** `EXTENSION` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectKinematicTree takes its joints as jointHTs (#2824)
+  - description: The maintainer, 2026-10-04: 'ObjectKinematicTree still has only jointTransformations and jointOffsets, but I believe that jointHTs would be much more convenient and could also boost the internal computations (?). Put there a step in the plan with substeps to suggest a transition to jointHTs, like adapting the CreateKinematicTree function, requiring a HTList (similar to Vector3DList) for the C++ interface, adapting the C++ implementation, also adapting the TreeLink to exudyn.HT'. revision2026b step RG16.13.
+  - **notes:** mbs.CreateKinematicTree passes jointHTs and TreeLink.jointHT is an exu.HT; exu.HT(H) copies an HT; storing the joint HTs in ObjectKinematicTree was measured and brings no gain, so the two lists stay with jointHTs as their view.
+  - date resolved: **2026-10-03 23:23**, date raised: 2026-10-03
 - **1.12.267** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` go to definition of mbs.CreateRigidBody reaches the Python function, not only the stub (#2825)
   - description: The maintainer, 2026-10-04: 'The Create... functions are injected into MainSystem, thus the direct navigation to these functions is not possible. If I use spyder or VS Code and I click on CreateRigidBody, it directs me to the .pyi file. Is there a fix for that?' The stub declares each added function as a method of MainSystem with its own copy of the signature and the first sentence of the docstring; the function itself is MainSystemCreateRigidBody in exudyn/misc/mainSystemExtensions.py. revision2026b step RG16.14. \[2026-10-03, Claude-JG\]: The step is revision2026b step RG12.37, not RG16.14 (it is not about the HT). Tried on a copy of the package with jedi 0.20 and mypy: (a) CreateRigidBody = \_MainSystemCreateRigidBody in the stub - mypy types it from the function, jedi's go to definition lands on that stub line and its inference reaches the source; (b) a class-scoped import in the stub - jedi goes straight to the source, mypy refuses it; (c) the stub docstring names the function. Recommended (a) with return annotations on the functions; the maintainer decides after a look in VS Code.
   - **notes:** Go to definition of mbs.CreateRigidBody and the other functions added to MainSystem reaches the Python function: the stub assigns the function itself, and type checkers take its signature from it.

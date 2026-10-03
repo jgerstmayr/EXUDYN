@@ -12,12 +12,20 @@ import this library e.g. with import exudyn.robotics as robotics
 - **Date**: 2020-04-14
 - **Example**: New robot model uses the class Robot with class RobotLink; the old dictionary structure is defined in the example in ComputeJointHT for the definition of the 'robot' dictionary.
 
+(sec-roboticscore--toht)=
+## Function: _ToHT
+
+[`_ToHT(H)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L65)
+
+- **function description**: an exudyn.HT from an exudyn.HT (the same object), a 4x4 matrix or None (the identity); the robotics classes store and compute with exudyn.HT (#2821)
+
+
 (sec-roboticscore-stddh2ht)=
 ## Function: StdDH2HT
 
-[`StdDH2HT(DHparameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1074)
+[`StdDH2HT(DHparameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1117)
 
-- **function description**: compute homogeneous transformation matrix HT from standard DHparameters=[theta, d, a, alpha]
+- **function description**: compute the homogeneous transformation HT, an exudyn.HT, from standard DHparameters=[theta, d, a, alpha]
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`serialRobotFlexible.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotFlexible.py) (Ex), [`serialRobotInteractiveLimits.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotInteractiveLimits.py) (Ex), [`serialRobotKinematicTree.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTree.py) (Ex), [`movingGroundRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/movingGroundRobotTest.py) (TM), [`serialRobotTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/serialRobotTest.py) (TM), ...
@@ -26,9 +34,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-moddhkk2ht)=
 ## Function: ModDHKK2HT
 
-[`ModDHKK2HT(DHparameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1097)
+[`ModDHKK2HT(DHparameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1139)
 
-- **function description**: compute pre- and post- homogeneous transformation matrices from modified Denavit-Hartenberg DHparameters=[alpha, d, theta, r]; returns [HTpre, HTpost]; HTpre is transformation before axis rotation, HTpost includes axis rotation and everything hereafter; modified DH-Parameters according to Khalil and Kleinfinger, 1986
+- **function description**: compute pre- and post- homogeneous transformations (exudyn.HT) from modified Denavit-Hartenberg DHparameters=[alpha, d, theta, r]; returns [HTpre, HTpost]; HTpre is transformation before axis rotation, HTpost includes axis rotation and everything hereafter; modified DH-Parameters according to Khalil and Kleinfinger, 1986
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobotKinematicTree.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/serialRobotKinematicTree.py) (Ex)
@@ -37,7 +45,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-roboticscore-projectangletopmpi)=
 ## Function: projectAngleToPMPi
 
-[`projectAngleToPMPi(q0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1107)
+[`projectAngleToPMPi(q0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1149)
 
 - **function description**: This function projects an angle in the range $[-min_{float}, +max_{float}]$ fo the range $[-\pi, +\pi]$
 - **input**:
@@ -55,7 +63,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-roboticscore-vrobotlink---init--)=
 ### Class function: __init__
 
-[`__init__(self, jointRadius = 0.06, jointWidth = 0.12, linkWidth = 0.1, showMBSjoint = True, showCOM = True, linkColor = [0.4,0.4,0.4,1], graphicsData = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L96)
+[`__init__(self, jointRadius = 0.06, jointWidth = 0.12, linkWidth = 0.1, showMBSjoint = True, showCOM = True, linkColor = [0.4,0.4,0.4,1], graphicsData = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L105)
 
 - **class function description**: initialize robot link with parameters, being self-explaining
 - **input**:
@@ -80,25 +88,41 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robotlink---init--)=
 ### Class function: __init__
 
-[`__init__(self, mass, COM, inertia, localHT = erb.HT0(), jointType = 'Rz', parent = -2, preHT = erb.HT0(), PDcontrol = (None,None), visualization = VRobotLink())`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L137)
+[`__init__(self, mass, COM, inertia, localHT = None, jointType = 'Rz', parent = -2, preHT = None, PDcontrol = (None,None), visualization = VRobotLink())`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L146)
 
 - **class function description**: initialize robot link
 - **input**:
   - `mass`: mass of robot link
   - `COM`: center of mass in link coordinate system
   - `inertia`: 3x3 matrix (list of lists / numpy array) containing inertia tensor in link coordinates, with respect to center of mass
-  - `localHT`: 4x4 matrix (list of lists / numpy array) or exudyn.HT containing homogeneous transformation from local joint to link coordinates; default = identity; currently, this transformation is not available in KinematicTree, therefore the link inertia and COM must be transformed accordingly
-  - `preHT`: 4x4 matrix (list of lists / numpy array) or exudyn.HT containing homogeneous transformation from previous link to this joint; default = identity
+  - `localHT`: exudyn.HT or 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from local joint to link coordinates, stored as exudyn.HT; default (None) = identity; currently, this transformation is not available in KinematicTree, therefore the link inertia and COM must be transformed accordingly
+  - `preHT`: exudyn.HT or 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from previous link to this joint, stored as exudyn.HT; default (None) = identity
   - `jointType`: string containing joint type, out of: 'Rx', 'Ry', 'Rz' for revolute joints and 'Px', 'Py', 'Pz' for prismatic joints around/along the respecitive local axes
   - `parent`: for building robots as kinematic tree; use '-2' to automatically set parents for serial robot (on fixed base), use '-1' for ground-parent and any other 0-based index for connection to parent link
   - `PDcontrol`: tuple of P and D control values, defining position (rotation) proportional value P and velocitiy proportional value D
   - `visualization`: VRobotLink structure containing options for drawing of link and joints; see class VRobotLink
 
 
+(sec-roboticscore-robotlink-localht)=
+### Class function: localHT
+
+[`localHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L172)
+
+- **class function description**: transformation from local joint to link coordinates, an exudyn.HT
+
+
+(sec-roboticscore-robotlink-preht)=
+### Class function: preHT
+
+[`preHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L181)
+
+- **class function description**: transformation from previous link to this joint, an exudyn.HT
+
+
 (sec-roboticscore-robotlink-setpdcontrol)=
 ### Class function: SetPDcontrol
 
-[`SetPDcontrol(self, Pvalue, Dvalue)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L162)
+[`SetPDcontrol(self, Pvalue, Dvalue)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L189)
 
 - **class function description**: set PD control values for drive of joint related to link using position-proportional value P and differential value (velocity proportional) D
 
@@ -106,7 +130,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robotlink-haspdcontrol)=
 ### Class function: HasPDcontrol
 
-[`HasPDcontrol(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L167)
+[`HasPDcontrol(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L194)
 
 - **class function description**: check if contrl is available
 
@@ -114,7 +138,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robotlink-getpdcontrol)=
 ### Class function: GetPDcontrol
 
-[`GetPDcontrol(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L172)
+[`GetPDcontrol(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L199)
 
 - **class function description**: get PD control values
 
@@ -131,7 +155,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-vrobottool---init--)=
 ### Class function: __init__
 
-[`__init__(self, graphicsData = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L198)
+[`__init__(self, graphicsData = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L225)
 
 - **class function description**: initialize robot tool with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
 
@@ -148,12 +172,20 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robottool---init--)=
 ### Class function: __init__
 
-[`__init__(self, HT = erb.HT0(), visualization = VRobotTool())`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L206)
+[`__init__(self, HT = None, visualization = VRobotTool())`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L233)
 
 - **class function description**: initialize robot tool
 - **input**:
-  - `HT`: 4x4 matrix (list of lists / numpy array) or exudyn.HT containing homogeneous transformation to transform from last link to tool
+  - `HT`: exudyn.HT or 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from last link to tool, stored as exudyn.HT; default (None) = identity
   - `graphicsData`: dictionary containing a list of GraphicsData, same as in exudyn Objects
+
+
+(sec-roboticscore-robottool-ht)=
+### Class function: HT
+
+[`HT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L244)
+
+- **class function description**: the homogeneous transformation, an exudyn.HT
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`kinematicTreePendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreePendulum.py) (Ex), [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`homogeneousTransformationParameterTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py) (TM), [`kinematicTreeAndMBStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py) (TM), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM), ...
@@ -168,7 +200,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-vrobotbase---init--)=
 ### Class function: __init__
 
-[`__init__(self, graphicsData = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L226)
+[`__init__(self, graphicsData = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L262)
 
 - **class function description**: initialize robot base with parameters; currently only graphicsData, which is a list of GraphicsData same as in mbs Objects
 
@@ -185,12 +217,20 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robotbase---init--)=
 ### Class function: __init__
 
-[`__init__(self, HT = erb.HT0(), visualization = VRobotBase())`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L235)
+[`__init__(self, HT = None, visualization = VRobotBase())`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L271)
 
 - **class function description**: initialize robot base
 - **input**:
-  - `HT`: 4x4 matrix (list of lists / numpy array) or exudyn.HT containing homogeneous transformation to transform from world coordinates to base coordinates (changes orientation and position of robot)
+  - `HT`: exudyn.HT or 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from world coordinates to base coordinates (changes orientation and position of robot), stored as exudyn.HT; default (None) = identity
   - `graphicsData`: dictionary containing a list of GraphicsData, same as in exudyn Objects
+
+
+(sec-roboticscore-robotbase-ht)=
+### Class function: HT
+
+[`HT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L282)
+
+- **class function description**: the homogeneous transformation, an exudyn.HT
 
 
 Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotInteraction.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/humanRobotInteraction.py) (Ex), [`InverseKinematicsNumericalExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/InverseKinematicsNumericalExample.py) (Ex), [`kinematicTreeAndMBS.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreeAndMBS.py) (Ex), [`kinematicTreePendulum.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/kinematicTreePendulum.py) (Ex), [`openAIgymNLinkAdvanced.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/openAIgymNLinkAdvanced.py) (Ex), [`homogeneousTransformationParameterTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/homogeneousTransformationParameterTest.py) (TM), [`kinematicTreeAndMBStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeAndMBStest.py) (TM), [`kinematicTreeConstraintTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/kinematicTreeConstraintTest.py) (TM), ...
@@ -205,7 +245,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot---init--)=
 ### Class function: __init__
 
-[`__init__(self, gravity = [0,0,-9.81], base = RobotBase(), tool = RobotTool(), referenceConfiguration = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L261)
+[`__init__(self, gravity = [0,0,-9.81], base = RobotBase(), tool = RobotTool(), referenceConfiguration = [])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L306)
 
 - **class function description**: initialize robot class
 - **input**:
@@ -218,7 +258,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-addlink)=
 ### Class function: AddLink
 
-[`AddLink(self, robotLink)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L294)
+[`AddLink(self, robotLink)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L339)
 
 - **class function description**: add a link to serial robot
 
@@ -226,7 +266,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-isserialrobot)=
 ### Class function: IsSerialRobot
 
-[`IsSerialRobot(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L316)
+[`IsSerialRobot(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L361)
 
 - **class function description**: return True, if robot is a serial robot
 
@@ -234,7 +274,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-getlink)=
 ### Class function: GetLink
 
-[`GetLink(self, i)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L321)
+[`GetLink(self, i)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L366)
 
 - **class function description**: return Link object of link i
 
@@ -242,7 +282,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-hasparent)=
 ### Class function: HasParent
 
-[`HasParent(self, i)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L326)
+[`HasParent(self, i)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L371)
 
 - **class function description**: True if link has parent, False if not
 
@@ -250,7 +290,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-getparentindex)=
 ### Class function: GetParentIndex
 
-[`GetParentIndex(self, i)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L331)
+[`GetParentIndex(self, i)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L376)
 
 - **class function description**: Get index of parent link; for serial robot this is simple, but for general trees, there is a index list
 
@@ -258,7 +298,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-numberoflinks)=
 ### Class function: NumberOfLinks
 
-[`NumberOfLinks(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L337)
+[`NumberOfLinks(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L382)
 
 - **class function description**: return number of links
 
@@ -266,7 +306,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-getbaseht)=
 ### Class function: GetBaseHT
 
-[`GetBaseHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L342)
+[`GetBaseHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L387)
 
 - **class function description**: return base as homogeneous transformation
 
@@ -274,7 +314,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-gettoolht)=
 ### Class function: GetToolHT
 
-[`GetToolHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L347)
+[`GetToolHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L392)
 
 - **class function description**: return base as homogeneous transformation
 
@@ -282,31 +322,31 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-linkht)=
 ### Class function: LinkHT
 
-[`LinkHT(self, q)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L352)
+[`LinkHT(self, q)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L397)
 
-- **class function description**: compute list of homogeneous transformations for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different!
+- **class function description**: compute list of homogeneous transformations (exudyn.HT) for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different!
 
 
 (sec-roboticscore-robot-jointht)=
 ### Class function: JointHT
 
-[`JointHT(self, q)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L382)
+[`JointHT(self, q)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L427)
 
-- **class function description**: compute list of homogeneous transformations for every joint (after rotation), using current joint coordinates q
+- **class function description**: compute list of homogeneous transformations (exudyn.HT) for every joint (after rotation), using current joint coordinates q
 
 
 (sec-roboticscore-robot-comht)=
 ### Class function: COMHT
 
-[`COMHT(self, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L410)
+[`COMHT(self, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L455)
 
-- **class function description**: compute list of  homogeneous transformations HT from base to every COM using HT list from Robot.JointHT(...)
+- **class function description**: compute list of  homogeneous transformations HT (exudyn.HT) from base to every COM using HT list from Robot.JointHT(...)
 
 
 (sec-roboticscore-robot-statictorques)=
 ### Class function: StaticTorques
 
-[`StaticTorques(self, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L420)
+[`StaticTorques(self, HT)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L465)
 
 - **class function description**: compute list of joint torques for serial robot due to gravity (gravity and mass as given in robot), taking HT from Robot.JointHT()
 
@@ -314,7 +354,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-jacobian)=
 ### Class function: Jacobian
 
-[`Jacobian(self, HT, toolPosition = [], mode = 'all', linkIndex = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L438)
+[`Jacobian(self, HT, toolPosition = [], mode = 'all', linkIndex = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L483)
 
 - **class function description**: compute jacobian for translation and rotation at toolPosition using joint HT; this is using the Robot functions, but is inefficient for simulation purposes
 - **input**:
@@ -328,7 +368,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-createkinematictree)=
 ### Class function: CreateKinematicTree
 
-[`CreateKinematicTree(self, mbs, name = '', forceUserFunction = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L512)
+[`CreateKinematicTree(self, mbs, name = '', forceUserFunction = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L558)
 
 - **class function description**: Add a ObjectKinematicTree to existing mbs from the robot structure inside this robot class; Joints defined by the kinematics as well as links (and inertia) are transferred to the kinematic tree object; Current implementation only works for serial robots; Control can be realized simply by adding PDcontrol to RobotLink structures, then modifying jointPositionOffsetVector and jointVelocityOffsetVector in ObjectKinematicTree; force offsets (e.g., static or dynamic torque compensation) can be added to KinematicTree jointForceVector; more general control can be added by using KinematicTree forceUserFunction; The coordinates in KinematicTree (as well as jointPositionOffsetVector, etc.) are sorted in the order as the RobotLinks are added to the Robot class; Note that the ObjectKinematicTree is still under development and interfaces may change.
 - **input**:
@@ -341,7 +381,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-createredundantcoordinatembs)=
 ### Class function: CreateRedundantCoordinateMBS
 
-[`CreateRedundantCoordinateMBS(self, mbs, baseMarker, jointSpringDamperUserFunctionList = [], jointLoadUserFunctionList = [], createJointTorqueLoads = True, rotationMarkerBase = None, rigidBodyNodeType = exudyn.NodeType.RotationEulerParameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L691)
+[`CreateRedundantCoordinateMBS(self, mbs, baseMarker, jointSpringDamperUserFunctionList = [], jointLoadUserFunctionList = [], createJointTorqueLoads = True, rotationMarkerBase = None, rigidBodyNodeType = exudyn.NodeType.RotationEulerParameters)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L737)
 
 - **class function description**: Add items to existing mbs from the robot structure inside this robot class; robot is attached to baseMarker (can be ground object or moving/deformable body); The (serial) robot is built as rigid bodies (containing rigid body nodes), where bodies represent the links which are connected by joints; Add optional jointSpringDamperUserFunctionList for individual control of joints; otherwise use PDcontrol in RobotLink structure; additional joint torques/forces can be added via spring damper, using mbs.SetObjectParameter(...) function; See several Python examples, e.g., `serialRobotTestTSD.py`, in Examples or TestModels; For more efficient models, use CreateKinematicTree(...) function!
 - **input**:
@@ -358,7 +398,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-getkinematictree66)=
 ### Class function: GetKinematicTree66
 
-[`GetKinematicTree66(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L945)
+[`GetKinematicTree66(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L989)
 
 - **class function description**: export kinematicTree
 
@@ -366,7 +406,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-getlinkgraphicsdata)=
 ### Class function: GetLinkGraphicsData
 
-[`GetLinkGraphicsData(self, i, p0, p1, axis0, axis1, linkVisualization)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L976)
+[`GetLinkGraphicsData(self, i, p0, p1, axis0, axis1, linkVisualization)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1019)
 
 - **class function description**: create link GraphicsData (list) for link i; internally used in CreateRedundantCoordinateMBS(...); linkVisualization contains visualization dict of link
 
@@ -374,7 +414,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-robot-buildfromdictionary)=
 ### Class function: BuildFromDictionary
 
-[`BuildFromDictionary(self, robotDict)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1021)
+[`BuildFromDictionary(self, robotDict)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1064)
 
 - **class function description**: build robot structre from dictionary; this is a DEPRECATED function, which is used in older models; DO NOT USE
 
@@ -393,7 +433,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-inversekinematicsnumerical()---init--)=
 ### Class function: __init__
 
-[`__init__(self, robot, jointStiffness = 1e0, useRenderer = False, flagDebug = False, useAlternativeConstraints = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1136)
+[`__init__(self, robot, jointStiffness = 1e0, useRenderer = False, flagDebug = False, useAlternativeConstraints = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1178)
 
 - **class function description**: initialize RigidBodyInertia with scalar mass, 3x3 inertiaTensor (w.r.t. reference point!!!) and center of mass com
 - **input**:
@@ -406,15 +446,15 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-inversekinematicsnumerical()-getcurrentrobotht)=
 ### Class function: GetCurrentRobotHT
 
-[`GetCurrentRobotHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1232)
+[`GetCurrentRobotHT(self)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1274)
 
-- **class function description**: Utility function to get current Homogeneous transformation of the robot to check inverse Kinematics solution ** output: T: 4x4 homogeneous Transformation matrix of the current TCP pose
+- **class function description**: Utility function to get current Homogeneous transformation of the robot to check inverse Kinematics solution ** output: T: homogeneous transformation (exudyn.HT) of the current TCP pose
 
 
 (sec-roboticscore-inversekinematicsnumerical()-interpolatehts)=
 ### Class function: InterpolateHTs
 
-[`InterpolateHTs(self, T1, T2, rotStep = np.pi/16, minSteps = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1244)
+[`InterpolateHTs(self, T1, T2, rotStep = np.pi/16, minSteps = 1)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1286)
 
 - **class function description**: 
 - **input**:
@@ -422,7 +462,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
   - `T2`: 4x4 homogeneous transformation matrix representing the second Pose
   - `rotStep`: the max. size of steps to take for the orientation
   - `minSteps`: minimum number of substeps to interpolate
-- **output**: T: a List of homogeneous Transformations for each step between
+- **output**: T: a List of homogeneous transformations (exudyn.HT) for each step between
 - **author**: Peter Manzl
 - **notes**: still under development; interpolation may be changed to using logSE3
 
@@ -430,11 +470,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-inversekinematicsnumerical()-solvesafe)=
 ### Class function: SolveSafe
 
-[`SolveSafe(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1291)
+[`SolveSafe(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1333)
 
 - **class function description**: This Method can be used to solve the inverse kinematics problem by solving the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve. This helps the function Solve() to find the correct solutions.
 - **input**:
-  - `T`: the 4x4 homogeneous transformation matrix representing the desired position and orientation of the Endeffector
+  - `T`: the homogeneous transformation, an exudyn.HT or a 4x4 matrix, representing the desired position and orientation of the Endeffector
   - `q0`: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
 - **output**: [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None success: flag to indicate if method was successful
 - **author**: Peter Manzl, Johannes Gerstmayr
@@ -444,11 +484,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-roboticscore-inversekinematicsnumerical()-solve)=
 ### Class function: Solve
 
-[`Solve(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1348)
+[`Solve(self, T, q0 = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/roboticsCore.py#L1390)
 
 - **class function description**: This Method can be used to solve the inverse kinematics problem by solving the static problem of a serial robot using steps to interpolate between start and end position close to the function Solve. T his helps the fucntion Solve to find the correct solutions.
 - **input**:
-  - `T`: the 4x4 homogeneous transformation matrix representing the desired position and orientation of the Endeffector
+  - `T`: the homogeneous transformation, an exudyn.HT or a 4x4 matrix, representing the desired position and orientation of the Endeffector
   - `q0`: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
 - **output**: [q, success]; q: The solution for the joint angles in which the robot's tool center point (TCP) reaches the desired homogeneous transformation matrix T; success=False indicates that all trials for inverse kinematics failed, leading to q=None
 - **author**: Peter Manzl, Johannes Gerstmayr

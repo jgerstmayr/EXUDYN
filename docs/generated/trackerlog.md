@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.267.dev1
+- Exudyn version = 1.12.270.dev1
 - last change = 2026-10-03
-- Number of issues = 2827
-- Number of resolved issues = 2581 (267 in current version)
+- Number of issues = 2828
+- Number of resolved issues = 2584 (270 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,12 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` the functions added to MainSystem have return annotations (#2826)
-  - description: The maintainer, 2026-10-04, choosing option (a) of \#2825: add a step to add return annotations for the Create functions. Since \#2825 the stub assigns the Python functions to MainSystem, so a type checker and an editor take their signature from the functions themselves; the return types that the copied stub had (ObjectIndex, NodeIndex, dict for returnDict=True, ...) must therefore be annotations of the functions: the 25 Create functions and the other functions added to MainSystem (SolveDynamic, SolveStatic, PlotSensor, SolutionViewer, ComputeLinearizedSystem, ...). revision2026b step RG12.38.
-  - date raised: 2026-10-03
-- `EXTENSION` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` ObjectKinematicTree takes its joints as jointHTs (#2824)
-  - description: The maintainer, 2026-10-04: 'ObjectKinematicTree still has only jointTransformations and jointOffsets, but I believe that jointHTs would be much more convenient and could also boost the internal computations (?). Put there a step in the plan with substeps to suggest a transition to jointHTs, like adapting the CreateKinematicTree function, requiring a HTList (similar to Vector3DList) for the C++ interface, adapting the C++ implementation, also adapting the TreeLink to exudyn.HT'. revision2026b step RG16.13.
-  - date raised: 2026-10-03
 - `EXAMPLE` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` examples and test models that show referenceHT, localHT and exu.HT (#2823)
   - description: The maintainer, 2026-10-04: 'referenceHT, localHT, etc. is rarely used'; 'a couple of examples and test models (like 4+4) should use referenceHT / localHT, just to show how it works and for the tests' - solutionViewerTest.py, rigidBodyTutorial3.py (better as Jupyter tutorial, RG17), and 'a pure prestepuserfunction example showing 4 bodies transformed with the InterpolateSE3/SO3 features, writing the transformations into the renderer (with the solution information string)'. revision2026b step RG16.12. \[2026-10-03, Claude-JG\]: Done 2026-10-04: the example homogeneousTransformationInterpolation.py (RG16.12.1) and solutionViewerTest.py on exu.HT with referenceHT and localHT (RG16.12.2); open: two examples, four test models, rigidBodyTutorial3 as notebook (RG16.12.3 to .5).
   - date raised: 2026-10-03

@@ -36,8 +36,8 @@ flagStdDH = True
 
 toolGraphics = [graphics.Basis(length=0.3*0)]
 robot2 = Robot(gravity=[0,0,-9.81],
-              base = RobotBase(HT=HTtranslate([0,0,0]), visualization=VRobotBase(graphicsData=graphicsBaseList)),
-              tool = RobotTool(HT=HTtranslate([0,0,0.1*0]), visualization=VRobotTool(graphicsData=toolGraphics)),
+              base = RobotBase(HT=exu.HT(), visualization=VRobotBase(graphicsData=graphicsBaseList)),
+              tool = RobotTool(HT=exu.HT(translation=[0,0,0.1*0]), visualization=VRobotTool(graphicsData=toolGraphics)),
               referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
 nLinks = len(robotDef['links'])
@@ -67,7 +67,7 @@ if 1:  # tests close to zero-configuration
     R = RotXYZ2RotationMatrix(np.array([np.pi,0.2*0,np.pi/8*0 ]))
     t = [0.4526, -0.1488, 0.5275] 
     T2 = [[1,0,0,0.3], [0,1,0,0.3], [0,0,1,0.3], [0,0,0,1]]
-    T3 = HomogeneousTransformation(R, t)
+    T3 = exu.HT(rotation=R, translation=t)
     sol = myIkine.Solve(T3, q0 = [0, -np.pi/4, -np.pi/4, -np.pi/4, np.pi/4, np.pi/2])
     print('success = {}\nq = {} rad'.format(sol[1], np.round(sol[0], 3)))
     

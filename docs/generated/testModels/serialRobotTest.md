@@ -64,7 +64,7 @@ graphicsToolList+= [graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color
 #changed to new robot structure July 2021:
 newRobot = Robot(gravity=[0,0,9.81],
                  base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
-                 tool = RobotTool(HT=HTtranslate([0,0,0.1]), visualization=VRobotTool(graphicsData=graphicsToolList)),
+                 tool = RobotTool(HT=exu.HT(translation=[0,0,0.1]), visualization=VRobotTool(graphicsData=graphicsToolList)),
                  referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
 newRobot.AddLink(RobotLink(mass=20, COM=[0,0,0], inertia=np.diag([1e-8,0.35,1e-8]), localHT = StdDH2HT([0,0,0,np.pi/2]), visualization=VRobotLink(linkColor=graphics.colorList[0])))
@@ -118,7 +118,7 @@ graphicsBaseList +=[graphics.Cylinder([0,0,0], [0.5,0,0], 0.0025, graphics.color
 graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color.green)]
 graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue)]
 #oGround = mbs.AddObject(ObjectGround(referencePosition=list(HT2translation(Tcurrent)), 
-objectGround = mbs.AddObject(ObjectGround(referencePosition=HT2translation(newRobot.GetBaseHT()), 
+objectGround = mbs.AddObject(ObjectGround(referencePosition=newRobot.GetBaseHT().translation, 
                                      visualization=VObjectGround(graphicsData=graphicsBaseList)))
 
 #baseMarker; could also be a moving base!

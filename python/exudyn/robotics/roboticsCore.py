@@ -52,15 +52,24 @@ dictJointTypeText2Exudyn = {
     'Pz':exudyn.JointType.PrismaticZ, #prismatic joint for local Z axis
     }
 
-#define dictionary for joint transformations as homogeneous transformations, replacement for switch/case
+#define dictionary for joint transformations as homogeneous transformations (exudyn.HT), replacement for switch/case
 dictJointType2HT = {
-    'Rx':erb.HTrotateX, #revolute joint for local X axis
-    'Ry':erb.HTrotateY, #revolute joint for local Y axis
-    'Rz':erb.HTrotateZ, #revolute joint for local Z axis
-    'Px':erb.HTtranslateX, #prismatic joint for local X axis
-    'Py':erb.HTtranslateY, #prismatic joint for local Y axis
-    'Pz':erb.HTtranslateZ, #prismatic joint for local Z axis
+    'Rx':lambda angle: exudyn.HT().SetRotationX(angle), #revolute joint for local X axis
+    'Ry':lambda angle: exudyn.HT().SetRotationY(angle), #revolute joint for local Y axis
+    'Rz':lambda angle: exudyn.HT().SetRotationZ(angle), #revolute joint for local Z axis
+    'Px':lambda x: exudyn.HT(translation=[x,0.,0.]), #prismatic joint for local X axis
+    'Py':lambda y: exudyn.HT(translation=[0.,y,0.]), #prismatic joint for local Y axis
+    'Pz':lambda z: exudyn.HT(translation=[0.,0.,z]), #prismatic joint for local Z axis
     }
+
+def _ToHT(H):
+    """an exudyn.HT from an exudyn.HT (the same object), a 4x4 matrix or None (the identity); the robotics classes store
+    and compute with exudyn.HT (#2821)"""
+    if isinstance(H, exudyn.HT):
+        return H
+    if H is None:
+        return exudyn.HT()
+    return exudyn.HT(np.array(H, dtype=float))
 
 #define dictionary for joint transformations as homogeneous transformations, replacement for switch/case
 dictJointType2Axis = {
@@ -134,15 +143,15 @@ class VRobotLink:
 class RobotLink:
     """class to define one link of a robot
     """
-    def __init__(self, mass, COM, inertia, localHT=erb.HT0(), jointType='Rz', parent=-2, preHT=erb.HT0(), PDcontrol=(None,None), visualization=VRobotLink()):
+    def __init__(self, mass, COM, inertia, localHT=None, jointType='Rz', parent=-2, preHT=None, PDcontrol=(None,None), visualization=VRobotLink()):
         """initialize robot link
 
         Args:
             mass: mass of robot link
             COM: center of mass in link coordinate system
             inertia: 3x3 matrix (list of lists / numpy array) containing inertia tensor in link coordinates, with respect to center of mass
-            localHT: 4x4 matrix (list of lists / numpy array) or exudyn.HT containing homogeneous transformation from local joint to link coordinates; default = identity; currently, this transformation is not available in KinematicTree, therefore the link inertia and COM must be transformed accordingly
-            preHT: 4x4 matrix (list of lists / numpy array) or exudyn.HT containing homogeneous transformation from previous link to this joint; default = identity
+            localHT: exudyn.HT or 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from local joint to link coordinates, stored as exudyn.HT; default (None) = identity; currently, this transformation is not available in KinematicTree, therefore the link inertia and COM must be transformed accordingly
+            preHT: exudyn.HT or 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from previous link to this joint, stored as exudyn.HT; default (None) = identity
             jointType: string containing joint type, out of: 'Rx', 'Ry', 'Rz' for revolute joints and 'Px', 'Py', 'Pz' for prismatic joints around/along the respecitive local axes
             parent: for building robots as kinematic tree; use '-2' to automatically set parents for serial robot (on fixed base), use '-1' for ground-parent and any other 0-based index for connection to parent link
             PDcontrol: tuple of P and D control values, defining position (rotation) proportional value P and velocitiy proportional value D
@@ -151,13 +160,31 @@ class RobotLink:
         self.mass = mass
         self.COM = np.array(COM)
         self.inertia = np.array(inertia)
-        self.localHT = np.array(localHT)
-        self.preHT = np.array(preHT)
+        self.localHT = localHT
+        self.preHT = preHT
         self.jointType = jointType
         self.parent = parent
         self.visualization = deepcopy(visualization)
         if PDcontrol[0] is not None:
             self.PDcontrol = PDcontrol
+
+    @property
+    def localHT(self):
+        """transformation from local joint to link coordinates, an exudyn.HT"""
+        return self._localHT
+
+    @localHT.setter
+    def localHT(self, value):
+        self._localHT = _ToHT(value)
+
+    @property
+    def preHT(self):
+        """transformation from previous link to this joint, an exudyn.HT"""
+        return self._preHT
+
+    @preHT.setter
+    def preHT(self, value):
+        self._preHT = _ToHT(value)
 
     def SetPDcontrol(self, Pvalue, Dvalue):
         """set PD control values for drive of joint related to link using position-proportional value P and differential value (velocity proportional) D
@@ -203,15 +230,24 @@ class VRobotTool:
 class RobotTool:
     """define tool of robot: containing graphics and HT (may add features in future)
     """
-    def __init__(self, HT=erb.HT0(), visualization=VRobotTool()):
+    def __init__(self, HT=None, visualization=VRobotTool()):
         """initialize robot tool
 
         Args:
-            HT: 4x4 matrix (list of lists / numpy array) or exudyn.HT containing homogeneous transformation to transform from last link to tool
+            HT: exudyn.HT or 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from last link to tool, stored as exudyn.HT; default (None) = identity
             graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
         """
-        self.HT = np.array(HT)
+        self.HT = HT
         self.visualization = visualization
+
+    @property
+    def HT(self):
+        """the homogeneous transformation, an exudyn.HT"""
+        return self._HT
+
+    @HT.setter
+    def HT(self, value):
+        self._HT = _ToHT(value)
         
     def __str__(self):
         s = '  HT = ' + str(self.HT)
@@ -232,15 +268,24 @@ class VRobotBase:
 class RobotBase:
     """define base of robot: containing graphics and HT (may add features in future)
     """
-    def __init__(self, HT=erb.HT0(), visualization=VRobotBase()):
+    def __init__(self, HT=None, visualization=VRobotBase()):
         """initialize robot base
 
         Args:
-            HT: 4x4 matrix (list of lists / numpy array) or exudyn.HT containing homogeneous transformation to transform from world coordinates to base coordinates (changes orientation and position of robot)
+            HT: exudyn.HT or 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from world coordinates to base coordinates (changes orientation and position of robot), stored as exudyn.HT; default (None) = identity
             graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
         """
-        self.HT = np.array(HT)
+        self.HT = HT
         self.visualization = visualization
+
+    @property
+    def HT(self):
+        """the homogeneous transformation, an exudyn.HT"""
+        return self._HT
+
+    @HT.setter
+    def HT(self, value):
+        self._HT = _ToHT(value)
     
     def __str__(self):
         s = '  HT = ' + str(self.HT)
@@ -307,7 +352,7 @@ class Robot:
         if  self.links[i].parent != i-1:
             self.isSerialRobot = False
         
-        if not self.isSerialRobot and (np.linalg.norm(self.tool.HT - erb.HT0()) >= 1e-15
+        if not self.isSerialRobot and (np.linalg.norm(self.tool.HT.HT44() - np.eye(4)) >= 1e-15
             or self.tool.visualization.graphicsData != []):
             exudyn.Print('Warning: class Robot: tool defined in kinematic tree; currently tool is only allowed for serial robots')
 
@@ -350,7 +395,7 @@ class Robot:
         return self.tool.HT
     
     def LinkHT(self, q):
-        """compute list of homogeneous transformations for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different!
+        """compute list of homogeneous transformations (exudyn.HT) for every link, using current joint coordinates q; leads to different results for standard and modified DH parameters because link coordinates are different!
         """
         HT = []
 
@@ -369,18 +414,18 @@ class Robot:
         for i in range(len(self.links)):
             link = self.links[i]
 
-            T01 = link.preHT @ dictJointType2HT[link.jointType](q[i]) @ link.localHT
+            T01 = link.preHT * dictJointType2HT[link.jointType](q[i]) * link.localHT
             if self.HasParent(i):
                 pIndex = self.GetParentIndex(i)
-                Tcurrent = HT[pIndex] @ T01
+                Tcurrent = HT[pIndex] * T01
             else:
-                Tcurrent = self.base.HT @ T01
-            HT += [copy(Tcurrent)]
+                Tcurrent = self.base.HT * T01
+            HT += [Tcurrent]
         
         return HT    
 
     def JointHT(self, q):
-        """compute list of homogeneous transformations for every joint (after rotation), using current joint coordinates q
+        """compute list of homogeneous transformations (exudyn.HT) for every joint (after rotation), using current joint coordinates q
         """
         HT = []
 
@@ -398,22 +443,22 @@ class Robot:
         for i in range(len(self.links)):
             link = self.links[i]
 
-            T01 = link.preHT @ dictJointType2HT[link.jointType](q[i])
+            T01 = link.preHT * dictJointType2HT[link.jointType](q[i])
             if self.HasParent(i):
                 pIndex = self.GetParentIndex(i)
-                Tcurrent = HT[pIndex] @ self.links[pIndex].localHT @ T01
+                Tcurrent = HT[pIndex] * self.links[pIndex].localHT * T01
             else:
-                Tcurrent = self.base.HT @ T01
-            HT += [copy(Tcurrent)]
+                Tcurrent = self.base.HT * T01
+            HT += [Tcurrent]
         return HT
 
     def COMHT(self, HT):
-        """compute list of  homogeneous transformations HT from base to every COM using HT list from Robot.JointHT(...)
+        """compute list of  homogeneous transformations HT (exudyn.HT) from base to every COM using HT list from Robot.JointHT(...)
         """
         HTCOM = []
-        
+
         for i in range(len(self.links)):
-            HTCOM += [HT[i] @ self.links[i].localHT @ erb.HTtranslate(self.links[i].COM)]
+            HTCOM += [_ToHT(HT[i]) * self.links[i].localHT * exudyn.HT(translation=self.links[i].COM)]
         
         return HTCOM
     
@@ -427,7 +472,7 @@ class Robot:
         
         #sum up the torques of all gravity loads:
         for i in range(len(HTcom)):
-            p = erb.HT2translation(HTcom[i])
+            p = HTcom[i].translation
             Jcom = self.Jacobian(HT[0:i+1],toolPosition=p,mode='trans')
             fG = self.links[i].mass * self.gravity
             tau = Jcom.T @ fG
@@ -462,7 +507,7 @@ class Robot:
         
         vn = list(toolPosition)
         if len(vn) == 0:
-            vn = erb.HT2translation(HT[linkIndex] @ self.links[linkIndex].localHT) #last link coordinates
+            vn = (_ToHT(HT[linkIndex]) * self.links[linkIndex].localHT).translation #last link coordinates
 
 
         #for tree, we may only consider links in the chain from link to base!
@@ -470,7 +515,8 @@ class Robot:
         endReached = False
         while not endReached:
             #if i > 0:
-            A = erb.HT2rotationMatrix(HT[i]) #rotation of joint i
+            Hjoint = _ToHT(HT[i])
+            A = Hjoint.rotation #rotation of joint i
 
             # localAxis = erb.HT2rotationMatrix(self.links[i].preHT) @ dictJointType2Axis[self.links[i].jointType]
             localAxis = dictJointType2Axis[self.links[i].jointType]
@@ -481,7 +527,7 @@ class Robot:
                 Jomega[0:3,i] = axis #only considered, if revolute joint
             
             #vPrevious = erb.HT2translation(HT[i] @ self.links[i].preHT)
-            vPrevious = erb.HT2translation(HT[i])
+            vPrevious = Hjoint.translation
              
             #revolute joint:
             if self.links[i].jointType[0] == 'R': #revolute joint
@@ -529,13 +575,13 @@ class Robot:
 
         #add graphics for base:
         baseObject = None #if it does not exist
-        baseOffset = erb.HT2translation(self.base.HT)
+        baseOffset = self.base.HT.translation
 
         if self.base.visualization.graphicsData != []:
             #add a ground object at base position
             graphicsDataBase = []
             pOff = baseOffset
-            Aoff = erb.HT2rotationMatrix(self.base.HT)
+            Aoff = self.base.HT.rotation
             for data in self.base.visualization.graphicsData:
                 graphicsDataBase += [exudyn.graphics.Move(data, [0,0,0], Aoff)] #only rotated, translation is in ground
 
@@ -588,10 +634,10 @@ class Robot:
             # jointOffsets += [erb.HT2translation(link.preHT)]
             
             # 
-            parentLinkLocalHT = erb.HT0()
+            parentLinkLocalHT = exudyn.HT()
             if self.HasParent(i):
                 parentLinkLocalHT = self.links[self.GetParentIndex(i)].localHT
-            jointHTs += [parentLinkLocalHT @ link.preHT]
+            jointHTs += [parentLinkLocalHT * link.preHT]
 
             #inertia is defined in link coordinates; but KinematicTree needs inertia w.r.t. joint coordinates:
             rbi = erb.RigidBodyInertia()
@@ -636,7 +682,7 @@ class Robot:
             if self.HasParent(i):
                 iParent = self.GetParentIndex(i)
                 #parentLink = self.GetLink(iParent)
-                vParent = erb.HT2translation(parentLinkLocalHT@link.preHT)
+                vParent = jointHTs[i].translation
                 if len(linkVisualization.graphicsData) == 0:
                     gLink = exudyn.graphics.Cylinder([0.,0.,0.], vParent, radius=0.5*wL, color=color)
                     graphicsDataList[iParent] += [gLink]
@@ -647,8 +693,8 @@ class Robot:
             #add transformed graphicsData of tool to link graphics
             if (i==len(self.links)-1 and #tool
                 self.tool.visualization.graphicsData != []):
-                pOff = erb.HT2translation(self.tool.HT)
-                Aoff = erb.HT2rotationMatrix(self.tool.HT)
+                pOff = self.tool.HT.translation
+                Aoff = self.tool.HT.rotation
                 for data in self.tool.visualization.graphicsData:
                     graphicsDataLink += [exudyn.graphics.Move(data, pOff, Aoff)] 
 
@@ -735,8 +781,8 @@ class Robot:
         if self.base.visualization.graphicsData != []:
             #add a ground object at base position
             graphicsDataBase = []
-            pOff = erb.HT2translation(self.base.HT)
-            Aoff = erb.HT2rotationMatrix(self.base.HT)
+            pOff = self.base.HT.translation
+            Aoff = self.base.HT.rotation
             for data in self.base.visualization.graphicsData:
                 graphicsDataBase += [exudyn.graphics.Move(data, [0,0,0], Aoff)] #only rotated, translation is in ground
 
@@ -759,20 +805,20 @@ class Robot:
         
         
             # T01 = DH2HT(DHparam) #transformation from last link to this link; it defines the orientation of the body
-            T01 = link.preHT @ dictJointType2HT[link.jointType](qRef[i]) @ link.localHT #new bodies are placed at origin of link frame
+            T01 = link.preHT * dictJointType2HT[link.jointType](qRef[i]) * link.localHT #new bodies are placed at origin of link frame
             if not self.HasParent(i):
                 Tcurrent = self.GetBaseHT()
             else:
                 Tcurrent = HTlist[self.GetParentIndex(i)]
 
-            Tcurrent = Tcurrent @ T01
-            HTlist += [copy(Tcurrent)]
+            Tcurrent = Tcurrent * T01
+            HTlist += [Tcurrent]
 
             #++++++++++++++++++++++++++++++++++++++++++++++
         
-            localHTinv = erb.InverseHT(link.localHT)
-            AthisT = erb.HT2rotationMatrix(localHTinv) #transforms back to joint0
-            pThis =  erb.HT2translation(localHTinv) #AthisT @ np.array([-a,0,-d]) #needed for marker of next link
+            localHTinv = link.localHT.Inverse()
+            AthisT = localHTinv.rotation #transforms back to joint0
+            pThis =  localHTinv.translation #AthisT @ np.array([-a,0,-d]) #needed for marker of next link
             
             #compute axis of previous link, for std DH, this is transformed back to previous joint
             jointAxis = dictJointType2Axis[link.jointType]
@@ -794,8 +840,8 @@ class Robot:
                 #     pNext = np.array([0,0,0.]) #use local position for final link
                 #     axisNext=np.array([0,0,0]) #no axis to draw for last link
                 nextLink = self.links[nextLinkIndex]
-                pNext = erb.HT2translation(nextLink.preHT) #this defines the position for the local of the axis for next link
-                axisNext = erb.HT2rotationMatrix(nextLink.preHT) @ dictJointType2Axis[nextLink.jointType] 
+                pNext = nextLink.preHT.translation #this defines the position for the local of the axis for next link
+                axisNext = nextLink.preHT.rotation @ dictJointType2Axis[nextLink.jointType]
 
                 if len(link.visualization.graphicsData) == 0:
                     graphicsList += self.GetLinkGraphicsData(i, pThis, pNext, axis0, axisNext, link.visualization)
@@ -806,16 +852,15 @@ class Robot:
             #add transformed graphicsData of tool to link graphics
             if (i==len(self.links)-1 and #tool
                 self.tool.visualization.graphicsData != []):
-                pOff = erb.HT2translation(self.tool.HT)
-                Aoff = erb.HT2rotationMatrix(self.tool.HT)
+                pOff = self.tool.HT.translation
+                Aoff = self.tool.HT.rotation
                 for data in self.tool.visualization.graphicsData:
                     graphicsList += [exudyn.graphics.Move(data, pOff, Aoff)] 
 
             
             #++++++++++++++++++++++++
             #now add body for link:
-            dictLink = mbs.CreateRigidBody(referencePosition=erb.HT2translation(Tcurrent),  
-                                           referenceRotationMatrix=erb.HT2rotationMatrix(Tcurrent),  
+            dictLink = mbs.CreateRigidBody(referenceHT=Tcurrent,
                                            inertia=inertiaLink,  
                                            gravity=self.gravity,  
                                            nodeType=rigidBodyNodeType,  
@@ -826,17 +871,16 @@ class Robot:
         
             #++++++++++++++++++++++++
             #add markers and joints; the markers carry the rotation of the joint as localHT (#2745)
-            mLink1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=dictLink['bodyNumber'], localHT=exudyn.HT(rotation=AthisT, translation=pThis)))
+            mLink1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=dictLink['bodyNumber'], localHT=localHTinv))
 
             if i == 0:
-                lastMarkerRotation = erb.HT2rotationMatrix(link.preHT)@lastMarkerRotation #is rotationMarkerBase
+                lastMarkerRotation = link.preHT.rotation @ lastMarkerRotation #is rotationMarkerBase
                 (mLink0LastBody, rotationMarker0) = erb._MarkerWithRotation(mbs, baseMarker, lastMarkerRotation)
             else:
-                lastMarkerRotation = erb.HT2rotationMatrix(link.preHT)
-                marker0Position = erb.HT2translation(link.preHT) #this is defined in the parent link!
+                lastMarkerRotation = link.preHT.rotation
                 parentBody = bodyList[self.GetParentIndex(i)]
                 mLink0LastBody = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=parentBody,
-                                                               localHT=exudyn.HT(rotation=lastMarkerRotation, translation=marker0Position)))
+                                                               localHT=link.preHT)) #preHT is defined in the parent link
                 rotationMarker0 = np.eye(3)
 
             markerList0+=[mLink0LastBody]
@@ -955,12 +999,11 @@ class Robot:
             link = self.links[i]
             jointTypes += [link.jointType]
             
-            preHT = link.preHT
-            Amat = erb.HT2rotationMatrix(preHT) 
-            vVec = erb.HT2translation(preHT)
+            Amat = link.preHT.rotation
+            vVec = link.preHT.translation
             X=erb.RotationTranslation2T66Inverse(A=Amat, v=vVec)
-            if np.linalg.norm(link.localHT - erb.HT0()) > 1e-15:
-                raise ValueError('GetKinematicTree66(): not implemented for links with localHT != HT0()')
+            if np.linalg.norm(link.localHT.HT44() - np.eye(4)) > 1e-15:
+                raise ValueError('GetKinematicTree66(): not implemented for links with localHT other than the identity')
             
             transformations += [X] #defines transformation to joint in parent link
             J = erb.RigidBodyInertia(mass=link.mass, inertiaTensor=link.inertia) #link.inertia around COM
@@ -1027,9 +1070,9 @@ class Robot:
             exudyn.Print("WARNING: function BuildFromDictionary in class Robot is DEPRECATED; DO NOT USE")
 
         if 'base' in robotDict:
-            self.base.HT = np.array(robotDict['base']['HT'])
+            self.base.HT = robotDict['base']['HT']
         if 'tool' in robotDict:
-            self.tool.HT = np.array(robotDict['tool']['HT'])
+            self.tool.HT = robotDict['tool']['HT']
         if 'gravity' in robotDict:
             self.gravity = np.array(robotDict['gravity'])
         if 'referenceConfiguration' in robotDict:
@@ -1055,10 +1098,10 @@ class Robot:
                 if i < len(robotDict['links'])-1: #there exists a next link, which we use as additional standard DH-parameters for this link
                     [theta1, d1, a1, alpha1] = link['modDHcraig']
                 if i == 0: #put first two DH parameters to base
-                    self.base.HT = self.base.HT @ erb.HTrotateX(alpha) @ erb.HTtranslate([a,0,0]) 
+                    self.base.HT = self.base.HT * exudyn.HT().SetRotationX(alpha) * exudyn.HT(translation=[a,0,0])
                 
                 #local HT re-interpreted as standard DH-parameters, as suggested by Corke 2017, page 219:
-                localHT = erb.HTrotateZ(theta) @ erb.HTtranslate([0,0,d]) @ erb.HTtranslate([a1,0,0]) @ erb.HTrotateX(alpha1)
+                localHT = exudyn.HT().SetRotationZ(theta) * exudyn.HT(translation=[a1,0,d]) * exudyn.HT().SetRotationX(alpha1)
             else:
                 raise ValueError('BuildFromDictionary in class Robot: only supports links with stdDH parameters')
 
@@ -1072,7 +1115,7 @@ class Robot:
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 def StdDH2HT(DHparameters):
-    """compute homogeneous transformation matrix HT from standard DHparameters=[theta, d, a, alpha]
+    """compute the homogeneous transformation HT, an exudyn.HT, from standard DHparameters=[theta, d, a, alpha]
     """
 #    [theta, d, a, alpha] = DHparameters
 #    return erb.HTrotateZ(theta) @ erb.HTtranslate([0,0,d]) @ erb.HTtranslate([a,0,0]) @ erb.HTrotateX(alpha)
@@ -1082,10 +1125,9 @@ def StdDH2HT(DHparameters):
     st = np.sin(theta)
     ca = np.cos(alpha)
     sa = np.sin(alpha)
-    return np.array([[ct,-st*ca, st*sa, a*ct],
-                     [st, ct*ca,-ct*sa, a*st],
-                     [ 0, sa   , ca   , d   ],
-                     [ 0, 0    , 0    , 1   ]])
+    return exudyn.HT(rotation=[[ct,-st*ca, st*sa],
+                               [st, ct*ca,-ct*sa],
+                               [ 0, sa   , ca   ]], translation=[a*ct, a*st, d])
 
 #\mfour{\cos \theta_j &-\sin \theta_j \cos \alpha_j & \sin \theta_j \sin \alpha_j & a_j \cos \theta_j}
 #                                                        {\sin \theta_j & \cos \theta_j \cos \alpha_j &-\cos \theta_j \sin \alpha_j & a_j \sin \theta_j}
@@ -1095,10 +1137,10 @@ def StdDH2HT(DHparameters):
 #exudyn.Print("std. DH =\n", DH2HT([0.5, 0.1, 0.2, np.pi/2]).round(4))
 
 def ModDHKK2HT(DHparameters):
-    """compute pre- and post- homogeneous transformation matrices from modified Denavit-Hartenberg DHparameters=[alpha, d, theta, r]; returns [HTpre, HTpost]; HTpre is transformation before axis rotation, HTpost includes axis rotation and everything hereafter; modified DH-Parameters according to Khalil and Kleinfinger, 1986
+    """compute pre- and post- homogeneous transformations (exudyn.HT) from modified Denavit-Hartenberg DHparameters=[alpha, d, theta, r]; returns [HTpre, HTpost]; HTpre is transformation before axis rotation, HTpost includes axis rotation and everything hereafter; modified DH-Parameters according to Khalil and Kleinfinger, 1986
     """
     [alpha, d, theta, r] = DHparameters
-    return [erb.HTrotateX(alpha) @ erb.HTtranslate([d,0,0]) , erb.HTrotateZ(theta) @ erb.HTtranslate([0,0,r]) ] 
+    return [exudyn.HT().SetRotationX(alpha) * exudyn.HT(translation=[d,0,0]), exudyn.HT().SetRotationZ(theta) * exudyn.HT(translation=[0,0,r])]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #+++
@@ -1153,7 +1195,7 @@ class InverseKinematicsNumerical():
         self.epsSolution = 1e-14
         self.useAlternativeConstraints = useAlternativeConstraints
         
-        self.oGround = self.mbsIK.AddObject(eii.ObjectGround(referencePosition=erb.HT2translation(robot.GetBaseHT()), 
+        self.oGround = self.mbsIK.AddObject(eii.ObjectGround(referencePosition=robot.GetBaseHT().translation, 
                                               #visualization=VObjectGround(graphicsData=graphicsBaseList)
                                                   ))
         
@@ -1232,12 +1274,12 @@ class InverseKinematicsNumerical():
     def GetCurrentRobotHT(self): 
         """Utility function to get current Homogeneous transformation of the robot to check inverse Kinematics solution
         ** output:
-          T: 4x4 homogeneous Transformation matrix of the current TCP pose
+          T: homogeneous transformation (exudyn.HT) of the current TCP pose
         """
         # self.robot.JointHT(q)[-1]  @ self.robot.tool.HT # proviedes same functionality as reading sensors...
         posFKine = self.mbsIK.GetSensorValues(self.sToolTrans) 
         RotFkine = self.mbsIK.GetSensorValues(self.sToolRot).reshape((3,3))
-        T = erb.HomogeneousTransformation(RotFkine, posFKine) # global HT
+        T = exudyn.HT(rotation=RotFkine, translation=posFKine) # global HT
         return T
 
     @docmeta(author='Peter Manzl')
@@ -1251,7 +1293,7 @@ class InverseKinematicsNumerical():
             minSteps: minimum number of substeps to interpolate
 
         Returns:
-            T: a List of homogeneous Transformations for each step between
+            T: a List of homogeneous transformations (exudyn.HT) for each step between
 
         Note:
             still under development; interpolation may be changed to using logSE3
@@ -1282,9 +1324,9 @@ class InverseKinematicsNumerical():
             Ri = R1 @ erb.RotationVector2RotationMatrix(roti)
             # Ri = Ri /np.linalg.det(Ri) # avoid
             ti = t1 + (t2-t1)*(i+1)/n 
-            Ti = erb.HomogeneousTransformation(Ri, ti)    
+            Ti = exudyn.HT(rotation=Ri, translation=ti)
             T += [Ti]
-        T += [T2] # to satisfy the boundry condition
+        T += [_ToHT(T2)] # to satisfy the boundry condition
         return T
     
     @docmeta(author='Peter Manzl, Johannes Gerstmayr')
@@ -1294,7 +1336,7 @@ class InverseKinematicsNumerical():
         This helps the function Solve() to find the correct solutions.
 
         Args:
-            T: the 4x4 homogeneous transformation matrix representing the desired position and orientation of the Endeffector
+            T: the homogeneous transformation, an exudyn.HT or a 4x4 matrix, representing the desired position and orientation of the Endeffector
             q0: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
 
         Returns:
@@ -1319,11 +1361,11 @@ class InverseKinematicsNumerical():
         else:
             TSol = T0
     
-        if ((TSol-T) >= self.epsSolution).any(): #*JG: 1e-12; try once again with even finer discretization ...
+        if ((np.array(TSol)-np.array(T)) >= self.epsSolution).any(): #*JG: 1e-12; try once again with even finer discretization ...
             if self.flagDebug:
                 exudyn.Print('WARNING: InverseKinematics: SolveSafe refine')
                 if success:
-                    exudyn.Print(' at err = \n', (np.round((TSol-T), 10)) ) # round for better readability
+                    exudyn.Print(' at err = \n', (np.round((np.array(TSol)-np.array(T)), 10)) ) # round for better readability
 
             TInterp = self.InterpolateHTs(T0, T, rotStep = np.pi/20, minSteps=4) #*JG:2023-03-29: changed from TSol to T0
             q = q0
@@ -1334,9 +1376,9 @@ class InverseKinematicsNumerical():
 
             if success:
                 TSol = self.GetCurrentRobotHT()
-                if (np.abs(TSol-T) >= 1e-8).any(): 
+                if (np.abs(np.array(TSol)-np.array(T)) >= 1e-8).any(): 
                     if self.flagDebug: 
-                        exudyn.Print('WARNING: InverseKinematics: SolveSafe refinement failed: err = ', (np.round((TSol-T), 10))) # round for better readability
+                        exudyn.Print('WARNING: InverseKinematics: SolveSafe refinement failed: err = ', (np.round((np.array(TSol)-np.array(T)), 10))) # round for better readability
                     success = False
 
         if not success:
@@ -1351,7 +1393,7 @@ class InverseKinematicsNumerical():
         T his helps the fucntion Solve to find the correct solutions.
 
         Args:
-            T: the 4x4 homogeneous transformation matrix representing the desired position and orientation of the Endeffector
+            T: the homogeneous transformation, an exudyn.HT or a 4x4 matrix, representing the desired position and orientation of the Endeffector
             q0: The configuration (joint angles/positions) of the robot from which the numerical methods start so calculate the solution; q0=None indicates that the stored solution (from model or previous solution) shall be used for initialization
 
         Returns:
@@ -1374,11 +1416,10 @@ class InverseKinematicsNumerical():
 
         
         self.mbsIK.systemData.SetODE2Coordinates(coordinates=q0, configuration=exudyn.ConfigurationType.Initial)
-        R = erb.HT2rotationMatrix(T)
-        trans = (erb.HT2translation(T))
-        
+        T = _ToHT(T) #an exudyn.HT or a 4x4 matrix
+
         # the desired pose of the tool center point is the frame of the ground marker (in global "ground" sytem)
-        self.mbsIK.SetMarkerParameter(self.mGroundEE, 'localHT', erb.HomogeneousTransformation(R, trans))
+        self.mbsIK.SetMarkerParameter(self.mGroundEE, 'localHT', T)
         
         try: 
             if self.useRenderer: 
@@ -1399,7 +1440,7 @@ class InverseKinematicsNumerical():
         if success:
             # read output from sensors to check if the solution of the inverse Kinematics was correct
             self.fKineSolved = self.GetCurrentRobotHT()
-            if (np.abs(self.fKineSolved - T) <= self.epsSolution).all(): 
+            if (np.abs(self.fKineSolved.HT44() - T.HT44()) <= self.epsSolution).all():  
                 success = True
             else: 
                 success = False
@@ -1408,12 +1449,12 @@ class InverseKinematicsNumerical():
                 if self.flagDebug: 
                     exudyn.Print('\n'*1)
                     exudyn.Print('WARNING: InverseKinematics: solution incorrect:') 
-                    p1 = erb.HT2translation(self.fKineSolved)
-                    p2 = erb.HT2translation(T)
+                    p1 = self.fKineSolved.translation
+                    p2 = T.translation
                     exudyn.Print('pos error: ', np.round(p1-p2, 17)) # if TF is in the workspace then the position works
                     # rotation may still be wrong
-                    R1 = self.fKineSolved[0:3,0:3]
-                    R2 = T[0:3,0:3]
+                    R1 = self.fKineSolved.rotation
+                    R2 = T.rotation
                     rot1 = erb.RotationMatrix2RotXYZ(R1)
                     rot2 = erb.RotationMatrix2RotXYZ(R2) 
                     exudyn.Print('rot1 = {}, rot2 = {}'.format(rot1, rot2))

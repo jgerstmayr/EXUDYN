@@ -2,7 +2,7 @@
 (sec-mainsystemextensions-solutionviewer)=
 #### Function: SolutionViewer
 
-[`SolutionViewer(mainSystem, solution = None, rowIncrement = 1, timeout = 0.04, runOnStart = True, runMode = 2, fontSize = 12, title = '', checkRenderEngineStopFlag = True, windowSize = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L869)
+[`SolutionViewer(mainSystem, solution = None, rowIncrement = 1, timeout = 0.04, runOnStart = True, runMode = 2, fontSize = 12, title = '', checkRenderEngineStopFlag = True, windowSize = None) -> Non)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L869)
 
 - **function description**: open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics) - NOTE that this function is added to MainSystem via Python function SolutionViewer.
 - **input**:
@@ -37,7 +37,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`addPrismati
 (sec-mainsystemextensions-plotsensor)=
 #### Function: PlotSensor
 
-[`PlotSensor(mbs, sensorNumbers = [], components = 0, xLabel = None, yLabel = None, labels = [], colorCodeOffset = 0, newFigure = True, closeAll = False, componentsX = [], title = '', figureName = '', fontSize = None, colors = None, lineStyles = None, lineWidths = None, markerStyles = None, markerSizes = None, markerDensity = None, rangeX = [], rangeY = [], majorTicksX = None, majorTicksY = None, offsets = [], factors = [], subPlot = [], sizeInches = None, fileName = '', useXYZcomponents = True, legendArgs = None, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L371)
+[`PlotSensor(mbs, sensorNumbers = [], components = 0, xLabel = None, yLabel = None, labels = [], colorCodeOffset = 0, newFigure = True, closeAll = False, componentsX = [], title = '', figureName = '', fontSize = None, colors = None, lineStyles = None, lineWidths = None, markerStyles = None, markerSizes = None, markerDensity = None, rangeX = [], rangeY = [], majorTicksX = None, majorTicksY = None, offsets = [], factors = [], subPlot = [], sizeInches = None, fileName = '', useXYZcomponents = True, legendArgs = None, **kwargs) -> lis)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L371)
 
 - **function description**: Helper function for direct and easy visualization of sensor outputs, without need for loading text files, etc.; PlotSensor can be used to simply plot, e.g., the measured x-Position over time in a figure. PlotSensor provides an interface to matplotlib (which needs to be installed). Default values of many function arguments can be changed using the exudyn.plot function PlotSensorDefaults(), see there for usage. - NOTE that this function is added to MainSystem via Python function PlotSensor.
 - **input**:
@@ -117,7 +117,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest
 (sec-mainsystemextensions-solvestatic)=
 #### Function: SolveStatic
 
-[`SolveStatic(mbs, simulationSettings = None, updateInitialValues = False, storeSolver = True, showHints = False, showCausingItems = True, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L137)
+[`SolveStatic(mbs, simulationSettings = None, updateInitialValues = False, storeSolver = True, showHints = False, showCausingItems = True, autoAssemble = True, ) -> boo)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L137)
 
 - **function description**: solves the static mbs problem using simulationSettings; see MainSolverStatic, {ref}`sec-mainsolverstatic`, for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...)) - NOTE that this function is added to MainSystem via Python function SolveStatic.
 - **input**:
@@ -163,7 +163,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`3SpringsDis
 (sec-mainsystemextensions-solvedynamic)=
 #### Function: SolveDynamic
 
-[`SolveDynamic(mbs, simulationSettings = None, solverType = None, updateInitialValues = False, storeSolver = True, showHints = False, showCausingItems = True, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L216)
+[`SolveDynamic(mbs, simulationSettings = None, solverType = None, updateInitialValues = False, storeSolver = True, showHints = False, showCausingItems = True, autoAssemble = True, ) -> boo)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L216)
 
 - **function description**: solves the dynamic mbs problem using simulationSettings and solver type; see MainSolverImplicitSecondOrder, {ref}`sec-mainsolverimplicitsecondorder`, for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...)) - NOTE that this function is added to MainSystem via Python function SolveDynamic.
 - **input**:
@@ -211,7 +211,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`3SpringsDis
 (sec-mainsystemextensions-computelinearizedsystem)=
 #### Function: ComputeLinearizedSystem
 
-[`ComputeLinearizedSystem(mbs, simulationSettings = None, projectIntoConstraintNullspace = False, singularValuesTolerance = 1e-12, returnConstraintJacobian = False, returnConstraintNullspace = False, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L410)
+[`ComputeLinearizedSystem(mbs, simulationSettings = None, projectIntoConstraintNullspace = False, singularValuesTolerance = 1e-12, returnConstraintJacobian = False, returnConstraintNullspace = False, autoAssemble = True, ) -> lis)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L410)
 
 - **function description**: compute linearized system of equations for ODE2 part of mbs, not considering the effects of algebraic constraints; for computation of eigenvalues and advanced computation with constrained systems, see ComputeODE2Eigenvalues; the current implementation is also able to project into the constrained space, however, this currently does not generally work with non-holonomic systems - NOTE that this function is added to MainSystem via Python function ComputeLinearizedSystem.
 - **input**:
@@ -260,7 +260,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEig
 (sec-mainsystemextensions-computeode2eigenvalues)=
 #### Function: ComputeODE2Eigenvalues
 
-[`ComputeODE2Eigenvalues(mbs, simulationSettings = None, useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates = [], convert2Frequencies = False, useAbsoluteValues = True, computeComplexEigenvalues = False, ignoreAlgebraicEquations = False, singularValuesTolerance = 1e-12, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L544)
+[`ComputeODE2Eigenvalues(mbs, simulationSettings = None, useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates = [], convert2Frequencies = False, useAbsoluteValues = True, computeComplexEigenvalues = False, ignoreAlgebraicEquations = False, singularValuesTolerance = 1e-12, autoAssemble = True, ) -> lis)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L544)
 
 - **function description**: compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see {ref}`sec-mbs-systemdata`); note that mass and stiffness matrices are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver. - NOTE that this function is added to MainSystem via Python function ComputeODE2Eigenvalues.
 - **input**:
@@ -322,7 +322,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`nMassOscill
 (sec-mainsystemextensions-computesystemdegreeoffreedom)=
 #### Function: ComputeSystemDegreeOfFreedom
 
-[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L790)
+[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True, ) -> dic)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L790)
 
 - **function description**: compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True) - NOTE that this function is added to MainSystem via Python function ComputeSystemDegreeOfFreedom.
 - **input**:

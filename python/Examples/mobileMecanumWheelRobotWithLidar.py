@@ -263,7 +263,7 @@ for iWheel in range(nWheels):
     mWheel = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0,0,0]))
     markerWheels += [mWheel]
 
-    mCarAxle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bCar, localHT=HomogeneousTransformation(initialRotation, pOff))) #the joint frame on the car
+    mCarAxle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bCar, localHT=exu.HT(rotation=initialRotation, translation=pOff))) #the joint frame on the car
     markerCarAxles += [mCarAxle]
 
     lockedAxis0 = 0 # could be used to lock an Axis
@@ -332,7 +332,7 @@ def RotatedMarker(marker, rotation):
     """a marker on the same body, its frame turned by rotation: the frame of a joint or connector"""
     data = mbs.GetMarker(marker)
     return mbs.AddMarker(MarkerBodyRigid(bodyNumber=data['bodyNumber'],
-                                         localHT=np.array(data['localHT']) @ HomogeneousTransformation(rotation, [0,0,0])))
+                                         localHT=exu.HT(data['localHT']) * exu.HT(rotation=rotation)))
 
 for i in range(4):
     # Torsional springdamper always acts in z-Axis: its markers are turned about y, so that z is the wheel axis

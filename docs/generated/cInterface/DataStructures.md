@@ -166,6 +166,11 @@ The class **HT** has the following **functions and structures**:
 - **`HasNoRotation()`**: True if the rotation is the unit matrix - set without rotation (identity, SetTranslation, a product of such) or given as the exact unit matrix from Python -, which its products then skip; a unit matrix computed in C++ is not checked
 - **`__mul__(other)`**: H1*H2, the composition of two transformations, an HT; H*v, the transformed point A*v+p of a 3D vector, a numpy array
 - **`__eq__(other)`**: True if rotation and translation are equal, component by component
+- **`__matmul__(other)`**: H1@H2, the composition of two transformations as H1*H2, an HT; H@x for any other x as numpy computes it with the 4x4 matrix, e.g. H@[x,y,z,1]
+- **`__copy__()`**: a copy, for copy.copy(H)
+- **`__deepcopy__(memo)`**: a copy, for copy.deepcopy(H) and objects holding an HT
+- **`... = data[index]key`**: H[key]: numpy indexing of the 4x4 matrix [A p; 0 1], e.g. H[0:3,3] for the translation; the result is a copy
+- **`data[index]= ...key, value`**: H[key] = value: numpy indexing of the 4x4 matrix for writing the rotation and the translation, e.g. H[0:3,3] = p; writing the last row [0,0,0,1] raises
 - **`__array__(dtype = None, copy = None)`**: the 4x4 matrix [A p; 0 1] as numpy array, for np.array(H) and wherever numpy takes the HT
 - **`__repr__()`**: the string representation of the HT
 

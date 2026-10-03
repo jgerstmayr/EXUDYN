@@ -867,7 +867,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 #++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
 def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, runOnStart = True, runMode=2, 
-                   fontSize=12, title='', checkRenderEngineStopFlag=True, windowSize=None):
+                   fontSize=12, title='', checkRenderEngineStopFlag=True, windowSize=None) -> None:
     """open interactive dialog and visulation (animate) solution loaded with LoadSolutionFile(...); Change slider 'Increment' to change the automatic increment of time frames; Change mode between continuous run, one cycle (fits perfect for animation recording) or 'Static' (to change Solution steps manually with the mouse); update period also lets you change the speed of animation; Press Run / Stop button to start/stop interactive mode (updating of grpahics)
 
     Args:

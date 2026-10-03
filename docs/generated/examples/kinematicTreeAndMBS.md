@@ -93,14 +93,14 @@ graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0.5,0], 0.0025, graphics.color
 graphicsBaseList +=[graphics.Cylinder([0,0,0], [0,0,0.5], 0.0025, graphics.color.blue)]
 newRobot = Robot(gravity=gravity3D,
               base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
-              tool = RobotTool(HT=HTtranslate([0,0,0]), visualization=VRobotTool(graphicsData=[])),
+              tool = RobotTool(HT=exu.HT(), visualization=VRobotTool(graphicsData=[])),
              referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
 for i in range(n):
     newRobot.AddLink(RobotLink(mass=listMass[i],
                                COM=listCOM[i], 
                                inertia=listInertiaCOM[i], 
-                               preHT = HomogeneousTransformation(Amat[i], vVec[i]),
+                               preHT = exu.HT(rotation=Amat[i], translation=vVec[i]),
                                ))
 
 if useMBS:
@@ -243,14 +243,14 @@ if useKT2:
             q=[q]
     
         graphicsList = []
-        T = HT0() #initial transformation
+        T = exu.HT() #initial transformation
         pPrev = [0,0,0]
         for i in range(n):
             # T66prev = T66
             [A, v, rotAxis, transAxis] = JointTransformMotionSubspace(KT2.listOfJointTypes[i], q[i])
             XL = KT2.XL(i)
-            XLHT = HomogeneousTransformation(XL[0],XL[1])
-            T = T @ XLHT @ HomogeneousTransformation(A.T,v) #A is inverse transform
+            XLHT = exu.HT(rotation=XL[0], translation=XL[1])
+            T = T @ XLHT @ exu.HT(rotation=A.T, translation=v) #A is inverse transform
 
             p = HT2translation(T)
             A = HT2rotationMatrix(T)

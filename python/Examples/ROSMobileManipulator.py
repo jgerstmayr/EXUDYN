@@ -130,7 +130,7 @@ def functionStateMachine(t, posPlatform, ThetaPlatform, PosObj, armStatus, mySta
         # build homogenous transformation from rotation matrix existing rotation matrix
         TArmRot = np.eye(4)
         TArmRot[0:3,0:3] = ArmOrientationR
-        TArm = HTtranslate(ArmPosition) @ TArmRot
+        TArm = exu.HT(translation=ArmPosition) @ TArmRot
     elif robotControlString == 'mk':
         # state for external cmd_vel (keyboard or other node)
         # get velocity data from ROS /cmd_vel topic, please use: rostopic pub -r 100 /cmd_vel geometry_msgs/Twist "..." but send via keyboard node
@@ -175,7 +175,7 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
     mobileRobot = { 'gravity':                  [0,0,-9.81],                # gravity in m/s^2
                     'platformDimensions':       [0.575, 0.718 , 0.2495],    # [width, length, hight]   [0.575, 0.718 , 0.495]
                     'platformMass':             125-18.4,                   # platform mass- manipulator mass 
-                    'platformInitialPose':      HTtranslate([p0[0],p0[1],(0.495+(-0.12))]) @ HTrotateZ(theta0),  # platform initial pose as HT middle of platform (box representation) 
+                    'platformInitialPose':      exu.HT(translation=[p0[0],p0[1],(0.495+(-0.12))]) @ exu.HT().SetRotationZ(theta0),  # platform initial pose as HT middle of platform (box representation) 
                     'platformInitialOmega':     [0,0,0],                # platform initial rotational velocity around x,y,z axis
                     'platformInitialVelocity':  [0,0,0],                # platform initial translational velocity in x,y,z direction
                     'platformCOM':              comShift,               # center of mass shift to base coordinate system
@@ -198,7 +198,7 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
                     'wheelNumbers':             4,                      # number of wheels on platform
                     'wheelContactStiffness':    10**(6), 
                     'wheelContactDamping':      50*np.sqrt(10**(5)), 
-                    'serialRobotMountpoint':    HTtranslate([0.178 , 0, 0.12]), 
+                    'serialRobotMountpoint':    exu.HT(translation=[0.178 , 0, 0.12]), 
                     'proportionalZone':         1e-2,                   # friction regularization
                     'debugOffset':              debugOffsetNumber
                     }  
@@ -295,13 +295,13 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
         graphicsToolList+= [graphics.Brick([-tx,0, 0], toolSize, graphics.color.grey)]
         graphicsToolList+= [graphics.Brick([0,0, -0.05], [tx*5,0.09,0.04], graphics.color.grey)]
         graphicsToolList += [graphics.Basis(length=0.2)]
-        basePoseHT=mobileRobot['platformInitialPose'] @ mobileRobot['serialRobotMountpoint'] @ HTrotateZ(qOffset[0]) #robot base position and orientation  
+        basePoseHT=mobileRobot['platformInitialPose'] @ mobileRobot['serialRobotMountpoint'] @ exu.HT().SetRotationZ(qOffset[0]) #robot base position and orientation  
 
         # manipulator input with included function from exudyn robotics models
         myRobotList = ManipulatorUR5()
         robot = Robot(gravity=[0,0,-9.81],
             base = RobotBase(HT=basePoseHT), #visualization=VRobotBase(graphicsData=graphicsBaseList)),
-            tool = RobotTool(HT=HTtranslate([0,0,0.155]), #  @ HTrotateZ(np.pi/2), 
+            tool = RobotTool(HT=exu.HT(translation=[0,0,0.155]), #  @ HTrotateZ(np.pi/2), 
                             visualization=VRobotTool(graphicsData=graphicsToolList)),
             referenceConfiguration = q0) #referenceConfiguration created with 0s automatically
         robot = LinkDict2Robot(myRobotList, robotClass=robot)

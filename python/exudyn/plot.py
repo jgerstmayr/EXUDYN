@@ -374,7 +374,7 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel=None, yLabel=None, la
                colors=None, lineStyles=None, lineWidths=None, markerStyles=None, markerSizes=None, markerDensity=None,
                rangeX=[], rangeY=[], majorTicksX=None, majorTicksY=None,
                offsets=[], factors=[], subPlot=[], sizeInches=None,
-               fileName='', useXYZcomponents=True, legendArgs=None, **kwargs):
+               fileName='', useXYZcomponents=True, legendArgs=None, **kwargs) -> list:
     r"""Helper function for direct and easy visualization of sensor outputs, without need for loading text files, etc.; PlotSensor can be used to simply plot, e.g., the measured x-Position over time in a figure. PlotSensor provides an interface to matplotlib (which needs to be installed). Default values of many function arguments can be changed using the exudyn.plot function PlotSensorDefaults(), see there for usage.
 
     Args:

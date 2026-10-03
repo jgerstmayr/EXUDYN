@@ -524,8 +524,8 @@ if __name__ == '__main__':
     HTZeroExu = myRobotModel.LinkHT(qZero)
     HTRandExu = myRobotModel.LinkHT(qRand)
      
-    HTZeroError = HTZeroCorke - HTZeroExu[-1]
-    HTRandError = HTRandCorke - HTRandExu[-1]
+    HTZeroError = HTZeroCorke - np.array(HTZeroExu[-1])
+    HTRandError = HTRandCorke - np.array(HTRandExu[-1])
     
     print('Forward kinematics check:\n zero config error = \n',HTZeroError)
     print('Forward kinematics check:\n rand config error = \n',HTRandError)
@@ -564,7 +564,7 @@ if __name__ == '__main__':
 
     for sol in ikSolutionRandExu:
         HTRandExuCheck = myRobotModel.LinkHT(sol)[-1]
-        HTErrorExu = HTRandExu[-1] - HTRandExuCheck
+        HTErrorExu = np.array(HTRandExu[-1]) - np.array(HTRandExuCheck)
         print('Error in position for solution q='+str(sol)+' \n Error=', HTErrorExu[0:3,3])
         print('Error in orientation for solution q='+str(sol)+' \n Error=\n', HTErrorExu[0:3,0:3])
 

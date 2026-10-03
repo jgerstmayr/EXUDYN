@@ -276,7 +276,7 @@ graphicsToolList+= [graphics.Brick([0,-ty,1.5*tz+zOff], toolSize, graphics.color
 #changed to new robot structure July 2021:
 newRobot = Robot(gravity=gravity,
               base = RobotBase(visualization=VRobotBase(graphicsData=graphicsBaseList)),
-              tool = RobotTool(HT=HTtranslate([0,0,0.1]), visualization=VRobotTool(graphicsData=graphicsToolList)),
+              tool = RobotTool(HT=exu.HT(translation=[0,0,0.1]), visualization=VRobotTool(graphicsData=graphicsToolList)),
               referenceConfiguration = []) #referenceConfiguration created with 0s automatically
 
 #modKKDH according to Khalil and Kleinfinger, 1986
@@ -383,7 +383,7 @@ def ComputeMBSstaticRobotTorques(newRobot):
 #++++++++++++++++++++++++++++++++++++++++++++++++
 #base, graphics, object and marker:
 
-objectGround = mbs.AddObject(ObjectGround(referencePosition=HT2translation(newRobot.GetBaseHT()), 
+objectGround = mbs.AddObject(ObjectGround(referencePosition=newRobot.GetBaseHT().translation, 
                                       #visualization=VObjectGround(graphicsData=graphicsBaseList)
                                           ))
 

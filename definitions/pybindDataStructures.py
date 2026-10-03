@@ -404,6 +404,47 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='__eq__',
                        isLambdaFunction = True,
                        )
 
+#the operators and copies of a 4x4 numpy array, so that scripts written for those work with an HT (#2821)
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__matmul__',
+                       cName='[](const PyHT &item, const py::object &other) {\n            return item.MatMul(other); }',
+                       description="H1@H2, the composition of two transformations as H1*H2, an HT; H@x for any other x as numpy computes it with the 4x4 matrix, e.g. H@[x,y,z,1]",
+                       argList=['other'], argTypes=['Union[HT, ArrayLike]'],
+                       returnType='Union[HT, ArrayLike]',
+                       isLambdaFunction = True,
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__copy__',
+                       cName='[](const PyHT &item) {\n            return PyHT(item); }',
+                       description="a copy, for copy.copy(H)",
+                       returnType='HT',
+                       isLambdaFunction = True,
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__deepcopy__',
+                       cName='[](const PyHT &item, const py::object& memo) {\n            return PyHT(item); }',
+                       description="a copy, for copy.deepcopy(H) and objects holding an HT",
+                       argList=['memo'], argTypes=['Any'],
+                       returnType='HT',
+                       isLambdaFunction = True,
+                       )
+
+#numpy indexing of the 4x4 matrix, so that scripts written for 4x4 numpy arrays read and write an HT (#2821)
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__getitem__',
+                       cName='[](const PyHT &item, const py::object& key) {\n            return item.GetItemPy(key); }',
+                       description="H[key]: numpy indexing of the 4x4 matrix [A p; 0 1], e.g. H[0:3,3] for the translation; the result is a copy",
+                       argList=['key'], argTypes=['Any'],
+                       returnType='Any',
+                       isLambdaFunction = True,
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__setitem__',
+                       cName='[](PyHT &item, const py::object& key, const py::object& value) {\n            item.SetItemPy(key, value); }',
+                       description="H[key] = value: numpy indexing of the 4x4 matrix for writing the rotation and the translation, e.g. H[0:3,3] = p; writing the last row [0,0,0,1] raises",
+                       argList=['key', 'value'], argTypes=['Any', 'Any'],
+                       returnType='None',
+                       isLambdaFunction = True,
+                       )
+
 #numpy reads an HT as its 4x4 matrix: np.array(H), and an HT is taken where a 4x4 numpy array is (#2799)
 pb.DefPyFunctionAccess(cClass=classStr, pyName='__array__',
                        cName='[](const PyHT &item, const py::object& dtype, const py::object& copy) {\n            return item.GetHT44Py(); }',

@@ -140,7 +140,7 @@ def SolveStatic(mbs, simulationSettings = None,
                 showHints = False,
                 showCausingItems = True,
                 autoAssemble = True,
-                ):
+                ) -> bool:
     """solves the static mbs problem using simulationSettings; see MainSolverStatic, [Section](#sec:MainSolverStatic), for further details of the static solver; this function is also available in exudyn (using exudyn.SolveStatic(...))
 
     Args:
@@ -221,7 +221,7 @@ def SolveDynamic(mbs,
                 showHints = False,
                 showCausingItems = True,
                 autoAssemble = True,
-                ):
+                ) -> bool:
     """solves the dynamic mbs problem using simulationSettings and solver type; see MainSolverImplicitSecondOrder, [Section](#sec:MainSolverImplicitSecondOrder), for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))
 
     Args:
@@ -414,7 +414,7 @@ def ComputeLinearizedSystem(mbs,
                             returnConstraintJacobian = False,
                             returnConstraintNullspace = False,
                             autoAssemble = True,
-                            ):
+                            ) -> list:
     r"""compute linearized system of equations for ODE2 part of mbs, not considering the effects of algebraic constraints; for computation of eigenvalues and advanced computation with constrained systems, see ComputeODE2Eigenvalues; the current implementation is also able to project into the constrained space, however, this currently does not generally work with non-holonomic systems
 
     Args:
@@ -548,7 +548,7 @@ def ComputeODE2Eigenvalues(mbs,
                            computeComplexEigenvalues = False,
                            ignoreAlgebraicEquations=False, singularValuesTolerance=1e-12,
                            autoAssemble = True,
-                           ):
+                           ) -> list:
     r"""compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see [Section](#sec:mbs:systemData)); note that mass and stiffness matrices are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
 
     Args:
@@ -791,7 +791,7 @@ def ComputeSystemDegreeOfFreedom(mbs,
                 simulationSettings = None,
                 threshold = 1e-12, verbose=False, useSVD=False,
                 autoAssemble = True,
-                ):
+                ) -> dict:
     """compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
 
     Args:

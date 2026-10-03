@@ -13,7 +13,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 (sec-models-manipulator4rsimple)=
 ## Function: Manipulator4Rsimple
 
-[`Manipulator4Rsimple()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L46)
+[`Manipulator4Rsimple()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L45)
 
 - **function description**: generate 4R manipulator as myRobot dictionary, settings are done in function
 - **output**: myRobot dictionary
@@ -24,7 +24,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 (sec-models-manipulator3rsimple)=
 ## Function: Manipulator3RSimple
 
-[`Manipulator3RSimple()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L135)
+[`Manipulator3RSimple()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L134)
 
 - **function description**: generate 3R manipulator as myRobot dictionary, settings are done in function
 - **output**: myRobot dictionary
@@ -35,7 +35,7 @@ Homogeneous Transformations (HT) to describe transformations and coordinate syst
 (sec-models-manipulatorpanda)=
 ## Function: ManipulatorPANDA
 
-[`ManipulatorPANDA()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L229)
+[`ManipulatorPANDA()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L228)
 
 - **function description**: generate Franka Emika Panda manipulator as myRobot dictionary, settings are done in function
 - **output**: myRobot dictionary
@@ -49,7 +49,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKine
 (sec-models-manipulatorur5)=
 ## Function: ManipulatorUR5
 
-[`ManipulatorUR5()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L376)
+[`ManipulatorUR5()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L375)
 
 - **function description**: generate UR5 manipulator as myRobot dictionary, settings are done in function
 - **output**: myRobot dictionary
@@ -63,7 +63,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`InverseKine
 (sec-models-manipulatorpuma560)=
 ## Function: ManipulatorPuma560
 
-[`ManipulatorPuma560()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L470)
+[`ManipulatorPuma560()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L469)
 
 - **function description**: generate puma560 manipulator as myRobot dictionary, settings are done in function
 - **output**: myRobot dictionary
@@ -77,7 +77,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`humanRobotI
 (sec-models-linkdict2robot)=
 ## Function: LinkDict2Robot
 
-[`LinkDict2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L566)
+[`LinkDict2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L565)
 
 - **function description**: generate serial manipulator as robotClass object from robotLinkDict
 - **input**:
@@ -94,7 +94,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ROSMobileMa
 (sec-models-linkdictmoddhkk2robot)=
 ## Function: LinkDictModDHKK2Robot
 
-[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L632)
+[`LinkDictModDHKK2Robot(robotLinkDict, robotClass = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/robotics/models.py#L629)
 
 - **function description**: special test function to generate serial manipulator as robotClass object from robotLinkDict using inertia parameters defined in stdDH coordinates, but creating robot from modDHKK; will be ERASED in future
 - **input**:

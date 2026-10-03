@@ -59,7 +59,7 @@ Jlink4 = (InertiaCuboid(density=density, sideLengths=[1, 1 , 1]))
 
 Jlink = Jlink1
 Jlink = Jlink.Translated([0,0.5*L1,0])
-preHT = HT0()
+preHT = exu.HT()
 
 link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                  jointType='Rz', preHT=preHT, 
@@ -72,8 +72,8 @@ linksList += [copy.copy(link)]
 
 Jlink = Jlink2
 Jlink = Jlink.Translated([0,0.5*L2,0])
-preHT = HT0()
-preHT = HTtranslateY(L1)
+preHT = exu.HT()
+preHT = exu.HT(translation=[0,L1,0])
 
 link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                  jointType='Rz', preHT=preHT, 
@@ -86,8 +86,8 @@ linksList += [copy.copy(link)]
 
 Jlink = Jlink3
 Jlink = Jlink.Translated([0,0.5*L3,0])
-preHT = HT0()
-preHT = HTtranslateY(L2)
+preHT = exu.HT()
+preHT = exu.HT(translation=[0,L2,0])
 
 link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                  jointType='Rz', preHT=preHT, 
@@ -100,8 +100,8 @@ linksList += [copy.copy(link)]
 #4. Rotationsgelenk mit später fixiertem Würfel als Arm
 Jlink = Jlink4
 Jlink = Jlink.Translated([0,0,0])
-preHT = HT0()
-preHT = HTtranslateY(L3)
+preHT = exu.HT()
+preHT = exu.HT(translation=[0,L3,0])
 
 link = RobotLink(Jlink.Mass(), Jlink.COM(), Jlink.InertiaCOM(), 
                   jointType='Rz', preHT=preHT, 

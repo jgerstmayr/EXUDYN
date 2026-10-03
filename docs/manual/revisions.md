@@ -156,6 +156,14 @@ deformed cross section, and results with joints on slope nodes, change slightly 
 for most models. Results change within the tolerances of Newton - in most models from the eighth digit on, with
 contact and friction earlier; set it to `False` for the full Newton method. `staticSolver.newton` keeps the full Newton method (#2815).
 
+**The robotics classes compute with `exudyn.HT`.** `Robot.LinkHT`, `JointHT`, `COMHT`, `StdDH2HT`, `ModDHKK2HT`,
+`InverseKinematicsNumerical.GetCurrentRobotHT` and `dictJointType2HT` return `exu.HT` instead of 4x4 numpy arrays, and
+`RobotBase.HT`, `RobotTool.HT`, `RobotLink.localHT` and `preHT` are stored as `exu.HT`, given as `exu.HT` or 4x4 matrix
+as before; the kinematics is about twice as fast. Scripts written for numpy arrays keep working: an `exu.HT` is indexed
+as its 4x4 matrix (`H[0:3,3]`, also for writing, except the last row), `H1 @ H2` is the product and `H @ x` what numpy
+computes, `copy.deepcopy` copies it, and `np.array(H)` gives the matrix. What no longer works is numpy arithmetic on it,
+such as `H1 - H2`: use `np.array(H1) - np.array(H2)` (#2821).
+
 **`rigidBodyUtilities.HT` is gone; its name is `exudyn.HT` now.** The shortcut `HT` of the function
 `HomogeneousTransformation(A, r)`, which `from exudyn.utilities import *` brought into a script, is
 removed, so that `HT` means one thing - the class `exu.HT`. A script that called `HT(A, r)` for a 4x4

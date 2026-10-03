@@ -14360,3 +14360,50 @@ the decorator `extensionRegistry.extends` is typed (a `TypeVar` bound to `Callab
 - untyped, it made every added function `Any`. Checked with the installed package: mypy types `mbs.SolveDynamic` with
 its argument names and refuses an unknown keyword of `mbs.CreateRigidBody`; jedi goes to the stub line and infers the
 source function with its full docstring. The return types the old stub had come back with RG12.38 (#2826).
+
+<a id="rg16-10"></a>
+### RG16.10, RG16.13.2, RG12.38 — the robotics classes on `exu.HT`, the kinematic tree measured, return annotations (2026-10-04, #2821, #2824, #2826, #2827)
+
+*(Maintainer 2026-10-04 on RG16.10.1: "do as suggested. Could also be read/write indexing, if possible, but would fail
+on writing in the last row. Continue with the mentioned open steps.")*
+
+**`exu.HT` for scripts written for numpy** (C++, `PyHomogeneousTransformation.h`): `H[key]` reads the 4x4 matrix with
+numpy indexing (a copy), `H[key] = value` writes it and raises if the last row would not be [0,0,0,1]; `H1 @ H2` is the
+HT product and `H @ x` for anything else what numpy computes with the 4x4 matrix (`H @ [x,y,z,1]`); `__copy__` and
+`__deepcopy__` (the robotics classes deepcopy their links). Tested in `homogeneousTransformationInterfaceTest.py`.
+
+**RG16.10.2, .3**: `RobotBase.HT`, `RobotTool.HT`, `RobotLink.localHT` and `preHT` are properties that store an `exu.HT`
+(given as `exu.HT`, 4x4 matrix or None for the identity); `dictJointType2HT` gives `exu.HT`; `LinkHT`, `JointHT`, `COMHT`,
+`StdDH2HT`, `ModDHKK2HT`, `GetCurrentRobotHT`, `InterpolateHTs` return `exu.HT`; `Jacobian`, `COMHT`, `Solve` and
+`SolveSafe` take `exu.HT` or 4x4 matrices; `CreateRedundantCoordinateMBS` gives the bodies `referenceHT` and the joint
+markers the `localHT` from the HTs themselves; `models.py` builds base and tool frames with `exu.HT` (and two unused
+variables less); `future.py` subtracts HTs through `np.array`. Measured against the numpy version (the committed
+`roboticsCore.py` beside the new one): `LinkHT` 30 µs → 17 µs for 6 links, 99 µs → 56 µs for 20; `JointHT` with
+`Jacobian` 56 µs → 46 µs and 179 µs → 149 µs; the tip positions identical.
+
+**RG16.10.4**: the 23 scripts with the Robot class or the kinematic tree (the 24th, `homogeneousTransformationParameterTest.py`,
+compares on purpose) give their HTs with `exu.HT` - `exu.HT(translation=)`, `exu.HT().SetRotationZ()`,
+`exu.HT(rotation=, translation=)`, `exu.HT()` for `HT0()`, `.translation` for `HT2translation(robot.GetBaseHT())`; `@`
+between them stays. Each was run before and after (with the new library, venvExuP313; the five that need optional
+packages in venvP313, built from the same tree): the printed results identical, only timings differ;
+`serialRobotInverseKinematics.py` found `TSol - T` on two HTs in `SolveSafe`, fixed there. Not run to the end:
+`serialRobotKinematicTreeDigging.py` and the two `openAIgymNLink*.py` (beyond 4 minutes, before and after alike),
+`ROSMobileManipulator.py` (needs ROS) and `serialRobotURDF.py` (its robot model is not available offline). Test suite
+and `runTestExamples.py` pass.
+
+<a id="rg16-13-2"></a>
+**RG16.13.2** (#2824): `CObjectKinematicTree` computes per joint and evaluation `XL = RotationTranslation2T66Inverse(
+jointTransformations[i], jointOffsets[i])` and `Xup = XJ*XL`, in 6x6 spatial algebra. An experiment, not committed,
+computed `XL` once per tree: a tree of 6 links (RK44 20000 steps 0.324 s → 0.330 s; generalized-alpha 0.455 s → 0.454 s)
+and of 50 links (0.866 s → 0.893 s; 0.942 s → 0.987 s) - no gain, the time is elsewhere. Stored HTs would only add a
+conversion; the two lists stay the storage, `jointHTs` their view. The measurement tree (first link at the base,
+automatic graphics) made `mbs.CreateKinematicTree` fail with `UnboundLocalError: gLink`: the link graphics was appended
+also when none was created for a link without offset (#2827), fixed.
+
+<a id="rg12-38"></a>
+**RG12.38** (#2826): the 32 functions added to `MainSystem` have return annotations taken from the type their docstring
+names under `Returns:` - `exudyn.ObjectIndex`, `LoadIndex`, `SensorIndex`, `Union[dict, exudyn.ObjectIndex]` for the
+Create functions with `returnDict`, `bool` for the solvers, `list`, `dict`, `int`, `None`. `test_extensionAnnotations.py`
+checks that every registered function has one and that it is the documented type. mypy gives `bool` for
+`mbs.SolveDynamic()` now; the item indices stay `Any` for mypy, because the stub imports them from the module itself
+(as for `mbs.AddObject`).
