@@ -2,12 +2,16 @@
   "number": 2744,
   "title": "access functions: single functions per access type in the objects, with precise interfaces",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "priority": "NORMAL",
   "effort": "HIGH",
   "description": "The maintainer, 2026-09-29: GetAccessFunctionBody(AccessFunctionType, localPosition, Matrix& value) serves every access type through one function and a switch, with workarounds (e.g. the vector for JacobianTtimesVector_q passed in the output matrix). Revise into single functions per access type in the objects, with interfaces that say what they take and return. First: which objects need which access functions and what would be best for them. Then possibly a check that the declared access function flags (ItemAccessFunctionTypes) and the functions a definition declares agree. revision2026b step RG9.3.",
   "dateRaised": "2026-09-29",
   "deadline": "2027-03-28",
-  "file": "src/System/CObjectBody.h"
+  "dateResolved": "2026-10-03 08:16",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/System/CObjectBody.h",
+  "releaseNotes": "The access function types of an object are derived from the access functions it provides; AccessFunctionType.SuperElementAlternativeRotationMode is removed, the mode is an argument of the super element access function.",
+  "resolvedInVersion": "1.12.243"
 }

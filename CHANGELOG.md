@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 223 | 1.12.241 |
+| 1.12 | Metheney | 225 | 1.12.243 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.243** `CHANGE` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` access functions: single functions per access type in the objects, with precise interfaces (#2744)
+  - description: The maintainer, 2026-09-29: GetAccessFunctionBody(AccessFunctionType, localPosition, Matrix& value) serves every access type through one function and a switch, with workarounds (e.g. the vector for JacobianTtimesVector\_q passed in the output matrix). Revise into single functions per access type in the objects, with interfaces that say what they take and return. First: which objects need which access functions and what would be best for them. Then possibly a check that the declared access function flags (ItemAccessFunctionTypes) and the functions a definition declares agree. revision2026b step RG9.3.
+  - **notes:** The access function types of an object are derived from the access functions it provides; AccessFunctionType.SuperElementAlternativeRotationMode is removed, the mode is an argument of the super element access function.
+  - date resolved: **2026-10-03 08:16**, date raised: 2026-09-29
+- **1.12.242** `CHECK` `raised by: Claude-JG` `resolved by: Claude-JG` fourteen figure files in docs/figures are referenced by nothing (#2594)
+  - description: Twelve .pdf and two .eps files in docs/figures/ are referenced by no page, no definition and no tool: CommonTangents3D.eps, DrawSystemGraphExample.pdf, RotationAxisAngle.pdf, RotationAxisAngleDerivation.pdf, degrees\_of\_freedom.pdf, elementaryRotationX.pdf, elementaryRotationY.pdf, generalContactANCF2Dcircle.pdf, generalContactSpheres.pdf, open\_closed\_loop.pdf, plotSpringDamper.pdf, spectralRadiusZeta0.pdf, triangleNormal.eps, triangleNormal.pdf. They are the vector originals of the LaTeX era; most have a .png twin that IS used. Copies are in tmp/unusedFigures for the maintainer to look at (that directory is git-ignored, so nothing left version control). What has to be decided: delete them, or keep them as the editable source of the png twins - in which case they belong somewhere that says so. NOTE eleven further .pdf figures ARE referenced, but only inside \\ignoreRST{} blocks in definitions/itemDefsObjects.py, i.e. only by the LaTeX build that no longer exists; the Markdown and the new PDF of revision2026b step RG3.3 use their png twins.
+  - **notes:** The figures of the documentation that have a vector original are shown as vector graphics in the PDF and as png in the HTML.
+  - date resolved: **2026-10-03 08:16**, date raised: 2026-09-22
 - **1.12.241** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exu.HT where a 4x4 numpy HT is taken: rigidBodyUtilities and the robotics classes (#2799)
   - description: revision2026b step RG16.4.2: exu.HT converts to a 4x4 numpy array (\_\_array\_\_), the HT functions of rigidBodyUtilities and the robotics classes (RobotLink, RobotTool, RobotBase, InverseKinematicsNumerical) take an exu.HT as well; CreateKinematicTree gives jointHTs.
   - **notes:** numpy reads an exu.HT as its 4x4 matrix (np.array(H)); the HT functions of rigidBodyUtilities and the robotics classes take an exu.HT where they take a 4x4 array.

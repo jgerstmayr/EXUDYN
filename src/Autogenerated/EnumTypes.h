@@ -326,8 +326,7 @@ enum class AccessFunctionType {
     SuperElement = (Index)Marker::SuperElement,                             //!< for super elements, using TranslationalVelocity_qt and AngularVelocity_qt
     KinematicTree = (Index)Marker::KinematicTree,                           //!< for KinematicTree, using TranslationalVelocity_qt and AngularVelocity_qt
     OwnMarkersOnly = (1 << 29),                                             //!< the access functions serve only the object's own markers (super element or kinematic tree markers); the general body markers are refused
-    JacobianTtimesVector_q = (1 << 30),                                     //!< derivative of jacobian^T times vector (provided in markerData.vectorValue)
-    SuperElementAlternativeRotationMode = (1 << 31)                         //!< for super elements, alternative rotation mode
+    JacobianTtimesVector_q = (1 << 30)                                      //!< derivative of jacobian^T times vector (provided in markerData.vectorValue)
 };
 
 enum class DynamicSolverType {

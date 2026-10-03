@@ -238,7 +238,6 @@ The class **AccessFunctionType** has the following **functions and structures**:
 - **`KinematicTree`**: for KinematicTree, using TranslationalVelocity_qt and AngularVelocity_qt
 - **`OwnMarkersOnly`**: the access functions serve only the object's own markers (super element or kinematic tree markers); the general body markers are refused
 - **`JacobianTtimesVector_q`**: derivative of jacobian^T times vector (provided in markerData.vectorValue)
-- **`SuperElementAlternativeRotationMode`**: for super elements, alternative rotation mode
 
 
 (sec-dynamicsolvertype)=

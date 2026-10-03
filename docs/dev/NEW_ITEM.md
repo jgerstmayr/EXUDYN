@@ -46,8 +46,10 @@ vocabulary is in [definitions/README.md](../../definitions/README.md).
   your `.cpp`. `ItemFunction(...)` for a function new in this item. Each with a `description` where
   it is not obvious.
 - **Types**: what the item provides and needs - `ItemTypes`, `ItemRequestedTypes`,
-  `ItemAccessFunctionTypes` (objects), `requestedNodeTypes` (node markers). They decide which items
-  fit together; `Assemble()` checks them, and the page lists the fitting items from them.
+  `ItemAccessFunctionTypes()` (objects: the types are derived from the access functions the object
+  provides; `ownMarkers=` for a super element or kinematic tree with markers of its own),
+  `requestedNodeTypes` (node markers). They decide which items fit together; `Assemble()` checks
+  them, and the page lists the fitting items from them.
 - **`outputVariables`**: `ItemOutputVariable(OVPosition, r"""$symbol$description""")` for every output
   variable; the generator writes `GetOutputVariableTypes` from the list, you implement
   `GetOutputVariable...` for exactly these.
@@ -78,7 +80,7 @@ in the generated headers.
 
 | kind | functions to implement |
 |---|---|
-| body | `ComputeMassMatrix`, `ComputeODE2LHS`, the access functions `GetPositionJacobian`, `GetRotationJacobian`, `GetMassWeightedPositionJacobian`, `GetJacobianTransposedTimesVectorDerivative` (how a force or torque reaches the body; one per type in `ItemAccessFunctionTypes`, which the validator checks) and `IsValidLocalPosition` where they are defined at restricted local positions only, `GetOutputVariableBody`, `GetPosition`, `GetVelocity`, ... as far as they apply, `GetAvailableJacobians` |
+| body | `ComputeMassMatrix`, `ComputeODE2LHS`, the access functions `GetPositionJacobian`, `GetRotationJacobian`, `GetMassWeightedPositionJacobian`, `GetJacobianTransposedTimesVectorDerivative` (how a force or torque reaches the body; each gives the body its access function type, derived by `ItemAccessFunctionTypes()`) and `IsValidLocalPosition` where they are defined at restricted local positions only, `GetOutputVariableBody`, `GetPosition`, `GetVelocity`, ... as far as they apply, `GetAvailableJacobians` |
 | connector | `ComputeODE2LHS` (the forces on the markers), `ComputeJacobianODE2_ODE2` unless `GetAvailableJacobians` says it is not a function, `GetOutputVariableConnector` |
 | constraint | `ComputeAlgebraicEquations`, `ComputeJacobianAE`, `GetOutputVariableConnector` |
 | node | `GetPosition`, `GetVelocity`, ..., `GetOutputVariable` |

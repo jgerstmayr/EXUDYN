@@ -12133,3 +12133,42 @@ their references. Not done: products in the robotics code stay numpy - `exu.HT` 
 functions are not hot.
 
 **RG16.4.3, the mode switch**: not needed - RG16.2 decided per item, with `None` for not given; no global mode.
+
+<a id="rg3-8-5"></a>
+### RG3.8.5 — the seventeen figures with a vector original (2026-10-03, #2594)
+
+**One comparison per pair, as the step asked.** Each `.pdf` rendered with `pdftoppm` (MiKTeX, 150 dpi), both images
+cropped to their content, scaled to 200 pixels width and compared in grey: the aspect ratios agree to 0.5 %, the mean
+difference is 0.6 to 3.6 of 255 (antialiasing of the two renderers), at most 1.2 % of the pixels differ by more than 60;
+side by side, all seventeen are the same picture - labels, arrows, curves (the six with the largest differences
+looked at: `elementaryRotationY`, `SphereHollowsphereContact`, `ObjectFFRFsketch`, `triangleNormal`,
+`plotSpringDamper`, `ConvexRolling`). So **all seventeen are switched** to `docs/figures/<name>.*` - 7 in the item and
+marker definitions, 10 in the manual: the HTML takes the `.png` (checked: `theoryRotations.html` shows
+`elementaryRotationX.png`), the PDF the `.pdf` (checked in the LaTeX source of `exudev docs --pdf`:
+`elementaryRotationX.pdf`, `CommonTangents3D.pdf`). `README.rst` keeps `DrawSystemGraphExample.png`: GitHub and PyPI
+render it, and they do not resolve `.*`.
+
+**What #2594 asked besides**: the `.pdf` it named as unreferenced are the vector originals now used by the PDF; the
+`.eps` are gone since RG3.8.2. Unreferenced in `docs/figures/` is only `ExudynLOGO1.7.jpg`, the older logo - deleting a
+tracked file is the maintainer's to decide.
+
+<a id="rg9-3-4-4"></a>
+### RG9.3.4.4 — the access function types derived, the two meanings separated (2026-10-03, #2744)
+
+**Derived**: `ItemAccessFunctionTypes()` declares no list any more. `ItemDefinition` derives the types of the body
+markers from the access functions the object provides - its `ItemFunctionDef`s, and for a hand-written parent class
+the table `definitionTypes.parentClassAccessFunctions` (only `CObjectANCFCable2DBase` provides some) - with
+`accessFunctionOfType` (GetPositionJacobian means TranslationalVelocity_qt, and so on), and writes
+`GetAccessFunctionTypes`. Rule 7 of the validator checks now that table against the C++ headers. The 15 bodies and
+their generated C++ are unchanged (two sums in another order: `ObjectANCFCable2D`, `ObjectRigidBody2D`).
+
+**The two meanings apart**: the bits `TranslationalVelocity_qt`, `AngularVelocity_qt`, `DisplacementMassIntegral_q`
+meant "a body marker finds the access function" and, with `SuperElement` or `KinematicTree`, "the object's own markers
+of that kind" - `GetAccessFunctionSuperElement`, not the body functions. In the definitions they are apart now:
+`ItemAccessFunctionTypes(ownMarkers='SuperElement', ownMarkerTypes=[...])` for `ObjectGenericODE2`, `ObjectFFRF`,
+`ObjectFFRFreducedOrder`, `ownMarkers='KinematicTree'` for `ObjectKinematicTree`; **`OwnMarkersOnly` is derived** - an
+object with own markers and none of the body functions (`ObjectGenericODE2`, `ObjectKinematicTree`), as the plan said
+("declares none"). C++ keeps the bits it checks (`CSystem::CheckSystemIntegrity`), so nothing changes at run time.
+**`SuperElementAlternativeRotationMode`** - bit 31, a mode of `MarkerSuperElementRigid` (`useAlternativeApproach`)
+packed into the access type - is the argument `alternativeRotationMode` of `GetAccessFunctionSuperElement` now, and
+the enumeration value is gone (`revisions.md`, *What can break*). `NEW_ITEM.md` says how to declare it.

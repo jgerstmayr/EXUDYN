@@ -317,14 +317,8 @@ static void ComputeJacobians(const CMarkerSuperElementRigid& marker, const CSyst
 	LinkedDataMatrix weightingMatrix(marker.GetParameters().weightingFactors.GetDataPointer(), nw, 1);
 
 	cObject.GetAccessFunctionSuperElement((AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement),
-		weightingMatrix, marker.GetParameters().meshNodeNumbers, marker.GetParameters().localHT.GetTranslation(), positionJacobian, EXUmath::unitMatrix3D);
+		weightingMatrix, marker.GetParameters().meshNodeNumbers, marker.GetParameters().localHT.GetTranslation(), positionJacobian, EXUmath::unitMatrix3D, false);
 
-	//add special flag for alternative rotation mode (little hack, maybe this becomes a separate variable in future)
-	Index rotationMode = 0;
-	if (marker.GetParameters().useAlternativeApproach)
-	{
-		rotationMode += (Index)AccessFunctionType::SuperElementAlternativeRotationMode;
-	}
 	Matrix3D rotationCorrection;
 	if (marker.GetParameters().rotationsExponentialMap > 0 && pyExperimental.markerSuperElementRigidTexpSO3)
 	{
@@ -334,8 +328,8 @@ static void ComputeJacobians(const CMarkerSuperElementRigid& marker, const CSyst
 	}
 	else { rotationCorrection.SetScalarMatrix(3, 1.); }
 
-	cObject.GetAccessFunctionSuperElement((AccessFunctionType)(rotationMode + (Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::SuperElement),
-		weightingMatrix, marker.GetParameters().meshNodeNumbers, marker.GetParameters().localHT.GetTranslation(), rotationJacobian, rotationCorrection);
+	cObject.GetAccessFunctionSuperElement((AccessFunctionType)((Index)AccessFunctionType::AngularVelocity_qt + (Index)AccessFunctionType::SuperElement),
+		weightingMatrix, marker.GetParameters().meshNodeNumbers, marker.GetParameters().localHT.GetTranslation(), rotationJacobian, rotationCorrection, marker.GetParameters().useAlternativeApproach);
 
 #ifdef verboseCMarkerSuperElementRigid
 	pout << "  markerdata.positionJacobian=" << positionJacobian << "\n";

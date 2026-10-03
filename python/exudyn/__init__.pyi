@@ -483,8 +483,6 @@ class AccessFunctionType(Enum):
     """the access functions serve only the object's own markers (super element or kinematic tree markers); the general body markers are refused"""
     JacobianTtimesVector_q = int
     """derivative of jacobian^T times vector (provided in markerData.vectorValue)"""
-    SuperElementAlternativeRotationMode = int
-    """for super elements, alternative rotation mode"""
 
 
 class DynamicSolverType(Enum):

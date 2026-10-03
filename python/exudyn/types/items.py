@@ -367,7 +367,7 @@ items = {
     'kind': 'Object',
     'types': ['Body', 'SingleNoded'],
     'requestedNodeTypes': ['Position2D', 'Orientation2D'],
-    'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'JacobianTtimesVector_q'],
+    'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
     'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'RotationMatrix', 'HomogeneousTransformation', 'Rotation', 'AngularVelocity', 'AngularVelocityLocal', 'Acceleration', 'AccelerationLocal', 'AngularAcceleration', 'AngularAccelerationLocal', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},
@@ -552,7 +552,7 @@ items = {
     'kind': 'Object',
     'types': ['Body', 'MultiNoded'],
     'requestedNodeTypes': ['Position2D', 'Orientation2D', 'Point2DSlope1'],
-    'accessFunctionTypes': ['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'AngularVelocity_qt', 'DisplacementMassIntegral_q'],
+    'accessFunctionTypes': ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q'],
     'outputVariables': ['Position', 'Displacement', 'Velocity', 'VelocityLocal', 'Rotation', 'Director1', 'StrainLocal', 'CurvatureLocal', 'ForceLocal', 'TorqueLocal', 'AngularVelocity', 'Acceleration', 'AngularAcceleration', 'KineticEnergy', 'PotentialEnergy'],
     'parameters': {
       'name': {'type': 'String', 'size': '', 'range': '', 'default': '', 'mustBeGiven': False, 'description': "objects's unique name"},

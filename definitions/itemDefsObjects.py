@@ -137,7 +137,7 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::_None);'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q']),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetRotationJacobian'),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
@@ -316,7 +316,7 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return JacobianType::_None;'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q']),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
         ItemFunctionDef('GetMassWeightedPositionJacobian'),
@@ -448,7 +448,7 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return JacobianType::_None;'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q']),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
         ItemFunctionDef('GetMassWeightedPositionJacobian'),
@@ -584,7 +584,7 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return JacobianType::_None;'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q']),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetRotationJacobian'),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
@@ -724,7 +724,7 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return JacobianType::_None;'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q']),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetRotationJacobian'),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
@@ -1059,7 +1059,7 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('ComputeJacobianAE'),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::AE_ODE2 + JacobianType::AE_ODE2_function + JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q']),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetRotationJacobian'),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
@@ -1270,7 +1270,7 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='if (parameters.physicsCenterOfMass == 0.) {return JacobianType::_None;} else {return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);}'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'JacobianTtimesVector_q']),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetRotationJacobian'),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
@@ -1604,8 +1604,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemFunctionDef('GetAvailableJacobians'),
         #the types serve MarkerSuperElementPosition/Rigid; it provides none of the access functions of a body, so the general
         #body markers are refused at Assemble() (#2734)
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'SuperElement'],
-                                bodyMarkers=False),
+        ItemAccessFunctionTypes(ownMarkers='SuperElement', ownMarkerTypes=['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q']),
         ItemFunctionDef('GetOutputVariableBody'),
         ItemFunctionDef('GetPosition'),
         ItemFunctionDef('GetDisplacement'),
@@ -1899,7 +1898,7 @@ oGenericODE1 = mbs.AddObject(ObjectGenericODE1(nodeNumbers=[nODE1],
         ItemFunctionDef('ComputeODE1RHS'),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::ODE1_ODE1);'),
-        ItemAccessFunctionTypes([]),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetAccessFunction'),
         ItemFunctionDef('GetOutputVariable'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
@@ -2397,8 +2396,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemFunctionDef('GetAvailableJacobians'),
         #the types serve MarkerKinematicTreeRigid; it provides none of the access functions of a body, so the general
         #body markers are refused at Assemble() (#2734)
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'KinematicTree'],
-                                bodyMarkers=False),
+        ItemAccessFunctionTypes(ownMarkers='KinematicTree', ownMarkerTypes=['TranslationalVelocity_qt', 'AngularVelocity_qt']),
         ItemFunctionDef('GetOutputVariableBody'),
         ItemFunction(type=TReal, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='ComputePotentialEnergy', args='ConfigurationType configuration',
@@ -2977,7 +2975,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'SuperElement']),
+        ItemAccessFunctionTypes(ownMarkers='SuperElement', ownMarkerTypes=['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q']),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetRotationJacobian'),
         ItemFunctionDef('GetMassWeightedPositionJacobian'),
@@ -3194,7 +3192,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     
 
     (fig-objectffrfreducedorder-mesh)=
-    ```{figure} /docs/figures/ObjectFFRFsketch.png
+    ```{figure} /docs/figures/ObjectFFRFsketch.*
     :width: 400
 
     Floating frame of reference with exemplary position of a mesh node *i*
@@ -3595,7 +3593,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q', 'SuperElement']),
+        ItemAccessFunctionTypes(ownMarkers='SuperElement', ownMarkerTypes=['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q']),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetRotationJacobian'),
         ItemFunctionDef('GetMassWeightedPositionJacobian'),
@@ -3873,7 +3871,7 @@ definitions.append(ItemDefinition(
             description=r"Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'"),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q']), #no rotation: a single slope carries no orientation (#2733)
+        ItemAccessFunctionTypes(), #no rotation: a single slope carries no orientation (#2733)
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetMassWeightedPositionJacobian'),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative',
@@ -4528,7 +4526,7 @@ cable = ObjectANCFCable2D(physicsMassPerLength=rhoA,
             implementation='return parameters.useReducedOrderIntegration;'),
         ItemFunctionDef('StrainIsRelativeToReference',
             implementation='return parameters.strainIsRelativeToReference;'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'AngularVelocity_qt', 'DisplacementMassIntegral_q']),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
         ItemFunctionDef('GetAvailableJacobians'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
@@ -4721,7 +4719,7 @@ definitions.append(ItemDefinition(
             implementation='return parameters.physicsAddALEvariation;'),
         ItemFunctionDef('ComputeMassMatrix'),
         ItemFunctionDef('ComputeODE2LHS'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'DisplacementMassIntegral_q']),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);'),
         ItemFunctionDef('GetPositionJacobian'),
@@ -4939,7 +4937,7 @@ definitions.append(ItemDefinition(
             description=r"Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'"),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q']),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetMassWeightedPositionJacobian'),
         ItemFunctionDef('GetRotationJacobian'),
@@ -5231,7 +5229,7 @@ definitions.append(ItemDefinition(
             description=r'templated function to enable automatic differentiation'),
         ItemFunctionDef('ComputeJacobianODE2_ODE2'),
         ItemFunctionDef('GetAvailableJacobians'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q']),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetRotationJacobian'),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
@@ -5490,7 +5488,7 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('ComputeJacobianODE2_ODE2'),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q']),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetRotationJacobian'),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative'),
@@ -5696,7 +5694,7 @@ definitions.append(ItemDefinition(
             description=r"Computational function: compute left-hand-side (LHS) of second order ordinary differential equations (ODE) to 'ode2Lhs'"),
         ItemFunctionDef('GetAvailableJacobians',
             implementation='return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);'),
-        ItemAccessFunctionTypes(['TranslationalVelocity_qt', 'JacobianTtimesVector_q', 'DisplacementMassIntegral_q']),
+        ItemAccessFunctionTypes(),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetMassWeightedPositionJacobian'),
         ItemFunctionDef('GetJacobianTransposedTimesVectorDerivative',
@@ -8548,7 +8546,7 @@ definitions.append(ItemDefinition(
     
 
     (fig-reevingsystemsprings-tangents)=
-    ```{figure} /docs/figures/CommonTangents3D.png
+    ```{figure} /docs/figures/CommonTangents3D.*
     :width: 500
 
     Geometry of common tangent for two spatial circles defined by radii $R_A$ and $R_B$ as well as by the normalized axis vectors $\av_A$ and $\av_B$. The tangent is undefined, if one of the axis vectors is parallel to the vector $\cv$, which connects the two center points. The positive rotation sense is indicated by means of the angular velocities $\omega_A$ and $\omega_B$.
@@ -9553,7 +9551,7 @@ definitions.append(ItemDefinition(
      The main geometrical setup is shown in the following figure:
     
 
-    ```{figure} /docs/figures/ObjectJointRollingDiscSketch.png
+    ```{figure} /docs/figures/ObjectJointRollingDiscSketch.*
     :width: 600
     ```
 
@@ -9941,7 +9939,7 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
     
 
     (fig-objectcontactconvexroll-sketch)=
-    ```{figure} /docs/figures/ConvexRolling.png
+    ```{figure} /docs/figures/ConvexRolling.*
     :width: 600
 
     Sketch of the roller Dimensions. The rollers radius $r({^bx})$ is described by the polynomial `coefficientsHull`.
@@ -11176,7 +11174,7 @@ definitions.append(ItemDefinition(
     
 
     (fig-objectspherespherecontact)=
-    ```{figure} /docs/figures/SphereSphereContact.png
+    ```{figure} /docs/figures/SphereSphereContact.*
     :width: 400
 
     Two spheres that are in contact, showing a force on marker 1 in normal direction due to overlap; forces on marker 0 act in opposite direction.
@@ -11226,7 +11224,7 @@ definitions.append(ItemDefinition(
     
 
     (fig-objectspherehollowspherecontact)=
-    ```{figure} /docs/figures/SphereHollowsphereContact.png
+    ```{figure} /docs/figures/SphereHollowsphereContact.*
     :width: 400
 
     One sphere and one hollowsphere that are in contact, showing a force on marker 1 against normal direction due to overlap; forces on marker 0 act in opposite direction.

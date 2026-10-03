@@ -109,7 +109,7 @@ $$ (eq-fpencontact)
 acts against the penetration of the ground. The penetration depth $z_{\mathrm{pen}}$ is the z-component of the position vector of the contact point relative to the ground frame ${^0\pv_{\mathrm{C}}}$.
 
 (fig-objectcontactconvexroll-sketch)=
-```{figure} /docs/figures/ConvexRolling.png
+```{figure} /docs/figures/ConvexRolling.*
 :width: 600
 
 Sketch of the roller Dimensions. The rollers radius $r({^bx})$ is described by the polynomial `coefficientsHull`.

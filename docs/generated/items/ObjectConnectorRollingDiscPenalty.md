@@ -99,7 +99,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 The main geometrical setup is shown in the following figure:
 
-```{figure} /docs/figures/ObjectJointRollingDiscSketch.png
+```{figure} /docs/figures/ObjectJointRollingDiscSketch.*
 :width: 600
 ```
 

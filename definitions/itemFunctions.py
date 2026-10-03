@@ -351,8 +351,8 @@ objectFunctions = [
     ItemFunctionLib(classType='Object', pythonName='GetAccessFunctionSuperElement',
         type=Tvoid, destination=DestComp,
         cFlags=CFConst,
-        args='AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection',
-        description='compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; for details see CObjectSuperElement header file'),
+        args='AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection, bool alternativeRotationMode',
+        description='compute Jacobian with weightingMatrix (WM) and/or meshNodeNumbers, which define how the SuperElement mesh nodes or coordinates are transformed to a global position; alternativeRotationMode is the useAlternativeApproach of MarkerSuperElementRigid (#2744); for details see CObjectSuperElement header file'),
 
     ItemFunctionLib(classType='Object', pythonName='GetAccessFunctionTypes',
         type=TAccessFunctionType, destination=DestComp,

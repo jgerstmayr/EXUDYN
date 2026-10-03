@@ -158,7 +158,6 @@
 		.value("KinematicTree", AccessFunctionType::KinematicTree, "for KinematicTree, using TranslationalVelocity_qt and AngularVelocity_qt")
 		.value("OwnMarkersOnly", AccessFunctionType::OwnMarkersOnly, "the access functions serve only the object's own markers (super element or kinematic tree markers); the general body markers are refused")
 		.value("JacobianTtimesVector_q", AccessFunctionType::JacobianTtimesVector_q, "derivative of jacobian^T times vector (provided in markerData.vectorValue)")
-		.value("SuperElementAlternativeRotationMode", AccessFunctionType::SuperElementAlternativeRotationMode, "for super elements, alternative rotation mode")
 		;
 
   py::enum_<DynamicSolverType>(m, "DynamicSolverType")

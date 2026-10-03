@@ -695,14 +695,9 @@ Vector3D CObjectFFRFreducedOrder::GetMeshNodeCoordinates(Index nodeNumber, const
 
 //! for definition see CObjectSuperElement
 void CObjectFFRFreducedOrder::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, 
-	const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection) const
+	const ArrayIndex& meshNodeNumbers, const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection, bool alternativeRotationMode) const
 { 
-	bool useAlternativeApproach = false;
-	if (EXUstd::IsOfType(accessType, AccessFunctionType::SuperElementAlternativeRotationMode)) 
-	{ 
-		useAlternativeApproach = true; //must be same as in CMarkerSuperElementRigid! alternative approach uses skew symmetric matrix of reference position; follows the inertia concept
-		accessType = (AccessFunctionType)((Index)accessType - (Index)AccessFunctionType::SuperElementAlternativeRotationMode);
-	}
+	const bool useAlternativeApproach = alternativeRotationMode; //must be same as in CMarkerSuperElementRigid! alternative approach uses skew symmetric matrix of reference position; follows the inertia concept
 
 	switch ((Index)accessType)
 	{

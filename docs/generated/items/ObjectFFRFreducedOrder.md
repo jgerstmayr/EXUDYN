@@ -132,7 +132,7 @@ The notation of kinematics quantities follows the floating frame of reference id
 quantities given in the tables above and sketched in [](#fig-objectffrfreducedorder-mesh).
 
 (fig-objectffrfreducedorder-mesh)=
-```{figure} /docs/figures/ObjectFFRFsketch.png
+```{figure} /docs/figures/ObjectFFRFsketch.*
 :width: 400
 
 Floating frame of reference with exemplary position of a mesh node *i*

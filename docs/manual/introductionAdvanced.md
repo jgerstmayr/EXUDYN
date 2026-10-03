@@ -106,7 +106,7 @@ Typically, you can use primitives (cube, sphere, ...) or {ref}`STL <STL>` data t
 **NOTE** that for correct rendering and correct contact computations, all triangle nodes must follow a strict local order and triangle normals -- if defined -- must point outwards, see {ref}`fig-trianglenormals`.
 
 (fig-trianglenormals)=
-```{figure} /docs/figures/triangleNormal.png
+```{figure} /docs/figures/triangleNormal.*
 :width: 250
 
 Definition of triangle normals and outside/inside regions in Exudyn

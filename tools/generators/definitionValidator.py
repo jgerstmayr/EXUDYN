@@ -225,32 +225,28 @@ def ValidatePybindDeclarations(counts):
 
 
 #an access function type and the function of a body that provides it (#2744)
-accessFunctionOfType = {'TranslationalVelocity_qt': 'GetPositionJacobian',
-                        'AngularVelocity_qt': 'GetRotationJacobian',
-                        'DisplacementMassIntegral_q': 'GetMassWeightedPositionJacobian',
-                        'JacobianTtimesVector_q': 'GetJacobianTransposedTimesVectorDerivative'}
-
-
 def _CheckAccessFunctions(moduleName, definition, classes, counts):
-    """rule 7: an object declares an access function type (ItemAccessFunctionTypes) exactly if it provides the
-    function - in its definition, or in a hand-written parent class other than the base classes, which raise;
-    an object that serves only its own markers (bodyMarkers=False) provides none of them"""
-    accessMember = next((m for m in definition['members'] if 'accessFunctionTypes' in m), None)
+    """rule 7: the access function types an object gets are derived from the access functions it provides
+    (definitionTypes._DeriveAccessFunctionTypes, #2744) - from its definition and from the table
+    definitionTypes.parentClassAccessFunctions of the hand-written parent classes; this checks the table against the
+    C++ headers: a type is derived exactly if the object provides its function there (the base classes raise)"""
+    import definitionTypes
+    accessMember = next((m for m in definition['members'] if m.get('deriveAccess', False)), None)
     if accessMember is None:
         return []
-    declaredFunctions = set(m['pythonName'] for m in definition['members'] if 'Function' in m['kind'])
+    providedFunctions = set(m['pythonName'] for m in definition['members'] if 'Function' in m['kind'])
     for c in _Chain(classes, definition.get('cParentClass', '')):
         if c not in ('CObjectBody', 'CObjectSuperElement', 'CObject'):
-            declaredFunctions.update(classes[c][1].keys())
+            providedFunctions.update(classes[c][1].keys())
     violations = []
-    for (accessType, function) in accessFunctionOfType.items():
+    for (accessType, function) in definitionTypes.accessFunctionOfType.items():
         counts['access'] += 1
-        declared = accessType in accessMember['accessFunctionTypes'] and accessMember.get('bodyMarkers', True)
-        if declared != (function in declaredFunctions):
-            violations.append(moduleName + '.py: ' + definition['className'] + ': ' +
-                              ('declares ' + accessType + ', but provides no ' + function if declared else
-                               'provides ' + function + ', but does not declare ' + accessType +
-                               (' (bodyMarkers=False: it serves its own markers only)' if not accessMember.get('bodyMarkers', True) else '')))
+        derived = accessType in accessMember['bodyAccessFunctionTypes']
+        if derived != (function in providedFunctions):
+            violations.append(moduleName + '.py: ' + definition['className'] + ': ' + accessType + ' is '
+                              + ('derived' if derived else 'not derived') + ', but the C++ class '
+                              + ('does not provide ' if derived else 'provides ') + function
+                              + ' - correct definitionTypes.parentClassAccessFunctions')
     return violations
 
 

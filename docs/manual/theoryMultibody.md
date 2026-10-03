@@ -126,7 +126,7 @@ A closed-loop mechanism is shown in {ref}`fig-open-closed-loop`b, which is a fou
 As mentioned before, the fourth link is the ground link.
 
 (fig-open-closed-loop)=
-```{figure} /docs/figures/open_closed_loop.png
+```{figure} /docs/figures/open_closed_loop.*
 :width: 400
 
 a.) Open loop mechanism (double pendulum), b.) Closed loops mechanism (four-bar linkage).
@@ -188,7 +188,7 @@ Thus, $\phi_c$ is the only remaining independent (minimum) coordinate of the sys
 Regarding the four-bar mechanism, there exist some configurations, which can lead to bifurcation and a change in the degrees of freedom -- but this is usually avoided in practical cases.
 
 (fig-degrees-of-freedom)=
-```{figure} /docs/figures/degrees_of_freedom.png
+```{figure} /docs/figures/degrees_of_freedom.*
 :width: 500
 
 Examples of mechanisms with different degrees of freedom.

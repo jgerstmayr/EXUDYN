@@ -433,7 +433,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 **RG3.8.4** **DONE 2026-09-26** (#2594) — [log](exudynRevisionLog2026b.md#rg3-8-4) · [plan text](exudynRevisionLog2026b.md#plan-rg3-8-4) — The four lost figures are three, and they are back.
 
 <a id="rg3-8-5"></a>
-**RG3.8.5** *(from RG3.8; measured 2026-09-26)* **The seventeen vector originals whose png the
+**RG3.8.5** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg3-8-5) (#2594) *(from RG3.8; measured 2026-09-26)* **The seventeen vector originals whose png the
     documentation uses.** `CommonTangents3D`, `ConvexRolling`, `ObjectFFRFsketch`,
     `SphereSphereContact` and thirteen more exist as `.png` **and** as `.pdf` or `.eps`, and every
     reference names the `.png`. Writing them as `.*` would give the PDF the vector original at no
@@ -1253,7 +1253,7 @@ revision (info document D15).
 **RG9.2** **DONE 2026-09-23** (#2628, #2629) — [log](exudynRevisionLog2026b.md#rg9-2) · [plan text](exudynRevisionLog2026b.md#plan-rg9-2) — Fourteen item sources included an exception header they do not use, and paid pybind11 for it.
 
 <a id="rg9-3"></a>
-**RG9.3** *(group RG9; maintainer 2026-09-29)* **Access functions as single functions of the objects**
+**RG9.3** **DONE 2026-10-03** (#2744 resolved) *(group RG9; maintainer 2026-09-29)* **Access functions as single functions of the objects**
     (#2744). `GetAccessFunctionBody(AccessFunctionType, localPosition, Matrix& value)` serves every access
     type through one function and a switch, and carries workarounds - the vector of
     `JacobianTtimesVector_q` travels in the output matrix, `OwnMarkersOnly` (RG4.10) says what a
@@ -1270,8 +1270,8 @@ revision (info document D15).
       (`ItemAccessFunctionTypes`) and the functions its definition declares agree - possibly by deriving the flags
       from the functions;
     - **RG9.3.3** the migration, object by object - realized in RG9.3.4.
-    - **RG9.3.4** *(maintainer 2026-10-02)* **the split of `GetAccessFunctionBody`** — .1-.3 **DONE 2026-10-02**, .4 in
-      part — [log](exudynRevisionLog2026b.md#rg9-3-4):
+    - **RG9.3.4** *(maintainer 2026-10-02)* **the split of `GetAccessFunctionBody`** — .1-.3 **DONE 2026-10-02**, .4 **DONE 2026-10-03** (first in
+      part 2026-10-02) — [log](exudynRevisionLog2026b.md#rg9-3-4):
       - **RG9.3.4.1** the class of access functions: in `CObjectBody`, one virtual function per access type with an
         interface that says what it takes and returns - `GetPositionJacobian(localPosition, jacobian)` (3 x n),
         `GetRotationJacobian(localPosition, jacobian)`, `GetMassWeightedPositionJacobian(jacobian)`,
@@ -1288,10 +1288,10 @@ revision (info document D15).
         `GetAccessFunctionBody` and the input-through-output convention of `JacobianTtimesVector_q` go;
       - **RG9.3.4.4** = RG9.3.2: the flags derived from the functions a definition declares; `OwnMarkersOnly` becomes
         "declares none"; `SuperElementAlternativeRotationMode` moves to the marker; **done 2026-10-02: the check**
-        (rule 7 of the definition validator: a body declares a type exactly if it provides its function). **Open**: the
-        flags derived instead of declared, `OwnMarkersOnly` and `SuperElementAlternativeRotationMode` - the super
-        elements use the same flags for their own markers (`GetAccessFunctionSuperElement`), so deriving needs these
-        two meanings separated first;
+        (rule 7 of the definition validator: a body declares a type exactly if it provides its function). **The rest DONE
+        2026-10-03** — [log](exudynRevisionLog2026b.md#rg9-3-4-4): the flags derived instead of declared, the own
+        markers declared apart (`ownMarkers=`, `ownMarkerTypes=`), `OwnMarkersOnly` derived, and
+        `SuperElementAlternativeRotationMode` an argument of `GetAccessFunctionSuperElement`;
     - **RG9.3.5** **DONE 2026-10-02** (evaluated with a switch; (a)-(c) decided by the maintainer and done, the switch
       removed) — [log](exudynRevisionLog2026b.md#rg9-3-5), [decision](exudynRevisionLog2026b.md#rg9-3-5-decided) - *(maintainer 2026-10-02; after RG9.3.4; "with a switch, so performance can
       be compared")* **evaluation: hand-written Jacobians or AD of a templated `GetPosition`**. To answer: what changes - a template cannot be virtual, so the object would provide a templated
@@ -2544,7 +2544,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG1.4 | - | **the 1.13 release** - the first public one after the revision |
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
-| RG3.8.5 | #2594 | the seventeen vector originals whose png the documentation uses |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models |
 | RG2.4 | #2748 | the manual GUI check, per release and platform (list and model done) |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
@@ -2553,7 +2552,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
-| RG9.3 | #2744 | access functions as single functions of the objects: the split done (RG9.3.4.1-.3), the declarations checked (rule 7); open the flags derived instead of declared (RG9.3.4.4, after separating the super elements' own meaning); RG9.3.5 to RG9.3.7 done (hand-written Jacobians, AD for the derivative of `J^T f` of the cable and of the torque on `ObjectANCFBeam`, `ObjectRotationalMass1D` off its axis) |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |

@@ -1314,7 +1314,7 @@ definitions.append(ItemDefinition(
     
 
     (fig-markersuperelementrigid-sketch)=
-    ```{figure} /docs/figures/MarkerSuperElementRigid.png
+    ```{figure} /docs/figures/MarkerSuperElementRigid.*
     :width: 400
 
     Sketch of marker nodes, exemplary node $i$, reference coordinates and marker coordinate system; note the difference of the center of the marker 'surface' (rectangle) marked with the red cross, and the averaged of the averaged local reference position.

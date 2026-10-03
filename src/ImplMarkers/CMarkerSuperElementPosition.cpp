@@ -67,7 +67,7 @@ static void ComputePositionJacobian(const CMarkerSuperElementPosition& marker, c
 	positionJacobian.SetAll(0.);
 	LinkedDataMatrix weightingMatrix(parameters.weightingFactors.GetDataPointer(), parameters.weightingFactors.NumberOfItems(), 1);
 	cObject.GetAccessFunctionSuperElement((AccessFunctionType)((Index)AccessFunctionType::TranslationalVelocity_qt + (Index)AccessFunctionType::SuperElement),
-		weightingMatrix, parameters.meshNodeNumbers, Vector3D(0.), positionJacobian, EXUmath::unitMatrix3D);
+		weightingMatrix, parameters.meshNodeNumbers, Vector3D(0.), positionJacobian, EXUmath::unitMatrix3D, false);
 }
 
 void CMarkerSuperElementPosition::ComputeMarkerData(const CSystemData& cSystemData, bool computeJacobian, MarkerData& markerData) const

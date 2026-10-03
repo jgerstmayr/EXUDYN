@@ -764,7 +764,7 @@ void CObjectKinematicTree::GetOutputVariableKinematicTree(OutputVariableType var
 
 //! just make sure that this overwritten function is not called!
 void CObjectKinematicTree::GetAccessFunctionSuperElement(AccessFunctionType accessType, const Matrix& weightingMatrix, const ArrayIndex& meshNodeNumbers, 
-	const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection) const
+	const Vector3D& localOffset, Matrix& value, const Matrix3D& rotTangentCorrection, bool alternativeRotationMode) const
 {
 	CHECKandTHROWstring("CObjectKinematicTree::GetAccessFunctionSuperElement: Function called without intention; use MarkerKinematicTree instead of MarkerSuperElement");
 }

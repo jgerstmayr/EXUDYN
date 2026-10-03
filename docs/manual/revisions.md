@@ -30,6 +30,10 @@ release that carries it**.
 
 ### What can break a script
 
+**`exudyn.AccessFunctionType.SuperElementAlternativeRotationMode` is gone**: it was a mode of
+`MarkerSuperElementRigid` (`useAlternativeApproach`), not an access type, and is passed as an argument
+now (#2744).
+
 **Star imports export only what a module defines.** `from exudyn.utilities import *` used to drag
 in everything that module had imported itself — `np`, `sin`, `cos`, `sqrt`, `graphics` and more.
 Every module now declares `__all__`, so a script that relied on those names arriving *through*

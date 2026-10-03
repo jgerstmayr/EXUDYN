@@ -865,19 +865,51 @@ def ItemTypes(kind, types, description):
     return member
 
 
-def ItemAccessFunctionTypes(types, description=None, bodyMarkers=True):
-    """Use site: the access functions an object provides for markers and loads (GetAccessFunctionTypes),
-    as a declared list of AccessFunctionType value names; a marker with
-    Position (Orientation) needs TranslationalVelocity_qt (AngularVelocity_qt).
-    bodyMarkers=False: the types serve the object's own markers (super element, kinematic tree) only; the
-    object adds OwnMarkersOnly, with which CSystem::CheckSystemIntegrity refuses the general body markers (#2734)"""
-    member = ItemFunctionDef('GetAccessFunctionTypes',
-                             implementation=_TypeSumImplementation('AccessFunctionType',
-                                                                   list(types) + ([] if bodyMarkers else ['OwnMarkersOnly'])),
-                             description=description)
-    member['accessFunctionTypes'] = list(types)
-    member['bodyMarkers'] = bodyMarkers
+#the access function of each access type a body provides for markers and loads (#2744)
+accessFunctionOfType = {'TranslationalVelocity_qt': 'GetPositionJacobian',
+                        'AngularVelocity_qt': 'GetRotationJacobian',
+                        'JacobianTtimesVector_q': 'GetJacobianTransposedTimesVectorDerivative',
+                        'DisplacementMassIntegral_q': 'GetMassWeightedPositionJacobian'}
+#the access functions a hand-written parent class provides to its objects; the definition validator (rule 7)
+#checks this table against the C++ headers
+parentClassAccessFunctions = {'CObjectANCFCable2DBase': ['GetPositionJacobian', 'GetRotationJacobian',
+                                                         'GetMassWeightedPositionJacobian']}
+#the order in which GetAccessFunctionTypes adds the types
+_accessFunctionTypeOrder = ['TranslationalVelocity_qt', 'AngularVelocity_qt', 'JacobianTtimesVector_q',
+                            'DisplacementMassIntegral_q', 'SuperElement', 'KinematicTree', 'OwnMarkersOnly']
+
+
+def ItemAccessFunctionTypes(ownMarkers=None, ownMarkerTypes=(), description=None):
+    """Use site: the access functions an object provides for markers and loads (GetAccessFunctionTypes). The types
+    of the body markers are NOT declared: ItemDefinition derives them from the access functions the object provides
+    (accessFunctionOfType: GetPositionJacobian means TranslationalVelocity_qt, ...), so that the two cannot drift
+    (#2744). ownMarkers='SuperElement' or 'KinematicTree': the object also serves markers of its own, which need
+    the ownMarkerTypes (a MarkerSuperElementRigid the position and the rotation); an object that serves only its own
+    markers - it provides none of the access functions - adds OwnMarkersOnly, with which CSystem::CheckSystemIntegrity
+    refuses the general body markers (#2734)"""
+    if ownMarkers not in (None, 'SuperElement', 'KinematicTree'):
+        raise ValueError('ItemAccessFunctionTypes: ownMarkers must be None, SuperElement or KinematicTree')
+    member = ItemFunctionDef('GetAccessFunctionTypes', description=description) #implementation: ItemDefinition
+    member['deriveAccess'] = True
+    member['ownMarkers'] = ownMarkers
+    member['ownMarkerTypes'] = list(ownMarkerTypes)
     return member
+
+
+def _DeriveAccessFunctionTypes(member, members, parentClass):
+    """GetAccessFunctionTypes of an object from the access functions it provides (#2744)"""
+    provided = set(m['pythonName'] for m in members if 'Function' in m['kind'])
+    provided.update(parentClassAccessFunctions.get(parentClass, []))
+    bodyTypes = [accessType for (accessType, function) in accessFunctionOfType.items() if function in provided]
+    types = set(bodyTypes + member['ownMarkerTypes'])
+    if member['ownMarkers'] is not None:
+        types.add(member['ownMarkers'])
+    declared = [name for name in _accessFunctionTypeOrder if name in types]
+    ownMarkersOnly = member['ownMarkers'] is not None and len(bodyTypes) == 0
+    member['implementation'] = _TypeSumImplementation('AccessFunctionType', declared + (['OwnMarkersOnly'] if ownMarkersOnly else []))
+    member['accessFunctionTypes'] = declared
+    member['bodyAccessFunctionTypes'] = bodyTypes
+    member['bodyMarkers'] = not ownMarkersOnly
 
 
 _functionLibrary = None
@@ -923,7 +955,7 @@ def _ResolveFunctionReference(reference, className, classType, parentClass):
     if reference['description'] is not None:
         member['description'] = reference['description']
     member['cplusplusName'] = reference['cplusplusName'] or reference['pythonName']
-    for key in ('requestedTypes', 'conditionalTypes', 'accessFunctionTypes', 'bodyMarkers'): #declared lists
+    for key in ('requestedTypes', 'conditionalTypes', 'deriveAccess', 'ownMarkers', 'ownMarkerTypes'): #declared lists
         if key in reference:
             member[key] = reference[key]
 
@@ -951,6 +983,9 @@ def ItemDefinition(className, members, **header):
                for m in members]
     header['className'] = className
     header['members'] = members
+    for member in members:
+        if member.get('deriveAccess', False):
+            _DeriveAccessFunctionTypes(member, members, header.get('cParentClass', ''))
     #a user function's type is its own, PyFunction<Item><Parameter>, with the std::function of its def (#2664)
     for member in members:
         if member.get('userFunction') is not None:

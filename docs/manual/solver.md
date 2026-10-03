@@ -402,7 +402,7 @@ $$
   \beta = \frac{1}{4}(1- \alpha_m + \alpha_f)^2
 $$
 (fig-spectralradius)=
-```{figure} /docs/figures/spectralRadiusZeta0.png
+```{figure} /docs/figures/spectralRadiusZeta0.*
 :width: 400
 
 Spectral radius for generalized-$\alpha$ method depending on dimensionless step size $\bar h=h/T$, in which $T$ is the period of an equivalent single DOF mass-spring-damper system.

@@ -192,7 +192,7 @@ $$
   \LU{1}{\rv} = \LU{12}{\Rot} \LU{2}{\rv}
 $$
 (fig-theory-rotations-elementaryx)=
-```{figure} /docs/figures/elementaryRotationX.png
+```{figure} /docs/figures/elementaryRotationX.*
 :width: 320
 
 Elementary rotation around axis $\mathbf{ x}_1$.
@@ -206,7 +206,7 @@ $$
   \mr{c \varphi_2}{0}{s \varphi_2}{0}{1}{0}{-s \varphi_2}{0}{c \varphi_2}\, .
 $$
 (fig-theory-rotations-elementaryy)=
-```{figure} /docs/figures/elementaryRotationY.png
+```{figure} /docs/figures/elementaryRotationY.*
 :width: 320
 
 Elementary rotation around axis $\mathbf{ y}_2$.
@@ -313,7 +313,7 @@ $$
   \rv(t)=\Rot(t) \, \rv_0 \qquad \text{with} \qquad \Rot(t)=\Rot(\uv(t),\varphi(t))
 $$
 (fig-theory-rotations-angleaxis)=
-```{figure} /docs/figures/RotationAxisAngle.png
+```{figure} /docs/figures/RotationAxisAngle.*
 :width: 260
 
 Rotation of a vector $\mathbf{ r}_0$ by means of the angle-axis tuple $(\mathbf{ u}(t), \, \varphi(t))$.
@@ -322,7 +322,7 @@ Rotation of a vector $\mathbf{ r}_0$ by means of the angle-axis tuple $(\mathbf{
 Using {ref}`fig-theory-rotations-angleaxis`, we may now consider relations of the two frames $(\ev_{x0},\,\ev_{y0},\,\ev_{z0})$ and $(\ev_{x1},\,\ev_{y1},\,\ev_{z1})$, solely defined by the angle-axis $(\uv(t), \, \varphi(t))$ relation.
 
 (fig-theory-rotations-axisanglederivation)=
-```{figure} /docs/figures/RotationAxisAngleDerivation.png
+```{figure} /docs/figures/RotationAxisAngleDerivation.*
 :width: 320
 
 Relations for derivation of rotation tensor and Rodrigues' formula.
