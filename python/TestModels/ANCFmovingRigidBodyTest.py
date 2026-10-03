@@ -174,6 +174,7 @@ mbs.Assemble()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 
 simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.staticSolver.numberOfLoadSteps  = 2
  
 SC.visualizationSettings.general.circleTiling = 64

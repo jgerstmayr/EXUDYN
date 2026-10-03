@@ -1,0 +1,17 @@
+{
+  "number": 2816,
+  "title": "the binary solution file takes the size of its numbers from solution.precision",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The binary solution file wrote float or double depending on the console precision (consolePrecision, before 1.13 outputPrecision), while the description of solution.file.binary says solution.precision. The maintainer (2026-10-04): use solution.precision - below 8 float, otherwise double. The examples that set solution.precision = 6 for a float file (ANCFcableCantilevered, ANCFslidingJoint) now get one; no script relied on the console precision for it. Test model binarySolutionFileTest.py. revision2026b step RG12.34.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 20:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Solver/CSolverBase.cpp",
+  "releaseNotes": "The binary solution file stores float if solution.precision is below 8 and double otherwise, as its description says; before, the console precision decided.",
+  "resolvedInVersion": "1.12.261"
+}

@@ -66,6 +66,7 @@ sTip = mbs.AddSensor(SensorNode(nodeNumber=nodes[-1], outputVariableType=exu.Out
                                 storeInternal=True, writeToFile=False))
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.numberOfSteps = 4000
 simulationSettings.timeIntegration.endTime = 4
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1

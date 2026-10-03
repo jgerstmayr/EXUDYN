@@ -174,6 +174,7 @@ def SwingingBody(useLocalHT, nodeMarker):
                                           rotationMarker0=Aaxis, rotationMarker1=Aaxis))
     mbsj.Assemble()
     simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
     simulationSettings.timeIntegration.numberOfSteps = 200
     simulationSettings.timeIntegration.endTime = 0.5
     simulationSettings.timeIntegration.verboseMode = 0
@@ -203,6 +204,7 @@ def SwingingTree(useJointHTs):
                                                gravity=[0, -9.81, 0], **jointData))
     mbsk.Assemble()
     simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
     simulationSettings.timeIntegration.numberOfSteps = 100
     simulationSettings.timeIntegration.endTime = 0.2
     simulationSettings.timeIntegration.verboseMode = 0

@@ -326,9 +326,9 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodePosition',
     cParentClass=ParentClassCMarker,
-    #the node types it needs, as CSystem::CheckSystemIntegrity checks them (src/Main/CSystem.cpp); each
-    #entry is a list of alternatives, and the page of the marker and of the nodes say it (#2725);
-    #python/testing/test_itemCompatibility.py keeps the declaration and the C++ in agreement (#2727)
+    #the node types the node must provide, each entry a list of alternatives: it generates
+    #GetRequestedNodeTypes() of the Main class, which Assemble checks and mbs.Inspect answers (#2817),
+    #and the page of the marker and of the nodes say it (#2725)
     requestedNodeTypes=[['Position', 'Position2D']],
     overallDescription=r'A node-Marker attached to a position-based node. It can be used for connectors, joints or loads where position is required. If connectors also require orientation information, use a MarkerNodeRigid.',
     classType=ClassTypeMarker,
@@ -756,7 +756,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='MarkerNodeRotationCoordinate',
     cParentClass=ParentClassCMarker,
-    #checked by MainMarkerNodeRotationCoordinate::CheckPreAssembleConsistency (#2725)
+    #checked by Assemble, as all requestedNodeTypes (#2817)
     requestedNodeTypes=[['Orientation']],
     overallDescription=r'A node-Marker attached to a a node containing rotation; the Marker measures a rotation coordinate (Tait-Bryan angles) or angular velocities on the velocity level.',
     classType=ClassTypeMarker,

@@ -59,6 +59,10 @@ public:
 	//! Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail; override by according classes
 	virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const { return true; }
 
+	//! the node types the node of a node marker must provide, from requestedNodeTypes of its definition: the node
+	//! provides one member of each list of alternatives; empty for markers that do not request any (#2817)
+	virtual std::vector<std::vector<Node::Type>> GetRequestedNodeTypes() const { return {}; }
+
 	//! Get (read) parameter 'parameterName' via pybind / pyhton interface instead of obtaining the whole dictionary with GetDictionary
 	virtual py::object GetParameter(const STDstring& parameterName) const { SysError("Invalid call to MainMarker::GetParameter"); return py::object(); }
 	//! Set (write) parameter 'parameterName' to 'value' via pybind / pyhton interface instead of writing the whole dictionary with SetWithDictionary(...)

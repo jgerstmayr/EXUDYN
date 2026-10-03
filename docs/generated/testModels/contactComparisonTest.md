@@ -88,6 +88,7 @@ def Drop(kind, law):
         component = 3
     mbs.Assemble()
     simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
     simulationSettings.timeIntegration.numberOfSteps = nSteps
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.verboseMode = 0

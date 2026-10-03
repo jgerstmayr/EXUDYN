@@ -80,6 +80,7 @@ h = 5e-4   #test
 tEnd = 0.1 #test
 #tEnd = 0.1*20 #for simulation
 sims=exu.SimulationSettings()
+sims.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 sims.timeIntegration.generalizedAlpha.spectralRadius=0.7
 sims.timeIntegration.endTime = tEnd
 sims.timeIntegration.numberOfSteps = int(tEnd/h) #original: 1e-3, fails now in Newton

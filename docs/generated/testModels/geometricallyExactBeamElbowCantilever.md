@@ -80,6 +80,7 @@ sTip = mbs.AddSensor(SensorNode(nodeNumber=nodesLeg2[-1], outputVariableType=exu
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd

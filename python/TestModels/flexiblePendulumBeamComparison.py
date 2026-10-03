@@ -84,6 +84,7 @@ def Pendulum(kind):
                                     storeInternal=True, writeToFile=False))
     mbs.Assemble()
     simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.verboseMode = 0

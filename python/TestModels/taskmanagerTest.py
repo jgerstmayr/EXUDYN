@@ -136,6 +136,7 @@ for nMasses in [0, 1, 2, 4]:
                         tEnd = 0.1*20
                         h = 0.01
                         simulationSettings = exu.SimulationSettings()
+                        simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
                         simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
                         simulationSettings.timeIntegration.endTime = tEnd
                         # simulationSettings.show.statistics = True

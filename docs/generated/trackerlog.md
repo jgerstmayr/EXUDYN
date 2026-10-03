@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.259.dev1
+- Exudyn version = 1.12.263.dev1
 - last change = 2026-10-03
-- Number of issues = 2816
-- Number of resolved issues = 2573 (259 in current version)
+- Number of issues = 2819
+- Number of resolved issues = 2577 (263 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,9 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` two Newton structures for time integration and static solver, with the modified Newton by default in the time integration (#2815)
-  - description: NewtonSettings is shared; with the forwarding of RG12.1 two structures are possible, most members copied, each with its own defaults - useModifiedNewton=True for the time integration; the test suite has to be evaluated again (maintainer 2026-10-04).
-  - date raised: 2026-10-03
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Jupyter notebooks for the tutorials and some examples: an evaluation first (#2811)
   - description: Tutorials, and some sections of examples, as notebooks (Jupyter or similar): what it takes in the docs build (myst-nb or nbsphinx), in the test runners, the renderer and plots inside a notebook, and the size of the repository (maintainer 2026-10-03).
   - date raised: 2026-10-03

@@ -117,11 +117,12 @@ def TestExamplesReferenceSolution():
         'simulationSettingsDeprecationTest.py':126, #new 2026-10-03: a renamed simulation setting forwards under its old name with a DeprecationWarning (#2588)
         'simulationSettingsRenamesTest.py':50, #new 2026-10-04: every renamed simulation setting forwards both ways to its new place (#2813)
         'itemParameterRenamesTest.py':66, #new 2026-10-04: every renamed item parameter forwards in the dictionary, Get and SetObjectParameter (#2814)
+        'binarySolutionFileTest.py':0.1888874815147666, #new 2026-10-04: the binary solution file as float or double by solution.precision (#2816)
         'rotationMarkerDeprecationTest.py':-0.13402861946207856, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
         'libraryDeprecationTest.py':4, #new 2026-10-03: a deprecated function and argument of the Python library warn once per session at the user's line and are counted (#2807)
         'homogeneousTransformationInterfaceTest.py':9.245684006275722, #new 2026-10-03: exu.HT with the node coordinates, Relative, the interpolations, angle and axis (#2810)
         'homogeneousTransformationTest.py':178.9377398330175, #new 2026-10-02: exudyn.HT against the 4x4 matrices of rigidBodyUtilities, and the output variable HomogeneousTransformation (#2780)
-        'inspectTest.py':47, #2026-10-02: the output variable HomogeneousTransformation of the rigid body and its node (#2780), before 45; 2026-10-02: a rigid body reports PotentialEnergy = 0 (#2202), before 44; new 2026-10-01: mbs.Inspect (#2203); the number of listed members, refusals included
+        'inspectTest.py':49, #2026-10-04: the node types a node marker requests (#2817), before 47; 2026-10-02: the output variable HomogeneousTransformation of the rigid body and its node (#2780), before 45; 2026-10-02: a rigid body reports PotentialEnergy = 0 (#2202), before 44; new 2026-10-01: mbs.Inspect (#2203); the number of listed members, refusals included
         'energiesTest.py':17.614884358875663, #kinetic and potential energy of simple bodies and spring-dampers (#2202); 2026-10-01 with what the energies refuse and the gravity connector; before 8.724884363749222
         'geometricallyExactBeamOutputTest.py':-6.079487513916353, #section forces, moments and strains of the 3D beam (#2753)
         'geometricallyExactBeamElbowCantilever.py':-5.57992601861755, #2026-09-30: consistent mass matrix (#1273); #right-angle cantilever of Simo and Vu-Quoc 1988, free oscillations (#2730)
@@ -430,7 +431,7 @@ def MiniExamplesReferenceSolution():
         'ObjectConnectorTorsionalSpringDamper.py':0.0004999866342439527,
         'ObjectConnectorCoordinateSpringDamper.py':0.0019995154213252597,
         'ObjectConnectorGravity.py':1.0000000000000484,
-        'ObjectConnectorDistance.py':-0.9861806726069355,
+        'ObjectConnectorDistance.py':-0.9861806727696236,
         'ObjectConnectorCoordinate.py':0.04999999999999982,
         'ObjectGenericODE2.py':1.0039999999354785,
         'ObjectGenericODE1.py':-0.8206847097689384,
@@ -443,32 +444,32 @@ def MiniExamplesReferenceSolution():
         'ObjectRotationalMass1D.py':2.0,
         #the objects (#2732)
         'ObjectGround.py':-0.09809999999999997,
-        'ObjectRigidBody.py':1.0949978647619167,
+        'ObjectRigidBody.py':1.0949978521569106,
         'ObjectANCFBeam.py':-0.3381249577076517,
         'ObjectBeamGeometricallyExact2D.py':-0.3381249616596102,
         'ObjectBeamGeometricallyExact.py':-0.33812496093079464,
         'ObjectANCFThinPlate.py':-0.06987553667440825,
-        'ObjectALEANCFCable2D.py':0.2500092950450501,
-        'ObjectJointALEMoving2D.py':0.7249978133196032,
+        'ObjectALEANCFCable2D.py':0.2500092945807542,
+        'ObjectJointALEMoving2D.py':0.7249978132591198,
         'ObjectConnectorCoordinateSpringDamperExt.py':0.050495049504950505,
         'ObjectConnectorCoordinateVector.py':0.49999999999999867,
         'ObjectContactCoordinate.py':-0.000999999999999999,
-        'ObjectContactCircleCable2D.py':-0.0834019844819408,
-        'ObjectContactFrictionCircleCable2D.py':-0.09630714157535598,
+        'ObjectContactCircleCable2D.py':-0.08340198465657866,
+        'ObjectContactFrictionCircleCable2D.py':-0.0963071435860746,
         'ObjectContactSphereSphere.py':1.0999019,
         'ObjectContactSphereTriangle.py':0.09990189999999996,
         'ObjectContactSphereTorus.py':0.10101,
         'ObjectContactCurveCircles.py':0.09949999999999998,
-        'ObjectConnectorRollingDiscPenalty.py':-1.9999976983485357,
-        'ObjectJointRollingDisc.py':-1.999997664339446,
-        'ObjectJointGeneric.py':-3.1340201965908596,
+        'ObjectConnectorRollingDiscPenalty.py':-1.999997689449951,
+        'ObjectJointRollingDisc.py':-1.9999976540123938,
+        'ObjectJointGeneric.py':-3.134020196852591,
         'ObjectJointPrismaticX.py':0.999999999999996,
-        'ObjectJointSpherical.py':-0.003786192314531511,
-        'ObjectJointRevolute2D.py':-3.1334196587393026,
+        'ObjectJointSpherical.py':-0.003786192183655731,
+        'ObjectJointRevolute2D.py':-3.1334196612408762,
         'ObjectJointPrismatic2D.py':0.24999999999999895,
         'ObjectJointSliding2D.py':1.0999999999999979,
         'ObjectJointSliding.py':1.0999999999999979,
-        'ObjectConnectorReevingSystemSprings.py':-1.0000000000001228,
+        'ObjectConnectorReevingSystemSprings.py':-0.9999999999998965,
         'ObjectConnectorHydraulicActuatorSimple.py':1.0,
         #the markers, loads and sensors (#2732)
         'MarkerBodyMass.py':-4.904999999999998,
@@ -487,9 +488,9 @@ def MiniExamplesReferenceSolution():
         'MarkerObjectODE2Coordinates.py':0.49999999999999795,
         'MarkerBodyCable2DCoordinates.py':1.0999999999999979,
         'MarkerBodyBeamShape.py':1.0999999999999979,
-        'MarkerBodyCable2DShape.py':-0.0834019844819408,
+        'MarkerBodyCable2DShape.py':-0.08340198465657866,
         'LoadForceVector.py':0.24999999999999897,
-        'LoadTorqueVector.py':0.9996440089647525,
+        'LoadTorqueVector.py':0.9996439632248505,
         'LoadCoordinate.py':0.16667520761043855,
         'SensorNode.py':2.0,
         'SensorObject.py':10.000000000000009,
@@ -512,7 +513,7 @@ def MiniExamplesReferenceSolution():
         'NodePointSlope12.py':-0.06987553667440825,
         'NodePointSlope23.py':-0.3381249577076517,
         'NodeRigidBody2D.py':3.0,
-        'NodeRigidBodyEP.py':1.5707880511179813,
+        'NodeRigidBodyEP.py':1.5707880511569134,
         'NodeRigidBodyRotVecLG.py':1.5707963267949456,
         'NodeRigidBodyRxyz.py':1.5707963267948934,
         }

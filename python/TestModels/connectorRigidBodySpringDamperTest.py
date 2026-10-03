@@ -65,6 +65,7 @@ if not testIsActive:
 
 
 simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.solution.file.write = False

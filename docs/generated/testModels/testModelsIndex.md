@@ -94,6 +94,7 @@ homogeneousTransformationParameterTest
 simulationSettingsDeprecationTest
 simulationSettingsRenamesTest
 itemParameterRenamesTest
+binarySolutionFileTest
 rotationMarkerDeprecationTest
 libraryDeprecationTest
 homogeneousTransformationInterfaceTest

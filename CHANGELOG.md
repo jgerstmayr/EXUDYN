@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 241 | 1.12.259 |
+| 1.12 | Metheney | 245 | 1.12.263 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.263** `FIX` `LOW` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` LoadBinarySolutionFile prints verbose= on every call (#2818)
+  - description: basicUtilities.LoadBinarySolutionFile prints 'verbose=' and the value unconditionally - a debug line left in. Found with binarySolutionFileTest.py (RG12.34).
+  - **notes:** LoadBinarySolutionFile no longer prints verbose= on every call.
+  - date resolved: **2026-10-03 20:55**, date raised: 2026-10-03
+- **1.12.262** `IMPROVEMENT` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` mbs.Inspect answers the node types a node marker requests, and Assemble checks them from the declaration (#2817)
+  - description: The node types a node marker requests (Position or Position2D, Orientation or Orientation2D) were checked by hand-written C++ in CSystem::CheckSystemIntegrity and declared separately as requestedNodeTypes in the definitions, for the documentation only; mbs.Inspect did not answer them. Now the declaration generates MainMarker::GetRequestedNodeTypes(), Assemble checks it, and mbs.Inspect(marker, InspectType.RequestedNodeTypes) returns it - per node a list of requirements, each a list of alternatives. revision2026b step RG12.29.2.
+  - **notes:** mbs.Inspect(marker, InspectType.RequestedNodeTypes) answers the node types a node marker requests, as requirements each a list of alternatives; Assemble checks them from the same declaration.
+  - date resolved: **2026-10-03 20:55**, date raised: 2026-10-03
+- **1.12.261** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the binary solution file takes the size of its numbers from solution.precision (#2816)
+  - description: The binary solution file wrote float or double depending on the console precision (consolePrecision, before 1.13 outputPrecision), while the description of solution.file.binary says solution.precision. The maintainer (2026-10-04): use solution.precision - below 8 float, otherwise double. The examples that set solution.precision = 6 for a float file (ANCFcableCantilevered, ANCFslidingJoint) now get one; no script relied on the console precision for it. Test model binarySolutionFileTest.py. revision2026b step RG12.34.
+  - **notes:** The binary solution file stores float if solution.precision is below 8 and double otherwise, as its description says; before, the console precision decided.
+  - date resolved: **2026-10-03 20:55**, date raised: 2026-10-03
+- **1.12.260** `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` two Newton structures for time integration and static solver, with the modified Newton by default in the time integration (#2815)
+  - description: NewtonSettings is shared; with the forwarding of RG12.1 two structures are possible, most members copied, each with its own defaults - useModifiedNewton=True for the time integration; the test suite has to be evaluated again (maintainer 2026-10-04).
+  - **notes:** The time integration uses the modified Newton method by default: timeIntegration.newton.useModifiedNewton is True, much faster for most models; results change within the Newton tolerances. staticSolver.newton keeps the full Newton method.
+  - date resolved: **2026-10-03 20:55**, date raised: 2026-10-03
 - **1.12.259** `CHANGE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` item parameters renamed as decided in RG12.31: the prefix physics dropped, the friction forces, use... flags (#2814)
   - description: physicsMass -\> mass and 26 more, sphereRadius, dynamicFrictionForce/staticFrictionOffsetForce/viscousFrictionForce, factor1, rollingViscousFriction, useIntrinsicFormulation, useClassicalFormulation; the old names forward until 2031; C++, library, scripts, documentation and tests follow (maintainer 2026-10-03).
   - **notes:** the item parameters of bodies and finite elements lost their prefix physics (physicsMass is mass, ...), and sphereRadius, the friction forces of CoordinateSpringDamperExt, factor1, rollingViscousFriction, useIntrinsicFormulation and useClassicalFormulation are renamed; every old name still works with a warning until 2031, and exudev scripts --fix rewrites a script

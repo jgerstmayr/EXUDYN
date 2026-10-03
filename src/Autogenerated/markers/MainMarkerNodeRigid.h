@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  00:32:23 (last modified)
+* @date         2026-10-03  20:38:37 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -103,6 +103,12 @@ public: // AUTO:
     virtual const char* GetTypeName() const override
     {
         return "NodeRigid";
+    }
+
+    //! AUTO:  the node types the node of the marker must provide: one of each list of alternatives
+    virtual std::vector<std::vector<Node::Type>> GetRequestedNodeTypes() const override
+    {
+        return {{Node::Position, Node::Position2D}, {Node::Orientation, Node::Orientation2D}};
     }
 
 

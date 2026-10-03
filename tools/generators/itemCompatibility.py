@@ -7,7 +7,8 @@
 # an object, a connector or a load requests of its nodes or markers (GetRequestedNodeType,
 # GetRequestedMarkerType), which access functions a body offers (ItemAccessFunctionTypes), and -
 # for the node markers - which node types they need (requestedNodeTypes). Those declarations ARE
-# the compatibility rules of a model, checked by CSystem::CheckSystemIntegrity. This module turns
+# the compatibility rules of a model, checked by CSystem::CheckSystemIntegrity (the node markers'
+# through the generated GetRequestedNodeTypes, #2817). This module turns
 # them into the lines of the Interface block of an item page: "Node markers: MarkerNodePosition,
 # ...", "Used by: ...", instead of a type bit that the reader has to match by hand.
 #

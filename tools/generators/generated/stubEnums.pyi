@@ -87,7 +87,7 @@ class InspectType(Enum):
     NodeType = int
     """the types a node provides (NodeType): Position, Orientation, RotationEulerParameters, ..."""
     RequestedNodeTypes = int
-    """for each node of an object, the node types it requests (NodeType)"""
+    """for each node of an object, the node types it requests (NodeType), all of them; for the node of a node marker, a list of requirements, each a list of alternatives of which the node provides one - [[NodeType.Position, NodeType.Position2D]] for MarkerNodePosition"""
     MarkerType = int
     """the types a marker provides (MarkerType)"""
     RequestedMarkerTypes = int

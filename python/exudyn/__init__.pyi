@@ -266,7 +266,7 @@ class InspectType(Enum):
     NodeType = int
     """the types a node provides (NodeType): Position, Orientation, RotationEulerParameters, ..."""
     RequestedNodeTypes = int
-    """for each node of an object, the node types it requests (NodeType)"""
+    """for each node of an object, the node types it requests (NodeType), all of them; for the node of a node marker, a list of requirements, each a list of alternatives of which the node provides one - [[NodeType.Position, NodeType.Position2D]] for MarkerNodePosition"""
     MarkerType = int
     """the types a marker provides (MarkerType)"""
     RequestedMarkerTypes = int
@@ -1131,7 +1131,7 @@ class NewtonSettings:
     residualMode: int
     """0 ... use residual for computation of error (standard); 1 ... use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag."""
     useModifiedNewton: bool
-    """True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration (default, but may be costly)."""
+    """True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration, which may be costly; the default is True for timeIntegration.newton and False for staticSolver.newton."""
     weightTolerancePerCoordinate: bool
     """flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size."""
     def GetDictionary(self) -> dict: ...
@@ -1205,7 +1205,7 @@ class TimeIntegrationSettings:
     generalizedAlpha: GeneralizedAlphaSettings
     """parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)."""
     newton: NewtonSettings
-    """parameters for Newton method; used for implicit time integration methods only."""
+    """parameters for Newton method; used for implicit time integration methods only; the modified Newton method is the default here."""
     realtime: RealtimeSettings
     """simulation in realtime."""
     absoluteTolerance: float
@@ -3613,7 +3613,7 @@ class MainSystem:
         ...
     @overload
     def Inspect(self, itemIndex: Any, what: InspectType=None) -> Any: 
-        """What an item provides and requests (#2203): for the typed index of an object, node, marker, load or sensor and a what of type exu.InspectType, a list of exported enumeration members - the output variables (OutputVariableType; energies only where they can be computed with the current parameters), the object, node or marker type flags (ObjectType, NodeType, MarkerType), the requested node types per node or marker types per marker, the access functions of a body (AccessFunctionType); with what=None a dict of all that apply to the item; a what that does not apply raises with the list of those that do.
+        """What an item provides and requests (#2203): for the typed index of an object, node, marker, load or sensor and a what of type exu.InspectType, a list of exported enumeration members - the output variables (OutputVariableType; energies only where they can be computed with the current parameters), the object, node or marker type flags (ObjectType, NodeType, MarkerType), the requested node types per node (for a node marker: requirements, each a list of alternatives) or marker types per marker, the access functions of a body (AccessFunctionType); with what=None a dict of all that apply to the item; a what that does not apply raises with the list of those that do.
         
         Examples:
             mbs.Inspect(oMassPoint, exu.InspectType.OutputVariables)

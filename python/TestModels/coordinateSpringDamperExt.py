@@ -234,6 +234,7 @@ mbs.Assemble()
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 
 simulationSettings.solution.file.write = False
 simulationSettings.solution.file.writePeriod = 0.1 #data not used

@@ -197,6 +197,7 @@ mbs.Assemble()
 # Simualtion settings:
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
 simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 #simulationSettings.staticSolver.loadStepGeometric = True
 #simulationSettings.staticSolver.adaptiveStep = False
 simulationSettings.staticSolver.numberOfLoadSteps=10

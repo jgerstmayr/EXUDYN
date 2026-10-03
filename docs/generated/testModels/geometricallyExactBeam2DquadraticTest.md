@@ -48,6 +48,7 @@ def Beam(nElements, force=0, moment=0, dynamic=False):
     for i in ([0, 1] if dynamic else [0, 1, 2]):
         mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[0], coordinate=i))]))
     simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
     simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     if dynamic:
         for e in elements:

@@ -154,6 +154,7 @@ stepSize = 4e-3
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.solution.file.write=(not testIsActive) #only the SolutionViewer reads it (#2492)
 simulationSettings.solution.file.writePeriod=0.004
 simulationSettings.timeIntegration.numberOfSteps = tEnd/stepSize

@@ -19,7 +19,9 @@ You can view and download this file on Github: [inspectTest.py](https://github.c
 #               a spring-damper only as long as no user function defines its force;
 #           (2) the types of an object, a node and a marker;
 #           (3) what a connector and a load request of their markers, what an object requests of its
-#               nodes, and the access functions of a body, which decide the markers it takes;
+#               nodes, what a node marker requests of its node - requirements, each a list of
+#               alternatives of which the node provides one -, and the access functions of a body,
+#               which decide the markers it takes;
 #           (4) what Inspect refuses: a plain int instead of a typed index, and a what that does not
 #               apply to the item.
 #
@@ -73,6 +75,8 @@ exu.Print('marker types of the node marker:', Names(mbs.Inspect(mMass, I.MarkerT
 exu.Print('the spring-damper requests per marker:', [Names(perMarker) for perMarker in mbs.Inspect(oSpring, I.RequestedMarkerTypes)])
 exu.Print('the load requests per marker:', [Names(perMarker) for perMarker in mbs.Inspect(lForce, I.RequestedMarkerTypes)])
 exu.Print('the mass point requests per node:', [Names(perNode) for perNode in mbs.Inspect(oMass, I.RequestedNodeTypes)])
+markerRequests = mbs.Inspect(mMass, I.RequestedNodeTypes)[0] #one node; [[Position, Position2D]]
+exu.Print('the node marker requests of its node one of:', [Names(alternatives) for alternatives in markerRequests])
 exu.Print('access functions of the rigid body:', Names(mbs.Inspect(oRigid, I.AccessFunctions)))
 everything = mbs.Inspect(oSpring)
 exu.Print('everything of the spring-damper:', {what.name: answer for (what, answer) in everything.items()})
@@ -88,7 +92,7 @@ for (itemIndex, what) in [(1, I.OutputVariables), (oSpring, I.AccessFunctions)]:
         refused += 1
 
 testResult = (sum(len(answer) for answer in outputVariables.values()) + len(withUserFunction) + len(everything)
-              + len(mbs.Inspect(oRigid, I.AccessFunctions)) + refused)
+              + len(mbs.Inspect(oRigid, I.AccessFunctions)) + sum(len(alternatives) for alternatives in markerRequests) + refused)
 exu.Print('solution of inspectTest=', testResult)
 exu.sys['testResult'] = testResult
 ```

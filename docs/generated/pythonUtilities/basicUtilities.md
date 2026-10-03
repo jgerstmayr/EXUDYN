@@ -240,7 +240,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ComputeSens
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py) (Ex), [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex), [`beltDrivesComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py) (Ex), [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`abaqusImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/abaqusImportTest.py) (TM), [`compareFullModifiedNewton.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/compareFullModifiedNewton.py) (TM), [`NGsolveCMStest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/NGsolveCMStest.py) (TM), ...
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/ANCFALEtest.py) (Ex), [`beltDriveALE.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveALE.py) (Ex), [`beltDriveReevingSystem.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDriveReevingSystem.py) (Ex), [`beltDrivesComparison.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beltDrivesComparison.py) (Ex), [`bicycleIftommBenchmark.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/bicycleIftommBenchmark.py) (Ex), [`abaqusImportTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/abaqusImportTest.py) (TM), [`binarySolutionFileTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/binarySolutionFileTest.py) (TM), [`compareFullModifiedNewton.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/compareFullModifiedNewton.py) (TM), ...
 
 
 (sec-basicutilities-createdirectoryforfile)=
@@ -338,7 +338,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-recoversolutionfile)=
 ## Function: RecoverSolutionFile
 
-[`RecoverSolutionFile(fileName, newFileName, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L919)
+[`RecoverSolutionFile(fileName, newFileName, verbose = 0)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L918)
 
 - **function description**: recover solution file with last row not completely written (e.g., if crashed, interrupted or no flush file option set)
 - **input**:
@@ -351,7 +351,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-initializefromrestartfile)=
 ## Function: InitializeFromRestartFile
 
-[`InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L978)
+[`InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L977)
 
 - **function description**: recover initial coordinates, time, etc. from given restart file
 - **input**:
@@ -365,7 +365,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-setsolutionstate)=
 ## Function: SetSolutionState
 
-[`SetSolutionState(mbs, solution, row, configuration = exudyn.ConfigurationType.Current, sendRedrawSignal = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L1054)
+[`SetSolutionState(mbs, solution, row, configuration = exudyn.ConfigurationType.Current, sendRedrawSignal = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L1053)
 
 - **function description**: load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization
 
@@ -373,7 +373,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-animatesolution)=
 ## Function: AnimateSolution
 
-[`AnimateSolution(mbs, solution, rowIncrement = 1, timeout = 0.04, createImages = False, runLoop = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L1080)
+[`AnimateSolution(mbs, solution, rowIncrement = 1, timeout = 0.04, createImages = False, runLoop = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L1079)
 
 - **function description**: This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result
 - **input**:

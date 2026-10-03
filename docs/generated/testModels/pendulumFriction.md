@@ -108,7 +108,7 @@ simulationSettings.solution.sensors.writePeriod = simulationSettings.timeIntegra
 #simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
-#simulationSettings.timeIntegration.newton.useModifiedNewton = False
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = simulationSettings.timeIntegration.generalizedAlpha.useNewmark
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.60 #0.62 is approx. the limit

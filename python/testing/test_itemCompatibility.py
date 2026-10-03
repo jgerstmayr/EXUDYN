@@ -3,10 +3,10 @@
 #
 # Details:  The node types a node marker needs are DECLARED in its definition, requestedNodeTypes,
 #           and the pages of the reference manual say from it which nodes and markers fit (#2725).
-#           The check itself is C++ - CSystem::CheckSystemIntegrity for position and orientation,
-#           MainMarkerNodeRotationCoordinate::CheckPreAssembleConsistency for the rotation
-#           coordinate. This test keeps the two in agreement (#2727): every node marker is attached to
-#           every node, and what Assemble() accepts must be what the declaration says.
+#           The declaration also generates the check of CSystem::CheckSystemIntegrity and the answer
+#           of mbs.Inspect (#2817). This test keeps the documentation and the C++ in agreement (#2727):
+#           every node marker is attached to every node, what Assemble() accepts must be what the
+#           declaration says, and mbs.Inspect answers the declaration.
 #
 # Usage:    pytest python/testing/test_itemCompatibility.py
 #
@@ -74,6 +74,18 @@ def test_theDeclaredNodeTypesAreWhatAssembleAccepts(marker):
             disagree.append(node.name + ': Assemble ' + ('accepts' if accepted else 'refuses')
                             + ', the declaration ' + ('accepts' if marker.AcceptsNode(node) else 'refuses'))
     assert disagree == [], marker.name + '\n' + '\n'.join(disagree)
+
+
+@pytest.mark.parametrize('marker', nodeMarkers, ids=[m.name for m in nodeMarkers])
+def test_inspectAnswersTheDeclaredNodeTypes(marker):
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    nodeNumber = mbs.AddNode(exu.itemInterface.NodeRigidBodyEP(referenceCoordinates=[0, 0, 0, 1, 0, 0, 0]))
+    markerNumber = mbs.AddMarker(dict({'markerType': marker.name[len('Marker'):], 'nodeNumber': nodeNumber},
+                                      **markerArguments.get(marker.name, {})))
+    answer = mbs.Inspect(markerNumber, exu.InspectType.RequestedNodeTypes)
+    names = [[[nodeType.name for nodeType in alternatives] for alternatives in perNode] for perNode in answer]
+    assert names == [marker.requestedNodeTypes]
 
 
 def _SuperElementAndTree(mbs):

@@ -133,6 +133,7 @@ sPos1 = mbs.AddSensor(SensorNode(nodeNumber = nR1, storeInternal = True,
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 
 #testIsActive = True
 tEnd = 1

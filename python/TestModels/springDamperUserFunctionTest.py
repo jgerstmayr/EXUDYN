@@ -95,6 +95,7 @@ sCoords=mbs.AddSensor(SensorNode(nodeNumber=n1, writeToFile = writeSensorFile,
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.solution.file.writePeriod = 2e-3  #output interval
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd

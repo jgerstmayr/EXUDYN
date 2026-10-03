@@ -103,7 +103,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 	const StaticSolverSettings& staticSolver = simulationSettings.staticSolver;
 	const SolutionSettings& solution = simulationSettings.solution;
 	
-	if (simulationSettings.consolePrecision >= 8) { file.binaryFileSettings.realSize = sizeof(double); }
+	if (solution.precision >= 8) { file.binaryFileSettings.realSize = sizeof(double); }
 	else { file.binaryFileSettings.realSize = sizeof(float); }
 
 	if (IsStaticSolver())

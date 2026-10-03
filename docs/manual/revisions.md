@@ -151,6 +151,11 @@ derivatives; they were a least-squares fit of both slopes, which differs where t
 deforms. Joints and torques on these nodes converge as they should; the angular velocity output of a
 deformed cross section, and results with joints on slope nodes, change slightly (#2763).
 
+**The time integration uses the modified Newton method by default.** `timeIntegration.newton.useModifiedNewton` is
+`True`: the Jacobian is kept over the steps and computed again only when Newton converges badly, which is much faster
+for most models. Results change within the tolerances of Newton - in most models from the eighth digit on, with
+contact and friction earlier; set it to `False` for the full Newton method. `staticSolver.newton` keeps the full Newton method (#2815).
+
 **`rigidBodyUtilities.HT` is gone; its name is `exudyn.HT` now.** The shortcut `HT` of the function
 `HomogeneousTransformation(A, r)`, which `from exudyn.utilities import *` brought into a script, is
 removed, so that `HT` means one thing - the class `exu.HT`. A script that called `HT(A, r)` for a 4x4
@@ -255,6 +260,9 @@ to `SolveDynamic` is used for that run and the setting is set back afterwards - 
 explicit solver type written into the settings. An `exudyn.MainSolverExplicit` used directly takes the solver from
 `timeIntegration.solverType` and refuses an implicit one with a message naming the setting.
 
+The binary solution file (`solution.file.binary`) stores its numbers as `float` if `solution.precision` is below 8 and
+as `double` otherwise (#2816).
+
 **Item parameters without the prefix `physics`, and a few more renamed.** The parameters of the bodies and finite
 elements lost their prefix - `physicsMass` is `mass`, `physicsInertia` is `inertia`, `physicsCenterOfMass` is
 `centerOfMass`, `physicsLength`, `physicsMassPerLength`, `physicsAxialStiffness`, `physicsBendingDamping` and the others
@@ -321,7 +329,8 @@ which item types exist.
 **`mbs.Inspect(itemIndex, what)`** asks an existing item what it provides and requests - its output
 variables, its type flags, the node and marker types it requests, the access functions of a body -
 as lists of the exported enumerations; `what` is a member of `exu.InspectType`, or `None` for all
-that apply. The test model `inspectTest.py` shows it.
+that apply. A node marker answers the node types its node must provide as requirements, each a list of
+alternatives (#2817). The test model `inspectTest.py` shows it.
 
 **Kinetic and potential energy as output variables** (`OutputVariableType.KineticEnergy`,
 `PotentialEnergy`) of the bodies, beams, plates, superelements and spring-dampers, and

@@ -575,7 +575,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetObjectOutput', cName='PyGetOb
                                 )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='Inspect', cName='PyInspect',
-                                description="what an item provides and requests (#2203): for the typed index of an object, node, marker, load or sensor and a what of type exu.InspectType, a list of exported enumeration members - the output variables (OutputVariableType; energies only where they can be computed with the current parameters), the object, node or marker type flags (ObjectType, NodeType, MarkerType), the requested node types per node or marker types per marker, the access functions of a body (AccessFunctionType); with what=None a dict of all that apply to the item; a what that does not apply raises with the list of those that do",
+                                description="what an item provides and requests (#2203): for the typed index of an object, node, marker, load or sensor and a what of type exu.InspectType, a list of exported enumeration members - the output variables (OutputVariableType; energies only where they can be computed with the current parameters), the object, node or marker type flags (ObjectType, NodeType, MarkerType), the requested node types per node (for a node marker: requirements, each a list of alternatives) or marker types per marker, the access functions of a body (AccessFunctionType); with what=None a dict of all that apply to the item; a what that does not apply raises with the list of those that do",
                                 argList=['itemIndex', 'what'],
                                 argTypes=['Any', 'InspectType'],
                                 defaultArgs=['', 'py::none()'],

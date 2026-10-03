@@ -126,14 +126,7 @@ bool MainMarkerNodeRotationCoordinate::CheckPreAssembleConsistency(const MainSys
 	Index nodeNumber = cMarker->GetNodeNumber();
 	//Index nodeNumberOfCoordinates = mainSystem.GetCSystem().GetSystemData().GetCNode(nodeNumber).GetNumberOfAccessibleCoordinates();
 
-	//check if coordinate < 3 and if is rigid body!
-	//nodenumber already checked in CSystem
-	if (!EXUstd::IsOfType(mainSystem.GetMainSystemData().GetMainNodes()[nodeNumber]->GetCNode()->GetType(), Node::Orientation))
-	{
-		errorString = "MarkerNodeRotationCoordinate: Node must be of type Orientation (or RigidBody)";
-		return false;
-	}
-
+	//node number and node type (requestedNodeTypes, #2817) already checked in CSystem
 	if (((Index)mainSystem.GetMainSystemData().GetMainNodes()[nodeNumber]->GetCNode()->GetNodeGroup() & (Index)CNodeGroup::ODE2variables) == 0)
 	{
 		errorString = "MarkerNodeRotationCoordinate: Node must be of NodeGroup::ODE2variables";

@@ -122,6 +122,7 @@ mbs.Assemble()
 #exu.Print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 
 fact = 2000
 simulationSettings.timeIntegration.numberOfSteps = 1*fact

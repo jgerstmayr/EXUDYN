@@ -42,6 +42,7 @@ def Run(mu, stepSize=1e-5, tEnd=0.05):
             sens[name+ov]=mbs.AddSensor(SensorNode(nodeNumber=n,outputVariableType=getattr(exu.OutputVariableType,ov),storeInternal=True))
     mbs.Assemble()
     s=exu.SimulationSettings(); s.timeIntegration.numberOfSteps=int(tEnd/stepSize); s.timeIntegration.endTime=tEnd
+    s.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
     s.solution.file.write=False; s.solution.sensors.writePeriod=stepSize*10
     s.timeIntegration.generalizedAlpha.spectralRadius=1
     mbs.SolveDynamic(s)

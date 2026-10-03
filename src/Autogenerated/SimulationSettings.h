@@ -706,7 +706,7 @@ public: // AUTO:
   bool modifiedNewtonJacUpdatePerStep;            //!< AUTO: True: compute Jacobian at every time step (or static step), but not in every Newton iteration (except for bad convergence ==> switch to full Newton)
   Real relativeTolerance;                         //!< AUTO: must be >= 0; relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)
   Index residualMode;                             //!< AUTO: must be >= 0; 0 ... use residual for computation of error (standard); 1 ... use ABRV:ODE2 and ABRV:ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag
-  bool useModifiedNewton;                         //!< AUTO: True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration (default, but may be costly)
+  bool useModifiedNewton;                         //!< AUTO: True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration, which may be costly; the default is True for timeIntegration.newton and False for staticSolver.newton
   bool weightTolerancePerCoordinate;              //!< AUTO: flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size
 
 private: // AUTO: 
@@ -1074,7 +1074,7 @@ public: // AUTO:
   ExplicitIntegrationSettings explicitSettings;   //!< AUTO: special parameters for explicit time integration
   ExplicitIntegrationSettingsDeprecated explicitIntegration;//!< AUTO: DEPRECATED; Instead use deprecated, use timeIntegration.explicit and timeIntegration.solverType
   GeneralizedAlphaSettings generalizedAlpha;      //!< AUTO: parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)
-  NewtonSettings newton;                          //!< AUTO: parameters for Newton method; used for implicit time integration methods only
+  NewtonSettings newton;                          //!< AUTO: parameters for Newton method; used for implicit time integration methods only; the modified Newton method is the default here
   RealtimeSettings realtime;                      //!< AUTO: simulation in realtime
   Real absoluteTolerance;                         //!< AUTO: must be >= 0; \f$a_{tol}\f$: if automaticStepSize=True, absolute tolerance for the error control; must fulfill \f$a_{tol} > 0\f$; see [](#sec-explicitsolver)
   bool adaptiveStep;                              //!< AUTO: True: the step size may be reduced if step fails; no automatic stepsize control
@@ -1128,6 +1128,7 @@ public: // AUTO:
     stepSizeSafety = 0.9;
     verboseMode = 0;
     verboseModeFile = 0;
+    newton.useModifiedNewton = true;
   };
   void Init(SimulationSettings* backlinkInit) //!< AUTO: called from parent structure
   {

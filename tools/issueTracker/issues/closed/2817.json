@@ -1,0 +1,17 @@
+{
+  "number": 2817,
+  "title": "mbs.Inspect answers the node types a node marker requests, and Assemble checks them from the declaration",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The node types a node marker requests (Position or Position2D, Orientation or Orientation2D) were checked by hand-written C++ in CSystem::CheckSystemIntegrity and declared separately as requestedNodeTypes in the definitions, for the documentation only; mbs.Inspect did not answer them. Now the declaration generates MainMarker::GetRequestedNodeTypes(), Assemble checks it, and mbs.Inspect(marker, InspectType.RequestedNodeTypes) returns it - per node a list of requirements, each a list of alternatives. revision2026b step RG12.29.2.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 20:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Main/MainSystem.cpp",
+  "releaseNotes": "mbs.Inspect(marker, InspectType.RequestedNodeTypes) answers the node types a node marker requests, as requirements each a list of alternatives; Assemble checks them from the same declaration.",
+  "resolvedInVersion": "1.12.262"
+}

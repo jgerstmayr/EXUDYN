@@ -518,7 +518,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=Tbool,
             pythonName='useModifiedNewton',
             defaultValue=False,
-            description=r'True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration (default, but may be costly)'),
+            description=r'True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration, which may be costly; the default is True for timeIntegration.newton and False for staticSolver.newton'),
         StructureParameter(type=Tbool,
             pythonName='modifiedNewtonJacUpdatePerStep',
             defaultValue=False,
@@ -720,7 +720,8 @@ definitions.append(StructureDefinition(
         StructureParameter(type='NewtonSettings',
             pythonName='newton',
             defaultValue=NoDefaultValue,
-            description=r'parameters for Newton method; used for implicit time integration methods only'),
+            memberDefaults={'useModifiedNewton': True}, #the Jacobian is kept over the steps, much faster in time integration (#2815)
+            description=r'parameters for Newton method; used for implicit time integration methods only; the modified Newton method is the default here'),
         StructureParameter(type='DiscontinuousSettings',
             pythonName='discontinuous',
             defaultValue=NoDefaultValue,

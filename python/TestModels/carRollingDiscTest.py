@@ -197,6 +197,7 @@ mbs.AddLoad(Torque(markerNumber=markerWheels[1],loadVector=[-200,0,0], bodyFixed
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 
 tEnd = 0.5 #40#1.2
 h=0.002 #no visual differences for step sizes smaller than 0.0005

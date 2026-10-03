@@ -1222,20 +1222,25 @@ find out about the settings of a model. It is the group a user notices most and 
       `ObjectRotationalMass1D` (`AngularVelocityLocal`), and two that depend on the node - `ObjectRigidBody` on a
       Lie group node (the accelerations of rotation), `MarkerNodeRigid` on a node without angular velocity
       (`NodePointGround`); the plate's `Director1`, `ForceLocal` and `TorqueLocal` returned zeros as well;
-    - **RG12.29.2** *open* - the node types a **node marker** requests: today checked in C++ as alternatives
-      (`Position` or `Position2D`, ...), declared as `requestedNodeTypes` in the definitions for the documentation
-      only (RG13.5.0.3); `Inspect` does not answer them yet - a list of alternatives per node would need its own
-      form, or the C++ check generated from the declaration first.
+    - **RG12.29.2** **DONE 2026-10-04** (#2817) — [log](exudynRevisionLog2026b.md#rg12-29-2) - the node types a
+      **node marker** requests: the declaration `requestedNodeTypes` generates `GetRequestedNodeTypes()` of the Main
+      class, `Assemble` checks it instead of the hand-written C++, and `Inspect` answers it - per node a list of
+      requirements, each a list of alternatives.
 
 <a id="rg12-31"></a>
 **RG12.31** **DONE 2026-10-04** (#2802) — [plan text](exudynRevisionLog2026b.md#plan-rg12-31) — Settings and item parameters that could be renamed or restructured.
 
 <a id="rg12-34"></a>
 **RG12.34** **DONE 2026-10-04** (#2813) — [log](exudynRevisionLog2026b.md#rg12-34) · [plan text](exudynRevisionLog2026b.md#plan-rg12-34) — The simulation settings renamed and restructured as decided in RG12.31.
+    - **RG12.34.8** **DONE 2026-10-04** (#2816, #2818) — [log](exudynRevisionLog2026b.md#rg12-34-8) - the binary
+      solution file takes the size of its numbers from `solution.precision` (maintainer 2026-10-04); the debug print
+      of `LoadBinarySolutionFile` removed.
 
 <a id="rg12-36"></a>
-**RG12.36** *(group RG12; maintainer 2026-10-04; later)* **Two Newton structures, and the modified Newton by default in
-the time integration** (#2815). `NewtonSettings` is one structure shared by `timeIntegration` and `staticSolver`; with
+**RG12.36** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg12-36) *(group RG12; maintainer 2026-10-04: "do this
+step already now"; full Newton in the test models that used the default, with the comment "Just for the test; modified
+Newton is usually faster"; the drift of the MiniExamples accepted)* **Two Newton structures, and the modified Newton by
+default in the time integration** (#2815) - realized with `memberDefaults` of the one structure, no second one. `NewtonSettings` is one structure shared by `timeIntegration` and `staticSolver`; with
 the forwarding of RG12.1 and RG12.34 two structures are possible, most of their members copied, so that each can have
 its own defaults - above all `timeIntegration.newton.useModifiedNewton = True`, a large gain for the user. It changes
 the results of many test models (iterations, step sizes): the test suite is evaluated again, model by model, before.
@@ -1405,8 +1410,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
-| RG12.29.2 | - | the node types a node marker requests, answered by `mbs.Inspect` (and the C++ check generated from the declaration) |
-| RG12.36 | #2815 | two Newton structures, the modified Newton by default in the time integration; the test suite evaluated again |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15 | #2746 | objects computing from coordinates passed in: the work after the evaluation of RG15.1, not planned yet |
@@ -1440,7 +1443,6 @@ whether it becomes a step.
 
 | where | issue | what it is |
 |---|---|---|
-| RG12.34 | #2813, resolved | the binary solution file takes the size of its numbers from `consolePrecision` (8 and more: double), its description says `solution.precision` - which one is meant (maintainer) |
 | RG12.34.7 | #2813, resolved | a dictionary of settings stored by Exudyn 1.11 (`SetDictionary` with `solutionSettings`, ...) is not forwarded to the new names - its old keys are not read |
 | RG16.6.3 | #2809, resolved | `GetPosition2D`/the angle of a planar frame: considered, implemented only if a planar model needs it |
 
@@ -1456,14 +1458,10 @@ The title of each says what the step **does**; the sentence after it says why it
    page that needs **other people's time**, so it starts before the rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4), with the curved GraphicsData (row K13) and the TikZ figures in
    the PDF. It is the last condition of 1.13 that one person can meet alone.
-3. **Decide the precision of the binary solution file** (raised by RG12.34): a one-line change either way, and the
-   last open question of the renamed settings before 1.13 makes them public.
-4. **Finish the steps that are nearly done**, each small and without a decision left:
+3. **Finish the steps that are nearly done**, each small and without a decision left:
    - RG2.3.3.8 (#2776): the raytracer hang - a timeout or the cause, before the graphics suite is relied on;
-   - RG12.29.2: the requested node types in `mbs.Inspect`, from the declaration that exists since RG13.5.0.3;
    - RG10.1.1 (#2713): `exudev scripts` runs the scripts - the checker parses them already, and with `--fix`
      a run is the check that a rewritten script still works;
    - RG12.34.7: settings dictionaries of 1.11 forwarded in `SetDictionary`, as the attributes are.
-5. **Then the larger open steps of 1.13**: RG4.15.8 (`GeneralContact` against the sphere contact) and RG4.17.2
-   (the beam stall), which are bugs a user can meet; RG12.36 (the modified Newton by default) after the release,
-   because it changes the results of many test models.
+4. **Then the larger open steps of 1.13**: RG4.15.8 (`GeneralContact` against the sphere contact) and RG4.17.2
+   (the beam stall), which are bugs a user can meet.

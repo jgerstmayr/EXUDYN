@@ -46,6 +46,7 @@ b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
 
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 2
 mbs.SolveDynamic(simulationSettings = simulationSettings)
@@ -75,6 +76,7 @@ b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
 
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 2
 
@@ -108,6 +110,7 @@ oSD = mbs.CreateSpringDamper(bodyNumbers=[oGround, b0],
 
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 2
 SC.visualizationSettings.nodes.drawNodesAsPoint=False
@@ -142,6 +145,7 @@ oSD = mbs.CreateCartesianSpringDamper(bodyNumbers=[oGround, b0],
 
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 2
 SC.visualizationSettings.nodes.drawNodesAsPoint=False
@@ -174,6 +178,7 @@ mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[2.5,0,0], axis=[0,0
 
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 2
 
@@ -206,6 +211,7 @@ mbs.CreatePrismaticJoint(bodyNumbers=[oGround, b0], position=[3.5,0,0], axis=[0,
 
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 2
 
@@ -238,6 +244,7 @@ mbs.CreateSphericalJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
 
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 2
 
@@ -287,6 +294,7 @@ t0 = mbs.CreateTorque(bodyNumber=b0, loadVector=[0.,0.,10.], bodyFixed=True,
 
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 2
 
@@ -412,6 +420,7 @@ mbs.CreateDistanceConstraint(bodyOrNodeList=[b0, n1],
 
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 2
 

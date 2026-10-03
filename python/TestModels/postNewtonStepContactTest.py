@@ -155,6 +155,7 @@ if not testIsActive:
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.solution.file.write = False
 simulationSettings.solution.sensors.writePeriod = 1e-5
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)

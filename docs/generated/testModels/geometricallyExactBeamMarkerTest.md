@@ -69,6 +69,7 @@ def Pendulum(throughElements):
     Fix(mbs, mGround, nodes[0], [0, 1, 2])
     mbs.Assemble()
     s = exu.SimulationSettings()
+    s.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
     s.timeIntegration.numberOfSteps = 200; s.timeIntegration.endTime = 0.5
     s.solution.file.write = False
     s.linearSolver.solverType = exu.LinearSolverType.EigenSparse
@@ -97,6 +98,7 @@ def Cantilever(case, throughElements):
     Fix(mbs, mGround, nodes[0], [0, 1, 2, 4, 5, 6])
     mbs.Assemble()
     s = exu.SimulationSettings()
+    s.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
     s.staticSolver.numberOfLoadSteps = 10
     s.staticSolver.newton.relativeTolerance = 1e-10
     mbs.SolveStatic(s)

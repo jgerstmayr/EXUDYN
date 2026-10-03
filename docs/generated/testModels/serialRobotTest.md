@@ -242,7 +242,7 @@ simulationSettings.show.computationTime = False
 simulationSettings.show.statistics = False
 simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
-#simulationSettings.timeIntegration.newton.useModifiedNewton = True
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #0.6 works well 

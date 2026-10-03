@@ -1,0 +1,17 @@
+{
+  "number": 2818,
+  "title": "LoadBinarySolutionFile prints verbose= on every call",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "LOW",
+  "effort": "LOW",
+  "description": "basicUtilities.LoadBinarySolutionFile prints 'verbose=' and the value unconditionally - a debug line left in. Found with binarySolutionFileTest.py (RG12.34).",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 20:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/basicUtilities.py",
+  "releaseNotes": "LoadBinarySolutionFile no longer prints verbose= on every call.",
+  "resolvedInVersion": "1.12.263"
+}

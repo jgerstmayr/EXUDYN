@@ -165,6 +165,7 @@ EnergySensors('two masses attracting each other', o14, [c14])
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.numberOfSteps = 2000
 simulationSettings.timeIntegration.endTime = 2
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1

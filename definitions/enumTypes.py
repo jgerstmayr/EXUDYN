@@ -69,7 +69,7 @@ enumTypes = [
              [EnumValue('OutputVariables', 1, 'the output variables of an object, node or marker (OutputVariableType), with its current parameters: the energies only where they can be computed'),
               EnumValue('ObjectType', 2, 'the type flags of an object (ObjectType): Body, Connector, Constraint, SuperElement, ...'),
               EnumValue('NodeType', 3, 'the types a node provides (NodeType): Position, Orientation, RotationEulerParameters, ...'),
-              EnumValue('RequestedNodeTypes', 4, 'for each node of an object, the node types it requests (NodeType)'),
+              EnumValue('RequestedNodeTypes', 4, 'for each node of an object, the node types it requests (NodeType), all of them; for the node of a node marker, a list of requirements, each a list of alternatives of which the node provides one - [[NodeType.Position, NodeType.Position2D]] for MarkerNodePosition'),
               EnumValue('MarkerType', 5, 'the types a marker provides (MarkerType)'),
               EnumValue('RequestedMarkerTypes', 6, 'for each marker of a connector, constraint or load, the marker types it requests (MarkerType)'),
               EnumValue('AccessFunctions', 7, 'the access functions a body offers (AccessFunctionType), which decide the body markers it takes'),

@@ -718,6 +718,15 @@ def ItemCppHeaders(definition):
             sList[indexComp] += ');\n    }\n\n'
         else:
             print("ERROR: ",definition['className'], ": output variables only possible for Objects and Nodes")
+
+    #the node types a node marker requests, from its declaration requestedNodeTypes: Assemble checks them and
+    #mbs.Inspect answers them (#2817)
+    requestedNodeTypes = definition.get('requestedNodeTypes') or []
+    if len(requestedNodeTypes) != 0:
+        sList[3] += space4+'//! AUTO:  the node types the node of the marker must provide: one of each list of alternatives\n'
+        sList[3] += space4+'virtual std::vector<std::vector<Node::Type>> GetRequestedNodeTypes() const override\n    {\n        return {'
+        sList[3] += ', '.join('{' + ', '.join('Node::' + nodeType for nodeType in alternatives) + '}' for alternatives in requestedNodeTypes)
+        sList[3] += '};\n    }\n\n'
         
         
     

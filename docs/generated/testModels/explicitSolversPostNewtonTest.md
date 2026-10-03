@@ -45,6 +45,7 @@ solverTypes = ['GeneralizedAlpha', 'ExplicitEuler', 'ExplicitMidpoint', 'RK33', 
 def Solve(mbs, endTime, numberOfSteps, solverType, useRecommendedStepSize=True):
     mbs.Assemble()
     simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
     simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize = useRecommendedStepSize
     simulationSettings.timeIntegration.numberOfSteps = numberOfSteps
     simulationSettings.timeIntegration.endTime = endTime

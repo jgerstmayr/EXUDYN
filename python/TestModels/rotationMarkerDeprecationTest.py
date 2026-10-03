@@ -67,6 +67,7 @@ def Simulate(useLocalHT, connector):
     mbs.Assemble()
 
     simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
     simulationSettings.timeIntegration.numberOfSteps = 200
     simulationSettings.timeIntegration.endTime = 0.2
     simulationSettings.timeIntegration.verboseMode = 0

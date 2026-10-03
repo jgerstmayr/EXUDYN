@@ -14212,3 +14212,60 @@ dictionary of `AddObject`, read and written with `GetObjectParameter`/`SetObject
 `physicsMass` of `ObjectMassPoint` instead of a renamed copy; `parameterConversionTest` recorded again (the old names
 convert as the new ones, except `None`, which leaves the default, as RG12.2 decided); stubtest baseline. The test suite
 and all examples (`runTestExamples.py`) pass unchanged.
+
+<a id="rg12-34-8"></a>
+### RG12.34.8 — the precision of the binary solution file (2026-10-04, #2816, #2818)
+
+*(Maintainer 2026-10-04: "use the solution.precision"; check which scripts used the wrong setting, and a test model
+if one can show it.)*
+
+`CSolverBase.cpp` sets the size of the numbers of the binary solution file from `solution.precision` (below 8:
+`float`, otherwise `double`) instead of `consolePrecision`, as the description of `solution.file.binary` already
+said. **The scripts**: only `ANCFcableCantilevered.py` and `ANCFslidingJoint.py` set `solution.precision = 6 #float`
+together with a binary file - they meant the solution precision and get a float file now; the other scripts with a
+binary file (`serialRobot*`, `spotModel`, `ALEANCFpipe`) set no precision and write double, as before with the
+default console precision; the commented `#simulationSettings.consolePrecision = 16` in `ALEANCFpipe.py` and
+`ANCFmovingRigidbody.py` come from the old `outputPrecision` and change nothing. No script relied on the console
+precision for the file. **Test model** `binarySolutionFileTest.py`: a mass on a spring solved with precision 6 and 12,
+the files read back - the double file gives the final state exactly, the float one to 1.6e-9, and it is about two
+thirds of the size (794 against 1234 bytes). `LoadBinarySolutionFile` printed `verbose=` on every call, a debug line
+left in (#2818, found with the test model): removed.
+
+<a id="rg12-29-2"></a>
+### RG12.29.2 — the node types a node marker requests, generated and inspected (2026-10-04, #2817)
+
+The declaration `requestedNodeTypes` of `MarkerNodePosition`, `MarkerNodeRigid` and `MarkerNodeRotationCoordinate`
+(RG13.5.0.3) is the source now: `itemHeaderEmitter` writes `GetRequestedNodeTypes()` into the Main class of a marker
+that declares it (`std::vector<std::vector<Node::Type>>`, one list of alternatives per requirement; empty in
+`MainMarker`). `CSystem::CheckSystemIntegrity` loops over it instead of the two hand-written checks on the marker type
+flags, with the same message ("requires a node with type Position or Position2D, ..."), and the node-type check of
+`MainMarkerNodeRotationCoordinate::CheckPreAssembleConsistency` is gone, since `Assemble` checks the declaration
+before. `mbs.Inspect(marker, InspectType.RequestedNodeTypes)` applies to a node marker that declares node types and
+answers per node the requirements, each a list of alternatives - `[[[NodeType.Position, NodeType.Position2D]]]` for
+`MarkerNodePosition`; an object keeps its form, one list of `NodeType` per node, all of them requested. Descriptions
+of `InspectType.RequestedNodeTypes` and `mbs.Inspect`, `definitions/README.md`. **Tests**: `inspectTest.py` (the node
+marker's answer, result 49), `test_itemCompatibility.py` (`Inspect` answers the declaration for every node marker; the
+agreement of `Assemble` with the declaration stays tested node by node).
+
+<a id="rg12-36"></a>
+### RG12.36 — the modified Newton method by default in the time integration (2026-10-04, #2815)
+
+*(Maintainer 2026-10-04: "you can switch to full Newton in the scripts if they use default values. Therefore, do this
+step already now. When switching a test model to full Newton, add a comment 'Just for the test; modified Newton is
+usually faster'; for static solver, behavior stays the same. For MiniExamples, the drift is acceptable - do not add
+the full Newton manually.")*
+
+**No second structure**: `memberDefaults={'useModifiedNewton': True}` on the member `newton` of
+`TimeIntegrationSettings` gives the time integration its own default (the generated constructor sets
+`newton.useModifiedNewton = true`), while `staticSolver.newton` keeps `False` - the per-instance defaults that the
+visualization materials use; the copy, the forwarding and the documentation of the structure needed nothing more. The
+description of `useModifiedNewton` names both defaults.
+
+**The test suite**: with the new default, 40 of 158 test models and 15 of 93 MiniExamples differed from their
+references - most from the 8th to the 13th digit, the contact and friction models more (`postNewtonStepContactTest`
+1.1e-3, `computeItemTest` 4.7e-4, `rollingCoinTest` 5.3e-5, `heavyTop` 3.1e-6). The 40 test models switch to full
+Newton with the comment the maintainer gave - after their `exu.SimulationSettings()`, or in place of a commented-out
+`useModifiedNewton` line (`MathematicalPendulumTest`, `movingGroundRobotTest`, `pendulumFriction`, `serialRobotTest`),
+and `connectorOutputVariablesTest` got a settings object instead of two `exu.SimulationSettings()` in its calls; their
+references are unchanged. The 15 MiniExamples have new references (largest change 4.6e-8, `LoadTorqueVector`).
+`runTestExamples.py`: all examples pass. `docs/manual/revisions.md` says the change under "What can break a script".

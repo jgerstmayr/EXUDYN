@@ -99,6 +99,7 @@ mbs.AddObject(ObjectGenericODE2(nodeNumbers = [n2], massMatrix=M, stiffnessMatri
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 
 tEnd = 1
 steps = 2000

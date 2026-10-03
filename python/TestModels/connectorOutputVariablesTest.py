@@ -30,6 +30,8 @@ import numpy as np
 testIsActive = exu.sys.get('testIsActive', False)
 
 OV = exu.OutputVariableType
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 testResult = 0
 
 def ContactCoordinate(activeConnector):
@@ -47,7 +49,7 @@ def ContactCoordinate(activeConnector):
                                                      activeConnector=activeConnector))
     mbs.AddLoad(LoadCoordinate(markerNumber=mCoordinate, load=-10))
     mbs.Assemble()
-    mbs.SolveDynamic(exu.SimulationSettings())
+    mbs.SolveDynamic(simulationSettings)
     return (mbs, node, oContact)
 
 #(1) contact: at rest on the stop, the gap is the coordinate (stop at 0, no offset): -F/k = -1e-3
@@ -74,7 +76,7 @@ def Planar(addJoint):
     mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[2, 1, 0]))
     mbs.AddLoad(LoadTorqueVector(markerNumber=mBody, loadVector=[0, 0, 0.1]))
     mbs.Assemble()
-    mbs.SolveDynamic(exu.SimulationSettings())
+    mbs.SolveDynamic(simulationSettings)
     return (mbs, node, oJoint)
 
 #(2) revolute joint: the joint points stay together

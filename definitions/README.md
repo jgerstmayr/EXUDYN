@@ -261,7 +261,7 @@ link it, do not repeat it.
 |---|---|
 | title and `overallDescription` | written: one or two sentences, what it is and what it is for |
 | **Simpler**: the Create functions that add the item | `createFunctions=['CreateRigidBody']`, objects and loads; the one place a page names them |
-| **Interface** | generated from the declared types: `itemTypes`, `requestedTypes`, `accessFunctionTypes`, and `requestedNodeTypes` of a node marker (`test_itemCompatibility.py` keeps that one equal to the C++ check) |
+| **Interface** | generated from the declared types: `itemTypes`, `requestedTypes`, `accessFunctionTypes`, and `requestedNodeTypes` of a node marker (which also generates the check of `Assemble` and the answer of `mbs.Inspect`, #2817) |
 | **Parameters**, **Visualization parameters**, **Output variables** | generated from the `description` of each member |
 | **Detailed description** | written, `detailedDescription`, headings by kind (below) |
 | user functions | generated from the `def` (#2664) |

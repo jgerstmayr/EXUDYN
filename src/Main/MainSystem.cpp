@@ -1389,7 +1389,11 @@ py::object MainSystem::PyInspect(const py::object& itemIndex, const py::object& 
 		if (EXUstd::IsOfType(object->GetType(), CObjectType::Body)) { applicable.push_back(InspectType::AccessFunctions); }
 	}
 	else if (itemType == ItemType::Node) { applicable = { InspectType::OutputVariables, InspectType::NodeType }; }
-	else if (itemType == ItemType::Marker) { applicable = { InspectType::OutputVariables, InspectType::MarkerType }; }
+	else if (itemType == ItemType::Marker)
+	{
+		applicable = { InspectType::OutputVariables, InspectType::MarkerType };
+		if (data.GetMainMarkers()[number]->GetRequestedNodeTypes().size() != 0) { applicable.push_back(InspectType::RequestedNodeTypes); }
+	}
 	else if (itemType == ItemType::Load) { applicable = { InspectType::RequestedMarkerTypes }; }
 
 	auto Answer = [&](InspectType inspectType) -> py::object
@@ -1415,6 +1419,18 @@ py::object MainSystem::PyInspect(const py::object& itemIndex, const py::object& 
 		case InspectType::RequestedNodeTypes:
 		{
 			py::list perNode;
+			if (itemType == ItemType::Marker) //one node; a list of requirements, each a list of alternatives (#2817)
+			{
+				py::list requirements;
+				for (const std::vector<Node::Type>& alternatives : data.GetMainMarkers()[number]->GetRequestedNodeTypes())
+				{
+					py::list members;
+					for (Node::Type alternative : alternatives) { members.append(py::cast(alternative)); }
+					requirements.append(members);
+				}
+				perNode.append(requirements);
+				return perNode;
+			}
 			for (Index i = 0; i < object->GetNumberOfNodes(); i++)
 			{
 				perNode.append(InspectFlags<Node::Type>((Index64)data.GetMainObjects()[number]->GetRequestedNodeType()));

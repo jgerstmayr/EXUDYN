@@ -292,21 +292,20 @@ bool CSystem::CheckSystemIntegrity(const MainSystem& mainSystem)
 			{
 				const CNode* node = mainSystem.GetMainSystemData().GetMainNode(nodeIndex).GetCNode();
 				Node::Type nodeType = node->GetType();
-				if (EXUstd::IsOfType(markerType, Marker::Position) && !EXUstd::IsOfType(markerType, Marker::Body))
+				//the node types declared as requestedNodeTypes in the definition of the marker (#2817)
+				for (const std::vector<Node::Type>& alternatives : item->GetRequestedNodeTypes())
 				{
-					if (!EXUstd::IsOfType(nodeType, Node::Position) && !EXUstd::IsOfType(nodeType, Node::Position2D))
+					bool provided = false;
+					STDstring names;
+					for (Node::Type alternative : alternatives)
 					{
-						PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-							" requires a node with type Position or Position2D, but node number " + EXUstd::ToString(nodeIndex) + " does not provide this", PyErrorType::modelError);
-						systemIsInteger = false;
+						if (EXUstd::IsOfType(nodeType, alternative)) { provided = true; }
+						names += (names.size() ? " or " : "") + Node::GetTypeString(alternative);
 					}
-				}
-				if (EXUstd::IsOfType(markerType, Marker::Orientation) && !EXUstd::IsOfType(markerType, Marker::Body))
-				{
-					if (!EXUstd::IsOfType(nodeType, Node::Orientation) && !EXUstd::IsOfType(nodeType, Node::Orientation2D))
+					if (!provided)
 					{
 						PyError(STDstring("Marker ") + EXUstd::ToString(itemIndex) + ", name = '" + item->GetName() + "', type=" + item->GetTypeName() +
-							" requires a node with type Orientation or Orientation2D, but node number " + EXUstd::ToString(nodeIndex) + " does not provide this", PyErrorType::modelError);
+							" requires a node with type " + names + ", but node number " + EXUstd::ToString(nodeIndex) + " does not provide this", PyErrorType::modelError);
 						systemIsInteger = false;
 					}
 				}

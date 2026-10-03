@@ -194,6 +194,7 @@ mbs.Assemble()
 
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 testIsActive = True
 tEnd = 0.1
 if not testIsActive:

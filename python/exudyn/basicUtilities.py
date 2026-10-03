@@ -741,7 +741,6 @@ def LoadBinarySolutionFile(fileName, maxRows=-1, verbose=True):
     Returns:
         dictionary with 'data': the matrix of stored solution vectors, 'columnsExported': a list with integer values showing the exported sizes [nODE2, nVel2, nAcc2, nODE1, nVel1, nAlgebraic, nData], 'nColumns': the number of data columns and 'nRows': the number of data rows
     """
-    exudyn.Print('verbose=',verbose)
     with open(fileName, 'r') as file:
         data = np.fromfile(file, dtype=np.byte, count=6)
         s = NumpyInt8ArrayToString(data)

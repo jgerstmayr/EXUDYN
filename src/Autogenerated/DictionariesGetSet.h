@@ -700,7 +700,7 @@ inline py::dict GetDictionaryWithTypeInfo(const NewtonSettings& data) {
     d["value"] = data.useModifiedNewton;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration (default, but may be costly)";
+    d["description"] = "True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration, which may be costly; the default is True for timeIntegration.newton and False for staticSolver.newton";
     structureDict["useModifiedNewton"] = d;
 
     d = py::dict(); //reset local dict

@@ -114,6 +114,7 @@ EnergySensors('KinematicTree', [oKT])
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 1
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1

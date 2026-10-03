@@ -76,7 +76,7 @@ The class **InspectType** has the following **functions and structures**:
 - **`OutputVariables`**: the output variables of an object, node or marker (OutputVariableType), with its current parameters: the energies only where they can be computed
 - **`ObjectType`**: the type flags of an object (ObjectType): Body, Connector, Constraint, SuperElement, ...
 - **`NodeType`**: the types a node provides (NodeType): Position, Orientation, RotationEulerParameters, ...
-- **`RequestedNodeTypes`**: for each node of an object, the node types it requests (NodeType)
+- **`RequestedNodeTypes`**: for each node of an object, the node types it requests (NodeType), all of them; for the node of a node marker, a list of requirements, each a list of alternatives of which the node provides one - [[NodeType.Position, NodeType.Position2D]] for MarkerNodePosition
 - **`MarkerType`**: the types a marker provides (MarkerType)
 - **`RequestedMarkerTypes`**: for each marker of a connector, constraint or load, the marker types it requests (MarkerType)
 - **`AccessFunctions`**: the access functions a body offers (AccessFunctionType), which decide the body markers it takes

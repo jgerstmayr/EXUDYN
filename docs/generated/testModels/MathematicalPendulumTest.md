@@ -77,7 +77,7 @@ simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False #better c
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 
 #simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6 #SHOULD work with standard values ...
-#simulationSettings.timeIntegration.newton.useModifiedNewton = False #CHECK if works with modified Newton ...
+simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 
 #simulationSettings.show.statistics = False
