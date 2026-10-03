@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.255.dev1
 - last change = 2026-10-03
-- Number of issues = 2813
+- Number of issues = 2814
 - Number of resolved issues = 2569 (255 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` `HIGH EFF` `raised by: Claude-JG` simulationSettings renamed and restructured as decided in RG12.31, with every change the deprecation needs (#2813)
+  - description: No substructure ends in Settings (solution, linearSolver), solution.file/.sensors/.restart, show.\*, timeIntegration.realtime and .solverType, newton.active/.residualMode, camel case fixes; the old names forward until 2031; C++, library, scripts (exudev scripts --fix), documentation and tests follow (maintainer 2026-10-03).
+  - date raised: 2026-10-03
 - `DOCU` `MEDIUM EFF` `raised by: Claude-JG` the flow charts of the documentation as TikZ again: vector graphics in the PDF, images on the web (#2812)
   - description: The mermaid charts of introduction.md, solver.md and theoryContact.md are of low quality compared to the TikZ figures of the old LaTeX documentation (tmp/oldDocs/theDoc): arrows, colors, fonts, and they did not fit the page. Keep the current content of the charts, draw them in TikZ again: one small standalone .tex per figure, compiled only when a figure changes (an exudev command, needs LaTeX), giving a PDF for the PDF build and an image for the web (maintainer 2026-10-03).
   - date raised: 2026-10-03

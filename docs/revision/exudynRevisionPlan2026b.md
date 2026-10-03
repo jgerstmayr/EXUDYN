@@ -1991,23 +1991,88 @@ find out about the settings of a model. It is the group a user notices most and 
 could be renamed or restructured** (#2802). The candidates found by a pass over all members of `SimulationSettings`
 and all parameters of the item definitions; each one is a decision of the maintainer, and each decided one becomes a
 sub-step with its own issue, done with the deprecation of RG12.1/RG12.2 (old name forwarding, removal five years
-after). *Status: a list, nothing decided.* Settings:
+after). *Status: the settings answered by the maintainer 2026-10-03 and revised into the map below, **which waits for
+the maintainer's decision to continue**; the item parameters (RG12.31.8 to .16) are not decided yet.* Settings, as first
+listed (each with the maintainer's answer):
     - **RG12.31.1** two `outputPrecision`: the top one is for the console, `solutionSettings.outputPrecision` for the
       files - `consoleOutputPrecision`, or the top one into a small structure with the other console members
-      (`displayComputationTime`, `displayStatistics`, `displayGlobalTimers`);
+      (`displayComputationTime`, `displayStatistics`, `displayGlobalTimers`); *answer*: the top one stays,
+      `solutionSettings.outputPrecision` becomes `solution.precision`; the three `display...` become `show.*`;
     - **RG12.31.2** `linearSolverType` beside `linearSolverSettings` - into it, as `linearSolverSettings.solverType`;
+      *answer*: yes, as `linearSolver.solverType`;
     - **RG12.31.3** `timeIntegration.simulateInRealtime`, `realtimeFactor`, `realtimeWaitMicroseconds` - a structure
-      `timeIntegration.realtime` (`active`, `factor`, `waitMicroseconds`);
+      `timeIntegration.realtime` (`active`, `factor`, `waitMicroseconds`); *answer*: yes;
     - **RG12.31.4** `numericalDifferentiation.forODE2connectors` - `forODE2Connectors`, and
       `staticSolver.constrainODE1coordinates` - `constrainODE1Coordinates` (the capital of every other name);
+      *answer*: yes, Exudyn's camel case;
     - **RG12.31.5** inside `newton`: `newtonResidualMode` - `residualMode`; `useNewtonSolver` (false = linear) -
-      `useNewton` or `linear` with the opposite meaning;
+      `useNewton` or `linear` with the opposite meaning; *answer*: `residualMode`, and `active`;
     - **RG12.31.6** `solutionSettings`: three files with three patterns (`coordinatesSolutionFileName`,
       `solverInformationFileName`, `restartFileName`; `solutionWritePeriod`, `sensorsWritePeriod`,
       `restartWritePeriod`; `writeFileHeader`, `sensorsWriteFileHeader`), and `flushFilesDOF` (a number of
       coordinates) - substructures `solutionFile`, `sensorFiles`, `restartFile` with the same members; the largest
-      one, and the one most scripts use;
-    - **RG12.31.7** `explicitIntegration.dynamicSolverType` selects the explicit solver only - `explicitSolverType`.
+      one, and the one most scripts use; *answer*: `solution.file` for everything of the coordinates solution file,
+      its `export...` flags in `solution.file.export`, and `solution.sensors`, `solution.restart`;
+    - **RG12.31.7** `explicitIntegration.dynamicSolverType` selects the explicit solver only - `explicitSolverType`;
+      *answer*: `timeIntegration.solverType` (default `GeneralizedAlpha`), so that the solver is visible in the settings
+      and a second implicit solver has its switch; `mbs.SolveDynamic` adapted; and `explicitIntegration` becomes
+      `explicit`;
+    - **RG12.31.17** *(maintainer 2026-10-03)* **no substructure ends in `Settings`** - a design flaw:
+      `solutionSettings` becomes `solution`, `linearSolverSettings` becomes `linearSolver`; the names of the classes
+      (`SolutionSettings`, ...) stay.
+
+  **The map, revised from the answers** - every name of `SimulationSettings` that changes; the old one forwards with a
+  `DeprecationWarning` until 2031 (all of them existed in 1.11.0). Marked **(?)**: where the answer left a choice, or
+  where something looked strange to me - for the maintainer to confirm before anything is changed.
+
+  | old | new |
+  |---|---|
+  | `displayComputationTime`, `displayStatistics`, `displayGlobalTimers` | `show.computationTime`, `show.statistics`, `show.globalTimers` **(?)** lower case as every member, not `show.ComputationTime` |
+  | `outputPrecision` (console) | stays |
+  | `linearSolverSettings` | `linearSolver` |
+  | `linearSolverType` | `linearSolver.solverType` |
+  | `solutionSettings` | `solution` |
+  | `solutionSettings.outputPrecision` | `solution.precision` (solution and sensor files) |
+  | `solutionSettings.writeSolutionToFile` | `solution.file.write` **(?)** or `solution.file.active`, as `newton.active` |
+  | `solutionSettings.coordinatesSolutionFileName` | `solution.file.fileName` **(?)** or `solution.file.name` |
+  | `solutionSettings.solutionWritePeriod` | `solution.file.writePeriod` |
+  | `solutionSettings.appendToFile` | `solution.file.append` |
+  | `solutionSettings.binarySolutionFile` | `solution.file.binary` |
+  | `solutionSettings.writeFileHeader`, `writeFileFooter` | `solution.file.writeHeader`, `solution.file.writeFooter` |
+  | `solutionSettings.writeInitialValues` | `solution.file.writeInitialValues` |
+  | `solutionSettings.solutionInformation` | `solution.file.information` (the text written into its header) |
+  | `solutionSettings.flushFilesDOF` | `solution.file.flushAboveCoordinates` **(?)** a number of coordinates above which the file is always flushed |
+  | `solutionSettings.exportVelocities`, `exportAccelerations`, `exportODE1Velocities`, `exportAlgebraicCoordinates`, `exportDataCoordinates` | `solution.file.export.velocities`, `.accelerations`, `.ODE1Velocities`, `.algebraicCoordinates`, `.dataCoordinates` |
+  | `solutionSettings.sensorsStoreAndWriteFiles` | `solution.sensors.active` **(?)** it switches storing and writing of all sensors |
+  | `solutionSettings.sensorsWritePeriod`, `sensorsAppendToFile` | `solution.sensors.writePeriod`, `solution.sensors.append` |
+  | `solutionSettings.sensorsWriteFileHeader`, `sensorsWriteFileFooter` | `solution.sensors.writeHeader`, `solution.sensors.writeFooter` |
+  | `solutionSettings.writeRestartFile`, `restartFileName`, `restartWritePeriod` | `solution.restart.write`, `solution.restart.fileName`, `solution.restart.writePeriod` (as `file`, whichever is decided there) |
+  | `solutionSettings.flushFilesImmediately` | `solution.flushFilesImmediately` (all files) |
+  | `solutionSettings.solverInformationFileName` | `solution.solverInformationFileName` **(?)** a file of its own; or `solution.solverInformation.fileName` |
+  | `solutionSettings.recordImagesInterval` | `solution.recordImagesInterval` **(?)** images, not a file of the solution; stays where it is |
+  | `timeIntegration.simulateInRealtime`, `realtimeFactor`, `realtimeWaitMicroseconds` | `timeIntegration.realtime.active`, `.factor`, `.waitMicroseconds` |
+  | `timeIntegration.explicitIntegration` | `timeIntegration.explicit` **(?)** `explicit` is a keyword of C++: the Python name only, the C++ member keeps another name (`cplusplusName`) |
+  | `timeIntegration.explicitIntegration.dynamicSolverType` | `timeIntegration.solverType`, default `GeneralizedAlpha` |
+  | `newton.newtonResidualMode`, `newton.useNewtonSolver` | `newton.residualMode`, `newton.active` (time integration and static solver, a shared structure) |
+  | `newton.numericalDifferentiation.forODE2connectors` | `newton.numericalDifferentiation.forODE2Connectors` |
+  | `staticSolver.constrainODE1coordinates` | `staticSolver.constrainODE1Coordinates` |
+
+  **`mbs.SolveDynamic` and `timeIntegration.solverType` (?)**: `solverType=None` as the default of `SolveDynamic`, which
+  then takes `timeIntegration.solverType` (default `GeneralizedAlpha` - the same result as today); a `solverType` given
+  to `SolveDynamic` overrides the setting for that call, **without writing it into the settings** - today it writes
+  `explicitIntegration.dynamicSolverType` into the user's `simulationSettings` and leaves it there, which is the kind of
+  side effect #2535 removed for `useNewmark`. The C++ explicit solver reads the setting as now.
+
+  **What stays as it is**: `parallel.*` (renamed in RG12.1.1), `pauseAfterEachStep`, `cleanUpMemory`, the members of
+  `staticSolver` and `timeIntegration` not in the table, the class names; `visualizationSettings`, whose substructures
+  carry no `Settings`.
+
+  **One mechanism to check first**: a deprecated **substructure** (`solutionSettings`, `linearSolverSettings`,
+  `explicitIntegration`) forwarding to the renamed one, so that `simulationSettings.solutionSettings.sensorsWritePeriod`
+  reaches `solution.sensors.writePeriod`: the old member names then stay as deprecated members of the renamed class,
+  forwarding to their new place by a path from the top structure (RG12.1). RG12.1 forwards plain members; whether a
+  deprecated member of structure type works the same - and in a structure that two places share (`NewtonSettings`) -
+  is RG12.34.1.
 
   Item parameters:
     - **RG12.31.8** `ObjectJointGeneric.axesRadius/axesLength` against `axisRadius/axisLength` of
@@ -2034,6 +2099,33 @@ after). *Status: a list, nothing decided.* Settings:
   Not listed: `localPosition` of the rigid markers beside `localHT` (its deprecation is RG14.2.15/RG16.5), the
   names of the internal members (`temp...`, RG14.2.16), and `axisMarker0` of `LinearSpringDamper`/`JointPrismatic2D`,
   an axis and not a rotation, which stays.
+
+<a id="rg12-34"></a>
+**RG12.34** *(group RG12; maintainer 2026-10-03; starts after the decision on the map of RG12.31)* **The simulation
+settings renamed and restructured as decided in RG12.31** (#2813) - every change a deprecation needs, so that nothing
+of Exudyn uses an old name afterwards and every user script keeps working with a warning until 2031:
+    - **RG12.34.1** the mechanism: a deprecated member of structure type (a renamed substructure) forwarding, also for
+      a shared structure, and the old member names as deprecated members of the renamed classes; a test of it before
+      the definitions change;
+    - **RG12.34.2** `definitions/structureDefsSimulationSettings.py`: the new substructures (`show`, `solution.file`,
+      `solution.file.export`, `solution.sensors`, `solution.restart`, `timeIntegration.realtime`), the renamed members,
+      every old name as `Deprecated('1.12...', 2031)` with its new path; descriptions that name an old name;
+    - **RG12.34.3** the C++ that reads the settings (`src/`, some 60 places of `solutionSettings.` alone), and the
+      solvers for `timeIntegration.solverType`;
+    - **RG12.34.4** the Python library: `exudyn.solver` (`SolveDynamic(solverType=None)`, no writing into the
+      settings), the utilities, the GUI dialogs and the results monitor, `processing.py`; nothing in `python/exudyn` uses
+      an old name (`exudev scripts python/exudyn` reports nothing);
+    - **RG12.34.5** **`exudev scripts --fix`**: rewrites the renamed settings in a script, from the same table of
+      deprecations - a tool for users as well; then the scripts of the repository with it: `Examples`, `TestModels`,
+      `MiniExamples` (from the definitions), `PerformanceModels`, `pytest` files, `tmp/` not; some 330 files use an old
+      name today; the test suite with unchanged results is the check;
+    - **RG12.34.6** the documentation: the user manual (tutorials, `solver.md`, the getting-started pages, the FAQ),
+      the descriptions in `definitions/` and the docstrings that name a setting, the pybind descriptions,
+      `revisions.md` (one paragraph with the table); the generated pages follow;
+    - **RG12.34.7** the tests: a test model that sets and reads every old name and finds it at its new place (generated
+      from the deprecations, so that it cannot miss one), `parameterConversionTest` and the stubtest baseline, the
+      settings dialog (its tree shows the new structure), dictionaries of settings stored by an earlier version
+      (`SetDictionary` with old keys - forwarded, or refused with the new name).
 
 <a id="rg12-32"></a>
 **RG12.32** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg12-32) *(group RG12; maintainer 2026-10-03: "think
@@ -2784,6 +2876,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG3.30 | #2812 | the flow charts as TikZ again: vector graphics in the PDF, images on the web |
 | RG17.1 | #2811 | notebooks for tutorials and examples: the evaluation |
+| RG12.34 | #2813 | the simulation settings renamed and restructured as decided in RG12.31, with scripts, documentation and tests |
 | RG12.31 | #2802 | settings and item parameters that could be renamed: a list for the maintainer's decision |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
@@ -2831,5 +2924,5 @@ The title of each says what the step **does**; the sentence after it says why it
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Decide the renames of RG12.31** (#2802): settings and item parameters with a name that says less than it
-   could; each decided one is a small step on the deprecation mechanism of RG12.1/RG12.2.
+3. **Confirm the map of the simulation settings in RG12.31** (#2802) - the marks **(?)** - and decide the item
+   parameters; then RG12.34 (#2813) renames them, with the scripts, the documentation and the tests.

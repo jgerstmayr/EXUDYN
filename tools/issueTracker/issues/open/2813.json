@@ -1,0 +1,11 @@
+{
+  "number": 2813,
+  "title": "simulationSettings renamed and restructured as decided in RG12.31, with every change the deprecation needs",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "effort": "HIGH",
+  "description": "No substructure ends in Settings (solution, linearSolver), solution.file/.sensors/.restart, show.*, timeIntegration.realtime and .solverType, newton.active/.residualMode, camel case fixes; the old names forward until 2031; C++, library, scripts (exudev scripts --fix), documentation and tests follow (maintainer 2026-10-03).",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01"
+}
