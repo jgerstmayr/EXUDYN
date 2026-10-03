@@ -91,7 +91,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetSystemContainer', cName='GetM
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='WaitForUserToContinue', cName='WaitForUserToContinue', 
-                        deprecated=Deprecated('1.11.0', 2028),
+                        deprecated=Deprecated('1.11.0', 2029),
                         description="interrupt further computation until user input --> 'pause' function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as SC.WaitForRenderEngineStopFlag()",
                         argList=['printMessage','deprecationWarning'],
                         defaultArgs=['True','True'],

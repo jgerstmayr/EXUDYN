@@ -1538,7 +1538,7 @@ def GetRigidBodyNode(nodeType,
     return nodeItem
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-@Deprecated('1.11.0', 2028, use='mbs.CreateRigidBody')
+@Deprecated('1.11.0', 2029, use='mbs.CreateRigidBody')
 def AddRigidBody(mainSys, inertia, 
                  nodeType = exu.NodeType.RotationEulerParameters, 
                  position=[0,0,0], velocity=[0,0,0], 
@@ -1637,7 +1637,7 @@ def _MarkerWithRotation(mbs, marker, rotation):
     return (mbs.AddMarker(data), np.eye(3))
 
 
-@Deprecated('1.11.0', 2028, use='mbs.CreateRevoluteJoint')
+@Deprecated('1.11.0', 2029, use='mbs.CreateRevoluteJoint')
 def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
                      showJoint=True, axisRadius=0.1, axisLength=0.4):
     """DEPRECATED (use MainSystem function instead): add revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -1725,7 +1725,7 @@ def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True,
     return [oJoint, mBody0, mBody1]
 
 
-@Deprecated('1.11.0', 2028, use='mbs.CreatePrismaticJoint')
+@Deprecated('1.11.0', 2029, use='mbs.CreatePrismaticJoint')
 def AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
                      showJoint=True, axisRadius=0.1, axisLength=0.4):
     """DEPRECATED (use MainSystem function instead): add prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed

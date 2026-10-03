@@ -2,10 +2,14 @@
   "number": 2810,
   "title": "exu.HT: the functions of the accepted proposal, with examples in its documentation and tests",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "Realization of the HT proposal: the bindings on the existing C++ conversions, examples in the data structures section (rotation, position, the node coordinates), a test model.",
   "dateRaised": "2026-10-03",
-  "deadline": "2027-04-01"
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 15:51",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "exu.HT converts from and to Euler parameters, Tait-Bryan angles, rotation vector and the coordinates of the rigid body nodes, gives Relative, InterpolateSO3, InterpolateSE3, RotationAngle and RotationAxis; its Set functions return it",
+  "resolvedInVersion": "1.12.255"
 }

@@ -4,58 +4,61 @@
 
 Every name of Exudyn that is deprecated, with the version it was deprecated in and the year it is removed. A use warns once per session and is counted in `exudyn.sys['deprecationUse']`; `tools/checkDeprecations.py` fails for a deprecation whose year has come, which then has to be removed. How to deprecate something: `CODING_STYLE.md` §10.5. The version is 1.11.0 for what was deprecated before the history of this repository begins.
 
-## Functions and arguments of the Python library (17)
+## Functions and arguments of the Python library (20)
 
 | name | since | removed in | instead | declared in |
 |---|---|---|---|---|
-| `FEM.AddObjectFFRFreducedOrderWithUserFunctions.eulerParametersRef` | 1.11.0 | 2028 | rotationMatrixRef | python/exudyn/FEM.py |
-| `FEM.CSRtoScipySparseCSR` | 1.11.0 | 2028 | SparseTripletsToScipySparseCSR | python/exudyn/FEM.py |
-| `FEM.ReadNodesFromAbaqusInp` | 1.11.0 | 2028 | FEMinterface.ImportFromAbaqusInputFile | python/exudyn/FEM.py |
-| `basicUtilities.AddSensorRecorder` | 1.11.0 | 2028 | a sensor with storeInternal=True | python/exudyn/basicUtilities.py |
-| `beams.GenerateStraightBeam` | 1.11.0 | 2028 | beams.GenerateBeamElementsAlongLine | python/exudyn/beams.py |
-| `beams.GenerateStraightLineANCFCable` | 1.11.0 | 2028 | beams.GenerateBeamElementsAlongLine | python/exudyn/beams.py |
-| `beams.GenerateStraightLineANCFCable2D` | 1.11.0 | 2028 | beams.GenerateBeamElementsAlongLine | python/exudyn/beams.py |
-| `graphics.BrickXYZ` | 1.11.0 | 2028 | graphics.Brick(centerPoint, size) | python/exudyn/graphics.py |
-| `graphicsDataUtilities.GraphicsDataOrthoCubeLines` | 1.11.0 | 2028 | graphics.Brick(centerPoint, size, addFaces=False, addEdges=True) | python/exudyn/graphicsDataUtilities.py |
-| `graphicsDataUtilities.GraphicsDataRectangle` | 1.11.0 | 2028 | graphics.Lines with the five corner points | python/exudyn/graphicsDataUtilities.py |
-| `misc.mainSystemExtensions.ProcessBodyNodeMarkerLists.bodyList` | 1.11.0 | 2028 | bodyNumbers | python/exudyn/misc/mainSystemExtensions.py |
-| `processing.GeneticOptimization.numberOfChildren` | 1.11.0 | 2028 | populationSize and elitistRatio | python/exudyn/processing.py |
-| `processing.GeneticOptimization.survivingIndividuals` | 1.11.0 | 2028 | populationSize and elitistRatio | python/exudyn/processing.py |
-| `rigidBodyUtilities.AddPrismaticJoint` | 1.11.0 | 2028 | mbs.CreatePrismaticJoint | python/exudyn/rigidBodyUtilities.py |
-| `rigidBodyUtilities.AddRevoluteJoint` | 1.11.0 | 2028 | mbs.CreateRevoluteJoint | python/exudyn/rigidBodyUtilities.py |
-| `rigidBodyUtilities.AddRigidBody` | 1.11.0 | 2028 | mbs.CreateRigidBody | python/exudyn/rigidBodyUtilities.py |
-| `robotics.models.LinkDictModDHKK2Robot` | 1.11.0 | 2028 | LinkDict2Robot | python/exudyn/robotics/models.py |
+| `FEM.AddObjectFFRFreducedOrderWithUserFunctions.eulerParametersRef` | 1.11.0 | 2029 | rotationMatrixRef | python/exudyn/FEM.py |
+| `FEM.CSRtoScipySparseCSR` | 1.11.0 | 2029 | SparseTripletsToScipySparseCSR | python/exudyn/FEM.py |
+| `FEM.ReadNodesFromAbaqusInp` | 1.11.0 | 2029 | FEMinterface.ImportFromAbaqusInputFile | python/exudyn/FEM.py |
+| `FEM.mode='NPY'` | 1.11.0 | 2029 | mode='NPZ' | python/exudyn/FEM.py |
+| `basicUtilities.AddSensorRecorder` | 1.11.0 | 2029 | a sensor with storeInternal=True | python/exudyn/basicUtilities.py |
+| `beams.GenerateStraightBeam` | 1.11.0 | 2029 | beams.GenerateBeamElementsAlongLine | python/exudyn/beams.py |
+| `beams.GenerateStraightLineANCFCable` | 1.11.0 | 2029 | beams.GenerateBeamElementsAlongLine | python/exudyn/beams.py |
+| `beams.GenerateStraightLineANCFCable2D` | 1.11.0 | 2029 | beams.GenerateBeamElementsAlongLine | python/exudyn/beams.py |
+| `graphics.BrickXYZ` | 1.11.0 | 2029 | graphics.Brick(centerPoint, size) | python/exudyn/graphics.py |
+| `graphicsDataUtilities.GraphicsDataOrthoCubeLines` | 1.11.0 | 2029 | graphics.Brick(centerPoint, size, addFaces=False, addEdges=True) | python/exudyn/graphicsDataUtilities.py |
+| `graphicsDataUtilities.GraphicsDataRectangle` | 1.11.0 | 2029 | graphics.Lines with the five corner points | python/exudyn/graphicsDataUtilities.py |
+| `misc.mainSystemExtensions.ProcessBodyNodeMarkerLists.bodyList` | 1.11.0 | 2029 | bodyNumbers | python/exudyn/misc/mainSystemExtensions.py |
+| `processing.GeneticOptimization.numberOfChildren` | 1.11.0 | 2029 | populationSize and elitistRatio | python/exudyn/processing.py |
+| `processing.GeneticOptimization.survivingIndividuals` | 1.11.0 | 2029 | populationSize and elitistRatio | python/exudyn/processing.py |
+| `rigidBodyUtilities.AddPrismaticJoint` | 1.11.0 | 2029 | mbs.CreatePrismaticJoint | python/exudyn/rigidBodyUtilities.py |
+| `rigidBodyUtilities.AddRevoluteJoint` | 1.11.0 | 2029 | mbs.CreateRevoluteJoint | python/exudyn/rigidBodyUtilities.py |
+| `rigidBodyUtilities.AddRigidBody` | 1.11.0 | 2029 | mbs.CreateRigidBody | python/exudyn/rigidBodyUtilities.py |
+| `robotics.mobile.MecanumWheelVelocity2XYphi` | 1.11.0 | 2029 | MobileKinematics | python/exudyn/robotics/mobile.py |
+| `robotics.mobile.MecanumXYphi2WheelVelocities` | 1.11.0 | 2029 | MobileKinematics | python/exudyn/robotics/mobile.py |
+| `robotics.models.LinkDictModDHKK2Robot` | 1.11.0 | 2029 | LinkDict2Robot | python/exudyn/robotics/models.py |
 
 ## Functions of the C++ module (26)
 
 | name | since | removed in | instead | declared in |
 |---|---|---|---|---|
-| `MainSystem.WaitForUserToContinue` | 1.11.0 | 2028 |  | definitions/pybindMainSystem.py |
-| `MatrixContainer.SetWithSparseMatrixCSR` | 1.11.0 | 2028 |  | definitions/pybindDataStructures.py |
-| `SystemContainer.AttachToRenderEngine` | 1.11.0 | 2028 |  | definitions/pybindSystemContainer.py |
-| `SystemContainer.DetachFromRenderEngine` | 1.11.0 | 2028 |  | definitions/pybindSystemContainer.py |
-| `SystemContainer.GetCurrentMouseCoordinates` | 1.11.0 | 2028 |  | definitions/pybindSystemContainer.py |
-| `SystemContainer.GetRenderState` | 1.11.0 | 2028 |  | definitions/pybindSystemContainer.py |
-| `SystemContainer.RedrawAndSaveImage` | 1.11.0 | 2028 |  | definitions/pybindSystemContainer.py |
-| `SystemContainer.RenderEngineZoomAll` | 1.11.0 | 2028 |  | definitions/pybindSystemContainer.py |
-| `SystemContainer.SendRedrawSignal` | 1.11.0 | 2028 |  | definitions/pybindSystemContainer.py |
-| `SystemContainer.SetRenderState` | 1.11.0 | 2028 |  | definitions/pybindSystemContainer.py |
-| `SystemContainer.WaitForRenderEngineStopFlag` | 1.11.0 | 2028 |  | definitions/pybindSystemContainer.py |
-| `exudyn.ComputeODE2Eigenvalues` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `exudyn.DoRendererIdleTasks` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `exudyn.GetVersionString` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `exudyn.InfoStat` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `exudyn.IsRendererActive` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `exudyn.SetLinalgOutputFormatPython` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `exudyn.SetOutputPrecision` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `exudyn.SetPrintDelayMilliSeconds` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `exudyn.SetWriteToConsole` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `exudyn.SolveDynamic` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `exudyn.SolveStatic` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `exudyn.StartRenderer` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `exudyn.StopRenderer` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `exudyn.SuppressWarnings` | 1.11.0 | 2028 |  | definitions/pybindModule.py |
-| `renderer.Detach` | 1.11.0 | 2028 |  | definitions/pybindRenderer.py |
+| `MainSystem.WaitForUserToContinue` | 1.11.0 | 2029 |  | definitions/pybindMainSystem.py |
+| `MatrixContainer.SetWithSparseMatrixCSR` | 1.11.0 | 2029 |  | definitions/pybindDataStructures.py |
+| `SystemContainer.AttachToRenderEngine` | 1.11.0 | 2029 |  | definitions/pybindSystemContainer.py |
+| `SystemContainer.DetachFromRenderEngine` | 1.11.0 | 2029 |  | definitions/pybindSystemContainer.py |
+| `SystemContainer.GetCurrentMouseCoordinates` | 1.11.0 | 2029 |  | definitions/pybindSystemContainer.py |
+| `SystemContainer.GetRenderState` | 1.11.0 | 2029 |  | definitions/pybindSystemContainer.py |
+| `SystemContainer.RedrawAndSaveImage` | 1.11.0 | 2029 |  | definitions/pybindSystemContainer.py |
+| `SystemContainer.RenderEngineZoomAll` | 1.11.0 | 2029 |  | definitions/pybindSystemContainer.py |
+| `SystemContainer.SendRedrawSignal` | 1.11.0 | 2029 |  | definitions/pybindSystemContainer.py |
+| `SystemContainer.SetRenderState` | 1.11.0 | 2029 |  | definitions/pybindSystemContainer.py |
+| `SystemContainer.WaitForRenderEngineStopFlag` | 1.11.0 | 2029 |  | definitions/pybindSystemContainer.py |
+| `exudyn.ComputeODE2Eigenvalues` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `exudyn.DoRendererIdleTasks` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `exudyn.GetVersionString` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `exudyn.InfoStat` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `exudyn.IsRendererActive` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `exudyn.SetLinalgOutputFormatPython` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `exudyn.SetOutputPrecision` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `exudyn.SetPrintDelayMilliSeconds` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `exudyn.SetWriteToConsole` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `exudyn.SolveDynamic` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `exudyn.SolveStatic` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `exudyn.StartRenderer` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `exudyn.StopRenderer` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `exudyn.SuppressWarnings` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
+| `renderer.Detach` | 1.11.0 | 2029 |  | definitions/pybindRenderer.py |
 
 ## Item parameters (10)
 

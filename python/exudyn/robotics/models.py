@@ -628,7 +628,7 @@ def LinkDict2Robot(robotLinkDict, robotClass=None):
 
 
 @docmeta(author='Martin Sereinig')
-@Deprecated('1.11.0', 2028, use='LinkDict2Robot')
+@Deprecated('1.11.0', 2029, use='LinkDict2Robot')
 def LinkDictModDHKK2Robot(robotLinkDict, robotClass=None):
     """special test function to generate serial manipulator as robotClass object from robotLinkDict using inertia parameters defined in stdDH coordinates, but creating robot from modDHKK; will be ERASED in future
 

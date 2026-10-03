@@ -152,7 +152,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='SetAllZero', cName='SetAllZero',
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SetWithSparseMatrixCSR', cName='SetWithSparseMatrixCSR', 
                         argList=['numberOfRowsInit', 'numberOfColumnsInit', 'pyArrayCSR', 'useDenseMatrix','factor'],
                         defaultArgs=['','','','False','1.'],
-                        deprecated=Deprecated('1.11.0', 2028),
+                        deprecated=Deprecated('1.11.0', 2029),
                         description="DEPRECATED: set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix; the values of pyArrayCSR are multiplied by the given factor",
                         argTypes=['int','int',sparseMatrixType,'bool','float'],
                         returnType='None',
@@ -175,29 +175,51 @@ pb.DefPyFinishClass('MatrixContainer')
 classStr = 'PyHT'
 pyClassStr = 'HT'
 
-pb.DefPyStartClass(classStr, pyClassStr, 'The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint. It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation set without rotation (identity, SetTranslation) skips the rotation in its products. Examples:',
+pb.DefPyStartClass(classStr, pyClassStr, 'The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint, and the place for transformations of rigid bodies: it converts from and to the coordinates of the rigid body nodes (Euler parameters, Tait-Bryan angles Rxyz, rotation vector), composes, inverts and interpolates. It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation without rotation (identity, SetTranslation, a unit matrix) skips the rotation in its products. The Set functions return the HT itself, so that they chain. Examples:',
                     subSection=True, labelName='sec:HT')
 
 pb.AddDocuCodeBlock(code="""
 import exudyn as exu
 import numpy as np
 from exudyn.rigidBodyUtilities import RotationMatrixZ
-H0 = exu.HT()                                            #identity
+H0 = exu.HT()                                              #identity
 H1 = exu.HT(rotation=RotationMatrixZ(0.5), translation=[1,0,0])
 H2 = exu.HT(translation=[0,2,0])                           #translation only
-H = H1 * H2                                                #composition, an HT
-p = H1 * [0.1,0,0]                                         #a point transformed, a numpy array
-A, t = H.Get()                                             #rotation and translation
-H44 = H.HT44()                                             #4x4 numpy array
-H3 = exu.HT(H44)                                           #from a 4x4 matrix, or its 16 values as a sensor stores them
-T44 = np.array(H)                                          #numpy reads an HT as its 4x4 matrix
+H3 = exu.HT(Rxyz=[0,0,0.5], translation=[1,0,0])           #the same as H1, from Tait-Bryan angles
+H4 = exu.HT().SetRotationAxis([1,1,0], np.pi/4)            #the Set functions return the HT
+
+#read and write access to the parts:
+A = H1.rotation                                            #3x3 numpy array
+p = H1.translation                                         #numpy array [1,0,0]
+H1.translation = [0,0,1]                                   #writing a part keeps the other
+H1.rotation = np.eye(3)                                    #a unit matrix: H1.HasNoRotation() is True
+A, p = H3.Get()                                            #both parts
+H3.Set(rotationVector=[0,0,0.5])                           #only the rotation; the translation stays
+
+#composition, points, inverse, numpy:
+H = H3 * H2                                                #first H2, then H3: an HT
+x = H3 * [0.1,0,0]                                         #a point transformed, a numpy array
 Hinv = H.Inverse()
-H.translation = [0,0,1]                                    #write access, the rotation is kept
+H44 = H.HT44()                                             #4x4 numpy array; also np.array(H)
+H5 = exu.HT(H44)                                           #from a 4x4 matrix, or its 16 values as a sensor stores them
+
+#the frame of H2 seen from H3, and frames in between:
+Hrel = H3.Relative(H2)                                     #H3.Inverse()*H2
+Hhalf = H3.InterpolateSE3(H2, 0.5)                         #halfway, a screw motion
+
+#the coordinates of the rigid body nodes:
+q7 = H3.GetCoordinatesEP()                                 #[x,y,z, ep0,ep1,ep2,ep3] for NodeRigidBodyEP
+q6 = H3.GetCoordinatesRxyz()                               #[x,y,z, rotX,rotY,rotZ] for NodeRigidBodyRxyz
+ep = H3.GetEP()                                            #only the rotation, as Euler parameters
+H6 = exu.HT().SetCoordinatesRotationVector([1,0,0, 0,0,0.5])
+angle = H6.RotationAngle()                                 #0.5
+axis = H6.RotationAxis()                                   #[0,0,1]
 """)
 
 pb.DefStartTable(pyClassStr)
 
-pb.CppCode('        .def(py::init<const py::object&, const py::object&>(), py::arg("rotation") = py::none(), py::arg("translation") = py::none())\n')
+pb.CppCode('        .def(py::init<const py::object&, const py::object&, const py::object&, const py::object&, const py::object&>(), py::arg("rotation") = py::none(), py::arg("translation") = py::none(), py::arg("eulerParameters") = py::none(), py::arg("Rxyz") = py::none(), py::arg("rotationVector") = py::none())\n')
+pb.AddDocuList(['HT(rotation=None, translation=None, eulerParameters=None, Rxyz=None, rotationVector=None): the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, the translation, each None for the unit rotation or zero; or HT(H44) from a 4x4 matrix or its 16 values row by row'])
 
 pb.CppCode('        .def_property("rotation", &PyHT::GetRotationPy, &PyHT::SetRotationPy)\n')
 pb.DefDataAccess('rotation', 'the 3x3 rotation matrix as numpy array; setting it keeps the translation', dataType='ArrayLike')
@@ -209,32 +231,99 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='Get', cName='GetPy',
                        returnType='List[ArrayLike]',
                        )
 
-pb.DefPyFunctionAccess(cClass=classStr, pyName='Set', cName='SetPy',
-                       argList=['rotation', 'translation'],
-                       description="set the 3x3 rotation matrix and the translation",
-                       argTypes=['ArrayLike', 'ArrayLike'],
-                       returnType='None',
+pb.DefPyFunctionAccess(cClass=classStr, pyName='Set',
+                       cName='[](PyHT& item, const py::object& rotation, const py::object& translation, const py::object& eulerParameters, const py::object& Rxyz, const py::object& rotationVector) -> PyHT& {\n            item.SetPy(rotation, translation, eulerParameters, Rxyz, rotationVector); return item; }',
+                       argList=['rotation', 'translation', 'eulerParameters', 'Rxyz', 'rotationVector'],
+                       defaultArgs=['py::none()']*5,
+                       description="set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT",
+                       argTypes=['ArrayLike']*5,
+                       returnType='HT', isLambdaFunction=True, options='py::return_value_policy::reference_internal',
                        )
 
-pb.DefPyFunctionAccess(cClass=classStr, pyName='SetIdentity', cName='SetIdentity',
-                       description="set the identity: unit rotation, zero translation",
-                       returnType='None',
+pb.DefPyFunctionAccess(cClass=classStr, pyName='SetIdentity',
+                       cName='[](PyHT& item) -> PyHT& {\n            item.SetIdentity(); return item; }',
+                       description="set the identity: unit rotation, zero translation; returns the HT",
+                       returnType='HT', isLambdaFunction=True, options='py::return_value_policy::reference_internal',
                        )
 
-pb.DefPyFunctionAccess(cClass=classStr, pyName='SetTranslation', cName='SetTranslationOnlyPy',
+pb.DefPyFunctionAccess(cClass=classStr, pyName='SetTranslation',
+                       cName='[](PyHT& item, const py::object& translation) -> PyHT& {\n            item.SetTranslationOnlyPy(translation); return item; }',
                        argList=['translation'],
-                       description="set a translation and the unit rotation",
+                       description="set a translation and the unit rotation; returns the HT",
                        argTypes=['ArrayLike'],
-                       returnType='None',
+                       returnType='HT', isLambdaFunction=True, options='py::return_value_policy::reference_internal',
                        )
 
 for axis in ['X', 'Y', 'Z']:
-    pb.DefPyFunctionAccess(cClass=classStr, pyName='SetRotation' + axis, cName='SetRotation' + axis,
+    pb.DefPyFunctionAccess(cClass=classStr, pyName='SetRotation' + axis,
+                           cName='[](PyHT& item, Real angle) -> PyHT& {\n            item.SetRotation' + axis + '(angle); return item; }',
                            argList=['angle'],
-                           description="set a rotation about the " + axis.lower() + "-axis by angle (in radians) and zero translation",
+                           description="set a rotation about the " + axis.lower() + "-axis by angle (in radians) and zero translation; returns the HT",
                            argTypes=['float'],
-                           returnType='None',
+                           returnType='HT', isLambdaFunction=True, options='py::return_value_policy::reference_internal',
                            )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='SetRotationAxis',
+                       cName='[](PyHT& item, const py::object& axis, Real angle) -> PyHT& {\n            item.SetRotationAxisPy(axis, angle); return item; }',
+                       argList=['axis', 'angle'],
+                       description="set a rotation by angle (in radians) about axis, a 3D vector of any length but zero, and zero translation; returns the HT",
+                       argTypes=['ArrayLike', 'float'],
+                       returnType='HT', isLambdaFunction=True, options='py::return_value_policy::reference_internal',
+                       )
+
+#the rotation parameters and the coordinates of the rigid body nodes (#2810)
+for (name, cName, what) in [('GetEP', 'GetEPPy', 'the rotation as the 4 Euler parameters [ep0,ep1,ep2,ep3], the rotation parameters of NodeRigidBodyEP'),
+                            ('GetRxyz', 'GetRxyzPy', 'the rotation as the 3 Tait-Bryan angles [rotX,rotY,rotZ] (rotation about x, then y, then z), the rotation parameters of NodeRigidBodyRxyz'),
+                            ('GetRotationVector', 'GetRotationVectorPy', 'the rotation as rotation vector (axis times angle), the rotation parameters of NodeRigidBodyRotVecLG'),
+                            ('GetCoordinatesEP', 'GetCoordinatesEPPy', 'the 7 coordinates of NodeRigidBodyEP: the translation and the Euler parameters, e.g. for referenceCoordinates'),
+                            ('GetCoordinatesRxyz', 'GetCoordinatesRxyzPy', 'the 6 coordinates of NodeRigidBodyRxyz: the translation and the Tait-Bryan angles'),
+                            ('GetCoordinatesRotationVector', 'GetCoordinatesRotationVectorPy', 'the 6 coordinates of NodeRigidBodyRotVecLG: the translation and the rotation vector')]:
+    pb.DefPyFunctionAccess(cClass=classStr, pyName=name, cName=cName, description=what + ', a numpy array',
+                           returnType='ArrayLike')
+
+for (name, kind, what) in [('SetCoordinatesEP', 0, 'the 7 coordinates of NodeRigidBodyEP, translation and Euler parameters'),
+                           ('SetCoordinatesRxyz', 1, 'the 6 coordinates of NodeRigidBodyRxyz, translation and Tait-Bryan angles'),
+                           ('SetCoordinatesRotationVector', 2, 'the 6 coordinates of NodeRigidBodyRotVecLG, translation and rotation vector')]:
+    pb.DefPyFunctionAccess(cClass=classStr, pyName=name,
+                           cName='[](PyHT& item, const py::object& coordinates) -> PyHT& {\n            item.SetCoordinatesPy(coordinates, ' + str(kind) + '); return item; }',
+                           argList=['coordinates'],
+                           description='set from ' + what + ', as given by GetCoordinates... or by a node; returns the HT',
+                           argTypes=['ArrayLike'],
+                           returnType='HT', isLambdaFunction=True, options='py::return_value_policy::reference_internal',
+                           )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='RotationAngle', cName='RotationAnglePy',
+                       description="the angle of the rotation in radians, 0 to pi: the length of the rotation vector",
+                       returnType='float',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='RotationAxis', cName='RotationAxisPy',
+                       argList=['raiseError'], defaultArgs=['True'],
+                       description="the unit axis of the rotation, from the rotation vector; for no rotation an error, or [0,0,0] if raiseError=False",
+                       argTypes=['bool'],
+                       returnType='ArrayLike',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='Relative', cName='Relative',
+                       argList=['other'],
+                       description="the frame of other seen from this one, H.Inverse()*other, without computing the inverse: what a joint computes between the frames of its two markers",
+                       argTypes=['HT'],
+                       returnType='HT',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='InterpolateSO3', cName='InterpolateSO3',
+                       argList=['other', 'factor'],
+                       description="the transformation between this one (factor=0) and other (factor=1): the translation linear and the rotation on SO(3), about one fixed axis with the angle in proportion",
+                       argTypes=['HT', 'float'],
+                       returnType='HT',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='InterpolateSE3', cName='InterpolateSE3',
+                       argList=['other', 'factor'],
+                       description="the transformation between this one (factor=0) and other (factor=1) on SE(3): a screw motion, in which translation and rotation are coupled, as a rigid body moves with constant twist",
+                       argTypes=['HT', 'float'],
+                       returnType='HT',
+                       )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='HT44', cName='GetHT44Py',
                        description="the 4x4 matrix [A p; 0 1] as numpy array",
@@ -266,7 +355,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='RotateVectorTransposed', cName='
                        )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='HasNoRotation', cName='HasNoRotation',
-                       description="True if the transformation was set without rotation (identity, SetTranslation, or a product of such), which its products then skip; a given unit matrix does not set this",
+                       description="True if the rotation is the unit matrix - set without rotation (identity, SetTranslation, a product of such) or given as the exact unit matrix from Python -, which its products then skip; a unit matrix computed in C++ is not checked",
                        returnType='bool',
                        )
 

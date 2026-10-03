@@ -117,6 +117,7 @@ def TestExamplesReferenceSolution():
         'simulationSettingsDeprecationTest.py':126, #new 2026-10-03: a renamed simulation setting forwards under its old name with a DeprecationWarning (#2588)
         'rotationMarkerDeprecationTest.py':-0.13402861946207856, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
         'libraryDeprecationTest.py':4, #new 2026-10-03: a deprecated function and argument of the Python library warn once per session at the user's line and are counted (#2807)
+        'homogeneousTransformationInterfaceTest.py':9.245684006275722, #new 2026-10-03: exu.HT with the node coordinates, Relative, the interpolations, angle and axis (#2810)
         'homogeneousTransformationTest.py':178.9377398330175, #new 2026-10-02: exudyn.HT against the 4x4 matrices of rigidBodyUtilities, and the output variable HomogeneousTransformation (#2780)
         'inspectTest.py':47, #2026-10-02: the output variable HomogeneousTransformation of the rigid body and its node (#2780), before 45; 2026-10-02: a rigid body reports PotentialEnergy = 0 (#2202), before 44; new 2026-10-01: mbs.Inspect (#2203); the number of listed members, refusals included
         'energiesTest.py':17.614884358875663, #kinetic and potential energy of simple bodies and spring-dampers (#2202); 2026-10-01 with what the energies refuse and the gravity connector; before 8.724884363749222

@@ -2,10 +2,14 @@
   "number": 2809,
   "title": "exu.HT as the place for rigid body transformations: a proposal for its functions and names",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "DOCU",
   "effort": "LOW",
   "description": "The coordinates of the rigid body nodes from and to an HT (position with Euler parameters, Tait-Bryan angles Rxyz or rotation vector), more functions that nodes, markers and items need, and the names of the class (translation or position) - for the maintainer's decision (2026-10-03).",
   "dateRaised": "2026-10-03",
-  "deadline": "2027-04-01"
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 15:51",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "decided: exu.HT keeps translation; node coordinates, Relative, InterpolateSO3/SE3, angle and axis, chained Set functions",
+  "resolvedInVersion": "1.12.254"
 }

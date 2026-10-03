@@ -633,13 +633,13 @@ def GeneticOptimization(objectiveFunction, parameters,
     #+++++++++++++++++++++++++++++++++++++++++++++++
     #+++++++++++++++++++++++++++++++++++++++++++++++
     if 'numberOfChildren' in kwargs: #unused
-        DeprecatedArgument('numberOfChildren', '1.11.0', 2028, use='populationSize and elitistRatio')
+        DeprecatedArgument('numberOfChildren', '1.11.0', 2029, use='populationSize and elitistRatio')
     
     #old value: survivingIndividuals=8
     survivingIndividuals = int(elitistRatio*populationSize)
     if 'survivingIndividuals' in kwargs: 
         survivingIndividuals = kwargs['survivingIndividuals']
-        DeprecatedArgument('survivingIndividuals', '1.11.0', 2028, use='populationSize and elitistRatio')
+        DeprecatedArgument('survivingIndividuals', '1.11.0', 2029, use='populationSize and elitistRatio')
 
 
     if 'randomizerInitialization' in kwargs: 

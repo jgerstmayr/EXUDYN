@@ -28,7 +28,7 @@ The class **MainRenderer** has the following **functions and structures**:
 - **`Stop()`**: Stop OpenGL rendering engine; uses timeout in multithreading.
 - **`IsActive()`**: returns True if GLFW renderer is available and running; otherwise False
 - **`Attach()`**: Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked)
-- **`Detach()`**: DEPRECATED; Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed; removed in 2028
+- **`Detach()`**: DEPRECATED; Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed; removed in 2029
 - **`StopSimulation(forceQuit = True)`**: Stop the simulation as closing the render window does: a running simulation ends after its current step, quietly and without an error, as if the user had stopped it; with forceQuit=True (default) a simulation that starts later ends before its first step as well, until mbs.SetRenderEngineStopFlag(False) resets it - which is what pressing Escape or closing the window does. Works without an open renderer, e.g. from a user function, another thread or a test
 
   *Example*:

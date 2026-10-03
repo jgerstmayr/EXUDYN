@@ -37,7 +37,7 @@ def _LibraryName(moduleName, functionName):
 
 
 class Deprecated:
-    """decorator of a deprecated function of the library: @Deprecated('1.11.0', 2028, use='mbs.CreateRigidBody');
+    """decorator of a deprecated function of the library: @Deprecated('1.11.0', 2029, use='mbs.CreateRigidBody');
     each call reports the use, the function itself is unchanged; its docstring starts with DEPRECATED, which
     tools/checkDeprecations.py checks"""
     def __init__(self, since, expires, use=''):

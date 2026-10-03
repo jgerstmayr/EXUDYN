@@ -180,7 +180,11 @@ testing a model or an item of one's own (#2779).
 **`exudyn.HT`, the homogeneous transformation of the C++ core.** `exu.HT(rotation=A, translation=p)`
 composes with `*` (`H1*H2`, and `H*v` for a point), inverts (`Inverse()`), and converts to and from the
 4x4 matrix (`HT44()`, `exu.HT(T44)`) - faster than the 4x4 numpy arrays of
-`exudyn.rigidBodyUtilities`, whose function `HomogeneousTransformation` stays (#2780).
+`exudyn.rigidBodyUtilities`, whose function `HomogeneousTransformation` stays (#2780). It converts the rotation from and to Euler
+parameters, Tait-Bryan angles and the rotation vector, and the reference coordinates of the three rigid body nodes
+(`GetCoordinatesEP()`, `SetCoordinatesRxyz(q)`, ...), gives the frame of one HT seen from another (`Relative`),
+interpolates (`InterpolateSO3`, `InterpolateSE3`) and the angle and axis of its rotation; its Set functions return it,
+so that `exu.HT().SetRotationAxis(axis, angle)` is one line (#2810).
 
 **The output variable `HomogeneousTransformation`.** Every node, body point, marker and connector that
 gives `Position` and `RotationMatrix` also gives `HomogeneousTransformation`, the 4x4 matrix [A p; 0 1]:
@@ -220,7 +224,7 @@ and removed item parameters, as keyword of the item class and as key of an item 
 description, and the arguments `bodyList` of the `Create...` functions and `numberOfChildren`/`survivingIndividuals` of
 `GeneticOptimization`, give a `DeprecationWarning` at the line of the script, once per session, and are counted in
 `exu.sys['deprecationUse']['library']`; each says what to use instead. They, and the deprecated functions of the C++
-module, are removed in 2028; `exudev scripts` reports them in a script (#2807).
+module, are removed in 2029; `exudev scripts` reports them in a script (#2807).
 
 **A system without coordinates** - only ground, sensors and user functions - is solved by every
 solver: time advances, the user functions are called and the sensors record (#2790).

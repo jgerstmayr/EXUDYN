@@ -12373,3 +12373,37 @@ their docstrings), the `'NPY'` mode of the FEM file functions (a value, not an a
 **Tests**: test model `libraryDeprecationTest.py` (`BrickXYZ` once and three times, `Brick` recording nothing, `bodyList`
 reported for `CreateSpringDamper` at the script's line); `test_checkDeprecations.py` (every source, nothing
 inconsistent, the year logic and the exit code); `test_checkUserScripts.py` gets the library.
+
+<a id="rg16-7"></a>
+### RG16.6, RG16.7 — exu.HT decided and built (2026-10-03, #2809, #2810)
+
+**The decisions** of the maintainer are in the plan under RG16.6: `translation` stays, `Relative`, `InterpolateSO3`
+and `InterpolateSE3`, angle and axis with `raiseError`, Set returning the HT instead of static constructors, no 2D,
+`HasNoRotation` for a unit matrix from Python, measured in RG5.1.1.
+
+**Built** (`PyHomogeneousTransformation.h`, `definitions/pybindDataStructures.py`), all on the conversions of
+`RigidBodyMath.h` (`RotationMatrix2EP`/`EP2RotationMatrix`, `RotationMatrix2RotXYZ`/`RotXYZ2RotationMatrix`,
+`EXUlie::ExpSO3`/`LogSO3Vector`, `ExpSE3`/`LogSE3Vector`), no second implementation:
+`HT(rotation, translation, eulerParameters, Rxyz, rotationVector)` and `Set(...)` with the same keywords (at most one
+rotation, a part not given stays; Euler parameters must have unit length); `GetEP()`, `GetRxyz()`,
+`GetRotationVector()`; `GetCoordinatesEP/Rxyz/RotationVector()` and `SetCoordinates...` for the reference coordinates of
+the three rigid body nodes; `RotationAngle()`, `RotationAxis(raiseError=True)`, `SetRotationAxis(axis, angle)`;
+`Relative(other)` computed as $\Am_0\tp\Am_1$, $\Am_0\tp(\pv_1-\pv_0)$ without the inverse; `InterpolateSO3`,
+`InterpolateSE3`; every `Set...` returns the HT (`reference_internal`). A unit matrix given from Python - the rotation
+property, `Set`, the constructor, a 4x4 matrix - sets the flag of no rotation (`UpdateNoRotationFlag`), as do rotation
+parameters that give one. **The documentation** of the HT has the examples asked for: `.rotation` and `.translation` read
+and written, the constructor with Tait-Bryan angles, chained Set functions, composition, `Relative`, the interpolation,
+the node coordinates, angle and axis. **Test model** `homogeneousTransformationInterfaceTest.py`: the conversions against
+`rigidBodyUtilities`, the coordinates both ways for the three nodes and the same as `CreateRigidBody(referenceHT=...)`
+gives its node, `Relative` against `Inverse()*`, the interpolations at 0, 1 and halfway (the SE(3) one: two half steps
+give the whole), angle and axis, chained Set, `HasNoRotation`, the refusal of two rotations.
+
+**Also answered (maintainer 2026-10-03, two notes of the same message)**: a system without coordinates in the explicit
+(and every other) solver, with a `PreStepUserFunction` for animations, is #2790, `emptySystemTest.py`; the frame of the
+rigid markers with `visualizationSettings.markers.showBasis` and `basisSize` - three lines, or arrows with heads half as
+long as those of a node - is #2791. No new steps for them.
+
+**RG12.33 addendum** (maintainer 2026-10-03): the deprecations before 1.11.0 are removed in **2029**, not 2028 as written
+in the entry of RG12.33; and the two functions of `robotics/mobile.py` (`MecanumXYphi2WheelVelocities`,
+`MecanumWheelVelocity2XYphi`, use `MobileKinematics`; docstrings added) and the mode `'NPY'` of the FEM files (reported as
+`FEM.mode='NPY'`, use `'NPZ'`, at the line that called the Save or Load function) are deprecated as well.

@@ -457,7 +457,7 @@ def CirclePointsAndSegments(center=[0,0], radius=0.1, invert = False, pointIndex
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #************************************************
-@Deprecated('1.11.0', 2028, use='graphics.Lines with the five corner points')
+@Deprecated('1.11.0', 2029, use='graphics.Lines with the five corner points')
 def GraphicsDataRectangle(xMin, yMin, xMax, yMax, color=[0.,0.,0.,1.]): 
     """generate graphics data for 2D rectangle
 
@@ -479,7 +479,7 @@ def GraphicsDataRectangle(xMin, yMin, xMax, yMax, color=[0.,0.,0.,1.]):
     return dataRect
 
 #************************************************
-@Deprecated('1.11.0', 2028, use='graphics.Brick(centerPoint, size, addFaces=False, addEdges=True)')
+@Deprecated('1.11.0', 2029, use='graphics.Brick(centerPoint, size, addFaces=False, addEdges=True)')
 def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.]): 
     """generate graphics data for orthogonal block drawn with lines
 

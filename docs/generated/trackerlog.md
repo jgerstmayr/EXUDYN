@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.253.dev1
+- Exudyn version = 1.12.255.dev1
 - last change = 2026-10-03
-- Number of issues = 2812
-- Number of resolved issues = 2567 (253 in current version)
+- Number of issues = 2813
+- Number of resolved issues = 2569 (255 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,14 +7568,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` `MEDIUM EFF` `raised by: Claude-JG` the flow charts of the documentation as TikZ again: vector graphics in the PDF, images on the web (#2812)
+  - description: The mermaid charts of introduction.md, solver.md and theoryContact.md are of low quality compared to the TikZ figures of the old LaTeX documentation (tmp/oldDocs/theDoc): arrows, colors, fonts, and they did not fit the page. Keep the current content of the charts, draw them in TikZ again: one small standalone .tex per figure, compiled only when a figure changes (an exudev command, needs LaTeX), giving a PDF for the PDF build and an image for the web (maintainer 2026-10-03).
+  - date raised: 2026-10-03
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Jupyter notebooks for the tutorials and some examples: an evaluation first (#2811)
   - description: Tutorials, and some sections of examples, as notebooks (Jupyter or similar): what it takes in the docs build (myst-nb or nbsphinx), in the test runners, the renderer and plots inside a notebook, and the size of the repository (maintainer 2026-10-03).
-  - date raised: 2026-10-03
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` exu.HT: the functions of the accepted proposal, with examples in its documentation and tests (#2810)
-  - description: Realization of the HT proposal: the bindings on the existing C++ conversions, examples in the data structures section (rotation, position, the node coordinates), a test model.
-  - date raised: 2026-10-03
-- `DOCU` `LOW EFF` `raised by: Claude-JG` exu.HT as the place for rigid body transformations: a proposal for its functions and names (#2809)
-  - description: The coordinates of the rigid body nodes from and to an HT (position with Euler parameters, Tait-Bryan angles Rxyz or rotation vector), more functions that nodes, markers and items need, and the names of the class (translation or position) - for the maintainer's decision (2026-10-03).
   - date raised: 2026-10-03
 - `DOCU` `LOW EFF` `raised by: Claude-JG` settings and item parameters that could be renamed or restructured, for the maintainer's decision (#2802)
   - description: maintainer 2026-10-03: search simulation settings and item parameter names that could be renamed or restructured; listed as revision2026b step RG12.31 for decision.

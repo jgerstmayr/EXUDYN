@@ -45,7 +45,7 @@ pb.DefPyFunctionAccess('', 'Help', 'PyHelp',
                                )
 
 pb.DefPyFunctionAccess(cClass='', pyName='StartRenderer', cName='PyStartOpenGLRenderer', 
-                                deprecated=Deprecated('1.11.0', 2028),
+                                deprecated=Deprecated('1.11.0', 2029),
                         description="DEPRECATED; Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g., Spyder",
                                 argList=['verbose','deprecationWarning'],
                                 defaultArgs=['0','True'],
@@ -55,7 +55,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='StartRenderer', cName='PyStartOpenGLRe
 
 #new, defined in C++ as lambda function:
 pb.DefPyFunctionAccess(cClass='', pyName='StopRenderer', cName='PyStopOpenGLRenderer',#'no direct link to C++ here', 
-                                deprecated=Deprecated('1.11.0', 2028),
+                                deprecated=Deprecated('1.11.0', 2029),
                         description="DEPRECATED; Stop OpenGL rendering engine",
                                 argList=['deprecationWarning'],
                                 defaultArgs=['True'],
@@ -65,7 +65,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='StopRenderer', cName='PyStopOpenGLRend
                                 )
 
 pb.DefPyFunctionAccess(cClass='', pyName='IsRendererActive', cName='PyIsRendererActive', 
-                                deprecated=Deprecated('1.11.0', 2028),
+                                deprecated=Deprecated('1.11.0', 2029),
                         description="DEPRECATED; returns True if GLFW renderer is available and running; otherwise False",
                                 argList=['deprecationWarning'],
                                 defaultArgs=['True'],
@@ -74,7 +74,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='IsRendererActive', cName='PyIsRenderer
                                 )
 
 pb.DefPyFunctionAccess(cClass='', pyName='DoRendererIdleTasks', cName='PyDoRendererIdleTasks', 
-                                deprecated=Deprecated('1.11.0', 2028),
+                                deprecated=Deprecated('1.11.0', 2029),
                         description="DEPRECATED; Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g., waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed",
                                 argList=['waitSeconds','deprecationWarning'],
                                 defaultArgs=['0','True'],
@@ -84,7 +84,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='DoRendererIdleTasks', cName='PyDoRende
 
 pb.BeginCppWrittenByHand()
 pb.DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic', 
-                               deprecated=Deprecated('1.11.0', 2028),
+                               deprecated=Deprecated('1.11.0', 2029),
                         description=r"""DEPRECATED; Static solver function, mapped from module `solver`, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see [](#sec-mainsystemextensions-solvestatic); for background on solvers, see [](#sec-solvers)""",
                                argList=['mbs', 'simulationSettings', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','True'],
@@ -94,7 +94,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='SolveStatic', cName='SolveDynamic',
                                )
                 
 pb.DefPyFunctionAccess(cClass='', pyName='SolveDynamic', cName='SolveDynamic', 
-                               deprecated=Deprecated('1.11.0', 2028),
+                               deprecated=Deprecated('1.11.0', 2029),
                         description=r"""DEPRECATED; Dynamic solver function, mapped from module `solver`, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see [](#sec-mainsystemextensions-solvedynamic); for background on solvers, see [](#sec-solvers)""",
                                argList=['mbs', 'simulationSettings', 'solverType', 'updateInitialValues', 'storeSolver'],
                                defaultArgs=['','exudyn.SimulationSettings()','exudyn.DynamicSolverType.GeneralizedAlpha','False','True'],
@@ -104,7 +104,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='SolveDynamic', cName='SolveDynamic',
                                )
                 
 pb.DefPyFunctionAccess(cClass='', pyName='ComputeODE2Eigenvalues', cName='ComputeODE2Eigenvalues', 
-                               deprecated=Deprecated('1.11.0', 2028),
+                               deprecated=Deprecated('1.11.0', 2029),
                         description=r"""DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module `solver`; for details on the Python interface see [](#sec-mainsystemextensions-computeode2eigenvalues)""",
                                argList=['mbs', 'simulationSettings', 'useSparseSolver', 'numberOfEigenvalues', 'setInitialValues', 'convert2Frequencies'],
                                defaultArgs=['','exudyn.SimulationSettings()','False','-1','True','False'],
@@ -151,7 +151,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='Print', cName='PyPrint',
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #DEPRECATED:
 pb.DefPyFunctionAccess(cClass='', pyName='SetOutputPrecision', cName='PySetOutputPrecisionOld', 
-                                deprecated=Deprecated('1.11.0', 2028),
+                                deprecated=Deprecated('1.11.0', 2029),
                         description="DEPRECATED; use set exudyn.config.precision instead",
                                 argList=['numberOfDigits'],
                                 argTypes=['int'],
@@ -160,7 +160,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='SetOutputPrecision', cName='PySetOutpu
                                 )
 
 pb.DefPyFunctionAccess(cClass='', pyName='SetLinalgOutputFormatPython', cName='PySetLinalgOutputFormatPython', 
-                                deprecated=Deprecated('1.11.0', 2028),
+                                deprecated=Deprecated('1.11.0', 2029),
                         description="DEPRECATED; True: use Python format for output of vectors and matrices; False: use Matlab format",
                                 argList=['flagPythonFormat'],
                                 argTypes=['bool'],
@@ -169,7 +169,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='SetLinalgOutputFormatPython', cName='P
                                 )
 
 pb.DefPyFunctionAccess('', 'GetVersionString', 'PyGetVersionString', 
-                               deprecated=Deprecated('1.11.0', 2028),
+                               deprecated=Deprecated('1.11.0', 2029),
                         description='DEPRECATED; Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.; the Python micro version may differ from that you are working with; AVX2 shows that you are running a AVX2 compiled version)',
                                argList=['addDetails'],
                                defaultArgs=['False'],
@@ -178,7 +178,7 @@ pb.DefPyFunctionAccess('', 'GetVersionString', 'PyGetVersionString',
                                )
 
 pb.DefPyFunctionAccess(cClass='', pyName='SetPrintDelayMilliSeconds', cName='PySetPrintDelayMilliSeconds', 
-                            deprecated=Deprecated('1.11.0', 2028),
+                            deprecated=Deprecated('1.11.0', 2029),
                         description="DEPRECATED; add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0",
                             argList=['delayMilliSeconds'],
                             argTypes=['int'],
@@ -187,7 +187,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='SetPrintDelayMilliSeconds', cName='PyS
                             )
 
 pb.DefPyFunctionAccess(cClass='', pyName='SuppressWarnings', cName='PySuppressWarningsOld', 
-                            deprecated=Deprecated('1.11.0', 2028),
+                            deprecated=Deprecated('1.11.0', 2029),
                         description="DEPRECATED; set flag to suppress (=True) or enable (=False) warnings",
                             argList=['flag'],
                             argTypes=['bool'],
@@ -196,7 +196,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='SuppressWarnings', cName='PySuppressWa
                             )
 
 pb.DefPyFunctionAccess(cClass='', pyName='InfoStat', cName='PythonInfoStatOld', 
-                            deprecated=Deprecated('1.11.0', 2028),
+                            deprecated=Deprecated('1.11.0', 2029),
                         description='DEPRECATED; Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag',
                             argList=['writeOutput'],
                             defaultArgs=['True'],
@@ -206,7 +206,7 @@ pb.DefPyFunctionAccess(cClass='', pyName='InfoStat', cName='PythonInfoStatOld',
                             )
 
 pb.DefPyFunctionAccess(cClass='', pyName='SetWriteToConsole', cName='PySetWriteToConsole', 
-                            deprecated=Deprecated('1.11.0', 2028),
+                            deprecated=Deprecated('1.11.0', 2029),
                         description="DEPRECATED; set flag to write (True) or not write to console; default = True",
                             argList=['flag'],
                             argTypes=['bool'],

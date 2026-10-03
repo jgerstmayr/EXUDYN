@@ -25,6 +25,7 @@ import exudyn.graphics as graphics
 from exudyn.robotics import *
 
 import numpy as np
+from exudyn.misc.deprecation import Deprecated #the deprecations of the library (#2807)
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -546,9 +547,11 @@ def FunDDiffPoly(x, a):
 
 
 
-# old functions deprecated
+# old functions, deprecated
 ################################################################################
+@Deprecated('1.11.0', 2029, use='MobileKinematics')
 def MecanumXYphi2WheelVelocities(xVel, yVel, angVel, R, Lx, Ly, wheeltype):
+    """DEPRECATED: the wheel velocities of a mecanum platform for the velocities [xVel, yVel, angVel]; use MobileKinematics"""
     if wheeltype == 0: # O-configuration
         LxLy2 = (Lx+Ly)/2
         mat = (1/R)*np.array([[1,-1,-LxLy2],
@@ -571,7 +574,9 @@ def MecanumXYphi2WheelVelocities(xVel, yVel, angVel, R, Lx, Ly, wheeltype):
                             [-1,+1,-LxLy2]])
     return mat @ [xVel, yVel, angVel]
 
+@Deprecated('1.11.0', 2029, use='MobileKinematics')
 def MecanumWheelVelocity2XYphi(w, R, Lx, Ly, wheeltype): 
+    """DEPRECATED: the platform velocities [xVel, yVel, angVel] of a mecanum platform for the wheel velocities w; use MobileKinematics"""
     c = 0
     LxLy2 = 0
     

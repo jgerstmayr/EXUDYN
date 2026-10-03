@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 235 | 1.12.253 |
+| 1.12 | Metheney | 237 | 1.12.255 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.255** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exu.HT: the functions of the accepted proposal, with examples in its documentation and tests (#2810)
+  - description: Realization of the HT proposal: the bindings on the existing C++ conversions, examples in the data structures section (rotation, position, the node coordinates), a test model.
+  - **notes:** exu.HT converts from and to Euler parameters, Tait-Bryan angles, rotation vector and the coordinates of the rigid body nodes, gives Relative, InterpolateSO3, InterpolateSE3, RotationAngle and RotationAxis; its Set functions return it
+  - date resolved: **2026-10-03 15:51**, date raised: 2026-10-03
+- **1.12.254** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exu.HT as the place for rigid body transformations: a proposal for its functions and names (#2809)
+  - description: The coordinates of the rigid body nodes from and to an HT (position with Euler parameters, Tait-Bryan angles Rxyz or rotation vector), more functions that nodes, markers and items need, and the names of the class (translation or position) - for the maintainer's decision (2026-10-03).
+  - **notes:** decided: exu.HT keeps translation; node coordinates, Relative, InterpolateSO3/SE3, angle and axis, chained Set functions
+  - date resolved: **2026-10-03 15:51**, date raised: 2026-10-03
 - **1.12.253** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` deprecations of the Python library declared like those of the C++, and a build check for expired ones (#2807)
   - description: The Python library deprecates functions and arguments by hand - a docstring saying DEPRECATED, an exu.Print('WARNING: ...'), about 20 places (AddRevoluteJoint, bodyList of the Create functions, GeneticOptimization arguments, ...) - with no version, no year of removal and nothing that finds them. Proposal: one declaration with since and expires for every deprecation, the library warning through exudyn.special.deprecations, and a check in exudev generate --all-checks that lists all deprecations and fails for one past its year (maintainer 2026-10-03).
   - **notes:** the deprecated functions and arguments of the Python library warn once per session at the line of the script and are counted in exudyn.sys\['deprecationUse'\]\['library'\]; every deprecation of Exudyn has a year of removal, and a build check fails once it has come

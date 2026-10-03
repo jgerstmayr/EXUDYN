@@ -107,7 +107,7 @@ def testDeprecatedFunctionsAndArgumentsOfTheLibrary(tables):
                      'GeneticOptimization(F, p, numberOfChildren=8)\n'
                      'mbs.CreateSpringDamper(bodyList=[b0, b1])\n'
                      'mbs.CreateSpringDamper(bodyNumbers=[b0, b1])\n', tables)
-    assert any(text.startswith("'AddRigidBody' is deprecated since 1.11.0 and removed in 2028; use mbs.CreateRigidBody")
+    assert any(text.startswith("'AddRigidBody' is deprecated since 1.11.0 and removed in 2029; use mbs.CreateRigidBody")
                for text in found)
     assert any(text.startswith("'BrickXYZ' is deprecated") for text in found)
     assert any(text.startswith('GeneticOptimization(numberOfChildren=...): the argument is deprecated') for text in found)

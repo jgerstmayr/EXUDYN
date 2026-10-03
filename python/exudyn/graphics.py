@@ -678,7 +678,7 @@ def Cuboid(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1], addNormals=False, ad
     return data
 
 
-@Deprecated('1.11.0', 2028, use='graphics.Brick(centerPoint, size)')
+@Deprecated('1.11.0', 2029, use='graphics.Brick(centerPoint, size)')
 @_ReturnsRows
 def BrickXYZ(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.], addNormals=False, addEdges=False, edgeColor=color.black, addFaces=True): 
     """generate graphics data for orthogonal 3D block with min and max dimensions

@@ -437,14 +437,15 @@ class MatrixContainer:
         ...
     @overload
     def SetWithSparseMatrixCSR(self, numberOfRowsInit: int, numberOfColumnsInit: int, pyArrayCSR: Any, useDenseMatrix: bool=False, factor: float=1.) -> None: 
-        """DEPRECATED: set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix; the values of pyArrayCSR are multiplied by the given factor; removed in 2028."""
+        """DEPRECATED: set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix; the values of pyArrayCSR are multiplied by the given factor; removed in 2029."""
         ...
 
 #stub information for class HT functions
 class HT:
-    """The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint.
+    """The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint, and the place for transformations of rigid bodies: it converts from and to the coordinates of the rigid body nodes (Euler parameters, Tait-Bryan angles Rxyz, rotation vector), composes, inverts and interpolates.
 
-    It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation set without rotation (identity, SetTranslation) skips the rotation in its products
+    It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation without rotation (identity, SetTranslation, a unit matrix) skips the rotation in its products
+    The Set functions return the HT itself, so that they chain
     Examples:
     """
     rotation:ArrayLike
@@ -456,28 +457,97 @@ class HT:
         """[rotation, translation] as numpy arrays."""
         ...
     @overload
-    def Set(self, rotation: ArrayLike, translation: ArrayLike) -> None: 
-        """Set the 3x3 rotation matrix and the translation."""
+    def Set(self, rotation: ArrayLike=None, translation: ArrayLike=None, eulerParameters: ArrayLike=None, Rxyz: ArrayLike=None, rotationVector: ArrayLike=None) -> HT: 
+        """Set the parts given, a part that is None stays: the rotation from at most one of a 3x3 matrix, Euler parameters, Tait-Bryan angles Rxyz and a rotation vector, and the translation; returns the HT."""
         ...
     @overload
-    def SetIdentity(self) -> None: 
-        """Set the identity: unit rotation, zero translation."""
+    def SetIdentity(self) -> HT: 
+        """Set the identity: unit rotation, zero translation; returns the HT."""
         ...
     @overload
-    def SetTranslation(self, translation: ArrayLike) -> None: 
-        """Set a translation and the unit rotation."""
+    def SetTranslation(self, translation: ArrayLike) -> HT: 
+        """Set a translation and the unit rotation; returns the HT."""
         ...
     @overload
-    def SetRotationX(self, angle: float) -> None: 
-        """Set a rotation about the x-axis by angle (in radians) and zero translation."""
+    def SetRotationX(self, angle: float) -> HT: 
+        """Set a rotation about the x-axis by angle (in radians) and zero translation; returns the HT."""
         ...
     @overload
-    def SetRotationY(self, angle: float) -> None: 
-        """Set a rotation about the y-axis by angle (in radians) and zero translation."""
+    def SetRotationY(self, angle: float) -> HT: 
+        """Set a rotation about the y-axis by angle (in radians) and zero translation; returns the HT."""
         ...
     @overload
-    def SetRotationZ(self, angle: float) -> None: 
-        """Set a rotation about the z-axis by angle (in radians) and zero translation."""
+    def SetRotationZ(self, angle: float) -> HT: 
+        """Set a rotation about the z-axis by angle (in radians) and zero translation; returns the HT."""
+        ...
+    @overload
+    def SetRotationAxis(self, axis: ArrayLike, angle: float) -> HT: 
+        """Set a rotation by angle (in radians) about axis, a 3D vector of any length but zero, and zero translation; returns the HT."""
+        ...
+    @overload
+    def GetEP(self) -> ArrayLike: 
+        """The rotation as the 4 Euler parameters [ep0,ep1,ep2,ep3], the rotation parameters of NodeRigidBodyEP, a numpy array."""
+        ...
+    @overload
+    def GetRxyz(self) -> ArrayLike: 
+        """The rotation as the 3 Tait-Bryan angles [rotX,rotY,rotZ] (rotation about x, then y, then z), the rotation parameters of NodeRigidBodyRxyz, a numpy array."""
+        ...
+    @overload
+    def GetRotationVector(self) -> ArrayLike: 
+        """The rotation as rotation vector (axis times angle), the rotation parameters of NodeRigidBodyRotVecLG, a numpy array."""
+        ...
+    @overload
+    def GetCoordinatesEP(self) -> ArrayLike: 
+        """The 7 coordinates of NodeRigidBodyEP: the translation and the Euler parameters, e.g. for referenceCoordinates, a numpy array."""
+        ...
+    @overload
+    def GetCoordinatesRxyz(self) -> ArrayLike: 
+        """The 6 coordinates of NodeRigidBodyRxyz: the translation and the Tait-Bryan angles, a numpy array."""
+        ...
+    @overload
+    def GetCoordinatesRotationVector(self) -> ArrayLike: 
+        """The 6 coordinates of NodeRigidBodyRotVecLG: the translation and the rotation vector, a numpy array."""
+        ...
+    @overload
+    def SetCoordinatesEP(self, coordinates: ArrayLike) -> HT: 
+        """Set from the 7 coordinates of NodeRigidBodyEP, translation and Euler parameters, as given by GetCoordinates...
+        
+        or by a node; returns the HT
+        """
+        ...
+    @overload
+    def SetCoordinatesRxyz(self, coordinates: ArrayLike) -> HT: 
+        """Set from the 6 coordinates of NodeRigidBodyRxyz, translation and Tait-Bryan angles, as given by GetCoordinates...
+        
+        or by a node; returns the HT
+        """
+        ...
+    @overload
+    def SetCoordinatesRotationVector(self, coordinates: ArrayLike) -> HT: 
+        """Set from the 6 coordinates of NodeRigidBodyRotVecLG, translation and rotation vector, as given by GetCoordinates...
+        
+        or by a node; returns the HT
+        """
+        ...
+    @overload
+    def RotationAngle(self) -> float: 
+        """The angle of the rotation in radians, 0 to pi: the length of the rotation vector."""
+        ...
+    @overload
+    def RotationAxis(self, raiseError: bool=True) -> ArrayLike: 
+        """The unit axis of the rotation, from the rotation vector; for no rotation an error, or [0,0,0] if raiseError=False."""
+        ...
+    @overload
+    def Relative(self, other: HT) -> HT: 
+        """The frame of other seen from this one, H.Inverse()*other, without computing the inverse: what a joint computes between the frames of its two markers."""
+        ...
+    @overload
+    def InterpolateSO3(self, other: HT, factor: float) -> HT: 
+        """The transformation between this one (factor=0) and other (factor=1): the translation linear and the rotation on SO(3), about one fixed axis with the angle in proportion."""
+        ...
+    @overload
+    def InterpolateSE3(self, other: HT, factor: float) -> HT: 
+        """The transformation between this one (factor=0) and other (factor=1) on SE(3): a screw motion, in which translation and rotation are coupled, as a rigid body moves with constant twist."""
         ...
     @overload
     def HT44(self) -> ArrayLike: 
@@ -501,7 +571,7 @@ class HT:
         ...
     @overload
     def HasNoRotation(self) -> bool: 
-        """True if the transformation was set without rotation (identity, SetTranslation, or a product of such), which its products then skip; a given unit matrix does not set this."""
+        """True if the rotation is the unit matrix - set without rotation (identity, SetTranslation, a product of such) or given as the exact unit matrix from Python -, which its products then skip; a unit matrix computed in C++ is not checked."""
         ...
     @overload
     def __mul__(self, other: Union[HT, ArrayLike]) -> Union[HT, ArrayLike]: 

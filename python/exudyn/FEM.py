@@ -167,7 +167,7 @@ def CSRtoRowsAndColumns(sparseMatrixCSR):
 
 
 warnedCSRtoScipySparseCSR = False #add warning if this function is used with old format!
-@Deprecated('1.11.0', 2028, use='SparseTripletsToScipySparseCSR')
+@Deprecated('1.11.0', 2029, use='SparseTripletsToScipySparseCSR')
 def CSRtoScipySparseCSR(sparseMatrixCSR):
     """DEPRECATED: convert internal compressed CSR to scipy.sparse csr matrix; should not be used and raises warning; use SparseTripletsToScipySparseCSR instead!
     """
@@ -292,7 +292,8 @@ def FileNameToMode(fileName, mode):
     if fileName.endswith(fileExtension):
         fileName = fileName[:-len(fileExtension)]
 
-    if mode=='NPY':
+    if mode=='NPY': #reported for the Save/Load function that called this one
+        DeprecatedArgument("mode='NPY'", '1.11.0', 2029, use="mode='NPZ'", function='FEM', stackLevel=4)
         if WarnNumpy2():
             exu.Print('FEM.FileNameToMode: Load/Save: NPY format does not work with NumPy 2.x => switch to NPZ or other formats!')
 
@@ -300,7 +301,7 @@ def FileNameToMode(fileName, mode):
 
 
 
-@Deprecated('1.11.0', 2028, use='FEMinterface.ImportFromAbaqusInputFile')
+@Deprecated('1.11.0', 2029, use='FEMinterface.ImportFromAbaqusInputFile')
 def ReadNodesFromAbaqusInp(fileName, typeName='Part', name='Part-1', exportElements=False):
     """DEPRECATED: read the nodes of an Abaqus input file into a numpy array; use FEMinterface.ImportFromAbaqusInputFile
 
@@ -1602,7 +1603,7 @@ class ObjectFFRFreducedOrderInterface:
         nameNodeGeneric = '' if name=='' else 'NodeGeneric:'+name
         
         if len(eulerParametersRef) != 0:
-            DeprecatedArgument('eulerParametersRef', '1.11.0', 2028, use='rotationMatrixRef')
+            DeprecatedArgument('eulerParametersRef', '1.11.0', 2029, use='rotationMatrixRef')
             if str(self.rigidBodyNodeType) != 'NodeType.RotationEulerParameters':
                 raise ValueError('AddObjectFFRFreducedOrderWithUserFunctions: inconsistent reference rotation parameters and rigidBodyNodeType')
             #compute initial euler parameter velocities from angular velocity vector

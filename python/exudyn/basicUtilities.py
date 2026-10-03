@@ -409,7 +409,7 @@ def UFsensorRecord(mbs, t, sensorNumbers, factors, configuration):
     return val #return value usually not used further
 
 
-@Deprecated('1.11.0', 2028, use='a sensor with storeInternal=True')
+@Deprecated('1.11.0', 2029, use='a sensor with storeInternal=True')
 def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutputSize=3):
     """DEPRECATED: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecord'+str(sensorNumber)] where sensorNumber is the mbs sensor number
 

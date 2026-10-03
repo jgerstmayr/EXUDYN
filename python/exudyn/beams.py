@@ -28,7 +28,7 @@ __all__ = [
     ]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-@Deprecated('1.11.0', 2028, use='beams.GenerateBeamElementsAlongLine')
+@Deprecated('1.11.0', 2029, use='beams.GenerateBeamElementsAlongLine')
 def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numberOfElements, cableTemplate,
                                 massProportionalLoad=[0,0,0], 
                                 fixedConstraintsNode0=[0,0,0,0], fixedConstraintsNode1=[0,0,0,0],
@@ -64,7 +64,7 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
     
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-@Deprecated('1.11.0', 2028, use='beams.GenerateBeamElementsAlongLine')
+@Deprecated('1.11.0', 2029, use='beams.GenerateBeamElementsAlongLine')
 def GenerateStraightLineANCFCable(mbs, positionOfNode0, positionOfNode1, numberOfElements, cableTemplate,
                                 massProportionalLoad=[0,0,0], fixedConstraintsNode0=[0,0,0, 0,0,0], fixedConstraintsNode1=[0,0,0, 0,0,0],
                                 nodeNumber0=-1, nodeNumber1=-1):
@@ -136,7 +136,7 @@ def GenerateBeamElementsAlongLine(mbs, positionStart, positionEnd, numberOfEleme
     return beamElementsDict
     
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-@Deprecated('1.11.0', 2028, use='beams.GenerateBeamElementsAlongLine')
+@Deprecated('1.11.0', 2029, use='beams.GenerateBeamElementsAlongLine')
 def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements, beamTemplate,
                          gravity=[0,0,0], fixedConstraintsNode0=None, fixedConstraintsNode1=None,
                          nodeNumber0=-1, nodeNumber1=-1):

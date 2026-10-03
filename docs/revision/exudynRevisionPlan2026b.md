@@ -493,6 +493,17 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 <a id="rg3-21"></a>
 **RG3.21** **DONE 2026-09-27** (#2673) — [log](exudynRevisionLog2026b.md#rg3-21) · [plan text](exudynRevisionLog2026b.md#plan-rg3-21) — The pages that still describe the state before a step that is done.
 
+<a id="rg3-30"></a>
+**RG3.30** *(maintainer 2026-10-03)* **The flow charts as TikZ again** (#2812). The mermaid charts of `introduction.md`,
+    `solver.md` and `theoryContact.md` are of low quality next to the TikZ figures of the old LaTeX documentation
+    (`tmp/oldDocs/theDoc`, ten `tikzpicture`s in `introduction.tex` and `solver.tex`): arrows, colors and fonts, and
+    they fit the page. **Their current content stays** (the charts were brought up to date with the solver), only the
+    drawing changes. *Proposal*: one small standalone `.tex` per chart in `docs/figures/tikz/`, the TikZ of the old
+    figure brought to the current content, smaller fonts so that it fits the page; an exudev command (`exudev figures`)
+    compiles only what changed - it needs LaTeX, which the regular docs build does not - into a PDF (vector, for the
+    PDF build) and an image for the web (SVG with `dvisvgm` or `pdftocairo`, or a PNG), both committed, referenced as
+    `figure.*` like the other figures with a vector original (RG3.8.5); the mermaid source goes.
+
 <a id="rg3-29"></a>
 **RG3.29** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg3-29) *(maintainer 2026-10-03)* **The Python-C++
     command interface in sections** (#2808): the Exudyn module page has a section per group of members -
@@ -792,6 +803,10 @@ maintained rather than written once, and the vectorization work it would guide.
 
     The pattern to follow is `src/Linalg/symbolicCppDemo.h` from revision2026 step R5.4.12: named functions, one
     topic each, compiled by being included, and a header that says what it is for.
+    - **RG5.1.1** *(maintainer 2026-10-03)* the products of `HomogeneousTransformation` - $\Hm\vv$, $\Hm_1\Hm_2$,
+      $\Hm^{-1}$ - with and without the flag of no rotation (`HasNoRotation`, set by construction and, since #2810, for
+      a unit matrix given from Python): whether skipping the rotation is a measurable gain, or the branch costs more
+      than it saves (`homogeneousTransformationUseIdentityFlag` switches it off).
 
 <a id="rg5-2"></a>
 **RG5.2** *(group RG5, after RG5.1; revision2026 step R11.3)* **Make the hot linear algebra vectorizable.** Revision2026 step R2.16 measured that the
@@ -2664,8 +2679,8 @@ the joints an HT means fewer variables and one way of doing things.
     maintainer's decision in RG16.2.
 
 <a id="rg16-6"></a>
-**RG16.6** *(group RG16; maintainer 2026-10-03: "the premier place for rigid body transformations"; **proposal, waits
-for the maintainer's decision**)* **What `exu.HT` offers, and how its parts are named** (#2809). Everything about the
+**RG16.6** **DECIDED 2026-10-03** (the decisions below the proposal) *(group RG16; maintainer 2026-10-03: "the premier
+place for rigid body transformations")* **What `exu.HT` offers, and how its parts are named** (#2809). Everything about the
 HT was introduced after 1.11.0, so names change without deprecation until 1.13.
 *Today*: `HT(rotation=None, translation=None)` (also a 4x4 matrix or its 16 values), the properties `rotation` and
 `translation`, `Get()`, `Set(rotation, translation)`, `SetIdentity()`, `SetTranslation(t)` (with the unit rotation),
@@ -2701,7 +2716,28 @@ HT was introduced after 1.11.0, so names change without deprecation until 1.13.
     - **RG16.6.4** **names kept**: `rotation` (not `A`), `HT44()`, `Inverse()`/`Invert()`, `RotateVector...`,
       `HasNoRotation()`; `SetRotationX/Y/Z` keep their meaning (the rotation and zero position).
 
-**RG16.7** *(group RG16; after the decision of RG16.6)* **`exu.HT` as decided in RG16.6** (#2810): the bindings on the
+*Decided (maintainer 2026-10-03):*
+    - **translation**, not position: it is the word of consecutive transformations, and what people and tools
+      expect of an HT; the items keep their positions (a local position is a position). Both names could coexist later,
+      not now.
+    - **`Relative()`** as proposed.
+    - **`InterpolateSO3` and `InterpolateSE3`**: the rotation on SO(3) with the translation linear, and the screw motion
+      on SE(3).
+    - **`RotationAngle()` and `RotationAxis()`** from the rotation vector; for no rotation the axis raises, or is
+      `[0,0,0]` with `raiseError=False` (`raise` is a keyword of Python).
+    - **Set and From unified**: no static constructors; every `Set...` returns the HT, so that
+      `exu.HT().SetRotationAxis(axis, angle)` is the constructor; `SetRotationAxis(axis, angle)` added beside
+      `SetRotationX/Y/Z`.
+    - **2D** (`GetPosition2D`, the angle in the plane): considered, **not implemented** - only if a planar model needs it.
+    - **`HasNoRotation()`** also for a unit matrix given from Python (the Python setters check it, the C++ side does
+      not); whether the flag pays off is measured in RG5.1.1.
+    - The node coordinates as proposed; their functions are named after the coordinates: `GetCoordinatesEP()`,
+      `GetCoordinatesRxyz()`, `GetCoordinatesRotationVector()` and the three `SetCoordinates...` (not
+      `GetPositionEP`, as the HT says translation and the node coordinates are what is meant).
+
+<a id="rg16-7"></a>
+**RG16.7** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-7) *(group RG16; after the decision of RG16.6)*
+**`exu.HT` as decided in RG16.6** (#2810): the bindings on the
 existing C++ functions (no second implementation of a conversion), the names changed where decided; **examples in the
 documentation** of the HT (`definitions/pybindDataStructures.py`, section *HT*): `.rotation` and `.position` read and
 written, a product and a point, the node coordinates of a rigid body from an HT and back
@@ -2746,8 +2782,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
-| RG16.6 | #2809 | `exu.HT` as the place for rigid body transformations: the proposal for its functions and names |
-| RG16.7 | #2810 | `exu.HT` as decided in RG16.6, with examples in its documentation and a test model |
+| RG3.30 | #2812 | the flow charts as TikZ again: vector graphics in the PDF, images on the web |
 | RG17.1 | #2811 | notebooks for tutorials and examples: the evaluation |
 | RG12.31 | #2802 | settings and item parameters that could be renamed: a list for the maintainer's decision |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |

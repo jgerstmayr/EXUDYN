@@ -94,6 +94,7 @@ homogeneousTransformationParameterTest
 simulationSettingsDeprecationTest
 rotationMarkerDeprecationTest
 libraryDeprecationTest
+homogeneousTransformationInterfaceTest
 homogeneousTransformationTest
 inspectTest
 energiesTest
