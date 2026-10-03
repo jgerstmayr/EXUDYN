@@ -12101,3 +12101,9 @@ RG14.2.12 and RG16.3.4. The issues: **#2202 resolved** (the energies are done, R
 #2793-#2795, RG16.3.4 in the list); #2745 stays open, as RG14.2.15 is to be done (the deprecation of the joints'
 `rotationMarker0/1`). *Still open* lost RG6.7 and RG12.4.7 (done), RG9.4 and RG13.6.6; RG16.3 became RG16.4, the further
 steps of the HT.
+
+<a id="rg9-5-7-decided"></a>
+### RG9.5.7 — decided: left as it is (2026-10-03, #2784)
+
+The maintainer, on the observation above (the Jacobian fixed to the beam, the marker velocity with the Eulerian term
+`vALE * r_x`): **leave as is**. Nothing changes in `CObjectALEANCFCable2D`; #2784 closed with this decision.

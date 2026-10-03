@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.238.dev1
+- Exudyn version = 1.12.239.dev1
 - last change = 2026-10-03
 - Number of issues = 2798
-- Number of resolved issues = 2552 (238 in current version)
+- Number of resolved issues = 2553 (239 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,9 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHECK` `MEDIUM EFF` `raised by: Claude-JG` ObjectALEANCFCable2D: the position Jacobian and the velocity output disagree (#2784)
-  - description: Found by test\_accessFunctionsAllBodies.py (RG9.5.6): the position Jacobian of ObjectALEANCFCable2D is 3 x 8, the ANCF coordinates only, while the object has 9 (with the ALE coordinate) and its velocity output - the material velocity - depends on the ALE velocity (column r\_x); off the axis (localPosition\[1\] != 0) the Jacobian also differs from the derivative of the velocity output by the ANCF velocities (7e-3 against 0.35). To decide: is a marker on the ALE cable a material point (then the Jacobian needs the ALE column, and the forces act on the ALE coordinate) or a point fixed along the axis (then the velocity output of a marker is not J q\_t); and which normal derivative is right off the axis.
-  - date raised: 2026-10-02
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
   - date raised: 2026-09-29

@@ -1444,7 +1444,8 @@ revision (info document D15).
       `ObjectGenericODE2` -, and the derivative of the Lie group node by composed increments.
     - **RG9.5.7** *(found in RG9.5.6; maintainer 2026-10-02: the marker stays fixed to the beam, not co-moving with the
       axial displacement - co-moving makes sense only along a list of beams, as the sliding joints do; observed: the
-      Jacobian agrees, the velocity of the marker does not - [log](exudynRevisionLog2026b.md#rg9-5-7), open)*
+      Jacobian agrees, the velocity of the marker does not - [log](exudynRevisionLog2026b.md#rg9-5-7); **DECIDED
+      2026-10-03 (maintainer): left as it is** - the marker velocity keeps the Eulerian term; #2784 closed)*
       **`ObjectALEANCFCable2D`: what a marker on it is**
       (#2784): its position Jacobian has a zero column for the ALE coordinate (since #2786, before 8 columns, which failed
       every connector and load through a body marker after RG14.2.13), while its velocity
@@ -2554,7 +2555,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures - done but RG14.2.15: the flag and the deprecation of the joints' `rotationMarker0/1`, the documentation and the examples moved to the markers' `localHT` (the parameter itself is in since RG16.3.3); RG14.2.9.4 and RG14.2.12 are in the list below |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
-| RG9.5.7 | #2784 | `ObjectALEANCFCable2D`: a marker on it - a material point or a point along the axis (for the maintainer's decision) |
 | RG16.4 | - | HT further: the mode switch, `ObjectKinematicTree.jointHTs`, the deprecation of `rotationMarker0/1` in the joints, the robotics utilities on HT |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 
