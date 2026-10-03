@@ -113,7 +113,7 @@ bool MainSystemContainer::WaitForRenderEngineStopFlag()
 //! send renderer zoom all request; DEPRECATED function only affects main view
 void MainSystemContainer::PyZoomAll() 
 { 
-	renderer.DeprecationWarning("ZoomAll", "ZoomAll");
+	renderer.DeprecationWarning("RenderEngineZoomAll", "ZoomAll");
 	RenderViewDataVSC& RVD = visualizationSystems.GetRenderViewData(VisualizationSystemContainer::mainViewID);
 	RVD.zoomAllRequest = true;
 }

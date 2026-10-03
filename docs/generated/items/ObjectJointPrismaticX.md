@@ -6,7 +6,7 @@
 (sec-item-objectjointprismaticx)=
 # ObjectJointPrismaticX
 
-A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), [](#sec-rigidbodyutilities-addprismaticjoint), for two rigid bodies (or ground).
+A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use `mbs.CreatePrismaticJoint(...)` for two rigid bodies (or ground).
 
 ```{image} /docs/figures/PrismaticJointX.png
 :width: 400

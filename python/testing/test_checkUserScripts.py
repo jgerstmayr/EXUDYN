@@ -31,7 +31,8 @@ spec.loader.exec_module(checker)
 @pytest.fixture(scope='module')
 def tables():
     return {'functions': checker.DeprecatedFunctions(), 'settings': checker.DeprecatedSettings(),
-            'submodules': checker.SubmodulesNotLoaded(), 'itemParameters': checker.DeprecatedItemParameters()}
+            'submodules': checker.SubmodulesNotLoaded(), 'itemParameters': checker.DeprecatedItemParameters(),
+            'library': checker.DeprecatedLibrary()}
 
 
 def Findings(source, tables):
@@ -94,6 +95,24 @@ def testDeprecatedAndRemovedItemParameters(tables):
     assert any(text.startswith('ObjectContactCurveCircles(rotationMarker0=...): the parameter is removed') for text in found)
     assert "'parallel.multithreadedLLimitLoads' is deprecated since 1.12.244; use multithreadedLowerLimitLoads" in found
     assert len(found) == 5
+
+
+def testDeprecatedFunctionsAndArgumentsOfTheLibrary(tables):
+    """the declarations of exudyn.misc.deprecation (#2807): a function by its name, an argument as keyword of its
+    function, and bodyList, whose function is named at runtime, in any call"""
+    found = Findings('import exudyn as exu\nfrom exudyn.utilities import *\n'
+                     'import exudyn.graphics as graphics\n'
+                     'b = AddRigidBody(mbs, inertia, nodeType=exu.NodeType.RotationEulerParameters)\n'
+                     'g = graphics.BrickXYZ(0,0,0,1,1,1)\n'
+                     'GeneticOptimization(F, p, numberOfChildren=8)\n'
+                     'mbs.CreateSpringDamper(bodyList=[b0, b1])\n'
+                     'mbs.CreateSpringDamper(bodyNumbers=[b0, b1])\n', tables)
+    assert any(text.startswith("'AddRigidBody' is deprecated since 1.11.0 and removed in 2028; use mbs.CreateRigidBody")
+               for text in found)
+    assert any(text.startswith("'BrickXYZ' is deprecated") for text in found)
+    assert any(text.startswith('GeneticOptimization(numberOfChildren=...): the argument is deprecated') for text in found)
+    assert any(text.startswith('CreateSpringDamper(bodyList=...): the argument is deprecated') for text in found)
+    assert len(found) == 4
 
 
 def testTheWindowOfAViewIsNotTheDeprecatedWindow(tables):

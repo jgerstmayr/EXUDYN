@@ -332,6 +332,15 @@ definition and gets `deprecated=Deprecated(since, expires, advice='<what to do i
 `SetWithDictionary` and `SetParameter` warn when it is set other than its default, the page lists it below the table, and
 `exudev scripts` reports it (#2804, #2805). The library itself uses no deprecated name.
 
+A **function of the Python library** is decorated with `@Deprecated(since, expires, use='...')` from
+`exudyn.misc.deprecation`, and its docstring starts with `DEPRECATED`; an **argument** is reported where the function sees
+it, with `DeprecatedArgument(name, since, expires, use='...')`. A **function of the C++ module** gets
+`deprecated=Deprecated(since, expires)` in its `DefPyFunctionAccess` of `definitions/pybind*.py`, beside the
+`PyDeprecated` call in C++. `expires` is a year, five years after the deprecation unless decided otherwise.
+`tools/checkDeprecations.py` (in `exudev generate --all-checks`) fails for a deprecation whose year has come - it is
+removed then - and for one said in a text but not declared; the list of all of them is
+`docs/generated/deprecations.md` (#2807).
+
 ### 10.6 Writing the message
 
 - Say what is wrong and what to change, not that something is wrong.

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 234 | 1.12.252 |
+| 1.12 | Metheney | 235 | 1.12.253 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.253** `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` deprecations of the Python library declared like those of the C++, and a build check for expired ones (#2807)
+  - description: The Python library deprecates functions and arguments by hand - a docstring saying DEPRECATED, an exu.Print('WARNING: ...'), about 20 places (AddRevoluteJoint, bodyList of the Create functions, GeneticOptimization arguments, ...) - with no version, no year of removal and nothing that finds them. Proposal: one declaration with since and expires for every deprecation, the library warning through exudyn.special.deprecations, and a check in exudev generate --all-checks that lists all deprecations and fails for one past its year (maintainer 2026-10-03).
+  - **notes:** the deprecated functions and arguments of the Python library warn once per session at the line of the script and are counted in exudyn.sys\['deprecationUse'\]\['library'\]; every deprecation of Exudyn has a year of removal, and a build check fails once it has come
+  - date resolved: **2026-10-03 15:06**, date raised: 2026-10-03
 - **1.12.252** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Python-C++ command interface: the Exudyn module page in sections, the persisted settings a manual page, the environment variables a page of their own (#2808)
   - description: The module page had one section with every member; its groups (config, experimental, special and its parts, variables and sys) become sections from the definitions. The settings that persist between runs, with the plot windows of PlotSensor, move to the manual page userSettings.md; the environment variables become the last page of the chapter, after the type definitions (maintainer 2026-10-03).
   - **notes:** the Exudyn module page has a section per group of members; the settings that persist between runs are a page of the user manual, the environment variables the last page of the Python-C++ command interface

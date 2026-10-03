@@ -200,6 +200,7 @@ def Generate(options):
                   (['python', 'tools/checkHeadings.py', '--check'],       'checkHeadings'),
                   (['python', 'tools/checkTocs.py', '--check'],           'checkTocs'),
                   (['python', 'tools/checkIssues.py', '--check'],           'checkIssues'),
+                  (['python', 'tools/checkDeprecations.py', '--check'],     'checkDeprecations'),
                   (['python', 'tools/checkPython.py', '--check'],             'checkPython (ruff)'),
                   (['python', 'tools/checkPython.py', '--stubs', '--check'],  'checkPython (stubs)'),
                   (['pydoclint', '--config=pyproject.toml', 'python/exudyn'],  'pydoclint'),   #the CI job check_docstrings (#2747)

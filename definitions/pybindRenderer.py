@@ -17,6 +17,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 from pybindTypes import *
+from definitionTypes import Deprecated #every deprecated function: since and the year of removal (#2807)
 
 pb = PybindInterface()
 
@@ -80,6 +81,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='Attach', cName='Attach',
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='Detach', cName='Detach', 
+                        deprecated=Deprecated('1.11.0', 2028),
                         description="DEPRECATED; Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed",
                         returnType='bool',
                         )

@@ -100,6 +100,9 @@ stages = [
           ['python/Examples', 'python/TestModels'],
           ['docs/generated/examples', 'docs/generated/testModels',
            'docs/generated/abbreviations.md']),
+    #every deprecation with its year of removal, for the developer documentation (#2807)
+    Stage('tools/generators/deprecationsEmitter.py', ['definitions', 'python/exudyn'],
+          ['docs/generated/deprecations.md']),
     ]
 
 #deliberately NOT stages:

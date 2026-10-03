@@ -6,7 +6,7 @@
 (sec-item-objectjointrevolutez)=
 # ObjectJointRevoluteZ
 
-A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), [](#sec-rigidbodyutilities-addrevolutejoint), for two rigid bodies (or ground).
+A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use `mbs.CreateRevoluteJoint(...)` for two rigid bodies (or ground).
 
 ```{image} /docs/figures/RevoluteJointZ.png
 :width: 400

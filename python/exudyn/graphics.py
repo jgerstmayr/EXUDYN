@@ -22,6 +22,7 @@ from exudyn.rigidBodyUtilities import ComputeOrthonormalBasisVectors, Homogeneou
 import exudyn.graphicsDataUtilities as gdu
 
 from exudyn.advancedUtilities import IsEmptyList
+from exudyn.misc.deprecation import Deprecated #the deprecations of the library (#2807)
 
 #constants and fixed structures:
 import numpy as np #LoadSolutionFile
@@ -677,6 +678,7 @@ def Cuboid(pList, color=[0.,0.,0.,1.], faces=[1,1,1,1,1,1], addNormals=False, ad
     return data
 
 
+@Deprecated('1.11.0', 2028, use='graphics.Brick(centerPoint, size)')
 @_ReturnsRows
 def BrickXYZ(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.], addNormals=False, addEdges=False, edgeColor=color.black, addFaces=True): 
     """generate graphics data for orthogonal 3D block with min and max dimensions
@@ -728,7 +730,7 @@ def Brick(centerPoint=[0,0,0], size=[0.1,0.1,0.1], color=[0.,0.,0.,1.], addNorma
         yMax = centerPoint[1] + 0.5*size[1]
         zMax = centerPoint[2] + 0.5*size[2]
     
-        gBox = BrickXYZ(xMin, yMin, zMin, xMax, yMax, zMax, color, 
+        gBox = BrickXYZ.__wrapped__(xMin, yMin, zMin, xMax, yMax, zMax, color, 
                          addNormals=addNormals, addEdges=addEdges, edgeColor=edgeColor, addFaces=addFaces)
         # if addEdges:
         #     gBox['edgeColor'] = np.array(edgeColor)

@@ -18,6 +18,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 from pybindTypes import *
+from definitionTypes import Deprecated #every deprecated function: since and the year of removal (#2807)
 
 pb = PybindInterface()
 
@@ -151,6 +152,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='SetAllZero', cName='SetAllZero',
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SetWithSparseMatrixCSR', cName='SetWithSparseMatrixCSR', 
                         argList=['numberOfRowsInit', 'numberOfColumnsInit', 'pyArrayCSR', 'useDenseMatrix','factor'],
                         defaultArgs=['','','','False','1.'],
+                        deprecated=Deprecated('1.11.0', 2028),
                         description="DEPRECATED: set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix; the values of pyArrayCSR are multiplied by the given factor",
                         argTypes=['int','int',sparseMatrixType,'bool','float'],
                         returnType='None',

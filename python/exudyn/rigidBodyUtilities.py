@@ -14,6 +14,7 @@
 
 #constants and fixed structures:
 from exudyn.misc.docmeta import docmeta
+from exudyn.misc.deprecation import Deprecated #the deprecations of the library (#2807)
 import numpy as np #LoadSolutionFile
 import exudyn.itemInterface as eii
 import exudyn as exu 
@@ -1537,6 +1538,7 @@ def GetRigidBodyNode(nodeType,
     return nodeItem
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@Deprecated('1.11.0', 2028, use='mbs.CreateRigidBody')
 def AddRigidBody(mainSys, inertia, 
                  nodeType = exu.NodeType.RotationEulerParameters, 
                  position=[0,0,0], velocity=[0,0,0], 
@@ -1635,6 +1637,7 @@ def _MarkerWithRotation(mbs, marker, rotation):
     return (mbs.AddMarker(data), np.eye(3))
 
 
+@Deprecated('1.11.0', 2028, use='mbs.CreateRevoluteJoint')
 def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
                      showJoint=True, axisRadius=0.1, axisLength=0.4):
     """DEPRECATED (use MainSystem function instead): add revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -1654,7 +1657,6 @@ def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True,
         DEPRECATED and will be removed; use MainSystem.CreateRevoluteJoint(...) instead!
     """
 
-    exu.Print('WARNING: AddRevoluteJoint is deprecated; use mbs.CreateRevoluteJoint instead!')
     
     #perform some checks:
     if not IsValidObjectIndex(body0):
@@ -1723,6 +1725,7 @@ def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True,
     return [oJoint, mBody0, mBody1]
 
 
+@Deprecated('1.11.0', 2028, use='mbs.CreatePrismaticJoint')
 def AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame=True, 
                      showJoint=True, axisRadius=0.1, axisLength=0.4):
     """DEPRECATED (use MainSystem function instead): add prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
@@ -1742,7 +1745,6 @@ def AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame=True,
         DEPRECATED and will be removed; use MainSystem.CreatePrismaticJoint(...) instead!
     """
 
-    exu.Print('WARNING: AddPrismaticJoint is deprecated; use mbs.CreateRevoluteJoint instead!')
         
     if not IsValidObjectIndex(body0):
         RaiseTypeError(where='AddPrismaticJoint', argumentName='body0', received = body0, expectedType = ExpectedType.ObjectIndex)

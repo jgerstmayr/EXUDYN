@@ -16,6 +16,7 @@
 
 #import exudyn #does not work out of exudyn.__init__.py
 from exudyn.misc.docmeta import docmeta
+from exudyn.misc.deprecation import DeprecatedArgument #the deprecations of the library (#2807)
 import exudyn as exu
 from exudyn.misc.extensionRegistry import extends, install
 import exudyn.plot
@@ -186,7 +187,8 @@ def ProcessBodyNodeMarkerLists(bodyNumbers, bodyOrNodeList, localPosition0, loca
         bodyOrNodeList = [bodyNumbers[0],bodyNumbers[1]] #flat copy, but otherwise would lead to change of args (mutable args!)
         causingArgName = 'bodyNumbers'
     elif IsNotNone(bodyList[0]) or IsNotNone(bodyList[1]):
-        exu.Print('WARNING: bodyList in MainSystem Create functions is deprecated; use bodyNumbers instead!')
+        #reported for the Create function, one stack level further up than the helper
+        DeprecatedArgument('bodyList', '1.11.0', 2028, use='bodyNumbers', function=where.replace('(...)', ''), stackLevel=4)
         bodyOrNodeList = [bodyList[0],bodyList[1]] #flat copy, but otherwise would lead to change of args (mutable args!)
         causingArgName = 'bodyList'
 

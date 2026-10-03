@@ -14,7 +14,7 @@ includes functionality like mesh manipulation and some helper functions
 (sec-graphicsdatautilities-switchtripletorder)=
 ## Function: SwitchTripletOrder
 
-[`SwitchTripletOrder(vector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L95)
+[`SwitchTripletOrder(vector)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L96)
 
 - **function description**: helper function to switch order of three items in a list; mostly used for reverting normals in triangles
 - **input**: 3D vector as list or as np.array
@@ -24,7 +24,7 @@ includes functionality like mesh manipulation and some helper functions
 (sec-graphicsdatautilities-computetrianglenormal)=
 ## Function: ComputeTriangleNormal
 
-[`ComputeTriangleNormal(p0, p1, p2)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L110)
+[`ComputeTriangleNormal(p0, p1, p2)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L111)
 
 - **function description**: compute normalized normal for 3 triangle points
 - **input**: 3D vector as list or as np.array
@@ -34,7 +34,7 @@ includes functionality like mesh manipulation and some helper functions
 (sec-graphicsdatautilities-computetrianglearea)=
 ## Function: ComputeTriangleArea
 
-[`ComputeTriangleArea(p0, p1, p2)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L128)
+[`ComputeTriangleArea(p0, p1, p2)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L129)
 
 - **function description**: compute area of triangle given by 3 points
 - **input**: 3D vector as list or as np.array
@@ -44,7 +44,7 @@ includes functionality like mesh manipulation and some helper functions
 (sec-graphicsdatautilities-compute6nodetrigsnormals)=
 ## Function: Compute6NodeTrigsNormals
 
-[`Compute6NodeTrigsNormals(elementNodes)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L140)
+[`Compute6NodeTrigsNormals(elementNodes)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L141)
 
 - **function description**: Internal function: compute normals to 6-node triangular surface given by elementNodes input: elementNodes given as np.array with 6 node vectors in rows; node ordering must follow Netgen order, see the local coordinates in the function
 - **output**: returns np.array with 6 normals in rows
@@ -53,7 +53,7 @@ includes functionality like mesh manipulation and some helper functions
 (sec-graphicsdatautilities-refinemesh)=
 ## Function: RefineMesh
 
-[`RefineMesh(points, triangles)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L211)
+[`RefineMesh(points, triangles)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L212)
 
 - **function description**: refine triangle mesh; every triangle is subdivided into 4 triangles
 - **input**:
@@ -69,7 +69,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`particleClu
 (sec-graphicsdatautilities-shrinkmeshnormaltosurface)=
 ## Function: ShrinkMeshNormalToSurface
 
-[`ShrinkMeshNormalToSurface(points, triangles, distance)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L268)
+[`ShrinkMeshNormalToSurface(points, triangles, distance)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L269)
 
 - **function description**: shrink mesh using triangle normals; every point is at least moved a distance 'distance' normal from boundary
 - **input**:
@@ -86,7 +86,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`generalCont
 (sec-graphicsdatautilities-computetriangularmesh)=
 ## Function: ComputeTriangularMesh
 
-[`ComputeTriangularMesh(vertices, segments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L305)
+[`ComputeTriangularMesh(vertices, segments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L306)
 
 - **function description**: helper function to compute triangular mesh from list of vertices (=points) and segments; computes triangular meshes for non-convex case. In order to make it efficient, it first computes neighbors and then defines triangles at segments to be inside/outside. Finally neighboring relations are used to define all triangles inside/outside finally only returns triangles that are inside the segments
 - **input**:
@@ -111,7 +111,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`generalCont
 (sec-graphicsdatautilities-segmentsfrompoints)=
 ## Function: SegmentsFromPoints
 
-[`SegmentsFromPoints(points, pointIndexOffset = 0, invert = False, closeCurve = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L397)
+[`SegmentsFromPoints(points, pointIndexOffset = 0, invert = False, closeCurve = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L398)
 
 - **function description**: convert point list into segments (indices to points); point indices start with pointIndexOffset
 - **input**:
@@ -123,7 +123,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`generalCont
 (sec-graphicsdatautilities-circlepointsandsegments)=
 ## Function: CirclePointsAndSegments
 
-[`CirclePointsAndSegments(center = [0,0], radius = 0.1, invert = False, pointIndexOffset = 0, nTiles = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L424)
+[`CirclePointsAndSegments(center = [0,0], radius = 0.1, invert = False, pointIndexOffset = 0, nTiles = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L425)
 
 - **function description**: create points and segments, used in SolidExtrusion(...) for circle with given parameters
 - **input**:
@@ -139,7 +139,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`generalCont
 (sec-graphicsdatautilities-graphicsdatarectangle)=
 ## Function: GraphicsDataRectangle
 
-[`GraphicsDataRectangle(xMin, yMin, xMax, yMax, color = [0.,0.,0.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L459)
+[`GraphicsDataRectangle(xMin, yMin, xMax, yMax, color = [0.,0.,0.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L461)
 
 - **function description**: generate graphics data for 2D rectangle
 - **input**: minimal and maximal cartesian coordinates in (x/y) plane; color provided as list of 4 RGBA values
@@ -153,9 +153,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`particleClu
 (sec-graphicsdatautilities-graphicsdataorthocubelines)=
 ## Function: GraphicsDataOrthoCubeLines
 
-[`GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color = [0.,0.,0.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L480)
+[`GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color = [0.,0.,0.,1.])`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/graphicsDataUtilities.py#L483)
 
 - **function description**: generate graphics data for orthogonal block drawn with lines
 - **input**: minimal and maximal cartesian coordinates for orthogonal cube; color provided as list of 4 RGBA values
 - **output**: graphicsData dictionary, to be used in visualization of EXUDYN objects
-- **notes**: DEPRECATED: use graphics.BrickXYZ(xMin, yMin, zMin, xMax, yMax, zMax, addFaces=False, addEdges=True, edgeColor=color)
+- **notes**: DEPRECATED: use graphics.Brick(centerPoint, size, addFaces=False, addEdges=True, edgeColor=color)

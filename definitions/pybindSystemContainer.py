@@ -17,6 +17,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 from pybindTypes import *
+from definitionTypes import Deprecated #every deprecated function: since and the year of removal (#2807)
 
 pb = PybindInterface()
 
@@ -99,12 +100,14 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='SetDictionary', cName='SetDictio
 #keep for compatibility until mid 2027:
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetRenderState', cName='PyGetRenderState', 
+                        deprecated=Deprecated('1.11.0', 2028),
                         description="DEPRECATED; Get dictionary with current render state (openGL zoom, modelview, etc.); will have no effect if GLFW_GRAPHICS is deactivated",
                         returnType='dict',
                         addDocu=False,
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SetRenderState', cName='PySetRenderState', 
+                        deprecated=Deprecated('1.11.0', 2028),
                         description="DEPRECATED; Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState; waitForRendererFullStartup is used to wait at startup for the first frame to be drawn (and zoom all to be set), but be be set False in case of performance issues; will have no effect if GLFW_GRAPHICS is deactivated",
                         argList=['renderState','waitForRendererFullStartup'],
                         argTypes=['dict','bool'],
@@ -114,42 +117,49 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='SetRenderState', cName='PySetRen
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='RedrawAndSaveImage', cName='RedrawAndSaveImage', 
+                        deprecated=Deprecated('1.11.0', 2028),
                         description="DEPRECATED; Redraw openGL scene and save image (command waits until process is finished)",
                         returnType='None',
                         addDocu=False,
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='WaitForRenderEngineStopFlag', cName='WaitForRenderEngineStopFlag', 
+                        deprecated=Deprecated('1.11.0', 2028),
                         description="DEPRECTED; Wait for user to stop render engine (Press 'Q' or Escape-key); this command is used to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as mbs.WaitForUserToContinue()",
                         returnType='bool',
                         addDocu=False,
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='RenderEngineZoomAll', cName='PyZoomAll', 
+                        deprecated=Deprecated('1.11.0', 2028),
                         description="DEPRECATED; Send zoom all signal, which will perform zoom all at next redraw request",
                         returnType='None',
                         addDocu=False,
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AttachToRenderEngine', cName='AttachToRenderEngine', 
+                        deprecated=Deprecated('1.11.0', 2028),
                         description="DEPRECATED; Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked)",
                         returnType='bool',
                         addDocu=False,
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='DetachFromRenderEngine', cName='DetachFromRenderEngine', 
+                        deprecated=Deprecated('1.11.0', 2028),
                         description="DEPRECATED; Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed",
                         returnType='bool',
                         addDocu=False,
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='SendRedrawSignal', cName='SendRedrawSignal', 
+                        deprecated=Deprecated('1.11.0', 2028),
                         description="DEPRECATED; This function is used to send a signal to the renderer that all MainSystems (mbs) shall be redrawn",
                         returnType='None',
                         addDocu=False,
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetCurrentMouseCoordinates', cName='PyGetCurrentMouseCoordinates', 
+                        deprecated=Deprecated('1.11.0', 2028),
                         description="DEPRECATED; Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane",
                         argList=['useOpenGLcoordinates'],
                         argTypes=['bool'],

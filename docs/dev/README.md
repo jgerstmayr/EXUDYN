@@ -32,6 +32,7 @@ Developer-facing notes. Users start at [`README.rst`](https://github.com/jgerstm
 /docs/dev/WORKFLOW
 /docs/dev/NEW_ITEM
 /docs/dev/GUI_MANUAL_CHECK
+/docs/generated/deprecations
 /definitions/README
 /tools/generators/README
 /tools/exudev/README

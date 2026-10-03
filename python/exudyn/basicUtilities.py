@@ -20,6 +20,7 @@ import os   #for the output file paths
 import numpy as np
 import exudyn
 from exudyn.itemInterface import MarkerBodyRigid, VMarkerBodyRigid, SensorUserFunction
+from exudyn.misc.deprecation import Deprecated #the deprecations of the library (#2807)
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
@@ -253,8 +254,8 @@ def GetJointArgs(mbs, markerNumber0=None, markerNumber1=None,
         mbs: multibody system where new marker is added to
         markerNumber0: markerNumber of existing rigid body marker
         markerNumber1: markerNumber of existing rigid body marker
-        rotationMarker0: joint marker rotation matrix for markerNumber0 (must be MarkerBodyRigid); deprecated as the joints' rotationMarker0: better give the rotation to markerNumber0 as its localHT
-        rotationMarker1: joint marker rotation matrix for markerNumber1 (must be MarkerBodyRigid); deprecated, as rotationMarker0
+        rotationMarker0: rotation of the joint frame relative to the frame of markerNumber0; the joint then takes a copy of the marker turned by it
+        rotationMarker1: the same for markerNumber1
         bodyNumber0: existing body used to create new marker
         bodyNumber1: existing body used to create new marker
 
@@ -391,7 +392,7 @@ def HighlightItem(SC, mbs, itemNumber, itemType=exudyn.ItemType.Object, showNumb
 
 
 def UFsensorRecord(mbs, t, sensorNumbers, factors, configuration):
-    """DEPRECATED: Internal SensorUserFunction, used in function AddSensorRecorder
+    """Internal SensorUserFunction of the deprecated function AddSensorRecorder
 
     Note:
         Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
@@ -408,6 +409,7 @@ def UFsensorRecord(mbs, t, sensorNumbers, factors, configuration):
     return val #return value usually not used further
 
 
+@Deprecated('1.11.0', 2028, use='a sensor with storeInternal=True')
 def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutputSize=3):
     """DEPRECATED: Add a SensorUserFunction object in order to record sensor output internally; this avoids creation of files for sensors, which can speedup and simplify evaluation in ParameterVariation and GeneticOptimization; values are stored internally in mbs.variables['sensorRecord'+str(sensorNumber)] where sensorNumber is the mbs sensor number
 
@@ -424,7 +426,6 @@ def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutp
     Note:
         Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
     """
-    exudyn.Print('WARNING: AddSensorRecorder is DEPRECATED, use sensors and set storeInternal=True to achieve similar functionality')
     nSteps = int(endTime/sensorsWritePeriod)
     mbs.variables['sensorRecord'+str(sensorNumber)] = np.zeros((nSteps+1,1+sensorOutputSize)) #time+3 sensor values
 

@@ -12487,7 +12487,7 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 5;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    overallDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), [](#sec-rigidbodyutilities-addrevolutejoint), for two rigid bodies (or ground). 
+    overallDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use `mbs.CreateRevoluteJoint(...)` for two rigid bodies (or ground). 
 
 ```{image} /docs/figures/RevoluteJointZ.png
 :width: 400
@@ -12705,7 +12705,7 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 5;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    overallDescription=r"""A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), [](#sec-rigidbodyutilities-addprismaticjoint), for two rigid bodies (or ground). 
+    overallDescription=r"""A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use `mbs.CreatePrismaticJoint(...)` for two rigid bodies (or ground). 
 
 ```{image} /docs/figures/PrismaticJointX.png
 :width: 400

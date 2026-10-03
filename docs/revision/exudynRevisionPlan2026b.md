@@ -2060,8 +2060,8 @@ deprecated name** (#2804). The warning about
   names that line all the same.
 
 <a id="rg12-33"></a>
-**RG12.33** *(group RG12; maintainer 2026-10-03: "deprecation also in the library ... outdated parameters rejected by
-some build check"; **proposal, waits for the maintainer's decision**)* **Deprecations of the Python library, declared
+**RG12.33** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg12-33) *(group RG12; maintainer 2026-10-03:
+"deprecation also in the library ... outdated parameters rejected by some build check"; proposal **accepted** 2026-10-03)* **Deprecations of the Python library, declared
 and checked** (#2807). The C++ side declares each deprecation with `Deprecated(since, expires)` in `definitions/`; the
 Python library does it by hand - a docstring saying DEPRECATED, an `exu.Print('WARNING: ...')` - about 20 places
 (`AddRevoluteJoint`, `AddPrismaticJoint`, `AddRigidBody`, `AddSensorRecorder`, `bodyList` and `eulerParametersRef` of
@@ -2749,7 +2749,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG16.6 | #2809 | `exu.HT` as the place for rigid body transformations: the proposal for its functions and names |
 | RG16.7 | #2810 | `exu.HT` as decided in RG16.6, with examples in its documentation and a test model |
 | RG17.1 | #2811 | notebooks for tutorials and examples: the evaluation |
-| RG12.33 | #2807 | deprecations of the Python library declared like the C++ ones, and a build check for expired ones: a proposal |
 | RG12.31 | #2802 | settings and item parameters that could be renamed: a list for the maintainer's decision |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |

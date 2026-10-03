@@ -14,6 +14,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 from exudyn.misc.docmeta import docmeta
+from exudyn.misc.deprecation import Deprecated #the deprecations of the library (#2807)
 import numpy as np
 import exudyn
 import exudyn.graphics as graphics
@@ -627,6 +628,7 @@ def LinkDict2Robot(robotLinkDict, robotClass=None):
 
 
 @docmeta(author='Martin Sereinig')
+@Deprecated('1.11.0', 2028, use='LinkDict2Robot')
 def LinkDictModDHKK2Robot(robotLinkDict, robotClass=None):
     """special test function to generate serial manipulator as robotClass object from robotLinkDict using inertia parameters defined in stdDH coordinates, but creating robot from modDHKK; will be ERASED in future
 

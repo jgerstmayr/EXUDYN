@@ -12325,3 +12325,51 @@ references to `sec-overridesettings` (three descriptions of `visualizationSettin
 **The environment variables** are the last page of the chapter, after the type definitions:
 `definitions/pybindEnvironment.py`, replayed by `pybindEmitter` after the enums, label `sec-environmentvariables`
 unchanged.
+
+<a id="rg12-33"></a>
+### RG12.33 — deprecations of the Python library, declared and checked (2026-10-03, #2807)
+
+**The library**: `exudyn.misc.deprecation` - the decorator `Deprecated(since, expires, use)` and
+`DeprecatedArgument(name, since, expires, use, function=None, stackLevel=3)`; both report through
+`exu.special.deprecations.Warn('library', ...)`, so once per session, at the user's line (the stack levels are chosen
+for that: 2 from the decorator, 3 from a function that sees the argument, 4 for `bodyList`, which a helper of the
+`Create...` functions handles and reports under the name of the calling function), and counted in
+`deprecationUse['library']`. The docstring keeps its `DEPRECATED` as before - the reference manual reads it statically -
+and the check makes sure declaration and docstring agree. Declared: `AddRigidBody`, `AddRevoluteJoint`,
+`AddPrismaticJoint`, `AddSensorRecorder`, `GenerateStraightLineANCFCable2D`, `GenerateStraightLineANCFCable`,
+`GenerateStraightBeam` (all three now name `GenerateBeamElementsAlongLine`; the first two named `GenerateStraightBeam`,
+itself deprecated), `CSRtoScipySparseCSR`, `ReadNodesFromAbaqusInp` (got a docstring), `graphics.BrickXYZ`,
+`GraphicsDataRectangle`, `GraphicsDataOrthoCubeLines` (now names `graphics.Brick`, not the deprecated `BrickXYZ`),
+`LinkDictModDHKK2Robot`; the arguments `bodyList` (four `Create...` functions), `eulerParametersRef` of
+`AddObjectFFRFreducedOrderWithUserFunctions`, `numberOfChildren` and `survivingIndividuals` of
+`GeneticOptimization`. The hand-written `exu.Print('WARNING: ... deprecated')` of these are gone. Where the library
+calls one of them itself (`Brick` calls `BrickXYZ`, the cable generators `GenerateStraightBeam`) it calls
+`__wrapped__`, so the library does not warn; `@Deprecated` is the outermost decorator for that.
+
+**The C++ module**: the 26 functions whose description says DEPRECATED have `deprecated=Deprecated('1.11.0', 2028)` in
+`definitions/pybind*.py` (`DefPyFunctionAccess` takes it and adds the year to the description); the C++ warnings stay
+where they are and are checked against the declarations. `ZoomAll` was the wrong name in the warning of
+`RenderEngineZoomAll`; `systemData.GetCurrentTime` and `SetVisualizationTime` warned from two C++ functions bound
+nowhere, removed.
+
+**The years**: this repository's history begins at 1.11.0, so the version of what was deprecated earlier is `1.11.0`,
+and their year of removal **2028** (my choice, for the maintainer to confirm: two years from now, as they have been
+deprecated for some time already; the rule for new deprecations stays five years).
+
+**The check**: `tools/generators/deprecationModel.py` collects all 151 deprecations - settings 98, item parameters 10,
+functions of C++ 26, library 17 - from the definitions and by parsing `python/exudyn`, and finds what is inconsistent: a
+docstring or a description saying DEPRECATED without a declaration, a declaration without version or year, a C++
+warning for an undeclared function. `tools/checkDeprecations.py` (in `exudev generate --all-checks`) fails for these and
+for a deprecation whose year has come, and warns in its last year; `deprecationsEmitter.py` writes
+`docs/generated/deprecations.md`, a page of the developer documentation. **`exudev scripts`** reads the library's
+deprecations from the same model: a deprecated function by its name, an argument as keyword of its function (`bodyList`,
+named at runtime, in any call). Over Examples, TestModels and MiniExamples it now reports 67 findings in 66 scripts,
+most of them `BrickXYZ` and `GenerateStraightLineANCFCable2D`.
+
+**Not declared** (said "deprecated" in a comment only, to be decided): the functions under `# old functions deprecated`
+in `robotics/mobile.py` (`MecanumXYphi2WheelVelocities`, `MecanumWheelVelocity2XYphi`, exported and without a word in
+their docstrings), the `'NPY'` mode of the FEM file functions (a value, not an argument).
+
+**Tests**: test model `libraryDeprecationTest.py` (`BrickXYZ` once and three times, `Brick` recording nothing, `bodyList`
+reported for `CreateSpringDamper` at the script's line); `test_checkDeprecations.py` (every source, nothing
+inconsistent, the year logic and the exit code); `test_checkUserScripts.py` gets the library.

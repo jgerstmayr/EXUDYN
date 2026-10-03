@@ -23,6 +23,7 @@
 
 #constants and fixed structures:
 import numpy as np #LoadSolutionFile
+from exudyn.misc.deprecation import Deprecated #the deprecations of the library (#2807)
 import copy as copy #to be able to copy e.g. lists
 from math import pi, sin, cos
 
@@ -456,6 +457,7 @@ def CirclePointsAndSegments(center=[0,0], radius=0.1, invert = False, pointIndex
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 #************************************************
+@Deprecated('1.11.0', 2028, use='graphics.Lines with the five corner points')
 def GraphicsDataRectangle(xMin, yMin, xMax, yMax, color=[0.,0.,0.,1.]): 
     """generate graphics data for 2D rectangle
 
@@ -477,6 +479,7 @@ def GraphicsDataRectangle(xMin, yMin, xMax, yMax, color=[0.,0.,0.,1.]):
     return dataRect
 
 #************************************************
+@Deprecated('1.11.0', 2028, use='graphics.Brick(centerPoint, size, addFaces=False, addEdges=True)')
 def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,0.,1.]): 
     """generate graphics data for orthogonal block drawn with lines
 
@@ -487,8 +490,7 @@ def GraphicsDataOrthoCubeLines(xMin, yMin, zMin, xMax, yMax, zMax, color=[0.,0.,
         graphicsData dictionary, to be used in visualization of EXUDYN objects
 
     Note:
-        DEPRECATED: use graphics.BrickXYZ(xMin, yMin, zMin, xMax, yMax, zMax, addFaces=False, addEdges=True,
-        edgeColor=color)
+        DEPRECATED: use graphics.Brick(centerPoint, size, addFaces=False, addEdges=True, edgeColor=color)
     """
 
     dataRect = {'type':'Line', 'color': list(color), 'data':[xMin,yMin,zMin, xMin,yMax,zMin, xMin,yMin,zMin, xMax,yMin,zMin, xMax,yMax,zMin, xMax,yMin,zMin, 

@@ -14,6 +14,7 @@
 
 #constants and fixed structures:
 from exudyn.misc.docmeta import docmeta
+from exudyn.misc.deprecation import Deprecated, DeprecatedArgument #the deprecations of the library (#2807)
 import exudyn as exu
 from exudyn.basicUtilities import CreateDirectoryForFile #every writer creates its directory (#2493)
 import exudyn.itemInterface as eii
@@ -166,6 +167,7 @@ def CSRtoRowsAndColumns(sparseMatrixCSR):
 
 
 warnedCSRtoScipySparseCSR = False #add warning if this function is used with old format!
+@Deprecated('1.11.0', 2028, use='SparseTripletsToScipySparseCSR')
 def CSRtoScipySparseCSR(sparseMatrixCSR):
     """DEPRECATED: convert internal compressed CSR to scipy.sparse csr matrix; should not be used and raises warning; use SparseTripletsToScipySparseCSR instead!
     """
@@ -298,13 +300,19 @@ def FileNameToMode(fileName, mode):
 
 
 
-#DEPRECATED!
-#read abaqus nodes information to numpy array
-#typeName is Part or Instance; name is part's or instance's name
-#if exportElement=False: returns np.array(nodes) with nodal coordinates
-#if exportElements=True: returns a list [np.array(nodes), elementsDict, surfaceElementsDict] with information on types of elements
+@Deprecated('1.11.0', 2028, use='FEMinterface.ImportFromAbaqusInputFile')
 def ReadNodesFromAbaqusInp(fileName, typeName='Part', name='Part-1', exportElements=False):
-    exu.Print("\n********************WARNING:\nFUNCTION ReadNodesFromAbaqusInp is deprecated; use FEMinterface!\n********************\n")
+    """DEPRECATED: read the nodes of an Abaqus input file into a numpy array; use FEMinterface.ImportFromAbaqusInputFile
+
+    Args:
+        fileName: name of the Abaqus input file
+        typeName: 'Part' or 'Instance'
+        name: the name of the part or instance
+        exportElements: if True, the elements are returned as well
+
+    Returns:
+        np.array(nodes) with the nodal coordinates; if exportElements=True, [np.array(nodes), elementsDict, surfaceElementsDict]
+    """
     fileLines = []
     try: #still close file if crashes
         file=open(fileName,'r') 
@@ -1594,6 +1602,7 @@ class ObjectFFRFreducedOrderInterface:
         nameNodeGeneric = '' if name=='' else 'NodeGeneric:'+name
         
         if len(eulerParametersRef) != 0:
+            DeprecatedArgument('eulerParametersRef', '1.11.0', 2028, use='rotationMatrixRef')
             if str(self.rigidBodyNodeType) != 'NodeType.RotationEulerParameters':
                 raise ValueError('AddObjectFFRFreducedOrderWithUserFunctions: inconsistent reference rotation parameters and rigidBodyNodeType')
             #compute initial euler parameter velocities from angular velocity vector

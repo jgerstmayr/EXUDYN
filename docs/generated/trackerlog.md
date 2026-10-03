@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.252.dev1
+- Exudyn version = 1.12.253.dev1
 - last change = 2026-10-03
 - Number of issues = 2812
-- Number of resolved issues = 2566 (252 in current version)
+- Number of resolved issues = 2567 (253 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7576,10 +7576,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-10-03
 - `DOCU` `LOW EFF` `raised by: Claude-JG` exu.HT as the place for rigid body transformations: a proposal for its functions and names (#2809)
   - description: The coordinates of the rigid body nodes from and to an HT (position with Euler parameters, Tait-Bryan angles Rxyz or rotation vector), more functions that nodes, markers and items need, and the names of the class (translation or position) - for the maintainer's decision (2026-10-03).
-  - date raised: 2026-10-03
-- `IMPROVEMENT` `MEDIUM EFF` `raised by: Claude-JG` deprecations of the Python library declared like those of the C++, and a build check for expired ones (#2807)
-  - description: The Python library deprecates functions and arguments by hand - a docstring saying DEPRECATED, an exu.Print('WARNING: ...'), about 20 places (AddRevoluteJoint, bodyList of the Create functions, GeneticOptimization arguments, ...) - with no version, no year of removal and nothing that finds them. Proposal: one declaration with since and expires for every deprecation, the library warning through exudyn.special.deprecations, and a check in exudev generate --all-checks that lists all deprecations and fails for one past its year (maintainer 2026-10-03).
-  - **remarks:** proposal in plan step RG12.33, waits for the maintainer's decision
   - date raised: 2026-10-03
 - `DOCU` `LOW EFF` `raised by: Claude-JG` settings and item parameters that could be renamed or restructured, for the maintainer's decision (#2802)
   - description: maintainer 2026-10-03: search simulation settings and item parameter names that could be renamed or restructured; listed as revision2026b step RG12.31 for decision.

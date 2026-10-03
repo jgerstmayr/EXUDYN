@@ -57,31 +57,31 @@ def Help() -> None:
     ...
 @overload
 def StartRenderer(verbose=0, deprecationWarning=True) -> bool: 
-    """DEPRECATED; Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g., Spyder."""
+    """DEPRECATED; Start OpenGL rendering engine (in separate thread) for visualization of rigid or flexible multibody system; use verbose=1 to output information during OpenGL window creation; verbose=2 produces more output and verbose=3 gives a debug level; some of the information will only be seen in windows command (powershell) windows or linux shell, but not inside iPython of e.g., Spyder; removed in 2028."""
     ...
 @overload
 def StopRenderer(deprecationWarning=True) -> None: 
-    """DEPRECATED; Stop OpenGL rendering engine."""
+    """DEPRECATED; Stop OpenGL rendering engine; removed in 2028."""
     ...
 @overload
 def IsRendererActive(deprecationWarning=True) -> bool: 
-    """DEPRECATED; returns True if GLFW renderer is available and running; otherwise False."""
+    """DEPRECATED; returns True if GLFW renderer is available and running; otherwise False; removed in 2028."""
     ...
 @overload
 def DoRendererIdleTasks(waitSeconds=0, deprecationWarning=True) -> None: 
-    """DEPRECATED; Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g., waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed."""
+    """DEPRECATED; Call this function in order to interact with Renderer window; use waitSeconds in order to run this idle tasks while animating a model (e.g., waitSeconds=0.04), use waitSeconds=0 without waiting, or use waitSeconds=-1 (default) to wait until window is closed; removed in 2028."""
     ...
 @overload
 def SolveStatic(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), updateInitialValues=False, storeSolver=True) -> bool: 
-    """DEPRECATED; Static solver function, mapped from module `solver`, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see sec-mainsystemextensions-solvestatic; for background on solvers, see sec-solvers."""
+    """DEPRECATED; Static solver function, mapped from module `solver`, to solve static equations (without inertia terms) of constrained rigid or flexible multibody system; for details on the Python interface see sec-mainsystemextensions-solvestatic; for background on solvers, see sec-solvers; removed in 2028."""
     ...
 @overload
 def SolveDynamic(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), solverType: DynamicSolverType=exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues=False, storeSolver=True) -> bool: 
-    """DEPRECATED; Dynamic solver function, mapped from module `solver`, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see sec-mainsystemextensions-solvedynamic; for background on solvers, see sec-solvers."""
+    """DEPRECATED; Dynamic solver function, mapped from module `solver`, to solve equations of motion of constrained rigid or flexible multibody system; for details on the Python interface see sec-mainsystemextensions-solvedynamic; for background on solvers, see sec-solvers; removed in 2028."""
     ...
 @overload
 def ComputeODE2Eigenvalues(mbs: MainSystem, simulationSettings: SimulationSettings=exudyn.SimulationSettings(), useSparseSolver=False, numberOfEigenvalues=-1, setInitialValues=True, convert2Frequencies=False) -> bool: 
-    """DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module `solver`; for details on the Python interface see sec-mainsystemextensions-computeode2eigenvalues."""
+    """DEPRECATED; Simple interface to scipy eigenvalue solver for eigenvalue analysis of the second order differential equations part in mbs, mapped from module `solver`; for details on the Python interface see sec-mainsystemextensions-computeode2eigenvalues; removed in 2028."""
     ...
 @overload
 def RequireVersion(requiredVersionString: str) -> None: 
@@ -110,31 +110,31 @@ def Print() -> None:
     ...
 @overload
 def SetOutputPrecision(numberOfDigits: int) -> None: 
-    """DEPRECATED; use set exudyn.config.precision instead."""
+    """DEPRECATED; use set exudyn.config.precision instead; removed in 2028."""
     ...
 @overload
 def SetLinalgOutputFormatPython(flagPythonFormat: bool) -> None: 
-    """DEPRECATED; True: use Python format for output of vectors and matrices; False: use Matlab format."""
+    """DEPRECATED; True: use Python format for output of vectors and matrices; False: use Matlab format; removed in 2028."""
     ...
 @overload
 def GetVersionString(addDetails=False) -> str: 
-    """DEPRECATED; Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.; the Python micro version may differ from that you are working with; AVX2 shows that you are running a AVX2 compiled version)."""
+    """DEPRECATED; Get Exudyn built version as string (if addDetails=True, adds more information on compilation Python version, platform, etc.; the Python micro version may differ from that you are working with; AVX2 shows that you are running a AVX2 compiled version); removed in 2028."""
     ...
 @overload
 def SetPrintDelayMilliSeconds(delayMilliSeconds: int) -> None: 
-    """DEPRECATED; add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0."""
+    """DEPRECATED; add some delay (in milliSeconds) to printing to console, in order to let Spyder process the output; default = 0; removed in 2028."""
     ...
 @overload
 def SuppressWarnings(flag: bool) -> None: 
-    """DEPRECATED; set flag to suppress (=True) or enable (=False) warnings."""
+    """DEPRECATED; set flag to suppress (=True) or enable (=False) warnings; removed in 2028."""
     ...
 @overload
 def InfoStat(writeOutput=True) -> List[int]: 
-    """DEPRECATED; Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag."""
+    """DEPRECATED; Retrieve list of global information on memory allocation and other counts as list:[array_new_counts, array_delete_counts, vector_new_counts, vector_delete_counts, matrix_new_counts, matrix_delete_counts, linkedDataVectorCast_counts]; May be extended in future; if writeOutput==True, it additionally prints the statistics; counts for new vectors and matrices should not depend on numberOfSteps, except for some objects such as ObjectGenericODE2 and for (sensor) output to files; Not available if code is compiled with __FAST_EXUDYN_LINALG flag; removed in 2028."""
     ...
 @overload
 def SetWriteToConsole(flag: bool) -> None: 
-    """DEPRECATED; set flag to write (True) or not write to console; default = True."""
+    """DEPRECATED; set flag to write (True) or not write to console; default = True; removed in 2028."""
     ...
 @overload
 def InvalidIndex() -> int: 
@@ -628,7 +628,7 @@ class MatrixContainer:
         ...
     @overload
     def SetWithSparseMatrixCSR(self, numberOfRowsInit: int, numberOfColumnsInit: int, pyArrayCSR: Any, useDenseMatrix: bool=False, factor: float=1.) -> None: 
-        """DEPRECATED: set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix; the values of pyArrayCSR are multiplied by the given factor."""
+        """DEPRECATED: set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix; the values of pyArrayCSR are multiplied by the given factor; removed in 2028."""
         ...
 
 
@@ -3165,7 +3165,7 @@ class MainSystem:
         ...
     @overload
     def WaitForUserToContinue(self, printMessage=True, deprecationWarning=True) -> None: 
-        """Interrupt further computation until user input --> 'pause' function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as SC.WaitForRenderEngineStopFlag()."""
+        """Interrupt further computation until user input --> 'pause' function; this command runs a loop in the background to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as SC.WaitForRenderEngineStopFlag(); removed in 2028."""
         ...
     @overload
     def SendRedrawSignal(self) -> None: 
@@ -3921,7 +3921,7 @@ class Renderer:
         ...
     @overload
     def Detach(self) -> bool: 
-        """DEPRECATED; Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed."""
+        """DEPRECATED; Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed; removed in 2028."""
         ...
     @overload
     def StopSimulation(self, forceQuit: bool=True) -> None: 
@@ -4082,39 +4082,39 @@ class SystemContainer:
         ...
     @overload
     def GetRenderState(self) -> dict: 
-        """DEPRECATED; Get dictionary with current render state (openGL zoom, modelview, etc.); will have no effect if GLFW_GRAPHICS is deactivated."""
+        """DEPRECATED; Get dictionary with current render state (openGL zoom, modelview, etc.); will have no effect if GLFW_GRAPHICS is deactivated; removed in 2028."""
         ...
     @overload
     def SetRenderState(self, renderState: dict, waitForRendererFullStartup: bool=True) -> None: 
-        """DEPRECATED; Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState; waitForRendererFullStartup is used to wait at startup for the first frame to be drawn (and zoom all to be set), but be be set False in case of performance issues; will have no effect if GLFW_GRAPHICS is deactivated."""
+        """DEPRECATED; Set current render state (openGL zoom, modelview, etc.) with given dictionary; usually, this dictionary has been obtained with GetRenderState; waitForRendererFullStartup is used to wait at startup for the first frame to be drawn (and zoom all to be set), but be be set False in case of performance issues; will have no effect if GLFW_GRAPHICS is deactivated; removed in 2028."""
         ...
     @overload
     def RedrawAndSaveImage(self) -> None: 
-        """DEPRECATED; Redraw openGL scene and save image (command waits until process is finished)."""
+        """DEPRECATED; Redraw openGL scene and save image (command waits until process is finished); removed in 2028."""
         ...
     @overload
     def WaitForRenderEngineStopFlag(self) -> bool: 
-        """DEPRECTED; Wait for user to stop render engine (Press 'Q' or Escape-key); this command is used to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as mbs.WaitForUserToContinue()."""
+        """DEPRECTED; Wait for user to stop render engine (Press 'Q' or Escape-key); this command is used to have active response of the render window, e.g., to open the visualization dialog or use the right-mouse-button; behaves similar as mbs.WaitForUserToContinue(); removed in 2028."""
         ...
     @overload
     def RenderEngineZoomAll(self) -> None: 
-        """DEPRECATED; Send zoom all signal, which will perform zoom all at next redraw request."""
+        """DEPRECATED; Send zoom all signal, which will perform zoom all at next redraw request; removed in 2028."""
         ...
     @overload
     def AttachToRenderEngine(self) -> bool: 
-        """DEPRECATED; Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked)."""
+        """DEPRECATED; Links the SystemContainer to the render engine, such that the changes in the graphics structure drawn upon updates, etc.; done automatically on creation of SystemContainer; return False, if no renderer exists (e.g., compiled without GLFW) or cannot be linked (if other SystemContainer already linked); removed in 2028."""
         ...
     @overload
     def DetachFromRenderEngine(self) -> bool: 
-        """DEPRECATED; Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed."""
+        """DEPRECATED; Releases the SystemContainer from the render engine; return True if successfully released, False if no GLFW available or detaching failed; removed in 2028."""
         ...
     @overload
     def SendRedrawSignal(self) -> None: 
-        """DEPRECATED; This function is used to send a signal to the renderer that all MainSystems (mbs) shall be redrawn."""
+        """DEPRECATED; This function is used to send a signal to the renderer that all MainSystems (mbs) shall be redrawn; removed in 2028."""
         ...
     @overload
     def GetCurrentMouseCoordinates(self, useOpenGLcoordinates: bool=False) -> [float,float]: 
-        """DEPRECATED; Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane."""
+        """DEPRECATED; Get current mouse coordinates as list [x, y]; x and y being floats, as returned by GLFW, measured from top left corner of window; use GetCurrentMouseCoordinates(useOpenGLcoordinates=True) to obtain OpenGLcoordinates of projected plane; removed in 2028."""
         ...
     renderer:Renderer
     """The substructure in SystemContainer responsible for rendering (except visualizationSettings)."""

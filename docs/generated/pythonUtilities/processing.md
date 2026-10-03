@@ -13,7 +13,7 @@ It includes parameter variation and (genetic) optimization functionality.
 (sec-processing-getversionplatformstring)=
 ## Function: GetVersionPlatformString
 
-[`GetVersionPlatformString()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L36)
+[`GetVersionPlatformString()`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L38)
 
 - **function description**: internal function to return Exudyn version string, which allows to identify how results have been obtained writes something like 'Exudyn version = 1.11.158.dev1; Python3.13.15; Windows x86_64 AVX2 FLOAT64; Windows10 V10.0.19044; AMD64; Intel64 Family 6 Model 142 Stepping 10, GenuineIntel'
 - **notes**: If exudyn C++ module is not available, it outputs the Python version
@@ -22,7 +22,7 @@ It includes parameter variation and (genetic) optimization functionality.
 (sec-processing-processparameterlist)=
 ## Function: ProcessParameterList
 
-[`ProcessParameterList(parameterFunction, parameterList, useMultiProcessing, clusterHostNames = [], **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L148)
+[`ProcessParameterList(parameterFunction, parameterList, useMultiProcessing, clusterHostNames = [], **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L150)
 
 - **function description**: processes parameterFunction for given parameters in parameterList, see ParameterVariation
 - **input**:
@@ -59,7 +59,7 @@ It includes parameter variation and (genetic) optimization functionality.
 (sec-processing-parametervariation)=
 ## Function: ParameterVariation
 
-[`ParameterVariation(parameterFunction, parameters, useLogSpace = False, debugMode = False, addComputationIndex = False, useMultiProcessing = False, showProgress = True, parameterFunctionData = {}, clusterHostNames = [], numberOfThreads = None, resultsFile = '', **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L385)
+[`ParameterVariation(parameterFunction, parameters, useLogSpace = False, debugMode = False, addComputationIndex = False, useMultiProcessing = False, showProgress = True, parameterFunctionData = {}, clusterHostNames = [], numberOfThreads = None, resultsFile = '', **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L387)
 
 - **function description**: calls successively the function parameterFunction(parameterDict) with variation of parameters in given range; parameterDict is a dictionary, containing the current values of parameters, e.g., parameterDict=['mass':13, 'stiffness':12000] to be computed and returns a value or a list of values which is then stored for each parameter
 - **input**:
@@ -95,7 +95,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`dispyParame
 (sec-processing-geneticoptimization)=
 ## Function: GeneticOptimization
 
-[`GeneticOptimization(objectiveFunction, parameters, populationSize = 100, numberOfGenerations = 10, elitistRatio = 0.1, crossoverProbability = 0.25, crossoverAmount = 0.5, rangeReductionFactor = 0.7, distanceFactor = 0.1, childDistribution = "uniform", distanceFactorGenerations = -1, debugMode = False, addComputationIndex = False, useMultiProcessing = False, showProgress = True, clusterHostNames = [], parameterFunctionData = {}, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L530)
+[`GeneticOptimization(objectiveFunction, parameters, populationSize = 100, numberOfGenerations = 10, elitistRatio = 0.1, crossoverProbability = 0.25, crossoverAmount = 0.5, rangeReductionFactor = 0.7, distanceFactor = 0.1, childDistribution = "uniform", distanceFactorGenerations = -1, debugMode = False, addComputationIndex = False, useMultiProcessing = False, showProgress = True, clusterHostNames = [], parameterFunctionData = {}, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L532)
 
 - **function description**: compute minimum of given objectiveFunction
 - **input**:
@@ -139,7 +139,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`geneticOpti
 (sec-processing-minimize)=
 ## Function: Minimize
 
-[`Minimize(objectiveFunction, parameters, initialGuess = [], method = 'Nelder-Mead', tol = 1e-4, options = {}, enforceBounds = True, debugMode = False, showProgress = True, addComputationIndex = False, storeFunctionValues = True, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L899)
+[`Minimize(objectiveFunction, parameters, initialGuess = [], method = 'Nelder-Mead', tol = 1e-4, options = {}, enforceBounds = True, debugMode = False, showProgress = True, addComputationIndex = False, storeFunctionValues = True, **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L900)
 
 - **function description**: Compute minimum of given objectiveFunction. This function is based on scipy.optimize.minimize() and it provides the same interface as GeneticOptimization(). Note that in special cases, you should copy this function and adapt to your needs.
 - **input**:
@@ -168,7 +168,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`minimizeExa
 (sec-processing-computesensitivities)=
 ## Function: ComputeSensitivities
 
-[`ComputeSensitivities(parameterFunction, parameters, scaledByReference = False, debugMode = False, addComputationIndex = False, useMultiProcessing = False, showProgress = True, parameterFunctionData = dict(), **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L1107)
+[`ComputeSensitivities(parameterFunction, parameters, scaledByReference = False, debugMode = False, addComputationIndex = False, useMultiProcessing = False, showProgress = True, parameterFunctionData = dict(), **kwargs)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L1108)
 
 - **function description**: Perform a sensitivity analysis by successively calling the function parameterFunction(parameterList[i]) with a one at a time variation of parameters in the defined increments. e.g., parameterList[0] =['mass':13, 'stiffness':12000] to be computed and returns a value or a list of values which is then stored for each parameter
 - **input**:
@@ -200,7 +200,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ComputeSens
 (sec-processing-plotoptimizationresults2d)=
 ## Function: PlotOptimizationResults2D
 
-[`PlotOptimizationResults2D(parameterList, valueList, xLogScale = False, yLogScale = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L1240)
+[`PlotOptimizationResults2D(parameterList, valueList, xLogScale = False, yLogScale = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L1241)
 
 - **function description**: visualize results of optimization for every parameter (2D plots)
 - **input**:
@@ -217,7 +217,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`geneticOpti
 (sec-processing-plotsensitivityresults)=
 ## Function: PlotSensitivityResults
 
-[`PlotSensitivityResults(valRef, valuesSorted, sensitivity, fVar = None, strYAxis = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L1299)
+[`PlotSensitivityResults(valRef, valuesSorted, sensitivity, fVar = None, strYAxis = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/processing.py#L1300)
 
 - **function description**: visualize results of Sensitivityanalyis for every parameter (2D plots)
 - **input**:

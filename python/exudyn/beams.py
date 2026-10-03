@@ -16,6 +16,7 @@ import copy
 import numpy as np #for loading
 import exudyn #for sensor index
 import exudyn.itemInterface as eii
+from exudyn.misc.deprecation import Deprecated #the deprecations of the library (#2807)
 
 
 #public API of this module; kept complete by tools/checkAll.py (#2444)
@@ -27,6 +28,7 @@ __all__ = [
     ]
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@Deprecated('1.11.0', 2028, use='beams.GenerateBeamElementsAlongLine')
 def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numberOfElements, cableTemplate,
                                 massProportionalLoad=[0,0,0], 
                                 fixedConstraintsNode0=[0,0,0,0], fixedConstraintsNode1=[0,0,0,0],
@@ -49,12 +51,12 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
         returns a list containing created items [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
 
     Note:
-        use GenerateStraightBeam instead
+        use GenerateBeamElementsAlongLine instead
 
     Example:
         see Examples/ANCF_cantilever_test.py
     """
-    return GenerateStraightBeam(mbs=mbs, positionOfNode0=positionOfNode0, positionOfNode1=positionOfNode1, 
+    return GenerateStraightBeam.__wrapped__(mbs=mbs, positionOfNode0=positionOfNode0, positionOfNode1=positionOfNode1, 
                                 numberOfElements=numberOfElements, beamTemplate=cableTemplate,
                                 gravity=massProportionalLoad, 
                                 fixedConstraintsNode0=fixedConstraintsNode0, fixedConstraintsNode1=fixedConstraintsNode1,
@@ -62,6 +64,7 @@ def GenerateStraightLineANCFCable2D(mbs, positionOfNode0, positionOfNode1, numbe
     
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@Deprecated('1.11.0', 2028, use='beams.GenerateBeamElementsAlongLine')
 def GenerateStraightLineANCFCable(mbs, positionOfNode0, positionOfNode1, numberOfElements, cableTemplate,
                                 massProportionalLoad=[0,0,0], fixedConstraintsNode0=[0,0,0, 0,0,0], fixedConstraintsNode1=[0,0,0, 0,0,0],
                                 nodeNumber0=-1, nodeNumber1=-1):
@@ -85,7 +88,7 @@ def GenerateStraightLineANCFCable(mbs, positionOfNode0, positionOfNode1, numberO
     Example:
         see Examples/ANCF_cantilever_test.py
     """
-    return GenerateStraightBeam(mbs=mbs, positionOfNode0=positionOfNode0, positionOfNode1=positionOfNode1, 
+    return GenerateStraightBeam.__wrapped__(mbs=mbs, positionOfNode0=positionOfNode0, positionOfNode1=positionOfNode1, 
                                 numberOfElements=numberOfElements, beamTemplate=cableTemplate,
                                 gravity=massProportionalLoad, 
                                 fixedConstraintsNode0=fixedConstraintsNode0, fixedConstraintsNode1=fixedConstraintsNode1,
@@ -133,6 +136,7 @@ def GenerateBeamElementsAlongLine(mbs, positionStart, positionEnd, numberOfEleme
     return beamElementsDict
     
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+@Deprecated('1.11.0', 2028, use='beams.GenerateBeamElementsAlongLine')
 def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements, beamTemplate,
                          gravity=[0,0,0], fixedConstraintsNode0=None, fixedConstraintsNode1=None,
                          nodeNumber0=-1, nodeNumber1=-1):

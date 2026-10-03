@@ -14,6 +14,8 @@
 
 
 from exudyn.misc.docmeta import docmeta
+from exudyn.misc.deprecation import DeprecatedArgument #the deprecations of the library (#2807)
+
 from exudyn.basicUtilities import OutputFilePath #exudyn.config.outputDirectory (#2454)
 from exudyn.basicUtilities import CreateDirectoryForFile #every writer creates its directory (#2493)
 from exudyn.basicUtilities import UIWindowSuppressed #exudyn.special.userInterface (#2477)
@@ -630,15 +632,14 @@ def GeneticOptimization(objectiveFunction, parameters,
 
     #+++++++++++++++++++++++++++++++++++++++++++++++
     #+++++++++++++++++++++++++++++++++++++++++++++++
-    #delete this in future:
-    if 'numberOfChildren' in kwargs: 
-        exudyn.Print("GeneticOptimization: deprecated and unused parameter; use population size a and elitistRatio instead\n")
+    if 'numberOfChildren' in kwargs: #unused
+        DeprecatedArgument('numberOfChildren', '1.11.0', 2028, use='populationSize and elitistRatio')
     
     #old value: survivingIndividuals=8
     survivingIndividuals = int(elitistRatio*populationSize)
     if 'survivingIndividuals' in kwargs: 
         survivingIndividuals = kwargs['survivingIndividuals']
-        exudyn.Print("GeneticOptimization: survivingIndividuals: deprecated parameter; use population size a and elitistRatio instead\n")
+        DeprecatedArgument('survivingIndividuals', '1.11.0', 2028, use='populationSize and elitistRatio')
 
 
     if 'randomizerInitialization' in kwargs: 

@@ -74,7 +74,7 @@ The class **MatrixContainer** has the following **functions and structures**:
 - **`Convert2DenseMatrix()`**: convert MatrixContainer to dense numpy array (SLOW and may fail for too large sparse matrices)
 - **`UseDenseMatrix()`**: returns True if dense matrix is used, otherwise False
 - **`SetAllZero()`**: Set all values to zero; dense mode: set all matrix entries to zero (slow); sparse mode: set number of triplets to zero (fast)
-- **`SetWithSparseMatrixCSR(numberOfRowsInit, numberOfColumnsInit, pyArrayCSR, useDenseMatrix = False, factor = 1.)`**: DEPRECATED: set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix; the values of pyArrayCSR are multiplied by the given factor
+- **`SetWithSparseMatrixCSR(numberOfRowsInit, numberOfColumnsInit, pyArrayCSR, useDenseMatrix = False, factor = 1.)`**: DEPRECATED: set with sparse CSR matrix format: numpy array 'pyArrayCSR' contains sparse triplet (row, col, value) per row; numberOfRows and numberOfColumns given extra; if useDenseMatrix=True, matrix will be converted and stored internally as dense matrix, otherwise it will be stored as sparse matrix; the values of pyArrayCSR are multiplied by the given factor; removed in 2028
 - **`__repr__()`**: return the string representation of the MatrixContainer
 
 

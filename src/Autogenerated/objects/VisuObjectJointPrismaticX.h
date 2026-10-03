@@ -1,6 +1,6 @@
 /** ***********************************************************************************************
 * @class        VisualizationObjectJointPrismaticX
-* @brief        A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint \f$y\f$ and \f$z\f$ axes, allowing a relative motion along the joint \f$x\f$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), [](#sec-rigidbodyutilities-addprismaticjoint), for two rigid bodies (or ground).
+* @brief        A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint \f$y\f$ and \f$z\f$ axes, allowing a relative motion along the joint \f$x\f$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use `mbs.CreatePrismaticJoint(...)` for two rigid bodies (or ground).
 
 ```{image} /docs/figures/PrismaticJointX.png
 :width: 400
@@ -9,7 +9,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  11:06:22 (last modified)
+* @date         2026-10-03  14:46:52 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

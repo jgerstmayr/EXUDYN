@@ -572,20 +572,6 @@ public: //
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-//! get current (computation) time
-	Real PyGetCurrentTime()
-	{
-		PyDeprecated("functions", "systemData.GetCurrentTime", "mbs.systemData.GetCurrentTime() is DEPRECATED! use mbs.systemData.GetTime(exu.ConfigurationType.Current) instead");
-		return cSystemData->GetCData().GetCurrent().GetTime();
-	}
-
-	//! set visualization time (for postprocessing, animations, etc.)
-	void PySetVisualizationTime(Real vTime)
-	{
-		PyDeprecated("functions", "systemData.SetVisualizationTime", "mbs.systemData.SetVisualizationTime() is DEPRECATED! use mbs.systemData.SetTime(exu.ConfigurationType.Visualization) instead");
-		cSystemData->GetCData().GetVisualization().SetTime(vTime);
-	}
-
 	//! get current (computation) time
 	Real PyGetStateTime(ConfigurationType configurationType = ConfigurationType::Current)
 	{

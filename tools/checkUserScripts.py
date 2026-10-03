@@ -10,6 +10,7 @@
 #   - a name that is gone, with its replacement: the eleven vector helpers of basicUtilities and the
 #     GraphicsData... aliases of exudyn.utilities;
 #   - a function, method, setting or item parameter that is DEPRECATED, with what to use instead -
+#     also a function or an argument of the Python library (exudyn.misc.deprecation, #2807) -
 #     read from definitions/, so that the list is the one the documentation is generated from; an item
 #     parameter is found as the keyword of its item class and as the key of an item dictionary;
 #   - a setting or a function that is REMOVED;
@@ -283,6 +284,23 @@ def DeprecatedItemParameters():
     return found
 
 
+def DeprecatedLibrary():
+    """the deprecations of the Python library (#2807): {'functions': {name: (use, since, expires)},
+    'arguments': [(function name, or None for any call, argument, use, since, expires)]}; an argument whose
+    function is named at runtime (the Create functions name themselves) applies to any call"""
+    sys.path.insert(0, os.path.join(root, 'tools', 'generators'))
+    import deprecationModel                                                 # noqa: PLC0415
+    found = {'functions': {}, 'arguments': []}
+    for (entry, kind, functionName, argument, function) in deprecationModel.LibraryDeclarations():
+        data = (entry['use'], entry['since'], str(entry['expires']))
+        if kind == 'function':
+            found['functions'][functionName] = data
+        else:
+            owner = functionName if function is None else (None if function == '*' else function.split('.')[-1])
+            found['arguments'].append((owner, argument) + data)
+    return found
+
+
 def SubmodulesNotLoaded():
     """the submodules of exudyn that 'import exudyn' does not load"""
     os.environ.setdefault('EXUDYN_NO_USER_SETTINGS', '1')
@@ -466,11 +484,22 @@ def CheckTree(tree, tables):
                                + "' is deprecated: " + tables['functions'][(receiver, chain[-1])])
                         break
 
-        elif isinstance(node, ast.Call) and tables.get('itemParameters'):
-            #a deprecated item parameter as keyword of its item class (#2805)
+        elif isinstance(node, ast.Call) and (tables.get('itemParameters') or tables.get('library')):
             className = getattr(node.func, 'attr', getattr(node.func, 'id', ''))
+            #a deprecated function or argument of the library (#2807)
+            library = tables.get('library') or {'functions': {}, 'arguments': []}
+            if className in library['functions']:
+                (use, since, expires) = library['functions'][className]
+                Report(node.lineno, ('library', className), "'" + className + "' is deprecated since " + since
+                       + ' and removed in ' + expires + ('; use ' + use if use else ''))
+            for (owner, argument, use, since, expires) in library['arguments']:
+                if owner in (None, className) and any(keyword.arg == argument for keyword in node.keywords):
+                    Report(node.lineno, ('libraryArgument', className, argument), className + '(' + argument
+                           + '=...): the argument is deprecated since ' + since + ' and removed in ' + expires
+                           + ('; use ' + use if use else ''))
+            #a deprecated item parameter as keyword of its item class (#2805)
             for keyword in node.keywords:
-                entry = tables['itemParameters'].get(keyword.arg, {}).get(className)
+                entry = (tables.get('itemParameters') or {}).get(keyword.arg, {}).get(className)
                 if entry is not None:
                     Report(keyword.value.lineno, ('itemParameter', className, keyword.arg),
                            ItemParameterFinding(className + '(' + keyword.arg + '=...)', entry))
@@ -552,7 +581,8 @@ def main():
     args = parser.parse_args()
 
     tables = {'functions': DeprecatedFunctions(), 'settings': DeprecatedSettings(),
-              'submodules': SubmodulesNotLoaded(), 'itemParameters': DeprecatedItemParameters()}
+              'submodules': SubmodulesNotLoaded(), 'itemParameters': DeprecatedItemParameters(),
+              'library': DeprecatedLibrary()}
 
     (checked, skipped, withFindings, total, unreadable) = (0, 0, 0, 0, [])
     for path in PythonFiles(args.paths):

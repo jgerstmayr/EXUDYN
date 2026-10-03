@@ -2,11 +2,14 @@
   "number": 2807,
   "title": "deprecations of the Python library declared like those of the C++, and a build check for expired ones",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "IMPROVEMENT",
   "effort": "MEDIUM",
   "description": "The Python library deprecates functions and arguments by hand - a docstring saying DEPRECATED, an exu.Print('WARNING: ...'), about 20 places (AddRevoluteJoint, bodyList of the Create functions, GeneticOptimization arguments, ...) - with no version, no year of removal and nothing that finds them. Proposal: one declaration with since and expires for every deprecation, the library warning through exudyn.special.deprecations, and a check in exudev generate --all-checks that lists all deprecations and fails for one past its year (maintainer 2026-10-03).",
   "dateRaised": "2026-10-03",
   "deadline": "2027-04-01",
-  "workingRemarks": "proposal in plan step RG12.33, waits for the maintainer's decision"
+  "dateResolved": "2026-10-03 15:06",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the deprecated functions and arguments of the Python library warn once per session at the line of the script and are counted in exudyn.sys['deprecationUse']['library']; every deprecation of Exudyn has a year of removal, and a build check fails once it has come",
+  "resolvedInVersion": "1.12.253"
 }

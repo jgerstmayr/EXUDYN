@@ -215,6 +215,13 @@ counted in `exu.sys['deprecationUse']`, by source (`simulationSettings`, `visual
 and name, so a test sees whether a model used anything deprecated (`recordUse`). `exudev scripts` also reports deprecated
 and removed item parameters, as keyword of the item class and as key of an item dictionary (#2804, #2805, #2806).
 
+**The deprecated functions of the Python library warn as well.** `AddRigidBody`, `AddRevoluteJoint`,
+`AddPrismaticJoint`, `graphics.BrickXYZ`, `GenerateStraightLineANCFCable2D` and the others marked DEPRECATED in their
+description, and the arguments `bodyList` of the `Create...` functions and `numberOfChildren`/`survivingIndividuals` of
+`GeneticOptimization`, give a `DeprecationWarning` at the line of the script, once per session, and are counted in
+`exu.sys['deprecationUse']['library']`; each says what to use instead. They, and the deprecated functions of the C++
+module, are removed in 2028; `exudev scripts` reports them in a script (#2807).
+
 **A system without coordinates** - only ground, sensors and user functions - is solved by every
 solver: time advances, the user functions are called and the sensors record (#2790).
 

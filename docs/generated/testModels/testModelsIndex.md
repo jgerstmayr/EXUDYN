@@ -93,6 +93,7 @@ emptySystemTest
 homogeneousTransformationParameterTest
 simulationSettingsDeprecationTest
 rotationMarkerDeprecationTest
+libraryDeprecationTest
 homogeneousTransformationTest
 inspectTest
 energiesTest

@@ -447,8 +447,12 @@ class DeclarationWriter:
     #isLambdaFunction = True: cName is intepreted as lambda function and copied into pybind definition
     def DefPyFunctionAccess(self, cClass, pyName, cName, description, argList=[], defaultArgs=[], 
                             example='', options='', isLambdaFunction = False, 
-                            argTypes=[], returnType = '', addDocu=True): 
+                            argTypes=[], returnType = '', addDocu=True, deprecated=None): 
         
+        #a deprecated function says when it goes; tools/checkDeprecations.py reads the declaration (#2807)
+        if deprecated is not None:
+            description = description.rstrip().rstrip('.') + '; removed in ' + str(deprecated.expires)
+
         if pyName not in localListFunctionNames:
             localListFunctionNames.append(pyName)
 
