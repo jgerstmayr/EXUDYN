@@ -1,0 +1,15 @@
+{
+  "number": 2799,
+  "title": "exu.HT where a 4x4 numpy HT is taken: rigidBodyUtilities and the robotics classes",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026b step RG16.4.2: exu.HT converts to a 4x4 numpy array (__array__), the HT functions of rigidBodyUtilities and the robotics classes (RobotLink, RobotTool, RobotBase, InverseKinematicsNumerical) take an exu.HT as well; CreateKinematicTree gives jointHTs.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 07:56",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "numpy reads an exu.HT as its 4x4 matrix (np.array(H)); the HT functions of rigidBodyUtilities and the robotics classes take an exu.HT where they take a 4x4 array.",
+  "resolvedInVersion": "1.12.241"
+}

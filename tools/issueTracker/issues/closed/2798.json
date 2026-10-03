@@ -1,0 +1,15 @@
+{
+  "number": 2798,
+  "title": "ObjectKinematicTree takes jointHTs, the joint transformations and offsets as one list of HTs",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "revision2026b step RG16.4.1 (named in RG16.2): jointHTs, a list of homogeneous transformations (4x4, 16 values or exu.HT), reads and writes the stored jointTransformations and jointOffsets; None for not given, both given must agree; a list of HTs in the generator.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 07:56",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectKinematicTree takes its joint transformations and offsets as one list jointHTs of homogeneous transformations (4x4 matrices, their 16 values or exu.HT).",
+  "resolvedInVersion": "1.12.240"
+}

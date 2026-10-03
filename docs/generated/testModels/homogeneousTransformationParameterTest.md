@@ -19,6 +19,9 @@ You can view and download this file on Github: [homogeneousTransformationParamet
 #           The rigid markers take localHT, the marker frame being the body or node frame times localHT: the rotation
 #           matrix and the local angular velocity of MarkerBodyRigid, MarkerNodeRigid and MarkerKinematicTreeRigid; a node marker refuses a
 #           translation; a joint whose markers carry its rotation in localHT moves as one with rotationMarker0/1.
+#           ObjectKinematicTree takes its joint transformations and offsets as one list jointHTs and moves the same;
+#           numpy reads an exu.HT as its 4x4 matrix, and the HT functions of rigidBodyUtilities and the robotics
+#           classes take it.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-03
@@ -192,6 +195,63 @@ for nodeMarker in [False, True]:
     exu.Print('joint with localHT, nodeMarker =', nodeMarker, ':', pLocalHT, ', difference', np.abs(pLocalHT - pRotationMarkers).max())
     errors += [np.abs(pLocalHT - pRotationMarkers).max()*1e6] #both solved the same equations
     total += np.sum(pLocalHT)
+
+#ObjectKinematicTree: jointHTs, the joint transformations and offsets as one list of HTs (#2798)
+def SwingingTree(useJointHTs):
+    SCk = exu.SystemContainer()
+    mbsk = SCk.AddSystem()
+    rotations = [RotXYZ2RotationMatrix([0.1, 0.2, 0.3]), RotXYZ2RotationMatrix([-0.3, 0.1, 0.])]
+    offsets = [[0., 0., 0.], [0.5, 0., 0.1]]
+    nTree = mbsk.AddNode(NodeGenericODE2(referenceCoordinates=[0., 0.], initialCoordinates=[0.3, -0.2],
+                                         initialCoordinates_t=[0., 0.], numberOfODE2Coordinates=2))
+    jointData = ({'jointHTs': [exu.HT(rotations[0], offsets[0]), HomogeneousTransformation(rotations[1], offsets[1])]}
+                 if useJointHTs else {'jointTransformations': exu.Matrix3DList(rotations), 'jointOffsets': exu.Vector3DList(offsets)})
+    oTree = mbsk.AddObject(ObjectKinematicTree(nodeNumber=nTree, jointTypes=[exu.JointType.RevoluteZ]*2, linkParents=[-1, 0],
+                                               linkInertiasCOM=exu.Matrix3DList([np.eye(3)*0.01]*2),
+                                               linkCOMs=exu.Vector3DList([[0.25, 0, 0]]*2), linkMasses=[1., 1.],
+                                               gravity=[0, -9.81, 0], **jointData))
+    mbsk.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 100
+    simulationSettings.timeIntegration.endTime = 0.2
+    simulationSettings.timeIntegration.verboseMode = 0
+    mbsk.SolveDynamic(simulationSettings)
+    return (mbsk, oTree, mbsk.GetNodeOutput(nTree, exu.OutputVariableType.Coordinates))
+(mbsLists, oLists, qLists) = SwingingTree(False)
+(mbsHTs, oHTs, qHTs) = SwingingTree(True)
+errors += [np.abs(qLists - qHTs).max()]
+dTree = mbsHTs.GetObject(oHTs)
+errors += [sum(np.abs(np.array(H) - HomogeneousTransformation(A, p)).max() for (H, A, p) in
+               zip(dTree['jointHTs'], dTree['jointTransformations'], dTree['jointOffsets']))]
+mbsHTs.SetObjectParameter(oHTs, 'jointHTs', [np.eye(4), exu.HT(translation=[0.4, 0, 0]).HT44().flatten()])
+errors += [np.abs(np.array(mbsHTs.GetObjectParameter(oHTs, 'jointOffsets')[1]) - [0.4, 0, 0]).max()]
+raised = 0
+for rotation in [RotXYZ2RotationMatrix([0.1, 0, 0]), np.eye(3)]: #jointHTs and the lists differ, then agree
+    try:
+        mbsHTs.AddObject({'objectType': 'KinematicTree', 'nodeNumber': 0, 'jointHTs': [np.eye(4)],
+                          'jointTransformations': exu.Matrix3DList([rotation]), 'jointOffsets': exu.Vector3DList([[0, 0, 0]])})
+    except Exception:
+        raised += 1
+errors += [1 - raised]
+total += np.sum(qHTs)
+
+#an exu.HT is read by numpy as its 4x4 matrix, and taken by the HT functions of rigidBodyUtilities (#2799)
+H = exu.HT(A, p)
+errors += [np.abs(np.array(H) - H44).max(), np.abs(HT2translation(H) - p).max(), np.abs(HT2rotationMatrix(H) - A).max(),
+           np.abs(InverseHT(H) @ H44 - np.eye(4)).max(), np.abs(np.eye(4) @ H - H44).max()]
+
+#the robotics classes take an exu.HT where they take a 4x4 array (#2799)
+from exudyn.robotics import Robot, RobotLink, RobotBase, RobotTool
+def MakeRobot(asHT):
+    Convert = (lambda T: exu.HT(T)) if asHT else (lambda T: T)
+    robot = Robot(gravity=[0, 0, -9.81], base=RobotBase(HT=Convert(HTtranslate([0, 0, 0.5]))),
+                  tool=RobotTool(HT=Convert(HTtranslate([0, 0, 0.1]))), referenceConfiguration=[])
+    for k in range(2):
+        robot.AddLink(RobotLink(mass=1, COM=[0.1, 0, 0], inertia=np.eye(3)*0.01, jointType='Rz',
+                                preHT=Convert(HTtranslate([0.3, 0, 0]) @ HTrotateX(0.2))))
+    return robot
+qRobot = [0.3, -0.4]
+errors += [max(np.abs(np.array(a) - np.array(b)).max() for (a, b) in zip(MakeRobot(False).LinkHT(qRobot), MakeRobot(True).LinkHT(qRobot)))]
 
 exu.Print('homogeneousTransformationParameterTest: errors', np.round(errors, 15))
 u = sum(errors) + np.sum(mbs.GetObjectParameter(gCopy, 'referenceHT')) + total

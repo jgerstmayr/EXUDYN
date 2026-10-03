@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 221 | 1.12.238 |
+| 1.12 | Metheney | 223 | 1.12.241 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.241** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exu.HT where a 4x4 numpy HT is taken: rigidBodyUtilities and the robotics classes (#2799)
+  - description: revision2026b step RG16.4.2: exu.HT converts to a 4x4 numpy array (\_\_array\_\_), the HT functions of rigidBodyUtilities and the robotics classes (RobotLink, RobotTool, RobotBase, InverseKinematicsNumerical) take an exu.HT as well; CreateKinematicTree gives jointHTs.
+  - **notes:** numpy reads an exu.HT as its 4x4 matrix (np.array(H)); the HT functions of rigidBodyUtilities and the robotics classes take an exu.HT where they take a 4x4 array.
+  - date resolved: **2026-10-03 07:56**, date raised: 2026-10-03
+- **1.12.240** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectKinematicTree takes jointHTs, the joint transformations and offsets as one list of HTs (#2798)
+  - description: revision2026b step RG16.4.1 (named in RG16.2): jointHTs, a list of homogeneous transformations (4x4, 16 values or exu.HT), reads and writes the stored jointTransformations and jointOffsets; None for not given, both given must agree; a list of HTs in the generator.
+  - **notes:** ObjectKinematicTree takes its joint transformations and offsets as one list jointHTs of homogeneous transformations (4x4 matrices, their 16 values or exu.HT).
+  - date resolved: **2026-10-03 07:56**, date raised: 2026-10-03
 - **1.12.238** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` homogeneous transformations in the user interface of the rigid items: evaluation (#2781)
   - description: Evaluate whether ObjectRigidBody, ObjectGround, rigid body nodes and rigid markers can take an HT instead of position and rotation (compatibility mode with None defaults, or a global/auto-detected mode flag), exporting both; localHT in the rigid markers and its deprecation path; homogenize with the localHT work (RG14.2.15); proposal and decisions for the maintainer.
   - **notes:** Homogeneous transformations in the user interface: ObjectGround referenceHT, CreateGround/CreateRigidBody referenceHT and initialHT, localHT of the rigid markers - None for not given, an HT and its parts must agree.

@@ -94,10 +94,12 @@ names = {
         'ArrayIndex': 'List[int]', 'ArrayFloat': 'List[float]', 'Index2': 'Tuple[int,int]',
         'void': 'None', 'std::string': 'str',
         'HomogeneousTransformation': 'Any',         #a 4x4 array, its 16 values or an exu.HT (#2793)
+        'HomogeneousTransformationList': 'Any',     #a list of them (#2798)
     },
     'pyTyping': {
         'Vector': 'array_like', 'ArrayIndex': 'array_like',
         'HomogeneousTransformation': 'array_like (4x4) or exudyn.HT',
+        'HomogeneousTransformationList': 'list of array_like (4x4) or exudyn.HT',
     },
 }
 

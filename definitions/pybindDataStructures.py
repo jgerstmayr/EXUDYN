@@ -178,8 +178,9 @@ pb.DefPyStartClass(classStr, pyClassStr, 'The HT is a homogeneous transformation
 
 pb.AddDocuCodeBlock(code="""
 import exudyn as exu
+import numpy as np
 from exudyn.rigidBodyUtilities import RotationMatrixZ
-H0 = exu.HT()                                              #identity
+H0 = exu.HT()                                            #identity
 H1 = exu.HT(rotation=RotationMatrixZ(0.5), translation=[1,0,0])
 H2 = exu.HT(translation=[0,2,0])                           #translation only
 H = H1 * H2                                                #composition, an HT
@@ -187,6 +188,7 @@ p = H1 * [0.1,0,0]                                         #a point transformed,
 A, t = H.Get()                                             #rotation and translation
 H44 = H.HT44()                                             #4x4 numpy array
 H3 = exu.HT(H44)                                           #from a 4x4 matrix, or its 16 values as a sensor stores them
+T44 = np.array(H)                                          #numpy reads an HT as its 4x4 matrix
 Hinv = H.Inverse()
 H.translation = [0,0,1]                                    #write access, the rotation is kept
 """)
@@ -279,6 +281,15 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='__eq__',
                        description="True if rotation and translation are equal, component by component",
                        argList=['other'], argTypes=['HT'],
                        returnType='bool',
+                       isLambdaFunction = True,
+                       )
+
+#numpy reads an HT as its 4x4 matrix: np.array(H), and an HT is taken where a 4x4 numpy array is (#2799)
+pb.DefPyFunctionAccess(cClass=classStr, pyName='__array__',
+                       cName='[](const PyHT &item, const py::object& dtype, const py::object& copy) {\n            return item.GetHT44Py(); }',
+                       description="the 4x4 matrix [A p; 0 1] as numpy array, for np.array(H) and wherever numpy takes the HT",
+                       argList=['dtype', 'copy'], defaultArgs=['py::none()', 'py::none()'], argTypes=['Any', 'Any'],
+                       returnType='ArrayLike',
                        isLambdaFunction = True,
                        )
 

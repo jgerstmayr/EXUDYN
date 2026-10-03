@@ -184,6 +184,9 @@ parameter left `None` is not given, and an HT given with one of its parts must a
 with a rotation in the body, link or node: `MarkerBodyRigid` and `MarkerKinematicTreeRigid` with `localPosition` as
 its translation, `MarkerSuperElementRigid` with `offset`, `MarkerNodeRigid` a rotation only - so a joint can take its
 axis from its markers instead of `rotationMarker0/1` (#2795).
+`ObjectKinematicTree` takes its joint transformations and offsets as one list `jointHTs`, and numpy reads an `exu.HT`
+as its 4x4 matrix (`np.array(H)`), so the HT functions of `exudyn.rigidBodyUtilities` and the robotics classes take an
+`exu.HT` wherever they take a 4x4 array (#2798, #2799).
 
 **A system without coordinates** - only ground, sensors and user functions - is solved by every
 solver: time advances, the user functions are called and the sensors record (#2790).

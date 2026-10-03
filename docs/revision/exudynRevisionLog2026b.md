@@ -12107,3 +12107,29 @@ steps of the HT.
 
 The maintainer, on the observation above (the Jacobian fixed to the beam, the marker velocity with the Eulerian term
 `vALE * r_x`): **leave as is**. Nothing changes in `CObjectALEANCFCable2D`; #2784 closed with this decision.
+
+<a id="rg16-4"></a>
+### RG16.4 — the kinematic tree and the robotics utilities on HT (2026-10-03, #2798, #2799)
+
+**RG16.4.1, `jointHTs`** - the name RG16.2 gave it. The kinematic tree keeps its stored lists `jointTransformations` and
+`jointOffsets`, which its C++ computes from; `jointHTs` is a view of the two: read, the list of 4x4 numpy arrays composed
+of them; written, a list of `exu.HT`, 4x4 matrices or their 16 values, split into them. In the generator the opposite
+of the frame of RG16.3.1, where the HT is stored and the parts are views: an `ItemParameter` of type
+`THomogeneousTransformationList` with `htListOf=[rotations, translations]`, not stored, written after its parts
+(`EPyUtils::HTListFromDictionary`, `HTListFromPython`, `HTListToPython` in `PyHomogeneousTransformation.h`). `None`
+is "not given"; given together with non-empty lists, they must agree - so the dictionary of `GetObject`, which lists
+all three, can be added again. Test: a tree of two revolute joints given by the two lists and by `jointHTs` (an
+`exu.HT` and a 4x4 array) moves the same, its `jointHTs` read back equal the lists, `SetObjectParameter` of `jointHTs`
+writes the offsets, a dictionary whose lists differ from `jointHTs` raises and one whose lists agree is taken.
+
+**RG16.4.2, the robotics utilities.** Rather than an `exu.HT` version of every function, numpy reads an `exu.HT` as its
+4x4 matrix: `__array__` (with `dtype` and `copy`, as numpy 2 calls it), so `np.array(H)`, `A @ H` and `H44 - H` work.
+The robotics classes stored their HTs with `np.array(...)` already and take an `exu.HT` now (`RobotLink.localHT`,
+`preHT`, `RobotTool.HT`, `RobotBase.HT`; their docstrings say so); `HT2translation`, `HT2rotationMatrix`, `InverseHT`,
+`HT2T66Inverse` and `InverseKinematicsNumerical.InterpolateHTs` index the array of `np.asarray(T)`.
+`Robot.CreateKinematicTree` gives the tree `jointHTs` instead of two lists. Test: a robot of two links built with
+4x4 arrays and with `exu.HT` gives the same `LinkHT`; the serial robot test models (through `CreateKinematicTree`) keep
+their references. Not done: products in the robotics code stay numpy - `exu.HT` would be faster in a loop, but these
+functions are not hot.
+
+**RG16.4.3, the mode switch**: not needed - RG16.2 decided per item, with `None` for not given; no global mode.

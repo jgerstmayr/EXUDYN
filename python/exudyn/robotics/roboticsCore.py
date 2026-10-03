@@ -141,8 +141,8 @@ class RobotLink:
             mass: mass of robot link
             COM: center of mass in link coordinate system
             inertia: 3x3 matrix (list of lists / numpy array) containing inertia tensor in link coordinates, with respect to center of mass
-            localHT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from local joint to link coordinates; default = identity; currently, this transformation is not available in KinematicTree, therefore the link inertia and COM must be transformed accordingly
-            preHT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation from previous link to this joint; default = identity
+            localHT: 4x4 matrix (list of lists / numpy array) or exudyn.HT containing homogeneous transformation from local joint to link coordinates; default = identity; currently, this transformation is not available in KinematicTree, therefore the link inertia and COM must be transformed accordingly
+            preHT: 4x4 matrix (list of lists / numpy array) or exudyn.HT containing homogeneous transformation from previous link to this joint; default = identity
             jointType: string containing joint type, out of: 'Rx', 'Ry', 'Rz' for revolute joints and 'Px', 'Py', 'Pz' for prismatic joints around/along the respecitive local axes
             parent: for building robots as kinematic tree; use '-2' to automatically set parents for serial robot (on fixed base), use '-1' for ground-parent and any other 0-based index for connection to parent link
             PDcontrol: tuple of P and D control values, defining position (rotation) proportional value P and velocitiy proportional value D
@@ -207,7 +207,7 @@ class RobotTool:
         """initialize robot tool
 
         Args:
-            HT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from last link to tool
+            HT: 4x4 matrix (list of lists / numpy array) or exudyn.HT containing homogeneous transformation to transform from last link to tool
             graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
         """
         self.HT = np.array(HT)
@@ -236,7 +236,7 @@ class RobotBase:
         """initialize robot base
 
         Args:
-            HT: 4x4 matrix (list of lists / numpy array) containing homogeneous transformation to transform from world coordinates to base coordinates (changes orientation and position of robot)
+            HT: 4x4 matrix (list of lists / numpy array) or exudyn.HT containing homogeneous transformation to transform from world coordinates to base coordinates (changes orientation and position of robot)
             graphicsData: dictionary containing a list of GraphicsData, same as in exudyn Objects
         """
         self.HT = np.array(HT)
@@ -551,8 +551,7 @@ class Robot:
         jointTypesList = []     #exudyn joint types
         linkParents = []
 
-        jointTransformations=[]
-        jointOffsets=[]
+        jointHTs=[] #the joint transformations and offsets as HTs (#2798)
         linkInertiasCOM=[] 
         linkCOMs=[]
         linkMasses=[]
@@ -592,8 +591,7 @@ class Robot:
             parentLinkLocalHT = erb.HT0()
             if self.HasParent(i):
                 parentLinkLocalHT = self.links[self.GetParentIndex(i)].localHT
-            jointTransformations += [erb.HT2rotationMatrix(parentLinkLocalHT @ link.preHT)] 
-            jointOffsets += [erb.HT2translation(parentLinkLocalHT @ link.preHT)]
+            jointHTs += [parentLinkLocalHT @ link.preHT]
 
             #inertia is defined in link coordinates; but KinematicTree needs inertia w.r.t. joint coordinates:
             rbi = erb.RigidBodyInertia()
@@ -673,8 +671,7 @@ class Robot:
 
         #create KinematicTree
         oKT = mbs.AddObject(eii.ObjectKinematicTree(nodeNumber=nGeneric, jointTypes=jointTypesList, linkParents=linkParents,
-                                          jointTransformations=exudyn.Matrix3DList(jointTransformations), 
-                                          jointOffsets=exudyn.Vector3DList(jointOffsets), 
+                                          jointHTs=jointHTs, 
                                           linkInertiasCOM=exudyn.Matrix3DList(linkInertiasCOM), 
                                           linkCOMs=exudyn.Vector3DList(linkCOMs), linkMasses=linkMasses, 
                                           baseOffset = baseOffset, gravity=self.gravity, 
@@ -1262,6 +1259,7 @@ class InverseKinematicsNumerical():
         Note:
             still under development; interpolation may be changed to using logSE3
         """
+        (T1, T2) = (np.asarray(T1), np.asarray(T2)) #a 4x4 array or an exudyn.HT
         R1, t1 = T1[:3,:3], erb.HT2translation(T1)
         R2, t2 = T2[:3,:3], erb.HT2translation(T2)
         t12 = t2 - t1

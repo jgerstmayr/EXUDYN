@@ -799,19 +799,20 @@ def HTrotateZ(angle):
     return T
 
 def HT2translation(T):
-    """return translation part of [HT](#HT)
+    """return translation part of [HT](#HT); T is a 4x4 array or an exudyn.HT
     """
-    return T[0:3,3]
+    return np.asarray(T)[0:3,3]
 
 def HT2rotationMatrix(T):
-    """return rotation matrix of [HT](#HT)
+    """return rotation matrix of [HT](#HT); T is a 4x4 array or an exudyn.HT
     """
-    return T[0:3,0:3]
+    return np.asarray(T)[0:3,0:3]
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def InverseHT(T):
-    """return inverse [HT](#HT) such that inv(T)*T = np.eye(4)
+    """return inverse [HT](#HT) such that inv(T)*T = np.eye(4); T is a 4x4 array or an exudyn.HT
     """
+    T = np.asarray(T)
     Tinv = np.eye(4)
     Ainv = T[0:3,0:3].T #inverse rotation part
     Tinv[0:3,0:3] = Ainv
@@ -997,11 +998,12 @@ def HT2T66Inverse(T):
     """convert 4x4 homogeneous transformation into 6x6 coordinate transformation (Plücker transform); NOTE that the homogeneous transformation is the inverse of what is computed in function pluho() of Featherstone
 
     Args:
-        T: 4x4 homogeneous transformation (numpy array)
+        T: 4x4 homogeneous transformation (numpy array or exudyn.HT)
 
     Returns:
         T66 (6x6 numpy array)
     """
+    T = np.asarray(T)
     A = T[0:3,0:3].T 
     v = T[0:3,3]
     return np.block([

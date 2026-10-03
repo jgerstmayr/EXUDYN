@@ -87,8 +87,9 @@ The HT is a homogeneous transformation - a rotation matrix A and a translation p
 
 ```python
 import exudyn as exu
+import numpy as np
 from exudyn.rigidBodyUtilities import RotationMatrixZ
-H0 = exu.HT()                                              #identity
+H0 = exu.HT()                                            #identity
 H1 = exu.HT(rotation=RotationMatrixZ(0.5), translation=[1,0,0])
 H2 = exu.HT(translation=[0,2,0])                           #translation only
 H = H1 * H2                                                #composition, an HT
@@ -96,6 +97,7 @@ p = H1 * [0.1,0,0]                                         #a point transformed,
 A, t = H.Get()                                             #rotation and translation
 H44 = H.HT44()                                             #4x4 numpy array
 H3 = exu.HT(H44)                                           #from a 4x4 matrix, or its 16 values as a sensor stores them
+T44 = np.array(H)                                          #numpy reads an HT as its 4x4 matrix
 Hinv = H.Inverse()
 H.translation = [0,0,1]                                    #write access, the rotation is kept
 ```
@@ -120,6 +122,7 @@ The class **HT** has the following **functions and structures**:
 - **`HasNoRotation()`**: True if the transformation was set without rotation (identity, SetTranslation, or a product of such), which its products then skip; a given unit matrix does not set this
 - **`__mul__(other)`**: H1*H2, the composition of two transformations, an HT; H*v, the transformed point A*v+p of a 3D vector, a numpy array
 - **`__eq__(other)`**: True if rotation and translation are equal, component by component
+- **`__array__(dtype = None, copy = None)`**: the 4x4 matrix [A p; 0 1] as numpy array, for np.array(H) and wherever numpy takes the HT
 - **`__repr__()`**: the string representation of the HT
 
 

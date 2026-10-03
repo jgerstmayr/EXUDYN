@@ -485,6 +485,11 @@ def HTPartOf(member):
     return member.get('partOfHT', '') or ''
 
 
+def HTListOf(member):
+    """(rotations, translations): the names of the stored lists a list of HTs is composed of (#2798), None otherwise"""
+    return member.get('htListOf', None)
+
+
 def HTParts(definition, htName):
     """the python names of the position and the rotation parameter of an HT parameter, None if it has none"""
     position, rotation = None, None

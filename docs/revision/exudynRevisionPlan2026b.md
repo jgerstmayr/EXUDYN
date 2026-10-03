@@ -2511,8 +2511,13 @@ the joints an HT means fewer variables and one way of doing things.
       (the formulas of `CObjectRigidBody` for 3D rigid body nodes; for the slope nodes and `NodeRigidBody2D` to be
       decided) - when a case needs it.
 
-**RG16.4** *(group RG16)* **The further steps** - the mode switch, the kinematic tree and the robotics utilities on
-    HT -, planned after RG16.3.
+**RG16.4** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-4) *(group RG16)* **The further steps** - the
+    mode switch, the kinematic tree and the robotics utilities on HT -, planned after RG16.3:
+    - **RG16.4.1** (#2798) `ObjectKinematicTree.jointHTs`: the joint transformations and offsets as one list of HTs, a
+      view of the two stored lists (a list of HTs in the generator, `htListOf`);
+    - **RG16.4.2** (#2799) numpy reads an `exu.HT` as its 4x4 matrix (`__array__`); the HT functions of
+      `rigidBodyUtilities` and the robotics classes take an `exu.HT`, `Robot.CreateKinematicTree` gives `jointHTs`;
+    - **RG16.4.3** the mode switch: **not needed** - RG16.2 decided per item, with `None` for not given, no global mode.
 
 <a id="rg16-5"></a>
 **RG16.5** **DONE 2026-10-03 by RG16.3.3** (the decision of RG16.2: `localHT` and `localPosition` next to each other,
@@ -2555,7 +2560,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures - done but RG14.2.15: the flag and the deprecation of the joints' `rotationMarker0/1`, the documentation and the examples moved to the markers' `localHT` (the parameter itself is in since RG16.3.3); RG14.2.9.4 and RG14.2.12 are in the list below |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
-| RG16.4 | - | HT further: the mode switch, `ObjectKinematicTree.jointHTs`, the deprecation of `rotationMarker0/1` in the joints, the robotics utilities on HT |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 
 <a id="not-decided"></a>

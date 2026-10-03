@@ -21,11 +21,15 @@ outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !Ex
   ObjectGenericODE2: nodeNumbers(class,dict,set)
   ObjectGround: referenceHT(set)
   ObjectJointALEMoving2D: nodeNumbers(class,dict,set)
+  ObjectKinematicTree: jointHTs(set)
   SensorUserFunction: sensorNumbers(class,dict,set)
   SimulationSettings: linearSolverType(attribute,dict)
   SimulationSettings.timeIntegration.explicitIntegration: dynamicSolverType(attribute,dict)
   VisualizationSettings.contour: outputVariable(attribute,dict)
   VisualizationSettings.interactive: highlightItemType(attribute,dict)
+
+outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError list0=[]
+  ObjectKinematicTree: jointHTs(class,dict)
 
 outcome: !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError !ExudynTypeError numpy4x4f
   MarkerBodyRigid: localHT(class,dict)
@@ -1077,7 +1081,7 @@ outcome: str=default
   ObjectJointSliding: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) axialForce(omit) constrainRotations(omit) constrainTranslations(omit) markerNumbers(omit) nodeNumber(omit) slidingMarkerNumbers(omit) slidingMarkerOffsets(omit)
   ObjectJointSliding2D: Vcolor(omit) VdrawSize(omit) Vshow(omit) activeConnector(omit) axialForce(omit) classicalFormulation(omit) constrainRotation(omit) markerNumbers(omit) nodeNumber(omit) slidingMarkerNumbers(omit) slidingMarkerOffsets(omit)
   ObjectJointSpherical: Vcolor(omit) VjointRadius(omit) Vshow(omit) activeConnector(omit) constrainedAxes(omit) markerNumbers(omit)
-  ObjectKinematicTree: Vcolor(omit) VgraphicsDataList(omit) Vshow(omit) VshowJoints(omit) VshowLinks(omit) baseOffset(omit) forceUserFunction(omit) gravity(omit) jointDControlVector(omit) jointForceVector(omit) jointOffsets(omit) jointPControlVector(omit) jointPositionOffsetVector(omit) jointTransformations(omit) jointTypes(omit) jointVelocityOffsetVector(omit) linkCOMs(omit) linkForces(omit) linkInertiasCOM(omit) linkMasses(omit) linkParents(omit) linkTorques(omit) nodeNumber(omit)
+  ObjectKinematicTree: Vcolor(omit) VgraphicsDataList(omit) Vshow(omit) VshowJoints(omit) VshowLinks(omit) baseOffset(omit) forceUserFunction(omit) gravity(omit) jointDControlVector(omit) jointForceVector(omit) jointHTs(omit) jointOffsets(omit) jointPControlVector(omit) jointPositionOffsetVector(omit) jointTransformations(omit) jointTypes(omit) jointVelocityOffsetVector(omit) linkCOMs(omit) linkForces(omit) linkInertiasCOM(omit) linkMasses(omit) linkParents(omit) linkTorques(omit) nodeNumber(omit)
   ObjectMass1D: VgraphicsData(omit) Vshow(omit) nodeNumber(omit) physicsMass(omit) referencePosition(omit) referenceRotation(omit)
   ObjectMassPoint: VgraphicsData(omit) Vshow(omit) nodeNumber(omit) physicsMass(omit)
   ObjectMassPoint2D: VgraphicsData(omit) Vshow(omit) nodeNumber(omit) physicsMass(omit)

@@ -214,6 +214,68 @@ namespace EPyUtils
 	}
 }
 
+//! a list of HTs, of an item that stores it as a list of rotations and a list of translations (#2798)
+namespace EPyUtils
+{
+	//! the HTs as a Python list of 4x4 numpy arrays
+	inline py::list HTListToPython(const Matrix3DList& rotations, const Vector3DList& translations)
+	{
+		py::list list;
+		Index n = EXUstd::Minimum(rotations.NumberOfItems(), translations.NumberOfItems());
+		for (Index i = 0; i < n; i++) { list.append(ToPython(HomogeneousTransformation(rotations[i], translations[i]))); }
+		return list;
+	}
+
+	//! rotations and translations from a list of exu.HT, 4x4 matrices or their 16 values
+	inline void HTListFromPython(const py::object& value, Matrix3DList& rotations, Vector3DList& translations, const char* context)
+	{
+		if (value.is_none() || !(py::isinstance<py::sequence>(value) || py::isinstance<py::array>(value)))
+		{
+			PyError(STDstring(context) + ": a list of HTs must be a list of exu.HT, 4x4 matrices or their 16 values", PyErrorType::typeError);
+			return;
+		}
+		rotations.SetNumberOfItems(0);
+		translations.SetNumberOfItems(0);
+		for (py::handle item : value)
+		{
+			HomogeneousTransformation ht;
+			HTFromPython(py::reinterpret_borrow<py::object>(item), ht, context);
+			rotations.Append(ht.GetRotation());
+			translations.Append(ht.GetTranslation());
+		}
+	}
+
+	//! the list of HTs from a dictionary, if given and not None: it writes the rotations and translations, which the
+	//! dictionary may give as well (written before): then they must agree
+	inline void HTListFromDictionary(const py::dict& d, const char* htName, const char* rotationsName, const char* translationsName,
+		Matrix3DList& rotations, Vector3DList& translations, const char* className)
+	{
+		if (!DictItemExists(d, htName) || d[htName].is_none()) { return; }
+		Matrix3DList newRotations;
+		Vector3DList newTranslations;
+		HTListFromPython(d[htName], newRotations, newTranslations, (STDstring(className) + "." + htName).c_str());
+		auto Given = [&d](const char* name) { return DictItemExists(d, name) && !d[name].is_none() && py::len(d[name]) != 0; };
+		if (Given(rotationsName) || Given(translationsName))
+		{
+			bool agree = rotations.NumberOfItems() == newRotations.NumberOfItems() && translations.NumberOfItems() == newTranslations.NumberOfItems();
+			for (Index i = 0; agree && i < newRotations.NumberOfItems(); i++)
+			{
+				Real difference = (translations[i] - newTranslations[i]).GetL2Norm();
+				for (Index k = 0; k < 9; k++) { difference += fabs(rotations[i].GetDataPointer()[k] - newRotations[i].GetDataPointer()[k]); }
+				agree = difference <= 1e-12 * (1. + newTranslations[i].GetL2Norm());
+			}
+			if (!agree)
+			{
+				PyError(STDstring(className) + ": " + htName + " and " + rotationsName + " or " + translationsName +
+					" are given and differ; give one of them, the other None", PyErrorType::valueError);
+				return;
+			}
+		}
+		rotations = newRotations;
+		translations = newTranslations;
+	}
+}
+
 //! an output variable as Python object (#2789): HomogeneousTransformation as exu.HT, from its 16 values row by row; a single
 //! value as float; else a numpy array
 inline py::object OutputVariableToPython(OutputVariableType variableType, const Vector& value)

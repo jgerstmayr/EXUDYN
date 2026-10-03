@@ -2769,6 +2769,8 @@ class ObjectKinematicTree:
 
         jointOffsets: list of constant joint offsets from parent joint to this joint; :math:`p_0`, :math:`p_1`, :math:`\ldots` denote the parent coordinate systems; this means that the joint offset is added prior to performing the joint transformation; if no parent exists (:math:`-1`), the base coordinate system :math:`0` is used; must be always set; type: Vector3DList
 
+        jointHTs: the joint transformations and the joint offsets at once, as a list of homogeneous transformations from the parent joint to this joint - :math:`\Hm_i` with the rotation :math:`\Tm_i` and the translation :math:`{}^{p_i}{o_i}`, each a 4x4 matrix, its 16 values or an exu.HT; None: not given; given together with jointTransformations or jointOffsets, they must agree; type: list of array_like (4x4) or exudyn.HT
+
         linkInertiasCOM: list of link inertia tensors w.r.t. COM in joint/link :math:`j_i` coordinates; must be always set; type: Matrix3DList
 
         linkCOMs: list of vectors for center of mass (COM) in joint/link :math:`j_i` coordinates; must be always set; type: Vector3DList
@@ -2799,7 +2801,7 @@ class ObjectKinematicTree:
         Requested Node type: ``GenericODE2``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), gravity = [0.,0.,0.], baseOffset = [0.,0.,0.], jointTypes = [], linkParents = [], jointTransformations = None, jointOffsets = None, linkInertiasCOM = None, linkCOMs = None, linkMasses = [], linkForces = None, linkTorques = None, jointForceVector = [], jointPositionOffsetVector = [], jointVelocityOffsetVector = [], jointPControlVector = [], jointDControlVector = [], forceUserFunction: Union[ObjectKinematicTreeForceUserFunction, int] = 0, visualization = {'show': True, 'showLinks': True, 'showJoints': True, 'color': [-1.,-1.,-1.,-1.], 'graphicsDataList': []}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), gravity = [0.,0.,0.], baseOffset = [0.,0.,0.], jointTypes = [], linkParents = [], jointTransformations = None, jointOffsets = None, jointHTs = None, linkInertiasCOM = None, linkCOMs = None, linkMasses = [], linkForces = None, linkTorques = None, jointForceVector = [], jointPositionOffsetVector = [], jointVelocityOffsetVector = [], jointPControlVector = [], jointDControlVector = [], forceUserFunction: Union[ObjectKinematicTreeForceUserFunction, int] = 0, visualization = {'show': True, 'showLinks': True, 'showJoints': True, 'color': [-1.,-1.,-1.,-1.], 'graphicsDataList': []}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.gravity = np.array(gravity)
@@ -2808,6 +2810,7 @@ class ObjectKinematicTree:
         self.linkParents = copy.copy(linkParents)
         self.jointTransformations = jointTransformations
         self.jointOffsets = jointOffsets
+        self.jointHTs = jointHTs
         self.linkInertiasCOM = linkInertiasCOM
         self.linkCOMs = linkCOMs
         self.linkMasses = np.array(linkMasses)
@@ -2831,6 +2834,7 @@ class ObjectKinematicTree:
         yield 'linkParents', self.linkParents
         yield 'jointTransformations', self.jointTransformations
         yield 'jointOffsets', self.jointOffsets
+        yield 'jointHTs', self.jointHTs
         yield 'linkInertiasCOM', self.linkInertiasCOM
         yield 'linkCOMs', self.linkCOMs
         yield 'linkMasses', self.linkMasses

@@ -154,9 +154,9 @@ def ItemCppHeaders(definition):
     usesBodyGraphicsData = False #the MAIN class calls the Py...BodyGraphicsData... functions
     usesHT = False #an HT parameter: the main class converts it with Pymodules/PyHomogeneousTransformation.h (#2793)
     for parameter in parameterList:
-        if (IsOwnVariable(parameter)) and not HTPartOf(parameter): #only if it is a member variable; the part of an HT is not stored
+        if (IsOwnVariable(parameter)) and not HTPartOf(parameter) and not HTListOf(parameter): #only if it is a member variable; the part of an HT and a list of HTs are not stored
             cntParameters[DestinationNr(Destination(parameter))] += 1
-        if TypeName(parameter) == 'HomogeneousTransformation' and IsVariable(parameter):
+        if TypeName(parameter) in ['HomogeneousTransformation', 'HomogeneousTransformationList'] and IsVariable(parameter):
             usesHT = True
         if TypeName(parameter).find('PyFunction') != -1:
             usesPyFunction = True
@@ -283,7 +283,7 @@ def ItemCppHeaders(definition):
 
     #process variables:    
     for parameter in parameterList:
-        if (IsOwnVariable(parameter) and not HTPartOf(parameter) and
+        if (IsOwnVariable(parameter) and not HTPartOf(parameter) and not HTListOf(parameter) and
             not IsInternalSetGetParameter(TypeName(parameter)) ): #only if it is a member variable but not special one with conversion
         
             isPyFunction = (TypeName(parameter).find('PyFunction') != -1) 
@@ -334,7 +334,7 @@ def ItemCppHeaders(definition):
             sList[i]+=space4+'{\n'
         
             for parameter in parameterList:
-                if (IsVariable(parameter) and not HTPartOf(parameter) and
+                if (IsVariable(parameter) and not HTPartOf(parameter) and not HTListOf(parameter) and
                     not IsInternalSetGetParameter(TypeName(parameter)) ): #only if it is a variable and not variable with internal conversion; include parent members
                     strDefault = DefaultValue(parameter)
                     if len(strDefault) or (TypeName(parameter) == 'String'): #only add initialization if default value exists
@@ -497,6 +497,9 @@ def ItemCppHeaders(definition):
                     parRead = 'EPyUtils::ToPython(' + destFolder + HTPartOf(parameter) + '.' + part + ')'
                 elif TypeName(parameter) == 'HomogeneousTransformation': #a 4x4 numpy array (#2793)
                     parRead = 'EPyUtils::ToPython(' + destStr + ')'
+                elif HTListOf(parameter): #a list of 4x4 numpy arrays, from the stored rotations and translations (#2798)
+                    (rotations, translations) = HTListOf(parameter)
+                    parRead = 'EPyUtils::HTListToPython(' + destFolder + rotations + ', ' + destFolder + translations + ')'
                 elif TypeName(parameter)[:-2] == 'Matrix' and TypeName(parameter)[-1] == 'D':
                     parRead = 'EPyUtils::ToPython(' + destStr + ')'
                 elif TypeName(parameter)[:-2] == 'Vector' and TypeName(parameter)[-1] == 'D': #any Vector2D, Vector3D, ...
@@ -566,7 +569,14 @@ def ItemCppHeaders(definition):
                                                     
                 #+++++++++++++++++
                 #write to dictionary
-                if (not HasFlag(parameter, 'R')) and (HTPartOf(parameter) or TypeName(parameter) == 'HomogeneousTransformation'):
+                if (not HasFlag(parameter, 'R')) and HTListOf(parameter):
+                    #a list of HTs: written after its parts, None meaning not given (#2798)
+                    (rotations, translations) = HTListOf(parameter)
+                    context = '"' + classStr + '.' + pyName + '"'
+                    dictListWrite[i] += (space8 + 'EPyUtils::HTListFromDictionary(d, "' + pyName + '", "' + rotations + '", "' + translations
+                                         + '", ' + destFolder + rotations + ', ' + destFolder + translations + ', "' + classStr + '");' + chr(10))
+                    parWrite += 'EPyUtils::HTListFromPython(value, ' + destFolder + rotations + ', ' + destFolder + translations + ', ' + context + ');'
+                elif (not HasFlag(parameter, 'R')) and (HTPartOf(parameter) or TypeName(parameter) == 'HomogeneousTransformation'):
                     #an HT and its parts: written together from the dictionary, None meaning not given (#2793)
                     context = '"' + classStr + '.' + pyName + '"'
                     if HTPartOf(parameter):
@@ -599,7 +609,7 @@ def ItemCppHeaders(definition):
                 if parRead != '':
                     #if TypeName(parameter).find('Numpy') != -1: #do not add py::cast(...) NumpyMatrix/Vector
                     parameterReadStr += 'if (parameterName.compare("' + pyName + '") == 0) { return '
-                    if parRead.startswith('EPyUtils::ToPython('): #already a Python object
+                    if parRead.startswith('EPyUtils::ToPython(') or parRead.startswith('EPyUtils::HTListToPython('): #already a Python object
                         parameterReadStr += parRead
                     elif isPyFunction:
                         #parameterReadStr += destStr+' ? py::cast('+parRead+') : py::cast((int)0);'

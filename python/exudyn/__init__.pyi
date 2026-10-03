@@ -705,6 +705,10 @@ class HT:
         """True if rotation and translation are equal, component by component."""
         ...
     @overload
+    def __array__(self, dtype: Any=None, copy: Any=None) -> ArrayLike: 
+        """The 4x4 matrix [A p; 0 1] as numpy array, for np.array(H) and wherever numpy takes the HT."""
+        ...
+    @overload
     def __repr__(self) -> str: 
         """The string representation of the HT."""
         ...

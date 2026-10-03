@@ -626,6 +626,7 @@ TNumpyMatrixI                      = TypeSpec('NumpyMatrixI')
 TTransformation66List              = TypeSpec('Transformation66List')
 TBeamSection                       = TypeSpec('BeamSection')
 THomogeneousTransformation         = TypeSpec('HomogeneousTransformation')
+THomogeneousTransformationList     = TypeSpec('HomogeneousTransformationList')
 TAccessFunctionType                = TypeSpec('AccessFunctionType')
 TBodyGraphicsDataList              = TypeSpec('BodyGraphicsDataList')
 TCNodeGroup                        = TypeSpec('CNodeGroup')
@@ -650,7 +651,11 @@ userFunctionSignatures = {'KeyPressUserFunction': 'std::function<bool(int, int, 
 def ItemParameter(type=Required, destination=Required, pythonName=Required,
                   defaultValue=Required, description=Required,
                   cFlags='', size='', args='', cplusplusName='',
-                  fromParent=False, deprecated=None, userFunction=None, userFunctionExample=None, partOfHT=''):
+                  fromParent=False, deprecated=None, userFunction=None, userFunctionExample=None, partOfHT='',
+                  htListOf=None):
+    #htListOf: for a list of HTs (THomogeneousTransformationList), the names of the list of rotations (a
+    #TMatrix3DList) and of translations (a TVector3DList) it is composed of: those are stored, the list of HTs
+    #reads and writes them; it defaults to None, "not given" (#2798)
     #partOfHT: for the position (a Vector3D) or the rotation (a Matrix3D) of a frame, the name of the
     #HomogeneousTransformation parameter it is part of: C++ stores only the HT, and the part reads and
     #writes its share of it; the HT and its parts default to None, "not given" (#2793)
