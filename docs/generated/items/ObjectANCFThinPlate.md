@@ -23,17 +23,20 @@ The parameters of the item; in a dictionary, its type is 'ANCFThinPlate':
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsThickness** | NumpyVector |  | [] | (symbol: $h$) [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients |
-| **physicsDensity** | UReal |  | 0. | (symbol: $\rho$) [SI:kg/m$^3$] density of the plate, possibly averaged over thickness |
-| **physicsMassProportionalDamping** | Real |  | 0. | mass-proportional damping coefficient $\alpha$ [SI:1/s]; adds massmatrix proportional damping forces $\fv_d = \alpha \Mm \dot{\qv}$ |
-| **physicsStrainCoefficients** | Matrix3DList |  | [] | (symbol: $\Dm_\varepsilon$) [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients |
-| **physicsCurvatureCoefficients** | Matrix3DList |  | [] | (symbol: $\Dm_\kappa$) [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients |
+| **thickness** | NumpyVector |  | [] | (symbol: $h$) [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients |
+| **density** | UReal |  | 0. | (symbol: $\rho$) [SI:kg/m$^3$] density of the plate, possibly averaged over thickness |
+| **massProportionalDamping** | Real |  | 0. | mass-proportional damping coefficient $\alpha$ [SI:1/s]; adds massmatrix proportional damping forces $\fv_d = \alpha \Mm \dot{\qv}$ |
+| **strainCoefficients** | Matrix3DList |  | [] | (symbol: $\Dm_\varepsilon$) [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients |
+| **curvatureCoefficients** | Matrix3DList |  | [] | (symbol: $\Dm_\kappa$) [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients |
 | **strainIsRelativeToReference** | Real |  | 1. | (symbol: $f\cRef$) if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation |
 | **slopesScalingX** | Vector4D | 4 | [-1.,-1.,-1.,-1.] | scaling of x-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances. |
 | **slopesScalingY** | Vector4D | 4 | [-1.,-1.,-1.,-1.] | scaling of y-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances. |
 | **nodeNumbers** | NodeIndex4 | 4 | [invalid (-1), invalid (-1), invalid (-1), invalid (-1)] | 4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)] |
 | **useReducedOrderIntegration** | Index |  | 0 | 0/false: use highest Gauss integration for virtual work of strains |
 | **visualization** | VObjectANCFThinPlate |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsThickness` (deprecated since 1.12.258, removed in 2031): use `thickness`; `physicsDensity` (deprecated since 1.12.258, removed in 2031): use `density`; `physicsMassProportionalDamping` (deprecated since 1.12.258, removed in 2031): use `massProportionalDamping`; `physicsStrainCoefficients` (deprecated since 1.12.258, removed in 2031): use `strainCoefficients`; `physicsCurvatureCoefficients` (deprecated since 1.12.258, removed in 2031): use `curvatureCoefficients`.
 
 ## Visualization parameters
 
@@ -92,8 +95,8 @@ the side length of a flat element by default.
 
 Kirchhoff plate: the in-plane strains of the mid-surface and the curvatures from the second
 derivatives of the position, relative to the reference configuration with `strainIsRelativeToReference`,
-with the stiffness coefficients $\Dm_\varepsilon$ = `physicsStrainCoefficients` and $\Dm_\kappa$ =
-`physicsCurvatureCoefficients`, integrated over the thickness.
+with the stiffness coefficients $\Dm_\varepsilon$ = `strainCoefficients` and $\Dm_\kappa$ =
+`curvatureCoefficients`, integrated over the thickness.
 
 ### Mass matrix and damping
 

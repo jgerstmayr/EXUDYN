@@ -22,7 +22,7 @@ def MassPointModel():
     """one mass point under gravity: its x coordinate stays 0, its y coordinate falls"""
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
-    oMass = mbs.CreateMassPoint(referencePosition=[0, 0, 0], physicsMass=1, gravity=[0, -9.81, 0])
+    oMass = mbs.CreateMassPoint(referencePosition=[0, 0, 0], mass=1, gravity=[0, -9.81, 0])
     mbs.Assemble()
     return (SC, mbs, mbs.GetObject(oMass)['nodeNumber'])
 

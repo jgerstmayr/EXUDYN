@@ -22,7 +22,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 #the position of a node: a mass hanging on a spring from a ground node, released at rest
 nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,-1]))
-mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, mass=1))
 mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
 mFixed = mbs.AddMarker(MarkerNodePosition(nodeNumber=nGround))
 k = (2*np.pi)**2 #1 Hz

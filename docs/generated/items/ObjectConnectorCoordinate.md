@@ -27,12 +27,15 @@ The parameters of the item; in a dictionary, its type is 'ConnectorCoordinate':
 | **name** | String |  | '' | constraints's unique name |
 | **markerNumbers** | ArrayMarkerIndex |  | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers used in connector |
 | **offset** | Real |  | 0. | (symbol: $l_\mathrm{off}$) An offset between the two values |
-| **factorValue1** | Real |  | 1. | (symbol: $k_{m1}$) An additional factor multiplied with value1 used in algebraic equation |
+| **factor1** | Real |  | 1. | (symbol: $k_{m1}$) An additional factor multiplied with value1 used in algebraic equation |
 | **velocityLevel** | Bool |  | False | If true: connector constrains velocities (only works for {ref}`ODE2 <ODE2>` coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored |
 | **offsetUserFunction** | ObjectConnectorCoordinateOffsetUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the time-dependent offset; see description below |
 | **offsetUserFunction_t** | ObjectConnectorCoordinateOffsetUserFunction_t |  | 0 | (symbol: $\mathrm{UF}_t \in \Rcal$) time derivative of offsetUserFunction; needed for velocity level constraints; see description below |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorCoordinate |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `factorValue1` (deprecated since 1.12.258, removed in 2031): use `factor1`.
 
 ## Visualization parameters
 
@@ -56,8 +59,8 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 | output variable | symbol | description |
 |---|---|---|
-| Displacement | $\Delta q$ | relative scalar displacement of marker coordinates, not including factorValue1 |
-| Velocity | $\Delta v$ | difference of scalar marker velocity coordinates, not including factorValue1 |
+| Displacement | $\Delta q$ | relative scalar displacement of marker coordinates, not including factor1 |
+| Velocity | $\Delta v$ | difference of scalar marker velocity coordinates, not including factor1 |
 | ConstraintEquation | $\cv$ | (residuum of) constraint equation |
 | Force | $\lambda_0$ | scalar constraint force (Lagrange multiplier) |
 
@@ -164,7 +167,7 @@ def UFoffset_t(mbs, t, itemNumber, lOffset): #time derivative of UFoffset
     return 0.5*lOffset*0.5*pi*sin(0.5*pi*t)
 
 nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
-massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+massPoint = mbs.AddObject(MassPoint(mass = 5, nodeNumber = nMass))
 
 groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
 nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
@@ -185,7 +188,7 @@ def OffsetUF(mbs, t, itemNumber, lOffset): #gives 0.05 at t=1
     return 0.5*(1-np.cos(2*3.141592653589793*0.25*t))*lOffset
 
 nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
-massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+massPoint = mbs.AddObject(MassPoint(mass = 5, nodeNumber = nMass))
 
 groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
 nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))

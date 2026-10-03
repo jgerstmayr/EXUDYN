@@ -61,7 +61,7 @@ g = 9.81    # gravity
 
 graphicsCube = graphics.Brick(centerPoint=[0,0,0], size=[L,b,b], color=graphics.color.steelblue)
 nRigid0 = mbs.AddNode(Rigid2D(referenceCoordinates=[0.5*L,0,0], initialVelocities=[0,0,0]));
-oRigid0 = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid0,
+oRigid0 = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid0,
                                    visualization=VObjectRigidBody2D(graphicsData= [graphicsCube])))
 
 mR0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid0, localPosition=[-0.5*L,0.,0.])) #support point
@@ -74,7 +74,7 @@ mbs.AddObject(RevoluteJoint2D(markerNumbers=[mG0,mR0]))
 mbs.AddLoad(Force(markerNumber = mR0com, loadVector = [0, -massRigid*g, 0]))
 
 nRigid1 = mbs.AddNode(Rigid2D(referenceCoordinates=[1.5*L,0,0], initialVelocities=[0,0,0]));
-oRigid1 = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid1,
+oRigid1 = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid1,
                                    visualization=VObjectRigidBody2D(graphicsData= [graphicsCube])))
 
 mR1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid1, localPosition=[-0.5*L,0.,0.])) #support point

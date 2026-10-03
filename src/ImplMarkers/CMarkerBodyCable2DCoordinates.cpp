@@ -44,7 +44,7 @@ void CMarkerBodyCable2DCoordinates::ComputeMarkerData(const CSystemData& cSystem
 	ConstSizeVector<nnc> q0DisplRef;	//coordinates (displacement+reference) node 0
 	ConstSizeVector<nnc> q1DisplRef; //coordinates (displacement+reference) node 1
 
-	markerData.GetHelper() = cable->GetLength(); //OLD: 2020-03-09; cable->GetParameters().physicsLength; //needed for shape function computation; WORKAROUND
+	markerData.GetHelper() = cable->GetLength(); //OLD: 2020-03-09; cable->GetParameters().length; //needed for shape function computation; WORKAROUND
 
 	markerData.vectorValue.SetNumberOfItems(nCoordinatesCable); //stores 8 cable coordinates
 	markerData.vectorValue_t.SetNumberOfItems(nCoordinatesCable); //stores 8 cable coordinates velocities

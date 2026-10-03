@@ -24,8 +24,8 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0.2,0]+eulerParameters0,
                                    initialVelocities=[0,0,5]+list(AngularVelocity2EulerParameters_t([0,0,1], eulerParameters0))))
-body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                     physicsInertia=inertia.GetInertia6D()))
+body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                     inertia=inertia.GetInertia6D()))
 mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
 mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,0,-9.81]))
 

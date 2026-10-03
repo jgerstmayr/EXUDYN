@@ -39,11 +39,11 @@ def Run(mu, stepSize=1e-5, tEnd=0.05):
     iR=InertiaCylinder(density=7800, length=0.02, outerRadius=0.12, innerRadius=0.1, axis=2)
     nB=mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.1005,0,0]+eulerParameters0, initialVelocities=[0.5,1,0.2]+list(AngularVelocity2EulerParameters_t([0,0,50],eulerParameters0))))
     nR=mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0, initialVelocities=[0,0,0]+list(AngularVelocity2EulerParameters_t([0,2,3],eulerParameters0))))
-    b=mbs.AddObject(ObjectRigidBody(nodeNumber=nB, physicsMass=iB.Mass(), physicsInertia=iB.GetInertia6D()))
-    r=mbs.AddObject(ObjectRigidBody(nodeNumber=nR, physicsMass=iR.Mass(), physicsInertia=iR.GetInertia6D(), physicsCenterOfMass=iR.COM()))
+    b=mbs.AddObject(ObjectRigidBody(nodeNumber=nB, mass=iB.Mass(), inertia=iB.GetInertia6D()))
+    r=mbs.AddObject(ObjectRigidBody(nodeNumber=nR, mass=iR.Mass(), inertia=iR.GetInertia6D(), centerOfMass=iR.COM()))
     mB=mbs.AddMarker(MarkerBodyRigid(bodyNumber=b)); mR=mbs.AddMarker(MarkerBodyRigid(bodyNumber=r))
     nD=mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0,0,0,0]))
-    mbs.AddObject(ObjectContactSphereTorus(markerNumbers=[mB,mR], nodeNumber=nD, radiusSphere=0.01, torusMajorRadius=0.1, torusMinorRadius=0.011,
+    mbs.AddObject(ObjectContactSphereTorus(markerNumbers=[mB,mR], nodeNumber=nD, sphereRadius=0.01, torusMajorRadius=0.1, torusMinorRadius=0.011,
         torusAxis=[0,0,1], contactStiffness=1e6, contactDamping=1e2, dynamicFriction=mu, frictionProportionalZone=1e-3))
     sens={}
     for name,n in [('B',nB),('R',nR)]:

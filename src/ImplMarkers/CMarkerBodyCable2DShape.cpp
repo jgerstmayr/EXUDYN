@@ -45,7 +45,7 @@ void CMarkerBodyCable2DShape::ComputeMarkerData(const CSystemData& cSystemData, 
 	CObjectANCFCable2DBase* cable = ((CObjectANCFCable2DBase*)(cSystemData.GetCObjects()[parameters.bodyNumber]));
 
 	Index nCoordinatesCable = cable->GetODE2Size(); //gives 9 for ALE
-	//Real L = cable->GetParameters().physicsLength;
+	//Real L = cable->GetParameters().length;
 	Real L = cable->GetLength();
 	const Index ns = 4;   //number of shape functions
 	const Index dim = 2;

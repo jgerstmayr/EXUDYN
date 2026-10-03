@@ -117,7 +117,7 @@ Index CObjectRigidBody::GetAlgebraicEquationsSize() const
 bool CObjectRigidBody::HasConstantMassMatrix() const
 {
 	if (EXUstd::IsOfType(((CNodeRigidBody*)GetCNode(0))->GetType(), Node::RotationRotationVector) &&
-		(parameters.physicsCenterOfMass == 0.))
+		(parameters.centerOfMass == 0.))
 	{
 		return true;
 	}
@@ -132,7 +132,7 @@ void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, 
 	static_assert(nDisplacementCoordinates == CNodeRigidBody::maxDisplacementCoordinates); //add this code to raise compiler error, if max. number of displacement coordiantes changes in RigidBodyNode ==> requires reimplementation in this file!
 
 	//set mass terms in first 3 diagonal entries and set remaining entries to zero (the last 4x4 entries will be overwritten when filling in inertia terms)
-	massMatrix.SetScalarMatrix(GetODE2Size(), parameters.physicsMass);
+	massMatrix.SetScalarMatrix(GetODE2Size(), parameters.mass);
 
 	//ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> rot = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters();
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
@@ -144,12 +144,12 @@ void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, 
 	//Index nRotationCoordinates = ((CNodeRigidBody*)GetCNode(0))->GetNumberOfRotationCoordinates();
 
 	//ConstSizeMatrix<9> localInertia;
-	//RigidBodyMath::ComputeInertiaMatrix(parameters.physicsInertia, localInertia);
+	//RigidBodyMath::ComputeInertiaMatrix(parameters.inertia, localInertia);
 	////EXUmath::MultMatrixTransposedMatrix(Glocal, localInertia, GlocalInertia);
 
 	GlocalInertia.SetNumberOfRowsAndColumns(Glocal.NumberOfColumns(), nDim3D);
 
-	const Vector6D& J6D = parameters.physicsInertia;
+	const Vector6D& J6D = parameters.inertia;
 	for (Index i = 0; i < Glocal.NumberOfColumns(); i++)
 	{
 		GlocalInertia(i, 0) = Glocal(0, i) * J6D[0] + Glocal(1, i) * J6D[5] + Glocal(2, i) * J6D[4];
@@ -162,11 +162,11 @@ void CObjectRigidBody::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, 
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//Terms for COM!=0
-	if (!(parameters.physicsCenterOfMass == 0.)) //component-wise compare
+	if (!(parameters.centerOfMass == 0.)) //component-wise compare
 	{
 		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> mRTheta; //off-diagonal mass term
 		//–m * A * \tilde \bar u_{ COM } \bar G
-		EXUmath::MultMatrixMatrix(RigidBodyMath::Vector2SkewMatrix((-parameters.physicsMass)*parameters.physicsCenterOfMass), Glocal, GlocalInertia);
+		EXUmath::MultMatrixMatrix(RigidBodyMath::Vector2SkewMatrix((-parameters.mass)*parameters.centerOfMass), Glocal, GlocalInertia);
 		EXUmath::MultMatrixMatrix(((CNodeRigidBody*)GetCNode(0))->GetRotationMatrix(), GlocalInertia, mRTheta);
 		Index nRotationCoordinates = Glocal.NumberOfColumns();
 
@@ -224,8 +224,8 @@ void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 	//inertiaParameters[0], inertiaParameters[5], inertiaParameters[4],
 	//inertiaParameters[5], inertiaParameters[1], inertiaParameters[3],
 	//inertiaParameters[4], inertiaParameters[3], inertiaParameters[2] });
-	//const Vector6D& J6D = parameters.physicsInertia;
-	const Real* J6D = parameters.physicsInertia.GetDataPointer();
+	//const Vector6D& J6D = parameters.inertia;
+	const Real* J6D = parameters.inertia.GetDataPointer();
 
 	Vector3D JomegaBar({ 
 		J6D[0] * omegaBar[0] + J6D[5] * omegaBar[1] + J6D[4] * omegaBar[2],
@@ -245,7 +245,7 @@ void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal_t; //store this term for case with COM!=0
 		LinkedDataVector rot_t = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters_t();//store this term for case with COM!=0
 		ConstSizeMatrix<9> localInertia;
-		RigidBodyMath::ComputeInertiaMatrix(parameters.physicsInertia, localInertia); //localInertia @ vector could be implemented as separate (hardcoded) function
+		RigidBodyMath::ComputeInertiaMatrix(parameters.inertia, localInertia); //localInertia @ vector could be implemented as separate (hardcoded) function
 			
 		//compute: forces2 = Glocal^T * localInertia * Glocal_t * rot_t
 		ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> forces2;
@@ -283,11 +283,11 @@ void CObjectRigidBody::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 	//STARTGLOBALTIMER(TSrigidPart2);
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//Terms for COM!=0
-	if (!(parameters.physicsCenterOfMass == 0.)) //component-wise compare
+	if (!(parameters.centerOfMass == 0.)) //component-wise compare
 	{
 		//add terms with Ubar=m*xBar_COM != 0; addForce is put on left-hand-side
 		//additional term: -A*[omegaBar x (Ubar x omegaBar) + Ubar x (Glocal_t * rot_t) ]
-		Vector3D Ubar = -parameters.physicsMass * parameters.physicsCenterOfMass;	//negative sign of -A[...]
+		Vector3D Ubar = -parameters.mass * parameters.centerOfMass;	//negative sign of -A[...]
 		Vector3D addForce = omegaBar.CrossProduct(Ubar.CrossProduct(omegaBar));		//omegaBar x (U x omegaBar)
 
 		addForce += Ubar.CrossProduct(Glocal_tTheta_t);								//U x (Glocal_t * rot_t) (=0 if EulerParameters)
@@ -514,9 +514,9 @@ bool CObjectRigidBody::GetJacobianTransposedTimesVectorDerivative(const Vector3D
 //! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
 void CObjectRigidBody::GetMassWeightedPositionJacobian(Matrix& value) const
 {
-	Real m = parameters.physicsMass;
+	Real m = parameters.mass;
 
-	if (parameters.physicsCenterOfMass == 0.)
+	if (parameters.centerOfMass == 0.)
 	{
 		value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
 		value.SetAll(0.);
@@ -530,8 +530,8 @@ void CObjectRigidBody::GetMassWeightedPositionJacobian(Matrix& value) const
 		((CNodeRigidBody*)GetCNode(0))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
 
 
-		ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*parameters.physicsCenterOfMass); //negative sign in -A*uLocalTilde*Glocal
-		//uLocalTilde *= -1.;//moved into ((-m)*parameters.physicsCenterOfMass)
+		ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*parameters.centerOfMass); //negative sign in -A*uLocalTilde*Glocal
+		//uLocalTilde *= -1.;//moved into ((-m)*parameters.centerOfMass)
 
 		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> temp; //temporary matrix during computation
 		EXUmath::MultMatrixMatrix(uLocalTilde, Glocal, temp);
@@ -634,10 +634,10 @@ void CObjectRigidBody::GetOutputVariableBody(OutputVariableType variableType, co
 		Vector3D v = GetVelocity(localPosition, configuration);
 		Vector3D omega = GetAngularVelocity(localPosition, configuration);
 		Vector3D omegaLocal = GetAngularVelocityLocal(localPosition, configuration);
-		Vector3D b = GetRotationMatrix(localPosition, configuration) * parameters.physicsCenterOfMass;
-		Real m = parameters.physicsMass;
+		Vector3D b = GetRotationMatrix(localPosition, configuration) * parameters.centerOfMass;
+		Real m = parameters.mass;
 		Matrix3D J;
-		RigidBodyMath::ComputeInertiaMatrix(parameters.physicsInertia, J);
+		RigidBodyMath::ComputeInertiaMatrix(parameters.inertia, J);
 		value.SetVector({ 0.5*m*(v*v) + m*(v*omega.CrossProduct(b)) + 0.5*(omegaLocal*(J*omegaLocal)) });
 		break; }
 	default:
@@ -858,14 +858,14 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 //	static_assert(nDisplacementCoordinates == CNodeRigidBody::maxDisplacementCoordinates); //add this code to raise compiler error, if max. number of displacement coordiantes changes in RigidBodyNode ==> requires reimplementation in this file!
 //
 //	//set mass terms in first 3 diagonal entries and set remaining entries to zero (the last 4x4 entries will be overwritten when filling in inertia terms)
-//	massMatrix.SetScalarMatrix(GetODE2Size(), parameters.physicsMass);
+//	massMatrix.SetScalarMatrix(GetODE2Size(), parameters.mass);
 //
 //	//ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> rot = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters();
 //	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> Glocal;
 //	((CNodeRigidBody*)GetCNode(0))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
 //
 //	ConstSizeMatrix<9> localInertia;
-//	RigidBodyMath::ComputeInertiaMatrix(parameters.physicsInertia, localInertia);
+//	RigidBodyMath::ComputeInertiaMatrix(parameters.inertia, localInertia);
 //
 //	//pout << "Glocal=" << Glocal << "\n";
 //	//pout << "A=" << ((CNodeRigidBody*)GetCNode(0))->GetRotationMatrix() << "\n";
@@ -888,11 +888,11 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 //
 //	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //	//Terms for COM!=0
-//	if (!(parameters.physicsCenterOfMass == 0.)) //component-wise compare
+//	if (!(parameters.centerOfMass == 0.)) //component-wise compare
 //	{
 //		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> mRTheta; //off-diagonal mass term
 //		//–m * A * \tilde \bar u_{ COM } \bar G
-//		EXUmath::MultMatrixMatrix(RigidBodyMath::Vector2SkewMatrix((-parameters.physicsMass)*parameters.physicsCenterOfMass), Glocal, GlocalInertia);
+//		EXUmath::MultMatrixMatrix(RigidBodyMath::Vector2SkewMatrix((-parameters.mass)*parameters.centerOfMass), Glocal, GlocalInertia);
 //		EXUmath::MultMatrixMatrix(((CNodeRigidBody*)GetCNode(0))->GetRotationMatrix(), GlocalInertia, mRTheta);
 //
 //		for (Index i = 0; i < nDim3D; i++)
@@ -915,7 +915,7 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 //	ode2Lhs.SetAll(0.);
 //
 //	ConstSizeMatrix<9> localInertia;
-//	RigidBodyMath::ComputeInertiaMatrix(parameters.physicsInertia, localInertia);
+//	RigidBodyMath::ComputeInertiaMatrix(parameters.inertia, localInertia);
 //
 //	//compute forces1 and forces2 on left-hand-side (M*a + forces1 + forces2)
 //	//compute: forces1 = Glocal^T * (omegaBar.Cross(localInertia*omegaBar))
@@ -980,11 +980,11 @@ void CObjectRigidBody::ComputeRigidBodyMarkerData(const Vector3D& localPosition,
 //
 //	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //	//Terms for COM!=0
-//	if (!(parameters.physicsCenterOfMass == 0.)) //component-wise compare
+//	if (!(parameters.centerOfMass == 0.)) //component-wise compare
 //	{
 //		//add terms with Ubar=m*xBar_COM != 0; addForce is put on left-hand-side
 //		//additional term: -A*[omegaBar x (Ubar x omegaBar) + Ubar x (Glocal_t * rot_t) ]
-//		Vector3D Ubar = -parameters.physicsMass * parameters.physicsCenterOfMass;	//negative sign of -A[...]
+//		Vector3D Ubar = -parameters.mass * parameters.centerOfMass;	//negative sign of -A[...]
 //		Vector3D addForce = omegaBar.CrossProduct(Ubar.CrossProduct(omegaBar));		//omegaBar x (U x omegaBar)
 //
 //		addForce += Ubar.CrossProduct(Glocal_tTheta_t);								//U x (Glocal_t * rot_t) (=0 if EulerParameters)

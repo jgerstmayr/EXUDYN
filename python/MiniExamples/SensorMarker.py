@@ -22,7 +22,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 #what a marker provides, here the velocity of a point of a body
 node = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0], initialVelocities=[0,2,0]))
-body = mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+body = mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
 mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[0,0,0]))
 mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[0,-1,0]))
 sVelocity = mbs.AddSensor(SensorMarker(markerNumber=mBody, outputVariableType=exu.OutputVariableType.Velocity,

@@ -279,7 +279,7 @@ def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
                                                     discRadius=rWheel, dryFriction=[mobileRobot['friction'][0], mobileRobot['friction'][1]], dryFrictionAngle=frictionAngle,
                                                     viscousFriction = mobileRobot['viscousFrictionWheel'], 
                                                     dryFrictionProportionalZone= mobileRobot['proportionalZone'], 
-                                                    rollingFrictionViscous=mobileRobot['friction'][2], 
+                                                    rollingViscousFriction=mobileRobot['friction'][2], 
                                                     useLinearProportionalZone=mobileRobot['linearRegularization'], 
                                                     contactStiffness=kRolling, contactDamping=dRolling,
                                                     # visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=graphics.color.blue)))

@@ -35,7 +35,7 @@ oGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0],
 nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[L,0], 
                                 initialCoordinates=[0,0],
                                 initialVelocities=[0,0]))
-oMass = mbs.AddObject(MassPoint2D(physicsMass = mass, nodeNumber = nMass, 
+oMass = mbs.AddObject(MassPoint2D(mass = mass, nodeNumber = nMass, 
                                   visualization = VObjectMassPoint2D(graphicsData = [graphicsSphere])))
 
 mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))

@@ -164,8 +164,8 @@ void CObjectANCFCable::PreComputeMassTerms() const
 	if (!massMatrixComputed)
 	{
 		precomputedMassMatrix.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
-		Real L = parameters.physicsLength;
-		Real rhoA = parameters.physicsMassPerLength;
+		Real L = parameters.length;
+		Real rhoA = parameters.massPerLength;
 		const Index dim = 3;		//3D finite element
 		const Index ns = nShapeFunctions;			//number of shape functions
 
@@ -230,12 +230,12 @@ void CObjectANCFCable::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 	const Index ns = nShapeFunctions;			//number of shape functions
 	const Index nnc = nNodalCoordinates;  //number of node coordinates
 
-	Real L = parameters.physicsLength;
-	Real EA = parameters.physicsAxialStiffness;
-	Real EI = parameters.physicsBendingStiffness;
-	Real axialStrain0 = parameters.physicsReferenceAxialStrain;
-	Real bendingDamping = parameters.physicsBendingDamping;
-	Real axialDamping = parameters.physicsAxialDamping;
+	Real L = parameters.length;
+	Real EA = parameters.axialStiffness;
+	Real EI = parameters.bendingStiffness;
+	Real axialStrain0 = parameters.referenceAxialStrain;
+	Real bendingDamping = parameters.bendingDamping;
+	Real axialDamping = parameters.axialDamping;
 
 	Index cnt;
 	Real a = 0; //integration interval [a,b]
@@ -303,7 +303,7 @@ void CObjectANCFCable::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 			}
 		}
 
-		//elasticForces *= integrationFactor * GetParameters().physicsAxialStiffness * (axialStrain - GetParameters().physicsReferenceAxialStrain);
+		//elasticForces *= integrationFactor * GetParameters().axialStiffness * (axialStrain - GetParameters().referenceAxialStrain);
 		elasticForces *= integrationFactor * (EA * (axialStrain - axialStrainRef) + axialDamping * axialStrain_t);
 
 		ode2Lhs += elasticForces;  //add to element elastic forces
@@ -490,8 +490,8 @@ void CObjectANCFCable::GetMassWeightedPositionJacobian(Matrix& value) const
 	value.SetNumberOfRowsAndColumns(dim, dim * ns); //3D velocity, 12 coordinates qt
 	value.SetAll(0.);
 
-	Real L = parameters.physicsLength;
-	Real rhoA = parameters.physicsMassPerLength;
+	Real L = parameters.length;
+	Real rhoA = parameters.massPerLength;
 
 	Index cnt = 0;
 	Real a = 0; //integration interval [a,b]
@@ -548,7 +548,7 @@ void CObjectANCFCable::GetIntegrationRule(bool bending, ConstSizeVector<EXUmath:
 
 void CObjectANCFCable::ComputeReferenceStrains(Real x, Real& axialStrainRef, Vector3D& curvatureRef) const
 {
-	axialStrainRef = parameters.physicsReferenceAxialStrain;
+	axialStrainRef = parameters.referenceAxialStrain;
 	curvatureRef.SetAll(0.);
 	if (parameters.strainIsRelativeToReference != 0.)
 	{
@@ -561,7 +561,7 @@ void CObjectANCFCable::ComputeReferenceStrains(Real x, Real& axialStrainRef, Vec
 
 Real CObjectANCFCable::ComputeElasticEnergy(ConfigurationType configuration) const
 {
-	Real L = parameters.physicsLength;
+	Real L = parameters.length;
 	ConstSizeVector<EXUmath::maxIntegrationPoints> points, weights;
 	Real energy = 0.;
 	for (bool bending : {false, true})
@@ -577,12 +577,12 @@ Real CObjectANCFCable::ComputeElasticEnergy(ConfigurationType configuration) con
 			if (bending)
 			{
 				Vector3D curvature = ComputeCurvature(x, configuration) - curvatureRef;
-				strainEnergy = parameters.physicsBendingStiffness * (curvature*curvature);
+				strainEnergy = parameters.bendingStiffness * (curvature*curvature);
 			}
 			else
 			{
 				Real axialStrain = ComputeAxialStrain(x, configuration) - axialStrainRef;
-				strainEnergy = parameters.physicsAxialStiffness * axialStrain*axialStrain;
+				strainEnergy = parameters.axialStiffness * axialStrain*axialStrain;
 			}
 			energy += 0.5*L*weights[i] * 0.5*strainEnergy;
 		}
@@ -653,8 +653,8 @@ void CObjectANCFCable::GetOutputVariableBody(OutputVariableType variableType, co
 		Vector3D curvatureRef;
 		ComputeReferenceStrains(x, axialStrainRef, curvatureRef);
 
-		Real force = parameters.physicsAxialStiffness * (ComputeAxialStrain(x, configuration) - axialStrainRef);
-		if (parameters.physicsAxialDamping != 0) { force += parameters.physicsAxialDamping * ComputeAxialStrain_t(x, configuration); }
+		Real force = parameters.axialStiffness * (ComputeAxialStrain(x, configuration) - axialStrainRef);
+		if (parameters.axialDamping != 0) { force += parameters.axialDamping * ComputeAxialStrain_t(x, configuration); }
 
 		value.SetVector({ force }); break;
 	}
@@ -665,10 +665,10 @@ void CObjectANCFCable::GetOutputVariableBody(OutputVariableType variableType, co
 		Vector3D curvatureRef;
 		ComputeReferenceStrains(x, axialStrainRef, curvatureRef);
 
-		Vector3D torque = parameters.physicsBendingStiffness * (ComputeCurvature(x, configuration) - curvatureRef);
-		if (parameters.physicsBendingDamping != 0) 
+		Vector3D torque = parameters.bendingStiffness * (ComputeCurvature(x, configuration) - curvatureRef);
+		if (parameters.bendingDamping != 0) 
 		{ 
-			torque += parameters.physicsBendingDamping * ComputeCurvature_t(x, configuration); 
+			torque += parameters.bendingDamping * ComputeCurvature_t(x, configuration); 
 		}
 		value.CopyFrom(torque); 
 		break;

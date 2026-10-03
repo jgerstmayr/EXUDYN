@@ -102,7 +102,7 @@ force of a load or connector enters them with its first two components.
 ```python
 #a planar point mass under gravity, thrown with an initial velocity
 node = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0], initialVelocities=[1,2]))
-oMass = mbs.AddObject(ObjectMassPoint2D(nodeNumber=node, physicsMass=1))
+oMass = mbs.AddObject(ObjectMassPoint2D(nodeNumber=node, mass=1))
 mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
 mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[0,-9.81,0]))
 

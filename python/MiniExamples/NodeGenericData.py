@@ -23,7 +23,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 #data coordinates hold a state that is no degree of freedom and that the object updates after each step:
 #here the limit stop of a connector, which a mass is pushed against
 node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
 mMass = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
 mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[0,0,0]))

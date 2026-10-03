@@ -71,7 +71,7 @@ gGroundList = [graphics.Brick(centerPoint=[-0.1,0,0],size=[0.2,0.4,0.4],color=gr
 
 oGround = mbs.CreateGround(graphicsDataList=gGroundList)
 oMass = mbs.CreateMassPoint(referencePosition=[L,0,0],
-                            physicsMass=mass,
+                            mass=mass,
                             graphicsDataList=[gSphere])
 
 mMass = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oMass))

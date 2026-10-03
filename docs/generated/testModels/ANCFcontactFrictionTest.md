@@ -71,9 +71,9 @@ lElem = L / nElements
 for i in range(nElements):
     nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
     nodeList+=[nLast]
-    elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rho*A, 
-                               physicsBendingStiffness=E*I, physicsAxialStiffness=E*A*0.1, 
-                               physicsBendingDamping=E*I*0.025*0, physicsAxialDamping=E*A*0.1, 
+    elem=mbs.AddObject(Cable2D(length=lElem, massPerLength=rho*A, 
+                               bendingStiffness=E*I, axialStiffness=E*A*0.1, 
+                               bendingDamping=E*I*0.025*0, axialDamping=E*A*0.1, 
                                nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
     cableList+=[elem]
 
@@ -119,7 +119,7 @@ if useCircleContact:
     rGraphics = graphics.Lines([[0.,0.,0], [0.1*r2,0.,0], [0.1*r2,r2,0], [0.,r2,0], [0.,0.,0]])
     vRigidBody = VObjectRigidBody2D(graphicsData = [rGraphics])
     nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=posRoll2))
-    oRigid = mbs.AddObject(RigidBody2D(nodeNumber = nRigid, physicsMass = 1, physicsInertia=0.001, visualization=vRigidBody))
+    oRigid = mbs.AddObject(RigidBody2D(nodeNumber = nRigid, mass = 1, inertia=0.001, visualization=vRigidBody))
     mRigid = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRigid, localPosition=[0,0,0]))
     # mRigid = mbs.AddMarker(MarkerNodeRigid(nodeNumber = nRigid)) #gives identical result
 

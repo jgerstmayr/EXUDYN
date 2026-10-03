@@ -2,10 +2,14 @@
   "number": 2814,
   "title": "item parameters renamed as decided in RG12.31: the prefix physics dropped, the friction forces, use... flags",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "HIGH",
   "description": "physicsMass -> mass and 26 more, sphereRadius, dynamicFrictionForce/staticFrictionOffsetForce/viscousFrictionForce, factor1, rollingViscousFriction, useIntrinsicFormulation, useClassicalFormulation; the old names forward until 2031; C++, library, scripts, documentation and tests follow (maintainer 2026-10-03).",
   "dateRaised": "2026-10-03",
-  "deadline": "2027-04-01"
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 18:44",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "the item parameters of bodies and finite elements lost their prefix physics (physicsMass is mass, ...), and sphereRadius, the friction forces of CoordinateSpringDamperExt, factor1, rollingViscousFriction, useIntrinsicFormulation and useClassicalFormulation are renamed; every old name still works with a warning until 2031, and exudev scripts --fix rewrites a script",
+  "resolvedInVersion": "1.12.259"
 }

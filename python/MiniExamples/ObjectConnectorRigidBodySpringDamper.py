@@ -23,7 +23,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 #example with rigid body at [0,0,0], 1kg under initial velocity
 k=500
 nBody = mbs.AddNode(RigidRxyz(initialVelocities=[0,1e3,0, 0,0,0]))
-oBody = mbs.AddObject(RigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], 
+oBody = mbs.AddObject(RigidBody(mass=1, inertia=[1,1,1,0,0,0], 
                                 nodeNumber=nBody))
 
 mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))

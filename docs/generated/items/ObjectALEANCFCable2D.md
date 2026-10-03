@@ -6,7 +6,7 @@
 (sec-item-objectaleancfcable2d)=
 # ObjectALEANCFCable2D
 
-A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2, which adds additional (redundant) motion in axial direction of the beam. This allows modeling pipes but also axially moving beams. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the {ref}`EOM <EOM>`).
+A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2, which adds additional (redundant) motion in axial direction of the beam. This allows modeling pipes but also axially moving beams. The localPosition of the beam with length $L$=length and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the {ref}`EOM <EOM>`).
 
 ## Interface
 
@@ -24,21 +24,24 @@ The parameters of the item; in a dictionary, its type is 'ALEANCFCable2D':
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsLength** | UReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
-| **physicsMassPerLength** | UReal |  | 0. | (symbol: $\rho A$) [SI:kg/m] total mass per length of beam (including axially moving parts / fluid) |
-| **physicsMovingMassFactor** | UReal |  | 1. | this factor denotes the amount of $\rho A$ which is moving; physicsMovingMassFactor=1 means, that all mass is moving; physicsMovingMassFactor=0 means, that no mass is moving; factor can be used to simulate e.g. pipe conveying fluid, in which $\rho A$ is the mass of the pipe+fluid, while $physicsMovingMassFactor \cdot \rho A$ is the mass per unit length of the fluid |
-| **physicsBendingStiffness** | UReal |  | 0. | (symbol: $EI$) [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature |
-| **physicsAxialStiffness** | UReal |  | 0. | (symbol: $EA$) [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = \|\rv^\prime\|-1$ is the axial strain |
-| **physicsBendingDamping** | UReal |  | 0. | (symbol: $d_{K}$) [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$ |
-| **physicsAxialDamping** | UReal |  | 0. | (symbol: $d_{\varepsilon}$) [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$ |
-| **physicsReferenceAxialStrain** | Real |  | 0. | (symbol: $\varepsilon_0$) [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value |
-| **physicsReferenceCurvature** | Real |  | 0. | (symbol: $\kappa_0$) [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value |
-| **physicsUseCouplingTerms** | Bool |  | True | true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then) |
-| **physicsAddALEvariation** | Bool |  | True | true: correct case, where additional terms related to variation of strain and curvature are added |
+| **length** | UReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
+| **massPerLength** | UReal |  | 0. | (symbol: $\rho A$) [SI:kg/m] total mass per length of beam (including axially moving parts / fluid) |
+| **movingMassFactor** | UReal |  | 1. | this factor denotes the amount of $\rho A$ which is moving; movingMassFactor=1 means, that all mass is moving; movingMassFactor=0 means, that no mass is moving; factor can be used to simulate e.g. pipe conveying fluid, in which $\rho A$ is the mass of the pipe+fluid, while $movingMassFactor \cdot \rho A$ is the mass per unit length of the fluid |
+| **bendingStiffness** | UReal |  | 0. | (symbol: $EI$) [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature |
+| **axialStiffness** | UReal |  | 0. | (symbol: $EA$) [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = \|\rv^\prime\|-1$ is the axial strain |
+| **bendingDamping** | UReal |  | 0. | (symbol: $d_{K}$) [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$ |
+| **axialDamping** | UReal |  | 0. | (symbol: $d_{\varepsilon}$) [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$ |
+| **referenceAxialStrain** | Real |  | 0. | (symbol: $\varepsilon_0$) [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value |
+| **referenceCurvature** | Real |  | 0. | (symbol: $\kappa_0$) [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value |
+| **useCouplingTerms** | Bool |  | True | true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then) |
+| **addALEvariation** | Bool |  | True | true: correct case, where additional terms related to variation of strain and curvature are added |
 | **nodeNumbers** | NodeIndex3 | 3 | [invalid (-1), invalid (-1), invalid (-1)] | two node numbers ANCF cable element, third node=ALE GenericODE2 node |
 | **useReducedOrderIntegration** | Index |  | 0 | 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments |
 | **strainIsRelativeToReference** | Real |  | 0. | (symbol: $f\cRef$) if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1. |
 | **visualization** | VObjectALEANCFCable2D |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsLength` (deprecated since 1.12.258, removed in 2031): use `length`; `physicsMassPerLength` (deprecated since 1.12.258, removed in 2031): use `massPerLength`; `physicsMovingMassFactor` (deprecated since 1.12.258, removed in 2031): use `movingMassFactor`; `physicsBendingStiffness` (deprecated since 1.12.258, removed in 2031): use `bendingStiffness`; `physicsAxialStiffness` (deprecated since 1.12.258, removed in 2031): use `axialStiffness`; `physicsBendingDamping` (deprecated since 1.12.258, removed in 2031): use `bendingDamping`; `physicsAxialDamping` (deprecated since 1.12.258, removed in 2031): use `axialDamping`; `physicsReferenceAxialStrain` (deprecated since 1.12.258, removed in 2031): use `referenceAxialStrain`; `physicsReferenceCurvature` (deprecated since 1.12.258, removed in 2031): use `referenceCurvature`; `physicsUseCouplingTerms` (deprecated since 1.12.258, removed in 2031): use `useCouplingTerms`; `physicsAddALEvariation` (deprecated since 1.12.258, removed in 2031): use `addALEvariation`.
 
 ## Visualization parameters
 
@@ -81,12 +84,12 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and an axially moving coordinate of type NodeGenericODE2.
 The element has 8+1 coordinates and uses cubic polynomials for position interpolation.
 In addition to ANCFCable2D the element adds an Eulerian axial velocity by the GenericODE2 coordiante.
-The parameter `physicsMovingMassFactor` allows to control the amount of mass, which moves with
+The parameter `movingMassFactor` allows to control the amount of mass, which moves with
 the Eulerian velocity (e.g., the fluid), and which is not moving (the pipe).
-A factor of `physicsMovingMassFactor=1` gives an axially moving beam.
+A factor of `movingMassFactor=1` gives an axially moving beam.
 
 The Bernoulli-Euler beam is capable of large deformation as it employs the material measure of curvature for the bending.
-Note that damping (physicsBendingDamping, physicsAxialDamping) only acts on the non-moving part of the beam, as it is the case for the pipe.
+Note that damping (bendingDamping, axialDamping) only acts on the non-moving part of the beam, as it is the case for the pipe.
 
 Note that most functions act on the underlying cable finite element, which is not co-moving axially. E.g., if you apply constraints
 to the nodal coordinates, the cable can be fixed, while still the axial component is freely moving.
@@ -105,7 +108,7 @@ from exudyn.beams import GenerateStraightLineANCFCable2D
 #an axially moving cable: the material slides through clamped nodes, described by one ALE coordinate
 nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
                                    initialCoordinates=[0], initialCoordinates_t=[0]))
-cable = ObjectALEANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4)
+cable = ObjectALEANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4)
 cable.nodeNumbers[2] = nALE #the ALE node of every element
 [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
                         numberOfElements=4, cableTemplate=cable,

@@ -24,11 +24,14 @@ The parameters of the item; in a dictionary, its type is 'Mass1D':
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsMass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of mass |
+| **mass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of mass |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n0$) node number (type NodeIndex) for Node1D |
 | **referencePosition** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{0}{\pRef_0}$) a reference position, used to transform the 1D coordinate to a position |
 | **referenceRotation** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{0b}{\Rot_{0}} \in \Rcal^{3 \times 3}$) the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates |
 | **visualization** | VObjectMass1D |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsMass` (deprecated since 1.12.258, removed in 2031): use `mass`.
 
 ## Visualization parameters
 
@@ -100,7 +103,7 @@ $m$ times $\LU{0}{\Jm_{pos}}$.
 node = mbs.AddNode(Node1D(referenceCoordinates = [1], 
                           initialCoordinates=[0.5],
                           initialVelocities=[0.5]))
-mass = mbs.AddObject(Mass1D(nodeNumber = node, physicsMass=1))
+mass = mbs.AddObject(Mass1D(nodeNumber = node, mass=1))
 
 #assemble and solve system for default parameters
 mbs.Assemble()

@@ -140,7 +140,7 @@ for i in range(n):
                                       initialVelocities=v0,
                                       visualization=VNodePoint(show=True,drawSize=2*gRad, color=color4node)))
         
-        oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass,
+        oMass = mbs.AddObject(MassPoint(mass=m, nodeNumber=nMass,
                                         #visualization=VMassPoint(graphicsData=[gSphere,gSphere2])
                                         # visualization=VMassPoint(graphicsData=gData)
                                         ))

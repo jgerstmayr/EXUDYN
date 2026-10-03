@@ -42,7 +42,7 @@ def BuildRigidChain(mbs, nBodies, rotations):
         else:
             n = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.2*(i+1), 0, 0, 0.1, 0.2, 0.1],
                                               initialVelocities=[0, 0.1*np.sin(i), 0.05] + omega))
-        b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+        b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
         m0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[-0.05, 0.01, 0]))
         m1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[0.05, 0.01, 0]))
         mbs.AddObject(RigidBodySpringDamper(markerNumbers=[lastMarker, m0], stiffness=np.diag([1000]*3+[10]*3),
@@ -56,7 +56,7 @@ def BuildRigid2DChain(mbs, nBodies):
     lastMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround))
     for i in range(nBodies):
         n = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.2*(i+1), 0, 0.1*i], initialVelocities=[0, 0.1*np.sin(i), 0.5]))
-        b = mbs.AddObject(ObjectRigidBody2D(nodeNumber=n, physicsMass=1, physicsInertia=0.01))
+        b = mbs.AddObject(ObjectRigidBody2D(nodeNumber=n, mass=1, inertia=0.01))
         m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=b, localPosition=[-0.05, 0.01, 0]))
         m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=b, localPosition=[0.05, 0.01, 0]))
         mbs.AddObject(SpringDamper(markerNumbers=[lastMarker, m0], referenceLength=0.1, stiffness=1000, damping=1))
@@ -70,8 +70,8 @@ def BuildCable(mbs, nElements):
     nodes = [mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[i*L, 0, 1, 0], initialVelocities=[0, 0.1*np.sin(i), 0, 0]))
              for i in range(nElements+1)]
     for i in range(nElements):
-        e = mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=L, physicsMassPerLength=1,
-                                            physicsBendingStiffness=1, physicsAxialStiffness=1000))
+        e = mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[nodes[i], nodes[i+1]], length=L, massPerLength=1,
+                                            bendingStiffness=1, axialStiffness=1000))
         mCable = mbs.AddMarker(MarkerBodyPosition(bodyNumber=e, localPosition=[0.5*L, 0.01, 0]))
         mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[(i+0.5)*L, -0.09, 0]))
         mbs.AddObject(SpringDamper(markerNumbers=[mGround, mCable], referenceLength=0.1, stiffness=100, damping=0.1))

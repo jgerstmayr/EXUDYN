@@ -34,7 +34,7 @@ def MassMatrix():
     section.stiffnessMatrix = np.eye(6)
     section.inertia = np.eye(3) * 1e-3
     section.massPerLength = rhoA
-    mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[n0, n1], physicsLength=L, sectionData=section))
+    mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[n0, n1], length=L, sectionData=section))
     mbs.Assemble()
     solver = exu.MainSolverImplicitSecondOrder()
     settings = exu.SimulationSettings()

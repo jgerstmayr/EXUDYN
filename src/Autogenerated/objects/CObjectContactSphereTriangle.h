@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  12:55:35 (last modified)
+* @date         2026-10-03  18:09:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,7 +29,7 @@ class CObjectContactSphereTriangleParameters // AUTO:
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers representing the center of the sphere (marker 0) and the reference point of the triangle (marker 1), where triangle nodal positions are defined in the local coordinates of marker 1.
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.
-    Real radiusSphere;                            //!< AUTO: must be > 0;  radius of sphere [SI:m]
+    Real sphereRadius;                            //!< AUTO: must be > 0;  radius of sphere [SI:m]
     Vector3DList trianglePoints;                  //!< AUTO:  triangle points, defined in marker 1 local coordinates
     Index includeEdges;                           //!< AUTO: must be >= 0; Binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1
     Real dynamicFriction;                         //!< AUTO: must be >= 0; dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics)
@@ -46,7 +46,7 @@ public: // AUTO:
     {
         markerNumbers = ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex });
         nodeNumber = EXUstd::InvalidIndex;
-        radiusSphere = 0.;
+        sphereRadius = 0.;
         trianglePoints = Vector3DList();
         includeEdges = 7;
         dynamicFriction = 0.;

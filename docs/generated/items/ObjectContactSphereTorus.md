@@ -27,7 +27,7 @@ The parameters of the item; in a dictionary, its type is 'ContactSphereTorus':
 | **name** | String |  | '' | constraints's unique name |
 | **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers representing centers of sphere (marker 0) and center of torus (marker 1) |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused. |
-| **radiusSphere** | PReal |  | 0. | (symbol: $r_S$) radius of sphere [SI:m]; **must be given**: the default is only a placeholder |
+| **sphereRadius** | PReal |  | 0. | (symbol: $r_S$) radius of sphere [SI:m]; **must be given**: the default is only a placeholder |
 | **torusMajorRadius** | PReal |  | 0. | (symbol: $r_{M}$) major radius of torus [SI:m], representing center of rotated circle; **must be given**: the default is only a placeholder |
 | **torusMinorRadius** | PReal |  | 0. | (symbol: $r_{m}$) minor radius of torus [SI:m], representing radius of circle of ring; **must be given**: the default is only a placeholder |
 | **torusAxis** | Vector3D | 3 | [0,0,0] | (symbol: $\vv_{axis}$) Vector containing rotation axis of torus; must be a unit vector. |
@@ -41,6 +41,9 @@ The parameters of the item; in a dictionary, its type is 'ContactSphereTorus':
 | **impactModel** | UInt |  | 0 | (symbol: $m_\mathrm{impact}$) number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero! |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactSphereTorus |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `radiusSphere` (deprecated since 1.12.258, removed in 2031): use `sphereRadius`.
 
 ## Visualization parameters
 
@@ -128,12 +131,12 @@ Newton iterations (active set).
 #a ball in the groove of a torus, as in a ball bearing: pushed radially into the groove by a spring
 inertia = InertiaSphere(mass=0.1, radius=0.01)
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.1,0,0]+eulerParameters0))
-ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
 mRing = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))
 nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0,0,0,0]))
 #groove of an outer ring: torus about z with major radius 0.1 and groove radius 0.011
-mbs.AddObject(ObjectContactSphereTorus(markerNumbers=[mBall, mRing], nodeNumber=nData, radiusSphere=0.01,
+mbs.AddObject(ObjectContactSphereTorus(markerNumbers=[mBall, mRing], nodeNumber=nData, sphereRadius=0.01,
                                        torusMajorRadius=0.1, torusMinorRadius=0.011, torusAxis=[0,0,1],
                                        contactStiffness=1e6, contactDamping=1e3))
 mbs.AddLoad(LoadForceVector(markerNumber=mBall, loadVector=[10,0,0])) #pushes outwards

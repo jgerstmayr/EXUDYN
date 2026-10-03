@@ -96,7 +96,7 @@ for pos in posList:
     gDataList += [graphics.Sphere(point=pos, radius=rb, color= graphics.color.grey, nTiles=40)]
     #gDataList += [GraphicsDataRectangle(-1.2*H,-H*0.75,1.2*H,10*H,color=graphics.color.red)]
     nMass = mbs.AddNode(NodePointGround(referenceCoordinates=pos))
-    #oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass))
+    #oMass = mbs.AddObject(MassPoint(mass=m, nodeNumber=nMass))
     mThis = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))
     markerList += [mThis]
     radiusList += [rb]

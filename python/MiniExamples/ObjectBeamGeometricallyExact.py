@@ -29,7 +29,7 @@ section.massPerLength = 1
 nodes = [mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[L*i/nElements,0,0]+eulerParameters0))
          for i in range(nElements+1)]
 for i in range(nElements):
-    mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i],nodes[i+1]], physicsLength=L/nElements,
+    mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i],nodes[i+1]], length=L/nElements,
                                                sectionData=section))
 mbs.AddObject(GenericJoint(markerNumbers=[mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround)),
                                           mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodes[0]))])) #clamped

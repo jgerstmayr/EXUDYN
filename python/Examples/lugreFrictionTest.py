@@ -112,7 +112,7 @@ if useLugrePos:
     node1D = mbs.AddNode(Node1D(referenceCoordinates = [0],
                                 initialCoordinates=[0.],
                                 initialVelocities=[0.]))
-    mass1D = mbs.AddObject(Mass1D(nodeNumber = node1D, physicsMass=M,
+    mass1D = mbs.AddObject(Mass1D(nodeNumber = node1D, mass=M,
                                   visualization=VMass1D(graphicsData=[graphics.Sphere(radius=0.05, color=graphics.color.dodgerblue)])))
     
     #+++++++++++++++++++++++++++++++++++++++++++

@@ -49,11 +49,11 @@ print("load f="+str(f))
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #generate ANCF beams with utilities function
-cableTemplate = Cable2D(#physicsLength = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
-                        physicsMassPerLength = rho*A,
-                        physicsBendingStiffness = E*I,
-                        physicsAxialStiffness = E*A,
-                        physicsBendingDamping = 0.02*E*I,
+cableTemplate = Cable2D(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+                        massPerLength = rho*A,
+                        bendingStiffness = E*I,
+                        axialStiffness = E*A,
+                        bendingDamping = 0.02*E*I,
                         useReducedOrderIntegration = 0,
                         visualization=VCable2D(drawHeight=h),
                         #nodeNumbers = [0, 0], #will be filled in GenerateStraightLineANCFCable2D(...)

@@ -56,7 +56,7 @@ Index CObjectFFRFreducedOrder::GetODE2Size() const
 void CObjectFFRFreducedOrder::InitializeObject()
 {
 	//build all special matrices here
-	physicsCenterOfMassTilde = RigidBodyMath::Vector2SkewMatrix(physicsCenterOfMass);
+	centerOfMassTilde = RigidBodyMath::Vector2SkewMatrix(centerOfMass);
 
 	//put more constant matrices here for speedup of computation ...
 
@@ -119,7 +119,7 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 
 		//Mtt: (constant!)
 		Matrix3D Mtt(3, 3);
-		Mtt.SetScalarMatrix(3, physicsMass);
+		Mtt.SetScalarMatrix(3, mass);
 		massMatrix.AddSubmatrix(Mtt, 0, 0);
 
 //#define CObjectFFRFreducedOrderComputeMassMatrixOutput
@@ -134,7 +134,7 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 		//	self.massMatrixFFRFreduced[self.dim3D:self.dim3D + self.nODE2rot, 0 : self.dim3D] = Mtr.T
 		Matrix3D temp;
 		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(parameters.mPhitTPsiTilde, tempKronZetaI, temp);
-		temp += physicsMass * physicsCenterOfMassTilde;
+		temp += mass * centerOfMassTilde;
 		temp = -1. * A * temp;
 
 		EXUmath::MultMatrixMatrixTemplate<Matrix3D, ConstSizeMatrix<GMaxSize>, Matrix>(temp, Glocal, tempMatrix);
@@ -145,7 +145,7 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 		pout << "Mtr=" << tempMatrix << "\n\n";
 		pout << "temp=" << temp << "\n\n";
 		pout << "Glocal=" << Glocal << "\n\n";
-		pout << "physicsMass * physicsCenterOfMassTilde=" << physicsMass * physicsCenterOfMassTilde << "\n\n";
+		pout << "mass * centerOfMassTilde=" << mass * centerOfMassTilde << "\n\n";
 #endif
 
 		//Mtf:
@@ -175,7 +175,7 @@ void CObjectFFRFreducedOrder::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 		Matrix3D temp2=temp;
 		temp2.TransposeYourself();
 		temp += temp2;
-		temp += physicsInertia;
+		temp += inertia;
 		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix>(parameters.mPsiTildePsiTilde, tempKronZetaI, tempMatrix);
 		EXUmath::MultMatrixTransposedMatrixAddTemplate<Matrix, Matrix, Matrix3D>(tempKronZetaI, tempMatrix, temp);
 
@@ -313,7 +313,7 @@ void CObjectFFRFreducedOrder::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber
 
 		Matrix3D temp;
 		EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(parameters.mPhitTPsiTilde, tempKronZetaI, temp);
-		temp += physicsMass * physicsCenterOfMassTilde;
+		temp += mass * centerOfMassTilde;
 
 		Vector3D fTempTT = A * (omega3Dtilde * (temp * omega3D));
 		EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI_t, omega3D, tempVector); //3*nODE2FF length
@@ -332,7 +332,7 @@ void CObjectFFRFreducedOrder::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber
 		//			2 * G.T @ (self.mXRefTildePsiTilde @ zeta_tI + zetaI.T @ self.mPsiTildePsiTilde @ zeta_tI) @ omega3D)  #identical to FFRF up to 1e-16
 
 		//(self.inertiaLocal + self.mXRefTildePsiTilde @ zetaI + (self.mXRefTildePsiTilde @ zetaI).T + zetaI.T @ self.mPsiTildePsiTilde @ zetaI)*omega3D:
-		Vector3D temp3D = physicsInertia * omega3D;
+		Vector3D temp3D = inertia * omega3D;
 		EXUmath::MultMatrixVectorTemplate<ResizableMatrix, Vector3D, ResizableVector>(tempKronZetaI, omega3D, tempVector2); //tempVector2=zetaI*omega3D
 		EXUmath::MultMatrixVectorAddTemplate<Matrix, ResizableVector, Vector3D>(parameters.mXRefTildePsiTilde, tempVector2, temp3D);
 
@@ -368,7 +368,7 @@ void CObjectFFRFreducedOrder::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber
 		//Matrix3D temp2 = temp;
 		//temp2.TransposeYourself();
 		//temp += temp2;
-		//temp += physicsInertia;
+		//temp += inertia;
 		//EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix>(parameters.mPsiTildePsiTilde, tempKronZetaI, tempMatrix);
 		//EXUmath::MultMatrixTransposedMatrixAddTemplate<Matrix, Matrix, Matrix3D>(tempKronZetaI, tempMatrix, temp);
 
@@ -530,13 +530,13 @@ void CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian(Matrix& value) con
 {
 	value.SetNumberOfRowsAndColumns(CNodeRigidBody::nDim3D, GetODE2Size());
 
-	Real m = physicsMass;
+	Real m = mass;
 
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> AuTildeGlocal;
 	((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(AuTildeGlocal);// RigidBodyMath::EP2Glocal(rot);
 
 	//negative sign in -A*uLocalTilde*Glocal; transposed as compared to paper and earlier gravity force in FEM.py
-	ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*physicsCenterOfMass); 
+	ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*centerOfMass); 
 
 	ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> temp; //temporary matrix during computation
 	EXUmath::MultMatrixMatrix(uLocalTilde, AuTildeGlocal, temp);

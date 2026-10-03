@@ -25,7 +25,7 @@ oGround = mbs.CreateGround() #[0,0,0]
 
 oMass = mbs.CreateMassPoint(name='HeavyMass',
                             referencePosition=[2,0,0],
-                            physicsMass=12,
+                            mass=12,
                             gravity=[0,-9.81,0],
                             drawSize=0.2,
                             color=graphics.color.red)

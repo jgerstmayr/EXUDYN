@@ -119,7 +119,7 @@ for case in range(2):
     
         #horizontal body:
         nBodyH = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[L*i,L*i,0]))
-        oBodyH = mbs.AddObject(RigidBody2D(physicsMass = mass, physicsInertia=mass, nodeNumber = nBodyH, visualization = VObjectRigidBody2D(graphicsData = [graphicscube])))
+        oBodyH = mbs.AddObject(RigidBody2D(mass = mass, inertia=mass, nodeNumber = nBodyH, visualization = VObjectRigidBody2D(graphicsData = [graphicscube])))
     
         mBodyH0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oBodyH, localPosition=[-L,0,0]))
         mBodyH1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oBodyH, localPosition=[ L,0,0]))
@@ -127,7 +127,7 @@ for case in range(2):
         
         #vertical body:
         nBodyV = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[L*i,L*i,0.5*pi]))
-        oBodyV = mbs.AddObject(RigidBody2D(physicsMass = mass, physicsInertia=mass, nodeNumber = nBodyV, visualization = VObjectRigidBody2D(graphicsData = [graphicscube])))
+        oBodyV = mbs.AddObject(RigidBody2D(mass = mass, inertia=mass, nodeNumber = nBodyV, visualization = VObjectRigidBody2D(graphicsData = [graphicscube])))
         nMeasure = nBodyV
         
         mBodyV0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oBodyV, localPosition=[-L,0,0]))
@@ -137,7 +137,7 @@ for case in range(2):
         #diagonal body:
         if i==0 and addPrismaticJoint:
             nBodyD = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0.25*pi]))
-            oBodyD = mbs.AddObject(RigidBody2D(physicsMass = mass, physicsInertia=mass, nodeNumber = nBodyD, visualization = VObjectRigidBody2D(graphicsData = [graphicscube2])))
+            oBodyD = mbs.AddObject(RigidBody2D(mass = mass, inertia=mass, nodeNumber = nBodyD, visualization = VObjectRigidBody2D(graphicsData = [graphicscube2])))
     
             #mBodyD0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oBodyD, localPosition=[-L,0,0]))
             #mBodyD1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oBodyD, localPosition=[ L,0,0]))

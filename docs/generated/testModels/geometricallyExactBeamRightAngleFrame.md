@@ -60,7 +60,7 @@ nodesArm2 = [mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[L, -i*lElement, 0
              for i in range(nElements+1)]
 for nodes in [nodesArm1, nodesArm2]:
     for i in range(nElements):
-        mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=lElement, sectionData=section))
+        mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], length=lElement, sectionData=section))
 
 mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=mbs.AddNode(NodePointGround())))
 mbs.AddObject(GenericJoint(markerNumbers=[mGround, mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesArm1[0]))]))

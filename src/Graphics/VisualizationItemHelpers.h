@@ -305,7 +305,7 @@ void UpdateGraphicsBeam3D(const VisualizationSettings& visualizationSettings, Vi
 	item.itemID = itemID;
 	if (vObject->GetColor()[0] != -1.f) { currentColor = vObject->GetColor(); }
 
-	Real L = cObject->GetParameters().physicsLength;
+	Real L = cObject->GetParameters().length;
 	item.color1 = currentColor;
 	item.color2 = currentColor;
 

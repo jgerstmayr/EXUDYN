@@ -89,15 +89,15 @@ oCCvALE=mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mALE], offset=
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create one beam template
-cable = ALECable2D(#physicsLength=L, 
-                    physicsMassPerLength=rhoA, 
-                    physicsBendingStiffness=EI, 
-                    physicsAxialStiffness=EA, 
-                    physicsBendingDamping=bendingDamping, 
-                    physicsAxialDamping=axialDamping, 
-                    physicsMovingMassFactor=movingMassFactor, 
+cable = ALECable2D(#length=L, 
+                    massPerLength=rhoA, 
+                    bendingStiffness=EI, 
+                    axialStiffness=EA, 
+                    bendingDamping=bendingDamping, 
+                    axialDamping=axialDamping, 
+                    movingMassFactor=movingMassFactor, 
                     nodeNumbers=[0,0,nALE],
-                    # physicsUseCouplingTerms = True,
+                    # useCouplingTerms = True,
                     # useReducedOrderIntegration = True, #faster
                     )
 

@@ -166,14 +166,14 @@ mCoordinateGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coord
 #create ANCF elements:
 dimZ = b #z.dimension
 
-cableTemplate = Cable2D(#physicsLength = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
-                        physicsMassPerLength = rhoA,
-                        physicsBendingStiffness = EI,
-                        physicsAxialStiffness = EA,
-                        physicsBendingDamping = dEI,
-                        physicsAxialDamping = dEA,
-                        physicsReferenceAxialStrain = preStretch*int(improvedBelt), #prestretch
-                        physicsReferenceCurvature = 0.,#-1/(radiusPulley + hc/2),
+cableTemplate = Cable2D(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+                        massPerLength = rhoA,
+                        bendingStiffness = EI,
+                        axialStiffness = EA,
+                        bendingDamping = dEI,
+                        axialDamping = dEA,
+                        referenceAxialStrain = preStretch*int(improvedBelt), #prestretch
+                        referenceCurvature = 0.,#-1/(radiusPulley + hc/2),
                         useReducedOrderIntegration = 2, #2=improved axial strain in postprocessing!
                         strainIsRelativeToReference = strainIsRelativeToReference,
                         visualization=VCable2D(drawHeight=hc),
@@ -313,7 +313,7 @@ if useContact:
         nMass = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=pRef, initialVelocities=v0,
                                             visualization=VNodeRigidBody2D(drawSize=dimZ*2)))
         nMassList += [nMass]
-        oMass = mbs.AddObject(ObjectRigidBody2D(physicsMass=wheelMass, physicsInertia=wheelInertia,
+        oMass = mbs.AddObject(ObjectRigidBody2D(mass=wheelMass, inertia=wheelInertia,
                                                 nodeNumber=nMass, visualization=
                                                 VObjectRigidBody2D(graphicsData=gList)))
         mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))
@@ -446,7 +446,7 @@ def PreStepUserFunction(mbs, t):
             oANCF = cableList[i]
             mbs.SetObjectParameter(oANCF, 'strainIsRelativeToReference', 
                                    fact)
-            mbs.SetObjectParameter(oANCF, 'physicsReferenceAxialStrain', 
+            mbs.SetObjectParameter(oANCF, 'referenceAxialStrain', 
                                     preStretch*(1.-fact))
 
         # if movePulley:

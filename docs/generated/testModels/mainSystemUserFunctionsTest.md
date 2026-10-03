@@ -54,7 +54,7 @@ for case in caseList:
     mass0 = mbs.CreateMassPoint(referencePosition=[L,0,0],
                                 initialDisplacement=[0.,0.5,0],
                                 initialVelocity=[50,0.,0.],
-                                physicsMass=mass,
+                                mass=mass,
                                 graphicsDataList=[graphics.Sphere(radius=0.2, 
                                                                   color=graphics.color.dodgerblue, 
                                                                   nTiles=32)]
@@ -69,7 +69,7 @@ for case in caseList:
     #mass point
     nMass1 = mbs.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[0.2]))
     mass1 = mbs.AddObject(Mass1D(nodeNumber = nMass1, 
-                                 physicsMass=mass*0.5, referencePosition=[0,L,0],
+                                 mass=mass*0.5, referencePosition=[0,L,0],
                                  visualization=VMass1D(graphicsData=[graphics.Sphere(radius=0.15,
                                                                      color=graphics.color.green, 
                                                                      nTiles=32)])))

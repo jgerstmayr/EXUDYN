@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  08:07:17 (last modified)
+* @date         2026-10-03  18:08:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -86,9 +86,9 @@ protected: // AUTO:
     CObjectFFRFParameters parameters; //! AUTO: contains all parameters for CObjectFFRF
     ArrayIndex coordinateIndexPerNode;            //!< AUTO: this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed
     bool objectIsInitialized;                     //!< AUTO: ALWAYS set to False! flag used to correctly initialize all ABRV:FFRF matrices; as soon as this flag is False, internal (constant) ABRV:FFRF matrices are recomputed during Assemble()
-    Real physicsMass;                             //!< AUTO: must be >= 0; total mass [SI:kg] of ABRV:FFRF object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
-    Matrix3D physicsInertia;                      //!< AUTO: inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\LU{b}{\Mm}\f$
-    Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (ABRV:COM); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
+    Real mass;                                    //!< AUTO: must be >= 0; total mass [SI:kg] of ABRV:FFRF object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
+    Matrix3D inertia;                             //!< AUTO: inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\LU{b}{\Mm}\f$
+    Vector3D centerOfMass;                        //!< AUTO: local position of center of mass (ABRV:COM); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
     Matrix PHItTM;                                //!< AUTO: projector matrix; may be removed in future
     Vector referencePositions;                    //!< AUTO: vector containing the reference positions of all flexible nodes
     mutable Vector tempVector;                    //!< AUTO: temporary vector
@@ -107,9 +107,9 @@ public: // AUTO:
     {
         coordinateIndexPerNode = ArrayIndex();
         objectIsInitialized = false;
-        physicsMass = 0.;
-        physicsInertia = EXUmath::unitMatrix3D;
-        physicsCenterOfMass = Vector3D({0.,0.,0.});
+        mass = 0.;
+        inertia = EXUmath::unitMatrix3D;
+        centerOfMass = Vector3D({0.,0.,0.});
         PHItTM = Matrix();
         referencePositions = Vector();
         tempVector = Vector();
@@ -142,25 +142,25 @@ public: // AUTO:
     bool& GetObjectIsInitialized() { return objectIsInitialized; }
 
     //! AUTO:  Write (Reference) access to:\f$m\f$total mass [SI:kg] of ABRV:FFRF object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
-    void SetPhysicsMass(const Real& value) { physicsMass = value; }
+    void SetMass(const Real& value) { mass = value; }
     //! AUTO:  Read (Reference) access to:\f$m\f$total mass [SI:kg] of ABRV:FFRF object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
-    const Real& GetPhysicsMass() const { return physicsMass; }
+    const Real& GetMass() const { return mass; }
     //! AUTO:  Read (Reference) access to:\f$m\f$total mass [SI:kg] of ABRV:FFRF object, auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
-    Real& GetPhysicsMass() { return physicsMass; }
+    Real& GetMass() { return mass; }
 
     //! AUTO:  Write (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\LU{b}{\Mm}\f$
-    void SetPhysicsInertia(const Matrix3D& value) { physicsInertia = value; }
+    void SetInertia(const Matrix3D& value) { inertia = value; }
     //! AUTO:  Read (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\LU{b}{\Mm}\f$
-    const Matrix3D& GetPhysicsInertia() const { return physicsInertia; }
+    const Matrix3D& GetInertia() const { return inertia; }
     //! AUTO:  Read (Reference) access to:\f$J_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix \f$\LU{b}{\Mm}\f$
-    Matrix3D& GetPhysicsInertia() { return physicsInertia; }
+    Matrix3D& GetInertia() { return inertia; }
 
     //! AUTO:  Write (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (ABRV:COM); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
-    void SetPhysicsCenterOfMass(const Vector3D& value) { physicsCenterOfMass = value; }
+    void SetCenterOfMass(const Vector3D& value) { centerOfMass = value; }
     //! AUTO:  Read (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (ABRV:COM); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
-    const Vector3D& GetPhysicsCenterOfMass() const { return physicsCenterOfMass; }
+    const Vector3D& GetCenterOfMass() const { return centerOfMass; }
     //! AUTO:  Read (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (ABRV:COM); auto-computed from mass matrix \f$\LU{b}{\Mm}\f$
-    Vector3D& GetPhysicsCenterOfMass() { return physicsCenterOfMass; }
+    Vector3D& GetCenterOfMass() { return centerOfMass; }
 
     //! AUTO:  Write (Reference) access to:\f$\tPhi\indt\tp \in \Rcal^{n\indf \times 3}\f$projector matrix; may be removed in future
     void SetPHItTM(const Matrix& value) { PHItTM = value; }
@@ -288,7 +288,7 @@ public: // AUTO:
     //! AUTO:  return the local position of the center of mass, needed for massProportionalLoad; this is only the reference-frame part!
     virtual Vector3D GetLocalCenterOfMass() const override
     {
-        return physicsCenterOfMass;
+        return centerOfMass;
     }
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping

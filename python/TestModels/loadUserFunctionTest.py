@@ -49,7 +49,7 @@ for case in cases:
     
     oGround = mbs.CreateGround()
     
-    oMassPoint = mbs.CreateMassPoint(referencePosition=[1.+0.05,0,0], physicsMass=1, drawSize=0.1)
+    oMassPoint = mbs.CreateMassPoint(referencePosition=[1.+0.05,0,0], mass=1, drawSize=0.1)
     co = mbs.CreateSpringDamper(bodyNumbers=[oGround, oMassPoint],
                                 referenceLength = 1, stiffness = 100, damping = 1)
     sMass = mbs.AddSensor(SensorBody(bodyNumber=oMassPoint, 

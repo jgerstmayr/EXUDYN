@@ -43,8 +43,8 @@ graphicsCube = graphics.Brick(size= [L,b,b], color= graphics.color.dodgerblue, a
 graphicsJoint = graphics.Cylinder(pAxis=[-0.5*L,0,-0.6*b], vAxis= [0,0,1.2*b], radius = 0.55*b, color=graphics.color.darkgrey, addEdges=True)
 
 nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[-com[0],L+com[1],0], initialVelocities=[0,0,initAngVel]));
-oRigid = mbs.AddObject(RigidBody2D(physicsMass=massRigid, 
-                                   physicsInertia=inertiaRigidCOM,
+oRigid = mbs.AddObject(RigidBody2D(mass=massRigid, 
+                                   inertia=inertiaRigidCOM,
                                    nodeNumber=nRigid,
                                    visualization=VObjectRigidBody2D(graphicsData= [graphicsCube, graphicsJoint, graphics.Basis()])))
 
@@ -63,9 +63,9 @@ if True:
     graphicsCube2 = graphics.Brick(centerPoint=[0.5*L,0,0.2*b], size= [L,b,b], color= graphics.color.red, addEdges=True)
     graphicsJoint2 = graphics.Cylinder(pAxis=[-0.*L,0,-0.6*b], vAxis= [0,0,1.2*b], radius = 0.55*b, color=graphics.color.darkgrey, addEdges=True)
     nRigid2 = mbs.AddNode(Rigid2D(referenceCoordinates=[-L,L,0], initialVelocities=[0,0,initAngVel]));
-    oRigid2 = mbs.AddObject(RigidBody2D(physicsMass=massRigid, 
-                                       physicsInertia=inertiaRigidRef,
-                                       physicsCenterOfMass=com,
+    oRigid2 = mbs.AddObject(RigidBody2D(mass=massRigid, 
+                                       inertia=inertiaRigidRef,
+                                       centerOfMass=com,
                                        nodeNumber=nRigid2,
                                        visualization=VObjectRigidBody2D(graphicsData= [graphicsCube2, graphicsJoint2, graphics.Basis(origin=[com[0],com[1],0])])))
 

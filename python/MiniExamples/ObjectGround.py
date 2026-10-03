@@ -24,7 +24,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 oFixed = mbs.AddObject(ObjectGround(referencePosition=[0,2,0]))
 mFixed = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oFixed, localPosition=[0,0,0]))
 node = mbs.AddNode(NodePoint(referenceCoordinates=[0,1,0]))
-mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
 mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
 mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mFixed, mNode], stiffness=[100,100,100],
                                                    offset=[0,-1,0]))

@@ -221,7 +221,7 @@ $$
 m = 100; A = 0.01; p1 = 1e5
 p0 = (m*9.81 + p1*A)/A #the pressure that holds the weight
 nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0,1,0]))
-mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=m))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, mass=m))
 mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
 mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[0,-m*9.81,0]))
 mBase = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))

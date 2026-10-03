@@ -101,7 +101,7 @@ gFloor = graphics.CheckerBoard(point=[0,0,-0.5],size=2)
 mbs.CreateGround(graphicsDataList=[gMesh,
                                    gFloor])
     
-mbs.CreateMassPoint(physicsMass=1, show=False)
+mbs.CreateMassPoint(mass=1, show=False)
 
 mbs.Assemble()
 

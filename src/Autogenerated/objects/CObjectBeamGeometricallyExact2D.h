@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  07:37:05 (last modified)
+* @date         2026-10-03  18:09:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -28,31 +28,31 @@ class CObjectBeamGeometricallyExact2DParameters // AUTO:
 {
 public: // AUTO:
     ArrayIndex nodeNumbers;                       //!< AUTO: two node numbers for beam element
-    Real physicsLength;                           //!< AUTO: must be >= 0;  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
-    Real physicsMassPerLength;                    //!< AUTO: must be >= 0;  [SI:kg/m] mass per length of beam
-    Real physicsCrossSectionInertia;              //!< AUTO: must be >= 0;  [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section
-    Real physicsBendingStiffness;                 //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$] bending stiffness of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
-    Real physicsAxialStiffness;                   //!< AUTO: must be >= 0;  [SI:N] axial stiffness of beam; the axial force is \f$f_{ax} = EA (\varepsilon -\varepsilon_0)\f$, in which \f$\varepsilon\f$ is the axial strain
-    Real physicsShearStiffness;                   //!< AUTO: must be >= 0;  [SI:N] effective shear stiffness of beam, including stiffness correction
-    Real physicsBendingDamping;                   //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$/s] viscous damping of bending deformation; the additional virtual work due to damping is \f$\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\f$
-    Real physicsAxialDamping;                     //!< AUTO: must be >= 0;  [SI:N/s] viscous damping of axial deformation
-    Real physicsShearDamping;                     //!< AUTO: must be >= 0;  [SI:N/s] viscous damping of shear deformation
-    Real physicsReferenceCurvature;               //!< AUTO:  [SI:1/m] reference curvature of beam (pre-deformation) of beam
+    Real length;                                  //!< AUTO: must be >= 0;  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
+    Real massPerLength;                           //!< AUTO: must be >= 0;  [SI:kg/m] mass per length of beam
+    Real crossSectionInertia;                     //!< AUTO: must be >= 0;  [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section
+    Real bendingStiffness;                        //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$] bending stiffness of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
+    Real axialStiffness;                          //!< AUTO: must be >= 0;  [SI:N] axial stiffness of beam; the axial force is \f$f_{ax} = EA (\varepsilon -\varepsilon_0)\f$, in which \f$\varepsilon\f$ is the axial strain
+    Real shearStiffness;                          //!< AUTO: must be >= 0;  [SI:N] effective shear stiffness of beam, including stiffness correction
+    Real bendingDamping;                          //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$/s] viscous damping of bending deformation; the additional virtual work due to damping is \f$\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\f$
+    Real axialDamping;                            //!< AUTO: must be >= 0;  [SI:N/s] viscous damping of axial deformation
+    Real shearDamping;                            //!< AUTO: must be >= 0;  [SI:N/s] viscous damping of shear deformation
+    Real referenceCurvature;                      //!< AUTO:  [SI:1/m] reference curvature of beam (pre-deformation) of beam
     bool includeReferenceRotations;               //!< AUTO: if True, rotation of the cross section at the nodes includes node reference rotations (within referenceCoordinates of NodeRigidBody2D), which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the reference slope vector. This allows to easily share nodes among several beams with different reference cross section orientation (i.e., only the change of rotation counts).
     //! AUTO: default constructor with parameter initialization
     CObjectBeamGeometricallyExact2DParameters()
     {
         nodeNumbers = ArrayIndex();
-        physicsLength = 0.;
-        physicsMassPerLength = 0.;
-        physicsCrossSectionInertia = 0.;
-        physicsBendingStiffness = 0.;
-        physicsAxialStiffness = 0.;
-        physicsShearStiffness = 0.;
-        physicsBendingDamping = 0.;
-        physicsAxialDamping = 0.;
-        physicsShearDamping = 0.;
-        physicsReferenceCurvature = 0.;
+        length = 0.;
+        massPerLength = 0.;
+        crossSectionInertia = 0.;
+        bendingStiffness = 0.;
+        axialStiffness = 0.;
+        shearStiffness = 0.;
+        bendingDamping = 0.;
+        axialDamping = 0.;
+        shearDamping = 0.;
+        referenceCurvature = 0.;
         includeReferenceRotations = false;
     };
 };
@@ -60,7 +60,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectBeamGeometricallyExact2D
-* @brief        A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the \f$y\f$-axis, while and angle \f$\pi/2\f$ means that the cross section points in negative \f$x\f$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[-L/2, L/2]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the ABRV:EOM).
+* @brief        A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the \f$y\f$-axis, while and angle \f$\pi/2\f$ means that the cross section points in negative \f$x\f$-direction. Pre-curvature can be included with referenceCurvature and axial pre-stress can be considered by using a length different from the reference configuration of the nodes. The localPosition of the beam with length \f$L\f$=length and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[-L/2, L/2]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the ABRV:EOM).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

@@ -22,7 +22,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 #the force in a spring-damper, measured at the object
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
-mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
 mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
 mFixed = mbs.AddMarker(MarkerNodePosition(nodeNumber=nGround))
 oSpring = mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[mFixed, mNode], stiffness=100, referenceLength=1))

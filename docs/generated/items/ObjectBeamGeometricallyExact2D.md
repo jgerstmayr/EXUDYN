@@ -6,7 +6,7 @@
 (sec-item-objectbeamgeometricallyexact2d)=
 # ObjectBeamGeometricallyExact2D
 
-A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the {ref}`EOM <EOM>`).
+A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with referenceCurvature and axial pre-stress can be considered by using a length different from the reference configuration of the nodes. The localPosition of the beam with length $L$=length and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the {ref}`EOM <EOM>`).
 
 ## Interface
 
@@ -25,18 +25,21 @@ The parameters of the item; in a dictionary, its type is 'BeamGeometricallyExact
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** | ArrayNodeIndex |  | [] | two node numbers for beam element |
-| **physicsLength** | UReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
-| **physicsMassPerLength** | UReal |  | 0. | (symbol: $\rho A$) [SI:kg/m] mass per length of beam |
-| **physicsCrossSectionInertia** | UReal |  | 0. | (symbol: $\rho J$) [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section |
-| **physicsBendingStiffness** | UReal |  | 0. | (symbol: $EI$) [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature |
-| **physicsAxialStiffness** | UReal |  | 0. | (symbol: $EA$) [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon$ is the axial strain |
-| **physicsShearStiffness** | UReal |  | 0. | (symbol: $GA$) [SI:N] effective shear stiffness of beam, including stiffness correction |
-| **physicsBendingDamping** | UReal |  | 0. | (symbol: $d_{K}$) [SI:Nm$^2$/s] viscous damping of bending deformation; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$ |
-| **physicsAxialDamping** | UReal |  | 0. | (symbol: $d_{\varepsilon}$) [SI:N/s] viscous damping of axial deformation |
-| **physicsShearDamping** | UReal |  | 0. | (symbol: $d_{\gamma}$) [SI:N/s] viscous damping of shear deformation |
-| **physicsReferenceCurvature** | Real |  | 0. | (symbol: $\kappa_0$) [SI:1/m] reference curvature of beam (pre-deformation) of beam |
+| **length** | UReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
+| **massPerLength** | UReal |  | 0. | (symbol: $\rho A$) [SI:kg/m] mass per length of beam |
+| **crossSectionInertia** | UReal |  | 0. | (symbol: $\rho J$) [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section |
+| **bendingStiffness** | UReal |  | 0. | (symbol: $EI$) [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature |
+| **axialStiffness** | UReal |  | 0. | (symbol: $EA$) [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon$ is the axial strain |
+| **shearStiffness** | UReal |  | 0. | (symbol: $GA$) [SI:N] effective shear stiffness of beam, including stiffness correction |
+| **bendingDamping** | UReal |  | 0. | (symbol: $d_{K}$) [SI:Nm$^2$/s] viscous damping of bending deformation; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$ |
+| **axialDamping** | UReal |  | 0. | (symbol: $d_{\varepsilon}$) [SI:N/s] viscous damping of axial deformation |
+| **shearDamping** | UReal |  | 0. | (symbol: $d_{\gamma}$) [SI:N/s] viscous damping of shear deformation |
+| **referenceCurvature** | Real |  | 0. | (symbol: $\kappa_0$) [SI:1/m] reference curvature of beam (pre-deformation) of beam |
 | **includeReferenceRotations** | bool |  | False | if True, rotation of the cross section at the nodes includes node reference rotations (within referenceCoordinates of NodeRigidBody2D), which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the reference slope vector. This allows to easily share nodes among several beams with different reference cross section orientation (i.e., only the change of rotation counts). |
 | **visualization** | VObjectBeamGeometricallyExact2D |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsLength` (deprecated since 1.12.258, removed in 2031): use `length`; `physicsMassPerLength` (deprecated since 1.12.258, removed in 2031): use `massPerLength`; `physicsCrossSectionInertia` (deprecated since 1.12.258, removed in 2031): use `crossSectionInertia`; `physicsBendingStiffness` (deprecated since 1.12.258, removed in 2031): use `bendingStiffness`; `physicsAxialStiffness` (deprecated since 1.12.258, removed in 2031): use `axialStiffness`; `physicsShearStiffness` (deprecated since 1.12.258, removed in 2031): use `shearStiffness`; `physicsBendingDamping` (deprecated since 1.12.258, removed in 2031): use `bendingDamping`; `physicsAxialDamping` (deprecated since 1.12.258, removed in 2031): use `axialDamping`; `physicsShearDamping` (deprecated since 1.12.258, removed in 2031): use `shearDamping`; `physicsReferenceCurvature` (deprecated since 1.12.258, removed in 2031): use `referenceCurvature`.
 
 ## Visualization parameters
 
@@ -106,7 +109,7 @@ $$
 $$
 
 the axial strain, the shear strain and the curvature, with the reference curvature $\kappa_0$ =
-`physicsReferenceCurvature`. The virtual work of the elastic forces is
+`referenceCurvature`. The virtual work of the elastic forces is
 
 $$
 \delta W_e = \int_{-L/2}^{L/2} \left( EA\,\gamma_1\,\delta\gamma_1 + GA\,\gamma_2\,\delta\gamma_2 + EI\,\kappa\,\delta\kappa \right) dx ,
@@ -146,9 +149,9 @@ for i in range(3): #clamped: x, y, rotation
                   mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))]))
 for k in range(nElements):
     n1 = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[L*(k+1)/nElements,0,0]))
-    mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[n0,n1], physicsLength=L/nElements,
-                  physicsMassPerLength=1, physicsCrossSectionInertia=0.01, physicsBendingStiffness=EI,
-                  physicsAxialStiffness=1e5, physicsShearStiffness=GA))
+    mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[n0,n1], length=L/nElements,
+                  massPerLength=1, crossSectionInertia=0.01, bendingStiffness=EI,
+                  axialStiffness=1e5, shearStiffness=GA))
     n0 = n1
 mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n1)), loadVector=[0,F,0]))
 

@@ -28,12 +28,12 @@ void CObjectMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, con
 
 	if (!computeInverse)
 	{
-		massMatrix.SetScalarMatrix(1, parameters.physicsMass);
+		massMatrix.SetScalarMatrix(1, parameters.mass);
 	}
 	else
 	{
-		CHECKandTHROW(parameters.physicsMass != 0., "CObjectMassPoint2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
-		massMatrix.SetScalarMatrix(1, 1./parameters.physicsMass);
+		CHECKandTHROW(parameters.mass != 0., "CObjectMassPoint2D::ComputeMassMatrix: mass may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
+		massMatrix.SetScalarMatrix(1, 1./parameters.mass);
 	}
 }
 
@@ -70,7 +70,7 @@ bool CObjectMass1D::GetJacobianTransposedTimesVectorDerivative(const Vector3D& l
 //! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
 void CObjectMass1D::GetMassWeightedPositionJacobian(Matrix& value) const
 {
-	Vector3D v = parameters.referenceRotation * Vector3D({ parameters.physicsMass,0.,0. });
+	Vector3D v = parameters.referenceRotation * Vector3D({ parameters.mass,0.,0. });
 	value.SetMatrix(3, 1, { v[0], v[1], v[2] }); //a 3D gravity Vector acts on 1 coordinate, rotated by reference rotation
 }
 
@@ -100,7 +100,7 @@ void CObjectMass1D::GetOutputVariableBody(OutputVariableType variableType, const
 		value.SetVector({ 0. }); break;
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectMass1D");
-		value.SetVector({ 0.5*parameters.physicsMass*GetVelocity(localPosition, configuration).GetL2NormSquared() }); break; }
+		value.SetVector({ 0.5*parameters.mass*GetVelocity(localPosition, configuration).GetL2NormSquared() }); break; }
 	default:
 		SysError("CObjectMass1D::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

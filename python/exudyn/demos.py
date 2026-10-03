@@ -61,7 +61,7 @@ def Demo1(showAll = True):
     mbs = SC.AddSystem()               #add a new system to work with
     
     nMP = mbs.AddNode(eii.NodePoint2D(referenceCoordinates=[0,0]))
-    mbs.AddObject(eii.ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
+    mbs.AddObject(eii.ObjectMassPoint2D(mass=10, nodeNumber=nMP ))
     mMP = mbs.AddMarker(eii.MarkerNodePosition(nodeNumber = nMP))
     mbs.AddLoad(eii.Force(markerNumber = mMP, loadVector=[0.001,0,0]))
     
@@ -116,8 +116,8 @@ def Demo2(showAll = True):
         oGraphics = graphics.Brick(size=[1.8*sx, 2*s, 2*s], color= graphics.color.dodgerblue, addEdges=True)
         oGraphicsJoint = graphics.Sphere(point=[-sx,0,cPosZ], radius = 0.6*s, color=graphics.color.darkgrey, 
                                             nTiles=24)
-        oRB = mbs.AddObject(eii.ObjectRigidBody(physicsMass=2, 
-                                            physicsInertia=[6,1,6,0,0,0], 
+        oRB = mbs.AddObject(eii.ObjectRigidBody(mass=2, 
+                                            inertia=[6,1,6,0,0,0], 
                                             nodeNumber=nRB, 
                                             visualization=eii.VObjectRigidBody(graphicsData=[oGraphics, oGraphicsJoint])))
     

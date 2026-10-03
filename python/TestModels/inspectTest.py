@@ -32,7 +32,7 @@ I = exu.InspectType
 
 oGround = mbs.AddObject(ObjectGround())
 nMass = mbs.AddNode(NodePoint(referenceCoordinates=[1, 0, 0]))
-oMass = mbs.AddObject(MassPoint(nodeNumber=nMass, physicsMass=2))
+oMass = mbs.AddObject(MassPoint(nodeNumber=nMass, mass=2))
 mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround))
 mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
 oSpring = mbs.AddObject(SpringDamper(markerNumbers=[mGround, mMass], referenceLength=1, stiffness=100))

@@ -39,7 +39,7 @@ void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(const Marke
 	ConstSizeMatrixBase<TReal, 9> A0all = ApplyRotationMarker(A0, parameters.rotationMarker0);
 	ConstSizeMatrixBase<TReal, 9> A1all = ApplyRotationMarker(A1, parameters.rotationMarker1);
 
-	if (parameters.intrinsicFormulation)
+	if (parameters.useIntrinsicFormulation)
 	{
 		if constexpr (std::is_same<TReal, Real>::value)
 		{
@@ -138,7 +138,7 @@ void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigidTemplate(c
 	SlimVectorBase<TReal, 3> fRot = Ajoint * SlimVectorBase<TReal, 3>({ fLocVec6D[3], fLocVec6D[4], fLocVec6D[5] });
 	SlimVectorBase<TReal, 3> torque;
 	torque.SetAll(0.);
-	if (parameters.intrinsicFormulation)
+	if (parameters.useIntrinsicFormulation)
 	{
 		SlimVectorBase<TReal, 3> halfPos;
 		for (Index i = 0; i < 3; i++) { halfPos[i] = -0.5*vLocPos[i]; }
@@ -153,7 +153,7 @@ void CObjectConnectorRigidBodySpringDamper::ComputeConnectorForceRigidTemplate(c
 //! the Jacobian by automatic differentiation (ComputeConnectorForceRigidDiff), unless a user function defines the force (#2745)
 JacobianType::Type CObjectConnectorRigidBodySpringDamper::GetAvailableJacobians() const
 {
-	if (!parameters.springForceTorqueUserFunction && !parameters.intrinsicFormulation)
+	if (!parameters.springForceTorqueUserFunction && !parameters.useIntrinsicFormulation)
 	{
 		return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t + JacobianType::ODE2_ODE2_function + JacobianType::ODE2_ODE2_t_function);
 	}

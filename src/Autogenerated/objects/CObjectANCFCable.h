@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  11:54:19 (last modified)
+* @date         2026-10-03  18:08:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,26 +27,26 @@
 class CObjectANCFCableParameters // AUTO:
 {
 public: // AUTO:
-    Real physicsLength;                           //!< AUTO: must be >= 0;  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
-    Real physicsMassPerLength;                    //!< AUTO: must be >= 0;  [SI:kg/m] mass per length of beam
-    Real physicsBendingStiffness;                 //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$] bending stiffness of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
-    Real physicsAxialStiffness;                   //!< AUTO: must be >= 0;  [SI:N] axial stiffness of beam; the axial force is \f$f_{ax} = EA (\varepsilon -\varepsilon_0)\f$, in which \f$\varepsilon = |\rv^\prime|-1\f$ is the axial strain
-    Real physicsBendingDamping;                   //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$/s] bending damping of beam ; the additional virtual work due to damping is \f$\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\f$
-    Real physicsAxialDamping;                     //!< AUTO: must be >= 0;  [SI:N/s] axial damping of beam; the additional virtual work due to damping is \f$\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx\f$
-    Real physicsReferenceAxialStrain;             //!< AUTO:  [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value
+    Real length;                                  //!< AUTO: must be >= 0;  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
+    Real massPerLength;                           //!< AUTO: must be >= 0;  [SI:kg/m] mass per length of beam
+    Real bendingStiffness;                        //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$] bending stiffness of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
+    Real axialStiffness;                          //!< AUTO: must be >= 0;  [SI:N] axial stiffness of beam; the axial force is \f$f_{ax} = EA (\varepsilon -\varepsilon_0)\f$, in which \f$\varepsilon = |\rv^\prime|-1\f$ is the axial strain
+    Real bendingDamping;                          //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$/s] bending damping of beam ; the additional virtual work due to damping is \f$\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\f$
+    Real axialDamping;                            //!< AUTO: must be >= 0;  [SI:N/s] axial damping of beam; the additional virtual work due to damping is \f$\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx\f$
+    Real referenceAxialStrain;                    //!< AUTO:  [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value
     Real strainIsRelativeToReference;             //!< AUTO:  if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of \f$\varepsilon_0\f$ and \f$\kappa_0\f$ serve as a reference geometry; allows also values between 0. and 1.
     Index2 nodeNumbers;                           //!< AUTO: two node numbers ANCF cable element
     Index useReducedOrderIntegration;             //!< AUTO: 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
     //! AUTO: default constructor with parameter initialization
     CObjectANCFCableParameters()
     {
-        physicsLength = 0.;
-        physicsMassPerLength = 0.;
-        physicsBendingStiffness = 0.;
-        physicsAxialStiffness = 0.;
-        physicsBendingDamping = 0.;
-        physicsAxialDamping = 0.;
-        physicsReferenceAxialStrain = 0.;
+        length = 0.;
+        massPerLength = 0.;
+        bendingStiffness = 0.;
+        axialStiffness = 0.;
+        bendingDamping = 0.;
+        axialDamping = 0.;
+        referenceAxialStrain = 0.;
         strainIsRelativeToReference = 0.;
         nodeNumbers = Index2({EXUstd::InvalidIndex, EXUstd::InvalidIndex});
         useReducedOrderIntegration = 0;
@@ -56,7 +56,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectANCFCable
-* @brief        A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[0, L]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the ABRV:EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
+* @brief        A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length \f$L\f$=length and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[0, L]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the ABRV:EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -96,7 +96,7 @@ public: // AUTO:
     //! AUTO:  access to individual element paramters for base class functions
     Real GetLength() const
     {
-        return parameters.physicsLength;
+        return parameters.length;
     }
 
     //! AUTO:  Computational function: compute mass matrix
@@ -168,7 +168,7 @@ public: // AUTO:
     //! AUTO:  return the local position of the center of mass, needed for equations of motion and for massProportionalLoad
     virtual Vector3D GetLocalCenterOfMass() const override
     {
-        return Vector3D({0.5*parameters.physicsLength,0.,0.});
+        return Vector3D({0.5*parameters.length,0.,0.});
     }
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping

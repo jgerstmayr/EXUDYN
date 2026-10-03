@@ -46,7 +46,7 @@ def Drop(kind, law):
     if kind == 'coordinate':
         #the coordinate is the height; gap = q - offset
         node = mbs.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[z0]))
-        mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=m))
+        mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=m))
         mBall = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
         mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
         nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1+nImpact, initialCoordinates=[z0 - r]+[0]*nImpact))
@@ -58,8 +58,8 @@ def Drop(kind, law):
         component = 1
     else:
         node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.1, 0.1, z0] + eulerParameters0))
-        ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=m,
-                                             physicsInertia=InertiaSphere(mass=m, radius=r).GetInertia6D()))
+        ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m,
+                                             inertia=InertiaSphere(mass=m, radius=r).GetInertia6D()))
         mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball))
         mbs.AddLoad(LoadForceVector(markerNumber=mBall, loadVector=[0, 0, -m*g]))
         nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0, 0, 0, 0]))
@@ -71,7 +71,7 @@ def Drop(kind, law):
         else:
             #the sphere is marker 0, the triangle marker 1
             mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
-            mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, radiusSphere=r,
+            mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=r,
                                                       trianglePoints=exu.Vector3DList([[-1, -1, 0], [1, -1, 0], [0, 1, 0]]),
                                                       **law))
         sensor = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=exu.OutputVariableType.Position,

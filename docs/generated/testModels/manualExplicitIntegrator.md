@@ -67,8 +67,8 @@ lElem = L / nElements
 nLast = 0
 for i in range(nElements):
     nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
-    elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rho*A, 
-                               physicsBendingStiffness=E*I, physicsAxialStiffness=E*A*0.1, 
+    elem=mbs.AddObject(Cable2D(length=lElem, massPerLength=rho*A, 
+                               bendingStiffness=E*I, axialStiffness=E*A*0.1, 
                                nodeNumbers=[int(nc0)+i,int(nc0)+i+1], useReducedOrderIntegration=True))
     cableList+=[elem]
 

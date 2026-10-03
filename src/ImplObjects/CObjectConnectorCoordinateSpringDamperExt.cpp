@@ -42,10 +42,10 @@ Real ComputeFrictionForce(Real relPos, Real relVel, Real lastStickPos, Real last
         if (isPostNewton)
         {
             newStickPos = lastStickPos;
-            if (fabs(frictionForce) > (parameters.fDynamicFriction + parameters.fStaticFrictionOffset))
+            if (fabs(frictionForce) > (parameters.dynamicFrictionForce + parameters.staticFrictionOffsetForce))
             {   //was stick => switch to slide: friction force is larger than allowed sticking force
-                Real stribeck = ExuPhysics::StribeckFunction(relVel, parameters.fDynamicFriction,
-                    parameters.fStaticFrictionOffset, parameters.fViscousFriction,
+                Real stribeck = ExuPhysics::StribeckFunction(relVel, parameters.dynamicFrictionForce,
+                    parameters.staticFrictionOffsetForce, parameters.viscousFrictionFactor,
                     parameters.exponentialDecayStatic, parameters.frictionProportionalZone);
 
                 forceError += fabs(frictionForce) - fabs(stribeck);
@@ -62,8 +62,8 @@ Real ComputeFrictionForce(Real relPos, Real relVel, Real lastStickPos, Real last
     }
     else // is/was slip
     {
-        frictionForce = ExuPhysics::StribeckFunction(relVel, parameters.fDynamicFriction,
-            parameters.fStaticFrictionOffset, parameters.fViscousFriction,
+        frictionForce = ExuPhysics::StribeckFunction(relVel, parameters.dynamicFrictionForce,
+            parameters.staticFrictionOffsetForce, parameters.viscousFrictionFactor,
             parameters.exponentialDecayStatic, parameters.frictionProportionalZone);
         if (!isPostNewton)
         {
@@ -185,13 +185,13 @@ void CObjectConnectorCoordinateSpringDamperExt::ComputeSpringForceRelative(Real 
             //friction:
             if (parameters.frictionProportionalZone != 0)
             {
-                force += ExuPhysics::StribeckFunction(relVel, parameters.fDynamicFriction, 
-                    parameters.fStaticFrictionOffset, parameters.fViscousFriction, 
+                force += ExuPhysics::StribeckFunction(relVel, parameters.dynamicFrictionForce, 
+                    parameters.staticFrictionOffsetForce, parameters.viscousFrictionFactor, 
                     parameters.exponentialDecayStatic, parameters.frictionProportionalZone);  
             }
             else
             {
-                if (parameters.fDynamicFriction != 0 || parameters.fStaticFrictionOffset != 0)
+                if (parameters.dynamicFrictionForce != 0 || parameters.staticFrictionOffsetForce != 0)
                 {
                     CHECKandTHROW(parameters.nodeNumber != EXUstd::InvalidIndex, "CObjectConnectorCoordinateSpringDamperExt: needs valid data node for frictionProportionalZone != 0", ExudynModelError);
                     Real& currentStateFriction = ((CNodeData*)GetCNode(0))->GetCoordinateVector(ConfigurationType::Current)[0];
@@ -277,8 +277,8 @@ void CObjectConnectorCoordinateSpringDamperExt::ComputeJacobianODE2_ODE2(EXUmath
 JacobianType::Type CObjectConnectorCoordinateSpringDamperExt::GetAvailableJacobians() const
 {
     bool hasNonlinearity = parameters.useLimitStops ||
-        parameters.fDynamicFriction != 0 || parameters.fStaticFrictionOffset != 0 ||
-        parameters.fViscousFriction != 0;
+        parameters.dynamicFrictionForce != 0 || parameters.staticFrictionOffsetForce != 0 ||
+        parameters.viscousFrictionFactor != 0;
 
     if (!parameters.springForceUserFunction && !hasNonlinearity)
 	{   //only in very simple case we can use analytical Jacobian

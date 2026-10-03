@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  08:06:21 (last modified)
+* @date         2026-10-03  18:08:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -32,14 +32,14 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 class CObjectANCFCable2DParameters // AUTO:
 {
 public: // AUTO:
-    Real physicsLength;                           //!< AUTO: must be >= 0;  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
-    Real physicsMassPerLength;                    //!< AUTO: must be >= 0;  [SI:kg/m] mass per length of beam
-    Real physicsBendingStiffness;                 //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$] bending stiffness of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
-    Real physicsAxialStiffness;                   //!< AUTO: must be >= 0;  [SI:N] axial stiffness of beam; the axial force is \f$f_{ax} = EA (\varepsilon -\varepsilon_0)\f$, in which \f$\varepsilon = |\rv^\prime|-1\f$ is the axial strain
-    Real physicsBendingDamping;                   //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$/s] bending damping of beam ; the additional virtual work due to damping is \f$\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\f$
-    Real physicsAxialDamping;                     //!< AUTO: must be >= 0;  [SI:N/s] axial damping of beam; the additional virtual work due to damping is \f$\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx\f$
-    Real physicsReferenceAxialStrain;             //!< AUTO:  [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value
-    Real physicsReferenceCurvature;               //!< AUTO:  [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value
+    Real length;                                  //!< AUTO: must be >= 0;  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
+    Real massPerLength;                           //!< AUTO: must be >= 0;  [SI:kg/m] mass per length of beam
+    Real bendingStiffness;                        //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$] bending stiffness of beam; the bending moment is \f$m = EI (\kappa - \kappa_0)\f$, in which \f$\kappa\f$ is the material measure of curvature
+    Real axialStiffness;                          //!< AUTO: must be >= 0;  [SI:N] axial stiffness of beam; the axial force is \f$f_{ax} = EA (\varepsilon -\varepsilon_0)\f$, in which \f$\varepsilon = |\rv^\prime|-1\f$ is the axial strain
+    Real bendingDamping;                          //!< AUTO: must be >= 0;  [SI:Nm\f$^2\f$/s] bending damping of beam ; the additional virtual work due to damping is \f$\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx\f$
+    Real axialDamping;                            //!< AUTO: must be >= 0;  [SI:N/s] axial damping of beam; the additional virtual work due to damping is \f$\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx\f$
+    Real referenceAxialStrain;                    //!< AUTO:  [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value
+    Real referenceCurvature;                      //!< AUTO:  [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value
     Real strainIsRelativeToReference;             //!< AUTO:  if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of \f$\varepsilon_0\f$ and \f$\kappa_0\f$ serve as a reference geometry; allows also values between 0. and 1.
     Index2 nodeNumbers;                           //!< AUTO: two node numbers ANCF cable element
     Index useReducedOrderIntegration;             //!< AUTO: 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/True: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments; 2: use mixed Lobatto/Gauss integration with exceptional quality of axial strain, however, spurious (hourglass) modes may occur!
@@ -48,14 +48,14 @@ public: // AUTO:
     //! AUTO: default constructor with parameter initialization
     CObjectANCFCable2DParameters()
     {
-        physicsLength = 0.;
-        physicsMassPerLength = 0.;
-        physicsBendingStiffness = 0.;
-        physicsAxialStiffness = 0.;
-        physicsBendingDamping = 0.;
-        physicsAxialDamping = 0.;
-        physicsReferenceAxialStrain = 0.;
-        physicsReferenceCurvature = 0.;
+        length = 0.;
+        massPerLength = 0.;
+        bendingStiffness = 0.;
+        axialStiffness = 0.;
+        bendingDamping = 0.;
+        axialDamping = 0.;
+        referenceAxialStrain = 0.;
+        referenceCurvature = 0.;
         strainIsRelativeToReference = 0.;
         nodeNumbers = Index2({EXUstd::InvalidIndex, EXUstd::InvalidIndex});
         useReducedOrderIntegration = 0;
@@ -67,7 +67,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        CObjectANCFCable2D
-* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[0, L]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the ABRV:EOM).
+* @brief        A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length \f$L\f$=length and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[0, L]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the ABRV:EOM).
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -104,19 +104,19 @@ public: // AUTO:
     //! AUTO:  access to individual element paramters for base class functions
     virtual Real GetLength() const override
     {
-        return parameters.physicsLength;
+        return parameters.length;
     }
 
     //! AUTO:  access to individual element paramters for base class functions
     virtual Real GetMassPerLength() const override
     {
-        return parameters.physicsMassPerLength;
+        return parameters.massPerLength;
     }
 
     //! AUTO:  access to individual element paramters for base class functions
-    virtual void GetMaterialParameters(Real& physicsBendingStiffness, Real& physicsAxialStiffness, Real& physicsBendingDamping, Real& physicsAxialDamping, Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature, Real& physicsMovingMassFactor) const override
+    virtual void GetMaterialParameters(Real& bendingStiffness, Real& axialStiffness, Real& bendingDamping, Real& axialDamping, Real& referenceAxialStrain, Real& referenceCurvature, Real& movingMassFactor) const override
     {
-        physicsBendingStiffness = parameters.physicsBendingStiffness; physicsAxialStiffness = parameters.physicsAxialStiffness; physicsBendingDamping = parameters.physicsBendingDamping; physicsAxialDamping = parameters.physicsAxialDamping; physicsReferenceAxialStrain = parameters.physicsReferenceAxialStrain; physicsReferenceCurvature = parameters.physicsReferenceCurvature; physicsMovingMassFactor = 1.;
+        bendingStiffness = parameters.bendingStiffness; axialStiffness = parameters.axialStiffness; bendingDamping = parameters.bendingDamping; axialDamping = parameters.axialDamping; referenceAxialStrain = parameters.referenceAxialStrain; referenceCurvature = parameters.referenceCurvature; movingMassFactor = 1.;
     }
 
     //! AUTO:  access to useReducedOrderIntegration from derived class
@@ -193,10 +193,10 @@ public: // AUTO:
     }
 
     //! AUTO:  Safe interface to evaluation of user function
-    void EvaluateUserFunctionBendingMoment(Real& torque, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real physicsBendingStiffness, Real physicsBendingDamping, Real axialStrain, Real axialStrain_t, Real axialStrainRef) const;
+    void EvaluateUserFunctionBendingMoment(Real& torque, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real bendingStiffness, Real bendingDamping, Real axialStrain, Real axialStrain_t, Real axialStrainRef) const;
 
     //! AUTO:  Safe interface to evaluation of user function
-    void EvaluateUserFunctionAxialForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real axialPositionNormalized, Real axialStrain, Real axialStrain_t, Real axialStrainRef, Real physicsAxialStiffness, Real physicsAxialDamping, Real curvature, Real curvature_t, Real curvatureRef) const;
+    void EvaluateUserFunctionAxialForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real axialPositionNormalized, Real axialStrain, Real axialStrain_t, Real axialStrainRef, Real axialStiffness, Real axialDamping, Real curvature, Real curvature_t, Real curvatureRef) const;
 
     virtual OutputVariableType GetOutputVariableTypes() const override
     {

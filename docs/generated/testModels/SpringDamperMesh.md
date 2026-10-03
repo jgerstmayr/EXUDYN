@@ -44,10 +44,10 @@ for j in range(nBodies2):
         # node = mbs.AddNode({'nodeType': 'Point','referenceCoordinates': [i+1, j, 0.0],
         #                     'initialCoordinates': [(i+1)*0.05*0, 0.0, 0.0], 
         #                     'initialVelocities': [0., 0., 0.],})
-        # body = mbs.AddObject({'objectType': 'MassPoint', 'physicsMass': 10, 'nodeNumber': node})
+        # body = mbs.AddObject({'objectType': 'MassPoint', 'mass': 10, 'nodeNumber': node})
         node = mbs.AddNode(NodePoint2D(referenceCoordinates=[i+1, j],
                                        initialCoordinates=[(i+1)*0.05*0, 0]))
-        body = mbs.AddObject(ObjectMassPoint2D(physicsMass= 10, nodeNumber= node))
+        body = mbs.AddObject(ObjectMassPoint2D(mass= 10, nodeNumber= node))
         mbs.AddMarker({'markerType': 'BodyPosition',  'bodyNumber': body,  'localPosition': [0.0, 0.0, 0.0], 'bodyFixed': False})
 
 #add spring-dampers:

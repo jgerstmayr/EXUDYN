@@ -77,7 +77,7 @@ markerBody0J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0,0,
 nGeneric = mbs.AddNode(NodeGenericData(initialCoordinates=[0,0,0], numberOfDataCoordinates=3))
 oRolling=mbs.AddObject(ObjectConnectorRollingDiscPenalty(markerNumbers=[markerGround, markerBody0J0], nodeNumber = nGeneric,
                                               discRadius=r, dryFriction=[0.8,0.8], dryFrictionProportionalZone=1e-2, 
-                                              rollingFrictionViscous=0.2,
+                                              rollingViscousFriction=0.2,
                                               contactStiffness=1e5, contactDamping=1e4,
                                               visualization=VObjectConnectorRollingDiscPenalty(discWidth=w, color=graphics.color.blue)))
 

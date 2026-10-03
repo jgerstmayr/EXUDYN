@@ -26,11 +26,14 @@ The parameters of the item; in a dictionary, its type is 'RigidBody2D':
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsMass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of rigid body |
-| **physicsInertia** | UReal |  | 0. | (symbol: $J$) inertia [SI:kgm$^2$] of rigid body w.r.t. reference point; this is equal to the center of mass, if physicsCenterOfMass = 0 |
-| **physicsCenterOfMass** | Vector2D | 2 | [0.,0.] | (symbol: $\LU{b}{\bv_{COM}}$) local position of {ref}`COM <COM>` relative to the body's reference point; if the vector of the {ref}`COM <COM>` is [0,0], the computation will not consider additional terms for the {ref}`COM <COM>` and it is faster |
+| **mass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of rigid body |
+| **inertia** | UReal |  | 0. | (symbol: $J$) inertia [SI:kgm$^2$] of rigid body w.r.t. reference point; this is equal to the center of mass, if centerOfMass = 0 |
+| **centerOfMass** | Vector2D | 2 | [0.,0.] | (symbol: $\LU{b}{\bv_{COM}}$) local position of {ref}`COM <COM>` relative to the body's reference point; if the vector of the {ref}`COM <COM>` is [0,0], the computation will not consider additional terms for the {ref}`COM <COM>` and it is faster |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_0$) node number (type NodeIndex) for 2D rigid body node |
 | **visualization** | VObjectRigidBody2D |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsMass` (deprecated since 1.12.258, removed in 2031): use `mass`; `physicsInertia` (deprecated since 1.12.258, removed in 2031): use `inertia`; `physicsCenterOfMass` (deprecated since 1.12.258, removed in 2031): use `centerOfMass`.
 
 ## Visualization parameters
 
@@ -87,7 +90,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 ### Equations of motion
 
-With `physicsCenterOfMass` $= \Null$:
+With `centerOfMass` $= \Null$:
 
 $$
 \mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = \fv .
@@ -141,7 +144,7 @@ For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-obj
 node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates = [1,1,0.25*np.pi], 
                                    initialCoordinates=[0.5,0,0],
                                    initialVelocities=[0.5,0,0.75*np.pi]))
-mbs.AddObject(RigidBody2D(nodeNumber = node, physicsMass=1, physicsInertia=2))
+mbs.AddObject(RigidBody2D(nodeNumber = node, mass=1, inertia=2))
 
 #assemble and solve system for default parameters
 mbs.Assemble()

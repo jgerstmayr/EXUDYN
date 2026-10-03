@@ -42,7 +42,7 @@ def Bend(force):
     section.inertia = np.diag([2*I, I, I])
     section.massPerLength = A
     for i in range(nElements):
-        mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=R*np.pi/4/nElements,
+        mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], length=R*np.pi/4/nElements,
                                                    sectionData=section))
     #clamped: position and e1..e3; e0 follows from the norm constraint
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))

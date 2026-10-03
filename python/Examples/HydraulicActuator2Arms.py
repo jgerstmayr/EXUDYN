@@ -73,7 +73,7 @@ if addArm2:
 
 #print(graphicsList)
 nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[0.5*L,0,0], initialVelocities=[0,0,0]));
-oRigid = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid,
+oRigid = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid,
                                    visualization=VObjectRigidBody2D(graphicsData= graphicsList)))
 
 mR1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[-0.5*L,0.,0.])) #support point
@@ -153,7 +153,7 @@ if addArm2:
 
     #print(graphicsList)
     nRigid2 = mbs.AddNode(Rigid2D(referenceCoordinates=[1.*L,-0.5*L,-0.5*pi], initialVelocities=[0,0,0]));
-    oRigid2 = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid2,
+    oRigid2 = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid2,
                                        visualization=VObjectRigidBody2D(graphicsData= graphicsList)))
 
     mR1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid2, localPosition=[-0.5*L,0.,0.])) #support point

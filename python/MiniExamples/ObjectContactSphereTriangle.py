@@ -23,12 +23,12 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 #a ball dropped onto a triangle fixed to the ground
 inertia = InertiaSphere(mass=1, radius=0.1)
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2,0.2,0.2]+eulerParameters0))
-ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
 mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=ball)), loadVector=[0,0,-9.81]))
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))
 nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0,0,0,0]))
-mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, radiusSphere=0.1,
+mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=0.1,
                                           trianglePoints=exu.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]),
                                           contactStiffness=1e5, contactDamping=1e3))
 

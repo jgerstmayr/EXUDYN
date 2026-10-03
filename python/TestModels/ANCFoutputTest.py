@@ -52,13 +52,13 @@ axialDamping=0 # for ALE Element
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #create one beam template
-cable = Cable2D(#physicsLength=L, 
-                physicsMassPerLength=rhoA, 
-                physicsBendingStiffness=EI, 
-                physicsAxialStiffness=EA, 
-                physicsBendingDamping=bendingDamping, 
-                physicsAxialDamping=axialDamping, 
-                # physicsUseCouplingTerms = True,
+cable = Cable2D(#length=L, 
+                massPerLength=rhoA, 
+                bendingStiffness=EI, 
+                axialStiffness=EA, 
+                bendingDamping=bendingDamping, 
+                axialDamping=axialDamping, 
+                # useCouplingTerms = True,
                 # useReducedOrderIntegration = True, #faster
                 visualization=VCable2D(drawHeight=hBeam)
                 )

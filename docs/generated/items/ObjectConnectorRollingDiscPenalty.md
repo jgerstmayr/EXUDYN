@@ -37,10 +37,13 @@ The parameters of the item; in a dictionary, its type is 'ConnectorRollingDiscPe
 | **dryFriction** | Vector2D | 2 | [0,0] | (symbol: $[\mu_x,\mu_y]\tp$) dry friction coefficients [SI:1] in local marker 1 joint $J1$ coordinates; if $\alpha_t==0$, lateral direction $l=x$ and forward direction $f=y$; assuming a normal force $f_n$, the local friction force can be computed as $\LU{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}$ |
 | **dryFrictionProportionalZone** | Real |  | 0. | (symbol: $v_\mu$) limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations) |
 | **viscousFriction** | Vector2D | 2 | [0,0] | (symbol: $[d_x, d_y]\tp$) viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint $J1$ coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity |
-| **rollingFrictionViscous** | Real |  | 0. | (symbol: $\mu_r$) rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground! |
+| **rollingViscousFriction** | Real |  | 0. | (symbol: $\mu_r$) viscous rolling friction [SI:s/m]: the force acts against the velocity of the trail on ground and is proportional to this velocity and to the contact normal force; currently, only implemented for disc axis parallel to ground! |
 | **useLinearProportionalZone** | Bool |  | False | if True, a linear proportional zone is used; the linear zone performs better in implicit time integration as the Jacobian has a constant tangent in the sticking case |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectConnectorRollingDiscPenalty |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `rollingFrictionViscous` (deprecated since 1.12.258, removed in 2031): use `rollingViscousFriction`.
 
 ## Visualization parameters
 
@@ -264,7 +267,7 @@ r = 0.2
 inertia = InertiaCylinder(density=1000, length=0.05, outerRadius=r, axis=0)
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,r]+eulerParameters0,
                    initialVelocities=[0,-2,0]+list(AngularVelocity2EulerParameters_t([2/r,0,0], eulerParameters0))))
-disc = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+disc = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
 mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=disc)), loadVector=[0,0,-9.81]))
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 mDisc = mbs.AddMarker(MarkerBodyRigid(bodyNumber=disc, localPosition=[0,0,0]))

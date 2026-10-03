@@ -61,7 +61,7 @@ def Drop(kind, solverType, numberOfSteps=6000, useRecommendedStepSize=True, last
     oGround = mbs.AddObject(ObjectGround())
     if kind == 'coordinate':
         node = mbs.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[z0]))
-        mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=m))
+        mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=m))
         mBall = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
         mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
         nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[z0 - r]))
@@ -73,8 +73,8 @@ def Drop(kind, solverType, numberOfSteps=6000, useRecommendedStepSize=True, last
     else:
         #Lie group node: the explicit integrators do not take the constraint of Euler parameters
         node = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=[0.1, 0.1, z0, 0, 0, 0]))
-        ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=m,
-                                             physicsInertia=InertiaSphere(mass=m, radius=r).GetInertia6D()))
+        ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m,
+                                             inertia=InertiaSphere(mass=m, radius=r).GetInertia6D()))
         mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball))
         mbs.AddLoad(LoadForceVector(markerNumber=mBall, loadVector=[0, 0, -m*g]))
         nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0, 0, 0, 0]))
@@ -93,7 +93,7 @@ def Torsional(solverType):
     """the rotation angle counted by the data node, after several turns back and forth"""
     SC = exu.SystemContainer(); mbs = SC.AddSystem()
     node = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=[0]*6, initialVelocities=[0, 0, 0, 0, 0, 20]))
-    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=1, physicsInertia=[1, 1, 1, 0, 0, 0]))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=1, inertia=[1, 1, 1, 0, 0, 0]))
     ground = mbs.AddObject(ObjectGround())
     nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[0]))
     mbs.AddObject(ObjectConnectorTorsionalSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=ground)),
@@ -106,12 +106,12 @@ def StickSlip(solverType):
     """the position of a mass with stick-slip friction under a periodic force"""
     SC = exu.SystemContainer(); mbs = SC.AddSystem()
     node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
     mMass = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
     nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[0, 0, 0]))
     mbs.AddObject(ObjectConnectorCoordinateSpringDamperExt(markerNumbers=[mGround, mMass], nodeNumber=nData, stiffness=0,
-                  damping=0, fDynamicFriction=2, fStaticFrictionOffset=0.5, stickingStiffness=1e4,
+                  damping=0, dynamicFrictionForce=2, staticFrictionOffsetForce=0.5, stickingStiffness=1e4,
                   stickingDamping=100, frictionProportionalZone=0))
     mbs.AddLoad(LoadCoordinate(markerNumber=mMass, load=0, loadUserFunction=lambda mbs, t, load: 3*np.sin(2*np.pi*t)))
     Solve(mbs, 2, 4000, solverType)

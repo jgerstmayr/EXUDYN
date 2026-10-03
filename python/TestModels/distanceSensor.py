@@ -69,7 +69,7 @@ gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mGround, contactStiffne
 gTable = [graphics.Cylinder([0,0,0],[0,0,0.05*rRot],radius=rRot, color=graphics.color.orange,addEdges=True, nTiles=64)]
 gTable+= [graphics.Cylinder([0,-rRot,0.05*rRot],[0,0,0.05*rRot],radius=0.1*rRot, color=graphics.color.orange,addEdges=True, nTiles=16)]
 nTable = mbs.AddNode(Node1D(referenceCoordinates=[0], initialVelocities=[4*pi]))
-oTable = mbs.AddObject(ObjectRotationalMass1D(physicsInertia=1, nodeNumber=nTable, referencePosition=[0,rRot,rRot], 
+oTable = mbs.AddObject(ObjectRotationalMass1D(inertia=1, nodeNumber=nTable, referencePosition=[0,rRot,rRot], 
                                               referenceRotation=np.eye(3), 
                                               visualization=VRotor1D(graphicsData=gTable)))
 mTable = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oTable, localPosition=[0,-rRot,0]))
@@ -115,10 +115,10 @@ I=b*h**3/12             # second moment of area of ANCF element in m^4
 
 
 #generate ANCF beams with utilities function
-cableTemplate = Cable2D(physicsMassPerLength = rho*A,
-                        physicsBendingStiffness = E*I,
-                        physicsAxialStiffness = E*A,
-                        physicsBendingDamping = 0.005*E*I,
+cableTemplate = Cable2D(massPerLength = rho*A,
+                        bendingStiffness = E*I,
+                        axialStiffness = E*A,
+                        bendingDamping = 0.005*E*I,
                         useReducedOrderIntegration = 2,
                         visualization=VCable2D(drawHeight=h)
                         )

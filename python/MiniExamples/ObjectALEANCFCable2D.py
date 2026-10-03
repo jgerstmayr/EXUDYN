@@ -24,7 +24,7 @@ from exudyn.beams import GenerateStraightLineANCFCable2D
 #an axially moving cable: the material slides through clamped nodes, described by one ALE coordinate
 nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
                                    initialCoordinates=[0], initialCoordinates_t=[0]))
-cable = ObjectALEANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4)
+cable = ObjectALEANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4)
 cable.nodeNumbers[2] = nALE #the ALE node of every element
 [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
                         numberOfElements=4, cableTemplate=cable,

@@ -24,7 +24,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0],
                              initialCoordinates=[0,0.5,0],   #displacement from the reference
                              initialVelocities=[2,0,0]))
-mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
 
 mbs.Assemble()
 mbs.SolveDynamic() #default: 1 second

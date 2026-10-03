@@ -140,6 +140,7 @@ def ItemDocstrings(definition):
     requestedMarkerString = ''
     itemTypeString = ''
     requestedNodeString = ''
+    deprecatedInputs = []
     for member in definition['members']:
         if im.IsInterfaceParameter(member) and not im.IsReadOnly(member): #the __init__ arguments
             [parameterDescription, mathSymbol] = ExtractMathSymbol(im.Description(member))
@@ -154,8 +155,11 @@ def ItemDocstrings(definition):
             elif im.DeprecatedUseAdvice(member): #a parameter that stays but is deprecated (#2804)
                 description += ('; deprecated since ' + str(member['deprecated'].since) + ', removed in '
                                 + str(member['deprecated'].expires) + ': ' + im.DeprecatedUseAdvice(member))
-            thisDataDocString['inputs'].append({'name': member['pythonName'],
-                                                'description': description.strip()})
+            entry = {'name': member['pythonName'], 'description': description.strip()}
+            if im.IsDeprecatedItemParameter(member): #the old names come last in the signature, and so in the docstring
+                deprecatedInputs.append(entry)
+            else:
+                thisDataDocString['inputs'].append(entry)
         elif member['pythonName'] == 'GetRequestedMarkerType':
             requestedMarkerString = GetTypesStringDocu(im.DefaultValueString(member), 'Marker',
                                                         possibleTypes['Marker'], ' +')
@@ -180,6 +184,7 @@ def ItemDocstrings(definition):
             dataDocstring['notes'].append('Requested Node type: '
                                           + CleanStringForPyiDescription(requestedNodeString))
 
+    dataDocstring['inputs'] += deprecatedInputs
     dataDocstring['inputs'].append({'name': 'visualization',
                                     'description': 'visualization data, see V' + className})
     return dataDocstring, dataDocstringV

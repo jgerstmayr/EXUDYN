@@ -259,7 +259,7 @@ It can be seen that the torque due to the connector is the same for both spheres
 #a ball dropped onto a large fixed sphere: penalty contact with its state in a data node
 inertia = InertiaSphere(mass=1, radius=0.1)
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,1.2]+eulerParameters0))
-ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
 mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=ball)), loadVector=[0,0,-9.81]))
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))

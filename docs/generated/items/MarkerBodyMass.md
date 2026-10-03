@@ -65,7 +65,7 @@ times the position Jacobian of the center of mass.
 ```python
 #gravity on a planar rigid body: the load acts on the mass of the whole body
 node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0.2,0]))
-body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=2, inertia=0.1))
 mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
 mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,-9.81,0]))
 

@@ -144,9 +144,9 @@ mbs.SolveDynamic(simulationSettings)
 
 
 
-p0=mbs.GetObjectOutputBody(objectList[0], exu.OutputVariableType.Displacement, mbs.GetObject(objectList[0])['physicsCenterOfMass'])
+p0=mbs.GetObjectOutputBody(objectList[0], exu.OutputVariableType.Displacement, mbs.GetObject(objectList[0])['centerOfMass'])
 #exu.Print("p0=", p0)
-p1=mbs.GetObjectOutputBody(objectList[1], exu.OutputVariableType.Displacement, mbs.GetObject(objectList[1])['physicsCenterOfMass'])
+p1=mbs.GetObjectOutputBody(objectList[1], exu.OutputVariableType.Displacement, mbs.GetObject(objectList[1])['centerOfMass'])
 #exu.Print("p1=", p1)
 
 #exu.Print("p0-p1=", p0-p1)

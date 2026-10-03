@@ -46,17 +46,17 @@ def BuildChain(mbs, connector, nBodies, explicit):
                 n = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2*(i+1), 0, 0] + list(eulerParameters0),
                                                 initialVelocities=[0, 0.1*np.sin(i), 0.05] + list(
                                                     AngularVelocity2EulerParameters_t([0.1, 0.2, 0.3], eulerParameters0))))
-            b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+            b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
             MarkerType = MarkerBodyRigid if connector == 'rigid' else MarkerBodyPosition
             m0 = mbs.AddMarker(MarkerType(bodyNumber=b, localPosition=[-0.05, 0.01, 0]))
             m1 = mbs.AddMarker(MarkerType(bodyNumber=b, localPosition=[0.05, 0.01, 0]))
         elif connector == 'gravity':
             n = mbs.AddNode(NodePoint(referenceCoordinates=[0.2*(i+1), 0, 0], initialVelocities=[0, 0.1*np.sin(i), 0.05]))
-            mbs.AddObject(MassPoint(nodeNumber=n, physicsMass=1))
+            mbs.AddObject(MassPoint(nodeNumber=n, mass=1))
             m0 = m1 = mbs.AddMarker(MarkerNodePosition(nodeNumber=n))
         else:
             n = mbs.AddNode(Node1D(referenceCoordinates=[0], initialVelocities=[0.1*np.sin(i)]))
-            mbs.AddObject(Mass1D(nodeNumber=n, physicsMass=1))
+            mbs.AddObject(Mass1D(nodeNumber=n, mass=1))
             m0 = m1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n, coordinate=0))
 
         if connector == 'spring':

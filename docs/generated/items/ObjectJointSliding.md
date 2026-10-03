@@ -29,7 +29,7 @@ The parameters of the item; in a dictionary, its type is 'JointSliding':
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_{GD}$) node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position |
 | **constrainRotations** | ArrayIndex | 3 | [1,1,1] | flags for constrained rotation about x, y and z-axis: if flag=1, add constraint on rotation of marker m0 relative to respective axis; flag=0: sliding body can rotate freely about this axis; for ANCFCable, rotation about x-axis cannot be constrained |
 | **constrainTranslations** | ArrayIndex | 3 | [1,1,1] | flags for constrained translation in x, y and z-direction: if flag=1, add constraint on translation of marker m0 relative to respective axis; flag=0: sliding body can translate freely about this axis; along x-axis this should be usually 0, except for driven motion |
-| **axialForce** | Real |  | 0 | (symbol: $f_\mathrm{ax}$) ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions. |
+| **axialForce** | Real |  | 0 | (symbol: $f_\mathrm{ax}$) ONLY APPLIES if useClassicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions. |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectJointSliding |  |  | parameters for visualization of item |
 
@@ -109,7 +109,7 @@ $$
 \LU{0}{\Delta\vv} = \LUR{0}{\dot\rv}{ANCF} - \LU{0}{\vv}_{m0}
 $$
 
-### Connector constraint equations (classicalFormulation=True)
+### Connector constraint equations (useClassicalFormulation=True)
 
 The 3D sliding joint is implemented having 7 equations, using the special algebraic coordinates $\zv$.
 The algebraic equations read
@@ -187,12 +187,12 @@ $$
 ```python
 #the shape of 3D ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
 from exudyn.beams import GenerateStraightLineANCFCable
-cable = ObjectANCFCable(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
+cable = ObjectANCFCable(massPerLength=1, bendingStiffness=1e4, axialStiffness=1e6)
 [nodes, elements, *_] = GenerateStraightLineANCFCable(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
                         numberOfElements=4, cableTemplate=cable,
                         fixedConstraintsNode0=[1,1,1, 1,1,1], fixedConstraintsNode1=[1,1,1, 1,1,1])
 nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0.6,0,0]))
-mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, mass=1))
 mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
 mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[1,0,0]))
 

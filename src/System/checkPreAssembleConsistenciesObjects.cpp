@@ -175,34 +175,34 @@ bool MainObjectANCFThinPlate::CheckPreAssembleConsistency(const MainSystem& main
 
 	}
 
-	if (cObject->GetParameters().physicsThickness.NumberOfItems() != 1 &&
-		cObject->GetParameters().physicsThickness.NumberOfItems() != 4)
+	if (cObject->GetParameters().thickness.NumberOfItems() != 1 &&
+		cObject->GetParameters().thickness.NumberOfItems() != 4)
 	{
-		errorString = "ObjectANCFThinPlate: physicsThickness must either be scalar (or list/array with 1 component) or a list/array of 4 parameters, but received " +
-			EXUstd::ToString(cObject->GetParameters().physicsThickness);
+		errorString = "ObjectANCFThinPlate: thickness must either be scalar (or list/array with 1 component) or a list/array of 4 parameters, but received " +
+			EXUstd::ToString(cObject->GetParameters().thickness);
 		return false;
 	}
-	for (Real thickness: cObject->GetParameters().physicsThickness)
+	for (Real thickness: cObject->GetParameters().thickness)
 	{
 		if (thickness <= 0)
 		{
-			errorString = "ObjectANCFThinPlate: each component of physicsThickness must be > 0 but received " + EXUstd::ToString(cObject->GetParameters().physicsThickness);
+			errorString = "ObjectANCFThinPlate: each component of thickness must be > 0 but received " + EXUstd::ToString(cObject->GetParameters().thickness);
 			return false;
 		}
 	}
 
 
-	if (cObject->GetParameters().physicsThickness.NumberOfItems() !=
-		cObject->GetParameters().physicsStrainCoefficients.NumberOfItems())
+	if (cObject->GetParameters().thickness.NumberOfItems() !=
+		cObject->GetParameters().strainCoefficients.NumberOfItems())
 	{
-		errorString = "ObjectANCFThinPlate: physicsThickness and physicsStrainCoefficients must be have consistent dimentions (either one height and one strain cofficient matrix, or a list with same length each)";
+		errorString = "ObjectANCFThinPlate: thickness and strainCoefficients must be have consistent dimentions (either one height and one strain cofficient matrix, or a list with same length each)";
 		return false;
 	}
 
-	if (cObject->GetParameters().physicsThickness.NumberOfItems() !=
-		cObject->GetParameters().physicsCurvatureCoefficients.NumberOfItems())
+	if (cObject->GetParameters().thickness.NumberOfItems() !=
+		cObject->GetParameters().curvatureCoefficients.NumberOfItems())
 	{
-		errorString = "ObjectANCFThinPlate: physicsThickness and physicsCurvatureCoefficients must be have consistent dimentions (either one height and one curvature cofficient matrix, or a list with same length each)";
+		errorString = "ObjectANCFThinPlate: thickness and curvatureCoefficients must be have consistent dimentions (either one height and one curvature cofficient matrix, or a list with same length each)";
 		return false;
 	}
 
@@ -270,7 +270,7 @@ bool MainObjectConnectorCoordinateSpringDamperExt::CheckPreAssembleConsistency(c
     CObjectConnectorCoordinateSpringDamperExt* cObject = (CObjectConnectorCoordinateSpringDamperExt*)GetCObject();
 
     bool needsDataNode = cObject->GetParameters().useLimitStops ||
-        ((cObject->GetParameters().fDynamicFriction != 0 || cObject->GetParameters().fStaticFrictionOffset != 0)
+        ((cObject->GetParameters().dynamicFrictionForce != 0 || cObject->GetParameters().staticFrictionOffsetForce != 0)
             && cObject->GetParameters().frictionProportionalZone == 0);
     //pout << "needsDataNode=" << needsDataNode << "\n";
 
@@ -281,8 +281,8 @@ bool MainObjectConnectorCoordinateSpringDamperExt::CheckPreAssembleConsistency(c
         else if (cObject->GetParameters().frictionProportionalZone == 0)
         {
             str += "frictionProportionalZone is zero and ";
-            if (cObject->GetParameters().fDynamicFriction != 0) { str += "dynamicFriction is non-zero"; }
-            else if (cObject->GetParameters().fStaticFrictionOffset != 0) { str += "dynamicFriction is non-zero"; }
+            if (cObject->GetParameters().dynamicFrictionForce != 0) { str += "dynamicFriction is non-zero"; }
+            else if (cObject->GetParameters().staticFrictionOffsetForce != 0) { str += "dynamicFriction is non-zero"; }
         }
         errorString = str + " the nodeNumber must contain a valid number of a data node (NodeGenericData)";
         return false;
@@ -298,7 +298,7 @@ bool MainObjectConnectorCoordinateSpringDamperExt::CheckPreAssembleConsistency(c
         //errorString = "CObjectConnectorCoordinateSpringDamperExt: case frictionProportionalZone = 0 not implemented";
         //return false;
 
-        if ((cObject->GetParameters().fDynamicFriction != 0 || cObject->GetParameters().fStaticFrictionOffset != 0) 
+        if ((cObject->GetParameters().dynamicFrictionForce != 0 || cObject->GetParameters().staticFrictionOffsetForce != 0) 
             && (cObject->GetParameters().stickingStiffness == 0) )
         {
             errorString = "CObjectConnectorCoordinateSpringDamperExt: in case frictionProportionalZone = 0 or useLimitStops=True, and friction parameters != 0, stickingStiffness may not be zero";
@@ -837,7 +837,7 @@ bool MainObjectContactSphereTorus::CheckPreAssembleConsistency(const MainSystem&
 	}
 
 	//for prestressed cases, we like to allow that!
-	//if (cObject->GetParameters().radiusSphere > cObject->GetParameters().torusMinorRadius 
+	//if (cObject->GetParameters().sphereRadius > cObject->GetParameters().torusMinorRadius 
 	//	//|| cObject->GetParameters().torusMinorRadius >= cObject->GetParameters().torusMajorRadius //this could be helpful in case that we like a sphere to move in a flat shape
 	//	)
 	//{
@@ -1706,9 +1706,9 @@ bool MainObjectJointSliding::CheckPreAssembleConsistency(const MainSystem& mainS
 		return false;
 	}
 
-	//if (cObject->GetParameters().axialForce != 0 && !cObject->GetParameters().classicalFormulation)
+	//if (cObject->GetParameters().axialForce != 0 && !cObject->GetParameters().useClassicalFormulation)
 	//{
-	//	errorString = STDstring("ObjectJointSliding: in case of classicalFormulation == False, no axialForce may be applied; set axialForce=0 !");
+	//	errorString = STDstring("ObjectJointSliding: in case of useClassicalFormulation == False, no axialForce may be applied; set axialForce=0 !");
 	//	return false;
 	//}
 
@@ -1777,9 +1777,9 @@ bool MainObjectJointSliding2D::CheckPreAssembleConsistency(const MainSystem& mai
 		return false;
 	}
 
-	if (cObject->GetParameters().axialForce != 0 && !cObject->GetParameters().classicalFormulation)
+	if (cObject->GetParameters().axialForce != 0 && !cObject->GetParameters().useClassicalFormulation)
 	{
-		errorString = STDstring("ObjectJointSliding2D: in case of classicalFormulation == False, no axialForce may be applied; set axialForce=0 !");
+		errorString = STDstring("ObjectJointSliding2D: in case of useClassicalFormulation == False, no axialForce may be applied; set axialForce=0 !");
 		return false;
 	}
 

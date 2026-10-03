@@ -97,7 +97,7 @@ for i in range(N+useConstraint):
                               initialVelocities=[0.]
                               ))
     nMass += [node]
-    massPoint = mbs.AddObject(Mass1D(nodeNumber = node, physicsMass=mass,
+    massPoint = mbs.AddObject(Mass1D(nodeNumber = node, mass=mass,
                                      referencePosition=[0,0,0],
                                      visualization=VMass1D(graphicsData=[gSphere])
                                      ))

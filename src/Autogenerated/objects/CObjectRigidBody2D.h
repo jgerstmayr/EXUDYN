@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  08:06:21 (last modified)
+* @date         2026-10-03  18:08:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,16 +30,16 @@ namespace py = pybind11;            //! AUTO: "py" used throughout in code
 class CObjectRigidBody2DParameters // AUTO:
 {
 public: // AUTO:
-    Real physicsMass;                             //!< AUTO: must be >= 0; mass [SI:kg] of rigid body
-    Real physicsInertia;                          //!< AUTO: must be >= 0; inertia [SI:kgm\f$^2\f$] of rigid body w.r.t. reference point; this is equal to the center of mass, if physicsCenterOfMass = 0
-    Vector2D physicsCenterOfMass;                 //!< AUTO: local position of ABRV:COM relative to the body's reference point; if the vector of the ABRV:COM is [0,0], the computation will not consider additional terms for the ABRV:COM and it is faster
+    Real mass;                                    //!< AUTO: must be >= 0; mass [SI:kg] of rigid body
+    Real inertia;                                 //!< AUTO: must be >= 0; inertia [SI:kgm\f$^2\f$] of rigid body w.r.t. reference point; this is equal to the center of mass, if centerOfMass = 0
+    Vector2D centerOfMass;                        //!< AUTO: local position of ABRV:COM relative to the body's reference point; if the vector of the ABRV:COM is [0,0], the computation will not consider additional terms for the ABRV:COM and it is faster
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) for 2D rigid body node
     //! AUTO: default constructor with parameter initialization
     CObjectRigidBody2DParameters()
     {
-        physicsMass = 0.;
-        physicsInertia = 0.;
-        physicsCenterOfMass = Vector2D({0.,0.});
+        mass = 0.;
+        inertia = 0.;
+        centerOfMass = Vector2D({0.,0.});
         nodeNumber = EXUstd::InvalidIndex;
     };
 };
@@ -89,7 +89,7 @@ public: // AUTO:
     //! AUTO:  return the available jacobian dependencies and the jacobians which are available as a function; if jacobian dependencies exist but are not available as a function, it is computed numerically; can be combined with 2^i enum flags
     virtual JacobianType::Type GetAvailableJacobians() const override
     {
-        if (parameters.physicsCenterOfMass == 0.) {return JacobianType::_None;} else {return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);}
+        if (parameters.centerOfMass == 0.) {return JacobianType::_None;} else {return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);}
     }
 
     //! AUTO:  Flags to determine, which access (forces, moments, connectors, ...) to object are possible
@@ -143,7 +143,7 @@ public: // AUTO:
     //! AUTO:  return the local position of the center of mass, needed for equations of motion and for massProportionalLoad
     virtual Vector3D GetLocalCenterOfMass() const override
     {
-        return Vector3D({parameters.physicsCenterOfMass[0],parameters.physicsCenterOfMass[1],0.});
+        return Vector3D({parameters.centerOfMass[0],parameters.centerOfMass[1],0.});
     }
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping
@@ -180,7 +180,7 @@ public: // AUTO:
     //! AUTO:  return true if object has time and coordinate independent (=constant) mass matrix
     virtual bool HasConstantMassMatrix() const override
     {
-        if (parameters.physicsCenterOfMass == 0.) {return true;} else {return false;}
+        if (parameters.centerOfMass == 0.) {return true;} else {return false;}
     }
 
     virtual OutputVariableType GetOutputVariableTypes() const override

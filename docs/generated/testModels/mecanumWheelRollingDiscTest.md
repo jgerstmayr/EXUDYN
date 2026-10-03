@@ -179,7 +179,7 @@ for iWheel in range(nWheels):
     oRolling = mbs.AddObject(ObjectConnectorRollingDiscPenalty(markerNumbers=[markerGround, mWheel], nodeNumber = nGeneric,
                                                   discRadius=rWheel, dryFriction=[1.,0.], dryFrictionAngle=frictionAngle,
                                                   dryFrictionProportionalZone=1e-1, 
-                                                  rollingFrictionViscous=0.2*0,
+                                                  rollingViscousFriction=0.2*0,
                                                   contactStiffness=kRolling, contactDamping=dRolling,
                                                   visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=graphics.color.blue)))
     oRollingDiscs += [oRolling]

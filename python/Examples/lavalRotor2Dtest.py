@@ -77,7 +77,7 @@ nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
 
 #add mass point (this is a 3D object with 3 coordinates):
 gRotor = graphics.Lines([[-r*0.5,-r*0.5,0], [r*0.5,-r*0.5,0], [r*0.5,r*0.5,0], [-r*0.5,r*0.5,0], [-r*0.5,-r*0.5,0]], color=[1,0,0,1])
-rigid2D = mbs.AddObject(RigidBody2D(physicsMass=mass, physicsInertia=mass*r**2, nodeNumber = n1, visualization=VObjectRigidBody2D(graphicsData=[gRotor])))
+rigid2D = mbs.AddObject(RigidBody2D(mass=mass, inertia=mass*r**2, nodeNumber = n1, visualization=VObjectRigidBody2D(graphicsData=[gRotor])))
 
 #marker for ground (=fixed):
 groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))

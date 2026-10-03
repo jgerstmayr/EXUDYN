@@ -35,7 +35,7 @@ def Beam(mbs):
     section.stiffnessMatrix = np.diag([E*A, G*A, G*A, G*(Iyy+Izz), E*Iyy, E*Izz])
     section.inertia = np.diag([rho*(Iyy+Izz), rho*Iyy, rho*Izz])
     section.massPerLength = rho*A
-    elements = [mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=lElement,
+    elements = [mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], length=lElement,
                                                            sectionData=section)) for i in range(nElements)]
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
     return (nodes, elements, mGround)

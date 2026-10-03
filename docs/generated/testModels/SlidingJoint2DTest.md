@@ -72,8 +72,8 @@ lElem = L / nElements
 for i in range(nElements):
     nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
     nodeList+=[nLast]
-    elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rho*A, 
-                               physicsBendingStiffness=E*I, physicsAxialStiffness=E*A, 
+    elem=mbs.AddObject(Cable2D(length=lElem, massPerLength=rho*A, 
+                               bendingStiffness=E*I, axialStiffness=E*A, 
                                nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
     cableList+=[elem]
     mBody = mbs.AddMarker(MarkerBodyMass(bodyNumber = elem))
@@ -105,7 +105,7 @@ if addRigidBody:
     #rigid body which slides:
     graphicsRigid = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[-b,-a,0, b,-a,0, b,a,0, -b,a,0, -b,-a,0]} #drawing of rigid body
     nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[slidingCoordinateInit,-a,0], initialVelocities=[0,0,0]));
-    oRigid = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid,visualization=VObjectRigidBody2D(graphicsData= [graphicsRigid])))
+    oRigid = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid,visualization=VObjectRigidBody2D(graphicsData= [graphicsRigid])))
 
     markerRigidTop = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[0.,a,0.])) #support point
     mR2 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[ 0.,0.,0.])) #center of mass (for load)
@@ -129,7 +129,7 @@ if addSlidingJoint:
     nodeDataSJ = mbs.AddNode(NodeGenericData(initialCoordinates=[initialLocalMarker,slidingCoordinateInit],numberOfDataCoordinates=2)) #initial index in cable list
     slidingJoint = mbs.AddObject(ObjectJointSliding2D(name='slider', markerNumbers=[markerRigidTop,cableMarkerList[initialLocalMarker]], 
                                                       slidingMarkerNumbers=cableMarkerList, slidingMarkerOffsets=offsetList, 
-                                                      nodeNumber=nodeDataSJ, classicalFormulation = False))
+                                                      nodeNumber=nodeDataSJ, useClassicalFormulation = False))
 
 
 mbs.Assemble()

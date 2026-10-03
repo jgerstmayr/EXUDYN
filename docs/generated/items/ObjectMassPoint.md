@@ -26,9 +26,12 @@ The parameters of the item; in a dictionary, its type is 'MassPoint':
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsMass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of mass point |
+| **mass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of mass point |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n0$) node number (type NodeIndex) for mass point |
 | **visualization** | VObjectMassPoint |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsMass` (deprecated since 1.12.258, removed in 2031): use `mass`.
 
 ## Visualization parameters
 
@@ -103,7 +106,7 @@ it. A mass point has no rotation: there is no rotation Jacobian, and no `MarkerB
 node = mbs.AddNode(NodePoint(referenceCoordinates = [1,1,0], 
                              initialCoordinates=[0.5,0,0],
                              initialVelocities=[0.5,0,0]))
-mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+mbs.AddObject(MassPoint(nodeNumber = node, mass=1))
 
 #assemble and solve system for default parameters
 mbs.Assemble()

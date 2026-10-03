@@ -201,12 +201,12 @@ for case in caseList:
             if useGeometricallyExact:
                 n1 = mbs.AddNode(NodeClass(referenceCoordinates=[lElem*(k+1),0,0]+initialRotationsGE))
             
-                oBeam = mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[n0,n1], physicsLength = lElem, 
+                oBeam = mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[n0,n1], length = lElem, 
                                                                      sectionData = sectionData,
                                                                      visualization=VBeam3D(sectionGeometry=sectionGeometry)))
             else:
                 n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[lElem*(k+1),0,0]+initialRotations))
-                oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength = lElem, 
+                oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], length = lElem, 
                                                        #testBeamRectangularSize = [h,w],
                                                        sectionData = sectionData,
                                                        crossSectionPenaltyFactor = [csFact,csFact,csFact],

@@ -27,7 +27,7 @@ distance = 1.0
 oMass1 = mbs.CreateMassPoint(
     referencePosition=[-distance/2,0,0],
     initialVelocity=[1,0,0],
-    physicsMass=mass,
+    mass=mass,
     drawSize = 2*radius, 
     color=exu.graphics.color.blue,
 )
@@ -35,7 +35,7 @@ oMass1 = mbs.CreateMassPoint(
 oMass2 = mbs.CreateMassPoint(
     referencePosition=[distance/2,0,0],
     initialVelocity=[-1,0,0],
-    physicsMass=mass,
+    mass=mass,
     drawSize = 2*radius, 
     color=exu.graphics.color.red,
 )

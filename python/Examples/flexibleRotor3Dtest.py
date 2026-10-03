@@ -96,8 +96,8 @@ gRotor1 = graphics.Cylinder([-lRotor*0.5,0,0],[lRotor,0,0],r,[0.9,0.3,0.3,transl
 gRotor0Axis = graphics.Cylinder([-L*0.5+0.5*lRotor,0,0],[L*0.5,0,0],r*0.05,[0.3,0.3,0.9,1],16)
 gRotor1Axis = graphics.Cylinder([-0.5*lRotor,0,0],[L*0.5,0,0],r*0.05,[0.3,0.3,0.9,1],16)
 gRotorCS = [backgroundX, backgroundY, backgroundZ]
-rigid0 = mbs.AddObject(RigidBody(physicsMass=m, physicsInertia=[Jxx,Jyyzz,Jyyzz,0,0,0], nodeNumber = n0, visualization=VObjectRigidBody2D(graphicsData=[gRotor0, gRotor0Axis]+gRotorCS)))
-rigid1 = mbs.AddObject(RigidBody(physicsMass=m, physicsInertia=[Jxx,Jyyzz,Jyyzz,0,0,0], nodeNumber = n1, visualization=VObjectRigidBody2D(graphicsData=[gRotor1, gRotor1Axis]+gRotorCS)))
+rigid0 = mbs.AddObject(RigidBody(mass=m, inertia=[Jxx,Jyyzz,Jyyzz,0,0,0], nodeNumber = n0, visualization=VObjectRigidBody2D(graphicsData=[gRotor0, gRotor0Axis]+gRotorCS)))
+rigid1 = mbs.AddObject(RigidBody(mass=m, inertia=[Jxx,Jyyzz,Jyyzz,0,0,0], nodeNumber = n1, visualization=VObjectRigidBody2D(graphicsData=[gRotor1, gRotor1Axis]+gRotorCS)))
 
 #marker for ground (=fixed):
 groundMarker0=mbs.AddMarker(MarkerNodePosition(nodeNumber= nGround0))

@@ -79,16 +79,16 @@ graphics2 = graphics.RigidLink(p0=[-0.5*L2,0,0.5*tz],p1=[0.5*L2,0,0.5*tz],
 #crank:
 nRigid1 = mbs.AddNode(Rigid2D(referenceCoordinates=[s1,0,0], 
                               initialVelocities=[0,0,0]));
-oRigid1 = mbs.AddObject(RigidBody2D(physicsMass=m1, 
-                                    physicsInertia=J1,
+oRigid1 = mbs.AddObject(RigidBody2D(mass=m1, 
+                                    inertia=J1,
                                     nodeNumber=nRigid1,
                                     visualization=VObjectRigidBody2D(graphicsData= [graphics1])))
 
 #connecting rod:
 nRigid2 = mbs.AddNode(Rigid2D(referenceCoordinates=[L1+s2,0,0], 
                               initialVelocities=[0,0,0]));
-oRigid2 = mbs.AddObject(RigidBody2D(physicsMass=m2, 
-                                    physicsInertia=J2,
+oRigid2 = mbs.AddObject(RigidBody2D(mass=m2, 
+                                    inertia=J2,
                                     nodeNumber=nRigid2,
                                     visualization=VObjectRigidBody2D(graphicsData= [graphics2])))
 
@@ -99,10 +99,10 @@ c=0.025 #dimension of mass
 graphics3 = graphics.BrickXYZ(-c,-c,-c*2,c,c,0,graphics.color.grey)
 
 nMass3 = mbs.AddNode(Point2D(referenceCoordinates=[L1+L2,0]))
-oMass3 = mbs.AddObject(MassPoint2D(physicsMass=m3, nodeNumber=nMass3,visualization=VObjectRigidBody2D(graphicsData= [graphics3])))
+oMass3 = mbs.AddObject(MassPoint2D(mass=m3, nodeNumber=nMass3,visualization=VObjectRigidBody2D(graphicsData= [graphics3])))
 
 nMass4 = mbs.AddNode(Point2D(referenceCoordinates=[L1+L2+L3,0]))
-oMass4 = mbs.AddObject(MassPoint2D(physicsMass=m4, nodeNumber=nMass4,visualization=VObjectRigidBody2D(graphicsData= [graphics3])))
+oMass4 = mbs.AddObject(MassPoint2D(mass=m4, nodeNumber=nMass4,visualization=VObjectRigidBody2D(graphicsData= [graphics3])))
 
 #++++++++++++++++++++++++++++++++
 #markers for joints:

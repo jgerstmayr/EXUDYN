@@ -38,7 +38,7 @@ omega0 = 4
 
 graphics2 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[-a,-b,0, a,-b,0, a,b,0, -a,b,0, -a,-b,0]} #background
 nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[-0.5,0,0], initialVelocities=[0,omega0*a,omega0]));
-oRigid = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid,visualization=VObjectRigidBody2D(graphicsData= [graphics2])))
+oRigid = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid,visualization=VObjectRigidBody2D(graphicsData= [graphics2])))
 
 mR1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[-0.5,0.,0.])) #support point
 mG0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[-0.5-a,0.,0.]))
@@ -50,7 +50,7 @@ mCoordR1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nRigid, coordinate=1))
 
 #additional mass point attached to COM of rigid body:
 nMass = mbs.AddNode(Point2D(referenceCoordinates=[-0.5,0], initialVelocities=[0,omega0*a]));
-oMass = mbs.AddObject(MassPoint2D(physicsMass=mass, nodeNumber=nMass) )
+oMass = mbs.AddObject(MassPoint2D(mass=mass, nodeNumber=nMass) )
 
 mCoordM0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nMass, coordinate=0)) 
 mCoordM1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nMass, coordinate=1)) 

@@ -170,13 +170,13 @@ for cnt, circleList in enumerate(reevingSystems):
     
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #create ANCF elements:
-    cableTemplate = Cable2D(#physicsLength = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
-                            physicsMassPerLength = rhoBeam*A,
-                            physicsBendingStiffness = E*I,
-                            physicsAxialStiffness = E*A,
-                            physicsBendingDamping = dEI,
-                            physicsAxialDamping = dEA,
-                            physicsReferenceAxialStrain = preStretch, #prestretch
+    cableTemplate = Cable2D(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+                            massPerLength = rhoBeam*A,
+                            bendingStiffness = E*I,
+                            axialStiffness = E*A,
+                            bendingDamping = dEI,
+                            axialDamping = dEA,
+                            referenceAxialStrain = preStretch, #prestretch
                             useReducedOrderIntegration=2,
                             visualization=VCable2D(drawHeight=2*h),
                             )
@@ -218,7 +218,7 @@ for cnt, circleList in enumerate(reevingSystems):
             cyl2 = graphics.Cylinder([0,-tensionerY,dimZ],vAxis=[0.6*dWheels,tensionerY,0], radius=0.05*rWheel, color=graphics.color.orange)
             gTensioner = [cyl0,cyl1,cyl2]
 
-            oTensioner = mbs.AddObject(ObjectRigidBody2D(physicsMass=wheelMass*10, physicsInertia=wheelInertia*10,
+            oTensioner = mbs.AddObject(ObjectRigidBody2D(mass=wheelMass*10, inertia=wheelInertia*10,
                                                     nodeNumber=nTensioner, visualization=
                                                     VObjectRigidBody2D(graphicsData=gTensioner)))
             mTensionerCenter = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nTensioner))
@@ -258,7 +258,7 @@ for cnt, circleList in enumerate(reevingSystems):
     
             nMass = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=pRef, initialVelocities=v0,
                                                 visualization=VNodeRigidBody2D(drawSize=dimZ*2)))
-            oMass = mbs.AddObject(ObjectRigidBody2D(physicsMass=wheelMass, physicsInertia=wheelInertia,
+            oMass = mbs.AddObject(ObjectRigidBody2D(mass=wheelMass, inertia=wheelInertia,
                                                     nodeNumber=nMass, visualization=
                                                     VObjectRigidBody2D(graphicsData=gList)))
             mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))

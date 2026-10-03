@@ -61,8 +61,8 @@ inertia6D = [6,1,6,0,1,0]
 g = 9.81
 
 oGraphics = graphics.Brick(centerPoint=[0,0,0], size=[sx,s,s], color=graphics.color.red)
-oRB = mbs.AddObject(ObjectRigidBody(physicsMass=mass, 
-                                    physicsInertia=inertia6D, 
+oRB = mbs.AddObject(ObjectRigidBody(mass=mass, 
+                                    inertia=inertia6D, 
                                     nodeNumber=nRB, 
                                     visualization=VObjectRigidBody(graphicsData=[oGraphics])))
 
@@ -81,8 +81,8 @@ if True: #rigid body as user function
 
     #dummy object, replacement for constraint by using a rigid body with zero mass:
     if useDummyObject:
-        oRB2 = mbs.AddObject(ObjectRigidBody(physicsMass=mass*0, 
-                                            physicsInertia=np.array(inertia6D)*0, 
+        oRB2 = mbs.AddObject(ObjectRigidBody(mass=mass*0, 
+                                            inertia=np.array(inertia6D)*0, 
                                             nodeNumber=nRB2, 
                                             visualization=VObjectRigidBody(graphicsData=[oGraphics])))
 

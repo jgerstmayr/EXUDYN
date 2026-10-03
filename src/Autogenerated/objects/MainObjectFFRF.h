@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  09:23:36 (last modified)
+* @date         2026-10-03  18:08:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -147,9 +147,9 @@ public: // AUTO:
         d["computeFFRFterms"] = (bool)cObjectFFRF->GetParameters().computeFFRFterms;
         d["coordinateIndexPerNode"] = EPyUtils::ToPythonMember(cObjectFFRF->GetCoordinateIndexPerNode());
         d["objectIsInitialized"] = (bool)cObjectFFRF->GetObjectIsInitialized();
-        d["physicsMass"] = (Real)cObjectFFRF->GetPhysicsMass();
-        d["physicsInertia"] = EPyUtils::ToPython(cObjectFFRF->GetPhysicsInertia());
-        d["physicsCenterOfMass"] = EPyUtils::ToPython(cObjectFFRF->GetPhysicsCenterOfMass());
+        d["mass"] = (Real)cObjectFFRF->GetMass();
+        d["inertia"] = EPyUtils::ToPython(cObjectFFRF->GetInertia());
+        d["centerOfMass"] = EPyUtils::ToPython(cObjectFFRF->GetCenterOfMass());
         d["PHItTM"] = EPyUtils::ToPython(cObjectFFRF->GetPHItTM());
         d["referencePositions"] = EPyUtils::ToPython(cObjectFFRF->GetReferencePositions());
         d["tempVector"] = EPyUtils::ToPython(cObjectFFRF->GetTempVector());
@@ -179,9 +179,9 @@ public: // AUTO:
         else if (parameterName.compare("computeFFRFterms") == 0) { return py::cast((bool)cObjectFFRF->GetParameters().computeFFRFterms); } //! AUTO: get parameter
         else if (parameterName.compare("coordinateIndexPerNode") == 0) { return py::cast(EPyUtils::ToPythonMember(cObjectFFRF->GetCoordinateIndexPerNode())); } //! AUTO: get parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { return py::cast((bool)cObjectFFRF->GetObjectIsInitialized()); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectFFRF->GetPhysicsMass()); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsInertia") == 0) { return EPyUtils::ToPython(cObjectFFRF->GetPhysicsInertia()); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsCenterOfMass") == 0) { return EPyUtils::ToPython(cObjectFFRF->GetPhysicsCenterOfMass()); } //! AUTO: get parameter
+        else if (parameterName.compare("mass") == 0) { return py::cast((Real)cObjectFFRF->GetMass()); } //! AUTO: get parameter
+        else if (parameterName.compare("inertia") == 0) { return EPyUtils::ToPython(cObjectFFRF->GetInertia()); } //! AUTO: get parameter
+        else if (parameterName.compare("centerOfMass") == 0) { return EPyUtils::ToPython(cObjectFFRF->GetCenterOfMass()); } //! AUTO: get parameter
         else if (parameterName.compare("PHItTM") == 0) { return EPyUtils::ToPython(cObjectFFRF->GetPHItTM()); } //! AUTO: get parameter
         else if (parameterName.compare("referencePositions") == 0) { return EPyUtils::ToPython(cObjectFFRF->GetReferencePositions()); } //! AUTO: get parameter
         else if (parameterName.compare("tempVector") == 0) { return EPyUtils::ToPython(cObjectFFRF->GetTempVector()); } //! AUTO: get parameter

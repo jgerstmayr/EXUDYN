@@ -67,7 +67,7 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 		vPos[0] = (slidingPosition[0] - markerData.GetMarkerData(0).position[0]); //this is the difference between the sliding position and the position of marker0
 		vPos[1] = (slidingPosition[1] - markerData.GetMarkerData(0).position[1]);
 
-		if (parameters.classicalFormulation)
+		if (parameters.useClassicalFormulation)
 		{
 			if (!velocityLevel)
 			{
@@ -86,7 +86,7 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 			}
 			else
 			{
-				CHECKandTHROWstring("CObjectJointSliding2D::ComputeAlgebraicEquations: velocityLevel not possible for classicalFormulation", ExudynNotImplementedError);
+				CHECKandTHROWstring("CObjectJointSliding2D::ComputeAlgebraicEquations: velocityLevel not possible for useClassicalFormulation", ExudynNotImplementedError);
 
 			}
 		}
@@ -133,7 +133,7 @@ void CObjectJointSliding2D::ComputeAlgebraicEquations(Vector& algebraicEquations
 		}
 		if (!velocityLevel && parameters.constrainRotation)
 		{
-			//this is for both classicalFormulation = true/false:
+			//this is for both useClassicalFormulation = true/false:
 			Vector2D n0({ markerData.GetMarkerData(0).orientation(0,1), markerData.GetMarkerData(0).orientation(1,1) }); //equivalent to A0*[0,1,0], but much faster
 			algebraicEquations[3] = slopeVector * n0;
 		}
@@ -212,7 +212,7 @@ void CObjectJointSliding2D::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Re
 		}
 
 
-		if (parameters.classicalFormulation)
+		if (parameters.useClassicalFormulation)
 		{
 			//Vector2D vPos;
 			//vPos[0] = (slidingPosition[0] - markerData.GetMarkerData(0).position[0]); //this is the difference between the sliding position and the position of marker0

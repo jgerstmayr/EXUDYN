@@ -104,15 +104,15 @@ void CObjectFFRF::InitializeObject()
 
 	//Mtt = PHIt.T @ massMatrix @ PHIt
 	//Mnew[0:3, 0 : 3] = Mtt
-	physicsMass = Mtt(0, 0); //must be diagonal matrix with mass in diagonal
+	mass = Mtt(0, 0); //must be diagonal matrix with mass in diagonal
 
 	referencePositions = Vector(nODE2FF);
 
 	//compute center of mass //2021-03-25
-	physicsCenterOfMass.CopyFrom(PHItTM * referencePositions);
-	if (physicsMass != 0.)
+	centerOfMass.CopyFrom(PHItTM * referencePositions);
+	if (mass != 0.)
 	{
-		physicsCenterOfMass *= 1 / physicsMass; //needed for application of force
+		centerOfMass *= 1 / mass; //needed for application of force
 	}
 	else
 	{
@@ -141,7 +141,7 @@ void CObjectFFRF::InitializeObject()
 	//inertiaLocal = xRefTilde.T @ massMatrix @ xRefTilde
 	Matrix xRefTildeTM;
 	parameters.massMatrixFF.MultDenseMatrixTransposedMatrix(xRefTilde, xRefTildeTM);
-	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(xRefTildeTM, xRefTilde, physicsInertia);
+	EXUmath::MultMatrixMatrixTemplate<Matrix, Matrix, Matrix3D>(xRefTildeTM, xRefTilde, inertia);
 
 //#define CObjectFFRFInitializeObjectOutput
 #ifdef CObjectFFRFInitializeObjectOutput
@@ -149,8 +149,8 @@ void CObjectFFRF::InitializeObject()
 	pout << "PHItTM = " << PHItTM.GetSubmatrix(0, 0, 3, 6) << "\n";
 	pout << "xRefTilde size = " << xRefTilde.NumberOfRows() << "," << xRefTilde.NumberOfColumns() << "\n";
 	pout << "xRefTilde = " << xRefTilde.GetSubmatrix(0, 0, 6, 3) << "\n";
-	pout << "inertiaLocal = " << physicsInertia << "\n";
-	pout << "parameters.physicsMass = " << physicsMass << "\n";
+	pout << "inertiaLocal = " << inertia << "\n";
+	pout << "parameters.mass = " << mass << "\n";
 	pout << "Mtt = " << Mtt << "\n";
 #endif
 
@@ -215,7 +215,7 @@ void CObjectFFRF::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const
 
 		//Mtt
 		Matrix3D Mtt(3, 3);
-		Mtt.SetScalarMatrix(3, physicsMass);
+		Mtt.SetScalarMatrix(3, mass);
 		massMatrix.AddSubmatrix(Mtt, 0, 0);
 
 		//++++++++++++++++++++++++++++++++
@@ -496,9 +496,9 @@ void CObjectFFRF::GetMassWeightedPositionJacobian(Matrix& value) const
 {
 	value.SetNumberOfRowsAndColumns(CNodeRigidBody::nDim3D, GetODE2Size());
 
-	Real m = physicsMass;
+	Real m = mass;
 
-	if (physicsCenterOfMass == 0.)
+	if (centerOfMass == 0.)
 	{
 		for (Index i = 0; i < CNodeRigidBody::nDim3D; i++)
 		{
@@ -516,8 +516,8 @@ void CObjectFFRF::GetMassWeightedPositionJacobian(Matrix& value) const
 		((CNodeRigidBody*)GetCNode(rigidBodyNodeNumber))->GetGlocal(Glocal);// RigidBodyMath::EP2Glocal(rot);
 
 
-		ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*physicsCenterOfMass); //negative sign in -A*uLocalTilde*Glocal
-		//uLocalTilde *= -1.;//moved into ((-m)*parameters.physicsCenterOfMass)
+		ConstSizeMatrix<9> uLocalTilde = RigidBodyMath::Vector2SkewMatrix((-m)*centerOfMass); //negative sign in -A*uLocalTilde*Glocal
+		//uLocalTilde *= -1.;//moved into ((-m)*parameters.centerOfMass)
 
 		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * CNodeRigidBody::nDim3D> temp; //temporary matrix during computation
 		EXUmath::MultMatrixMatrix(uLocalTilde, Glocal, temp);

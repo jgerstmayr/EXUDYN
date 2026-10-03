@@ -23,7 +23,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 node = mbs.AddNode(Node1D(referenceCoordinates = [1], 
                           initialCoordinates=[0.5],
                           initialVelocities=[0.5]))
-mass = mbs.AddObject(Mass1D(nodeNumber = node, physicsMass=1))
+mass = mbs.AddObject(Mass1D(nodeNumber = node, mass=1))
 
 #assemble and solve system for default parameters
 mbs.Assemble()

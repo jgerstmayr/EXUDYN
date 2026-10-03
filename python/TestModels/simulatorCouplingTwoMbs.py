@@ -223,7 +223,7 @@ for iWheel in range(nWheels):
                                                                 discRadius=rWheel, 
                                                                 dryFriction=[0.8,0.8], 
                                                                 dryFrictionProportionalZone=1e-1, 
-                                                                rollingFrictionViscous=0.2*0,
+                                                                rollingViscousFriction=0.2*0,
                                                                 contactStiffness=kRolling, contactDamping=dRolling,
                                                                 visualization=VObjectConnectorRollingDiscPenalty(discWidth=wWheel, color=graphics.color.blue, show=False)))
     oRollingDiscs += [oRolling]

@@ -183,7 +183,7 @@ gGraphicsPiston1 = graphics.Cylinder(pAxis=[0,0,-0.6*hC],vAxis=[0,0,1.2*hC],
 nPiston = mbs.AddNode(Node1D(referenceCoordinates=[0]))
 pistonMass = 0.1
 
-oPiston = mbs.AddObject(Mass1D(physicsMass = pistonMass, 
+oPiston = mbs.AddObject(Mass1D(mass = pistonMass, 
                                 nodeNumber = nPiston,
                                 referencePosition=[0,dR+dC,-0.5*hC],
                                 referenceRotation=RotationMatrixZ(-0.5*pi), #change 1D axis from x to y axis

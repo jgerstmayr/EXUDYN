@@ -23,7 +23,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 #a body that may only slide along the x-axis of the joint frame, here turned to the global y-axis
 inertia = InertiaCuboid(density=1000, sideLengths=[0.1,0.1,0.1])
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0))
-body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
 HTjoint = HomogeneousTransformation(RotationMatrixZ(0.5*np.pi), [0,0,0]) #the joint x-axis is the global y-axis
 mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localHT=HTjoint))
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HTjoint))

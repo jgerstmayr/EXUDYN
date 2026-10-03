@@ -22,7 +22,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 #a coordinate that contacts a stop: a 1D mass falls onto the ground coordinate (gap = q1 - q0 - offset)
 node = mbs.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[0.1]))
-mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
 mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
 mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[0.1])) #the gap

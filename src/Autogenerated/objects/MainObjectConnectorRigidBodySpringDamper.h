@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  13:23:06 (last modified)
+* @date         2026-10-03  18:09:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -119,7 +119,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "rotationMarker0")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker0"], cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0); if (!(cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectConnectorRigidBodySpringDamper.rotationMarker0", "ObjectConnectorRigidBodySpringDamper: the parameter rotationMarker0 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } }
         if (EPyUtils::DictItemExists(d, "rotationMarker1")) { EPyUtils::FromPython<Real, 3, 3>(d["rotationMarker1"], cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); if (!(cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectConnectorRigidBodySpringDamper.rotationMarker1", "ObjectConnectorRigidBodySpringDamper: the parameter rotationMarker1 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } }
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cObjectConnectorRigidBodySpringDamper->GetParameters().offset); }
-        if (EPyUtils::DictItemExists(d, "intrinsicFormulation")) { EPyUtils::FromPython(d["intrinsicFormulation"], cObjectConnectorRigidBodySpringDamper->GetParameters().intrinsicFormulation, "ObjectConnectorRigidBodySpringDamper.intrinsicFormulation"); }
+        if (EPyUtils::DictItemExists(d, "useIntrinsicFormulation")) { EPyUtils::FromPython(d["useIntrinsicFormulation"], cObjectConnectorRigidBodySpringDamper->GetParameters().useIntrinsicFormulation, "ObjectConnectorRigidBodySpringDamper.useIntrinsicFormulation"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector, "ObjectConnectorRigidBodySpringDamper.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "springForceTorqueUserFunction")) { cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction = d["springForceTorqueUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "postNewtonStepUserFunction")) { cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction = d["postNewtonStepUserFunction"]; }
@@ -127,6 +127,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorRigidBodySpringDamper->GetShow(), "ObjectConnectorRigidBodySpringDamper.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectConnectorRigidBodySpringDamper->GetDrawSize(), "ObjectConnectorRigidBodySpringDamper.VdrawSize"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorRigidBodySpringDamper->GetColor(), "ObjectConnectorRigidBodySpringDamper.Vcolor"); }
+        if (EPyUtils::DictItemExists(d, "intrinsicFormulation") && !d["intrinsicFormulation"].is_none()) { PyDeprecated("items", "ObjectConnectorRigidBodySpringDamper.intrinsicFormulation", "ObjectConnectorRigidBodySpringDamper: the parameter intrinsicFormulation is deprecated since 1.12.258 and removed in 2031; use useIntrinsicFormulation"); EPyUtils::FromPython(d["intrinsicFormulation"], cObjectConnectorRigidBodySpringDamper->GetParameters().useIntrinsicFormulation, "ObjectConnectorRigidBodySpringDamper.intrinsicFormulation"); } //! AUTO: deprecated, forwards to useIntrinsicFormulation
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -142,7 +143,7 @@ public: // AUTO:
         d["rotationMarker0"] = EPyUtils::ToPython(cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0);
         d["rotationMarker1"] = EPyUtils::ToPython(cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1);
         d["offset"] = EPyUtils::ToPython(cObjectConnectorRigidBodySpringDamper->GetParameters().offset);
-        d["intrinsicFormulation"] = (bool)cObjectConnectorRigidBodySpringDamper->GetParameters().intrinsicFormulation;
+        d["useIntrinsicFormulation"] = (bool)cObjectConnectorRigidBodySpringDamper->GetParameters().useIntrinsicFormulation;
         d["activeConnector"] = (bool)cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector;
         d["springForceTorqueUserFunction"] = (py::object)cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction;
         d["postNewtonStepUserFunction"] = (py::object)cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction;
@@ -164,13 +165,14 @@ public: // AUTO:
         else if (parameterName.compare("rotationMarker0") == 0) { return EPyUtils::ToPython(cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0); } //! AUTO: get parameter
         else if (parameterName.compare("rotationMarker1") == 0) { return EPyUtils::ToPython(cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return EPyUtils::ToPython(cObjectConnectorRigidBodySpringDamper->GetParameters().offset); } //! AUTO: get parameter
-        else if (parameterName.compare("intrinsicFormulation") == 0) { return py::cast((bool)cObjectConnectorRigidBodySpringDamper->GetParameters().intrinsicFormulation); } //! AUTO: get parameter
+        else if (parameterName.compare("useIntrinsicFormulation") == 0) { return py::cast((bool)cObjectConnectorRigidBodySpringDamper->GetParameters().useIntrinsicFormulation); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector); } //! AUTO: get parameter
         else if (parameterName.compare("springForceTorqueUserFunction") == 0) { return cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("postNewtonStepUserFunction") == 0) { return cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorRigidBodySpringDamper->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectConnectorRigidBodySpringDamper->GetDrawSize()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectConnectorRigidBodySpringDamper->GetColor())); } //! AUTO: get parameter
+        else if (parameterName.compare("intrinsicFormulation") == 0) { PyDeprecated("items", "ObjectConnectorRigidBodySpringDamper.intrinsicFormulation", "ObjectConnectorRigidBodySpringDamper: the parameter intrinsicFormulation is deprecated since 1.12.258 and removed in 2031; use useIntrinsicFormulation"); return py::cast((bool)cObjectConnectorRigidBodySpringDamper->GetParameters().useIntrinsicFormulation); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectConnectorRigidBodySpringDamper::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -187,13 +189,14 @@ public: // AUTO:
         else if (parameterName.compare("rotationMarker0") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0); if (!(cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker0 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectConnectorRigidBodySpringDamper.rotationMarker0", "ObjectConnectorRigidBodySpringDamper: the parameter rotationMarker0 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } } //! AUTO: set parameter
         else if (parameterName.compare("rotationMarker1") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1); if (!(cObjectConnectorRigidBodySpringDamper->GetParameters().rotationMarker1 == EXUmath::unitMatrix3D)) { PyDeprecated("items", "ObjectConnectorRigidBodySpringDamper.rotationMarker1", "ObjectConnectorRigidBodySpringDamper: the parameter rotationMarker1 is deprecated since 1.12.244 and removed in 2031; give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p))"); } } //! AUTO: set parameter
         else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cObjectConnectorRigidBodySpringDamper->GetParameters().offset); } //! AUTO: set parameter
-        else if (parameterName.compare("intrinsicFormulation") == 0) { EPyUtils::FromPython(value, cObjectConnectorRigidBodySpringDamper->GetParameters().intrinsicFormulation, "ObjectConnectorRigidBodySpringDamper.intrinsicFormulation"); } //! AUTO: set parameter
+        else if (parameterName.compare("useIntrinsicFormulation") == 0) { EPyUtils::FromPython(value, cObjectConnectorRigidBodySpringDamper->GetParameters().useIntrinsicFormulation, "ObjectConnectorRigidBodySpringDamper.useIntrinsicFormulation"); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectConnectorRigidBodySpringDamper->GetParameters().activeConnector, "ObjectConnectorRigidBodySpringDamper.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("springForceTorqueUserFunction") == 0) { cObjectConnectorRigidBodySpringDamper->GetParameters().springForceTorqueUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("postNewtonStepUserFunction") == 0) { cObjectConnectorRigidBodySpringDamper->GetParameters().postNewtonStepUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorRigidBodySpringDamper->GetShow(), "ObjectConnectorRigidBodySpringDamper.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorRigidBodySpringDamper->GetDrawSize(), "ObjectConnectorRigidBodySpringDamper.VdrawSize"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorRigidBodySpringDamper->GetColor(), "ObjectConnectorRigidBodySpringDamper.Vcolor"); } //! AUTO: set parameter
+        else if (parameterName.compare("intrinsicFormulation") == 0) { PyDeprecated("items", "ObjectConnectorRigidBodySpringDamper.intrinsicFormulation", "ObjectConnectorRigidBodySpringDamper: the parameter intrinsicFormulation is deprecated since 1.12.258 and removed in 2031; use useIntrinsicFormulation"); EPyUtils::FromPython(value, cObjectConnectorRigidBodySpringDamper->GetParameters().useIntrinsicFormulation, "ObjectConnectorRigidBodySpringDamper.intrinsicFormulation"); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectConnectorRigidBodySpringDamper::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

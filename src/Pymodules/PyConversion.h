@@ -141,7 +141,7 @@ namespace EPyUtils {
 	enum class RangeCheck { nonNegative, positive };
 
 	//! raises for None, which pybind11 would convert silently (bool: False; lists: empty); context names
-	//! item and parameter for the message, e.g. "ObjectMassPoint.physicsMass"
+	//! item and parameter for the message, e.g. "ObjectMassPoint.mass"
 	inline void RejectNone(const py::object& value, const char* context)
 	{
 		if (value.is_none())
@@ -177,7 +177,7 @@ namespace EPyUtils {
 	}
 
 	//! a Real, float or Index scalar with a range; context names item and parameter for the message,
-	//! e.g. "ObjectMassPoint.physicsMass"; exudyn.special.exceptions.parameterRangeChecks = False accepts any value
+	//! e.g. "ObjectMassPoint.mass"; exudyn.special.exceptions.parameterRangeChecks = False accepts any value
 	template<class T>
 	inline void FromPython(const py::object& value, T& destination, RangeCheck range, const char* context)
 	{

@@ -62,7 +62,7 @@ def BeamGE(nodeType):
             nodes = [mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[x, 0, 0, 1, 0, 0, 0])) for x in [0, 1]]
         else:
             nodes = [mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[x, 0, 0, 0, 0, 0])) for x in [0, 1]]
-        return mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=nodes, physicsLength=1, sectionData=Section())), [[0.3, 0, 0]]
+        return mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=nodes, length=1, sectionData=Section())), [[0.3, 0, 0]]
     return Build
 
 
@@ -74,28 +74,28 @@ def Plate(mbs):
 
 
 bodies = {
-    'MassPoint': lambda mbs: (mbs.AddObject(MassPoint(nodeNumber=mbs.AddNode(NodePoint(referenceCoordinates=[1, 2, 3])), physicsMass=1)), [[0, 0, 0]]),
-    'MassPoint2D': lambda mbs: (mbs.AddObject(MassPoint2D(nodeNumber=mbs.AddNode(NodePoint2D(referenceCoordinates=[1, 2])), physicsMass=1)), [[0, 0, 0]]),
-    'Mass1D': lambda mbs: (mbs.AddObject(Mass1D(nodeNumber=mbs.AddNode(Node1D(referenceCoordinates=[0.3])), physicsMass=1,
+    'MassPoint': lambda mbs: (mbs.AddObject(MassPoint(nodeNumber=mbs.AddNode(NodePoint(referenceCoordinates=[1, 2, 3])), mass=1)), [[0, 0, 0]]),
+    'MassPoint2D': lambda mbs: (mbs.AddObject(MassPoint2D(nodeNumber=mbs.AddNode(NodePoint2D(referenceCoordinates=[1, 2])), mass=1)), [[0, 0, 0]]),
+    'Mass1D': lambda mbs: (mbs.AddObject(Mass1D(nodeNumber=mbs.AddNode(Node1D(referenceCoordinates=[0.3])), mass=1,
                                                 referencePosition=[1, 2, 3])), [[0, 0, 0]]),
     'RotationalMass1D': lambda mbs: (mbs.AddObject(ObjectRotationalMass1D(nodeNumber=mbs.AddNode(Node1D(referenceCoordinates=[0.3])),
-                                     physicsInertia=1, referencePosition=[1, 2, 3], referenceRotation=RotXYZ2RotationMatrix([0.2, 0.3, 0.4])),
+                                     inertia=1, referencePosition=[1, 2, 3], referenceRotation=RotXYZ2RotationMatrix([0.2, 0.3, 0.4])),
                                      ), [[0, 0, 0], [0.2, 0.1, 0]]),
     'RigidBodyEP': RigidBody(exu.NodeType.RotationEulerParameters),
     'RigidBodyRxyz': RigidBody(exu.NodeType.RotationRxyz),
     'RigidBodyRotVecLG': RigidBody(exu.NodeType.RotationRotationVector),
     'RigidBody2D': lambda mbs: (mbs.AddObject(ObjectRigidBody2D(nodeNumber=mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[1, 2, 0.3])),
-                                physicsMass=1, physicsInertia=1)), [[0, 0, 0], [0.1, -0.2, 0]]),
+                                mass=1, inertia=1)), [[0, 0, 0], [0.1, -0.2, 0]]),
     'ANCFCable2D': lambda mbs: (mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[x, 0, 1, 0])) for x in [0, 1]],
-                                physicsLength=1, physicsMassPerLength=1, physicsBendingStiffness=1, physicsAxialStiffness=100)),
+                                length=1, massPerLength=1, bendingStiffness=1, axialStiffness=100)),
                                 [[0.3, 0, 0], [0.6, 0.05, 0]]),
     'ANCFCable': lambda mbs: (mbs.AddObject(ObjectANCFCable(nodeNumbers=[mbs.AddNode(NodePointSlope1(referenceCoordinates=[x, 0, 0, 1, 0, 0])) for x in [0, 1]],
-                              physicsLength=1, physicsMassPerLength=1, physicsBendingStiffness=1, physicsAxialStiffness=100)), [[0.3, 0, 0]]),
+                              length=1, massPerLength=1, bendingStiffness=1, axialStiffness=100)), [[0.3, 0, 0]]),
     'ANCFBeam': lambda mbs: (mbs.AddObject(ObjectANCFBeam(nodeNumbers=[mbs.AddNode(NodePointSlope23(referenceCoordinates=[x, 0, 0, 0, 1, 0, 0, 0, 1]))
-                             for x in [0, 1]], physicsLength=1, sectionData=Section())), [[0.3, 0, 0], [0.6, 0.05, -0.02]]),
+                             for x in [0, 1]], length=1, sectionData=Section())), [[0.3, 0, 0], [0.6, 0.05, -0.02]]),
     'BeamGE2D': lambda mbs: (mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[x, 0, 0]))
-                             for x in [0, 1]], physicsLength=1, physicsMassPerLength=1, physicsCrossSectionInertia=0.1,
-                             physicsBendingStiffness=1, physicsAxialStiffness=100, physicsShearStiffness=100)), [[0.3, 0, 0]]),
+                             for x in [0, 1]], length=1, massPerLength=1, crossSectionInertia=0.1,
+                             bendingStiffness=1, axialStiffness=100, shearStiffness=100)), [[0.3, 0, 0]]),
     'BeamGE_EP': BeamGE('EP'),
     'BeamGE_Rxyz': BeamGE('Rxyz'),
     'ANCFThinPlate': Plate,
@@ -245,8 +245,8 @@ def test_theALECableHasTheNumericalPositionJacobianInItsANCFCoordinates():
     mbs = SC.AddSystem()
     nodeALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0], initialCoordinates=[0], initialCoordinates_t=[0.1]))
     nodes = [mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[x, 0, 1, 0])) for x in [0, 1]]
-    cable = mbs.AddObject(ObjectALEANCFCable2D(nodeNumbers=nodes + [nodeALE], physicsLength=1, physicsMassPerLength=1,
-                                               physicsBendingStiffness=1, physicsAxialStiffness=100, physicsMovingMassFactor=1))
+    cable = mbs.AddObject(ObjectALEANCFCable2D(nodeNumbers=nodes + [nodeALE], length=1, massPerLength=1,
+                                               bendingStiffness=1, axialStiffness=100, movingMassFactor=1))
     mbs.Assemble()
     RandomState(mbs, 7)
     coordinates = ItemODE2Coordinates(mbs, cable)[:8]

@@ -24,7 +24,7 @@ def OffsetUF(mbs, t, itemNumber, lOffset): #gives 0.05 at t=1
     return 0.5*(1-np.cos(2*3.141592653589793*0.25*t))*lOffset
 
 nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
-massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+massPoint = mbs.AddObject(MassPoint(mass = 5, nodeNumber = nMass))
 
 groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
 nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))

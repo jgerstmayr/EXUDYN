@@ -22,7 +22,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 #a point of a body given by its local position: a planar rigid body spinning about its center
 node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0.2,0], initialVelocities=[0,0,0.5*np.pi]))
-body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=0.1))
+body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=1, inertia=0.1))
 sPoint = mbs.AddSensor(SensorBody(bodyNumber=body, localPosition=[0.5,0,0],
                                   outputVariableType=exu.OutputVariableType.Position,
                                   storeInternal=True, writeToFile=False))

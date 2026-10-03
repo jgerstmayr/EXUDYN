@@ -74,7 +74,7 @@ void CObjectJointSliding::ComputeAlgebraicEquations(Vector& algebraicEquations, 
 			CHECKandTHROWstring("CObjectJointSliding::ComputeAlgebraicEquations: velocityLevel not possible now!", ExudynNotImplementedError);
 		}
 
-		if (true) //(parameters.classicalFormulation)
+		if (true) //(parameters.useClassicalFormulation)
 		{
 			Vector3D vPos = (position - markerData.GetMarkerData(0).position); //this is the difference between the sliding position and the position of marker0
 
@@ -213,7 +213,7 @@ void CObjectJointSliding::ComputeJacobianAE(ResizableMatrix& jacobian_ODE2, Resi
 		}
 
 
-		if (true) //(parameters.classicalFormulation)
+		if (true) //(parameters.useClassicalFormulation)
 		{
 			//Vector3D vPos = (position - markerData.GetMarkerData(0).position); //this is the difference between the sliding position and the position of marker0
 

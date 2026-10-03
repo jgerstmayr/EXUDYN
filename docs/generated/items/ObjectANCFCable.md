@@ -6,7 +6,7 @@
 (sec-item-objectancfcable)=
 # ObjectANCFCable
 
-A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the {ref}`EOM <EOM>`). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
+A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length $L$=length and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the {ref}`EOM <EOM>`). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
 
 ## Interface
 
@@ -24,17 +24,20 @@ The parameters of the item; in a dictionary, its type is 'ANCFCable':
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsLength** | UReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
-| **physicsMassPerLength** | UReal |  | 0. | (symbol: $\rho A$) [SI:kg/m] mass per length of beam |
-| **physicsBendingStiffness** | UReal |  | 0. | (symbol: $EI$) [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature |
-| **physicsAxialStiffness** | UReal |  | 0. | (symbol: $EA$) [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = \|\rv^\prime\|-1$ is the axial strain |
-| **physicsBendingDamping** | UReal |  | 0. | (symbol: $d_{K}$) [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$ |
-| **physicsAxialDamping** | UReal |  | 0. | (symbol: $d_{\varepsilon}$) [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$ |
-| **physicsReferenceAxialStrain** | Real |  | 0. | (symbol: $\varepsilon_0$) [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value |
+| **length** | UReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
+| **massPerLength** | UReal |  | 0. | (symbol: $\rho A$) [SI:kg/m] mass per length of beam |
+| **bendingStiffness** | UReal |  | 0. | (symbol: $EI$) [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature |
+| **axialStiffness** | UReal |  | 0. | (symbol: $EA$) [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = \|\rv^\prime\|-1$ is the axial strain |
+| **bendingDamping** | UReal |  | 0. | (symbol: $d_{K}$) [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$ |
+| **axialDamping** | UReal |  | 0. | (symbol: $d_{\varepsilon}$) [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$ |
+| **referenceAxialStrain** | Real |  | 0. | (symbol: $\varepsilon_0$) [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value |
 | **strainIsRelativeToReference** | Real |  | 0. | (symbol: $f\cRef$) if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1. |
 | **nodeNumbers** | NodeIndex2 | 2 | [invalid (-1), invalid (-1)] | two node numbers ANCF cable element |
 | **useReducedOrderIntegration** | Index |  | 0 | 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments |
 | **visualization** | VObjectANCFCable |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsLength` (deprecated since 1.12.258, removed in 2031): use `length`; `physicsMassPerLength` (deprecated since 1.12.258, removed in 2031): use `massPerLength`; `physicsBendingStiffness` (deprecated since 1.12.258, removed in 2031): use `bendingStiffness`; `physicsAxialStiffness` (deprecated since 1.12.258, removed in 2031): use `axialStiffness`; `physicsBendingDamping` (deprecated since 1.12.258, removed in 2031): use `bendingDamping`; `physicsAxialDamping` (deprecated since 1.12.258, removed in 2031): use `axialDamping`; `physicsReferenceAxialStrain` (deprecated since 1.12.258, removed in 2031): use `referenceAxialStrain`.
 
 ## Visualization parameters
 
@@ -145,9 +148,9 @@ from exudyn.beams import GenerateStraightLineANCFCable
 rhoA = 78.
 EA = 1000000.
 EI = 833.3333333333333
-cable = Cable(physicsMassPerLength=rhoA, 
-              physicsBendingStiffness=EI, 
-              physicsAxialStiffness=EA, 
+cable = Cable(massPerLength=rhoA, 
+              bendingStiffness=EI, 
+              axialStiffness=EA, 
               )
 
 ancf=GenerateStraightLineANCFCable(mbs=mbs,

@@ -332,7 +332,7 @@ To show the interoperability with julia, test the following example (similar to 
   mbs = SC.AddSystem()               #add a new system to work with
 
   nMP = mbs.AddNode(eii.NodePoint2D(referenceCoordinates=[0,0]))
-  mbs.AddObject(eii.ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
+  mbs.AddObject(eii.ObjectMassPoint2D(mass=10, nodeNumber=nMP ))
   mMP = mbs.AddMarker(eii.MarkerNodePosition(nodeNumber = nMP))
   mbs.AddLoad(eii.Force(markerNumber = mMP, loadVector=[0.001,0,0]))
 

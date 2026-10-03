@@ -33,7 +33,7 @@ for i in range(9): #clamped: position and both slopes
                   mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))]))
 for k in range(nElements):
     n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[L*(k+1)/nElements,0,0, 0,1,0, 0,0,1]))
-    mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength=L/nElements, sectionData=section))
+    mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], length=L/nElements, sectionData=section))
     n0 = n1
 mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n1)), loadVector=[0,0,F]))
 

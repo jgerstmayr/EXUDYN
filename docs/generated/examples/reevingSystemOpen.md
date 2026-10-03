@@ -195,13 +195,13 @@ dEA = 1e-2*E*A #axial strain proportional damping
 
 dimZ = b #z.dimension
 
-cableTemplate = Cable2D(#physicsLength = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
-                        physicsMassPerLength = rhoBeam*A,
-                        physicsBendingStiffness = E*I,
-                        physicsAxialStiffness = E*A,
-                        physicsBendingDamping = dEI,
-                        physicsAxialDamping = dEA,
-                        physicsReferenceAxialStrain = preStretch, #prestretch
+cableTemplate = Cable2D(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+                        massPerLength = rhoBeam*A,
+                        bendingStiffness = E*I,
+                        axialStiffness = E*A,
+                        bendingDamping = dEI,
+                        axialDamping = dEA,
+                        referenceAxialStrain = preStretch, #prestretch
                         visualization=VCable2D(drawHeight=h),
                         )
 
@@ -216,10 +216,10 @@ node0 = ancf[0][0]
 nodeL = ancf[0][-1]
 massLoad=2
 
-bMass0 = mbs.AddObject(ObjectMassPoint2D(physicsMass=massLoad, 
+bMass0 = mbs.AddObject(ObjectMassPoint2D(mass=massLoad, 
                                          nodeNumber=node0,
                                 visualization=VMassPoint2D(graphicsData=[graphics.Sphere(radius=0.1, nTiles=32)])))
-bMassL = mbs.AddObject(ObjectMassPoint2D(physicsMass=massLoad, 
+bMassL = mbs.AddObject(ObjectMassPoint2D(mass=massLoad, 
                                          nodeNumber=nodeL,
                                 visualization=VMassPoint2D(graphicsData=[graphics.Sphere(radius=0.1, nTiles=32)])))
 
@@ -270,7 +270,7 @@ if useContact:
 
         nMass = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=pRef, initialVelocities=v0,
                                             visualization=VNodeRigidBody2D(drawSize=dimZ*2)))
-        oMass = mbs.AddObject(ObjectRigidBody2D(physicsMass=wheelMass, physicsInertia=wheelInertia,
+        oMass = mbs.AddObject(ObjectRigidBody2D(mass=wheelMass, inertia=wheelInertia,
                                                 nodeNumber=nMass, visualization=
                                                 VObjectRigidBody2D(graphicsData=gList)))
         mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))

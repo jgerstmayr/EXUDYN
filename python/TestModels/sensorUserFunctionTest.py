@@ -22,7 +22,7 @@ mbs = SC.AddSystem()
 node = mbs.AddNode(NodePoint(referenceCoordinates = [1,0,0], 
                              initialCoordinates=[0,0,0],
                              initialVelocities=[0,1,0]))
-mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+mbs.AddObject(MassPoint(nodeNumber = node, mass=1))
 
 sNode = mbs.AddSensor(SensorNode(nodeNumber=node,
                                  fileName='solution/sensorTestPos.txt',

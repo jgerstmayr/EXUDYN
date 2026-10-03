@@ -204,7 +204,7 @@ if addParticles:
                                               visualization=VNodePoint(show=True,drawSize=2*radius, color=color4node)))
                 
                 #omitting the graphics speeds up, but does not allow shadow of particles ...
-                oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass,
+                oMass = mbs.AddObject(MassPoint(mass=m, nodeNumber=nMass,
                                                 #visualization=VMassPoint(graphicsData=[graphics.Sphere(radius=radius, color=color4node, nTiles=6)])
                                                 ))
                 mThis = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))

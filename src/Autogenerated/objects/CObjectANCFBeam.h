@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  22:10:14 (last modified)
+* @date         2026-10-03  18:09:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,27 +30,27 @@ class CObjectANCFBeamParameters // AUTO:
 {
 public: // AUTO:
     Index2 nodeNumbers;                           //!< AUTO: two node numbers for beam element
-    Real physicsLength;                           //!< AUTO: must be > 0;  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
-    Real physicsMassPerLength;                    //!< AUTO: must be >= 0;  [SI:kg/m] mass per length of beam; this data is used internally for computation
-    Matrix3D physicsCrossSectionInertia;          //!< AUTO:  [SI:kg m] cross section mass moment of inertia tensor; this data is used internally for computation
-    Vector3D physicsTorsionalBendingStiffness;    //!< AUTO:  [SI:Nm\f$^2\f$] bending and torsional stiffness vector;
-    Vector3D physicsAxialShearStiffness;          //!< AUTO:  [SI:N] axial and shear stiffness;
+    Real length;                                  //!< AUTO: must be > 0;  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
+    Real massPerLength;                           //!< AUTO: must be >= 0;  [SI:kg/m] mass per length of beam; this data is used internally for computation
+    Matrix3D crossSectionInertia;                 //!< AUTO:  [SI:kg m] cross section mass moment of inertia tensor; this data is used internally for computation
+    Vector3D torsionalBendingStiffness;           //!< AUTO:  [SI:Nm\f$^2\f$] bending and torsional stiffness vector;
+    Vector3D axialShearStiffness;                 //!< AUTO:  [SI:N] axial and shear stiffness;
     Vector3D crossSectionPenaltyFactor;           //!< AUTO:  [SI:1] additional penalty factors for cross section deformation, which are in total \f$k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp\f$
-    Vector3D physicsTorsionalBendingDamping;      //!< AUTO:  [SI:Nm\f$^2\f$] viscous damping of bending and torsional deformation, according to \f$k_\kappa\f$
-    Vector3D physicsAxialShearDamping;            //!< AUTO:  [SI:N] viscous damping of axial and shear deformation, according to \f$k_{as}\f$
+    Vector3D torsionalBendingDamping;             //!< AUTO:  [SI:Nm\f$^2\f$] viscous damping of bending and torsional deformation, according to \f$k_\kappa\f$
+    Vector3D axialShearDamping;                   //!< AUTO:  [SI:N] viscous damping of axial and shear deformation, according to \f$k_{as}\f$
     Vector3D crossSectionDamping;                 //!< AUTO:  [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read  \f$d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp\f$
     //! AUTO: default constructor with parameter initialization
     CObjectANCFBeamParameters()
     {
         nodeNumbers = Index2({EXUstd::InvalidIndex, EXUstd::InvalidIndex});
-        physicsLength = 0.;
-        physicsMassPerLength = 0.;
-        physicsCrossSectionInertia = EXUmath::zeroMatrix3D;
-        physicsTorsionalBendingStiffness = Vector3D({0.,0.,0.});
-        physicsAxialShearStiffness = Vector3D({0.,0.,0.});
+        length = 0.;
+        massPerLength = 0.;
+        crossSectionInertia = EXUmath::zeroMatrix3D;
+        torsionalBendingStiffness = Vector3D({0.,0.,0.});
+        axialShearStiffness = Vector3D({0.,0.,0.});
         crossSectionPenaltyFactor = Vector3D({1.,1.,1.});
-        physicsTorsionalBendingDamping = Vector3D({0.,0.,0.});
-        physicsAxialShearDamping = Vector3D({0.,0.,0.});
+        torsionalBendingDamping = Vector3D({0.,0.,0.});
+        axialShearDamping = Vector3D({0.,0.,0.});
         crossSectionDamping = Vector3D({0.,0.,0.});
     };
 };

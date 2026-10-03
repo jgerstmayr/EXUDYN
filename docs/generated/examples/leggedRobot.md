@@ -135,7 +135,7 @@ oRolling=mbs.AddObject(ObjectConnectorRollingDiscPenalty(markerNumbers=[markerGr
                                                           discRadius=rFoot, 
                                                           dryFriction=[0.8,0.8], 
                                                           dryFrictionProportionalZone=1e-2, 
-                                                          rollingFrictionViscous=0.2,
+                                                          rollingViscousFriction=0.2,
                                                           contactStiffness=cStiffness, 
                                                           contactDamping=cDamping,
                                                           #activeConnector = False, #set to false to deactivated

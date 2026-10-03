@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  22:10:14 (last modified)
+* @date         2026-10-03  18:08:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,12 +27,12 @@
 class CObjectMassPointParameters // AUTO:
 {
 public: // AUTO:
-    Real physicsMass;                             //!< AUTO: must be >= 0; mass [SI:kg] of mass point
+    Real mass;                                    //!< AUTO: must be >= 0; mass [SI:kg] of mass point
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) for mass point
     //! AUTO: default constructor with parameter initialization
     CObjectMassPointParameters()
     {
-        physicsMass = 0.;
+        mass = 0.;
         nodeNumber = EXUstd::InvalidIndex;
     };
 };

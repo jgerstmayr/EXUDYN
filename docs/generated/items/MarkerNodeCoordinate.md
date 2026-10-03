@@ -63,7 +63,7 @@ Jacobian empty, so nothing acts: this is the ground side of a `CoordinateSpringD
 ```python
 #one coordinate of a node: a coordinate spring between the ground node and a 1D mass
 node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
 mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
 mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 mbs.AddObject(ObjectConnectorCoordinateSpringDamper(markerNumbers=[mGround, mCoord], stiffness=100))

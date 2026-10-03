@@ -45,7 +45,7 @@ for j in range(nBodies2):
     for i in range(nBodies-1): 
         #2D:
         node = mbs.AddNode(NodePoint2D(referenceCoordinates=[i+1, j], initialCoordinates=[0, 0]))
-        body = mbs.AddObject(MassPoint2D(physicsMass=10, nodeNumber=node))
+        body = mbs.AddObject(MassPoint2D(mass=10, nodeNumber=node))
         mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[0,0,0]))
         #dynamic/explicit:
         #mbs.AddLoad(LoadForceVector(markerNumber = mBody, loadVector = [0, -0.025*100, 0]))

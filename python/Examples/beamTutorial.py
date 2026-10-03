@@ -54,12 +54,12 @@ positionOfNode1 = [0+L,0,0] # 3D vector
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## build geometrically exact 2D beam template (Timoshenko-Reissner), which includes all parameters
 beamTemplate = Beam2D(nodeNumbers = [-1,-1],
-                      physicsMassPerLength=rhoA,
-                      physicsCrossSectionInertia=rhoI,
-                      physicsBendingStiffness=EI,
-                      physicsAxialStiffness=EA,
-                      physicsShearStiffness=GA,
-                      physicsBendingDamping=0.02*EI,
+                      massPerLength=rhoA,
+                      crossSectionInertia=rhoI,
+                      bendingStiffness=EI,
+                      axialStiffness=EA,
+                      shearStiffness=GA,
+                      bendingDamping=0.02*EI,
                       visualization=VObjectBeamGeometricallyExact2D(drawHeight = h))
 
 beamData = GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, 
@@ -70,10 +70,10 @@ beamData = GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1,
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## build ANCF cable elemente (Bernoulli-Euler)
 beamTemplate = Cable2D(nodeNumbers = [-1,-1],
-                       physicsMassPerLength=rhoA,
-                       physicsBendingStiffness=EI,
-                       physicsAxialStiffness=EA,
-                       physicsBendingDamping=0.02*EI,
+                       massPerLength=rhoA,
+                       bendingStiffness=EI,
+                       axialStiffness=EA,
+                       bendingDamping=0.02*EI,
                        visualization=VCable2D(drawHeight = h))
 
 cableData = GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, 

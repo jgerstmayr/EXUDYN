@@ -89,7 +89,7 @@ mbs.AddLoad(LoadCoordinate(markerNumber = markerCoordinate,
 ```python
 #a load on one coordinate, growing in time through its user function
 node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
 mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
 def UFload(mbs, t, load):
     return load*t

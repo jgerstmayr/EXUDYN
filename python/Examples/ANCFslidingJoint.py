@@ -40,11 +40,11 @@ for i in range(nCables):
     p0 = np.array([0,0,i*0.1])
     p1 = p0 + [L,0,0]
 
-    cable = ObjectANCFCable(physicsMassPerLength=rhoA, 
-                  physicsBendingStiffness = EI, 
-                  physicsBendingDamping = EI*0.02,
-                  physicsAxialStiffness=EA,
-                  physicsAxialDamping=EA*0.02,
+    cable = ObjectANCFCable(massPerLength=rhoA, 
+                  bendingStiffness = EI, 
+                  bendingDamping = EI*0.02,
+                  axialStiffness=EA,
+                  axialDamping=EA*0.02,
                   visualization=VObjectANCFCable(radius = rCable),
                   )
 
@@ -58,7 +58,7 @@ for i in range(nCables):
                   )
     #ancf=[cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
 
-lElem = mbs.GetObject(ancf[1][0])['physicsLength']
+lElem = mbs.GetObject(ancf[1][0])['length']
 
 slidingCoordinateInit = 0.1*L
 initialLocalMarker = int(slidingCoordinateInit/lElem) #second element

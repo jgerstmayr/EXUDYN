@@ -38,7 +38,7 @@ def TestExudyn(x):
     node = mbs.AddNode(Node1D(referenceCoordinates = [0], 
                               initialCoordinates=[0.],
                               initialVelocities=[1*x]))
-    mass = mbs.AddObject(Mass1D(nodeNumber = node, physicsMass=1))
+    mass = mbs.AddObject(Mass1D(nodeNumber = node, mass=1))
 
     #assemble and solve system for default parameters
     mbs.Assemble()

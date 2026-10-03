@@ -307,8 +307,8 @@ if sys_set == 0 or sys_set > 2:
                                                       'data':[0,0,0,r_0,0,0]}]) 
     #ObjectRigidBody2D disk0
     oRB2D_disk0 = mbs.AddObject(ObjectRigidBody2D(nodeNumber = nRB2D_disk0, 
-                                                  physicsMass=m_disk0, 
-                                                  physicsInertia=J_disk0, 
+                                                  mass=m_disk0, 
+                                                  inertia=J_disk0, 
                                                   visualization = bodyVis_disk0))   
     #MarkerBodyRigid on center of disk0
     mNP_disk0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB2D_disk0, 
@@ -334,8 +334,8 @@ if sys_set == 0 or sys_set > 2:
                                                       'data':[0,0,0,r_1,0,0]}])   
     #ObjectRigidBody2D disk1
     oRB2D_disk1 = mbs.AddObject(ObjectRigidBody2D(nodeNumber = nRB2D_disk1, 
-                                                  physicsMass=m_disk1, 
-                                                  physicsInertia=J_disk1, 
+                                                  mass=m_disk1, 
+                                                  inertia=J_disk1, 
                                                   visualization = bodyVis_disk1))   
     #MarkerBodyRigid on center of disk1
     mNP_disk1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB2D_disk1, 
@@ -404,13 +404,13 @@ if sys_set == 0 or sys_set > 2:
     # dimZ = b #z.dimension
     hDraw = 0.002
     cableTemplate = ObjectANCFCable2D(
-                            physicsBendingStiffness=bendStiffness_belt*0.1,
-                            physicsMassPerLength=MassPerLength_belt, 
-                            physicsAxialStiffness=axialStiffness_belt, 
+                            bendingStiffness=bendStiffness_belt*0.1,
+                            massPerLength=MassPerLength_belt, 
+                            axialStiffness=axialStiffness_belt, 
                             useReducedOrderIntegration=2,  
-                            physicsReferenceAxialStrain=epsilon_belt,
-                            physicsBendingDamping = 0.005*bendStiffness_belt,
-                            physicsAxialDamping = 0.02*axialStiffness_belt,
+                            referenceAxialStrain=epsilon_belt,
+                            bendingDamping = 0.005*bendStiffness_belt,
+                            axialDamping = 0.02*axialStiffness_belt,
                             visualization=VObjectANCFCable2D(drawHeight=hDraw),
                             )
     
@@ -519,8 +519,8 @@ if sys_set == 1 or sys_set == 3:
     nRB2D_crank = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[-L_A*0.5,0,0], 
                                               initialVelocities=[0,0,0]))
     #RigidBody2D crank
-    oRB2D_crank = mbs.AddObject(RigidBody2D(physicsMass=m_crank, 
-                                        physicsInertia=J_zz_crank,
+    oRB2D_crank = mbs.AddObject(RigidBody2D(mass=m_crank, 
+                                        inertia=J_zz_crank,
                                         nodeNumber=nRB2D_crank,
                                         visualization=VObjectRigidBody2D(graphicsData=[graphics_crank])))
     
@@ -538,8 +538,8 @@ if sys_set == 1 or sys_set == 3:
     nRB2D_conrod = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[-(L_A+L_B*0.5),0,0], 
                                                initialVelocities=[0,0,0]))
     #RigidBody2D connecting rod
-    oRB2D_conrod = mbs.AddObject(RigidBody2D(physicsMass=inertia_conrod.mass, 
-                                      physicsInertia=inertia_conrod.inertiaTensor[1,1],
+    oRB2D_conrod = mbs.AddObject(RigidBody2D(mass=inertia_conrod.mass, 
+                                      inertia=inertia_conrod.inertiaTensor[1,1],
                                       nodeNumber=nRB2D_conrod,
                                       visualization=VObjectRigidBody2D(graphicsData= [graphics_conrod])))
     
@@ -553,7 +553,7 @@ if sys_set == 1 or sys_set == 3:
     #node on center of gravity of slider
     nP2D_slider = mbs.AddNode(NodePoint2D(referenceCoordinates=[-(L_A+L_B),0]))
     #MassPoint2D slider
-    oMP2D_slider = mbs.AddObject(MassPoint2D(physicsMass=m_slider, 
+    oMP2D_slider = mbs.AddObject(MassPoint2D(mass=m_slider, 
                                              nodeNumber=nP2D_slider,
                                              visualization=VObjectRigidBody2D(graphicsData= [graphics_slider])))
 

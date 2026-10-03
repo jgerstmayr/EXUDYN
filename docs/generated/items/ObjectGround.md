@@ -109,7 +109,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 #create simple system:
 mbs.AddNode(NodePoint())
-body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
+body = mbs.AddObject(MassPoint(mass=1, nodeNumber=0))
 
 #user function for moving graphics:
 def UFgraphics(mbs, objectNum):
@@ -138,7 +138,7 @@ SC.renderer.Stop()
 oFixed = mbs.AddObject(ObjectGround(referencePosition=[0,2,0]))
 mFixed = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oFixed, localPosition=[0,0,0]))
 node = mbs.AddNode(NodePoint(referenceCoordinates=[0,1,0]))
-mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
 mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
 mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mFixed, mNode], stiffness=[100,100,100],
                                                    offset=[0,-1,0]))

@@ -325,13 +325,13 @@ def ParameterFunction(parameterSet):
             for i in range(nElements):
                 nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
                 nodeList+=[nLast]
-                elem=mbs.AddObject(ALECable2D(physicsLength=lElem, 
-                                              physicsMassPerLength=rhoA, 
-                                              physicsBendingStiffness=EI, 
-                                              physicsAxialStiffness=EA, 
-                                              physicsBendingDamping=0, 
-                                              physicsAxialDamping=0, 
-                                              physicsMovingMassFactor=movingMassFactor, 
+                elem=mbs.AddObject(ALECable2D(length=lElem, 
+                                              massPerLength=rhoA, 
+                                              bendingStiffness=EI, 
+                                              axialStiffness=EA, 
+                                              bendingDamping=0, 
+                                              axialDamping=0, 
+                                              movingMassFactor=movingMassFactor, 
                                               nodeNumbers=[nodeList[i],nodeList[i+1],nALE]))
                 cableList+=[elem]
                 

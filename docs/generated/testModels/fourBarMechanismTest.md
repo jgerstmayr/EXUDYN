@@ -47,10 +47,10 @@ rect = [-6,-6,6,6] #xmin,ymin,xmax,ymax
 background = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[rect[0],rect[1],0, rect[2],rect[1],0, rect[2],rect[3],0, rect[0],rect[3],0, rect[0],rect[1],0]} #background
 #oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0], visualization=VObjectGround(graphicsData= [background])))
 #graphics1 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[-(L+Lo),-(L+Lo),0, (L+Lo),-(L+Lo),0, (L+Lo),Lo,0, -(L+Lo),Lo,0, -(L+Lo),-(L+Lo), 0]} #background
-o0=mbs.AddObject(MassPoint(physicsMass=0,nodeNumber=n0,visualization=VObjectMassPoint(graphicsData= [background])))
-o1=mbs.AddObject(MassPoint(physicsMass=mass,nodeNumber=n1))
-o2=mbs.AddObject(MassPoint(physicsMass=mass,nodeNumber=n2))
-o3=mbs.AddObject(MassPoint(physicsMass=mass,nodeNumber=n3))
+o0=mbs.AddObject(MassPoint(mass=0,nodeNumber=n0,visualization=VObjectMassPoint(graphicsData= [background])))
+o1=mbs.AddObject(MassPoint(mass=mass,nodeNumber=n1))
+o2=mbs.AddObject(MassPoint(mass=mass,nodeNumber=n2))
+o3=mbs.AddObject(MassPoint(mass=mass,nodeNumber=n3))
 
 #use NodePosition markers:
 for i in range(nBodies): 

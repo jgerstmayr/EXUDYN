@@ -24,11 +24,14 @@ The parameters of the item; in a dictionary, its type is 'RotationalMass1D':
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsInertia** | UReal |  | 0. | (symbol: $J$) inertia components [SI:kgm$^2$] of rotor / rotational mass |
+| **inertia** | UReal |  | 0. | (symbol: $J$) inertia components [SI:kgm$^2$] of rotor / rotational mass |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n0$) node number (type NodeIndex) of Node1D, providing rotation coordinate $\psi_0 = c_0$ |
 | **referencePosition** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{0}{\pRef_0}$) a constant reference position = reference point, used to assign joint constraints accordingly and for drawing |
 | **referenceRotation** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\LU{0i}{\Rot_{0}} \in \Rcal^{3 \times 3}$) an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description |
 | **visualization** | VObjectRotationalMass1D |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsInertia` (deprecated since 1.12.258, removed in 2031): use `inertia`.
 
 ## Visualization parameters
 
@@ -99,7 +102,7 @@ about the axis - on the axis, $x = y = 0$, it has no effect; there is no mass-pr
 node = mbs.AddNode(Node1D(referenceCoordinates = [1], #\psi_0ref
                           initialCoordinates=[0.5],   #\psi_0ini
                           initialVelocities=[0.5]))   #\psi_t0ini
-rotor = mbs.AddObject(Rotor1D(nodeNumber = node, physicsInertia=1))
+rotor = mbs.AddObject(Rotor1D(nodeNumber = node, inertia=1))
 
 #assemble and solve system for default parameters
 mbs.Assemble()

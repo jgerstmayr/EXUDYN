@@ -32,12 +32,12 @@ The parameters of the item; in a dictionary, its type is 'ConnectorCoordinateSpr
 | **velocityOffset** | Real |  | 0. | (symbol: $v_\mathrm{off}$) offset between two coordinates; used to model D-control of a drive, where damping is not acting against prescribed velocity |
 | **factor0** | Real |  | 1. | (symbol: $f_0$) marker 0 coordinate is multiplied with factor0 |
 | **factor1** | Real |  | 1. | (symbol: $f_1$) marker 1 coordinate is multiplied with factor1 |
-| **fDynamicFriction** | UReal |  | 0. | (symbol: $f_{\mu,\mathrm{d}}$) dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$ |
-| **fStaticFrictionOffset** | UReal |  | 0. | (symbol: $f_{\mu,\mathrm{so}}$) static (dry) friction offset force [SI:N]; assuming a normal force $f_N$, the friction force is limited by $f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}$ |
+| **dynamicFrictionForce** | UReal |  | 0. | (symbol: $f_{\mu,\mathrm{d}}$) dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$ |
+| **staticFrictionOffsetForce** | UReal |  | 0. | (symbol: $f_{\mu,\mathrm{so}}$) static (dry) friction offset force [SI:N]; assuming a normal force $f_N$, the friction force is limited by $f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}$ |
 | **stickingStiffness** | UReal |  | 0. | (symbol: $k_\mu$) stiffness of bristles in sticking case [SI:N/m] |
 | **stickingDamping** | UReal |  | 0. | (symbol: $d_\mu$) damping of bristles in sticking case [SI:N/(m/s)] |
 | **exponentialDecayStatic** | PReal |  | 0.001 | (symbol: $v_\mathrm{exp}$) relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at $\Delta v = v_\mathrm{exp}$, the static friction offset force is reduced to 36.8% |
-| **fViscousFriction** | Real |  | 0. | (symbol: $f_{\mu,\mathrm{v}}$) viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case |
+| **viscousFrictionFactor** | Real |  | 0. | (symbol: $f_{\mu,\mathrm{v}}$) viscous friction factor [SI:N s/m]: the friction force part proportional to the relative velocity, acting against it in the sliding case |
 | **frictionProportionalZone** | UReal |  | 0. | (symbol: $v_\mathrm{reg}$) if non-zero, a regularized Stribeck model is used, regularizing friction force around zero velocity - leading to zero friction force in case of zero velocity; this does not require a data node at all; if zero, the bristle model is used, which requires a data node which contains previous friction state and last sticking position |
 | **limitStopsUpper** | Real |  | 0. | (symbol: $s_\mathrm{upper}$) upper (maximum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates |
 | **limitStopsLower** | Real |  | 0. | (symbol: $s_\mathrm{lower}$) lower (minimum) value [SI:m] of coordinate before limit is activated; defined relative to the two marker coordinates |
@@ -47,6 +47,9 @@ The parameters of the item; in a dictionary, its type is 'ConnectorCoordinateSpr
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **springForceUserFunction** | ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the spring force with 8 parameters, see equations section / see description below |
 | **visualization** | VObjectConnectorCoordinateSpringDamperExt |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `fDynamicFriction` (deprecated since 1.12.258, removed in 2031): use `dynamicFrictionForce`; `fStaticFrictionOffset` (deprecated since 1.12.258, removed in 2031): use `staticFrictionOffsetForce`; `fViscousFriction` (deprecated since 1.12.258, removed in 2031): use `viscousFrictionFactor`.
 
 ## Visualization parameters
 
@@ -101,7 +104,7 @@ v= f_1 \cdot v_{m1} - f_0 \cdot v_{m0}
 $$
 
 The friction force is computed from given friction 'force' parameters, as there is no normal force in this model.
-This means, that `fDynamicFriction` represents $\mu_d \cdot F_N$ in which $\mu_d$ is the friction parameter and
+This means, that `dynamicFrictionForce` represents $\mu_d \cdot F_N$ in which $\mu_d$ is the friction parameter and
 $F_N$ is an according normal force.
 
 The friction force is computed for different cases:
@@ -204,7 +207,7 @@ force on 'slower' coordinates for certain gear ratios.
 
 If `activeConnector = False`, $f_{SD}$ is set to zero.
 
-**Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, velocityOffset, fDynamicFriction, fStaticFrictionOffset, exponentialDecayStatic, fViscousFriction, frictionProportionalZone)`
+**Userfunction**: `springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset, velocityOffset, dynamicFrictionForce, staticFrictionOffsetForce, exponentialDecayStatic, viscousFrictionFactor, frictionProportionalZone)`
 A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity)
 and several object parameters.
 Note that itemNumber represents the index of the object in mbs, which can be used to retrieve additional data from the object through
@@ -225,10 +228,10 @@ mbs.GetObjectParameter(itemNumber, 'limitStopsUpper') to obtain these parameters
 | `damping` | Real | copied from object |
 | `offset` | Real | copied from object |
 | `velocityOffset` | Real | copied from object |
-| `fDynamicFriction` | Real | copied from object |
-| `fStaticFrictionOffset` | Real | copied from object |
+| `dynamicFrictionForce` | Real | copied from object |
+| `staticFrictionOffsetForce` | Real | copied from object |
 | `exponentialDecayStatic` | Real | copied from object |
-| `fViscousFriction` | Real | copied from object |
+| `viscousFrictionFactor` | Real | copied from object |
 | `frictionProportionalZone` | Real | copied from object, also called regularization velocity or regVel |
 | **return value** | Real | scalar value of computed force |
 
@@ -249,7 +252,7 @@ def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStatic
 ```python
 #a coordinate spring with a limit stop; the stop's state is kept in a data node
 node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
 mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
 mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[0,0,0]))

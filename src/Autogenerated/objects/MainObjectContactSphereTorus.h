@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-03  18:17:13 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -116,7 +116,7 @@ public: // AUTO:
     {
         if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactSphereTorus->GetParameters().markerNumbers); }
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactSphereTorus->GetParameters().nodeNumber); }
-        if (EPyUtils::DictItemExists(d, "radiusSphere")) { EPyUtils::RequireGiven(d["radiusSphere"], 0., "ObjectContactSphereTorus.radiusSphere"); EPyUtils::FromPython(d["radiusSphere"], cObjectContactSphereTorus->GetParameters().radiusSphere, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.radiusSphere"); } else { EPyUtils::RequireGiven(py::cast(cObjectContactSphereTorus->GetParameters().radiusSphere), 0., "ObjectContactSphereTorus.radiusSphere"); }
+        if (EPyUtils::DictItemExists(d, "sphereRadius") && (!EPyUtils::DictItemExists(d, "radiusSphere") || d["radiusSphere"].is_none())) { EPyUtils::RequireGiven(d["sphereRadius"], 0., "ObjectContactSphereTorus.sphereRadius"); EPyUtils::FromPython(d["sphereRadius"], cObjectContactSphereTorus->GetParameters().sphereRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.sphereRadius"); } else { if (!EPyUtils::DictItemExists(d, "radiusSphere") || d["radiusSphere"].is_none()) EPyUtils::RequireGiven(py::cast(cObjectContactSphereTorus->GetParameters().sphereRadius), 0., "ObjectContactSphereTorus.sphereRadius"); }
         if (EPyUtils::DictItemExists(d, "torusMajorRadius")) { EPyUtils::RequireGiven(d["torusMajorRadius"], 0., "ObjectContactSphereTorus.torusMajorRadius"); EPyUtils::FromPython(d["torusMajorRadius"], cObjectContactSphereTorus->GetParameters().torusMajorRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.torusMajorRadius"); } else { EPyUtils::RequireGiven(py::cast(cObjectContactSphereTorus->GetParameters().torusMajorRadius), 0., "ObjectContactSphereTorus.torusMajorRadius"); }
         if (EPyUtils::DictItemExists(d, "torusMinorRadius")) { EPyUtils::RequireGiven(d["torusMinorRadius"], 0., "ObjectContactSphereTorus.torusMinorRadius"); EPyUtils::FromPython(d["torusMinorRadius"], cObjectContactSphereTorus->GetParameters().torusMinorRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.torusMinorRadius"); } else { EPyUtils::RequireGiven(py::cast(cObjectContactSphereTorus->GetParameters().torusMinorRadius), 0., "ObjectContactSphereTorus.torusMinorRadius"); }
         if (EPyUtils::DictItemExists(d, "torusAxis")) { EPyUtils::FromPython(d["torusAxis"], cObjectContactSphereTorus->GetParameters().torusAxis); }
@@ -132,6 +132,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactSphereTorus->GetShow(), "ObjectContactSphereTorus.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectContactSphereTorus->GetColor(), "ObjectContactSphereTorus.Vcolor"); }
+        if (EPyUtils::DictItemExists(d, "radiusSphere") && !d["radiusSphere"].is_none()) { PyDeprecated("items", "ObjectContactSphereTorus.radiusSphere", "ObjectContactSphereTorus: the parameter radiusSphere is deprecated since 1.12.258 and removed in 2031; use sphereRadius"); EPyUtils::RequireGiven(d["radiusSphere"], 0., "ObjectContactSphereTorus.radiusSphere"); EPyUtils::FromPython(d["radiusSphere"], cObjectContactSphereTorus->GetParameters().sphereRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.radiusSphere"); } //! AUTO: deprecated, forwards to sphereRadius
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -142,7 +143,7 @@ public: // AUTO:
         d["objectType"] = (std::string)GetTypeName();
         d["markerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectContactSphereTorus->GetParameters().markerNumbers);
         d["nodeNumber"] = (NodeIndex)cObjectContactSphereTorus->GetParameters().nodeNumber;
-        d["radiusSphere"] = (Real)cObjectContactSphereTorus->GetParameters().radiusSphere;
+        d["sphereRadius"] = (Real)cObjectContactSphereTorus->GetParameters().sphereRadius;
         d["torusMajorRadius"] = (Real)cObjectContactSphereTorus->GetParameters().torusMajorRadius;
         d["torusMinorRadius"] = (Real)cObjectContactSphereTorus->GetParameters().torusMinorRadius;
         d["torusAxis"] = EPyUtils::ToPython(cObjectContactSphereTorus->GetParameters().torusAxis);
@@ -167,7 +168,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectContactSphereTorus->GetParameters().markerNumbers)); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectContactSphereTorus->GetParameters().nodeNumber); } //! AUTO: get parameter
-        else if (parameterName.compare("radiusSphere") == 0) { return py::cast((Real)cObjectContactSphereTorus->GetParameters().radiusSphere); } //! AUTO: get parameter
+        else if (parameterName.compare("sphereRadius") == 0) { return py::cast((Real)cObjectContactSphereTorus->GetParameters().sphereRadius); } //! AUTO: get parameter
         else if (parameterName.compare("torusMajorRadius") == 0) { return py::cast((Real)cObjectContactSphereTorus->GetParameters().torusMajorRadius); } //! AUTO: get parameter
         else if (parameterName.compare("torusMinorRadius") == 0) { return py::cast((Real)cObjectContactSphereTorus->GetParameters().torusMinorRadius); } //! AUTO: get parameter
         else if (parameterName.compare("torusAxis") == 0) { return EPyUtils::ToPython(cObjectContactSphereTorus->GetParameters().torusAxis); } //! AUTO: get parameter
@@ -182,6 +183,7 @@ public: // AUTO:
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectContactSphereTorus->GetParameters().activeConnector); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectContactSphereTorus->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectContactSphereTorus->GetColor())); } //! AUTO: get parameter
+        else if (parameterName.compare("radiusSphere") == 0) { PyDeprecated("items", "ObjectContactSphereTorus.radiusSphere", "ObjectContactSphereTorus: the parameter radiusSphere is deprecated since 1.12.258 and removed in 2031; use sphereRadius"); return py::cast((Real)cObjectContactSphereTorus->GetParameters().sphereRadius); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectContactSphereTorus::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -193,7 +195,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectContactSphereTorus->GetParameters().markerNumbers); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectContactSphereTorus->GetParameters().nodeNumber); } //! AUTO: set parameter
-        else if (parameterName.compare("radiusSphere") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().radiusSphere, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.radiusSphere"); } //! AUTO: set parameter
+        else if (parameterName.compare("sphereRadius") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().sphereRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.sphereRadius"); } //! AUTO: set parameter
         else if (parameterName.compare("torusMajorRadius") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().torusMajorRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.torusMajorRadius"); } //! AUTO: set parameter
         else if (parameterName.compare("torusMinorRadius") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().torusMinorRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.torusMinorRadius"); } //! AUTO: set parameter
         else if (parameterName.compare("torusAxis") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().torusAxis); } //! AUTO: set parameter
@@ -208,6 +210,7 @@ public: // AUTO:
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().activeConnector, "ObjectContactSphereTorus.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectContactSphereTorus->GetShow(), "ObjectContactSphereTorus.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectContactSphereTorus->GetColor(), "ObjectContactSphereTorus.Vcolor"); } //! AUTO: set parameter
+        else if (parameterName.compare("radiusSphere") == 0) { PyDeprecated("items", "ObjectContactSphereTorus.radiusSphere", "ObjectContactSphereTorus: the parameter radiusSphere is deprecated since 1.12.258 and removed in 2031; use sphereRadius"); EPyUtils::FromPython(value, cObjectContactSphereTorus->GetParameters().sphereRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTorus.radiusSphere"); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectContactSphereTorus::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

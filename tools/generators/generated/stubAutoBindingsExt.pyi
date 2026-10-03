@@ -11,7 +11,7 @@ class MainSystem:
     ...
 
     @overload
-    def CreateMassPoint(self, name='', referencePosition=[0.,0.,0.], initialDisplacement=[0.,0.,0.], initialVelocity=[0.,0.,0.], physicsMass=0, gravity=[0.,0.,0.], graphicsDataList=[], drawSize=-1, color=[-1.,-1.,-1.,-1.], show=True, create2D=False, returnDict=False) -> Union[dict, ObjectIndex]: 
+    def CreateMassPoint(self, name='', referencePosition=[0.,0.,0.], initialDisplacement=[0.,0.,0.], initialVelocity=[0.,0.,0.], mass=0, gravity=[0.,0.,0.], graphicsDataList=[], drawSize=-1, color=[-1.,-1.,-1.,-1.], show=True, create2D=False, returnDict=False, physicsMass=None) -> Union[dict, ObjectIndex]: 
         """helper function to create 2D or 3D mass point object and node, using arguments as in NodePoint and MassPoint."""
     ...
 
@@ -31,7 +31,7 @@ class MainSystem:
     ...
 
     @overload
-    def CreateRigidBodySpringDamper(self, name='', bodyNumbers=[None, None], localPosition0=[0.,0.,0.], localPosition1=[0.,0.,0.], stiffness=np.zeros((6,6)), damping=np.zeros((6,6)), offset=[0.,0.,0.,0.,0.,0.], rotationMatrixJoint=np.eye(3), useGlobalFrame=True, intrinsicFormulation=True, springForceTorqueUserFunction=0, postNewtonStepUserFunction=0, bodyOrNodeList=[None, None], bodyList=[None, None], show=True, drawSize=-1, color=exudyn.graphics.color.default) -> ObjectIndex: 
+    def CreateRigidBodySpringDamper(self, name='', bodyNumbers=[None, None], localPosition0=[0.,0.,0.], localPosition1=[0.,0.,0.], stiffness=np.zeros((6,6)), damping=np.zeros((6,6)), offset=[0.,0.,0.,0.,0.,0.], rotationMatrixJoint=np.eye(3), useGlobalFrame=True, useIntrinsicFormulation=True, springForceTorqueUserFunction=0, postNewtonStepUserFunction=0, bodyOrNodeList=[None, None], bodyList=[None, None], show=True, drawSize=-1, color=exudyn.graphics.color.default, intrinsicFormulation=None) -> ObjectIndex: 
         """helper function to create RigidBodySpringDamper connector, using arguments from ObjectConnectorRigidBodySpringDamper, see there for the full documentation."""
     ...
 
@@ -66,7 +66,7 @@ class MainSystem:
     ...
 
     @overload
-    def CreateCoordinateConstraint(self, name='', bodyNumbers=[None, None], coordinates=[None, None], offset=0., factorValue1=1., velocityLevel=False, offsetUserFunction=0, offsetUserFunction_t=0, show=True, drawSize=-1., color=exudyn.graphics.color.default) -> ObjectIndex: 
+    def CreateCoordinateConstraint(self, name='', bodyNumbers=[None, None], coordinates=[None, None], offset=0., factor1=1., velocityLevel=False, offsetUserFunction=0, offsetUserFunction_t=0, show=True, drawSize=-1., color=exudyn.graphics.color.default, factorValue1=None) -> ObjectIndex: 
         """Create coordinate constraint for two bodies, or body on ground; markers and NodePointGround are automatically created when needed."""
     ...
 
@@ -76,7 +76,7 @@ class MainSystem:
     ...
 
     @overload
-    def CreateRollingDiscPenalty(self, name='', bodyNumbers=[None, None], axisPosition=[], axisVector=[1,0,0], discRadius=0., planePosition=[0,0,0], planeNormal=[0,0,1], contactStiffness=0., contactDamping=0., dryFriction=[0,0], dryFrictionAngle=0., dryFrictionProportionalZone=0., viscousFriction=[0,0], rollingFrictionViscous=0., useLinearProportionalZone=False, activeConnector=True, show=True, discWidth=0.1, color=exudyn.graphics.color.default) -> ObjectIndex: 
+    def CreateRollingDiscPenalty(self, name='', bodyNumbers=[None, None], axisPosition=[], axisVector=[1,0,0], discRadius=0., planePosition=[0,0,0], planeNormal=[0,0,1], contactStiffness=0., contactDamping=0., dryFriction=[0,0], dryFrictionAngle=0., dryFrictionProportionalZone=0., viscousFriction=[0,0], rollingViscousFriction=0., useLinearProportionalZone=False, activeConnector=True, show=True, discWidth=0.1, color=exudyn.graphics.color.default, rollingFrictionViscous=None) -> ObjectIndex: 
         """Create penalty-based rolling disc joint between wheel rigid body and ground; the disc is infinitely thin and the ground is a perfectly flat plane; the wheel may lift off; definition of joint position and axis in global coordinates (alternatively in wheel (body1) local coordinates) for reference configuration of bodies; all markers and other quantities are automatically computed."""
     ...
 
@@ -86,12 +86,12 @@ class MainSystem:
     ...
 
     @overload
-    def CreateSphereQuadContact(self, name='', bodyNumbers=[None, None], localPosition0=[0.,0.,0.], radiusSphere=0, quadPoints=exudyn.Vector3DList([[0,0,0],[1,0,0],[1,1,0],[0,1,0]]), includeEdges=15, dynamicFriction=0., frictionProportionalZone=1e-3, contactStiffness=0., contactDamping=0., contactStiffnessExponent=1, restitutionCoefficient=1, minimumImpactVelocity=0, impactModel=0, dataInitialCoordinates=[0,0,0,0], activeConnector=True, bodyOrNodeList=[None, None], localPosition1=[0.,0.,0.], show=False, color=exudyn.graphics.color.default) -> dict: 
+    def CreateSphereQuadContact(self, name='', bodyNumbers=[None, None], localPosition0=[0.,0.,0.], sphereRadius=0, quadPoints=exudyn.Vector3DList([[0,0,0],[1,0,0],[1,1,0],[0,1,0]]), includeEdges=15, dynamicFriction=0., frictionProportionalZone=1e-3, contactStiffness=0., contactDamping=0., contactStiffnessExponent=1, restitutionCoefficient=1, minimumImpactVelocity=0, impactModel=0, dataInitialCoordinates=[0,0,0,0], activeConnector=True, bodyOrNodeList=[None, None], localPosition1=[0.,0.,0.], show=False, color=exudyn.graphics.color.default, radiusSphere=None) -> dict: 
         """Create penalty-based sphere-quad contact between two rigid bodies, mass points or according nodes; the contact is based on two ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems."""
     ...
 
     @overload
-    def CreateSphereTriangleContact(self, name='', bodyNumbers=[None, None], localPosition0=[0.,0.,0.], radiusSphere=0, trianglePoints=exudyn.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]), includeEdges=7, dynamicFriction=0., frictionProportionalZone=1e-3, contactStiffness=0., contactDamping=0., contactStiffnessExponent=1, restitutionCoefficient=1, minimumImpactVelocity=0, impactModel=0, dataInitialCoordinates=[0,0,0,0], activeConnector=True, bodyOrNodeList=[None, None], localPosition1=[0.,0.,0.], show=False, color=exudyn.graphics.color.default) -> ObjectIndex: 
+    def CreateSphereTriangleContact(self, name='', bodyNumbers=[None, None], localPosition0=[0.,0.,0.], sphereRadius=0, trianglePoints=exudyn.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]), includeEdges=7, dynamicFriction=0., frictionProportionalZone=1e-3, contactStiffness=0., contactDamping=0., contactStiffnessExponent=1, restitutionCoefficient=1, minimumImpactVelocity=0, impactModel=0, dataInitialCoordinates=[0,0,0,0], activeConnector=True, bodyOrNodeList=[None, None], localPosition1=[0.,0.,0.], show=False, color=exudyn.graphics.color.default, radiusSphere=None) -> ObjectIndex: 
         """Create penalty-based sphere-triangle contact between two rigid bodies, mass points or according nodes; the contact is based on ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems."""
     ...
 

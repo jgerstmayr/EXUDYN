@@ -511,7 +511,7 @@ from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
 SC = exu.SystemContainer()         #container of systems
 mbs = SC.AddSystem()               #add a new system to work with
 nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
-mbs.AddObject(ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
+mbs.AddObject(ObjectMassPoint2D(mass=10, nodeNumber=nMP ))
 """)
 
 pb.DefStartTable(classStr+':objects')
@@ -519,7 +519,7 @@ pb.DefStartTable(classStr+':objects')
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='AddMainObjectPyClass', 
                                 description="add an object with objectDefinition from Python object class; returns (global) object number (type ObjectIndex) of newly added object",
                                 argList=['pyObject'],
-                                example = r"""item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100) \\mbs.AddObject(item) \\objectDict = {'objectType': 'MassPoint', \\'physicsMass': 10, \\'nodeNumber': 0, \\'name': 'example object'} \\mbs.AddObject(objectDict)""",
+                                example = r"""item = MassPoint(name='heavy object', nodeNumber=0, mass=100) \\mbs.AddObject(item) \\objectDict = {'objectType': 'MassPoint', \\'mass': 10, \\'nodeNumber': 0, \\'name': 'example object'} \\mbs.AddObject(objectDict)""",
                                 argTypes=[itemDict],
                                 returnType='ObjectIndex',
                                 )
@@ -645,7 +645,7 @@ from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
 SC = exu.SystemContainer()         #container of systems
 mbs = SC.AddSystem()               #add a new system to work with
 nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
-mbs.AddObject(ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
+mbs.AddObject(ObjectMassPoint2D(mass=10, nodeNumber=nMP ))
 mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
 """)
 
@@ -741,7 +741,7 @@ from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
 SC = exu.SystemContainer()         #container of systems
 mbs = SC.AddSystem()               #add a new system to work with
 nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
-mbs.AddObject(ObjectMassPoint2D(physicsMass=10, nodeNumber=nMP ))
+mbs.AddObject(ObjectMassPoint2D(mass=10, nodeNumber=nMP ))
 mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
 mbs.AddLoad(Force(markerNumber = mMP, loadVector=[0.001,0,0]))
 """)
@@ -834,7 +834,7 @@ from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
 SC = exu.SystemContainer()         #container of systems
 mbs = SC.AddSystem()               #add a new system to work with
 nMP = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
-mbs.AddObject(ObjectMassPoint(physicsMass=10, nodeNumber=nMP ))
+mbs.AddObject(ObjectMassPoint(mass=10, nodeNumber=nMP ))
 mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
 mbs.AddLoad(Force(markerNumber = mMP, loadVector=[2,0,5]))
 sMP = mbs.AddSensor(SensorNode(nodeNumber=nMP, storeInternal=True,

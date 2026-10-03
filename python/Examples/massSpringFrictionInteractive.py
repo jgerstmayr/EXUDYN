@@ -72,7 +72,7 @@ param = [4, 40,  3, 400]   #no stable oscillation with relative damping of 0.002
 
 vBand = param[0]
 fFriction = param[1] #force in Newton, only depends on direction of velocity
-fStaticFrictionOffset = param[2]
+staticFrictionOffsetForce = param[2]
 stiffness = param[3]
 kSticking = 1e4
 dSticking = 0.01*kSticking
@@ -101,7 +101,7 @@ nMass=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialCoordinates = [u0
 
 #add mass points and ground object:
 gCube = graphics.BrickXYZ(-tt, -tt, -tt, tt, tt, tt, graphics.color.steelblue)
-massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = nMass, 
+massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = nMass, 
                                     visualization=VObjectMassPoint(graphicsData=[gCube])))
 
 #marker for constraint / springDamper
@@ -125,7 +125,7 @@ else:
     n0=mbs.AddNode(Point(referenceCoordinates = [0,0,0], initialCoordinates = [0,0,0], 
                          initialVelocities= [vBand,0,0]))
     bandCoordinateMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n0, coordinate = 0))
-    mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n0, 
+    mbs.AddObject(MassPoint(mass = mass, nodeNumber = n0, 
                             visualization=VObjectMassPoint(graphicsData=gBackground)))
     #mbs.AddLoad(LoadCoordinate(markerNumber=bandCoordinateMarker, load=1e5))
     mbs.variables['oCCband'] = mbs.AddObject(CoordinateConstraint(markerNumbers=[groundCoordinateMarker, bandCoordinateMarker], 
@@ -144,8 +144,8 @@ nGeneric = mbs.AddNode(NodeGenericData(initialCoordinates=[1,0,0], numberOfDataC
 mbs.variables['oFriction'] = mbs.AddObject(CoordinateSpringDamperExt(markerNumbers = [bandCoordinateMarker, nodeCoordinateMarker0], 
                                      nodeNumber=nGeneric,
                                      #stiffness = stiffness, damping = damping, #added to separate CSD, otherwise spring is wrong!
-                                     fDynamicFriction=fFriction,
-                                     fStaticFrictionOffset=fStaticFrictionOffset,
+                                     dynamicFrictionForce=fFriction,
+                                     staticFrictionOffsetForce=staticFrictionOffsetForce,
                                      stickingStiffness=kSticking, stickingDamping=dSticking, 
                                      exponentialDecayStatic=expVel,
                                      frictionProportionalZone=regVel,
@@ -266,8 +266,8 @@ simulationSettings.timeIntegration.adaptiveStepDecrease = 0.25
 
 #this is an exemplariy simulation function, which adjusts some values for simulation
 def SimulationUF(mbs, dialog):
-    mbs.SetObjectParameter(mbs.variables['oFriction'],'fDynamicFriction',mbs.variables['dynamicFriction'])
-    mbs.SetObjectParameter(mbs.variables['oFriction'],'fStaticFrictionOffset',mbs.variables['staticFrictionOffset'])
+    mbs.SetObjectParameter(mbs.variables['oFriction'],'dynamicFrictionForce',mbs.variables['dynamicFriction'])
+    mbs.SetObjectParameter(mbs.variables['oFriction'],'staticFrictionOffsetForce',mbs.variables['staticFrictionOffset'])
     mbs.SetObjectParameter(mbs.variables['oSpring'],'stiffness',mbs.variables['stiffness'])
     mbs.SetObjectParameter(mbs.variables['oSpring'],'damping',2*mbs.variables['relDamping']*omega0)
 

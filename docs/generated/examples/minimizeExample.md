@@ -78,7 +78,7 @@ def ParameterFunction(parameterSet):
     nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
     
     #add mass point (this is a 3D object with 3 coordinates):
-    massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
+    massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = n1))
     
     #marker for ground (=fixed):
     groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))

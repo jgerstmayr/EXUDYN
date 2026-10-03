@@ -172,7 +172,7 @@ for i in range(4):
         gGraphicsPiston = graphics.Cylinder(pAxis=[0,0,0],vAxis=axPiston, radius=2*a, color=graphics.color.red)
 
     n1D1 = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-    oPiston1 = mbs.AddObject(Mass1D(physicsMass = pistonMass, 
+    oPiston1 = mbs.AddObject(Mass1D(mass = pistonMass, 
                                     nodeNumber = n1D1,
                                     referencePosition=refPosPiston,
                                     referenceRotation=A,
@@ -203,7 +203,7 @@ gGraphicsDiscSmall0b = graphics.BrickXYZ(0,-0.25*a,-a*1.01, discSmall, 0.25*a, a
 #Gear0:
 nDT0 = mbs.AddNode(Node1D(referenceCoordinates = [0]))
 oDT0 = mbs.AddObject(Rotor1D(nodeNumber = nDT0, 
-                             physicsInertia=inertiaDiscBig.GetInertia6D()[2],
+                             inertia=inertiaDiscBig.GetInertia6D()[2],
                              referencePosition = [0,0,-2*a],
                              visualization=VObjectRotationalMass1D(graphicsData=[gGraphicsDiscBig0a,gGraphicsDiscBig0b])))
 
@@ -217,38 +217,38 @@ mbs.AddObject(ObjectJointGeneric(markerNumbers=[mRigid0,mDT0Rigid],
 #Gear1:
 nDT1 = mbs.AddNode(Node1D(referenceCoordinates = [0]))
 oDT1 = mbs.AddObject(Rotor1D(nodeNumber = nDT1, 
-                             physicsInertia=inertiaDiscSmall.GetInertia6D()[2],
+                             inertia=inertiaDiscSmall.GetInertia6D()[2],
                              referencePosition = [discBig+discSmall,0,-2*a],
                              visualization=VObjectRotationalMass1D(graphicsData=[gGraphicsDiscSmall0a,gGraphicsDiscSmall0b])))
 
 mDT1Coordinate = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nDT1, coordinate=0)) #coordinate for rotation
 mbs.AddObject(CoordinateConstraint(markerNumbers=[mDT0Coordinate,mDT1Coordinate],
-                                   factorValue1=-discSmall/discBig,
+                                   factor1=-discSmall/discBig,
                                    visualization=VObjectConnectorCoordinate(show=False)))
 
 #Gear2:
 gGraphicsDiscAxis2 = graphics.Cylinder([0,0,-2*a],[0,0,7*a], a, graphics.color.grey)
 nDT2 = mbs.AddNode(Node1D(referenceCoordinates = [0]))
 oDT2 = mbs.AddObject(Rotor1D(nodeNumber = nDT2, 
-                             physicsInertia=inertiaDiscBig.GetInertia6D()[2],
+                             inertia=inertiaDiscBig.GetInertia6D()[2],
                              referencePosition = [discBig+discSmall,0,-5*a],
                              visualization=VObjectRotationalMass1D(graphicsData=[gGraphicsDiscAxis2,gGraphicsDiscBig0a,gGraphicsDiscBig0b])))
 
 mDT2Coordinate = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nDT2, coordinate=0)) #coordinate for rotation
-mbs.AddObject(CoordinateConstraint(markerNumbers=[mDT1Coordinate,mDT2Coordinate],factorValue1=1,
+mbs.AddObject(CoordinateConstraint(markerNumbers=[mDT1Coordinate,mDT2Coordinate],factor1=1,
                                    visualization=VObjectConnectorCoordinate(show=False)))
 
 #Gear3:
 gGraphicsDiscAxis3 = graphics.Cylinder([0,0,-2*a],[0,0,4*a], a, graphics.color.grey)
 nDT3 = mbs.AddNode(Node1D(referenceCoordinates = [0]))
 oDT3 = mbs.AddObject(Rotor1D(nodeNumber = nDT3, 
-                             physicsInertia=inertiaDiscSmall.GetInertia6D()[2],
+                             inertia=inertiaDiscSmall.GetInertia6D()[2],
                              referencePosition = [(discBig+discSmall)*2,0,-5*a],
                              visualization=VObjectRotationalMass1D(graphicsData=[gGraphicsDiscAxis3,gGraphicsDiscSmall0a,gGraphicsDiscSmall0b])))
 
 mDT3Coordinate = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nDT3, coordinate=0)) #coordinate for rotation
 mbs.AddObject(CoordinateConstraint(markerNumbers=[mDT2Coordinate,mDT3Coordinate],
-                                   factorValue1=-discSmall/discBig,
+                                   factor1=-discSmall/discBig,
                                    visualization=VObjectConnectorCoordinate(show=False)))
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -257,7 +257,7 @@ gGraphicsDiscFlyWheel0a = graphics.Cylinder([0,0,-2*a],[0,0,2*a], discBig, [0.4,
 gGraphicsDiscFlyWheel0b = graphics.BrickXYZ(0,-0.25*a,-a*2.01, discBig, 0.25*a, a*0.01, [0.7,0.7,0.7,0.5]) #add something to the cylinder to see rotation
 nDT4 = mbs.AddNode(Node1D(referenceCoordinates = [0]))
 oDT4 = mbs.AddObject(Rotor1D(nodeNumber = nDT4, 
-                             physicsInertia=5*inertiaDiscBig.GetInertia6D()[2],
+                             inertia=5*inertiaDiscBig.GetInertia6D()[2],
                              referencePosition = [0,0,9*a],
                              visualization=VObjectRotationalMass1D(graphicsData=[gGraphicsDiscAxis3,gGraphicsDiscFlyWheel0a,gGraphicsDiscFlyWheel0b])))
 

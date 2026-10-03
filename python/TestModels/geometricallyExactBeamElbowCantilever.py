@@ -47,7 +47,7 @@ nodesLeg2 = [mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[i*lElement, L, 0]
              for i in range(nElements+1)]
 for nodes in [nodesLeg1, nodesLeg2]:
     for i in range(nElements):
-        mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=lElement, sectionData=section))
+        mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], length=lElement, sectionData=section))
 
 mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=mbs.AddNode(NodePointGround())))
 #the clamping in the frame of the first leg, the corner turned back: rotations of the markers (localHT)

@@ -135,7 +135,7 @@ for solverNum, solver in enumerate(solverList):
                                                                 nodeNumber=nData1,
                                                                 trianglePoints=trianglePoints,
                                                                 includeEdges=includeEdgesList[k],
-                                                                radiusSphere=radius,
+                                                                sphereRadius=radius,
                                                                 contactStiffness = contactStiffness,
                                                                 dynamicFriction=dynamicFriction,
                                                                 impactModel = impactModel,

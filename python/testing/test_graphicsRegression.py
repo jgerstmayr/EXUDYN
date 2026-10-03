@@ -213,7 +213,7 @@ def RepresentativeModel():
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     oGround = mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0, 0, -0.5], size=4, nTiles=4)])
-    oMass = mbs.CreateMassPoint(referencePosition=[1, 1, 0], physicsMass=1, drawSize=0.1)
+    oMass = mbs.CreateMassPoint(referencePosition=[1, 1, 0], mass=1, drawSize=0.1)
     oBody = mbs.CreateRigidBody(inertia=InertiaCuboid(1000, [1, 0.2, 0.2]), referencePosition=[1, 0, 0],
                                 graphicsDataList=[graphics.Brick(size=[1, 0.2, 0.2], color=red)])
     mbs.CreateRevoluteJoint(bodyNumbers=[oGround, oBody], position=[0.5, 0, 0], axis=[0, 0, 1])
@@ -226,8 +226,8 @@ def RepresentativeModel():
                              outputVariableType=exu.OutputVariableType.Position, storeInternal=True))
     n0 = mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[-2, 0, 1, 0]))
     n1 = mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[-1, 0, 1, 0]))
-    mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[n0, n1], physicsLength=1, physicsMassPerLength=1,
-                                    physicsBendingStiffness=1, physicsAxialStiffness=100,
+    mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[n0, n1], length=1, massPerLength=1,
+                                    bendingStiffness=1, axialStiffness=100,
                                     visualization=VCable2D(drawHeight=0.05)))
     mbs.Assemble()
     return SC

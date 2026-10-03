@@ -91,8 +91,8 @@ mNodeCarr = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nCoordCarr, coordinate
 mNodeHook = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nCoordHook, coordinate=0))
 
 ## add 1D mass object for dynamics of main rope drum
-mbs.AddObject(Mass1D(physicsMass=1, nodeNumber=nCoordCarr))
-mbs.AddObject(Mass1D(physicsMass=1, nodeNumber=nCoordHook))
+mbs.AddObject(Mass1D(mass=1, nodeNumber=nCoordCarr))
+mbs.AddObject(Mass1D(mass=1, nodeNumber=nCoordHook))
 
 ## add coordinate constraint for prescribed motion using offset later on
 ccCarr = mbs.AddObject(CoordinateConstraint(markerNumbers=[mNodeGround, mNodeCarr], offset=0))

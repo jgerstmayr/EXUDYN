@@ -54,7 +54,7 @@ inertia = InertiaCuboid(density=mass/(L*d*d), sideLengths=[L,d,d])
 exu.Print("mass=",inertia.mass)
 
 nR0 = mbs.AddNode(Rigid2D(referenceCoordinates=[L/2,0,0])) #body goes from [0,0,0] to [L,0,0]
-oR0 = mbs.AddObject(RigidBody2D(nodeNumber=nR0, physicsMass = inertia.mass, physicsInertia=inertia.inertiaTensor[2][2], 
+oR0 = mbs.AddObject(RigidBody2D(nodeNumber=nR0, mass = inertia.mass, inertia=inertia.inertiaTensor[2][2], 
                                   visualization = VObjectRigidBody2D(graphicsData = [graphicsLink,graphicsSphere])))
 
 #markers:

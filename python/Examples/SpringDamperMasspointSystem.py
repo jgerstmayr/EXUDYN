@@ -137,7 +137,7 @@ for i in range( len(stepSizeList) ):
         massPointName = "mass point - " + nodeName
          
         objectDict = {"objectType": "MassPoint",
-                      "physicsMass": massMassPoint,
+                      "mass": massMassPoint,
                       "nodeNumber": nodeNumber,
                       "name": massPointName}
         

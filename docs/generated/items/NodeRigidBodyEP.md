@@ -150,8 +150,8 @@ ep0 = eulerParameters0
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0.2,0.1]+ep0,
                                    initialVelocities=[0,0,0]+list(AngularVelocity2EulerParameters_t(omega, ep0))))
 inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
-mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                              physicsInertia=inertia.GetInertia6D()))
+mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                              inertia=inertia.GetInertia6D()))
 
 mbs.Assemble()
 mbs.SolveDynamic()

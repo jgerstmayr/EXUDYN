@@ -141,7 +141,7 @@ def _SystemWithAFailingUserFunction():
     systemContainer = exu.SystemContainer()
     mbs = systemContainer.AddSystem()
     nodeNumber = mbs.AddNode(NodePoint(referenceCoordinates=[0., 0., 0.]))
-    mbs.AddObject(ObjectMassPoint(physicsMass=1., nodeNumber=nodeNumber))
+    mbs.AddObject(ObjectMassPoint(mass=1., nodeNumber=nodeNumber))
     markerNumber = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodeNumber, coordinate=0))
 
     def DivideByZero(mbs2, t, load):
@@ -311,7 +311,7 @@ def test_aSolverFailureReachesTheSolverFile(tmp_path):
     systemContainer = exu.SystemContainer()
     mbs = systemContainer.AddSystem()
     nodeNumber = mbs.AddNode(NodePoint(referenceCoordinates=[0., 0., 0.]))
-    mbs.AddObject(ObjectMassPoint(physicsMass=1., nodeNumber=nodeNumber))
+    mbs.AddObject(ObjectMassPoint(mass=1., nodeNumber=nodeNumber))
     markerNumber = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodeNumber, coordinate=0))
     mbs.AddLoad(LoadCoordinate(markerNumber=markerNumber, load=10.))  #nothing holds the body
     mbs.Assemble()

@@ -54,19 +54,19 @@ void MainObjectANCFBeam::SetInternalBeamSection(const py::object& pyObject)
                 ) {pout << "ObjectANCFBeam::SetInternalBeamSection: stiffness matrix has size " << 
                 bs.stiffnessMatrix.NumberOfRows() << "," << bs.stiffnessMatrix.NumberOfColumns() << "\n";}
 
-		    GetCObjectANCFBeam()->GetParameters().physicsAxialShearStiffness =
+		    GetCObjectANCFBeam()->GetParameters().axialShearStiffness =
 			    Vector3D({ bs.stiffnessMatrix(0,0),bs.stiffnessMatrix(1,1),bs.stiffnessMatrix(2,2) });
-		    GetCObjectANCFBeam()->GetParameters().physicsTorsionalBendingStiffness =
+		    GetCObjectANCFBeam()->GetParameters().torsionalBendingStiffness =
 			    Vector3D({ bs.stiffnessMatrix(3,3),bs.stiffnessMatrix(4,4),bs.stiffnessMatrix(5,5) });
 
-			GetCObjectANCFBeam()->GetParameters().physicsAxialShearDamping =
+			GetCObjectANCFBeam()->GetParameters().axialShearDamping =
 				Vector3D({ bs.dampingMatrix(0,0),bs.dampingMatrix(1,1),bs.dampingMatrix(2,2) });
-			GetCObjectANCFBeam()->GetParameters().physicsTorsionalBendingDamping =
+			GetCObjectANCFBeam()->GetParameters().torsionalBendingDamping =
 				Vector3D({ bs.dampingMatrix(3,3),bs.dampingMatrix(4,4),bs.dampingMatrix(5,5) });
 
 
-		    GetCObjectANCFBeam()->GetParameters().physicsCrossSectionInertia = bs.inertia;
-		    GetCObjectANCFBeam()->GetParameters().physicsMassPerLength = bs.massPerLength;
+		    GetCObjectANCFBeam()->GetParameters().crossSectionInertia = bs.inertia;
+		    GetCObjectANCFBeam()->GetParameters().massPerLength = bs.massPerLength;
 
 		    //CHECK that there are no parameters in BeamSection which are not processed:
 		    PyBeamSection bsCheck;
@@ -96,28 +96,28 @@ PyBeamSection MainObjectANCFBeam::GetInternalBeamSection() const
 {
 	PyBeamSection bs; //sets all data to zero
 
-	Vector3D kAS = GetCObjectANCFBeam()->GetParameters().physicsAxialShearStiffness;
+	Vector3D kAS = GetCObjectANCFBeam()->GetParameters().axialShearStiffness;
 	bs.stiffnessMatrix(0, 0) = kAS[0];
 	bs.stiffnessMatrix(1, 1) = kAS[1];
 	bs.stiffnessMatrix(2, 2) = kAS[2];
 
-	Vector3D kKappa = GetCObjectANCFBeam()->GetParameters().physicsTorsionalBendingStiffness;
+	Vector3D kKappa = GetCObjectANCFBeam()->GetParameters().torsionalBendingStiffness;
 	bs.stiffnessMatrix(3, 3) = kKappa[0];
 	bs.stiffnessMatrix(4, 4) = kKappa[1];
 	bs.stiffnessMatrix(5, 5) = kKappa[2];
 
-	Vector3D dAS = GetCObjectANCFBeam()->GetParameters().physicsAxialShearDamping;
+	Vector3D dAS = GetCObjectANCFBeam()->GetParameters().axialShearDamping;
 	bs.dampingMatrix(0, 0) = dAS[0];
 	bs.dampingMatrix(1, 1) = dAS[1];
 	bs.dampingMatrix(2, 2) = dAS[2];
 
-	Vector3D dKappa = GetCObjectANCFBeam()->GetParameters().physicsTorsionalBendingDamping;
+	Vector3D dKappa = GetCObjectANCFBeam()->GetParameters().torsionalBendingDamping;
 	bs.dampingMatrix(3, 3) = dKappa[0];
 	bs.dampingMatrix(4, 4) = dKappa[1];
 	bs.dampingMatrix(5, 5) = dKappa[2];
 
-	bs.inertia = GetCObjectANCFBeam()->GetParameters().physicsCrossSectionInertia;
-	bs.massPerLength = GetCObjectANCFBeam()->GetParameters().physicsMassPerLength;
+	bs.inertia = GetCObjectANCFBeam()->GetParameters().crossSectionInertia;
+	bs.massPerLength = GetCObjectANCFBeam()->GetParameters().massPerLength;
 
 	return bs;
 }
@@ -235,9 +235,9 @@ void CObjectANCFBeam::ComputeSlopeVectors(Real x, ConfigurationType configuratio
 	((CNodeODE2*)GetCNode(1))->GetODE2CoordinateVectorWithReference(q1, configuration);
 
 	slopeX = ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(ComputeShapeFunctions_x(Vector3D({ x,0.,0. }), 
-		parameters.physicsLength), q0, q1);
-	slopeY = ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(ComputeShapeFunctions_y(Vector3D({ x,0.,0. }), parameters.physicsLength), q0, q1);
-	slopeZ = ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(ComputeShapeFunctions_z(Vector3D({ x,0.,0. }), parameters.physicsLength), q0, q1);
+		parameters.length), q0, q1);
+	slopeY = ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(ComputeShapeFunctions_y(Vector3D({ x,0.,0. }), parameters.length), q0, q1);
+	slopeZ = ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(ComputeShapeFunctions_z(Vector3D({ x,0.,0. }), parameters.length), q0, q1);
 }
 
 
@@ -247,8 +247,8 @@ void CObjectANCFBeam::PreComputeMassTerms() const
 	if (!massMatrixComputed)
 	{
 		precomputedMassMatrix.SetScalarMatrix(nODE2coordinates, 0.); //set 8x8 matrix
-		Real L = parameters.physicsLength;
-		Real rhoA = parameters.physicsMassPerLength;
+		Real L = parameters.length;
+		Real rhoA = parameters.massPerLength;
 		const Index ns = nSFperNode * nNodes;   //number of shape functions
 		
 		//if (parameters.testBeamRectangularSize[0] <= 0.) //default, use new approach, with inertia and only integration along x-axis
@@ -290,11 +290,11 @@ void CObjectANCFBeam::PreComputeMassTerms() const
 			//==> mass matrix: (SY + SZ).T @ Winv.T @ inertiaTensor @ Winv @ (SY + SZ)
 			//distortion of slope vectors contributes to inertia => same as if integrated mass matrix directly + constant mass matrix
 
-			//Matrix3D Winv = parameters.physicsCrossSectionInertia;
+			//Matrix3D Winv = parameters.crossSectionInertia;
 			//CHECKandTHROW(Winv.Invert(), "CObjectANCFBeam::PreComputeMassTerms: cross section inertia seems to be singular");
 
 			Matrix3D Winv({ 0.5,0.,0., 0.,1.,0., 0.,0.,1. });
-			Matrix3D WIW = Winv.GetTransposed()*parameters.physicsCrossSectionInertia*Winv;
+			Matrix3D WIW = Winv.GetTransposed()*parameters.crossSectionInertia*Winv;
 			cnt = 0;
 			for (auto item : EXUmath::gaussRuleOrder3Points) //shape functions are linear, so order 3 shall be enough!
 			{
@@ -507,7 +507,7 @@ void CObjectANCFBeam::GetDeltaLocalTwistAndCurvature(Real x, ConstSizeMatrix<EXU
 {
 	//compute twist and curvature (kappa)
 	//use automatic differentiation for deltaKappa!
-	Real L = parameters.physicsLength;
+	Real L = parameters.length;
 	Vector3D localPosition({ x,0.,0. });
 	const Index dim3D = EXUstd::dim3D;
 
@@ -565,7 +565,7 @@ void CObjectANCFBeam::GetDeltaLocalAxialShearDeformation(Real x, ConstSizeMatrix
 {
 	//compute twist and curvature (kappa)
 	//use automatic differentiation for deltaKappa!
-	Real L = parameters.physicsLength;
+	Real L = parameters.length;
 	//Vector3D localPosition({ x,0.,0. });
 	const Index dim3D = EXUstd::dim3D;
 
@@ -622,7 +622,7 @@ void CObjectANCFBeam::GetDeltaCrossSectionDeformation(Real x, ConstSizeMatrix<EX
 {
 	//compute twist and curvature (kappa)
 	//use automatic differentiation for deltaKappa!
-	Real L = parameters.physicsLength;
+	Real L = parameters.length;
 	Vector3D localPosition({ x,0.,0. });
 	const Index dim3D = EXUstd::dim3D;
 
@@ -689,7 +689,7 @@ Real CObjectANCFBeam::ComputeElasticEnergy() const
 {
 	ConstSizeVector<nODE2coordinates> qANCF;
 	ComputeCurrentObjectCoordinates(qANCF);
-	const Real L = parameters.physicsLength;
+	const Real L = parameters.length;
 	ConstSizeVector<EXUmath::maxIntegrationPoints> intPoints, intWeights;
 	ConstSizeVector<EXUstd::dim3D> deformation;
 	ConstSizeMatrix<EXUstd::dim3D * nODE2coordinates> deltaDeformation(EXUstd::dim3D, nODE2coordinates);
@@ -699,16 +699,16 @@ Real CObjectANCFBeam::ComputeElasticEnergy() const
 	for (Index ix = 0; ix < intPoints.NumberOfItems(); ix++)
 	{
 		GetLocalTwistAndCurvatureDiff<Real>(qANCF, deformation, L, 0.5*L*intPoints[ix]);
-		for (Index k = 0; k < 3; k++) { energy += 0.5*L*intWeights[ix] * 0.5*parameters.physicsTorsionalBendingStiffness[k] * deformation[k] * deformation[k]; }
+		for (Index k = 0; k < 3; k++) { energy += 0.5*L*intWeights[ix] * 0.5*parameters.torsionalBendingStiffness[k] * deformation[k] * deformation[k]; }
 	}
 	EXUmath::SetGaussIntegrationRule(orderAxialShear, intPoints, intWeights);
 	for (Index ix = 0; ix < intPoints.NumberOfItems(); ix++)
 	{
 		GetLocalAxialShearDeformationDiff<Real>(qANCF, deformation, L, 0.5*L*intPoints[ix]);
-		for (Index k = 0; k < 3; k++) { energy += 0.5*L*intWeights[ix] * 0.5*parameters.physicsAxialShearStiffness[k] * deformation[k] * deformation[k]; }
+		for (Index k = 0; k < 3; k++) { energy += 0.5*L*intWeights[ix] * 0.5*parameters.axialShearStiffness[k] * deformation[k] * deformation[k]; }
 	}
-	Real EA = parameters.physicsAxialShearStiffness[0];
-	Real GA2 = parameters.physicsAxialShearStiffness[1] + parameters.physicsAxialShearStiffness[2];
+	Real EA = parameters.axialShearStiffness[0];
+	Real GA2 = parameters.axialShearStiffness[1] + parameters.axialShearStiffness[2];
 	Vector3D kCS({ EA,EA,GA2 });
 	kCS.MultComponentWise(parameters.crossSectionPenaltyFactor);
 	EXUmath::SetLobattoIntegrationRule(orderCrossSection, intPoints, intWeights);
@@ -735,14 +735,14 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 	ode2Lhs.SetAll(0.);
 	//compute work of elastic forces:
 
-	Real L = parameters.physicsLength;
+	Real L = parameters.length;
 	const Index dim3D = EXUstd::dim3D;
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//for thickness stiffness, take average of shear stiffness: 0.5*(GAy+GAz)
 
-	const bool hasTorsionalBendingDamping = !(parameters.physicsTorsionalBendingDamping == 0);
-	const bool hasAxialShearDamping = !(parameters.physicsAxialShearDamping == 0);
+	const bool hasTorsionalBendingDamping = !(parameters.torsionalBendingDamping == 0);
+	const bool hasAxialShearDamping = !(parameters.axialShearDamping == 0);
 	const bool hasCrossSectionDamping = !(parameters.crossSectionDamping == 0);
 
 	ConstSizeMatrixBase<TReal, dim3D * nODE2coordinates> deltaDeformation(dim3D, nODE2coordinates); //for deltaKappa, delta...
@@ -762,7 +762,7 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 
 		GetDeltaLocalTwistAndCurvature(x, deltaDeformation, deformation);
 
-		deformation.MultComponentWise(factInt*parameters.physicsTorsionalBendingStiffness);
+		deformation.MultComponentWise(factInt*parameters.torsionalBendingStiffness);
 
 		EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
 
@@ -770,7 +770,7 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 		{
 			EXUmath::MultMatrixVectorTemplate(deltaDeformation, qANCF_t, deformation); //==> deformation = deformation_t !
 
-			deformation.MultComponentWise(factInt * parameters.physicsTorsionalBendingDamping);
+			deformation.MultComponentWise(factInt * parameters.torsionalBendingDamping);
 
 			EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
 		}
@@ -785,7 +785,7 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 
 		GetDeltaLocalAxialShearDeformation(x, deltaDeformation, deformation);
 
-		deformation.MultComponentWise(factInt*parameters.physicsAxialShearStiffness);
+		deformation.MultComponentWise(factInt*parameters.axialShearStiffness);
 
 		EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
 
@@ -793,15 +793,15 @@ void CObjectANCFBeam::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) const
 		{
 			EXUmath::MultMatrixVectorTemplate(deltaDeformation, qANCF_t, deformation); //==> deformation = deformation_t !
 
-			deformation.MultComponentWise(factInt * parameters.physicsAxialShearDamping);
+			deformation.MultComponentWise(factInt * parameters.axialShearDamping);
 
 			EXUmath::MultMatrixTransposedVectorAddTemplate(deltaDeformation, deformation, ode2Lhs);
 		}
 	}
 
 	//compute cross section deformation terms:
-	Real EA = parameters.physicsAxialShearStiffness[0];
-	Real GA2 = parameters.physicsAxialShearStiffness[1] + parameters.physicsAxialShearStiffness[2]; //add both, if different
+	Real EA = parameters.axialShearStiffness[0];
+	Real GA2 = parameters.axialShearStiffness[1] + parameters.axialShearStiffness[2]; //add both, if different
 	Vector3D kCS({ EA,EA,GA2 }); //according to paper
 	kCS.MultComponentWise(parameters.crossSectionPenaltyFactor); //additional factors
 	Vector3D dCS({ EA,EA,GA2 }); //according to paper
@@ -899,7 +899,7 @@ void CObjectANCFBeam::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
 //! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
 void CObjectANCFBeam::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
-	Real L = parameters.physicsLength;
+	Real L = parameters.length;
 
 	SlimVector<CObjectANCFBeam::nSFperNode*CObjectANCFBeam::nNodes> SV = ComputeShapeFunctions(localPosition, L);
 	value.SetNumberOfRowsAndColumns(EXUstd::dim3D, nODE2coordinates); //3D velocity, all coordinates q_t (#2775)
@@ -924,8 +924,8 @@ static void ANCFBeamSlopes(const CObjectANCFBeam& beam, const Vector3D& localPos
 	beam.ComputeSlopeVectors(localPosition[0], ConfigurationType::Current, slopeX, slopeY, slopeZ);
 	for (Index c = 0; c < 3; c++) { s[c] = slopeY[c]; s[3 + c] = slopeZ[c]; }
 	Vector3D position({ localPosition[0], 0., 0. });
-	SVy = beam.ComputeShapeFunctions_y(position, beam.GetParameters().physicsLength);
-	SVz = beam.ComputeShapeFunctions_z(position, beam.GetParameters().physicsLength);
+	SVy = beam.ComputeShapeFunctions_y(position, beam.GetParameters().length);
+	SVz = beam.ComputeShapeFunctions_z(position, beam.GetParameters().length);
 }
 
 //! the rotation Jacobian d(omega)/d(q_t), 3 x n (#2775, #2763): the derivative of the frame of the slopes r_y, r_z of the
@@ -985,8 +985,8 @@ void CObjectANCFBeam::GetMassWeightedPositionJacobian(Matrix& value) const
 	value.SetNumberOfRowsAndColumns(EXUstd::dim3D, nODE2coordinates); //3D velocity, all coordinates q_t (#2775)
 	value.SetAll(0.);
 
-	Real L = parameters.physicsLength;
-	Real rhoA = parameters.physicsMassPerLength;
+	Real L = parameters.length;
+	Real rhoA = parameters.massPerLength;
 
 	Index cnt = 0;
 	Real a = 0; //integration interval [a,b]
@@ -1102,27 +1102,27 @@ void CObjectANCFBeam::GetOutputVariableBody(OutputVariableType variableType, con
 	//}
 	//case OutputVariableType::ForceLocal: {
 	//	//do not add this due to drawing function: CHECKandTHROW(y == 0., "CObjectANCFBeam::GetOutputVariableBody: Y-component of localPosition must be zero for ForceLocal");
-	//	Real physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature;
-	//	GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature);
+	//	Real bendingStiffness, axialStiffness, bendingDamping, axialDamping, referenceAxialStrain, referenceCurvature;
+	//	GetMaterialParameters(bendingStiffness, axialStiffness, bendingDamping, axialDamping, referenceAxialStrain, referenceCurvature);
 
-	//	Real axialStrainRef = physicsReferenceAxialStrain;
+	//	Real axialStrainRef = referenceAxialStrain;
 	//	if (StrainIsRelativeToReference() != 0.)
 	//	{
 	//		Vector2D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
 	//		axialStrainRef += StrainIsRelativeToReference()*(rxRef.GetL2Norm() - 1.);
 	//	}
 
-	//	Real force = physicsAxialStiffness * (ComputeAxialStrain(x, configuration) - axialStrainRef);
+	//	Real force = axialStiffness * (ComputeAxialStrain(x, configuration) - axialStrainRef);
 	//	if (axialDamping != 0) { force += axialDamping * ComputeAxialStrain_t(x, configuration); }
 
 	//	value.SetVector({ force }); break;
 	//}
 	//case OutputVariableType::TorqueLocal: {
 	//	//do not add this due to drawing function: CHECKandTHROW(y == 0., "CObjectANCFBeam::GetOutputVariableBody: Y-component of localPosition must be zero for TorqueLocal");
-	//	Real physicsBendingStiffness, physicsAxialStiffness, physicsReferenceAxialStrain, physicsReferenceCurvature, bendingDamping, axialDamping;
-	//	GetMaterialParameters(physicsBendingStiffness, physicsAxialStiffness, bendingDamping, axialDamping, physicsReferenceAxialStrain, physicsReferenceCurvature);
+	//	Real bendingStiffness, axialStiffness, referenceAxialStrain, referenceCurvature, bendingDamping, axialDamping;
+	//	GetMaterialParameters(bendingStiffness, axialStiffness, bendingDamping, axialDamping, referenceAxialStrain, referenceCurvature);
 
-	//	Real curvatureRef = physicsReferenceCurvature;
+	//	Real curvatureRef = referenceCurvature;
 	//	if (StrainIsRelativeToReference() != 0.)
 	//	{
 	//		Vector2D rxRef = ComputeSlopeVector(x, ConfigurationType::Reference);
@@ -1133,7 +1133,7 @@ void CObjectANCFBeam::GetOutputVariableBody(OutputVariableType variableType, con
 	//		curvatureRef += StrainIsRelativeToReference()*(rxCrossRxxRef / rxNorm2ref);
 	//	}
 
-	//	Real torque = physicsBendingStiffness * (ComputeCurvature(x, configuration) - curvatureRef);
+	//	Real torque = bendingStiffness * (ComputeCurvature(x, configuration) - curvatureRef);
 	//	if (bendingDamping != 0) { torque += bendingDamping * ComputeCurvature_t(x, configuration); }
 	//	value.SetVector({ torque }); break;
 	//}
@@ -1152,7 +1152,7 @@ void CObjectANCFBeam::GetOutputVariableBody(OutputVariableType variableType, con
 //  return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectANCFBeam::GetPosition(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	SlimVector<nSFperNode*nNodes> SV = ComputeShapeFunctions(localPosition, parameters.physicsLength);
+	SlimVector<nSFperNode*nNodes> SV = ComputeShapeFunctions(localPosition, parameters.length);
 
 	Vector3D v = ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(SV, 
 		((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));
@@ -1170,7 +1170,7 @@ Vector3D CObjectANCFBeam::GetPosition(const Vector3D& localPosition, Configurati
 //  return the (global) velocity of "localPosition" according to configuration type
 Vector3D CObjectANCFBeam::GetVelocity(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	SlimVector<nSFperNode*nNodes> SV = ComputeShapeFunctions(localPosition, parameters.physicsLength);
+	SlimVector<nSFperNode*nNodes> SV = ComputeShapeFunctions(localPosition, parameters.length);
 
 	return ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(SV,
 		((CNodeODE2*)GetCNode(0))->GetCoordinateVector_t(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector_t(configuration));
@@ -1179,7 +1179,7 @@ Vector3D CObjectANCFBeam::GetVelocity(const Vector3D& localPosition, Configurati
 //  return the (global) velocity of "localPosition" according to configuration type
 Vector3D CObjectANCFBeam::GetAcceleration(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	SlimVector<nSFperNode*nNodes> SV = ComputeShapeFunctions(localPosition, parameters.physicsLength);
+	SlimVector<nSFperNode*nNodes> SV = ComputeShapeFunctions(localPosition, parameters.length);
 
 	return ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(SV,
 		((CNodeODE2*)GetCNode(0))->GetCoordinateVector_tt(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector_tt(configuration));
@@ -1188,7 +1188,7 @@ Vector3D CObjectANCFBeam::GetAcceleration(const Vector3D& localPosition, Configu
 ////  return the (global) acceleration of "localPosition" according to configuration type
 //Vector3D CObjectANCFBeam::GetAcceleration(const Vector3D& localPosition, ConfigurationType configuration) const
 //{
-//	SlimVector<nSFperNode*nNodes> SV = ComputeShapeFunctions(localPosition, parameters.physicsLength);
+//	SlimVector<nSFperNode*nNodes> SV = ComputeShapeFunctions(localPosition, parameters.length);
 //
 //	return ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(SV,
 //		((CNodeODE2*)GetCNode(0))->GetCoordinateVector_tt(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector_tt(configuration));
@@ -1197,7 +1197,7 @@ Vector3D CObjectANCFBeam::GetAcceleration(const Vector3D& localPosition, Configu
 //! return the (global) position of "localPosition" according to configuration type
 Vector3D CObjectANCFBeam::GetDisplacement(const Vector3D& localPosition, ConfigurationType configuration) const
 {
-	SlimVector<nSFperNode*nNodes> SV = ComputeShapeFunctions(localPosition, parameters.physicsLength);
+	SlimVector<nSFperNode*nNodes> SV = ComputeShapeFunctions(localPosition, parameters.length);
 
 	return ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(SV,
 		((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));
@@ -1235,9 +1235,9 @@ Vector3D CObjectANCFBeam::GetAngularVelocity(const Vector3D& localPosition, Conf
 	LinkedDataVector q1_t(((CNodeODE2*)GetCNode(1))->GetCoordinateVector_t(configuration));
 	Vector3D position({ localPosition[0], 0., 0. });
 	Vector3D slopeY_t = ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(
-		ComputeShapeFunctions_y(position, parameters.physicsLength), q0_t, q1_t);
+		ComputeShapeFunctions_y(position, parameters.length), q0_t, q1_t);
 	Vector3D slopeZ_t = ExuMath::MapCoordinates2Nodes<Real, LinkedDataVector, nSFperNode, EXUstd::dim3D>(
-		ComputeShapeFunctions_z(position, parameters.physicsLength), q0_t, q1_t);
+		ComputeShapeFunctions_z(position, parameters.length), q0_t, q1_t);
 	const Real s[6] = { slopeY[0], slopeY[1], slopeY[2], slopeZ[0], slopeZ[1], slopeZ[2] };
 	const Real s_t[6] = { slopeY_t[0], slopeY_t[1], slopeY_t[2], slopeZ_t[0], slopeZ_t[1], slopeZ_t[2] };
 	return AccessFunctionsAD::SlopesAngularVelocity(s, s_t);
@@ -1259,7 +1259,7 @@ Vector3D CObjectANCFBeam::GetAngularVelocityLocal(const Vector3D& localPosition,
 
 //Vector2D CObjectANCFBeam::ComputeSlopeVector_x(Real x, ConfigurationType configuration) const
 //{
-//	Vector4D SVxx = ComputeShapeFunctions_xx(x, parameters.physicsLength);
+//	Vector4D SVxx = ComputeShapeFunctions_xx(x, parameters.length);
 //
 //	Vector2D slope_x = MapCoordinates(SVxx, ((CNodeODE2*)GetCNode(0))->GetCoordinateVector(configuration), ((CNodeODE2*)GetCNode(1))->GetCoordinateVector(configuration));
 //	if (configuration != ConfigurationType::Reference) //add reference configuration to any current, initial, visualization coordinates (except reference configuration!)

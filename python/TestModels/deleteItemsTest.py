@@ -39,7 +39,7 @@ lastBody = oGround
 for i in range(nMasses):
     oDict = mbs.CreateMassPoint(referencePosition=[length*(i+1),0,0],
                                 initialVelocity=[0,-initialVelocity,0],
-                                physicsMass=mass,
+                                mass=mass,
                                 gravity=[0,-gravity,0],
                                 returnDict=True)
     oMass = oDict['bodyNumber']

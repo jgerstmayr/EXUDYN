@@ -37,7 +37,7 @@ def Cantilever(force, torque, nElements=8):
     section.stiffnessMatrix = np.diag([EA, GA, GA, GJ, EIy, EIz])
     section.inertia = np.diag([2e-3, 1e-3, 1e-3])
     section.massPerLength = 1
-    elements = [mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=lElement,
+    elements = [mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], length=lElement,
                                                            sectionData=section)) for i in range(nElements)]
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
     for i in [0, 1, 2, 4, 5, 6]:

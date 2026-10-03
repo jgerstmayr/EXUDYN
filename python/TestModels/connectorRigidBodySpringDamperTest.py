@@ -31,7 +31,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 #example with rigid body at [0,0,0], 1kg under initial velocity
 graphicsBody = graphics.Brick(centerPoint=[0,0,0],size=[0.09,0.09,0.2], color=graphics.color.lightred)
 nBody = mbs.AddNode(RigidRxyz(initialVelocities=[0,10,0, 2*pi*4,0,0]))
-oBody = mbs.AddObject(RigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], nodeNumber=nBody, 
+oBody = mbs.AddObject(RigidBody(mass=1, inertia=[1,1,1,0,0,0], nodeNumber=nBody, 
                                 visualization=VRigidBody(graphicsData=[graphicsBody])))
 
 mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))

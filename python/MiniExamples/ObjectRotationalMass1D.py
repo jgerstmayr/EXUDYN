@@ -23,7 +23,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 node = mbs.AddNode(Node1D(referenceCoordinates = [1], #\psi_0ref
                           initialCoordinates=[0.5],   #\psi_0ini
                           initialVelocities=[0.5]))   #\psi_t0ini
-rotor = mbs.AddObject(Rotor1D(nodeNumber = node, physicsInertia=1))
+rotor = mbs.AddObject(Rotor1D(nodeNumber = node, inertia=1))
 
 #assemble and solve system for default parameters
 mbs.Assemble()

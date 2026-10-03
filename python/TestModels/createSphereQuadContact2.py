@@ -97,7 +97,7 @@ for iPhi in range(nSpheres):
     oSSC = mbs.CreateSphereQuadContact(bodyNumbers=[oMass, oGround],
                                        quadPoints=quadPoints,
                                        includeEdges=15, #all edges
-                                       radiusSphere=radius,
+                                       sphereRadius=radius,
                                        contactStiffness = contactStiffness,
                                        contactDamping = contactDamping,
                                        dynamicFriction=dynamicFriction,
@@ -132,7 +132,7 @@ for oMass in listMasses:
     oSSC = mbs.CreateSphereQuadContact(bodyNumbers=[oMass,oBodyTop],
                                        quadPoints=quadPoints,
                                        includeEdges=15, #all edges
-                                       radiusSphere=radius*1,
+                                       sphereRadius=radius*1,
                                        contactStiffness = contactStiffness,
                                        contactDamping = contactDamping,
                                        dynamicFriction=dynamicFriction,

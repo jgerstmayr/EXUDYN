@@ -22,7 +22,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 #the value of a load, here of a load with a user function, which the load vector does not show
 node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
 mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
 def UFload(mbs, t, load):
     return load*np.cos(np.pi*t)

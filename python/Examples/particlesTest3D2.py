@@ -59,7 +59,7 @@ for pos in posList:
     #gDataList += [GraphicsDataRectangle(-1.2*H,-H,1.2*H,14*H,color=graphics.color.red)]#80000 particles
     nMass = mbs.AddNode(NodePointGround(referenceCoordinates=pos,
                         visualization=VNodePointGround(show=False)))
-    #oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass))
+    #oMass = mbs.AddObject(MassPoint(mass=m, nodeNumber=nMass))
     mThis = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
     markerList += [mThis]
     radiusList += [rb]
@@ -95,7 +95,7 @@ for i in range(n):
                                   initialVelocities=[0,-20,0],
                                   visualization=VNodePoint(show=True,drawSize=2*gRad, color=color4node)))
     
-    oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass,
+    oMass = mbs.AddObject(MassPoint(mass=m, nodeNumber=nMass,
                                     #visualization=VMassPoint(graphicsData=[gSphere,gSphere2])
                                     # visualization=VMassPoint(graphicsData=gData)
                                     ))

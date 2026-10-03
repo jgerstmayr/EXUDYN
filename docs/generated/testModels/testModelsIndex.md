@@ -93,6 +93,7 @@ emptySystemTest
 homogeneousTransformationParameterTest
 simulationSettingsDeprecationTest
 simulationSettingsRenamesTest
+itemParameterRenamesTest
 rotationMarkerDeprecationTest
 libraryDeprecationTest
 homogeneousTransformationInterfaceTest

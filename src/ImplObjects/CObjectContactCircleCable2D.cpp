@@ -234,7 +234,7 @@ void VisualizationObjectContactCircleCable2D::UpdateGraphics(const Visualization
 		Vector3D pContactLast; //previously computed point
 
 		Index objectNum = vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[1]]->GetObjectNumber();
-		Real lCable = ((const CObjectANCFCable2DBase*)vSystem->systemData->GetCObjects()[objectNum])->GetLength();//GetParameters().physicsLength;
+		Real lCable = ((const CObjectANCFCable2DBase*)vSystem->systemData->GetCObjects()[objectNum])->GetLength();//GetParameters().length;
 
 		//Vector3D contactForceLast;
 		for (Index i = 0; i <= nSeg; i++)

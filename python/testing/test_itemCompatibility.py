@@ -132,12 +132,12 @@ def _Assembles(build):
     nRigid = mbs.AddNode(ii.NodeRigidBody2D(referenceCoordinates=[0, 0, 0]))
     nPoint = mbs.AddNode(ii.NodePoint(referenceCoordinates=[0, 0, 0]))
     from exudyn.beams import GenerateStraightLineANCFCable2D, GenerateStraightLineANCFCable
-    bodies = {'ObjectRigidBody2D': mbs.AddObject(ii.ObjectRigidBody2D(nodeNumber=nRigid, physicsMass=1, physicsInertia=1)),
-              'ObjectMassPoint': mbs.AddObject(ii.ObjectMassPoint(nodeNumber=nPoint, physicsMass=1)),
+    bodies = {'ObjectRigidBody2D': mbs.AddObject(ii.ObjectRigidBody2D(nodeNumber=nRigid, mass=1, inertia=1)),
+              'ObjectMassPoint': mbs.AddObject(ii.ObjectMassPoint(nodeNumber=nPoint, mass=1)),
               'ObjectANCFCable2D': GenerateStraightLineANCFCable2D(mbs, [0, 0, 0], [1, 0, 0], 1,
-                  ii.ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=1, physicsAxialStiffness=1))[1][0],
+                  ii.ObjectANCFCable2D(massPerLength=1, bendingStiffness=1, axialStiffness=1))[1][0],
               'ObjectANCFCable': GenerateStraightLineANCFCable(mbs, [0, 0, 0], [1, 0, 0], 1,
-                  ii.ObjectANCFCable(physicsMassPerLength=1, physicsBendingStiffness=1, physicsAxialStiffness=1))[1][0],
+                  ii.ObjectANCFCable(massPerLength=1, bendingStiffness=1, axialStiffness=1))[1][0],
               'ObjectGround': mbs.AddObject(ii.ObjectGround())}
     try:
         build(mbs, bodies)

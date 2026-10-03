@@ -725,7 +725,7 @@ symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, load, 'loadUserFunction',v
 
 #add ground and mass point:
 oGround = mbs.CreateGround()
-oMassPoint = mbs.CreateMassPoint(referencePosition=[1.+0.05,0,0], physicsMass=1)
+oMassPoint = mbs.CreateMassPoint(referencePosition=[1.+0.05,0,0], mass=1)
 
 #add marker and load:
 mc = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.GetObject(oMassPoint)['nodeNumber'], coordinate=0))

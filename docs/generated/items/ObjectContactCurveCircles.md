@@ -103,7 +103,7 @@ enough that only one circle touches it at a time, which the connector warns abou
 ```python
 #a planar body with a circle of radius 0.1 resting on a curve of line segments (the ground line y=0)
 node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0.1,0]))
-body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=0.01))
+body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=1, inertia=0.01))
 mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=body)), loadVector=[0,-10,0]))
 mCurve = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 mCircle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))

@@ -45,7 +45,7 @@ graphics1 = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[-(L+Lo),-(L+Lo),0, 
 
 #add mass points and ground object:
 mbs.AddObject({'objectType': 'Ground', 'referencePosition': [0,0,0], 'VgraphicsData': [graphics1]})
-mbs.AddObject({'objectType': 'MassPoint', 'physicsMass': mass, 'nodeNumber': n1, 'VdrawSize':0.05*L}) 
+mbs.AddObject({'objectType': 'MassPoint', 'mass': mass, 'nodeNumber': n1, 'VdrawSize':0.05*L}) 
 
 #add markers (needed for connectors and loads):
 for i in range(nBodies): mbs.AddMarker({'markerType': 'BodyPosition',  'bodyNumber': i,  'localPosition': [0.0, 0.0, 0.0], 'bodyFixed': False})

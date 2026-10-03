@@ -41,10 +41,10 @@ for i in range(nCables):
         p1 = p0 - [2+np.random.rand()*0.25,0,0]
     
 
-    cable = ObjectANCFCable(physicsMassPerLength=rhoA, 
-                  physicsBendingStiffness=EI*(0.5+np.random.rand()*0.25), 
-                  physicsBendingDamping = EI,
-                  physicsAxialStiffness=EA, 
+    cable = ObjectANCFCable(massPerLength=rhoA, 
+                  bendingStiffness=EI*(0.5+np.random.rand()*0.25), 
+                  bendingDamping = EI,
+                  axialStiffness=EA, 
                   )
 
     ancf=GenerateStraightLineANCFCable(mbs=mbs,

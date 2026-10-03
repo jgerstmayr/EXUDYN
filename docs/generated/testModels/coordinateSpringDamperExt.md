@@ -56,9 +56,9 @@ dSticking = 0.01*kSticking
 frictionProportionalZone = 1e-3
 expVel = 0.2
 muFriction = 0.3
-fDynamicFriction = muFriction * (mass*g)
-fStaticFrictionOffset = 0.5*fDynamicFriction
-exu.Print('fMu=', fDynamicFriction)
+dynamicFrictionForce = muFriction * (mass*g)
+staticFrictionOffsetForce = 0.5*dynamicFrictionForce
+exu.Print('fMu=', dynamicFrictionForce)
 
 kLimits = 1e4
 dLimits = 0.001*kLimits
@@ -91,7 +91,7 @@ if useFrictionReg:
 
     #add mass points and ground object:
     gCube = graphics.Brick(size=[w,w,w], color=graphics.color.steelblue)
-    massPoint0 = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = nMass0, 
+    massPoint0 = mbs.AddObject(MassPoint(mass = mass, nodeNumber = nMass0, 
                                         visualization=VObjectMassPoint(graphicsData=[gCube])))
 
     node0CoordinateMarker0  = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass0, coordinate = 0))
@@ -99,7 +99,7 @@ if useFrictionReg:
     mbs.AddObject(CoordinateSpringDamperExt(markerNumbers = [groundCoordinateMarker0, node0CoordinateMarker0], 
                                          stiffness = stiffness, damping = damping,
                                          offset = 0, velocityOffset=0,
-                                         fDynamicFriction=fDynamicFriction, fStaticFrictionOffset=fStaticFrictionOffset,
+                                         dynamicFrictionForce=dynamicFrictionForce, staticFrictionOffsetForce=staticFrictionOffsetForce,
                                          frictionProportionalZone=frictionProportionalZone, exponentialDecayStatic=expVel,
                                          #springForceUserFunction = UFspring,
                                          visualization=VObjectConnectorCoordinateSpringDamperExt(show=True))) 
@@ -122,7 +122,7 @@ if useFrictionBristle:
 
     #add mass points and ground object:
     gCube = graphics.Brick(size=[w,w,w], color=graphics.color.steelblue)
-    massPoint0 = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = nMass0, 
+    massPoint0 = mbs.AddObject(MassPoint(mass = mass, nodeNumber = nMass0, 
                                         visualization=VObjectMassPoint(graphicsData=[gCube])))
 
     node0CoordinateMarker0  = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass0, coordinate = 0))
@@ -131,7 +131,7 @@ if useFrictionBristle:
     mbs.AddObject(CoordinateSpringDamperExt(markerNumbers = [groundCoordinateMarker0, node0CoordinateMarker0], nodeNumber=nGeneric,
                                          stiffness = stiffness, damping = damping,
                                          offset = 0, velocityOffset=0,
-                                         fDynamicFriction=fDynamicFriction, fStaticFrictionOffset=fStaticFrictionOffset,
+                                         dynamicFrictionForce=dynamicFrictionForce, staticFrictionOffsetForce=staticFrictionOffsetForce,
                                          stickingStiffness=kSticking, stickingDamping=dSticking, 
                                          frictionProportionalZone=0, exponentialDecayStatic=expVel,
                                          #springForceUserFunction = UFspring,
@@ -155,7 +155,7 @@ if useLimitStops:
 
     #add mass points and ground object:
     gCube = graphics.Brick(size=[w,w,w], color=graphics.color.steelblue)
-    massPoint1 = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = nMass1, 
+    massPoint1 = mbs.AddObject(MassPoint(mass = mass, nodeNumber = nMass1, 
                                         visualization=VObjectMassPoint(graphicsData=[gCube])))
 
     node1CoordinateMarker0  = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass1, coordinate = 0))
@@ -165,7 +165,7 @@ if useLimitStops:
                                          #stiffness = stiffness, damping = damping,
                                          limitStopsUpper=0.5*L-0.5*w, limitStopsLower=-(0.5*L-0.5*w), 
                                          limitStopsStiffness=kLimits,limitStopsDamping=dLimits,useLimitStops=True,
-                                         #fDynamicFriction=fDynamicFriction, fStaticFrictionOffset=0,
+                                         #dynamicFrictionForce=dynamicFrictionForce, staticFrictionOffsetForce=0,
                                          #frictionProportionalZone=frictionProportionalZone,
                                          #springForceUserFunction = UFspring,
                                          #stickingStiffness=kSticking, stickingDamping=dSticking,  #DELETE
@@ -198,10 +198,10 @@ if useGears: #show that also transmission / gear ratio works; test for limit sto
     gRotor0 += [graphics.Cylinder(pAxis=[0,0,-0.25*w],vAxis=[0,0,0.5*w], radius = rad0, color=graphics.color.orange, nTiles=32)]
     gRotor1 = [graphics.Brick(size=[3*0.5*w,3*0.5*w,w], color=graphics.color.grey)]
     gRotor1 += [graphics.Cylinder(pAxis=[0,0,-0.25*w],vAxis=[0,0,0.5*w], radius = rad1, color=graphics.color.dodgerblue, nTiles=32)]
-    gear0 = mbs.AddObject(Rotor1D(physicsInertia = 1, nodeNumber = nG0,
+    gear0 = mbs.AddObject(Rotor1D(inertia = 1, nodeNumber = nG0,
                                   referencePosition = [-rad0,-4*w,0],
                                   visualization=VRotor1D(graphicsData=gRotor0)))
-    gear1 = mbs.AddObject(Rotor1D(physicsInertia = 1, nodeNumber = nG1,
+    gear1 = mbs.AddObject(Rotor1D(inertia = 1, nodeNumber = nG1,
                                   referencePosition = [ rad1,-4*w,0],
                                   visualization=VRotor1D(graphicsData=gRotor1)))
 

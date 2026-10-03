@@ -42,7 +42,7 @@ oGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0],
 graphicsSphere = graphics.Sphere(point=[0,0,0], radius=r, color=graphics.color.steelblue, nTiles = 16)
 
 nR0 = mbs.AddNode(Point2D(referenceCoordinates=[L,0]))
-oR0 = mbs.AddObject(MassPoint2D(nodeNumber=nR0, physicsMass=mass, visualization=VMassPoint2D(graphicsData=[graphicsSphere])))
+oR0 = mbs.AddObject(MassPoint2D(nodeNumber=nR0, mass=mass, visualization=VMassPoint2D(graphicsData=[graphicsSphere])))
 
 mGround0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition = [0,0,0]))
 mTip0 = mbs.AddMarker(MarkerNodePosition(nodeNumber=nR0))
@@ -93,7 +93,7 @@ sPos0 = mbs.AddSensor(SensorNode(nodeNumber = nR0, storeInternal = True,
 if doublePendulum:
     graphicsSphere = graphics.Sphere(point=[0,0,0], radius=r, color=graphics.color.red, nTiles = 16)
     nR1 = mbs.AddNode(Point2D(referenceCoordinates=[L*2,0]))
-    oR1 = mbs.AddObject(MassPoint2D(nodeNumber=nR1, physicsMass=mass, visualization=VMassPoint2D(graphicsData=[graphicsSphere])))
+    oR1 = mbs.AddObject(MassPoint2D(nodeNumber=nR1, mass=mass, visualization=VMassPoint2D(graphicsData=[graphicsSphere])))
     
     mTip1 = mbs.AddMarker(MarkerNodePosition(nodeNumber=nR1))
 

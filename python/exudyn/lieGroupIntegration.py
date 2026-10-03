@@ -146,8 +146,8 @@ def LieGroupExplicitRKInitialize(mainSys):
     for i in range(nObjects):
         d = mainSys.GetObject(i)
         if d['objectType'] == 'ConnectorCoordinate':
-            if d['factorValue1'] != 1.: 
-                exu.Print('ConnectorCoordinate.factorValue1 must be 1., otherwise connector constraint cannot be resolved!') #2488
+            if d['factor1'] != 1.: 
+                exu.Print('ConnectorCoordinate.factor1 must be 1., otherwise connector constraint cannot be resolved!') #2488
             elif d['offset'] != 0.: 
                 exu.Print('ConnectorCoordinate.offset must be 0., otherwise connector constraint cannot be resolved!') #2488
             elif d['activeConnector']: #constrain only if connector is active!

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-23  20:10:38 (last modified)
+* @date         2026-10-03  18:08:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,13 +112,14 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        if (EPyUtils::DictItemExists(d, "physicsMass")) { EPyUtils::FromPython(d["physicsMass"], cObjectMass1D->GetParameters().physicsMass, EPyUtils::RangeCheck::nonNegative, "ObjectMass1D.physicsMass"); }
+        if (EPyUtils::DictItemExists(d, "mass")) { EPyUtils::FromPython(d["mass"], cObjectMass1D->GetParameters().mass, EPyUtils::RangeCheck::nonNegative, "ObjectMass1D.mass"); }
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectMass1D->GetParameters().nodeNumber); }
         if (EPyUtils::DictItemExists(d, "referencePosition")) { EPyUtils::FromPython(d["referencePosition"], cObjectMass1D->GetParameters().referencePosition); }
         if (EPyUtils::DictItemExists(d, "referenceRotation")) { EPyUtils::FromPython<Real, 3, 3>(d["referenceRotation"], cObjectMass1D->GetParameters().referenceRotation); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectMass1D->GetShow(), "ObjectMass1D.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsDataList(d, "VgraphicsData", visualizationObjectMass1D->GetGraphicsData()); }
+        if (EPyUtils::DictItemExists(d, "physicsMass") && !d["physicsMass"].is_none()) { PyDeprecated("items", "ObjectMass1D.physicsMass", "ObjectMass1D: the parameter physicsMass is deprecated since 1.12.258 and removed in 2031; use mass"); EPyUtils::FromPython(d["physicsMass"], cObjectMass1D->GetParameters().mass, EPyUtils::RangeCheck::nonNegative, "ObjectMass1D.physicsMass"); } //! AUTO: deprecated, forwards to mass
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -127,7 +128,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["physicsMass"] = (Real)cObjectMass1D->GetParameters().physicsMass;
+        d["mass"] = (Real)cObjectMass1D->GetParameters().mass;
         d["nodeNumber"] = (NodeIndex)cObjectMass1D->GetParameters().nodeNumber;
         d["referencePosition"] = EPyUtils::ToPython(cObjectMass1D->GetParameters().referencePosition);
         d["referenceRotation"] = EPyUtils::ToPython(cObjectMass1D->GetParameters().referenceRotation);
@@ -141,12 +142,13 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectMass1D->GetParameters().physicsMass); } //! AUTO: get parameter
+        else if (parameterName.compare("mass") == 0) { return py::cast((Real)cObjectMass1D->GetParameters().mass); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectMass1D->GetParameters().nodeNumber); } //! AUTO: get parameter
         else if (parameterName.compare("referencePosition") == 0) { return EPyUtils::ToPython(cObjectMass1D->GetParameters().referencePosition); } //! AUTO: get parameter
         else if (parameterName.compare("referenceRotation") == 0) { return EPyUtils::ToPython(cObjectMass1D->GetParameters().referenceRotation); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectMass1D->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsData") == 0) { return PyGetBodyGraphicsDataList(visualizationObjectMass1D->GetGraphicsData(), true); } //! AUTO: get parameter
+        else if (parameterName.compare("physicsMass") == 0) { PyDeprecated("items", "ObjectMass1D.physicsMass", "ObjectMass1D: the parameter physicsMass is deprecated since 1.12.258 and removed in 2031; use mass"); return py::cast((Real)cObjectMass1D->GetParameters().mass); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectMass1D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -156,12 +158,13 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsMass") == 0) { EPyUtils::FromPython(value, cObjectMass1D->GetParameters().physicsMass, EPyUtils::RangeCheck::nonNegative, "ObjectMass1D.physicsMass"); } //! AUTO: set parameter
+        else if (parameterName.compare("mass") == 0) { EPyUtils::FromPython(value, cObjectMass1D->GetParameters().mass, EPyUtils::RangeCheck::nonNegative, "ObjectMass1D.mass"); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectMass1D->GetParameters().nodeNumber); } //! AUTO: set parameter
         else if (parameterName.compare("referencePosition") == 0) { EPyUtils::FromPython(value, cObjectMass1D->GetParameters().referencePosition); } //! AUTO: set parameter
         else if (parameterName.compare("referenceRotation") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectMass1D->GetParameters().referenceRotation); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectMass1D->GetShow(), "ObjectMass1D.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("VgraphicsData") == 0) { PyWriteBodyGraphicsDataList(value, visualizationObjectMass1D->GetGraphicsData()); } //! AUTO: set parameter
+        else if (parameterName.compare("physicsMass") == 0) { PyDeprecated("items", "ObjectMass1D.physicsMass", "ObjectMass1D: the parameter physicsMass is deprecated since 1.12.258 and removed in 2031; use mass"); EPyUtils::FromPython(value, cObjectMass1D->GetParameters().mass, EPyUtils::RangeCheck::nonNegative, "ObjectMass1D.physicsMass"); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectMass1D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

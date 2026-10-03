@@ -47,13 +47,13 @@ for nBodies in nBodiesList:
         for i in range(nBodies):
             n = mbs.AddNode(RigidEP(referenceCoordinates=[0.1*i,0,0]+list(eulerParameters0), 
                                     initialVelocities=[0,0,0]+ ep_t0))
-            o = mbs.AddObject(RigidBody(physicsMass=m, physicsInertia=J, nodeNumber=n, 
+            o = mbs.AddObject(RigidBody(mass=m, inertia=J, nodeNumber=n, 
                                         visualization=VObjectRigidBody(graphicsData=[gBody])))
     else:
         for i in range(nBodies):
             n = mbs.AddNode(RigidRxyz(referenceCoordinates=[0.1*i,0,0]+[0]*3, 
                                     initialVelocities=[0,0,0]+ omega0))
-            o = mbs.AddObject(RigidBody(physicsMass=m, physicsInertia=J, nodeNumber=n, 
+            o = mbs.AddObject(RigidBody(mass=m, inertia=J, nodeNumber=n, 
                                         visualization=VObjectRigidBody(graphicsData=[gBody])))
 
     mbs.Assemble()

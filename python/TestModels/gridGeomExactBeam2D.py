@@ -67,12 +67,12 @@ for j in range(nY):
         n0 = nodeIndices[i, j]
         n1 = nodeIndices[i+1, j]
         oGeneric = mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers = [n0,n1], 
-                                                                physicsLength=lElem,
-                                                                physicsMassPerLength=rhoA,
-                                                                physicsCrossSectionInertia=rhoI,
-                                                                physicsBendingStiffness=EI,
-                                                                physicsAxialStiffness=EA,
-                                                                physicsShearStiffness=GA,
+                                                                length=lElem,
+                                                                massPerLength=rhoA,
+                                                                crossSectionInertia=rhoI,
+                                                                bendingStiffness=EI,
+                                                                axialStiffness=EA,
+                                                                shearStiffness=GA,
                                                                 includeReferenceRotations=False,
                                                                 visualization=VObjectBeamGeometricallyExact2D(drawHeight = h)
                                                     ))
@@ -83,12 +83,12 @@ for j in range(nY-1):
         n0 = nodeIndices[(i+1)*4-1, j]
         n1 = nodeIndices[(i+1)*4-1, j+1]
         mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers = [n0,n1], 
-                                                     physicsLength=lElemY,
-                                                     physicsMassPerLength=rhoA,
-                                                     physicsCrossSectionInertia=rhoI,
-                                                     physicsBendingStiffness=EI,
-                                                     physicsAxialStiffness=EA,
-                                                     physicsShearStiffness=GA,
+                                                     length=lElemY,
+                                                     massPerLength=rhoA,
+                                                     crossSectionInertia=rhoI,
+                                                     bendingStiffness=EI,
+                                                     axialStiffness=EA,
+                                                     shearStiffness=GA,
                                                      includeReferenceRotations=False,
                                                      visualization=VObjectBeamGeometricallyExact2D(drawHeight = h) ))
         

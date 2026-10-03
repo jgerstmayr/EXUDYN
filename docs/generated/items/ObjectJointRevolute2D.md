@@ -75,7 +75,7 @@ position on the velocity level.
 ```python
 #a planar rigid body pendulum held at its end by a planar revolute joint
 node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0,0]))
-body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=1/12))
+body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=1, inertia=1/12))
 mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=body)), loadVector=[0,-9.81,0]))
 mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
 mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[-0.5,0,0]))

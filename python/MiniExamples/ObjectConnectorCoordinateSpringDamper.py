@@ -26,7 +26,7 @@ def springForce(mbs, t, itemNumber, u, v, k, d, offset):
     return 0.1*k*u+k*u**3+v*d
 
 nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
-massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+massPoint = mbs.AddObject(MassPoint(mass = 5, nodeNumber = nMass))
 
 groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
 nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))

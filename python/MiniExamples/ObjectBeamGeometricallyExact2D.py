@@ -29,9 +29,9 @@ for i in range(3): #clamped: x, y, rotation
                   mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))]))
 for k in range(nElements):
     n1 = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[L*(k+1)/nElements,0,0]))
-    mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[n0,n1], physicsLength=L/nElements,
-                  physicsMassPerLength=1, physicsCrossSectionInertia=0.01, physicsBendingStiffness=EI,
-                  physicsAxialStiffness=1e5, physicsShearStiffness=GA))
+    mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[n0,n1], length=L/nElements,
+                  massPerLength=1, crossSectionInertia=0.01, bendingStiffness=EI,
+                  axialStiffness=1e5, shearStiffness=GA))
     n0 = n1
 mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n1)), loadVector=[0,F,0]))
 

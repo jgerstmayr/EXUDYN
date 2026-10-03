@@ -35,8 +35,8 @@ public:
 	virtual Real GetMassPerLength() const { CHECKandTHROWcond(false); return 0; }
 
 	//! access function to parameters; must be overwritten
-	virtual void GetMaterialParameters(Real& physicsBendingStiffness, Real& physicsAxialStiffness, Real& physicsBendingDamping, Real& physicsAxialDamping,
-		Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature, Real& physicsMovingMassFactor) const {
+	virtual void GetMaterialParameters(Real& bendingStiffness, Real& axialStiffness, Real& bendingDamping, Real& axialDamping,
+		Real& referenceAxialStrain, Real& referenceCurvature, Real& movingMassFactor) const {
 		CHECKandTHROWcond(false); }
 
 	//! access to parameters.useReducedOrderIntegration of derived class
@@ -241,17 +241,17 @@ public:
 	Vector2D ComputeSlopeVector_xt(Real x, ConfigurationType configuration) const;
 
 	//!  compute time derivative of the axial strain at a certain axial position, for given configuration
-	Real ComputeAxialStrain_t(Real x, bool isALE, Real physicsMovingMassFactor, ConfigurationType configuration) const;
+	Real ComputeAxialStrain_t(Real x, bool isALE, Real movingMassFactor, ConfigurationType configuration) const;
 
 	//!  compute time derivative of the (bending) curvature at a certain axial position, for given configuration
-	Real ComputeCurvature_t(Real x, bool isALE, Real physicsMovingMassFactor, ConfigurationType configuration) const;
+	Real ComputeCurvature_t(Real x, bool isALE, Real movingMassFactor, ConfigurationType configuration) const;
 
 	//! compute local force for user function; axialPositionNormalized is in unit coordinates [0, 1]
 	Real ComputeAxialForceLocalUserFunction(Real axialPositionNormalized, Real axialStrain, Real axialStrain_t, Real axialStrain0, 
-		Real physicsAxialStiffness, Real axialDamping,
+		Real axialStiffness, Real axialDamping,
 		Real curvature, Real curvature_t, Real curvature0, Index itemIndex, ConfigurationType configuration = ConfigurationType::Current) const;
 	//! compute local torque for user function; axialPositionNormalized is in unit coordinates [0, 1]
-	Real ComputeBendingMomentLocalUserFunction(Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real physicsBendingStiffness, Real bendingDamping,
+	Real ComputeBendingMomentLocalUserFunction(Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real bendingStiffness, Real bendingDamping,
 		Real axialStrain, Real axialStrain_t, Real axialStrainRef, Index itemIndex, ConfigurationType configuration = ConfigurationType::Current) const;
 };
 

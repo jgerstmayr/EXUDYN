@@ -26,7 +26,7 @@ mbs = SC.AddSystem()
 graphicsGround = graphics.CheckerBoard(point=[0,2,-1], size=8)
 oGround = mbs.CreateGround(referencePosition=[0,0,0], graphicsDataList=[graphicsGround])
 
-oMass = mbs.CreateMassPoint(physicsMass=5, referencePosition=[1,0,0], 
+oMass = mbs.CreateMassPoint(mass=5, referencePosition=[1,0,0], 
                             initialDisplacement=[0,0,0],
                             initialVelocity=[0,0.5,0],
                             gravity=[0,-9.81,0],
@@ -103,7 +103,7 @@ mbs.CreateTorque(bodyNumber=oBody, loadVector=[5,0,0],
 inertiaSphere = InertiaSphere(mass=2, radius=0.25)
 gSphere = inertiaSphere.GetGraphics(graphics.color.red)
 
-oMass1 = mbs.CreateMassPoint(physicsMass=2, referencePosition=[1,0,0],
+oMass1 = mbs.CreateMassPoint(mass=2, referencePosition=[1,0,0],
                              gravity=[0,-9.81,0],
                              # drawSize=0.25, color=graphics.color.red,
                              graphicsDataList=[gSphere]
@@ -117,7 +117,7 @@ mbs.CreateSphericalJoint(bodyNumbers=[oGround, oMass1],
 #constrain Y and Z coordinate of mass point to move z=10*y
 mbs.CreateCoordinateConstraint(bodyNumbers=[oMass1, oMass1], 
                                coordinates=[2,1],
-                               factorValue1=10)
+                               factor1=10)
 
 mbs.CreatePrismaticJoint(bodyNumbers=[oGround, oBody], 
                          position=[3,0,0], #global position of joint

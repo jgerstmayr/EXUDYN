@@ -40,7 +40,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeSensor,
     miniExample=r"""    #the position of a node, stored during the simulation
     node = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0], initialVelocities=[1,0,0]))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
     sNode = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=exu.OutputVariableType.Position,
                                      storeInternal=True, writeToFile=False))
 
@@ -131,7 +131,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeSensor,
     miniExample=r"""    #the force in a spring-damper, measured at the object
     node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
     mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
     mFixed = mbs.AddMarker(MarkerNodePosition(nodeNumber=nGround))
     oSpring = mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[mFixed, mNode], stiffness=100, referenceLength=1))
@@ -228,7 +228,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeSensor,
     miniExample=r"""    #a point of a body given by its local position: a planar rigid body spinning about its center
     node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0.2,0], initialVelocities=[0,0,0.5*np.pi]))
-    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=0.1))
+    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=1, inertia=0.1))
     sPoint = mbs.AddSensor(SensorBody(bodyNumber=body, localPosition=[0.5,0,0],
                                       outputVariableType=exu.OutputVariableType.Position,
                                       storeInternal=True, writeToFile=False))
@@ -246,7 +246,7 @@ definitions.append(ItemDefinition(
     The body `bodyNumber`, at the point `localPosition` $\pLocB$. The local position is given in the
     body frame and measured from the **reference point** of the body - the position of its node, which
     is `referencePosition` in `CreateRigidBody`. The center of mass of an `ObjectRigidBody` lies at
-    `physicsCenterOfMass` from it, so a sensor at the center of mass has that local position.
+    `centerOfMass` from it, so a sensor at the center of mass has that local position.
 
     #### Measures
 
@@ -548,7 +548,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeSensor,
     miniExample=r"""    #what a marker provides, here the velocity of a point of a body
     node = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0], initialVelocities=[0,2,0]))
-    body = mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+    body = mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
     mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[0,0,0]))
     mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[0,-1,0]))
     sVelocity = mbs.AddSensor(SensorMarker(markerNumber=mBody, outputVariableType=exu.OutputVariableType.Velocity,
@@ -647,7 +647,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeSensor,
     miniExample=r"""    #the value of a load, here of a load with a user function, which the load vector does not show
     node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
     mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
     def UFload(mbs, t, load):
         return load*np.cos(np.pi*t)
@@ -756,8 +756,8 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #a value computed from other sensors: the distance between two mass points
     nA = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0], initialVelocities=[-1,0,0]))
     nB = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0], initialVelocities=[0,1,0]))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=nA, physicsMass=1))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=nB, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nA, mass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nB, mass=1))
     sA = mbs.AddSensor(SensorNode(nodeNumber=nA, outputVariableType=exu.OutputVariableType.Position, writeToFile=False))
     sB = mbs.AddSensor(SensorNode(nodeNumber=nB, outputVariableType=exu.OutputVariableType.Position, writeToFile=False))
     def UFdistance(mbs, t, sensorNumbers, factors, configuration):
@@ -818,7 +818,7 @@ mbs = SC.AddSystem()
 node = mbs.AddNode(NodePoint(referenceCoordinates = [1,1,0], 
                              initialCoordinates=[0,0,0],
                              initialVelocities=[0,-1,0]))
-mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+mbs.AddObject(MassPoint(nodeNumber = node, mass=1))
 
 sNode = mbs.AddSensor(SensorNode(nodeNumber=node, fileName='solution/sensorTest.txt',
                       outputVariableType=exu.OutputVariableType.Position))

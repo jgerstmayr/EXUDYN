@@ -287,7 +287,7 @@ objectFunctions = [
     ItemFunctionLib(classType='Object', pythonName='AddALEvariation',
         type=Tbool, destination=DestComp,
         cFlags=CFConst,
-        description='access to physicsAddALEvariation'),
+        description='access to addALEvariation'),
 
     ItemFunctionLib(classType='Object', pythonName='CallUserFunction',
         type=Tvoid, destination=DestVisu,
@@ -411,7 +411,7 @@ objectFunctions = [
     ItemFunctionLib(classType='Object', pythonName='GetMaterialParameters',
         type=Tvoid, destination=DestComp,
         cFlags=CFConst,
-        args='Real& physicsBendingStiffness, Real& physicsAxialStiffness, Real& physicsBendingDamping, Real& physicsAxialDamping, Real& physicsReferenceAxialStrain, Real& physicsReferenceCurvature, Real& physicsMovingMassFactor',
+        args='Real& bendingStiffness, Real& axialStiffness, Real& bendingDamping, Real& axialDamping, Real& referenceAxialStrain, Real& referenceCurvature, Real& movingMassFactor',
         description='access to individual element paramters for base class functions'),
 
     ItemFunctionLib(classType='Object', pythonName='GetMeshNode',

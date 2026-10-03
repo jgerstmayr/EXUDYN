@@ -51,10 +51,10 @@ mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #generate ANCF beams with utilities function
-cableTemplate = Cable2D(#physicsLength = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
-                        physicsMassPerLength = rho*A,
-                        physicsBendingStiffness = E*I,
-                        physicsAxialStiffness = E*A,
+cableTemplate = Cable2D(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+                        massPerLength = rho*A,
+                        bendingStiffness = E*I,
+                        axialStiffness = E*A,
                         useReducedOrderIntegration = 1,
                         #nodeNumbers = [0, 0], #will be filled in GenerateStraightLineANCFCable2D(...)
                         )

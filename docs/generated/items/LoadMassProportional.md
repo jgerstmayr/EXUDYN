@@ -80,7 +80,7 @@ Example of user function: functionality same as in `LoadForceVector`
 
 ```python
 node = mbs.AddNode(NodePoint(referenceCoordinates = [1,0,0]))
-body = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=2))
+body = mbs.AddObject(MassPoint(nodeNumber = node, mass=2))
 mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
 mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,0,-9.81]))
 

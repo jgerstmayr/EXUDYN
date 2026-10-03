@@ -25,8 +25,8 @@ void CObjectALEANCFCable2D::PreComputeMassTerms() const
 	const int ns = 4; //number of shape functions
 	CObjectANCFCable2DBase::PreComputeMassTerms(); //compute massMatrix, but only in first step
 
-	Real L = GetParameters().physicsLength;
-	Real rhoAmoving = GetParameters().physicsMassPerLength * GetParameters().physicsMovingMassFactor; //take only moving part here!
+	Real L = GetParameters().length;
+	Real rhoAmoving = GetParameters().massPerLength * GetParameters().movingMassFactor; //take only moving part here!
 
 	if (!massTermsALEComputed)
 	{
@@ -99,8 +99,8 @@ void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatr
 	//	//==>moves result into 'precomputedMassMatrix'
 	//}
 
-	Real L = GetParameters().physicsLength;
-	Real rhoAmoving = GetParameters().physicsMassPerLength * GetParameters().physicsMovingMassFactor; //take only moving part here!
+	Real L = GetParameters().length;
+	Real rhoAmoving = GetParameters().massPerLength * GetParameters().movingMassFactor; //take only moving part here!
 
 	//compute ALE mass terms:
 	//++++++++++++++++++++++++++++++
@@ -119,7 +119,7 @@ void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatr
 	//pout << "mq=" << mq << "\n";
 
 	//fill in Term m and m^T into last row/last column of mass matrix:
-	if (parameters.physicsUseCouplingTerms)
+	if (parameters.useCouplingTerms)
 	{
 		for (Index i = 0; i < 2 * ns; i++)
 		{
@@ -140,7 +140,7 @@ void CObjectALEANCFCable2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatr
 	//++++++++++++++++++++++++++++++
 	//Term \mu:
 	EXUmath::MultMatrixVector(preComputedM2, qANCF, mq); //M''*q
-	//this term is approximately the mass of the cable parameters.physicsLength*parameters.physicsMassPerLength:
+	//this term is approximately the mass of the cable parameters.length*parameters.massPerLength:
 	massMatrix(nODE2coordinates, nODE2coordinates) = qANCF * mq; //mu = q^T*M''*q; check if this does any Vector conversion
 	//approximation ...:
 	massMatrix(nODE2coordinates, nODE2coordinates) = rhoAmoving * L;
@@ -225,7 +225,7 @@ void CObjectALEANCFCable2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) 
 //! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
 void CObjectALEANCFCable2D::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
 {
-	Real L = GetParameters().physicsLength;
+	Real L = GetParameters().length;
 
 	//const Index dim = 2;  //2D finite element
 	//const Index ns = 4;   //number of shape functions
@@ -306,7 +306,7 @@ void CObjectALEANCFCable2D::GetPositionJacobian(const Vector3D& localPosition, M
 //! the rotation Jacobian d(omega)/d(q_t), omega global, 3 x n (#2744)
 void CObjectALEANCFCable2D::GetRotationJacobian(const Vector3D& localPosition, Matrix& value) const
 {
-	Real L = GetParameters().physicsLength;
+	Real L = GetParameters().length;
 
 	//const Index dim = 2;  //2D finite element
 	const Index ns = 4;   //number of shape functions
@@ -338,8 +338,8 @@ void CObjectALEANCFCable2D::GetMassWeightedPositionJacobian(Matrix& value) const
 	value.SetNumberOfRowsAndColumns(3, 8 + CObjectALEANCFCable2D_USE_ALE_MASSTERM); //3D velocity, 8 coordinates qt
 	value.SetAll(0.);
 
-	Real L = GetParameters().physicsLength;
-	Real rhoA = GetParameters().physicsMassPerLength;
+	Real L = GetParameters().length;
+	Real rhoA = GetParameters().massPerLength;
 
 	Index cnt = 0;
 	Real a = 0; //integration interval [a,b]

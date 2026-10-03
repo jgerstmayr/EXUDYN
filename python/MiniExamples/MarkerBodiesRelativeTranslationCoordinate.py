@@ -23,8 +23,8 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 #the translation of body 1 relative to body 0 along an axis of body 0, held by a coordinate constraint
 inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
 node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0]))
-body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                     physicsInertia=inertia.GetInertia6D()))
+body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                     inertia=inertia.GetInertia6D()))
 mRel = mbs.AddMarker(MarkerBodiesRelativeTranslationCoordinate(bodyNumbers=[oGround, body], axis0=[1,0,0]))
 mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mRel], offset=0.3))

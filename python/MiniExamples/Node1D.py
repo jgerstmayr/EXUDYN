@@ -22,7 +22,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 #one coordinate, here the displacement of a 1D mass, pulled by a constant force
 node = mbs.AddNode(Node1D(referenceCoordinates=[0], initialVelocities=[1]))
-mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=2))
+mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=2))
 mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
 mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=4))
 

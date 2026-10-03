@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-03  18:09:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -108,7 +108,7 @@ public: // AUTO:
     {
         if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectConnectorCoordinate->GetParameters().markerNumbers); }
         if (EPyUtils::DictItemExists(d, "offset")) { EPyUtils::FromPython(d["offset"], cObjectConnectorCoordinate->GetParameters().offset, "ObjectConnectorCoordinate.offset"); }
-        if (EPyUtils::DictItemExists(d, "factorValue1")) { EPyUtils::FromPython(d["factorValue1"], cObjectConnectorCoordinate->GetParameters().factorValue1, "ObjectConnectorCoordinate.factorValue1"); }
+        if (EPyUtils::DictItemExists(d, "factor1")) { EPyUtils::FromPython(d["factor1"], cObjectConnectorCoordinate->GetParameters().factor1, "ObjectConnectorCoordinate.factor1"); }
         if (EPyUtils::DictItemExists(d, "velocityLevel")) { EPyUtils::FromPython(d["velocityLevel"], cObjectConnectorCoordinate->GetParameters().velocityLevel, "ObjectConnectorCoordinate.velocityLevel"); }
         if (EPyUtils::DictItemExists(d, "offsetUserFunction")) { cObjectConnectorCoordinate->GetParameters().offsetUserFunction = d["offsetUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "offsetUserFunction_t")) { cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t = d["offsetUserFunction_t"]; }
@@ -117,6 +117,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorCoordinate->GetShow(), "ObjectConnectorCoordinate.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectConnectorCoordinate->GetDrawSize(), "ObjectConnectorCoordinate.VdrawSize"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorCoordinate->GetColor(), "ObjectConnectorCoordinate.Vcolor"); }
+        if (EPyUtils::DictItemExists(d, "factorValue1") && !d["factorValue1"].is_none()) { PyDeprecated("items", "ObjectConnectorCoordinate.factorValue1", "ObjectConnectorCoordinate: the parameter factorValue1 is deprecated since 1.12.258 and removed in 2031; use factor1"); EPyUtils::FromPython(d["factorValue1"], cObjectConnectorCoordinate->GetParameters().factor1, "ObjectConnectorCoordinate.factorValue1"); } //! AUTO: deprecated, forwards to factor1
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -127,7 +128,7 @@ public: // AUTO:
         d["objectType"] = (std::string)GetTypeName();
         d["markerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectConnectorCoordinate->GetParameters().markerNumbers);
         d["offset"] = (Real)cObjectConnectorCoordinate->GetParameters().offset;
-        d["factorValue1"] = (Real)cObjectConnectorCoordinate->GetParameters().factorValue1;
+        d["factor1"] = (Real)cObjectConnectorCoordinate->GetParameters().factor1;
         d["velocityLevel"] = (bool)cObjectConnectorCoordinate->GetParameters().velocityLevel;
         d["offsetUserFunction"] = (py::object)cObjectConnectorCoordinate->GetParameters().offsetUserFunction;
         d["offsetUserFunction_t"] = (py::object)cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t;
@@ -145,7 +146,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectConnectorCoordinate->GetParameters().markerNumbers)); } //! AUTO: get parameter
         else if (parameterName.compare("offset") == 0) { return py::cast((Real)cObjectConnectorCoordinate->GetParameters().offset); } //! AUTO: get parameter
-        else if (parameterName.compare("factorValue1") == 0) { return py::cast((Real)cObjectConnectorCoordinate->GetParameters().factorValue1); } //! AUTO: get parameter
+        else if (parameterName.compare("factor1") == 0) { return py::cast((Real)cObjectConnectorCoordinate->GetParameters().factor1); } //! AUTO: get parameter
         else if (parameterName.compare("velocityLevel") == 0) { return py::cast((bool)cObjectConnectorCoordinate->GetParameters().velocityLevel); } //! AUTO: get parameter
         else if (parameterName.compare("offsetUserFunction") == 0) { return cObjectConnectorCoordinate->GetParameters().offsetUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("offsetUserFunction_t") == 0) { return cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t.GetPythonDictionary(); } //! AUTO: get parameter
@@ -153,6 +154,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorCoordinate->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectConnectorCoordinate->GetDrawSize()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectConnectorCoordinate->GetColor())); } //! AUTO: get parameter
+        else if (parameterName.compare("factorValue1") == 0) { PyDeprecated("items", "ObjectConnectorCoordinate.factorValue1", "ObjectConnectorCoordinate: the parameter factorValue1 is deprecated since 1.12.258 and removed in 2031; use factor1"); return py::cast((Real)cObjectConnectorCoordinate->GetParameters().factor1); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectConnectorCoordinate::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -164,7 +166,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectConnectorCoordinate->GetParameters().markerNumbers); } //! AUTO: set parameter
         else if (parameterName.compare("offset") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinate->GetParameters().offset, "ObjectConnectorCoordinate.offset"); } //! AUTO: set parameter
-        else if (parameterName.compare("factorValue1") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinate->GetParameters().factorValue1, "ObjectConnectorCoordinate.factorValue1"); } //! AUTO: set parameter
+        else if (parameterName.compare("factor1") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinate->GetParameters().factor1, "ObjectConnectorCoordinate.factor1"); } //! AUTO: set parameter
         else if (parameterName.compare("velocityLevel") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinate->GetParameters().velocityLevel, "ObjectConnectorCoordinate.velocityLevel"); } //! AUTO: set parameter
         else if (parameterName.compare("offsetUserFunction") == 0) { cObjectConnectorCoordinate->GetParameters().offsetUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("offsetUserFunction_t") == 0) { cObjectConnectorCoordinate->GetParameters().offsetUserFunction_t = value; } //! AUTO: set parameter
@@ -172,6 +174,7 @@ public: // AUTO:
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorCoordinate->GetShow(), "ObjectConnectorCoordinate.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorCoordinate->GetDrawSize(), "ObjectConnectorCoordinate.VdrawSize"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorCoordinate->GetColor(), "ObjectConnectorCoordinate.Vcolor"); } //! AUTO: set parameter
+        else if (parameterName.compare("factorValue1") == 0) { PyDeprecated("items", "ObjectConnectorCoordinate.factorValue1", "ObjectConnectorCoordinate: the parameter factorValue1 is deprecated since 1.12.258 and removed in 2031; use factor1"); EPyUtils::FromPython(value, cObjectConnectorCoordinate->GetParameters().factor1, "ObjectConnectorCoordinate.factorValue1"); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectConnectorCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

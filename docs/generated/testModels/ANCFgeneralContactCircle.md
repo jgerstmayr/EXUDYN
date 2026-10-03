@@ -89,13 +89,13 @@ preStretch=-0.002
 # nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0])) #ground node for coordinate constraint
 # mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGround, coordinate=0)) #Ground node ==> no action
 
-cableTemplate = Cable2D(#physicsLength = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
-                        physicsMassPerLength = rhoBeam*A,
-                        physicsBendingStiffness = E*I,
-                        physicsAxialStiffness = E*A,
-                        physicsBendingDamping = dEI,
-                        physicsAxialDamping = dEA,
-                        physicsReferenceAxialStrain = preStretch, #prestretch
+cableTemplate = Cable2D(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+                        massPerLength = rhoBeam*A,
+                        bendingStiffness = E*I,
+                        axialStiffness = E*A,
+                        bendingDamping = dEI,
+                        axialDamping = dEA,
+                        referenceAxialStrain = preStretch, #prestretch
                         #nodeNumbers = [0, 0], #will be filled in GenerateStraightLineANCFCable2D(...)
                         visualization=VCable2D(drawHeight=2*h),
                         )
@@ -191,7 +191,7 @@ if useContact:
 
         nMass = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=pRef, initialVelocities=v0,
                                             visualization=VNodeRigidBody2D(drawSize=dimZ*2)))
-        oMass = mbs.AddObject(ObjectRigidBody2D(physicsMass=RBinertia.mass, physicsInertia=RBinertia.GetInertia6D()[2],
+        oMass = mbs.AddObject(ObjectRigidBody2D(mass=RBinertia.mass, inertia=RBinertia.GetInertia6D()[2],
                                                 nodeNumber=nMass, visualization=
                                                 VObjectRigidBody2D(graphicsData=gList)))
         mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nMass))

@@ -55,20 +55,20 @@ graphics1 = graphics.Lines([[-a1,-b1,0], [a1,-b1,0], [a1,b1,0], [-a1,b1,0], [-a1
 
 nRigid0 = mbs.AddNode(Rigid2D(referenceCoordinates=[a0,0,0], 
                               initialVelocities=[0,0,0]));
-oRigid0 = mbs.AddObject(RigidBody2D(physicsMass=massRigid0, 
-                                    physicsInertia=inertiaRigid0,
+oRigid0 = mbs.AddObject(RigidBody2D(mass=massRigid0, 
+                                    inertia=inertiaRigid0,
                                     nodeNumber=nRigid0,
                                     visualization=VObjectRigidBody2D(graphicsData= [graphics0])))
 
 nRigid1 = mbs.AddNode(Rigid2D(referenceCoordinates=[2*a0+a1,0,0], initialVelocities=[0,0,0]));
-oRigid1 = mbs.AddObject(RigidBody2D(physicsMass=massRigid1, physicsInertia=inertiaRigid1,nodeNumber=nRigid1,visualization=VObjectRigidBody2D(graphicsData= [graphics1])))
+oRigid1 = mbs.AddObject(RigidBody2D(mass=massRigid1, inertia=inertiaRigid1,nodeNumber=nRigid1,visualization=VObjectRigidBody2D(graphicsData= [graphics1])))
 
 c=0.05 #dimension of mass
 sliderMass = 1
 graphics2 = graphics.Lines([[-c,-c,0], [c,-c,0], [c,c,0], [-c,c,0], [-c,-c,0]])
 
 nMass = mbs.AddNode(Point2D(referenceCoordinates=[2*a0+2*a1,0]))
-oMass = mbs.AddObject(MassPoint2D(physicsMass=sliderMass, nodeNumber=nMass,visualization=VObjectRigidBody2D(graphicsData= [graphics2])))
+oMass = mbs.AddObject(MassPoint2D(mass=sliderMass, nodeNumber=nMass,visualization=VObjectRigidBody2D(graphicsData= [graphics2])))
 
 #++++++++++++++++++++++++++++++++
 #markers for joints:

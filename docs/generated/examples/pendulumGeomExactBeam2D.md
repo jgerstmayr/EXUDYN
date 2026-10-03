@@ -67,12 +67,12 @@ for i in range(nElements+1):
 listBeams = []
 for i in range(nElements):
     oBeam = mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers = [firstNode+i,firstNode+i+1], 
-                                                            physicsLength=lElem,
-                                                            physicsMassPerLength=rhoA,
-                                                            physicsCrossSectionInertia=rhoI,
-                                                            physicsBendingStiffness=EI,
-                                                            physicsAxialStiffness=EA,
-                                                            physicsShearStiffness=GA,
+                                                            length=lElem,
+                                                            massPerLength=rhoA,
+                                                            crossSectionInertia=rhoI,
+                                                            bendingStiffness=EI,
+                                                            axialStiffness=EA,
+                                                            shearStiffness=GA,
                                                             visualization=VObjectBeamGeometricallyExact2D(drawHeight = h)
                                                 ))
     listBeams += [oBeam]

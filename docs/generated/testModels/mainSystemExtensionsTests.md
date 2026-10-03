@@ -41,7 +41,7 @@ mbs = SC.AddSystem()
 
 b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
                        initialVelocity = [2,5,0],
-                       physicsMass = 1, gravity = [0,-9.81,0],
+                       mass = 1, gravity = [0,-9.81,0],
                        drawSize = 0.5, color=graphics.color.blue)
 
 mbs.Assemble()
@@ -95,7 +95,7 @@ mbs = SC.AddSystem()
 
 b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
                          initialVelocity = [2,5,0],
-                         physicsMass = 1, gravity = [0,-9.81,0],
+                         mass = 1, gravity = [0,-9.81,0],
                          drawSize = 0.5, color=graphics.color.blue)
 
 oGround = mbs.AddObject(ObjectGround())
@@ -129,7 +129,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 b0 = mbs.CreateMassPoint(referencePosition = [7,0,0],
-                          physicsMass = 1, gravity = [0,-9.81,0],
+                          mass = 1, gravity = [0,-9.81,0],
                           drawSize = 0.5, color=graphics.color.blue)
 
 oGround = mbs.AddObject(ObjectGround())
@@ -308,7 +308,7 @@ mbs = SC.AddSystem()
 
 b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
                          initialVelocity = [2*0,5,0],
-                         physicsMass = 1, gravity = [0,-9.81,0],
+                         mass = 1, gravity = [0,-9.81,0],
                          drawSize = 0.5, color=graphics.color.blue)
 
 oGround = mbs.AddObject(ObjectGround())
@@ -394,7 +394,7 @@ b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
                           graphicsDataList = [graphics.Brick(size=[1,0.1,0.1], 
                                                                       color=graphics.color.orange)])
 m1 = mbs.CreateMassPoint(referencePosition=[5.5,-1,0],
-                         physicsMass=1, drawSize = 0.2)
+                         mass=1, drawSize = 0.2)
 n1 = mbs.GetObject(m1)['nodeNumber']
     
 oGround = mbs.AddObject(ObjectGround())

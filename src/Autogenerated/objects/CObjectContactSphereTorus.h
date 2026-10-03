@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  12:07:29 (last modified)
+* @date         2026-10-03  18:09:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -29,7 +29,7 @@ class CObjectContactSphereTorusParameters // AUTO:
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers representing centers of sphere (marker 0) and center of torus (marker 1)
     Index nodeNumber;                             //!< AUTO: node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.
-    Real radiusSphere;                            //!< AUTO: must be > 0;  radius of sphere [SI:m]
+    Real sphereRadius;                            //!< AUTO: must be > 0;  radius of sphere [SI:m]
     Real torusMajorRadius;                        //!< AUTO: must be > 0;  major radius of torus [SI:m], representing center of rotated circle
     Real torusMinorRadius;                        //!< AUTO: must be > 0;  minor radius of torus [SI:m], representing radius of circle of ring
     Vector3D torusAxis;                           //!< AUTO: Vector containing rotation axis of torus; must be a unit vector.
@@ -47,7 +47,7 @@ public: // AUTO:
     {
         markerNumbers = ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex });
         nodeNumber = EXUstd::InvalidIndex;
-        radiusSphere = 0.;
+        sphereRadius = 0.;
         torusMajorRadius = 0.;
         torusMinorRadius = 0.;
         torusAxis = Vector3D({0,0,0});

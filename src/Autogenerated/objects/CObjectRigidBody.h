@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  22:10:14 (last modified)
+* @date         2026-10-03  18:08:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,16 +30,16 @@ namespace py = pybind11;            //! AUTO: "py" used throughout in code
 class CObjectRigidBodyParameters // AUTO:
 {
 public: // AUTO:
-    Real physicsMass;                             //!< AUTO: must be >= 0; mass [SI:kg] of rigid body
-    Vector6D physicsInertia;                      //!< AUTO: inertia components [SI:kgm\f$^2\f$]: \f$[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]\f$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to ABRV:COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, ABRV:COM and mass
-    Vector3D physicsCenterOfMass;                 //!< AUTO: local position of ABRV:COM relative to the body's reference point; if the vector of the ABRV:COM is [0,0,0], the computation will not consider additional terms for the ABRV:COM and it is faster
+    Real mass;                                    //!< AUTO: must be >= 0; mass [SI:kg] of rigid body
+    Vector6D inertia;                             //!< AUTO: inertia components [SI:kgm\f$^2\f$]: \f$[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]\f$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to ABRV:COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, ABRV:COM and mass
+    Vector3D centerOfMass;                        //!< AUTO: local position of ABRV:COM relative to the body's reference point; if the vector of the ABRV:COM is [0,0,0], the computation will not consider additional terms for the ABRV:COM and it is faster
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) for rigid body node
     //! AUTO: default constructor with parameter initialization
     CObjectRigidBodyParameters()
     {
-        physicsMass = 0.;
-        physicsInertia = Vector6D({0.,0.,0., 0.,0.,0.});
-        physicsCenterOfMass = Vector3D({0.,0.,0.});
+        mass = 0.;
+        inertia = Vector6D({0.,0.,0., 0.,0.,0.});
+        centerOfMass = Vector3D({0.,0.,0.});
         nodeNumber = EXUstd::InvalidIndex;
     };
 };
@@ -152,7 +152,7 @@ public: // AUTO:
     //! AUTO:  return the local position of the center of mass, needed for equations of motion and for massProportionalLoad
     virtual Vector3D GetLocalCenterOfMass() const override
     {
-        return parameters.physicsCenterOfMass;
+        return parameters.centerOfMass;
     }
 
     //! AUTO:  accelerator function for faster computation of MarkerData for rigid bodies/joints

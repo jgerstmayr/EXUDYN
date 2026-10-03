@@ -52,7 +52,7 @@ def Case(name, whatTheUserDidWrong):
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 nodeNumber = mbs.AddNode(NodePoint(referenceCoordinates=[0, 0, 0]))
-objectNumber = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=nodeNumber))
+objectNumber = mbs.AddObject(MassPoint(mass=1, nodeNumber=nodeNumber))
 markerNumber = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodeNumber, coordinate=0))
 mbs.Assemble()
 
@@ -77,7 +77,7 @@ def NodeNumberOutOfRange():
 def ParameterOfWrongType():
     scratch = exu.SystemContainer().AddSystem()
     scratchNode = scratch.AddNode(NodePoint(referenceCoordinates=[0, 0, 0]))
-    scratch.AddObject(MassPoint(physicsMass='heavy', nodeNumber=scratchNode))
+    scratch.AddObject(MassPoint(mass='heavy', nodeNumber=scratchNode))
 
 
 @Case('parameter of the wrong value', 'gives a 3D reference position two components')
@@ -106,7 +106,7 @@ def MarkerDoesNotExist():
     localSC = exu.SystemContainer()
     localMbs = localSC.AddSystem()
     localNode = localMbs.AddNode(NodePoint(referenceCoordinates=[0, 0, 0]))
-    localMbs.AddObject(MassPoint(physicsMass=1, nodeNumber=localNode))
+    localMbs.AddObject(MassPoint(mass=1, nodeNumber=localNode))
     localMbs.AddLoad(LoadCoordinate(markerNumber=999, load=1))
     localMbs.Assemble()
 
@@ -116,7 +116,7 @@ def SolverCannotSolve():
     localSC = exu.SystemContainer()
     localMbs = localSC.AddSystem()
     localNode = localMbs.AddNode(NodePoint(referenceCoordinates=[0, 0, 0]))
-    localMbs.AddObject(MassPoint(physicsMass=1, nodeNumber=localNode))
+    localMbs.AddObject(MassPoint(mass=1, nodeNumber=localNode))
     localMarker = localMbs.AddMarker(MarkerNodeCoordinate(nodeNumber=localNode, coordinate=0))
     localMbs.AddLoad(LoadCoordinate(markerNumber=localMarker, load=10))
     localMbs.Assemble()
@@ -132,7 +132,7 @@ def UserFunctionRaises():
     localSC = exu.SystemContainer()
     localMbs = localSC.AddSystem()
     localNode = localMbs.AddNode(NodePoint(referenceCoordinates=[0, 0, 0]))
-    localMbs.AddObject(MassPoint(physicsMass=1, nodeNumber=localNode))
+    localMbs.AddObject(MassPoint(mass=1, nodeNumber=localNode))
     localMarker = localMbs.AddMarker(MarkerNodeCoordinate(nodeNumber=localNode, coordinate=0))
 
     def LoadUserFunction(mbs, t, load):

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-03  18:09:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -118,7 +118,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "slidingMarkerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["slidingMarkerNumbers"], cObjectJointSliding2D->GetParameters().slidingMarkerNumbers); }
         if (EPyUtils::DictItemExists(d, "slidingMarkerOffsets")) { EPyUtils::FromPython(d["slidingMarkerOffsets"], cObjectJointSliding2D->GetParameters().slidingMarkerOffsets, "ObjectJointSliding2D.slidingMarkerOffsets"); }
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectJointSliding2D->GetParameters().nodeNumber); }
-        if (EPyUtils::DictItemExists(d, "classicalFormulation")) { EPyUtils::FromPython(d["classicalFormulation"], cObjectJointSliding2D->GetParameters().classicalFormulation, "ObjectJointSliding2D.classicalFormulation"); }
+        if (EPyUtils::DictItemExists(d, "useClassicalFormulation")) { EPyUtils::FromPython(d["useClassicalFormulation"], cObjectJointSliding2D->GetParameters().useClassicalFormulation, "ObjectJointSliding2D.useClassicalFormulation"); }
         if (EPyUtils::DictItemExists(d, "constrainRotation")) { EPyUtils::FromPython(d["constrainRotation"], cObjectJointSliding2D->GetParameters().constrainRotation, "ObjectJointSliding2D.constrainRotation"); }
         if (EPyUtils::DictItemExists(d, "axialForce")) { EPyUtils::FromPython(d["axialForce"], cObjectJointSliding2D->GetParameters().axialForce, "ObjectJointSliding2D.axialForce"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectJointSliding2D->GetParameters().activeConnector, "ObjectJointSliding2D.activeConnector"); }
@@ -126,6 +126,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectJointSliding2D->GetShow(), "ObjectJointSliding2D.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectJointSliding2D->GetDrawSize(), "ObjectJointSliding2D.VdrawSize"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectJointSliding2D->GetColor(), "ObjectJointSliding2D.Vcolor"); }
+        if (EPyUtils::DictItemExists(d, "classicalFormulation") && !d["classicalFormulation"].is_none()) { PyDeprecated("items", "ObjectJointSliding2D.classicalFormulation", "ObjectJointSliding2D: the parameter classicalFormulation is deprecated since 1.12.258 and removed in 2031; use useClassicalFormulation"); EPyUtils::FromPython(d["classicalFormulation"], cObjectJointSliding2D->GetParameters().useClassicalFormulation, "ObjectJointSliding2D.classicalFormulation"); } //! AUTO: deprecated, forwards to useClassicalFormulation
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -138,7 +139,7 @@ public: // AUTO:
         d["slidingMarkerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectJointSliding2D->GetParameters().slidingMarkerNumbers);
         d["slidingMarkerOffsets"] = EPyUtils::ToPython(cObjectJointSliding2D->GetParameters().slidingMarkerOffsets);
         d["nodeNumber"] = (NodeIndex)cObjectJointSliding2D->GetParameters().nodeNumber;
-        d["classicalFormulation"] = (bool)cObjectJointSliding2D->GetParameters().classicalFormulation;
+        d["useClassicalFormulation"] = (bool)cObjectJointSliding2D->GetParameters().useClassicalFormulation;
         d["constrainRotation"] = (bool)cObjectJointSliding2D->GetParameters().constrainRotation;
         d["axialForce"] = (Real)cObjectJointSliding2D->GetParameters().axialForce;
         d["activeConnector"] = (bool)cObjectJointSliding2D->GetParameters().activeConnector;
@@ -157,13 +158,14 @@ public: // AUTO:
         else if (parameterName.compare("slidingMarkerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectJointSliding2D->GetParameters().slidingMarkerNumbers)); } //! AUTO: get parameter
         else if (parameterName.compare("slidingMarkerOffsets") == 0) { return EPyUtils::ToPython(cObjectJointSliding2D->GetParameters().slidingMarkerOffsets); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectJointSliding2D->GetParameters().nodeNumber); } //! AUTO: get parameter
-        else if (parameterName.compare("classicalFormulation") == 0) { return py::cast((bool)cObjectJointSliding2D->GetParameters().classicalFormulation); } //! AUTO: get parameter
+        else if (parameterName.compare("useClassicalFormulation") == 0) { return py::cast((bool)cObjectJointSliding2D->GetParameters().useClassicalFormulation); } //! AUTO: get parameter
         else if (parameterName.compare("constrainRotation") == 0) { return py::cast((bool)cObjectJointSliding2D->GetParameters().constrainRotation); } //! AUTO: get parameter
         else if (parameterName.compare("axialForce") == 0) { return py::cast((Real)cObjectJointSliding2D->GetParameters().axialForce); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectJointSliding2D->GetParameters().activeConnector); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectJointSliding2D->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectJointSliding2D->GetDrawSize()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectJointSliding2D->GetColor())); } //! AUTO: get parameter
+        else if (parameterName.compare("classicalFormulation") == 0) { PyDeprecated("items", "ObjectJointSliding2D.classicalFormulation", "ObjectJointSliding2D: the parameter classicalFormulation is deprecated since 1.12.258 and removed in 2031; use useClassicalFormulation"); return py::cast((bool)cObjectJointSliding2D->GetParameters().useClassicalFormulation); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectJointSliding2D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -177,13 +179,14 @@ public: // AUTO:
         else if (parameterName.compare("slidingMarkerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectJointSliding2D->GetParameters().slidingMarkerNumbers); } //! AUTO: set parameter
         else if (parameterName.compare("slidingMarkerOffsets") == 0) { EPyUtils::FromPython(value, cObjectJointSliding2D->GetParameters().slidingMarkerOffsets, "ObjectJointSliding2D.slidingMarkerOffsets"); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectJointSliding2D->GetParameters().nodeNumber); } //! AUTO: set parameter
-        else if (parameterName.compare("classicalFormulation") == 0) { EPyUtils::FromPython(value, cObjectJointSliding2D->GetParameters().classicalFormulation, "ObjectJointSliding2D.classicalFormulation"); } //! AUTO: set parameter
+        else if (parameterName.compare("useClassicalFormulation") == 0) { EPyUtils::FromPython(value, cObjectJointSliding2D->GetParameters().useClassicalFormulation, "ObjectJointSliding2D.useClassicalFormulation"); } //! AUTO: set parameter
         else if (parameterName.compare("constrainRotation") == 0) { EPyUtils::FromPython(value, cObjectJointSliding2D->GetParameters().constrainRotation, "ObjectJointSliding2D.constrainRotation"); } //! AUTO: set parameter
         else if (parameterName.compare("axialForce") == 0) { EPyUtils::FromPython(value, cObjectJointSliding2D->GetParameters().axialForce, "ObjectJointSliding2D.axialForce"); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectJointSliding2D->GetParameters().activeConnector, "ObjectJointSliding2D.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectJointSliding2D->GetShow(), "ObjectJointSliding2D.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationObjectJointSliding2D->GetDrawSize(), "ObjectJointSliding2D.VdrawSize"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectJointSliding2D->GetColor(), "ObjectJointSliding2D.Vcolor"); } //! AUTO: set parameter
+        else if (parameterName.compare("classicalFormulation") == 0) { PyDeprecated("items", "ObjectJointSliding2D.classicalFormulation", "ObjectJointSliding2D: the parameter classicalFormulation is deprecated since 1.12.258 and removed in 2031; use useClassicalFormulation"); EPyUtils::FromPython(value, cObjectJointSliding2D->GetParameters().useClassicalFormulation, "ObjectJointSliding2D.classicalFormulation"); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectJointSliding2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

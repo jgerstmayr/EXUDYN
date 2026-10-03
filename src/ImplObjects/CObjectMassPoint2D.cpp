@@ -26,10 +26,10 @@ void CObjectMassPoint2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 	massMatrixC.SetUseDenseMatrix(false);
 	SparseTripletVector& triplets = massMatrixC.GetInternalSparseTripletMatrix().GetTriplets();
 
-	Real m = parameters.physicsMass;
+	Real m = parameters.mass;
 	if (computeInverse)
 	{
-		CHECKandTHROW(m != 0., "CObjectMassPoint2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
+		CHECKandTHROW(m != 0., "CObjectMassPoint2D::ComputeMassMatrix: mass may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
 		m = 1. / m;
 	}
 	if (m != 0.)
@@ -62,7 +62,7 @@ bool CObjectMassPoint2D::GetJacobianTransposedTimesVectorDerivative(const Vector
 //! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
 void CObjectMassPoint2D::GetMassWeightedPositionJacobian(Matrix& value) const
 {
-	value.SetMatrix(3, 2, { parameters.physicsMass,0.,0.,parameters.physicsMass,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on two coordinates (x,y)
+	value.SetMatrix(3, 2, { parameters.mass,0.,0.,parameters.mass,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on two coordinates (x,y)
 }
 
 
@@ -85,7 +85,7 @@ void CObjectMassPoint2D::GetOutputVariableBody(OutputVariableType variableType, 
 		value.SetVector({ 0. }); break;
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectMassPoint2D");
-		value.SetVector({ 0.5*parameters.physicsMass*GetVelocity(localPosition, configuration).GetL2NormSquared() }); break; }
+		value.SetVector({ 0.5*parameters.mass*GetVelocity(localPosition, configuration).GetL2NormSquared() }); break; }
 	default:
 		SysError("CObjectMassPoint2D::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

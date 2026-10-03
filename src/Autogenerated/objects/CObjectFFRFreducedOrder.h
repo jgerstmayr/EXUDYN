@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  08:07:18 (last modified)
+* @date         2026-10-03  18:08:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -103,10 +103,10 @@ class CObjectFFRFreducedOrder: public CObjectSuperElement // AUTO:
 protected: // AUTO:
     CObjectFFRFreducedOrderParameters parameters; //! AUTO: contains all parameters for CObjectFFRFreducedOrder
     bool objectIsInitialized;                     //!< AUTO: ALWAYS set to False! flag used to correctly initialize all ABRV:FFRF matrices; as soon as this flag is False, some internal (constant) ABRV:FFRF matrices are recomputed during Assemble()
-    Real physicsMass;                             //!< AUTO: must be >= 0; total mass [SI:kg] of FFRFreducedOrder object
-    Matrix3D physicsInertia;                      //!< AUTO: inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body
-    Vector3D physicsCenterOfMass;                 //!< AUTO: local position of center of mass (ABRV:COM)
-    Matrix3D physicsCenterOfMassTilde;            //!< AUTO: tilde matrix from local position of ABRV:COM; autocomputed during initialization
+    Real mass;                                    //!< AUTO: must be >= 0; total mass [SI:kg] of FFRFreducedOrder object
+    Matrix3D inertia;                             //!< AUTO: inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body
+    Vector3D centerOfMass;                        //!< AUTO: local position of center of mass (ABRV:COM)
+    Matrix3D centerOfMassTilde;                   //!< AUTO: tilde matrix from local position of ABRV:COM; autocomputed during initialization
     mutable Vector tempUserFunctionForce;         //!< AUTO: temporary vector for UF force
     mutable ResizableVector tempCoordinates;      //!< AUTO: temporary vector containing coordinates
     mutable ResizableVector tempCoordinates_t;    //!< AUTO: temporary vector containing velocity coordinates
@@ -126,10 +126,10 @@ public: // AUTO:
     CObjectFFRFreducedOrder()
     {
         objectIsInitialized = false;
-        physicsMass = 0.;
-        physicsInertia = EXUmath::unitMatrix3D;
-        physicsCenterOfMass = Vector3D({0.,0.,0.});
-        physicsCenterOfMassTilde = EXUmath::zeroMatrix3D;
+        mass = 0.;
+        inertia = EXUmath::unitMatrix3D;
+        centerOfMass = Vector3D({0.,0.,0.});
+        centerOfMassTilde = EXUmath::zeroMatrix3D;
         tempUserFunctionForce = Vector();
         tempCoordinates = ResizableVector();
         tempCoordinates_t = ResizableVector();
@@ -156,32 +156,32 @@ public: // AUTO:
     bool& GetObjectIsInitialized() { return objectIsInitialized; }
 
     //! AUTO:  Write (Reference) access to:\f$m\f$total mass [SI:kg] of FFRFreducedOrder object
-    void SetPhysicsMass(const Real& value) { physicsMass = value; }
+    void SetMass(const Real& value) { mass = value; }
     //! AUTO:  Read (Reference) access to:\f$m\f$total mass [SI:kg] of FFRFreducedOrder object
-    const Real& GetPhysicsMass() const { return physicsMass; }
+    const Real& GetMass() const { return mass; }
     //! AUTO:  Read (Reference) access to:\f$m\f$total mass [SI:kg] of FFRFreducedOrder object
-    Real& GetPhysicsMass() { return physicsMass; }
+    Real& GetMass() { return mass; }
 
     //! AUTO:  Write (Reference) access to:\f$\Jm_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body
-    void SetPhysicsInertia(const Matrix3D& value) { physicsInertia = value; }
+    void SetInertia(const Matrix3D& value) { inertia = value; }
     //! AUTO:  Read (Reference) access to:\f$\Jm_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body
-    const Matrix3D& GetPhysicsInertia() const { return physicsInertia; }
+    const Matrix3D& GetInertia() const { return inertia; }
     //! AUTO:  Read (Reference) access to:\f$\Jm_r \in \Rcal^{3 \times 3}\f$inertia tensor [SI:kgm\f$^2\f$] of rigid body w.r.t. to the reference point of the body
-    Matrix3D& GetPhysicsInertia() { return physicsInertia; }
+    Matrix3D& GetInertia() { return inertia; }
 
     //! AUTO:  Write (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (ABRV:COM)
-    void SetPhysicsCenterOfMass(const Vector3D& value) { physicsCenterOfMass = value; }
+    void SetCenterOfMass(const Vector3D& value) { centerOfMass = value; }
     //! AUTO:  Read (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (ABRV:COM)
-    const Vector3D& GetPhysicsCenterOfMass() const { return physicsCenterOfMass; }
+    const Vector3D& GetCenterOfMass() const { return centerOfMass; }
     //! AUTO:  Read (Reference) access to:\f$\LU{b}{\bv}_{COM}\f$local position of center of mass (ABRV:COM)
-    Vector3D& GetPhysicsCenterOfMass() { return physicsCenterOfMass; }
+    Vector3D& GetCenterOfMass() { return centerOfMass; }
 
     //! AUTO:  Write (Reference) access to:\f$\LU{b}{\tilde \bv}_{COM}\f$tilde matrix from local position of ABRV:COM; autocomputed during initialization
-    void SetPhysicsCenterOfMassTilde(const Matrix3D& value) { physicsCenterOfMassTilde = value; }
+    void SetCenterOfMassTilde(const Matrix3D& value) { centerOfMassTilde = value; }
     //! AUTO:  Read (Reference) access to:\f$\LU{b}{\tilde \bv}_{COM}\f$tilde matrix from local position of ABRV:COM; autocomputed during initialization
-    const Matrix3D& GetPhysicsCenterOfMassTilde() const { return physicsCenterOfMassTilde; }
+    const Matrix3D& GetCenterOfMassTilde() const { return centerOfMassTilde; }
     //! AUTO:  Read (Reference) access to:\f$\LU{b}{\tilde \bv}_{COM}\f$tilde matrix from local position of ABRV:COM; autocomputed during initialization
-    Matrix3D& GetPhysicsCenterOfMassTilde() { return physicsCenterOfMassTilde; }
+    Matrix3D& GetCenterOfMassTilde() { return centerOfMassTilde; }
 
     //! AUTO:  Write (Reference) access to:\f$\fv_{temp} \in \Rcal^{n_{ODE2}}\f$temporary vector for UF force
     void SetTempUserFunctionForce(const Vector& value) { tempUserFunctionForce = value; }
@@ -316,7 +316,7 @@ public: // AUTO:
     //! AUTO:  return the local position of the center of mass, needed for massProportionalLoad; this is only the reference-frame part!
     virtual Vector3D GetLocalCenterOfMass() const override
     {
-        return physicsCenterOfMass;
+        return centerOfMass;
     }
 
     //! AUTO:  Get global node number (with local node index); needed for every object ==> does local mapping

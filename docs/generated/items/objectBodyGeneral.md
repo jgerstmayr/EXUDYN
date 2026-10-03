@@ -18,7 +18,7 @@ A body has a **body frame** $b$ and a **reference point**, which is the position
 `localPosition` $\pLocB$ - of a marker, a sensor, a graphics - is given in the body frame and
 measured from the reference point; the rotation matrix $\LU{0b}{\Rot}$ takes it into the global
 frame. The reference point is the center of mass only where the page of the body says so: an
-`ObjectRigidBody` has its center of mass at `physicsCenterOfMass` from it.
+`ObjectRigidBody` has its center of mass at `centerOfMass` from it.
 
 ## Marker interfaces
 

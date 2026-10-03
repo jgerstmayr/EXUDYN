@@ -68,7 +68,7 @@ if nWarnings != [1, 3] or Uses('graphics.BrickXYZ') != used + 6:
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 oGround = mbs.CreateGround()
-b0 = mbs.CreateMassPoint(referencePosition=[1,0,0], physicsMass=1)
+b0 = mbs.CreateMassPoint(referencePosition=[1,0,0], mass=1)
 used = Uses('MainSystem.CreateSpringDamper.bodyList')
 deprecations.warnOnce = False
 with warnings.catch_warnings(record=True) as caught:

@@ -4,7 +4,7 @@
 
 Every name of Exudyn that is deprecated, with the version it was deprecated in and the year it is removed. A use warns once per session and is counted in `exudyn.sys['deprecationUse']`; `tools/checkDeprecations.py` fails for a deprecation whose year has come, which then has to be removed. How to deprecate something: `CODING_STYLE.md` §10.5. The version is 1.11.0 for what was deprecated before the history of this repository begins.
 
-## Functions and arguments of the Python library (20)
+## Functions and arguments of the Python library (26)
 
 | name | since | removed in | instead | declared in |
 |---|---|---|---|---|
@@ -28,6 +28,12 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `robotics.mobile.MecanumWheelVelocity2XYphi` | 1.11.0 | 2029 | MobileKinematics | python/exudyn/robotics/mobile.py |
 | `robotics.mobile.MecanumXYphi2WheelVelocities` | 1.11.0 | 2029 | MobileKinematics | python/exudyn/robotics/mobile.py |
 | `robotics.models.LinkDictModDHKK2Robot` | 1.11.0 | 2029 | LinkDict2Robot | python/exudyn/robotics/models.py |
+| `MainSystem.CreateCoordinateConstraint.factorValue1` | 1.12.258 | 2031 | factor1 | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateMassPoint.physicsMass` | 1.12.258 | 2031 | mass | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateRigidBodySpringDamper.intrinsicFormulation` | 1.12.258 | 2031 | useIntrinsicFormulation | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateRollingDiscPenalty.rollingFrictionViscous` | 1.12.258 | 2031 | rollingViscousFriction | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateSphereQuadContact.radiusSphere` | 1.12.258 | 2031 | sphereRadius | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateSphereTriangleContact.radiusSphere` | 1.12.258 | 2031 | sphereRadius | python/exudyn/misc/mainSystemExtensions.py |
 
 ## Functions of the C++ module (26)
 
@@ -60,20 +66,86 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `exudyn.SuppressWarnings` | 1.11.0 | 2029 |  | definitions/pybindModule.py |
 | `renderer.Detach` | 1.11.0 | 2029 |  | definitions/pybindRenderer.py |
 
-## Item parameters (10)
+## Item parameters (76)
 
 | name | since | removed in | instead | declared in |
 |---|---|---|---|---|
+| `ObjectALEANCFCable2D.physicsAddALEvariation` | 1.12.258 | 2031 | addALEvariation | definitions (ObjectALEANCFCable2D) |
+| `ObjectALEANCFCable2D.physicsAxialDamping` | 1.12.258 | 2031 | axialDamping | definitions (ObjectALEANCFCable2D) |
+| `ObjectALEANCFCable2D.physicsAxialStiffness` | 1.12.258 | 2031 | axialStiffness | definitions (ObjectALEANCFCable2D) |
+| `ObjectALEANCFCable2D.physicsBendingDamping` | 1.12.258 | 2031 | bendingDamping | definitions (ObjectALEANCFCable2D) |
+| `ObjectALEANCFCable2D.physicsBendingStiffness` | 1.12.258 | 2031 | bendingStiffness | definitions (ObjectALEANCFCable2D) |
+| `ObjectALEANCFCable2D.physicsLength` | 1.12.258 | 2031 | length | definitions (ObjectALEANCFCable2D) |
+| `ObjectALEANCFCable2D.physicsMassPerLength` | 1.12.258 | 2031 | massPerLength | definitions (ObjectALEANCFCable2D) |
+| `ObjectALEANCFCable2D.physicsMovingMassFactor` | 1.12.258 | 2031 | movingMassFactor | definitions (ObjectALEANCFCable2D) |
+| `ObjectALEANCFCable2D.physicsReferenceAxialStrain` | 1.12.258 | 2031 | referenceAxialStrain | definitions (ObjectALEANCFCable2D) |
+| `ObjectALEANCFCable2D.physicsReferenceCurvature` | 1.12.258 | 2031 | referenceCurvature | definitions (ObjectALEANCFCable2D) |
+| `ObjectALEANCFCable2D.physicsUseCouplingTerms` | 1.12.258 | 2031 | useCouplingTerms | definitions (ObjectALEANCFCable2D) |
+| `ObjectANCFBeam.physicsLength` | 1.12.258 | 2031 | length | definitions (ObjectANCFBeam) |
+| `ObjectANCFCable.physicsAxialDamping` | 1.12.258 | 2031 | axialDamping | definitions (ObjectANCFCable) |
+| `ObjectANCFCable.physicsAxialStiffness` | 1.12.258 | 2031 | axialStiffness | definitions (ObjectANCFCable) |
+| `ObjectANCFCable.physicsBendingDamping` | 1.12.258 | 2031 | bendingDamping | definitions (ObjectANCFCable) |
+| `ObjectANCFCable.physicsBendingStiffness` | 1.12.258 | 2031 | bendingStiffness | definitions (ObjectANCFCable) |
+| `ObjectANCFCable.physicsLength` | 1.12.258 | 2031 | length | definitions (ObjectANCFCable) |
+| `ObjectANCFCable.physicsMassPerLength` | 1.12.258 | 2031 | massPerLength | definitions (ObjectANCFCable) |
+| `ObjectANCFCable.physicsReferenceAxialStrain` | 1.12.258 | 2031 | referenceAxialStrain | definitions (ObjectANCFCable) |
+| `ObjectANCFCable2D.physicsAxialDamping` | 1.12.258 | 2031 | axialDamping | definitions (ObjectANCFCable2D) |
+| `ObjectANCFCable2D.physicsAxialStiffness` | 1.12.258 | 2031 | axialStiffness | definitions (ObjectANCFCable2D) |
+| `ObjectANCFCable2D.physicsBendingDamping` | 1.12.258 | 2031 | bendingDamping | definitions (ObjectANCFCable2D) |
+| `ObjectANCFCable2D.physicsBendingStiffness` | 1.12.258 | 2031 | bendingStiffness | definitions (ObjectANCFCable2D) |
+| `ObjectANCFCable2D.physicsLength` | 1.12.258 | 2031 | length | definitions (ObjectANCFCable2D) |
+| `ObjectANCFCable2D.physicsMassPerLength` | 1.12.258 | 2031 | massPerLength | definitions (ObjectANCFCable2D) |
+| `ObjectANCFCable2D.physicsReferenceAxialStrain` | 1.12.258 | 2031 | referenceAxialStrain | definitions (ObjectANCFCable2D) |
+| `ObjectANCFCable2D.physicsReferenceCurvature` | 1.12.258 | 2031 | referenceCurvature | definitions (ObjectANCFCable2D) |
+| `ObjectANCFThinPlate.physicsCurvatureCoefficients` | 1.12.258 | 2031 | curvatureCoefficients | definitions (ObjectANCFThinPlate) |
+| `ObjectANCFThinPlate.physicsDensity` | 1.12.258 | 2031 | density | definitions (ObjectANCFThinPlate) |
+| `ObjectANCFThinPlate.physicsMassProportionalDamping` | 1.12.258 | 2031 | massProportionalDamping | definitions (ObjectANCFThinPlate) |
+| `ObjectANCFThinPlate.physicsStrainCoefficients` | 1.12.258 | 2031 | strainCoefficients | definitions (ObjectANCFThinPlate) |
+| `ObjectANCFThinPlate.physicsThickness` | 1.12.258 | 2031 | thickness | definitions (ObjectANCFThinPlate) |
+| `ObjectBeamGeometricallyExact.physicsLength` | 1.12.258 | 2031 | length | definitions (ObjectBeamGeometricallyExact) |
+| `ObjectBeamGeometricallyExact2D.physicsAxialDamping` | 1.12.258 | 2031 | axialDamping | definitions (ObjectBeamGeometricallyExact2D) |
+| `ObjectBeamGeometricallyExact2D.physicsAxialStiffness` | 1.12.258 | 2031 | axialStiffness | definitions (ObjectBeamGeometricallyExact2D) |
+| `ObjectBeamGeometricallyExact2D.physicsBendingDamping` | 1.12.258 | 2031 | bendingDamping | definitions (ObjectBeamGeometricallyExact2D) |
+| `ObjectBeamGeometricallyExact2D.physicsBendingStiffness` | 1.12.258 | 2031 | bendingStiffness | definitions (ObjectBeamGeometricallyExact2D) |
+| `ObjectBeamGeometricallyExact2D.physicsCrossSectionInertia` | 1.12.258 | 2031 | crossSectionInertia | definitions (ObjectBeamGeometricallyExact2D) |
+| `ObjectBeamGeometricallyExact2D.physicsLength` | 1.12.258 | 2031 | length | definitions (ObjectBeamGeometricallyExact2D) |
+| `ObjectBeamGeometricallyExact2D.physicsMassPerLength` | 1.12.258 | 2031 | massPerLength | definitions (ObjectBeamGeometricallyExact2D) |
+| `ObjectBeamGeometricallyExact2D.physicsReferenceCurvature` | 1.12.258 | 2031 | referenceCurvature | definitions (ObjectBeamGeometricallyExact2D) |
+| `ObjectBeamGeometricallyExact2D.physicsShearDamping` | 1.12.258 | 2031 | shearDamping | definitions (ObjectBeamGeometricallyExact2D) |
+| `ObjectBeamGeometricallyExact2D.physicsShearStiffness` | 1.12.258 | 2031 | shearStiffness | definitions (ObjectBeamGeometricallyExact2D) |
+| `ObjectConnectorCoordinate.factorValue1` | 1.12.258 | 2031 | factor1 | definitions (ObjectConnectorCoordinate) |
+| `ObjectConnectorCoordinateSpringDamperExt.fDynamicFriction` | 1.12.258 | 2031 | dynamicFrictionForce | definitions (ObjectConnectorCoordinateSpringDamperExt) |
+| `ObjectConnectorCoordinateSpringDamperExt.fStaticFrictionOffset` | 1.12.258 | 2031 | staticFrictionOffsetForce | definitions (ObjectConnectorCoordinateSpringDamperExt) |
+| `ObjectConnectorCoordinateSpringDamperExt.fViscousFriction` | 1.12.258 | 2031 | viscousFrictionFactor | definitions (ObjectConnectorCoordinateSpringDamperExt) |
+| `ObjectConnectorRigidBodySpringDamper.intrinsicFormulation` | 1.12.258 | 2031 | useIntrinsicFormulation | definitions (ObjectConnectorRigidBodySpringDamper) |
 | `ObjectConnectorRigidBodySpringDamper.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectConnectorRigidBodySpringDamper) |
 | `ObjectConnectorRigidBodySpringDamper.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectConnectorRigidBodySpringDamper) |
+| `ObjectConnectorRollingDiscPenalty.rollingFrictionViscous` | 1.12.258 | 2031 | rollingViscousFriction | definitions (ObjectConnectorRollingDiscPenalty) |
 | `ObjectConnectorTorsionalSpringDamper.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectConnectorTorsionalSpringDamper) |
 | `ObjectConnectorTorsionalSpringDamper.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectConnectorTorsionalSpringDamper) |
+| `ObjectContactSphereTorus.radiusSphere` | 1.12.258 | 2031 | sphereRadius | definitions (ObjectContactSphereTorus) |
+| `ObjectContactSphereTriangle.radiusSphere` | 1.12.258 | 2031 | sphereRadius | definitions (ObjectContactSphereTriangle) |
+| `ObjectFFRFreducedOrder.physicsCenterOfMass` | 1.12.258 | 2031 | centerOfMass | definitions (ObjectFFRFreducedOrder) |
+| `ObjectFFRFreducedOrder.physicsCenterOfMassTilde` | 1.12.258 | 2031 | centerOfMassTilde | definitions (ObjectFFRFreducedOrder) |
+| `ObjectFFRFreducedOrder.physicsInertia` | 1.12.258 | 2031 | inertia | definitions (ObjectFFRFreducedOrder) |
+| `ObjectFFRFreducedOrder.physicsMass` | 1.12.258 | 2031 | mass | definitions (ObjectFFRFreducedOrder) |
 | `ObjectJointGeneric.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointGeneric) |
 | `ObjectJointGeneric.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointGeneric) |
 | `ObjectJointPrismaticX.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointPrismaticX) |
 | `ObjectJointPrismaticX.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointPrismaticX) |
 | `ObjectJointRevoluteZ.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointRevoluteZ) |
 | `ObjectJointRevoluteZ.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointRevoluteZ) |
+| `ObjectJointSliding2D.classicalFormulation` | 1.12.258 | 2031 | useClassicalFormulation | definitions (ObjectJointSliding2D) |
+| `ObjectMass1D.physicsMass` | 1.12.258 | 2031 | mass | definitions (ObjectMass1D) |
+| `ObjectMassPoint.physicsMass` | 1.12.258 | 2031 | mass | definitions (ObjectMassPoint) |
+| `ObjectMassPoint2D.physicsMass` | 1.12.258 | 2031 | mass | definitions (ObjectMassPoint2D) |
+| `ObjectRigidBody.physicsCenterOfMass` | 1.12.258 | 2031 | centerOfMass | definitions (ObjectRigidBody) |
+| `ObjectRigidBody.physicsInertia` | 1.12.258 | 2031 | inertia | definitions (ObjectRigidBody) |
+| `ObjectRigidBody.physicsMass` | 1.12.258 | 2031 | mass | definitions (ObjectRigidBody) |
+| `ObjectRigidBody2D.physicsCenterOfMass` | 1.12.258 | 2031 | centerOfMass | definitions (ObjectRigidBody2D) |
+| `ObjectRigidBody2D.physicsInertia` | 1.12.258 | 2031 | inertia | definitions (ObjectRigidBody2D) |
+| `ObjectRigidBody2D.physicsMass` | 1.12.258 | 2031 | mass | definitions (ObjectRigidBody2D) |
+| `ObjectRotationalMass1D.physicsInertia` | 1.12.258 | 2031 | inertia | definitions (ObjectRotationalMass1D) |
 
 ## Settings (149)
 

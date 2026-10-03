@@ -163,11 +163,11 @@ def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements
         SC = exu.SystemContainer()
         mbs = SC.AddSystem()
         #example of flexible pendulum
-        beamTemplate = ObjectBeamGeometricallyExact2D(physicsMassPerLength=0.02,
-                            physicsCrossSectionInertia=8e-9,
-                            physicsBendingStiffness=8e-4,
-                            physicsAxialStiffness=2000,
-                            physicsShearStiffness=650,
+        beamTemplate = ObjectBeamGeometricallyExact2D(massPerLength=0.02,
+                            crossSectionInertia=8e-9,
+                            bendingStiffness=8e-4,
+                            axialStiffness=2000,
+                            shearStiffness=650,
                             visualization=VObjectBeamGeometricallyExact2D(drawHeight = 0.002))
         #create straight beam with 10 elements, apply gravity and fix (x,y) position of node 0 (rotation left free)
         beamInfo = GenerateStraightBeam(mbs, positionOfNode0=[0,0,0], positionOfNode1=[0.5,0,0],
@@ -252,7 +252,7 @@ def GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1, numberOfElements
         nBeam0 = mbs.AddNode(NodeTemplate(referenceCoordinates=ConvertVector(positionOfNode0, is2D) + beamRotations)) 
         beamNodeList+=[nBeam0]
     
-    beamTemplate.physicsLength = beamLength
+    beamTemplate.length = beamLength
     
     # add all other ANCF nodes (straight reference configuration) and attach Gravity marker to them:
     for i in range(numberOfElements): 
@@ -389,11 +389,11 @@ def GenerateCircularArcANCFCable2D(mbs, positionOfNode0, radius, startAngle, arc
         if verboseMode:
             exudyn.Print('  node 0: pos=', positionOfNode0[0],',',positionOfNode0[1],', slope=',cableSlopeVec[0],',',cableSlopeVec[1])
     
-    cableTemplate.physicsLength = cableLength
+    cableTemplate.length = cableLength
 
-    oldReferenceCurvature = cableTemplate.physicsReferenceCurvature 
+    oldReferenceCurvature = cableTemplate.referenceCurvature 
     if setCurvedReferenceConfiguration:
-        cableTemplate.physicsReferenceCurvature = arcSign/radius #set reference curvature, such that beam is pre-curved
+        cableTemplate.referenceCurvature = arcSign/radius #set reference curvature, such that beam is pre-curved
     
     # add all other ANCF nodes (straight reference configuration) and attach Gravity marker to them:
     for i in range(numberOfElements): 
@@ -455,7 +455,7 @@ def GenerateCircularArcANCFCable2D(mbs, positionOfNode0, radius, startAngle, arc
 
      
     if setCurvedReferenceConfiguration:
-        cableTemplate.physicsReferenceCurvature = oldReferenceCurvature        
+        cableTemplate.referenceCurvature = oldReferenceCurvature        
     
     return [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
 
@@ -727,7 +727,7 @@ def PointsAndSlopes2ANCFCable2D(mbs, ancfPointsSlopes, elementLengths, cableTemp
         fixedConstraintsNode0: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope)
         fixedConstraintsNode1: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope)
         firstNodeIsLastNode: if True, then the last node is using the node number of the first node and the curve is closed; otherwise, the first and last nodes are different, and the curve is open
-        elementCurvatures: optional list of pre-curvatures of elements, used to override the cableTemplate entry 'physicsReferenceCurvature'; use 0. for straight lines!
+        elementCurvatures: optional list of pre-curvatures of elements, used to override the cableTemplate entry 'referenceCurvature'; use 0. for straight lines!
         graphicsSizeConstraints: if set other than -1, it will be used as the size for drawing applied coordinate constraints
 
     Returns:
@@ -750,9 +750,9 @@ def PointsAndSlopes2ANCFCable2D(mbs, ancfPointsSlopes, elementLengths, cableTemp
         # pointSlope0 = ancfPointsSlopes[i]
         # pointSlope1 = ancfPointsSlopes[i+1]
 
-        cableTemplate.physicsLength = elementLengths[i]
+        cableTemplate.length = elementLengths[i]
         if elementCurvatures != []:
-            cableTemplate.physicsReferenceCurvature = elementCurvatures[i]
+            cableTemplate.referenceCurvature = elementCurvatures[i]
         
         if (i==numberOfElements-1 and firstNodeIsLastNode):
             nodeNumberLast = nodeNumber0
@@ -827,7 +827,7 @@ def GenerateSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,loc
         m = mbs.AddMarker(eii.MarkerBodyCable2DCoordinates(bodyNumber = item))
         cableMarkerList += [m]
         offsetList += [offset]  
-        offset += mbs.GetObjectParameter(item,'physicsLength')
+        offset += mbs.GetObjectParameter(item,'length')
     
     nodeDataSlidingJoint = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[localMarkerIndexOfStartCable,slidingCoordinateStartPosition],numberOfDataCoordinates=2)) #initial index in cable list
     
@@ -859,7 +859,7 @@ def GenerateAleSlidingJoint(mbs,cableObjectList,markerBodyPositionOfSlidingBody,
         m = mbs.AddMarker(eii.MarkerBodyCable2DCoordinates(bodyNumber = item))
         cableMarkerList += [m]
         offsetList += [offset]  
-        offset += mbs.GetObjectParameter(item,'physicsLength')
+        offset += mbs.GetObjectParameter(item,'length')
     
     nodeDataAleSlidingJoint = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[localMarkerIndexOfStartCable],numberOfDataCoordinates=1)) #initial index in cable list   
     oAleSlidingJoint = mbs.AddObject(eii.ObjectJointALEMoving2D(markerNumbers=[markerBodyPositionOfSlidingBody,cableMarkerList[localMarkerIndexOfStartCable]], 

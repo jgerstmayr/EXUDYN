@@ -89,15 +89,15 @@ class CartPoleEnv(Env):
         gCart = graphics.Brick(size=[0.5*self.length, 0.1*self.length, 0.1*self.length], 
                                            color=graphics.color.dodgerblue)
         self.nCart = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,0,0]));
-        oCart = self.mbs.AddObject(RigidBody2D(physicsMass=self.masscart, 
-                                          physicsInertia=0.1*self.masscart, #not needed
+        oCart = self.mbs.AddObject(RigidBody2D(mass=self.masscart, 
+                                          inertia=0.1*self.masscart, #not needed
                                           nodeNumber=self.nCart,
                                           visualization=VObjectRigidBody2D(graphicsData= [gCart])))
         
         gPole = graphics.Brick(size=[0.1*self.length, self.length, 0.1*self.length], color=graphics.color.red)
         self.nPole = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,0.5*self.length,0]));
-        oPole = self.mbs.AddObject(RigidBody2D(physicsMass=self.masspole, 
-                                          physicsInertia=1e-6, #not included in original paper
+        oPole = self.mbs.AddObject(RigidBody2D(mass=self.masspole, 
+                                          inertia=1e-6, #not included in original paper
                                           nodeNumber=self.nPole,
                                           visualization=VObjectRigidBody2D(graphicsData= [gPole])))
         

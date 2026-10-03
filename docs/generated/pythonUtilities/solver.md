@@ -44,7 +44,7 @@ Most of the solvers are implemented inside the C++ core.
   #create simple system:
   ground = mbs.AddObject(ObjectGround())
   mbs.AddNode(NodePoint())
-  body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
+  body = mbs.AddObject(MassPoint(mass=1, nodeNumber=0))
   m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=ground))
   m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body))
   mbs.AddObject(CartesianSpringDamper(markerNumbers=[m0,m1], stiffness=[100,100,100]))
@@ -90,7 +90,7 @@ Most of the solvers are implemented inside the C++ core.
   #create simple system:
   ground = mbs.AddObject(ObjectGround())
   mbs.AddNode(NodePoint())
-  body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
+  body = mbs.AddObject(MassPoint(mass=1, nodeNumber=0))
   m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=ground))
   m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body))
   mbs.AddObject(CartesianSpringDamper(markerNumbers=[m0,m1], stiffness=[100,100,100]))
@@ -174,7 +174,7 @@ Most of the solvers are implemented inside the C++ core.
   #
   b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
                            initialVelocity = [2*0,5,0],
-                           physicsMass = 1, gravity = [0,-9.81,0],
+                           mass = 1, gravity = [0,-9.81,0],
                            drawSize = 0.5, color=graphics.color.blue)
   #
   oGround = mbs.AddObject(ObjectGround())
@@ -227,7 +227,7 @@ Most of the solvers are implemented inside the C++ core.
   mbs = SC.AddSystem()
   #
   b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
-                           physicsMass = 1, gravity = [0,-9.81,0],
+                           mass = 1, gravity = [0,-9.81,0],
                            drawSize = 0.5, color=graphics.color.blue)
   #
   oGround = mbs.AddObject(ObjectGround())

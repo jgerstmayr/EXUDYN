@@ -77,7 +77,7 @@ for modelCnt, modelName in enumerate(robotModels):
 
     #static view of robot in Exudyn with staticGraphicsList
     if onlyShowModel:
-        if modelCnt == 0: mbs.CreateMassPoint(physicsMass=1) #to avoid zero-DOF system
+        if modelCnt == 0: mbs.CreateMassPoint(mass=1) #to avoid zero-DOF system
         mbs.CreateGround(referencePosition=offsetPosition,
                          graphicsDataList=robotDataDict['staticGraphicsList'])
         # continue

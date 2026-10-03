@@ -104,7 +104,7 @@ NOTE { that until 2023-01-21 (exudyn V1.5.76), the CoordinateSpringDamper includ
 These parameters have been removed and they are only available in CoordinateSpringDamperExt, HOWEVER, with different names.
 In order to use CoordinateSpringDamperExt instead of the old CoordinateSpringDamper with the same friction behavior, we recoomend:
 
-- USE CoordinateSpringDamperExt.fDynamicFriction INSTEAD of CoordinateSpringDamper.dryFriction
+- USE CoordinateSpringDamperExt.dynamicFrictionForce INSTEAD of CoordinateSpringDamper.dryFriction
 - USE CoordinateSpringDamperExt.frictionProportionalZone INSTEAD of CoordinateSpringDamper.dryFrictionProportionalZone
 - CoordinateSpringDamperExt.frictionProportionalZone has a different behavior in case that it is zero; thus use 1e-16 in this case, to get as close as possible to previous behaviour
 - the variables stiffness, damping and offset have the same interpretation in both objects
@@ -150,7 +150,7 @@ def springForce(mbs, t, itemNumber, u, v, k, d, offset):
     return 0.1*k*u+k*u**3+v*d
 
 nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
-massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+massPoint = mbs.AddObject(MassPoint(mass = 5, nodeNumber = nMass))
 
 groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
 nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))

@@ -79,11 +79,11 @@ def Arm(position0, direction, rotation, slopes):
             nodes += [mbs.AddNode(NodePointSlope23(referenceCoordinates=p+slopes))]
     for k in range(nElements):
         if useGeometricallyExact:
-            mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[k], nodes[k+1]], physicsLength=lElem,
+            mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[k], nodes[k+1]], length=lElem,
                                                        sectionData=sectionData,
                                                        visualization=VBeam3D(sectionGeometry=sectionGeometry)))
         else:
-            mbs.AddObject(ObjectANCFBeam(nodeNumbers=[nodes[k], nodes[k+1]], physicsLength=lElem,
+            mbs.AddObject(ObjectANCFBeam(nodeNumbers=[nodes[k], nodes[k+1]], length=lElem,
                                          sectionData=sectionData, crossSectionPenaltyFactor=[1, 1, 1],
                                          visualization=VANCFBeam(sectionGeometry=sectionGeometry)))
     return nodes[0], nodes[-1]

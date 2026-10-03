@@ -171,8 +171,8 @@ The returned matrix of `jacobianUserFunction` must have `nAE` rows and `len(q)` 
 #coordinates INCLUDE the reference values, so qB - qA = [1,0,0] keeps the two points where they are
 nA = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
 nB = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
-mbs.AddObject(ObjectMassPoint(nodeNumber=nA, physicsMass=1))
-mbs.AddObject(ObjectMassPoint(nodeNumber=nB, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nA, mass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nB, mass=1))
 mA = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nA))
 mB = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nB))
 mbs.AddObject(ObjectConnectorCoordinateVector(markerNumbers=[mA, mB], scalingMarker0=np.eye(3),

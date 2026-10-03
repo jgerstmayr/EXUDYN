@@ -28,7 +28,7 @@ typedef EXUmath::AutoDiff<9*2, Real> DReal18;
 // Quadratic (3-node, nodes at x = {-L/2, 0, L/2}): Lagrange at xi = 2x/L with nodes at xi = {-1,0,1}
 ConstSizeVector<CObjectBeamGeometricallyExact2D::maxNNodes> CObjectBeamGeometricallyExact2D::ComputeShapeFunctions(Real x) const
 {
-    Real L = parameters.physicsLength;
+    Real L = parameters.length;
     const Index ns = GetNumberOfNodes();
     ConstSizeVector<CObjectBeamGeometricallyExact2D::maxNNodes> SV(ns);
     if (IsLinear())
@@ -51,7 +51,7 @@ ConstSizeVector<CObjectBeamGeometricallyExact2D::maxNNodes> CObjectBeamGeometric
 // Return dN_i/dx for ns = GetNumberOfNodes()
 ConstSizeVector<CObjectBeamGeometricallyExact2D::maxNNodes> CObjectBeamGeometricallyExact2D::ComputeShapeFunctions_x(Real x) const
 {
-    const Real L = parameters.physicsLength;
+    const Real L = parameters.length;
     const Index ns = GetNumberOfNodes();
     ConstSizeVector<CObjectBeamGeometricallyExact2D::maxNNodes> SVx(ns);
     if (IsLinear())
@@ -128,10 +128,10 @@ void CObjectBeamGeometricallyExact2D::ComputeMassMatrix(EXUmath::MatrixContainer
         const Index ns = GetNumberOfNodes();
         massMatrix.SetScalarMatrix(GetODE2Size(), 0.0);
 
-        const Real a = -0.5 * parameters.physicsLength;
-        const Real b = 0.5 * parameters.physicsLength;
-        const Real rhoA = parameters.physicsMassPerLength;
-        const Real rhoJ = parameters.physicsCrossSectionInertia;
+        const Real a = -0.5 * parameters.length;
+        const Real b = 0.5 * parameters.length;
+        const Real rhoA = parameters.massPerLength;
+        const Real rhoJ = parameters.crossSectionInertia;
 
         ConstSizeVector<3> integrationPoints;
         ConstSizeVector<3> integrationWeights;
@@ -263,7 +263,7 @@ void CObjectBeamGeometricallyExact2D::ComputeGeneralizedStrains(Real x, TReal& t
     SlimVectorBase<TReal, 3> slopeVectorTotal = MapCoordinates<TReal, maxODE2coordinates>(SV_x, qBeamTotal); //Total: r_x, r_y, theta_x
     TReal u1_x = slopeVectorTotal[0] - slopeVectorRef[0];
     TReal u2_x = slopeVectorTotal[1] - slopeVectorRef[1];
-    theta_x = slopeVectorTotal[2] - parameters.physicsReferenceCurvature; //in precurved case, reference values shall not contribute to curvature
+    theta_x = slopeVectorTotal[2] - parameters.referenceCurvature; //in precurved case, reference values shall not contribute to curvature
 
     //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     TReal cosTheta = cos(theta);
@@ -380,8 +380,8 @@ void CObjectBeamGeometricallyExact2D::ComputeODE2LHStemplate(VectorBase<TReal>& 
     
     const Index ns = GetNumberOfNodes();
 
-    const Real a = -0.5 * parameters.physicsLength;
-    const Real b = 0.5 * parameters.physicsLength;
+    const Real a = -0.5 * parameters.length;
+    const Real b = 0.5 * parameters.length;
 
     ConstSizeVector<3> integrationPoints;
     ConstSizeVector<3> integrationWeights;
@@ -401,10 +401,10 @@ void CObjectBeamGeometricallyExact2D::ComputeODE2LHStemplate(VectorBase<TReal>& 
             gamma1, gamma2, theta_x, gamma1_t, gamma2_t, theta_xt,
             deltaGamma1, deltaGamma2);
 
-        ode2Lhs.MultAdd((parameters.physicsAxialDamping * gamma1_t + parameters.physicsAxialStiffness * gamma1) * factInt, deltaGamma1);
-        ode2Lhs.MultAdd((parameters.physicsShearDamping * gamma2_t + parameters.physicsShearStiffness * gamma2) * factInt, deltaGamma2);
+        ode2Lhs.MultAdd((parameters.axialDamping * gamma1_t + parameters.axialStiffness * gamma1) * factInt, deltaGamma1);
+        ode2Lhs.MultAdd((parameters.shearDamping * gamma2_t + parameters.shearStiffness * gamma2) * factInt, deltaGamma2);
 
-        const TReal bendTerm = (parameters.physicsBendingDamping * theta_xt + parameters.physicsBendingStiffness * theta_x) * factInt;
+        const TReal bendTerm = (parameters.bendingDamping * theta_xt + parameters.bendingStiffness * theta_x) * factInt;
         for (Index i = 0; i < ns; ++i)
         {
             ode2Lhs[3 * i + 2] += bendTerm * SV_x[i]; // add to rotational DOF of each node
@@ -422,10 +422,10 @@ void CObjectBeamGeometricallyExact2D::ComputeODE2LHStemplate(VectorBase<TReal>& 
 
         //const Real fact = L; // integration factor (midpoint evaluation)
 
-        //ode2Lhs.MultAdd((parameters.physicsAxialDamping * gamma1_t + parameters.physicsAxialStiffness * gamma1) * fact, deltaGamma1);
-        //ode2Lhs.MultAdd((parameters.physicsShearDamping * gamma2_t + parameters.physicsShearStiffness * gamma2) * fact, deltaGamma2);
+        //ode2Lhs.MultAdd((parameters.axialDamping * gamma1_t + parameters.axialStiffness * gamma1) * fact, deltaGamma1);
+        //ode2Lhs.MultAdd((parameters.shearDamping * gamma2_t + parameters.shearStiffness * gamma2) * fact, deltaGamma2);
 
-        //const Real bendTerm = (parameters.physicsBendingDamping * theta_xt + parameters.physicsBendingStiffness * theta_x) * fact;
+        //const Real bendTerm = (parameters.bendingDamping * theta_xt + parameters.bendingStiffness * theta_x) * fact;
         //for (Index i = 0; i < ns; ++i)
         //{
         //    ode2Lhs[3 * i + 2] += bendTerm * SV_x[i]; // add to rotational DOF of each node
@@ -460,7 +460,7 @@ Real CObjectBeamGeometricallyExact2D::ComputeElasticEnergy(ConfigurationType con
     ComputeCurrentCoordinates(qBeamTotal, qBeam_t, qBeamRef, configuration);
     ConstSizeVector<3> integrationPoints, integrationWeights;
     GetIntegrationRule(integrationPoints, integrationWeights);
-    const Real L = parameters.physicsLength;
+    const Real L = parameters.length;
 
     ConstSizeVector<maxNNodes> SV, SV_x;
     ConstSizeVector<maxODE2coordinates> deltaGamma1, deltaGamma2;
@@ -470,8 +470,8 @@ Real CObjectBeamGeometricallyExact2D::ComputeElasticEnergy(ConfigurationType con
     {
         ComputeGeneralizedStrains<Real>(0.5 * L * integrationPoints[i], theta, qBeamTotal, qBeam_t, qBeamRef, SV, SV_x,
             gamma1, gamma2, theta_x, gamma1_t, gamma2_t, theta_xt, deltaGamma1, deltaGamma2);
-        energy += 0.5 * L * integrationWeights[i] * 0.5 * (parameters.physicsAxialStiffness * gamma1 * gamma1
-            + parameters.physicsShearStiffness * gamma2 * gamma2 + parameters.physicsBendingStiffness * theta_x * theta_x);
+        energy += 0.5 * L * integrationWeights[i] * 0.5 * (parameters.axialStiffness * gamma1 * gamma1
+            + parameters.shearStiffness * gamma2 * gamma2 + parameters.bendingStiffness * theta_x * theta_x);
     }
     return energy;
 }
@@ -530,8 +530,8 @@ void CObjectBeamGeometricallyExact2D::GetMassWeightedPositionJacobian(Matrix& va
     value.SetNumberOfRowsAndColumns(3, GetODE2Size()); //3D velocity, 6 coordinates qt
     value.SetAll(0.);
 
-    Real L = parameters.physicsLength;
-    Real rhoA = parameters.physicsMassPerLength;
+    Real L = parameters.length;
+    Real rhoA = parameters.massPerLength;
 
     if (IsLinear())
     {
@@ -544,8 +544,8 @@ void CObjectBeamGeometricallyExact2D::GetMassWeightedPositionJacobian(Matrix& va
     }
     else
     {
-        const Real a = -0.5 * parameters.physicsLength;
-        const Real b = 0.5 * parameters.physicsLength;
+        const Real a = -0.5 * parameters.length;
+        const Real b = 0.5 * parameters.length;
 
         Index cnt = 0;
         for (auto item : EXUmath::gaussRuleOrder3Points)
@@ -592,9 +592,9 @@ void CObjectBeamGeometricallyExact2D::GetOutputVariableBody(OutputVariableType v
             {
             case OutputVariableType::StrainLocal:	value.SetVector({ gamma1, 0., 0.,  0., 0., gamma2 }); break;
             case OutputVariableType::CurvatureLocal:value.SetVector({ 0., 0., theta_x }); break;
-            case OutputVariableType::ForceLocal:	value.SetVector({ (parameters.physicsAxialDamping * gamma1_t + parameters.physicsAxialStiffness * gamma1),
-                (parameters.physicsShearDamping * gamma2_t + parameters.physicsShearStiffness * gamma2), 0. }); break;
-            case OutputVariableType::TorqueLocal:	value.SetVector({ 0., 0., (parameters.physicsBendingDamping * theta_xt + parameters.physicsBendingStiffness * theta_x) }); break;
+            case OutputVariableType::ForceLocal:	value.SetVector({ (parameters.axialDamping * gamma1_t + parameters.axialStiffness * gamma1),
+                (parameters.shearDamping * gamma2_t + parameters.shearStiffness * gamma2), 0. }); break;
+            case OutputVariableType::TorqueLocal:	value.SetVector({ 0., 0., (parameters.bendingDamping * theta_xt + parameters.bendingStiffness * theta_x) }); break;
             case OutputVariableType::PotentialEnergy: {
                 CheckEnergyLocalPosition(localPosition, "ObjectBeamGeometricallyExact2D");
                 value.SetVector({ ComputeElasticEnergy(configuration) }); break; }
@@ -770,7 +770,7 @@ void VisualizationObjectBeamGeometricallyExact2D::UpdateGraphics(const Visualiza
 	item.itemID = itemID;
 	if (color[0] != -1.f) { currentColor = color; }
 
-	Real L = cObject->GetParameters().physicsLength;
+	Real L = cObject->GetParameters().length;
 	item.color1 = currentColor;
 	item.color2 = currentColor;
 

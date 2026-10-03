@@ -170,7 +170,7 @@ mTranslationRack = mbs.AddMarker(MarkerBodiesRelativeTranslationCoordinate(bodyN
 
 #now add constraints and spring-dampers
 mbs.AddObject(CoordinateConstraint(markerNumbers=[mRotationShaft,mTranslationRack],
-                                   factorValue1=1/(baseCircleDiameter0*0.5),
+                                   factor1=1/(baseCircleDiameter0*0.5),
                                    visualization=VCoordinateConstraint(show=False)))
 
 mbs.AddObject(CoordinateSpringDamperExt(markerNumbers=[mRotationShaft,mRotationShaft2],

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-30  01:36:17 (last modified)
+* @date         2026-10-03  18:17:13 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,12 +115,13 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectBeamGeometricallyExact->GetParameters().nodeNumbers); }
-        if (EPyUtils::DictItemExists(d, "physicsLength")) { EPyUtils::RequireGiven(d["physicsLength"], 0., "ObjectBeamGeometricallyExact.physicsLength"); EPyUtils::FromPython(d["physicsLength"], cObjectBeamGeometricallyExact->GetParameters().physicsLength, EPyUtils::RangeCheck::positive, "ObjectBeamGeometricallyExact.physicsLength"); } else { EPyUtils::RequireGiven(py::cast(cObjectBeamGeometricallyExact->GetParameters().physicsLength), 0., "ObjectBeamGeometricallyExact.physicsLength"); }
+        if (EPyUtils::DictItemExists(d, "length") && (!EPyUtils::DictItemExists(d, "physicsLength") || d["physicsLength"].is_none())) { EPyUtils::RequireGiven(d["length"], 0., "ObjectBeamGeometricallyExact.length"); EPyUtils::FromPython(d["length"], cObjectBeamGeometricallyExact->GetParameters().length, EPyUtils::RangeCheck::positive, "ObjectBeamGeometricallyExact.length"); } else { if (!EPyUtils::DictItemExists(d, "physicsLength") || d["physicsLength"].is_none()) EPyUtils::RequireGiven(py::cast(cObjectBeamGeometricallyExact->GetParameters().length), 0., "ObjectBeamGeometricallyExact.length"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "sectionData")) { SetInternalBeamSection(d["sectionData"]); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectBeamGeometricallyExact->GetShow(), "ObjectBeamGeometricallyExact.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VsectionGeometry")) { visualizationObjectBeamGeometricallyExact->GetSectionGeometry() = py::cast<BeamSectionGeometry>(d["VsectionGeometry"]); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectBeamGeometricallyExact->GetColor(), "ObjectBeamGeometricallyExact.Vcolor"); }
+        if (EPyUtils::DictItemExists(d, "physicsLength") && !d["physicsLength"].is_none()) { PyDeprecated("items", "ObjectBeamGeometricallyExact.physicsLength", "ObjectBeamGeometricallyExact: the parameter physicsLength is deprecated since 1.12.258 and removed in 2031; use length"); EPyUtils::RequireGiven(d["physicsLength"], 0., "ObjectBeamGeometricallyExact.physicsLength"); EPyUtils::FromPython(d["physicsLength"], cObjectBeamGeometricallyExact->GetParameters().length, EPyUtils::RangeCheck::positive, "ObjectBeamGeometricallyExact.physicsLength"); } //! AUTO: deprecated, forwards to length
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -130,7 +131,7 @@ public: // AUTO:
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
         d["nodeNumbers"] = EPyUtils::ItemIndexToPython<NodeIndex>((ArrayIndex)cObjectBeamGeometricallyExact->GetParameters().nodeNumbers);
-        d["physicsLength"] = (Real)cObjectBeamGeometricallyExact->GetParameters().physicsLength;
+        d["length"] = (Real)cObjectBeamGeometricallyExact->GetParameters().length;
         d["name"] = (std::string)name;
         d["sectionData"] = GetInternalBeamSection();
         d["Vshow"] = (bool)visualizationObjectBeamGeometricallyExact->GetShow();
@@ -144,11 +145,12 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>((ArrayIndex)cObjectBeamGeometricallyExact->GetParameters().nodeNumbers)); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsLength") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact->GetParameters().physicsLength); } //! AUTO: get parameter
+        else if (parameterName.compare("length") == 0) { return py::cast((Real)cObjectBeamGeometricallyExact->GetParameters().length); } //! AUTO: get parameter
         else if (parameterName.compare("sectionData") == 0) { return py::cast(GetInternalBeamSection()); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectBeamGeometricallyExact->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("VsectionGeometry") == 0) { return py::cast((BeamSectionGeometry)visualizationObjectBeamGeometricallyExact->GetSectionGeometry()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectBeamGeometricallyExact->GetColor())); } //! AUTO: get parameter
+        else if (parameterName.compare("physicsLength") == 0) { PyDeprecated("items", "ObjectBeamGeometricallyExact.physicsLength", "ObjectBeamGeometricallyExact: the parameter physicsLength is deprecated since 1.12.258 and removed in 2031; use length"); return py::cast((Real)cObjectBeamGeometricallyExact->GetParameters().length); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectBeamGeometricallyExact::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -159,11 +161,12 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectBeamGeometricallyExact->GetParameters().nodeNumbers); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsLength") == 0) { EPyUtils::FromPython(value, cObjectBeamGeometricallyExact->GetParameters().physicsLength, EPyUtils::RangeCheck::positive, "ObjectBeamGeometricallyExact.physicsLength"); } //! AUTO: set parameter
+        else if (parameterName.compare("length") == 0) { EPyUtils::FromPython(value, cObjectBeamGeometricallyExact->GetParameters().length, EPyUtils::RangeCheck::positive, "ObjectBeamGeometricallyExact.length"); } //! AUTO: set parameter
         else if (parameterName.compare("sectionData") == 0) { SetInternalBeamSection(value); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectBeamGeometricallyExact->GetShow(), "ObjectBeamGeometricallyExact.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("VsectionGeometry") == 0) { visualizationObjectBeamGeometricallyExact->GetSectionGeometry() = py::cast<BeamSectionGeometry>(value); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectBeamGeometricallyExact->GetColor(), "ObjectBeamGeometricallyExact.Vcolor"); } //! AUTO: set parameter
+        else if (parameterName.compare("physicsLength") == 0) { PyDeprecated("items", "ObjectBeamGeometricallyExact.physicsLength", "ObjectBeamGeometricallyExact: the parameter physicsLength is deprecated since 1.12.258 and removed in 2031; use length"); EPyUtils::FromPython(value, cObjectBeamGeometricallyExact->GetParameters().length, EPyUtils::RangeCheck::positive, "ObjectBeamGeometricallyExact.physicsLength"); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectBeamGeometricallyExact::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

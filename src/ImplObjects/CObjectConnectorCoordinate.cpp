@@ -57,11 +57,11 @@ void CObjectConnectorCoordinate::ComputeConstraintEquationsTemplate(const Marker
 		{
 			EvaluateUserFunctionOffset(offset, cSystemData->GetMainSystemBacklink(), t, itemIndex);
 		}
-		equations[0] = markers[1].value * parameters.factorValue1 - markers[0].value - offset;
+		equations[0] = markers[1].value * parameters.factor1 - markers[0].value - offset;
 	}
 	else
 	{
-		equations[0] = markers[1].value_t * parameters.factorValue1 - markers[0].value_t; //the index-reduced equation: no offset
+		equations[0] = markers[1].value_t * parameters.factor1 - markers[0].value_t; //the index-reduced equation: no offset
 		if (parameters.offsetUserFunction_t)
 		{
 			Real offset = 0;
@@ -106,7 +106,7 @@ void CObjectConnectorCoordinate::ComputeJacobianAE(ResizableMatrix& jacobian_ODE
 
 		usedJac->SetSubmatrix(markerData.GetMarkerData(0).jacobian, 0, 0, -1.);
 		usedJac->SetSubmatrix(markerData.GetMarkerData(1).jacobian, 0,
-			markerData.GetMarkerData(0).jacobian.NumberOfColumns(), parameters.factorValue1);
+			markerData.GetMarkerData(0).jacobian.NumberOfColumns(), parameters.factor1);
 
 	}
 	else

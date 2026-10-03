@@ -255,6 +255,18 @@ to `SolveDynamic` is used for that run and the setting is set back afterwards - 
 explicit solver type written into the settings. An `exudyn.MainSolverExplicit` used directly takes the solver from
 `timeIntegration.solverType` and refuses an implicit one with a message naming the setting.
 
+**Item parameters without the prefix `physics`, and a few more renamed.** The parameters of the bodies and finite
+elements lost their prefix - `physicsMass` is `mass`, `physicsInertia` is `inertia`, `physicsCenterOfMass` is
+`centerOfMass`, `physicsLength`, `physicsMassPerLength`, `physicsAxialStiffness`, `physicsBendingDamping` and the others
+of the beams and the plate likewise; `radiusSphere` is `sphereRadius` (`ContactSphereTorus`, `ContactSphereTriangle`),
+the friction of `ObjectConnectorCoordinateSpringDamperExt` is `dynamicFrictionForce`, `staticFrictionOffsetForce` and
+`viscousFrictionFactor` (N s/m), `factorValue1` of `ObjectConnectorCoordinate` is `factor1`, `rollingFrictionViscous`
+of `ObjectConnectorRollingDiscPenalty` is `rollingViscousFriction` (s/m), and `intrinsicFormulation` and
+`classicalFormulation` are `useIntrinsicFormulation` and `useClassicalFormulation`. The `Create...` functions take the
+new names. Every old name still works until 2031 with a `DeprecationWarning` - in the item class, in a dictionary, in
+`GetObjectParameter`/`SetObjectParameter` and as argument of a `Create...` function - and `exudev scripts --fix`
+rewrites it (#2814).
+
 **A system without coordinates** - only ground, sensors and user functions - is solved by every
 solver: time advances, the user functions are called and the sensors record (#2790).
 

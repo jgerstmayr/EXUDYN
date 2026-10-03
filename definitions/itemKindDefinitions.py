@@ -103,7 +103,7 @@ definitions.append(ItemKindDefinition(
     `localPosition` $\pLocB$ - of a marker, a sensor, a graphics - is given in the body frame and
     measured from the reference point; the rotation matrix $\LU{0b}{\Rot}$ takes it into the global
     frame. The reference point is the center of mass only where the page of the body says so: an
-    `ObjectRigidBody` has its center of mass at `physicsCenterOfMass` from it.
+    `ObjectRigidBody` has its center of mass at `centerOfMass` from it.
 
     ## Marker interfaces
 
@@ -212,7 +212,7 @@ definitions.append(ItemKindDefinition(
     reference is stress-free depends on the element: the ANCF cables subtract the reference strains
     with `strainIsRelativeToReference`, the geometrically exact beam has a reference curvature. The
     local axial coordinate runs over $[0,\,L]$ for the ANCF cables and over $[-L/2,\,L/2]$ for the other
-    beams; `physicsLength` is the length of the element in its reference configuration.
+    beams; `length` is the length of the element in its reference configuration.
 
     ## Meshes
 

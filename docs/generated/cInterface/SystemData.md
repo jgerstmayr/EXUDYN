@@ -11,7 +11,7 @@ from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
 SC = exu.SystemContainer()         #container of systems
 mbs = SC.AddSystem()               #add a new system to work with
 nMP = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
-mbs.AddObject(ObjectMassPoint(physicsMass=10, nodeNumber=nMP ))
+mbs.AddObject(ObjectMassPoint(mass=10, nodeNumber=nMP ))
 mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
 mbs.AddLoad(Force(markerNumber = mMP, loadVector=[2,0,5]))
 mbs.Assemble()

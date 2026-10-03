@@ -232,7 +232,7 @@ if False:
                                                               planeNormal=[0,0,1],
                                                               dryFriction=[0.8,0.8], 
                                                               dryFrictionProportionalZone=1e-2, 
-                                                              rollingFrictionViscous=0.,
+                                                              rollingViscousFriction=0.,
                                                               contactStiffness=cStiffness, 
                                                               contactDamping=cDamping,
                                                               #activeConnector = False, #set to false to deactivated
@@ -246,7 +246,7 @@ if False:
                                                               planeNormal=[0,0,1],
                                                               dryFriction=[0.8,0.8], 
                                                               dryFrictionProportionalZone=1e-2, 
-                                                              rollingFrictionViscous=0.,
+                                                              rollingViscousFriction=0.,
                                                               contactStiffness=cStiffness, 
                                                               contactDamping=cDamping,
                                                               #activeConnector = False, #set to false to deactivated

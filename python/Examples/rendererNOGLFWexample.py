@@ -78,7 +78,7 @@ quadPoints = exu.Vector3DList([[-size,-size,0],[size,-size,0],[size,size,0],[-si
 oSSC = mbs.CreateSphereQuadContact(bodyNumbers=[oMass, oGround],
                                    quadPoints=quadPoints,
                                    includeEdges=15, #all edges
-                                   radiusSphere=radius,
+                                   sphereRadius=radius,
                                    contactStiffness = contactStiffness,
                                    contactDamping = contactDamping,
                                    dynamicFriction=dynamicFriction,

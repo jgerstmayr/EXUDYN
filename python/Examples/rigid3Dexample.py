@@ -56,8 +56,8 @@ for i in range(20):
     oGraphicsLines = graphics.BrickXYZ(-0.9*sx, -s, -s, 0.9*sx, s, s, addFaces=False, addEdges=True, edgeColor=graphics.color.black)
     oGraphics = graphics.Brick(size=[1.8*sx, 2*s, 2*s], color= graphics.color.dodgerblue)
     oGraphicsJoint = graphics.Sphere(point=[-sx,0,cPosZ], radius = 0.6*s, color=graphics.color.darkgrey, nTiles=24)
-    oRB = mbs.AddObject(ObjectRigidBody(physicsMass=2, 
-                                        physicsInertia=[6,1,6,0,0,0], 
+    oRB = mbs.AddObject(ObjectRigidBody(mass=2, 
+                                        inertia=[6,1,6,0,0,0], 
                                         nodeNumber=nRB, 
                                         visualization=VObjectRigidBody(graphicsData=[oGraphics, oGraphicsJoint, oGraphicsLines])))
 

@@ -35,7 +35,7 @@ values, sentinels), **ITEMS**, **STRUCTURES**.
 ## Members
 
 ```python
-ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam, pythonName='physicsMass',
+ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam, pythonName='mass',
     defaultValue=0., description=r'$m$mass [SI:kg] of mass point')
 ItemFunction(type=Tvoid, destination=DestComp, pythonName='ComputeContactForces',
     description='...', cFlags=CFConst, args='...')

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  22:10:14 (last modified)
+* @date         2026-10-03  18:09:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -30,20 +30,20 @@ class CObjectBeamGeometricallyExactParameters // AUTO:
 {
 public: // AUTO:
     Index2 nodeNumbers;                           //!< AUTO: two node numbers for beam element
-    Real physicsLength;                           //!< AUTO: must be > 0;  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
-    Real physicsMassPerLength;                    //!< AUTO: must be >= 0;  [SI:kg/m] mass per length of beam; this data is used internally for computation
-    Matrix3D physicsCrossSectionInertia;          //!< AUTO:  [SI:kg m] cross section mass moment of inertia tensor; this data is used internally for computation
-    Vector3D physicsTorsionalBendingStiffness;    //!< AUTO:  [SI:Nm\f$^2\f$] bending and torsional stiffness vector;
-    Vector3D physicsAxialShearStiffness;          //!< AUTO:  [SI:N] axial and shear stiffness;
+    Real length;                                  //!< AUTO: must be > 0;  [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives \f$\rho A L\f$; must be positive
+    Real massPerLength;                           //!< AUTO: must be >= 0;  [SI:kg/m] mass per length of beam; this data is used internally for computation
+    Matrix3D crossSectionInertia;                 //!< AUTO:  [SI:kg m] cross section mass moment of inertia tensor; this data is used internally for computation
+    Vector3D torsionalBendingStiffness;           //!< AUTO:  [SI:Nm\f$^2\f$] bending and torsional stiffness vector;
+    Vector3D axialShearStiffness;                 //!< AUTO:  [SI:N] axial and shear stiffness;
     //! AUTO: default constructor with parameter initialization
     CObjectBeamGeometricallyExactParameters()
     {
         nodeNumbers = Index2({EXUstd::InvalidIndex, EXUstd::InvalidIndex});
-        physicsLength = 0.;
-        physicsMassPerLength = 0.;
-        physicsCrossSectionInertia = EXUmath::zeroMatrix3D;
-        physicsTorsionalBendingStiffness = 0.;
-        physicsAxialShearStiffness = 0.;
+        length = 0.;
+        massPerLength = 0.;
+        crossSectionInertia = EXUmath::zeroMatrix3D;
+        torsionalBendingStiffness = 0.;
+        axialShearStiffness = 0.;
     };
 };
 

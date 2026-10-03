@@ -57,19 +57,19 @@ def Pendulum(kind):
             nodes.append(mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[x, 0, 1, 0])))
     for i in range(nElements):
         if kind == 'GE2D':
-            mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=lElement,
-                          physicsMassPerLength=rho*A, physicsCrossSectionInertia=rho*Izz, physicsBendingStiffness=E*Izz,
-                          physicsAxialStiffness=E*A, physicsShearStiffness=ks*G*A))
+            mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[nodes[i], nodes[i+1]], length=lElement,
+                          massPerLength=rho*A, crossSectionInertia=rho*Izz, bendingStiffness=E*Izz,
+                          axialStiffness=E*A, shearStiffness=ks*G*A))
         elif kind == 'GE3D':
             section = exu.BeamSection()
             section.stiffnessMatrix = np.diag([E*A, ks*G*A, ks*G*A, G*(Iyy+Izz), E*Iyy, E*Izz])
             section.inertia = np.diag([rho*(Iyy+Izz), rho*Iyy, rho*Izz])
             section.massPerLength = rho*A
-            mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=lElement,
+            mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], length=lElement,
                                                        sectionData=section))
         else:
-            mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=lElement,
-                          physicsMassPerLength=rho*A, physicsBendingStiffness=E*Izz, physicsAxialStiffness=E*A))
+            mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[nodes[i], nodes[i+1]], length=lElement,
+                          massPerLength=rho*A, bendingStiffness=E*Izz, axialStiffness=E*A))
     #gravity as nodal forces: half the weight of an element at each of its nodes
     for i in range(nElements+1):
         weight = rho*A*lElement*(0.5 if i in [0, nElements] else 1)*g

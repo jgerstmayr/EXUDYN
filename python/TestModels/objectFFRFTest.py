@@ -399,7 +399,7 @@ else:
 if nODE2rot == 4: #for euler parameters --> add body to constrain EP
     epsMass = 1e-3#needed, if not all ffrf terms are included
     #add rigid body to node for Euler Parameter constraint:
-    nReferenceFrame = mbs.AddObject(ObjectRigidBody(nodeNumber=nRB, physicsMass=epsMass, physicsInertia=[epsMass,epsMass,epsMass,0,0,0])) 
+    nReferenceFrame = mbs.AddObject(ObjectRigidBody(nodeNumber=nRB, mass=epsMass, inertia=[epsMass,epsMass,epsMass,0,0,0])) 
 
 mRB = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nRB))
 #exu.Print("rigidNodeMarker=", mRB)

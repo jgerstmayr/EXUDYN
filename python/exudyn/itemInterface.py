@@ -202,8 +202,8 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectFFRF,massMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t'], ['NumpyMatrix'], ['ObjectFFRFMassMatrixUserFunction']],
         'ObjectFFRFreducedOrder,forceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t'], ['StdVector'], ['ObjectFFRFreducedOrderForceUserFunction']],
         'ObjectFFRFreducedOrder,massMatrixUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector'], ['mbs', 't', 'itemNumber', 'q', 'q_t'], ['NumpyMatrix'], ['ObjectFFRFreducedOrderMassMatrixUserFunction']],
-        'ObjectANCFCable2D,axialForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'axialPositionNormalized', 'axialStrain', 'axialStrain_t', 'axialStrainRef', 'physicsAxialStiffness', 'physicsAxialDamping', 'curvature', 'curvature_t', 'curvatureRef'], ['Real'], ['ObjectANCFCable2DAxialForceUserFunction']],
-        'ObjectANCFCable2D,bendingMomentUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'axialPositionNormalized', 'curvature', 'curvature_t', 'curvatureRef', 'physicsBendingStiffness', 'physicsBendingDamping', 'axialStrain', 'axialStrain_t', 'axialStrainRef'], ['Real'], ['ObjectANCFCable2DBendingMomentUserFunction']],
+        'ObjectANCFCable2D,axialForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'axialPositionNormalized', 'axialStrain', 'axialStrain_t', 'axialStrainRef', 'axialStiffness', 'axialDamping', 'curvature', 'curvature_t', 'curvatureRef'], ['Real'], ['ObjectANCFCable2DAxialForceUserFunction']],
+        'ObjectANCFCable2D,bendingMomentUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'axialPositionNormalized', 'curvature', 'curvature_t', 'curvatureRef', 'bendingStiffness', 'bendingDamping', 'axialStrain', 'axialStrain_t', 'axialStrainRef'], ['Real'], ['ObjectANCFCable2DBendingMomentUserFunction']],
         'ObjectConnectorSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'deltaL', 'deltaL_t', 'stiffness', 'damping', 'force'], ['Real'], ['ObjectConnectorSpringDamperSpringForceUserFunction']],
         'ObjectConnectorCartesianSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdVector3D'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset'], ['StdVector3D'], ['ObjectConnectorCartesianSpringDamperSpringForceUserFunction']],
         'ObjectConnectorRigidBodySpringDamper,springForceTorqueUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdVector3D', 'StdMatrix6D', 'StdMatrix6D', 'StdMatrix3D', 'StdMatrix3D', 'StdVector6D'], ['mbs', 't', 'itemNumber', 'displacement', 'rotation', 'velocity', 'angularVelocity', 'stiffness', 'damping', 'rotJ0', 'rotJ1', 'offset'], ['StdVector6D'], ['ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction']],
@@ -211,7 +211,7 @@ userFunctionArgsDict = {'MainSystem,preStepUserFunction': [['MainSystem', 'Real'
         'ObjectConnectorLinearSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset'], ['Real'], ['ObjectConnectorLinearSpringDamperSpringForceUserFunction']],
         'ObjectConnectorTorsionalSpringDamper,springTorqueUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'rotation', 'angularVelocity', 'stiffness', 'damping', 'offset'], ['Real'], ['ObjectConnectorTorsionalSpringDamperSpringTorqueUserFunction']],
         'ObjectConnectorCoordinateSpringDamper,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset'], ['Real'], ['ObjectConnectorCoordinateSpringDamperSpringForceUserFunction']],
-        'ObjectConnectorCoordinateSpringDamperExt,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset', 'velocityOffset', 'fDynamicFriction', 'fStaticFrictionOffset', 'exponentialDecayStatic', 'fViscousFriction', 'frictionProportionalZone'], ['Real'], ['ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction']],
+        'ObjectConnectorCoordinateSpringDamperExt,springForceUserFunction': [['MainSystem', 'Real', 'Index', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real', 'Real'], ['mbs', 't', 'itemNumber', 'displacement', 'velocity', 'stiffness', 'damping', 'offset', 'velocityOffset', 'dynamicFrictionForce', 'staticFrictionOffsetForce', 'exponentialDecayStatic', 'viscousFrictionFactor', 'frictionProportionalZone'], ['Real'], ['ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction']],
         'ObjectConnectorCoordinate,offsetUserFunction': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real'], ['ObjectConnectorCoordinateOffsetUserFunction']],
         'ObjectConnectorCoordinate,offsetUserFunction_t': [['MainSystem', 'Real', 'Index', 'Real'], ['mbs', 't', 'itemNumber', 'lOffset'], ['Real'], ['ObjectConnectorCoordinateOffsetUserFunction_t']],
         'ObjectConnectorCoordinateVector,constraintUserFunction': [['MainSystem', 'Real', 'Index', 'StdVector', 'StdVector', 'bool'], ['mbs', 't', 'itemNumber', 'q', 'q_t', 'velocityLevel'], ['StdVector'], ['ObjectConnectorCoordinateVectorConstraintUserFunction']],
@@ -516,9 +516,9 @@ class ObjectANCFCable2DAxialForceUserFunction(Protocol):
 
         axialStrainRef (float): :math:`\varepsilon_0 + f\cRef \cdot \varepsilon\cRef`
 
-        physicsAxialStiffness (float): as given in object parameters
+        axialStiffness (float): as given in object parameters
 
-        physicsAxialDamping (float): as given in object parameters
+        axialDamping (float): as given in object parameters
 
         curvature (float): :math:`K`
 
@@ -529,7 +529,7 @@ class ObjectANCFCable2DAxialForceUserFunction(Protocol):
     Returns:
         float: scalar value of computed axial force
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, axialPositionNormalized: float, axialStrain: float, axialStrain_t: float, axialStrainRef: float, physicsAxialStiffness: float, physicsAxialDamping: float, curvature: float, curvature_t: float, curvatureRef: float) -> float: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, axialPositionNormalized: float, axialStrain: float, axialStrain_t: float, axialStrainRef: float, axialStiffness: float, axialDamping: float, curvature: float, curvature_t: float, curvatureRef: float) -> float: ...
 
 class ObjectANCFCable2DBendingMomentUserFunction(Protocol):
     r"""A user function, which computes the bending moment depending on time, strains and curvatures and.
@@ -555,9 +555,9 @@ class ObjectANCFCable2DBendingMomentUserFunction(Protocol):
 
         curvatureRef (float): :math:`K_0 + f\cRef \cdot K\cRef`
 
-        physicsBendingStiffness (float): as given in object parameters
+        bendingStiffness (float): as given in object parameters
 
-        physicsBendingDamping (float): as given in object parameters
+        bendingDamping (float): as given in object parameters
 
         axialStrain (float): :math:`\varepsilon`
 
@@ -568,7 +568,7 @@ class ObjectANCFCable2DBendingMomentUserFunction(Protocol):
     Returns:
         float: scalar value of computed bending moment
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, axialPositionNormalized: float, curvature: float, curvature_t: float, curvatureRef: float, physicsBendingStiffness: float, physicsBendingDamping: float, axialStrain: float, axialStrain_t: float, axialStrainRef: float) -> float: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, axialPositionNormalized: float, curvature: float, curvature_t: float, curvatureRef: float, bendingStiffness: float, bendingDamping: float, axialStrain: float, axialStrain_t: float, axialStrainRef: float) -> float: ...
 
 class ObjectConnectorSpringDamperSpringForceUserFunction(Protocol):
     r"""A user function, which computes the spring force depending on time, object variables (deltaL, deltaL_t) and.
@@ -839,20 +839,20 @@ class ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction(Protocol):
 
         velocityOffset (float): copied from object
 
-        fDynamicFriction (float): copied from object
+        dynamicFrictionForce (float): copied from object
 
-        fStaticFrictionOffset (float): copied from object
+        staticFrictionOffsetForce (float): copied from object
 
         exponentialDecayStatic (float): copied from object
 
-        fViscousFriction (float): copied from object
+        viscousFrictionFactor (float): copied from object
 
         frictionProportionalZone (float): copied from object, also called regularization velocity or regVel
 
     Returns:
         float: scalar value of computed force
     """
-    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, displacement: float, velocity: float, stiffness: float, damping: float, offset: float, velocityOffset: float, fDynamicFriction: float, fStaticFrictionOffset: float, exponentialDecayStatic: float, fViscousFriction: float, frictionProportionalZone: float) -> float: ...
+    def __call__(self, mbs: exudyn.MainSystem, t: float, itemNumber: int, displacement: float, velocity: float, stiffness: float, damping: float, offset: float, velocityOffset: float, dynamicFrictionForce: float, staticFrictionOffsetForce: float, exponentialDecayStatic: float, viscousFrictionFactor: float, frictionProportionalZone: float) -> float: ...
 
 class ObjectConnectorCoordinateOffsetUserFunction(Protocol):
     r"""A user function, which computes scalar offset for the coordinate constraint, e.g., in order to move a node on a prescribed trajectory.
@@ -2183,9 +2183,11 @@ class ObjectMassPoint:
     Args:
         name: objects's unique name; type: str
 
-        physicsMass: mass [SI:kg] of mass point; type: float
+        mass: mass [SI:kg] of mass point; type: float
 
         nodeNumber: node number (type NodeIndex) for mass point
+
+        physicsMass: deprecated since 1.12.258, removed in 2031: use mass
 
         visualization: visualization data, see VObjectMassPoint
 
@@ -2195,19 +2197,22 @@ class ObjectMassPoint:
         Requested Node type: ``Position``
 
     """
-    def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', mass = 0., nodeNumber = exudyn.InvalidIndex(), physicsMass = None, visualization = {'show': True, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = physicsMass
+        self.mass = mass
         self.nodeNumber = nodeNumber
+        self.physicsMass = physicsMass
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'MassPoint'
         yield 'name', self.name
-        yield 'physicsMass', self.physicsMass
+        yield 'mass', self.mass
         yield 'nodeNumber', self.nodeNumber
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
+        if self.physicsMass is not None:
+            yield 'physicsMass', self.physicsMass
 
     def __repr__(self):
         return str(dict(self))
@@ -2242,9 +2247,11 @@ class ObjectMassPoint2D:
     Args:
         name: objects's unique name; type: str
 
-        physicsMass: mass [SI:kg] of mass point; type: float
+        mass: mass [SI:kg] of mass point; type: float
 
         nodeNumber: node number (type NodeIndex) for mass point
+
+        physicsMass: deprecated since 1.12.258, removed in 2031: use mass
 
         visualization: visualization data, see VObjectMassPoint2D
 
@@ -2254,19 +2261,22 @@ class ObjectMassPoint2D:
         Requested Node type: ``Position2D`` + ``Position``
 
     """
-    def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', mass = 0., nodeNumber = exudyn.InvalidIndex(), physicsMass = None, visualization = {'show': True, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = physicsMass
+        self.mass = mass
         self.nodeNumber = nodeNumber
+        self.physicsMass = physicsMass
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'MassPoint2D'
         yield 'name', self.name
-        yield 'physicsMass', self.physicsMass
+        yield 'mass', self.mass
         yield 'nodeNumber', self.nodeNumber
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
+        if self.physicsMass is not None:
+            yield 'physicsMass', self.physicsMass
 
     def __repr__(self):
         return str(dict(self))
@@ -2303,13 +2313,15 @@ class ObjectMass1D:
     Args:
         name: objects's unique name; type: str
 
-        physicsMass: mass [SI:kg] of mass; type: float
+        mass: mass [SI:kg] of mass; type: float
 
         nodeNumber: node number (type NodeIndex) for Node1D
 
         referencePosition: a reference position, used to transform the 1D coordinate to a position; type: [float,float,float]
 
         referenceRotation: the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates; type: array_like
+
+        physicsMass: deprecated since 1.12.258, removed in 2031: use mass
 
         visualization: visualization data, see VObjectMass1D
 
@@ -2319,23 +2331,26 @@ class ObjectMass1D:
         Requested Node type: ``GenericODE2``
 
     """
-    def __init__(self, name = '', physicsMass = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', mass = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), physicsMass = None, visualization = {'show': True, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = physicsMass
+        self.mass = mass
         self.nodeNumber = nodeNumber
         self.referencePosition = np.array(referencePosition)
         self.referenceRotation = np.array(referenceRotation)
+        self.physicsMass = physicsMass
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'Mass1D'
         yield 'name', self.name
-        yield 'physicsMass', self.physicsMass
+        yield 'mass', self.mass
         yield 'nodeNumber', self.nodeNumber
         yield 'referencePosition', self.referencePosition
         yield 'referenceRotation', self.referenceRotation
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
+        if self.physicsMass is not None:
+            yield 'physicsMass', self.physicsMass
 
     def __repr__(self):
         return str(dict(self))
@@ -2370,13 +2385,15 @@ class ObjectRotationalMass1D:
     Args:
         name: objects's unique name; type: str
 
-        physicsInertia: inertia components [SI:kgm:math:`^2`] of rotor / rotational mass; type: float
+        inertia: inertia components [SI:kgm:math:`^2`] of rotor / rotational mass; type: float
 
         nodeNumber: node number (type NodeIndex) of Node1D, providing rotation coordinate :math:`\psi_0 = c_0`
 
         referencePosition: a constant reference position = reference point, used to assign joint constraints accordingly and for drawing; type: [float,float,float]
 
         referenceRotation: an intermediate rotation matrix, which transforms the 1D coordinate into 3D, see description; type: array_like
+
+        physicsInertia: deprecated since 1.12.258, removed in 2031: use inertia
 
         visualization: visualization data, see VObjectRotationalMass1D
 
@@ -2386,23 +2403,26 @@ class ObjectRotationalMass1D:
         Requested Node type: ``GenericODE2``
 
     """
-    def __init__(self, name = '', physicsInertia = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), visualization = {'show': True, 'graphicsData': []}):
+    def __init__(self, name = '', inertia = 0., nodeNumber = exudyn.InvalidIndex(), referencePosition = [0.,0.,0.], referenceRotation = IIDiagMatrix(rowsColumns=3,value=1), physicsInertia = None, visualization = {'show': True, 'graphicsData': []}):
         self.name = name
-        self.physicsInertia = physicsInertia
+        self.inertia = inertia
         self.nodeNumber = nodeNumber
         self.referencePosition = np.array(referencePosition)
         self.referenceRotation = np.array(referenceRotation)
+        self.physicsInertia = physicsInertia
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'RotationalMass1D'
         yield 'name', self.name
-        yield 'physicsInertia', self.physicsInertia
+        yield 'inertia', self.inertia
         yield 'nodeNumber', self.nodeNumber
         yield 'referencePosition', self.referencePosition
         yield 'referenceRotation', self.referenceRotation
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
+        if self.physicsInertia is not None:
+            yield 'physicsInertia', self.physicsInertia
 
     def __repr__(self):
         return str(dict(self))
@@ -2447,13 +2467,19 @@ class ObjectRigidBody:
     Args:
         name: objects's unique name; type: str
 
-        physicsMass: mass [SI:kg] of rigid body; type: float
+        mass: mass [SI:kg] of rigid body; type: float
 
-        physicsInertia: inertia components [SI:kgm:math:`^2`]: :math:`[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]` in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, COM and mass; type: array_like
+        inertia: inertia components [SI:kgm:math:`^2`]: :math:`[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]` in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, COM and mass; type: array_like
 
-        physicsCenterOfMass: local position of COM relative to the body's reference point; if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster; type: [float,float,float]
+        centerOfMass: local position of COM relative to the body's reference point; if the vector of the COM is [0,0,0], the computation will not consider additional terms for the COM and it is faster; type: [float,float,float]
 
         nodeNumber: node number (type NodeIndex) for rigid body node
+
+        physicsMass: deprecated since 1.12.258, removed in 2031: use mass
+
+        physicsInertia: deprecated since 1.12.258, removed in 2031: use inertia
+
+        physicsCenterOfMass: deprecated since 1.12.258, removed in 2031: use centerOfMass
 
         visualization: visualization data, see VObjectRigidBody
 
@@ -2463,24 +2489,33 @@ class ObjectRigidBody:
         Requested Node type: ``Position`` + ``Orientation`` + ``RigidBody``
 
     """
-    def __init__(self, name = '', physicsMass = 0., physicsInertia = [0.,0.,0., 0.,0.,0.], physicsCenterOfMass = [0.,0.,0.], nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
+    def __init__(self, name = '', mass = 0., inertia = [0.,0.,0., 0.,0.,0.], centerOfMass = [0.,0.,0.], nodeNumber = exudyn.InvalidIndex(), physicsMass = None, physicsInertia = None, physicsCenterOfMass = None, visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
-        self.physicsMass = physicsMass
-        self.physicsInertia = np.array(physicsInertia)
-        self.physicsCenterOfMass = np.array(physicsCenterOfMass)
+        self.mass = mass
+        self.inertia = np.array(inertia)
+        self.centerOfMass = np.array(centerOfMass)
         self.nodeNumber = nodeNumber
+        self.physicsMass = physicsMass
+        self.physicsInertia = physicsInertia
+        self.physicsCenterOfMass = physicsCenterOfMass
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'RigidBody'
         yield 'name', self.name
-        yield 'physicsMass', self.physicsMass
-        yield 'physicsInertia', self.physicsInertia
-        yield 'physicsCenterOfMass', self.physicsCenterOfMass
+        yield 'mass', self.mass
+        yield 'inertia', self.inertia
+        yield 'centerOfMass', self.centerOfMass
         yield 'nodeNumber', self.nodeNumber
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
+        if self.physicsMass is not None:
+            yield 'physicsMass', self.physicsMass
+        if self.physicsInertia is not None:
+            yield 'physicsInertia', self.physicsInertia
+        if self.physicsCenterOfMass is not None:
+            yield 'physicsCenterOfMass', self.physicsCenterOfMass
 
     def __repr__(self):
         return str(dict(self))
@@ -2521,13 +2556,19 @@ class ObjectRigidBody2D:
     Args:
         name: objects's unique name; type: str
 
-        physicsMass: mass [SI:kg] of rigid body; type: float
+        mass: mass [SI:kg] of rigid body; type: float
 
-        physicsInertia: inertia [SI:kgm:math:`^2`] of rigid body w.r.t. reference point; this is equal to the center of mass, if physicsCenterOfMass = 0; type: float
+        inertia: inertia [SI:kgm:math:`^2`] of rigid body w.r.t. reference point; this is equal to the center of mass, if centerOfMass = 0; type: float
 
-        physicsCenterOfMass: local position of COM relative to the body's reference point; if the vector of the COM is [0,0], the computation will not consider additional terms for the COM and it is faster; type: [float,float]
+        centerOfMass: local position of COM relative to the body's reference point; if the vector of the COM is [0,0], the computation will not consider additional terms for the COM and it is faster; type: [float,float]
 
         nodeNumber: node number (type NodeIndex) for 2D rigid body node
+
+        physicsMass: deprecated since 1.12.258, removed in 2031: use mass
+
+        physicsInertia: deprecated since 1.12.258, removed in 2031: use inertia
+
+        physicsCenterOfMass: deprecated since 1.12.258, removed in 2031: use centerOfMass
 
         visualization: visualization data, see VObjectRigidBody2D
 
@@ -2537,24 +2578,33 @@ class ObjectRigidBody2D:
         Requested Node type: ``Position2D`` + ``Orientation2D`` + ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', physicsMass = 0., physicsInertia = 0., physicsCenterOfMass = [0.,0.], nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
+    def __init__(self, name = '', mass = 0., inertia = 0., centerOfMass = [0.,0.], nodeNumber = exudyn.InvalidIndex(), physicsMass = None, physicsInertia = None, physicsCenterOfMass = None, visualization = {'show': True, 'graphicsDataUserFunction': 0, 'graphicsData': []}):
         self.name = name
+        self.mass = mass
+        self.inertia = inertia
+        self.centerOfMass = np.array(centerOfMass)
+        self.nodeNumber = nodeNumber
         self.physicsMass = physicsMass
         self.physicsInertia = physicsInertia
-        self.physicsCenterOfMass = np.array(physicsCenterOfMass)
-        self.nodeNumber = nodeNumber
+        self.physicsCenterOfMass = physicsCenterOfMass
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'RigidBody2D'
         yield 'name', self.name
-        yield 'physicsMass', self.physicsMass
-        yield 'physicsInertia', self.physicsInertia
-        yield 'physicsCenterOfMass', self.physicsCenterOfMass
+        yield 'mass', self.mass
+        yield 'inertia', self.inertia
+        yield 'centerOfMass', self.centerOfMass
         yield 'nodeNumber', self.nodeNumber
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VgraphicsDataUserFunction', dict(self.visualization)["graphicsDataUserFunction"]
         yield 'VgraphicsData', dict(self.visualization)["graphicsData"]
+        if self.physicsMass is not None:
+            yield 'physicsMass', self.physicsMass
+        if self.physicsInertia is not None:
+            yield 'physicsInertia', self.physicsInertia
+        if self.physicsCenterOfMass is not None:
+            yield 'physicsCenterOfMass', self.physicsCenterOfMass
 
     def __repr__(self):
         return str(dict(self))
@@ -3012,11 +3062,11 @@ class ObjectFFRFreducedOrder:
 
         objectIsInitialized: ALWAYS set to False! flag used to correctly initialize all FFRF matrices; as soon as this flag is False, some internal (constant) FFRF matrices are recomputed during Assemble(); type: bool
 
-        physicsMass: total mass [SI:kg] of FFRFreducedOrder object; type: float
+        mass: total mass [SI:kg] of FFRFreducedOrder object; type: float
 
-        physicsInertia: inertia tensor [SI:kgm:math:`^2`] of rigid body w.r.t. to the reference point of the body; type: array_like
+        inertia: inertia tensor [SI:kgm:math:`^2`] of rigid body w.r.t. to the reference point of the body; type: array_like
 
-        physicsCenterOfMass: local position of center of mass (COM); type: [float,float,float]
+        centerOfMass: local position of center of mass (COM); type: [float,float,float]
 
         mPsiTildePsi: special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface; type: array_like
 
@@ -3030,7 +3080,15 @@ class ObjectFFRFreducedOrder:
 
         mXRefTildePsiTilde: special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface; type: array_like
 
-        physicsCenterOfMassTilde: tilde matrix from local position of COM; autocomputed during initialization; type: array_like
+        centerOfMassTilde: tilde matrix from local position of COM; autocomputed during initialization; type: array_like
+
+        physicsMass: deprecated since 1.12.258, removed in 2031: use mass
+
+        physicsInertia: deprecated since 1.12.258, removed in 2031: use inertia
+
+        physicsCenterOfMass: deprecated since 1.12.258, removed in 2031: use centerOfMass
+
+        physicsCenterOfMassTilde: deprecated since 1.12.258, removed in 2031: use centerOfMassTilde
 
         visualization: visualization data, see VObjectFFRFreducedOrder
 
@@ -3038,7 +3096,7 @@ class ObjectFFRFreducedOrder:
         Object has/provides the following types: ``Body``, ``MultiNoded``, ``SuperElement``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = None, stiffnessMatrixReduced = None, dampingMatrixReduced = None, forceUserFunction: Union[ObjectFFRFreducedOrderForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFreducedOrderMassMatrixUserFunction, int] = 0, computeFFRFterms = True, modeBasis = [], outputVariableModeBasis = [], outputVariableTypeModeBasis = 0, referencePositions = [], objectIsInitialized = False, physicsMass = 0., physicsInertia = IIDiagMatrix(rowsColumns=3,value=1), physicsCenterOfMass = [0.,0.,0.], mPsiTildePsi = [], mPsiTildePsiTilde = [], mPhitTPsi = [], mPhitTPsiTilde = [], mXRefTildePsi = [], mXRefTildePsiTilde = [], physicsCenterOfMassTilde = IIDiagMatrix(rowsColumns=3,value=0), visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
+    def __init__(self, name = '', nodeNumbers = [], massMatrixReduced = None, stiffnessMatrixReduced = None, dampingMatrixReduced = None, forceUserFunction: Union[ObjectFFRFreducedOrderForceUserFunction, int] = 0, massMatrixUserFunction: Union[ObjectFFRFreducedOrderMassMatrixUserFunction, int] = 0, computeFFRFterms = True, modeBasis = [], outputVariableModeBasis = [], outputVariableTypeModeBasis = 0, referencePositions = [], objectIsInitialized = False, mass = 0., inertia = IIDiagMatrix(rowsColumns=3,value=1), centerOfMass = [0.,0.,0.], mPsiTildePsi = [], mPsiTildePsiTilde = [], mPhitTPsi = [], mPhitTPsiTilde = [], mXRefTildePsi = [], mXRefTildePsiTilde = [], centerOfMassTilde = IIDiagMatrix(rowsColumns=3,value=0), physicsMass = None, physicsInertia = None, physicsCenterOfMass = None, physicsCenterOfMassTilde = None, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.], 'triangleMesh': [], 'showNodes': False}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.massMatrixReduced = massMatrixReduced
@@ -3052,16 +3110,20 @@ class ObjectFFRFreducedOrder:
         self.outputVariableTypeModeBasis = outputVariableTypeModeBasis
         self.referencePositions = CheckForValidNumpyArray(referencePositions)
         self.objectIsInitialized = objectIsInitialized
-        self.physicsMass = physicsMass
-        self.physicsInertia = np.array(physicsInertia)
-        self.physicsCenterOfMass = np.array(physicsCenterOfMass)
+        self.mass = mass
+        self.inertia = np.array(inertia)
+        self.centerOfMass = np.array(centerOfMass)
         self.mPsiTildePsi = CheckForValidNumpyArray(mPsiTildePsi)
         self.mPsiTildePsiTilde = CheckForValidNumpyArray(mPsiTildePsiTilde)
         self.mPhitTPsi = CheckForValidNumpyArray(mPhitTPsi)
         self.mPhitTPsiTilde = CheckForValidNumpyArray(mPhitTPsiTilde)
         self.mXRefTildePsi = CheckForValidNumpyArray(mXRefTildePsi)
         self.mXRefTildePsiTilde = CheckForValidNumpyArray(mXRefTildePsiTilde)
-        self.physicsCenterOfMassTilde = np.array(physicsCenterOfMassTilde)
+        self.centerOfMassTilde = np.array(centerOfMassTilde)
+        self.physicsMass = physicsMass
+        self.physicsInertia = physicsInertia
+        self.physicsCenterOfMass = physicsCenterOfMass
+        self.physicsCenterOfMassTilde = physicsCenterOfMassTilde
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -3079,20 +3141,28 @@ class ObjectFFRFreducedOrder:
         yield 'outputVariableTypeModeBasis', self.outputVariableTypeModeBasis
         yield 'referencePositions', self.referencePositions
         yield 'objectIsInitialized', self.objectIsInitialized
-        yield 'physicsMass', self.physicsMass
-        yield 'physicsInertia', self.physicsInertia
-        yield 'physicsCenterOfMass', self.physicsCenterOfMass
+        yield 'mass', self.mass
+        yield 'inertia', self.inertia
+        yield 'centerOfMass', self.centerOfMass
         yield 'mPsiTildePsi', self.mPsiTildePsi
         yield 'mPsiTildePsiTilde', self.mPsiTildePsiTilde
         yield 'mPhitTPsi', self.mPhitTPsi
         yield 'mPhitTPsiTilde', self.mPhitTPsiTilde
         yield 'mXRefTildePsi', self.mXRefTildePsi
         yield 'mXRefTildePsiTilde', self.mXRefTildePsiTilde
-        yield 'physicsCenterOfMassTilde', self.physicsCenterOfMassTilde
+        yield 'centerOfMassTilde', self.centerOfMassTilde
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
         yield 'VtriangleMesh', dict(self.visualization)["triangleMesh"]
         yield 'VshowNodes', dict(self.visualization)["showNodes"]
+        if self.physicsMass is not None:
+            yield 'physicsMass', self.physicsMass
+        if self.physicsInertia is not None:
+            yield 'physicsInertia', self.physicsInertia
+        if self.physicsCenterOfMass is not None:
+            yield 'physicsCenterOfMass', self.physicsCenterOfMass
+        if self.physicsCenterOfMassTilde is not None:
+            yield 'physicsCenterOfMassTilde', self.physicsCenterOfMassTilde
 
     def __repr__(self):
         return str(dict(self))
@@ -3128,30 +3198,44 @@ class VObjectANCFCable:
 class ObjectANCFCable:
     r"""A 3D cable finite element using 2 nodes of type NodePointSlope1.
     
-    The localPosition of the beam with length :math:`L`=physicsLength and height :math:`h` ranges in :math:`X`-direction in range :math:`[0, L]` and in :math:`Y`-direction in range :math:`[-h/2,h/2]` (which is in fact not needed in the EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
+    The localPosition of the beam with length :math:`L`=length and height :math:`h` ranges in :math:`X`-direction in range :math:`[0, L]` and in :math:`Y`-direction in range :math:`[-h/2,h/2]` (which is in fact not needed in the EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
     
     Args:
         name: objects's unique name; type: str
 
-        physicsLength: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
+        length: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
 
-        physicsMassPerLength: [SI:kg/m] mass per length of beam; type: float
+        massPerLength: [SI:kg/m] mass per length of beam; type: float
 
-        physicsBendingStiffness: [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature; type: float
+        bendingStiffness: [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature; type: float
 
-        physicsAxialStiffness: [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon = |\rv^\prime|-1` is the axial strain; type: float
+        axialStiffness: [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon = |\rv^\prime|-1` is the axial strain; type: float
 
-        physicsBendingDamping: [SI:Nm:math:`^2`/s] bending damping of beam ; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`; type: float
+        bendingDamping: [SI:Nm:math:`^2`/s] bending damping of beam ; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`; type: float
 
-        physicsAxialDamping: [SI:N/s] axial damping of beam; the additional virtual work due to damping is :math:`\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx`; type: float
+        axialDamping: [SI:N/s] axial damping of beam; the additional virtual work due to damping is :math:`\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx`; type: float
 
-        physicsReferenceAxialStrain: [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value; type: float
+        referenceAxialStrain: [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value; type: float
 
         strainIsRelativeToReference: if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of :math:`\varepsilon_0` and :math:`\kappa_0` serve as a reference geometry; allows also values between 0. and 1.; type: float
 
         nodeNumbers: two node numbers ANCF cable element; type: NodeIndex2
 
         useReducedOrderIntegration: 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments
+
+        physicsLength: deprecated since 1.12.258, removed in 2031: use length
+
+        physicsMassPerLength: deprecated since 1.12.258, removed in 2031: use massPerLength
+
+        physicsBendingStiffness: deprecated since 1.12.258, removed in 2031: use bendingStiffness
+
+        physicsAxialStiffness: deprecated since 1.12.258, removed in 2031: use axialStiffness
+
+        physicsBendingDamping: deprecated since 1.12.258, removed in 2031: use bendingDamping
+
+        physicsAxialDamping: deprecated since 1.12.258, removed in 2031: use axialDamping
+
+        physicsReferenceAxialStrain: deprecated since 1.12.258, removed in 2031: use referenceAxialStrain
 
         visualization: visualization data, see VObjectANCFCable
 
@@ -3161,8 +3245,18 @@ class ObjectANCFCable:
         Requested Node type: ``Position``
 
     """
-    def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, visualization = {'show': True, 'radius': 0., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', length = 0., massPerLength = 0., bendingStiffness = 0., axialStiffness = 0., bendingDamping = 0., axialDamping = 0., referenceAxialStrain = 0., strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, physicsLength = None, physicsMassPerLength = None, physicsBendingStiffness = None, physicsAxialStiffness = None, physicsBendingDamping = None, physicsAxialDamping = None, physicsReferenceAxialStrain = None, visualization = {'show': True, 'radius': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
+        self.length = length
+        self.massPerLength = massPerLength
+        self.bendingStiffness = bendingStiffness
+        self.axialStiffness = axialStiffness
+        self.bendingDamping = bendingDamping
+        self.axialDamping = axialDamping
+        self.referenceAxialStrain = referenceAxialStrain
+        self.strainIsRelativeToReference = strainIsRelativeToReference
+        self.nodeNumbers = copy.copy(nodeNumbers)
+        self.useReducedOrderIntegration = useReducedOrderIntegration
         self.physicsLength = physicsLength
         self.physicsMassPerLength = physicsMassPerLength
         self.physicsBendingStiffness = physicsBendingStiffness
@@ -3170,27 +3264,38 @@ class ObjectANCFCable:
         self.physicsBendingDamping = physicsBendingDamping
         self.physicsAxialDamping = physicsAxialDamping
         self.physicsReferenceAxialStrain = physicsReferenceAxialStrain
-        self.strainIsRelativeToReference = strainIsRelativeToReference
-        self.nodeNumbers = copy.copy(nodeNumbers)
-        self.useReducedOrderIntegration = useReducedOrderIntegration
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'ANCFCable'
         yield 'name', self.name
-        yield 'physicsLength', self.physicsLength
-        yield 'physicsMassPerLength', self.physicsMassPerLength
-        yield 'physicsBendingStiffness', self.physicsBendingStiffness
-        yield 'physicsAxialStiffness', self.physicsAxialStiffness
-        yield 'physicsBendingDamping', self.physicsBendingDamping
-        yield 'physicsAxialDamping', self.physicsAxialDamping
-        yield 'physicsReferenceAxialStrain', self.physicsReferenceAxialStrain
+        yield 'length', self.length
+        yield 'massPerLength', self.massPerLength
+        yield 'bendingStiffness', self.bendingStiffness
+        yield 'axialStiffness', self.axialStiffness
+        yield 'bendingDamping', self.bendingDamping
+        yield 'axialDamping', self.axialDamping
+        yield 'referenceAxialStrain', self.referenceAxialStrain
         yield 'strainIsRelativeToReference', self.strainIsRelativeToReference
         yield 'nodeNumbers', self.nodeNumbers
         yield 'useReducedOrderIntegration', self.useReducedOrderIntegration
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vradius', dict(self.visualization)["radius"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.physicsLength is not None:
+            yield 'physicsLength', self.physicsLength
+        if self.physicsMassPerLength is not None:
+            yield 'physicsMassPerLength', self.physicsMassPerLength
+        if self.physicsBendingStiffness is not None:
+            yield 'physicsBendingStiffness', self.physicsBendingStiffness
+        if self.physicsAxialStiffness is not None:
+            yield 'physicsAxialStiffness', self.physicsAxialStiffness
+        if self.physicsBendingDamping is not None:
+            yield 'physicsBendingDamping', self.physicsBendingDamping
+        if self.physicsAxialDamping is not None:
+            yield 'physicsAxialDamping', self.physicsAxialDamping
+        if self.physicsReferenceAxialStrain is not None:
+            yield 'physicsReferenceAxialStrain', self.physicsReferenceAxialStrain
 
     def __repr__(self):
         return str(dict(self))
@@ -3226,26 +3331,26 @@ class VObjectANCFCable2D:
 class ObjectANCFCable2D:
     r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1.
     
-    The localPosition of the beam with length :math:`L`=physicsLength and height :math:`h` ranges in :math:`X`-direction in range :math:`[0, L]` and in :math:`Y`-direction in range :math:`[-h/2,h/2]` (which is in fact not needed in the EOM).
+    The localPosition of the beam with length :math:`L`=length and height :math:`h` ranges in :math:`X`-direction in range :math:`[0, L]` and in :math:`Y`-direction in range :math:`[-h/2,h/2]` (which is in fact not needed in the EOM).
     
     Args:
         name: objects's unique name; type: str
 
-        physicsLength: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
+        length: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
 
-        physicsMassPerLength: [SI:kg/m] mass per length of beam; type: float
+        massPerLength: [SI:kg/m] mass per length of beam; type: float
 
-        physicsBendingStiffness: [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature; type: float
+        bendingStiffness: [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature; type: float
 
-        physicsAxialStiffness: [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon = |\rv^\prime|-1` is the axial strain; type: float
+        axialStiffness: [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon = |\rv^\prime|-1` is the axial strain; type: float
 
-        physicsBendingDamping: [SI:Nm:math:`^2`/s] bending damping of beam ; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`; type: float
+        bendingDamping: [SI:Nm:math:`^2`/s] bending damping of beam ; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`; type: float
 
-        physicsAxialDamping: [SI:N/s] axial damping of beam; the additional virtual work due to damping is :math:`\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx`; type: float
+        axialDamping: [SI:N/s] axial damping of beam; the additional virtual work due to damping is :math:`\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx`; type: float
 
-        physicsReferenceAxialStrain: [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value; type: float
+        referenceAxialStrain: [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value; type: float
 
-        physicsReferenceCurvature: [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value; type: float
+        referenceCurvature: [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value; type: float
 
         strainIsRelativeToReference: if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of :math:`\varepsilon_0` and :math:`\kappa_0` serve as a reference geometry; allows also values between 0. and 1.; type: float
 
@@ -3257,14 +3362,43 @@ class ObjectANCFCable2D:
 
         bendingMomentUserFunction: A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below; type: ObjectANCFCable2DBendingMomentUserFunction
 
+        physicsLength: deprecated since 1.12.258, removed in 2031: use length
+
+        physicsMassPerLength: deprecated since 1.12.258, removed in 2031: use massPerLength
+
+        physicsBendingStiffness: deprecated since 1.12.258, removed in 2031: use bendingStiffness
+
+        physicsAxialStiffness: deprecated since 1.12.258, removed in 2031: use axialStiffness
+
+        physicsBendingDamping: deprecated since 1.12.258, removed in 2031: use bendingDamping
+
+        physicsAxialDamping: deprecated since 1.12.258, removed in 2031: use axialDamping
+
+        physicsReferenceAxialStrain: deprecated since 1.12.258, removed in 2031: use referenceAxialStrain
+
+        physicsReferenceCurvature: deprecated since 1.12.258, removed in 2031: use referenceCurvature
+
         visualization: visualization data, see VObjectANCFCable2D
 
     Notes:
         Requested Node type: ``Position2D`` + ``Orientation2D`` + ``Point2DSlope1`` + ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, axialForceUserFunction: Union[ObjectANCFCable2DAxialForceUserFunction, int] = 0, bendingMomentUserFunction: Union[ObjectANCFCable2DBendingMomentUserFunction, int] = 0, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', length = 0., massPerLength = 0., bendingStiffness = 0., axialStiffness = 0., bendingDamping = 0., axialDamping = 0., referenceAxialStrain = 0., referenceCurvature = 0., strainIsRelativeToReference = 0., nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, axialForceUserFunction: Union[ObjectANCFCable2DAxialForceUserFunction, int] = 0, bendingMomentUserFunction: Union[ObjectANCFCable2DBendingMomentUserFunction, int] = 0, physicsLength = None, physicsMassPerLength = None, physicsBendingStiffness = None, physicsAxialStiffness = None, physicsBendingDamping = None, physicsAxialDamping = None, physicsReferenceAxialStrain = None, physicsReferenceCurvature = None, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
+        self.length = length
+        self.massPerLength = massPerLength
+        self.bendingStiffness = bendingStiffness
+        self.axialStiffness = axialStiffness
+        self.bendingDamping = bendingDamping
+        self.axialDamping = axialDamping
+        self.referenceAxialStrain = referenceAxialStrain
+        self.referenceCurvature = referenceCurvature
+        self.strainIsRelativeToReference = strainIsRelativeToReference
+        self.nodeNumbers = copy.copy(nodeNumbers)
+        self.useReducedOrderIntegration = useReducedOrderIntegration
+        self.axialForceUserFunction = axialForceUserFunction
+        self.bendingMomentUserFunction = bendingMomentUserFunction
         self.physicsLength = physicsLength
         self.physicsMassPerLength = physicsMassPerLength
         self.physicsBendingStiffness = physicsBendingStiffness
@@ -3273,24 +3407,19 @@ class ObjectANCFCable2D:
         self.physicsAxialDamping = physicsAxialDamping
         self.physicsReferenceAxialStrain = physicsReferenceAxialStrain
         self.physicsReferenceCurvature = physicsReferenceCurvature
-        self.strainIsRelativeToReference = strainIsRelativeToReference
-        self.nodeNumbers = copy.copy(nodeNumbers)
-        self.useReducedOrderIntegration = useReducedOrderIntegration
-        self.axialForceUserFunction = axialForceUserFunction
-        self.bendingMomentUserFunction = bendingMomentUserFunction
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'ANCFCable2D'
         yield 'name', self.name
-        yield 'physicsLength', self.physicsLength
-        yield 'physicsMassPerLength', self.physicsMassPerLength
-        yield 'physicsBendingStiffness', self.physicsBendingStiffness
-        yield 'physicsAxialStiffness', self.physicsAxialStiffness
-        yield 'physicsBendingDamping', self.physicsBendingDamping
-        yield 'physicsAxialDamping', self.physicsAxialDamping
-        yield 'physicsReferenceAxialStrain', self.physicsReferenceAxialStrain
-        yield 'physicsReferenceCurvature', self.physicsReferenceCurvature
+        yield 'length', self.length
+        yield 'massPerLength', self.massPerLength
+        yield 'bendingStiffness', self.bendingStiffness
+        yield 'axialStiffness', self.axialStiffness
+        yield 'bendingDamping', self.bendingDamping
+        yield 'axialDamping', self.axialDamping
+        yield 'referenceAxialStrain', self.referenceAxialStrain
+        yield 'referenceCurvature', self.referenceCurvature
         yield 'strainIsRelativeToReference', self.strainIsRelativeToReference
         yield 'nodeNumbers', self.nodeNumbers
         yield 'useReducedOrderIntegration', self.useReducedOrderIntegration
@@ -3299,6 +3428,22 @@ class ObjectANCFCable2D:
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawHeight', dict(self.visualization)["drawHeight"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.physicsLength is not None:
+            yield 'physicsLength', self.physicsLength
+        if self.physicsMassPerLength is not None:
+            yield 'physicsMassPerLength', self.physicsMassPerLength
+        if self.physicsBendingStiffness is not None:
+            yield 'physicsBendingStiffness', self.physicsBendingStiffness
+        if self.physicsAxialStiffness is not None:
+            yield 'physicsAxialStiffness', self.physicsAxialStiffness
+        if self.physicsBendingDamping is not None:
+            yield 'physicsBendingDamping', self.physicsBendingDamping
+        if self.physicsAxialDamping is not None:
+            yield 'physicsAxialDamping', self.physicsAxialDamping
+        if self.physicsReferenceAxialStrain is not None:
+            yield 'physicsReferenceAxialStrain', self.physicsReferenceAxialStrain
+        if self.physicsReferenceCurvature is not None:
+            yield 'physicsReferenceCurvature', self.physicsReferenceCurvature
 
     def __repr__(self):
         return str(dict(self))
@@ -3334,32 +3479,32 @@ class VObjectALEANCFCable2D:
 class ObjectALEANCFCable2D:
     r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2, which adds additional (redundant) motion in axial direction of the beam.
     
-    This allows modeling pipes but also axially moving beams. The localPosition of the beam with length :math:`L`=physicsLength and height :math:`h` ranges in :math:`X`-direction in range :math:`[0, L]` and in :math:`Y`-direction in range :math:`[-h/2,h/2]` (which is in fact not needed in the EOM).
+    This allows modeling pipes but also axially moving beams. The localPosition of the beam with length :math:`L`=length and height :math:`h` ranges in :math:`X`-direction in range :math:`[0, L]` and in :math:`Y`-direction in range :math:`[-h/2,h/2]` (which is in fact not needed in the EOM).
     
     Args:
         name: objects's unique name; type: str
 
-        physicsLength: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
+        length: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
 
-        physicsMassPerLength: [SI:kg/m] total mass per length of beam (including axially moving parts / fluid); type: float
+        massPerLength: [SI:kg/m] total mass per length of beam (including axially moving parts / fluid); type: float
 
-        physicsMovingMassFactor: this factor denotes the amount of :math:`\rho A` which is moving; physicsMovingMassFactor=1 means, that all mass is moving; physicsMovingMassFactor=0 means, that no mass is moving; factor can be used to simulate e.g. pipe conveying fluid, in which :math:`\rho A` is the mass of the pipe+fluid, while :math:`physicsMovingMassFactor \cdot \rho A` is the mass per unit length of the fluid; type: float
+        movingMassFactor: this factor denotes the amount of :math:`\rho A` which is moving; movingMassFactor=1 means, that all mass is moving; movingMassFactor=0 means, that no mass is moving; factor can be used to simulate e.g. pipe conveying fluid, in which :math:`\rho A` is the mass of the pipe+fluid, while :math:`movingMassFactor \cdot \rho A` is the mass per unit length of the fluid; type: float
 
-        physicsBendingStiffness: [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature; type: float
+        bendingStiffness: [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature; type: float
 
-        physicsAxialStiffness: [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon = |\rv^\prime|-1` is the axial strain; type: float
+        axialStiffness: [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon = |\rv^\prime|-1` is the axial strain; type: float
 
-        physicsBendingDamping: [SI:Nm:math:`^2`/s] bending damping of beam ; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`; type: float
+        bendingDamping: [SI:Nm:math:`^2`/s] bending damping of beam ; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`; type: float
 
-        physicsAxialDamping: [SI:N/s] axial damping of beam; the additional virtual work due to damping is :math:`\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx`; type: float
+        axialDamping: [SI:N/s] axial damping of beam; the additional virtual work due to damping is :math:`\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx`; type: float
 
-        physicsReferenceAxialStrain: [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value; type: float
+        referenceAxialStrain: [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value; type: float
 
-        physicsReferenceCurvature: [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value; type: float
+        referenceCurvature: [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value; type: float
 
-        physicsUseCouplingTerms: true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then); type: bool
+        useCouplingTerms: true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then); type: bool
 
-        physicsAddALEvariation: true: correct case, where additional terms related to variation of strain and curvature are added; type: bool
+        addALEvariation: true: correct case, where additional terms related to variation of strain and curvature are added; type: bool
 
         nodeNumbers: two node numbers ANCF cable element, third node=ALE GenericODE2 node; type: NodeIndex3
 
@@ -3367,11 +3512,47 @@ class ObjectALEANCFCable2D:
 
         strainIsRelativeToReference: if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of :math:`\varepsilon_0` and :math:`\kappa_0` serve as a reference geometry; allows also values between 0. and 1.; type: float
 
+        physicsLength: deprecated since 1.12.258, removed in 2031: use length
+
+        physicsMassPerLength: deprecated since 1.12.258, removed in 2031: use massPerLength
+
+        physicsMovingMassFactor: deprecated since 1.12.258, removed in 2031: use movingMassFactor
+
+        physicsBendingStiffness: deprecated since 1.12.258, removed in 2031: use bendingStiffness
+
+        physicsAxialStiffness: deprecated since 1.12.258, removed in 2031: use axialStiffness
+
+        physicsBendingDamping: deprecated since 1.12.258, removed in 2031: use bendingDamping
+
+        physicsAxialDamping: deprecated since 1.12.258, removed in 2031: use axialDamping
+
+        physicsReferenceAxialStrain: deprecated since 1.12.258, removed in 2031: use referenceAxialStrain
+
+        physicsReferenceCurvature: deprecated since 1.12.258, removed in 2031: use referenceCurvature
+
+        physicsUseCouplingTerms: deprecated since 1.12.258, removed in 2031: use useCouplingTerms
+
+        physicsAddALEvariation: deprecated since 1.12.258, removed in 2031: use addALEvariation
+
         visualization: visualization data, see VObjectALEANCFCable2D
 
     """
-    def __init__(self, name = '', physicsLength = 0., physicsMassPerLength = 0., physicsMovingMassFactor = 1., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsReferenceAxialStrain = 0., physicsReferenceCurvature = 0., physicsUseCouplingTerms = True, physicsAddALEvariation = True, nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, strainIsRelativeToReference = 0., visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', length = 0., massPerLength = 0., movingMassFactor = 1., bendingStiffness = 0., axialStiffness = 0., bendingDamping = 0., axialDamping = 0., referenceAxialStrain = 0., referenceCurvature = 0., useCouplingTerms = True, addALEvariation = True, nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, strainIsRelativeToReference = 0., physicsLength = None, physicsMassPerLength = None, physicsMovingMassFactor = None, physicsBendingStiffness = None, physicsAxialStiffness = None, physicsBendingDamping = None, physicsAxialDamping = None, physicsReferenceAxialStrain = None, physicsReferenceCurvature = None, physicsUseCouplingTerms = None, physicsAddALEvariation = None, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
+        self.length = length
+        self.massPerLength = massPerLength
+        self.movingMassFactor = movingMassFactor
+        self.bendingStiffness = bendingStiffness
+        self.axialStiffness = axialStiffness
+        self.bendingDamping = bendingDamping
+        self.axialDamping = axialDamping
+        self.referenceAxialStrain = referenceAxialStrain
+        self.referenceCurvature = referenceCurvature
+        self.useCouplingTerms = useCouplingTerms
+        self.addALEvariation = addALEvariation
+        self.nodeNumbers = copy.copy(nodeNumbers)
+        self.useReducedOrderIntegration = useReducedOrderIntegration
+        self.strainIsRelativeToReference = strainIsRelativeToReference
         self.physicsLength = physicsLength
         self.physicsMassPerLength = physicsMassPerLength
         self.physicsMovingMassFactor = physicsMovingMassFactor
@@ -3383,31 +3564,50 @@ class ObjectALEANCFCable2D:
         self.physicsReferenceCurvature = physicsReferenceCurvature
         self.physicsUseCouplingTerms = physicsUseCouplingTerms
         self.physicsAddALEvariation = physicsAddALEvariation
-        self.nodeNumbers = copy.copy(nodeNumbers)
-        self.useReducedOrderIntegration = useReducedOrderIntegration
-        self.strainIsRelativeToReference = strainIsRelativeToReference
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'ALEANCFCable2D'
         yield 'name', self.name
-        yield 'physicsLength', self.physicsLength
-        yield 'physicsMassPerLength', self.physicsMassPerLength
-        yield 'physicsMovingMassFactor', self.physicsMovingMassFactor
-        yield 'physicsBendingStiffness', self.physicsBendingStiffness
-        yield 'physicsAxialStiffness', self.physicsAxialStiffness
-        yield 'physicsBendingDamping', self.physicsBendingDamping
-        yield 'physicsAxialDamping', self.physicsAxialDamping
-        yield 'physicsReferenceAxialStrain', self.physicsReferenceAxialStrain
-        yield 'physicsReferenceCurvature', self.physicsReferenceCurvature
-        yield 'physicsUseCouplingTerms', self.physicsUseCouplingTerms
-        yield 'physicsAddALEvariation', self.physicsAddALEvariation
+        yield 'length', self.length
+        yield 'massPerLength', self.massPerLength
+        yield 'movingMassFactor', self.movingMassFactor
+        yield 'bendingStiffness', self.bendingStiffness
+        yield 'axialStiffness', self.axialStiffness
+        yield 'bendingDamping', self.bendingDamping
+        yield 'axialDamping', self.axialDamping
+        yield 'referenceAxialStrain', self.referenceAxialStrain
+        yield 'referenceCurvature', self.referenceCurvature
+        yield 'useCouplingTerms', self.useCouplingTerms
+        yield 'addALEvariation', self.addALEvariation
         yield 'nodeNumbers', self.nodeNumbers
         yield 'useReducedOrderIntegration', self.useReducedOrderIntegration
         yield 'strainIsRelativeToReference', self.strainIsRelativeToReference
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawHeight', dict(self.visualization)["drawHeight"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.physicsLength is not None:
+            yield 'physicsLength', self.physicsLength
+        if self.physicsMassPerLength is not None:
+            yield 'physicsMassPerLength', self.physicsMassPerLength
+        if self.physicsMovingMassFactor is not None:
+            yield 'physicsMovingMassFactor', self.physicsMovingMassFactor
+        if self.physicsBendingStiffness is not None:
+            yield 'physicsBendingStiffness', self.physicsBendingStiffness
+        if self.physicsAxialStiffness is not None:
+            yield 'physicsAxialStiffness', self.physicsAxialStiffness
+        if self.physicsBendingDamping is not None:
+            yield 'physicsBendingDamping', self.physicsBendingDamping
+        if self.physicsAxialDamping is not None:
+            yield 'physicsAxialDamping', self.physicsAxialDamping
+        if self.physicsReferenceAxialStrain is not None:
+            yield 'physicsReferenceAxialStrain', self.physicsReferenceAxialStrain
+        if self.physicsReferenceCurvature is not None:
+            yield 'physicsReferenceCurvature', self.physicsReferenceCurvature
+        if self.physicsUseCouplingTerms is not None:
+            yield 'physicsUseCouplingTerms', self.physicsUseCouplingTerms
+        if self.physicsAddALEvariation is not None:
+            yield 'physicsAddALEvariation', self.physicsAddALEvariation
 
     def __repr__(self):
         return str(dict(self))
@@ -3450,13 +3650,15 @@ class ObjectANCFBeam:
 
         nodeNumbers: two node numbers for beam element; type: NodeIndex2
 
-        physicsLength: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
+        length: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
 
         sectionData: data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.
 
         crossSectionPenaltyFactor: [SI:1] additional penalty factors for cross section deformation, which are in total :math:`k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp`; type: [float,float,float]
 
         crossSectionDamping: [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read  :math:`d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp`; type: [float,float,float]
+
+        physicsLength: deprecated since 1.12.258, removed in 2031: use length
 
         visualization: visualization data, see VObjectANCFBeam
 
@@ -3466,26 +3668,29 @@ class ObjectANCFBeam:
         Requested Node type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., sectionData = exudyn.BeamSection(), crossSectionPenaltyFactor = [1.,1.,1.], crossSectionDamping = [0.,0.,0.], visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], length = 0., sectionData = exudyn.BeamSection(), crossSectionPenaltyFactor = [1.,1.,1.], crossSectionDamping = [0.,0.,0.], physicsLength = None, visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
-        self.physicsLength = physicsLength
+        self.length = length
         self.sectionData = sectionData
         self.crossSectionPenaltyFactor = np.array(crossSectionPenaltyFactor)
         self.crossSectionDamping = np.array(crossSectionDamping)
+        self.physicsLength = physicsLength
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'ANCFBeam'
         yield 'name', self.name
         yield 'nodeNumbers', self.nodeNumbers
-        yield 'physicsLength', self.physicsLength
+        yield 'length', self.length
         yield 'sectionData', self.sectionData
         yield 'crossSectionPenaltyFactor', self.crossSectionPenaltyFactor
         yield 'crossSectionDamping', self.crossSectionDamping
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VsectionGeometry', dict(self.visualization)["sectionGeometry"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.physicsLength is not None:
+            yield 'physicsLength', self.physicsLength
 
     def __repr__(self):
         return str(dict(self))
@@ -3521,34 +3726,54 @@ class VObjectBeamGeometricallyExact2D:
 class ObjectBeamGeometricallyExact2D:
     r"""A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D.
     
-    Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the :math:`y`-axis, while and angle :math:`\pi/2` means that the cross section points in negative :math:`x`-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length :math:`L`=physicsLength and height :math:`h` ranges in :math:`X`-direction in range :math:`[-L/2, L/2]` and in :math:`Y`-direction in range :math:`[-h/2,h/2]` (which is in fact not needed in the EOM).
+    Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the :math:`y`-axis, while and angle :math:`\pi/2` means that the cross section points in negative :math:`x`-direction. Pre-curvature can be included with referenceCurvature and axial pre-stress can be considered by using a length different from the reference configuration of the nodes. The localPosition of the beam with length :math:`L`=length and height :math:`h` ranges in :math:`X`-direction in range :math:`[-L/2, L/2]` and in :math:`Y`-direction in range :math:`[-h/2,h/2]` (which is in fact not needed in the EOM).
     
     Args:
         name: objects's unique name; type: str
 
         nodeNumbers: two node numbers for beam element; type: ArrayNodeIndex
 
-        physicsLength: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
+        length: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
 
-        physicsMassPerLength: [SI:kg/m] mass per length of beam; type: float
+        massPerLength: [SI:kg/m] mass per length of beam; type: float
 
-        physicsCrossSectionInertia: [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section; type: float
+        crossSectionInertia: [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section; type: float
 
-        physicsBendingStiffness: [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature; type: float
+        bendingStiffness: [SI:Nm:math:`^2`] bending stiffness of beam; the bending moment is :math:`m = EI (\kappa - \kappa_0)`, in which :math:`\kappa` is the material measure of curvature; type: float
 
-        physicsAxialStiffness: [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon` is the axial strain; type: float
+        axialStiffness: [SI:N] axial stiffness of beam; the axial force is :math:`f_{ax} = EA (\varepsilon -\varepsilon_0)`, in which :math:`\varepsilon` is the axial strain; type: float
 
-        physicsShearStiffness: [SI:N] effective shear stiffness of beam, including stiffness correction; type: float
+        shearStiffness: [SI:N] effective shear stiffness of beam, including stiffness correction; type: float
 
-        physicsBendingDamping: [SI:Nm:math:`^2`/s] viscous damping of bending deformation; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`; type: float
+        bendingDamping: [SI:Nm:math:`^2`/s] viscous damping of bending deformation; the additional virtual work due to damping is :math:`\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx`; type: float
 
-        physicsAxialDamping: [SI:N/s] viscous damping of axial deformation; type: float
+        axialDamping: [SI:N/s] viscous damping of axial deformation; type: float
 
-        physicsShearDamping: [SI:N/s] viscous damping of shear deformation; type: float
+        shearDamping: [SI:N/s] viscous damping of shear deformation; type: float
 
-        physicsReferenceCurvature: [SI:1/m] reference curvature of beam (pre-deformation) of beam; type: float
+        referenceCurvature: [SI:1/m] reference curvature of beam (pre-deformation) of beam; type: float
 
         includeReferenceRotations: if True, rotation of the cross section at the nodes includes node reference rotations (within referenceCoordinates of NodeRigidBody2D), which are used for the computation of bending strains (this means that a pre-curved beam is stress-free); if False, the reference rotation of the cross section is orthogonal to the reference slope vector. This allows to easily share nodes among several beams with different reference cross section orientation (i.e., only the change of rotation counts).; type: bool
+
+        physicsLength: deprecated since 1.12.258, removed in 2031: use length
+
+        physicsMassPerLength: deprecated since 1.12.258, removed in 2031: use massPerLength
+
+        physicsCrossSectionInertia: deprecated since 1.12.258, removed in 2031: use crossSectionInertia
+
+        physicsBendingStiffness: deprecated since 1.12.258, removed in 2031: use bendingStiffness
+
+        physicsAxialStiffness: deprecated since 1.12.258, removed in 2031: use axialStiffness
+
+        physicsShearStiffness: deprecated since 1.12.258, removed in 2031: use shearStiffness
+
+        physicsBendingDamping: deprecated since 1.12.258, removed in 2031: use bendingDamping
+
+        physicsAxialDamping: deprecated since 1.12.258, removed in 2031: use axialDamping
+
+        physicsShearDamping: deprecated since 1.12.258, removed in 2031: use shearDamping
+
+        physicsReferenceCurvature: deprecated since 1.12.258, removed in 2031: use referenceCurvature
 
         visualization: visualization data, see VObjectBeamGeometricallyExact2D
 
@@ -3558,9 +3783,20 @@ class ObjectBeamGeometricallyExact2D:
         Requested Node type: ``Position2D`` + ``Orientation2D`` + ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], physicsLength = 0., physicsMassPerLength = 0., physicsCrossSectionInertia = 0., physicsBendingStiffness = 0., physicsAxialStiffness = 0., physicsShearStiffness = 0., physicsBendingDamping = 0., physicsAxialDamping = 0., physicsShearDamping = 0., physicsReferenceCurvature = 0., includeReferenceRotations = False, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', nodeNumbers = [], length = 0., massPerLength = 0., crossSectionInertia = 0., bendingStiffness = 0., axialStiffness = 0., shearStiffness = 0., bendingDamping = 0., axialDamping = 0., shearDamping = 0., referenceCurvature = 0., includeReferenceRotations = False, physicsLength = None, physicsMassPerLength = None, physicsCrossSectionInertia = None, physicsBendingStiffness = None, physicsAxialStiffness = None, physicsShearStiffness = None, physicsBendingDamping = None, physicsAxialDamping = None, physicsShearDamping = None, physicsReferenceCurvature = None, visualization = {'show': True, 'drawHeight': 0., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
+        self.length = length
+        self.massPerLength = massPerLength
+        self.crossSectionInertia = crossSectionInertia
+        self.bendingStiffness = bendingStiffness
+        self.axialStiffness = axialStiffness
+        self.shearStiffness = shearStiffness
+        self.bendingDamping = bendingDamping
+        self.axialDamping = axialDamping
+        self.shearDamping = shearDamping
+        self.referenceCurvature = referenceCurvature
+        self.includeReferenceRotations = includeReferenceRotations
         self.physicsLength = physicsLength
         self.physicsMassPerLength = physicsMassPerLength
         self.physicsCrossSectionInertia = physicsCrossSectionInertia
@@ -3571,27 +3807,46 @@ class ObjectBeamGeometricallyExact2D:
         self.physicsAxialDamping = physicsAxialDamping
         self.physicsShearDamping = physicsShearDamping
         self.physicsReferenceCurvature = physicsReferenceCurvature
-        self.includeReferenceRotations = includeReferenceRotations
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'BeamGeometricallyExact2D'
         yield 'name', self.name
         yield 'nodeNumbers', self.nodeNumbers
-        yield 'physicsLength', self.physicsLength
-        yield 'physicsMassPerLength', self.physicsMassPerLength
-        yield 'physicsCrossSectionInertia', self.physicsCrossSectionInertia
-        yield 'physicsBendingStiffness', self.physicsBendingStiffness
-        yield 'physicsAxialStiffness', self.physicsAxialStiffness
-        yield 'physicsShearStiffness', self.physicsShearStiffness
-        yield 'physicsBendingDamping', self.physicsBendingDamping
-        yield 'physicsAxialDamping', self.physicsAxialDamping
-        yield 'physicsShearDamping', self.physicsShearDamping
-        yield 'physicsReferenceCurvature', self.physicsReferenceCurvature
+        yield 'length', self.length
+        yield 'massPerLength', self.massPerLength
+        yield 'crossSectionInertia', self.crossSectionInertia
+        yield 'bendingStiffness', self.bendingStiffness
+        yield 'axialStiffness', self.axialStiffness
+        yield 'shearStiffness', self.shearStiffness
+        yield 'bendingDamping', self.bendingDamping
+        yield 'axialDamping', self.axialDamping
+        yield 'shearDamping', self.shearDamping
+        yield 'referenceCurvature', self.referenceCurvature
         yield 'includeReferenceRotations', self.includeReferenceRotations
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawHeight', dict(self.visualization)["drawHeight"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.physicsLength is not None:
+            yield 'physicsLength', self.physicsLength
+        if self.physicsMassPerLength is not None:
+            yield 'physicsMassPerLength', self.physicsMassPerLength
+        if self.physicsCrossSectionInertia is not None:
+            yield 'physicsCrossSectionInertia', self.physicsCrossSectionInertia
+        if self.physicsBendingStiffness is not None:
+            yield 'physicsBendingStiffness', self.physicsBendingStiffness
+        if self.physicsAxialStiffness is not None:
+            yield 'physicsAxialStiffness', self.physicsAxialStiffness
+        if self.physicsShearStiffness is not None:
+            yield 'physicsShearStiffness', self.physicsShearStiffness
+        if self.physicsBendingDamping is not None:
+            yield 'physicsBendingDamping', self.physicsBendingDamping
+        if self.physicsAxialDamping is not None:
+            yield 'physicsAxialDamping', self.physicsAxialDamping
+        if self.physicsShearDamping is not None:
+            yield 'physicsShearDamping', self.physicsShearDamping
+        if self.physicsReferenceCurvature is not None:
+            yield 'physicsReferenceCurvature', self.physicsReferenceCurvature
 
     def __repr__(self):
         return str(dict(self))
@@ -3634,9 +3889,11 @@ class ObjectBeamGeometricallyExact:
 
         nodeNumbers: two node numbers for beam element; type: NodeIndex2
 
-        physicsLength: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
+        length: [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives :math:`\rho A L`; must be positive; type: float
 
         sectionData: data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.
+
+        physicsLength: deprecated since 1.12.258, removed in 2031: use length
 
         visualization: visualization data, see VObjectBeamGeometricallyExact
 
@@ -3646,22 +3903,25 @@ class ObjectBeamGeometricallyExact:
         Requested Node type: ``Position`` + ``Orientation``
 
     """
-    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], physicsLength = 0., sectionData = exudyn.BeamSection(), visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex()], length = 0., sectionData = exudyn.BeamSection(), physicsLength = None, visualization = {'show': True, 'sectionGeometry': exudyn.BeamSectionGeometry(), 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
-        self.physicsLength = physicsLength
+        self.length = length
         self.sectionData = sectionData
+        self.physicsLength = physicsLength
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'BeamGeometricallyExact'
         yield 'name', self.name
         yield 'nodeNumbers', self.nodeNumbers
-        yield 'physicsLength', self.physicsLength
+        yield 'length', self.length
         yield 'sectionData', self.sectionData
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VsectionGeometry', dict(self.visualization)["sectionGeometry"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.physicsLength is not None:
+            yield 'physicsLength', self.physicsLength
 
     def __repr__(self):
         return str(dict(self))
@@ -3698,15 +3958,15 @@ class ObjectANCFThinPlate:
     Args:
         name: objects's unique name; type: str
 
-        physicsThickness: [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients; type: array_like
+        thickness: [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients; type: array_like
 
-        physicsDensity: [SI:kg/m:math:`^3`] density of the plate, possibly averaged over thickness; type: float
+        density: [SI:kg/m:math:`^3`] density of the plate, possibly averaged over thickness; type: float
 
-        physicsMassProportionalDamping: mass-proportional damping coefficient :math:`\alpha` [SI:1/s]; adds massmatrix proportional damping forces :math:`\fv_d = \alpha \Mm \dot{\qv}`; type: float
+        massProportionalDamping: mass-proportional damping coefficient :math:`\alpha` [SI:1/s]; adds massmatrix proportional damping forces :math:`\fv_d = \alpha \Mm \dot{\qv}`; type: float
 
-        physicsStrainCoefficients: [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients; type: Matrix3DList
+        strainCoefficients: [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients; type: Matrix3DList
 
-        physicsCurvatureCoefficients: [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients; type: Matrix3DList
+        curvatureCoefficients: [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients; type: Matrix3DList
 
         strainIsRelativeToReference: if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation; type: float
 
@@ -3718,6 +3978,16 @@ class ObjectANCFThinPlate:
 
         useReducedOrderIntegration: 0/false: use highest Gauss integration for virtual work of strains
 
+        physicsThickness: deprecated since 1.12.258, removed in 2031: use thickness
+
+        physicsDensity: deprecated since 1.12.258, removed in 2031: use density
+
+        physicsMassProportionalDamping: deprecated since 1.12.258, removed in 2031: use massProportionalDamping
+
+        physicsStrainCoefficients: deprecated since 1.12.258, removed in 2031: use strainCoefficients
+
+        physicsCurvatureCoefficients: deprecated since 1.12.258, removed in 2031: use curvatureCoefficients
+
         visualization: visualization data, see VObjectANCFThinPlate
 
     Notes:
@@ -3726,28 +3996,33 @@ class ObjectANCFThinPlate:
         Requested Node type: ``Position``
 
     """
-    def __init__(self, name = '', physicsThickness = [], physicsDensity = 0., physicsMassProportionalDamping = 0., physicsStrainCoefficients = None, physicsCurvatureCoefficients = None, strainIsRelativeToReference = 1., slopesScalingX = [-1.,-1.,-1.,-1.], slopesScalingY = [-1.,-1.,-1.,-1.], nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', thickness = [], density = 0., massProportionalDamping = 0., strainCoefficients = None, curvatureCoefficients = None, strainIsRelativeToReference = 1., slopesScalingX = [-1.,-1.,-1.,-1.], slopesScalingY = [-1.,-1.,-1.,-1.], nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, physicsThickness = None, physicsDensity = None, physicsMassProportionalDamping = None, physicsStrainCoefficients = None, physicsCurvatureCoefficients = None, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
-        self.physicsThickness = CheckForValidNumpyArray(physicsThickness)
-        self.physicsDensity = physicsDensity
-        self.physicsMassProportionalDamping = physicsMassProportionalDamping
-        self.physicsStrainCoefficients = physicsStrainCoefficients
-        self.physicsCurvatureCoefficients = physicsCurvatureCoefficients
+        self.thickness = CheckForValidNumpyArray(thickness)
+        self.density = density
+        self.massProportionalDamping = massProportionalDamping
+        self.strainCoefficients = strainCoefficients
+        self.curvatureCoefficients = curvatureCoefficients
         self.strainIsRelativeToReference = strainIsRelativeToReference
         self.slopesScalingX = np.array(slopesScalingX)
         self.slopesScalingY = np.array(slopesScalingY)
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.useReducedOrderIntegration = useReducedOrderIntegration
+        self.physicsThickness = physicsThickness
+        self.physicsDensity = physicsDensity
+        self.physicsMassProportionalDamping = physicsMassProportionalDamping
+        self.physicsStrainCoefficients = physicsStrainCoefficients
+        self.physicsCurvatureCoefficients = physicsCurvatureCoefficients
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
         yield 'objectType', 'ANCFThinPlate'
         yield 'name', self.name
-        yield 'physicsThickness', self.physicsThickness
-        yield 'physicsDensity', self.physicsDensity
-        yield 'physicsMassProportionalDamping', self.physicsMassProportionalDamping
-        yield 'physicsStrainCoefficients', self.physicsStrainCoefficients
-        yield 'physicsCurvatureCoefficients', self.physicsCurvatureCoefficients
+        yield 'thickness', self.thickness
+        yield 'density', self.density
+        yield 'massProportionalDamping', self.massProportionalDamping
+        yield 'strainCoefficients', self.strainCoefficients
+        yield 'curvatureCoefficients', self.curvatureCoefficients
         yield 'strainIsRelativeToReference', self.strainIsRelativeToReference
         yield 'slopesScalingX', self.slopesScalingX
         yield 'slopesScalingY', self.slopesScalingY
@@ -3755,6 +4030,16 @@ class ObjectANCFThinPlate:
         yield 'useReducedOrderIntegration', self.useReducedOrderIntegration
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.physicsThickness is not None:
+            yield 'physicsThickness', self.physicsThickness
+        if self.physicsDensity is not None:
+            yield 'physicsDensity', self.physicsDensity
+        if self.physicsMassProportionalDamping is not None:
+            yield 'physicsMassProportionalDamping', self.physicsMassProportionalDamping
+        if self.physicsStrainCoefficients is not None:
+            yield 'physicsStrainCoefficients', self.physicsStrainCoefficients
+        if self.physicsCurvatureCoefficients is not None:
+            yield 'physicsCurvatureCoefficients', self.physicsCurvatureCoefficients
 
     def __repr__(self):
         return str(dict(self))
@@ -3973,13 +4258,15 @@ class ObjectConnectorRigidBodySpringDamper:
 
         offset: translational and rotational offset considered in the spring force calculation; type: array_like
 
-        intrinsicFormulation: if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations; type: bool
+        useIntrinsicFormulation: if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations; type: bool
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
         springForceTorqueUserFunction: A Python function which computes the 6D force-torque vector (3D force + 3D torque) between the two rigid body markers, if activeConnector=True; see description below; type: ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction
 
         postNewtonStepUserFunction: A Python function which computes the error of the PostNewtonStep; see description below; type: ObjectConnectorRigidBodySpringDamperPostNewtonStepUserFunction
+
+        intrinsicFormulation: deprecated since 1.12.258, removed in 2031: use useIntrinsicFormulation
 
         visualization: visualization data, see VObjectConnectorRigidBodySpringDamper
 
@@ -3991,7 +4278,7 @@ class ObjectConnectorRigidBodySpringDamper:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], intrinsicFormulation = False, activeConnector = True, springForceTorqueUserFunction: Union[ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction, int] = 0, postNewtonStepUserFunction: Union[ObjectConnectorRigidBodySpringDamperPostNewtonStepUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = IIDiagMatrix(rowsColumns=6,value=0.), damping = IIDiagMatrix(rowsColumns=6,value=0.), rotationMarker0 = IIDiagMatrix(rowsColumns=3,value=1), rotationMarker1 = IIDiagMatrix(rowsColumns=3,value=1), offset = [0.,0.,0.,0.,0.,0.], useIntrinsicFormulation = False, activeConnector = True, springForceTorqueUserFunction: Union[ObjectConnectorRigidBodySpringDamperSpringForceTorqueUserFunction, int] = 0, postNewtonStepUserFunction: Union[ObjectConnectorRigidBodySpringDamperPostNewtonStepUserFunction, int] = 0, intrinsicFormulation = None, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -4000,10 +4287,11 @@ class ObjectConnectorRigidBodySpringDamper:
         self.rotationMarker0 = np.array(rotationMarker0)
         self.rotationMarker1 = np.array(rotationMarker1)
         self.offset = np.array(offset)
-        self.intrinsicFormulation = intrinsicFormulation
+        self.useIntrinsicFormulation = useIntrinsicFormulation
         self.activeConnector = activeConnector
         self.springForceTorqueUserFunction = springForceTorqueUserFunction
         self.postNewtonStepUserFunction = postNewtonStepUserFunction
+        self.intrinsicFormulation = intrinsicFormulation
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -4016,13 +4304,15 @@ class ObjectConnectorRigidBodySpringDamper:
         yield 'rotationMarker0', self.rotationMarker0
         yield 'rotationMarker1', self.rotationMarker1
         yield 'offset', self.offset
-        yield 'intrinsicFormulation', self.intrinsicFormulation
+        yield 'useIntrinsicFormulation', self.useIntrinsicFormulation
         yield 'activeConnector', self.activeConnector
         yield 'springForceTorqueUserFunction', self.springForceTorqueUserFunction
         yield 'postNewtonStepUserFunction', self.postNewtonStepUserFunction
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.intrinsicFormulation is not None:
+            yield 'intrinsicFormulation', self.intrinsicFormulation
 
     def __repr__(self):
         return str(dict(self))
@@ -4364,9 +4654,9 @@ class ObjectConnectorCoordinateSpringDamperExt:
 
         factor1: marker 1 coordinate is multiplied with factor1; type: float
 
-        fDynamicFriction: dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force :math:`f_N`, the friction force can be interpreted as :math:`f_\mu = \mu f_N`; type: float
+        dynamicFrictionForce: dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force :math:`f_N`, the friction force can be interpreted as :math:`f_\mu = \mu f_N`; type: float
 
-        fStaticFrictionOffset: static (dry) friction offset force [SI:N]; assuming a normal force :math:`f_N`, the friction force is limited by :math:`f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}`; type: float
+        staticFrictionOffsetForce: static (dry) friction offset force [SI:N]; assuming a normal force :math:`f_N`, the friction force is limited by :math:`f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}`; type: float
 
         stickingStiffness: stiffness of bristles in sticking case  [SI:N/m]; type: float
 
@@ -4374,7 +4664,7 @@ class ObjectConnectorCoordinateSpringDamperExt:
 
         exponentialDecayStatic: relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at :math:`\Delta v = v_\mathrm{exp}`, the static friction offset force is reduced to 36.8%; type: float
 
-        fViscousFriction: viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case; type: float
+        viscousFrictionFactor: viscous friction factor [SI:N s/m]: the friction force part proportional to the relative velocity, acting against it in the sliding case; type: float
 
         frictionProportionalZone: if non-zero, a regularized Stribeck model is used, regularizing friction force around zero velocity - leading to zero friction force in case of zero velocity; this does not require a data node at all; if zero, the bristle model is used, which requires a data node which contains previous friction state and last sticking position; type: float
 
@@ -4392,6 +4682,12 @@ class ObjectConnectorCoordinateSpringDamperExt:
 
         springForceUserFunction: A Python function which defines the spring force with 8 parameters, see equations section / see description below; type: ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction
 
+        fDynamicFriction: deprecated since 1.12.258, removed in 2031: use dynamicFrictionForce
+
+        fStaticFrictionOffset: deprecated since 1.12.258, removed in 2031: use staticFrictionOffsetForce
+
+        fViscousFriction: deprecated since 1.12.258, removed in 2031: use viscousFrictionFactor
+
         visualization: visualization data, see VObjectConnectorCoordinateSpringDamperExt
 
     Notes:
@@ -4402,7 +4698,7 @@ class ObjectConnectorCoordinateSpringDamperExt:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., factor0 = 1., factor1 = 1., fDynamicFriction = 0., fStaticFrictionOffset = 0., stickingStiffness = 0., stickingDamping = 0., exponentialDecayStatic = 0.001, fViscousFriction = 0., frictionProportionalZone = 0., limitStopsUpper = 0., limitStopsLower = 0., limitStopsStiffness = 0., limitStopsDamping = 0., useLimitStops = False, activeConnector = True, springForceUserFunction: Union[ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction, int] = 0, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), stiffness = 0., damping = 0., offset = 0., velocityOffset = 0., factor0 = 1., factor1 = 1., dynamicFrictionForce = 0., staticFrictionOffsetForce = 0., stickingStiffness = 0., stickingDamping = 0., exponentialDecayStatic = 0.001, viscousFrictionFactor = 0., frictionProportionalZone = 0., limitStopsUpper = 0., limitStopsLower = 0., limitStopsStiffness = 0., limitStopsDamping = 0., useLimitStops = False, activeConnector = True, springForceUserFunction: Union[ObjectConnectorCoordinateSpringDamperExtSpringForceUserFunction, int] = 0, fDynamicFriction = None, fStaticFrictionOffset = None, fViscousFriction = None, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -4412,12 +4708,12 @@ class ObjectConnectorCoordinateSpringDamperExt:
         self.velocityOffset = velocityOffset
         self.factor0 = factor0
         self.factor1 = factor1
-        self.fDynamicFriction = fDynamicFriction
-        self.fStaticFrictionOffset = fStaticFrictionOffset
+        self.dynamicFrictionForce = dynamicFrictionForce
+        self.staticFrictionOffsetForce = staticFrictionOffsetForce
         self.stickingStiffness = stickingStiffness
         self.stickingDamping = stickingDamping
         self.exponentialDecayStatic = exponentialDecayStatic
-        self.fViscousFriction = fViscousFriction
+        self.viscousFrictionFactor = viscousFrictionFactor
         self.frictionProportionalZone = frictionProportionalZone
         self.limitStopsUpper = limitStopsUpper
         self.limitStopsLower = limitStopsLower
@@ -4426,6 +4722,9 @@ class ObjectConnectorCoordinateSpringDamperExt:
         self.useLimitStops = useLimitStops
         self.activeConnector = activeConnector
         self.springForceUserFunction = springForceUserFunction
+        self.fDynamicFriction = fDynamicFriction
+        self.fStaticFrictionOffset = fStaticFrictionOffset
+        self.fViscousFriction = fViscousFriction
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -4439,12 +4738,12 @@ class ObjectConnectorCoordinateSpringDamperExt:
         yield 'velocityOffset', self.velocityOffset
         yield 'factor0', self.factor0
         yield 'factor1', self.factor1
-        yield 'fDynamicFriction', self.fDynamicFriction
-        yield 'fStaticFrictionOffset', self.fStaticFrictionOffset
+        yield 'dynamicFrictionForce', self.dynamicFrictionForce
+        yield 'staticFrictionOffsetForce', self.staticFrictionOffsetForce
         yield 'stickingStiffness', self.stickingStiffness
         yield 'stickingDamping', self.stickingDamping
         yield 'exponentialDecayStatic', self.exponentialDecayStatic
-        yield 'fViscousFriction', self.fViscousFriction
+        yield 'viscousFrictionFactor', self.viscousFrictionFactor
         yield 'frictionProportionalZone', self.frictionProportionalZone
         yield 'limitStopsUpper', self.limitStopsUpper
         yield 'limitStopsLower', self.limitStopsLower
@@ -4456,6 +4755,12 @@ class ObjectConnectorCoordinateSpringDamperExt:
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.fDynamicFriction is not None:
+            yield 'fDynamicFriction', self.fDynamicFriction
+        if self.fStaticFrictionOffset is not None:
+            yield 'fStaticFrictionOffset', self.fStaticFrictionOffset
+        if self.fViscousFriction is not None:
+            yield 'fViscousFriction', self.fViscousFriction
 
     def __repr__(self):
         return str(dict(self))
@@ -4925,7 +5230,7 @@ class ObjectConnectorCoordinate:
 
         offset: An offset between the two values; type: float
 
-        factorValue1: An additional factor multiplied with value1 used in algebraic equation; type: float
+        factor1: An additional factor multiplied with value1 used in algebraic equation; type: float
 
         velocityLevel: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored; type: bool
 
@@ -4935,6 +5240,8 @@ class ObjectConnectorCoordinate:
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
+        factorValue1: deprecated since 1.12.258, removed in 2031: use factor1
+
         visualization: visualization data, see VObjectConnectorCoordinate
 
     Notes:
@@ -4943,15 +5250,16 @@ class ObjectConnectorCoordinate:
         Requested Marker type: ``Coordinate``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], offset = 0., factorValue1 = 1., velocityLevel = False, offsetUserFunction: Union[ObjectConnectorCoordinateOffsetUserFunction, int] = 0, offsetUserFunction_t: Union[ObjectConnectorCoordinateOffsetUserFunction_t, int] = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], offset = 0., factor1 = 1., velocityLevel = False, offsetUserFunction: Union[ObjectConnectorCoordinateOffsetUserFunction, int] = 0, offsetUserFunction_t: Union[ObjectConnectorCoordinateOffsetUserFunction_t, int] = 0, activeConnector = True, factorValue1 = None, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.offset = offset
-        self.factorValue1 = factorValue1
+        self.factor1 = factor1
         self.velocityLevel = velocityLevel
         self.offsetUserFunction = offsetUserFunction
         self.offsetUserFunction_t = offsetUserFunction_t
         self.activeConnector = activeConnector
+        self.factorValue1 = factorValue1
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -4959,7 +5267,7 @@ class ObjectConnectorCoordinate:
         yield 'name', self.name
         yield 'markerNumbers', self.markerNumbers
         yield 'offset', self.offset
-        yield 'factorValue1', self.factorValue1
+        yield 'factor1', self.factor1
         yield 'velocityLevel', self.velocityLevel
         yield 'offsetUserFunction', self.offsetUserFunction
         yield 'offsetUserFunction_t', self.offsetUserFunction_t
@@ -4967,6 +5275,8 @@ class ObjectConnectorCoordinate:
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.factorValue1 is not None:
+            yield 'factorValue1', self.factorValue1
 
     def __repr__(self):
         return str(dict(self))
@@ -5122,11 +5432,13 @@ class ObjectConnectorRollingDiscPenalty:
 
         viscousFriction: viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint :math:`J1` coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity; type: [float,float]
 
-        rollingFrictionViscous: rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground!; type: float
+        rollingViscousFriction: viscous rolling friction [SI:s/m]: the force acts against the velocity of the trail on ground and is proportional to this velocity and to the contact normal force; currently, only implemented for disc axis parallel to ground!; type: float
 
         useLinearProportionalZone: if True, a linear proportional zone is used; the linear zone performs better in implicit time integration as the Jacobian has a constant tangent in the sticking case; type: bool
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        rollingFrictionViscous: deprecated since 1.12.258, removed in 2031: use rollingViscousFriction
 
         visualization: visualization data, see VObjectConnectorRollingDiscPenalty
 
@@ -5138,7 +5450,7 @@ class ObjectConnectorRollingDiscPenalty:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), discRadius = 0., discAxis = [1,0,0], planeNormal = [0,0,1], dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., viscousFriction = [0,0], rollingFrictionViscous = 0., useLinearProportionalZone = False, activeConnector = True, visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), discRadius = 0., discAxis = [1,0,0], planeNormal = [0,0,1], dryFrictionAngle = 0., contactStiffness = 0., contactDamping = 0., dryFriction = [0,0], dryFrictionProportionalZone = 0., viscousFriction = [0,0], rollingViscousFriction = 0., useLinearProportionalZone = False, activeConnector = True, rollingFrictionViscous = None, visualization = {'show': True, 'discWidth': 0.1, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
@@ -5151,9 +5463,10 @@ class ObjectConnectorRollingDiscPenalty:
         self.dryFriction = np.array(dryFriction)
         self.dryFrictionProportionalZone = dryFrictionProportionalZone
         self.viscousFriction = np.array(viscousFriction)
-        self.rollingFrictionViscous = rollingFrictionViscous
+        self.rollingViscousFriction = rollingViscousFriction
         self.useLinearProportionalZone = useLinearProportionalZone
         self.activeConnector = activeConnector
+        self.rollingFrictionViscous = rollingFrictionViscous
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -5170,12 +5483,14 @@ class ObjectConnectorRollingDiscPenalty:
         yield 'dryFriction', self.dryFriction
         yield 'dryFrictionProportionalZone', self.dryFrictionProportionalZone
         yield 'viscousFriction', self.viscousFriction
-        yield 'rollingFrictionViscous', self.rollingFrictionViscous
+        yield 'rollingViscousFriction', self.rollingViscousFriction
         yield 'useLinearProportionalZone', self.useLinearProportionalZone
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdiscWidth', dict(self.visualization)["discWidth"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.rollingFrictionViscous is not None:
+            yield 'rollingFrictionViscous', self.rollingFrictionViscous
 
     def __repr__(self):
         return str(dict(self))
@@ -5726,7 +6041,7 @@ class ObjectContactSphereTorus:
 
         nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.; type: NodeIndex
 
-        radiusSphere: radius of sphere [SI:m]; type: float
+        sphereRadius: radius of sphere [SI:m]; type: float
 
         torusMajorRadius: major radius of torus [SI:m], representing center of rotated circle; type: float
 
@@ -5752,6 +6067,8 @@ class ObjectContactSphereTorus:
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
+        radiusSphere: deprecated since 1.12.258, removed in 2031: use sphereRadius
+
         visualization: visualization data, see VObjectContactSphereTorus
 
     Notes:
@@ -5762,11 +6079,11 @@ class ObjectContactSphereTorus:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), radiusSphere = 0., torusMajorRadius = 0., torusMinorRadius = 0., torusAxis = [0,0,0], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., torusMajorRadius = 0., torusMinorRadius = 0., torusAxis = [0,0,0], dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, radiusSphere = None, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
-        self.radiusSphere = radiusSphere
+        self.sphereRadius = sphereRadius
         self.torusMajorRadius = torusMajorRadius
         self.torusMinorRadius = torusMinorRadius
         self.torusAxis = np.array(torusAxis)
@@ -5779,6 +6096,7 @@ class ObjectContactSphereTorus:
         self.minimumImpactVelocity = minimumImpactVelocity
         self.impactModel = impactModel
         self.activeConnector = activeConnector
+        self.radiusSphere = radiusSphere
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -5786,7 +6104,7 @@ class ObjectContactSphereTorus:
         yield 'name', self.name
         yield 'markerNumbers', self.markerNumbers
         yield 'nodeNumber', self.nodeNumber
-        yield 'radiusSphere', self.radiusSphere
+        yield 'sphereRadius', self.sphereRadius
         yield 'torusMajorRadius', self.torusMajorRadius
         yield 'torusMinorRadius', self.torusMinorRadius
         yield 'torusAxis', self.torusAxis
@@ -5801,6 +6119,8 @@ class ObjectContactSphereTorus:
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.radiusSphere is not None:
+            yield 'radiusSphere', self.radiusSphere
 
     def __repr__(self):
         return str(dict(self))
@@ -5837,7 +6157,7 @@ class ObjectContactSphereTriangle:
 
         nodeNumber: node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.; type: NodeIndex
 
-        radiusSphere: radius of sphere [SI:m]; type: float
+        sphereRadius: radius of sphere [SI:m]; type: float
 
         trianglePoints: triangle points, defined in marker 1 local coordinates; type: Vector3DList
 
@@ -5861,6 +6181,8 @@ class ObjectContactSphereTriangle:
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
+        radiusSphere: deprecated since 1.12.258, removed in 2031: use sphereRadius
+
         visualization: visualization data, see VObjectContactSphereTriangle
 
     Notes:
@@ -5871,11 +6193,11 @@ class ObjectContactSphereTriangle:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), radiusSphere = 0., trianglePoints = None, includeEdges = 7, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], nodeNumber = exudyn.InvalidIndex(), sphereRadius = 0., trianglePoints = None, includeEdges = 7, dynamicFriction = 0., frictionProportionalZone = 0.001, contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1., restitutionCoefficient = 1., minimumImpactVelocity = 0., impactModel = 0, activeConnector = True, radiusSphere = None, visualization = {'show': False, 'color': [0.7,0.7,0.7,1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.nodeNumber = nodeNumber
-        self.radiusSphere = radiusSphere
+        self.sphereRadius = sphereRadius
         self.trianglePoints = trianglePoints
         self.includeEdges = includeEdges
         self.dynamicFriction = dynamicFriction
@@ -5887,6 +6209,7 @@ class ObjectContactSphereTriangle:
         self.minimumImpactVelocity = minimumImpactVelocity
         self.impactModel = impactModel
         self.activeConnector = activeConnector
+        self.radiusSphere = radiusSphere
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -5894,7 +6217,7 @@ class ObjectContactSphereTriangle:
         yield 'name', self.name
         yield 'markerNumbers', self.markerNumbers
         yield 'nodeNumber', self.nodeNumber
-        yield 'radiusSphere', self.radiusSphere
+        yield 'sphereRadius', self.sphereRadius
         yield 'trianglePoints', self.trianglePoints
         yield 'includeEdges', self.includeEdges
         yield 'dynamicFriction', self.dynamicFriction
@@ -5908,6 +6231,8 @@ class ObjectContactSphereTriangle:
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.radiusSphere is not None:
+            yield 'radiusSphere', self.radiusSphere
 
     def __repr__(self):
         return str(dict(self))
@@ -6621,7 +6946,7 @@ class ObjectJointSliding:
 
         constrainTranslations: flags for constrained translation in x, y and z-direction: if flag=1, add constraint on translation of marker m0 relative to respective axis; flag=0: sliding body can translate freely about this axis; along x-axis this should be usually 0, except for driven motion; type: array_like
 
-        axialForce: ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions.; type: float
+        axialForce: ONLY APPLIES if useClassicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions.; type: float
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -6707,13 +7032,15 @@ class ObjectJointSliding2D:
 
         nodeNumber: node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position; type: NodeIndex
 
-        classicalFormulation: True: uses a formulation with 3 (+1) equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; False: use local formulation, which only needs 2 (+1) equations and can be used with index 2 formulation; type: bool
+        useClassicalFormulation: True: uses a formulation with 3 (+1) equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; False: use local formulation, which only needs 2 (+1) equations and can be used with index 2 formulation; type: bool
 
         constrainRotation: True: add constraint on rotation of marker m0 relative to slope (if True, marker m0 must be a rigid body marker); False: marker m0 body can rotate freely; type: bool
 
-        axialForce: ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions.; type: float
+        axialForce: ONLY APPLIES if useClassicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions.; type: float
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
+
+        classicalFormulation: deprecated since 1.12.258, removed in 2031: use useClassicalFormulation
 
         visualization: visualization data, see VObjectJointSliding2D
 
@@ -6725,16 +7052,17 @@ class ObjectJointSliding2D:
         Requested Node type: ``GenericData``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], nodeNumber = exudyn.InvalidIndex(), classicalFormulation = True, constrainRotation = False, axialForce = 0, activeConnector = True, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], slidingMarkerNumbers = [], slidingMarkerOffsets = [], nodeNumber = exudyn.InvalidIndex(), useClassicalFormulation = True, constrainRotation = False, axialForce = 0, activeConnector = True, classicalFormulation = None, visualization = {'show': True, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.slidingMarkerNumbers = copy.copy(slidingMarkerNumbers)
         self.slidingMarkerOffsets = np.array(slidingMarkerOffsets)
         self.nodeNumber = nodeNumber
-        self.classicalFormulation = classicalFormulation
+        self.useClassicalFormulation = useClassicalFormulation
         self.constrainRotation = constrainRotation
         self.axialForce = axialForce
         self.activeConnector = activeConnector
+        self.classicalFormulation = classicalFormulation
         self.visualization = CopyDictLevel1(visualization)
 
     def __iter__(self):
@@ -6744,13 +7072,15 @@ class ObjectJointSliding2D:
         yield 'slidingMarkerNumbers', self.slidingMarkerNumbers
         yield 'slidingMarkerOffsets', self.slidingMarkerOffsets
         yield 'nodeNumber', self.nodeNumber
-        yield 'classicalFormulation', self.classicalFormulation
+        yield 'useClassicalFormulation', self.useClassicalFormulation
         yield 'constrainRotation', self.constrainRotation
         yield 'axialForce', self.axialForce
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
         yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
+        if self.classicalFormulation is not None:
+            yield 'classicalFormulation', self.classicalFormulation
 
     def __repr__(self):
         return str(dict(self))

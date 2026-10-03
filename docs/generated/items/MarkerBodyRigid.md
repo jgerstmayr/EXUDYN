@@ -78,8 +78,8 @@ velocity transformation $\LU{0}{\Gm}$ of the rotation parameters in $\LU{0}{\Jm_
 #position and orientation of a rigid body: a torque on it, held by a rigid body spring-damper
 inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[1,0,0]+eulerParameters0))
-body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                     physicsInertia=inertia.GetInertia6D()))
+body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                     inertia=inertia.GetInertia6D()))
 mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[1,0,0]))
 mbs.AddObject(ObjectConnectorRigidBodySpringDamper(markerNumbers=[mGround, mBody],

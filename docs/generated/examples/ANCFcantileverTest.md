@@ -54,10 +54,10 @@ print("load f="+str(f))
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ## generate ANCFCable2D template containing beam parameters
-cableTemplate = Cable2D(#physicsLength = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
-                        physicsMassPerLength = rho*A,
-                        physicsBendingStiffness = E*I,
-                        physicsAxialStiffness = E*A,
+cableTemplate = Cable2D(#length = L / nElements, #set in GenerateStraightLineANCFCable2D(...)
+                        massPerLength = rho*A,
+                        bendingStiffness = E*I,
+                        axialStiffness = E*A,
                         useReducedOrderIntegration = 0,
                         #nodeNumbers = [0, 0], #will be filled in GenerateStraightLineANCFCable2D(...)
                         )

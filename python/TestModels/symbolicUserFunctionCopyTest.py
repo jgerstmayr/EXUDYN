@@ -25,7 +25,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 node = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
-mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
 mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
 nFixed = mbs.AddNode(NodePointGround())
 mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mbs.AddMarker(MarkerNodePosition(nodeNumber=nFixed)), mNode],

@@ -63,8 +63,8 @@ lElem = L / nElements
 for i in range(nElements):
     nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
     nodeList+=[nLast]
-    elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rho*A, 
-                               physicsBendingStiffness=E*I, physicsAxialStiffness=E*A, nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
+    elem=mbs.AddObject(Cable2D(length=lElem, massPerLength=rho*A, 
+                               bendingStiffness=E*I, axialStiffness=E*A, nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
     cableList+=[elem]
     mBody = mbs.AddMarker(MarkerBodyMass(bodyNumber = elem))
     mbs.AddLoad(Gravity(markerNumber=mBody, loadVector=[0,-g,0]))
@@ -75,7 +75,7 @@ if addPointMass:
     nMass = mbs.AddNode(Point2D(referenceCoordinates=[L,0],visualization=VNodePoint2D(drawSize=0.3)))
     mTip0 = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
     mTip1 = mbs.AddMarker(MarkerNodePosition(nodeNumber=nLast))
-    mbs.AddObject(MassPoint2D(physicsMass = massTip, nodeNumber=nMass))
+    mbs.AddObject(MassPoint2D(mass = massTip, nodeNumber=nMass))
     mbs.AddLoad(Force(markerNumber=mTip0, loadVector=[0,-massTip*g,0]))
     mbs.AddObject(RevoluteJoint2D(markerNumbers=[mTip0,mTip1]))
 
@@ -138,7 +138,7 @@ if addRigidBody:
     #rigid body which slides:
     graphicsRigid = {'type':'Line', 'color':[0.1,0.1,0.8,1], 'data':[-b,-a,0, b,-a,0, b,a,0, -b,a,0, -b,-a,0]} #drawing of rigid body
     nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[slidingCoordinateInit,-a,0], initialVelocities=[0,0,0]));
-    oRigid = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid,visualization=VObjectRigidBody2D(graphicsData= [graphicsRigid])))
+    oRigid = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid,visualization=VObjectRigidBody2D(graphicsData= [graphicsRigid])))
 
     markerRigidTop = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[0.,a,0.])) #support point
     mR2 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[ 0.,0.,0.])) #center of mass (for load)

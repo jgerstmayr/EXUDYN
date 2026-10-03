@@ -40,7 +40,7 @@ n1=mbs.AddNode(Point(referenceCoordinates = [L,0,0], initialCoordinates = [u0,0,
 
 #add mass points and ground object:
 objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0]))
-massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
+massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = n1))
 
 #marker for constraint / springDamper
 groundMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber = objectGround, localPosition= [0, 0, 0]))

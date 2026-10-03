@@ -47,7 +47,7 @@ def ContactCoordinate(activeConnector):
     mbs = SC.AddSystem()
     nGround = mbs.AddNode(NodePointGround())
     node = mbs.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[0.1]))
-    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
     mCoordinate = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
     nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[0.1]))
@@ -76,7 +76,7 @@ def Planar(addJoint):
     mbs = SC.AddSystem()
     oGround = mbs.AddObject(ObjectGround())
     node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0, 0, 0]))
-    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=2, inertia=0.1))
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
     mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))
     oJoint = addJoint(mbs, mGround, mBody)
@@ -121,8 +121,8 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 oGround = mbs.AddObject(ObjectGround())
 [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0, 0, 0], positionOfNode1=[1, 0, 0],
-                        numberOfElements=1, cableTemplate=ObjectANCFCable2D(physicsMassPerLength=1,
-                        physicsBendingStiffness=1, physicsAxialStiffness=100), fixedConstraintsNode0=[1, 1, 1, 1])
+                        numberOfElements=1, cableTemplate=ObjectANCFCable2D(massPerLength=1,
+                        bendingStiffness=1, axialStiffness=100), fixedConstraintsNode0=[1, 1, 1, 1])
 mCircle = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0.5, -1, 0]))
 mShape = mbs.AddMarker(MarkerBodyCable2DShape(bodyNumber=elements[0], numberOfSegments=2))
 nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=2, initialCoordinates=[0.1, 0.1]))

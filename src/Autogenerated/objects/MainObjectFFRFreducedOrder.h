@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes, Zwölfer Andreas
 * @date         2019-07-01 (generated)
-* @date         2026-10-01  00:12:29 (last modified)
+* @date         2026-10-03  18:28:33 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -133,15 +133,19 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "mXRefTildePsi")) { EPyUtils::FromPython(d["mXRefTildePsi"], cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi); }
         if (EPyUtils::DictItemExists(d, "mXRefTildePsiTilde")) { EPyUtils::FromPython(d["mXRefTildePsiTilde"], cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde); }
         if (EPyUtils::DictItemExists(d, "objectIsInitialized")) { EPyUtils::FromPython(d["objectIsInitialized"], cObjectFFRFreducedOrder->GetObjectIsInitialized(), "ObjectFFRFreducedOrder.objectIsInitialized"); }
-        if (EPyUtils::DictItemExists(d, "physicsMass")) { EPyUtils::FromPython(d["physicsMass"], cObjectFFRFreducedOrder->GetPhysicsMass(), EPyUtils::RangeCheck::nonNegative, "ObjectFFRFreducedOrder.physicsMass"); }
-        if (EPyUtils::DictItemExists(d, "physicsInertia")) { EPyUtils::FromPython<Real, 3, 3>(d["physicsInertia"], cObjectFFRFreducedOrder->GetPhysicsInertia()); }
-        if (EPyUtils::DictItemExists(d, "physicsCenterOfMass")) { EPyUtils::FromPython(d["physicsCenterOfMass"], cObjectFFRFreducedOrder->GetPhysicsCenterOfMass()); }
-        if (EPyUtils::DictItemExists(d, "physicsCenterOfMassTilde")) { EPyUtils::FromPython<Real, 3, 3>(d["physicsCenterOfMassTilde"], cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); }
+        if (EPyUtils::DictItemExists(d, "mass")) { EPyUtils::FromPython(d["mass"], cObjectFFRFreducedOrder->GetMass(), EPyUtils::RangeCheck::nonNegative, "ObjectFFRFreducedOrder.mass"); }
+        if (EPyUtils::DictItemExists(d, "inertia")) { EPyUtils::FromPython<Real, 3, 3>(d["inertia"], cObjectFFRFreducedOrder->GetInertia()); }
+        if (EPyUtils::DictItemExists(d, "centerOfMass")) { EPyUtils::FromPython(d["centerOfMass"], cObjectFFRFreducedOrder->GetCenterOfMass()); }
+        if (EPyUtils::DictItemExists(d, "centerOfMassTilde")) { EPyUtils::FromPython<Real, 3, 3>(d["centerOfMassTilde"], cObjectFFRFreducedOrder->GetCenterOfMassTilde()); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectFFRFreducedOrder->GetShow(), "ObjectFFRFreducedOrder.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectFFRFreducedOrder->GetColor(), "ObjectFFRFreducedOrder.Vcolor"); }
         if (EPyUtils::DictItemExists(d, "VtriangleMesh")) { EPyUtils::FromPython(d["VtriangleMesh"], visualizationObjectFFRFreducedOrder->GetTriangleMesh()); }
         if (EPyUtils::DictItemExists(d, "VshowNodes")) { EPyUtils::FromPython(d["VshowNodes"], visualizationObjectFFRFreducedOrder->GetShowNodes(), "ObjectFFRFreducedOrder.VshowNodes"); }
+        if (EPyUtils::DictItemExists(d, "physicsMass") && !d["physicsMass"].is_none()) { PyDeprecated("items", "ObjectFFRFreducedOrder.physicsMass", "ObjectFFRFreducedOrder: the parameter physicsMass is deprecated since 1.12.258 and removed in 2031; use mass"); EPyUtils::FromPython(d["physicsMass"], cObjectFFRFreducedOrder->GetMass(), EPyUtils::RangeCheck::nonNegative, "ObjectFFRFreducedOrder.physicsMass"); } //! AUTO: deprecated, forwards to mass
+        if (EPyUtils::DictItemExists(d, "physicsInertia") && !d["physicsInertia"].is_none()) { PyDeprecated("items", "ObjectFFRFreducedOrder.physicsInertia", "ObjectFFRFreducedOrder: the parameter physicsInertia is deprecated since 1.12.258 and removed in 2031; use inertia"); EPyUtils::FromPython<Real, 3, 3>(d["physicsInertia"], cObjectFFRFreducedOrder->GetInertia()); } //! AUTO: deprecated, forwards to inertia
+        if (EPyUtils::DictItemExists(d, "physicsCenterOfMass") && !d["physicsCenterOfMass"].is_none()) { PyDeprecated("items", "ObjectFFRFreducedOrder.physicsCenterOfMass", "ObjectFFRFreducedOrder: the parameter physicsCenterOfMass is deprecated since 1.12.258 and removed in 2031; use centerOfMass"); EPyUtils::FromPython(d["physicsCenterOfMass"], cObjectFFRFreducedOrder->GetCenterOfMass()); } //! AUTO: deprecated, forwards to centerOfMass
+        if (EPyUtils::DictItemExists(d, "physicsCenterOfMassTilde") && !d["physicsCenterOfMassTilde"].is_none()) { PyDeprecated("items", "ObjectFFRFreducedOrder.physicsCenterOfMassTilde", "ObjectFFRFreducedOrder: the parameter physicsCenterOfMassTilde is deprecated since 1.12.258 and removed in 2031; use centerOfMassTilde"); EPyUtils::FromPython<Real, 3, 3>(d["physicsCenterOfMassTilde"], cObjectFFRFreducedOrder->GetCenterOfMassTilde()); } //! AUTO: deprecated, forwards to centerOfMassTilde
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -168,10 +172,10 @@ public: // AUTO:
         d["mXRefTildePsi"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi);
         d["mXRefTildePsiTilde"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde);
         d["objectIsInitialized"] = (bool)cObjectFFRFreducedOrder->GetObjectIsInitialized();
-        d["physicsMass"] = (Real)cObjectFFRFreducedOrder->GetPhysicsMass();
-        d["physicsInertia"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetPhysicsInertia());
-        d["physicsCenterOfMass"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetPhysicsCenterOfMass());
-        d["physicsCenterOfMassTilde"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde());
+        d["mass"] = (Real)cObjectFFRFreducedOrder->GetMass();
+        d["inertia"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetInertia());
+        d["centerOfMass"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetCenterOfMass());
+        d["centerOfMassTilde"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetCenterOfMassTilde());
         d["tempUserFunctionForce"] = EPyUtils::ToPython(cObjectFFRFreducedOrder->GetTempUserFunctionForce());
         d["name"] = (std::string)name;
         d["Vshow"] = (bool)visualizationObjectFFRFreducedOrder->GetShow();
@@ -197,21 +201,25 @@ public: // AUTO:
         else if (parameterName.compare("outputVariableTypeModeBasis") == 0) { return py::cast((OutputVariableType)cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis); } //! AUTO: get parameter
         else if (parameterName.compare("referencePositions") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().referencePositions); } //! AUTO: get parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { return py::cast((bool)cObjectFFRFreducedOrder->GetObjectIsInitialized()); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectFFRFreducedOrder->GetPhysicsMass()); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsInertia") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetPhysicsInertia()); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsCenterOfMass") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetPhysicsCenterOfMass()); } //! AUTO: get parameter
+        else if (parameterName.compare("mass") == 0) { return py::cast((Real)cObjectFFRFreducedOrder->GetMass()); } //! AUTO: get parameter
+        else if (parameterName.compare("inertia") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetInertia()); } //! AUTO: get parameter
+        else if (parameterName.compare("centerOfMass") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetCenterOfMass()); } //! AUTO: get parameter
         else if (parameterName.compare("mPsiTildePsi") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi); } //! AUTO: get parameter
         else if (parameterName.compare("mPsiTildePsiTilde") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mPsiTildePsiTilde); } //! AUTO: get parameter
         else if (parameterName.compare("mPhitTPsi") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mPhitTPsi); } //! AUTO: get parameter
         else if (parameterName.compare("mPhitTPsiTilde") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mPhitTPsiTilde); } //! AUTO: get parameter
         else if (parameterName.compare("mXRefTildePsi") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi); } //! AUTO: get parameter
         else if (parameterName.compare("mXRefTildePsiTilde") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsCenterOfMassTilde") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); } //! AUTO: get parameter
+        else if (parameterName.compare("centerOfMassTilde") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetCenterOfMassTilde()); } //! AUTO: get parameter
         else if (parameterName.compare("tempUserFunctionForce") == 0) { return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetTempUserFunctionForce()); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectFFRFreducedOrder->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectFFRFreducedOrder->GetColor())); } //! AUTO: get parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { return EPyUtils::ToPython(visualizationObjectFFRFreducedOrder->GetTriangleMesh()); } //! AUTO: get parameter
         else if (parameterName.compare("VshowNodes") == 0) { return py::cast((bool)visualizationObjectFFRFreducedOrder->GetShowNodes()); } //! AUTO: get parameter
+        else if (parameterName.compare("physicsMass") == 0) { PyDeprecated("items", "ObjectFFRFreducedOrder.physicsMass", "ObjectFFRFreducedOrder: the parameter physicsMass is deprecated since 1.12.258 and removed in 2031; use mass"); return py::cast((Real)cObjectFFRFreducedOrder->GetMass()); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsInertia") == 0) { PyDeprecated("items", "ObjectFFRFreducedOrder.physicsInertia", "ObjectFFRFreducedOrder: the parameter physicsInertia is deprecated since 1.12.258 and removed in 2031; use inertia"); return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetInertia()); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsCenterOfMass") == 0) { PyDeprecated("items", "ObjectFFRFreducedOrder.physicsCenterOfMass", "ObjectFFRFreducedOrder: the parameter physicsCenterOfMass is deprecated since 1.12.258 and removed in 2031; use centerOfMass"); return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetCenterOfMass()); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsCenterOfMassTilde") == 0) { PyDeprecated("items", "ObjectFFRFreducedOrder.physicsCenterOfMassTilde", "ObjectFFRFreducedOrder: the parameter physicsCenterOfMassTilde is deprecated since 1.12.258 and removed in 2031; use centerOfMassTilde"); return EPyUtils::ToPython(cObjectFFRFreducedOrder->GetCenterOfMassTilde()); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectFFRFreducedOrder::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -233,20 +241,24 @@ public: // AUTO:
         else if (parameterName.compare("outputVariableTypeModeBasis") == 0) { cObjectFFRFreducedOrder->GetParameters().outputVariableTypeModeBasis = py::cast<OutputVariableType>(value); } //! AUTO: set parameter
         else if (parameterName.compare("referencePositions") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().referencePositions); } //! AUTO: set parameter
         else if (parameterName.compare("objectIsInitialized") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetObjectIsInitialized(), "ObjectFFRFreducedOrder.objectIsInitialized"); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsMass") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetPhysicsMass(), EPyUtils::RangeCheck::nonNegative, "ObjectFFRFreducedOrder.physicsMass"); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsInertia") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectFFRFreducedOrder->GetPhysicsInertia()); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsCenterOfMass") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetPhysicsCenterOfMass()); } //! AUTO: set parameter
+        else if (parameterName.compare("mass") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetMass(), EPyUtils::RangeCheck::nonNegative, "ObjectFFRFreducedOrder.mass"); } //! AUTO: set parameter
+        else if (parameterName.compare("inertia") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectFFRFreducedOrder->GetInertia()); } //! AUTO: set parameter
+        else if (parameterName.compare("centerOfMass") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetCenterOfMass()); } //! AUTO: set parameter
         else if (parameterName.compare("mPsiTildePsi") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mPsiTildePsi); } //! AUTO: set parameter
         else if (parameterName.compare("mPsiTildePsiTilde") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mPsiTildePsiTilde); } //! AUTO: set parameter
         else if (parameterName.compare("mPhitTPsi") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mPhitTPsi); } //! AUTO: set parameter
         else if (parameterName.compare("mPhitTPsiTilde") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mPhitTPsiTilde); } //! AUTO: set parameter
         else if (parameterName.compare("mXRefTildePsi") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mXRefTildePsi); } //! AUTO: set parameter
         else if (parameterName.compare("mXRefTildePsiTilde") == 0) { EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetParameters().mXRefTildePsiTilde); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsCenterOfMassTilde") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectFFRFreducedOrder->GetPhysicsCenterOfMassTilde()); } //! AUTO: set parameter
+        else if (parameterName.compare("centerOfMassTilde") == 0) { EPyUtils::FromPython<Real, 3, 3>(value, cObjectFFRFreducedOrder->GetCenterOfMassTilde()); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRFreducedOrder->GetShow(), "ObjectFFRFreducedOrder.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRFreducedOrder->GetColor(), "ObjectFFRFreducedOrder.Vcolor"); } //! AUTO: set parameter
         else if (parameterName.compare("VtriangleMesh") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRFreducedOrder->GetTriangleMesh()); } //! AUTO: set parameter
         else if (parameterName.compare("VshowNodes") == 0) { EPyUtils::FromPython(value, visualizationObjectFFRFreducedOrder->GetShowNodes(), "ObjectFFRFreducedOrder.VshowNodes"); } //! AUTO: set parameter
+        else if (parameterName.compare("physicsMass") == 0) { PyDeprecated("items", "ObjectFFRFreducedOrder.physicsMass", "ObjectFFRFreducedOrder: the parameter physicsMass is deprecated since 1.12.258 and removed in 2031; use mass"); EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetMass(), EPyUtils::RangeCheck::nonNegative, "ObjectFFRFreducedOrder.physicsMass"); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsInertia") == 0) { PyDeprecated("items", "ObjectFFRFreducedOrder.physicsInertia", "ObjectFFRFreducedOrder: the parameter physicsInertia is deprecated since 1.12.258 and removed in 2031; use inertia"); EPyUtils::FromPython<Real, 3, 3>(value, cObjectFFRFreducedOrder->GetInertia()); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsCenterOfMass") == 0) { PyDeprecated("items", "ObjectFFRFreducedOrder.physicsCenterOfMass", "ObjectFFRFreducedOrder: the parameter physicsCenterOfMass is deprecated since 1.12.258 and removed in 2031; use centerOfMass"); EPyUtils::FromPython(value, cObjectFFRFreducedOrder->GetCenterOfMass()); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsCenterOfMassTilde") == 0) { PyDeprecated("items", "ObjectFFRFreducedOrder.physicsCenterOfMassTilde", "ObjectFFRFreducedOrder: the parameter physicsCenterOfMassTilde is deprecated since 1.12.258 and removed in 2031; use centerOfMassTilde"); EPyUtils::FromPython<Real, 3, 3>(value, cObjectFFRFreducedOrder->GetCenterOfMassTilde()); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectFFRFreducedOrder::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

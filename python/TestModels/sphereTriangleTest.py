@@ -73,7 +73,7 @@ for i in range(nMasses):
                                                         nodeNumber=nData1,
                                                         trianglePoints=trianglePoints,
                                                         includeEdges=includeEdgesList[k],
-                                                        radiusSphere=radius,
+                                                        sphereRadius=radius,
                                                         contactStiffness = contactStiffness,
                                                         dynamicFriction=dynamicFriction,
                                                         contactDamping = contactDamping,

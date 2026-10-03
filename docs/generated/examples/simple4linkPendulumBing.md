@@ -33,13 +33,13 @@ n2=mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[2,0,0], initialVelocities=[
 n3=mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[3,0,0], initialVelocities=[0,0,0]))
 
 # create bodies:
-b0=mbs.AddObject(RigidBody2D(physicsMass=1, physicsInertia=1,nodeNumber=n0,
+b0=mbs.AddObject(RigidBody2D(mass=1, inertia=1,nodeNumber=n0,
        visualization=VRigidBody2D(graphicsData=[graphics.Lines([[-0.5,0,0],[0.5,0,0]])])))
-b1=mbs.AddObject(RigidBody2D(physicsMass=1, physicsInertia=1,nodeNumber=n1,
+b1=mbs.AddObject(RigidBody2D(mass=1, inertia=1,nodeNumber=n1,
                  visualization=VRigidBody2D(graphicsData=[graphics.Lines([[-0.5,0,0],[0.5,0,0]])])))
-b2=mbs.AddObject(RigidBody2D(physicsMass=1, physicsInertia=1,nodeNumber=n2,
+b2=mbs.AddObject(RigidBody2D(mass=1, inertia=1,nodeNumber=n2,
                  visualization=VRigidBody2D(graphicsData=[graphics.Lines([[-0.5,0,0],[0.5,0,0]])])))
-b3=mbs.AddObject(RigidBody2D(physicsMass=1, physicsInertia=1,nodeNumber=n3,
+b3=mbs.AddObject(RigidBody2D(mass=1, inertia=1,nodeNumber=n3,
                  visualization=VRigidBody2D(graphicsData=[graphics.Lines([[-0.5,0,0],[0.5,0,0]])])))
 
 # add markers and loads:

@@ -65,7 +65,7 @@ definitions.append(ItemDefinition(
     oFixed = mbs.AddObject(ObjectGround(referencePosition=[0,2,0]))
     mFixed = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oFixed, localPosition=[0,0,0]))
     node = mbs.AddNode(NodePoint(referenceCoordinates=[0,1,0]))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
     mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
     mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mFixed, mNode], stiffness=[100,100,100],
                                                        offset=[0,-1,0]))
@@ -201,7 +201,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 #create simple system:
 mbs.AddNode(NodePoint())
-body = mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=0))
+body = mbs.AddObject(MassPoint(mass=1, nodeNumber=0))
 
 #user function for moving graphics:
 def UFgraphics(mbs, objectNum):
@@ -273,7 +273,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    node = mbs.AddNode(NodePoint(referenceCoordinates = [1,1,0], 
                                  initialCoordinates=[0.5,0,0],
                                  initialVelocities=[0.5,0,0]))
-    mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+    mbs.AddObject(MassPoint(nodeNumber = node, mass=1))
 
     #assemble and solve system for default parameters
     mbs.Assemble()
@@ -305,9 +305,14 @@ definitions.append(ItemDefinition(
             defaultValue=NoDefaultValue,
             description=r"objects's unique name"),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsMass',
+            pythonName='mass',
             defaultValue=0.,
             description=r'$m$mass [SI:kg] of mass point'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='physicsMass',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'mass'),
         ItemParameter(type=TIndex(ItemNode), destination=DestComp+DestParam,
             pythonName='nodeNumber',
             defaultValue=DVInvalidIndex,
@@ -405,7 +410,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    node = mbs.AddNode(NodePoint2D(referenceCoordinates = [1,1], 
                                  initialCoordinates=[0.5,0],
                                  initialVelocities=[0.5,0]))
-    mbs.AddObject(MassPoint2D(nodeNumber = node, physicsMass=1))
+    mbs.AddObject(MassPoint2D(nodeNumber = node, mass=1))
 
     #assemble and solve system for default parameters
     mbs.Assemble()
@@ -437,9 +442,14 @@ definitions.append(ItemDefinition(
             defaultValue=NoDefaultValue,
             description=r"objects's unique name"),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsMass',
+            pythonName='mass',
             defaultValue=0.,
             description=r'$m$mass [SI:kg] of mass point'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='physicsMass',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'mass'),
         ItemParameter(type=TIndex(ItemNode), destination=DestComp+DestParam,
             pythonName='nodeNumber',
             defaultValue=DVInvalidIndex,
@@ -534,7 +544,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    node = mbs.AddNode(Node1D(referenceCoordinates = [1], 
                               initialCoordinates=[0.5],
                               initialVelocities=[0.5]))
-    mass = mbs.AddObject(Mass1D(nodeNumber = node, physicsMass=1))
+    mass = mbs.AddObject(Mass1D(nodeNumber = node, mass=1))
 
     #assemble and solve system for default parameters
     mbs.Assemble()
@@ -565,9 +575,14 @@ definitions.append(ItemDefinition(
             defaultValue=NoDefaultValue,
             description=r"objects's unique name"),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsMass',
+            pythonName='mass',
             defaultValue=0.,
             description=r'$m$mass [SI:kg] of mass'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='physicsMass',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'mass'),
         ItemParameter(type=TIndex(ItemNode), destination=DestComp+DestParam,
             pythonName='nodeNumber',
             defaultValue=DVInvalidIndex,
@@ -674,7 +689,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    node = mbs.AddNode(Node1D(referenceCoordinates = [1], #\psi_0ref
                               initialCoordinates=[0.5],   #\psi_0ini
                               initialVelocities=[0.5]))   #\psi_t0ini
-    rotor = mbs.AddObject(Rotor1D(nodeNumber = node, physicsInertia=1))
+    rotor = mbs.AddObject(Rotor1D(nodeNumber = node, inertia=1))
 
     #assemble and solve system for default parameters
     mbs.Assemble()
@@ -705,9 +720,14 @@ definitions.append(ItemDefinition(
             defaultValue=NoDefaultValue,
             description=r"objects's unique name"),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsInertia',
+            pythonName='inertia',
             defaultValue=0.,
             description=r'$J$inertia components [SI:kgm$^2$] of rotor / rotational mass'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='physicsInertia',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'inertia'),
         ItemParameter(type=TIndex(ItemNode), destination=DestComp+DestParam,
             pythonName='nodeNumber',
             defaultValue=DVInvalidIndex,
@@ -813,8 +833,8 @@ definitions.append(ItemDefinition(
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0.2,0]+eulerParameters0,
                                        initialVelocities=[0,0,5]+list(AngularVelocity2EulerParameters_t([0,0,1], eulerParameters0))))
-    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                         physicsInertia=inertia.GetInertia6D()))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                         inertia=inertia.GetInertia6D()))
     mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
     mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,0,-9.81]))
 
@@ -1038,17 +1058,32 @@ definitions.append(ItemDefinition(
             defaultValue=NoDefaultValue,
             description=r"objects's unique name"),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsMass',
+            pythonName='mass',
             defaultValue=0.,
             description=r'$m$mass [SI:kg] of rigid body'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='physicsMass',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'mass'),
         ItemParameter(type=TVectorND(6), destination=DestComp+DestParam,
-            pythonName='physicsInertia',
+            pythonName='inertia',
             defaultValue='Vector6D({0.,0.,0., 0.,0.,0.})',
             description=r"""$\LU{b}{\jv_6}$inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to ABRV:COM; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, ABRV:COM and mass"""),
+        ItemParameter(type=TVectorND(6), destination=DestComp+DestParam,
+            pythonName='physicsInertia',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'inertia'),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
-            pythonName='physicsCenterOfMass',
+            pythonName='centerOfMass',
             defaultValue=DVZeroVector3D,
             description=r"""$\LU{b}{\bv_{COM}}$local position of ABRV:COM relative to the body's reference point; if the vector of the ABRV:COM is [0,0,0], the computation will not consider additional terms for the ABRV:COM and it is faster"""),
+        ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
+            pythonName='physicsCenterOfMass',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'centerOfMass'),
         ItemParameter(type=TIndex(ItemNode), destination=DestComp+DestParam,
             pythonName='nodeNumber',
             defaultValue=DVInvalidIndex,
@@ -1082,7 +1117,7 @@ definitions.append(ItemDefinition(
             args='const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current',
             description=r"return the (global) angular acceleration of 'localPosition' according to configuration type"),
         ItemFunctionDef('GetLocalCenterOfMass',
-            implementation='return parameters.physicsCenterOfMass;'),
+            implementation='return parameters.centerOfMass;'),
         ItemFunctionDef('ComputeRigidBodyMarkerData'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
@@ -1179,7 +1214,7 @@ definitions.append(ItemDefinition(
 
     #### Equations of motion
 
-    With `physicsCenterOfMass` $= \Null$:
+    With `centerOfMass` $= \Null$:
 
     $$
     \mr{m}{0}{0} {0}{m}{0} {0}{0}{J} \vr{\ddot q_0}{\ddot q_1}{\ddot \psi_0} = \vr{f_0}{f_1}{\tau_2} = \fv .
@@ -1214,7 +1249,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates = [1,1,0.25*np.pi], 
                                        initialCoordinates=[0.5,0,0],
                                        initialVelocities=[0.5,0,0.75*np.pi]))
-    mbs.AddObject(RigidBody2D(nodeNumber = node, physicsMass=1, physicsInertia=2))
+    mbs.AddObject(RigidBody2D(nodeNumber = node, mass=1, inertia=2))
 
     #assemble and solve system for default parameters
     mbs.Assemble()
@@ -1251,17 +1286,32 @@ definitions.append(ItemDefinition(
             defaultValue=NoDefaultValue,
             description=r"objects's unique name"),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsMass',
+            pythonName='mass',
             defaultValue=0.,
             description=r'$m$mass [SI:kg] of rigid body'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsInertia',
+            pythonName='physicsMass',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'mass'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='inertia',
             defaultValue=0.,
-            description=r'$J$inertia [SI:kgm$^2$] of rigid body w.r.t. reference point; this is equal to the center of mass, if physicsCenterOfMass = 0'),
+            description=r'$J$inertia [SI:kgm$^2$] of rigid body w.r.t. reference point; this is equal to the center of mass, if centerOfMass = 0'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='physicsInertia',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'inertia'),
         ItemParameter(type=TVectorND(2), destination=DestComp+DestParam,
-            pythonName='physicsCenterOfMass',
+            pythonName='centerOfMass',
             defaultValue='Vector2D({0.,0.})',
             description=r"""$\LU{b}{\bv_{COM}}$local position of ABRV:COM relative to the body's reference point; if the vector of the ABRV:COM is [0,0], the computation will not consider additional terms for the ABRV:COM and it is faster"""),
+        ItemParameter(type=TVectorND(2), destination=DestComp+DestParam,
+            pythonName='physicsCenterOfMass',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'centerOfMass'),
         ItemParameter(type=TIndex(ItemNode), destination=DestComp+DestParam,
             pythonName='nodeNumber',
             defaultValue=DVInvalidIndex,
@@ -1269,7 +1319,7 @@ definitions.append(ItemDefinition(
         ItemFunctionDef('ComputeMassMatrix'),
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunctionDef('GetAvailableJacobians',
-            implementation='if (parameters.physicsCenterOfMass == 0.) {return JacobianType::_None;} else {return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);}'),
+            implementation='if (parameters.centerOfMass == 0.) {return JacobianType::_None;} else {return (JacobianType::Type)(JacobianType::ODE2_ODE2 + JacobianType::ODE2_ODE2_t);}'),
         ItemAccessFunctionTypes(),
         ItemFunctionDef('GetPositionJacobian'),
         ItemFunctionDef('GetRotationJacobian'),
@@ -1294,7 +1344,7 @@ definitions.append(ItemDefinition(
             args='const Vector3D& localPosition, ConfigurationType configuration = ConfigurationType::Current',
             description=r"return the (global) angular acceleration of 'localPosition' according to configuration type"),
         ItemFunctionDef('GetLocalCenterOfMass',
-            implementation='return Vector3D({parameters.physicsCenterOfMass[0],parameters.physicsCenterOfMass[1],0.});'),
+            implementation='return Vector3D({parameters.centerOfMass[0],parameters.centerOfMass[1],0.});'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
             implementation='return "RigidBody2D";',
@@ -1314,7 +1364,7 @@ definitions.append(ItemDefinition(
             implementation='return (CObjectType)((Index)CObjectType::Body + (Index)CObjectType::SingleNoded);',
             description=r'Get type of object, e.g. to categorize and distinguish during assembly and computation'),
         ItemFunctionDef('HasConstantMassMatrix',
-            implementation='if (parameters.physicsCenterOfMass == 0.) {return true;} else {return false;}'),
+            implementation='if (parameters.centerOfMass == 0.) {return true;} else {return false;}'),
         ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
             pythonName='show',
             defaultValue=True,
@@ -2852,7 +2902,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     they are the markers for forces, connectors and joints on the flexible body. The general body markers
     `MarkerBodyPosition` and `MarkerBodyRigid` act on the **reference frame** only, the rigid body node 0,
     and not on the deformation. `MarkerBodyMass` applies a load proportional to the total mass at the
-    center of mass `physicsCenterOfMass`, through the coordinates of the reference frame only: the
+    center of mass `centerOfMass`, through the coordinates of the reference frame only: the
     flexible coordinates get no share of it.
 
 
@@ -2918,15 +2968,15 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             defaultValue=False,
             description=r"""ALWAYS set to False! flag used to correctly initialize all ABRV:FFRF matrices; as soon as this flag is False, internal (constant) ABRV:FFRF matrices are recomputed during Assemble()"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp, cFlags=CFReadOnly,
-            pythonName='physicsMass',
+            pythonName='mass',
             defaultValue=0.,
             description=r"""$m$total mass [SI:kg] of ABRV:FFRF object, auto-computed from mass matrix $\LU{b}{\Mm}$"""),
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp, cFlags=CFReadOnly,
-            pythonName='physicsInertia',
+            pythonName='inertia',
             defaultValue='EXUmath::unitMatrix3D',
             description=r"""$J_r \in \Rcal^{3 \times 3}$inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix $\LU{b}{\Mm}$"""),
         ItemParameter(type=TVectorND(3), destination=DestComp, cFlags=CFReadOnly,
-            pythonName='physicsCenterOfMass',
+            pythonName='centerOfMass',
             defaultValue=DVZeroVector3D,
             description=r"""$\LU{b}{\bv}_{COM}$local position of center of mass (ABRV:COM); auto-computed from mass matrix $\LU{b}{\Mm}$"""),
         ItemParameter(type=TNumpyMatrix, destination=DestComp, cFlags=CFReadOnly,
@@ -2989,7 +3039,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemFunctionDef('GetAngularVelocityLocal',
             description='return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect'),
         ItemFunctionDef('GetLocalCenterOfMass',
-            implementation='return physicsCenterOfMass;',
+            implementation='return centerOfMass;',
             description='return the local position of the center of mass, needed for massProportionalLoad; this is only the reference-frame part!'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
@@ -3504,17 +3554,32 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             defaultValue=False,
             description=r"""ALWAYS set to False! flag used to correctly initialize all ABRV:FFRF matrices; as soon as this flag is False, some internal (constant) ABRV:FFRF matrices are recomputed during Assemble()"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp,
-            pythonName='physicsMass',
+            pythonName='mass',
             defaultValue=0.,
             description=r'$m$total mass [SI:kg] of FFRFreducedOrder object'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp,
+            pythonName='physicsMass',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'mass'),
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp,
-            pythonName='physicsInertia',
+            pythonName='inertia',
             defaultValue='EXUmath::unitMatrix3D',
             description=r"""$\Jm_r \in \Rcal^{3 \times 3}$inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body"""),
+        ItemParameter(type=TMatrixND(3, 3), destination=DestComp,
+            pythonName='physicsInertia',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'inertia'),
         ItemParameter(type=TVectorND(3), destination=DestComp,
-            pythonName='physicsCenterOfMass',
+            pythonName='centerOfMass',
             defaultValue=DVZeroVector3D,
             description=r"""$\LU{b}{\bv}_{COM}$local position of center of mass (ABRV:COM)"""),
+        ItemParameter(type=TVectorND(3), destination=DestComp,
+            pythonName='physicsCenterOfMass',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'centerOfMass'),
         ItemParameter(type=TNumpyMatrix, destination=DestComp+DestParam,
             pythonName='mPsiTildePsi',
             defaultValue='Matrix()',
@@ -3540,9 +3605,14 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             defaultValue='Matrix()',
             description=r'special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface'),
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp,
-            pythonName='physicsCenterOfMassTilde',
+            pythonName='centerOfMassTilde',
             defaultValue='EXUmath::zeroMatrix3D',
             description=r"""$\LU{b}{\tilde \bv}_{COM}$tilde matrix from local position of ABRV:COM; autocomputed during initialization"""),
+        ItemParameter(type=TMatrixND(3, 3), destination=DestComp,
+            pythonName='physicsCenterOfMassTilde',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'centerOfMassTilde'),
         ItemParameter(type=TNumpyVector, destination=DestComp, cFlags=CFMutable+CFReadOnly,
             pythonName='tempUserFunctionForce',
             defaultValue='Vector()',
@@ -3607,7 +3677,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
         ItemFunctionDef('GetAngularVelocityLocal',
             description='return configuration dependent local (=body-fixed) angular velocity of node; returns always a 3D Vector, independent of 2D or 3D object; for rigid bodies, the argument localPosition has no effect'),
         ItemFunctionDef('GetLocalCenterOfMass',
-            implementation='return physicsCenterOfMass;',
+            implementation='return centerOfMass;',
             description='return the local position of the center of mass, needed for massProportionalLoad; this is only the reference-frame part!'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
@@ -3705,7 +3775,7 @@ definitions.append(ItemDefinition(
     static constexpr Index nNodalCoordinates = 6; //!< number of nodal coordinates
 """,
     cParentClass=ParentClassCObjectBody,
-    overallDescription=r"""A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.""",
+    overallDescription=r"""A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length $L$=length and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.""",
     classType=ClassTypeObject,
     detailedDescription=r"""    #### Nodes and coordinates
 
@@ -3775,9 +3845,9 @@ definitions.append(ItemDefinition(
     rhoA = 78.
     EA = 1000000.
     EI = 833.3333333333333
-    cable = Cable(physicsMassPerLength=rhoA, 
-                  physicsBendingStiffness=EI, 
-                  physicsAxialStiffness=EA, 
+    cable = Cable(massPerLength=rhoA, 
+                  bendingStiffness=EI, 
+                  axialStiffness=EA, 
                   )
 
     ancf=GenerateStraightLineANCFCable(mbs=mbs,
@@ -3820,33 +3890,68 @@ definitions.append(ItemDefinition(
             defaultValue=NoDefaultValue,
             description=r"objects's unique name"),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsLength',
+            pythonName='length',
             defaultValue=0.,
             description=r"""$L$ [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsMassPerLength',
+            pythonName='physicsLength',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'length'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='massPerLength',
             defaultValue=0.,
             description=r'$\rho A$ [SI:kg/m] mass per length of beam'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsBendingStiffness',
+            pythonName='physicsMassPerLength',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'massPerLength'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='bendingStiffness',
             defaultValue=0.,
             description=r"""$EI$ [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsAxialStiffness',
+            pythonName='physicsBendingStiffness',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'bendingStiffness'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='axialStiffness',
             defaultValue=0.,
             description=r"""$EA$ [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = |\rv^\prime|-1$ is the axial strain"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsBendingDamping',
+            pythonName='physicsAxialStiffness',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'axialStiffness'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='bendingDamping',
             defaultValue=0.,
             description=r"""$d_{K}$ [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsAxialDamping',
+            pythonName='physicsBendingDamping',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'bendingDamping'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='axialDamping',
             defaultValue=0.,
             description=r"""$d_{\varepsilon}$ [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='physicsAxialDamping',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'axialDamping'),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
-            pythonName='physicsReferenceAxialStrain',
+            pythonName='referenceAxialStrain',
             defaultValue=0.,
             description=r"""$\varepsilon_0$ [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value"""),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='physicsReferenceAxialStrain',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'referenceAxialStrain'),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='strainIsRelativeToReference',
             defaultValue=0.,
@@ -3861,7 +3966,7 @@ definitions.append(ItemDefinition(
             description=r'0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/true: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments'),
         ItemFunction(type=TReal, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='GetLength',
-            implementation='return parameters.physicsLength;',
+            implementation='return parameters.length;',
             description=r'access to individual element paramters for base class functions'),
         ItemFunctionDef('ComputeMassMatrix'),
         ItemFunctionDef('ComputeODE2LHS'),
@@ -3897,7 +4002,7 @@ definitions.append(ItemDefinition(
             description=r"return the (global) acceleration of 'localPosition' according to configuration type"),
         ItemFunctionDef('GetAngularVelocity'),
         ItemFunctionDef('GetLocalCenterOfMass',
-            implementation='return Vector3D({0.5*parameters.physicsLength,0.,0.});'),
+            implementation='return Vector3D({0.5*parameters.length,0.,0.});'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
             implementation='return "ANCFCable";',
@@ -4016,8 +4121,8 @@ definitions.append(ItemDefinition(
 def ObjectANCFCable2D_axialForceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
                                              axialPositionNormalized: Real, axialStrain: Real,
                                              axialStrain_t: Real, axialStrainRef: Real,
-                                             physicsAxialStiffness: Real,
-                                             physicsAxialDamping: Real, curvature: Real,
+                                             axialStiffness: Real,
+                                             axialDamping: Real, curvature: Real,
                                              curvature_t: Real, curvatureRef: Real) -> Real:
     r"""A user function, which computes the axial force depending on time, strains and curvatures and
 
@@ -4035,8 +4140,8 @@ def ObjectANCFCable2D_axialForceUserFunction(mbs: MainSystem, t: Real, itemNumbe
         axialStrain: $\varepsilon$
         axialStrain_t: $\varepsilon_t$
         axialStrainRef: $\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$
-        physicsAxialStiffness: as given in object parameters
-        physicsAxialDamping: as given in object parameters
+        axialStiffness: as given in object parameters
+        axialDamping: as given in object parameters
         curvature: $K$
         curvature_t: $\dot K$
         curvatureRef: $K_0 + f\cRef \cdot K\cRef$
@@ -4047,8 +4152,8 @@ def ObjectANCFCable2D_axialForceUserFunction(mbs: MainSystem, t: Real, itemNumbe
 def ObjectANCFCable2D_bendingMomentUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
                                                 axialPositionNormalized: Real, curvature: Real,
                                                 curvature_t: Real, curvatureRef: Real,
-                                                physicsBendingStiffness: Real,
-                                                physicsBendingDamping: Real, axialStrain: Real,
+                                                bendingStiffness: Real,
+                                                bendingDamping: Real, axialStrain: Real,
                                                 axialStrain_t: Real, axialStrainRef: Real) -> Real:
     r"""A user function, which computes the bending moment depending on time, strains and curvatures and
 
@@ -4066,8 +4171,8 @@ def ObjectANCFCable2D_bendingMomentUserFunction(mbs: MainSystem, t: Real, itemNu
         curvature: $K$
         curvature_t: $\dot K$
         curvatureRef: $K_0 + f\cRef \cdot K\cRef$
-        physicsBendingStiffness: as given in object parameters
-        physicsBendingDamping: as given in object parameters
+        bendingStiffness: as given in object parameters
+        bendingDamping: as given in object parameters
         axialStrain: $\varepsilon$
         axialStrain_t: $\varepsilon_t$
         axialStrainRef: $\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$
@@ -4084,7 +4189,7 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     static constexpr Index nNodalCoordinates = 4; //!< number of nodal coordinates
 """,
     cParentClass=ParentClassCObjectANCFCable2DBase,
-    overallDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
+    overallDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length $L$=length and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
     detailedDescription=r"""    #### Definition of quantities
 
@@ -4380,9 +4485,9 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
     rhoA = 78.
     EA = 1000000.
     EI = 833.3333333333333
-    cable = Cable2D(physicsMassPerLength=rhoA, 
-                    physicsBendingStiffness=EI, 
-                    physicsAxialStiffness=EA, 
+    cable = Cable2D(massPerLength=rhoA, 
+                    bendingStiffness=EI, 
+                    axialStiffness=EA, 
                     )
 
     ancf=GenerateStraightLineANCFCable2D(mbs=mbs,
@@ -4429,37 +4534,77 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
             defaultValue=NoDefaultValue,
             description=r"objects's unique name"),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsLength',
+            pythonName='length',
             defaultValue=0.,
             description=r"""$L$ [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsMassPerLength',
+            pythonName='physicsLength',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'length'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='massPerLength',
             defaultValue=0.,
             description=r'$\rho A$ [SI:kg/m] mass per length of beam'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsBendingStiffness',
+            pythonName='physicsMassPerLength',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'massPerLength'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='bendingStiffness',
             defaultValue=0.,
             description=r"""$EI$ [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsAxialStiffness',
+            pythonName='physicsBendingStiffness',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'bendingStiffness'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='axialStiffness',
             defaultValue=0.,
             description=r"""$EA$ [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = |\rv^\prime|-1$ is the axial strain"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsBendingDamping',
+            pythonName='physicsAxialStiffness',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'axialStiffness'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='bendingDamping',
             defaultValue=0.,
             description=r"""$d_{K}$ [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsAxialDamping',
+            pythonName='physicsBendingDamping',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'bendingDamping'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='axialDamping',
             defaultValue=0.,
             description=r"""$d_{\varepsilon}$ [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='physicsAxialDamping',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'axialDamping'),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
-            pythonName='physicsReferenceAxialStrain',
+            pythonName='referenceAxialStrain',
             defaultValue=0.,
             description=r"""$\varepsilon_0$ [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value"""),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
-            pythonName='physicsReferenceCurvature',
+            pythonName='physicsReferenceAxialStrain',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'referenceAxialStrain'),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='referenceCurvature',
             defaultValue=0.,
             description=r"""$\kappa_0$ [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value"""),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='physicsReferenceCurvature',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'referenceCurvature'),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='strainIsRelativeToReference',
             defaultValue=0.,
@@ -4490,38 +4635,38 @@ EI =   1e5
 
 #example of bending moment user function
 def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
-           curvature, curvature_t, curvatureRef, physicsBendingStiffness, 
-           physicsBendingDamping, axialStrain, axialStrain_t, axialStrainRef):
+           curvature, curvature_t, curvatureRef, bendingStiffness, 
+           bendingDamping, axialStrain, axialStrain_t, axialStrainRef):
     fact = min(1,t) #runs from 0 to 1
     #change reference curvature of beam over time:
     kappa=(curvature-curvatureRef*fact) 
-    return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
+    return bendingStiffness*(kappa) + bendingDamping*curvature_t
 
 def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, 
-           axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, 
-           physicsAxialDamping, curvature, curvature_t, curvatureRef):
+           axialStrain, axialStrain_t, axialStrainRef, axialStiffness, 
+           axialDamping, curvature, curvature_t, curvatureRef):
     fact = min(1,t) #runs from 0 to 1
-    return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) + 
-            physicsAxialDamping*axialStrain_t)
+    return (axialStiffness*(axialStrain-fact*axialStrainRef) + 
+            axialDamping*axialStrain_t)
 
-cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
-                physicsBendingStiffness=EI, 
-                physicsBendingDamping = EI*0.1,
-                physicsAxialStiffness=EA,
-                physicsAxialDamping=EA*0.05,
-                physicsReferenceAxialStrain=0.1, #10 <!-- stretch -->
-                physicsReferenceCurvature=1,     #radius=1
+cable = ObjectANCFCable2D(massPerLength=rhoA, 
+                bendingStiffness=EI, 
+                bendingDamping = EI*0.1,
+                axialStiffness=EA,
+                axialDamping=EA*0.05,
+                referenceAxialStrain=0.1, #10 <!-- stretch -->
+                referenceCurvature=1,     #radius=1
                 bendingMomentUserFunction=bendingMomentUserFunction,
                 axialForceUserFunction=axialForceUserFunction,
                 )
 #use  cable with GenerateStraightLineANCFCable(...)
 '''),
         ItemFunctionDef('GetLength',
-            implementation='return parameters.physicsLength;'),
+            implementation='return parameters.length;'),
         ItemFunctionDef('GetMassPerLength',
-            implementation='return parameters.physicsMassPerLength;'),
+            implementation='return parameters.massPerLength;'),
         ItemFunctionDef('GetMaterialParameters',
-            implementation='physicsBendingStiffness = parameters.physicsBendingStiffness; physicsAxialStiffness = parameters.physicsAxialStiffness; physicsBendingDamping = parameters.physicsBendingDamping; physicsAxialDamping = parameters.physicsAxialDamping; physicsReferenceAxialStrain = parameters.physicsReferenceAxialStrain; physicsReferenceCurvature = parameters.physicsReferenceCurvature; physicsMovingMassFactor = 1.;'),
+            implementation='bendingStiffness = parameters.bendingStiffness; axialStiffness = parameters.axialStiffness; bendingDamping = parameters.bendingDamping; axialDamping = parameters.axialDamping; referenceAxialStrain = parameters.referenceAxialStrain; referenceCurvature = parameters.referenceCurvature; movingMassFactor = 1.;'),
         ItemFunctionDef('UseReducedOrderIntegration',
             implementation='return parameters.useReducedOrderIntegration;'),
         ItemFunctionDef('StrainIsRelativeToReference',
@@ -4554,11 +4699,11 @@ cable = ObjectANCFCable2D(physicsMassPerLength=rhoA,
         ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateUserFunctionBendingMoment',
-            args='Real& torque, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real physicsBendingStiffness, Real physicsBendingDamping, Real axialStrain, Real axialStrain_t, Real axialStrainRef',
+            args='Real& torque, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real bendingStiffness, Real bendingDamping, Real axialStrain, Real axialStrain_t, Real axialStrainRef',
             description=r'Safe interface to evaluation of user function'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='EvaluateUserFunctionAxialForce',
-            args='Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real axialPositionNormalized, Real axialStrain, Real axialStrain_t, Real axialStrainRef, Real physicsAxialStiffness, Real physicsAxialDamping, Real curvature, Real curvature_t, Real curvatureRef',
+            args='Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex, Real axialPositionNormalized, Real axialStrain, Real axialStrain_t, Real axialStrainRef, Real axialStiffness, Real axialDamping, Real curvature, Real curvature_t, Real curvatureRef',
             description=r'Safe interface to evaluation of user function'),
         ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
             pythonName='show',
@@ -4587,13 +4732,13 @@ definitions.append(ItemDefinition(
     mutable ConstSizeMatrix<nODE2coordinates*nODE2coordinates> preComputedM1, preComputedM2, preComputedB1, preComputedB2; //!< if massTermsALEComputed=true, this contains the constant mass terms for faster computation
 """,
     cParentClass=ParentClassCObjectANCFCable2DBase,
-    overallDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2, which adds additional (redundant) motion in axial direction of the beam. This allows modeling pipes but also axially moving beams. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
+    overallDescription=r"""A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and a axially moving coordinate of type NodeGenericODE2, which adds additional (redundant) motion in axial direction of the beam. This allows modeling pipes but also axially moving beams. The localPosition of the beam with length $L$=length and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
     miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
     #an axially moving cable: the material slides through clamped nodes, described by one ALE coordinate
     nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
                                        initialCoordinates=[0], initialCoordinates_t=[0]))
-    cable = ObjectALEANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4)
+    cable = ObjectALEANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4)
     cable.nodeNumbers[2] = nALE #the ALE node of every element
     [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
                             numberOfElements=4, cableTemplate=cable,
@@ -4611,12 +4756,12 @@ definitions.append(ItemDefinition(
     detailedDescription=r"""    A 2D cable finite element using 2 nodes of type NodePoint2DSlope1 and an axially moving coordinate of type NodeGenericODE2.
     The element has 8+1 coordinates and uses cubic polynomials for position interpolation.
     In addition to ANCFCable2D the element adds an Eulerian axial velocity by the GenericODE2 coordiante.
-    The parameter `physicsMovingMassFactor` allows to control the amount of mass, which moves with
+    The parameter `movingMassFactor` allows to control the amount of mass, which moves with
     the Eulerian velocity (e.g., the fluid), and which is not moving (the pipe). 
-    A factor of `physicsMovingMassFactor=1` gives an axially moving beam.
+    A factor of `movingMassFactor=1` gives an axially moving beam.
 
     The Bernoulli-Euler beam is capable of large deformation as it employs the material measure of curvature for the bending.
-    Note that damping (physicsBendingDamping, physicsAxialDamping) only acts on the non-moving part of the beam, as it is the case for the pipe.
+    Note that damping (bendingDamping, axialDamping) only acts on the non-moving part of the beam, as it is the case for the pipe.
     
     Note that most functions act on the underlying cable finite element, which is not co-moving axially. E.g., if you apply constraints
     to the nodal coordinates, the cable can be fixed, while still the axial component is freely moving.
@@ -4650,49 +4795,104 @@ definitions.append(ItemDefinition(
             defaultValue=NoDefaultValue,
             description=r"objects's unique name"),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsLength',
+            pythonName='length',
             defaultValue=0.,
             description=r"""$L$ [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsMassPerLength',
+            pythonName='physicsLength',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'length'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='massPerLength',
             defaultValue=0.,
             description=r"""$\rho A$ [SI:kg/m] total mass per length of beam (including axially moving parts / fluid)"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsMovingMassFactor',
-            defaultValue=1.,
-            description=r"""this factor denotes the amount of $\rho A$ which is moving; physicsMovingMassFactor=1 means, that all mass is moving; physicsMovingMassFactor=0 means, that no mass is moving; factor can be used to simulate e.g. pipe conveying fluid, in which $\rho A$ is the mass of the pipe+fluid, while $physicsMovingMassFactor \cdot \rho A$ is the mass per unit length of the fluid"""),
+            pythonName='physicsMassPerLength',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'massPerLength'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsBendingStiffness',
+            pythonName='movingMassFactor',
+            defaultValue=1.,
+            description=r"""this factor denotes the amount of $\rho A$ which is moving; movingMassFactor=1 means, that all mass is moving; movingMassFactor=0 means, that no mass is moving; factor can be used to simulate e.g. pipe conveying fluid, in which $\rho A$ is the mass of the pipe+fluid, while $movingMassFactor \cdot \rho A$ is the mass per unit length of the fluid"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='physicsMovingMassFactor',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'movingMassFactor'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='bendingStiffness',
             defaultValue=0.,
             description=r"""$EI$ [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsAxialStiffness',
+            pythonName='physicsBendingStiffness',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'bendingStiffness'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='axialStiffness',
             defaultValue=0.,
             description=r"""$EA$ [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = |\rv^\prime|-1$ is the axial strain"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsBendingDamping',
+            pythonName='physicsAxialStiffness',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'axialStiffness'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='bendingDamping',
             defaultValue=0.,
             description=r"""$d_{K}$ [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsAxialDamping',
+            pythonName='physicsBendingDamping',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'bendingDamping'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='axialDamping',
             defaultValue=0.,
             description=r"""$d_{\varepsilon}$ [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='physicsAxialDamping',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'axialDamping'),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
-            pythonName='physicsReferenceAxialStrain',
+            pythonName='referenceAxialStrain',
             defaultValue=0.,
             description=r"""$\varepsilon_0$ [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value"""),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
-            pythonName='physicsReferenceCurvature',
+            pythonName='physicsReferenceAxialStrain',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'referenceAxialStrain'),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='referenceCurvature',
             defaultValue=0.,
             description=r"""$\kappa_0$ [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value"""),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='physicsReferenceCurvature',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'referenceCurvature'),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
-            pythonName='physicsUseCouplingTerms',
+            pythonName='useCouplingTerms',
             defaultValue=True,
             description=r'true: correct case, where all coupling terms due to moving mass are respected; false: only include constant mass for ALE node coordinate, but deactivate other coupling terms (behaves like ANCFCable2D then)'),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
-            pythonName='physicsAddALEvariation',
+            pythonName='physicsUseCouplingTerms',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'useCouplingTerms'),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='addALEvariation',
             defaultValue=True,
             description=r'true: correct case, where additional terms related to variation of strain and curvature are added'),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='physicsAddALEvariation',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'addALEvariation'),
         ItemParameter(type=TIndexND(3, ItemNode), destination=DestComp+DestParam,
             pythonName='nodeNumbers',
             defaultValue='Index3({EXUstd::InvalidIndex, EXUstd::InvalidIndex, EXUstd::InvalidIndex})',
@@ -4706,17 +4906,17 @@ definitions.append(ItemDefinition(
             defaultValue=0.,
             description=r"""$f\cRef$ if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1."""),
         ItemFunctionDef('GetLength',
-            implementation='return parameters.physicsLength;'),
+            implementation='return parameters.length;'),
         ItemFunctionDef('GetMassPerLength',
-            implementation='return parameters.physicsMassPerLength;'),
+            implementation='return parameters.massPerLength;'),
         ItemFunctionDef('GetMaterialParameters',
-            implementation='physicsBendingStiffness = parameters.physicsBendingStiffness; physicsAxialStiffness = parameters.physicsAxialStiffness; physicsBendingDamping = parameters.physicsBendingDamping; physicsAxialDamping = parameters.physicsAxialDamping; physicsReferenceAxialStrain = parameters.physicsReferenceAxialStrain; physicsReferenceCurvature = parameters.physicsReferenceCurvature; physicsMovingMassFactor = parameters.physicsMovingMassFactor;'),
+            implementation='bendingStiffness = parameters.bendingStiffness; axialStiffness = parameters.axialStiffness; bendingDamping = parameters.bendingDamping; axialDamping = parameters.axialDamping; referenceAxialStrain = parameters.referenceAxialStrain; referenceCurvature = parameters.referenceCurvature; movingMassFactor = parameters.movingMassFactor;'),
         ItemFunctionDef('UseReducedOrderIntegration',
             implementation='return parameters.useReducedOrderIntegration;'),
         ItemFunctionDef('StrainIsRelativeToReference',
             implementation='return parameters.strainIsRelativeToReference;'),
         ItemFunctionDef('AddALEvariation',
-            implementation='return parameters.physicsAddALEvariation;'),
+            implementation='return parameters.addALEvariation;'),
         ItemFunctionDef('ComputeMassMatrix'),
         ItemFunctionDef('ComputeODE2LHS'),
         ItemAccessFunctionTypes(),
@@ -4796,7 +4996,7 @@ definitions.append(ItemDefinition(
                       mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))]))
     for k in range(nElements):
         n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[L*(k+1)/nElements,0,0, 0,1,0, 0,0,1]))
-        mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength=L/nElements, sectionData=section))
+        mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], length=L/nElements, sectionData=section))
         n0 = n1
     mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n1)), loadVector=[0,0,F]))
 
@@ -4834,8 +5034,8 @@ definitions.append(ItemDefinition(
 
     | strain | definition | stiffness |
     |---|---|---|
-    | axial and shear | $\gamma_1 = \tv_1\tp\rv' - 1$, $\gamma_2 = \tv_2\tp\rv'$, $\gamma_3 = \tv_3\tp\rv'$ | $[EA,\; GA_y,\; GA_z]$ = `physicsAxialShearStiffness` |
-    | twist and curvature | $\kv = \frac{1}{2}\sum_i \ev_i \times \ev_i'$ in the local basis | $[GJ_x,\; EI_y,\; EI_z]$ = `physicsTorsionalBendingStiffness` |
+    | axial and shear | $\gamma_1 = \tv_1\tp\rv' - 1$, $\gamma_2 = \tv_2\tp\rv'$, $\gamma_3 = \tv_3\tp\rv'$ | $[EA,\; GA_y,\; GA_z]$ = `axialShearStiffness` |
+    | twist and curvature | $\kv = \frac{1}{2}\sum_i \ev_i \times \ev_i'$ in the local basis | $[GJ_x,\; EI_y,\; EI_z]$ = `torsionalBendingStiffness` |
     | cross section deformation | $\frac{1}{2}(\rv_y\tp\rv_y - 1)$, $\frac{1}{2}(\rv_z\tp\rv_z - 1)$, $\frac{1}{2}\rv_y\tp\rv_z$ | penalty $[f_{yy} EA,\; f_{zz} EA,\; f_{yz}(GA_y+GA_z)]$ with `crossSectionPenaltyFactor` |
 
     each with a viscous damping of the same form. The strains are measured against a **straight,
@@ -4890,27 +5090,32 @@ definitions.append(ItemDefinition(
             defaultValue='Index2({EXUstd::InvalidIndex, EXUstd::InvalidIndex})',
             description=r'two node numbers for beam element'),
         ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
-            pythonName='physicsLength',
+            pythonName='length',
             defaultValue=0.,
             description=r"""$L$ [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive"""),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam,
+            pythonName='physicsLength',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'length'),
         ItemParameter(type=TBeamSection, destination=DestMain,
             pythonName='sectionData',
             defaultValue='BeamSection()',
             description=r'data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam, cFlags=CFNoInterface,
-            pythonName='physicsMassPerLength',
+            pythonName='massPerLength',
             defaultValue=0.,
             description=r"""$\rho A$ [SI:kg/m] mass per length of beam; this data is used internally for computation"""),
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam, cFlags=CFNoInterface,
-            pythonName='physicsCrossSectionInertia',
+            pythonName='crossSectionInertia',
             defaultValue='EXUmath::zeroMatrix3D',
             description=r"""$\rho \Jm$ [SI:kg m] cross section mass moment of inertia tensor; this data is used internally for computation"""),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam, cFlags=CFNoInterface,
-            pythonName='physicsTorsionalBendingStiffness',
+            pythonName='torsionalBendingStiffness',
             defaultValue=DVZeroVector3D,
             description=r"""$k_\kappa = [GJ_x, \, EI_y, \, EI_z]\tp$ [SI:Nm$^2$] bending and torsional stiffness vector;"""),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam, cFlags=CFNoInterface,
-            pythonName='physicsAxialShearStiffness',
+            pythonName='axialShearStiffness',
             defaultValue=DVZeroVector3D,
             description=r"""$k_{as} = [EA, \, GA_y, \, GA_z]\tp$ [SI:N] axial and shear stiffness;"""),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
@@ -4918,11 +5123,11 @@ definitions.append(ItemDefinition(
             defaultValue='Vector3D({1.,1.,1.})',
             description=r"""$k_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp$ [SI:1] additional penalty factors for cross section deformation, which are in total $k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp$"""),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam, cFlags=CFNoInterface,
-            pythonName='physicsTorsionalBendingDamping',
+            pythonName='torsionalBendingDamping',
             defaultValue=DVZeroVector3D,
             description=r"""$d_\kappa = [d_{GJx}, \, d_{EIy}, \, d_{EIz}]\tp$ [SI:Nm$^2$] viscous damping of bending and torsional deformation, according to $k_\kappa$"""),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam, cFlags=CFNoInterface,
-            pythonName='physicsAxialShearDamping',
+            pythonName='axialShearDamping',
             defaultValue=DVZeroVector3D,
             description=r"""$d_{as} = [d_{EA}, \, d_{GAy}, \, d_{GAz}]\tp$ [SI:N] viscous damping of axial and shear deformation, according to $k_{as}$"""),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam,
@@ -5070,7 +5275,7 @@ definitions.append(ItemDefinition(
     mutable ConstSizeMatrix<maxODE2coordinates*maxODE2coordinates> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
 """,
     cParentClass=ParentClassCObjectBody,
-    overallDescription=r"""A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with physicsReferenceCurvature and axial pre-stress can be considered by using a physicsLength different from the reference configuration of the nodes. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
+    overallDescription=r"""A 2D geometrically exact beam finite element, using 2 or 3 nodes of type NodeRigidBody2D. Note that the orientation of the nodes need to follow the cross section orientation in case that includeReferenceRotations=True; e.g., an angle 0 represents the cross section aligned with the $y$-axis, while and angle $\pi/2$ means that the cross section points in negative $x$-direction. Pre-curvature can be included with referenceCurvature and axial pre-stress can be considered by using a length different from the reference configuration of the nodes. The localPosition of the beam with length $L$=length and height $h$ ranges in $X$-direction in range $[-L/2, L/2]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the ABRV:EOM).""",
     classType=ClassTypeObject,
     miniExample=r"""    #a cantilever of four planar geometrically exact beam elements on rigid body nodes, loaded at the tip
     L = 1; nElements = 4; EI = 100; GA = 1e4; F = -0.1
@@ -5081,9 +5286,9 @@ definitions.append(ItemDefinition(
                       mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))]))
     for k in range(nElements):
         n1 = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[L*(k+1)/nElements,0,0]))
-        mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[n0,n1], physicsLength=L/nElements,
-                      physicsMassPerLength=1, physicsCrossSectionInertia=0.01, physicsBendingStiffness=EI,
-                      physicsAxialStiffness=1e5, physicsShearStiffness=GA))
+        mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[n0,n1], length=L/nElements,
+                      massPerLength=1, crossSectionInertia=0.01, bendingStiffness=EI,
+                      axialStiffness=1e5, shearStiffness=GA))
         n0 = n1
     mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n1)), loadVector=[0,F,0]))
 
@@ -5126,7 +5331,7 @@ definitions.append(ItemDefinition(
     $$
 
     the axial strain, the shear strain and the curvature, with the reference curvature $\kappa_0$ =
-    `physicsReferenceCurvature`. The virtual work of the elastic forces is
+    `referenceCurvature`. The virtual work of the elastic forces is
 
     $$
     \delta W_e = \int_{-L/2}^{L/2} \left( EA\,\gamma_1\,\delta\gamma_1 + GA\,\gamma_2\,\delta\gamma_2 + EI\,\kappa\,\delta\kappa \right) dx ,
@@ -5178,45 +5383,95 @@ definitions.append(ItemDefinition(
             defaultValue='ArrayIndex()',
             description=r'two node numbers for beam element'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsLength',
+            pythonName='length',
             defaultValue=0.,
             description=r"""$L$ [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsMassPerLength',
+            pythonName='physicsLength',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'length'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='massPerLength',
             defaultValue=0.,
             description=r'$\rho A$ [SI:kg/m] mass per length of beam'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsCrossSectionInertia',
+            pythonName='physicsMassPerLength',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'massPerLength'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='crossSectionInertia',
             defaultValue=0.,
             description=r"""$\rho J$ [SI:kg m] cross section mass moment of inertia; inertia acting against rotation of cross section"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsBendingStiffness',
+            pythonName='physicsCrossSectionInertia',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'crossSectionInertia'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='bendingStiffness',
             defaultValue=0.,
             description=r"""$EI$ [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsAxialStiffness',
+            pythonName='physicsBendingStiffness',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'bendingStiffness'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='axialStiffness',
             defaultValue=0.,
             description=r"""$EA$ [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon$ is the axial strain"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsShearStiffness',
+            pythonName='physicsAxialStiffness',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'axialStiffness'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='shearStiffness',
             defaultValue=0.,
             description=r'$GA$ [SI:N] effective shear stiffness of beam, including stiffness correction'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsBendingDamping',
+            pythonName='physicsShearStiffness',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'shearStiffness'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='bendingDamping',
             defaultValue=0.,
             description=r"""$d_{K}$ [SI:Nm$^2$/s] viscous damping of bending deformation; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsAxialDamping',
+            pythonName='physicsBendingDamping',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'bendingDamping'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='axialDamping',
             defaultValue=0.,
             description=r"""$d_{\varepsilon}$ [SI:N/s] viscous damping of axial deformation"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsShearDamping',
+            pythonName='physicsAxialDamping',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'axialDamping'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='shearDamping',
             defaultValue=0.,
             description=r'$d_{\gamma}$ [SI:N/s] viscous damping of shear deformation'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='physicsShearDamping',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'shearDamping'),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
-            pythonName='physicsReferenceCurvature',
+            pythonName='referenceCurvature',
             defaultValue=0.,
             description=r"""$\kappa_0$ [SI:1/m] reference curvature of beam (pre-deformation) of beam"""),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='physicsReferenceCurvature',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'referenceCurvature'),
         ItemParameter(type=Tbool, destination=DestComp+DestParam,
             pythonName='includeReferenceRotations',
             defaultValue=False,
@@ -5353,7 +5608,7 @@ definitions.append(ItemDefinition(
     nodes = [mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[L*i/nElements,0,0]+eulerParameters0))
              for i in range(nElements+1)]
     for i in range(nElements):
-        mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i],nodes[i+1]], physicsLength=L/nElements,
+        mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i],nodes[i+1]], length=L/nElements,
                                                    sectionData=section))
     mbs.AddObject(GenericJoint(markerNumbers=[mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround)),
                                               mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodes[0]))])) #clamped
@@ -5372,7 +5627,7 @@ definitions.append(ItemDefinition(
     Two 3D rigid body nodes - `NodeRigidBodyEP`, `NodeRigidBodyRxyz` or `NodeRigidBodyRotVecLG` - each with the
     position $\pv_i$ of the beam axis and the rotation $\Rot_i$ of the cross section, whose local $x$-axis is the
     axis of the beam and whose local $y$- and $z$-axes span the cross section. The local axial coordinate is
-    $x \in [-L/2,\, L/2]$ with $L$ = `physicsLength`; node 0 is at $x = -L/2$.
+    $x \in [-L/2,\, L/2]$ with $L$ = `length`; node 0 is at $x = -L/2$.
 
     #### Kinematics and interpolation
     With the homogeneous transformations $\Hm_i = (\Rot_i, \pv_i)$ of the nodes, the relative motion of node 1
@@ -5460,27 +5715,32 @@ definitions.append(ItemDefinition(
             defaultValue='Index2({EXUstd::InvalidIndex, EXUstd::InvalidIndex})',
             description=r'two node numbers for beam element'),
         ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
-            pythonName='physicsLength',
+            pythonName='length',
             defaultValue=0.,
             description=r"""$L$ [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive"""),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam,
+            pythonName='physicsLength',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'length'),
         ItemParameter(type=TBeamSection, destination=DestMain,
             pythonName='sectionData',
             defaultValue='BeamSection()',
             description=r'data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section.'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam, cFlags=CFNoInterface,
-            pythonName='physicsMassPerLength',
+            pythonName='massPerLength',
             defaultValue=0.,
             description=r"""$\rho A$ [SI:kg/m] mass per length of beam; this data is used internally for computation"""),
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam, cFlags=CFNoInterface,
-            pythonName='physicsCrossSectionInertia',
+            pythonName='crossSectionInertia',
             defaultValue='EXUmath::zeroMatrix3D',
             description=r"""$\rho \Jm$ [SI:kg m] cross section mass moment of inertia tensor; this data is used internally for computation"""),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam, cFlags=CFNoInterface,
-            pythonName='physicsTorsionalBendingStiffness',
+            pythonName='torsionalBendingStiffness',
             defaultValue=0.,
             description=r"""$K_\kappa = [GJ_x, \, EI_y, \, EI_z]\tp$ [SI:Nm$^2$] bending and torsional stiffness vector;"""),
         ItemParameter(type=TVectorND(3), destination=DestComp+DestParam, cFlags=CFNoInterface,
-            pythonName='physicsAxialShearStiffness',
+            pythonName='axialShearStiffness',
             defaultValue=0.,
             description=r"""$K_{as} = [EA, \, GA_y, \, GA_z]\tp$ [SI:N] axial and shear stiffness;"""),
         ItemFunctionDef('ComputeMassMatrix'),
@@ -5591,8 +5851,8 @@ definitions.append(ItemDefinition(
 
     Kirchhoff plate: the in-plane strains of the mid-surface and the curvatures from the second
     derivatives of the position, relative to the reference configuration with `strainIsRelativeToReference`,
-    with the stiffness coefficients $\Dm_\varepsilon$ = `physicsStrainCoefficients` and $\Dm_\kappa$ =
-    `physicsCurvatureCoefficients`, integrated over the thickness.
+    with the stiffness coefficients $\Dm_\varepsilon$ = `strainCoefficients` and $\Dm_\kappa$ =
+    `curvatureCoefficients`, integrated over the thickness.
 
     #### Mass matrix and damping
 
@@ -5647,25 +5907,50 @@ definitions.append(ItemDefinition(
             defaultValue=NoDefaultValue,
             description=r"objects's unique name"),
         ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
-            pythonName='physicsThickness',
+            pythonName='thickness',
             defaultValue='Vector()',
             description=r'$h$ [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients'),
+        ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
+            pythonName='physicsThickness',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'thickness'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='physicsDensity',
+            pythonName='density',
             defaultValue=0.,
             description=r"""$\rho$ [SI:kg/m$^3$] density of the plate, possibly averaged over thickness"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='physicsDensity',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'density'),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
-            pythonName='physicsMassProportionalDamping',
+            pythonName='massProportionalDamping',
             defaultValue=0.,
             description=r"""mass-proportional damping coefficient $\alpha$ [SI:1/s]; adds massmatrix proportional damping forces $\fv_d = \alpha \Mm \dot{\qv}$"""),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='physicsMassProportionalDamping',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'massProportionalDamping'),
         ItemParameter(type=TMatrix3DList, destination=DestComp+DestParam,
-            pythonName='physicsStrainCoefficients',
+            pythonName='strainCoefficients',
             defaultValue='Matrix3DList()',
             description=r"""$\Dm_\varepsilon$ [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients"""),
         ItemParameter(type=TMatrix3DList, destination=DestComp+DestParam,
-            pythonName='physicsCurvatureCoefficients',
+            pythonName='physicsStrainCoefficients',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'strainCoefficients'),
+        ItemParameter(type=TMatrix3DList, destination=DestComp+DestParam,
+            pythonName='curvatureCoefficients',
             defaultValue='Matrix3DList()',
             description=r"""$\Dm_\kappa$ [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients"""),
+        ItemParameter(type=TMatrix3DList, destination=DestComp+DestParam,
+            pythonName='physicsCurvatureCoefficients',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'curvatureCoefficients'),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='strainIsRelativeToReference',
             defaultValue=1.,
@@ -6057,7 +6342,7 @@ definitions.append(ItemDefinition(
 """,
     mainParentClass=MainParentClassMainObjectConnector,
     miniExample=r"""    node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
-    oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+    oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, mass=1))
     
     m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
     m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oMassPoint, localPosition=[0,0,0]))
@@ -6349,7 +6634,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #example with mass at [1,1,0], 5kg under load 5N in -y direction
     k=5000
     nMass = mbs.AddNode(NodePoint(referenceCoordinates=[1,1,0]))
-    oMass = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+    oMass = mbs.AddObject(MassPoint(mass = 5, nodeNumber = nMass))
     
     mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
     mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition = [1,1,0]))
@@ -6569,7 +6854,7 @@ definitions.append(ItemDefinition(
 
     <!--
     definition how output variables are computed:
-    \rowTable{Rotation}{$\LU{J0}{\ttheta} = [\theta_0,\theta_1,\theta_2]$}{intrinsicFormulation=False: Tait-Bryan angles retrieved from relative rotation matrix; intrinsicFormulation=True: rotation vector of relative rotation matrix}
+    \rowTable{Rotation}{$\LU{J0}{\ttheta} = [\theta_0,\theta_1,\theta_2]$}{useIntrinsicFormulation=False: Tait-Bryan angles retrieved from relative rotation matrix; useIntrinsicFormulation=True: rotation vector of relative rotation matrix}
     \rowTable{ForceLocal}{$\LU{J0}{\fv}$}{see below}
     \rowTable{TorqueLocal}{$\LU{J0}{\mv}$}{see below}
     -->
@@ -6616,7 +6901,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #example with rigid body at [0,0,0], 1kg under initial velocity
     k=500
     nBody = mbs.AddNode(RigidRxyz(initialVelocities=[0,1e3,0, 0,0,0]))
-    oBody = mbs.AddObject(RigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], 
+    oBody = mbs.AddObject(RigidBody(mass=1, inertia=[1,1,1,0,0,0], 
                                     nodeNumber=nBody))
     
     mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))
@@ -6683,9 +6968,14 @@ definitions.append(ItemDefinition(
             defaultValue='Vector6D({0.,0.,0.,0.,0.,0.})',
             description=r'translational and rotational offset considered in the spring force calculation'),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
-            pythonName='intrinsicFormulation',
+            pythonName='useIntrinsicFormulation',
             defaultValue=False,
             description=r'if True, the joint uses the intrinsic formulation, which is independent on order of markers, using a mid-point and mid-rotation for evaluation and application of connector forces and torques; this uses a Lie group formulation; in this case, the force/torque vector is computed from the stiffness matrix times the 6-vector of the SE3 matrix logarithm between the two marker positions/rotations, see the equations'),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='intrinsicFormulation',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'useIntrinsicFormulation'),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='activeConnector',
             defaultValue=True,
@@ -6880,7 +7170,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #example with rigid body at [0,0,0], with torsional load
     k=2e3
     nBody = mbs.AddNode(RigidRxyz())
-    oBody = mbs.AddObject(RigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], 
+    oBody = mbs.AddObject(RigidBody(mass=1, inertia=[1,1,1,0,0,0], 
                                     nodeNumber=nBody))
     
     mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))
@@ -7116,7 +7406,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #example with rigid body at [0,0,0], with torsional load
     k=2e3
     nBody = mbs.AddNode(RigidRxyz())
-    oBody = mbs.AddObject(RigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], 
+    oBody = mbs.AddObject(RigidBody(mass=1, inertia=[1,1,1,0,0,0], 
                                     nodeNumber=nBody))
     
     mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))
@@ -7368,7 +7658,7 @@ definitions.append(ItemDefinition(
     These parameters have been removed and they are only available in CoordinateSpringDamperExt, HOWEVER, with different names.
     In order to use CoordinateSpringDamperExt instead of the old CoordinateSpringDamper with the same friction behavior, we recoomend:
     
-    - USE CoordinateSpringDamperExt.fDynamicFriction INSTEAD of CoordinateSpringDamper.dryFriction
+    - USE CoordinateSpringDamperExt.dynamicFrictionForce INSTEAD of CoordinateSpringDamper.dryFriction
     - USE CoordinateSpringDamperExt.frictionProportionalZone INSTEAD of CoordinateSpringDamper.dryFrictionProportionalZone
     - CoordinateSpringDamperExt.frictionProportionalZone has a different behavior in case that it is zero; thus use 1e-16 in this case, to get as close as possible to previous behaviour
     - the variables stiffness, damping and offset have the same interpretation in both objects
@@ -7384,7 +7674,7 @@ definitions.append(ItemDefinition(
         return 0.1*k*u+k*u**3+v*d
 
     nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
-    massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+    massPoint = mbs.AddObject(MassPoint(mass = 5, nodeNumber = nMass))
     
     groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
     nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
@@ -7518,10 +7808,10 @@ def ObjectConnectorCoordinateSpringDamperExt_springForceUserFunction(mbs: MainSy
                                                                      stiffness: Real,
                                                                      damping: Real, offset: Real,
                                                                      velocityOffset: Real,
-                                                                     fDynamicFriction: Real,
-                                                                     fStaticFrictionOffset: Real,
+                                                                     dynamicFrictionForce: Real,
+                                                                     staticFrictionOffsetForce: Real,
                                                                      exponentialDecayStatic: Real,
-                                                                     fViscousFriction: Real,
+                                                                     viscousFrictionFactor: Real,
                                                                      frictionProportionalZone: Real) -> Real:
     r"""A user function, which computes the scalar spring force depending on time, object variables (displacement, velocity)
 
@@ -7543,10 +7833,10 @@ def ObjectConnectorCoordinateSpringDamperExt_springForceUserFunction(mbs: MainSy
         damping: copied from object
         offset: copied from object
         velocityOffset: copied from object
-        fDynamicFriction: copied from object
-        fStaticFrictionOffset: copied from object
+        dynamicFrictionForce: copied from object
+        staticFrictionOffsetForce: copied from object
         exponentialDecayStatic: copied from object
-        fViscousFriction: copied from object
+        viscousFrictionFactor: copied from object
         frictionProportionalZone: copied from object, also called regularization velocity or regVel
     Returns:
         scalar value of computed force
@@ -7561,7 +7851,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     miniExample=r"""    #a coordinate spring with a limit stop; the stop's state is kept in a data node
     node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
     mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
     nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[0,0,0]))
@@ -7601,7 +7891,7 @@ definitions.append(ItemDefinition(
                         $$
 
     The friction force is computed from given friction 'force' parameters, as there is no normal force in this model.
-    This means, that `fDynamicFriction` represents $\mu_d \cdot F_N$ in which $\mu_d$ is the friction parameter and 
+    This means, that `dynamicFrictionForce` represents $\mu_d \cdot F_N$ in which $\mu_d$ is the friction parameter and 
     $F_N$ is an according normal force.
     
     The friction force is computed for different cases:
@@ -7758,13 +8048,23 @@ definitions.append(ItemDefinition(
             defaultValue=1.,
             description=r'$f_1$marker 1 coordinate is multiplied with factor1'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='fDynamicFriction',
+            pythonName='dynamicFrictionForce',
             defaultValue=0.,
             description=r"""$f_{\mu,\mathrm{d}}$dynamic (viscous) friction force [SI:N] against relative velocity when sliding; assuming a normal force $f_N$, the friction force can be interpreted as $f_\mu = \mu f_N$"""),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
-            pythonName='fStaticFrictionOffset',
+            pythonName='fDynamicFriction',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'dynamicFrictionForce'),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='staticFrictionOffsetForce',
             defaultValue=0.,
             description=r"""$f_{\mu,\mathrm{so}}$static (dry) friction offset force [SI:N]; assuming a normal force $f_N$, the friction force is limited by $f_\mu \le (\mu_{so} + \mu_d) f_N = f_{\mu_d} + f_{\mu_{so}}$"""),
+        ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
+            pythonName='fStaticFrictionOffset',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'staticFrictionOffsetForce'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='stickingStiffness',
             defaultValue=0.,
@@ -7778,9 +8078,14 @@ definitions.append(ItemDefinition(
             defaultValue=0.001,
             description=r"""$v_\mathrm{exp}$relative velocity for exponential decay of static friction offset force [SI:m/s] against relative velocity; at $\Delta v = v_\mathrm{exp}$, the static friction offset force is reduced to 36.8\%"""),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
-            pythonName='fViscousFriction',
+            pythonName='viscousFrictionFactor',
             defaultValue=0.,
-            description=r"""$f_{\mu,\mathrm{v}}$viscous friction force part [SI:N/(m s)], acting against relative velocity in sliding case"""),
+            description=r"""$f_{\mu,\mathrm{v}}$viscous friction factor [SI:N s/m]: the friction force part proportional to the relative velocity, acting against it in the sliding case"""),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='fViscousFriction',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'viscousFrictionFactor'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='frictionProportionalZone',
             defaultValue=0.,
@@ -7852,7 +8157,7 @@ def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStatic
             description=r'the force of the connector from relative position and velocity (#2745)'),
         ItemFunctionDef('ComputeJacobianODE2_ODE2'),
         ItemFunctionDef('HasDiscontinuousIteration',
-            implementation='return (( (parameters.fDynamicFriction != 0 || parameters.fStaticFrictionOffset != 0) && parameters.frictionProportionalZone == 0) || parameters.useLimitStops);'),
+            implementation='return (( (parameters.dynamicFrictionForce != 0 || parameters.staticFrictionOffsetForce != 0) && parameters.frictionProportionalZone == 0) || parameters.useLimitStops);'),
         ItemFunctionDef('PostNewtonStep'),
         ItemFunctionDef('PostDiscontinuousIterationStep'),
         ItemFunctionDef('ComputeJacobianForce6D'),
@@ -8007,8 +8312,8 @@ definitions.append(ItemDefinition(
     node0 = mbs.AddNode(NodePoint(referenceCoordinates = [0,0,0])) #star
     node1 = mbs.AddNode(NodePoint(referenceCoordinates = [r,0,0], 
                                   initialVelocities=[0,vInit,0])) #satellite
-    oMassPoint0 = mbs.AddObject(MassPoint(nodeNumber = node0, physicsMass=mass0))
-    oMassPoint1 = mbs.AddObject(MassPoint(nodeNumber = node1, physicsMass=mass1))
+    oMassPoint0 = mbs.AddObject(MassPoint(nodeNumber = node0, mass=mass0))
+    oMassPoint1 = mbs.AddObject(MassPoint(nodeNumber = node1, mass=mass1))
     
     m0 = mbs.AddMarker(MarkerNodePosition(nodeNumber=node0))
     m1 = mbs.AddMarker(MarkerNodePosition(nodeNumber=node1))
@@ -8137,7 +8442,7 @@ definitions.append(ItemDefinition(
     m = 100; A = 0.01; p1 = 1e5
     p0 = (m*9.81 + p1*A)/A #the pressure that holds the weight
     nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0,1,0]))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=m))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, mass=m))
     mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
     mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[0,-m*9.81,0]))
     mBase = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
@@ -8513,7 +8818,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #a rope from a fixed point over no sheave to a hanging body: the rope as one spring along its length
     inertia = InertiaCuboid(density=1000, sideLengths=[0.1,0.1,0.1])
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,-1,0]+eulerParameters0))
-    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
     mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0,-9.81,0]))
     mTop = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
     mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
@@ -8862,7 +9167,7 @@ definitions.append(ItemDefinition(
     mainParentClass=MainParentClassMainObjectConnector,
     miniExample=r"""    #example with 1m pendulum, 50kg under gravity
     nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[1,0]))
-    oMass = mbs.AddObject(MassPoint2D(physicsMass = 50, nodeNumber = nMass))
+    oMass = mbs.AddObject(MassPoint2D(mass = 50, nodeNumber = nMass))
     
     mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
     mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition = [0,0,0]))
@@ -9071,7 +9376,7 @@ definitions.append(ItemDefinition(
         return 0.5*(1-np.cos(2*3.141592653589793*0.25*t))*lOffset
 
     nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
-    massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+    massPoint = mbs.AddObject(MassPoint(mass = 5, nodeNumber = nMass))
     
     groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
     nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
@@ -9090,8 +9395,8 @@ definitions.append(ItemDefinition(
     miniExamplePerformanceTest={'numberOfSteps': 851050},
     objectType=ObjectTypeConstraint,
     outputVariables=[
-        ItemOutputVariable(OVDisplacement, r"""$\Delta q$relative scalar displacement of marker coordinates, not including factorValue1"""),
-        ItemOutputVariable(OVVelocity, r"""$\Delta v$difference of scalar marker velocity coordinates, not including factorValue1"""),
+        ItemOutputVariable(OVDisplacement, r"""$\Delta q$relative scalar displacement of marker coordinates, not including factor1"""),
+        ItemOutputVariable(OVVelocity, r"""$\Delta v$difference of scalar marker velocity coordinates, not including factor1"""),
         ItemOutputVariable(OVConstraintEquation, r'$\cv$(residuum of) constraint equation'),
         ItemOutputVariable(OVForce, r'$\lambda_0$scalar constraint force (Lagrange multiplier)'),
         ],
@@ -9111,9 +9416,14 @@ definitions.append(ItemDefinition(
             defaultValue=0.,
             description=r'$l_\mathrm{off}$An offset between the two values'),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
-            pythonName='factorValue1',
+            pythonName='factor1',
             defaultValue=1.,
             description=r'$k_{m1}$An additional factor multiplied with value1 used in algebraic equation'),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='factorValue1',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'factor1'),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='velocityLevel',
             defaultValue=False,
@@ -9138,7 +9448,7 @@ def UFoffset_t(mbs, t, itemNumber, lOffset): #time derivative of UFoffset
     return 0.5*lOffset*0.5*pi*sin(0.5*pi*t)
 
 nMass=mbs.AddNode(Point(referenceCoordinates = [2,0,0]))
-massPoint = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+massPoint = mbs.AddObject(MassPoint(mass = 5, nodeNumber = nMass))
 
 groundMarker=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nGround, coordinate = 0))
 nodeMarker  =mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= nMass, coordinate = 0))
@@ -9281,8 +9591,8 @@ definitions.append(ItemDefinition(
     #coordinates INCLUDE the reference values, so qB - qA = [1,0,0] keeps the two points where they are
     nA = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
     nB = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=nA, physicsMass=1))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=nB, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nA, mass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nB, mass=1))
     mA = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nA))
     mB = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nB))
     mbs.AddObject(ObjectConnectorCoordinateVector(markerNumbers=[mA, mB], scalingMarker0=np.eye(3),
@@ -9504,7 +9814,7 @@ definitions.append(ItemDefinition(
     inertia = InertiaCylinder(density=1000, length=0.05, outerRadius=r, axis=0)
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,r]+eulerParameters0,
                        initialVelocities=[0,-2,0]+list(AngularVelocity2EulerParameters_t([2/r,0,0], eulerParameters0))))
-    disc = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    disc = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
     mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=disc)), loadVector=[0,0,-9.81]))
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
     mDisc = mbs.AddMarker(MarkerBodyRigid(bodyNumber=disc, localPosition=[0,0,0]))
@@ -9793,9 +10103,14 @@ definitions.append(ItemDefinition(
             defaultValue='Vector2D({0,0})',
             description=r"""$[d_x, d_y]\tp$viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint $J1$ coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity"""),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
-            pythonName='rollingFrictionViscous',
+            pythonName='rollingViscousFriction',
             defaultValue=0.,
-            description=r"""$\mu_r$rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground!"""),
+            description=r"""$\mu_r$viscous rolling friction [SI:s/m]: the force acts against the velocity of the trail on ground and is proportional to this velocity and to the contact normal force; currently, only implemented for disc axis parallel to ground!"""),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='rollingFrictionViscous',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'rollingViscousFriction'),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='useLinearProportionalZone',
             defaultValue=False,
@@ -10170,7 +10485,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     miniExample=r"""    #a coordinate that contacts a stop: a 1D mass falls onto the ground coordinate (gap = q1 - q0 - offset)
     node = mbs.AddNode(Node1D(referenceCoordinates=[0], initialCoordinates=[0.1]))
-    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
     mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
     nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[0.1])) #the gap
@@ -10357,8 +10672,8 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
     #the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
-    cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4,
-                              physicsBendingDamping=0.1)
+    cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4,
+                              bendingDamping=0.1)
     [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
                             numberOfElements=4, cableTemplate=cable, massProportionalLoad=[0,-9.81,0],
                             fixedConstraintsNode0=[1,1,0,1])
@@ -10525,8 +10840,8 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
     #contact with friction between a circle and an ANCF cable: a cantilever falls onto a circle
-    cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4,
-                              physicsBendingDamping=0.1)
+    cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4,
+                              bendingDamping=0.1)
     [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
                             numberOfElements=4, cableTemplate=cable, massProportionalLoad=[0,-9.81,0],
                             fixedConstraintsNode0=[1,1,0,1])
@@ -11133,7 +11448,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #a ball dropped onto a large fixed sphere: penalty contact with its state in a data node
     inertia = InertiaSphere(mass=1, radius=0.1)
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,1.2]+eulerParameters0))
-    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
     mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=ball)), loadVector=[0,0,-9.81]))
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
     mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))
@@ -11517,12 +11832,12 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #a ball in the groove of a torus, as in a ball bearing: pushed radially into the groove by a spring
     inertia = InertiaSphere(mass=0.1, radius=0.01)
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.1,0,0]+eulerParameters0))
-    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
     mRing = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
     mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))
     nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0,0,0,0]))
     #groove of an outer ring: torus about z with major radius 0.1 and groove radius 0.011
-    mbs.AddObject(ObjectContactSphereTorus(markerNumbers=[mBall, mRing], nodeNumber=nData, radiusSphere=0.01,
+    mbs.AddObject(ObjectContactSphereTorus(markerNumbers=[mBall, mRing], nodeNumber=nData, sphereRadius=0.01,
                                            torusMajorRadius=0.1, torusMinorRadius=0.011, torusAxis=[0,0,1],
                                            contactStiffness=1e6, contactDamping=1e3))
     mbs.AddLoad(LoadForceVector(markerNumber=mBall, loadVector=[10,0,0])) #pushes outwards
@@ -11608,9 +11923,14 @@ definitions.append(ItemDefinition(
             defaultValue=DVInvalidIndex,
             description=r'$n_d$node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.'),
         ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
-            pythonName='radiusSphere',
+            pythonName='sphereRadius',
             defaultValue=0.,
             description=r'$r_S$ radius of sphere [SI:m]'),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam,
+            pythonName='radiusSphere',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'sphereRadius'),
         ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
             pythonName='torusMajorRadius',
             defaultValue=0.,
@@ -11740,12 +12060,12 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #a ball dropped onto a triangle fixed to the ground
     inertia = InertiaSphere(mass=1, radius=0.1)
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2,0.2,0.2]+eulerParameters0))
-    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
     mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=ball)), loadVector=[0,0,-9.81]))
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
     mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))
     nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0,0,0,0]))
-    mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, radiusSphere=0.1,
+    mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=0.1,
                                               trianglePoints=exu.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]),
                                               contactStiffness=1e5, contactDamping=1e3))
 
@@ -11821,9 +12141,14 @@ definitions.append(ItemDefinition(
             defaultValue=DVInvalidIndex,
             description=r'$n_d$node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the  gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused.'),
         ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam, cFlags=CFMustBeGiven,
-            pythonName='radiusSphere',
+            pythonName='sphereRadius',
             defaultValue=0.,
             description=r'$r_S$ radius of sphere [SI:m]'),
+        ItemParameter(type=TReal(greaterThan=0), destination=DestComp+DestParam,
+            pythonName='radiusSphere',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'sphereRadius'),
         ItemParameter(type=TVector3DList, destination=DestComp+DestParam,
             pythonName='trianglePoints',
             defaultValue='Vector3DList()',
@@ -11949,7 +12274,7 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
     classType=ClassTypeObject,
     miniExample=r"""    #a planar body with a circle of radius 0.1 resting on a curve of line segments (the ground line y=0)
     node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0.1,0]))
-    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=0.01))
+    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=1, inertia=0.01))
     mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=body)), loadVector=[0,-10,0]))
     mCurve = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
     mCircle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
@@ -12209,7 +12534,7 @@ definitions.append(ItemDefinition(
     #holding a rigid body pendulum at its end
     inertia = InertiaCuboid(density=1000, sideLengths=[1,0.1,0.1])
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0,0]+eulerParameters0))
-    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
     mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0,-9.81,0]))
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
     mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[-0.5,0,0]))
@@ -12577,7 +12902,7 @@ definitions.append(ItemDefinition(
     mainParentClass=MainParentClassMainObjectConnector,
     miniExample=r"""    #example with rigid body at [0,0,0], with torsional load
     nBody = mbs.AddNode(RigidRxyz())
-    oBody = mbs.AddObject(RigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], 
+    oBody = mbs.AddObject(RigidBody(mass=1, inertia=[1,1,1,0,0,0], 
                                     nodeNumber=nBody))
     
     mBody = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBody))
@@ -12715,7 +13040,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #a body that may only slide along the x-axis of the joint frame, here turned to the global y-axis
     inertia = InertiaCuboid(density=1000, sideLengths=[0.1,0.1,0.1])
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0))
-    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
     HTjoint = HomogeneousTransformation(RotationMatrixZ(0.5*np.pi), [0,0,0]) #the joint x-axis is the global y-axis
     mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localHT=HTjoint))
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HTjoint))
@@ -12928,7 +13253,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #a point of a rigid body held at a ground point, free to rotate: a spherical pendulum
     inertia = InertiaCuboid(density=1000, sideLengths=[1,0.1,0.1])
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0,0]+eulerParameters0))
-    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
     mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=body)), loadVector=[0,0,-9.81]))
     mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
     mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[-0.5,0,0]))
@@ -13132,7 +13457,7 @@ definitions.append(ItemDefinition(
     inertia = InertiaCylinder(density=1000, length=0.05, outerRadius=r, axis=0)
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,r]+eulerParameters0,
                        initialVelocities=[0,-2,0]+list(AngularVelocity2EulerParameters_t([2/r,0,0], eulerParameters0))))
-    disc = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    disc = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
     mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=disc)), loadVector=[0,0,-9.81]))
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
     mDisc = mbs.AddMarker(MarkerBodyRigid(bodyNumber=disc, localPosition=[0,0,0]))
@@ -13351,7 +13676,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     miniExample=r"""    #a planar rigid body pendulum held at its end by a planar revolute joint
     node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0,0]))
-    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=1/12))
+    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=1, inertia=1/12))
     mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=body)), loadVector=[0,-9.81,0]))
     mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
     mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[-0.5,0,0]))
@@ -13471,7 +13796,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     miniExample=r"""    #a planar rigid body sliding along an axis of the ground: the axis in marker 0, the normal in marker 1
     node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0]))
-    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=2, inertia=0.1))
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
     mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
     mbs.AddObject(ObjectJointPrismatic2D(markerNumbers=[mGround, mBody], axisMarker0=[1,1,0], normalMarker1=[-1,1,0]))
@@ -13616,12 +13941,12 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     miniExample=r"""    #the shape of 3D ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
     from exudyn.beams import GenerateStraightLineANCFCable
-    cable = ObjectANCFCable(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
+    cable = ObjectANCFCable(massPerLength=1, bendingStiffness=1e4, axialStiffness=1e6)
     [nodes, elements, *_] = GenerateStraightLineANCFCable(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
                             numberOfElements=4, cableTemplate=cable,
                             fixedConstraintsNode0=[1,1,1, 1,1,1], fixedConstraintsNode1=[1,1,1, 1,1,1])
     nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0.6,0,0]))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, mass=1))
     mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
     mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[1,0,0]))
 
@@ -13700,7 +14025,7 @@ definitions.append(ItemDefinition(
     +++++++++++++++++++++++++++++++++++++++++++++
     -->
 
-    #### Connector constraint equations (classicalFormulation=True)
+    #### Connector constraint equations (useClassicalFormulation=True)
 
     The 3D sliding joint is implemented having 7 equations, using the special algebraic coordinates $\zv$.
     The algebraic equations read
@@ -13737,7 +14062,7 @@ definitions.append(ItemDefinition(
 
     <!--
     +++++++++++++++++++++++++++++++++++++++++++++
-    for (classicalFormulation=False), see 2D case!
+    for (useClassicalFormulation=False), see 2D case!
     +++++++++++++++++++++++++++++++++++++++++++++
     -->
     In case that `constrainRotations=[0,0,0]`, the Lagrange multipliers for rotations are set
@@ -13846,7 +14171,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='axialForce',
             defaultValue=0,
-            description=r"""$f_\mathrm{ax}$ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions."""),
+            description=r"""$f_\mathrm{ax}$ONLY APPLIES if useClassicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions."""),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='activeConnector',
             defaultValue=True,
@@ -13931,12 +14256,12 @@ definitions.append(ItemDefinition(
     classType=ClassTypeObject,
     miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
     #the coordinates of ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
-    cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
+    cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=1e4, axialStiffness=1e6)
     [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
                             numberOfElements=4, cableTemplate=cable,
                             fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
     nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0.6,0]))
-    mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, mass=1))
     mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
     mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[1,0,0]))
 
@@ -14015,7 +14340,7 @@ definitions.append(ItemDefinition(
     +++++++++++++++++++++++++++++++++++++++++++++
     -->
 
-    #### Connector constraint equations (classicalFormulation=True)
+    #### Connector constraint equations (useClassicalFormulation=True)
 
     The 2D sliding joint is implemented having 3 equations (4 if constrainRotation==True, see below), using the special algebraic coordinates $\zv$.
     The algebraic equations read
@@ -14058,7 +14383,7 @@ definitions.append(ItemDefinition(
     +++++++++++++++++++++++++++++++++++++++++++++
     -->
 
-    #### Connector constraint equations (classicalFormulation=False)
+    #### Connector constraint equations (useClassicalFormulation=False)
 
     The 2D sliding joint is implemented having 3 equations (first equation is dummy and could be eliminated; 4 equations if constrainRotation==True, see below), using the special algebraic coordinates $\zv$. 
     The algebraic equations read
@@ -14171,9 +14496,14 @@ definitions.append(ItemDefinition(
             defaultValue=DVInvalidIndex,
             description=r'$n_{GD}$node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position'),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
-            pythonName='classicalFormulation',
+            pythonName='useClassicalFormulation',
             defaultValue=True,
             description=r'True: uses a formulation with 3 (+1) equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; False: use local formulation, which only needs 2 (+1) equations and can be used with index 2 formulation'),
+        ItemParameter(type=TBool, destination=DestComp+DestParam,
+            pythonName='classicalFormulation',
+            deprecated=Deprecated('1.12.258', 2031),
+            defaultValue=NoDefaultValue,
+            description=r'useClassicalFormulation'),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='constrainRotation',
             defaultValue=False,
@@ -14181,7 +14511,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='axialForce',
             defaultValue=0,
-            description=r"""$f_\mathrm{ax}$ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions."""),
+            description=r"""$f_\mathrm{ax}$ONLY APPLIES if useClassicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions."""),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='activeConnector',
             defaultValue=True,
@@ -14264,7 +14594,7 @@ definitions.append(ItemDefinition(
     #a mass point carried by the material of an axially moving cable
     nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0],
                                        initialCoordinates=[0], initialCoordinates_t=[0]))
-    cable = ObjectALEANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4)
+    cable = ObjectALEANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4)
     cable.nodeNumbers[2] = nALE
     [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
                             numberOfElements=4, cableTemplate=cable,
@@ -14272,7 +14602,7 @@ definitions.append(ItemDefinition(
     mbs.AddLoad(LoadCoordinate(markerNumber=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nALE, coordinate=0)), load=1))
 
     nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0.6,0]))
-    mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, physicsMass=2))
+    mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, mass=2))
     cableMarkers = [mbs.AddMarker(MarkerBodyCable2DCoordinates(bodyNumber=e)) for e in elements]
     nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[1])) #element 1
     mbs.AddObject(ObjectJointALEMoving2D(markerNumbers=[mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass)), cableMarkers[1]],

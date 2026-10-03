@@ -198,8 +198,8 @@ void CObjectConnectorCoordinateSpringDamperExt::EvaluateUserFunctionForce(Real& 
         //user function args:(deltaL, deltaL_t, Real stiffness, Real damping, Real offset, Real dryFriction, Real dryFrictionProportionalZone)
         force = parameters.springForceUserFunction.userFunction((const MainSystem&)cSystemData->GetMainSystemBacklink(), t, itemIndex,
             relPos, relVel, parameters.stiffness, parameters.damping, parameters.offset, parameters.velocityOffset,
-            parameters.fDynamicFriction, parameters.fStaticFrictionOffset, parameters.exponentialDecayStatic,
-            parameters.fViscousFriction, parameters.frictionProportionalZone);
+            parameters.dynamicFrictionForce, parameters.staticFrictionOffsetForce, parameters.exponentialDecayStatic,
+            parameters.viscousFrictionFactor, parameters.frictionProportionalZone);
     }, "ObjectConnectorCoordinateSpringDamperExt::springForceUserFunction");
     //def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStaticOffset, muExpVel, muViscous, muRegVel) :
 }
@@ -336,25 +336,25 @@ void CObjectFFRFreducedOrder::EvaluateUserFunctionMassMatrix(Matrix& massMatrix,
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //! call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places
 void CObjectANCFCable2D::EvaluateUserFunctionBendingMoment(Real& torque, const MainSystemBase& mainSystem, Real t, Index itemIndex,
-	Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real physicsBendingStiffness, Real physicsBendingDamping,
+	Real axialPositionNormalized, Real curvature, Real curvature_t, Real curvatureRef, Real bendingStiffness, Real bendingDamping,
 	Real axialStrain, Real axialStrain_t, Real axialStrainRef) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
 			torque = parameters.bendingMomentUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
-			axialPositionNormalized, curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping,
+			axialPositionNormalized, curvature, curvature_t, curvatureRef, bendingStiffness, bendingDamping,
 			axialStrain, axialStrain_t, axialStrainRef); 
 		}, "CObjectANCFCable2D::bendingMomentUserFunction");
 }
 
 void CObjectANCFCable2D::EvaluateUserFunctionAxialForce(Real& force, const MainSystemBase& mainSystem, Real t, Index itemIndex,
-	Real axialPositionNormalized, Real axialStrain, Real axialStrain_t, Real axialStrainRef, Real physicsAxialStiffness, Real physicsAxialDamping,
+	Real axialPositionNormalized, Real axialStrain, Real axialStrain_t, Real axialStrainRef, Real axialStiffness, Real axialDamping,
 	Real curvature, Real curvature_t, Real curvatureRef) const
 {
 	UserFunctionExceptionHandling([&] //lambda function to add consistent try{..} catch(...) block
 		{
 			force = parameters.axialForceUserFunction.userFunction((const MainSystem&)mainSystem, t, itemIndex,
-			axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping,
+			axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, axialStiffness, axialDamping,
 			curvature, curvature_t, curvatureRef);
 		}, "CObjectANCFCable2D::axialForceUserFunction");
 }

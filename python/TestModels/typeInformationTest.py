@@ -42,7 +42,8 @@ for name in types.ItemNames():
     Check(set(info.get('accessFunctionTypes', [])) <= set(exu.AccessFunctionType.__members__),
           name + ': unknown access function types')
     signature = inspect.signature(getattr(itemInterface, name)).parameters
-    Check(set(types.Parameters(name)) == set(signature) - {'visualization'},
+    #the class also takes the old names of renamed parameters, as its last keywords (#2589)
+    Check(set(types.Parameters(name)) == set(signature) - {'visualization'} - set(info.get('deprecatedParameters', {})),
           name + ': parameters differ from itemInterface.py')
     Check(set(info['visualization']) == set(signature['visualization'].default),
           name + ': visualization parameters differ from itemInterface.py')
@@ -66,10 +67,10 @@ def AssembleWorks(Build):
 def AddBody(mbs, objectName):
     if objectName == 'ObjectMassPoint':
         n = mbs.AddNode(itemInterface.NodePoint())
-        return mbs.AddObject(itemInterface.ObjectMassPoint(physicsMass=1, nodeNumber=n))
+        return mbs.AddObject(itemInterface.ObjectMassPoint(mass=1, nodeNumber=n))
     if objectName == 'ObjectRigidBody':
         n = mbs.AddNode(itemInterface.NodeRigidBodyEP(referenceCoordinates=[0,0,0, 1,0,0,0]))
-        return mbs.AddObject(itemInterface.ObjectRigidBody(physicsMass=1, physicsInertia=[1,1,1,0,0,0], nodeNumber=n))
+        return mbs.AddObject(itemInterface.ObjectRigidBody(mass=1, inertia=[1,1,1,0,0,0], nodeNumber=n))
     return mbs.AddObject(itemInterface.ObjectGround())
 
 markerBuilders = {'MarkerBodyPosition': lambda b: itemInterface.MarkerBodyPosition(bodyNumber=b),

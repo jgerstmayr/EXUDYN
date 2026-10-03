@@ -62,12 +62,12 @@ The unit matrix of the 8 coordinates: the joint computes the action on each coor
 ```python
 from exudyn.beams import GenerateStraightLineANCFCable2D
 #the coordinates of ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
-cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
+cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=1e4, axialStiffness=1e6)
 [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
                         numberOfElements=4, cableTemplate=cable,
                         fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
 nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0.6,0]))
-mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, physicsMass=1))
+mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, mass=1))
 mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
 mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[1,0,0]))
 

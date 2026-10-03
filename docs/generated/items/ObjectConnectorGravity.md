@@ -153,8 +153,8 @@ tEnd = (r*0.5*np.pi)/vInit #quarter period
 node0 = mbs.AddNode(NodePoint(referenceCoordinates = [0,0,0])) #star
 node1 = mbs.AddNode(NodePoint(referenceCoordinates = [r,0,0], 
                               initialVelocities=[0,vInit,0])) #satellite
-oMassPoint0 = mbs.AddObject(MassPoint(nodeNumber = node0, physicsMass=mass0))
-oMassPoint1 = mbs.AddObject(MassPoint(nodeNumber = node1, physicsMass=mass1))
+oMassPoint0 = mbs.AddObject(MassPoint(nodeNumber = node0, mass=mass0))
+oMassPoint1 = mbs.AddObject(MassPoint(nodeNumber = node1, mass=mass1))
 
 m0 = mbs.AddMarker(MarkerNodePosition(nodeNumber=node0))
 m1 = mbs.AddMarker(MarkerNodePosition(nodeNumber=node1))

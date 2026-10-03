@@ -39,7 +39,7 @@ def TableModel():
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     nTable = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-    oTable = mbs.AddObject(ObjectRotationalMass1D(physicsInertia=0.5, nodeNumber=nTable, referencePosition=[0, 0, 0]))
+    oTable = mbs.AddObject(ObjectRotationalMass1D(inertia=0.5, nodeNumber=nTable, referencePosition=[0, 0, 0]))
     mAxis = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oTable, localPosition=[0, 0, 0]))
     mRim = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oTable, localPosition=[0.2, 0, 0]))
     mbs.AddLoad(LoadTorqueVector(markerNumber=mAxis, loadVector=[0, 0, 1]))
@@ -54,8 +54,8 @@ def CableModel(offset):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     nodes = [mbs.AddNode(NodePointSlope1(referenceCoordinates=[x, 0, 0, 1, 0, 0])) for x in [0, 1]]
-    oCable = mbs.AddObject(ObjectANCFCable(nodeNumbers=nodes, physicsLength=1, physicsMassPerLength=1,
-                                           physicsBendingStiffness=1, physicsAxialStiffness=1e4))
+    oCable = mbs.AddObject(ObjectANCFCable(nodeNumbers=nodes, length=1, massPerLength=1,
+                                           bendingStiffness=1, axialStiffness=1e4))
     oGround = mbs.AddObject(ObjectGround())
     nGround = mbs.AddNode(NodePointGround())
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))

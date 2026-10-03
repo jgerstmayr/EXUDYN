@@ -140,7 +140,7 @@ nGround1=mbs.AddNode(NodePointGround(referenceCoordinates = [ L/2,0,0]))
 gRotor = graphics.Cylinder([-lRotor*0.5,0,0],[lRotor,0,0],r,[0.3,0.3,0.9,1],128)
 gRotor2 = graphics.Cylinder([-L0,0,0],[L,0,0],r*0.05,[0.3,0.3,0.9,1],16)
 gRotor3 = [backgroundX, backgroundY, backgroundZ]
-rigid = mbs.AddObject(RigidBody(physicsMass=m, physicsInertia=[Jxx,Jyyzz,Jyyzz,0,0,0], nodeNumber = n1, visualization=VObjectRigidBody2D(graphicsData=[gRotor, gRotor2]+gRotor3)))
+rigid = mbs.AddObject(RigidBody(mass=m, inertia=[Jxx,Jyyzz,Jyyzz,0,0,0], nodeNumber = n1, visualization=VObjectRigidBody2D(graphicsData=[gRotor, gRotor2]+gRotor3)))
 
 mbs.AddSensor(SensorBody(bodyNumber=rigid, 
                          fileName='solution/runupDisplacement'+modeStr+'.txt',

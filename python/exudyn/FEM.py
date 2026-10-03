@@ -1686,9 +1686,9 @@ class ObjectFFRFreducedOrderInterface:
                                                                             dampingMatrixReduced=dampingMatrixMC,
                                                                             modeBasis=self.modeBasis,
                                                                             referencePositions = self.xRef,
-                                                                            physicsMass=self.totalMass,
-                                                                            physicsInertia=self.inertiaLocal,
-                                                                            physicsCenterOfMass=self.chiU,
+                                                                            mass=self.totalMass,
+                                                                            inertia=self.inertiaLocal,
+                                                                            centerOfMass=self.chiU,
                                                                             mPsiTildePsi = self.mPsiTildePsi,
                                                                             mPsiTildePsiTilde = self.mPsiTildePsiTilde,
                                                                             mPhitTPsi = self.mPhitTPsi,
@@ -1733,8 +1733,8 @@ class ObjectFFRFreducedOrderInterface:
         #if self.nODE2rot == 4: #for euler parameters --> add body to constrain EP
         #    epsMass = 1e-3#needed, if not all ffrf terms are included
         #    #add rigid body to node for Euler Parameter constraint:
-        #    oAddedBody = mbs.AddObject(ObjectRigidBody(nodeNumber=self.nRigidBody, physicsMass=epsMass, 
-        #                                               physicsInertia=[epsMass,epsMass,epsMass,0,0,0])) 
+        #    oAddedBody = mbs.AddObject(ObjectRigidBody(nodeNumber=self.nRigidBody, mass=epsMass, 
+        #                                               inertia=[epsMass,epsMass,epsMass,0,0,0])) 
         #    dictReturn['oAddedBody'] = oAddedBody
 
         return dictReturn

@@ -25,11 +25,14 @@ The parameters of the item; in a dictionary, its type is 'ANCFBeam':
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** | NodeIndex2 | 2 | [invalid (-1), invalid (-1)] | two node numbers for beam element |
-| **physicsLength** | PReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive; **must be given**: the default is only a placeholder |
+| **length** | PReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive; **must be given**: the default is only a placeholder |
 | **sectionData** | BeamSection |  | BeamSection() | data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section. |
 | **crossSectionPenaltyFactor** | Vector3D | 3 | [1.,1.,1.] | (symbol: $k_{cs} = [f_{yy},\,f_{zz},\,f_{yz}]\tp$) [SI:1] additional penalty factors for cross section deformation, which are in total $k_{cs} = [f_{yy}\cdot EA,\, f_{zz}\cdot EA,\, f_{yz}\cdot (GA_y+GA_z)]\tp$ |
 | **crossSectionDamping** | Vector3D | 3 | [0.,0.,0.] | (symbol: $d_{cs} = [d_{fyy},\,d_{fzz},\,d_{fyz}]\tp$) [SI:1] viscous damping according to penalty factors for cross section deformation; the damping is relative to the stiffness and should be thus usually much smaller than 1; the viscous damping factors read $d_{cs} = [d_{fyy}\cdot EA,\, d_{fzz}\cdot EA,\, d_{fyz}\cdot (GA_y+GA_z)]\tp$ |
 | **visualization** | VObjectANCFBeam |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsLength` (deprecated since 1.12.258, removed in 2031): use `length`.
 
 ## Visualization parameters
 
@@ -95,8 +98,8 @@ and measures
 
 | strain | definition | stiffness |
 |---|---|---|
-| axial and shear | $\gamma_1 = \tv_1\tp\rv' - 1$, $\gamma_2 = \tv_2\tp\rv'$, $\gamma_3 = \tv_3\tp\rv'$ | $[EA,\; GA_y,\; GA_z]$ = `physicsAxialShearStiffness` |
-| twist and curvature | $\kv = \frac{1}{2}\sum_i \ev_i \times \ev_i'$ in the local basis | $[GJ_x,\; EI_y,\; EI_z]$ = `physicsTorsionalBendingStiffness` |
+| axial and shear | $\gamma_1 = \tv_1\tp\rv' - 1$, $\gamma_2 = \tv_2\tp\rv'$, $\gamma_3 = \tv_3\tp\rv'$ | $[EA,\; GA_y,\; GA_z]$ = `axialShearStiffness` |
+| twist and curvature | $\kv = \frac{1}{2}\sum_i \ev_i \times \ev_i'$ in the local basis | $[GJ_x,\; EI_y,\; EI_z]$ = `torsionalBendingStiffness` |
 | cross section deformation | $\frac{1}{2}(\rv_y\tp\rv_y - 1)$, $\frac{1}{2}(\rv_z\tp\rv_z - 1)$, $\frac{1}{2}\rv_y\tp\rv_z$ | penalty $[f_{yy} EA,\; f_{zz} EA,\; f_{yz}(GA_y+GA_z)]$ with `crossSectionPenaltyFactor` |
 
 each with a viscous damping of the same form. The strains are measured against a **straight,
@@ -142,7 +145,7 @@ for i in range(9): #clamped: position and both slopes
                   mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))]))
 for k in range(nElements):
     n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[L*(k+1)/nElements,0,0, 0,1,0, 0,0,1]))
-    mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength=L/nElements, sectionData=section))
+    mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], length=L/nElements, sectionData=section))
     n0 = n1
 mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n1)), loadVector=[0,0,F]))
 

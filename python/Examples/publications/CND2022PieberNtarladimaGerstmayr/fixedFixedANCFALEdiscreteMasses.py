@@ -257,13 +257,13 @@ def BuildModel(parameterSet):
     
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #create one beam template
-    cable = ALECable2D(#physicsLength=L, 
-                        physicsMassPerLength=rhoA, 
-                        physicsBendingStiffness=EI, 
-                        physicsAxialStiffness=EA, 
-                        physicsBendingDamping=bendingDamping, 
-                        physicsAxialDamping=axialDamping, 
-                        physicsMovingMassFactor=movingMassFactor, 
+    cable = ALECable2D(#length=L, 
+                        massPerLength=rhoA, 
+                        bendingStiffness=EI, 
+                        axialStiffness=EA, 
+                        bendingDamping=bendingDamping, 
+                        axialDamping=axialDamping, 
+                        movingMassFactor=movingMassFactor, 
                         nodeNumbers=[0,0,nALE]
                         )
     
@@ -317,7 +317,7 @@ def BuildModel(parameterSet):
         for i in range(nMasses):
             nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0], initialVelocities=[0*mbs.variables['setVALE'],0]))
             g = graphics.Sphere([0,0,0], radius=sizeMass*0.5, color=graphics.color.red)
-            oMass = mbs.AddObject(ObjectMassPoint2D(physicsMass=mass, nodeNumber=nMass, 
+            oMass = mbs.AddObject(ObjectMassPoint2D(mass=mass, nodeNumber=nMass, 
                                                     visualization=VMassPoint2D(graphicsData=[g])))
     
             mMassX = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nMass, coordinate=0)) 

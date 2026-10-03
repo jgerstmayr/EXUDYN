@@ -47,8 +47,8 @@ def rollSystem():
     markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ground, localPosition=[0, 0, 0]))
 
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0, 0, 5e-3, 1, 0, 0, 0]))
-    body = mbs.AddObject(ObjectRigidBody(physicsMass=1,
-                                         physicsInertia=[1e-3, 1e-3, 1e-3, 0, 0, 0],
+    body = mbs.AddObject(ObjectRigidBody(mass=1,
+                                         inertia=[1e-3, 1e-3, 1e-3, 0, 0, 0],
                                          nodeNumber=node))
     markerRoll = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-03  18:09:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -114,11 +114,11 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        if (EPyUtils::DictItemExists(d, "physicsThickness")) { EPyUtils::FromPython(d["physicsThickness"], cObjectANCFThinPlate->GetParameters().physicsThickness); }
-        if (EPyUtils::DictItemExists(d, "physicsDensity")) { EPyUtils::FromPython(d["physicsDensity"], cObjectANCFThinPlate->GetParameters().physicsDensity, EPyUtils::RangeCheck::nonNegative, "ObjectANCFThinPlate.physicsDensity"); }
-        if (EPyUtils::DictItemExists(d, "physicsMassProportionalDamping")) { EPyUtils::FromPython(d["physicsMassProportionalDamping"], cObjectANCFThinPlate->GetParameters().physicsMassProportionalDamping, "ObjectANCFThinPlate.physicsMassProportionalDamping"); }
-        if (EPyUtils::DictItemExists(d, "physicsStrainCoefficients")) { EPyUtils::SetMatrix3DListSafely(d["physicsStrainCoefficients"], cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients); }
-        if (EPyUtils::DictItemExists(d, "physicsCurvatureCoefficients")) { EPyUtils::SetMatrix3DListSafely(d["physicsCurvatureCoefficients"], cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients); }
+        if (EPyUtils::DictItemExists(d, "thickness")) { EPyUtils::FromPython(d["thickness"], cObjectANCFThinPlate->GetParameters().thickness); }
+        if (EPyUtils::DictItemExists(d, "density")) { EPyUtils::FromPython(d["density"], cObjectANCFThinPlate->GetParameters().density, EPyUtils::RangeCheck::nonNegative, "ObjectANCFThinPlate.density"); }
+        if (EPyUtils::DictItemExists(d, "massProportionalDamping")) { EPyUtils::FromPython(d["massProportionalDamping"], cObjectANCFThinPlate->GetParameters().massProportionalDamping, "ObjectANCFThinPlate.massProportionalDamping"); }
+        if (EPyUtils::DictItemExists(d, "strainCoefficients")) { EPyUtils::SetMatrix3DListSafely(d["strainCoefficients"], cObjectANCFThinPlate->GetParameters().strainCoefficients); }
+        if (EPyUtils::DictItemExists(d, "curvatureCoefficients")) { EPyUtils::SetMatrix3DListSafely(d["curvatureCoefficients"], cObjectANCFThinPlate->GetParameters().curvatureCoefficients); }
         if (EPyUtils::DictItemExists(d, "strainIsRelativeToReference")) { EPyUtils::FromPython(d["strainIsRelativeToReference"], cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference, "ObjectANCFThinPlate.strainIsRelativeToReference"); }
         if (EPyUtils::DictItemExists(d, "slopesScalingX")) { EPyUtils::FromPython(d["slopesScalingX"], cObjectANCFThinPlate->GetParameters().slopesScalingX); }
         if (EPyUtils::DictItemExists(d, "slopesScalingY")) { EPyUtils::FromPython(d["slopesScalingY"], cObjectANCFThinPlate->GetParameters().slopesScalingY); }
@@ -127,6 +127,11 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectANCFThinPlate->GetShow(), "ObjectANCFThinPlate.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectANCFThinPlate->GetColor(), "ObjectANCFThinPlate.Vcolor"); }
+        if (EPyUtils::DictItemExists(d, "physicsThickness") && !d["physicsThickness"].is_none()) { PyDeprecated("items", "ObjectANCFThinPlate.physicsThickness", "ObjectANCFThinPlate: the parameter physicsThickness is deprecated since 1.12.258 and removed in 2031; use thickness"); EPyUtils::FromPython(d["physicsThickness"], cObjectANCFThinPlate->GetParameters().thickness); } //! AUTO: deprecated, forwards to thickness
+        if (EPyUtils::DictItemExists(d, "physicsDensity") && !d["physicsDensity"].is_none()) { PyDeprecated("items", "ObjectANCFThinPlate.physicsDensity", "ObjectANCFThinPlate: the parameter physicsDensity is deprecated since 1.12.258 and removed in 2031; use density"); EPyUtils::FromPython(d["physicsDensity"], cObjectANCFThinPlate->GetParameters().density, EPyUtils::RangeCheck::nonNegative, "ObjectANCFThinPlate.physicsDensity"); } //! AUTO: deprecated, forwards to density
+        if (EPyUtils::DictItemExists(d, "physicsMassProportionalDamping") && !d["physicsMassProportionalDamping"].is_none()) { PyDeprecated("items", "ObjectANCFThinPlate.physicsMassProportionalDamping", "ObjectANCFThinPlate: the parameter physicsMassProportionalDamping is deprecated since 1.12.258 and removed in 2031; use massProportionalDamping"); EPyUtils::FromPython(d["physicsMassProportionalDamping"], cObjectANCFThinPlate->GetParameters().massProportionalDamping, "ObjectANCFThinPlate.physicsMassProportionalDamping"); } //! AUTO: deprecated, forwards to massProportionalDamping
+        if (EPyUtils::DictItemExists(d, "physicsStrainCoefficients") && !d["physicsStrainCoefficients"].is_none()) { PyDeprecated("items", "ObjectANCFThinPlate.physicsStrainCoefficients", "ObjectANCFThinPlate: the parameter physicsStrainCoefficients is deprecated since 1.12.258 and removed in 2031; use strainCoefficients"); EPyUtils::SetMatrix3DListSafely(d["physicsStrainCoefficients"], cObjectANCFThinPlate->GetParameters().strainCoefficients); } //! AUTO: deprecated, forwards to strainCoefficients
+        if (EPyUtils::DictItemExists(d, "physicsCurvatureCoefficients") && !d["physicsCurvatureCoefficients"].is_none()) { PyDeprecated("items", "ObjectANCFThinPlate.physicsCurvatureCoefficients", "ObjectANCFThinPlate: the parameter physicsCurvatureCoefficients is deprecated since 1.12.258 and removed in 2031; use curvatureCoefficients"); EPyUtils::SetMatrix3DListSafely(d["physicsCurvatureCoefficients"], cObjectANCFThinPlate->GetParameters().curvatureCoefficients); } //! AUTO: deprecated, forwards to curvatureCoefficients
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -135,11 +140,11 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["physicsThickness"] = EPyUtils::ToPython(cObjectANCFThinPlate->GetParameters().physicsThickness);
-        d["physicsDensity"] = (Real)cObjectANCFThinPlate->GetParameters().physicsDensity;
-        d["physicsMassProportionalDamping"] = (Real)cObjectANCFThinPlate->GetParameters().physicsMassProportionalDamping;
-        d["physicsStrainCoefficients"] = (PyMatrix3DList)cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients;
-        d["physicsCurvatureCoefficients"] = (PyMatrix3DList)cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients;
+        d["thickness"] = EPyUtils::ToPython(cObjectANCFThinPlate->GetParameters().thickness);
+        d["density"] = (Real)cObjectANCFThinPlate->GetParameters().density;
+        d["massProportionalDamping"] = (Real)cObjectANCFThinPlate->GetParameters().massProportionalDamping;
+        d["strainCoefficients"] = (PyMatrix3DList)cObjectANCFThinPlate->GetParameters().strainCoefficients;
+        d["curvatureCoefficients"] = (PyMatrix3DList)cObjectANCFThinPlate->GetParameters().curvatureCoefficients;
         d["strainIsRelativeToReference"] = (Real)cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference;
         d["slopesScalingX"] = EPyUtils::ToPython(cObjectANCFThinPlate->GetParameters().slopesScalingX);
         d["slopesScalingY"] = EPyUtils::ToPython(cObjectANCFThinPlate->GetParameters().slopesScalingY);
@@ -155,11 +160,11 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsThickness") == 0) { return EPyUtils::ToPython(cObjectANCFThinPlate->GetParameters().physicsThickness); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsDensity") == 0) { return py::cast((Real)cObjectANCFThinPlate->GetParameters().physicsDensity); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsMassProportionalDamping") == 0) { return py::cast((Real)cObjectANCFThinPlate->GetParameters().physicsMassProportionalDamping); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsStrainCoefficients") == 0) { return py::cast((PyMatrix3DList)cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsCurvatureCoefficients") == 0) { return py::cast((PyMatrix3DList)cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients); } //! AUTO: get parameter
+        else if (parameterName.compare("thickness") == 0) { return EPyUtils::ToPython(cObjectANCFThinPlate->GetParameters().thickness); } //! AUTO: get parameter
+        else if (parameterName.compare("density") == 0) { return py::cast((Real)cObjectANCFThinPlate->GetParameters().density); } //! AUTO: get parameter
+        else if (parameterName.compare("massProportionalDamping") == 0) { return py::cast((Real)cObjectANCFThinPlate->GetParameters().massProportionalDamping); } //! AUTO: get parameter
+        else if (parameterName.compare("strainCoefficients") == 0) { return py::cast((PyMatrix3DList)cObjectANCFThinPlate->GetParameters().strainCoefficients); } //! AUTO: get parameter
+        else if (parameterName.compare("curvatureCoefficients") == 0) { return py::cast((PyMatrix3DList)cObjectANCFThinPlate->GetParameters().curvatureCoefficients); } //! AUTO: get parameter
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { return py::cast((Real)cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference); } //! AUTO: get parameter
         else if (parameterName.compare("slopesScalingX") == 0) { return EPyUtils::ToPython(cObjectANCFThinPlate->GetParameters().slopesScalingX); } //! AUTO: get parameter
         else if (parameterName.compare("slopesScalingY") == 0) { return EPyUtils::ToPython(cObjectANCFThinPlate->GetParameters().slopesScalingY); } //! AUTO: get parameter
@@ -167,6 +172,11 @@ public: // AUTO:
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { return py::cast((Index)cObjectANCFThinPlate->GetParameters().useReducedOrderIntegration); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectANCFThinPlate->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectANCFThinPlate->GetColor())); } //! AUTO: get parameter
+        else if (parameterName.compare("physicsThickness") == 0) { PyDeprecated("items", "ObjectANCFThinPlate.physicsThickness", "ObjectANCFThinPlate: the parameter physicsThickness is deprecated since 1.12.258 and removed in 2031; use thickness"); return EPyUtils::ToPython(cObjectANCFThinPlate->GetParameters().thickness); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsDensity") == 0) { PyDeprecated("items", "ObjectANCFThinPlate.physicsDensity", "ObjectANCFThinPlate: the parameter physicsDensity is deprecated since 1.12.258 and removed in 2031; use density"); return py::cast((Real)cObjectANCFThinPlate->GetParameters().density); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsMassProportionalDamping") == 0) { PyDeprecated("items", "ObjectANCFThinPlate.physicsMassProportionalDamping", "ObjectANCFThinPlate: the parameter physicsMassProportionalDamping is deprecated since 1.12.258 and removed in 2031; use massProportionalDamping"); return py::cast((Real)cObjectANCFThinPlate->GetParameters().massProportionalDamping); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsStrainCoefficients") == 0) { PyDeprecated("items", "ObjectANCFThinPlate.physicsStrainCoefficients", "ObjectANCFThinPlate: the parameter physicsStrainCoefficients is deprecated since 1.12.258 and removed in 2031; use strainCoefficients"); return py::cast((PyMatrix3DList)cObjectANCFThinPlate->GetParameters().strainCoefficients); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsCurvatureCoefficients") == 0) { PyDeprecated("items", "ObjectANCFThinPlate.physicsCurvatureCoefficients", "ObjectANCFThinPlate: the parameter physicsCurvatureCoefficients is deprecated since 1.12.258 and removed in 2031; use curvatureCoefficients"); return py::cast((PyMatrix3DList)cObjectANCFThinPlate->GetParameters().curvatureCoefficients); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectANCFThinPlate::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -176,11 +186,11 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsThickness") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().physicsThickness); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsDensity") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().physicsDensity, EPyUtils::RangeCheck::nonNegative, "ObjectANCFThinPlate.physicsDensity"); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsMassProportionalDamping") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().physicsMassProportionalDamping, "ObjectANCFThinPlate.physicsMassProportionalDamping"); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsStrainCoefficients") == 0) { EPyUtils::SetMatrix3DListSafely(value, cObjectANCFThinPlate->GetParameters().physicsStrainCoefficients); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsCurvatureCoefficients") == 0) { EPyUtils::SetMatrix3DListSafely(value, cObjectANCFThinPlate->GetParameters().physicsCurvatureCoefficients); } //! AUTO: set parameter
+        else if (parameterName.compare("thickness") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().thickness); } //! AUTO: set parameter
+        else if (parameterName.compare("density") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().density, EPyUtils::RangeCheck::nonNegative, "ObjectANCFThinPlate.density"); } //! AUTO: set parameter
+        else if (parameterName.compare("massProportionalDamping") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().massProportionalDamping, "ObjectANCFThinPlate.massProportionalDamping"); } //! AUTO: set parameter
+        else if (parameterName.compare("strainCoefficients") == 0) { EPyUtils::SetMatrix3DListSafely(value, cObjectANCFThinPlate->GetParameters().strainCoefficients); } //! AUTO: set parameter
+        else if (parameterName.compare("curvatureCoefficients") == 0) { EPyUtils::SetMatrix3DListSafely(value, cObjectANCFThinPlate->GetParameters().curvatureCoefficients); } //! AUTO: set parameter
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().strainIsRelativeToReference, "ObjectANCFThinPlate.strainIsRelativeToReference"); } //! AUTO: set parameter
         else if (parameterName.compare("slopesScalingX") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().slopesScalingX); } //! AUTO: set parameter
         else if (parameterName.compare("slopesScalingY") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().slopesScalingY); } //! AUTO: set parameter
@@ -188,6 +198,11 @@ public: // AUTO:
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().useReducedOrderIntegration, "ObjectANCFThinPlate.useReducedOrderIntegration"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFThinPlate->GetShow(), "ObjectANCFThinPlate.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFThinPlate->GetColor(), "ObjectANCFThinPlate.Vcolor"); } //! AUTO: set parameter
+        else if (parameterName.compare("physicsThickness") == 0) { PyDeprecated("items", "ObjectANCFThinPlate.physicsThickness", "ObjectANCFThinPlate: the parameter physicsThickness is deprecated since 1.12.258 and removed in 2031; use thickness"); EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().thickness); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsDensity") == 0) { PyDeprecated("items", "ObjectANCFThinPlate.physicsDensity", "ObjectANCFThinPlate: the parameter physicsDensity is deprecated since 1.12.258 and removed in 2031; use density"); EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().density, EPyUtils::RangeCheck::nonNegative, "ObjectANCFThinPlate.physicsDensity"); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsMassProportionalDamping") == 0) { PyDeprecated("items", "ObjectANCFThinPlate.physicsMassProportionalDamping", "ObjectANCFThinPlate: the parameter physicsMassProportionalDamping is deprecated since 1.12.258 and removed in 2031; use massProportionalDamping"); EPyUtils::FromPython(value, cObjectANCFThinPlate->GetParameters().massProportionalDamping, "ObjectANCFThinPlate.physicsMassProportionalDamping"); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsStrainCoefficients") == 0) { PyDeprecated("items", "ObjectANCFThinPlate.physicsStrainCoefficients", "ObjectANCFThinPlate: the parameter physicsStrainCoefficients is deprecated since 1.12.258 and removed in 2031; use strainCoefficients"); EPyUtils::SetMatrix3DListSafely(value, cObjectANCFThinPlate->GetParameters().strainCoefficients); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsCurvatureCoefficients") == 0) { PyDeprecated("items", "ObjectANCFThinPlate.physicsCurvatureCoefficients", "ObjectANCFThinPlate: the parameter physicsCurvatureCoefficients is deprecated since 1.12.258 and removed in 2031; use curvatureCoefficients"); EPyUtils::SetMatrix3DListSafely(value, cObjectANCFThinPlate->GetParameters().curvatureCoefficients); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectANCFThinPlate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

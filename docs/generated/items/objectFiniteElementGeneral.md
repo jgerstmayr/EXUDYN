@@ -36,7 +36,7 @@ coordinates are the sum of reference and current coordinates. Whether a curved o
 reference is stress-free depends on the element: the ANCF cables subtract the reference strains
 with `strainIsRelativeToReference`, the geometrically exact beam has a reference curvature. The
 local axial coordinate runs over $[0,\,L]$ for the ANCF cables and over $[-L/2,\,L/2]$ for the other
-beams; `physicsLength` is the length of the element in its reference configuration.
+beams; `length` is the length of the element in its reference configuration.
 
 ## Meshes
 

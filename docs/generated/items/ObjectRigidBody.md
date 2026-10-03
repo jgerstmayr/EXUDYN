@@ -30,11 +30,14 @@ The parameters of the item; in a dictionary, its type is 'RigidBody':
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsMass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of rigid body |
-| **physicsInertia** | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | (symbol: $\LU{b}{\jv_6}$) inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to {ref}`COM <COM>`; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, {ref}`COM <COM>` and mass |
-| **physicsCenterOfMass** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{b}{\bv_{COM}}$) local position of {ref}`COM <COM>` relative to the body's reference point; if the vector of the {ref}`COM <COM>` is [0,0,0], the computation will not consider additional terms for the {ref}`COM <COM>` and it is faster |
+| **mass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of rigid body |
+| **inertia** | Vector6D | 6 | [0.,0.,0., 0.,0.,0.] | (symbol: $\LU{b}{\jv_6}$) inertia components [SI:kgm$^2$]: $[J_{xx}, J_{yy}, J_{zz}, J_{yz}, J_{xz}, J_{xy}]$ in body-fixed coordinate system and w.r.t. to the reference point of the body, NOT necessarily w.r.t. to {ref}`COM <COM>`; use the class RigidBodyInertia of exudynRigidBodyUtilities.py to handle inertia, {ref}`COM <COM>` and mass |
+| **centerOfMass** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{b}{\bv_{COM}}$) local position of {ref}`COM <COM>` relative to the body's reference point; if the vector of the {ref}`COM <COM>` is [0,0,0], the computation will not consider additional terms for the {ref}`COM <COM>` and it is faster |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n0$) node number (type NodeIndex) for rigid body node |
 | **visualization** | VObjectRigidBody |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsMass` (deprecated since 1.12.258, removed in 2031): use `mass`; `physicsInertia` (deprecated since 1.12.258, removed in 2031): use `inertia`; `physicsCenterOfMass` (deprecated since 1.12.258, removed in 2031): use `centerOfMass`.
 
 ## Visualization parameters
 
@@ -271,8 +274,8 @@ For an example for `graphicsDataUserFunction` see ObjectGround, [](#sec-item-obj
 inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0.2,0]+eulerParameters0,
                                    initialVelocities=[0,0,5]+list(AngularVelocity2EulerParameters_t([0,0,1], eulerParameters0))))
-body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                     physicsInertia=inertia.GetInertia6D()))
+body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                     inertia=inertia.GetInertia6D()))
 mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
 mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,0,-9.81]))
 

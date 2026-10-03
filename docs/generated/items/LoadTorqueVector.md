@@ -97,8 +97,8 @@ def UFforce(mbs, t, loadVector):
 #a torque about z spins a rigid body up
 inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0.2,0.1]+eulerParameters0))
-body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                     physicsInertia=inertia.GetInertia6D()))
+body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                     inertia=inertia.GetInertia6D()))
 mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
 mbs.AddLoad(LoadTorqueVector(markerNumber=mBody, loadVector=[0,0,1]))
 

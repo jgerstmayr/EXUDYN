@@ -111,8 +111,8 @@ slope vector.
 L = 1; EI = 100; F = -0.1
 n0 = mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[0,0, 1,0])) #position, slope = axis
 n1 = mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[L,0, 1,0]))
-mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[n0,n1], physicsLength=L, physicsMassPerLength=1,
-                                physicsBendingStiffness=EI, physicsAxialStiffness=1e5))
+mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[n0,n1], length=L, massPerLength=1,
+                                bendingStiffness=EI, axialStiffness=1e5))
 mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 for i in [0,1,3]: #clamped: x, y and the y-component of the slope
     mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))

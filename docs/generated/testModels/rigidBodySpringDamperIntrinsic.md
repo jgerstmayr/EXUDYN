@@ -31,7 +31,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 
 #intrinsic is independent of order of markers; force/torque computed at mid-frame of joint
-intrinsicFormulation=True
+useIntrinsicFormulation=True
 
 k=10000
 d= k*0.05 * 0
@@ -68,7 +68,7 @@ oRBSD1 = mbs.CreateRigidBodySpringDamper(bodyList = [oGround, oBody1],
                                         stiffness = np.diag([k*0.4,k*0.5,k*0.7, kr,kr*2,kr*1.3]), 
                                         damping = np.diag([d,d,d, dr,dr,dr]), 
                                         offset = [0.,0.,0.,0.,0.,0.],
-                                         intrinsicFormulation=intrinsicFormulation,
+                                         useIntrinsicFormulation=useIntrinsicFormulation,
                                         )
 
 oRBSD2 = mbs.CreateRigidBodySpringDamper(
@@ -78,7 +78,7 @@ oRBSD2 = mbs.CreateRigidBodySpringDamper(
                                          stiffness = np.diag([k*0.4,k*0.5,k*0.7, kr,kr*2,kr*1.3]), 
                                          damping = np.diag([d,d,d, dr,dr,dr]), 
                                          offset = [0.,0.,0.,0.,0.,0.],
-                                         intrinsicFormulation=intrinsicFormulation,
+                                         useIntrinsicFormulation=useIntrinsicFormulation,
                                         )
 
 #++++++++++++++++++++++++++++++++++++++++++++++
@@ -106,12 +106,12 @@ oRBSD3 = mbs.CreateRigidBodySpringDamper(
                                          stiffness = 1*np.diag([k*0.4,k*0.5,k*0.7, kr,kr*2,kr*1.3]), 
                                          damping = np.diag([d,d,d, dr,dr,dr]), 
                                          offset = [0.,0.,0.,0.,0.,0.],
-                                         intrinsicFormulation=intrinsicFormulation,
+                                         useIntrinsicFormulation=useIntrinsicFormulation,
                                         )
 
-# mbs.SetObjectParameter(oRBSD1, 'intrinsicFormulation', True)
-# mbs.SetObjectParameter(oRBSD2, 'intrinsicFormulation', True)
-# mbs.SetObjectParameter(oRBSD3, 'intrinsicFormulation', True)
+# mbs.SetObjectParameter(oRBSD1, 'useIntrinsicFormulation', True)
+# mbs.SetObjectParameter(oRBSD2, 'useIntrinsicFormulation', True)
+# mbs.SetObjectParameter(oRBSD3, 'useIntrinsicFormulation', True)
 
 sBody1 = mbs.AddSensor(SensorBody(bodyNumber=oBody1, storeInternal=True, outputVariableType=exu.OutputVariableType.Position))
 sBody2 = mbs.AddSensor(SensorBody(bodyNumber=oBody2, storeInternal=True, outputVariableType=exu.OutputVariableType.Position))

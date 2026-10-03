@@ -84,12 +84,12 @@ for i in range(nElements):
     #nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[L*2/3.1415926,L*2/3.1415926,0,1]))
     nodeList+=[nLast]
     if useALE:
-        elem=mbs.AddObject(ALECable2D(physicsLength=lElem, physicsMassPerLength=rhoA, 
-                                      physicsBendingStiffness=EI, physicsAxialStiffness=EA, physicsMovingMassFactor=movingMassFactor, 
+        elem=mbs.AddObject(ALECable2D(length=lElem, massPerLength=rhoA, 
+                                      bendingStiffness=EI, axialStiffness=EA, movingMassFactor=movingMassFactor, 
                                       nodeNumbers=[nodeList[i],nodeList[i+1],nALE]))
     else:
-        elem=mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rhoA, physicsBendingStiffness=EI, 
-                                   physicsAxialStiffness=EA, nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
+        elem=mbs.AddObject(Cable2D(length=lElem, massPerLength=rhoA, bendingStiffness=EI, 
+                                   axialStiffness=EA, nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
 
     cableList+=[elem]
     mBody = mbs.AddMarker(MarkerBodyMass(bodyNumber = elem))

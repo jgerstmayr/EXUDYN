@@ -416,6 +416,7 @@ def ItemCppHeaders(definition):
     parameterWriteStr = '' # functions and checks to write (set) parameters
 
     deprecatedParameters = [] #renamed parameters, forwarded after all others (#2589)
+    oldNameOf = {str(p['description']): p['pythonName'] for p in parameterList if IsDeprecatedItemParameter(p)} #new -> old name
     parameterAccess = {} #pythonName -> (parameter, typeCastStr, destStr, parRead) of the parameters they forward to
     for parameter in parameterList:
         if IsDeprecatedItemParameter(parameter):
@@ -603,12 +604,19 @@ def ItemCppHeaders(definition):
                                          + classStr + '.' + pyName + '", "' + classStr + ': the parameter ' + pyName + ' is deprecated since '
                                          + str(parameter['deprecated'].since) + ' and removed in ' + str(parameter['deprecated'].expires)
                                          + '; ' + DeprecatedUseAdvice(parameter) + '"); }')
-                    dictListWrite[i]+='if (EPyUtils::DictItemExists(d, "' +  pyName + '")) { '
+                    oldNameCondition = '' #given under its old name as well, the old one counts (it is written after all others, #2814)
+                    if pyName in oldNameOf and HasFlag(parameter, 'Q'):
+                        oldNameCondition = ' && (!EPyUtils::DictItemExists(d, "' + oldNameOf[pyName] + '") || d["' + oldNameOf[pyName] + '"].is_none())'
+                    dictListWrite[i]+='if (EPyUtils::DictItemExists(d, "' +  pyName + '")' + oldNameCondition + ') { '
                     dictListWrite[i] += ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDictionary=True, className=classStr)
                     dictListWrite[i] += deprecatedUse
                     dictListWrite[i]+=' }'
                     if HasFlag(parameter, 'Q'):
-                        dictListWrite[i]+=(' else { EPyUtils::RequireGiven(py::cast(' + destStr + '), ' + DefaultValueString(parameter)
+                        #a must-be-given parameter is also given under its old name, which is written after all others (#2814)
+                        oldGiven = ''
+                        if pyName in oldNameOf:
+                            oldGiven = 'if (!EPyUtils::DictItemExists(d, "' + oldNameOf[pyName] + '") || d["' + oldNameOf[pyName] + '"].is_none()) '
+                        dictListWrite[i]+=(' else { ' + oldGiven + 'EPyUtils::RequireGiven(py::cast(' + destStr + '), ' + DefaultValueString(parameter)
                                            + ', "' + classStr + '.' + pyName + '"); }')
                     dictListWrite[i]+='\n'
 

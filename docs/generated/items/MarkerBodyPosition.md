@@ -70,7 +70,7 @@ contains the rotation of the local position, see the page of the body.
 ```python
 #a point of a body - here of the ground, at a local position - connected to a mass point by a spring
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
-body = mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+body = mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
 mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[0,0,0]))
 mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[1,0,0]))
 mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mGround, mBody], stiffness=[100,100,100]))

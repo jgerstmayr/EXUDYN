@@ -61,7 +61,7 @@ for pos in posList:
     gDataList += [graphics.Cylinder(pAxis=pos, vAxis=[0,0,0.1], radius=rb, color= graphics.color.grey, nTiles=100)]
     #gDataList += [GraphicsDataRectangle(-1.2*H,-H*0.75,1.2*H,10*H,color=graphics.color.red)]
     nMass = mbs.AddNode(NodePointGround(referenceCoordinates=pos))
-    #oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass))
+    #oMass = mbs.AddObject(MassPoint(mass=m, nodeNumber=nMass))
     mThis = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
     markerList += [mThis]
     radiusList += [rb]
@@ -90,7 +90,7 @@ for i in range(n):
 
     nMass = mbs.AddNode(NodePoint(referenceCoordinates=[-0.6*a-H + (i%row+1)*a+0.2*a*np.random.random(1)[0],offy,0],
                                   initialVelocities=[0,-5,0]))
-    oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass,
+    oMass = mbs.AddObject(MassPoint(mass=m, nodeNumber=nMass,
                                     #visualization=VMassPoint(graphicsData=[gSphere,gSphere2])
                                     visualization=VMassPoint(graphicsData=gDataSphere[int(valueRand*ns)])
                                     ))

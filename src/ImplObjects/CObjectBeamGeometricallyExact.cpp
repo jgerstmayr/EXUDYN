@@ -36,13 +36,13 @@ void MainObjectBeamGeometricallyExact::SetInternalBeamSection(const py::object& 
 	if (py::isinstance<PyBeamSection>(pyObject)) //this must be the C-object
 	{
 		PyBeamSection bs(py::cast<PyBeamSection>(pyObject));
-		GetCObjectBeamGeometricallyExact()->GetParameters().physicsAxialShearStiffness =
+		GetCObjectBeamGeometricallyExact()->GetParameters().axialShearStiffness =
 			Vector3D({ bs.stiffnessMatrix(0,0),bs.stiffnessMatrix(1,1),bs.stiffnessMatrix(2,2) });
-		GetCObjectBeamGeometricallyExact()->GetParameters().physicsTorsionalBendingStiffness =
+		GetCObjectBeamGeometricallyExact()->GetParameters().torsionalBendingStiffness =
 			Vector3D({ bs.stiffnessMatrix(3,3),bs.stiffnessMatrix(4,4),bs.stiffnessMatrix(5,5) });
 
-		GetCObjectBeamGeometricallyExact()->GetParameters().physicsCrossSectionInertia = bs.inertia;
-		GetCObjectBeamGeometricallyExact()->GetParameters().physicsMassPerLength = bs.massPerLength;
+		GetCObjectBeamGeometricallyExact()->GetParameters().crossSectionInertia = bs.inertia;
+		GetCObjectBeamGeometricallyExact()->GetParameters().massPerLength = bs.massPerLength;
 
 		//CHECK that there are no parameters in BeamSection which are not processed:
 		PyBeamSection bsCheck;
@@ -66,18 +66,18 @@ void MainObjectBeamGeometricallyExact::SetInternalBeamSection(const py::object& 
 PyBeamSection MainObjectBeamGeometricallyExact::GetInternalBeamSection() const
 {
 	PyBeamSection bs;
-	Vector3D kAS = GetCObjectBeamGeometricallyExact()->GetParameters().physicsAxialShearStiffness;
+	Vector3D kAS = GetCObjectBeamGeometricallyExact()->GetParameters().axialShearStiffness;
 	bs.stiffnessMatrix(0, 0) = kAS[0];
 	bs.stiffnessMatrix(1, 1) = kAS[1];
 	bs.stiffnessMatrix(2, 2) = kAS[2];
 
-	Vector3D kKappa = GetCObjectBeamGeometricallyExact()->GetParameters().physicsTorsionalBendingStiffness;
+	Vector3D kKappa = GetCObjectBeamGeometricallyExact()->GetParameters().torsionalBendingStiffness;
 	bs.stiffnessMatrix(3, 3) = kKappa[0];
 	bs.stiffnessMatrix(4, 4) = kKappa[1];
 	bs.stiffnessMatrix(5, 5) = kKappa[2];
 
-	bs.inertia = GetCObjectBeamGeometricallyExact()->GetParameters().physicsCrossSectionInertia;
-	bs.massPerLength = GetCObjectBeamGeometricallyExact()->GetParameters().physicsMassPerLength;
+	bs.inertia = GetCObjectBeamGeometricallyExact()->GetParameters().crossSectionInertia;
+	bs.massPerLength = GetCObjectBeamGeometricallyExact()->GetParameters().massPerLength;
 
 	return bs;
 }
@@ -103,13 +103,13 @@ Index CObjectBeamGeometricallyExact::GetODE2Size() const
 //! shape function with x in [-L/2,L/2] and values (1,0) at x=-L/2 and (0,1) at x=L/2
 Vector2D CObjectBeamGeometricallyExact::ComputeShapeFunctions(Real x) const
 {
-	Real lElem = parameters.physicsLength;
+	Real lElem = parameters.length;
 	return Vector2D({ (lElem*0.5 - x) / lElem, (lElem*0.5 + x) / lElem });
 }
 
 //Vector2D CObjectBeamGeometricallyExact::ComputeShapeFunctions_x(Real x) const
 //{
-//	Real lElem = parameters.physicsLength;
+//	Real lElem = parameters.length;
 //	return Vector2D({ -1 / lElem , 1 / lElem });
 //}
 
@@ -146,7 +146,7 @@ void CObjectBeamGeometricallyExact::ComputeIncrementalMotion(Vector6D& h, Vector
 //! cross section, Theta = R(x)*J*R(x)^T, is integrated with two Gauss points; returns SV, R*J*R^T and the weight per point
 static void BeamGEInertiaAtGaussPoints(const CObjectBeamGeometricallyExact& beam, Vector2D SV[2], Matrix3D Theta[2], Real& weight)
 {
-	Real L = beam.GetParameters().physicsLength;
+	Real L = beam.GetParameters().length;
 	weight = 0.5 * L;
 	Real xGauss = 0.5 * L / sqrt(3.);
 	for (Index g = 0; g < 2; g++)
@@ -154,7 +154,7 @@ static void BeamGEInertiaAtGaussPoints(const CObjectBeamGeometricallyExact& beam
 		Real x = (g == 0) ? -xGauss : xGauss;
 		SV[g] = beam.ComputeShapeFunctions(x);
 		Matrix3D R = beam.GetLocalPositionFrame(Vector3D({ x, 0., 0. }), ConfigurationType::Current).GetRotation();
-		Theta[g] = R * beam.GetParameters().physicsCrossSectionInertia * R.GetTransposed();
+		Theta[g] = R * beam.GetParameters().crossSectionInertia * R.GetTransposed();
 	}
 }
 
@@ -170,7 +170,7 @@ void CObjectBeamGeometricallyExact::ComputeMassMatrix(EXUmath::MatrixContainer& 
 	const Index nDim3D = 3;
 	const Index nDisplacementCoordinates = 3;
 	Index nNode0 = GetCNode(0)->GetNumberOfODE2Coordinates();
-	Real L = parameters.physicsLength;
+	Real L = parameters.length;
 	Real intFactL = 0.5*L; //integration weight, using 2 points Lobatto
 
 	if (!pySpecial.beams.geometricallyExactLumpedMass)
@@ -188,7 +188,7 @@ void CObjectBeamGeometricallyExact::ComputeMassMatrix(EXUmath::MatrixContainer& 
 		{
 			for (Index j = 0; j < 2; j++)
 			{
-				for (Index k = 0; k < nDim3D; k++) { massMatrix(offset[i] + k, offset[j] + k) = parameters.physicsMassPerLength * mIJ[i][j]; }
+				for (Index k = 0; k < nDim3D; k++) { massMatrix(offset[i] + k, offset[j] + k) = parameters.massPerLength * mIJ[i][j]; }
 				Matrix3D thetaIJ(3, 3, 0.);
 				for (Index g = 0; g < 2; g++) { thetaIJ += (weight * SV[g][i] * SV[g][j]) * Theta[g]; }
 				for (Index a = 0; a < G[i].NumberOfColumns(); a++)
@@ -210,8 +210,8 @@ void CObjectBeamGeometricallyExact::ComputeMassMatrix(EXUmath::MatrixContainer& 
 	//set mass terms in first 3 diagonal entries and set remaining entries to zero (the last 4x4 entries will be overwritten when filling in inertia terms)
 	for (Index i = 0; i < nDim3D; i++)
 	{
-		massMatrix(i, i) = parameters.physicsMassPerLength * intFactL;
-		massMatrix(i+nNode0, i + nNode0) = parameters.physicsMassPerLength * intFactL;
+		massMatrix(i, i) = parameters.massPerLength * intFactL;
+		massMatrix(i+nNode0, i + nNode0) = parameters.massPerLength * intFactL;
 	}
 
 	//ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> rot = ((CNodeRigidBody*)GetCNode(0))->GetRotationParameters();
@@ -223,7 +223,7 @@ void CObjectBeamGeometricallyExact::ComputeMassMatrix(EXUmath::MatrixContainer& 
 
 		ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> GlocalInertia(CNodeRigidBody::maxRotationCoordinates, nDim3D);
 
-		EXUmath::MultMatrixTransposedMatrix(Glocal, intFactL*parameters.physicsCrossSectionInertia, GlocalInertia);
+		EXUmath::MultMatrixTransposedMatrix(Glocal, intFactL*parameters.crossSectionInertia, GlocalInertia);
 
 		EXUmath::MultMatrixMatrix2SubmatrixTemplate<ConstSizeMatrix<12>, ConstSizeMatrix<12>, Matrix>(GlocalInertia, Glocal, massMatrix, 
 			nDisplacementCoordinates + i*nNode0, nDisplacementCoordinates + i*nNode0);
@@ -243,7 +243,7 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index object
 	const Index nDim3D = 3;
 	//const Index nDisplacementCoordinates = 3;
 	Index nNode0 = GetCNode(0)->GetNumberOfODE2Coordinates();
-	Real L = parameters.physicsLength;
+	Real L = parameters.length;
 	//Real intFactL = 0.5*L; //integration weight, using 2 points Lobatto
 
 	Vector6D h;
@@ -265,12 +265,12 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index object
 	//pout << "incRot=" << incRot << "\n";
 
 	Vector6D K6D({
-		parameters.physicsAxialShearStiffness[0],
-		parameters.physicsAxialShearStiffness[1],
-		parameters.physicsAxialShearStiffness[2],
-		parameters.physicsTorsionalBendingStiffness[0],
-		parameters.physicsTorsionalBendingStiffness[1],
-		parameters.physicsTorsionalBendingStiffness[2]});
+		parameters.axialShearStiffness[0],
+		parameters.axialShearStiffness[1],
+		parameters.axialShearStiffness[2],
+		parameters.torsionalBendingStiffness[0],
+		parameters.torsionalBendingStiffness[1],
+		parameters.torsionalBendingStiffness[2]});
 
 	Vector6D eps = 1. / L * (h - h0); //deformation as incremental motion
 
@@ -307,7 +307,7 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index object
 
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		//compute quadratic velocity vector per node (lumped; the consistent one follows after the loop):
-		Vector3D temp = intFactL * omegaLocal.CrossProduct(parameters.physicsCrossSectionInertia * omegaLocal);
+		Vector3D temp = intFactL * omegaLocal.CrossProduct(parameters.crossSectionInertia * omegaLocal);
 
 
 		ConstSizeVector<CNodeRigidBody::maxRotationCoordinates> forcesQV; //forces acting on rotation coordinates
@@ -328,7 +328,7 @@ void CObjectBeamGeometricallyExact::ComputeODE2LHS(Vector& ode2Lhs, Index object
 
 			((CNodeRigidBody*)GetCNode(i))->GetGlocal_t(Glocal_t);
 			EXUmath::MultMatrixVector(Glocal_t, rot_t, Glocal_tTheta_t); //Glocal_tTheta_t stored for later usage!
-			EXUmath::MultMatrixVector(intFactL*parameters.physicsCrossSectionInertia, Glocal_tTheta_t, temp2); //the inertia of half the element, as in the mass matrix (#1273)
+			EXUmath::MultMatrixVector(intFactL*parameters.crossSectionInertia, Glocal_tTheta_t, temp2); //the inertia of half the element, as in the mass matrix (#1273)
 
 			EXUmath::MultMatrixTransposedVectorTemplate(Glocal, temp2, forces2);
 			forcesQV += forces2;
@@ -410,7 +410,7 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 	jac.SetScalarMatrix(dimJacobian, 0.);
 
 	Index offset[2] = { 0, nNode0 };
-	Real L = parameters.physicsLength;
+	Real L = parameters.length;
 
 	Vector6D h;
 	Vector6D h0;
@@ -419,8 +419,8 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 	Vector6D KL; //the diagonal of K6D/L
 	for (Index k = 0; k < nDim3D; k++)
 	{
-		KL[k] = parameters.physicsAxialShearStiffness[k] / L;
-		KL[k + nDim3D] = parameters.physicsTorsionalBendingStiffness[k] / L;
+		KL[k] = parameters.axialShearStiffness[k] / L;
+		KL[k + nDim3D] = parameters.torsionalBendingStiffness[k] / L;
 	}
 	Vector6D s; //the section forces and moments
 	for (Index k = 0; k < 6; k++) { s[k] = KL[k] * (h[k] - h0[k]); }
@@ -536,7 +536,7 @@ void CObjectBeamGeometricallyExact::ComputeJacobianODE2_ODE2(EXUmath::MatrixCont
 		if (factorODE2_t != 0. && pySpecial.beams.geometricallyExactLumpedMass)
 		{
 			Real intFactL = 0.5 * L;
-			const Matrix3D& J = parameters.physicsCrossSectionInertia;
+			const Matrix3D& J = parameters.crossSectionInertia;
 			ConstSizeMatrix<CNodeRigidBody::maxRotationCoordinates * nDim3D> GlocalCurrent;
 			Vector3D omegaLocal;
 			node->CollectCurrentNodeData1(GlocalCurrent, omegaLocal);
@@ -761,7 +761,7 @@ void CObjectBeamGeometricallyExact::GetMassWeightedPositionJacobian(Matrix& valu
 	//load gives no nodal torques
 	value.SetNumberOfRowsAndColumns(nDim3D, GetODE2Size());
 	value.SetAll(0.);
-	Real halfMass = 0.5 * parameters.physicsMassPerLength * parameters.physicsLength;
+	Real halfMass = 0.5 * parameters.massPerLength * parameters.length;
 	for (Index i = 0; i < 2; i++)
 	{
 		for (Index k = 0; k < nDim3D; k++) { value(k, offset[i] + k) = halfMass; }
@@ -798,11 +798,11 @@ void CObjectBeamGeometricallyExact::GetOutputVariableBody(OutputVariableType var
 		Vector6D h;
 		Vector6D h0;
 		ComputeIncrementalMotion(h, h0, configuration);
-		Real L = parameters.physicsLength;
+		Real L = parameters.length;
 		Vector6D strain;
 		for (Index k = 0; k < 6; k++) { strain[k] = (h[k] - h0[k]) / L; }
-		const Vector3D& kAS = parameters.physicsAxialShearStiffness;
-		const Vector3D& kTB = parameters.physicsTorsionalBendingStiffness;
+		const Vector3D& kAS = parameters.axialShearStiffness;
+		const Vector3D& kTB = parameters.torsionalBendingStiffness;
 		switch (variableType)
 		{
 		case OutputVariableType::StrainLocal:		value.SetVector({ strain[0], 0., 0., 0., strain[2], strain[1] }); break;

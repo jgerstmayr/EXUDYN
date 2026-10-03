@@ -55,8 +55,8 @@ for i in range(len(listRef)):
     
     nRigid=mbs.AddNode(NodeRigidBody2D(referenceCoordinates=listRef[i],
                                        initialVelocities=listVel[i]))
-    oRigid=mbs.AddObject(RigidBody2D(nodeNumber=nRigid, physicsMass=inertiaBar.mass, 
-                              physicsInertia=inertiaBar.inertiaTensor[2,2],
+    oRigid=mbs.AddObject(RigidBody2D(nodeNumber=nRigid, mass=inertiaBar.mass, 
+                              inertia=inertiaBar.inertiaTensor[2,2],
                               visualization=VRigidBody2D(graphicsData=[graphicsBar])))
     
     mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=oRigid))

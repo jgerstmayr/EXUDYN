@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-03  18:09:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -125,13 +125,14 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "dryFriction")) { EPyUtils::FromPython(d["dryFriction"], cObjectConnectorRollingDiscPenalty->GetParameters().dryFriction); }
         if (EPyUtils::DictItemExists(d, "dryFrictionProportionalZone")) { EPyUtils::FromPython(d["dryFrictionProportionalZone"], cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionProportionalZone, "ObjectConnectorRollingDiscPenalty.dryFrictionProportionalZone"); }
         if (EPyUtils::DictItemExists(d, "viscousFriction")) { EPyUtils::FromPython(d["viscousFriction"], cObjectConnectorRollingDiscPenalty->GetParameters().viscousFriction); }
-        if (EPyUtils::DictItemExists(d, "rollingFrictionViscous")) { EPyUtils::FromPython(d["rollingFrictionViscous"], cObjectConnectorRollingDiscPenalty->GetParameters().rollingFrictionViscous, "ObjectConnectorRollingDiscPenalty.rollingFrictionViscous"); }
+        if (EPyUtils::DictItemExists(d, "rollingViscousFriction")) { EPyUtils::FromPython(d["rollingViscousFriction"], cObjectConnectorRollingDiscPenalty->GetParameters().rollingViscousFriction, "ObjectConnectorRollingDiscPenalty.rollingViscousFriction"); }
         if (EPyUtils::DictItemExists(d, "useLinearProportionalZone")) { EPyUtils::FromPython(d["useLinearProportionalZone"], cObjectConnectorRollingDiscPenalty->GetParameters().useLinearProportionalZone, "ObjectConnectorRollingDiscPenalty.useLinearProportionalZone"); }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorRollingDiscPenalty->GetParameters().activeConnector, "ObjectConnectorRollingDiscPenalty.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorRollingDiscPenalty->GetShow(), "ObjectConnectorRollingDiscPenalty.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VdiscWidth")) { EPyUtils::FromPython(d["VdiscWidth"], visualizationObjectConnectorRollingDiscPenalty->GetDiscWidth(), "ObjectConnectorRollingDiscPenalty.VdiscWidth"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorRollingDiscPenalty->GetColor(), "ObjectConnectorRollingDiscPenalty.Vcolor"); }
+        if (EPyUtils::DictItemExists(d, "rollingFrictionViscous") && !d["rollingFrictionViscous"].is_none()) { PyDeprecated("items", "ObjectConnectorRollingDiscPenalty.rollingFrictionViscous", "ObjectConnectorRollingDiscPenalty: the parameter rollingFrictionViscous is deprecated since 1.12.258 and removed in 2031; use rollingViscousFriction"); EPyUtils::FromPython(d["rollingFrictionViscous"], cObjectConnectorRollingDiscPenalty->GetParameters().rollingViscousFriction, "ObjectConnectorRollingDiscPenalty.rollingFrictionViscous"); } //! AUTO: deprecated, forwards to rollingViscousFriction
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -151,7 +152,7 @@ public: // AUTO:
         d["dryFriction"] = EPyUtils::ToPython(cObjectConnectorRollingDiscPenalty->GetParameters().dryFriction);
         d["dryFrictionProportionalZone"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionProportionalZone;
         d["viscousFriction"] = EPyUtils::ToPython(cObjectConnectorRollingDiscPenalty->GetParameters().viscousFriction);
-        d["rollingFrictionViscous"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().rollingFrictionViscous;
+        d["rollingViscousFriction"] = (Real)cObjectConnectorRollingDiscPenalty->GetParameters().rollingViscousFriction;
         d["useLinearProportionalZone"] = (bool)cObjectConnectorRollingDiscPenalty->GetParameters().useLinearProportionalZone;
         d["activeConnector"] = (bool)cObjectConnectorRollingDiscPenalty->GetParameters().activeConnector;
         d["name"] = (std::string)name;
@@ -176,12 +177,13 @@ public: // AUTO:
         else if (parameterName.compare("dryFriction") == 0) { return EPyUtils::ToPython(cObjectConnectorRollingDiscPenalty->GetParameters().dryFriction); } //! AUTO: get parameter
         else if (parameterName.compare("dryFrictionProportionalZone") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionProportionalZone); } //! AUTO: get parameter
         else if (parameterName.compare("viscousFriction") == 0) { return EPyUtils::ToPython(cObjectConnectorRollingDiscPenalty->GetParameters().viscousFriction); } //! AUTO: get parameter
-        else if (parameterName.compare("rollingFrictionViscous") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().rollingFrictionViscous); } //! AUTO: get parameter
+        else if (parameterName.compare("rollingViscousFriction") == 0) { return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().rollingViscousFriction); } //! AUTO: get parameter
         else if (parameterName.compare("useLinearProportionalZone") == 0) { return py::cast((bool)cObjectConnectorRollingDiscPenalty->GetParameters().useLinearProportionalZone); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorRollingDiscPenalty->GetParameters().activeConnector); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorRollingDiscPenalty->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("VdiscWidth") == 0) { return py::cast((float)visualizationObjectConnectorRollingDiscPenalty->GetDiscWidth()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectConnectorRollingDiscPenalty->GetColor())); } //! AUTO: get parameter
+        else if (parameterName.compare("rollingFrictionViscous") == 0) { PyDeprecated("items", "ObjectConnectorRollingDiscPenalty.rollingFrictionViscous", "ObjectConnectorRollingDiscPenalty: the parameter rollingFrictionViscous is deprecated since 1.12.258 and removed in 2031; use rollingViscousFriction"); return py::cast((Real)cObjectConnectorRollingDiscPenalty->GetParameters().rollingViscousFriction); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectConnectorRollingDiscPenalty::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -202,12 +204,13 @@ public: // AUTO:
         else if (parameterName.compare("dryFriction") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().dryFriction); } //! AUTO: set parameter
         else if (parameterName.compare("dryFrictionProportionalZone") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().dryFrictionProportionalZone, "ObjectConnectorRollingDiscPenalty.dryFrictionProportionalZone"); } //! AUTO: set parameter
         else if (parameterName.compare("viscousFriction") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().viscousFriction); } //! AUTO: set parameter
-        else if (parameterName.compare("rollingFrictionViscous") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().rollingFrictionViscous, "ObjectConnectorRollingDiscPenalty.rollingFrictionViscous"); } //! AUTO: set parameter
+        else if (parameterName.compare("rollingViscousFriction") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().rollingViscousFriction, "ObjectConnectorRollingDiscPenalty.rollingViscousFriction"); } //! AUTO: set parameter
         else if (parameterName.compare("useLinearProportionalZone") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().useLinearProportionalZone, "ObjectConnectorRollingDiscPenalty.useLinearProportionalZone"); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().activeConnector, "ObjectConnectorRollingDiscPenalty.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorRollingDiscPenalty->GetShow(), "ObjectConnectorRollingDiscPenalty.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("VdiscWidth") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorRollingDiscPenalty->GetDiscWidth(), "ObjectConnectorRollingDiscPenalty.VdiscWidth"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorRollingDiscPenalty->GetColor(), "ObjectConnectorRollingDiscPenalty.Vcolor"); } //! AUTO: set parameter
+        else if (parameterName.compare("rollingFrictionViscous") == 0) { PyDeprecated("items", "ObjectConnectorRollingDiscPenalty.rollingFrictionViscous", "ObjectConnectorRollingDiscPenalty: the parameter rollingFrictionViscous is deprecated since 1.12.258 and removed in 2031; use rollingViscousFriction"); EPyUtils::FromPython(value, cObjectConnectorRollingDiscPenalty->GetParameters().rollingViscousFriction, "ObjectConnectorRollingDiscPenalty.rollingFrictionViscous"); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectConnectorRollingDiscPenalty::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

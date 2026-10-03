@@ -89,7 +89,7 @@ creates it when one side is the ground.
 ```python
 #a ground node: a fixed point that markers and connectors can use, without coordinates
 node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
-mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
 mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
 nFixed = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 mFixed = mbs.AddMarker(MarkerNodePosition(nodeNumber=nFixed))

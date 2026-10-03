@@ -64,7 +64,7 @@ if mode==0: #treat one element
     nc1 = mbs.AddNode(Point2DS1(referenceCoordinates=[L,0,1,0]))
 
     mbs.systemData.Info()
-    o0 = mbs.AddObject(Cable2D(name='FirstCable', physicsLength=L, physicsMassPerLength=rho*A, physicsBendingStiffness=E*I, physicsAxialStiffness=E*A, nodeNumbers=[nc0,nc1]))
+    o0 = mbs.AddObject(Cable2D(name='FirstCable', length=L, massPerLength=rho*A, bendingStiffness=E*I, axialStiffness=E*A, nodeNumbers=[nc0,nc1]))
     cableList+=[o0]
 
     myObject = mbs.GetObject('FirstCable')
@@ -92,10 +92,10 @@ else: #treat n elements
     lElem = L / nElements
     for i in range(nElements):
         nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
-        elem=mbs.AddObject(Cable2D(physicsLength=lElem, 
-                                   physicsMassPerLength=rho*A, 
-                                   physicsBendingStiffness=E*I, 
-                                   physicsAxialStiffness=E*A, 
+        elem=mbs.AddObject(Cable2D(length=lElem, 
+                                   massPerLength=rho*A, 
+                                   bendingStiffness=E*I, 
+                                   axialStiffness=E*A, 
                                    #useReducedOrderIntegration=True,
                                    nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
         cableList+=[elem]
@@ -193,8 +193,8 @@ else:
 
             #for nCable in cableList:
             #    cableDict = mbs.GetObject(nCable)
-            #    cableDict['physicsReferenceCurvature'] = curvatureValue
-            #    cableDict['physicsReferenceAxialStrain'] = 0.1*curvatureValue
+            #    cableDict['referenceCurvature'] = curvatureValue
+            #    cableDict['referenceAxialStrain'] = 0.1*curvatureValue
             #    mbs.ModifyObject(nCable, cableDict)
         
             mbs.SolveStatic(simulationSettings)

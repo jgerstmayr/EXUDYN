@@ -175,39 +175,39 @@ def SixBarLinkage(P00,theta,alphaMean): #compute one six-bar linkage (P00: ideal
     #Define rigid bodies and markers+++++++++++++++++++++++++++++++++++++++++++
     #rigid body M0 with markers mR01,mR02
     nRigid0 = mbs.AddNode(Rigid2D(referenceCoordinates=M0+[theta], initialVelocities=[0.,0.,0.]));
-    oRigid0 = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid0,visualization=VObjectRigidBody2D(graphicsData= [graphicsL2]+frameList)))
+    oRigid0 = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid0,visualization=VObjectRigidBody2D(graphicsData= [graphicsL2]+frameList)))
     mR01 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid0, localPosition=[-L2/2,0.,0.]))
     mR02 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid0, localPosition=[L2/2,0.,0.]))
 
     #rigid body M1 with markers mR1,mR2,mR15
     nRigid1 = mbs.AddNode(Rigid2D(referenceCoordinates=pT[5]+[0.+theta], initialVelocities=[0.,0.,0.]));
-    oRigid1 = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid1,visualization=VObjectRigidBody2D(graphicsData= [graphicsCE1,graphicsL21]+frameList)))
+    oRigid1 = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid1,visualization=VObjectRigidBody2D(graphicsData= [graphicsCE1,graphicsL21]+frameList)))
     mR1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid1, localPosition=P53+[0.]))
     mR2 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid1, localPosition=P57+[0.]))    
     mR15 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid1, localPosition=[0.,0.,0.]))
 
     #rigid body M2 with markers mR3,mR4     
     nRigid2 = mbs.AddNode(Rigid2D(referenceCoordinates=M2+[alphaMean-psi+theta], initialVelocities=[0.,0.,0.]));
-    oRigid2 = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid2,visualization=VObjectRigidBody2D(graphicsData= [graphicsCE]+frameList)))
+    oRigid2 = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid2,visualization=VObjectRigidBody2D(graphicsData= [graphicsCE]+frameList)))
     mR3 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid2, localPosition=[-CE/2,0.,0]))
     mR4 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid2, localPosition=[CE/2,0.,0]))
 
     #rigid body M5 with markers mR9,mR10
     nRigid5 = mbs.AddNode(Rigid2D(referenceCoordinates=M5+[psi+theta], initialVelocities=[0.,0.,0.]));
-    oRigid5 = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid5,visualization=VObjectRigidBody2D(graphicsData= [graphicsCE]+frameList)))
+    oRigid5 = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid5,visualization=VObjectRigidBody2D(graphicsData= [graphicsCE]+frameList)))
     mR9 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid5, localPosition=[-CE/2,0.,0]))
     mR10 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid5, localPosition=[CE/2,0.,0]))
 
     #rigid body M6 with markers mR11,mR12,mR65
     nRigid6 = mbs.AddNode(Rigid2D(referenceCoordinates=pT[5]+[0.+theta], initialVelocities=[0.,0.,0.]));
-    oRigid6 = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid6,visualization=VObjectRigidBody2D(graphicsData= [graphicsCE2,graphicsL22]+frameList)))
+    oRigid6 = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid6,visualization=VObjectRigidBody2D(graphicsData= [graphicsCE2,graphicsL22]+frameList)))
     mR11 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid6, localPosition=P58+[0.]))
     mR12 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid6, localPosition=P56+[0.]))
     mR65 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid6, localPosition=[0.,0.,0.]))
 
     #rigid body M7 with markers mR13,mR14
     nRigid7 = mbs.AddNode(Rigid2D(referenceCoordinates=M7+[alphaMean+theta], initialVelocities=[0.,0.,0.]));
-    oRigid7 = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid7,visualization=VObjectRigidBody2D(graphicsData= [graphicsL2]+frameList)))
+    oRigid7 = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid7,visualization=VObjectRigidBody2D(graphicsData= [graphicsL2]+frameList)))
     mR13 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid7, localPosition=[-L2/2,0.,0.]))
     mR14 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid7, localPosition=[L2/2,0.,0.]))
 

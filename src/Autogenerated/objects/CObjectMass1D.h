@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  22:10:14 (last modified)
+* @date         2026-10-03  18:08:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,14 +27,14 @@
 class CObjectMass1DParameters // AUTO:
 {
 public: // AUTO:
-    Real physicsMass;                             //!< AUTO: must be >= 0; mass [SI:kg] of mass
+    Real mass;                                    //!< AUTO: must be >= 0; mass [SI:kg] of mass
     Index nodeNumber;                             //!< AUTO: node number (type NodeIndex) for Node1D
     Vector3D referencePosition;                   //!< AUTO: a reference position, used to transform the 1D coordinate to a position
     Matrix3D referenceRotation;                   //!< AUTO: the constant body rotation matrix, which transforms body-fixed (b) to global (0) coordinates
     //! AUTO: default constructor with parameter initialization
     CObjectMass1DParameters()
     {
-        physicsMass = 0.;
+        mass = 0.;
         nodeNumber = EXUstd::InvalidIndex;
         referencePosition = Vector3D({0.,0.,0.});
         referenceRotation = EXUmath::unitMatrix3D;

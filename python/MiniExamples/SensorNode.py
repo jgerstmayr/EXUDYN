@@ -22,7 +22,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 #the position of a node, stored during the simulation
 node = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0], initialVelocities=[1,0,0]))
-mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
 sNode = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=exu.OutputVariableType.Position,
                                  storeInternal=True, writeToFile=False))
 

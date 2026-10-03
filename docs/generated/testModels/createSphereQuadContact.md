@@ -136,7 +136,7 @@ for methodNum, method in enumerate(methodList):
                     oSSC = mbs.CreateSphereTriangleContact(bodyNumbers=[oMass, oGround],
                                                            trianglePoints=trianglePoints,
                                                            includeEdges=includeEdgesList[k],
-                                                           radiusSphere=radius,
+                                                           sphereRadius=radius,
                                                            contactStiffness = contactStiffness,
                                                            dynamicFriction=dynamicFriction,
                                                            impactModel = impactModel,
@@ -148,7 +148,7 @@ for methodNum, method in enumerate(methodList):
                 oSSC = mbs.CreateSphereQuadContact(bodyNumbers=[oMass, oGround],
                                                    quadPoints=quadPoints,
                                                    includeEdges=15, #all edges
-                                                   radiusSphere=radius,
+                                                   sphereRadius=radius,
                                                    contactStiffness = contactStiffness,
                                                    dynamicFriction=dynamicFriction,
                                                    impactModel = impactModel,

@@ -106,7 +106,7 @@ $$
 ```python
 #example with 1m pendulum, 50kg under gravity
 nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[1,0]))
-oMass = mbs.AddObject(MassPoint2D(physicsMass = 50, nodeNumber = nMass))
+oMass = mbs.AddObject(MassPoint2D(mass = 50, nodeNumber = nMass))
 
 mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
 mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition = [0,0,0]))

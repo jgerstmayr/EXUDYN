@@ -40,8 +40,8 @@ mbs.AddNode(NodePoint())
 mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
 
 #add objects
-mbs.AddObject(ObjectMassPoint(nodeNumber=0,physicsMass=1))
-mbs.AddObject(ObjectMassPoint(nodeNumber=1,physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=0,mass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=1,mass=1))
 
 
 #add marker

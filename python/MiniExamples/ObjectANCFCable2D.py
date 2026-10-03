@@ -24,9 +24,9 @@ from exudyn.beams import GenerateStraightLineANCFCable2D
 rhoA = 78.
 EA = 1000000.
 EI = 833.3333333333333
-cable = Cable2D(physicsMassPerLength=rhoA, 
-                physicsBendingStiffness=EI, 
-                physicsAxialStiffness=EA, 
+cable = Cable2D(massPerLength=rhoA, 
+                bendingStiffness=EI, 
+                axialStiffness=EA, 
                 )
 
 ancf=GenerateStraightLineANCFCable2D(mbs=mbs,

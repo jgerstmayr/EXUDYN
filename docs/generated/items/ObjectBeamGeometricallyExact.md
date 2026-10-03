@@ -25,9 +25,12 @@ The parameters of the item; in a dictionary, its type is 'BeamGeometricallyExact
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
 | **nodeNumbers** | NodeIndex2 | 2 | [invalid (-1), invalid (-1)] | two node numbers for beam element |
-| **physicsLength** | PReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive; **must be given**: the default is only a placeholder |
+| **length** | PReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive; **must be given**: the default is only a placeholder |
 | **sectionData** | BeamSection |  | BeamSection() | data as given by exudyn.BeamSection(), defining inertial, stiffness and damping parameters of beam section. |
 | **visualization** | VObjectBeamGeometricallyExact |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsLength` (deprecated since 1.12.258, removed in 2031): use `length`.
 
 ## Visualization parameters
 
@@ -76,7 +79,7 @@ nodes as a screw motion, which represents a constant curvature, twist, shear and
 Two 3D rigid body nodes - `NodeRigidBodyEP`, `NodeRigidBodyRxyz` or `NodeRigidBodyRotVecLG` - each with the
 position $\pv_i$ of the beam axis and the rotation $\Rot_i$ of the cross section, whose local $x$-axis is the
 axis of the beam and whose local $y$- and $z$-axes span the cross section. The local axial coordinate is
-$x \in [-L/2,\, L/2]$ with $L$ = `physicsLength`; node 0 is at $x = -L/2$.
+$x \in [-L/2,\, L/2]$ with $L$ = `length`; node 0 is at $x = -L/2$.
 
 ### Kinematics and interpolation
 With the homogeneous transformations $\Hm_i = (\Rot_i, \pv_i)$ of the nodes, the relative motion of node 1
@@ -153,7 +156,7 @@ section.massPerLength = 1
 nodes = [mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[L*i/nElements,0,0]+eulerParameters0))
          for i in range(nElements+1)]
 for i in range(nElements):
-    mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i],nodes[i+1]], physicsLength=L/nElements,
+    mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i],nodes[i+1]], length=L/nElements,
                                                sectionData=section))
 mbs.AddObject(GenericJoint(markerNumbers=[mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround)),
                                           mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodes[0]))])) #clamped

@@ -489,7 +489,7 @@ def CreateBallBearing(mbs, bearingData, markerInnerRing, markerOuterRing, densit
                                                 numberOfDataCoordinates=4))
             oSSC = mbs.AddObject(eii.ObjectContactSphereTorus(markerNumbers=[mBall,mRing],
                                                           nodeNumber=nData1,
-                                                          radiusSphere=radiusBalls,
+                                                          sphereRadius=radiusBalls,
                                                           torusMajorRadius = torusMajorRadius, 
                                                           torusMinorRadius = torusMinorRadius, 
                                                           torusAxis = localBearingAxis,

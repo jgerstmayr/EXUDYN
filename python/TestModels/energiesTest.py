@@ -50,7 +50,7 @@ def EnergySensors(name, bodies, connectors):
 
 #(1) mass point on a Cartesian spring-damper
 n1 = mbs.AddNode(NodePoint(referenceCoordinates=[0, 0, 0], initialCoordinates=[0.1, 0, 0], initialVelocities=[0, 0.5, 0]))
-o1 = mbs.AddObject(MassPoint(nodeNumber=n1, physicsMass=2))
+o1 = mbs.AddObject(MassPoint(nodeNumber=n1, mass=2))
 c1 = mbs.AddObject(CartesianSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround)),
                                                         mbs.AddMarker(MarkerNodePosition(nodeNumber=n1))],
                                          stiffness=[200, 100, 300], damping=[0, 0, 0]))
@@ -58,7 +58,7 @@ EnergySensors('Cartesian spring', [o1], [c1])
 
 #(2) mass point on a distance spring-damper, swinging and stretching
 n2 = mbs.AddNode(NodePoint(referenceCoordinates=[1, 0, 0], initialCoordinates=[0.1, 0, 0], initialVelocities=[0, 1, 0.2]))
-o2 = mbs.AddObject(MassPoint(nodeNumber=n2, physicsMass=1))
+o2 = mbs.AddObject(MassPoint(nodeNumber=n2, mass=1))
 c2 = mbs.AddObject(SpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[2, 0, 0])),
                                                mbs.AddMarker(MarkerNodePosition(nodeNumber=n2))],
                                 referenceLength=1, stiffness=100, damping=0))
@@ -66,7 +66,7 @@ EnergySensors('distance spring', [o2], [c2])
 
 #(3) planar rigid body on a coordinate spring-damper in x, spinning freely
 n3 = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0, 2, 0], initialCoordinates=[0.05, 0, 0], initialVelocities=[0, 0, 2]))
-o3 = mbs.AddObject(RigidBody2D(nodeNumber=n3, physicsMass=3, physicsInertia=0.2))
+o3 = mbs.AddObject(RigidBody2D(nodeNumber=n3, mass=3, inertia=0.2))
 c3 = mbs.AddObject(CoordinateSpringDamper(markerNumbers=[mGroundCoordinate,
                                                          mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n3, coordinate=0))],
                                           stiffness=50, damping=0, offset=0.01))
@@ -74,7 +74,7 @@ EnergySensors('planar body', [o3], [c3])
 
 #(4) rotor on a torsional spring (rotor about the local z-axis)
 n4 = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0], initialCoordinates=[0.2], initialCoordinates_t=[0], numberOfODE2Coordinates=1))
-o4 = mbs.AddObject(ObjectRotationalMass1D(nodeNumber=n4, physicsInertia=0.5, referencePosition=[0, 3, 0]))
+o4 = mbs.AddObject(ObjectRotationalMass1D(nodeNumber=n4, inertia=0.5, referencePosition=[0, 3, 0]))
 c4 = mbs.AddObject(CoordinateSpringDamper(markerNumbers=[mGroundCoordinate,
                                                          mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n4, coordinate=0))],
                                           stiffness=20, damping=0))
@@ -82,7 +82,7 @@ EnergySensors('rotor', [o4], [c4])
 
 #(5) damped 1D mass: the energy decreases
 n5 = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0], initialCoordinates=[0.1], initialCoordinates_t=[0], numberOfODE2Coordinates=1))
-o5 = mbs.AddObject(ObjectMass1D(nodeNumber=n5, physicsMass=1, referencePosition=[0, 4, 0]))
+o5 = mbs.AddObject(ObjectMass1D(nodeNumber=n5, mass=1, referencePosition=[0, 4, 0]))
 c5 = mbs.AddObject(CoordinateSpringDamper(markerNumbers=[mGroundCoordinate,
                                                          mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n5, coordinate=0))],
                                           stiffness=100, damping=1))
@@ -94,14 +94,14 @@ omega0 = np.array([1., 2., 3.])
 v0 = np.array([0.3, 0, 0])
 n6 = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0, 5, 0] + list(eulerParameters0),
                                  initialVelocities=list(v0) + list(AngularVelocity2EulerParameters_t(omega0, eulerParameters0))))
-o6 = mbs.AddObject(ObjectRigidBody(nodeNumber=n6, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D(),
-                                   physicsCenterOfMass=inertia.COM()))
+o6 = mbs.AddObject(ObjectRigidBody(nodeNumber=n6, mass=inertia.Mass(), inertia=inertia.GetInertia6D(),
+                                   centerOfMass=inertia.COM()))
 EnergySensors('free body with offset center of mass', [o6], [])
 
 #(7) rigid body on a torsional spring about z, with a constant torque
 n7 = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0, 6, 0, 0, 0, 0], initialVelocities=[0, 0, 0, 0, 0, 1]))
 inertia7 = InertiaCuboid(density=500, sideLengths=[0.4, 0.2, 0.1])
-o7 = mbs.AddObject(ObjectRigidBody(nodeNumber=n7, physicsMass=inertia7.Mass(), physicsInertia=inertia7.GetInertia6D()))
+o7 = mbs.AddObject(ObjectRigidBody(nodeNumber=n7, mass=inertia7.Mass(), inertia=inertia7.GetInertia6D()))
 c7 = mbs.AddObject(TorsionalSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0, 6, 0])),
                                                         mbs.AddMarker(MarkerNodeRigid(nodeNumber=n7))],
                                          stiffness=2, damping=0, torque=0.1))
@@ -109,7 +109,7 @@ EnergySensors('torsional spring with a constant torque', [o7], [c7])
 
 #(8) rigid body on a linear spring-damper along x, with a constant force
 n8 = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0, 7, 0] + list(eulerParameters0), initialVelocities=[0.4, 0, 0, 0, 0, 0, 0]))
-o8 = mbs.AddObject(ObjectRigidBody(nodeNumber=n8, physicsMass=inertia7.Mass(), physicsInertia=inertia7.GetInertia6D()))
+o8 = mbs.AddObject(ObjectRigidBody(nodeNumber=n8, mass=inertia7.Mass(), inertia=inertia7.GetInertia6D()))
 c8 = mbs.AddObject(ObjectConnectorLinearSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0, 7, 0])),
                                                                     mbs.AddMarker(MarkerNodeRigid(nodeNumber=n8))],
                                                      stiffness=30, damping=0, force=0.5))
@@ -126,7 +126,7 @@ mechanisms['GenericODE2 with a constant force'] = ([mbs.AddSensor(SensorBody(bod
 #(10) rigid body on a rigid-body spring-damper, small motion in all six directions
 n10 = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0, 8, 0] + list(eulerParameters0),
                                   initialVelocities=[0.02, 0.01, -0.01] + list(AngularVelocity2EulerParameters_t([0.02, -0.01, 0.03], eulerParameters0))))
-o10 = mbs.AddObject(ObjectRigidBody(nodeNumber=n10, physicsMass=inertia7.Mass(), physicsInertia=inertia7.GetInertia6D()))
+o10 = mbs.AddObject(ObjectRigidBody(nodeNumber=n10, mass=inertia7.Mass(), inertia=inertia7.GetInertia6D()))
 c10 = mbs.AddObject(RigidBodySpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0, 8, 0])),
                                                          mbs.AddMarker(MarkerNodeRigid(nodeNumber=n10))],
                                           stiffness=np.diag([100, 200, 300, 2, 3, 4]), damping=np.zeros((6, 6))))
@@ -135,20 +135,20 @@ EnergySensors('rigid-body spring-damper, small motion', [o10], [c10])
 #(11) the kinetic energy from the mass matrix: flexible bodies in a rigid translation, 1/2 m v^2
 v11 = 0.5
 nodes11 = [mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[i*0.5, 10, 1, 0], initialVelocities=[v11, 0, 0, 0])) for i in range(3)]
-cables11 = [mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[nodes11[i], nodes11[i+1]], physicsLength=0.5, physicsMassPerLength=2,
-                                            physicsBendingStiffness=1, physicsAxialStiffness=100)) for i in range(2)]
+cables11 = [mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[nodes11[i], nodes11[i+1]], length=0.5, massPerLength=2,
+                                            bendingStiffness=1, axialStiffness=100)) for i in range(2)]
 section12 = exu.BeamSection()
 section12.stiffnessMatrix = np.diag([100, 100, 100, 1, 1, 1]); section12.inertia = np.diag([2e-3, 1e-3, 1e-3]); section12.massPerLength = 2
 nodes12 = [mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[i*0.5, 11, 0] + list(eulerParameters0),
                                        initialVelocities=[0, v11, 0, 0, 0, 0, 0])) for i in range(3)]
-beams12 = [mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes12[i], nodes12[i+1]], physicsLength=0.5, sectionData=section12))
+beams12 = [mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes12[i], nodes12[i+1]], length=0.5, sectionData=section12))
            for i in range(2)]
 sRigidMotion = [mbs.AddSensor(SensorBody(bodyNumber=b, outputVariableType=KE, storeInternal=True)) for b in cables11 + beams12]
 
 #(14) two mass points attracting each other (ObjectConnectorGravity) on an elliptic orbit about their center of mass
 n14 = [mbs.AddNode(NodePoint(referenceCoordinates=[0, 13, 0], initialVelocities=[0, -0.3, 0])),
        mbs.AddNode(NodePoint(referenceCoordinates=[1, 13, 0], initialVelocities=[0, 0.3, 0]))]
-o14 = [mbs.AddObject(MassPoint(nodeNumber=n, physicsMass=1)) for n in n14]
+o14 = [mbs.AddObject(MassPoint(nodeNumber=n, mass=1)) for n in n14]
 c14 = mbs.AddObject(ObjectConnectorGravity(markerNumbers=[mbs.AddMarker(MarkerNodePosition(nodeNumber=n)) for n in n14],
                                            gravitationalConstant=0.2, mass0=1, mass1=1, minDistanceRegularization=0.05))
 EnergySensors('two masses attracting each other', o14, [c14])
@@ -191,8 +191,8 @@ oGround2 = mbs2.AddObject(ObjectGround())
 inertia12 = InertiaCuboid(density=500, sideLengths=[0.4, 0.2, 0.1]).Translated([0.1, 0, 0])
 n12 = mbs2.AddNode(NodeRigidBodyEP(referenceCoordinates=[1, 0, 0] + list(eulerParameters0),
                                    initialVelocities=[0, 0.5, 0] + list(AngularVelocity2EulerParameters_t([0, 0, 1], eulerParameters0))))
-o12 = mbs2.AddObject(ObjectRigidBody(nodeNumber=n12, physicsMass=inertia12.Mass(), physicsInertia=inertia12.GetInertia6D(),
-                                     physicsCenterOfMass=inertia12.COM()))
+o12 = mbs2.AddObject(ObjectRigidBody(nodeNumber=n12, mass=inertia12.Mass(), inertia=inertia12.GetInertia6D(),
+                                     centerOfMass=inertia12.COM()))
 mbs2.AddObject(SpringDamper(markerNumbers=[mbs2.AddMarker(MarkerBodyPosition(bodyNumber=oGround2)),
                                            mbs2.AddMarker(MarkerBodyPosition(bodyNumber=o12))],
                             referenceLength=0.8, stiffness=50, damping=0))
@@ -225,7 +225,7 @@ SC3 = exu.SystemContainer()
 mbs3 = SC3.AddSystem()
 oGround3 = mbs3.AddObject(ObjectGround())
 n13 = mbs3.AddNode(NodePoint(referenceCoordinates=[1, 0, 0], initialVelocities=[0, 2, 0]))
-o13 = mbs3.AddObject(MassPoint(nodeNumber=n13, physicsMass=3))
+o13 = mbs3.AddObject(MassPoint(nodeNumber=n13, mass=3))
 c13 = mbs3.AddObject(SpringDamper(markerNumbers=[mbs3.AddMarker(MarkerBodyPosition(bodyNumber=oGround3)),
                                                  mbs3.AddMarker(MarkerNodePosition(nodeNumber=n13))],
                                   referenceLength=0.5, stiffness=10,

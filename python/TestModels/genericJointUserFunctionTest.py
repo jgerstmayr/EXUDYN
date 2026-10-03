@@ -56,10 +56,10 @@ for i in range(nBodies):
                                       initialVelocities=v0+list(ep_t0)))
     #nRB = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0,1,0,0,0], initialVelocities=[0,0,0,0,0,0,0]))
     oGraphics = graphics.BrickXYZ(-sx, -s, -s, sx, s, s, addFaces=False, addEdges=True, edgeColor=[0.8,0.1,0.1,1])
-    oRB = mbs.AddObject(ObjectRigidBody(physicsMass=2, 
-                                        physicsInertia=[6,1,6,0,0,0], 
+    oRB = mbs.AddObject(ObjectRigidBody(mass=2, 
+                                        inertia=[6,1,6,0,0,0], 
                                         nodeNumber=nRB, 
-                                        physicsCenterOfMass=[0,0,0],
+                                        centerOfMass=[0,0,0],
                                         visualization=VObjectRigidBody(graphicsData=[oGraphics])))
 
     mMassRB = mbs.AddMarker(MarkerBodyMass(bodyNumber = oRB))

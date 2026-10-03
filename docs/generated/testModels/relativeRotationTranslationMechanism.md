@@ -163,18 +163,18 @@ cc0 = mbs.AddObject(CoordinateConstraint(markerNumbers=[mcGround, markerList[0]]
                                           offsetUserFunction=UFoffset0))
 
 cc1 = mbs.AddObject(CoordinateConstraint(markerNumbers=[markerList[0], markerList[1]], 
-                                          factorValue1=1./(2*pi),
+                                          factor1=1./(2*pi),
                                           # velocityLevel=True
                                           ))
 
 cc2 = mbs.AddObject(CoordinateConstraint(markerNumbers=[markerList[1], markerList[2]], 
 # cc2 = mbs.AddObject(CoordinateConstraint(markerNumbers=[mcGround, markerList[2]], 
-                                          factorValue1=-1,
+                                          factor1=-1,
                                           # velocityLevel=True
                                           offsetUserFunction=UFoffset0
                                           ))
 cc3 = mbs.AddObject(CoordinateConstraint(markerNumbers=[markerList[2], markerList[3]], 
-                                          factorValue1=3*(2*pi),
+                                          factor1=3*(2*pi),
                                           # velocityLevel=True
                                           ))
 

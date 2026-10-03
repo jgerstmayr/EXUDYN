@@ -411,14 +411,14 @@ def MainSystemCreateMassPoint(mbs,
                            referencePosition = [0.,0.,0.],
                            initialDisplacement = [0.,0.,0.],
                            initialVelocity = [0.,0.,0.],
-                           physicsMass=0,
+                           mass=0,
                            gravity = [0.,0.,0.],
                            graphicsDataList = [],
                            drawSize = -1,
                            color =  [-1.,-1.,-1.,-1.],
                            show = True, 
                            create2D = False, 
-                           returnDict = False): 
+                           returnDict = False, physicsMass=None): 
     """helper function to create 2D or 3D mass point object and node, using arguments as in NodePoint and MassPoint
 
     Args:
@@ -427,7 +427,7 @@ def MainSystemCreateMassPoint(mbs,
         referencePosition: reference coordinates for point node (always a 3D vector, no matter if 2D or 3D mass)
         initialDisplacement: initial displacements for point node (always a 3D vector, no matter if 2D or 3D mass)
         initialVelocity: initial velocities for point node (always a 3D vector, no matter if 2D or 3D mass)
-        physicsMass: mass of mass point
+        mass: mass of mass point
         gravity: gravity vevtor applied (always a 3D vector, no matter if 2D or 3D mass)
         graphicsDataList: list of GraphicsData for optional mass visualization
         drawSize: general drawing size of node
@@ -435,6 +435,7 @@ def MainSystemCreateMassPoint(mbs,
         show: True: if graphicsData list is empty, node is shown, otherwise body is shown; False: nothing is shown
         create2D: if True, create NodePoint2D and MassPoint2D
         returnDict: if False, returns object index; if True, returns dict of all information on created object and node
+        physicsMass: deprecated name of mass
 
     Returns:
         :Union[dict, ObjectIndex]: returns mass point object index or dict with all data on request (if returnDict=True)
@@ -447,7 +448,7 @@ def MainSystemCreateMassPoint(mbs,
         mbs = SC.AddSystem()
         b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
                                initialVelocity = [2,5,0],
-                               physicsMass = 1, gravity = [0,-9.81,0],
+                               mass = 1, gravity = [0,-9.81,0],
                                drawSize = 0.5, color=exu.graphics.color.blue)
         mbs.Assemble()
         simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -455,6 +456,9 @@ def MainSystemCreateMassPoint(mbs,
         simulationSettings.timeIntegration.endTime = 2
         mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
+    if physicsMass is not None: #the old name of the argument (#2814)
+        DeprecatedArgument('physicsMass', '1.12.258', 2031, use='mass', function='MainSystem.CreateMassPoint')
+        mass = physicsMass
     #error checks:        
     if not exudyn.__useExudynFast:
         where='MainSystem.CreateMassPoint(...)'
@@ -498,7 +502,7 @@ def MainSystemCreateMassPoint(mbs,
                          visualization = eii.VNodePoint(show = show, drawSize = drawSize, color = color),
                          ))
         bodyNumber = mbs.AddObject(eii.MassPoint(name = name,
-                                                physicsMass=physicsMass,
+                                                mass=mass,
                                                 nodeNumber = nodeNumber,
                                                 visualization = eii.VMassPoint(show = graphicsDataList != [], 
                                                                            graphicsData = graphicsDataList) ))
@@ -510,7 +514,7 @@ def MainSystemCreateMassPoint(mbs,
                          visualization = eii.VNodePoint2D(show = show, drawSize = drawSize, color = color),
                          ))
         bodyNumber = mbs.AddObject(eii.MassPoint2D(name = name, 
-                                                physicsMass=physicsMass,
+                                                mass=mass,
                                                 nodeNumber = nodeNumber,
                                                 visualization = eii.VMassPoint(show = graphicsDataList != [], 
                                                                            graphicsData = graphicsDataList) ))
@@ -714,8 +718,8 @@ def MainSystemCreateRigidBody(mbs,
                              visualization = VNodeClass(show = show, drawSize = drawSize, color = color)
                              )
         nodeNumber = mbs.AddNode(nodeItem)
-        bodyNumber = mbs.AddObject(eii.ObjectRigidBody(name=name, physicsMass=inertia.mass, physicsInertia=inertia.GetInertia6D(), 
-                                                       physicsCenterOfMass=inertia.com,
+        bodyNumber = mbs.AddObject(eii.ObjectRigidBody(name=name, mass=inertia.mass, inertia=inertia.GetInertia6D(), 
+                                                       centerOfMass=inertia.com,
                                                        nodeNumber=nodeNumber, 
                                                        visualization=eii.VObjectRigidBody(show = show, 
                                                                                           graphicsDataUserFunction = graphicsDataUserFunction,
@@ -758,8 +762,8 @@ def MainSystemCreateRigidBody(mbs,
                              visualization = eii.VNodeRigidBody2D(show = show, drawSize = drawSize, color = color)
                              )
         nodeNumber = mbs.AddNode(nodeItem)
-        bodyNumber = mbs.AddObject(eii.ObjectRigidBody2D(name=name, physicsMass=inertia.mass, physicsInertia=inertia.GetInertia6D()[2],
-                                                       #physicsCenterOfMass=inertia.com,
+        bodyNumber = mbs.AddObject(eii.ObjectRigidBody2D(name=name, mass=inertia.mass, inertia=inertia.GetInertia6D()[2],
+                                                       #centerOfMass=inertia.com,
                                                        nodeNumber=nodeNumber,
                                                        visualization=eii.VObjectRigidBody(show = show,
                                                                                           graphicsDataUserFunction=graphicsDataUserFunction,
@@ -827,7 +831,7 @@ def MainSystemCreateSpringDamper(mbs,
         mbs = SC.AddSystem()
         b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
                                  initialVelocity = [2,5,0],
-                                 physicsMass = 1, gravity = [0,-9.81,0],
+                                 mass = 1, gravity = [0,-9.81,0],
                                  drawSize = 0.5, color=exu.graphics.color.blue)
         oGround = mbs.AddObject(ObjectGround())
         #add vertical spring
@@ -936,7 +940,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
         SC = exu.SystemContainer()
         mbs = SC.AddSystem()
         b0 = mbs.CreateMassPoint(referencePosition = [7,0,0],
-                                  physicsMass = 1, gravity = [0,-9.81,0],
+                                  mass = 1, gravity = [0,-9.81,0],
                                   drawSize = 0.5, color=exu.graphics.color.blue)
         oGround = mbs.AddObject(ObjectGround())
         oSD = mbs.CreateCartesianSpringDamper(bodyNumbers=[oGround, b0],
@@ -1002,12 +1006,12 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
                                  offset = [0.,0.,0.,0.,0.,0.],
                                  rotationMatrixJoint=np.eye(3),
                                  useGlobalFrame=True,
-                                 intrinsicFormulation=True,
+                                 useIntrinsicFormulation=True,
                                  springForceTorqueUserFunction=0,
                                  postNewtonStepUserFunction=0,
                                  bodyOrNodeList=[None, None],
                                  bodyList=[None, None],
-                                 show=True, drawSize=-1, color=exudyn.graphics.color.default):
+                                 show=True, drawSize=-1, color=exudyn.graphics.color.default, intrinsicFormulation=None):
     """helper function to create RigidBodySpringDamper connector, using arguments from ObjectConnectorRigidBodySpringDamper, see there for the full documentation
 
     Args:
@@ -1021,7 +1025,7 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
         offset: offset vector (as 6D list or numpy array)
         rotationMatrixJoint: additional rotation matrix; in case  useGlobalFrame=False, it transforms body0/node0 local frame to joint frame; if useGlobalFrame=True, it transforms global frame to joint frame
         useGlobalFrame: if False, the rotationMatrixJoint is defined in the local coordinate system of body0
-        intrinsicFormulation: if True, uses intrinsic formulation of Maserati and Morandini, which uses matrix logarithm and is independent of order of markers (preferred formulation); otherwise, Tait-Bryan angles are used for computation of torque, see documentation
+        useIntrinsicFormulation: if True, uses intrinsic formulation of Maserati and Morandini, which uses matrix logarithm and is independent of order of markers (preferred formulation); otherwise, Tait-Bryan angles are used for computation of torque, see documentation
         springForceTorqueUserFunction: a user function springForceTorqueUserFunction(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)->[float,float,float, float,float,float] ; this function replaces the internal connector force / torque computation
         postNewtonStepUserFunction: a special user function postNewtonStepUserFunction(mbs, t, Index itemIndex, dataCoordinates, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)->[PNerror, recommendedStepSize, data[0], data[1], ...] ; for details, see RigidBodySpringDamper for full docu
         bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
@@ -1029,6 +1033,7 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
         show: if True, connector visualization is drawn
         drawSize: general drawing size of connector
         color: color of connector
+        intrinsicFormulation: deprecated name of useIntrinsicFormulation
 
     Returns:
         :ObjectIndex: returns index of newly created object
@@ -1036,6 +1041,9 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
     Example:
         #coming later
     """
+    if intrinsicFormulation is not None: #the old name of the argument (#2814)
+        DeprecatedArgument('intrinsicFormulation', '1.12.258', 2031, use='useIntrinsicFormulation', function='MainSystem.CreateRigidBodySpringDamper')
+        useIntrinsicFormulation = intrinsicFormulation
     where='MainSystem.CreateRigidBodySpringDamper(...)'
     internBodyNodeMarkerList = ProcessBodyNodeMarkerLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where, bodyList)
 
@@ -1096,7 +1104,7 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
                                                                         offset = offset,
                                                                         rotationMarker0=MR0, 
                                                                         rotationMarker1=MR1,
-                                                                        intrinsicFormulation=intrinsicFormulation,
+                                                                        useIntrinsicFormulation=useIntrinsicFormulation,
                                                                         springForceTorqueUserFunction=springForceTorqueUserFunction, 
                                                                         postNewtonStepUserFunction=postNewtonStepUserFunction,
                                                                         visualization=eii.VRigidBodySpringDamper(show=show, 
@@ -1695,7 +1703,7 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
                                   graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
                                                                               color=exu.graphics.color.orange)])
         m1 = mbs.CreateMassPoint(referencePosition=[5.5,-1,0],
-                                 physicsMass=1, drawSize = 0.2)
+                                 mass=1, drawSize = 0.2)
         n1 = mbs.GetObject(m1)['nodeNumber']
         oGround = mbs.AddObject(ObjectGround())
         mbs.CreateDistanceConstraint(bodyNumbers=[oGround, b0],
@@ -1800,11 +1808,11 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
                                         bodyNumbers=[None, None], 
                                         coordinates=[None, None], 
                                         offset = 0.,
-                                        factorValue1 = 1.,
+                                        factor1 = 1.,
                                         velocityLevel = False,
                                         offsetUserFunction = 0,
                                         offsetUserFunction_t = 0,
-                                        show=True, drawSize=-1., color=exudyn.graphics.color.default):
+                                        show=True, drawSize=-1., color=exudyn.graphics.color.default, factorValue1=None):
     """Create coordinate constraint for two bodies, or body on ground; markers and NodePointGround are automatically created when needed
 
     Args:
@@ -1813,13 +1821,14 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
         bodyNumbers: a list of two body numbers (ObjectIndex) to be constrained
         coordinates: a list of two coordinates for the respective bodies (in case of ground, it shall be None)
         offset: an fixed offset between the two coordinate values
-        factorValue1: an additional factor multiplied with coordinate value1 used in algebraic equation, to enable (e.g. gear) ratio between coordinates
+        factor1: an additional factor multiplied with coordinate value1 used in algebraic equation, to enable (e.g. gear) ratio between coordinates
         velocityLevel: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; if True, the offsetUserFunction_t is considered and offsetUserFunction is ignored
         offsetUserFunction: a Python function which defines the time-dependent offset; see description in CoordinateConstraint
         offsetUserFunction_t: time derivative of offsetUserFunction; needed for velocity level constraints; see description in CoordinateConstraint
         show: if True, connector visualization is drawn
         drawSize: general drawing size of node
         color: color of connector
+        factorValue1: deprecated name of factor1
 
     Returns:
         :ObjectIndex: returns index of created joint
@@ -1837,7 +1846,7 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
                                   graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
                                                                               color=exu.graphics.color.orange)])
         m1 = mbs.CreateMassPoint(referencePosition=[5.5,-1,0],
-                                 physicsMass=1, drawSize = 0.2)
+                                 mass=1, drawSize = 0.2)
         mbs.CreateCoordinateConstraint(bodyNumbers=[None, b0],
                                        coordinates=[None, 0]) #constrains X-coordinate
         #constrain Y-coordinate of b0 to Z-coordinate of m1:
@@ -1849,6 +1858,9 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
         simulationSettings.timeIntegration.endTime = 2
         mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
+    if factorValue1 is not None: #the old name of the argument (#2814)
+        DeprecatedArgument('factorValue1', '1.12.258', 2031, use='factor1', function='MainSystem.CreateCoordinateConstraint')
+        factor1 = factorValue1
     where = 'MainSystem.CreateCoordinateConstraint(...)'
         
     if not exudyn.__useExudynFast:
@@ -1924,7 +1936,7 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
     oJoint = mbs.AddObject(eii.ObjectConnectorCoordinate( name=name,
                                                          markerNumbers=markerNumbers, 
                                                          offset = offset,
-                                                         factorValue1 = factorValue1,
+                                                         factor1 = factor1,
                                                          velocityLevel = velocityLevel,
                                                          offsetUserFunction = offsetUserFunction,
                                                          offsetUserFunction_t = offsetUserFunction_t,
@@ -2049,9 +2061,9 @@ def MainSystemCreateRollingDiscPenalty(mbs, name='', bodyNumbers=[None, None],
                                   contactStiffness = 0., contactDamping = 0., 
                                   dryFriction = [0,0], dryFrictionAngle = 0., 
                                   dryFrictionProportionalZone = 0., viscousFriction = [0,0], 
-                                  rollingFrictionViscous = 0., useLinearProportionalZone = False, 
+                                  rollingViscousFriction = 0., useLinearProportionalZone = False, 
                                   activeConnector = True, 
-                                  show=True, discWidth=0.1, color=exudyn.graphics.color.default):
+                                  show=True, discWidth=0.1, color=exudyn.graphics.color.default, rollingFrictionViscous=None):
     """Create penalty-based rolling disc joint between wheel rigid body and ground; the disc is infinitely thin and the ground is a perfectly flat plane; the wheel may lift off; definition of joint position and axis in global coordinates (alternatively in wheel (body1) local coordinates) for reference configuration of bodies; all markers and other quantities are automatically computed
 
     Args:
@@ -2069,12 +2081,13 @@ def MainSystemCreateRollingDiscPenalty(mbs, name='', bodyNumbers=[None, None],
         dryFriction: 2D list of friction parameters; dry friction coefficients in local wheel coordinates, where for dryFrictionAngle=0, the first parameter refers to forward direction and the second parameter to lateral direction
         viscousFriction: 2D list of viscous friction coefficients [SI:1/(m/s)] in local wheel coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity; directions are same as in dryFriction
         dryFrictionProportionalZone: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)
-        rollingFrictionViscous: rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force;
+        rollingViscousFriction: viscous rolling friction [SI:s/m]: the force acts against the velocity of the trail on ground and is proportional to this velocity and to the contact normal force;
         useLinearProportionalZone: if True, a linear proportional zone is used; the linear zone performs better in implicit time integration as the Jacobian has a constant tangent in the sticking case
         activeConnector: flag to activate or deactivate the connector
         show: if True, connector visualization is drawn
         discWidth: disc with, only used for drawing
         color: color of connector
+        rollingFrictionViscous: deprecated name of rollingViscousFriction
 
     Returns:
         :ObjectIndex: returns index of created joint
@@ -2106,6 +2119,9 @@ def MainSystemCreateRollingDiscPenalty(mbs, name='', bodyNumbers=[None, None],
         simulationSettings.timeIntegration.endTime = 2
         mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
+    if rollingFrictionViscous is not None: #the old name of the argument (#2814)
+        DeprecatedArgument('rollingFrictionViscous', '1.12.258', 2031, use='rollingViscousFriction', function='MainSystem.CreateRollingDiscPenalty')
+        rollingViscousFriction = rollingFrictionViscous
     where = 'MainSystem.CreateRollingDiscPenalty(...)'
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
@@ -2134,8 +2150,8 @@ def MainSystemCreateRollingDiscPenalty(mbs, name='', bodyNumbers=[None, None],
             RaiseTypeError(where=where, argumentName='dryFrictionAngle', received = dryFrictionAngle, expectedType = ExpectedType.Real)
         if not IsValidRealInt(dryFrictionProportionalZone):
             RaiseTypeError(where=where, argumentName='dryFrictionProportionalZone', received = dryFrictionProportionalZone, expectedType = ExpectedType.Real)
-        if not IsValidRealInt(rollingFrictionViscous):
-            RaiseTypeError(where=where, argumentName='rollingFrictionViscous', received = rollingFrictionViscous, expectedType = ExpectedType.Real)
+        if not IsValidRealInt(rollingViscousFriction):
+            RaiseTypeError(where=where, argumentName='rollingViscousFriction', received = rollingViscousFriction, expectedType = ExpectedType.Real)
         if not IsValidRealInt(useLinearProportionalZone):
             RaiseTypeError(where=where, argumentName='useLinearProportionalZone', received = useLinearProportionalZone, expectedType = ExpectedType.Real)
         if not IsValidRealInt(discWidth):
@@ -2164,7 +2180,7 @@ def MainSystemCreateRollingDiscPenalty(mbs, name='', bodyNumbers=[None, None],
                                                                  contactStiffness = contactStiffness, contactDamping = contactDamping, 
                                                                  dryFriction = dryFriction, dryFrictionAngle = dryFrictionAngle, 
                                                                  dryFrictionProportionalZone = dryFrictionProportionalZone, viscousFriction = viscousFriction, 
-                                                                 rollingFrictionViscous = rollingFrictionViscous, useLinearProportionalZone = useLinearProportionalZone, 
+                                                                 rollingViscousFriction = rollingViscousFriction, useLinearProportionalZone = useLinearProportionalZone, 
                                                                  activeConnector = activeConnector, 
                                                                  visualization = eii.VObjectConnectorRollingDiscPenalty(show=show, discWidth=discWidth, 
                                                                                                                         color=color) ))
@@ -2320,7 +2336,7 @@ def MainSystemCreateSphereSphereContact(mbs, name='', bodyNumbers=[None, None],
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
 def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None], 
-                                       localPosition0 = [0.,0.,0.], radiusSphere = 0,
+                                       localPosition0 = [0.,0.,0.], sphereRadius = 0,
                                        quadPoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[1,1,0],[0,1,0]]),
                                        includeEdges = 15, dynamicFriction = 0., frictionProportionalZone = 1e-3,
                                        contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1,
@@ -2330,7 +2346,7 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
                                        activeConnector=True,
                                        bodyOrNodeList=[None, None], 
                                        localPosition1 = [0.,0.,0.], 
-                                       show=False, color=exudyn.graphics.color.default):
+                                       show=False, color=exudyn.graphics.color.default, radiusSphere=None):
     """Create penalty-based sphere-quad contact between two rigid bodies, mass points or according nodes; the contact is based on two ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
 
     Args:
@@ -2338,7 +2354,7 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
         name: name string for joint; markers get Marker0:name and Marker1:name
         bodyNumbers: a list of object numbers for sphere (0) and quad (1); Note that if body is a mass point, friction due to rolling is not accounted for!
         localPosition0: local position (as 3D list or numpy array) of sphere0 on body0, if not a node number
-        radiusSphere: radius of sphere 0 [SI:m].
+        sphereRadius: radius of sphere 0 [SI:m].
         quadPoints: 4 points as Vector3DList, list or numpy array to define the quad, defined in body1 local coordinates; note that the quad is split into two triangles with point indices [0,1,3] and [1,2,3]
         includeEdges: binary flag, where 1 defines contact with edges 0, 2 with edge 1, 4 with edge 2 and 8 with edge 3; 15 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1, etc.
         dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, Section Module: physics
@@ -2355,10 +2371,14 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
         localPosition1: local position (as 3D list or numpy array) of quad1 on body1; this is usually not needed and adds simply an offset to the quad coordinates
         show: if True, connector visualization is drawn
         color: color of connector
+        radiusSphere: deprecated name of sphereRadius
 
     Returns:
         :dict: dictionary containing oContact0 and oContact1 with ObjectIndex of each contact object
     """
+    if radiusSphere is not None: #the old name of the argument (#2814)
+        DeprecatedArgument('radiusSphere', '1.12.258', 2031, use='sphereRadius', function='MainSystem.CreateSphereQuadContact')
+        sphereRadius = radiusSphere
     where = 'MainSystem.CreateSphereQuadContact(...)'
     internBodyNodeMarkerList = ProcessBodyNodeMarkerLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where)
 
@@ -2370,8 +2390,8 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
             RaiseTypeError(where=where, argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(localPosition1, 3):
             RaiseTypeError(where=where, argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
-        if not IsValidPRealInt(radiusSphere):
-            RaiseTypeError(where=where, argumentName='radiusSphere', received = radiusSphere, expectedType = ExpectedType.Real)
+        if not IsValidPRealInt(sphereRadius):
+            RaiseTypeError(where=where, argumentName='sphereRadius', received = sphereRadius, expectedType = ExpectedType.Real)
         if (type(quadPoints) != exudyn.Vector3DList and not isinstance(quadPoints, (list,np.ndarray))) or len(quadPoints) != 4:
             RaiseTypeError(where=where, argumentName='quadPoints', received = quadPoints, expectedType = 'expected type=exudyn.Vector3DList or list with length 4, or numpy array with position vectors in rows')
         if not IsValidInt(includeEdges) or includeEdges < 0 or includeEdges > 15:
@@ -2438,7 +2458,7 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
                                              numberOfDataCoordinates=len(dataInitialCoordinates)))
         oContact = mbs.AddObject(eii.ObjectContactSphereTriangle(markerNumbers=[mBody0, mBody1],
                                                         nodeNumber=nGeneric,
-                                                        radiusSphere=radiusSphere,
+                                                        sphereRadius=sphereRadius,
                                                         trianglePoints=trianglePoints,
                                                         includeEdges=includeEdgesList[k],
                                                         dynamicFriction = dynamicFriction,
@@ -2460,7 +2480,7 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
 def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None], 
-                                       localPosition0 = [0.,0.,0.], radiusSphere = 0,
+                                       localPosition0 = [0.,0.,0.], sphereRadius = 0,
                                        trianglePoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]),
                                        includeEdges = 7, dynamicFriction = 0., frictionProportionalZone = 1e-3,
                                        contactStiffness = 0., contactDamping = 0., contactStiffnessExponent = 1,
@@ -2470,7 +2490,7 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None]
                                        activeConnector=True,
                                        bodyOrNodeList=[None, None], 
                                        localPosition1 = [0.,0.,0.], 
-                                       show=False, color=exudyn.graphics.color.default):
+                                       show=False, color=exudyn.graphics.color.default, radiusSphere=None):
     """Create penalty-based sphere-triangle contact between two rigid bodies, mass points or according nodes; the contact is based on ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
 
     Args:
@@ -2478,7 +2498,7 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None]
         name: name string for joint; markers get Marker0:name and Marker1:name
         bodyNumbers: a list of object numbers for sphere (0) and triangle (1); Note that if body is a mass point, friction due to rolling is not accounted for!
         localPosition0: local position (as 3D list or numpy array) of sphere0 on body0, if not a node number
-        radiusSphere: radius of sphere 0 [SI:m].
+        sphereRadius: radius of sphere 0 [SI:m].
         trianglePoints: triangle points as Vector3DList, list or numpy array to define the quad, defined in body1 local coordinates
         includeEdges: binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1, etc.
         dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, Section Module: physics
@@ -2495,10 +2515,14 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None]
         localPosition1: local position (as 3D list or numpy array) of triangle1 on body1; this is usually not needed and adds simply an offset to the triangle coordinates
         show: if True, connector visualization is drawn
         color: color of connector
+        radiusSphere: deprecated name of sphereRadius
 
     Returns:
         :ObjectIndex: returns index of created joint
     """
+    if radiusSphere is not None: #the old name of the argument (#2814)
+        DeprecatedArgument('radiusSphere', '1.12.258', 2031, use='sphereRadius', function='MainSystem.CreateSphereTriangleContact')
+        sphereRadius = radiusSphere
     where = 'MainSystem.CreateSphereTriangleContact(...)'
     internBodyNodeMarkerList = ProcessBodyNodeMarkerLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where)
 
@@ -2510,8 +2534,8 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None]
             RaiseTypeError(where=where, argumentName='localPosition0', received = localPosition0, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(localPosition1, 3):
             RaiseTypeError(where=where, argumentName='localPosition1', received = localPosition1, expectedType = ExpectedType.Vector, dim=3)
-        if not IsValidPRealInt(radiusSphere):
-            RaiseTypeError(where=where, argumentName='radiusSphere', received = radiusSphere, expectedType = ExpectedType.Real)
+        if not IsValidPRealInt(sphereRadius):
+            RaiseTypeError(where=where, argumentName='sphereRadius', received = sphereRadius, expectedType = ExpectedType.Real)
         if (type(trianglePoints) != exudyn.Vector3DList and not isinstance(trianglePoints, (list,np.ndarray))) or len(trianglePoints) != 3:
             RaiseTypeError(where=where, argumentName='trianglePoints', received = trianglePoints, expectedType = 'expected type=exudyn.Vector3DList or list with length 3, or numpy array with position vectors in rows')
         if not IsValidInt(includeEdges) or includeEdges < 0 or includeEdges > 7:
@@ -2565,7 +2589,7 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None]
                                          numberOfDataCoordinates=len(dataInitialCoordinates)))
     oContact = mbs.AddObject(eii.ObjectContactSphereTriangle(markerNumbers=[mBody0, mBody1],
                                                     nodeNumber=nGeneric,
-                                                    radiusSphere=radiusSphere,
+                                                    sphereRadius=sphereRadius,
                                                     trianglePoints=trianglePoints,
                                                     includeEdges=includeEdges,
                                                     dynamicFriction = dynamicFriction,
@@ -3122,7 +3146,7 @@ def MainSystemCreateForce(mbs,
         mbs = SC.AddSystem()
         b0=mbs.CreateMassPoint(referencePosition = [0,0,0],
                                initialVelocity = [2,5,0],
-                               physicsMass = 1, gravity = [0,-9.81,0],
+                               mass = 1, gravity = [0,-9.81,0],
                                drawSize = 0.5, color=exu.graphics.color.blue)
         f0=mbs.CreateForce(bodyNumber=b0, loadVector=[100,0,0],
                            localPosition=[0,0,0])

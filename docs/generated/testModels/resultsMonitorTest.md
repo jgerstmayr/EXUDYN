@@ -57,7 +57,7 @@ geneticFile = 'solution/resultsMonitorGenetic.txt'
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 node = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
-mbs.AddObject(MassPoint(physicsMass=1, nodeNumber=node))
+mbs.AddObject(MassPoint(mass=1, nodeNumber=node))
 marker = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
 mbs.AddLoad(Force(markerNumber=marker, loadVector=[1,0,0]))
 mbs.AddSensor(SensorNode(nodeNumber=node, fileName=sensorFile, writeToFile=True,

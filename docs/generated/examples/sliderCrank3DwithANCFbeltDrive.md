@@ -164,8 +164,8 @@ cylDisc0 = graphics.Cylinder([0,0,-0.005], [0,0,0.01],
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ep0 = [1,0,0,0] #no rotation
 nCrank_3D = mbs.AddNode(RigidEP(referenceCoordinates=[0,0,-ba_1/2+zOff]+ep0))
-oCrank_3D = mbs.AddObject(RigidBody(physicsMass=massCrank,
-                                    physicsInertia=[Jxx,Jyy,Jzz,0,0,0],
+oCrank_3D = mbs.AddObject(RigidBody(mass=massCrank,
+                                    inertia=[Jxx,Jyy,Jzz,0,0,0],
                                     nodeNumber=nCrank_3D,
                                     visualization=VObjectRigidBody2D(graphicsData=[vCrank0,
                                                                                    vCrank1,
@@ -176,8 +176,8 @@ oCrank_3D = mbs.AddObject(RigidBody(physicsMass=massCrank,
 ##Rod##
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 nRod = mbs.AddNode(RigidEP(referenceCoordinates=[-(L_A+L_B/2),0,0+zOff]+ep0));
-oRod = mbs.AddObject(RigidBody(physicsMass=massCR,
-                                           physicsInertia=[Jxx_CR,Jyy_CR,Jzz_CR,0,0,0],
+oRod = mbs.AddObject(RigidBody(mass=massCR,
+                                           inertia=[Jxx_CR,Jyy_CR,Jzz_CR,0,0,0],
                                            nodeNumber=nRod,
                                            visualization=VObjectRigidBody2D(graphicsData=[vRod])))
 
@@ -185,7 +185,7 @@ oRod = mbs.AddObject(RigidBody(physicsMass=massCR,
 ##Slider##
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 nSlider = mbs.AddNode(Point(referenceCoordinates=[-(L_A+L_B), 0,0+zOff]))
-oSlider = mbs.AddObject(MassPoint(physicsMass = massSlider,
+oSlider = mbs.AddObject(MassPoint(mass = massSlider,
                                   nodeNumber = nSlider,
                                   visualization=VObjectMassPoint(graphicsData= [vSlider])))
 
@@ -267,7 +267,7 @@ mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mSliderZ]))
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #Disk 1 (Driven Disk)
 nDisk1 = mbs.AddNode(Rigid2D(referenceCoordinates=[0, 0, 0]))
-oDisk1 = mbs.AddObject(RigidBody2D(physicsMass=m_disk1, physicsInertia=J_disk1,
+oDisk1 = mbs.AddObject(RigidBody2D(mass=m_disk1, inertia=J_disk1,
                                    nodeNumber=nDisk1,
                                    visualization=VObjectRigidBody2D(graphicsData=[vDisk_line1])))
 mDisk1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oDisk1))
@@ -275,7 +275,7 @@ mDisk1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oDisk1))
 #Disk 0 (Driver Disk)
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 nDisk0 = mbs.AddNode(Rigid2D(referenceCoordinates=[0, 0, 0]))
-oDisk0 = mbs.AddObject(RigidBody2D(physicsMass=m_disk0, physicsInertia=J_disk0,
+oDisk0 = mbs.AddObject(RigidBody2D(mass=m_disk0, inertia=J_disk0,
                                    nodeNumber=nDisk0,
                                    visualization=VObjectRigidBody2D(graphicsData=[vDisk_line0,cylDisc0])))
 mDisk0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oDisk0))
@@ -329,16 +329,16 @@ for i in range(nElements):
 #Create belt-objects
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 for i in range(1, nElements):
-    cableList += [mbs.AddObject(Cable2D(physicsLength=arcLenght, physicsMassPerLength=rho*A,
-                                        physicsBendingStiffness=E_B*I, physicsAxialStiffness=E_B*A,
-                                        physicsReferenceCurvature=1/beltRadius,
+    cableList += [mbs.AddObject(Cable2D(length=arcLenght, massPerLength=rho*A,
+                                        bendingStiffness=E_B*I, axialStiffness=E_B*A,
+                                        referenceCurvature=1/beltRadius,
                                         nodeNumbers=[nodeList[i-1],nodeList[i]]))]
 
 #Connect first and last belt-object
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-cableList += [mbs.AddObject(Cable2D(physicsLength=arcLenght, physicsMassPerLength=rho*A,
-                            physicsBendingStiffness=E_B*I, physicsAxialStiffness=E_B*A,
-                            physicsReferenceCurvature=1/beltRadius,
+cableList += [mbs.AddObject(Cable2D(length=arcLenght, massPerLength=rho*A,
+                            bendingStiffness=E_B*I, axialStiffness=E_B*A,
+                            referenceCurvature=1/beltRadius,
                             nodeNumbers=[nodeList[-1],nodeList[0]]))]
 
 

@@ -117,11 +117,11 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcableCa
   SC = exu.SystemContainer()
   mbs = SC.AddSystem()
   #example of flexible pendulum
-  beamTemplate = ObjectBeamGeometricallyExact2D(physicsMassPerLength=0.02,
-                      physicsCrossSectionInertia=8e-9,
-                      physicsBendingStiffness=8e-4,
-                      physicsAxialStiffness=2000,
-                      physicsShearStiffness=650,
+  beamTemplate = ObjectBeamGeometricallyExact2D(massPerLength=0.02,
+                      crossSectionInertia=8e-9,
+                      bendingStiffness=8e-4,
+                      axialStiffness=2000,
+                      shearStiffness=650,
                       visualization=VObjectBeamGeometricallyExact2D(drawHeight = 0.002))
   #create straight beam with 10 elements, apply gravity and fix (x,y) position of node 0 (rotation left free)
   beamInfo = GenerateStraightBeam(mbs, positionOfNode0=[0,0,0], positionOfNode1=[0.5,0,0],
@@ -219,7 +219,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
   - `fixedConstraintsNode0`: a list of 4 binary values, indicating the coordinate contraints on the first node (x,y-position and x,y-slope)
   - `fixedConstraintsNode1`: a list of 4 binary values, indicating the coordinate contraints on the last node (x,y-position and x,y-slope)
   - `firstNodeIsLastNode`: if True, then the last node is using the node number of the first node and the curve is closed; otherwise, the first and last nodes are different, and the curve is open
-  - `elementCurvatures`: optional list of pre-curvatures of elements, used to override the cableTemplate entry 'physicsReferenceCurvature'; use 0. for straight lines!
+  - `elementCurvatures`: optional list of pre-curvatures of elements, used to override the cableTemplate entry 'referenceCurvature'; use 0. for straight lines!
   - `graphicsSizeConstraints`: if set other than -1, it will be used as the size for drawing applied coordinate constraints
 - **output**: returns a list [cableNodeList, cableObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList]
 

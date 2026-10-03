@@ -40,7 +40,7 @@ g = 9.81    # gravity
 graphicsCube = graphics.Brick(size= [L,b,b], color= graphics.color.dodgerblue, addEdges=True)
 graphicsJoint = graphics.Cylinder(pAxis=[-0.5*L,0,-0.6*b], vAxis= [0,0,1.2*b], radius = 0.55*b, color=graphics.color.darkgrey, addEdges=True)
 nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[-0.5*L,L,0], initialVelocities=[0,0,2]));
-oRigid = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid,
+oRigid = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid,
                                    visualization=VObjectRigidBody2D(graphicsData= [graphicsCube, graphicsJoint])))
 
 mR1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[-0.5*L,0.,0.])) #support point

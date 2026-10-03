@@ -42,7 +42,7 @@ from exudyn.utilities import *
 import exudyn.graphics as graphics
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
-mbs.CreateMassPoint(physicsMass=1)
+mbs.CreateMassPoint(mass=1)
 
 mbs.Assemble()
 SC.visualizationSettings.general.drawWorldBasis = True

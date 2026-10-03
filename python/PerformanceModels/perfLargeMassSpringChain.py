@@ -92,7 +92,7 @@ for run in runList:
             n = mbs.AddNode(Point(referenceCoordinates=[L*(i+1), 0, 0],
                                   initialCoordinates=[u0, 0, 0],
                                   initialVelocities=[0, 0, 0]))
-            mbs.AddObject(MassPoint(physicsMass=mass, nodeNumber=n))
+            mbs.AddObject(MassPoint(mass=mass, nodeNumber=n))
 
             nodeMarker = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n, coordinate=0))
             if i == 0:

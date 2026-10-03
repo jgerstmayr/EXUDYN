@@ -132,12 +132,12 @@ void CObjectConnectorRollingDiscPenalty::ComputeConnectorForceRigid(const Marker
 	Vector3D fPos = -(fContact[0] * wLateral + fContact[1] * w2 + fContact[2] * n0);
 	Vector3D fRotDisc = (parameters.discRadius*w3).CrossProduct(fPos);
 	Vector3D fRotGround = pC.CrossProduct(fPos);
-	if (parameters.rollingFrictionViscous)
+	if (parameters.rollingViscousFriction)
 	{
 		Vector3D omega0 = markerData.GetMarkerData(0).orientation*markerData.GetMarkerData(0).angularVelocityLocal;
 		Vector3D velGround = markerData.GetMarkerData(1).velocity - (markerData.GetMarkerData(0).velocity + omega0.CrossProduct(pC));
 		velGround -= (velGround*n0)*n0;
-		fPos += parameters.rollingFrictionViscous*fabs(fContact[2])*velGround;
+		fPos += parameters.rollingViscousFriction*fabs(fContact[2])*velGround;
 	}
 	forces[1] = fPos;
 	torques[1] = fRotDisc;

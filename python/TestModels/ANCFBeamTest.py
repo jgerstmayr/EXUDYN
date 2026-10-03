@@ -189,7 +189,7 @@ for case in caseList:
         for k in range(nElements):
             n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[lElem*(k+1),0,0]+initialRotations))
 
-            oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength = lElem, 
+            oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], length = lElem, 
                                                    sectionData = sectionData,
                                                    crossSectionPenaltyFactor = [csFact,csFact,csFact],
                                                    visualization=VANCFBeam(sectionGeometry=sectionGeometry)))

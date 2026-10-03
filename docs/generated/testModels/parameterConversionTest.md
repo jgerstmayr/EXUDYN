@@ -239,8 +239,8 @@ if suiteLogFileName:
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++
 #text: one block per distinct outcome row, followed by the parameters that share it, one line
-#per owner: '  ObjectMassPoint: physicsMass(dict,set) nodeNumber(class)'
-def SplitKey(key): #'ObjectMassPoint.physicsMass set' -> owner, member, path
+#per owner: '  ObjectMassPoint: mass(dict,set) nodeNumber(class)'
+def SplitKey(key): #'ObjectMassPoint.mass set' -> owner, member, path
     name, path = key.split(' ')
     if '.' not in name: #'ObjectMassPoint defaults'
         return name, '', path

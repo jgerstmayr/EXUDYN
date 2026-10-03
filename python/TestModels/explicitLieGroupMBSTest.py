@@ -93,7 +93,7 @@ elif nodeType == exu.NodeType.RotationRotationVector:
 
 
 oGraphics = graphics.BrickXYZ(-r/2,-L/2,-r/2, r/2,L/2,r/2, [0.1,0.1,0.8,0.5])
-oRB = mbs.AddObject(ObjectRigidBody(physicsMass=m, physicsInertia=[JFP[0][0], JFP[1][1], JFP[2][2], JFP[1][2], JFP[0][2], JFP[0][1]], 
+oRB = mbs.AddObject(ObjectRigidBody(mass=m, inertia=[JFP[0][0], JFP[1][1], JFP[2][2], JFP[1][2], JFP[0][2], JFP[0][1]], 
                                     nodeNumber=nRB, visualization=VObjectRigidBody(graphicsData=[oGraphics])))
 
 mMassRB = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oRB, localPosition=[r/2,L/2,0])) #this is the real COM
@@ -114,7 +114,7 @@ mbs.AddObject(CoordinateConstraint(markerNumbers=[mCground, mC2]))
 
 if useBody2:
     oGraphics2 = graphics.BrickXYZ(-r/2,-L/2,-r/2, r/2,L/2,r/2, [0.8,0.1,0.1,0.5])
-    oRB2 = mbs.AddObject(ObjectRigidBody(physicsMass=m, physicsInertia=[JFP[0][0], JFP[1][1], JFP[2][2], JFP[1][2], JFP[0][2], JFP[0][1]], 
+    oRB2 = mbs.AddObject(ObjectRigidBody(mass=m, inertia=[JFP[0][0], JFP[1][1], JFP[2][2], JFP[1][2], JFP[0][2], JFP[0][1]], 
                                         nodeNumber=nRB2, visualization=VObjectRigidBody(graphicsData=[oGraphics2])))
     
     mMassRB2 = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oRB2, localPosition=[r/2,-L/2,0])) #this is the real COM

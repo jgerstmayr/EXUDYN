@@ -1609,8 +1609,8 @@ def AddRigidBody(mainSys, inertia,
     nodeItem = GetRigidBodyNode(nodeType, position, velocity, rotationMatrixNew, rotationParameters, angularVelocity)
     nodeNumber = mainSys.AddNode(nodeItem)
     
-    bodyNumber = mainSys.AddObject(eii.ObjectRigidBody(physicsMass=inertia.mass, physicsInertia=inertia.GetInertia6D(), 
-                                                   physicsCenterOfMass=inertia.com,
+    bodyNumber = mainSys.AddObject(eii.ObjectRigidBody(mass=inertia.mass, inertia=inertia.GetInertia6D(), 
+                                                   centerOfMass=inertia.com,
                                                    nodeNumber=nodeNumber, 
                                                    visualization=eii.VObjectRigidBody(graphicsData=graphicsDataList)))
     

@@ -60,27 +60,27 @@ static ConstSizeVector<3> RigidBody2DCoordinates(const CNode* node)
 //! Computational function: compute mass matrix
 void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC, const ArrayIndex& ltg, Index objectNumber, bool computeInverse) const
 {
-	Real m = parameters.physicsMass;
-	Real J = parameters.physicsInertia;
+	Real m = parameters.mass;
+	Real J = parameters.inertia;
 
-	if (parameters.physicsCenterOfMass == 0.) //component-wise compare
+	if (parameters.centerOfMass == 0.) //component-wise compare
 	{
 		massMatrixC.SetUseDenseMatrix(false);
 		SparseTripletVector& triplets = massMatrixC.GetInternalSparseTripletMatrix().GetTriplets();
 
 		if (computeInverse)
 		{
-			CHECKandTHROW(m != 0., "CObjectRigidBody2D::ComputeMassMatrix: physicsMass may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
-			CHECKandTHROW(J != 0., "CObjectRigidBody2D::ComputeMassMatrix: physicsInertia may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
+			CHECKandTHROW(m != 0., "CObjectRigidBody2D::ComputeMassMatrix: mass may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
+			CHECKandTHROW(J != 0., "CObjectRigidBody2D::ComputeMassMatrix: inertia may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
 			m = 1. / m;
 			J = 1. / J;
 		}
-		if (parameters.physicsMass != 0.)
+		if (parameters.mass != 0.)
 		{
 			triplets.AppendPure(EXUmath::Triplet(ltg[0], ltg[0], m));
 			triplets.AppendPure(EXUmath::Triplet(ltg[1], ltg[1], m));
 		}
-		if (parameters.physicsInertia != 0.)
+		if (parameters.inertia != 0.)
 		{
 			triplets.AppendPure(EXUmath::Triplet(ltg[2], ltg[2], J));
 		}
@@ -90,7 +90,7 @@ void CObjectRigidBody2D::ComputeMassMatrix(EXUmath::MatrixContainer& massMatrixC
 		//in this case, due to computeInverse and 7 filled components, we should use dense mode
 		Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 
-		Vector2D com = parameters.physicsCenterOfMass;
+		Vector2D com = parameters.centerOfMass;
 
 		//–m * A * \tilde \bar u_{ COM } \bar G
 		Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
@@ -122,7 +122,7 @@ void CObjectRigidBody2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 	ode2Lhs.SetNumberOfItems(nODE2coordinates);
 	ode2Lhs.SetAll(0.);
 
-	Vector2D com = parameters.physicsCenterOfMass;
+	Vector2D com = parameters.centerOfMass;
 	if (!(com == 0.)) //component-wise compare
 	{
 		//–m * A * \tilde \bar u_{ COM } \bar G
@@ -132,7 +132,7 @@ void CObjectRigidBody2D::ComputeODE2LHS(Vector& ode2Lhs, Index objectNumber) con
 		Matrix2D A(2, 2, { cosPhi, -sinPhi, sinPhi, cosPhi });
 
 		Real omegaSquared = EXUstd::Square( ((CNodeODE2*)GetCNode(0))->GetCurrentCoordinate_t(2) );
-		Vector2D term = -(parameters.physicsMass * omegaSquared) * (A * com);
+		Vector2D term = -(parameters.mass * omegaSquared) * (A * com);
 
 		ode2Lhs[0] = term[0];
 		ode2Lhs[1] = term[1];
@@ -211,9 +211,9 @@ bool CObjectRigidBody2D::GetJacobianTransposedTimesVectorDerivative(const Vector
 //! the mass-weighted position Jacobian int(rho J_pos dV), 3 x n (#2744)
 void CObjectRigidBody2D::GetMassWeightedPositionJacobian(Matrix& value) const
 {
-	Real m = parameters.physicsMass;
+	Real m = parameters.mass;
 
-	if (parameters.physicsCenterOfMass == 0.)
+	if (parameters.centerOfMass == 0.)
 	{
 		value.SetMatrix(3, 3, { m,0.,0., 0.,m,0., 0.,0.,0. }); //a 3D Vector (e.g. 3D ForceVector) acts on three coordinates (x,y,phi)
 		//value.SetNumberOfRowsAndColumns(3, 3);
@@ -222,7 +222,7 @@ void CObjectRigidBody2D::GetMassWeightedPositionJacobian(Matrix& value) const
 	}
 	else
 	{
-		Vector2D com = parameters.physicsCenterOfMass;
+		Vector2D com = parameters.centerOfMass;
 		value.SetNumberOfRowsAndColumns(3, 3);
 
 		Real phi = GetCNode(0)->GetCurrentCoordinate(2) + GetCNode(0)->GetCoordinateVector(ConfigurationType::Reference)[2];
@@ -273,10 +273,10 @@ void CObjectRigidBody2D::GetOutputVariableBody(OutputVariableType variableType, 
 		CheckEnergyLocalPosition(localPosition, "ObjectRigidBody2D");
 		Vector3D v = GetVelocity(localPosition, configuration);
 		Vector3D omega = GetAngularVelocity(localPosition, configuration);
-		Vector3D com({ parameters.physicsCenterOfMass[0], parameters.physicsCenterOfMass[1], 0. });
+		Vector3D com({ parameters.centerOfMass[0], parameters.centerOfMass[1], 0. });
 		Vector3D b = GetRotationMatrix(localPosition, configuration) * com;
-		Real m = parameters.physicsMass;
-		value.SetVector({ 0.5*m*(v*v) + m*(v*omega.CrossProduct(b)) + 0.5*parameters.physicsInertia*omega[2]*omega[2] });
+		Real m = parameters.mass;
+		value.SetVector({ 0.5*m*(v*v) + m*(v*omega.CrossProduct(b)) + 0.5*parameters.inertia*omega[2]*omega[2] });
 		break; }
 	default:
 		SysError("CObjectRigidBody2D::GetOutputVariableBody failed"); //error should not occur, because types are checked!

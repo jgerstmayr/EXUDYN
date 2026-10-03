@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-23  20:10:38 (last modified)
+* @date         2026-10-03  18:08:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,14 +113,17 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        if (EPyUtils::DictItemExists(d, "physicsMass")) { EPyUtils::FromPython(d["physicsMass"], cObjectRigidBody2D->GetParameters().physicsMass, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.physicsMass"); }
-        if (EPyUtils::DictItemExists(d, "physicsInertia")) { EPyUtils::FromPython(d["physicsInertia"], cObjectRigidBody2D->GetParameters().physicsInertia, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.physicsInertia"); }
-        if (EPyUtils::DictItemExists(d, "physicsCenterOfMass")) { EPyUtils::FromPython(d["physicsCenterOfMass"], cObjectRigidBody2D->GetParameters().physicsCenterOfMass); }
+        if (EPyUtils::DictItemExists(d, "mass")) { EPyUtils::FromPython(d["mass"], cObjectRigidBody2D->GetParameters().mass, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.mass"); }
+        if (EPyUtils::DictItemExists(d, "inertia")) { EPyUtils::FromPython(d["inertia"], cObjectRigidBody2D->GetParameters().inertia, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.inertia"); }
+        if (EPyUtils::DictItemExists(d, "centerOfMass")) { EPyUtils::FromPython(d["centerOfMass"], cObjectRigidBody2D->GetParameters().centerOfMass); }
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectRigidBody2D->GetParameters().nodeNumber); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectRigidBody2D->GetShow(), "ObjectRigidBody2D.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VgraphicsDataUserFunction")) { visualizationObjectRigidBody2D->GetGraphicsDataUserFunction() = d["VgraphicsDataUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsDataList(d, "VgraphicsData", visualizationObjectRigidBody2D->GetGraphicsData()); }
+        if (EPyUtils::DictItemExists(d, "physicsMass") && !d["physicsMass"].is_none()) { PyDeprecated("items", "ObjectRigidBody2D.physicsMass", "ObjectRigidBody2D: the parameter physicsMass is deprecated since 1.12.258 and removed in 2031; use mass"); EPyUtils::FromPython(d["physicsMass"], cObjectRigidBody2D->GetParameters().mass, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.physicsMass"); } //! AUTO: deprecated, forwards to mass
+        if (EPyUtils::DictItemExists(d, "physicsInertia") && !d["physicsInertia"].is_none()) { PyDeprecated("items", "ObjectRigidBody2D.physicsInertia", "ObjectRigidBody2D: the parameter physicsInertia is deprecated since 1.12.258 and removed in 2031; use inertia"); EPyUtils::FromPython(d["physicsInertia"], cObjectRigidBody2D->GetParameters().inertia, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.physicsInertia"); } //! AUTO: deprecated, forwards to inertia
+        if (EPyUtils::DictItemExists(d, "physicsCenterOfMass") && !d["physicsCenterOfMass"].is_none()) { PyDeprecated("items", "ObjectRigidBody2D.physicsCenterOfMass", "ObjectRigidBody2D: the parameter physicsCenterOfMass is deprecated since 1.12.258 and removed in 2031; use centerOfMass"); EPyUtils::FromPython(d["physicsCenterOfMass"], cObjectRigidBody2D->GetParameters().centerOfMass); } //! AUTO: deprecated, forwards to centerOfMass
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -129,9 +132,9 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["physicsMass"] = (Real)cObjectRigidBody2D->GetParameters().physicsMass;
-        d["physicsInertia"] = (Real)cObjectRigidBody2D->GetParameters().physicsInertia;
-        d["physicsCenterOfMass"] = EPyUtils::ToPython(cObjectRigidBody2D->GetParameters().physicsCenterOfMass);
+        d["mass"] = (Real)cObjectRigidBody2D->GetParameters().mass;
+        d["inertia"] = (Real)cObjectRigidBody2D->GetParameters().inertia;
+        d["centerOfMass"] = EPyUtils::ToPython(cObjectRigidBody2D->GetParameters().centerOfMass);
         d["nodeNumber"] = (NodeIndex)cObjectRigidBody2D->GetParameters().nodeNumber;
         d["name"] = (std::string)name;
         d["Vshow"] = (bool)visualizationObjectRigidBody2D->GetShow();
@@ -144,13 +147,16 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectRigidBody2D->GetParameters().physicsMass); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsInertia") == 0) { return py::cast((Real)cObjectRigidBody2D->GetParameters().physicsInertia); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsCenterOfMass") == 0) { return EPyUtils::ToPython(cObjectRigidBody2D->GetParameters().physicsCenterOfMass); } //! AUTO: get parameter
+        else if (parameterName.compare("mass") == 0) { return py::cast((Real)cObjectRigidBody2D->GetParameters().mass); } //! AUTO: get parameter
+        else if (parameterName.compare("inertia") == 0) { return py::cast((Real)cObjectRigidBody2D->GetParameters().inertia); } //! AUTO: get parameter
+        else if (parameterName.compare("centerOfMass") == 0) { return EPyUtils::ToPython(cObjectRigidBody2D->GetParameters().centerOfMass); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectRigidBody2D->GetParameters().nodeNumber); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectRigidBody2D->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { return visualizationObjectRigidBody2D->GetGraphicsDataUserFunction().GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsData") == 0) { return PyGetBodyGraphicsDataList(visualizationObjectRigidBody2D->GetGraphicsData(), true); } //! AUTO: get parameter
+        else if (parameterName.compare("physicsMass") == 0) { PyDeprecated("items", "ObjectRigidBody2D.physicsMass", "ObjectRigidBody2D: the parameter physicsMass is deprecated since 1.12.258 and removed in 2031; use mass"); return py::cast((Real)cObjectRigidBody2D->GetParameters().mass); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsInertia") == 0) { PyDeprecated("items", "ObjectRigidBody2D.physicsInertia", "ObjectRigidBody2D: the parameter physicsInertia is deprecated since 1.12.258 and removed in 2031; use inertia"); return py::cast((Real)cObjectRigidBody2D->GetParameters().inertia); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsCenterOfMass") == 0) { PyDeprecated("items", "ObjectRigidBody2D.physicsCenterOfMass", "ObjectRigidBody2D: the parameter physicsCenterOfMass is deprecated since 1.12.258 and removed in 2031; use centerOfMass"); return EPyUtils::ToPython(cObjectRigidBody2D->GetParameters().centerOfMass); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectRigidBody2D::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -160,13 +166,16 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsMass") == 0) { EPyUtils::FromPython(value, cObjectRigidBody2D->GetParameters().physicsMass, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.physicsMass"); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsInertia") == 0) { EPyUtils::FromPython(value, cObjectRigidBody2D->GetParameters().physicsInertia, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.physicsInertia"); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsCenterOfMass") == 0) { EPyUtils::FromPython(value, cObjectRigidBody2D->GetParameters().physicsCenterOfMass); } //! AUTO: set parameter
+        else if (parameterName.compare("mass") == 0) { EPyUtils::FromPython(value, cObjectRigidBody2D->GetParameters().mass, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.mass"); } //! AUTO: set parameter
+        else if (parameterName.compare("inertia") == 0) { EPyUtils::FromPython(value, cObjectRigidBody2D->GetParameters().inertia, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.inertia"); } //! AUTO: set parameter
+        else if (parameterName.compare("centerOfMass") == 0) { EPyUtils::FromPython(value, cObjectRigidBody2D->GetParameters().centerOfMass); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectRigidBody2D->GetParameters().nodeNumber); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectRigidBody2D->GetShow(), "ObjectRigidBody2D.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("VgraphicsDataUserFunction") == 0) { visualizationObjectRigidBody2D->GetGraphicsDataUserFunction() = value; } //! AUTO: set parameter
         else if (parameterName.compare("VgraphicsData") == 0) { PyWriteBodyGraphicsDataList(value, visualizationObjectRigidBody2D->GetGraphicsData()); } //! AUTO: set parameter
+        else if (parameterName.compare("physicsMass") == 0) { PyDeprecated("items", "ObjectRigidBody2D.physicsMass", "ObjectRigidBody2D: the parameter physicsMass is deprecated since 1.12.258 and removed in 2031; use mass"); EPyUtils::FromPython(value, cObjectRigidBody2D->GetParameters().mass, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.physicsMass"); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsInertia") == 0) { PyDeprecated("items", "ObjectRigidBody2D.physicsInertia", "ObjectRigidBody2D: the parameter physicsInertia is deprecated since 1.12.258 and removed in 2031; use inertia"); EPyUtils::FromPython(value, cObjectRigidBody2D->GetParameters().inertia, EPyUtils::RangeCheck::nonNegative, "ObjectRigidBody2D.physicsInertia"); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsCenterOfMass") == 0) { PyDeprecated("items", "ObjectRigidBody2D.physicsCenterOfMass", "ObjectRigidBody2D: the parameter physicsCenterOfMass is deprecated since 1.12.258 and removed in 2031; use centerOfMass"); EPyUtils::FromPython(value, cObjectRigidBody2D->GetParameters().centerOfMass); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectRigidBody2D::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

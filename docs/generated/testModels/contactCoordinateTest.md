@@ -116,7 +116,7 @@ nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
 
 #add mass point (this is a 3D object with 3 coordinates):
 gSphere = graphics.Sphere([0,0,0], r, color=graphics.color.red, nTiles=20)
-massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1,
+massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = n1,
                                     visualization=VMassPoint(graphicsData=[gSphere])))
 
 #marker for ground (=fixed):

@@ -129,7 +129,7 @@ void CObjectContactSphereTorus::ComputeConnectorProperties(const MarkerDataStruc
 	deltaP = (p0 - pCircle1);
 
 	Real dist = deltaP.GetL2Norm();
-	gap = parameters.torusMinorRadius - parameters.radiusSphere - dist; //gap = -penetration
+	gap = parameters.torusMinorRadius - parameters.sphereRadius - dist; //gap = -penetration
 	//if (!contactFromData) pout << "gap=" << gap << ", rPC=" << rPC << ", p1=" << p1 << ", pp0=" << pp0 << "\n";
 
 	//unit direction and relative velocity of spring-damper
@@ -141,10 +141,10 @@ void CObjectContactSphereTorus::ComputeConnectorProperties(const MarkerDataStruc
 	Vector3D vSphere0 = markerData.GetMarkerData(0).velocity;
 	Vector3D vTorus1 = markerData.GetMarkerData(1).velocity;
 	//for torus, we always need to compute the full velocity due to rotation of the torus; therefore we also compute full velocity of sphere:
-	vSphere0 += (markerData.GetMarkerData(0).orientation * markerData.GetMarkerData(0).angularVelocityLocal).CrossProduct((parameters.radiusSphere + 0.5 * gap) * n0);
+	vSphere0 += (markerData.GetMarkerData(0).orientation * markerData.GetMarkerData(0).angularVelocityLocal).CrossProduct((parameters.sphereRadius + 0.5 * gap) * n0);
 	vTorus1 += (markerData.GetMarkerData(1).orientation * markerData.GetMarkerData(1).angularVelocityLocal).CrossProduct(rPC + (parameters.torusMinorRadius - 0.5 * gap) * n0);
 
-	contactPoint = p0 + (parameters.radiusSphere + 0.5 * gap) * n0; //needed for torque computation
+	contactPoint = p0 + (parameters.sphereRadius + 0.5 * gap) * n0; //needed for torque computation
 	frictionCoeff = parameters.dynamicFriction; //this has to be computed depending on velocity, using Stribeck function ...
 
 	deltaV = vTorus1 - vSphere0; //relative velocity in normal direction
@@ -197,7 +197,7 @@ void CObjectContactSphereTorus::ComputeConnectorForceRigid(const MarkerRigid<Rea
 	forces[1] = fVec;
 	torques[1] = (contactPoint - markerData.GetMarkerData(1).position).CrossProduct(fVec);
 	forces[0] = -fVec;
-	if (frictionCoeff != 0) { torques[0] = (-(parameters.radiusSphere + 0.5 * gap) * n0).CrossProduct(fVec); }
+	if (frictionCoeff != 0) { torques[0] = (-(parameters.sphereRadius + 0.5 * gap) * n0).CrossProduct(fVec); }
 }
 
 //! provide according output variable in "value"
@@ -236,7 +236,7 @@ void CObjectContactSphereTorus::GetOutputVariableConnector(OutputVariableType va
 	case OutputVariableType::Director2: value.CopyFrom((pCircle1 - p1) *(1. / parameters.torusMajorRadius) ); break;
 	case OutputVariableType::Director3: value.CopyFrom(n0); break;
 	case OutputVariableType::Force: value.CopyFrom(fVec); break;
-	case OutputVariableType::Torque: value.CopyFrom(((-(parameters.radiusSphere + 0.5 * gap)) * n0).CrossProduct(fVec)); break;
+	case OutputVariableType::Torque: value.CopyFrom(((-(parameters.sphereRadius + 0.5 * gap)) * n0).CrossProduct(fVec)); break;
 	default:
 		SysError("CObjectContactSphereTorus::GetOutputVariableConnector failed"); //error should not occur, because types are checked!
 	}
@@ -354,7 +354,7 @@ void VisualizationObjectContactSphereTorus::UpdateGraphics(const VisualizationSe
 		//marker0 is sphere:
 		Float4 currentColor = visualizationSettings.contact.colorSpheres;
 		if (color[0] != -1.f) { currentColor = color; }
-		EXUvis::DrawSphere(pos[0], cItem->GetParameters().radiusSphere, currentColor, vSystem->graphicsData, 
+		EXUvis::DrawSphere(pos[0], cItem->GetParameters().sphereRadius, currentColor, vSystem->graphicsData, 
 						   itemID, visualizationSettings.contact.tilingSpheres);
 	}
 	if (visualizationSettings.contact.showTori)

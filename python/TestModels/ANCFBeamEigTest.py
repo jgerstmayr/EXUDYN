@@ -103,7 +103,7 @@ if True:
         for k in range(nElements):
             n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[lElem*(k+1),0,0]+initialRotations))
     
-            oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength = lElem, 
+            oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], length = lElem, 
                                                    #testBeamRectangularSize = [h,w],
                                                    sectionData = sectionData,
                                                    crossSectionPenaltyFactor = [csPenaltyFactor]*3,
@@ -119,12 +119,12 @@ if True:
         for k in range(nElements):
             n2d1 = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[lElem*(k+1),0,0]))
     
-            oBeam = mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[n2d0,n2d1], physicsLength = lElem,
-                                                                 physicsMassPerLength=sectionData.massPerLength,
-                                                                 physicsAxialStiffness=sectionData.stiffnessMatrix[0,0],
-                                                                 physicsBendingStiffness=EI,
-                                                                 physicsShearStiffness=sectionData.stiffnessMatrix[1,1],
-                                                                 physicsCrossSectionInertia=sectionData.inertia[2,2],
+            oBeam = mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[n2d0,n2d1], length = lElem,
+                                                                 massPerLength=sectionData.massPerLength,
+                                                                 axialStiffness=sectionData.stiffnessMatrix[0,0],
+                                                                 bendingStiffness=EI,
+                                                                 shearStiffness=sectionData.stiffnessMatrix[1,1],
+                                                                 crossSectionInertia=sectionData.inertia[2,2],
                                                                  ))
             n2d0 = n2d1
     

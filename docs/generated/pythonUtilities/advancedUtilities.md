@@ -427,7 +427,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 ```python
   oGround = mbs.AddObject(ObjectGround())
   node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
-  oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+  oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, mass=1))
   symbolicFunc = CreateSymbolicUserFunction(mbs, function=springForceUserFunction,
                                             userFunctionName='springForceUserFunction',
                                             itemTypeName='ObjectConnectorSpringDamper')

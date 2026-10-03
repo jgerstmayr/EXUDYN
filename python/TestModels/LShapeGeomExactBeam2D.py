@@ -73,12 +73,12 @@ for p in pRefList:
 ## create beam elements:
 for i in range(len(nodeList)-1):
     mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers = [nodeList[i],nodeList[i+1]], 
-                                                 physicsLength=lElem,
-                                                 physicsMassPerLength=rhoA,
-                                                 physicsCrossSectionInertia=rhoI,
-                                                 physicsBendingStiffness=EI,
-                                                 physicsAxialStiffness=EA,
-                                                 physicsShearStiffness=GA,
+                                                 length=lElem,
+                                                 massPerLength=rhoA,
+                                                 crossSectionInertia=rhoI,
+                                                 bendingStiffness=EI,
+                                                 axialStiffness=EA,
+                                                 shearStiffness=GA,
                                                  includeReferenceRotations=False, #to connect beams at 90° at same node
                                                  visualization=VObjectBeamGeometricallyExact2D(drawHeight = h) ))
     

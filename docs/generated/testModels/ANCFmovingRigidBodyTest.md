@@ -54,9 +54,9 @@ mGlobalGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGlobalGround, c
 fixANCFRotation = 1
 
 #######################SUSPENSION ROPE##################################################################################################################################################################
-suspensionCableTemplate=Cable2D(physicsMassPerLength=20.87, 
-                                physicsBendingStiffness=78878*complianceFactBend, 
-                                physicsAxialStiffness=398240000*complianceFactAxial)
+suspensionCableTemplate=Cable2D(massPerLength=20.87, 
+                                bendingStiffness=78878*complianceFactBend, 
+                                axialStiffness=398240000*complianceFactAxial)
 
 [suspensionCableNodeList, suspensionCableObjectList, suspensionLoadList, suspensionCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, positionOfNode0=[0,0,0], positionOfNode1=[L,0,0], numberOfElements=nEl, cableTemplate=suspensionCableTemplate,
                                                                   massProportionalLoad=[0,-gravityFieldConstant,0], fixedConstraintsNode0=[1,1,0,fixANCFRotation], fixedConstraintsNode1=[1,1,0,fixANCFRotation])
@@ -68,10 +68,10 @@ suspensionCableTemplate=Cable2D(physicsMassPerLength=20.87,
 nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0], initialCoordinates=[0], initialCoordinates_t=[vALE]))
 mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nALE, coordinate=0)) #ALE velocity  marker
 
-haulageCableTemplate=ALECable2D(physicsMassPerLength=6.96, 
-                                physicsBendingStiffness=5956*complianceFactBend, 
-                                physicsAxialStiffness=96725000*complianceFactAxial,
-                                physicsAddALEvariation=False) #for compatibility with test suite results
+haulageCableTemplate=ALECable2D(massPerLength=6.96, 
+                                bendingStiffness=5956*complianceFactBend, 
+                                axialStiffness=96725000*complianceFactAxial,
+                                addALEvariation=False) #for compatibility with test suite results
 haulageCableTemplate.nodeNumbers[2]=nALE #this will not be overwritten!
 
 [haulageCableNodeList, haulageCableObjectList, haulageLoadList, haulageCableNodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, 
@@ -89,7 +89,7 @@ mSuspensionRopeAttachmentNodeY=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = s
 
 graphicsSlackCarrier={'type':'Circle', 'color':[.1,0.1,0.8,1], 'position':[0,0,0], 'radius': slackCarrierWheelRadius}
 nSlackCarrierRigidBody = mbs.AddNode(Rigid2D(referenceCoordinates=[5,offset-slackCarrierWheelRadius,0]))
-oSlackCarrierRigidBody = mbs.AddObject(RigidBody2D(physicsMass=1, physicsInertia=1, nodeNumber=nSlackCarrierRigidBody,visualization=VObjectRigidBody2D(graphicsData= [graphicsSlackCarrier]))) #, visualization=VObjectRigidBody2D(graphicsData= [graphicsSupportWheels])
+oSlackCarrierRigidBody = mbs.AddObject(RigidBody2D(mass=1, inertia=1, nodeNumber=nSlackCarrierRigidBody,visualization=VObjectRigidBody2D(graphicsData= [graphicsSlackCarrier]))) #, visualization=VObjectRigidBody2D(graphicsData= [graphicsSupportWheels])
 
 mSlackCarrierX = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nSlackCarrierRigidBody,coordinate=0))
 mSlackCarrierY = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nSlackCarrierRigidBody,coordinate=1))
@@ -139,7 +139,7 @@ graphicsRigid1 = graphics.Lines([[-b,0,0], [b,0,0], [b,a,0], [-b,a,0], [-b,0,0]]
 graphicsRigid2 = graphics.Lines([[-a,-a,0], [a,-a,0], [a,0,0], [-a,0,0], [-a,-a,0]]) #drawing of rigid body
 
 nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[refPos[0],refPos[1]-yCOM,0], initialVelocities=[vALE,0,0]));
-oRigid = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid,visualization=VObjectRigidBody2D(graphicsData= [graphicsRigid1,graphicsRigid2])))
+oRigid = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid,visualization=VObjectRigidBody2D(graphicsData= [graphicsRigid1,graphicsRigid2])))
 
 
 markerRigidTopAle = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[0.,yCOM,0.])) #support point

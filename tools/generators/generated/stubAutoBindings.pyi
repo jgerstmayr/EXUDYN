@@ -797,10 +797,10 @@ class MainSystem:
         """Add an object with objectDefinition from Python object class; returns (global) object number (type ObjectIndex) of newly added object.
         
         Examples:
-            item = MassPoint(name='heavy object', nodeNumber=0, physicsMass=100)
+            item = MassPoint(name='heavy object', nodeNumber=0, mass=100)
             mbs.AddObject(item)
             objectDict = {'objectType': 'MassPoint',
-            'physicsMass': 10,
+            'mass': 10,
             'nodeNumber': 0,
             'name': 'example object'}
             mbs.AddObject(objectDict)

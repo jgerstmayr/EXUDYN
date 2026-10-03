@@ -136,7 +136,7 @@ void CObjectContactSphereTriangle::ComputeConnectorProperties(const MarkerDataSt
 	Real dist = deltaP.GetL2Norm();
 	if (!contactFromData && onEdge && !(onEdge & parameters.includeEdges)) 
 	{ 
-		dist += parameters.radiusSphere; //in this case, we need to signal PostNewtonStep that there is no contact
+		dist += parameters.sphereRadius; //in this case, we need to signal PostNewtonStep that there is no contact
 	}
 
 	Real invDist = 1.;
@@ -160,7 +160,7 @@ void CObjectContactSphereTriangle::ComputeConnectorProperties(const MarkerDataSt
 	deltaV = vTrigJ - vSphereI;
 	//Real deltaVnormal = n0 * deltaV; //unused
 
-	gap = dist - parameters.radiusSphere; //gap is negative
+	gap = dist - parameters.sphereRadius; //gap is negative
 
 	frictionCoeff = parameters.dynamicFriction; //this should be computed depending on velocity, using Stribeck function ...
 
@@ -209,11 +209,11 @@ void CObjectContactSphereTriangle::ComputeConnectorForceRigid(const MarkerRigid<
 	Vector3D deltaP, deltaV, fVec, fFriction, n0;
 	Real frictionCoeff, gap;
 	ComputeConnectorProperties(markerData, itemIndex, data, frictionCoeff, gap, deltaP, deltaV, fVec, fFriction, n0);
-	Vector3D contactPoint = markerData.GetMarkerData(0).position + (parameters.radiusSphere + 0.5 * gap) * n0;
+	Vector3D contactPoint = markerData.GetMarkerData(0).position + (parameters.sphereRadius + 0.5 * gap) * n0;
 	forces[1] = fVec;
 	torques[1] = (contactPoint - markerData.GetMarkerData(1).position).CrossProduct(fVec);
 	forces[0] = -fVec;
-	if (frictionCoeff != 0) { torques[0] = (-(parameters.radiusSphere + 0.5 * gap) * n0).CrossProduct(fVec); }
+	if (frictionCoeff != 0) { torques[0] = (-(parameters.sphereRadius + 0.5 * gap) * n0).CrossProduct(fVec); }
 }
 
 //! provide according output variable in "value"
@@ -235,7 +235,7 @@ void CObjectContactSphereTriangle::GetOutputVariableConnector(OutputVariableType
 	switch (variableType)
 	{
 	case OutputVariableType::Position: {
-		Vector3D contactPoint = markerData.GetMarkerData(0).position + (parameters.radiusSphere + 0.5 * gap) * n0;
+		Vector3D contactPoint = markerData.GetMarkerData(0).position + (parameters.sphereRadius + 0.5 * gap) * n0;
 		value.CopyFrom(contactPoint); break;
 	}
 	case OutputVariableType::Displacement: value.CopyFrom(deltaP); break;
@@ -243,7 +243,7 @@ void CObjectContactSphereTriangle::GetOutputVariableConnector(OutputVariableType
 	case OutputVariableType::Velocity: value.CopyFrom(deltaV); break;
 	case OutputVariableType::Director1: value.CopyFrom(n0); break;
 	case OutputVariableType::Force: value.CopyFrom(fVec); break;
-	case OutputVariableType::Torque: value.CopyFrom((-(parameters.radiusSphere + 0.5 * gap) * n0).CrossProduct(fVec)); break;
+	case OutputVariableType::Torque: value.CopyFrom((-(parameters.sphereRadius + 0.5 * gap) * n0).CrossProduct(fVec)); break;
 	default:
 		SysError("CObjectContactSphereTriangle::GetOutputVariableConnector failed"); //error should not occur, because types are checked!
 	}
@@ -362,7 +362,7 @@ void VisualizationObjectContactSphereTriangle::UpdateGraphics(const Visualizatio
 		//marker0 is sphere:
 		Float4 currentColor = visualizationSettings.contact.colorSpheres;
 		if (color[0] != -1.f) { currentColor = color; }
-		EXUvis::DrawSphere(pos[0], cItem->GetParameters().radiusSphere, currentColor, vSystem->graphicsData, itemID, visualizationSettings.general.sphereTiling);
+		EXUvis::DrawSphere(pos[0], cItem->GetParameters().sphereRadius, currentColor, vSystem->graphicsData, itemID, visualizationSettings.general.sphereTiling);
 	}
 	if (visualizationSettings.contact.showTriangles)
 	{

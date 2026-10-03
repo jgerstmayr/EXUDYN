@@ -21,7 +21,7 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0]))
 nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
-oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, mass=1))
 
 m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
 m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oMassPoint, localPosition=[0,0,0]))

@@ -59,12 +59,12 @@ First, we create a beam template, which includes all beam parameters (this could
 
 ```python
   beamTemplate = Beam2D(nodeNumbers = [-1,-1], #added later
-                        physicsMassPerLength=rhoA,
-                        physicsCrossSectionInertia=rhoI,
-                        physicsBendingStiffness=EI,
-                        physicsAxialStiffness=EA,
-                        physicsShearStiffness=GA,
-                        physicsBendingDamping=0.02*EI,
+                        massPerLength=rhoA,
+                        crossSectionInertia=rhoI,
+                        bendingStiffness=EI,
+                        axialStiffness=EA,
+                        shearStiffness=GA,
+                        bendingDamping=0.02*EI,
                         visualization=VObjectBeamGeometricallyExact2D(drawHeight = h))
 ```
 
@@ -84,10 +84,10 @@ but in this case, we do not add constraints:
 
 ```python
   beamTemplate = Cable2D(nodeNumbers = [-1,-1], #added later
-                         physicsMassPerLength=rhoA,
-                         physicsBendingStiffness=EI,
-                         physicsAxialStiffness=EA,
-                         physicsBendingDamping=0.02*EI,
+                         massPerLength=rhoA,
+                         bendingStiffness=EI,
+                         axialStiffness=EA,
+                         bendingDamping=0.02*EI,
                          visualization=VCable2D(drawHeight = h))
 
   cableData = GenerateStraightBeam(mbs, positionOfNode0, positionOfNode1,

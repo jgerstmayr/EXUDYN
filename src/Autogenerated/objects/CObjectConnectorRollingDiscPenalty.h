@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  22:10:14 (last modified)
+* @date         2026-10-03  18:09:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
     Vector2D dryFriction;                         //!< AUTO: dry friction coefficients [SI:1] in local marker 1 joint \f$J1\f$ coordinates; if \f$\alpha_t==0\f$, lateral direction \f$l=x\f$ and forward direction \f$f=y\f$; assuming a normal force \f$f_n\f$, the local friction force can be computed as \f$\LU{J1}{\vp{f_{t,x}}{f_{t,y}}} = \vp{\mu_x f_n}{\mu_y f_n}\f$
     Real dryFrictionProportionalZone;             //!< AUTO: limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations)
     Vector2D viscousFriction;                     //!< AUTO: viscous friction coefficients [SI:1/(m/s)] in local marker 1 joint \f$J1\f$ coordinates; proportional to slipping velocity, leading to increasing slipping friction force for increasing slipping velocity
-    Real rollingFrictionViscous;                  //!< AUTO: rolling friction [SI:1], which acts against the velocity of the trail on ground and leads to a force proportional to the contact normal force; currently, only implemented for disc axis parallel to ground!
+    Real rollingViscousFriction;                  //!< AUTO: viscous rolling friction [SI:s/m]: the force acts against the velocity of the trail on ground and is proportional to this velocity and to the contact normal force; currently, only implemented for disc axis parallel to ground!
     bool useLinearProportionalZone;               //!< AUTO: if True, a linear proportional zone is used; the linear zone performs better in implicit time integration as the Jacobian has a constant tangent in the sticking case
     bool activeConnector;                         //!< AUTO: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint
     //! AUTO: default constructor with parameter initialization
@@ -55,7 +55,7 @@ public: // AUTO:
         dryFriction = Vector2D({0,0});
         dryFrictionProportionalZone = 0.;
         viscousFriction = Vector2D({0,0});
-        rollingFrictionViscous = 0.;
+        rollingViscousFriction = 0.;
         useLinearProportionalZone = false;
         activeConnector = true;
     };

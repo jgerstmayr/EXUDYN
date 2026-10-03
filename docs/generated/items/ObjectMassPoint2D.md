@@ -26,9 +26,12 @@ The parameters of the item; in a dictionary, its type is 'MassPoint2D':
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsMass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of mass point |
+| **mass** | UReal |  | 0. | (symbol: $m$) mass [SI:kg] of mass point |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n0$) node number (type NodeIndex) for mass point |
 | **visualization** | VObjectMassPoint2D |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsMass` (deprecated since 1.12.258, removed in 2031): use `mass`.
 
 ## Visualization parameters
 
@@ -100,7 +103,7 @@ so $\Qm = \LU{0}{\Jm_{pos}}\tp \LU{0}{\fv}_a = [f_0,\;f_1]\tp$. There is no rota
 node = mbs.AddNode(NodePoint2D(referenceCoordinates = [1,1], 
                              initialCoordinates=[0.5,0],
                              initialVelocities=[0.5,0]))
-mbs.AddObject(MassPoint2D(nodeNumber = node, physicsMass=1))
+mbs.AddObject(MassPoint2D(nodeNumber = node, mass=1))
 
 #assemble and solve system for default parameters
 mbs.Assemble()

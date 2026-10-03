@@ -54,7 +54,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeLoad,
     miniExample=r"""    #a body-fixed force on a planar rigid body turned by 90 degrees: the local x-direction is global y
     node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0.2,0.5*np.pi]))
-    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=2, inertia=0.1))
     mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
     mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[1,0,0], bodyFixed=True))
 
@@ -174,8 +174,8 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #a torque about z spins a rigid body up
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0.2,0.1]+eulerParameters0))
-    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                         physicsInertia=inertia.GetInertia6D()))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                         inertia=inertia.GetInertia6D()))
     mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
     mbs.AddLoad(LoadTorqueVector(markerNumber=mBody, loadVector=[0,0,1]))
 
@@ -321,7 +321,7 @@ definitions.append(ItemDefinition(
     """,
     mainParentClass=MainParentClassMainLoad,
     miniExample=r"""    node = mbs.AddNode(NodePoint(referenceCoordinates = [1,0,0]))
-    body = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=2))
+    body = mbs.AddObject(MassPoint(nodeNumber = node, mass=2))
     mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
     mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,0,-9.81]))
 
@@ -405,7 +405,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeLoad,
     miniExample=r"""    #a load on one coordinate, growing in time through its user function
     node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
     mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
     def UFload(mbs, t, load):
         return load*t

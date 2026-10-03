@@ -104,8 +104,8 @@ enters the first three.
 L = 1; EI = 100; F = -0.1
 n0 = mbs.AddNode(NodePointSlope1(referenceCoordinates=[0,0,0, 1,0,0])) #position, slope = axis
 n1 = mbs.AddNode(NodePointSlope1(referenceCoordinates=[L,0,0, 1,0,0]))
-mbs.AddObject(ObjectANCFCable(nodeNumbers=[n0,n1], physicsLength=L, physicsMassPerLength=1,
-                              physicsBendingStiffness=EI, physicsAxialStiffness=1e5))
+mbs.AddObject(ObjectANCFCable(nodeNumbers=[n0,n1], length=L, massPerLength=1,
+                              bendingStiffness=EI, axialStiffness=1e5))
 mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
 for i in [0,1,2,4,5]: #clamped: the position and the transverse components of the slope
     mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))

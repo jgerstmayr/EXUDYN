@@ -622,8 +622,8 @@ void VisualizationObjectContactFrictionCircleCable2D::UpdateGraphics(const Visua
 		Vector3D pContactLast; //previously computed point
 
 		Index objectNum = vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[1]]->GetObjectNumber();
-		//Real lCable = ((const CObjectANCFCable2D&)vSystem->systemData->GetCObjectBody(objectNum)).GetParameters().physicsLength;
-		Real lCable = ((const CObjectANCFCable2DBase*)vSystem->systemData->GetCObjects()[objectNum])->GetLength();//GetParameters().physicsLength;
+		//Real lCable = ((const CObjectANCFCable2D&)vSystem->systemData->GetCObjectBody(objectNum)).GetParameters().length;
+		Real lCable = ((const CObjectANCFCable2DBase*)vSystem->systemData->GetCObjects()[objectNum])->GetLength();//GetParameters().length;
 
 		LinkedDataVector visualizationState = cItem->GetCNode(0)->GetVisualizationCoordinateVector();
 		Vector3D contactForceLast;

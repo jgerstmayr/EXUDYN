@@ -41,7 +41,7 @@ graphicsList += [graphics.Cylinder(pAxis=[-0.5*L,0,-0.7*b], vAxis= [0,0,1.4*b], 
                                      color= graphics.color.lightgrey, addEdges=True, nTiles=32)]
 #print(graphicsList[2])
 nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[0.5*L,0,0], initialVelocities=[0,0,0]));
-oRigid = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid,
+oRigid = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid,
                                    visualization=VObjectRigidBody2D(graphicsData= graphicsList)))
 
 mR1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[-0.5*L,0.,0.])) #support point

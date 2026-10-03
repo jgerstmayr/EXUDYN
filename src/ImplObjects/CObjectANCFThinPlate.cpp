@@ -734,8 +734,8 @@ void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
     ComputeReferenceObjectCoordinates(qANCFref);
 
     //// Get material matrices
-    //const Matrix3D& Deps = parameters.physicsStrainCoefficients;
-    //const Matrix3D& Dkappa = parameters.physicsCurvatureCoefficients;
+    //const Matrix3D& Deps = parameters.strainCoefficients;
+    //const Matrix3D& Dkappa = parameters.curvatureCoefficients;
 
     // Get Gauss integration points based on useReducedOrderIntegration
     ConstSizeVector<5> xiGP, xiW;
@@ -920,7 +920,7 @@ void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
     // This matches the approach used in the Python mesh test (dampingMatrix = damp_fac * massMatrix),
     // but implemented here inside the element.
     // alpha has unit [1/s].
-    if (parameters.physicsMassProportionalDamping != 0.)
+    if (parameters.massProportionalDamping != 0.)
     {
         PreComputeMassTerms(); // ensures precomputedMassMatrix is available
         for (Index i = 0; i < nODE2coordinates; i++)
@@ -930,7 +930,7 @@ void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
             {
                 sum += precomputedMassMatrix(i, j) * qANCF_t[j];
             }
-            ode2Lhs[i] += parameters.physicsMassProportionalDamping * sum;
+            ode2Lhs[i] += parameters.massProportionalDamping * sum;
         }
     }
 }
@@ -953,16 +953,16 @@ void CObjectANCFThinPlate::ComputeMassMatrix(EXUmath::MatrixContainer& massMatri
 //bool testSF = true;
 
 //! Compute thickness at element point (xi, eta) in [-1,1] x [-1,1]
-//! using bilinear Q4 interpolation of physicsThicknessAtNodes.
+//! using bilinear Q4 interpolation of thicknessAtNodes.
 //! Node order matches element layout: n0=(-1,-1), n1=(+1,-1), n2=(+1,+1), n3=(-1,+1)
-//! Falls back to constant physicsThickness if all nodal values are zero.
+//! Falls back to constant thickness if all nodal values are zero.
 Real CObjectANCFThinPlate::ComputeThicknessAtPoint(Real xi, Real eta) const
 {
-    if (parameters.physicsThickness.NumberOfItems() == 1) { return parameters.physicsThickness[0]; }
+    if (parameters.thickness.NumberOfItems() == 1) { return parameters.thickness[0]; }
     else
     {
-        CHECKandTHROW(parameters.physicsThickness.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeThicknessAtPoint: physicsThickness must have length 1 or 4", ExudynValueError);
-        const Vector& coeffs = parameters.physicsThickness;
+        CHECKandTHROW(parameters.thickness.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeThicknessAtPoint: thickness must have length 1 or 4", ExudynValueError);
+        const Vector& coeffs = parameters.thickness;
         // Standard bilinear (Q4) shape functions: N_i = 0.25*(1+xi_i*xi)*(1+eta_i*eta)
         Real N0 = 0.25 * (1. - xi) * (1. - eta);  // node 0: (-1,-1)
         Real N1 = 0.25 * (1. + xi) * (1. - eta);  // node 1: (+1,-1)
@@ -974,11 +974,11 @@ Real CObjectANCFThinPlate::ComputeThicknessAtPoint(Real xi, Real eta) const
 //! Compute StrainCoefficients at element point (xi, eta) in [-1,1] x [-1,1]; same as ComputeThicknessAtPoint
 Matrix3D CObjectANCFThinPlate::ComputeStrainCoefficientsAtPoint(Real xi, Real eta) const
 {
-    if (parameters.physicsStrainCoefficients.NumberOfItems() == 1) { return parameters.physicsStrainCoefficients[0]; }
+    if (parameters.strainCoefficients.NumberOfItems() == 1) { return parameters.strainCoefficients[0]; }
     else
     {
-        CHECKandTHROW(parameters.physicsStrainCoefficients.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeStrainCoefficientsAtPoint: physicsStrainCoefficients must have length 1 or 4", ExudynValueError);
-        const Matrix3DList& coeffs = parameters.physicsStrainCoefficients;
+        CHECKandTHROW(parameters.strainCoefficients.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeStrainCoefficientsAtPoint: strainCoefficients must have length 1 or 4", ExudynValueError);
+        const Matrix3DList& coeffs = parameters.strainCoefficients;
         // Standard bilinear (Q4) shape functions: N_i = 0.25*(1+xi_i*xi)*(1+eta_i*eta)
         Real N0 = 0.25 * (1. - xi) * (1. - eta);  // node 0: (-1,-1)
         Real N1 = 0.25 * (1. + xi) * (1. - eta);  // node 1: (+1,-1)
@@ -990,11 +990,11 @@ Matrix3D CObjectANCFThinPlate::ComputeStrainCoefficientsAtPoint(Real xi, Real et
 //! Compute StrainCoefficients at element point (xi, eta) in [-1,1] x [-1,1]; same as ComputeThicknessAtPoint
 Matrix3D CObjectANCFThinPlate::ComputeCurvatureCoefficientsAtPoint(Real xi, Real eta) const
 {
-    if (parameters.physicsCurvatureCoefficients.NumberOfItems() == 1) { return parameters.physicsCurvatureCoefficients[0]; }
+    if (parameters.curvatureCoefficients.NumberOfItems() == 1) { return parameters.curvatureCoefficients[0]; }
     else
     {
-        CHECKandTHROW(parameters.physicsCurvatureCoefficients.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeCurvatureCoefficientsAtPoint: physicsCurvatureCoefficients must have length 1 or 4", ExudynValueError);
-        const Matrix3DList& coeffs = parameters.physicsCurvatureCoefficients;
+        CHECKandTHROW(parameters.curvatureCoefficients.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeCurvatureCoefficientsAtPoint: curvatureCoefficients must have length 1 or 4", ExudynValueError);
+        const Matrix3DList& coeffs = parameters.curvatureCoefficients;
         // Standard bilinear (Q4) shape functions: N_i = 0.25*(1+xi_i*xi)*(1+eta_i*eta)
         Real N0 = 0.25 * (1. - xi) * (1. - eta);  // node 0: (-1,-1)
         Real N1 = 0.25 * (1. + xi) * (1. - eta);  // node 1: (+1,-1)
@@ -1017,9 +1017,9 @@ void CObjectANCFThinPlate::PreComputeMassTerms() const
     // Node layout: 0=bottom-left, 1=bottom-right, 2=top-right, 3=top-left
     //Real jacDet = GetElementJacobian();
 
-    Real rho = parameters.physicsDensity;
+    Real rho = parameters.density;
     // CHANGED: thickness is now evaluated per Gauss point to support variable nodal thickness (MP/JG, 2026)
-    // OLD: Real rhoThickness = rho * parameters.physicsThickness;  // constant thickness
+    // OLD: Real rhoThickness = rho * parameters.thickness;  // constant thickness
 
     ConstSizeVector<nODE2coordinates> qANCFref;
     ComputeReferenceObjectCoordinates(qANCFref);
@@ -1122,9 +1122,9 @@ void CObjectANCFThinPlate::GetMassWeightedPositionJacobian(Matrix& value) const
     Vector12D SVloc;
     Vector12D SV(0.);
 
-    Real rho = parameters.physicsDensity;
+    Real rho = parameters.density;
     // CHANGED: thickness evaluated per Gauss point for variable thickness support (MP/JG, 2026)
-    // OLD: Real rhoThickness = rho * parameters.physicsThickness;
+    // OLD: Real rhoThickness = rho * parameters.thickness;
 
     Index cntEta = 0;
     for (Real eta : EXUmath::gaussRuleOrder3Points)
@@ -1705,7 +1705,7 @@ void CObjectANCFThinPlate::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& ja
 
     // Add analytical velocity Jacobian contribution for mass-proportional damping:
     // d(ode2Lhs)/dq_t = alpha * M (constant)
-    Real alpha = parameters.physicsMassProportionalDamping;
+    Real alpha = parameters.massProportionalDamping;
     if (factorODE2_t != 0. && alpha != 0.)
     {
         PreComputeMassTerms();

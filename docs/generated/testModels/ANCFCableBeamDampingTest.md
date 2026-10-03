@@ -108,11 +108,11 @@ for loadCase, loadVector in enumerate(loadVectorList):
     oGround = mbs.CreateGround(referencePosition=[0, 0, 0])
 
     #%% set up the ANCF 2D cable
-    cableTemplate = Cable2D(physicsMassPerLength=rhoA,
-                            physicsBendingStiffness=EI,
-                            physicsAxialStiffness=EA,
-                            physicsBendingDamping=beta*EI,
-                            physicsAxialDamping=betaAxial*EA,
+    cableTemplate = Cable2D(massPerLength=rhoA,
+                            bendingStiffness=EI,
+                            axialStiffness=EA,
+                            bendingDamping=beta*EI,
+                            axialDamping=betaAxial*EA,
                             useReducedOrderIntegration=0,
                             visualization=VCable2D(drawHeight=cableDiameter))
     nCable2D, oCable2D, lCable2D, _, _ = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0, 0, 0],
@@ -139,7 +139,7 @@ for loadCase, loadVector in enumerate(loadVectorList):
         n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[lElement*(k+1) + referenceOffset[0], referenceOffset[1], referenceOffset[2]] + initialRotations, visualization=VNodePointSlope23(show=True)))
         mCableList += [mbs.AddMarker(MarkerNodeRigid(nodeNumber=n1))]
         oBeam = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0, n1],
-                                             physicsLength=lElement, 
+                                             length=lElement, 
                                              sectionData=sectionData, #includes bending stiffness, axial stiffness, damping, etc.
                                              crossSectionPenaltyFactor=[1]*3,
                                              visualization=VANCFBeam(sectionGeometry=sectionGeometry,

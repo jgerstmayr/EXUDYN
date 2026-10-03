@@ -23,7 +23,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates = [1,1,0.25*np.pi], 
                                    initialCoordinates=[0.5,0,0],
                                    initialVelocities=[0.5,0,0.75*np.pi]))
-mbs.AddObject(RigidBody2D(nodeNumber = node, physicsMass=1, physicsInertia=2))
+mbs.AddObject(RigidBody2D(nodeNumber = node, mass=1, inertia=2))
 
 #assemble and solve system for default parameters
 mbs.Assemble()

@@ -40,7 +40,7 @@ Create the ground object and the mass point with initial conditions:
   massPoint = mbs.CreateMassPoint(referencePosition=[L, 0, 0],
                                   initialDisplacement=[u0, 0, 0],
                                   initialVelocity=[v0, 0, 0],
-                                  physicsMass=mass)
+                                  mass=mass)
 ```
 
 Set up the Cartesian spring damper between the ground and the mass point, and apply an external force on the mass point:

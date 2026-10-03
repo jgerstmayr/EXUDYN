@@ -66,7 +66,7 @@ def AddRigidBodySpringDamper(mbs, markers, intrinsic=False):
     stiffness = np.diag([500, 400, 300, 20, 30, 40])
     stiffness[0, 4] = stiffness[4, 0] = 10
     mbs.AddObject(RigidBodySpringDamper(markerNumbers=markers, stiffness=stiffness, damping=0.01*stiffness,
-                                        offset=[0.15, 0.01, 0, 0.1, 0, 0], intrinsicFormulation=intrinsic,
+                                        offset=[0.15, 0.01, 0, 0.1, 0, 0], useIntrinsicFormulation=intrinsic,
                                         rotationMarker0=np.eye(3), rotationMarker1=RotXYZ2RotationMatrix([0.1, 0, 0.2])))
 
 
@@ -109,14 +109,14 @@ def BuildCoordinateModel(connector, explicit=False, eulerParameters=True):
         if i % 2 == 0:
             n = mbs.AddNode(NodePoint(referenceCoordinates=[0.2*(i+1), 0, 0], initialCoordinates=[0.01, 0.02*i, 0],
                                       initialVelocities=[0.1, 0.1, 0.05*i]))
-            mbs.AddObject(MassPoint(nodeNumber=n, physicsMass=1))
+            mbs.AddObject(MassPoint(nodeNumber=n, mass=1))
             m0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n, coordinate=0))
             m1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n, coordinate=1))
         else:
             n = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.2*(i+1), 0.01, 0, 0.3, 0.2, 0.1*i],
                                               initialVelocities=[0.1, 0.1, 0, 0.1, 0.2, 0.3]))
             inertia = InertiaCuboid(density=1000, sideLengths=[0.1, 0.05, 0.05])
-            mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+            mbs.AddObject(ObjectRigidBody(nodeNumber=n, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
             m0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n, coordinate=1))
             m1 = mbs.AddMarker(MarkerNodeRotationCoordinate(nodeNumber=n, rotationCoordinate=2))
         addConnector(mbs, [mPrevious, m0])
@@ -147,7 +147,7 @@ def BuildRigidModel(connector, explicit=False, eulerParameters=True):
             ep = RotationMatrix2EulerParameters(RotXYZ2RotationMatrix(angles))
             n = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2*(i+1), 0.01, 0] + list(ep),
                                             initialVelocities=[0, 0.1, 0] + list(AngularVelocity2EulerParameters_t([0.1, 0.2, 0.3], ep))))
-        b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+        b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
         m0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[-0.05, 0.01, 0]))
         m1 = (mbs.AddMarker(MarkerNodeRigid(nodeNumber=n)) if i == 1 else
               mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[0.05, 0.01, 0.02])))
@@ -180,7 +180,7 @@ def BuildModel(connector, explicit=False, eulerParameters=True, zeroLength=True)
         if i % 2 == 0:
             n = mbs.AddNode(NodePoint(referenceCoordinates=[0.2*(i+1), 0, 0], initialCoordinates=[0.01, 0.02*i, 0],
                                       initialVelocities=[0, 0.1, 0.05*i]))
-            mbs.AddObject(MassPoint(nodeNumber=n, physicsMass=1))
+            mbs.AddObject(MassPoint(nodeNumber=n, mass=1))
             m0 = m1 = mbs.AddMarker(MarkerNodePosition(nodeNumber=n))
         else:
             A = RotXYZ2RotationMatrix([0.3, 0.2, 0.1*i])
@@ -194,7 +194,7 @@ def BuildModel(connector, explicit=False, eulerParameters=True, zeroLength=True)
                 ep = RotationMatrix2EulerParameters(A)
                 n = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2*(i+1), 0.01, 0] + list(ep),
                                                 initialVelocities=[0, 0.1, 0] + list(AngularVelocity2EulerParameters_t([0.1, 0.2, 0.3], ep))))
-            b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+            b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
             m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=b, localPosition=[-0.05, 0.01, 0]))
             m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=b, localPosition=[0.05, 0.01, 0.02]))
         addConnector(mbs, [mPrevious, m0])
@@ -202,12 +202,12 @@ def BuildModel(connector, explicit=False, eulerParameters=True, zeroLength=True)
 
     for k, velocity in enumerate([[0.1, -0.2, 0.3], [0, 0, 0]] if zeroLength else []):
         n = mbs.AddNode(NodePoint(referenceCoordinates=[1+k, 0, 0], initialVelocities=velocity))
-        mbs.AddObject(MassPoint(nodeNumber=n, physicsMass=1))
+        mbs.AddObject(MassPoint(nodeNumber=n, mass=1))
         addConnector(mbs, [mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[1+k, 0, 0])),
                            mbs.AddMarker(MarkerNodePosition(nodeNumber=n))])
 
     n2D = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5, 0.3, 0.4], initialVelocities=[0.1, 0, 0.5]))
-    b2D = mbs.AddObject(ObjectRigidBody2D(nodeNumber=n2D, physicsMass=1, physicsInertia=0.1))
+    b2D = mbs.AddObject(ObjectRigidBody2D(nodeNumber=n2D, mass=1, inertia=0.1))
     addConnector(mbs, [mbs.AddMarker(MarkerBodyPosition(bodyNumber=b2D, localPosition=[0.3, 0.05, 0])), mPrevious])
     mbs.Assemble()
     return mbs
@@ -252,13 +252,13 @@ def BuildConstraintModel(kind):
         mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
         nodes = [mbs.AddNode(NodePoint(referenceCoordinates=[0.2*i, 0, 0], initialVelocities=[0.1, 0.2*i, 0.3])) for i in range(3)]
         for n in nodes:
-            mbs.AddObject(MassPoint(nodeNumber=n, physicsMass=1))
+            mbs.AddObject(MassPoint(nodeNumber=n, mass=1))
             mbs.AddLoad(Force(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n)), loadVector=[1, -9.81, 0.5]))
         mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[0], coordinate=1))]))
         for i in range(2):
             mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[i], coordinate=1)),
                                                                    mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[i+1], coordinate=1+i))],
-                                                    factorValue1=2., offset=0.01*i))
+                                                    factor1=2., offset=0.01*i))
     elif kind in ['RevoluteZ', 'PrismaticX']: #a chain of rigid bodies; one joint with rotated marker frames
         inertia = InertiaCuboid(density=1000, sideLengths=[0.2, 0.05, 0.05])
         mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
@@ -267,7 +267,7 @@ def BuildConstraintModel(kind):
             ep = RotationMatrix2EulerParameters(np.eye(3))
             n = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2*i+0.1, 0, 0] + list(ep),
                                             initialVelocities=[0.05, 0.1, 0] + list(AngularVelocity2EulerParameters_t([0, 0, 0.3], ep))))
-            b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+            b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
             rotation = RotXYZ2RotationMatrix([0.2, 0.1, 0.3]) if i == 1 else np.eye(3)
             mbs.AddObject(Joint(markerNumbers=[mPrevious, mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[-0.1, 0, 0]))],
                                 rotationMarker0=rotation, rotationMarker1=rotation))
@@ -288,7 +288,7 @@ def BuildConstraintModel(kind):
             else:
                 n = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2*i+0.1, 0, 0] + list(ep),
                                                 initialVelocities=[0.05, 0.1, 0] + list(AngularVelocity2EulerParameters_t([0.1, 0, 0.3], ep))))
-            b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+            b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
             rotation = RotXYZ2RotationMatrix([0.2, 0.1, 0.3]) if i == 4 else np.eye(3)
             mbs.AddObject(ObjectJointGeneric(markerNumbers=[mPrevious, mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[-0.1, 0, 0]))],
                                              constrainedAxes=axes, alternativeConstraints=alternative,
@@ -304,7 +304,7 @@ def BuildConstraintModel(kind):
         nodes = [mbs.AddNode(NodePointSlope23(referenceCoordinates=p+slopes)) for (p, slopes) in
                  [([0, 0, 0], [0, 1, 0, 0, 0, 1]), ([0.3, 0, 0], [0, 1, 0, 0, 0, 1]), ([0.3, 0, 0], [-1, 0, 0, 0, 0, 1]), ([0.3, 0.3, 0], [-1, 0, 0, 0, 0, 1])]]
         for k in [0, 2]:
-            mbs.AddObject(ObjectANCFBeam(nodeNumbers=[nodes[k], nodes[k+1]], physicsLength=0.3, sectionData=section))
+            mbs.AddObject(ObjectANCFBeam(nodeNumbers=[nodes[k], nodes[k+1]], length=0.3, sectionData=section))
         mbs.AddObject(ObjectJointGeneric(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround)), mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodes[0]))]))
         mbs.AddObject(ObjectJointGeneric(markerNumbers=[mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodes[1])), mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodes[2]))],
                                          rotationMarker1=RotXYZ2RotationMatrix([0, 0, -0.5*np.pi])))
@@ -313,7 +313,7 @@ def BuildConstraintModel(kind):
         mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
         for i in range(3):
             n = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.2*i+0.1, 0, 0], initialVelocities=[0.1, 0, 0.2*i]))
-            b = mbs.AddObject(ObjectRigidBody2D(nodeNumber=n, physicsMass=1, physicsInertia=0.01))
+            b = mbs.AddObject(ObjectRigidBody2D(nodeNumber=n, mass=1, inertia=0.01))
             mbs.AddObject(ObjectJointPrismatic2D(markerNumbers=[mPrevious, mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[-0.1, 0, 0]))],
                                                  constrainRotation=(i != 1)))
             mPrevious = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b, localPosition=[0.1, 0, 0]))
@@ -322,7 +322,7 @@ def BuildConstraintModel(kind):
         mPrevious = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround))
         for i in range(3):
             n = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.2*i+0.1, 0, 0], initialVelocities=[0, 0, 0.2*i]))
-            b = mbs.AddObject(ObjectRigidBody2D(nodeNumber=n, physicsMass=1, physicsInertia=0.01))
+            b = mbs.AddObject(ObjectRigidBody2D(nodeNumber=n, mass=1, inertia=0.01))
             mbs.AddObject(ObjectJointRevolute2D(markerNumbers=[mPrevious, mbs.AddMarker(MarkerBodyPosition(bodyNumber=b, localPosition=[-0.1, 0, 0]))]))
             mPrevious = mbs.AddMarker(MarkerBodyPosition(bodyNumber=b, localPosition=[0.1, 0, 0]))
             mbs.AddLoad(Force(markerNumber=mbs.AddMarker(MarkerBodyPosition(bodyNumber=b)), loadVector=[0, -9.81, 0]))
@@ -335,7 +335,7 @@ def BuildConstraintModel(kind):
             ep = RotationMatrix2EulerParameters(np.eye(3))
             n = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2*i+0.1, 0, 0] + list(ep),
                                             initialVelocities=[0, 0.1, 0] + list(AngularVelocity2EulerParameters_t([0.1, 0.2, 0.3], ep))))
-            b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+            b = mbs.AddObject(ObjectRigidBody(nodeNumber=n, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
             mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=b, localPosition=[-offset, 0.01, 0]))
             if kind == 'Spherical':
                 mbs.AddObject(ObjectJointSpherical(markerNumbers=[mPrevious, mBody], constrainedAxes=[1, 1, 1] if i != 1 else [1, 0, 1]))
@@ -447,7 +447,7 @@ def DropOnContact(kind, ballRigid, groundRigid):
     inertia = InertiaCuboid(1000, [0.1, 0.12, 0.14])
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.02, 0.01, r + 0.05] + list(RotationMatrix2EulerParameters(RotXYZ2RotationMatrix([0.3, 0.2, 0.1]))),
                                        initialVelocities=[0.3, 0, 0] + list(AngularVelocity2EulerParameters_t([1, 2, 3], RotationMatrix2EulerParameters(RotXYZ2RotationMatrix([0.3, 0.2, 0.1]))))))
-    oBall = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.mass, physicsInertia=inertia.GetInertia6D()))
+    oBall = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.mass, inertia=inertia.GetInertia6D()))
     Marker = lambda rigid: MarkerBodyRigid if rigid else MarkerBodyPosition
     mBall = mbs.AddMarker(Marker(ballRigid)(bodyNumber=oBall))
     mbs.AddLoad(LoadForceVector(markerNumber=mBall, loadVector=[0, 0, -9.81*inertia.mass]))
@@ -459,7 +459,7 @@ def DropOnContact(kind, ballRigid, groundRigid):
         mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[mGround, mBall], nodeNumber=nData, spheresRadii=[R, r], **law))
     else:
         mGround = mbs.AddMarker(Marker(groundRigid)(bodyNumber=oGround))
-        mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, radiusSphere=r,
+        mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=r,
                                                   trianglePoints=exu.Vector3DList([[-1, -1, 0], [1, -1, 0], [0, 1, 0]]), **law))
     mbs.Assemble()
     s = exu.SimulationSettings()

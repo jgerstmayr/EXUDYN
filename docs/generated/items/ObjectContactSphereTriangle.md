@@ -29,7 +29,7 @@ The parameters of the item; in a dictionary, its type is 'ContactSphereTriangle'
 | **name** | String |  | '' | constraints's unique name |
 | **markerNumbers** | ArrayMarkerIndex | 2 | [ invalid (-1), invalid (-1) ] | (symbol: $[m0,m1]\tp$) list of markers representing the center of the sphere (marker 0) and the reference point of the triangle (marker 1), where triangle nodal positions are defined in the local coordinates of marker 1. |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_d$) node number of a NodeGenericData with numberOfDataCoordinates = 4 dataCoordinates, needed for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused. |
-| **radiusSphere** | PReal |  | 0. | (symbol: $r_S$) radius of sphere [SI:m]; **must be given**: the default is only a placeholder |
+| **sphereRadius** | PReal |  | 0. | (symbol: $r_S$) radius of sphere [SI:m]; **must be given**: the default is only a placeholder |
 | **trianglePoints** | Vector3DList |  | [] | (symbol: $[\LU{m_1}{\pv}_0,\LU{m_1}{\pv}_1,\LU{m_1}{\pv}_2]$) triangle points, defined in marker 1 local coordinates |
 | **includeEdges** | UInt |  | 7 | Binary flag, where 1 defines contact with edges 0, 2 with edge 1 and 4 with edge 2; 7 means that contact with all edges is included; edge 0 is the edge between node 0 and node 1 |
 | **dynamicFriction** | UReal |  | 0. | (symbol: $\mu_d$) dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
@@ -42,6 +42,9 @@ The parameters of the item; in a dictionary, its type is 'ContactSphereTriangle'
 | **impactModel** | UInt |  | 0 | (symbol: $m_\mathrm{impact}$) number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero! |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectContactSphereTriangle |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `radiusSphere` (deprecated since 1.12.258, removed in 2031): use `sphereRadius`.
 
 ## Visualization parameters
 
@@ -119,12 +122,12 @@ Newton iterations (active set).
 #a ball dropped onto a triangle fixed to the ground
 inertia = InertiaSphere(mass=1, radius=0.1)
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.2,0.2,0.2]+eulerParameters0))
-ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
 mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=ball)), loadVector=[0,0,-9.81]))
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball, localPosition=[0,0,0]))
 nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0,0,0,0]))
-mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, radiusSphere=0.1,
+mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=0.1,
                                           trianglePoints=exu.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]),
                                           contactStiffness=1e5, contactDamping=1e3))
 

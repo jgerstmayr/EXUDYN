@@ -78,7 +78,7 @@ def ParameterFunction(parameterSet):
     else:
         nFloating = mbs.AddNode(Rigid2D(referenceCoordinates=[0,0,0], initialVelocities=[0,0,0]));
         mFloatingN = mbs.AddMarker(MarkerNodePosition(nodeNumber=nFloating))
-        floatingRB = mbs.AddObject(RigidBody2D(physicsMass=2, physicsInertia=1, nodeNumber=nFloating, visualization=VObjectRigidBody2D(graphicsData=[gFloating])))
+        floatingRB = mbs.AddObject(RigidBody2D(mass=2, inertia=1, nodeNumber=nFloating, visualization=VObjectRigidBody2D(graphicsData=[gFloating])))
         mRB0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nFloating, coordinate=0))
         mRB1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nFloating, coordinate=1))
         mRB2 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nFloating, coordinate=2))
@@ -121,16 +121,16 @@ def ParameterFunction(parameterSet):
     #crank:
     nRigid1 = mbs.AddNode(Rigid2D(referenceCoordinates=[P.s1,0,0], 
                                   initialVelocities=[0,0,0]));
-    oRigid1 = mbs.AddObject(RigidBody2D(physicsMass=m1, 
-                                        physicsInertia=J1,
+    oRigid1 = mbs.AddObject(RigidBody2D(mass=m1, 
+                                        inertia=J1,
                                         nodeNumber=nRigid1,
                                         visualization=VObjectRigidBody2D(graphicsData= [graphics1])))
     
     #connecting rod:
     nRigid2 = mbs.AddNode(Rigid2D(referenceCoordinates=[L1+P.s2,0,0], 
                                   initialVelocities=[0,0,0]));
-    oRigid2 = mbs.AddObject(RigidBody2D(physicsMass=m2, 
-                                        physicsInertia=J2,
+    oRigid2 = mbs.AddObject(RigidBody2D(mass=m2, 
+                                        inertia=J2,
                                         nodeNumber=nRigid2,
                                         visualization=VObjectRigidBody2D(graphicsData= [graphics2])))
     
@@ -141,9 +141,9 @@ def ParameterFunction(parameterSet):
     graphics3 = graphics.BrickXYZ(-c,-c,-c*2,c,c,0,graphics.color.grey)
     
     #nMass = mbs.AddNode(Point2D(referenceCoordinates=[L1+L2,0]))
-    #oMass = mbs.AddObject(MassPoint2D(physicsMass=m3, nodeNumber=nMass,visualization=VObjectMassPoint2D(graphicsData= [graphics3])))
+    #oMass = mbs.AddObject(MassPoint2D(mass=m3, nodeNumber=nMass,visualization=VObjectMassPoint2D(graphicsData= [graphics3])))
     nMass = mbs.AddNode(Rigid2D(referenceCoordinates=[L1+L2,0,0]))
-    oMass = mbs.AddObject(RigidBody2D(physicsMass=m3, physicsInertia=0.001*m3, nodeNumber=nMass,visualization=VObjectRigidBody2D(graphicsData= [graphics3])))
+    oMass = mbs.AddObject(RigidBody2D(mass=m3, inertia=0.001*m3, nodeNumber=nMass,visualization=VObjectRigidBody2D(graphicsData= [graphics3])))
     
     #++++++++++++++++++++++++++++++++
     #markers for joints:

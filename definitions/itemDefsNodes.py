@@ -43,7 +43,7 @@ definitions.append(ItemDefinition(
     node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0],
                                  initialCoordinates=[0,0.5,0],   #displacement from the reference
                                  initialVelocities=[2,0,0]))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
 
     mbs.Assemble()
     mbs.SolveDynamic() #default: 1 second
@@ -171,7 +171,7 @@ definitions.append(ItemDefinition(
     examples=['Examples/pendulum2Dconstraint.py', 'Examples/SliderCrank.py', 'Examples/SpringDamperMassUserFunction.py', 'Examples/slidercrankWithMassSpring.py'],
     miniExample=r"""    #a planar point mass under gravity, thrown with an initial velocity
     node = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0], initialVelocities=[1,2]))
-    oMass = mbs.AddObject(ObjectMassPoint2D(nodeNumber=node, physicsMass=1))
+    oMass = mbs.AddObject(ObjectMassPoint2D(nodeNumber=node, mass=1))
     mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
     mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[0,-9.81,0]))
 
@@ -303,8 +303,8 @@ definitions.append(ItemDefinition(
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.5,0.2,0.1]+ep0,
                                        initialVelocities=[0,0,0]+list(AngularVelocity2EulerParameters_t(omega, ep0))))
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
-    mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                  physicsInertia=inertia.GetInertia6D()))
+    mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                  inertia=inertia.GetInertia6D()))
 
     mbs.Assemble()
     mbs.SolveDynamic()
@@ -509,8 +509,8 @@ definitions.append(ItemDefinition(
     node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.5,0.2,0.1, 0,0,0],
                                          initialVelocities=[0,0,0, 0,0,0.5*np.pi])) #angle rates
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
-    mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                  physicsInertia=inertia.GetInertia6D()))
+    mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                  inertia=inertia.GetInertia6D()))
 
     mbs.Assemble()
     mbs.SolveDynamic()
@@ -684,8 +684,8 @@ definitions.append(ItemDefinition(
     node = mbs.AddNode(NodeRigidBodyRotVecLG(referenceCoordinates=[0.5,0.2,0.1, 0,0,0],
                                              initialVelocities=[0,0,0, 0,0,0.5*np.pi])) #angular velocity
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
-    mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                  physicsInertia=inertia.GetInertia6D()))
+    mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                  inertia=inertia.GetInertia6D()))
 
     mbs.Assemble()
     simulationSettings = exu.SimulationSettings()
@@ -845,7 +845,7 @@ definitions.append(ItemDefinition(
     examples=['Examples/rigidPendulum.py', 'Examples/doublePendulum2D.py', 'Examples/SliderCrank.py', 'Examples/simple4linkPendulumBing.py', 'Examples/slidercrankWithMassSpring.py'],
     miniExample=r"""    #a planar rigid body: x, y and the rotation angle, thrown with a spin
     node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0.2,0], initialVelocities=[1,0,2]))
-    mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+    mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=2, inertia=0.1))
 
     mbs.Assemble()
     mbs.SolveDynamic()
@@ -974,7 +974,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeNode,
     miniExample=r"""    #one coordinate, here the displacement of a 1D mass, pulled by a constant force
     node = mbs.AddNode(Node1D(referenceCoordinates=[0], initialVelocities=[1]))
-    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=2))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=2))
     mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
     mbs.AddLoad(LoadCoordinate(markerNumber=mCoord, load=4))
 
@@ -1082,8 +1082,8 @@ definitions.append(ItemDefinition(
     L = 1; EI = 100; F = -0.1
     n0 = mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[0,0, 1,0])) #position, slope = axis
     n1 = mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[L,0, 1,0]))
-    mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[n0,n1], physicsLength=L, physicsMassPerLength=1,
-                                    physicsBendingStiffness=EI, physicsAxialStiffness=1e5))
+    mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[n0,n1], length=L, massPerLength=1,
+                                    bendingStiffness=EI, axialStiffness=1e5))
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
     for i in [0,1,3]: #clamped: x, y and the y-component of the slope
         mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))
@@ -1223,8 +1223,8 @@ definitions.append(ItemDefinition(
     L = 1; EI = 100; F = -0.1
     n0 = mbs.AddNode(NodePointSlope1(referenceCoordinates=[0,0,0, 1,0,0])) #position, slope = axis
     n1 = mbs.AddNode(NodePointSlope1(referenceCoordinates=[L,0,0, 1,0,0]))
-    mbs.AddObject(ObjectANCFCable(nodeNumbers=[n0,n1], physicsLength=L, physicsMassPerLength=1,
-                                  physicsBendingStiffness=EI, physicsAxialStiffness=1e5))
+    mbs.AddObject(ObjectANCFCable(nodeNumbers=[n0,n1], length=L, massPerLength=1,
+                                  bendingStiffness=EI, axialStiffness=1e5))
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
     for i in [0,1,2,4,5]: #clamped: the position and the transverse components of the slope
         mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))
@@ -1504,7 +1504,7 @@ definitions.append(ItemDefinition(
                       mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=n0, coordinate=i))]))
     for k in range(nElements):
         n1 = mbs.AddNode(NodePointSlope23(referenceCoordinates=[L*(k+1)/nElements,0,0, 0,1,0, 0,0,1]))
-        mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], physicsLength=L/nElements, sectionData=section))
+        mbs.AddObject(ObjectANCFBeam(nodeNumbers=[n0,n1], length=L/nElements, sectionData=section))
         n0 = n1
     mTip = mbs.AddMarker(MarkerNodeRigid(nodeNumber=n1))
     mbs.AddLoad(LoadForceVector(markerNumber=mTip, loadVector=[0,F,0]))
@@ -1893,7 +1893,7 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #data coordinates hold a state that is no degree of freedom and that the object updates after each step:
     #here the limit stop of a connector, which a mass is pushed against
     node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
     mMass = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
     nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=3, initialCoordinates=[0,0,0]))
@@ -1973,7 +1973,7 @@ definitions.append(ItemDefinition(
     examples=['Examples/springDamperTutorial.py', 'Examples/coordinateSpringDamper.py', 'Examples/SliderCrank.py', 'Examples/plotSensorExamples.py', 'Examples/SpringDamperMassUserFunction.py'],
     miniExample=r"""    #a ground node: a fixed point that markers and connectors can use, without coordinates
     node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
     mNode = mbs.AddMarker(MarkerNodePosition(nodeNumber=node))
     nFixed = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
     mFixed = mbs.AddMarker(MarkerNodePosition(nodeNumber=nFixed))

@@ -282,11 +282,11 @@ for iy in [-1,1]:
     p0 = np.array([0.5*bDimX,iy*yBeam,0.5*height])
     p1 = p0 + [length-bDimX,0,0]
 
-    cable = ObjectANCFCable(physicsMassPerLength=rhoA, 
-                  physicsBendingStiffness = EI, 
-                  physicsBendingDamping = EI*0.001,
-                  physicsAxialStiffness=EA,
-                  physicsAxialDamping=EA*0.0001,
+    cable = ObjectANCFCable(massPerLength=rhoA, 
+                  bendingStiffness = EI, 
+                  bendingDamping = EI*0.001,
+                  axialStiffness=EA,
+                  axialDamping=EA*0.0001,
                   visualization=VObjectANCFCable(radius = rCable),
                   )
 
@@ -324,7 +324,7 @@ addSlidingJoint = True
 if addSlidingJoint:
     for iANCF, markerList in enumerate([mCarrierSlidersRight,mCarrierSlidersLeft]):
         ancf = ancfList[iANCF]
-        lElem = mbs.GetObject(ancf[1][0])['physicsLength']
+        lElem = mbs.GetObject(ancf[1][0])['length']
 
         for i, mSlider in enumerate(markerList):
             pMarker = mbs.GetMarkerOutput(mSlider,exu.OutputVariableType.Position, 

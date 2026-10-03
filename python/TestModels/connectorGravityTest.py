@@ -43,7 +43,7 @@ oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
 # nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 node0 = mbs.AddNode(NodePoint(referenceCoordinates = [0,0,0])) #planet
 gMass0 = graphics.Sphere(radius=1e5, color=graphics.color.blue, nTiles=32)
-oMassPoint0 = mbs.AddObject(MassPoint(nodeNumber = node0, physicsMass=massStar,
+oMassPoint0 = mbs.AddObject(MassPoint(nodeNumber = node0, mass=massStar,
                                       visualization=VMassPoint(graphicsData=[gMass0])))
 m0 = mbs.AddMarker(MarkerNodePosition(nodeNumber=node0))
 
@@ -57,7 +57,7 @@ for i,r in enumerate(rOrbit):
     
     gMass1 = graphics.Sphere(radius=sizeMass[i], color=graphics.colorList[i], nTiles=24)
     
-    oMassPoint1 = mbs.AddObject(MassPoint(nodeNumber = node1, physicsMass=mass[i],
+    oMassPoint1 = mbs.AddObject(MassPoint(nodeNumber = node1, mass=mass[i],
                                           visualization=VMassPoint(graphicsData=[gMass1])))
     
     m1 = mbs.AddMarker(MarkerNodePosition(nodeNumber=node1))

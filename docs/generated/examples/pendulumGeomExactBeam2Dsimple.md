@@ -49,11 +49,11 @@ ks = 10*(1+nu)/(12+11*nu) # shear correction factor
 G = E/(2*(1+nu))          # shear modulus
 
 ## create beam template with beam parameters
-beamTemplate = ObjectBeamGeometricallyExact2D(physicsMassPerLength=rho*A,
-                                              physicsCrossSectionInertia=rho*I,
-                                              physicsBendingStiffness=E*I,
-                                              physicsAxialStiffness=E*A,
-                                              physicsShearStiffness=ks*G*A,
+beamTemplate = ObjectBeamGeometricallyExact2D(massPerLength=rho*A,
+                                              crossSectionInertia=rho*I,
+                                              bendingStiffness=E*I,
+                                              axialStiffness=E*A,
+                                              shearStiffness=ks*G*A,
                                               visualization=VObjectBeamGeometricallyExact2D(drawHeight = h), )
 
 ## create straight beam with 10 elements, apply gravity and fix (x,y) position of node 0 (rotation left free)

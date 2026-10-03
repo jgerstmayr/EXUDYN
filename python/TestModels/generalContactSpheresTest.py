@@ -113,7 +113,7 @@ for i in range(n):
             sNode=mbs.AddSensor(SensorNode(nodeNumber=nMass, fileName='solution/generalContactSpheres.txt',
                                      outputVariableType=exu.OutputVariableType.Position))
         
-    oMass = mbs.AddObject(MassPoint(physicsMass=m, nodeNumber=nMass))
+    oMass = mbs.AddObject(MassPoint(mass=m, nodeNumber=nMass))
     mThis = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
     mbs.AddLoad(Force(markerNumber=mThis, loadVector= [0,-m*9.81,0]))
     markerList += [mThis]

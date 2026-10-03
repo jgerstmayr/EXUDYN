@@ -23,7 +23,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 #example with mass at [1,1,0], 5kg under load 5N in -y direction
 k=5000
 nMass = mbs.AddNode(NodePoint(referenceCoordinates=[1,1,0]))
-oMass = mbs.AddObject(MassPoint(physicsMass = 5, nodeNumber = nMass))
+oMass = mbs.AddObject(MassPoint(mass = 5, nodeNumber = nMass))
 
 mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
 mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition = [1,1,0]))

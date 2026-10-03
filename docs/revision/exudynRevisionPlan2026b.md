@@ -1988,7 +1988,7 @@ find out about the settings of a model. It is the group a user notices most and 
       form, or the C++ check generated from the declaration first.
 
 <a id="rg12-31"></a>
-**RG12.31** *(group RG12; maintainer 2026-10-03: "list them - I decide")* **Settings and item parameters that
+**RG12.31** **DONE 2026-10-04** (decided; realized in RG12.34 and RG12.35) *(group RG12; maintainer 2026-10-03: "list them - I decide")* **Settings and item parameters that
 could be renamed or restructured** (#2802). The candidates found by a pass over all members of `SimulationSettings`
 and all parameters of the item definitions; each one is a decision of the maintainer, and each decided one becomes a
 sub-step with its own issue, done with the deprecation of RG12.1/RG12.2 (old name forwarding, removal five years
@@ -2159,8 +2159,9 @@ its own defaults - above all `timeIntegration.newton.useModifiedNewton = True`, 
 the results of many test models (iterations, step sizes): the test suite is evaluated again, model by model, before.
 
 <a id="rg12-35"></a>
-**RG12.35** *(group RG12; maintainer 2026-10-03; after the answers on the marks (?) of RG12.31)* **The item
-parameters renamed as decided in RG12.31** (#2814): `sphereRadius`, the three friction forces of
+**RG12.35** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg12-35) *(group RG12; maintainer 2026-10-03; the
+answers on the marks (?) 2026-10-04: `viscousFrictionFactor`, `rollingViscousFriction` with the unit s/m, the C++
+members renamed with them)* **The item parameters renamed as decided in RG12.31** (#2814): `sphereRadius`, the three friction forces of
 `CoordinateSpringDamperExt`, `factor1`, `rollingViscousFriction`, `useIntrinsicFormulation`, `useClassicalFormulation`,
 and the prefix `physics` dropped from 27 parameters - every old name a renamed parameter of RG12.2 (forwarding with a
 warning until 2031; all existed in 1.11.0):
@@ -2928,8 +2929,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG17.1 | #2811 | notebooks for tutorials and examples: the evaluation |
 | RG12.36 | #2815 | two Newton structures, the modified Newton by default in the time integration; the test suite evaluated again |
-| RG12.35 | #2814 | the item parameters renamed as decided in RG12.31: `physics` dropped, the friction forces, `use...` flags |
-| RG12.31 | #2802 | settings and item parameters that could be renamed: a list for the maintainer's decision |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
@@ -2976,5 +2975,5 @@ The title of each says what the step **does**; the sentence after it says why it
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Confirm the map of the simulation settings in RG12.31** (#2802) - the marks **(?)** - and decide the item
-   parameters; then RG12.34 (#2813) renames them, with the scripts, the documentation and the tests.
+3. **Decide which precision the binary solution file takes** (RG12.34: the console's today, its description says
+   the solution's), then RG12.36 (#2815) when the test suite may be evaluated again.

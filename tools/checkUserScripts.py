@@ -525,6 +525,9 @@ def CheckTree(tree, tables, fixes=None):
                 if entry is not None:
                     Report(keyword.value.lineno, ('itemParameter', className, keyword.arg),
                            ItemParameterFinding(className + '(' + keyword.arg + '=...)', entry))
+                    if fixes is not None and entry[0].startswith('use ') and entry[1] != '': #a renamed parameter (#2814)
+                        fixes.append(('span', keyword.lineno, keyword.col_offset, keyword.col_offset + len(keyword.arg),
+                                      entry[0][len('use '):]))
 
         elif isinstance(node, ast.Dict) and tables.get('itemParameters'):
             #and as key of an item dictionary: {'objectType': 'JointGeneric', 'rotationMarker0': ...}
@@ -539,6 +542,10 @@ def CheckTree(tree, tables, fixes=None):
                     if entry is not None:
                         Report(value.lineno, ('itemParameter', typeName, key),
                                ItemParameterFinding("'" + key + "' of " + typeName.split(':')[1], entry))
+                        keyNode = node.keys[keys.index(key)]
+                        if fixes is not None and entry[0].startswith('use ') and entry[1] != '' and keyNode.lineno == keyNode.end_lineno:
+                            fixes.append(('span', keyNode.lineno, keyNode.col_offset + 1, keyNode.end_col_offset - 1,
+                                          entry[0][len('use '):]))   #inside the quotes
 
         elif isinstance(node, ast.keyword) and node.arg in removedKeywords:
             Report(node.value.lineno, ('keyword', node.arg), "argument '" + node.arg
@@ -584,11 +591,16 @@ def ItemParameterFinding(where, entry):
 
 
 def ApplyFixes(source, fixes):
-    """the source with the renamed settings rewritten: each fix replaces the last names of an attribute chain, on one
-    line; the columns of the ast are UTF-8 bytes"""
+    """the source with the renamed settings and item parameters rewritten: a fix replaces the last names of an
+    attribute chain, on one line, or a span of a line - the keyword of an item class, the key of an item dictionary;
+    the columns of the ast are UTF-8 bytes"""
     lines = source.split('\n')
     edits = {}
-    for (node, count, names) in fixes:
+    for fix in fixes:
+        if fix[0] == 'span':                       #(span, line, start, end, text): a name replaced in place
+            edits[(fix[1], fix[2])] = (fix[3], fix[4])
+            continue
+        (node, count, names) = fix
         base = node
         for i in range(count):
             base = base.value
@@ -616,7 +628,7 @@ def main():
                                      'version has to change; it parses the scripts and never runs them')
     parser.add_argument('paths', nargs='+', help='folders (searched recursively) or .py files')
     parser.add_argument('--check', action='store_true', help='exit 1 if anything was found')
-    parser.add_argument('--fix', action='store_true', help='rewrite the renamed settings in place; what cannot be '
+    parser.add_argument('--fix', action='store_true', help='rewrite the renamed settings and item parameters in place; what cannot be '
                         'rewritten automatically is still reported')
     parser.add_argument('--base', default=os.getcwd(),
                         help='print the paths relative to this folder (default: the current one)')
@@ -654,7 +666,7 @@ def main():
                 if fixed != source:
                     newline = '\r\n' if '\r\n' in io.open(path, encoding='utf-8', errors='replace', newline='').read() else '\n'
                     io.open(path, 'w', encoding='utf-8', newline='').write(fixed.replace('\n', newline))
-                    print(shown + ': ' + str(len(fixes)) + ' renamed setting(s) rewritten')
+                    print(shown + ': ' + str(len(fixes)) + ' rename(s) rewritten')
                     source = fixed
                     tree = ast.parse(source, filename=path)
         findings = CheckTree(tree, tables)

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-02  08:26:07 (last modified)
+* @date         2026-10-03  18:09:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -33,7 +33,7 @@ class CObjectConnectorCoordinateParameters // AUTO:
 public: // AUTO:
     ArrayIndex markerNumbers;                     //!< AUTO: list of markers used in connector
     Real offset;                                  //!< AUTO: An offset between the two values
-    Real factorValue1;                            //!< AUTO: An additional factor multiplied with value1 used in algebraic equation
+    Real factor1;                                 //!< AUTO: An additional factor multiplied with value1 used in algebraic equation
     bool velocityLevel;                           //!< AUTO: If true: connector constrains velocities (only works for ABRV:ODE2 coordinates!); offset is used between velocities; in this case, the offsetUserFunction_t is considered and offsetUserFunction is ignored
     PythonUserFunctionBase< std::function<Real(const MainSystem&,Real,Index,Real)> > offsetUserFunction;//!< AUTO: A Python function which defines the time-dependent offset; see description below
     PythonUserFunctionBase< std::function<Real(const MainSystem&,Real,Index,Real)> > offsetUserFunction_t;//!< AUTO: time derivative of offsetUserFunction; needed for velocity level constraints; see description below
@@ -43,7 +43,7 @@ public: // AUTO:
     {
         markerNumbers = ArrayIndex({ EXUstd::InvalidIndex, EXUstd::InvalidIndex });
         offset = 0.;
-        factorValue1 = 1.;
+        factor1 = 1.;
         velocityLevel = false;
         offsetUserFunction = 0;
         offsetUserFunction_t = 0;

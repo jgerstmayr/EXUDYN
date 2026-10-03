@@ -45,7 +45,7 @@ nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [L,0,0]))
 
 #add mass points and ground object:
 objectGround = mbs.AddObject(ObjectGround(referencePosition = [0,0,0]))
-massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = n1))
+massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = n1))
 
 #marker for constraint / springDamper
 
@@ -61,7 +61,7 @@ nodeCoordinateMarker2  = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber= n1, coor
 mbs.AddObject(CoordinateSpringDamperExt(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker0], 
                                      stiffness = k, 
                                      damping = d*(1-useFriction), 
-                                     fDynamicFriction=0.2*fFriction*useFriction,
+                                     dynamicFrictionForce=0.2*fFriction*useFriction,
                                      frictionProportionalZone=0.01)) #offset must be zero, because coordinates just represent the displacements
 mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker1], stiffness = k)) 
 mbs.AddObject(CoordinateSpringDamper(markerNumbers = [groundCoordinateMarker, nodeCoordinateMarker2], stiffness = k)) 

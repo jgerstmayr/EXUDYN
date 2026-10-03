@@ -101,7 +101,7 @@ oGround=mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[bac
 
 #add mass point (this is a 3D object with 3 coordinates):
 gCube = graphics.Brick([0.1*L,0,0], [0.2*L]*3, graphics.color.steelblue)
-massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = nMass,
+massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = nMass,
                                     visualization=VMassPoint(graphicsData=[gCube])))
 
 #marker for ground (=fixed):

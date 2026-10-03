@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-03  18:17:13 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -115,7 +115,7 @@ public: // AUTO:
     virtual void SetWithDictionary(const py::dict& d) override
     {
         if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectANCFBeam->GetParameters().nodeNumbers); }
-        if (EPyUtils::DictItemExists(d, "physicsLength")) { EPyUtils::RequireGiven(d["physicsLength"], 0., "ObjectANCFBeam.physicsLength"); EPyUtils::FromPython(d["physicsLength"], cObjectANCFBeam->GetParameters().physicsLength, EPyUtils::RangeCheck::positive, "ObjectANCFBeam.physicsLength"); } else { EPyUtils::RequireGiven(py::cast(cObjectANCFBeam->GetParameters().physicsLength), 0., "ObjectANCFBeam.physicsLength"); }
+        if (EPyUtils::DictItemExists(d, "length") && (!EPyUtils::DictItemExists(d, "physicsLength") || d["physicsLength"].is_none())) { EPyUtils::RequireGiven(d["length"], 0., "ObjectANCFBeam.length"); EPyUtils::FromPython(d["length"], cObjectANCFBeam->GetParameters().length, EPyUtils::RangeCheck::positive, "ObjectANCFBeam.length"); } else { if (!EPyUtils::DictItemExists(d, "physicsLength") || d["physicsLength"].is_none()) EPyUtils::RequireGiven(py::cast(cObjectANCFBeam->GetParameters().length), 0., "ObjectANCFBeam.length"); }
         if (EPyUtils::DictItemExists(d, "crossSectionPenaltyFactor")) { EPyUtils::FromPython(d["crossSectionPenaltyFactor"], cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor); }
         if (EPyUtils::DictItemExists(d, "crossSectionDamping")) { EPyUtils::FromPython(d["crossSectionDamping"], cObjectANCFBeam->GetParameters().crossSectionDamping); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
@@ -123,6 +123,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectANCFBeam->GetShow(), "ObjectANCFBeam.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VsectionGeometry")) { visualizationObjectANCFBeam->GetSectionGeometry() = py::cast<BeamSectionGeometry>(d["VsectionGeometry"]); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectANCFBeam->GetColor(), "ObjectANCFBeam.Vcolor"); }
+        if (EPyUtils::DictItemExists(d, "physicsLength") && !d["physicsLength"].is_none()) { PyDeprecated("items", "ObjectANCFBeam.physicsLength", "ObjectANCFBeam: the parameter physicsLength is deprecated since 1.12.258 and removed in 2031; use length"); EPyUtils::RequireGiven(d["physicsLength"], 0., "ObjectANCFBeam.physicsLength"); EPyUtils::FromPython(d["physicsLength"], cObjectANCFBeam->GetParameters().length, EPyUtils::RangeCheck::positive, "ObjectANCFBeam.physicsLength"); } //! AUTO: deprecated, forwards to length
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -132,7 +133,7 @@ public: // AUTO:
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
         d["nodeNumbers"] = EPyUtils::ItemIndexToPython<NodeIndex>((ArrayIndex)cObjectANCFBeam->GetParameters().nodeNumbers);
-        d["physicsLength"] = (Real)cObjectANCFBeam->GetParameters().physicsLength;
+        d["length"] = (Real)cObjectANCFBeam->GetParameters().length;
         d["crossSectionPenaltyFactor"] = EPyUtils::ToPython(cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor);
         d["crossSectionDamping"] = EPyUtils::ToPython(cObjectANCFBeam->GetParameters().crossSectionDamping);
         d["name"] = (std::string)name;
@@ -148,13 +149,14 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>((ArrayIndex)cObjectANCFBeam->GetParameters().nodeNumbers)); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsLength") == 0) { return py::cast((Real)cObjectANCFBeam->GetParameters().physicsLength); } //! AUTO: get parameter
+        else if (parameterName.compare("length") == 0) { return py::cast((Real)cObjectANCFBeam->GetParameters().length); } //! AUTO: get parameter
         else if (parameterName.compare("sectionData") == 0) { return py::cast(GetInternalBeamSection()); } //! AUTO: get parameter
         else if (parameterName.compare("crossSectionPenaltyFactor") == 0) { return EPyUtils::ToPython(cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor); } //! AUTO: get parameter
         else if (parameterName.compare("crossSectionDamping") == 0) { return EPyUtils::ToPython(cObjectANCFBeam->GetParameters().crossSectionDamping); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectANCFBeam->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("VsectionGeometry") == 0) { return py::cast((BeamSectionGeometry)visualizationObjectANCFBeam->GetSectionGeometry()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectANCFBeam->GetColor())); } //! AUTO: get parameter
+        else if (parameterName.compare("physicsLength") == 0) { PyDeprecated("items", "ObjectANCFBeam.physicsLength", "ObjectANCFBeam: the parameter physicsLength is deprecated since 1.12.258 and removed in 2031; use length"); return py::cast((Real)cObjectANCFBeam->GetParameters().length); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectANCFBeam::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -165,13 +167,14 @@ public: // AUTO:
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectANCFBeam->GetParameters().nodeNumbers); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsLength") == 0) { EPyUtils::FromPython(value, cObjectANCFBeam->GetParameters().physicsLength, EPyUtils::RangeCheck::positive, "ObjectANCFBeam.physicsLength"); } //! AUTO: set parameter
+        else if (parameterName.compare("length") == 0) { EPyUtils::FromPython(value, cObjectANCFBeam->GetParameters().length, EPyUtils::RangeCheck::positive, "ObjectANCFBeam.length"); } //! AUTO: set parameter
         else if (parameterName.compare("sectionData") == 0) { SetInternalBeamSection(value); } //! AUTO: set parameter
         else if (parameterName.compare("crossSectionPenaltyFactor") == 0) { EPyUtils::FromPython(value, cObjectANCFBeam->GetParameters().crossSectionPenaltyFactor); } //! AUTO: set parameter
         else if (parameterName.compare("crossSectionDamping") == 0) { EPyUtils::FromPython(value, cObjectANCFBeam->GetParameters().crossSectionDamping); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFBeam->GetShow(), "ObjectANCFBeam.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("VsectionGeometry") == 0) { visualizationObjectANCFBeam->GetSectionGeometry() = py::cast<BeamSectionGeometry>(value); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFBeam->GetColor(), "ObjectANCFBeam.Vcolor"); } //! AUTO: set parameter
+        else if (parameterName.compare("physicsLength") == 0) { PyDeprecated("items", "ObjectANCFBeam.physicsLength", "ObjectANCFBeam: the parameter physicsLength is deprecated since 1.12.258 and removed in 2031; use length"); EPyUtils::FromPython(value, cObjectANCFBeam->GetParameters().length, EPyUtils::RangeCheck::positive, "ObjectANCFBeam.physicsLength"); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectANCFBeam::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

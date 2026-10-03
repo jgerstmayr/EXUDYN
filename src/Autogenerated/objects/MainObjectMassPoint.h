@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-23  20:10:38 (last modified)
+* @date         2026-10-03  18:08:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -112,11 +112,12 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        if (EPyUtils::DictItemExists(d, "physicsMass")) { EPyUtils::FromPython(d["physicsMass"], cObjectMassPoint->GetParameters().physicsMass, EPyUtils::RangeCheck::nonNegative, "ObjectMassPoint.physicsMass"); }
+        if (EPyUtils::DictItemExists(d, "mass")) { EPyUtils::FromPython(d["mass"], cObjectMassPoint->GetParameters().mass, EPyUtils::RangeCheck::nonNegative, "ObjectMassPoint.mass"); }
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectMassPoint->GetParameters().nodeNumber); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectMassPoint->GetShow(), "ObjectMassPoint.Vshow"); }
         if (EPyUtils::DictItemExists(d, "VgraphicsData")) { PyWriteBodyGraphicsDataList(d, "VgraphicsData", visualizationObjectMassPoint->GetGraphicsData()); }
+        if (EPyUtils::DictItemExists(d, "physicsMass") && !d["physicsMass"].is_none()) { PyDeprecated("items", "ObjectMassPoint.physicsMass", "ObjectMassPoint: the parameter physicsMass is deprecated since 1.12.258 and removed in 2031; use mass"); EPyUtils::FromPython(d["physicsMass"], cObjectMassPoint->GetParameters().mass, EPyUtils::RangeCheck::nonNegative, "ObjectMassPoint.physicsMass"); } //! AUTO: deprecated, forwards to mass
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -125,7 +126,7 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["physicsMass"] = (Real)cObjectMassPoint->GetParameters().physicsMass;
+        d["mass"] = (Real)cObjectMassPoint->GetParameters().mass;
         d["nodeNumber"] = (NodeIndex)cObjectMassPoint->GetParameters().nodeNumber;
         d["name"] = (std::string)name;
         d["Vshow"] = (bool)visualizationObjectMassPoint->GetShow();
@@ -137,10 +138,11 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsMass") == 0) { return py::cast((Real)cObjectMassPoint->GetParameters().physicsMass); } //! AUTO: get parameter
+        else if (parameterName.compare("mass") == 0) { return py::cast((Real)cObjectMassPoint->GetParameters().mass); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectMassPoint->GetParameters().nodeNumber); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectMassPoint->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("VgraphicsData") == 0) { return PyGetBodyGraphicsDataList(visualizationObjectMassPoint->GetGraphicsData(), true); } //! AUTO: get parameter
+        else if (parameterName.compare("physicsMass") == 0) { PyDeprecated("items", "ObjectMassPoint.physicsMass", "ObjectMassPoint: the parameter physicsMass is deprecated since 1.12.258 and removed in 2031; use mass"); return py::cast((Real)cObjectMassPoint->GetParameters().mass); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectMassPoint::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -150,10 +152,11 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsMass") == 0) { EPyUtils::FromPython(value, cObjectMassPoint->GetParameters().physicsMass, EPyUtils::RangeCheck::nonNegative, "ObjectMassPoint.physicsMass"); } //! AUTO: set parameter
+        else if (parameterName.compare("mass") == 0) { EPyUtils::FromPython(value, cObjectMassPoint->GetParameters().mass, EPyUtils::RangeCheck::nonNegative, "ObjectMassPoint.mass"); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectMassPoint->GetParameters().nodeNumber); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectMassPoint->GetShow(), "ObjectMassPoint.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("VgraphicsData") == 0) { PyWriteBodyGraphicsDataList(value, visualizationObjectMassPoint->GetGraphicsData()); } //! AUTO: set parameter
+        else if (parameterName.compare("physicsMass") == 0) { PyDeprecated("items", "ObjectMassPoint.physicsMass", "ObjectMassPoint: the parameter physicsMass is deprecated since 1.12.258 and removed in 2031; use mass"); EPyUtils::FromPython(value, cObjectMassPoint->GetParameters().mass, EPyUtils::RangeCheck::nonNegative, "ObjectMassPoint.physicsMass"); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectMassPoint::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

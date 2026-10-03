@@ -29,12 +29,12 @@ void CObjectRotationalMass1D::ComputeMassMatrix(EXUmath::MatrixContainer& massMa
 	Matrix& massMatrix = massMatrixC.GetInternalDenseMatrix();
 	if (!computeInverse)
 	{
-		massMatrix.SetScalarMatrix(1, parameters.physicsInertia);
+		massMatrix.SetScalarMatrix(1, parameters.inertia);
 	}
 	else
 	{
-		CHECKandTHROW(parameters.physicsInertia != 0., "CObjectRotationalMass1D::ComputeMassMatrix: physicsInertia may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
-		massMatrix.SetScalarMatrix(1, 1./parameters.physicsInertia);
+		CHECKandTHROW(parameters.inertia != 0., "CObjectRotationalMass1D::ComputeMassMatrix: inertia may not be 0 in case of computeMassMatrixInversePerBody=True", ExudynValueError);
+		massMatrix.SetScalarMatrix(1, 1./parameters.inertia);
 	}
 }
 
@@ -94,7 +94,7 @@ void CObjectRotationalMass1D::GetOutputVariableBody(OutputVariableType variableT
 		value.SetVector({ 0. }); break;
 	case OutputVariableType::KineticEnergy: {
 		CheckEnergyLocalPosition(localPosition, "ObjectRotationalMass1D");
-		value.SetVector({ 0.5*parameters.physicsInertia*GetAngularVelocity(localPosition, configuration).GetL2NormSquared() }); break; }
+		value.SetVector({ 0.5*parameters.inertia*GetAngularVelocity(localPosition, configuration).GetL2NormSquared() }); break; }
 	default:
 		SysError("CObjectRotationalMass1D::GetOutputVariableBody failed"); //error should not occur, because types are checked!
 	}

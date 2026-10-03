@@ -27,11 +27,14 @@ The parameters of the item; in a dictionary, its type is 'JointSliding2D':
 | **slidingMarkerNumbers** | ArrayMarkerIndex |  | [] | (symbol: $[m_{s0}, \ldots, m_{sn}]\tp$) these markers are used to update marker m1, if the sliding position exceeds the current cable's range; the markers must be sorted such that marker $m_{si}$ at x=cable(i).length is equal to marker(i+1) at x=0 of cable(i+1) |
 | **slidingMarkerOffsets** | Vector |  | [] | (symbol: $[d_{s0}, \ldots, d_{sn}]$) this list contains the offsets of every sliding object (given by slidingMarkerNumbers) w.r.t. to the initial position (0): marker m0: offset=0, marker m1: offset=Length(cable0), marker m2: offset=Length(cable0)+Length(cable1), ... |
 | **nodeNumber** | NodeIndex |  | invalid (-1) | (symbol: $n_{GD}$) node number of a NodeGenericData for 1 dataCoordinate showing the according marker number which is currently active and the start-of-step (global) sliding position |
-| **classicalFormulation** | Bool |  | True | True: uses a formulation with 3 (+1) equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; False: use local formulation, which only needs 2 (+1) equations and can be used with index 2 formulation |
+| **useClassicalFormulation** | Bool |  | True | True: uses a formulation with 3 (+1) equations, including the force in sliding direction to be zero; forces in global coordinates, only index 3; False: use local formulation, which only needs 2 (+1) equations and can be used with index 2 formulation |
 | **constrainRotation** | Bool |  | False | True: add constraint on rotation of marker m0 relative to slope (if True, marker m0 must be a rigid body marker); False: marker m0 body can rotate freely |
-| **axialForce** | Real |  | 0 | (symbol: $f_\mathrm{ax}$) ONLY APPLIES if classicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions. |
+| **axialForce** | Real |  | 0 | (symbol: $f_\mathrm{ax}$) ONLY APPLIES if useClassicalFormulation==True; axialForce represents an additional sliding force acting between beam and marker m0 body in axial (beam) direction; this force can be used to drive a body on a beam, but can only be changed with user functions. |
 | **activeConnector** | Bool |  | True | flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint |
 | **visualization** | VObjectJointSliding2D |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `classicalFormulation` (deprecated since 1.12.258, removed in 2031): use `useClassicalFormulation`.
 
 ## Visualization parameters
 
@@ -112,7 +115,7 @@ $$
 \LU{0}{\Delta\vv} = \LUR{0}{\dot\rv}{ANCF} - \LU{0}{\vv}_{m0}
 $$
 
-### Connector constraint equations (classicalFormulation=True)
+### Connector constraint equations (useClassicalFormulation=True)
 
 The 2D sliding joint is implemented having 3 equations (4 if constrainRotation==True, see below), using the special algebraic coordinates $\zv$.
 The algebraic equations read
@@ -145,7 +148,7 @@ s &= 0
 \end{aligned}
 $$
 
-### Connector constraint equations (classicalFormulation=False)
+### Connector constraint equations (useClassicalFormulation=False)
 
 The 2D sliding joint is implemented having 3 equations (first equation is dummy and could be eliminated; 4 equations if constrainRotation==True, see below), using the special algebraic coordinates $\zv$.
 The algebraic equations read
@@ -218,12 +221,12 @@ $$
 ```python
 from exudyn.beams import GenerateStraightLineANCFCable2D
 #the coordinates of ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
-cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
+cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=1e4, axialStiffness=1e6)
 [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
                         numberOfElements=4, cableTemplate=cable,
                         fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
 nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0.6,0]))
-mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, physicsMass=1))
+mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, mass=1))
 mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
 mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[1,0,0]))
 

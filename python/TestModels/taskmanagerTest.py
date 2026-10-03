@@ -77,12 +77,12 @@ for nMasses in [0, 1, 2, 4]:
                         for i in range(nMasses):
                             xOff = i*a
                             b0=mbs.CreateMassPoint(referencePosition=[xOff+a, 0, 0],
-                                                physicsMass=mass,
+                                                mass=mass,
                                                 drawSize = 0.1*a, color=graphics.color.red,
                                                 create2D=True,
                                                 gravity = g)
                             b1=mbs.CreateMassPoint(referencePosition=[xOff+a, b, 0],
-                                                physicsMass=mass,
+                                                mass=mass,
                                                 drawSize = 0.1*a, color=graphics.color.red,
                                                 create2D=True,
                                                 gravity = g)

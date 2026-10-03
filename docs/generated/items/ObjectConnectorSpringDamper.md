@@ -281,7 +281,7 @@ mbs.AddObject(ObjectConnectorSpringDamper(markerNumbers=[m0,m1],
 
 ```python
 node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
-oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, mass=1))
 
 m0 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[0,0,0]))
 m1 = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oMassPoint, localPosition=[0,0,0]))

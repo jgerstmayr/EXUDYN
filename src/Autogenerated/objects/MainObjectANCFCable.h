@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  09:23:36 (last modified)
+* @date         2026-10-03  18:08:00 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -38,7 +38,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectANCFCable
-* @brief        A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length \f$L\f$=physicsLength and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[0, L]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the ABRV:EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
+* @brief        A 3D cable finite element using 2 nodes of type NodePointSlope1. The localPosition of the beam with length \f$L\f$=length and height \f$h\f$ ranges in \f$X\f$-direction in range \f$[0, L]\f$ and in \f$Y\f$-direction in range \f$[-h/2,h/2]\f$ (which is in fact not needed in the ABRV:EOM). For description see ObjectANCFCable2D, which is almost identical to 3D case. NOTE: this element does not include torsion, therfore a torque cannot be applied along the local x-axis.
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
@@ -114,13 +114,13 @@ public: // AUTO:
     //! AUTO:  dictionary write access
     virtual void SetWithDictionary(const py::dict& d) override
     {
-        if (EPyUtils::DictItemExists(d, "physicsLength")) { EPyUtils::FromPython(d["physicsLength"], cObjectANCFCable->GetParameters().physicsLength, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsLength"); }
-        if (EPyUtils::DictItemExists(d, "physicsMassPerLength")) { EPyUtils::FromPython(d["physicsMassPerLength"], cObjectANCFCable->GetParameters().physicsMassPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsMassPerLength"); }
-        if (EPyUtils::DictItemExists(d, "physicsBendingStiffness")) { EPyUtils::FromPython(d["physicsBendingStiffness"], cObjectANCFCable->GetParameters().physicsBendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsBendingStiffness"); }
-        if (EPyUtils::DictItemExists(d, "physicsAxialStiffness")) { EPyUtils::FromPython(d["physicsAxialStiffness"], cObjectANCFCable->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsAxialStiffness"); }
-        if (EPyUtils::DictItemExists(d, "physicsBendingDamping")) { EPyUtils::FromPython(d["physicsBendingDamping"], cObjectANCFCable->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsBendingDamping"); }
-        if (EPyUtils::DictItemExists(d, "physicsAxialDamping")) { EPyUtils::FromPython(d["physicsAxialDamping"], cObjectANCFCable->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsAxialDamping"); }
-        if (EPyUtils::DictItemExists(d, "physicsReferenceAxialStrain")) { EPyUtils::FromPython(d["physicsReferenceAxialStrain"], cObjectANCFCable->GetParameters().physicsReferenceAxialStrain, "ObjectANCFCable.physicsReferenceAxialStrain"); }
+        if (EPyUtils::DictItemExists(d, "length")) { EPyUtils::FromPython(d["length"], cObjectANCFCable->GetParameters().length, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.length"); }
+        if (EPyUtils::DictItemExists(d, "massPerLength")) { EPyUtils::FromPython(d["massPerLength"], cObjectANCFCable->GetParameters().massPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.massPerLength"); }
+        if (EPyUtils::DictItemExists(d, "bendingStiffness")) { EPyUtils::FromPython(d["bendingStiffness"], cObjectANCFCable->GetParameters().bendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.bendingStiffness"); }
+        if (EPyUtils::DictItemExists(d, "axialStiffness")) { EPyUtils::FromPython(d["axialStiffness"], cObjectANCFCable->GetParameters().axialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.axialStiffness"); }
+        if (EPyUtils::DictItemExists(d, "bendingDamping")) { EPyUtils::FromPython(d["bendingDamping"], cObjectANCFCable->GetParameters().bendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.bendingDamping"); }
+        if (EPyUtils::DictItemExists(d, "axialDamping")) { EPyUtils::FromPython(d["axialDamping"], cObjectANCFCable->GetParameters().axialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.axialDamping"); }
+        if (EPyUtils::DictItemExists(d, "referenceAxialStrain")) { EPyUtils::FromPython(d["referenceAxialStrain"], cObjectANCFCable->GetParameters().referenceAxialStrain, "ObjectANCFCable.referenceAxialStrain"); }
         if (EPyUtils::DictItemExists(d, "strainIsRelativeToReference")) { EPyUtils::FromPython(d["strainIsRelativeToReference"], cObjectANCFCable->GetParameters().strainIsRelativeToReference, "ObjectANCFCable.strainIsRelativeToReference"); }
         if (EPyUtils::DictItemExists(d, "nodeNumbers")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumbers"], cObjectANCFCable->GetParameters().nodeNumbers); }
         if (EPyUtils::DictItemExists(d, "useReducedOrderIntegration")) { EPyUtils::FromPython(d["useReducedOrderIntegration"], cObjectANCFCable->GetParameters().useReducedOrderIntegration, "ObjectANCFCable.useReducedOrderIntegration"); }
@@ -128,6 +128,13 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectANCFCable->GetShow(), "ObjectANCFCable.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vradius")) { EPyUtils::FromPython(d["Vradius"], visualizationObjectANCFCable->GetRadius(), "ObjectANCFCable.Vradius"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectANCFCable->GetColor(), "ObjectANCFCable.Vcolor"); }
+        if (EPyUtils::DictItemExists(d, "physicsLength") && !d["physicsLength"].is_none()) { PyDeprecated("items", "ObjectANCFCable.physicsLength", "ObjectANCFCable: the parameter physicsLength is deprecated since 1.12.258 and removed in 2031; use length"); EPyUtils::FromPython(d["physicsLength"], cObjectANCFCable->GetParameters().length, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsLength"); } //! AUTO: deprecated, forwards to length
+        if (EPyUtils::DictItemExists(d, "physicsMassPerLength") && !d["physicsMassPerLength"].is_none()) { PyDeprecated("items", "ObjectANCFCable.physicsMassPerLength", "ObjectANCFCable: the parameter physicsMassPerLength is deprecated since 1.12.258 and removed in 2031; use massPerLength"); EPyUtils::FromPython(d["physicsMassPerLength"], cObjectANCFCable->GetParameters().massPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsMassPerLength"); } //! AUTO: deprecated, forwards to massPerLength
+        if (EPyUtils::DictItemExists(d, "physicsBendingStiffness") && !d["physicsBendingStiffness"].is_none()) { PyDeprecated("items", "ObjectANCFCable.physicsBendingStiffness", "ObjectANCFCable: the parameter physicsBendingStiffness is deprecated since 1.12.258 and removed in 2031; use bendingStiffness"); EPyUtils::FromPython(d["physicsBendingStiffness"], cObjectANCFCable->GetParameters().bendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsBendingStiffness"); } //! AUTO: deprecated, forwards to bendingStiffness
+        if (EPyUtils::DictItemExists(d, "physicsAxialStiffness") && !d["physicsAxialStiffness"].is_none()) { PyDeprecated("items", "ObjectANCFCable.physicsAxialStiffness", "ObjectANCFCable: the parameter physicsAxialStiffness is deprecated since 1.12.258 and removed in 2031; use axialStiffness"); EPyUtils::FromPython(d["physicsAxialStiffness"], cObjectANCFCable->GetParameters().axialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsAxialStiffness"); } //! AUTO: deprecated, forwards to axialStiffness
+        if (EPyUtils::DictItemExists(d, "physicsBendingDamping") && !d["physicsBendingDamping"].is_none()) { PyDeprecated("items", "ObjectANCFCable.physicsBendingDamping", "ObjectANCFCable: the parameter physicsBendingDamping is deprecated since 1.12.258 and removed in 2031; use bendingDamping"); EPyUtils::FromPython(d["physicsBendingDamping"], cObjectANCFCable->GetParameters().bendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsBendingDamping"); } //! AUTO: deprecated, forwards to bendingDamping
+        if (EPyUtils::DictItemExists(d, "physicsAxialDamping") && !d["physicsAxialDamping"].is_none()) { PyDeprecated("items", "ObjectANCFCable.physicsAxialDamping", "ObjectANCFCable: the parameter physicsAxialDamping is deprecated since 1.12.258 and removed in 2031; use axialDamping"); EPyUtils::FromPython(d["physicsAxialDamping"], cObjectANCFCable->GetParameters().axialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsAxialDamping"); } //! AUTO: deprecated, forwards to axialDamping
+        if (EPyUtils::DictItemExists(d, "physicsReferenceAxialStrain") && !d["physicsReferenceAxialStrain"].is_none()) { PyDeprecated("items", "ObjectANCFCable.physicsReferenceAxialStrain", "ObjectANCFCable: the parameter physicsReferenceAxialStrain is deprecated since 1.12.258 and removed in 2031; use referenceAxialStrain"); EPyUtils::FromPython(d["physicsReferenceAxialStrain"], cObjectANCFCable->GetParameters().referenceAxialStrain, "ObjectANCFCable.physicsReferenceAxialStrain"); } //! AUTO: deprecated, forwards to referenceAxialStrain
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -136,13 +143,13 @@ public: // AUTO:
     {
         auto d = py::dict();
         d["objectType"] = (std::string)GetTypeName();
-        d["physicsLength"] = (Real)cObjectANCFCable->GetParameters().physicsLength;
-        d["physicsMassPerLength"] = (Real)cObjectANCFCable->GetParameters().physicsMassPerLength;
-        d["physicsBendingStiffness"] = (Real)cObjectANCFCable->GetParameters().physicsBendingStiffness;
-        d["physicsAxialStiffness"] = (Real)cObjectANCFCable->GetParameters().physicsAxialStiffness;
-        d["physicsBendingDamping"] = (Real)cObjectANCFCable->GetParameters().physicsBendingDamping;
-        d["physicsAxialDamping"] = (Real)cObjectANCFCable->GetParameters().physicsAxialDamping;
-        d["physicsReferenceAxialStrain"] = (Real)cObjectANCFCable->GetParameters().physicsReferenceAxialStrain;
+        d["length"] = (Real)cObjectANCFCable->GetParameters().length;
+        d["massPerLength"] = (Real)cObjectANCFCable->GetParameters().massPerLength;
+        d["bendingStiffness"] = (Real)cObjectANCFCable->GetParameters().bendingStiffness;
+        d["axialStiffness"] = (Real)cObjectANCFCable->GetParameters().axialStiffness;
+        d["bendingDamping"] = (Real)cObjectANCFCable->GetParameters().bendingDamping;
+        d["axialDamping"] = (Real)cObjectANCFCable->GetParameters().axialDamping;
+        d["referenceAxialStrain"] = (Real)cObjectANCFCable->GetParameters().referenceAxialStrain;
         d["strainIsRelativeToReference"] = (Real)cObjectANCFCable->GetParameters().strainIsRelativeToReference;
         d["nodeNumbers"] = EPyUtils::ItemIndexToPython<NodeIndex>((ArrayIndex)cObjectANCFCable->GetParameters().nodeNumbers);
         d["useReducedOrderIntegration"] = (Index)cObjectANCFCable->GetParameters().useReducedOrderIntegration;
@@ -157,19 +164,26 @@ public: // AUTO:
     virtual py::object GetParameter(const STDstring& parameterName) const override
     {
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsLength") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().physicsLength); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsMassPerLength") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().physicsMassPerLength); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsBendingStiffness") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().physicsBendingStiffness); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsAxialStiffness") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().physicsAxialStiffness); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsBendingDamping") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().physicsBendingDamping); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsAxialDamping") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().physicsAxialDamping); } //! AUTO: get parameter
-        else if (parameterName.compare("physicsReferenceAxialStrain") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().physicsReferenceAxialStrain); } //! AUTO: get parameter
+        else if (parameterName.compare("length") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().length); } //! AUTO: get parameter
+        else if (parameterName.compare("massPerLength") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().massPerLength); } //! AUTO: get parameter
+        else if (parameterName.compare("bendingStiffness") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().bendingStiffness); } //! AUTO: get parameter
+        else if (parameterName.compare("axialStiffness") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().axialStiffness); } //! AUTO: get parameter
+        else if (parameterName.compare("bendingDamping") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().bendingDamping); } //! AUTO: get parameter
+        else if (parameterName.compare("axialDamping") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().axialDamping); } //! AUTO: get parameter
+        else if (parameterName.compare("referenceAxialStrain") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().referenceAxialStrain); } //! AUTO: get parameter
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { return py::cast((Real)cObjectANCFCable->GetParameters().strainIsRelativeToReference); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<NodeIndex>((ArrayIndex)cObjectANCFCable->GetParameters().nodeNumbers)); } //! AUTO: get parameter
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { return py::cast((Index)cObjectANCFCable->GetParameters().useReducedOrderIntegration); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectANCFCable->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("Vradius") == 0) { return py::cast((float)visualizationObjectANCFCable->GetRadius()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectANCFCable->GetColor())); } //! AUTO: get parameter
+        else if (parameterName.compare("physicsLength") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsLength", "ObjectANCFCable: the parameter physicsLength is deprecated since 1.12.258 and removed in 2031; use length"); return py::cast((Real)cObjectANCFCable->GetParameters().length); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsMassPerLength") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsMassPerLength", "ObjectANCFCable: the parameter physicsMassPerLength is deprecated since 1.12.258 and removed in 2031; use massPerLength"); return py::cast((Real)cObjectANCFCable->GetParameters().massPerLength); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsBendingStiffness") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsBendingStiffness", "ObjectANCFCable: the parameter physicsBendingStiffness is deprecated since 1.12.258 and removed in 2031; use bendingStiffness"); return py::cast((Real)cObjectANCFCable->GetParameters().bendingStiffness); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsAxialStiffness") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsAxialStiffness", "ObjectANCFCable: the parameter physicsAxialStiffness is deprecated since 1.12.258 and removed in 2031; use axialStiffness"); return py::cast((Real)cObjectANCFCable->GetParameters().axialStiffness); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsBendingDamping") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsBendingDamping", "ObjectANCFCable: the parameter physicsBendingDamping is deprecated since 1.12.258 and removed in 2031; use bendingDamping"); return py::cast((Real)cObjectANCFCable->GetParameters().bendingDamping); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsAxialDamping") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsAxialDamping", "ObjectANCFCable: the parameter physicsAxialDamping is deprecated since 1.12.258 and removed in 2031; use axialDamping"); return py::cast((Real)cObjectANCFCable->GetParameters().axialDamping); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsReferenceAxialStrain") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsReferenceAxialStrain", "ObjectANCFCable: the parameter physicsReferenceAxialStrain is deprecated since 1.12.258 and removed in 2031; use referenceAxialStrain"); return py::cast((Real)cObjectANCFCable->GetParameters().referenceAxialStrain); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectANCFCable::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -179,19 +193,26 @@ public: // AUTO:
     virtual void SetParameter(const STDstring& parameterName, const py::object& value) override
     {
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsLength") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().physicsLength, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsLength"); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsMassPerLength") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().physicsMassPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsMassPerLength"); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsBendingStiffness") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().physicsBendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsBendingStiffness"); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsAxialStiffness") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().physicsAxialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsAxialStiffness"); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsBendingDamping") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().physicsBendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsBendingDamping"); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsAxialDamping") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().physicsAxialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsAxialDamping"); } //! AUTO: set parameter
-        else if (parameterName.compare("physicsReferenceAxialStrain") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().physicsReferenceAxialStrain, "ObjectANCFCable.physicsReferenceAxialStrain"); } //! AUTO: set parameter
+        else if (parameterName.compare("length") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().length, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.length"); } //! AUTO: set parameter
+        else if (parameterName.compare("massPerLength") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().massPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.massPerLength"); } //! AUTO: set parameter
+        else if (parameterName.compare("bendingStiffness") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().bendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.bendingStiffness"); } //! AUTO: set parameter
+        else if (parameterName.compare("axialStiffness") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().axialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.axialStiffness"); } //! AUTO: set parameter
+        else if (parameterName.compare("bendingDamping") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().bendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.bendingDamping"); } //! AUTO: set parameter
+        else if (parameterName.compare("axialDamping") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().axialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.axialDamping"); } //! AUTO: set parameter
+        else if (parameterName.compare("referenceAxialStrain") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().referenceAxialStrain, "ObjectANCFCable.referenceAxialStrain"); } //! AUTO: set parameter
         else if (parameterName.compare("strainIsRelativeToReference") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().strainIsRelativeToReference, "ObjectANCFCable.strainIsRelativeToReference"); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumbers") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectANCFCable->GetParameters().nodeNumbers); } //! AUTO: set parameter
         else if (parameterName.compare("useReducedOrderIntegration") == 0) { EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().useReducedOrderIntegration, "ObjectANCFCable.useReducedOrderIntegration"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFCable->GetShow(), "ObjectANCFCable.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("Vradius") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFCable->GetRadius(), "ObjectANCFCable.Vradius"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectANCFCable->GetColor(), "ObjectANCFCable.Vcolor"); } //! AUTO: set parameter
+        else if (parameterName.compare("physicsLength") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsLength", "ObjectANCFCable: the parameter physicsLength is deprecated since 1.12.258 and removed in 2031; use length"); EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().length, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsLength"); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsMassPerLength") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsMassPerLength", "ObjectANCFCable: the parameter physicsMassPerLength is deprecated since 1.12.258 and removed in 2031; use massPerLength"); EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().massPerLength, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsMassPerLength"); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsBendingStiffness") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsBendingStiffness", "ObjectANCFCable: the parameter physicsBendingStiffness is deprecated since 1.12.258 and removed in 2031; use bendingStiffness"); EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().bendingStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsBendingStiffness"); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsAxialStiffness") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsAxialStiffness", "ObjectANCFCable: the parameter physicsAxialStiffness is deprecated since 1.12.258 and removed in 2031; use axialStiffness"); EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().axialStiffness, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsAxialStiffness"); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsBendingDamping") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsBendingDamping", "ObjectANCFCable: the parameter physicsBendingDamping is deprecated since 1.12.258 and removed in 2031; use bendingDamping"); EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().bendingDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsBendingDamping"); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsAxialDamping") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsAxialDamping", "ObjectANCFCable: the parameter physicsAxialDamping is deprecated since 1.12.258 and removed in 2031; use axialDamping"); EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().axialDamping, EPyUtils::RangeCheck::nonNegative, "ObjectANCFCable.physicsAxialDamping"); } //! AUTO: deprecated, searched last
+        else if (parameterName.compare("physicsReferenceAxialStrain") == 0) { PyDeprecated("items", "ObjectANCFCable.physicsReferenceAxialStrain", "ObjectANCFCable: the parameter physicsReferenceAxialStrain is deprecated since 1.12.258 and removed in 2031; use referenceAxialStrain"); EPyUtils::FromPython(value, cObjectANCFCable->GetParameters().referenceAxialStrain, "ObjectANCFCable.physicsReferenceAxialStrain"); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectANCFCable::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

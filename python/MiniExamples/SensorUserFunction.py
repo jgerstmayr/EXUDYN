@@ -23,8 +23,8 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 #a value computed from other sensors: the distance between two mass points
 nA = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0], initialVelocities=[-1,0,0]))
 nB = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0], initialVelocities=[0,1,0]))
-mbs.AddObject(ObjectMassPoint(nodeNumber=nA, physicsMass=1))
-mbs.AddObject(ObjectMassPoint(nodeNumber=nB, physicsMass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nA, mass=1))
+mbs.AddObject(ObjectMassPoint(nodeNumber=nB, mass=1))
 sA = mbs.AddSensor(SensorNode(nodeNumber=nA, outputVariableType=exu.OutputVariableType.Position, writeToFile=False))
 sB = mbs.AddSensor(SensorNode(nodeNumber=nB, outputVariableType=exu.OutputVariableType.Position, writeToFile=False))
 def UFdistance(mbs, t, sensorNumbers, factors, configuration):

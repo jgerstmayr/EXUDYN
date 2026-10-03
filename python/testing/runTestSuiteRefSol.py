@@ -116,6 +116,7 @@ def TestExamplesReferenceSolution():
         'homogeneousTransformationParameterTest.py':8.981932745662196, #new 2026-10-03: the HT parameters of the items, ObjectGround, Create functions, rigid markers, kinematic tree, robotics (#2793, #2794, #2795, #2798, #2799)
         'simulationSettingsDeprecationTest.py':126, #new 2026-10-03: a renamed simulation setting forwards under its old name with a DeprecationWarning (#2588)
         'simulationSettingsRenamesTest.py':50, #new 2026-10-04: every renamed simulation setting forwards both ways to its new place (#2813)
+        'itemParameterRenamesTest.py':66, #new 2026-10-04: every renamed item parameter forwards in the dictionary, Get and SetObjectParameter (#2814)
         'rotationMarkerDeprecationTest.py':-0.13402861946207856, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
         'libraryDeprecationTest.py':4, #new 2026-10-03: a deprecated function and argument of the Python library warn once per session at the user's line and are counted (#2807)
         'homogeneousTransformationInterfaceTest.py':9.245684006275722, #new 2026-10-03: exu.HT with the node coordinates, Relative, the interpolations, angle and axis (#2810)

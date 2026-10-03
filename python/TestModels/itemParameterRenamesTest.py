@@ -1,0 +1,82 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The item parameters renamed in Exudyn 1.13 (#2814) - the prefix physics dropped, sphereRadius, the
+#           friction forces of CoordinateSpringDamperExt, factor1, rollingViscousFriction, useIntrinsicFormulation,
+#           useClassicalFormulation: every old name, as exudyn.types lists them, still works with a DeprecationWarning -
+#           given in the dictionary of AddObject, read and written with GetObjectParameter/SetObjectParameter - and
+#           reaches the new parameter; a parameter that must be given is given under its old name as well.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-04
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+import exudyn.types as types
+import exudyn.itemInterface as eii
+import numpy as np
+import re
+import warnings
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+
+def Other(value):
+    """a value different from the given one, of the same kind"""
+    if isinstance(value, bool):
+        return not value
+    if isinstance(value, int):
+        return value + 1
+    if isinstance(value, float):
+        return value + 0.5
+    if value is None:                                #a list of 3x3 matrices, empty by default (ANCFThinPlate)
+        return 2. * np.eye(3)                       #one matrix, as a numpy array
+    if len(value) == 0:                              #a vector, empty by default (ANCFThinPlate.thickness)
+        return np.array([0.1, 0.1, 0.1, 0.1])
+    return np.array(value, dtype=float) + 0.25
+
+def Equal(a, b):
+    return np.allclose(np.array(a, dtype=float), np.array(b, dtype=float))
+
+errors = 0
+nRenames = 0
+with warnings.catch_warnings():
+    warnings.simplefilter('ignore', DeprecationWarning)
+    for name in types.ItemNames():
+        for (old, new) in types.ItemInfo(name).get('deprecatedParameters', {}).items():
+            nRenames += 1
+            data = dict(getattr(eii, name)())
+            value = Other(data[new])
+            del data[new]
+            data[old] = value                        #only the old name
+            for attempt in range(5):                 #the other parameters that must be given, given
+                try:
+                    item = mbs.AddObject(data)
+                    break
+                except Exception as exception:
+                    missing = re.search(r'parameter \w+\.(\w+) must be given', str(exception))
+                    if missing is None:
+                        raise
+                    data[missing.group(1)] = 1.
+            if not Equal(mbs.GetObjectParameter(item, new), value):
+                errors += 1
+                exu.Print('itemParameterRenamesTest:', name + '.' + old, 'given in the dictionary does not reach', new)
+            if not Equal(mbs.GetObjectParameter(item, old), value):
+                errors += 1
+                exu.Print('itemParameterRenamesTest:', name + '.' + old, 'is not read from', new)
+            value = Other(value)
+            mbs.SetObjectParameter(item, old, value)
+            if not Equal(mbs.GetObjectParameter(item, new), value):
+                errors += 1
+                exu.Print('itemParameterRenamesTest:', name + '.' + old, 'is not written to', new)
+
+exu.Print('itemParameterRenamesTest:', nRenames, 'old names, errors', errors)
+u = nRenames + errors
+exu.Print('solution of itemParameterRenamesTest=', u)
+
+exu.sys['testResult'] = u

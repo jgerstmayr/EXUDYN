@@ -32,9 +32,9 @@ def Beam(nElements, force=0, moment=0, dynamic=False):
     """the tip position of a beam of quadratic elements: a clamped cantilever, or a pendulum under gravity"""
     SC = exu.SystemContainer(); mbs = SC.AddSystem()
     nodes = [mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[L*i/(2*nElements), 0, 0])) for i in range(2*nElements+1)]
-    elements = [mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=nodes[2*k:2*k+3], physicsLength=L/nElements,
-                              physicsMassPerLength=1, physicsCrossSectionInertia=0.01, physicsBendingStiffness=EI,
-                              physicsAxialStiffness=EA, physicsShearStiffness=GA)) for k in range(nElements)]
+    elements = [mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=nodes[2*k:2*k+3], length=L/nElements,
+                              massPerLength=1, crossSectionInertia=0.01, bendingStiffness=EI,
+                              axialStiffness=EA, shearStiffness=GA)) for k in range(nElements)]
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
     for i in ([0, 1] if dynamic else [0, 1, 2]):
         mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[0], coordinate=i))]))

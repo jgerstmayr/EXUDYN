@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-03  18:17:13 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -116,7 +116,7 @@ public: // AUTO:
     {
         if (EPyUtils::DictItemExists(d, "markerNumbers")) { EPyUtils::ItemIndexFromPython<MarkerIndex>(d["markerNumbers"], cObjectContactSphereTriangle->GetParameters().markerNumbers); }
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cObjectContactSphereTriangle->GetParameters().nodeNumber); }
-        if (EPyUtils::DictItemExists(d, "radiusSphere")) { EPyUtils::RequireGiven(d["radiusSphere"], 0., "ObjectContactSphereTriangle.radiusSphere"); EPyUtils::FromPython(d["radiusSphere"], cObjectContactSphereTriangle->GetParameters().radiusSphere, EPyUtils::RangeCheck::positive, "ObjectContactSphereTriangle.radiusSphere"); } else { EPyUtils::RequireGiven(py::cast(cObjectContactSphereTriangle->GetParameters().radiusSphere), 0., "ObjectContactSphereTriangle.radiusSphere"); }
+        if (EPyUtils::DictItemExists(d, "sphereRadius") && (!EPyUtils::DictItemExists(d, "radiusSphere") || d["radiusSphere"].is_none())) { EPyUtils::RequireGiven(d["sphereRadius"], 0., "ObjectContactSphereTriangle.sphereRadius"); EPyUtils::FromPython(d["sphereRadius"], cObjectContactSphereTriangle->GetParameters().sphereRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTriangle.sphereRadius"); } else { if (!EPyUtils::DictItemExists(d, "radiusSphere") || d["radiusSphere"].is_none()) EPyUtils::RequireGiven(py::cast(cObjectContactSphereTriangle->GetParameters().sphereRadius), 0., "ObjectContactSphereTriangle.sphereRadius"); }
         if (EPyUtils::DictItemExists(d, "trianglePoints")) { EPyUtils::SetVector3DListSafely(d["trianglePoints"], cObjectContactSphereTriangle->GetParameters().trianglePoints); }
         if (EPyUtils::DictItemExists(d, "includeEdges")) { EPyUtils::FromPython(d["includeEdges"], cObjectContactSphereTriangle->GetParameters().includeEdges, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTriangle.includeEdges"); }
         if (EPyUtils::DictItemExists(d, "dynamicFriction")) { EPyUtils::FromPython(d["dynamicFriction"], cObjectContactSphereTriangle->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTriangle.dynamicFriction"); }
@@ -131,6 +131,7 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectContactSphereTriangle->GetShow(), "ObjectContactSphereTriangle.Vshow"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectContactSphereTriangle->GetColor(), "ObjectContactSphereTriangle.Vcolor"); }
+        if (EPyUtils::DictItemExists(d, "radiusSphere") && !d["radiusSphere"].is_none()) { PyDeprecated("items", "ObjectContactSphereTriangle.radiusSphere", "ObjectContactSphereTriangle: the parameter radiusSphere is deprecated since 1.12.258 and removed in 2031; use sphereRadius"); EPyUtils::RequireGiven(d["radiusSphere"], 0., "ObjectContactSphereTriangle.radiusSphere"); EPyUtils::FromPython(d["radiusSphere"], cObjectContactSphereTriangle->GetParameters().sphereRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTriangle.radiusSphere"); } //! AUTO: deprecated, forwards to sphereRadius
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -141,7 +142,7 @@ public: // AUTO:
         d["objectType"] = (std::string)GetTypeName();
         d["markerNumbers"] = EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectContactSphereTriangle->GetParameters().markerNumbers);
         d["nodeNumber"] = (NodeIndex)cObjectContactSphereTriangle->GetParameters().nodeNumber;
-        d["radiusSphere"] = (Real)cObjectContactSphereTriangle->GetParameters().radiusSphere;
+        d["sphereRadius"] = (Real)cObjectContactSphereTriangle->GetParameters().sphereRadius;
         d["trianglePoints"] = (PyVector3DList)cObjectContactSphereTriangle->GetParameters().trianglePoints;
         d["includeEdges"] = (Index)cObjectContactSphereTriangle->GetParameters().includeEdges;
         d["dynamicFriction"] = (Real)cObjectContactSphereTriangle->GetParameters().dynamicFriction;
@@ -165,7 +166,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
         else if (parameterName.compare("markerNumbers") == 0) { return py::cast(EPyUtils::ItemIndexToPython<MarkerIndex>(cObjectContactSphereTriangle->GetParameters().markerNumbers)); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cObjectContactSphereTriangle->GetParameters().nodeNumber); } //! AUTO: get parameter
-        else if (parameterName.compare("radiusSphere") == 0) { return py::cast((Real)cObjectContactSphereTriangle->GetParameters().radiusSphere); } //! AUTO: get parameter
+        else if (parameterName.compare("sphereRadius") == 0) { return py::cast((Real)cObjectContactSphereTriangle->GetParameters().sphereRadius); } //! AUTO: get parameter
         else if (parameterName.compare("trianglePoints") == 0) { return py::cast((PyVector3DList)cObjectContactSphereTriangle->GetParameters().trianglePoints); } //! AUTO: get parameter
         else if (parameterName.compare("includeEdges") == 0) { return py::cast((Index)cObjectContactSphereTriangle->GetParameters().includeEdges); } //! AUTO: get parameter
         else if (parameterName.compare("dynamicFriction") == 0) { return py::cast((Real)cObjectContactSphereTriangle->GetParameters().dynamicFriction); } //! AUTO: get parameter
@@ -179,6 +180,7 @@ public: // AUTO:
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectContactSphereTriangle->GetParameters().activeConnector); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectContactSphereTriangle->GetShow()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectContactSphereTriangle->GetColor())); } //! AUTO: get parameter
+        else if (parameterName.compare("radiusSphere") == 0) { PyDeprecated("items", "ObjectContactSphereTriangle.radiusSphere", "ObjectContactSphereTriangle: the parameter radiusSphere is deprecated since 1.12.258 and removed in 2031; use sphereRadius"); return py::cast((Real)cObjectContactSphereTriangle->GetParameters().sphereRadius); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectContactSphereTriangle::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -190,7 +192,7 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("markerNumbers") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cObjectContactSphereTriangle->GetParameters().markerNumbers); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cObjectContactSphereTriangle->GetParameters().nodeNumber); } //! AUTO: set parameter
-        else if (parameterName.compare("radiusSphere") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().radiusSphere, EPyUtils::RangeCheck::positive, "ObjectContactSphereTriangle.radiusSphere"); } //! AUTO: set parameter
+        else if (parameterName.compare("sphereRadius") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().sphereRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTriangle.sphereRadius"); } //! AUTO: set parameter
         else if (parameterName.compare("trianglePoints") == 0) { EPyUtils::SetVector3DListSafely(value, cObjectContactSphereTriangle->GetParameters().trianglePoints); } //! AUTO: set parameter
         else if (parameterName.compare("includeEdges") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().includeEdges, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTriangle.includeEdges"); } //! AUTO: set parameter
         else if (parameterName.compare("dynamicFriction") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().dynamicFriction, EPyUtils::RangeCheck::nonNegative, "ObjectContactSphereTriangle.dynamicFriction"); } //! AUTO: set parameter
@@ -204,6 +206,7 @@ public: // AUTO:
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().activeConnector, "ObjectContactSphereTriangle.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectContactSphereTriangle->GetShow(), "ObjectContactSphereTriangle.Vshow"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectContactSphereTriangle->GetColor(), "ObjectContactSphereTriangle.Vcolor"); } //! AUTO: set parameter
+        else if (parameterName.compare("radiusSphere") == 0) { PyDeprecated("items", "ObjectContactSphereTriangle.radiusSphere", "ObjectContactSphereTriangle: the parameter radiusSphere is deprecated since 1.12.258 and removed in 2031; use sphereRadius"); EPyUtils::FromPython(value, cObjectContactSphereTriangle->GetParameters().sphereRadius, EPyUtils::RangeCheck::positive, "ObjectContactSphereTriangle.radiusSphere"); } //! AUTO: deprecated, searched last
         else {PyError(STDstring("ObjectContactSphereTriangle::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

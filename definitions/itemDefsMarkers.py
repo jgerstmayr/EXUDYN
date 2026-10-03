@@ -40,7 +40,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeMarker,
     miniExample=r"""    #gravity on a planar rigid body: the load acts on the mass of the whole body
     node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0.2,0]))
-    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+    body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=2, inertia=0.1))
     mMass = mbs.AddMarker(MarkerBodyMass(bodyNumber=body))
     mbs.AddLoad(LoadMassProportional(markerNumber=mMass, loadVector=[0,-9.81,0]))
 
@@ -116,7 +116,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeMarker,
     miniExample=r"""    #a point of a body - here of the ground, at a local position - connected to a mass point by a spring
     node = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
-    body = mbs.AddObject(ObjectMassPoint(nodeNumber=node, physicsMass=1))
+    body = mbs.AddObject(ObjectMassPoint(nodeNumber=node, mass=1))
     mBody = mbs.AddMarker(MarkerBodyPosition(bodyNumber=body, localPosition=[0,0,0]))
     mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[1,0,0]))
     mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers=[mGround, mBody], stiffness=[100,100,100]))
@@ -214,8 +214,8 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #position and orientation of a rigid body: a torque on it, held by a rigid body spring-damper
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[1,0,0]+eulerParameters0))
-    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                         physicsInertia=inertia.GetInertia6D()))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                         inertia=inertia.GetInertia6D()))
     mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
     mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[1,0,0]))
     mbs.AddObject(ObjectConnectorRigidBodySpringDamper(markerNumbers=[mGround, mBody],
@@ -334,7 +334,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeMarker,
     miniExample=r"""    #the position of a node: a mass hanging on a spring from a ground node, released at rest
     nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,-1]))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, mass=1))
     mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
     mFixed = mbs.AddMarker(MarkerNodePosition(nodeNumber=nGround))
     k = (2*np.pi)**2 #1 Hz
@@ -420,8 +420,8 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #position and orientation of a rigid body node: a torque spins the body up
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
     node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0.5,0.2,0.1, 0,0,0]))
-    mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                  physicsInertia=inertia.GetInertia6D()))
+    mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                  inertia=inertia.GetInertia6D()))
     mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))
     mbs.AddLoad(LoadTorqueVector(markerNumber=mNode, loadVector=[0,0,1]))
 
@@ -518,7 +518,7 @@ definitions.append(ItemDefinition(
     classType=ClassTypeMarker,
     miniExample=r"""    #one coordinate of a node: a coordinate spring between the ground node and a 1D mass
     node = mbs.AddNode(Node1D(referenceCoordinates=[0]))
-    mbs.AddObject(ObjectMass1D(nodeNumber=node, physicsMass=1))
+    mbs.AddObject(ObjectMass1D(nodeNumber=node, mass=1))
     mCoord = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
     mbs.AddObject(ObjectConnectorCoordinateSpringDamper(markerNumbers=[mGround, mCoord], stiffness=100))
@@ -607,8 +607,8 @@ definitions.append(ItemDefinition(
     #coordinates INCLUDE the reference values, so qB - qA = [1,0,0] keeps the two points where they are
     nA = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
     nB = mbs.AddNode(NodePoint(referenceCoordinates=[1,0,0]))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=nA, physicsMass=1))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=nB, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nA, mass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nB, mass=1))
     mA = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nA))
     mB = mbs.AddMarker(MarkerNodeCoordinates(nodeNumber=nB))
     mbs.AddObject(ObjectConnectorCoordinateVector(markerNumbers=[mA, mB], scalingMarker0=np.eye(3),
@@ -763,8 +763,8 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #a rotation coordinate of a rigid body node, held by a coordinate constraint
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
     node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0]))
-    mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                  physicsInertia=inertia.GetInertia6D()))
+    mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                  inertia=inertia.GetInertia6D()))
     mRotZ = mbs.AddMarker(MarkerNodeRotationCoordinate(nodeNumber=node, rotationCoordinate=2))
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
     oHold = mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mRotZ]))
@@ -854,8 +854,8 @@ definitions.append(ItemDefinition(
     miniExample=r"""    #the translation of body 1 relative to body 0 along an axis of body 0, held by a coordinate constraint
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
     node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0]))
-    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                         physicsInertia=inertia.GetInertia6D()))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                         inertia=inertia.GetInertia6D()))
     mRel = mbs.AddMarker(MarkerBodiesRelativeTranslationCoordinate(bodyNumbers=[oGround, body], axis0=[1,0,0]))
     mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nGround, coordinate=0))
     mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mRel], offset=0.3))
@@ -972,8 +972,8 @@ definitions.append(ItemDefinition(
     #the data node continues the angle beyond +-pi
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
     node = mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[0,0,0, 0,0,0]))
-    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(),
-                                         physicsInertia=inertia.GetInertia6D()))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(),
+                                         inertia=inertia.GetInertia6D()))
     nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=1, initialCoordinates=[0]))
     mRel = mbs.AddMarker(MarkerBodiesRelativeRotationCoordinate(bodyNumbers=[oGround, body], axis0=[0,0,1],
                                                                nodeNumber=nData))
@@ -1794,8 +1794,8 @@ definitions.append(ItemDefinition(
     classType=ClassTypeMarker,
     miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
     #the shape of an ANCF cable element as line segments, for contact: a cantilever falls onto a circle
-    cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=10, physicsAxialStiffness=1e4,
-                              physicsBendingDamping=0.1)
+    cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=10, axialStiffness=1e4,
+                              bendingDamping=0.1)
     [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[1,0,0],
                             numberOfElements=4, cableTemplate=cable, massProportionalLoad=[0,-9.81,0],
                             fixedConstraintsNode0=[1,1,0,1])
@@ -1890,12 +1890,12 @@ definitions.append(ItemDefinition(
     classType=ClassTypeMarker,
     miniExample=r"""    from exudyn.beams import GenerateStraightLineANCFCable2D
     #the coordinates of ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
-    cable = ObjectANCFCable2D(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
+    cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=1e4, axialStiffness=1e6)
     [nodes, elements, *_] = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
                             numberOfElements=4, cableTemplate=cable,
                             fixedConstraintsNode0=[1,1,1,1], fixedConstraintsNode1=[1,1,1,1])
     nMass = mbs.AddNode(NodePoint2D(referenceCoordinates=[0.6,0]))
-    mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint2D(nodeNumber=nMass, mass=1))
     mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
     mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[1,0,0]))
 
@@ -1976,12 +1976,12 @@ definitions.append(ItemDefinition(
     classType=ClassTypeMarker,
     miniExample=r"""    #the shape of 3D ANCF cable elements for a sliding joint: a mass point slides along a clamped, stiff cable
     from exudyn.beams import GenerateStraightLineANCFCable
-    cable = ObjectANCFCable(physicsMassPerLength=1, physicsBendingStiffness=1e4, physicsAxialStiffness=1e6)
+    cable = ObjectANCFCable(massPerLength=1, bendingStiffness=1e4, axialStiffness=1e6)
     [nodes, elements, *_] = GenerateStraightLineANCFCable(mbs, positionOfNode0=[0,0,0], positionOfNode1=[2,0,0],
                             numberOfElements=4, cableTemplate=cable,
                             fixedConstraintsNode0=[1,1,1, 1,1,1], fixedConstraintsNode1=[1,1,1, 1,1,1])
     nMass = mbs.AddNode(NodePoint(referenceCoordinates=[0.6,0,0]))
-    mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, physicsMass=1))
+    mbs.AddObject(ObjectMassPoint(nodeNumber=nMass, mass=1))
     mMass = mbs.AddMarker(MarkerNodePosition(nodeNumber=nMass))
     mbs.AddLoad(LoadForceVector(markerNumber=mMass, loadVector=[1,0,0]))
 

@@ -45,7 +45,7 @@ mode = 1
 if mode==0: #treat one element
     nc0 = mbs.AddNode(Point2DS1(referenceCoordinates=[0,0,1,0]))
     nc1 = mbs.AddNode(Point2DS1(referenceCoordinates=[L,0,1,0]))
-    o0 = mbs.AddObject(Cable2D(physicsLength=L, physicsMassPerLength=rho*A, physicsBendingStiffness=E*I, physicsAxialStiffness=E*A, nodeNumbers=[nc0,nc1]))
+    o0 = mbs.AddObject(Cable2D(length=L, massPerLength=rho*A, bendingStiffness=E*I, axialStiffness=E*A, nodeNumbers=[nc0,nc1]))
     print(mbs.GetObject(o0))
 
     mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=0))
@@ -66,8 +66,8 @@ else: #treat n elements
     lElem = L / nElements
     for i in range(nElements):
         nLast = mbs.AddNode(Point2DS1(referenceCoordinates=[lElem*(i+1),0,1,0]))
-        mbs.AddObject(Cable2D(physicsLength=lElem, physicsMassPerLength=rho*A, 
-                              physicsBendingStiffness=E*I, physicsAxialStiffness=E*A, nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
+        mbs.AddObject(Cable2D(length=lElem, massPerLength=rho*A, 
+                              bendingStiffness=E*I, axialStiffness=E*A, nodeNumbers=[int(nc0)+i,int(nc0)+i+1]))
 
     mANCF0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=0))
     mANCF1 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nc0, coordinate=1))

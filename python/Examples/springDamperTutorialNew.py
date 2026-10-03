@@ -39,7 +39,7 @@ print('static displacement = '+str(x0))
 oMass = mbs.CreateMassPoint(referencePosition=[L,0,0], 
                             initialDisplacement = [u0,0,0], 
                             initialVelocity= [v0,0,0],
-                            physicsMass=mass) #force created via gravity
+                            mass=mass) #force created via gravity
 
 oGround = mbs.CreateGround()
 

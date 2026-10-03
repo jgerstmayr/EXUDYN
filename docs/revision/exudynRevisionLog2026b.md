@@ -12483,3 +12483,33 @@ classes and names, as in RG12.1); `test_checkUserScripts` with the new names. Th
 
 **Not done**: a dictionary of settings stored by an earlier version (`SetDictionary` with `solutionSettings` keys) is not
 forwarded - the keys are not read, as before for any unknown key (RG12.34.7, left open).
+
+<a id="rg12-35"></a>
+### RG12.35 — the item parameters renamed (2026-10-04, #2814)
+
+*(Maintainer 2026-10-04: `viscousFrictionFactor` - its unit is N s/m, not the N/(m s) of the description -, and
+`rollingViscousFriction` with the unit s/m: checked in `CObjectConnectorRollingDiscPenalty.cpp`, the force is
+`rollingFrictionViscous * |f_N| * velGround`, proportional to the velocity and the normal force, so the description's
+[SI:1] was wrong and the name right; the C++ members renamed with the Python names, one name everywhere.)*
+
+**Definitions**: 35 names renamed in `itemDefs*.py` - the 27 `physics...`, `radiusSphere`, the three friction forces,
+`factorValue1`, `rollingFrictionViscous`, `intrinsicFormulation`, `classicalFormulation` - and every old name of a
+parameter a user gives kept as a renamed parameter of RG12.2 (`Deprecated('1.12.258', 2031)`, 66 entries; not for the
+parameters without interface (`CFNoInterface`, set from `sectionData`) and the read-only ones of `ObjectFFRF`); the
+texts of all definitions (descriptions, MiniExamples) follow. **Two generator fixes** that the renames needed: a
+parameter that must be given is given under its old name as well (the new one is then not required, `itemHeaderEmitter`),
+and the docstring of an item class lists the old names last, as its signature does (`itemInterfaceEmitter`; pydoclint
+DOC104).
+
+**C++** (`src/`, about 310 places), **the library and the scripts** (280 files) by the table of names; the `Create...`
+functions take the new names, the old ones as deprecated arguments (`CreateMassPoint(physicsMass=)`,
+`CreateRigidBodySpringDamper(intrinsicFormulation=)`, `CreateCoordinateConstraint(factorValue1=)`,
+`CreateRollingDiscPenalty(rollingFrictionViscous=)`, `CreateSphereQuadContact`/`CreateSphereTriangleContact(radiusSphere=)`).
+**`exudev scripts --fix`** rewrites a renamed item parameter as keyword of the item class and as key of an item dictionary.
+
+**Tests**: test model `itemParameterRenamesTest.py` - every old name that `exudyn.types` lists (66), given in the
+dictionary of `AddObject`, read and written with `GetObjectParameter`/`SetObjectParameter`, reaches the new parameter;
+`typeInformationTest.py` allows the old names in the signatures; `test_itemParameterDeprecation.py` reads the real
+`physicsMass` of `ObjectMassPoint` instead of a renamed copy; `parameterConversionTest` recorded again (the old names
+convert as the new ones, except `None`, which leaves the default, as RG12.2 decided); stubtest baseline. The test suite
+and all examples (`runTestExamples.py`) pass unchanged.

@@ -333,7 +333,7 @@ void VisualizationObjectJointALEMoving2D::UpdateGraphics(const VisualizationSett
 	qNode1 += ((CNodeODE2*)cable.GetCNode(1))->GetReferenceCoordinateVector();
 
 	//compute sliding position:
-	Real L = cable.GetParameters().physicsLength;
+	Real L = cable.GetParameters().length;
 
 	//compute sliding coordinate
 	Real slidingCoordinate = cItem->GetCNode(1)->GetCoordinateVector(ConfigurationType::Visualization)[0]

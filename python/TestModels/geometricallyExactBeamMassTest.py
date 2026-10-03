@@ -35,7 +35,7 @@ section = exu.BeamSection()
 section.stiffnessMatrix = np.diag([1e4]*6)
 section.inertia = J
 section.massPerLength = m/L
-mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=nodes, physicsLength=L, sectionData=section))
+mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=nodes, length=L, sectionData=section))
 mbs.Assemble()
 solver = exu.MainSolverImplicitSecondOrder()
 solver.InitializeSolver(mbs, exu.SimulationSettings())
@@ -56,7 +56,7 @@ section = exu.BeamSection()
 section.stiffnessMatrix = np.diag([1e9, 1e9, 1e9, 1e7, 1e7, 1e7])
 section.inertia = np.diag([2e-6, 1e-6, 1e-6])
 section.massPerLength = m/L
-mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=nodes, physicsLength=L, sectionData=section))
+mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=nodes, length=L, sectionData=section))
 for n in nodes:
     mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=n)), loadVector=[0, -0.5*m*g, 0]))
 mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))

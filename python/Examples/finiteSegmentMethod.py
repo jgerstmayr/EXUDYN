@@ -49,8 +49,8 @@ oSegmentLast = -1 #store last segment for sensor
 for i in range(nSegments):
     graphicsBeam = graphics.Brick([0,0,0],[segmentLength, a, a], graphics.color.red)
     nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[(0.5+i)*segmentLength,0,0]))
-    oRigid = mbs.AddObject(RigidBody2D(physicsMass=massPerSegment, 
-                                       physicsInertia=inertiaSegment,
+    oRigid = mbs.AddObject(RigidBody2D(mass=massPerSegment, 
+                                       inertia=inertiaSegment,
                                        nodeNumber=nRigid,
                                        visualization=VObjectRigidBody2D(graphicsData= [graphicsBeam])))
     oSegmentLast = oRigid
@@ -76,9 +76,9 @@ for i in range(nSegments):
 #create ANCF beam as reference
 useANCF = False
 if useANCF:
-    cable = ObjectANCFCable2D(nodeNumbers=[0,0],physicsLength=segmentLength, 
-                              physicsMassPerLength=rhoA, physicsBendingStiffness=EI,
-                              physicsAxialStiffness=EI*1e4, useReducedOrderIntegration=True,
+    cable = ObjectANCFCable2D(nodeNumbers=[0,0],length=segmentLength, 
+                              massPerLength=rhoA, bendingStiffness=EI,
+                              axialStiffness=EI*1e4, useReducedOrderIntegration=True,
                               visualization=VCable2D(drawHeight = a, color=graphics.color.steelblue))
     
     ANCFcable = GenerateStraightLineANCFCable2D(mbs, positionOfNode0=[0,offY,0], positionOfNode1=[L,offY,0], 

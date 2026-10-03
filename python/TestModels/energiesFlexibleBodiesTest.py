@@ -48,22 +48,22 @@ section.massPerLength = 2
 #(1) ANCFCable2D: three nodes, the middle one moving sideways
 nodes = [mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[i*L, 0, 1, 0], initialVelocities=[0, 0.2 if i == 1 else 0, 0, 0]))
          for i in range(3)]
-EnergySensors('ANCFCable2D', [mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=L,
-              physicsMassPerLength=2, physicsBendingStiffness=1, physicsAxialStiffness=100)) for i in range(2)])
+EnergySensors('ANCFCable2D', [mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[nodes[i], nodes[i+1]], length=L,
+              massPerLength=2, bendingStiffness=1, axialStiffness=100)) for i in range(2)])
 
 #(2) ANCFCable (3D)
 nodes = [mbs.AddNode(NodePointSlope1(referenceCoordinates=[i*L, 1, 0, 1, 0, 0],
                                      initialVelocities=[0, 0.2 if i == 1 else 0, 0.1 if i == 2 else 0, 0, 0, 0]))
          for i in range(3)]
-EnergySensors('ANCFCable', [mbs.AddObject(ObjectANCFCable(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=L,
-              physicsMassPerLength=2, physicsBendingStiffness=1, physicsAxialStiffness=100)) for i in range(2)])
+EnergySensors('ANCFCable', [mbs.AddObject(ObjectANCFCable(nodeNumbers=[nodes[i], nodes[i+1]], length=L,
+              massPerLength=2, bendingStiffness=1, axialStiffness=100)) for i in range(2)])
 
 #(3) BeamGeometricallyExact2D
 nodes = [mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[i*L, 2, 0], initialVelocities=[0, 0.2 if i == 1 else 0, 0.5 if i == 0 else 0]))
          for i in range(3)]
 EnergySensors('BeamGeometricallyExact2D', [mbs.AddObject(ObjectBeamGeometricallyExact2D(nodeNumbers=[nodes[i], nodes[i+1]],
-              physicsLength=L, physicsMassPerLength=2, physicsCrossSectionInertia=2e-3, physicsBendingStiffness=1,
-              physicsAxialStiffness=100, physicsShearStiffness=60)) for i in range(2)])
+              length=L, massPerLength=2, crossSectionInertia=2e-3, bendingStiffness=1,
+              axialStiffness=100, shearStiffness=60)) for i in range(2)])
 
 #(4) BeamGeometricallyExact (3D), Euler parameter nodes
 nodes = [mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[i*L, 3, 0] + list(eulerParameters0),
@@ -71,13 +71,13 @@ nodes = [mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[i*L, 3, 0] + list(eul
                                          AngularVelocity2EulerParameters_t([0.3, 0, 0] if i == 0 else [0, 0, 0], eulerParameters0))))
          for i in range(3)]
 EnergySensors('BeamGeometricallyExact', [mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]],
-              physicsLength=L, sectionData=section)) for i in range(2)])
+              length=L, sectionData=section)) for i in range(2)])
 
 #(5) ANCFBeam (3D), with the cross-section deformation as a penalty
 nodes = [mbs.AddNode(NodePointSlope23(referenceCoordinates=[i*L, 4, 0, 0, 1, 0, 0, 0, 1],
                                       initialVelocities=[0, 0.2 if i == 1 else 0, 0.1 if i == 2 else 0, 0, 0, 0, 0, 0, 0]))
          for i in range(3)]
-EnergySensors('ANCFBeam', [mbs.AddObject(ObjectANCFBeam(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=L, sectionData=section,
+EnergySensors('ANCFBeam', [mbs.AddObject(ObjectANCFBeam(nodeNumbers=[nodes[i], nodes[i+1]], length=L, sectionData=section,
               crossSectionPenaltyFactor=[1, 1, 1])) for i in range(2)])
 
 #(6) ANCFThinPlate: 2x1 elements, one corner moving out of the plane

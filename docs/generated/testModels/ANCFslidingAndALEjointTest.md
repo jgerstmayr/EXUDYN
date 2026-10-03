@@ -42,7 +42,7 @@ def AddBodyWithSlidingJoints(mbs,xPositionOfFirstNodes=0,referencePositionOfBody
     yCOM = a    #COM distance to attachment point on suspension rope; in vertical direction      
     
     nRigid = mbs.AddNode(Rigid2D(referenceCoordinates=[xPositionOfFirstNodes+referencePositionOfBodyAlongCable,-yCOM,0]));
-    oRigid = mbs.AddObject(RigidBody2D(physicsMass=massRigid, physicsInertia=inertiaRigid,nodeNumber=nRigid,visualization=VObjectRigidBody2D(graphicsData= [graphicsRigid1])))  
+    oRigid = mbs.AddObject(RigidBody2D(mass=massRigid, inertia=inertiaRigid,nodeNumber=nRigid,visualization=VObjectRigidBody2D(graphicsData= [graphicsRigid1])))  
     markerRigidTop=mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[0.,yCOM,0.])) #support point
     markerRigidTopAle = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oRigid, localPosition=[0.,yCOM-offset,0.])) #support point
     
@@ -55,7 +55,7 @@ def AddBodyWithSlidingJoints(mbs,xPositionOfFirstNodes=0,referencePositionOfBody
     cummulativeLength=0
     count=0
     while referencePositionOfBodyAlongCable >= cummulativeLength:
-        cummulativeLength+=mbs.GetObjectParameter(cable2ObjectList[count],'physicsLength')
+        cummulativeLength+=mbs.GetObjectParameter(cable2ObjectList[count],'length')
         count+=1
     count+=-1
     
@@ -90,7 +90,7 @@ mGlobalGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nGlobalGround, c
 fixANCFRotation = 0
 
 #######################ROPE2 (Carrier rope)########################################################################################################################
-cable2Template=Cable2D(physicsMassPerLength=10, physicsBendingStiffness=50000*complianceFactBend, physicsAxialStiffness=2e8*complianceFactAxial)
+cable2Template=Cable2D(massPerLength=10, bendingStiffness=50000*complianceFactBend, axialStiffness=2e8*complianceFactAxial)
 
 [cable2NodeList, cable2ObjectList, suspensionLoadList, cable2NodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, 
                 positionOfNode0=[0,0,0], positionOfNode1=[L,0,0], numberOfElements=nEl, 
@@ -104,9 +104,9 @@ cable2Template=Cable2D(physicsMassPerLength=10, physicsBendingStiffness=50000*co
 nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0], initialCoordinates=[0], initialCoordinates_t=[vALE]))
 mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nALE, coordinate=0)) #ALE velocity  marker
 
-cable1Template=ALECable2D(physicsMassPerLength=3, physicsBendingStiffness=4000*complianceFactBend, 
-                          physicsAxialStiffness=5e7*complianceFactAxial,physicsUseCouplingTerms=False,
-                          physicsAddALEvariation=False) #for compatibility with test suite results
+cable1Template=ALECable2D(massPerLength=3, bendingStiffness=4000*complianceFactBend, 
+                          axialStiffness=5e7*complianceFactAxial,useCouplingTerms=False,
+                          addALEvariation=False) #for compatibility with test suite results
 cable1Template.nodeNumbers[2]=nALE
 
 [cable1NodeList, cable1ObjectList, haulageLoadList, cable1NodePositionList, dummy]=GenerateStraightLineANCFCable2D(mbs=mbs, 
@@ -125,7 +125,7 @@ mSuspensionRopeAttachmentNodeY=mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = c
 
 graphicsCarrier={'type':'Circle', 'color':[.1,0.1,0.8,1], 'position':[0,0,0], 'radius': carrierWheelRadius}
 nCarrierRigidBody = mbs.AddNode(Rigid2D(referenceCoordinates=[L/2,offsetCarrier-carrierWheelRadius,0]))
-oCarrierRigidBody = mbs.AddObject(RigidBody2D(physicsMass=200, physicsInertia=1, 
+oCarrierRigidBody = mbs.AddObject(RigidBody2D(mass=200, inertia=1, 
                                 nodeNumber=nCarrierRigidBody,visualization=VObjectRigidBody2D(graphicsData= [graphicsCarrier])))  
 
 mCarrierX = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nCarrierRigidBody,coordinate=0))
@@ -174,7 +174,7 @@ for i in range(numberOfBodys):
 
     #Add Body
     [oRigid,nRigid,oAleSlidingJoint,oSlidingJoint]=AddBodyWithSlidingJoints(mbs,xPositionOfFirstNodes=0,referencePositionOfBodyAlongCable=positionOfBody,gravityFieldConstant=gravityFieldConstant)
-    mbs.SetObjectParameter(oSlidingJoint, 'classicalFormulation', False) #test model computed with new sliding joint formulation
+    mbs.SetObjectParameter(oSlidingJoint, 'useClassicalFormulation', False) #test model computed with new sliding joint formulation
 
     #fix rotation of rigid body
     mRigidBodyRot = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nRigid, coordinate=2)) #add rigid body marker

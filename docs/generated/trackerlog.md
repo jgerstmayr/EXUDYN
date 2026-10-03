@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.257.dev1
+- Exudyn version = 1.12.259.dev1
 - last change = 2026-10-03
 - Number of issues = 2816
-- Number of resolved issues = 2571 (257 in current version)
+- Number of resolved issues = 2573 (259 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7571,15 +7571,8 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` two Newton structures for time integration and static solver, with the modified Newton by default in the time integration (#2815)
   - description: NewtonSettings is shared; with the forwarding of RG12.1 two structures are possible, most members copied, each with its own defaults - useModifiedNewton=True for the time integration; the test suite has to be evaluated again (maintainer 2026-10-04).
   - date raised: 2026-10-03
-- `CHANGE` `HIGH EFF` `raised by: Claude-JG` item parameters renamed as decided in RG12.31: the prefix physics dropped, the friction forces, use... flags (#2814)
-  - description: physicsMass -\> mass and 26 more, sphereRadius, dynamicFrictionForce/staticFrictionOffsetForce/viscousFrictionForce, factor1, rollingViscousFriction, useIntrinsicFormulation, useClassicalFormulation; the old names forward until 2031; C++, library, scripts, documentation and tests follow (maintainer 2026-10-03).
-  - date raised: 2026-10-03
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Jupyter notebooks for the tutorials and some examples: an evaluation first (#2811)
   - description: Tutorials, and some sections of examples, as notebooks (Jupyter or similar): what it takes in the docs build (myst-nb or nbsphinx), in the test runners, the renderer and plots inside a notebook, and the size of the repository (maintainer 2026-10-03).
-  - date raised: 2026-10-03
-- `DOCU` `LOW EFF` `raised by: Claude-JG` settings and item parameters that could be renamed or restructured, for the maintainer's decision (#2802)
-  - description: maintainer 2026-10-03: search simulation settings and item parameter names that could be renamed or restructured; listed as revision2026b step RG12.31 for decision.
-  - **remarks:** the list is plan step RG12.31 (16 candidates); waits for the maintainer's decision, each decided one gets its own issue
   - date raised: 2026-10-03
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.

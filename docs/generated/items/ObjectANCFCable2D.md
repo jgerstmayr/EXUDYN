@@ -6,7 +6,7 @@
 (sec-item-objectancfcable2d)=
 # ObjectANCFCable2D
 
-A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length $L$=physicsLength and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the {ref}`EOM <EOM>`).
+A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length $L$=length and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the {ref}`EOM <EOM>`).
 
 ## Interface
 
@@ -24,20 +24,23 @@ The parameters of the item; in a dictionary, its type is 'ANCFCable2D':
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **name** | String |  | '' | objects's unique name |
-| **physicsLength** | UReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
-| **physicsMassPerLength** | UReal |  | 0. | (symbol: $\rho A$) [SI:kg/m] mass per length of beam |
-| **physicsBendingStiffness** | UReal |  | 0. | (symbol: $EI$) [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature |
-| **physicsAxialStiffness** | UReal |  | 0. | (symbol: $EA$) [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = \|\rv^\prime\|-1$ is the axial strain |
-| **physicsBendingDamping** | UReal |  | 0. | (symbol: $d_{K}$) [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$ |
-| **physicsAxialDamping** | UReal |  | 0. | (symbol: $d_{\varepsilon}$) [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$ |
-| **physicsReferenceAxialStrain** | Real |  | 0. | (symbol: $\varepsilon_0$) [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value |
-| **physicsReferenceCurvature** | Real |  | 0. | (symbol: $\kappa_0$) [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value |
+| **length** | UReal |  | 0. | (symbol: $L$) [SI:m] reference length of beam; such that the total volume (e.g. for volume load) gives $\rho A L$; must be positive |
+| **massPerLength** | UReal |  | 0. | (symbol: $\rho A$) [SI:kg/m] mass per length of beam |
+| **bendingStiffness** | UReal |  | 0. | (symbol: $EI$) [SI:Nm$^2$] bending stiffness of beam; the bending moment is $m = EI (\kappa - \kappa_0)$, in which $\kappa$ is the material measure of curvature |
+| **axialStiffness** | UReal |  | 0. | (symbol: $EA$) [SI:N] axial stiffness of beam; the axial force is $f_{ax} = EA (\varepsilon -\varepsilon_0)$, in which $\varepsilon = \|\rv^\prime\|-1$ is the axial strain |
+| **bendingDamping** | UReal |  | 0. | (symbol: $d_{K}$) [SI:Nm$^2$/s] bending damping of beam ; the additional virtual work due to damping is $\delta W_{\dot \kappa} = \int_0^L \dot \kappa \delta \kappa dx$ |
+| **axialDamping** | UReal |  | 0. | (symbol: $d_{\varepsilon}$) [SI:N/s] axial damping of beam; the additional virtual work due to damping is $\delta W_{\dot\varepsilon} = \int_0^L \dot \varepsilon \delta \varepsilon dx$ |
+| **referenceAxialStrain** | Real |  | 0. | (symbol: $\varepsilon_0$) [SI:1] reference axial strain of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference axial strain value |
+| **referenceCurvature** | Real |  | 0. | (symbol: $\kappa_0$) [SI:1/m] reference curvature of beam (pre-deformation) of beam; without external loading the beam will statically keep the reference curvature value |
 | **strainIsRelativeToReference** | Real |  | 0. | (symbol: $f\cRef$) if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration plus the values of $\varepsilon_0$ and $\kappa_0$ serve as a reference geometry; allows also values between 0. and 1. |
 | **nodeNumbers** | NodeIndex2 | 2 | [invalid (-1), invalid (-1)] | two node numbers ANCF cable element |
 | **useReducedOrderIntegration** | Index |  | 0 | 0/false: use Gauss order 9 integration for virtual work of axial forces, order 5 for virtual work of bending moments; 1/True: use Gauss order 7 integration for virtual work of axial forces, order 3 for virtual work of bending moments; 2: use mixed Lobatto/Gauss integration with exceptional quality of axial strain, however, spurious (hourglass) modes may occur! |
 | **axialForceUserFunction** | ObjectANCFCable2DAxialForceUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local axial force; see description below |
 | **bendingMomentUserFunction** | ObjectANCFCable2DBendingMomentUserFunction |  | 0 | (symbol: $\mathrm{UF} \in \Rcal$) A Python function which defines the (nonlinear relations) of local strains (including axial strain and bending strain) as well as time derivatives to the local bending moment; see description below |
 | **visualization** | VObjectANCFCable2D |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsLength` (deprecated since 1.12.258, removed in 2031): use `length`; `physicsMassPerLength` (deprecated since 1.12.258, removed in 2031): use `massPerLength`; `physicsBendingStiffness` (deprecated since 1.12.258, removed in 2031): use `bendingStiffness`; `physicsAxialStiffness` (deprecated since 1.12.258, removed in 2031): use `axialStiffness`; `physicsBendingDamping` (deprecated since 1.12.258, removed in 2031): use `bendingDamping`; `physicsAxialDamping` (deprecated since 1.12.258, removed in 2031): use `axialDamping`; `physicsReferenceAxialStrain` (deprecated since 1.12.258, removed in 2031): use `referenceAxialStrain`; `physicsReferenceCurvature` (deprecated since 1.12.258, removed in 2031): use `referenceCurvature`.
 
 ## Visualization parameters
 
@@ -354,7 +357,7 @@ $$
 -r'_y \cdot S'_2(x) \frac{1}{\rv^{\prime 2}} & \cdots & r'_x \cdot S'_4(x) \frac{1}{\rv^{\prime 2}}  \end{array} \!\!\right]
 $$
 
-**Userfunction**: `axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping, curvature, curvature_t, curvatureRef)`
+**Userfunction**: `axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, axialStiffness, axialDamping, curvature, curvature_t, curvatureRef)`
 A user function, which computes the axial force depending on time, strains and curvatures and
 object parameters (stiffness, damping).
 The object variables are provided to the function using the current values of the ANCFCable2D object.
@@ -371,14 +374,14 @@ Note that itemNumber represents the index of the object in mbs, which can be use
 | `axialStrain` | Real | $\varepsilon$ |
 | `axialStrain_t` | Real | $\varepsilon_t$ |
 | `axialStrainRef` | Real | $\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$ |
-| `physicsAxialStiffness` | Real | as given in object parameters |
-| `physicsAxialDamping` | Real | as given in object parameters |
+| `axialStiffness` | Real | as given in object parameters |
+| `axialDamping` | Real | as given in object parameters |
 | `curvature` | Real | $K$ |
 | `curvature_t` | Real | $\dot K$ |
 | `curvatureRef` | Real | $K_0 + f\cRef \cdot K\cRef$ |
 | **return value** | Real | scalar value of computed axial force |
 
-**Userfunction**: `bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping, axialStrain, axialStrain_t, axialStrainRef)`
+**Userfunction**: `bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curvature, curvature_t, curvatureRef, bendingStiffness, bendingDamping, axialStrain, axialStrain_t, axialStrainRef)`
 A user function, which computes the bending moment depending on time, strains and curvatures and
 object parameters (stiffness, damping).
 The object variables are provided to the function using the current values of the ANCFCable2D object.
@@ -395,8 +398,8 @@ Note that itemNumber represents the index of the object in mbs, which can be use
 | `curvature` | Real | $K$ |
 | `curvature_t` | Real | $\dot K$ |
 | `curvatureRef` | Real | $K_0 + f\cRef \cdot K\cRef$ |
-| `physicsBendingStiffness` | Real | as given in object parameters |
-| `physicsBendingDamping` | Real | as given in object parameters |
+| `bendingStiffness` | Real | as given in object parameters |
+| `bendingDamping` | Real | as given in object parameters |
 | `axialStrain` | Real | $\varepsilon$ |
 | `axialStrain_t` | Real | $\varepsilon_t$ |
 | `axialStrainRef` | Real | $\varepsilon_0 + f\cRef \cdot \varepsilon\cRef$ |
@@ -412,27 +415,27 @@ EI =   1e5
 
 #example of bending moment user function
 def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized,
-           curvature, curvature_t, curvatureRef, physicsBendingStiffness,
-           physicsBendingDamping, axialStrain, axialStrain_t, axialStrainRef):
+           curvature, curvature_t, curvatureRef, bendingStiffness,
+           bendingDamping, axialStrain, axialStrain_t, axialStrainRef):
     fact = min(1,t) #runs from 0 to 1
     #change reference curvature of beam over time:
     kappa=(curvature-curvatureRef*fact)
-    return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
+    return bendingStiffness*(kappa) + bendingDamping*curvature_t
 
 def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized,
-           axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness,
-           physicsAxialDamping, curvature, curvature_t, curvatureRef):
+           axialStrain, axialStrain_t, axialStrainRef, axialStiffness,
+           axialDamping, curvature, curvature_t, curvatureRef):
     fact = min(1,t) #runs from 0 to 1
-    return (physicsAxialStiffness*(axialStrain-fact*axialStrainRef) +
-            physicsAxialDamping*axialStrain_t)
+    return (axialStiffness*(axialStrain-fact*axialStrainRef) +
+            axialDamping*axialStrain_t)
 
-cable = ObjectANCFCable2D(physicsMassPerLength=rhoA,
-                physicsBendingStiffness=EI,
-                physicsBendingDamping = EI*0.1,
-                physicsAxialStiffness=EA,
-                physicsAxialDamping=EA*0.05,
-                physicsReferenceAxialStrain=0.1, #10
-                physicsReferenceCurvature=1,     #radius=1
+cable = ObjectANCFCable2D(massPerLength=rhoA,
+                bendingStiffness=EI,
+                bendingDamping = EI*0.1,
+                axialStiffness=EA,
+                axialDamping=EA*0.05,
+                referenceAxialStrain=0.1, #10
+                referenceCurvature=1,     #radius=1
                 bendingMomentUserFunction=bendingMomentUserFunction,
                 axialForceUserFunction=axialForceUserFunction,
                 )
@@ -448,9 +451,9 @@ from exudyn.beams import GenerateStraightLineANCFCable2D
 rhoA = 78.
 EA = 1000000.
 EI = 833.3333333333333
-cable = Cable2D(physicsMassPerLength=rhoA, 
-                physicsBendingStiffness=EI, 
-                physicsAxialStiffness=EA, 
+cable = Cable2D(massPerLength=rhoA, 
+                bendingStiffness=EI, 
+                axialStiffness=EA, 
                 )
 
 ancf=GenerateStraightLineANCFCable2D(mbs=mbs,

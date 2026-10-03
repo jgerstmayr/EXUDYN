@@ -39,7 +39,7 @@ def Model(mbs):
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4, 0.1, 0.1])
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=list(pb) + list(RotationMatrix2EulerParameters(Ab)),
                                        initialVelocities=[0]*7))
-    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
     return (oGround, node, body)
 
 def Simulate(useLocalHT, connector):

@@ -38,18 +38,21 @@ The parameters of the item; in a dictionary, its type is 'FFRFreducedOrder':
 | **outputVariableTypeModeBasis** | OutputVariableType |  | OutputVariableType::_None | this must be the output variable type of the outputVariableModeBasis, e.g. exu.OutputVariableType.Stress |
 | **referencePositions** | NumpyVector |  | [] | (symbol: $\LU{b}{\xv}\cRef \in \Rcal^{n\indf}$) vector containing the reference positions of all flexible nodes, needed for graphics |
 | **objectIsInitialized** | Bool |  | False | ALWAYS set to False! flag used to correctly initialize all {ref}`FFRF <FFRF>` matrices; as soon as this flag is False, some internal (constant) {ref}`FFRF <FFRF>` matrices are recomputed during Assemble() |
-| **physicsMass** | UReal |  | 0. | (symbol: $m$) total mass [SI:kg] of FFRFreducedOrder object |
-| **physicsInertia** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\Jm_r \in \Rcal^{3 \times 3}$) inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body |
-| **physicsCenterOfMass** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{b}{\bv}_{COM}$) local position of center of mass ({ref}`COM <COM>`) |
+| **mass** | UReal |  | 0. | (symbol: $m$) total mass [SI:kg] of FFRFreducedOrder object |
+| **inertia** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $\Jm_r \in \Rcal^{3 \times 3}$) inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body |
+| **centerOfMass** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{b}{\bv}_{COM}$) local position of center of mass ({ref}`COM <COM>`) |
 | **mPsiTildePsi** | NumpyMatrix |  | [] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
 | **mPsiTildePsiTilde** | NumpyMatrix |  | [] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
 | **mPhitTPsi** | NumpyMatrix |  | [] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
 | **mPhitTPsiTilde** | NumpyMatrix |  | [] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
 | **mXRefTildePsi** | NumpyMatrix |  | [] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
 | **mXRefTildePsiTilde** | NumpyMatrix |  | [] | special FFRFreducedOrder matrix, computed in ObjectFFRFreducedOrderInterface |
-| **physicsCenterOfMassTilde** | Matrix3D | 9 | [[0,0,0], [0,0,0], [0,0,0]] | (symbol: $\LU{b}{\tilde \bv}_{COM}$) tilde matrix from local position of {ref}`COM <COM>`; autocomputed during initialization |
+| **centerOfMassTilde** | Matrix3D | 9 | [[0,0,0], [0,0,0], [0,0,0]] | (symbol: $\LU{b}{\tilde \bv}_{COM}$) tilde matrix from local position of {ref}`COM <COM>`; autocomputed during initialization |
 | **tempUserFunctionForce** | NumpyVector |  | [] | (symbol: $\fv_{temp} \in \Rcal^{n_{ODE2}}$) temporary vector for UF force |
 | **visualization** | VObjectFFRFreducedOrder |  |  | parameters for visualization of item |
+
+
+Renamed parameters, still taken with a `DeprecationWarning`: `physicsMass` (deprecated since 1.12.258, removed in 2031): use `mass`; `physicsInertia` (deprecated since 1.12.258, removed in 2031): use `inertia`; `physicsCenterOfMass` (deprecated since 1.12.258, removed in 2031): use `centerOfMass`; `physicsCenterOfMassTilde` (deprecated since 1.12.258, removed in 2031): use `centerOfMassTilde`.
 
 ## Visualization parameters
 

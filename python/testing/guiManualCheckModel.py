@@ -39,7 +39,7 @@ oGround = mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0.5,-1
 #++++++++++++++++++++++++++++++++++++++
 #1) mass point + spring-damper + force (as in springDamperTutorialNew.py)
 oMass = mbs.CreateMassPoint(name='mass', referencePosition=[1.5,0.8,0], initialDisplacement=[-0.1,0,0],
-                            physicsMass=1.6, drawSize=0.15, color=graphics.color.red)
+                            mass=1.6, drawSize=0.15, color=graphics.color.red)
 oSD = mbs.CreateSpringDamper(name='springDamper', bodyNumbers=[oGround, oMass],
                              referenceLength=1.5, stiffness=400, damping=0.5, drawSize=0.08)
 lForce = mbs.CreateForce(name='force', bodyNumber=oMass, loadVector=[8,0,0])

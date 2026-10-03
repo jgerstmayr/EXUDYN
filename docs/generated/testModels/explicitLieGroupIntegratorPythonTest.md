@@ -85,7 +85,7 @@ elif nodeType == exu.NodeType.RotationRotationVector:
 
 
 oGraphics = graphics.BrickXYZ(-r/2,-L/2,-r/2, r/2,L/2,r/2, [0.1,0.1,0.8,1])
-oRB = mbs.AddObject(ObjectRigidBody(physicsMass=m, physicsInertia=[JFP[0][0], JFP[1][1], JFP[2][2], JFP[1][2], JFP[0][2], JFP[0][1]], 
+oRB = mbs.AddObject(ObjectRigidBody(mass=m, inertia=[JFP[0][0], JFP[1][1], JFP[2][2], JFP[1][2], JFP[0][2], JFP[0][1]], 
                                     nodeNumber=nRB, visualization=VObjectRigidBody(graphicsData=[oGraphics])))
 
 mMassRB = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oRB, localPosition=[0,1,0])) #this is the real COM

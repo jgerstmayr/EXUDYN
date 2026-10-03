@@ -67,7 +67,7 @@ mbs.CreateTorque(bodyNumber=b0, localPosition=[0.5,0,0],
 #create a simple mass point at [1,-1,0] with initial velocity
 m1 = mbs.CreateMassPoint(referencePosition=[1,-1,0],
                          initialVelocity = [2,5,0], #initial velocities for mass point
-                         physicsMass=1, drawSize = 0.2)
+                         mass=1, drawSize = 0.2)
 #we can obtain the node number from the mass point:
 n1 = mbs.GetObject(m1)['nodeNumber']
     
@@ -139,7 +139,7 @@ mbs.CreatePrismaticJoint(bodyNumbers=[oGround, b1], position=[2,0,0], axis=[1,0,
 
 #create simple mass point, connected with ground
 m2 = mbs.CreateMassPoint(referencePosition = [7,2,0],
-                         physicsMass = 10, gravity = [0,-9.81,0],
+                         mass = 10, gravity = [0,-9.81,0],
                          drawSize = 0.5, color=graphics.color.blue)
 
 #create spring damper between bodies (using local position) or between nodes

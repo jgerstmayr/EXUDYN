@@ -87,7 +87,7 @@ about $z$, from $\Am_0\tp \Am_1$.
 ```python
 #a planar rigid body sliding along an axis of the ground: the axis in marker 0, the normal in marker 1
 node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0,0,0]))
-body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=2, inertia=0.1))
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
 mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
 mbs.AddObject(ObjectJointPrismatic2D(markerNumbers=[mGround, mBody], axisMarker0=[1,1,0], normalMarker1=[-1,1,0]))

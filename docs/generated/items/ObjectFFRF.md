@@ -35,9 +35,9 @@ The parameters of the item; in a dictionary, its type is 'FFRF':
 | **computeFFRFterms** | Bool |  | True | flag decides whether the standard {ref}`FFRF <FFRF>` terms are computed; use this flag for user-defined definition of {ref}`FFRF <FFRF>` terms in mass matrix and quadratic velocity vector |
 | **coordinateIndexPerNode** | ArrayIndex |  | [] | this list contains the local coordinate index for every node, which is needed, e.g., for markers; the list is generated automatically every time parameters have been changed |
 | **objectIsInitialized** | Bool |  | False | ALWAYS set to False! flag used to correctly initialize all {ref}`FFRF <FFRF>` matrices; as soon as this flag is False, internal (constant) {ref}`FFRF <FFRF>` matrices are recomputed during Assemble() |
-| **physicsMass** | UReal |  | 0. | (symbol: $m$) total mass [SI:kg] of {ref}`FFRF <FFRF>` object, auto-computed from mass matrix $\LU{b}{\Mm}$ |
-| **physicsInertia** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $J_r \in \Rcal^{3 \times 3}$) inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix $\LU{b}{\Mm}$ |
-| **physicsCenterOfMass** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{b}{\bv}_{COM}$) local position of center of mass ({ref}`COM <COM>`); auto-computed from mass matrix $\LU{b}{\Mm}$ |
+| **mass** | UReal |  | 0. | (symbol: $m$) total mass [SI:kg] of {ref}`FFRF <FFRF>` object, auto-computed from mass matrix $\LU{b}{\Mm}$ |
+| **inertia** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | (symbol: $J_r \in \Rcal^{3 \times 3}$) inertia tensor [SI:kgm$^2$] of rigid body w.r.t. to the reference point of the body, auto-computed from the mass matrix $\LU{b}{\Mm}$ |
+| **centerOfMass** | Vector3D | 3 | [0.,0.,0.] | (symbol: $\LU{b}{\bv}_{COM}$) local position of center of mass ({ref}`COM <COM>`); auto-computed from mass matrix $\LU{b}{\Mm}$ |
 | **PHItTM** | NumpyMatrix |  | [] | (symbol: $\tPhi\indt\tp \in \Rcal^{n\indf \times 3}$) projector matrix; may be removed in future |
 | **referencePositions** | NumpyVector |  | [] | (symbol: $\xv\cRef \in \Rcal^{n\indf}$) vector containing the reference positions of all flexible nodes |
 | **tempVector** | NumpyVector |  | [] | (symbol: $\vv_{temp} \in \Rcal^{n\indf}$) temporary vector |
@@ -321,7 +321,7 @@ the finite element mesh, moved with the reference frame -, averaged with the wei
 they are the markers for forces, connectors and joints on the flexible body. The general body markers
 `MarkerBodyPosition` and `MarkerBodyRigid` act on the **reference frame** only, the rigid body node 0,
 and not on the deformation. `MarkerBodyMass` applies a load proportional to the total mass at the
-center of mass `physicsCenterOfMass`, through the coordinates of the reference frame only: the
+center of mass `centerOfMass`, through the coordinates of the reference frame only: the
 flexible coordinates get no share of it.
 
 This object has no MiniExample, because it needs a finite element mesh; a complete model is

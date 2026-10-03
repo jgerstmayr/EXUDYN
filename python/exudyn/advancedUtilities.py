@@ -913,7 +913,7 @@ def CreateSymbolicUserFunction(mbs, function, userFunctionName, itemIndex=None, 
     Example:
         oGround = mbs.AddObject(ObjectGround())
         node = mbs.AddNode(NodePoint(referenceCoordinates = [1.05,0,0]))
-        oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, physicsMass=1))
+        oMassPoint = mbs.AddObject(MassPoint(nodeNumber = node, mass=1))
         symbolicFunc = CreateSymbolicUserFunction(mbs, function=springForceUserFunction,
                                                   userFunctionName='springForceUserFunction',
                                                   itemTypeName='ObjectConnectorSpringDamper')
@@ -1062,11 +1062,11 @@ def CloseTCPIPconnection(TCPIPobject):
 #the bodies whose mass and center of mass a mass-proportional load can use: the type, and a function that
 #returns (mass, local position of the center of mass)
 _massOfBody = {
-    'MassPoint': lambda d: (d['physicsMass'], [0, 0, 0]),
-    'MassPoint2D': lambda d: (d['physicsMass'], [0, 0, 0]),
-    'Mass1D': lambda d: (d['physicsMass'], [0, 0, 0]),
-    'RigidBody': lambda d: (d['physicsMass'], list(d['physicsCenterOfMass'])),
-    'RigidBody2D': lambda d: (d['physicsMass'], list(d['physicsCenterOfMass']) + [0]),
+    'MassPoint': lambda d: (d['mass'], [0, 0, 0]),
+    'MassPoint2D': lambda d: (d['mass'], [0, 0, 0]),
+    'Mass1D': lambda d: (d['mass'], [0, 0, 0]),
+    'RigidBody': lambda d: (d['mass'], list(d['centerOfMass'])),
+    'RigidBody2D': lambda d: (d['mass'], list(d['centerOfMass']) + [0]),
     }
 
 

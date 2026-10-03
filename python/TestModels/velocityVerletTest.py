@@ -26,7 +26,7 @@ mbs = SC.AddSystem()               #add a new system to work with
 mass = mbs.CreateMassPoint(referencePosition=[1,0,0], 
                            initialVelocity=[1,0,0], 
                            #gravity=[10,0,0],
-                           physicsMass=10, 
+                           mass=10, 
                            graphicsDataList=[graphics.Sphere(radius=0.2,color=graphics.color.red)])
 ground = mbs.CreateGround()
 mbs.CreateSpringDamper(bodyNumbers=[ground, mass], referenceLength=1, 

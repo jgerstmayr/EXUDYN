@@ -187,12 +187,12 @@ for i in range(N):
     node = mbs.AddNode(Node1D(referenceCoordinates = [l_mass*(1+len(nMass))],
                               initialCoordinates=[0.],
                               initialVelocities=[0.]))
-    massPoint = mbs.AddObject(Mass1D(nodeNumber = node, physicsMass=mass,
+    massPoint = mbs.AddObject(Mass1D(nodeNumber = node, mass=mass,
                                      referencePosition=[0,0,0],
                                      visualization=VMass1D(graphicsData=[gSphere])))
 
     gCircle = {'type':'Circle','position':[0,0,0],'radius':0.5*r_mass, 'color':col}
-    massPoint2 = mbs.AddObject(Mass1D(nodeNumber = node, physicsMass=0,
+    massPoint2 = mbs.AddObject(Mass1D(nodeNumber = node, mass=0,
                                      referencePosition=[l_mass*(len(nMass)+1),offCircleY-l_mass*(len(nMass)+1),0], 
                                      referenceRotation=[[0,1,0],[1,0,0],[0,0,1]],
                                      visualization=VMass1D(graphicsData=[gCircle])))
@@ -200,7 +200,7 @@ for i in range(N):
 
     # node = mbs.AddNode(Point(referenceCoordinates = [l_mass*(1+len(nMass)),0,0]))    
    
-    # massPoint = mbs.AddObject(MassPoint(physicsMass = mass, nodeNumber = node,
+    # massPoint = mbs.AddObject(MassPoint(mass = mass, nodeNumber = node,
     #                                     visualization=VMassPoint(graphicsData=[gSphere])))
     
     nMass += [node]

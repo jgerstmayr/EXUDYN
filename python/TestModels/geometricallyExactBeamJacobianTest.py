@@ -51,7 +51,7 @@ def Jacobian(nodeType, numerical, velocity, inertiaFactor):
     L = 0.5
     n0 = mbs.AddNode(Node(nodeType, [0, 0, 0], RotationMatrixY(0.1) @ RotationMatrixZ(0.2), [1, 2, 3]))
     n1 = mbs.AddNode(Node(nodeType, [0.98*L, 0.05, -0.03], RotationMatrixZ(0.5) @ RotationMatrixX(0.3), [-2, 1, 4]))
-    mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[n0, n1], physicsLength=L, sectionData=Section(inertiaFactor)))
+    mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[n0, n1], length=L, sectionData=Section(inertiaFactor)))
     mbs.Assemble()
     s = exu.SimulationSettings()
     s.timeIntegration.newton.numericalDifferentiation.forODE2 = numerical
@@ -87,7 +87,7 @@ SC = exu.SystemContainer(); mbs = SC.AddSystem()
 L = 1; nElements = 8; lElement = L/nElements
 nodes = [mbs.AddNode(NodeRigidBodyRxyz(referenceCoordinates=[i*lElement, 0, 0, 0, 0, 0])) for i in range(nElements+1)]
 for i in range(nElements):
-    mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=lElement, sectionData=Section()))
+    mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], length=lElement, sectionData=Section()))
 mGround = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
 for i in range(6):
     mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[0], coordinate=i))]))

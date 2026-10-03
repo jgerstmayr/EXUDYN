@@ -81,7 +81,7 @@ class ShellMesh:
         self.density = density
         self.thickness = thickness
         self.massProportionalDamping = massProportionalDamping
-        # per-node thickness array, shape (nNodes,); None means constant physicsThickness.
+        # per-node thickness array, shape (nNodes,); None means constant thickness.
         # Set before calling CreateANCFThinPlateElements, or pass as constructor argument.
         self.thicknessAtNodes = thicknessAtNodes
 
@@ -327,15 +327,15 @@ class ShellMesh:
                 # --- per-element nodal thicknesses for variable thickness ---
                 if self.thicknessAtNodes is not None:
                     hn = self.thicknessAtNodes
-                    physicsThickness = [float(hn[i0]), float(hn[i1]), float(hn[i2]), float(hn[i3])]
+                    thickness = [float(hn[i0]), float(hn[i1]), float(hn[i2]), float(hn[i3])]
                 else:
-                    physicsThickness = self.thickness
+                    thickness = self.thickness
 
                 #plate parameters:
                 Em = self.youngsModulus
                 nu = self.poissonsRatio
 
-                thicknessList  = physicsThickness
+                thicknessList  = thickness
                 if isinstance(thicknessList, float):
                     thicknessList = [thicknessList] #make list for single float
         
@@ -366,11 +366,11 @@ class ShellMesh:
                 
                 oANCF = eii.ObjectANCFThinPlate(
                     nodeNumbers=[n0, n1, n2, n3],
-                    physicsThickness=physicsThickness,
-                    physicsStrainCoefficients=self.Dstrain,        # membrane stiffness
-                    physicsCurvatureCoefficients=self.Dcurvature,  # bending stiffness
-                    physicsDensity=self.density,
-                    physicsMassProportionalDamping=self.massProportionalDamping,
+                    thickness=thickness,
+                    strainCoefficients=self.Dstrain,        # membrane stiffness
+                    curvatureCoefficients=self.Dcurvature,  # bending stiffness
+                    density=self.density,
+                    massProportionalDamping=self.massProportionalDamping,
                 )
                 o = mbs.AddObject(oANCF)
                 self.elementNumbers.append(o)

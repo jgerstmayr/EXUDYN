@@ -37,8 +37,8 @@ def BuildCable2D(offset, torsion):
     nodes = [mbs.AddNode(NodePoint2DSlope1(referenceCoordinates=[i*L, 0, 1, 0], initialCoordinates=[0, 0.02*i*i, 0, 0.05*i]))
              for i in range(5)]
     for i in range(4):
-        e = mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=L, physicsMassPerLength=1,
-                                            physicsBendingStiffness=1, physicsAxialStiffness=1000))
+        e = mbs.AddObject(ObjectANCFCable2D(nodeNumbers=[nodes[i], nodes[i+1]], length=L, massPerLength=1,
+                                            bendingStiffness=1, axialStiffness=1000))
         mCable = mbs.AddMarker(MarkerBodyPosition(bodyNumber=e, localPosition=[0.3*L, offset, 0]))
         mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[(i+0.3)*L+0.05, -0.09, 0]))
         mbs.AddObject(SpringDamper(markerNumbers=[mGround, mCable], referenceLength=0.12, stiffness=100))
@@ -58,8 +58,8 @@ def BuildCable3D():
     nodes = [mbs.AddNode(NodePointSlope1(referenceCoordinates=[i*L, 0, 0, 1, 0, 0],
                                          initialCoordinates=[0, 0.02*i, 0.01*i, 0, 0.05*i, 0])) for i in range(3)]
     for i in range(2):
-        e = mbs.AddObject(ObjectANCFCable(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=L, physicsMassPerLength=1,
-                                          physicsBendingStiffness=1, physicsAxialStiffness=1000))
+        e = mbs.AddObject(ObjectANCFCable(nodeNumbers=[nodes[i], nodes[i+1]], length=L, massPerLength=1,
+                                          bendingStiffness=1, axialStiffness=1000))
         mCable = mbs.AddMarker(MarkerBodyPosition(bodyNumber=e, localPosition=[0.3*L, 0, 0]))
         mGround = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oGround, localPosition=[(i+0.3)*L, -0.09, 0.05]))
         mbs.AddObject(SpringDamper(markerNumbers=[mGround, mCable], referenceLength=0.12, stiffness=100))
@@ -81,7 +81,7 @@ def BuildBeam():
                                           initialCoordinates=[0, 0.02*i, 0.01*i, 0.03*i, (c-1)*i/2+0.04*i, s*i/2, 0.02*i, -s*i/2+0.05*i, (c-1)*i/2-0.03*i]))
              for i in range(3)]
     for i in range(2):
-        e = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=L, sectionData=section))
+        e = mbs.AddObject(ObjectANCFBeam(nodeNumbers=[nodes[i], nodes[i+1]], length=L, sectionData=section))
         mRigid = mbs.AddMarker(MarkerBodyRigid(bodyNumber=e, localPosition=[0.3*L, 0, 0]))
         mbs.AddObject(TorsionalSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround)), mRigid],
                                             stiffness=2, offset=0.3))

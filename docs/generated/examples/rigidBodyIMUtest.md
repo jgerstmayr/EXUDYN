@@ -85,8 +85,8 @@ if mStr == '100HzGeneralRot':
     Iyy = 0.4
 
 oGraphics = graphics.BrickXYZ(-sx,-s,-s, sx,s,s, [0.8,0.1,0.1,1])
-oGyro = mbs.AddObject(ObjectRigidBody(physicsMass=mass, 
-                                    physicsInertia=[Ixx,Iyy,Izz,0,0,0], 
+oGyro = mbs.AddObject(ObjectRigidBody(mass=mass, 
+                                    inertia=[Ixx,Iyy,Izz,0,0,0], 
                                     nodeNumber=nGyro, 
                                     visualization=VObjectRigidBody(graphicsData=[oGraphics])))
 

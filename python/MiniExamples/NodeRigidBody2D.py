@@ -22,7 +22,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 
 #a planar rigid body: x, y and the rotation angle, thrown with a spin
 node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0.2,0], initialVelocities=[1,0,2]))
-mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=2, physicsInertia=0.1))
+mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=2, inertia=0.1))
 
 mbs.Assemble()
 mbs.SolveDynamic()

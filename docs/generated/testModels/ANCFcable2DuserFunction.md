@@ -44,26 +44,26 @@ EI = 2000
 
 #example of bending moment user function
 #limit bending moment with atan function
-def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curvature, curvature_t, curvatureRef, physicsBendingStiffness, physicsBendingDamping,
+def bendingMomentUserFunction(mbs, t, itemNumber, axialPositionNormalized, curvature, curvature_t, curvatureRef, bendingStiffness, bendingDamping,
                                     axialStrain, axialStrain_t, axialStrainRef):
-    #m = physicsBendingStiffness*(curvature-curvatureRef) + physicsBendingDamping*curvature_t #this is the linear, conventional case
+    #m = bendingStiffness*(curvature-curvatureRef) + bendingDamping*curvature_t #this is the linear, conventional case
     kappa=(curvature-curvatureRef)
     kappa = 0.1*atan(10*kappa) #nonlinear behavior, somehow like elasto-plastic
-    return physicsBendingStiffness*(kappa) + physicsBendingDamping*curvature_t
+    return bendingStiffness*(kappa) + bendingDamping*curvature_t
 
 #example of axial force user function
 #reduce stiffness over time
-def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, physicsAxialStiffness, physicsAxialDamping,
+def axialForceUserFunction(mbs, t, itemNumber, axialPositionNormalized, axialStrain, axialStrain_t, axialStrainRef, axialStiffness, axialDamping,
             curvature, curvature_t, curvatureRef):
     fact = max(0.02,(2-t**0.5)) #make axial stiffness it softer over time
-    return fact*physicsAxialStiffness*(axialStrain-axialStrainRef) + physicsAxialDamping*axialStrain_t
+    return fact*axialStiffness*(axialStrain-axialStrainRef) + axialDamping*axialStrain_t
 
 #create ANCF cable object:
-cable = ObjectANCFCable2D(physicsMassPerLength=rhoA, 
-                physicsBendingStiffness=EI, 
-                physicsBendingDamping = EI*0.1,
-                physicsAxialStiffness=EA,
-                physicsAxialDamping=EA*0.05,
+cable = ObjectANCFCable2D(massPerLength=rhoA, 
+                bendingStiffness=EI, 
+                bendingDamping = EI*0.1,
+                axialStiffness=EA,
+                axialDamping=EA*0.05,
                 bendingMomentUserFunction=bendingMomentUserFunction,
                 axialForceUserFunction=axialForceUserFunction,
                 )

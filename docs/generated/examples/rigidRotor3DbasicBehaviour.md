@@ -147,8 +147,8 @@ gRotor2 = graphics.Cylinder([-L0,-eps,0],[L,0,0],r*0.01*0.25,[0.6,0.6,0.6,1],16)
 gRotorCOM = graphics.Cylinder([-lRotor*0.1,0,0],[lRotor*0.6*0.1,0,0],r*0.01*0.5,
                                  [0.3,0.9,0.3,1],16)
 gRotor3 = [backgroundX, backgroundY, backgroundZ, textCOM, textY, textZ, textSHAFT]
-rigid = mbs.AddObject(RigidBody(physicsMass=m, 
-                                physicsInertia=[Jxx,Jyyzz,Jyyzz,0,0,0], 
+rigid = mbs.AddObject(RigidBody(mass=m, 
+                                inertia=[Jxx,Jyyzz,Jyyzz,0,0,0], 
                                 nodeNumber = n1, 
                                 visualization=VObjectRigidBody2D(graphicsData=[gRotor, gRotor2, gRotorCOM]+gRotor3)))
 

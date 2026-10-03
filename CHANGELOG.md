@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 239 | 1.12.257 |
+| 1.12 | Metheney | 241 | 1.12.259 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.259** `CHANGE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` item parameters renamed as decided in RG12.31: the prefix physics dropped, the friction forces, use... flags (#2814)
+  - description: physicsMass -\> mass and 26 more, sphereRadius, dynamicFrictionForce/staticFrictionOffsetForce/viscousFrictionForce, factor1, rollingViscousFriction, useIntrinsicFormulation, useClassicalFormulation; the old names forward until 2031; C++, library, scripts, documentation and tests follow (maintainer 2026-10-03).
+  - **notes:** the item parameters of bodies and finite elements lost their prefix physics (physicsMass is mass, ...), and sphereRadius, the friction forces of CoordinateSpringDamperExt, factor1, rollingViscousFriction, useIntrinsicFormulation and useClassicalFormulation are renamed; every old name still works with a warning until 2031, and exudev scripts --fix rewrites a script
+  - date resolved: **2026-10-03 18:44**, date raised: 2026-10-03
+- **1.12.258** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` settings and item parameters that could be renamed or restructured, for the maintainer's decision (#2802)
+  - description: maintainer 2026-10-03: search simulation settings and item parameter names that could be renamed or restructured; listed as revision2026b step RG12.31 for decision.
+  - **notes:** the settings and item parameters that could be renamed were listed and decided; realized in \#2813 and \#2814
+  - date resolved: **2026-10-03 18:44**, date raised: 2026-10-03
 - **1.12.257** `CHANGE` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` simulationSettings renamed and restructured as decided in RG12.31, with every change the deprecation needs (#2813)
   - description: No substructure ends in Settings (solution, linearSolver), solution.file/.sensors/.restart, show.\*, timeIntegration.realtime and .solverType, newton.active/.residualMode, camel case fixes; the old names forward until 2031; C++, library, scripts (exudev scripts --fix), documentation and tests follow (maintainer 2026-10-03).
   - **notes:** the simulation settings are reordered - solution.file, solution.sensors, solution.restart, linearSolver, show, timeIntegration.solverType, explicit and realtime, newton.active and residualMode; every old name still works with a warning until 2031, and exudev scripts --fix rewrites a script to the new names

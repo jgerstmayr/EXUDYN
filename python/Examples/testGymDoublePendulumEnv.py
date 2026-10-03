@@ -87,16 +87,16 @@ class DoublePendulumEnv(Env):
         gCart = graphics.Brick(size=[0.5*self.length, 0.1*self.length, 0.1*self.length], 
                                            color=graphics.color.dodgerblue)
         self.nCart = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,0,0]));
-        oCart = self.mbs.AddObject(RigidBody2D(physicsMass=self.masscart, 
-                                          physicsInertia=0.1*self.masscart, #not needed
+        oCart = self.mbs.AddObject(RigidBody2D(mass=self.masscart, 
+                                          inertia=0.1*self.masscart, #not needed
                                           nodeNumber=self.nCart,
                                           visualization=VObjectRigidBody2D(graphicsData= [gCart])))
         mCartCOM = self.mbs.AddMarker(MarkerNodePosition(nodeNumber=self.nCart))
         
         gArm1 = graphics.Brick(size=[0.1*self.length, self.length, 0.1*self.length], color=graphics.color.red)
         self.nArm1 = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,0.5*self.length,0]));
-        oArm1 = self.mbs.AddObject(RigidBody2D(physicsMass=self.massarm, 
-                                          physicsInertia=self.armInertia, #not included in original paper
+        oArm1 = self.mbs.AddObject(RigidBody2D(mass=self.massarm, 
+                                          inertia=self.armInertia, #not included in original paper
                                           nodeNumber=self.nArm1,
                                           visualization=VObjectRigidBody2D(graphicsData= [gArm1])))
         
@@ -106,8 +106,8 @@ class DoublePendulumEnv(Env):
 
         gArm2 = graphics.Brick(size=[0.1*self.length, self.length, 0.1*self.length], color=graphics.color.red)
         self.nArm2 = self.mbs.AddNode(Rigid2D(referenceCoordinates=[0,1.5*self.length,0]));
-        oArm2 = self.mbs.AddObject(RigidBody2D(physicsMass=self.massarm, 
-                                          physicsInertia=self.armInertia, #not included in original paper
+        oArm2 = self.mbs.AddObject(RigidBody2D(mass=self.massarm, 
+                                          inertia=self.armInertia, #not included in original paper
                                           nodeNumber=self.nArm2,
                                           visualization=VObjectRigidBody2D(graphicsData= [gArm2])))
         

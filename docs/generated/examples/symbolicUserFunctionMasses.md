@@ -89,7 +89,7 @@ for i in range(nx):
             if i == 0:
                 b = mbs.AddObject(ObjectGround(referencePosition=p))
             else:
-                b = mbs.CreateMassPoint(referencePosition=p, physicsMass=m, gravity=g, drawSize = drawSize)
+                b = mbs.CreateMassPoint(referencePosition=p, mass=m, gravity=g, drawSize = drawSize)
                     
             # print('b=',b,': i',i,': j',j,': k',k)
             bList[i,j,k] = b

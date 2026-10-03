@@ -45,7 +45,7 @@ The parameters of `VSensorBody`, given as `visualization`:
 The body `bodyNumber`, at the point `localPosition` $\pLocB$. The local position is given in the
 body frame and measured from the **reference point** of the body - the position of its node, which
 is `referencePosition` in `CreateRigidBody`. The center of mass of an `ObjectRigidBody` lies at
-`physicsCenterOfMass` from it, so a sensor at the center of mass has that local position.
+`centerOfMass` from it, so a sensor at the center of mass has that local position.
 
 ### Measures
 
@@ -60,7 +60,7 @@ lists them under **Output variables** - e.g. `Position`, `Velocity`, `Displaceme
 ```python
 #a point of a body given by its local position: a planar rigid body spinning about its center
 node = mbs.AddNode(NodeRigidBody2D(referenceCoordinates=[0.5,0.2,0], initialVelocities=[0,0,0.5*np.pi]))
-body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, physicsMass=1, physicsInertia=0.1))
+body = mbs.AddObject(ObjectRigidBody2D(nodeNumber=node, mass=1, inertia=0.1))
 sPoint = mbs.AddSensor(SensorBody(bodyNumber=body, localPosition=[0.5,0,0],
                                   outputVariableType=exu.OutputVariableType.Position,
                                   storeInternal=True, writeToFile=False))
