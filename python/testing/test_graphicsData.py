@@ -116,7 +116,7 @@ def testTheBodyMovesWithTheSolution():
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.endTime = 0.5
     simulationSettings.timeIntegration.numberOfSteps = 50
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
     simulationSettings.timeIntegration.verboseMode = 0
     mbs.SolveDynamic(simulationSettings)
     after = BodyTriangles()

@@ -152,7 +152,7 @@ Real CSolverStatic::ComputeNewtonResidual(CSystem& computationalSystem, const Si
     STOPTIMER(timer.ODE2RHS);
 
     STARTTIMER(timer.ODE1RHS);
-    if (simulationSettings.staticSolver.constrainODE1coordinates)
+    if (simulationSettings.staticSolver.constrainODE1Coordinates)
     {
         Vector& initialODE1 = computationalSystem.GetSystemData().GetCData().initialState.ODE1Coords;
         CHECKandTHROW(ode1Residual.NumberOfItems() == initialODE1.NumberOfItems(),
@@ -249,7 +249,7 @@ void CSolverStatic::ComputeNewtonJacobian(CSystem& computationalSystem, const Si
     STARTTIMER(timer.jacobianODE1);
     //Tangent stiffness: for ODE1 part, the jacobian is de facto computed for RHS while the ODE2 jacobian is put to LHS by multiplying with (-1)
     //ODE1 K-Matrix; has no factor
-    if (simulationSettings.staticSolver.constrainODE1coordinates)
+    if (simulationSettings.staticSolver.constrainODE1Coordinates)
     {
         //set jacobianODE1 to unit matrix, because this would not work otherwise!
         //equation reads: ODE1RHS=y1-y1initial=0

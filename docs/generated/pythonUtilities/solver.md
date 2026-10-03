@@ -66,13 +66,13 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-solvedynamic)=
 ## Function: SolveDynamic
 
-[`SolveDynamic(mbs, simulationSettings = None, solverType = exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues = False, storeSolver = True, showHints = False, showCausingItems = True, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L216)
+[`SolveDynamic(mbs, simulationSettings = None, solverType = None, updateInitialValues = False, storeSolver = True, showHints = False, showCausingItems = True, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L216)
 
 - **function description**: solves the dynamic mbs problem using simulationSettings and solver type; see MainSolverImplicitSecondOrder, {ref}`sec-mainsolverimplicitsecondorder`, for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))
 - **input**:
   - `mbs`: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
-  - `simulationSettings`: specific simulation settings out of exu.SimulationSettings(), as described in {ref}`sec-solutionsettings`; use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special {ref}`sec-overview-basics-speedup`)
-  - `solverType`: use exudyn.DynamicSolverType to set specific solver (default=generalized alpha)
+  - `simulationSettings`: specific simulation settings out of exu.SimulationSettings(), as described in {ref}`sec-solutionsettings`; use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicit; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special {ref}`sec-overview-basics-speedup`)
+  - `solverType`: an exudyn.DynamicSolverType for this run, which takes the place of simulationSettings.timeIntegration.solverType while the solver runs and is set back afterwards; None (default): the solver given by simulationSettings.timeIntegration.solverType (default GeneralizedAlpha)
   - `updateInitialValues`: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
   - `storeSolver`: if True, the dynamicSolver object is stored in the mbs.sys dictionary as mbs.sys['dynamicSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
   - `showHints`: show additional hints, if solver fails
@@ -110,10 +110,18 @@ Most of the solvers are implemented inside the C++ core.
 - **NOTE**: this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolveDynamic(...). For description of the interface, see the MainSystem Python extensions, {ref}`sec-mainsystemextensions-solvedynamic`
 
 
+(sec-solver--solvedynamic)=
+## Function: _SolveDynamic
+
+[`_SolveDynamic(mbs, simulationSettings, solverType, updateInitialValues, storeSolver, showHints, showCausingItems, autoAssemble)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L276)
+
+- **function description**: SolveDynamic with the solver type decided and set in the settings
+
+
 (sec-solver-solversuccess)=
 ## Function: SolverSuccess
 
-[`SolverSuccess(solverStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L353)
+[`SolverSuccess(solverStructure)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L367)
 
 - **function description**: return success (True/False) and error message of solver after SolveSteps(...), SolveSystem(...), SolveDynamic(...) or SolveStatic(...) have been called. May also be set if other higher level functions called e.g. SolveSystem(...)
 - **input**:
@@ -141,7 +149,7 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-computelinearizedsystem)=
 ## Function: ComputeLinearizedSystem
 
-[`ComputeLinearizedSystem(mbs, simulationSettings = None, projectIntoConstraintNullspace = False, singularValuesTolerance = 1e-12, returnConstraintJacobian = False, returnConstraintNullspace = False, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L396)
+[`ComputeLinearizedSystem(mbs, simulationSettings = None, projectIntoConstraintNullspace = False, singularValuesTolerance = 1e-12, returnConstraintJacobian = False, returnConstraintNullspace = False, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L410)
 
 - **function description**: compute linearized system of equations for ODE2 part of mbs, not considering the effects of algebraic constraints; for computation of eigenvalues and advanced computation with constrained systems, see ComputeODE2Eigenvalues; the current implementation is also able to project into the constrained space, however, this currently does not generally work with non-holonomic systems
 - **input**:
@@ -189,7 +197,7 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-computeode2eigenvalues)=
 ## Function: ComputeODE2Eigenvalues
 
-[`ComputeODE2Eigenvalues(mbs, simulationSettings = None, useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates = [], convert2Frequencies = False, useAbsoluteValues = True, computeComplexEigenvalues = False, ignoreAlgebraicEquations = False, singularValuesTolerance = 1e-12, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L530)
+[`ComputeODE2Eigenvalues(mbs, simulationSettings = None, useSparseSolver = False, numberOfEigenvalues = 0, constrainedCoordinates = [], convert2Frequencies = False, useAbsoluteValues = True, computeComplexEigenvalues = False, ignoreAlgebraicEquations = False, singularValuesTolerance = 1e-12, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L544)
 
 - **function description**: compute eigenvalues for unconstrained ODE2 part of mbs, which represent the square of the eigenfrequencies (in radiant) of the undamped system; the computation may include constraints in case that ignoreAlgebraicEquations=False (however, this currently does not generally work with non-holonomic systems); for algebraic constraints, however, a dense singular value decomposition of the constraint jacobian is used for the nullspace projection; the computation is done for the initial values of the mbs, independently of previous computations. If you would like to use the current state for the eigenvalue computation, you need to copy the current state to the initial state (using GetSystemState, SetSystemState, see {ref}`sec-mbs-systemdata`); note that mass and stiffness matrices are computed in dense mode so far, while eigenvalues are computed according to useSparseSolver.
 - **input**:
@@ -250,7 +258,7 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-computesystemdegreeoffreedom)=
 ## Function: ComputeSystemDegreeOfFreedom
 
-[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L776)
+[`ComputeSystemDegreeOfFreedom(mbs, simulationSettings = None, threshold = 1e-12, verbose = False, useSVD = False, autoAssemble = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L790)
 
 - **function description**: compute system DOF numerically, considering Grübler-Kutzbach formula as well as redundant constraints; uses numpy matrix rank or singular value decomposition of scipy (useSVD=True)
 - **input**:
@@ -296,7 +304,7 @@ Most of the solvers are implemented inside the C++ core.
 (sec-solver-checksolverinfostatistics)=
 ## Function: CheckSolverInfoStatistics
 
-[`CheckSolverInfoStatistics(solverName, infoStat, numberOfEvaluations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L906)
+[`CheckSolverInfoStatistics(solverName, infoStat, numberOfEvaluations)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/solver.py#L920)
 
 - **function description**: helper function for solvers to check e.g. if high number of memory allocations happened during simulation This can happen, if large amount of sensors are attached and output is written in every time step
 - **input**: stat=exudyn.special.InfoStat() from previous step, numberOfEvaluations is a counter which is proportional to number of RHS evaluations in method

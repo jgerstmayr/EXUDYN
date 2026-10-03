@@ -175,11 +175,11 @@ for case in caseList:
     stepSize = 0.001
     
     simulationSettings = exu.SimulationSettings()
-    #simulationSettings.solutionSettings.solutionWritePeriod = 2e-3  #output interval
+    #simulationSettings.solution.file.writePeriod = 2e-3  #output interval
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.solutionInformation = 'CASE: '+case
-    simulationSettings.displayStatistics = True
+    simulationSettings.solution.file.information = 'CASE: '+case
+    simulationSettings.show.statistics = True
     simulationSettings.timeIntegration.verboseMode = 1
     
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=False

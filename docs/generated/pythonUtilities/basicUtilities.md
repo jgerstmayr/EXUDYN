@@ -190,7 +190,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`jointArgsTe
   - `mbs`: mbs containing object
   - `sensorNumber`: integer sensor number to be recorded
   - `endTime`: end time of simulation, as given in simulationSettings.timeIntegration.endTime
-  - `sensorsWritePeriod`: as given in simulationSettings.solutionSettings.sensorsWritePeriod
+  - `sensorsWritePeriod`: as given in simulationSettings.solution.sensors.writePeriod
   - `sensorOutputSize`: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)
 - **output**: adds an according SensorUserFunction sensor to mbs; returns new sensor number; during initialization a new numpy array is allocated in  mbs.variables['sensorRecord'+str(sensorNumber)] and the information is written row-wise: [time, sensorValue1, sensorValue2, ...]
 - **notes**: Warning: this method is DEPRECATED, use storeInternal in Sensors, which is much more performant; Note, that a sensor usually just passes through values of an existing sensor, while recording the values to a numpy array row-wise (time in first column, data in remaining columns)
@@ -260,7 +260,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFALEtest
 
 [`LoadSolutionFile(fileName, safeMode = False, maxRows = -1, verbose = True, hasHeader = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L540)
 
-- **function description**: read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
+- **function description**: read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solution.file.name='...') into dictionary:
 - **input**:
   - `fileName`: string containing directory and filename of stored coordinatesSolutionFile
   - `saveMode`: if True, it loads lines directly to load inconsistent lines as well; use this for huge files (>2GB); is slower but needs less memory!
@@ -327,7 +327,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 
 [`LoadBinarySolutionFile(fileName, maxRows = -1, verbose = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L733)
 
-- **function description**: read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary
+- **function description**: read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solution.file.name='...') into dictionary
 - **input**:
   - `fileName`: string containing directory and filename of stored coordinatesSolutionFile
   - `verbose`: if True, some information is written when importing file (use for huge files to track progress)
@@ -357,7 +357,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 - **input**:
   - `mbs`: MainSystem to be operated with
   - `simulationSettings`: simulationSettings which is updated and shall be used afterwards for SolveDynamic(...) or SolveStatic(...)
-  - `restartFileName`: string containing directory and filename of stored restart file, as given in solutionSettings.restartFileName
+  - `restartFileName`: string containing directory and filename of stored restart file, as given in solution.restart.name
   - `verbose`: False=no information, True=basic information
 - **output**: modifies simulationSettings and sets according initial conditions in mbs
 

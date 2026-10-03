@@ -133,7 +133,7 @@ simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.timeIntegration.simulateInRealtime =False
+simulationSettings.timeIntegration.realtime.active =False
 
 
 SC.visualizationSettings.view0.scene.drawWorldBasis = True

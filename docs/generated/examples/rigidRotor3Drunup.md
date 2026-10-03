@@ -164,13 +164,13 @@ mbs.Assemble()
 #mbs.systemData.Info()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-5  #output interval
-simulationSettings.solutionSettings.sensorsWritePeriod = 1e-5  #output interval
+simulationSettings.solution.file.writePeriod = 1e-5  #output interval
+simulationSettings.solution.sensors.writePeriod = 1e-5  #output interval
 
 if isSymmetric:
-    simulationSettings.solutionSettings.solutionInformation = "Runup of Laval rotor, resonance="+str(round(fRes,3))+"Hz at 80-90 seconds"
+    simulationSettings.solution.file.information = "Runup of Laval rotor, resonance="+str(round(fRes,3))+"Hz at 80-90 seconds"
 else:
-    simulationSettings.solutionSettings.solutionInformation = "Runup of unsymmetric rotor"
+    simulationSettings.solution.file.information = "Runup of unsymmetric rotor"
 
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
@@ -182,7 +182,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 #create animations (causes slow simulation):
 createAnimation=True
 if createAnimation:
-    simulationSettings.solutionSettings.recordImagesInterval = 0.2
+    simulationSettings.solution.recordImagesInterval = 0.2
     SC.visualizationSettings.exportImages.saveImageFileName = "images/frame"
     SC.visualizationSettings.view0.window.renderWindowSize = [1600,1080]
 

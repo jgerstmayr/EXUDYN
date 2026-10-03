@@ -203,22 +203,22 @@ print('n spheres=',len(items['MarkerBasedSpheres']), ', ss=',ss)
 
 tEnd = 10
 simulationSettings = exu.SimulationSettings()
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-#simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.02
-simulationSettings.solutionSettings.outputPrecision = 5 #make files smaller
-simulationSettings.solutionSettings.exportAccelerations = False
-simulationSettings.solutionSettings.exportVelocities = False
-simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/test.txt'
-simulationSettings.displayComputationTime = True
-#simulationSettings.displayStatistics = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+#simulationSettings.solution.file.write = True
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.02
+simulationSettings.solution.precision = 5 #make files smaller
+simulationSettings.solution.file.export.accelerations = False
+simulationSettings.solution.file.export.velocities = False
+simulationSettings.solution.file.name = 'solution/test.txt'
+simulationSettings.show.computationTime = True
+#simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.stepInformation += 32 #show time to go
 simulationSettings.parallel.numberOfThreads = 8 #this should not be higher than the number of real cores (not threads)
 
-simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False
-simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True
+simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False
+simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody = True
 
 SC.visualizationSettings.general.graphicsUpdateInterval=2
 SC.visualizationSettings.general.circleTiling=20
@@ -241,7 +241,7 @@ SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 SC.visualizationSettings.exportImages.saveImageTimeOut=10000 #5000 is too shot sometimes!
 
 if False:
-    simulationSettings.solutionSettings.recordImagesInterval = 0.005
+    simulationSettings.solution.recordImagesInterval = 0.005
 
 
 simulate=True

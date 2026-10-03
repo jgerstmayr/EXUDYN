@@ -104,8 +104,8 @@ h = 0.5e-3 #step size
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.solutionSettings.solutionWritePeriod = 0.04 #store every 5 ms
-# simulationSettings.displayComputationTime = True
+simulationSettings.solution.file.writePeriod = 0.04 #store every 5 ms
+# simulationSettings.show.computationTime = True
 
 SC.visualizationSettings.view0.window.renderWindowSize=[1600,1080]
 SC.visualizationSettings.openGL.multiSampling = 4
@@ -126,7 +126,7 @@ SC.visualizationSettings.nodes.showBasis=False
 # omega 2 =  [-0.08742566  0.11224089  4.99987917]
 
 if useGraphics:
-    simulationSettings.timeIntegration.simulateInRealtime = True
+    simulationSettings.timeIntegration.realtime.active = True
     SC.renderer.Start()
     SC.renderer.RestoreSavedState() #reload old view
     

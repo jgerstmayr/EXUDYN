@@ -94,9 +94,9 @@ simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordi
 #simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
-simulationSettings.solutionSettings.solutionInformation = "Rigid pendulum with switching constraints"
-simulationSettings.displayStatistics = False
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.information = "Rigid pendulum with switching constraints"
+simulationSettings.show.statistics = False
+simulationSettings.solution.file.write=False
 
 #(not testIsActive) = True
 if not testIsActive: 

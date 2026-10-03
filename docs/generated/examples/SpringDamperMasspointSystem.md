@@ -82,21 +82,21 @@ for i in range( len(stepSizeList) ):
     mbs = SC.AddSystem()
     
     simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-    simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/BASpringDamperSystem h=' + str(stepSizeList[i]) + '.txt'
+    simulationSettings.solution.file.name = 'solution/BASpringDamperSystem h=' + str(stepSizeList[i]) + '.txt'
     
     print(int( tEnd/stepSizeList[i] ) )
     
     writeStep = 0.01
     simulationSettings.timeIntegration.numberOfSteps = int( tEnd/stepSizeList[i] )
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.writeSolutionToFile = createSolutionFile
-    simulationSettings.solutionSettings.solutionWritePeriod = writeStep
-    simulationSettings.solutionSettings.outputPrecision = 16
-    simulationSettings.displayComputationTime = True
+    simulationSettings.solution.file.write = createSolutionFile
+    simulationSettings.solution.file.writePeriod = writeStep
+    simulationSettings.solution.precision = 16
+    simulationSettings.show.computationTime = True
     simulationSettings.timeIntegration.verboseMode = 1
-    #simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    #simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     #simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1           
-    #simulationSettings.displayStatistics = True
+    #simulationSettings.show.statistics = True
     
     
     SC.visualizationSettings.bodies.showNumbers = True

@@ -167,16 +167,16 @@ exu.Print("finish gContact")
 tEnd = 0.1
 h= 0.0002
 simulationSettings = exu.SimulationSettings()
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.02
-simulationSettings.solutionSettings.sensorsWritePeriod = h*10
-simulationSettings.solutionSettings.outputPrecision = 5 #make files smaller
-simulationSettings.solutionSettings.exportAccelerations = False
-simulationSettings.solutionSettings.exportVelocities = False
-simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/test.txt'
-simulationSettings.displayComputationTime = True
-#simulationSettings.displayStatistics = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.02
+simulationSettings.solution.sensors.writePeriod = h*10
+simulationSettings.solution.precision = 5 #make files smaller
+simulationSettings.solution.file.export.accelerations = False
+simulationSettings.solution.file.export.velocities = False
+simulationSettings.solution.file.name = 'solution/test.txt'
+simulationSettings.show.computationTime = True
+#simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.parallel.numberOfThreads = 1 #use 1 thread to create reproducible results (due to round off errors in sparse vector?)
 
@@ -209,8 +209,8 @@ if not testIsActive:
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
-simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True ##2022-12-16: increase performance for multi-threading, Newton increment faster by factor 6 for 8 threads
+simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
+simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody = True ##2022-12-16: increase performance for multi-threading, Newton increment faster by factor 6 for 8 threads
 
 #one run with a single thread, which is what makes this test reproducible. The scaling over
 #thread counts is measured by generalContactSpheresPerf.py (#2513).

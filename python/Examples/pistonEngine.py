@@ -344,22 +344,22 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
 
-simulationSettings.timeIntegration.simulateInRealtime = True
+simulationSettings.timeIntegration.realtime.active = True
 
-simulationSettings.solutionSettings.solutionWritePeriod=0.01
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.sensorsWritePeriod = stepSize
-simulationSettings.solutionSettings.writeInitialValues = False #otherwise values are duplicated
-simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
+simulationSettings.solution.file.writePeriod=0.01
+simulationSettings.solution.file.write = True
+simulationSettings.solution.sensors.writePeriod = stepSize
+simulationSettings.solution.file.writeInitialValues = False #otherwise values are duplicated
+simulationSettings.solution.file.name = 'solution/coordinatesSolution.txt'
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
 
 simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator = False
-simulationSettings.linearSolverType=exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType=exu.LinearSolverType.EigenSparse
 
-simulationSettings.solutionSettings.solutionInformation = "Piston engine"
+simulationSettings.solution.file.information = "Piston engine"
 
 SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
 SC.visualizationSettings.view0.scene.drawWorldBasis = True

@@ -145,14 +145,14 @@ simulationSettings.timeIntegration.startTime = 0
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8*100 #10000
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-10
 simulationSettings.timeIntegration.verboseMode = 1
-# simulationSettings.timeIntegration.simulateInRealtime = True #to see what happens ...
+# simulationSettings.timeIntegration.realtime.active = True #to see what happens ...
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 
-simulationSettings.solutionSettings.solutionInformation = 'Hydraulics user function test'
+simulationSettings.solution.file.information = 'Hydraulics user function test'
 
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 2
@@ -161,7 +161,7 @@ if useGraphics:
     SC.renderer.Start()
     # SC.renderer.DoIdleTasks()
 
-simulationSettings.staticSolver.constrainODE1coordinates = True #True: set pressures to initial values
+simulationSettings.staticSolver.constrainODE1Coordinates = True #True: set pressures to initial values
 if staticInitialization:
     mbs.SolveStatic(simulationSettings, updateInitialValues=True) #results are new initial values
     force = mbs.GetObjectOutput(oDC, variableType=exu.OutputVariableType.Force)

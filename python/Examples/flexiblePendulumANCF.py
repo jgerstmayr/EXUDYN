@@ -102,8 +102,8 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 
 simulationSettings.parallel.numberOfThreads = 4 #4 is optimal for 25 elements
 
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = h*100
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = h*100
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
@@ -114,8 +114,8 @@ simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-6
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
 simulationSettings.timeIntegration.adaptiveStep = True #disable adaptive step reduction
 
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.displayStatistics = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.show.statistics = True
 SC.visualizationSettings.loads.show = False
 SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.StrainLocal
 #SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.CurvatureLocal

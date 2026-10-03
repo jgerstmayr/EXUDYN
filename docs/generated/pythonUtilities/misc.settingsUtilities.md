@@ -16,7 +16,7 @@ every function here runs without a window and can be tested without one.
 
 [`GetComboBoxListsDict(exu = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/misc/settingsUtilities.py#L67)
 
-- **function description**: The values a settings item of an enum type may take, as {typeName: [values]}. EVERY enum of the module, not a hand-written list of three: this named OutputVariableType, LinearSolverType and ItemType, and timeIntegration.explicitIntegration.dynamicSolverType - a DynamicSolverType - was therefore edited as free text, where a typo is a silent wrong value (#2597). A pybind11 enum is recognised by its __members__, so an enum added to the module arrives here by itself.
+- **function description**: The values a settings item of an enum type may take, as {typeName: [values]}. EVERY enum of the module, not a hand-written list of three: this named OutputVariableType, LinearSolverType and ItemType, and timeIntegration.solverType - a DynamicSolverType - was therefore edited as free text, where a typo is a silent wrong value (#2597). A pybind11 enum is recognised by its __members__, so an enum added to the module arrives here by itself.
 - **input**:
   - `exu`: the exudyn module
 - **output**: the dictionary the dialog picks its combo box entries from
@@ -167,7 +167,7 @@ every function here runs without a window and can be tested without one.
   - `reference`: see ChangedSettings
   - `comment`: True writes one '#' line saying how many settings differ, which is what makes the block readable when it is stored somewhere
 - **output**: the lines as one string, '' if nothing differs and comment is False
-- **notes**: This is also what belongs in a solution file that has to be reproducible: simulationSettings.solutionSettings.solutionInformation is written into the header of the solution file, and it takes any string.
+- **notes**: This is also what belongs in a solution file that has to be reproducible: simulationSettings.solution.file.information is written into the header of the solution file, and it takes any string.
 
 
 (sec-settingsutilities-printchangedsettings)=

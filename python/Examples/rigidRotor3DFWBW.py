@@ -184,10 +184,10 @@ mbs.Assemble()
 #mbs.systemData.Info()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-5  #output interval
-simulationSettings.solutionSettings.sensorsWritePeriod = 1e-5  #output interval
+simulationSettings.solution.file.writePeriod = 1e-5  #output interval
+simulationSettings.solution.sensors.writePeriod = 1e-5  #output interval
 
-simulationSettings.solutionSettings.solutionInformation = "Runup of "+s+" rotor: "+modeStr + ", " + symStr
+simulationSettings.solution.file.information = "Runup of "+s+" rotor: "+modeStr + ", " + symStr
 
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
@@ -199,7 +199,7 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 #create animations (causes slow simulation):
 createAnimation=True
 if createAnimation:
-    simulationSettings.solutionSettings.recordImagesInterval = 0.05
+    simulationSettings.solution.recordImagesInterval = 0.05
     SC.visualizationSettings.exportImages.saveImageFileName = "images/frame"
     SC.visualizationSettings.view0.window.renderWindowSize = [1600,1080]
     SC.visualizationSettings.openGL.multiSampling = 4

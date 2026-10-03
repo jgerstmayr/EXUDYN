@@ -481,7 +481,7 @@ SC.visualizationSettings.view0.window.renderWindowSize=[1600,1024]
 ##ANIMATIONS
 ##make images for animations (requires FFMPEG):
 ##requires a subfolder 'images'
-#simulationSettings.solutionSettings.recordImagesInterval=endTime/200
+#simulationSettings.solution.recordImagesInterval=endTime/200
 
 if not testIsActive: #only start graphics once, but after background is set
     SC.renderer.Start()
@@ -491,7 +491,7 @@ if not testIsActive: #only start graphics once, but after background is set
 
 #SC.visualizationSettings.nodes.show = False
 
-simulationSettings.solutionSettings.solutionInformation = "PARTS_1Joint"
+simulationSettings.solution.file.information = "PARTS_1Joint"
 
 
 if computeDynamic:
@@ -510,9 +510,9 @@ if computeDynamic:
     simulationSettings.timeIntegration.adaptiveStep = False #disable adaptive step reduction
     ##############################################################
     # IMPORTANT!!!!!!!!!
-    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse #sparse solver !!!!!!!!!!!!!!!
+    simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse #sparse solver !!!!!!!!!!!!!!!
     ##############################################################
-    simulationSettings.displayStatistics = True
+    simulationSettings.show.statistics = True
         
     
     mbs.SolveDynamic(simulationSettings)

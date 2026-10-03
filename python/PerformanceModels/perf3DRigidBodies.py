@@ -96,17 +96,17 @@ h=0.001  #use small step size to detext contact switching
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = 0.005
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
+simulationSettings.solution.file.writePeriod = 0.005
+simulationSettings.solution.sensors.writePeriod = 0.01
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 #simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep = True
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.displayComputationTime = True
-simulationSettings.displayStatistics = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.show.computationTime = True
+simulationSettings.show.statistics = True
 simulationSettings.parallel.numberOfThreads = 4
 
 SC.visualizationSettings.nodes.show = True
@@ -128,7 +128,7 @@ if not testIsActive:
     SC.renderer.RestoreSavedState()
     #SC.renderer.DoIdleTasks()
 else:
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
 
 mbs.SolveDynamic(simulationSettings)
 

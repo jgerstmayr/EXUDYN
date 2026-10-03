@@ -138,16 +138,16 @@ print("finish gContact")
 tEnd = 10
 h= 0.0001*0.25
 simulationSettings = exu.SimulationSettings()
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-#simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.02
-simulationSettings.solutionSettings.outputPrecision = 5 #make files smaller
-simulationSettings.solutionSettings.exportAccelerations = False
-simulationSettings.solutionSettings.exportVelocities = False
-simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/test.txt'
-simulationSettings.displayComputationTime = True
-#simulationSettings.displayStatistics = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+#simulationSettings.solution.file.write = True
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.02
+simulationSettings.solution.precision = 5 #make files smaller
+simulationSettings.solution.file.export.accelerations = False
+simulationSettings.solution.file.export.velocities = False
+simulationSettings.solution.file.name = 'solution/test.txt'
+simulationSettings.show.computationTime = True
+#simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.parallel.numberOfThreads = 4
 
@@ -174,7 +174,7 @@ SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 SC.visualizationSettings.exportImages.saveImageTimeOut=10000 #5000 is too shot sometimes!
 if False:
-    simulationSettings.solutionSettings.recordImagesInterval = 0.025
+    simulationSettings.solution.recordImagesInterval = 0.025
     SC.visualizationSettings.general.graphicsUpdateInterval=2
 
 
@@ -194,7 +194,7 @@ if simulate:
 
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
+    simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
     mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
     #print(gContact)
     #p = mbs.GetNodeOutput(n, variableType=exu.OutputVariableType.Position)

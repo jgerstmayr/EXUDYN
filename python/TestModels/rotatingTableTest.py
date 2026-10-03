@@ -171,16 +171,16 @@ for mode in range(2):
     h = 0.005
     simulationSettings.timeIntegration.endTime = tEnd #0.2 for testing
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
-    #simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-    #simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
+    #simulationSettings.solution.file.writePeriod = 0.01
+    #simulationSettings.solution.sensors.writePeriod = 0.01
     simulationSettings.timeIntegration.verboseMode = 1
-    simulationSettings.displayStatistics = True
+    simulationSettings.show.statistics = True
 
     # simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     
-    simulationSettings.timeIntegration.simulateInRealtime = (not testIsActive)
+    simulationSettings.timeIntegration.realtime.active = (not testIsActive)
     
     SC.visualizationSettings.connectors.showJointAxes = True
     SC.visualizationSettings.connectors.jointAxesLength = 0.3
@@ -190,7 +190,7 @@ for mode in range(2):
     SC.visualizationSettings.openGL.light0.shadow=0.15
     SC.visualizationSettings.openGL.multiSampling = 4
     SC.visualizationSettings.openGL.light0.position = [8,8,10,0]
-    simulationSettings.solutionSettings.solutionInformation = "Example Kollermill"
+    simulationSettings.solution.file.information = "Example Kollermill"
     SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
     
     if not testIsActive:

@@ -54,15 +54,15 @@ stepSize = 1e-5
 tEnd = 1
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
-simulationSettings.solutionSettings.solutionWritePeriod = 0.02
+simulationSettings.solution.file.write = (not testIsActive)
+simulationSettings.solution.file.writePeriod = 0.02
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 SC.visualizationSettings.view0.window.renderWindowSize=[1600,2000]

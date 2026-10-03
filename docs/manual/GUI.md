@@ -433,8 +433,8 @@ View of `SolutionViewer` (as of Exudyn 1.5.42.dev1)
 
 The `SolutionViewer` adds a `tkinter` interactive dialog, which lets you interact with the model, with the following features:
 
-- The SolutionViewer represents a 'Player' for the dynamic solution or a series of static solutions, which is available after simulation if `solutionSettings.writeSolutionToFile = True`
-- The parameter `solutionSettings.solutionWritePeriod` represents the time period used to store solutions during dynamic computations.
+- The SolutionViewer represents a 'Player' for the dynamic solution or a series of static solutions, which is available after simulation if `solution.file.write = True`
+- The parameter `solution.file.writePeriod` represents the time period used to store solutions during dynamic computations.
 - As soon as 'Run' is pressed, the player runs (and it may be started automatically as well)
 - In the 'Static' mode, drag the slider 'Solution steps' to view the solution steps
 - In the 'Continuous run' mode, the player runs in an infinite loop
@@ -450,7 +450,7 @@ The solution should be loaded with
 `LoadSolutionFile('solution/coordinatesSolution.txt')`, where 'solution/coordinatesSolution.txt' is the default solution file,
 see
 
-- `exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName`
+- `exu.SimulationSettings().solution.file.name`
 
 You can call the `SolutionViewer` either in the model, or at the command line / IPython to load a previous solution (belonging to the same mbs underlying the solution!):
 
@@ -510,7 +510,7 @@ The easiest way to create animations, is using the SolutionViewer with its integ
 
 To turn on recording of images during solving, set the following flag to a positive value
 
-- `simulationSettings.solutionSettings.recordImagesInterval = 0.01`
+- `simulationSettings.solution.recordImagesInterval = 0.01`
 
 which means, that after every 0.01 seconds of simulation time, an image of the current view is taken and stored in the directory and filename (without filename ending) specified by
 

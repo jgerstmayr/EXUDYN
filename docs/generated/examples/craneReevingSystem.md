@@ -366,15 +366,15 @@ solutionFile = 'solution/coordsCrane.txt'
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile= True #set False for CPU performance measurement
-simulationSettings.solutionSettings.solutionWritePeriod= 0.2
-simulationSettings.solutionSettings.coordinatesSolutionFileName = solutionFile
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.02
-# simulationSettings.timeIntegration.simulateInRealtime=True
-# simulationSettings.timeIntegration.realtimeFactor=5
+simulationSettings.solution.file.write= True #set False for CPU performance measurement
+simulationSettings.solution.file.writePeriod= 0.2
+simulationSettings.solution.file.name = solutionFile
+simulationSettings.solution.sensors.writePeriod = 0.02
+# simulationSettings.timeIntegration.realtime.active=True
+# simulationSettings.timeIntegration.realtime.factor=5
 SC.visualizationSettings.general.graphicsUpdateInterval = 0.01
 simulationSettings.parallel.numberOfThreads=4
-simulationSettings.displayComputationTime = True
+simulationSettings.show.computationTime = True
 
 simulationSettings.timeIntegration.verboseMode = 1
 

@@ -222,7 +222,7 @@ def Jacobian(connector, numerical, factorODE2, factorODE2_t):
     mbs = (BuildModel(connector, eulerParameters=False, zeroLength=False) if builder == BuildModel else
            builder(connector, eulerParameters=False))
     s = exu.SimulationSettings()
-    s.timeIntegration.newton.numericalDifferentiation.forODE2connectors = numerical
+    s.timeIntegration.newton.numericalDifferentiation.forODE2Connectors = numerical
     solver = exu.MainSolverImplicitSecondOrder()
     solver.InitializeSolver(mbs, s)
     mbs.systemData.SetODE2Coordinates_t(0*mbs.systemData.GetODE2Coordinates_t())
@@ -465,7 +465,7 @@ def DropOnContact(kind, ballRigid, groundRigid):
     s = exu.SimulationSettings()
     s.timeIntegration.numberOfSteps = 400
     s.timeIntegration.endTime = 0.2
-    s.solutionSettings.writeSolutionToFile = False
+    s.solution.file.write = False
     s.timeIntegration.verboseMode = 0
     mbs.SolveDynamic(s)
     return np.array(mbs.GetNodeOutput(node, exu.OutputVariableType.Position))

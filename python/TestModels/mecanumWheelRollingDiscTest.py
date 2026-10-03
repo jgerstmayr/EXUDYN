@@ -271,11 +271,11 @@ h=0.002
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-#simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.002
+#simulationSettings.solution.file.writePeriod = 0.01
+simulationSettings.solution.sensors.writePeriod = 0.002
 simulationSettings.timeIntegration.verboseMode = 0
-simulationSettings.displayComputationTime = False
-simulationSettings.displayStatistics = False
+simulationSettings.show.computationTime = False
+simulationSettings.show.statistics = False
 
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
@@ -296,7 +296,7 @@ if not testIsActive:
     SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
     SC.visualizationSettings.openGL.multiSampling = 4
     if False:
-        simulationSettings.solutionSettings.recordImagesInterval = 0.05
+        simulationSettings.solution.recordImagesInterval = 0.05
         SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
 if not testIsActive:

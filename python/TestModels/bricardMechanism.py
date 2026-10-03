@@ -107,21 +107,21 @@ for i, p in enumerate(listP):
     
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-simulationSettings.solutionSettings.solutionWritePeriod = 0.02
-simulationSettings.solutionSettings.writeSolutionToFile = not testIsActive
+simulationSettings.solution.file.writePeriod = 0.02
+simulationSettings.solution.file.write = not testIsActive
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = endTime
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.displayComputationTime = True
-simulationSettings.displayStatistics = True
+simulationSettings.show.computationTime = True
+simulationSettings.show.statistics = True
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
 
 #the dense solver can treat redundant constraints if according flags turned on
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense
-simulationSettings.linearSolverSettings.ignoreSingularJacobian = True
-# simulationSettings.linearSolverSettings.pivotThreshold = 1e-10
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenDense
+simulationSettings.linearSolver.ignoreSingularJacobian = True
+# simulationSettings.linearSolver.pivotThreshold = 1e-10
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #simulation times for system size 65, last joint=RigidBodySpringDamper!:

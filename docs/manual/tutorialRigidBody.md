@@ -339,15 +339,15 @@ System graph for rigid body tutorial (with option 3 for the first revolute joint
   simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
   simulationSettings.timeIntegration.endTime = tEnd
   simulationSettings.timeIntegration.verboseMode = 1
-  #simulationSettings.timeIntegration.simulateInRealtime = True
-  simulationSettings.solutionSettings.solutionWritePeriod = 0.005 #store every 5 ms
+  #simulationSettings.timeIntegration.realtime.active = True
+  simulationSettings.solution.file.writePeriod = 0.005 #store every 5 ms
 ```
 
 The `verboseMode` tells the solver the amount of output during solving. Higher values (2, 3, ...) show residual vectors, jacobians, etc. for every time step, but slow down simulation significantly.
-The option `simulateInRealtime` is used to view the model during simulation, while setting this false,
+The option `timeIntegration.realtime.active` is used to view the model during simulation, while setting this false,
 the simulation finishes after fractions of a second. It should be set to false in general,
 while solution can be viewed using the `SolutionViewer()`.
-With `solutionWritePeriod` you can adjust the frequency which is used to store the solution of the whole model,
+With `solution.file.writePeriod` you can adjust the frequency which is used to store the solution of the whole model,
 which may lead to very large files and may slow down simulation, but is used in the `SolutionViewer()` to reload the solution after simulation.
 
  In order to improve visualization, there are hundreds of options, see Visualization settings in {ref}`sec-visualizationsettingsmain`, some of them used here:
@@ -406,7 +406,7 @@ Note that the **generalized-$\alpha$ method** includes numerical damping (adjust
 If you entered everything correctly, the render window should show a nice animation of the 3D double pendulum after pressing the SPACE key.
 If we do not stop the renderer (`SC.renderer.Stop()`), it will stay open for further simulations. However, it is safer to always close the renderer at the end.
 
- As the simulation will run very fast, if you did not set `simulateInRealtime` to true. However, you can reload the stored solution and view the stored steps interactively:
+ As the simulation will run very fast, if you did not set `timeIntegration.realtime.active` to true. However, you can reload the stored solution and view the stored steps interactively:
 
 ```python
   mbs.SolutionViewer()

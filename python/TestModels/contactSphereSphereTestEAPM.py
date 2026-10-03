@@ -131,9 +131,9 @@ mbs.Assemble()
 #+++++++++++++++++++++++++++++++++++++++++++++
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = int(T/stepSize)
-simulationSettings.solutionSettings.sensorsWritePeriod = stepSize
+simulationSettings.solution.sensors.writePeriod = stepSize
 simulationSettings.timeIntegration.endTime = T
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True

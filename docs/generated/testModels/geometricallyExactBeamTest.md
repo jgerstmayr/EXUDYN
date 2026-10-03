@@ -252,14 +252,14 @@ for case in caseList:
     stepSize = 0.5*0.01*0.1    #step size; leads to 1000 steps
 
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.solutionSettings.solutionWritePeriod = 2e-2  #output interval general
-    simulationSettings.solutionSettings.sensorsWritePeriod = 1e-1  #output interval of sensors
+    simulationSettings.solution.file.writePeriod = 2e-2  #output interval general
+    simulationSettings.solution.sensors.writePeriod = 1e-1  #output interval of sensors
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize) #must be integer
     simulationSettings.timeIntegration.endTime = tEnd
-    #simulationSettings.solutionSettings.solutionInformation = "This is the info\nNew line\n and another new line \n"
+    #simulationSettings.solution.file.information = "This is the info\nNew line\n and another new line \n"
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-    #simulationSettings.timeIntegration.simulateInRealtime=True
-    #simulationSettings.timeIntegration.realtimeFactor=0.1
+    #simulationSettings.timeIntegration.realtime.active=True
+    #simulationSettings.timeIntegration.realtime.factor=0.1
 
     simulationSettings.timeIntegration.verboseMode = verbose
     simulationSettings.staticSolver.verboseMode = verbose
@@ -270,8 +270,8 @@ for case in caseList:
     #simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-4
     simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
 
-    # simulationSettings.displayComputationTime = True
-    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    # simulationSettings.show.computationTime = True
+    simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
     simulationSettings.staticSolver.numberOfLoadSteps = 5
     simulationSettings.staticSolver.adaptiveStep = True

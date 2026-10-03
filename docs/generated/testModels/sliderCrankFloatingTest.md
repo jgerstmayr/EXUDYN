@@ -205,7 +205,7 @@ for testCases in rangeTests:
     #simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8 #10000
     simulationSettings.timeIntegration.verboseMode = 1 #10000
     
-    simulationSettings.solutionSettings.solutionWritePeriod = 2e-4
+    simulationSettings.solution.file.writePeriod = 2e-4
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8
     simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-8

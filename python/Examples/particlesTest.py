@@ -116,13 +116,13 @@ print("finish gContact")
 tEnd = 20
 stepSize = 0.0005
 simulationSettings = exu.SimulationSettings()
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-#simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.04
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+#simulationSettings.solution.file.write = True
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.04
 
-simulationSettings.displayComputationTime = True
-#simulationSettings.displayStatistics = True
+simulationSettings.show.computationTime = True
+#simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.parallel.numberOfThreads = 8
 
@@ -147,7 +147,7 @@ if simulate:
 
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
+    simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
     mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitMidpoint)
     # print(gContact)
 

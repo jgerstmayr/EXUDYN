@@ -560,13 +560,13 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
     simulationSettings = exu.SimulationSettings() #takes currently set values or default values
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/hstepsize)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.solutionWritePeriod = hstepsize #0.005
-    simulationSettings.solutionSettings.sensorsWritePeriod = hstepsize # 0.005
-    simulationSettings.solutionSettings.binarySolutionFile = False
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.writePeriod = hstepsize #0.005
+    simulationSettings.solution.sensors.writePeriod = hstepsize # 0.005
+    simulationSettings.solution.file.binary = False
+    simulationSettings.solution.file.write = False
 
-    simulationSettings.timeIntegration.simulateInRealtime = True
-    #simulationSettings.timeIntegration.realtimeFactor = 0.25
+    simulationSettings.timeIntegration.realtime.active = True
+    #simulationSettings.timeIntegration.realtime.factor = 0.25
     simulationSettings.timeIntegration.verboseMode = verboseMode
     #simulationSettings.timeIntegration.newton.useModifiedNewton = True
     #simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
@@ -577,9 +577,9 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
     simulationSettings.timeIntegration.adaptiveStepRecoveryIterations = 10
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations= True # False
 
-    simulationSettings.displayComputationTime = True
-    simulationSettings.displayStatistics = True
-    #simulationSettings.linearSolverType = exu.LinearSolverType.EigenSpars
+    simulationSettings.show.computationTime = True
+    simulationSettings.show.statistics = True
+    #simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSpars
 
 
     SC.visualizationSettings.general.autoFitScene=False

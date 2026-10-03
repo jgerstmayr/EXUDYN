@@ -139,10 +139,10 @@ def test_miniExampleGraphics(fileName, outputDirectory):
     stepSize = ti.endTime / max(1, ti.numberOfSteps)
     ti.numberOfSteps = numberOfSteps
     ti.endTime = numberOfSteps * stepSize
-    simulationSettings.solutionSettings.writeSolutionToFile = False
-    simulationSettings.solutionSettings.sensorsWritePeriod = ti.endTime
-    simulationSettings.displayComputationTime = False
-    simulationSettings.displayStatistics = False
+    simulationSettings.solution.file.write = False
+    simulationSettings.solution.sensors.writePeriod = ti.endTime
+    simulationSettings.show.computationTime = False
+    simulationSettings.show.statistics = False
     ti.verboseMode = 0
     exu.config.printToConsole = False
     try:

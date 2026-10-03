@@ -202,13 +202,13 @@ if not testIsActive:
 h = 0.001
 simulationSettings.timeIntegration.endTime = tEnd #0.2 for testing
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
-#simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-#simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
+#simulationSettings.solution.file.writePeriod = 0.01
+#simulationSettings.solution.sensors.writePeriod = 0.01
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 
-simulationSettings.timeIntegration.simulateInRealtime = True
+simulationSettings.timeIntegration.realtime.active = True
 
 SC.visualizationSettings.connectors.showJointAxes = True
 SC.visualizationSettings.connectors.jointAxesLength = 0.3

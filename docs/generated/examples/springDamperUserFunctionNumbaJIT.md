@@ -132,15 +132,15 @@ loadC = mbs.AddLoad(LoadCoordinate(markerNumber = nodeMarker,
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.newton.useModifiedNewton=True
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 
-simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
+simulationSettings.show.statistics = True
+simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 #start solver:

@@ -2552,7 +2552,7 @@ bool CSystem::ComputeObjectJacobianODE2(TemporaryComputationData& temp, const Nu
 		object->ComputeJacobianODE2_ODE2(temp.jacobianODE2Container, temp.jacobianTemp, factorODE2, factorODE2_t, j, ltgODE2);
 		return true;
 	}
-	if (numDiff.forODE2connectors) { return false; }
+	if (numDiff.forODE2Connectors) { return false; }
 
 	CObjectConnector* connector = (CObjectConnector*)object;
 	const ArrayIndex& markerNumbers = connector->GetMarkerNumbers();

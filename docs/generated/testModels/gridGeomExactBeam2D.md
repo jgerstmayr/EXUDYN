@@ -134,22 +134,22 @@ tEnd = 0.1
 steps = 100
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
+simulationSettings.solution.file.writePeriod = tEnd/steps
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.solutionSettings.writeSolutionToFile = False
-#simulationSettings.timeIntegration.simulateInRealtime = True
-#simulationSettings.timeIntegration.realtimeFactor = 0.1
+simulationSettings.solution.file.write = False
+#simulationSettings.timeIntegration.realtime.active = True
+#simulationSettings.timeIntegration.realtime.factor = 0.1
 
-#simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+#simulationSettings.solution.file.writePeriod = tEnd/steps
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
 
 simulationSettings.staticSolver.newton.maxIterations = 50
 simulationSettings.staticSolver.numberOfLoadSteps = 10
-# simulationSettings.displayComputationTime = True
-# simulationSettings.displayStatistics = True
+# simulationSettings.show.computationTime = True
+# simulationSettings.show.statistics = True
 
 
 SC.visualizationSettings.nodes.defaultSize = 0.005

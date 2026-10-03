@@ -216,10 +216,10 @@ def main():
     simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
-    simulationSettings.timeIntegration.simulateInRealtime = True    # crucial for operating with robot
-    simulationSettings.displayStatistics = True
-    simulationSettings.solutionSettings.solutionInformation = "3D Spring Damper"
-    simulationSettings.solutionSettings.writeSolutionToFile = False 
+    simulationSettings.timeIntegration.realtime.active = True    # crucial for operating with robot
+    simulationSettings.show.statistics = True
+    simulationSettings.solution.file.information = "3D Spring Damper"
+    simulationSettings.solution.file.write = False 
     viewMatrix = np.eye(3)  @ RotationMatrixZ(np.pi/2)@ RotationMatrixX(np.pi/2)
     SC.visualizationSettings.general.autoFitScene = False
     # set up parameter for usage in WSL2 (Ubuntu 20.04) on Windows 10

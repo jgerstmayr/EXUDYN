@@ -152,7 +152,7 @@ SC.renderer.Start()
 if SC.renderer.IsActive(): #with a window: rotate for a while, in real time
     simulationSettings.timeIntegration.endTime = 200
     simulationSettings.timeIntegration.numberOfSteps = 200000
-    simulationSettings.timeIntegration.simulateInRealtime = True
+    simulationSettings.timeIntegration.realtime.active = True
     SC.renderer.DoIdleTasks()
 mbs.SolveDynamic(simulationSettings)
 SC.renderer.DoIdleTasks()

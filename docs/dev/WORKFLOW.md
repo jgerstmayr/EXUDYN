@@ -387,7 +387,7 @@ number. Since #2632 that is three lines, and nothing is imported from
 ```python
 testIsActive = exu.sys.get('testIsActive', False)   #True only while a runner runs this file
 ...
-simulationSettings.solutionSettings.writeSolutionToFile = not testIsActive
+simulationSettings.solution.file.write = not testIsActive
 ...
 if not testIsActive:
     SC.renderer.Start()

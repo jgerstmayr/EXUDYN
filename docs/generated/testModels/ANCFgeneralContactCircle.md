@@ -239,20 +239,20 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 tEnd = 0.1
 h = 1e-3
 
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.solution.file.name = 'solution/coordinatesSolution.txt'
 
 if not testIsActive:
     tEnd = 0.75
-    simulationSettings.solutionSettings.writeSolutionToFile = True
-    simulationSettings.solutionSettings.solutionWritePeriod = 0.005
+    simulationSettings.solution.file.write = True
+    simulationSettings.solution.file.writePeriod = 0.005
 else:
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
 
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
-#simulationSettings.displayComputationTime = True
+simulationSettings.solution.sensors.writePeriod = 0.001
+#simulationSettings.show.computationTime = True
 simulationSettings.parallel.numberOfThreads = 1 #use 4 to speed up for > 100 ANCF elements
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 
 doDynamic = True
 simulationSettings.timeIntegration.endTime = tEnd

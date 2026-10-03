@@ -69,8 +69,8 @@ simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 4000
 simulationSettings.timeIntegration.endTime = 4
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = 1e-3
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = 1e-3
 mbs.SolveDynamic(simulationSettings)
 data = mbs.GetSensorStoredData(sTip)
 t = data[:, 0]; x = data[:, 1]

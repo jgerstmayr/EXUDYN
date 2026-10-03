@@ -106,8 +106,8 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = h
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = h
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
@@ -116,7 +116,7 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
 simulationSettings.timeIntegration.adaptiveStep = True #disable adaptive step reduction
 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 SC.visualizationSettings.loads.show = False
 SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.StrainLocal
 #SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.CurvatureLocal

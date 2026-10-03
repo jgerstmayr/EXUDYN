@@ -29,7 +29,7 @@ The utilities contains general helper functions for the robotics module
   - `storeInternal`: like with any SensorUserFunction, setting to True stores sensor data internally
   - `fileName`: if defined, recorded data of SensorUserFunction is written to specified file
   - `measureVelocity`: if True, the sensor measures additionally the velocity (component 0=distance, component 1=velocity); velocity is the velocity in direction 'dirSensor' and does not account for changes in geometry, thus it may be different from the time derivative of the distance!
-  - `addGraphicsObject`: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solutionSettings.sensorsWritePeriod should be accordingly small
+  - `addGraphicsObject`: if True, the distance sensor is also visualized graphically in a simplified manner with a red line having the length of dirSensor; NOTE that updates are ONLY performed during computation, not in visualization; for this reason, solution.sensors.writePeriod should be accordingly small
   - `drawDisplaced`: if True, the red line is drawn backwards such that it moves along the measured surface; if False, the beam is fixed to marker or position
   - `color`: optional color for 'laser beam' to be drawn
 - **output**: creates sensor and returns list of sensor numbers for all laser sensors

@@ -65,7 +65,7 @@ def TestExudyn(parameterDict):
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.writeSolutionToFile = False #no concurrent writing to files ...!
+    simulationSettings.solution.file.write = False #no concurrent writing to files ...!
     #SC.renderer.Start() #don't do this in parallelization: will crash
     mbs.SolveDynamic(simulationSettings)
     #SC.renderer.Stop() #don't do this in parallelization: will crash

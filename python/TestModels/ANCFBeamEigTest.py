@@ -136,13 +136,13 @@ if True:
     
     
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.solutionSettings.solutionWritePeriod = 5e-3  #output interval general
-    simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
-    #simulationSettings.timeIntegration.realtimeFactor=0.1
+    simulationSettings.solution.file.writePeriod = 5e-3  #output interval general
+    simulationSettings.solution.sensors.writePeriod = 5e-3  #output interval of sensors
+    #simulationSettings.timeIntegration.realtime.factor=0.1
     
     simulationSettings.timeIntegration.verboseMode = 0
     
-    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     
     SC.visualizationSettings.bodies.beams.axialTiling = 20 #for drawing of small number of beams
     SC.visualizationSettings.view0.scene.drawWorldBasis = True

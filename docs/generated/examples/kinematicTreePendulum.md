@@ -91,8 +91,8 @@ h = 1e-2#*0.01
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile=False
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.05
+simulationSettings.solution.file.write=False
+simulationSettings.solution.sensors.writePeriod = 0.05
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.95 #SHOULD work with 0.9 as well

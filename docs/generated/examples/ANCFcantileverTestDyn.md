@@ -108,9 +108,9 @@ mbs.SetPreStepUserFunction(UFexcitation)
 fact = 20000
 simulationSettings.timeIntegration.numberOfSteps = 1*fact
 simulationSettings.timeIntegration.endTime = 0.000025*fact
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact
-simulationSettings.displayComputationTime = True
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/fact
+simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8*1000 #10000
@@ -124,15 +124,15 @@ simulationSettings.timeIntegration.newton.modifiedNewtonContractivity = 1000
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6
-simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
+simulationSettings.show.statistics = True
+simulationSettings.show.computationTime = True
 
 #SC.visualizationSettings.nodes.showNumbers = True
 SC.visualizationSettings.bodies.showNumbers = False
 #SC.visualizationSettings.connectors.showNumbers = True
 SC.visualizationSettings.nodes.defaultSize = 0.01
 
-simulationSettings.solutionSettings.solutionInformation = "nonlinear beam oscillations"
+simulationSettings.solution.file.information = "nonlinear beam oscillations"
 
 SC.renderer.Start()
 mbs.SolveDynamic(simulationSettings)

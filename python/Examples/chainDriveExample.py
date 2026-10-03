@@ -303,20 +303,20 @@ if addSecondWheel:
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-simulationSettings.solutionSettings.sensorsWritePeriod = stepSize  #output interval
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.01
+simulationSettings.solution.sensors.writePeriod = stepSize  #output interval
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
-#simulationSettings.timeIntegration.simulateInRealtime = True
+#simulationSettings.timeIntegration.realtime.active = True
 # simulationSettings.timeIntegration.discontinuous.iterationTolerance = 1e-2
 # simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize = False
 
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 #simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 SC.visualizationSettings.view0.window.renderWindowSize=[1600,2000]

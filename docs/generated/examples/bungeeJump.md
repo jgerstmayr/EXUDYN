@@ -147,12 +147,12 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
-simulationSettings.solutionSettings.writeSolutionToFile = True
-# simulationSettings.displayComputationTime = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.solution.file.name = 'solution/coordinatesSolution.txt'
+simulationSettings.solution.file.write = True
+# simulationSettings.show.computationTime = True
 simulationSettings.parallel.numberOfThreads = 1 #use 4 to speed up for > 100 ANCF elements
-# simulationSettings.displayStatistics = True
+# simulationSettings.show.statistics = True
 
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)

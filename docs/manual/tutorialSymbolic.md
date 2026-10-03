@@ -97,8 +97,8 @@ Set the user function to the object, assemble the system, and configure the simu
   simulationSettings.timeIntegration.numberOfSteps = steps
   simulationSettings.timeIntegration.endTime = tEnd
   simulationSettings.timeIntegration.verboseMode = 1
-  simulationSettings.solutionSettings.writeSolutionToFile = False
-  simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
+  simulationSettings.solution.file.write = False
+  simulationSettings.solution.sensors.writePeriod = 0.001
 ```
 
 Finally, start the renderer and solver, then evaluate the solution:

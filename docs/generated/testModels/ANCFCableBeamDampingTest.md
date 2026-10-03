@@ -92,11 +92,11 @@ SC.visualizationSettings.bodies.beams.axialTiling = 1
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
-simulationSettings.displayComputationTime = True
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.show.computationTime = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
 if recordImages:
-    simulationSettings.solutionSettings.recordImagesInterval = 0.1
+    simulationSettings.solution.recordImagesInterval = 0.1
 mbs = SC.AddSystem()
 
 solution = 0 #accumulated result for test suite
@@ -173,8 +173,8 @@ for loadCase, loadVector in enumerate(loadVectorList):
     
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.writeSolutionToFile = useSolutionViewer
-    simulationSettings.solutionSettings.sensorsWritePeriod = stepSize
+    simulationSettings.solution.file.write = useSolutionViewer
+    simulationSettings.solution.sensors.writePeriod = stepSize
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++
     if not testIsActive:

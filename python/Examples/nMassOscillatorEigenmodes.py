@@ -151,18 +151,18 @@ SC.visualizationSettings.loads.defaultRadius=0.01
 #setup simulation settings and run interactive dialog:
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.solutionWritePeriod = 0.1 #data not used
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.01 #data not used
-simulationSettings.solutionSettings.solutionInformation = 'n-mass-oscillatior'
+simulationSettings.solution.file.write = False
+simulationSettings.solution.file.writePeriod = 0.1 #data not used
+simulationSettings.solution.sensors.writePeriod = 0.01 #data not used
+simulationSettings.solution.file.information = 'n-mass-oscillatior'
 simulationSettings.timeIntegration.verboseMode = 0 #turn off, because of lots of output
 
 simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
 simulationSettings.timeIntegration.endTime = endTime
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-#simulationSettings.timeIntegration.simulateInRealtime = True
+#simulationSettings.timeIntegration.realtime.active = True
 
-simulationSettings.displayComputationTime = True
+simulationSettings.show.computationTime = True
 
 #plot FFT
 if False:

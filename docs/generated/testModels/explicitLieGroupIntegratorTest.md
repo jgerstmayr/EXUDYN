@@ -175,10 +175,10 @@ if not testIsActive: #only start graphics once, but after background is set
 if not testIsActive:
     simulationSettings.timeIntegration.verboseMode = 1
 
-simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/2000
+simulationSettings.solution.sensors.writePeriod = simulationSettings.timeIntegration.endTime/2000
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.timeIntegration.explicitIntegration.useLieGroupIntegration = True
+simulationSettings.solution.file.write = False
+simulationSettings.timeIntegration.explicit.useLieGroupIntegration = True
 
 methods=[
 #exu.DynamicSolverType.ExplicitEuler, #requires h=1e-4 for this example

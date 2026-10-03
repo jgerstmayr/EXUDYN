@@ -109,22 +109,22 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 fact = 100
 simulationSettings.timeIntegration.numberOfSteps = 1*fact
 simulationSettings.timeIntegration.endTime = 0.01*fact
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/1000
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/1000
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
 
-simulationSettings.solutionSettings.solutionInformation = "rigid body tests"
+simulationSettings.solution.file.information = "rigid body tests"
 SC.visualizationSettings.nodes.defaultSize = 0.025
 SC.visualizationSettings.nodes.drawNodesAsPoint = False
 SC.visualizationSettings.nodes.showBasis = True
 
-#simulationSettings.displayComputationTime = True
-#simulationSettings.displayStatistics = True
+#simulationSettings.show.computationTime = True
+#simulationSettings.show.statistics = True
 
 
 if not testIsActive:

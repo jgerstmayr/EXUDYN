@@ -157,17 +157,17 @@ sVel=mbs.AddSensor(SensorBody(bodyNumber=massPoint, storeInternal=True,
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.02
-simulationSettings.solutionSettings.sensorsWritePeriod = stepSize  #output interval
-simulationSettings.solutionSettings.solutionInformation = 'variation of restitution coefficients: 1, 0.95, 0.8, 1e-3'
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.02
+simulationSettings.solution.sensors.writePeriod = stepSize  #output interval
+simulationSettings.solution.file.information = 'variation of restitution coefficients: 1, 0.95, 0.8, 1e-3'
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
 #simulationSettings.timeIntegration.discontinuous.iterationTolerance = 1e-3
 #simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize = False
 #simulationSettings.timeIntegration.discontinuous.maxIterations = 2
 
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
 # simulationSettings.timeIntegration.discontinuous.iterationTolerance = 1e-2
 # simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize = False
@@ -175,7 +175,7 @@ simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.9
 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 SC.visualizationSettings.view0.scene.drawCoordinateSystem = False

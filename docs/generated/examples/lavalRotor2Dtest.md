@@ -114,7 +114,7 @@ print(mbs)
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-5  #output interval
+simulationSettings.solution.file.writePeriod = 1e-5  #output interval
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
 

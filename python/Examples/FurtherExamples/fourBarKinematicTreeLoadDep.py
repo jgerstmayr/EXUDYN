@@ -153,13 +153,13 @@ tEnd = 2
 h = 0.005
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.write=False
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.computeLoadsJacobian=2 #add load ODE2 and ODE2_t dependencies!
-# simulationSettings.timeIntegration.simulateInRealtime = True
-simulationSettings.displayStatistics = True
+# simulationSettings.timeIntegration.realtime.active = True
+simulationSettings.show.statistics = True
 
 SC.visualizationSettings.bodies.kinematicTree.frameSize = 0.25
 SC.visualizationSettings.bodies.kinematicTree.showJointFrames = True

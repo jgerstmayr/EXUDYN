@@ -73,7 +73,7 @@ A force and a torque on the marker act on the joint coordinates as
 $\Qm = \Jm_{pos}\tp \LU{0}{\fv} + \Jm_{rot}\tp \LU{0}{\ttau}$.
 
 The derivative of the Jacobians is not implemented: a connector that needs it raises an error with this
-marker; `newton.numericalDifferentiation.forODE2connectors = True` computes the connector's Jacobian
+marker; `newton.numericalDifferentiation.forODE2Connectors = True` computes the connector's Jacobian
 numerically instead.
 
 (miniexample-markerkinematictreerigid)=

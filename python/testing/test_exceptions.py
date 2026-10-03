@@ -154,7 +154,7 @@ def _SystemWithAFailingUserFunction():
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.numberOfSteps = 1
     simulationSettings.timeIntegration.endTime = 0.01
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
 
     return (mbs, simulationSettings)
 
@@ -250,7 +250,7 @@ def _SolveAndReadTheSolverFile(tmp_path, buildSystem):
     import numpy as np                                            # noqa: F401 - used by callers
 
     (mbs, simulationSettings) = buildSystem()
-    simulationSettings.solutionSettings.solverInformationFileName = str(tmp_path / "solver.txt")
+    simulationSettings.solution.solverInformationFileName = str(tmp_path / "solver.txt")
 
     caught = None
     try:
@@ -291,7 +291,7 @@ def test_aMacroErrorReachesTheSolverFile(tmp_path):
         simulationSettings.timeIntegration.endTime = 0.01
         simulationSettings.timeIntegration.verboseMode = 0
         simulationSettings.timeIntegration.verboseModeFile = 1
-        simulationSettings.solutionSettings.writeSolutionToFile = False
+        simulationSettings.solution.file.write = False
 
         return (mbs, simulationSettings)
 
@@ -317,10 +317,10 @@ def test_aSolverFailureReachesTheSolverFile(tmp_path):
     mbs.Assemble()
 
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
     simulationSettings.staticSolver.verboseMode = 0
     simulationSettings.staticSolver.verboseModeFile = 1
-    simulationSettings.solutionSettings.solverInformationFileName = str(tmp_path / "static.txt")
+    simulationSettings.solution.solverInformationFileName = str(tmp_path / "static.txt")
 
     with pytest.raises(exu.SolverError):
         mbs.SolveStatic(simulationSettings)

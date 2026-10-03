@@ -251,15 +251,15 @@ if not testIsActive:
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.verboseModeFile = 3
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-simulationSettings.solutionSettings.sensorsWritePeriod = h
+simulationSettings.solution.sensors.writePeriod = h
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
-simulationSettings.displayComputationTime = True
+simulationSettings.show.computationTime = True
 
 #create animation:
 SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]

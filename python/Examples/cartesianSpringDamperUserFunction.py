@@ -86,9 +86,9 @@ steps = 200000
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
-#simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
+#simulationSettings.solution.file.writePeriod = tEnd/steps
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = 0.001
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
 

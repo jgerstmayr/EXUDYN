@@ -45,7 +45,7 @@ sUser = mbs.AddSensor(SensorUserFunction(sensorNumbers=[sNode], factors=[180/pi]
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 
 mbs.SolveDynamic(simulationSettings)
 

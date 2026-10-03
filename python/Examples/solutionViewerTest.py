@@ -100,17 +100,17 @@ h=0.0005  #use small step size to detext contact switching
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = 0.005
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
-#simulationSettings.timeIntegration.simulateInRealtime = True
-simulationSettings.timeIntegration.realtimeFactor = 0.5
+simulationSettings.solution.file.writePeriod = 0.005
+simulationSettings.solution.sensors.writePeriod = 0.01
+#simulationSettings.timeIntegration.realtime.active = True
+simulationSettings.timeIntegration.realtime.factor = 0.5
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 #simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep = True
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 # simulationSettings.parallel.numberOfThreads=4
 
 SC.visualizationSettings.nodes.show = True
@@ -137,13 +137,13 @@ SC.visualizationSettings.general.renderWindowString = text
 SC.visualizationSettings.view0.window.globalFontSize = 14 #to see special characters
 useGraphics = True
 if useGraphics:
-    simulationSettings.displayComputationTime = True
-    simulationSettings.displayStatistics = True
+    simulationSettings.show.computationTime = True
+    simulationSettings.show.statistics = True
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
     #SC.renderer.DoIdleTasks()
 else:
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
 
 #mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 mbs.SolveDynamic(simulationSettings, showHints=True)

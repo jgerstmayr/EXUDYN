@@ -71,25 +71,25 @@ mbs.Assemble()
 # print(mbs)
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/1000
-simulationSettings.displayComputationTime = False
-#simulationSettings.displayStatistics = True
-#simulationSettings.displayComputationTime = True
+simulationSettings.solution.file.name = 'solution/coordinatesSolution.txt'
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/1000
+simulationSettings.show.computationTime = False
+#simulationSettings.show.statistics = True
+#simulationSettings.show.computationTime = True
 
 SC.visualizationSettings.nodes.defaultSize = 0.01
 
-simulationSettings.solutionSettings.solutionInformation = "Cantilever"
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.solution.file.information = "Cantilever"
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
 simulationSettings.staticSolver.verboseMode = 0
-simulationSettings.staticSolver.newton.newtonResidualMode = 1 
+simulationSettings.staticSolver.newton.residualMode = 1 
 
 #adapt these settings for better solution file with multiple simulations:
 #**************************************************
-simulationSettings.solutionSettings.appendToFile = False
-simulationSettings.solutionSettings.writeFileFooter = False #never write footer as it would be seen between the solution steps
+simulationSettings.solution.file.append = False
+simulationSettings.solution.file.writeFooter = False #never write footer as it would be seen between the solution steps
 #**************************************************
 
 useGraphics=False
@@ -112,9 +112,9 @@ for loadSteps in range(nLoadSteps):
 
     #**************************************************
     #after first STEP, add this:
-    simulationSettings.solutionSettings.writeInitialValues = False #to avoid duplication of output times (start/end)
-    simulationSettings.solutionSettings.writeFileHeader = False
-    simulationSettings.solutionSettings.appendToFile = True
+    simulationSettings.solution.file.writeInitialValues = False #to avoid duplication of output times (start/end)
+    simulationSettings.solution.file.writeHeader = False
+    simulationSettings.solution.file.append = True
     #**************************************************
 
     sol = mbs.systemData.GetODE2Coordinates()

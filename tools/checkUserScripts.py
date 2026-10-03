@@ -27,6 +27,7 @@
 # Usage:
 #   python tools/checkUserScripts.py <folder or file> [...]          #report
 #   python tools/checkUserScripts.py <folder> --check                 #exit 1 if anything was found
+#   python tools/checkUserScripts.py <folder> --fix                   #rewrite the renamed settings in place (#2813)
 #   exudev scripts <folder> [...]                                     #the same, through the driver
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import argparse
@@ -238,14 +239,21 @@ def DeprecatedSettings():
     #'window' is a deprecated member at the top of the visualization settings AND the current one of
     #every view, so a pair alone is ambiguous: the member above it decides (view0.window is not)
     found = {}
+    DeprecatedSettings.topLevel = {}     #{member: (the path to use, the version)} of the top structures (#2813)
     for definition in definitions:
         owner = memberOf.get(definition['className'])
         if owner is None:
+            if definition['className'] in ['SimulationSettings', 'VisualizationSettings']:
+                for member in definition['members']:
+                    deprecated = member.get('deprecated')
+                    if deprecated and str(member.get('type', '')) not in classNames:
+                        DeprecatedSettings.topLevel[member['pythonName']] = (member['description'].strip(),
+                                                                             str(getattr(deprecated, 'since', '')))
             continue
         parentMember = memberOf.get(parentOf.get(definition['className']))
         for member in definition['members']:
             deprecated = member.get('deprecated')
-            if deprecated:
+            if deprecated and str(member.get('type', '')) not in classNames: #a deprecated structure: its members are listed
                 found[(owner, member['pythonName'])] = (member['description'].strip(),
                                                         str(getattr(deprecated, 'since', '')),
                                                         parentMember)
@@ -404,8 +412,9 @@ def IsLocal(name):
     return name != '' and '/' not in name and chr(92) not in name
 
 
-def CheckTree(tree, tables):
-    """the findings of one parsed script: [(line, text)]"""
+def CheckTree(tree, tables, fixes=None):
+    """the findings of one parsed script: [(line, text)]; fixes, if a list, receives (attribute node, number of
+    trailing names to replace, the names to write instead) for every renamed setting (#2813)"""
     findings = []
     unbound = set(id(node) for node in UnboundLoads(tree))
     starModules = [node.module for node in ast.walk(tree)
@@ -458,15 +467,28 @@ def CheckTree(tree, tables):
                 if pair in tables['settings']:
                     (use, version, parentMember) = tables['settings'][pair]
                     above = chain[-3]
-                    if (parentMember is not None and above != parentMember) or                             (parentMember is None and (above in DeprecatedSettings.structureMembers
+                    if '.' in use and (parentMember is not None and above != parentMember) or                             (parentMember is None and (above in DeprecatedSettings.structureMembers
                                                        or above.startswith('view'))):
                         continue                          #the same pair in another structure
                     advice = ('it has no effect; remove it' if use.endswith('.dummy') else 'use ' + use)
                     Report(node.lineno, ('setting',) + pair, "'" + '.'.join(pair) + "' is deprecated"
                            + (' since ' + version if version else '') + '; ' + advice)
+                    if fixes is not None and not use.endswith('.dummy'):
+                        if '.' not in use:                  #a rename in its own structure
+                            fixes.append((node, 1, [use]))
+                        else:                               #a path from the top structure
+                            fixes.append((node, 2 if parentMember is None else 3, use.split('.')))
                 if pair in removedSettings:
                     Report(node.lineno, ('removedSetting',) + pair, "'" + '.'.join(pair)
                            + "' is removed; use " + removedSettings[pair])
+            topLevel = getattr(DeprecatedSettings, 'topLevel', {})
+            if (len(chain) >= 2 and chain[-1] in topLevel and chain[-2] != 'config'
+                    and chain[-2] not in getattr(DeprecatedSettings, 'structureMembers', set())):
+                (use, version) = topLevel[chain[-1]]  #a deprecated member of the top of a settings tree (#2813)
+                Report(node.lineno, ('settingTop', chain[-1]), "'" + chain[-1] + "' is deprecated"
+                       + (' since ' + version if version else '') + '; use ' + use)
+                if fixes is not None:
+                    fixes.append((node, 1, use.split('.')))
             if len(chain) == 2 and chain[0] in exudynAliases:
                 if ('module', chain[1]) in tables['functions']:
                     Report(node.lineno, ('function', chain[1]), "'" + '.'.join(chain)
@@ -528,7 +550,7 @@ def CheckTree(tree, tables):
     (written, insideTargets) = (set(), set())
     for node in ast.walk(tree):
         target = None
-        if isinstance(node, ast.Assign) and len(node.targets) == 1 and                 isinstance(node.targets[0], ast.Attribute) and node.targets[0].attr in outputSettings:
+        if isinstance(node, ast.Assign) and len(node.targets) == 1 and                 isinstance(node.targets[0], ast.Attribute) and (node.targets[0].attr in outputSettings or (node.targets[0].attr == 'name' and getattr(node.targets[0].value, 'attr', '') in ['file', 'restart'])):
             (target, what) = (node.value, node.targets[0].attr)
         elif isinstance(node, ast.Call):
             name = getattr(node.func, 'attr', getattr(node.func, 'id', ''))
@@ -561,6 +583,24 @@ def ItemParameterFinding(where, entry):
     return where + ': the parameter is deprecated since ' + since + ' and removed in ' + expires + '; ' + advice
 
 
+def ApplyFixes(source, fixes):
+    """the source with the renamed settings rewritten: each fix replaces the last names of an attribute chain, on one
+    line; the columns of the ast are UTF-8 bytes"""
+    lines = source.split('\n')
+    edits = {}
+    for (node, count, names) in fixes:
+        base = node
+        for i in range(count):
+            base = base.value
+        if base.end_lineno != node.end_lineno:
+            continue                                #a chain over two lines is left to the user
+        edits[(node.end_lineno, base.end_col_offset)] = (node.end_col_offset, '.' + '.'.join(names))
+    for ((lineNumber, start), (end, text)) in sorted(edits.items(), reverse=True):
+        line = lines[lineNumber - 1].encode('utf-8')
+        lines[lineNumber - 1] = (line[:start] + text.encode('utf-8') + line[end:]).decode('utf-8')
+    return '\n'.join(lines)
+
+
 def PythonFiles(paths):
     files = []
     for path in paths:
@@ -576,6 +616,8 @@ def main():
                                      'version has to change; it parses the scripts and never runs them')
     parser.add_argument('paths', nargs='+', help='folders (searched recursively) or .py files')
     parser.add_argument('--check', action='store_true', help='exit 1 if anything was found')
+    parser.add_argument('--fix', action='store_true', help='rewrite the renamed settings in place; what cannot be '
+                        'rewritten automatically is still reported')
     parser.add_argument('--base', default=os.getcwd(),
                         help='print the paths relative to this folder (default: the current one)')
     args = parser.parse_args()
@@ -604,6 +646,17 @@ def main():
             skipped += 1
             continue
         checked += 1
+        if args.fix:
+            fixes = []
+            CheckTree(tree, tables, fixes)
+            if fixes:
+                fixed = ApplyFixes(source, fixes)
+                if fixed != source:
+                    newline = '\r\n' if '\r\n' in io.open(path, encoding='utf-8', errors='replace', newline='').read() else '\n'
+                    io.open(path, 'w', encoding='utf-8', newline='').write(fixed.replace('\n', newline))
+                    print(shown + ': ' + str(len(fixes)) + ' renamed setting(s) rewritten')
+                    source = fixed
+                    tree = ast.parse(source, filename=path)
         findings = CheckTree(tree, tables)
         if findings:
             withFindings += 1

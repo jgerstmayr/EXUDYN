@@ -165,11 +165,11 @@ class SpotEnv(OpenAIGymInterfaceEnv):
         self.simulationSettings.timeIntegration.numberOfSteps = 100 #this is the number of solver steps per RL-step
         self.simulationSettings.timeIntegration.endTime = 0 #will be overwritten in step
         # self.simulationSettings.timeIntegration.verboseMode = 1
-        self.simulationSettings.solutionSettings.writeSolutionToFile = False #set True only for postprocessing
-        #self.simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+        self.simulationSettings.solution.file.write = False #set True only for postprocessing
+        #self.simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
         
-        self.simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False
-        self.simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True
+        self.simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False
+        self.simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody = True
         
         
         self.SC.visualizationSettings.contact.showSpheres = False

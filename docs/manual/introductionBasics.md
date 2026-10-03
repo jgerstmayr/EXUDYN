@@ -28,7 +28,7 @@ Using `mbs.Reset()` will clear the system and allows to set up a new system. Ite
 (sec-overview-basics-simulationsettings)=
 ## Simulation settings
 
-The simulation settings consists of a couple of substructures, e.g., for `solutionSettings`, `staticSolver`, `timeIntegration` as well as a couple of general options -- for details see {ref}`sec-solutionsettings` and {ref}`sec-simulationsettingsmain`.
+The simulation settings consists of a couple of substructures, e.g., for `solution`, `staticSolver`, `timeIntegration` as well as a couple of general options -- for details see {ref}`sec-solutionsettings` and {ref}`sec-simulationsettingsmain`.
 
 Simulation settings are needed for every solver. They contain solver-specific parameters (e.g., the way how load steps are applied), information on how solution files are written, and very specific control parameters, e.g., for the Newton solver.
 
@@ -61,14 +61,14 @@ Hereafter, values of the structure can be modified, e.g.,
   #write some output while the solver is active (SLOWER):
   simulationSettings.timeIntegration.verboseMode = 2
   #write solution every 0.1 seconds:
-  simulationSettings.solutionSettings.solutionWritePeriod = 0.1
+  simulationSettings.solution.file.writePeriod = 0.1
   #use sparse matrix storage and solver (package Eigen):
-  simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+  simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 ```
 
 ## Generating output and results
 
-The solvers provide a number of options in `solutionSettings` to generate a solution file. As a default, exporting the solution of all system coordinates (on position, velocity, ... level) to the solution file is activated with a writing period of 0.01 seconds.
+The solvers provide a number of options in `solution` to generate a solution file. As a default, exporting the solution of all system coordinates (on position, velocity, ... level) to the solution file is activated with a writing period of 0.01 seconds.
 
  Typical output settings are:
 
@@ -77,15 +77,15 @@ The solvers provide a number of options in `solutionSettings` to generate a solu
   simulationSettings = exu.SimulationSettings()
 
   #activate writing to solution file:
-  simulationSettings.solutionSettings.writeSolutionToFile = True
+  simulationSettings.solution.file.write = True
   #write results every 1ms:
-  simulationSettings.solutionSettings.solutionWritePeriod = 0.001
+  simulationSettings.solution.file.writePeriod = 0.001
 
   #assign new filename to solution file
-  simulationSettings.solutionSettings.coordinatesSolutionFileName= "myOutput.txt"
+  simulationSettings.solution.file.name= "myOutput.txt"
 
   #do not export certain coordinates:
-  simulationSettings.solutionSettings.exportDataCoordinates = False
+  simulationSettings.solution.file.export.dataCoordinates = False
 ```
 
 Furthermore, you can use sensors to record particular information, e.g., the displacement of a body's local

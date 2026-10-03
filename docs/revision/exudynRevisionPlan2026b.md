@@ -2125,8 +2125,8 @@ listed (each with the maintainer's answer):
   an axis and not a rotation, which stays.
 
 <a id="rg12-34"></a>
-**RG12.34** *(group RG12; maintainer 2026-10-03; starts after the decision on the map of RG12.31)* **The simulation
-settings renamed and restructured as decided in RG12.31** (#2813) - every change a deprecation needs, so that nothing
+**RG12.34** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg12-34) *(group RG12; maintainer 2026-10-03; the
+map of RG12.31 confirmed 2026-10-04)* **The simulation settings renamed and restructured as decided in RG12.31** (#2813) - every change a deprecation needs, so that nothing
 of Exudyn uses an old name afterwards and every user script keeps working with a warning until 2031:
     - **RG12.34.1** the mechanism: a deprecated member of structure type (a renamed substructure) forwarding, also for
       a shared structure, and the old member names as deprecated members of the renamed classes; a test of it before
@@ -2150,6 +2150,13 @@ of Exudyn uses an old name afterwards and every user script keeps working with a
       from the deprecations, so that it cannot miss one), `parameterConversionTest` and the stubtest baseline, the
       settings dialog (its tree shows the new structure), dictionaries of settings stored by an earlier version
       (`SetDictionary` with old keys - forwarded, or refused with the new name).
+
+<a id="rg12-36"></a>
+**RG12.36** *(group RG12; maintainer 2026-10-04; later)* **Two Newton structures, and the modified Newton by default in
+the time integration** (#2815). `NewtonSettings` is one structure shared by `timeIntegration` and `staticSolver`; with
+the forwarding of RG12.1 and RG12.34 two structures are possible, most of their members copied, so that each can have
+its own defaults - above all `timeIntegration.newton.useModifiedNewton = True`, a large gain for the user. It changes
+the results of many test models (iterations, step sizes): the test suite is evaluated again, model by model, before.
 
 <a id="rg12-35"></a>
 **RG12.35** *(group RG12; maintainer 2026-10-03; after the answers on the marks (?) of RG12.31)* **The item
@@ -2920,8 +2927,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG17.1 | #2811 | notebooks for tutorials and examples: the evaluation |
+| RG12.36 | #2815 | two Newton structures, the modified Newton by default in the time integration; the test suite evaluated again |
 | RG12.35 | #2814 | the item parameters renamed as decided in RG12.31: `physics` dropped, the friction forces, `use...` flags |
-| RG12.34 | #2813 | the simulation settings renamed and restructured as decided in RG12.31, with scripts, documentation and tests |
 | RG12.31 | #2802 | settings and item parameters that could be renamed: a list for the maintainer's decision |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |

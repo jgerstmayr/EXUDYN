@@ -198,9 +198,9 @@ fact = 1000 #1000 for testing
 outputFact = 1000
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 0.2 #0.2 for testing
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/outputFact
-simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/outputFact
-simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/outputFact
+simulationSettings.solution.sensors.writePeriod = simulationSettings.timeIntegration.endTime/outputFact
+simulationSettings.solution.file.write = (not testIsActive)
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True

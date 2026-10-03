@@ -199,9 +199,9 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = 2e-3
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = hSensor
+simulationSettings.solution.file.writePeriod = 2e-3
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = hSensor
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
@@ -210,7 +210,7 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 
-simulationSettings.solutionSettings.solutionInformation = "rigid body tests"
+simulationSettings.solution.file.information = "rigid body tests"
 SC.visualizationSettings.loads.show = False
 SC.visualizationSettings.nodes.showBasis=True
 SC.visualizationSettings.nodes.basisSize=1.25

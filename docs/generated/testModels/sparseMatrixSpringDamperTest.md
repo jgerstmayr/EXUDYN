@@ -77,7 +77,7 @@ if not testIsActive:
     SC.renderer.Start()
 
 simulationSettings = exu.SimulationSettings()
-#simulationSettings.displayStatistics = True
+#simulationSettings.show.statistics = True
 
 SC.visualizationSettings.nodes.show = False
 SC.visualizationSettings.loads.show = False
@@ -93,7 +93,7 @@ simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon 
 simulationSettings.staticSolver.verboseMode = 2
 
 #dense solver:
-simulationSettings.linearSolverType = exu.LinearSolverType.EXUdense
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EXUdense
 mbs.SolveStatic(simulationSettings)
 
 u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node
@@ -101,7 +101,7 @@ exu.Print('static tip displacement (y)=', u[1])
 exu.sys['testResult'] = u[1]
 
 #sparse solver:
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 mbs.SolveStatic(simulationSettings)
 
 u = mbs.GetNodeOutput(nBodies-2, exu.OutputVariableType.Position) #tip node

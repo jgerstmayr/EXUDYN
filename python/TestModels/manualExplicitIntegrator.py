@@ -95,7 +95,7 @@ SC.visualizationSettings.bodies.defaultSize = [dSize, dSize, dSize]
 #simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-9
 simulationSettings.staticSolver.verboseMode = 1
 simulationSettings.staticSolver.verboseModeFile = 2
-simulationSettings.solutionSettings.solverInformationFileName = 'solution/solverInformation.txt'
+simulationSettings.solution.solverInformationFileName = 'solution/solverInformation.txt'
 
 #simulationSettings.staticSolver.newton.absoluteTolerance = 1e-8
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-6 #1e-5 works for 64 elements
@@ -183,7 +183,7 @@ simulationSettings.timeIntegration.numberOfSteps = 5000 #1000 steps for test sui
 simulationSettings.timeIntegration.endTime = 0.05              #1s for test suite / error
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-#simulationSettings.displayComputationTime = True
+#simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 #dynamicSolver.SetUserFunctionInitializeStep(mbs, UserFunctionInitializeStep)

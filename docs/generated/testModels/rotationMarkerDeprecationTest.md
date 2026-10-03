@@ -79,7 +79,7 @@ def Simulate(useLocalHT, connector):
     simulationSettings.timeIntegration.numberOfSteps = 200
     simulationSettings.timeIntegration.endTime = 0.2
     simulationSettings.timeIntegration.verboseMode = 0
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
     mbs.SolveDynamic(simulationSettings)
     return np.array(mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates))
 

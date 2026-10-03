@@ -284,17 +284,17 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.solutionSettings.outputPrecision = 5 #make files smaller
-simulationSettings.solutionSettings.exportAccelerations = False
-simulationSettings.solutionSettings.exportVelocities = True
-simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #speeds up
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.solution.precision = 5 #make files smaller
+simulationSettings.solution.file.export.accelerations = False
+simulationSettings.solution.file.export.velocities = True
+simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False #speeds up
 
-simulationSettings.solutionSettings.writeSolutionToFile = False #don't write dynamic solver's solution
-simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/test.txt'
-#simulationSettings.displayComputationTime = True
-#simulationSettings.displayStatistics = True
+simulationSettings.solution.file.write = False #don't write dynamic solver's solution
+simulationSettings.solution.file.writePeriod = 0.01
+simulationSettings.solution.file.name = 'solution/test.txt'
+#simulationSettings.show.computationTime = True
+#simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.parallel.numberOfThreads = 1
 simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator = False #for lie group nodes
@@ -461,19 +461,19 @@ if doSimulatorCoupling:
     simulationSettings1 = copy.copy(simulationSettings)
     simulationSettings1.timeIntegration.numberOfSteps = 1
     simulationSettings1.timeIntegration.endTime = stepSize
-    simulationSettings1.solutionSettings.writeSolutionToFile = True
-    simulationSettings1.solutionSettings.solutionWritePeriod = 1
-    simulationSettings1.linearSolverType = exu.LinearSolverType.EigenSparse
-    simulationSettings1.solutionSettings.outputPrecision = 5 #make files smaller
-    simulationSettings1.solutionSettings.exportAccelerations = False
-    simulationSettings1.solutionSettings.exportVelocities = True
-    simulationSettings1.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #speeds up
+    simulationSettings1.solution.file.write = True
+    simulationSettings1.solution.file.writePeriod = 1
+    simulationSettings1.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+    simulationSettings1.solution.precision = 5 #make files smaller
+    simulationSettings1.solution.file.export.accelerations = False
+    simulationSettings1.solution.file.export.velocities = True
+    simulationSettings1.timeIntegration.explicit.computeEndOfStepAccelerations = False #speeds up
     
-    simulationSettings1.solutionSettings.writeFileFooter = False
-    simulationSettings1.solutionSettings.coordinatesSolutionFileName = solExplicit
+    simulationSettings1.solution.file.writeFooter = False
+    simulationSettings1.solution.file.name = solExplicit
     simulationSettings1.parallel.numberOfThreads = 1
 
-    simulationSettings1.timeIntegration.explicitIntegration.dynamicSolverType = exu.DynamicSolverType.VelocityVerlet
+    simulationSettings1.timeIntegration.solverType = exu.DynamicSolverType.VelocityVerlet
     explicitSolver = exudyn.MainSolverExplicit()
 
     #+++++++++++++++++++++++++++++++++++++++++
@@ -547,10 +547,10 @@ if doSimulatorCoupling:
 explicitSolver.it.numberOfSteps = 1
 
 explicitSolver.output.verboseMode = 0
-simulationSettings1.solutionSettings.solutionWritePeriod = 0.02
-simulationSettings1.solutionSettings.flushFilesImmediately = True
-simulationSettings1.solutionSettings.writeInitialValues = False
-simulationSettings1.solutionSettings.writeSolutionToFile = True
+simulationSettings1.solution.file.writePeriod = 0.02
+simulationSettings1.solution.flushFilesImmediately = True
+simulationSettings1.solution.file.writeInitialValues = False
+simulationSettings1.solution.file.write = True
 simulationSettings1.timeIntegration.verboseMode = 0
 simulationSettings1.timeIntegration.automaticStepSize = False
 
@@ -558,8 +558,8 @@ simulationSettings1.timeIntegration.automaticStepSize = False
 mbs1.sys['simulationSettings'] = simulationSettings1
 mbs1.sys['dynamicSolver'] = explicitSolver
 explicitSolver.InitializeSolver(mbs1, simulationSettings1)
-simulationSettings1.solutionSettings.writeFileHeader = False
-simulationSettings1.solutionSettings.appendToFile = True
+simulationSettings1.solution.file.writeHeader = False
+simulationSettings1.solution.file.append = True
 
 lastWritten = 0
 stepCnt = 0
@@ -658,8 +658,8 @@ else:
 
 
     #finalize solver and adjust solver parameters for solution viewer
-    simulationSettings1.solutionSettings.writeSolutionToFile = True
-    simulationSettings1.solutionSettings.writeFileFooter = False
+    simulationSettings1.solution.file.write = True
+    simulationSettings1.solution.file.writeFooter = False
     explicitSolver.FinalizeSolver(mbs1, simulationSettings)
     
     exu.Print('time spent=',time.time()-start)

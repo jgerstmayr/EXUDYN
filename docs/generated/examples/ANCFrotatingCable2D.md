@@ -132,9 +132,9 @@ tEnd = 10
 h = 2e-3
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/1000
-simulationSettings.displayComputationTime = False
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/1000
+simulationSettings.show.computationTime = False
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
@@ -145,7 +145,7 @@ simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
 
 SC.visualizationSettings.nodes.defaultSize = 0.01
 
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
 mbs.SolveDynamic(simulationSettings)
 

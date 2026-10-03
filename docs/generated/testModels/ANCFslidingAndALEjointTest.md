@@ -276,7 +276,7 @@ if solveDynamic:
     simulationSettings.timeIntegration.generalizedAlpha.useNewmark = simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.3
     simulationSettings.timeIntegration.verboseMode = 1
-    simulationSettings.displayStatistics = True
+    simulationSettings.show.statistics = True
     
     mbs.SolveDynamic(simulationSettings)
     

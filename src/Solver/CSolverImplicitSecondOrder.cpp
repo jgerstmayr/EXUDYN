@@ -164,7 +164,7 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 
 		if (computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t.GetL2Norm() > 1e-10)
 		{
-			//if (!EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolverType))
+			//if (!EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolver.solverType))
 			//{
 			//	PyWarning("Generalized alpha: initial accelerations due to initial velocities can only be computed in dense matrix mode!");
 			//}
@@ -174,7 +174,7 @@ void CSolverImplicitSecondOrderTimeInt::InitializeSolverInitialConditions(CSyste
 				Real factor = -1.; //(C_q*q_t)_q*q_t put on RHS
 				Vector& vInitial = computationalSystem.GetSystemData().GetCData().currentState.ODE2Coords_t; //=initialState! for consistency here, only currentState is used
 				data.jacobianAE->SetNumberOfRowsAndColumns(data.nAE, data.nODE2);
-				if (EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolverType))
+				if (EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolver.solverType))
 				{
 					computationalSystem.NumericalConstraintJacobianDerivative(data.tempCompData, newton.numericalDifferentiation,
 						data.tempODE2F0, data.tempODE2F1, vInitial, *(data.jacobianAE), factor);
@@ -394,7 +394,7 @@ void CSolverImplicitSecondOrderTimeInt::PostInitializeSolverSpecific(CSystem& co
 		} 
 		else //Lie group active!
 		{
-			if (!EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolverType) 
+			if (!EXUstd::IsOfType(LinearSolverType::Dense, simulationSettings.linearSolver.solverType) 
 				&& simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator
 				&& simulationSettings.timeIntegration.generalizedAlpha.lieGroupSimplifiedKinematicRelations)
 			{

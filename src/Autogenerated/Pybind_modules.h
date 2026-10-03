@@ -52,35 +52,119 @@
 
     //++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++
+    py::class_<SolutionFileExportSettings>(m, "SolutionFileExportSettings", "SolutionFileExportSettings class") // AUTO: 
+        .def(py::init<>())
+        .def_property("accelerations", EPyUtils::MemberGetter(&SolutionFileExportSettings::accelerations), EPyUtils::MemberSetter(&SolutionFileExportSettings::accelerations, "SolutionFileExportSettings.accelerations"), "add ABRV:ODE2 accelerations to the solution file")
+        .def_property("algebraicCoordinates", EPyUtils::MemberGetter(&SolutionFileExportSettings::algebraicCoordinates), EPyUtils::MemberSetter(&SolutionFileExportSettings::algebraicCoordinates, "SolutionFileExportSettings.algebraicCoordinates"), "add algebraicCoordinates (=Lagrange multipliers) to the solution file")
+        .def_property("dataCoordinates", EPyUtils::MemberGetter(&SolutionFileExportSettings::dataCoordinates), EPyUtils::MemberSetter(&SolutionFileExportSettings::dataCoordinates, "SolutionFileExportSettings.dataCoordinates"), "add DataCoordinates to the solution file")
+        .def_property("ODE1Velocities", EPyUtils::MemberGetter(&SolutionFileExportSettings::ODE1Velocities), EPyUtils::MemberSetter(&SolutionFileExportSettings::ODE1Velocities, "SolutionFileExportSettings.ODE1Velocities"), "add coordinatesODE1_t to the solution file")
+        .def_property("velocities", EPyUtils::MemberGetter(&SolutionFileExportSettings::velocities), EPyUtils::MemberSetter(&SolutionFileExportSettings::velocities, "SolutionFileExportSettings.velocities"), "add ABRV:ODE2 velocities to the solution file")
+        // AUTO: access functions for SolutionFileExportSettings
+        .def("__repr__", [](const SolutionFileExportSettings &item) { return "<SolutionFileExportSettings:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
+        .def("GetDictionary", [](const SolutionFileExportSettings &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
+        .def("SetDictionary", [](SolutionFileExportSettings &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access
+        .def(py::pickle(
+            [](const SolutionFileExportSettings& self) {
+                return py::make_tuple(EPyUtils::GetDictionary(self));
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "SolutionFileExportSettings: loading data with pickle received invalid data structure!", ExudynValueError);
+                SolutionFileExportSettings self;
+                EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
+                return self;
+            }))
+        ; // AUTO: end of class definition!!!
+
+    //++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++
+    py::class_<SolutionFileSettings>(m, "SolutionFileSettings", "SolutionFileSettings class") // AUTO: 
+        .def(py::init<>())
+        .def_readwrite("export", &SolutionFileSettings::exportSettings, "which quantities are written in addition to the coordinates")
+        .def_property("append", EPyUtils::MemberGetter(&SolutionFileSettings::append), EPyUtils::MemberSetter(&SolutionFileSettings::append, "SolutionFileSettings.append"), "flag (true/false); if true, the solution and the solver information are appended to existing files (otherwise created); in BINARY mode, files are always replaced and this parameter is ineffective!")
+        .def_property("binary", EPyUtils::MemberGetter(&SolutionFileSettings::binary), EPyUtils::MemberSetter(&SolutionFileSettings::binary, "SolutionFileSettings.binary"), "if true, the solution file is written in binary format for improved speed and smaller file sizes; setting solution.precision >= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that append is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files")
+        .def_property("flushAboveCoordinates", EPyUtils::MemberGetter(&SolutionFileSettings::flushAboveCoordinates), EPyUtils::MemberSetter(&SolutionFileSettings::flushAboveCoordinates, EPyUtils::RangeCheck::positive, "SolutionFileSettings.flushAboveCoordinates"), "number of coordinates above which the buffers of the solution file are always flushed, irrespectively of solution.flushFilesImmediately; for larger files, writing takes so much time that flushing does not add considerable time")
+        .def_property("information", EPyUtils::MemberGetter(&SolutionFileSettings::information), EPyUtils::MemberSetter(&SolutionFileSettings::information, "SolutionFileSettings.information"), "special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in [](#sec-utf8), but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)")
+        .def_property("name", EPyUtils::MemberGetter(&SolutionFileSettings::name), EPyUtils::MemberSetter(&SolutionFileSettings::name, "SolutionFileSettings.name"), "filename and (relative) path of the solution file containing all multibody system coordinates versus time; the default is in the directory solution/, like every file a run writes by default, so that nothing is written beside the script; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binary=True)")
+        .def_property("write", EPyUtils::MemberGetter(&SolutionFileSettings::write), EPyUtils::MemberSetter(&SolutionFileSettings::write, "SolutionFileSettings.write"), "flag (true/false), which determines if the coordinates are written to the solution file; standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional quantities, see export")
+        .def_property("writeFooter", EPyUtils::MemberGetter(&SolutionFileSettings::writeFooter), EPyUtils::MemberSetter(&SolutionFileSettings::writeFooter, "SolutionFileSettings.writeFooter"), "flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics")
+        .def_property("writeHeader", EPyUtils::MemberGetter(&SolutionFileSettings::writeHeader), EPyUtils::MemberSetter(&SolutionFileSettings::writeHeader, "SolutionFileSettings.writeHeader"), "flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)")
+        .def_property("writeInitialValues", EPyUtils::MemberGetter(&SolutionFileSettings::writeInitialValues), EPyUtils::MemberSetter(&SolutionFileSettings::writeInitialValues, "SolutionFileSettings.writeInitialValues"), "flag (true/false); if true, initial values are exported for the start time; applies to the solution file and the sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation")
+        .def_property("writePeriod", EPyUtils::MemberGetter(&SolutionFileSettings::writePeriod), EPyUtils::MemberSetter(&SolutionFileSettings::writePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionFileSettings.writePeriod"), "time span (period), determines how often the solution file is written during a simulation")
+        // AUTO: access functions for SolutionFileSettings
+        .def("__repr__", [](const SolutionFileSettings &item) { return "<SolutionFileSettings:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
+        .def("GetDictionary", [](const SolutionFileSettings &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
+        .def("SetDictionary", [](SolutionFileSettings &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access
+        .def(py::pickle(
+            [](const SolutionFileSettings& self) {
+                return py::make_tuple(EPyUtils::GetDictionary(self));
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "SolutionFileSettings: loading data with pickle received invalid data structure!", ExudynValueError);
+                SolutionFileSettings self;
+                EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
+                return self;
+            }))
+        ; // AUTO: end of class definition!!!
+
+    //++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++
+    py::class_<SolutionSensorsSettings>(m, "SolutionSensorsSettings", "SolutionSensorsSettings class") // AUTO: 
+        .def(py::init<>())
+        .def_property("active", EPyUtils::MemberGetter(&SolutionSensorsSettings::active), EPyUtils::MemberSetter(&SolutionSensorsSettings::active, "SolutionSensorsSettings.active"), "flag (true/false); if false, no sensor files will be created and no sensor data will be stored; this may be advantageous for benchmarking as well as for special solvers which should not overwrite existing results (e.g. ComputeODE2Eigenvalues); settings this value to False may cause problems if sensors are required to perform operations which are needed e.g. in UserSensors as input of loads, etc.")
+        .def_property("append", EPyUtils::MemberGetter(&SolutionSensorsSettings::append), EPyUtils::MemberSetter(&SolutionSensorsSettings::append, "SolutionSensorsSettings.append"), "flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations")
+        .def_property("writeFooter", EPyUtils::MemberGetter(&SolutionSensorsSettings::writeFooter), EPyUtils::MemberSetter(&SolutionSensorsSettings::writeFooter, "SolutionSensorsSettings.writeFooter"), "flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)")
+        .def_property("writeHeader", EPyUtils::MemberGetter(&SolutionSensorsSettings::writeHeader), EPyUtils::MemberSetter(&SolutionSensorsSettings::writeHeader, "SolutionSensorsSettings.writeHeader"), "flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)")
+        .def_property("writePeriod", EPyUtils::MemberGetter(&SolutionSensorsSettings::writePeriod), EPyUtils::MemberSetter(&SolutionSensorsSettings::writePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionSensorsSettings.writePeriod"), "time span (period), determines how often the sensor output is written to file or internal storage during a simulation")
+        // AUTO: access functions for SolutionSensorsSettings
+        .def("__repr__", [](const SolutionSensorsSettings &item) { return "<SolutionSensorsSettings:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
+        .def("GetDictionary", [](const SolutionSensorsSettings &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
+        .def("SetDictionary", [](SolutionSensorsSettings &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access
+        .def(py::pickle(
+            [](const SolutionSensorsSettings& self) {
+                return py::make_tuple(EPyUtils::GetDictionary(self));
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "SolutionSensorsSettings: loading data with pickle received invalid data structure!", ExudynValueError);
+                SolutionSensorsSettings self;
+                EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
+                return self;
+            }))
+        ; // AUTO: end of class definition!!!
+
+    //++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++
+    py::class_<SolutionRestartSettings>(m, "SolutionRestartSettings", "SolutionRestartSettings class") // AUTO: 
+        .def(py::init<>())
+        .def_property("name", EPyUtils::MemberGetter(&SolutionRestartSettings::name), EPyUtils::MemberSetter(&SolutionRestartSettings::name, "SolutionRestartSettings.name"), "filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart")
+        .def_property("write", EPyUtils::MemberGetter(&SolutionRestartSettings::write), EPyUtils::MemberSetter(&SolutionRestartSettings::write, "SolutionRestartSettings.write"), "flag (true/false), which determines if the restart file is written regularly, see name for details")
+        .def_property("writePeriod", EPyUtils::MemberGetter(&SolutionRestartSettings::writePeriod), EPyUtils::MemberSetter(&SolutionRestartSettings::writePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionRestartSettings.writePeriod"), "time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance")
+        // AUTO: access functions for SolutionRestartSettings
+        .def("__repr__", [](const SolutionRestartSettings &item) { return "<SolutionRestartSettings:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
+        .def("GetDictionary", [](const SolutionRestartSettings &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
+        .def("SetDictionary", [](SolutionRestartSettings &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access
+        .def(py::pickle(
+            [](const SolutionRestartSettings& self) {
+                return py::make_tuple(EPyUtils::GetDictionary(self));
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "SolutionRestartSettings: loading data with pickle received invalid data structure!", ExudynValueError);
+                SolutionRestartSettings self;
+                EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
+                return self;
+            }))
+        ; // AUTO: end of class definition!!!
+
+    //++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++
     py::class_<SolutionSettings>(m, "SolutionSettings", "SolutionSettings class") // AUTO: 
         .def(py::init<>())
-        .def_property("appendToFile", EPyUtils::MemberGetter(&SolutionSettings::appendToFile), EPyUtils::MemberSetter(&SolutionSettings::appendToFile, "SolutionSettings.appendToFile"), "flag (true/false); if true, solution and solverInformation is appended to existing file (otherwise created); in BINARY mode, files are always replaced and this parameter is ineffective!")
-        .def_property("binarySolutionFile", EPyUtils::MemberGetter(&SolutionSettings::binarySolutionFile), EPyUtils::MemberSetter(&SolutionSettings::binarySolutionFile, "SolutionSettings.binarySolutionFile"), "if true, the solution file is written in binary format for improved speed and smaller file sizes; setting outputPrecision >= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that appendToFile is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files")
-        .def_property("coordinatesSolutionFileName", EPyUtils::MemberGetter(&SolutionSettings::coordinatesSolutionFileName), EPyUtils::MemberSetter(&SolutionSettings::coordinatesSolutionFileName, "SolutionSettings.coordinatesSolutionFileName"), "filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; the default is in the directory solution/, like every file a run writes by default, so that nothing is written beside the script; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)")
-        .def_property("exportAccelerations", EPyUtils::MemberGetter(&SolutionSettings::exportAccelerations), EPyUtils::MemberSetter(&SolutionSettings::exportAccelerations, "SolutionSettings.exportAccelerations"), "add ABRV:ODE2 accelerations to solution file (coordinatesSolutionFile)")
-        .def_property("exportAlgebraicCoordinates", EPyUtils::MemberGetter(&SolutionSettings::exportAlgebraicCoordinates), EPyUtils::MemberSetter(&SolutionSettings::exportAlgebraicCoordinates, "SolutionSettings.exportAlgebraicCoordinates"), "add algebraicCoordinates (=Lagrange multipliers) to solution file (coordinatesSolutionFile)")
-        .def_property("exportDataCoordinates", EPyUtils::MemberGetter(&SolutionSettings::exportDataCoordinates), EPyUtils::MemberSetter(&SolutionSettings::exportDataCoordinates, "SolutionSettings.exportDataCoordinates"), "add DataCoordinates to solution file (coordinatesSolutionFile)")
-        .def_property("exportODE1Velocities", EPyUtils::MemberGetter(&SolutionSettings::exportODE1Velocities), EPyUtils::MemberSetter(&SolutionSettings::exportODE1Velocities, "SolutionSettings.exportODE1Velocities"), "add coordinatesODE1_t to solution file (coordinatesSolutionFile)")
-        .def_property("exportVelocities", EPyUtils::MemberGetter(&SolutionSettings::exportVelocities), EPyUtils::MemberSetter(&SolutionSettings::exportVelocities, "SolutionSettings.exportVelocities"), "add ABRV:ODE2 velocities to solution file (coordinatesSolutionFile)")
-        .def_property("flushFilesDOF", EPyUtils::MemberGetter(&SolutionSettings::flushFilesDOF), EPyUtils::MemberSetter(&SolutionSettings::flushFilesDOF, EPyUtils::RangeCheck::positive, "SolutionSettings.flushFilesDOF"), "number of DOF, above which solution file (coordinatesSolutionFile) buffers are always flushed, irrespectively of whether flushFilesImmediately is set True or False (see also flushFilesImmediately); for larger files, writing takes so much time that flushing does not add considerable time")
-        .def_property("flushFilesImmediately", EPyUtils::MemberGetter(&SolutionSettings::flushFilesImmediately), EPyUtils::MemberSetter(&SolutionSettings::flushFilesImmediately, "SolutionSettings.flushFilesImmediately"), "flush file buffers after every solution period written (coordinatesSolutionFile and sensor files); if set False, the output is written through a buffer, which is highly efficient, but during simulation, files may be always in an incomplete state; if set True, this may add a large amount of CPU time as the process waits until files are really written to hard disc (especially for simulation of small scale systems, writing 10.000s of time steps; at least 5us per step/file, depending on hardware)")
-        .def_property("outputPrecision", EPyUtils::MemberGetter(&SolutionSettings::outputPrecision), EPyUtils::MemberSetter(&SolutionSettings::outputPrecision, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.outputPrecision"), "precision for floating point numbers written to solution and sensor files")
+        .def_readwrite("file", &SolutionSettings::file, "the coordinates solution file")
+        .def_readwrite("restart", &SolutionSettings::restart, "the restart file")
+        .def_readwrite("sensors", &SolutionSettings::sensors, "storing and writing of the sensors")
+        .def_property("flushFilesImmediately", EPyUtils::MemberGetter(&SolutionSettings::flushFilesImmediately), EPyUtils::MemberSetter(&SolutionSettings::flushFilesImmediately, "SolutionSettings.flushFilesImmediately"), "flush file buffers after every period written (solution file and sensor files); if set False, the output is written through a buffer, which is highly efficient, but during simulation, files may be always in an incomplete state; if set True, this may add a large amount of CPU time as the process waits until files are really written to hard disc (especially for simulation of small scale systems, writing 10.000s of time steps; at least 5us per step/file, depending on hardware)")
+        .def_property("precision", EPyUtils::MemberGetter(&SolutionSettings::precision), EPyUtils::MemberSetter(&SolutionSettings::precision, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.precision"), "precision for floating point numbers written to the solution and sensor files; the precision of the output to the console is consolePrecision")
         .def_property("recordImagesInterval", EPyUtils::MemberGetter(&SolutionSettings::recordImagesInterval), EPyUtils::MemberSetter(&SolutionSettings::recordImagesInterval, "SolutionSettings.recordImagesInterval"), "record frames of the main view in the renderer (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages; note that only the main view (0) can be saved in this way, while for multiple views, you have to aquire data via renderer.RedrawAndGetImage()")
-        .def_property("restartFileName", EPyUtils::MemberGetter(&SolutionSettings::restartFileName), EPyUtils::MemberSetter(&SolutionSettings::restartFileName, "SolutionSettings.restartFileName"), "filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart")
-        .def_property("restartWritePeriod", EPyUtils::MemberGetter(&SolutionSettings::restartWritePeriod), EPyUtils::MemberSetter(&SolutionSettings::restartWritePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.restartWritePeriod"), "time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance")
-        .def_property("sensorsAppendToFile", EPyUtils::MemberGetter(&SolutionSettings::sensorsAppendToFile), EPyUtils::MemberSetter(&SolutionSettings::sensorsAppendToFile, "SolutionSettings.sensorsAppendToFile"), "flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations")
-        .def_property("sensorsStoreAndWriteFiles", EPyUtils::MemberGetter(&SolutionSettings::sensorsStoreAndWriteFiles), EPyUtils::MemberSetter(&SolutionSettings::sensorsStoreAndWriteFiles, "SolutionSettings.sensorsStoreAndWriteFiles"), "flag (true/false); if false, no sensor files will be created and no sensor data will be stored; this may be advantageous for benchmarking as well as for special solvers which should not overwrite existing results (e.g. ComputeODE2Eigenvalues); settings this value to False may cause problems if sensors are required to perform operations which are needed e.g. in UserSensors as input of loads, etc.")
-        .def_property("sensorsWriteFileFooter", EPyUtils::MemberGetter(&SolutionSettings::sensorsWriteFileFooter), EPyUtils::MemberSetter(&SolutionSettings::sensorsWriteFileFooter, "SolutionSettings.sensorsWriteFileFooter"), "flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)")
-        .def_property("sensorsWriteFileHeader", EPyUtils::MemberGetter(&SolutionSettings::sensorsWriteFileHeader), EPyUtils::MemberSetter(&SolutionSettings::sensorsWriteFileHeader, "SolutionSettings.sensorsWriteFileHeader"), "flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)")
-        .def_property("sensorsWritePeriod", EPyUtils::MemberGetter(&SolutionSettings::sensorsWritePeriod), EPyUtils::MemberSetter(&SolutionSettings::sensorsWritePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.sensorsWritePeriod"), "time span (period), determines how often the sensor output is written to file or internal storage during a simulation")
-        .def_property("solutionInformation", EPyUtils::MemberGetter(&SolutionSettings::solutionInformation), EPyUtils::MemberSetter(&SolutionSettings::solutionInformation, "SolutionSettings.solutionInformation"), "special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in [](#sec-utf8), but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)")
-        .def_property("solutionWritePeriod", EPyUtils::MemberGetter(&SolutionSettings::solutionWritePeriod), EPyUtils::MemberSetter(&SolutionSettings::solutionWritePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.solutionWritePeriod"), "time span (period), determines how often the solution file (coordinatesSolutionFile) is written during a simulation")
-        .def_property("solverInformationFileName", EPyUtils::MemberGetter(&SolutionSettings::solverInformationFileName), EPyUtils::MemberSetter(&SolutionSettings::solverInformationFileName, "SolutionSettings.solverInformationFileName"), "filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only")
-        .def_property("writeFileFooter", EPyUtils::MemberGetter(&SolutionSettings::writeFileFooter), EPyUtils::MemberSetter(&SolutionSettings::writeFileFooter, "SolutionSettings.writeFileFooter"), "flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics")
-        .def_property("writeFileHeader", EPyUtils::MemberGetter(&SolutionSettings::writeFileHeader), EPyUtils::MemberSetter(&SolutionSettings::writeFileHeader, "SolutionSettings.writeFileHeader"), "flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)")
-        .def_property("writeInitialValues", EPyUtils::MemberGetter(&SolutionSettings::writeInitialValues), EPyUtils::MemberSetter(&SolutionSettings::writeInitialValues, "SolutionSettings.writeInitialValues"), "flag (true/false); if true, initial values are exported for the start time; applies to coordinatesSolution and sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation")
-        .def_property("writeRestartFile", EPyUtils::MemberGetter(&SolutionSettings::writeRestartFile), EPyUtils::MemberSetter(&SolutionSettings::writeRestartFile, "SolutionSettings.writeRestartFile"), "flag (true/false), which determines if restart file is written regularly, see restartFileName for details")
-        .def_property("writeSolutionToFile", EPyUtils::MemberGetter(&SolutionSettings::writeSolutionToFile), EPyUtils::MemberSetter(&SolutionSettings::writeSolutionToFile, "SolutionSettings.writeSolutionToFile"), "flag (true/false), which determines if (global) solution vector is written to the solution file (coordinatesSolutionFile); standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional coordinates in the solution file, see the options below")
+        .def_property("solverInformationFileName", EPyUtils::MemberGetter(&SolutionSettings::solverInformationFileName), EPyUtils::MemberSetter(&SolutionSettings::solverInformationFileName, "SolutionSettings.solverInformationFileName"), "filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if file.append is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only")
         // AUTO: access functions for SolutionSettings
         .def("__repr__", [](const SolutionSettings &item) { return "<SolutionSettings:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
         .def("GetDictionary", [](const SolutionSettings &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
@@ -99,13 +183,61 @@
 
     //++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++
+    py::class_<SolutionSettingsDeprecated>(m, "SolutionSettingsDeprecated", "SolutionSettingsDeprecated class") // AUTO: 
+        .def(py::init<>())
+        .def_property("appendToFile", &SolutionSettingsDeprecated::PyGetAppendToFile, &SolutionSettingsDeprecated::PySetAppendToFile)
+        .def_property("binarySolutionFile", &SolutionSettingsDeprecated::PyGetBinarySolutionFile, &SolutionSettingsDeprecated::PySetBinarySolutionFile)
+        .def_property("coordinatesSolutionFileName", &SolutionSettingsDeprecated::PyGetCoordinatesSolutionFileName, &SolutionSettingsDeprecated::PySetCoordinatesSolutionFileName)
+        .def_property("exportAccelerations", &SolutionSettingsDeprecated::PyGetExportAccelerations, &SolutionSettingsDeprecated::PySetExportAccelerations)
+        .def_property("exportAlgebraicCoordinates", &SolutionSettingsDeprecated::PyGetExportAlgebraicCoordinates, &SolutionSettingsDeprecated::PySetExportAlgebraicCoordinates)
+        .def_property("exportDataCoordinates", &SolutionSettingsDeprecated::PyGetExportDataCoordinates, &SolutionSettingsDeprecated::PySetExportDataCoordinates)
+        .def_property("exportODE1Velocities", &SolutionSettingsDeprecated::PyGetExportODE1Velocities, &SolutionSettingsDeprecated::PySetExportODE1Velocities)
+        .def_property("exportVelocities", &SolutionSettingsDeprecated::PyGetExportVelocities, &SolutionSettingsDeprecated::PySetExportVelocities)
+        .def_property("flushFilesDOF", &SolutionSettingsDeprecated::PyGetFlushFilesDOF, &SolutionSettingsDeprecated::PySetFlushFilesDOF)
+        .def_property("flushFilesImmediately", &SolutionSettingsDeprecated::PyGetFlushFilesImmediately, &SolutionSettingsDeprecated::PySetFlushFilesImmediately)
+        .def_property("outputPrecision", &SolutionSettingsDeprecated::PyGetOutputPrecision, &SolutionSettingsDeprecated::PySetOutputPrecision)
+        .def_property("recordImagesInterval", &SolutionSettingsDeprecated::PyGetRecordImagesInterval, &SolutionSettingsDeprecated::PySetRecordImagesInterval)
+        .def_property("restartFileName", &SolutionSettingsDeprecated::PyGetRestartFileName, &SolutionSettingsDeprecated::PySetRestartFileName)
+        .def_property("restartWritePeriod", &SolutionSettingsDeprecated::PyGetRestartWritePeriod, &SolutionSettingsDeprecated::PySetRestartWritePeriod)
+        .def_property("sensorsAppendToFile", &SolutionSettingsDeprecated::PyGetSensorsAppendToFile, &SolutionSettingsDeprecated::PySetSensorsAppendToFile)
+        .def_property("sensorsStoreAndWriteFiles", &SolutionSettingsDeprecated::PyGetSensorsStoreAndWriteFiles, &SolutionSettingsDeprecated::PySetSensorsStoreAndWriteFiles)
+        .def_property("sensorsWriteFileFooter", &SolutionSettingsDeprecated::PyGetSensorsWriteFileFooter, &SolutionSettingsDeprecated::PySetSensorsWriteFileFooter)
+        .def_property("sensorsWriteFileHeader", &SolutionSettingsDeprecated::PyGetSensorsWriteFileHeader, &SolutionSettingsDeprecated::PySetSensorsWriteFileHeader)
+        .def_property("sensorsWritePeriod", &SolutionSettingsDeprecated::PyGetSensorsWritePeriod, &SolutionSettingsDeprecated::PySetSensorsWritePeriod)
+        .def_property("solutionInformation", &SolutionSettingsDeprecated::PyGetSolutionInformation, &SolutionSettingsDeprecated::PySetSolutionInformation)
+        .def_property("solutionWritePeriod", &SolutionSettingsDeprecated::PyGetSolutionWritePeriod, &SolutionSettingsDeprecated::PySetSolutionWritePeriod)
+        .def_property("solverInformationFileName", &SolutionSettingsDeprecated::PyGetSolverInformationFileName, &SolutionSettingsDeprecated::PySetSolverInformationFileName)
+        .def_property("writeFileFooter", &SolutionSettingsDeprecated::PyGetWriteFileFooter, &SolutionSettingsDeprecated::PySetWriteFileFooter)
+        .def_property("writeFileHeader", &SolutionSettingsDeprecated::PyGetWriteFileHeader, &SolutionSettingsDeprecated::PySetWriteFileHeader)
+        .def_property("writeInitialValues", &SolutionSettingsDeprecated::PyGetWriteInitialValues, &SolutionSettingsDeprecated::PySetWriteInitialValues)
+        .def_property("writeRestartFile", &SolutionSettingsDeprecated::PyGetWriteRestartFile, &SolutionSettingsDeprecated::PySetWriteRestartFile)
+        .def_property("writeSolutionToFile", &SolutionSettingsDeprecated::PyGetWriteSolutionToFile, &SolutionSettingsDeprecated::PySetWriteSolutionToFile)
+        // AUTO: access functions for SolutionSettingsDeprecated
+        .def("__repr__", [](const SolutionSettingsDeprecated &item) { return "<SolutionSettingsDeprecated:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
+        .def("GetDictionary", [](const SolutionSettingsDeprecated &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
+        .def("SetDictionary", [](SolutionSettingsDeprecated &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access
+        .def(py::pickle(
+            [](const SolutionSettingsDeprecated& self) {
+                return py::make_tuple(EPyUtils::GetDictionary(self));
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "SolutionSettingsDeprecated: loading data with pickle received invalid data structure!", ExudynValueError);
+                SolutionSettingsDeprecated self;
+                EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
+                return self;
+            }))
+        ; // AUTO: end of class definition!!!
+
+    //++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++
     py::class_<NumericalDifferentiationSettings>(m, "NumericalDifferentiationSettings", "NumericalDifferentiationSettings class") // AUTO: 
         .def(py::init<>())
         .def_property("addReferenceCoordinatesToEpsilon", EPyUtils::MemberGetter(&NumericalDifferentiationSettings::addReferenceCoordinatesToEpsilon), EPyUtils::MemberSetter(&NumericalDifferentiationSettings::addReferenceCoordinatesToEpsilon, "NumericalDifferentiationSettings.addReferenceCoordinatesToEpsilon"), "True: for the size estimation of the differentiation parameter, the reference coordinate $q^{Ref}_i$ is added to ABRV:ODE2 coordinates --> see; False: only the current coordinate is used for size estimation of the differentiation parameter")
         .def_property("doSystemWideDifferentiation", EPyUtils::MemberGetter(&NumericalDifferentiationSettings::doSystemWideDifferentiation), EPyUtils::MemberSetter(&NumericalDifferentiationSettings::doSystemWideDifferentiation, "NumericalDifferentiationSettings.doSystemWideDifferentiation"), "True: system wide differentiation (e.g. all ABRV:ODE2 equations w.r.t. all ABRV:ODE2 coordinates); False: only local (object) differentiation")
         .def_property("forAE", EPyUtils::MemberGetter(&NumericalDifferentiationSettings::forAE), EPyUtils::MemberSetter(&NumericalDifferentiationSettings::forAE, "NumericalDifferentiationSettings.forAE"), "flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification")
         .def_property("forODE2", EPyUtils::MemberGetter(&NumericalDifferentiationSettings::forODE2), EPyUtils::MemberSetter(&NumericalDifferentiationSettings::forODE2, "NumericalDifferentiationSettings.forODE2"), "flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; numerical differentiation is less efficient and may lead to numerical problems, but may smoothen problems of analytical derivatives; sometimes the analytical derivative may neglect terms")
-        .def_property("forODE2connectors", EPyUtils::MemberGetter(&NumericalDifferentiationSettings::forODE2connectors), EPyUtils::MemberSetter(&NumericalDifferentiationSettings::forODE2connectors, "NumericalDifferentiationSettings.forODE2connectors"), "flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE")
+        .def_property("forODE2Connectors", EPyUtils::MemberGetter(&NumericalDifferentiationSettings::forODE2Connectors), EPyUtils::MemberSetter(&NumericalDifferentiationSettings::forODE2Connectors, "NumericalDifferentiationSettings.forODE2Connectors"), "flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE")
+        .def_property("forODE2connectors", &NumericalDifferentiationSettings::PyGetForODE2connectors, &NumericalDifferentiationSettings::PySetForODE2connectors)
         .def_property("jacobianConnectorDerivative", EPyUtils::MemberGetter(&NumericalDifferentiationSettings::jacobianConnectorDerivative), EPyUtils::MemberSetter(&NumericalDifferentiationSettings::jacobianConnectorDerivative, "NumericalDifferentiationSettings.jacobianConnectorDerivative"), "True: for analytic Jacobians of connectors, the Jacobian derivative is computed, causing additional CPU costs and not beeing available for all connectors or markers (thus switching to numerical differentiation); False: Jacobian derivative is neglected in analytic Jacobians (but included in numerical Jacobians), which often has only minor influence on convergence")
         .def_property("minimumCoordinateSize", EPyUtils::MemberGetter(&NumericalDifferentiationSettings::minimumCoordinateSize), EPyUtils::MemberSetter(&NumericalDifferentiationSettings::minimumCoordinateSize, EPyUtils::RangeCheck::nonNegative, "NumericalDifferentiationSettings.minimumCoordinateSize"), "minimum size of coordinates in relative differentiation parameter")
         .def_property("relativeEpsilon", EPyUtils::MemberGetter(&NumericalDifferentiationSettings::relativeEpsilon), EPyUtils::MemberSetter(&NumericalDifferentiationSettings::relativeEpsilon, EPyUtils::RangeCheck::nonNegative, "NumericalDifferentiationSettings.relativeEpsilon"), "relative differentiation parameter epsilon; the numerical differentiation parameter $varepsilon$ follows from the formula ($varepsilon = varepsilon_mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)$, with $varepsilon_mathrm{relative}$=relativeEpsilon, $q_{min} = $minimumCoordinateSize, $q_i$ is the current coordinate which is differentiated, and $qRef_i$ is the reference coordinate of the current coordinate")
@@ -155,6 +287,7 @@
         .def(py::init<>())
         .def_readwrite("numericalDifferentiation", &NewtonSettings::numericalDifferentiation, "numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration)")
         .def_property("absoluteTolerance", EPyUtils::MemberGetter(&NewtonSettings::absoluteTolerance), EPyUtils::MemberSetter(&NewtonSettings::absoluteTolerance, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.absoluteTolerance"), "absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance")
+        .def_property("active", EPyUtils::MemberGetter(&NewtonSettings::active), EPyUtils::MemberSetter(&NewtonSettings::active, "NewtonSettings.active"), "flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution")
         .def_property("adaptInitialResidual", EPyUtils::MemberGetter(&NewtonSettings::adaptInitialResidual), EPyUtils::MemberSetter(&NewtonSettings::adaptInitialResidual, "NewtonSettings.adaptInitialResidual"), "flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increase significantely in the first Newton iteration; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration")
         .def_property("maximumSolutionNorm", EPyUtils::MemberGetter(&NewtonSettings::maximumSolutionNorm), EPyUtils::MemberSetter(&NewtonSettings::maximumSolutionNorm, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.maximumSolutionNorm"), "this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (i.e., value=$u_1^2$+$u_2^2$+...), and solutionV/A...; if the norm of solution vectors is larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float)")
         .def_property("maxIterations", EPyUtils::MemberGetter(&NewtonSettings::maxIterations), EPyUtils::MemberSetter(&NewtonSettings::maxIterations, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.maxIterations"), "maximum number of iterations (including modified + restart Newton iterations); after that total number of iterations, the static/dynamic solver refines the step size or stops with an error")
@@ -162,10 +295,11 @@
         .def_property("maxModifiedNewtonRestartIterations", EPyUtils::MemberGetter(&NewtonSettings::maxModifiedNewtonRestartIterations), EPyUtils::MemberSetter(&NewtonSettings::maxModifiedNewtonRestartIterations, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.maxModifiedNewtonRestartIterations"), "maximum number of iterations for modified Newton after a Jacobian update; after that number of iterations, the full Newton method is started for this step")
         .def_property("modifiedNewtonContractivity", EPyUtils::MemberGetter(&NewtonSettings::modifiedNewtonContractivity), EPyUtils::MemberSetter(&NewtonSettings::modifiedNewtonContractivity, EPyUtils::RangeCheck::positive, "NewtonSettings.modifiedNewtonContractivity"), "maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed")
         .def_property("modifiedNewtonJacUpdatePerStep", EPyUtils::MemberGetter(&NewtonSettings::modifiedNewtonJacUpdatePerStep), EPyUtils::MemberSetter(&NewtonSettings::modifiedNewtonJacUpdatePerStep, "NewtonSettings.modifiedNewtonJacUpdatePerStep"), "True: compute Jacobian at every time step (or static step), but not in every Newton iteration (except for bad convergence ==> switch to full Newton)")
-        .def_property("newtonResidualMode", EPyUtils::MemberGetter(&NewtonSettings::newtonResidualMode), EPyUtils::MemberSetter(&NewtonSettings::newtonResidualMode, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.newtonResidualMode"), "0 ... use residual for computation of error (standard); 1 ... use ABRV:ODE2 and ABRV:ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag")
+        .def_property("newtonResidualMode", &NewtonSettings::PyGetNewtonResidualMode, &NewtonSettings::PySetNewtonResidualMode)
         .def_property("relativeTolerance", EPyUtils::MemberGetter(&NewtonSettings::relativeTolerance), EPyUtils::MemberSetter(&NewtonSettings::relativeTolerance, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.relativeTolerance"), "relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)")
+        .def_property("residualMode", EPyUtils::MemberGetter(&NewtonSettings::residualMode), EPyUtils::MemberSetter(&NewtonSettings::residualMode, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.residualMode"), "0 ... use residual for computation of error (standard); 1 ... use ABRV:ODE2 and ABRV:ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag")
         .def_property("useModifiedNewton", EPyUtils::MemberGetter(&NewtonSettings::useModifiedNewton), EPyUtils::MemberSetter(&NewtonSettings::useModifiedNewton, "NewtonSettings.useModifiedNewton"), "True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration (default, but may be costly)")
-        .def_property("useNewtonSolver", EPyUtils::MemberGetter(&NewtonSettings::useNewtonSolver), EPyUtils::MemberSetter(&NewtonSettings::useNewtonSolver, "NewtonSettings.useNewtonSolver"), "flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution")
+        .def_property("useNewtonSolver", &NewtonSettings::PyGetUseNewtonSolver, &NewtonSettings::PySetUseNewtonSolver)
         .def_property("weightTolerancePerCoordinate", EPyUtils::MemberGetter(&NewtonSettings::weightTolerancePerCoordinate), EPyUtils::MemberSetter(&NewtonSettings::weightTolerancePerCoordinate, "NewtonSettings.weightTolerancePerCoordinate"), "flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size")
         // AUTO: access functions for NewtonSettings
         .def("__repr__", [](const NewtonSettings &item) { return "<NewtonSettings:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
@@ -218,8 +352,7 @@
     py::class_<ExplicitIntegrationSettings>(m, "ExplicitIntegrationSettings", "ExplicitIntegrationSettings class") // AUTO: 
         .def(py::init<>())
         .def_property("computeEndOfStepAccelerations", EPyUtils::MemberGetter(&ExplicitIntegrationSettings::computeEndOfStepAccelerations), EPyUtils::MemberSetter(&ExplicitIntegrationSettings::computeEndOfStepAccelerations, "ExplicitIntegrationSettings.computeEndOfStepAccelerations"), "accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different")
-        .def_property("computeMassMatrixInversePerBody", EPyUtils::MemberGetter(&ExplicitIntegrationSettings::computeMassMatrixInversePerBody), EPyUtils::MemberSetter(&ExplicitIntegrationSettings::computeMassMatrixInversePerBody, "ExplicitIntegrationSettings.computeMassMatrixInversePerBody"), "If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded) - together with a sparse solver, linearSolverType = exu.LinearSolverType.EigenSparse: with the dense default the inverse is stored as a dense matrix and every step costs O(n^2) (#2400)")
-        .def_property("dynamicSolverType", EPyUtils::MemberGetter(&ExplicitIntegrationSettings::dynamicSolverType), EPyUtils::MemberSetter(&ExplicitIntegrationSettings::dynamicSolverType, "ExplicitIntegrationSettings.dynamicSolverType"), "selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, VelocityVerlet, ...), for detailed description see DynamicSolverType, [](#sec-dynamicsolvertype), but only referring to explicit solvers.")
+        .def_property("computeMassMatrixInversePerBody", EPyUtils::MemberGetter(&ExplicitIntegrationSettings::computeMassMatrixInversePerBody), EPyUtils::MemberSetter(&ExplicitIntegrationSettings::computeMassMatrixInversePerBody, "ExplicitIntegrationSettings.computeMassMatrixInversePerBody"), "If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded) - together with a sparse solver, linearSolver.solverType = exu.LinearSolverType.EigenSparse: with the dense default the inverse is stored as a dense matrix and every step costs O(n^2) (#2400)")
         .def_property("eliminateConstraints", EPyUtils::MemberGetter(&ExplicitIntegrationSettings::eliminateConstraints), EPyUtils::MemberSetter(&ExplicitIntegrationSettings::eliminateConstraints, "ExplicitIntegrationSettings.eliminateConstraints"), "True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!")
         .def_property("useLieGroupIntegration", EPyUtils::MemberGetter(&ExplicitIntegrationSettings::useLieGroupIntegration), EPyUtils::MemberSetter(&ExplicitIntegrationSettings::useLieGroupIntegration, "ExplicitIntegrationSettings.useLieGroupIntegration"), "True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates!")
         // AUTO: access functions for ExplicitIntegrationSettings
@@ -240,12 +373,62 @@
 
     //++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++
+    py::class_<ExplicitIntegrationSettingsDeprecated>(m, "ExplicitIntegrationSettingsDeprecated", "ExplicitIntegrationSettingsDeprecated class") // AUTO: 
+        .def(py::init<>())
+        .def_property("computeEndOfStepAccelerations", &ExplicitIntegrationSettingsDeprecated::PyGetComputeEndOfStepAccelerations, &ExplicitIntegrationSettingsDeprecated::PySetComputeEndOfStepAccelerations)
+        .def_property("computeMassMatrixInversePerBody", &ExplicitIntegrationSettingsDeprecated::PyGetComputeMassMatrixInversePerBody, &ExplicitIntegrationSettingsDeprecated::PySetComputeMassMatrixInversePerBody)
+        .def_property("dynamicSolverType", &ExplicitIntegrationSettingsDeprecated::PyGetDynamicSolverType, &ExplicitIntegrationSettingsDeprecated::PySetDynamicSolverType)
+        .def_property("eliminateConstraints", &ExplicitIntegrationSettingsDeprecated::PyGetEliminateConstraints, &ExplicitIntegrationSettingsDeprecated::PySetEliminateConstraints)
+        .def_property("useLieGroupIntegration", &ExplicitIntegrationSettingsDeprecated::PyGetUseLieGroupIntegration, &ExplicitIntegrationSettingsDeprecated::PySetUseLieGroupIntegration)
+        // AUTO: access functions for ExplicitIntegrationSettingsDeprecated
+        .def("__repr__", [](const ExplicitIntegrationSettingsDeprecated &item) { return "<ExplicitIntegrationSettingsDeprecated:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
+        .def("GetDictionary", [](const ExplicitIntegrationSettingsDeprecated &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
+        .def("SetDictionary", [](ExplicitIntegrationSettingsDeprecated &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access
+        .def(py::pickle(
+            [](const ExplicitIntegrationSettingsDeprecated& self) {
+                return py::make_tuple(EPyUtils::GetDictionary(self));
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "ExplicitIntegrationSettingsDeprecated: loading data with pickle received invalid data structure!", ExudynValueError);
+                ExplicitIntegrationSettingsDeprecated self;
+                EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
+                return self;
+            }))
+        ; // AUTO: end of class definition!!!
+
+    //++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++
+    py::class_<RealtimeSettings>(m, "RealtimeSettings", "RealtimeSettings class") // AUTO: 
+        .def(py::init<>())
+        .def_property("active", EPyUtils::MemberGetter(&RealtimeSettings::active), EPyUtils::MemberSetter(&RealtimeSettings::active, "RealtimeSettings.active"), "True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues")
+        .def_property("factor", EPyUtils::MemberGetter(&RealtimeSettings::factor), EPyUtils::MemberSetter(&RealtimeSettings::factor, EPyUtils::RangeCheck::positive, "RealtimeSettings.factor"), "if active=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)")
+        .def_property("waitMicroseconds", EPyUtils::MemberGetter(&RealtimeSettings::waitMicroseconds), EPyUtils::MemberSetter(&RealtimeSettings::waitMicroseconds, EPyUtils::RangeCheck::positive, "RealtimeSettings.waitMicroseconds"), "if active=True, a loop runs which waits waitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy")
+        // AUTO: access functions for RealtimeSettings
+        .def("__repr__", [](const RealtimeSettings &item) { return "<RealtimeSettings:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
+        .def("GetDictionary", [](const RealtimeSettings &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
+        .def("SetDictionary", [](RealtimeSettings &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access
+        .def(py::pickle(
+            [](const RealtimeSettings& self) {
+                return py::make_tuple(EPyUtils::GetDictionary(self));
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "RealtimeSettings: loading data with pickle received invalid data structure!", ExudynValueError);
+                RealtimeSettings self;
+                EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
+                return self;
+            }))
+        ; // AUTO: end of class definition!!!
+
+    //++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++
     py::class_<TimeIntegrationSettings>(m, "TimeIntegrationSettings", "TimeIntegrationSettings class") // AUTO: 
         .def(py::init<>())
         .def_readwrite("discontinuous", &TimeIntegrationSettings::discontinuous, "parameters for treatment of discontinuities")
-        .def_readwrite("explicitIntegration", &TimeIntegrationSettings::explicitIntegration, "special parameters for explicit time integration")
+        .def_readwrite("explicit", &TimeIntegrationSettings::explicitSettings, "special parameters for explicit time integration")
+        .def_readwrite("explicitIntegration", &TimeIntegrationSettings::explicitIntegration, "deprecated, use timeIntegration.explicit and timeIntegration.solverType")
         .def_readwrite("generalizedAlpha", &TimeIntegrationSettings::generalizedAlpha, "parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)")
         .def_readwrite("newton", &TimeIntegrationSettings::newton, "parameters for Newton method; used for implicit time integration methods only")
+        .def_readwrite("realtime", &TimeIntegrationSettings::realtime, "simulation in realtime")
         .def_property("absoluteTolerance", EPyUtils::MemberGetter(&TimeIntegrationSettings::absoluteTolerance), EPyUtils::MemberSetter(&TimeIntegrationSettings::absoluteTolerance, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.absoluteTolerance"), "$a_{tol}$: if automaticStepSize=True, absolute tolerance for the error control; must fulfill $a_{tol} > 0$; see [](#sec-explicitsolver)")
         .def_property("adaptiveStep", EPyUtils::MemberGetter(&TimeIntegrationSettings::adaptiveStep), EPyUtils::MemberSetter(&TimeIntegrationSettings::adaptiveStep, "TimeIntegrationSettings.adaptiveStep"), "True: the step size may be reduced if step fails; no automatic stepsize control")
         .def_property("adaptiveStepDecrease", EPyUtils::MemberGetter(&TimeIntegrationSettings::adaptiveStepDecrease), EPyUtils::MemberSetter(&TimeIntegrationSettings::adaptiveStepDecrease, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.adaptiveStepDecrease"), "Multiplicative factor (MUST BE: 0 < factor < 1) for step size to decrese due to discontinuousIteration or Newton errors")
@@ -258,11 +441,12 @@
         .def_property("initialStepSize", EPyUtils::MemberGetter(&TimeIntegrationSettings::initialStepSize), EPyUtils::MemberSetter(&TimeIntegrationSettings::initialStepSize, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.initialStepSize"), "$h_{init}$: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster.")
         .def_property("minimumStepSize", EPyUtils::MemberGetter(&TimeIntegrationSettings::minimumStepSize), EPyUtils::MemberSetter(&TimeIntegrationSettings::minimumStepSize, EPyUtils::RangeCheck::positive, "TimeIntegrationSettings.minimumStepSize"), "$h_{min}$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)")
         .def_property("numberOfSteps", EPyUtils::MemberGetter(&TimeIntegrationSettings::numberOfSteps), EPyUtils::MemberSetter(&TimeIntegrationSettings::numberOfSteps, EPyUtils::RangeCheck::positive, "TimeIntegrationSettings.numberOfSteps"), "$n_{steps}$: number of steps in time integration; (maximum) stepSize $h$ is computed from $h = frac{t_{end} - t_{start}}{n_{steps}}$; for automatic stepsize control, this stepSize is the maximum steps size, $h_{max} = h$; numberOfSteps can also be a float type, but must be close to an integer (relative tolerance $100cdotvarepsilon$) as it is silently rounded to int")
-        .def_property("realtimeFactor", EPyUtils::MemberGetter(&TimeIntegrationSettings::realtimeFactor), EPyUtils::MemberSetter(&TimeIntegrationSettings::realtimeFactor, EPyUtils::RangeCheck::positive, "TimeIntegrationSettings.realtimeFactor"), "if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)")
-        .def_property("realtimeWaitMicroseconds", EPyUtils::MemberGetter(&TimeIntegrationSettings::realtimeWaitMicroseconds), EPyUtils::MemberSetter(&TimeIntegrationSettings::realtimeWaitMicroseconds, EPyUtils::RangeCheck::positive, "TimeIntegrationSettings.realtimeWaitMicroseconds"), "if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy")
+        .def_property("realtimeFactor", &TimeIntegrationSettings::PyGetRealtimeFactor, &TimeIntegrationSettings::PySetRealtimeFactor)
+        .def_property("realtimeWaitMicroseconds", &TimeIntegrationSettings::PyGetRealtimeWaitMicroseconds, &TimeIntegrationSettings::PySetRealtimeWaitMicroseconds)
         .def_property("relativeTolerance", EPyUtils::MemberGetter(&TimeIntegrationSettings::relativeTolerance), EPyUtils::MemberSetter(&TimeIntegrationSettings::relativeTolerance, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.relativeTolerance"), "$r_{tol}$: if automaticStepSize=True, relative tolerance for the error control; must fulfill $r_{tol} ge 0$; see [](#sec-explicitsolver)")
         .def_property("reuseConstantMassMatrix", EPyUtils::MemberGetter(&TimeIntegrationSettings::reuseConstantMassMatrix), EPyUtils::MemberSetter(&TimeIntegrationSettings::reuseConstantMassMatrix, "TimeIntegrationSettings.reuseConstantMassMatrix"), "True: does not recompute constant mass matrices (e.g. of some finite elements, mass points, etc.); if False, it always recomputes the mass matrix (e.g. needed, if user changes mass parameters via Python)")
-        .def_property("simulateInRealtime", EPyUtils::MemberGetter(&TimeIntegrationSettings::simulateInRealtime), EPyUtils::MemberSetter(&TimeIntegrationSettings::simulateInRealtime, "TimeIntegrationSettings.simulateInRealtime"), "True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues")
+        .def_property("simulateInRealtime", &TimeIntegrationSettings::PyGetSimulateInRealtime, &TimeIntegrationSettings::PySetSimulateInRealtime)
+        .def_property("solverType", EPyUtils::MemberGetter(&TimeIntegrationSettings::solverType), EPyUtils::MemberSetter(&TimeIntegrationSettings::solverType, "TimeIntegrationSettings.solverType"), "the solver of mbs.SolveDynamic(...): an implicit one (GeneralizedAlpha, TrapezoidalIndex2, ...) or an explicit one (DOPRI5, ExplicitEuler, RK44, ...), see DynamicSolverType, [](#sec-dynamicsolvertype); the argument solverType of mbs.SolveDynamic, if given, takes its place for that run")
         .def_property("startTime", EPyUtils::MemberGetter(&TimeIntegrationSettings::startTime), EPyUtils::MemberSetter(&TimeIntegrationSettings::startTime, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.startTime"), "$t_{start}$: start time of time integration (usually set to zero)")
         .def_property("stepInformation", EPyUtils::MemberGetter(&TimeIntegrationSettings::stepInformation), EPyUtils::MemberSetter(&TimeIntegrationSettings::stepInformation, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.stepInformation"), "add up the following binary flags: 0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days")
         .def_property("stepSizeMaxIncrease", EPyUtils::MemberGetter(&TimeIntegrationSettings::stepSizeMaxIncrease), EPyUtils::MemberSetter(&TimeIntegrationSettings::stepSizeMaxIncrease, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.stepSizeMaxIncrease"), "$f_{maxInc}$: if automaticStepSize=True, maximum increase of step size per step, see [](#sec-explicitsolver); make this factor smaller (but $> 1$) if too many rejected steps")
@@ -297,7 +481,8 @@
         .def_property("adaptiveStepRecoveryIterations", EPyUtils::MemberGetter(&StaticSolverSettings::adaptiveStepRecoveryIterations), EPyUtils::MemberSetter(&StaticSolverSettings::adaptiveStepRecoveryIterations, EPyUtils::RangeCheck::nonNegative, "StaticSolverSettings.adaptiveStepRecoveryIterations"), "Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value")
         .def_property("adaptiveStepRecoverySteps", EPyUtils::MemberGetter(&StaticSolverSettings::adaptiveStepRecoverySteps), EPyUtils::MemberSetter(&StaticSolverSettings::adaptiveStepRecoverySteps, EPyUtils::RangeCheck::nonNegative, "StaticSolverSettings.adaptiveStepRecoverySteps"), "Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors")
         .def_property("computeLoadsJacobian", EPyUtils::MemberGetter(&StaticSolverSettings::computeLoadsJacobian), EPyUtils::MemberSetter(&StaticSolverSettings::computeLoadsJacobian, "StaticSolverSettings.computeLoadsJacobian"), "True: compute (currently numerical) Jacobian for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; False: jacobian of loads not considered (may lead to slow convergence or Newton failure); note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies")
-        .def_property("constrainODE1coordinates", EPyUtils::MemberGetter(&StaticSolverSettings::constrainODE1coordinates), EPyUtils::MemberSetter(&StaticSolverSettings::constrainODE1coordinates, "StaticSolverSettings.constrainODE1coordinates"), "True: ODE1coordinates are constrained to initial values; False: undefined behavior, currently not supported")
+        .def_property("constrainODE1Coordinates", EPyUtils::MemberGetter(&StaticSolverSettings::constrainODE1Coordinates), EPyUtils::MemberSetter(&StaticSolverSettings::constrainODE1Coordinates, "StaticSolverSettings.constrainODE1Coordinates"), "True: ODE1coordinates are constrained to initial values; False: undefined behavior, currently not supported")
+        .def_property("constrainODE1coordinates", &StaticSolverSettings::PyGetConstrainODE1coordinates, &StaticSolverSettings::PySetConstrainODE1coordinates)
         .def_property("loadStepDuration", EPyUtils::MemberGetter(&StaticSolverSettings::loadStepDuration), EPyUtils::MemberSetter(&StaticSolverSettings::loadStepDuration, EPyUtils::RangeCheck::positive, "StaticSolverSettings.loadStepDuration"), "quasi-time for all load steps (added to current time in load steps)")
         .def_property("loadStepGeometric", EPyUtils::MemberGetter(&StaticSolverSettings::loadStepGeometric), EPyUtils::MemberSetter(&StaticSolverSettings::loadStepGeometric, "StaticSolverSettings.loadStepGeometric"), "if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for $n=8$ numberOfLoadSteps and $d = 1000$ loadStepGeometricRange, it follows: $1000^{1/8}/1000=0.00237$, $1000^{2/8}/1000=0.00562$, $1000^{3/8}/1000=0.0133$, ..., $1000^{7/8}/1000=0.422$, $1000^{8/8}/1000=1$")
         .def_property("loadStepGeometricRange", EPyUtils::MemberGetter(&StaticSolverSettings::loadStepGeometricRange), EPyUtils::MemberSetter(&StaticSolverSettings::loadStepGeometricRange, EPyUtils::RangeCheck::positive, "StaticSolverSettings.loadStepGeometricRange"), "if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric")
@@ -333,6 +518,7 @@
         .def_property("pivotThreshold", EPyUtils::MemberGetter(&LinearSolverSettings::pivotThreshold), EPyUtils::MemberSetter(&LinearSolverSettings::pivotThreshold, EPyUtils::RangeCheck::nonNegative, "LinearSolverSettings.pivotThreshold"), "[ONLY available for EXUdense and EigenDense (FullPivot) solver] threshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity")
         .def_property("reuseAnalyzedPattern", EPyUtils::MemberGetter(&LinearSolverSettings::reuseAnalyzedPattern), EPyUtils::MemberSetter(&LinearSolverSettings::reuseAnalyzedPattern, "LinearSolverSettings.reuseAnalyzedPattern"), "[ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(...) and should be handled with care!")
         .def_property("showCausingItems", EPyUtils::MemberGetter(&LinearSolverSettings::showCausingItems), EPyUtils::MemberSetter(&LinearSolverSettings::showCausingItems, "LinearSolverSettings.showCausingItems"), "False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!")
+        .def_property("solverType", EPyUtils::MemberGetter(&LinearSolverSettings::solverType), EPyUtils::MemberSetter(&LinearSolverSettings::solverType, "LinearSolverSettings.solverType"), "selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type)")
         // AUTO: access functions for LinearSolverSettings
         .def("__repr__", [](const LinearSolverSettings &item) { return "<LinearSolverSettings:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
         .def("GetDictionary", [](const LinearSolverSettings &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
@@ -347,6 +533,18 @@
                 EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
                 return self;
             }))
+        ; // AUTO: end of class definition!!!
+
+    //++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++
+    py::class_<LinearSolverSettingsDeprecated>(m, "LinearSolverSettingsDeprecated", "LinearSolverSettingsDeprecated class") // AUTO: 
+        .def(py::init<>())
+        .def_property("ignoreSingularJacobian", &LinearSolverSettingsDeprecated::PyGetIgnoreSingularJacobian, &LinearSolverSettingsDeprecated::PySetIgnoreSingularJacobian)
+        .def_property("pivotThreshold", &LinearSolverSettingsDeprecated::PyGetPivotThreshold, &LinearSolverSettingsDeprecated::PySetPivotThreshold)
+        .def_property("reuseAnalyzedPattern", &LinearSolverSettingsDeprecated::PyGetReuseAnalyzedPattern, &LinearSolverSettingsDeprecated::PySetReuseAnalyzedPattern)
+        .def_property("showCausingItems", &LinearSolverSettingsDeprecated::PyGetShowCausingItems, &LinearSolverSettingsDeprecated::PySetShowCausingItems)
+        // AUTO: access functions for LinearSolverSettingsDeprecated
+        .def("__repr__", [](const LinearSolverSettingsDeprecated &item) { return "<LinearSolverSettingsDeprecated:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
         ; // AUTO: end of class definition!!!
 
     //++++++++++++++++++++++++++++++++
@@ -383,19 +581,46 @@
 
     //++++++++++++++++++++++++++++++++
     //++++++++++++++++++++++++++++++++
+    py::class_<ShowSettings>(m, "ShowSettings", "ShowSettings class") // AUTO: 
+        .def(py::init<>())
+        .def_property("computationTime", EPyUtils::MemberGetter(&ShowSettings::computationTime), EPyUtils::MemberSetter(&ShowSettings::computationTime, "ShowSettings.computationTime"), "display computation time statistics at end of solving")
+        .def_property("globalTimers", EPyUtils::MemberGetter(&ShowSettings::globalTimers), EPyUtils::MemberSetter(&ShowSettings::globalTimers, "ShowSettings.globalTimers"), "display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development)")
+        .def_property("statistics", EPyUtils::MemberGetter(&ShowSettings::statistics), EPyUtils::MemberSetter(&ShowSettings::statistics, "ShowSettings.statistics"), "display general computation information at end of time step (steps, iterations, function calls, step rejections, ...")
+        // AUTO: access functions for ShowSettings
+        .def("__repr__", [](const ShowSettings &item) { return "<ShowSettings:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
+        .def("GetDictionary", [](const ShowSettings &item) { return EPyUtils::GetDictionary(item); }) //!< AUTO: add read for dictionary access
+        .def("SetDictionary", [](ShowSettings &item, const py::dict& d) { return EPyUtils::SetDictionary(item, d); }) //!< AUTO: add write from dictionary access
+        .def(py::pickle(
+            [](const ShowSettings& self) {
+                return py::make_tuple(EPyUtils::GetDictionary(self));
+            },
+            [](const py::tuple& t) {
+                CHECKandTHROW(t.size() == 1, "ShowSettings: loading data with pickle received invalid data structure!", ExudynValueError);
+                ShowSettings self;
+                EPyUtils::SetDictionary(self,py::cast<py::dict>(t[0]));
+                return self;
+            }))
+        ; // AUTO: end of class definition!!!
+
+    //++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++
     py::class_<SimulationSettings>(m, "SimulationSettings", "SimulationSettings class") // AUTO: 
         .def(py::init<>())
-        .def_readwrite("linearSolverSettings", &SimulationSettings::linearSolverSettings, "linear solver parameters (used for dense and sparse solvers)")
+        .def_readwrite("linearSolver", &SimulationSettings::linearSolver, "linear solver parameters (used for dense and sparse solvers)")
+        .def_readwrite("linearSolverSettings", &SimulationSettings::linearSolverSettings, "deprecated, use linearSolver")
         .def_readwrite("parallel", &SimulationSettings::parallel, "parameters for vectorized and parallelized (multi-threaded) computations")
-        .def_readwrite("solutionSettings", &SimulationSettings::solutionSettings, "settings for solution files")
+        .def_readwrite("show", &SimulationSettings::show, "what the solvers show in the console at the end of solving")
+        .def_readwrite("solution", &SimulationSettings::solution, "settings for solution files")
+        .def_readwrite("solutionSettings", &SimulationSettings::solutionSettings, "deprecated, use solution")
         .def_readwrite("staticSolver", &SimulationSettings::staticSolver, "static solver parameters")
         .def_readwrite("timeIntegration", &SimulationSettings::timeIntegration, "time integration parameters")
         .def_property("cleanUpMemory", EPyUtils::MemberGetter(&SimulationSettings::cleanUpMemory), EPyUtils::MemberSetter(&SimulationSettings::cleanUpMemory, "SimulationSettings.cleanUpMemory"), "True: solvers will free memory at exit (recommended for large systems); False: keep allocated memory for repeated computations to increase performance")
-        .def_property("displayComputationTime", EPyUtils::MemberGetter(&SimulationSettings::displayComputationTime), EPyUtils::MemberSetter(&SimulationSettings::displayComputationTime, "SimulationSettings.displayComputationTime"), "display computation time statistics at end of solving")
-        .def_property("displayGlobalTimers", EPyUtils::MemberGetter(&SimulationSettings::displayGlobalTimers), EPyUtils::MemberSetter(&SimulationSettings::displayGlobalTimers, "SimulationSettings.displayGlobalTimers"), "display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development)")
-        .def_property("displayStatistics", EPyUtils::MemberGetter(&SimulationSettings::displayStatistics), EPyUtils::MemberSetter(&SimulationSettings::displayStatistics, "SimulationSettings.displayStatistics"), "display general computation information at end of time step (steps, iterations, function calls, step rejections, ...")
-        .def_property("linearSolverType", EPyUtils::MemberGetter(&SimulationSettings::linearSolverType), EPyUtils::MemberSetter(&SimulationSettings::linearSolverType, "SimulationSettings.linearSolverType"), "selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type)")
-        .def_property("outputPrecision", EPyUtils::MemberGetter(&SimulationSettings::outputPrecision), EPyUtils::MemberSetter(&SimulationSettings::outputPrecision, EPyUtils::RangeCheck::nonNegative, "SimulationSettings.outputPrecision"), "precision for floating point numbers written to console; e.g. values written by solver")
+        .def_property("consolePrecision", EPyUtils::MemberGetter(&SimulationSettings::consolePrecision), EPyUtils::MemberSetter(&SimulationSettings::consolePrecision, EPyUtils::RangeCheck::nonNegative, "SimulationSettings.consolePrecision"), "precision for floating point numbers written to the console, e.g. the values written by the solver; the precision of the solution and sensor files is solution.precision")
+        .def_property("displayComputationTime", &SimulationSettings::PyGetDisplayComputationTime, &SimulationSettings::PySetDisplayComputationTime)
+        .def_property("displayGlobalTimers", &SimulationSettings::PyGetDisplayGlobalTimers, &SimulationSettings::PySetDisplayGlobalTimers)
+        .def_property("displayStatistics", &SimulationSettings::PyGetDisplayStatistics, &SimulationSettings::PySetDisplayStatistics)
+        .def_property("linearSolverType", &SimulationSettings::PyGetLinearSolverType, &SimulationSettings::PySetLinearSolverType)
+        .def_property("outputPrecision", &SimulationSettings::PyGetOutputPrecision, &SimulationSettings::PySetOutputPrecision)
         .def_property("pauseAfterEachStep", EPyUtils::MemberGetter(&SimulationSettings::pauseAfterEachStep), EPyUtils::MemberSetter(&SimulationSettings::pauseAfterEachStep, "SimulationSettings.pauseAfterEachStep"), "pause after every time step or static load step(user press SPACE)")
         // AUTO: access functions for SimulationSettings
         .def("__repr__", [](const SimulationSettings &item) { return "<SimulationSettings:\n" + EXUstd::ToString(item) + " >"; } ) //!< AUTO: add representation for object based on ostream operator
@@ -437,7 +662,7 @@
         .def_property("reallyQuitTimeLimit", EPyUtils::MemberGetter(&VSettingsGeneral::reallyQuitTimeLimit), EPyUtils::MemberSetter(&VSettingsGeneral::reallyQuitTimeLimit, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.reallyQuitTimeLimit"), "number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked")
         .def_property("rendererPrecision", EPyUtils::MemberGetter(&VSettingsGeneral::rendererPrecision), EPyUtils::MemberSetter(&VSettingsGeneral::rendererPrecision, EPyUtils::RangeCheck::positive, "VSettingsGeneral.rendererPrecision"), "precision of general floating point numbers shown in render window: total number of digits used  (max. 16)")
         .def_property("rendererStartupTimeout", EPyUtils::MemberGetter(&VSettingsGeneral::rendererStartupTimeout), EPyUtils::MemberSetter(&VSettingsGeneral::rendererStartupTimeout, EPyUtils::RangeCheck::positive, "VSettingsGeneral.rendererStartupTimeout"), "OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow)")
-        .def_property("renderWindowString", EPyUtils::MemberGetter(&VSettingsGeneral::renderWindowString), EPyUtils::MemberSetter(&VSettingsGeneral::renderWindowString, "VSettingsGeneral.renderWindowString"), "string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings)")
+        .def_property("renderWindowString", EPyUtils::MemberGetter(&VSettingsGeneral::renderWindowString), EPyUtils::MemberSetter(&VSettingsGeneral::renderWindowString, "VSettingsGeneral.renderWindowString"), "string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to information in simulationSettings.solution.file)")
         .def_property("showComputationInfo", &VSettingsGeneral::PyGetShowComputationInfo, &VSettingsGeneral::PySetShowComputationInfo)
         .def_property("showHelpOnStartup", EPyUtils::MemberGetter(&VSettingsGeneral::showHelpOnStartup), EPyUtils::MemberSetter(&VSettingsGeneral::showHelpOnStartup, EPyUtils::RangeCheck::nonNegative, "VSettingsGeneral.showHelpOnStartup"), "seconds to show help message on startup (0=deactivate)")
         .def_property("showSolutionInformation", EPyUtils::MemberGetter(&VSettingsGeneral::showSolutionInformation), EPyUtils::MemberSetter(&VSettingsGeneral::showSolutionInformation, "VSettingsGeneral.showSolutionInformation"), "true = show solution information (from simulationSettings.solution)")
@@ -1463,7 +1688,7 @@
         .def_property("postNewton", EPyUtils::MemberGetter(&CSolverTimer::postNewton), EPyUtils::MemberSetter(&CSolverTimer::postNewton, "CSolverTimer.postNewton"), "discontinuous iteration / PostNewtonStep")
         .def_property("python", EPyUtils::MemberGetter(&CSolverTimer::python), EPyUtils::MemberSetter(&CSolverTimer::python, "CSolverTimer.python"), "time spent for Python functions")
         .def_property("reactionForces", EPyUtils::MemberGetter(&CSolverTimer::reactionForces), EPyUtils::MemberSetter(&CSolverTimer::reactionForces, "CSolverTimer.reactionForces"), "CqT * lambda")
-        .def_property("realtimeIdleCPU", EPyUtils::MemberGetter(&CSolverTimer::realtimeIdleCPU), EPyUtils::MemberSetter(&CSolverTimer::realtimeIdleCPU, "CSolverTimer.realtimeIdleCPU"), "time waited for next frame to compute and draw if simulateInRealtime is True")
+        .def_property("realtimeIdleCPU", EPyUtils::MemberGetter(&CSolverTimer::realtimeIdleCPU), EPyUtils::MemberSetter(&CSolverTimer::realtimeIdleCPU, "CSolverTimer.realtimeIdleCPU"), "time waited for next frame to compute and draw if timeIntegration.realtime.active is True")
         .def_property("total", EPyUtils::MemberGetter(&CSolverTimer::total), EPyUtils::MemberSetter(&CSolverTimer::total, "CSolverTimer.total"), "total time measured between start and end of computation (static/dynamics)")
         .def_property("totalJacobian", EPyUtils::MemberGetter(&CSolverTimer::totalJacobian), EPyUtils::MemberSetter(&CSolverTimer::totalJacobian, "CSolverTimer.totalJacobian"), "time for all jacobian computations")
         .def_property("useTimer", EPyUtils::MemberGetter(&CSolverTimer::useTimer), EPyUtils::MemberSetter(&CSolverTimer::useTimer, "CSolverTimer.useTimer"), "flag to decide, whether the timer is used (true) or not")

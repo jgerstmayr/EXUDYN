@@ -68,7 +68,7 @@ def Simulate(SC, mbs):
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.verboseMode = 1
-    simulationSettings.timeIntegration.simulateInRealtime = True
+    simulationSettings.timeIntegration.realtime.active = True
     
     SC.visualizationSettings.general.autoFitScene = False
     SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]

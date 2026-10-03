@@ -145,10 +145,10 @@ h=0.01  #use small step size to detext contact switching
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile= False
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
+simulationSettings.solution.file.write= False
+simulationSettings.solution.sensors.writePeriod = 0.01
 simulationSettings.timeIntegration.verboseMode = 1
-#simulationSettings.displayComputationTime=True
+#simulationSettings.show.computationTime=True
 
 if False:
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
@@ -156,18 +156,18 @@ if False:
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.95
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 simulationSettings.timeIntegration.newton.useModifiedNewton=True
-# simulationSettings.timeIntegration.simulateInRealtime= True
-# simulationSettings.timeIntegration.realtimeFactor=0.1
+# simulationSettings.timeIntegration.realtime.active= True
+# simulationSettings.timeIntegration.realtime.factor=0.1
 
-#simulationSettings.linearSolverSettings.ignoreSingularJacobian = True #for redundant constraints
+#simulationSettings.linearSolver.ignoreSingularJacobian = True #for redundant constraints
 
 SC.visualizationSettings.nodes.show = True
 SC.visualizationSettings.nodes.drawNodesAsPoint  = False
 SC.visualizationSettings.nodes.showBasis = True
 SC.visualizationSettings.nodes.basisSize = w*2
 
-# simulationSettings.timeIntegration.simulateInRealtime=True
-# simulationSettings.timeIntegration.realtimeFactor=0.1
+# simulationSettings.timeIntegration.realtime.active=True
+# simulationSettings.timeIntegration.realtime.factor=0.1
 if True: #record animation frames:
     SC.visualizationSettings.loads.drawSimplified=False
     SC.visualizationSettings.general.graphicsUpdateInterval=0.01
@@ -176,7 +176,7 @@ if True: #record animation frames:
     #SC.visualizationSettings.view0.window.renderWindowSize=[1980,1080]
     SC.visualizationSettings.view0.window.renderWindowSize=[1280,720]
     SC.visualizationSettings.openGL.multiSampling = 4
-    #simulationSettings.solutionSettings.recordImagesInterval = 0.01
+    #simulationSettings.solution.recordImagesInterval = 0.01
     
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 #testIsActive = False

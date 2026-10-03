@@ -321,14 +321,14 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.005
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
-#simulationSettings.displayComputationTime = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.solution.file.name = 'solution/coordinatesSolution.txt'
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.005
+simulationSettings.solution.sensors.writePeriod = 0.001
+#simulationSettings.show.computationTime = True
 simulationSettings.parallel.numberOfThreads = 4 #use 4 to speed up for > 100 ANCF elements
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
@@ -344,7 +344,7 @@ simulationSettings.timeIntegration.adaptiveStepRecoverySteps = 40
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 
 SC.visualizationSettings.general.circleTiling = 24
 SC.visualizationSettings.loads.show=False
@@ -353,7 +353,7 @@ SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 2
 
 # SC.visualizationSettings.general.useGradientBackground = True
-simulationSettings.solutionSettings.solutionInformation = 'elevator'
+simulationSettings.solution.file.information = 'elevator'
 # SC.visualizationSettings.view0.window.globalFontSize = 14
 
 SC.visualizationSettings.view0.window.renderWindowSize = [1024,2000]

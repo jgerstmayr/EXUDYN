@@ -85,7 +85,7 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
 tEnd = 1 #1
 steps = 1000    #1000
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-3
+simulationSettings.solution.file.writePeriod = 1e-3
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
 

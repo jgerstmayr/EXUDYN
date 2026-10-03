@@ -112,20 +112,20 @@ tEnd = 1
 steps = 2000
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
+simulationSettings.solution.file.writePeriod = tEnd/steps
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 
-#simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+#simulationSettings.solution.file.writePeriod = tEnd/steps
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
 
 simulationSettings.staticSolver.newton.maxIterations = 50
 simulationSettings.staticSolver.numberOfLoadSteps = 10
-# simulationSettings.displayComputationTime = True
-# simulationSettings.displayStatistics = True
+# simulationSettings.show.computationTime = True
+# simulationSettings.show.statistics = True
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-6
 
 ## add some visualization settings

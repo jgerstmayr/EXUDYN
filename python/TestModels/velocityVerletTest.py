@@ -50,7 +50,7 @@ for i in range(4):
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.verboseMode=1 #provide some output
-    # simulationSettings.timeIntegration.simulateInRealtime = True
+    # simulationSettings.timeIntegration.realtime.active = True
 
     #SC.renderer.DoIdleTasks()
     mbs.SolveDynamic(simulationSettings, solverType = exudyn.DynamicSolverType.VelocityVerlet)

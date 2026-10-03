@@ -134,8 +134,8 @@ h = 2e-3 #step size
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.solutionSettings.solutionWritePeriod = 0.01 #store every 10 ms
-# simulationSettings.timeIntegration.simulateInRealtime = True
+simulationSettings.solution.file.writePeriod = 0.01 #store every 10 ms
+# simulationSettings.timeIntegration.realtime.active = True
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
 SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]

@@ -169,8 +169,8 @@ simulationSettings.timeIntegration.numberOfSteps = 2000
 simulationSettings.timeIntegration.endTime = 2
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 simulationSettings.timeIntegration.verboseMode = 0
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = 0.01
 mbs.SolveDynamic(simulationSettings)
 
 testResult = 0

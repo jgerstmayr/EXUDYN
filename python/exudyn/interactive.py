@@ -209,9 +209,9 @@ class InteractiveDialog:
         systemScaling = 1
 
         if (self.doTimeIntegration 
-            and self.simulationSettings.solutionSettings.writeInitialValues 
+            and self.simulationSettings.solution.file.writeInitialValues 
             and mbs.systemData.AEsize() != 0):
-            exudyn.Print('WARNING: InteractiveDialog:\nyou should set simulationSettings.solutionSettings.writeInitialValues = False in order to avoid erroneous constraint outputs during time integration periods.\n')
+            exudyn.Print('WARNING: InteractiveDialog:\nyou should set simulationSettings.solution.file.writeInitialValues = False in order to avoid erroneous constraint outputs during time integration periods.\n')
 
         #change global font size
         if True:
@@ -644,7 +644,7 @@ class InteractiveDialog:
             #update 2023-01-06: also update accelerations, needed for implicit solvers!
             #initial accelerations are set sero in initialization ...
             initAcc = mbs.systemData.GetODE2Coordinates_tt(configuration = exudyn.ConfigurationType.Current)
-            #not needed, if simulationSettings.solutionSettings.writeInitialValues = False 
+            #not needed, if simulationSettings.solution.file.writeInitialValues = False 
             #initAE = mbs.systemData.GetAECoordinates(configuration = exudyn.ConfigurationType.Current) 
 
             mbs.sys['solver'].InitializeSolverInitialConditions(mbs, self.simulationSettings) #needed to update simulationSettings in solver
@@ -839,7 +839,7 @@ def AnimateModes(systemContainer, mainSystem, nodeNumber, period = 0.04, stepsPe
 
     simulationSettings = exudyn.SimulationSettings() #not used, but needed in dialog
      #   self.mbs.sys['solver'].InitializeSolver(self.mbs, self.simulationSettings)
-    simulationSettings.solutionSettings.solutionInformation = 'Mode X'
+    simulationSettings.solution.file.information = 'Mode X'
 
     if not SC.visualizationSettings.general.useMultiThreadedRendering:
         SC.renderer.DoIdleTasks(0) #do an update once
@@ -904,11 +904,11 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
         if 'simulationSettings' not in mbs.sys:
             raise ValueError('SolutionViewer: no solution file found (already simulated?)!')
         sims = mbs.sys['simulationSettings']
-        if not sims.solutionSettings.writeSolutionToFile:
-            raise ValueError('SolutionViewer: previous simulation has writeSolutionToFile==False; no solution file available!')
-        filename = sims.solutionSettings.coordinatesSolutionFileName
+        if not sims.solution.file.write:
+            raise ValueError('SolutionViewer: previous simulation has solution.file.write==False; no solution file available!')
+        filename = sims.solution.file.name
         if filename.find('.')==-1:
-            if sims.solutionSettings.binarySolutionFile:
+            if sims.solution.file.binary:
                 filename+='.sol' #this is the default ending for binary file
             else:
                 filename+='.txt' #this is the default ending for text
@@ -1015,7 +1015,7 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
 
     simulationSettings = exudyn.SimulationSettings() #not used, but needed in dialog
      #   self.mbs.sys['solver'].InitializeSolver(self.mbs, self.simulationSettings)
-    simulationSettings.solutionSettings.solutionInformation = ''
+    simulationSettings.solution.file.information = ''
 
     if not SC.visualizationSettings.general.useMultiThreadedRendering:
         SC.renderer.DoIdleTasks(0) #do an update once

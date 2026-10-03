@@ -71,14 +71,14 @@ sTip = mbs.AddSensor(SensorNode(nodeNumber=nodesLeg2[-1], outputVariableType=exu
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1   #no numerical damping
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-8
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = stepSize
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = stepSize
 
 mbs.SolveDynamic(simulationSettings)
 

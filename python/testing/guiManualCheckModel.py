@@ -86,10 +86,10 @@ h = 2e-3
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.timeIntegration.simulateInRealtime = True
+simulationSettings.timeIntegration.realtime.active = True
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.solutionSettings.solutionWritePeriod = 0.02
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
+simulationSettings.solution.file.writePeriod = 0.02
+simulationSettings.solution.sensors.writePeriod = 0.01
 
 print('\n*** GUI check: press SPACE in the render window to start, Q to stop the simulation ***\n')
 SC.renderer.Start()

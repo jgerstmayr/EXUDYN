@@ -94,14 +94,14 @@ tEnd = 4     #end time of simulation
 h = 0.002    #step size; leads to 1000 steps
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 0.005  #output interval general
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = 1*h  #output interval of sensors
+simulationSettings.solution.file.writePeriod = 0.005  #output interval general
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = 1*h  #output interval of sensors
 
 simulationSettings.timeIntegration.numberOfSteps = tEnd/h
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.displayComputationTime = True
+simulationSettings.show.computationTime = True
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 

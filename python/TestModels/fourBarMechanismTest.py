@@ -81,10 +81,10 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 f = 2000
 simulationSettings.timeIntegration.numberOfSteps = 1*f
 simulationSettings.timeIntegration.endTime = 0.001*f
-simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/500
-simulationSettings.displayComputationTime = False
-simulationSettings.displayStatistics = False
+simulationSettings.solution.file.write = (not testIsActive) #only the SolutionViewer reads it (#2492)
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/500
+simulationSettings.show.computationTime = False
+simulationSettings.show.statistics = False
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8*100 #10000
@@ -103,7 +103,7 @@ SC.visualizationSettings.bodies.showNumbers = True
 #SC.visualizationSettings.connectors.showNumbers = True
 SC.visualizationSettings.nodes.defaultSize = 0.05
 
-simulationSettings.solutionSettings.solutionInformation = "Planar four-bar-mechanism with initial angular velocity and gravity"
+simulationSettings.solution.file.information = "Planar four-bar-mechanism with initial angular velocity and gravity"
 
 #testIsActive = False #uncomment this line to visualize the example!
 if not testIsActive: 

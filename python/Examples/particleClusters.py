@@ -231,21 +231,21 @@ h= 0.0001
 
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/test.txt'
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.name = 'solution/test.txt'
 
-simulationSettings.displayComputationTime = True
-#simulationSettings.displayStatistics = True
+simulationSettings.show.computationTime = True
+#simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.parallel.numberOfThreads = 8
 
 #SPEEDUPs:
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False
-simulationSettings.solutionSettings.solutionWritePeriod = 0.02
-simulationSettings.solutionSettings.outputPrecision = 5 #make files smaller
-simulationSettings.solutionSettings.exportAccelerations = False
-simulationSettings.solutionSettings.exportVelocities = False
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False
+simulationSettings.solution.file.writePeriod = 0.02
+simulationSettings.solution.precision = 5 #make files smaller
+simulationSettings.solution.file.export.accelerations = False
+simulationSettings.solution.file.export.velocities = False
 
 SC.visualizationSettings.general.graphicsUpdateInterval=1
 SC.visualizationSettings.general.circleTiling=200
@@ -261,7 +261,7 @@ SC.visualizationSettings.openGL.multiSampling = 4
 
 SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 if False:
-    simulationSettings.solutionSettings.recordImagesInterval = 0.025
+    simulationSettings.solution.recordImagesInterval = 0.025
     SC.visualizationSettings.general.graphicsUpdateInterval=2
 
 

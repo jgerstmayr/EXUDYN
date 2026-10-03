@@ -107,8 +107,8 @@ def ParameterFunction(parameterSet):
     tEnd = 1     #end time of simulation
     
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.solutionSettings.writeSolutionToFile = False
-    simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
+    simulationSettings.solution.file.write = False
+    simulationSettings.solution.sensors.writePeriod = 5e-3  #output interval of sensors
     simulationSettings.timeIntegration.numberOfSteps = steps
     simulationSettings.timeIntegration.endTime = tEnd
     

@@ -110,7 +110,7 @@ stepSize = 1e-3 #step size
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.timeIntegration.simulateInRealtime = True
+simulationSettings.timeIntegration.realtime.active = True
 
 SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]
 SC.visualizationSettings.openGL.multiSampling = 4

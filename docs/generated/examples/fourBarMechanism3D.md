@@ -12,7 +12,7 @@ You can view and download this file on Github: [fourBarMechanism3D.py](https://g
 #
 # Details:  A simple 3D four bar mechanism #read full text output!
 #           1) regular case does not work (redundant constraints/overconstrained joints; jacobian singluar)
-#           2) use simulationSettings.linearSolverSettings.ignoreSingularJacobian = True 
+#           2) use simulationSettings.linearSolver.ignoreSingularJacobian = True 
 #           3) remove redundant constraints: change flags for GenericJoint at last joint [1,1,0,0,0,0] to obtain well defined mbs
 #
 # Author:   Johannes Gerstmayr
@@ -155,15 +155,15 @@ for case in cases:
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.verboseMode = 1
-    #simulationSettings.timeIntegration.simulateInRealtime = True
-    #simulationSettings.timeIntegration.realtimeFactor = 4
+    #simulationSettings.timeIntegration.realtime.active = True
+    #simulationSettings.timeIntegration.realtime.factor = 4
 
     if case == 1:
-        simulationSettings.linearSolverSettings.ignoreSingularJacobian = True #for redundant constraints
+        simulationSettings.linearSolver.ignoreSingularJacobian = True #for redundant constraints
 
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
-    simulationSettings.solutionSettings.writeSolutionToFile = False
-    #simulationSettings.solutionSettings.solutionWritePeriod = 0.005 #store every 5 ms
+    simulationSettings.solution.file.write = False
+    #simulationSettings.solution.file.writePeriod = 0.005 #store every 5 ms
 
     SC.visualizationSettings.view0.window.renderWindowSize=[1200,1024]
     SC.visualizationSettings.openGL.multiSampling = 4

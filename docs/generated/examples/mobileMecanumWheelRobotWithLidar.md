@@ -444,10 +444,10 @@ mbs.variables['lidarDataHistory'][0] = data0
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.1
+simulationSettings.solution.sensors.writePeriod = 0.1
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.displayComputationTime = False
-simulationSettings.displayStatistics = False
+simulationSettings.show.computationTime = False
+simulationSettings.show.statistics = False
 
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
@@ -457,7 +457,7 @@ simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.discontinuous.ignoreMaxIterations = False #reduce step size for contact switching
 simulationSettings.timeIntegration.discontinuous.iterationTolerance = 0.1
-simulationSettings.linearSolverType=exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType=exu.LinearSolverType.EigenSparse
 
 speedup=True
 if speedup:
@@ -481,8 +481,8 @@ if useGraphics:
     SC.visualizationSettings.openGL.multiSampling = 4
 
     if False: #save images
-        simulationSettings.solutionSettings.sensorsWritePeriod = 0.01 #to avoid laggy visualization
-        simulationSettings.solutionSettings.recordImagesInterval = 0.04
+        simulationSettings.solution.sensors.writePeriod = 0.01 #to avoid laggy visualization
+        simulationSettings.solution.recordImagesInterval = 0.04
         SC.visualizationSettings.exportImages.saveImageFileName = "images/frame"
 
 if useGraphics:

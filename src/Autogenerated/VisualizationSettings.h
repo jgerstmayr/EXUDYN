@@ -45,7 +45,7 @@ public: // AUTO:
   Real reallyQuitTimeLimit;                       //!< AUTO: must be >= 0; number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked
   Index rendererPrecision;                        //!< AUTO: must be > 0; precision of general floating point numbers shown in render window: total number of digits used  (max. 16)
   Index rendererStartupTimeout;                   //!< AUTO: must be > 0; OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow)
-  std::string renderWindowString;                 //!< AUTO: string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings)
+  std::string renderWindowString;                 //!< AUTO: string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to information in simulationSettings.solution.file)
   Index showHelpOnStartup;                        //!< AUTO: must be >= 0; seconds to show help message on startup (0=deactivate)
   bool showSolutionInformation;                   //!< AUTO: true = show solution information (from simulationSettings.solution)
   bool showSolverInformation;                     //!< AUTO: true = solver name and further information shown in render window
@@ -938,7 +938,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        VSettingsTraces
-* @brief        Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics.
+* @brief        Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solution.sensors.writePeriod) may lead to slow graphics.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)

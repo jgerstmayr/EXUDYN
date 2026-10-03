@@ -126,13 +126,13 @@ if addSlidingJoint:
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.write=False
 
 fact = 200
 simulationSettings.timeIntegration.numberOfSteps = 1*fact
 simulationSettings.timeIntegration.endTime = 0.001*fact*0.5
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/fact
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8*100 #10000
@@ -145,7 +145,7 @@ simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordi
 simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-8 #6.055454452393343e-06*0.0001 #eps^(1/3)
 simulationSettings.timeIntegration.newton.modifiedNewtonContractivity = 1e8
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
-simulationSettings.displayStatistics = False
+simulationSettings.show.statistics = False
 
 if not testIsActive: 
     SC.renderer.Start()

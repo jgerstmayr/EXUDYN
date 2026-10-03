@@ -1,0 +1,11 @@
+{
+  "number": 2815,
+  "title": "two Newton structures for time integration and static solver, with the modified Newton by default in the time integration",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "effort": "HIGH",
+  "description": "NewtonSettings is shared; with the forwarding of RG12.1 two structures are possible, most members copied, each with its own defaults - useModifiedNewton=True for the time integration; the test suite has to be evaluated again (maintainer 2026-10-04).",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01"
+}

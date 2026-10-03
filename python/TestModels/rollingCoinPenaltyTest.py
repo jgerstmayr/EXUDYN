@@ -103,10 +103,10 @@ h=0.0001
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-#simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.0005
+#simulationSettings.solution.file.writePeriod = 0.01
+simulationSettings.solution.sensors.writePeriod = 0.0005
 #simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True

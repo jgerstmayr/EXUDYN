@@ -237,17 +237,17 @@ tEnd = 0.5 #was 0.5*10, shortened for the test suite; the comment above records 
 #     tEnd = stepSize
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd #0.2*5*4 #0.2 for testing
-simulationSettings.solutionSettings.solutionWritePeriod = writeStepSize*10
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
-simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
+simulationSettings.solution.file.writePeriod = writeStepSize*10
+simulationSettings.solution.sensors.writePeriod = 0.001
+simulationSettings.solution.file.write = (not testIsActive)
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.displayComputationTime = True
-simulationSettings.displayStatistics = True
+simulationSettings.show.computationTime = True
+simulationSettings.show.statistics = True
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.9 #0.6 works well 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 # simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep = True
-simulationSettings.linearSolverType=exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType=exu.LinearSolverType.EigenSparse
 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 simulationSettings.timeIntegration.generalizedAlpha.lieGroupAddTangentOperator = False

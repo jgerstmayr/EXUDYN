@@ -106,7 +106,7 @@ mbs.AddLoad(Torque(markerNumber = mR0Left, loadVector = [0, 0, 10])) #apply torq
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.write=False
 
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 1
@@ -114,7 +114,7 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-10 #10000
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-simulationSettings.displayStatistics = False
+simulationSettings.show.statistics = False
 
 if not testIsActive: 
     SC.renderer.Start()

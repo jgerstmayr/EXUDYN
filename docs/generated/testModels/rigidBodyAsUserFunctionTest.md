@@ -163,9 +163,9 @@ if not testIsActive:
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-#simulationSettings.solutionSettings.solutionWritePeriod = h
+#simulationSettings.solution.file.writePeriod = h
 simulationSettings.timeIntegration.verboseMode = 1
-#simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
+#simulationSettings.solution.file.writePeriod = tEnd/steps
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8 #SHOULD work with 0.9 as well
 

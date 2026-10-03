@@ -98,7 +98,7 @@ tEnd = 1     #end time of simulation
 h = 0.005    #step size; leads to 1000 steps
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.write=False
 simulationSettings.timeIntegration.numberOfSteps = tEnd/h
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1

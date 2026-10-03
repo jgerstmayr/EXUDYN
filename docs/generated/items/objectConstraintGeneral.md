@@ -23,7 +23,7 @@ A constraint is written on the **position level** (index 3), $\gv(\qv,t) = \Null
 position may drift over long simulations, which the output variables of some joints show.
 Constraints need an **implicit** time integration (generalized-alpha, trapezoidal) or the static
 solver; the explicit integrators do not solve algebraic equations - they can only eliminate
-`ObjectConnectorCoordinate` constraints to the ground, such as fixed nodes (`explicitIntegration.eliminateConstraints`).
+`ObjectConnectorCoordinate` constraints to the ground, such as fixed nodes (`timeIntegration.explicit.eliminateConstraints`).
 
 ## `activeConnector`
 
@@ -35,4 +35,4 @@ remains in the system with its multipliers, which are zero, and can be switched 
 Constraints that fix the same motion twice - two revolute joints on one axis, a closed loop of
 planar joints in 3D - make the Jacobian of the constraints singular, and the solver fails.
 `mbs.ComputeSystemDegreeOfFreedom()` counts the redundant constraints; the `EigenDense` linear solver
-with `linearSolverSettings.ignoreSingularJacobian` can handle some of them.
+with `linearSolver.ignoreSingularJacobian` can handle some of them.

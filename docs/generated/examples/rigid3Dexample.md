@@ -89,14 +89,14 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 fact = 20000 #10000
 simulationSettings.timeIntegration.numberOfSteps = 1*fact
 simulationSettings.timeIntegration.endTime = 0.001*fact*0.5*4
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact*10
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/fact*10
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
-simulationSettings.solutionSettings.solutionInformation = "rigid body tests"
+simulationSettings.solution.file.information = "rigid body tests"
 SC.visualizationSettings.nodes.defaultSize = 0.05
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 2

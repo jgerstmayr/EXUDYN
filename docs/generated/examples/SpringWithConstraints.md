@@ -64,9 +64,9 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 f = 100000
 simulationSettings.timeIntegration.numberOfSteps = 1*f
 simulationSettings.timeIntegration.endTime = 0.002*f
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/f
-simulationSettings.displayComputationTime = True
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/f
+simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8*1000 #10000
@@ -80,14 +80,14 @@ simulationSettings.timeIntegration.newton.modifiedNewtonContractivity = 1000
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 
 #SC.visualizationSettings.nodes.showNumbers = True
 SC.visualizationSettings.bodies.showNumbers = True
 #SC.visualizationSettings.connectors.showNumbers = True
 SC.visualizationSettings.nodes.defaultSize = 0.05
 
-simulationSettings.solutionSettings.solutionInformation = "Planar four-bar-mechanism with initial angular velocity and gravity"
+simulationSettings.solution.file.information = "Planar four-bar-mechanism with initial angular velocity and gravity"
 
 #SC.renderer.Start()
 #mbs.SolveDynamic(simulationSettings)

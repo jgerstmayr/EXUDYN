@@ -345,18 +345,18 @@ h= 0.0002  #h= 0.0002 for test suite
 # h*=0.1
 # tEnd*=3
 simulationSettings = exu.SimulationSettings()
-#simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.solutionSettings.writeSolutionToFile = False
+#simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.solution.file.write = False
 if not testIsActive:
-    simulationSettings.solutionSettings.solutionWritePeriod = 0.001
-    simulationSettings.solutionSettings.writeSolutionToFile = True
-    simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
+    simulationSettings.solution.file.writePeriod = 0.001
+    simulationSettings.solution.file.write = True
+    simulationSettings.solution.file.name = 'solution/coordinatesSolution.txt'
 else:
-    simulationSettings.solutionSettings.exportAccelerations = False
-    simulationSettings.solutionSettings.exportVelocities = False
+    simulationSettings.solution.file.export.accelerations = False
+    simulationSettings.solution.file.export.velocities = False
     
-simulationSettings.solutionSettings.sensorsWritePeriod = h*10
-simulationSettings.solutionSettings.outputPrecision = 8 #make files smaller
+simulationSettings.solution.sensors.writePeriod = h*10
+simulationSettings.solution.precision = 8 #make files smaller
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2 = False
@@ -389,7 +389,7 @@ if not testIsActive:
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
+simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
 mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
 # mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ODE23)
 

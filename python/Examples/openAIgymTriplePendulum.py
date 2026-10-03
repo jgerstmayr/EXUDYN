@@ -121,8 +121,8 @@ class InvertedTriplePendulumEnv(OpenAIGymInterfaceEnv):
         self.simulationSettings.timeIntegration.numberOfSteps = 1
         self.simulationSettings.timeIntegration.endTime = 0 #will be overwritten in step
         self.simulationSettings.timeIntegration.verboseMode = 0
-        self.simulationSettings.solutionSettings.writeSolutionToFile = False
-        #self.simulationSettings.timeIntegration.simulateInRealtime = True
+        self.simulationSettings.solution.file.write = False
+        #self.simulationSettings.timeIntegration.realtime.active = True
         
         self.simulationSettings.timeIntegration.newton.useModifiedNewton = True
         
@@ -130,7 +130,7 @@ class InvertedTriplePendulumEnv(OpenAIGymInterfaceEnv):
         self.SC.visualizationSettings.general.graphicsUpdateInterval = 0.01 #50Hz
         self.SC.visualizationSettings.openGL.multiSampling=4
         
-        #self.simulationSettings.solutionSettings.solutionInformation = "Open AI gym"
+        #self.simulationSettings.solution.file.information = "Open AI gym"
         
         #+++++++++++++++++++++++++++++++++++++++++++++++++++++
         # Angle at which to fail the episode

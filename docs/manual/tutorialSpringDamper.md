@@ -151,11 +151,11 @@ All settings for simulation, see according reference section, can be provided in
 
 ```python
   simulationSettings = exu.SimulationSettings()
-  simulationSettings.solutionSettings.solutionWritePeriod = 5e-3 #output interval general
-  simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
+  simulationSettings.solution.file.writePeriod = 5e-3 #output interval general
+  simulationSettings.solution.sensors.writePeriod = 5e-3  #output interval of sensors
   simulationSettings.timeIntegration.numberOfSteps = tEnd/h
   simulationSettings.timeIntegration.endTime = tEnd
-  simulationSettings.displayComputationTime = True               #show how fast
+  simulationSettings.show.computationTime = True               #show how fast
 ```
 
 In order to see some solver output, we must set `verboseMode` to 1 (higher values gives detailed output per step).
@@ -163,7 +163,7 @@ Furthermore, we can show information on computation time (which may cost some ov
 
 ```python
   simulationSettings.timeIntegration.verboseMode = 1             #show some solver output
-  simulationSettings.displayComputationTime = True               #show how fast
+  simulationSettings.show.computationTime = True               #show how fast
 ```
 
 We are using a generalized alpha solver, where numerical damping is needed for index 3 constraints. As we have only spring-dampers, we can set the spectral radius to 1, meaning no numerical damping:

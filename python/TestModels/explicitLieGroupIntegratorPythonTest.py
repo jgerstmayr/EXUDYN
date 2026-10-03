@@ -154,9 +154,9 @@ fact = 400 #400 steps for test suite/error
 simulationSettings.timeIntegration.numberOfSteps = fact 
 simulationSettings.timeIntegration.endTime = 0.01              #0.01s for test suite 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-#simulationSettings.displayComputationTime = True
+#simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/2000
+simulationSettings.solution.sensors.writePeriod = simulationSettings.timeIntegration.endTime/2000
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
 
 dynamicSolver.SetUserFunctionNewton(mbs, UserFunctionNewtonLieGroupRK4)

@@ -344,7 +344,7 @@ To show the interoperability with julia, test the following example (similar to 
   mbs.Assemble()                     #assemble system and solve
   simulationSettings = exu.SimulationSettings()
   simulationSettings.timeIntegration.verboseMode=1 #provide some output
-  simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/demo1.txt'
+  simulationSettings.solution.file.name = 'solution/demo1.txt'
 
   mbs.SolveDynamic(simulationSettings)
   print('results can be found in local directory: solution/demo1.txt')

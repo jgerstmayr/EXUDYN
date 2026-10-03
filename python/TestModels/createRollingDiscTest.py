@@ -48,7 +48,7 @@ tEnd = 1
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
+simulationSettings.solution.file.write = (not testIsActive)
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 

@@ -80,12 +80,12 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
+simulationSettings.show.statistics = True
+simulationSettings.show.computationTime = True
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 #start solver:

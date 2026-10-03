@@ -85,19 +85,19 @@ tEnd = 0.1
 h = 1e-4
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/1000
-simulationSettings.displayComputationTime = False
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/1000
+simulationSettings.show.computationTime = False
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
+simulationSettings.show.statistics = True
+simulationSettings.show.computationTime = True
 
 SC.visualizationSettings.nodes.defaultSize = 0.01
-simulationSettings.solutionSettings.solutionInformation = "ANCF cantilever beam"
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.solution.file.information = "ANCF cantilever beam"
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
 doDynamicSimulation = True #switch between static and dynamic simulation
 

@@ -145,12 +145,12 @@ stepSize = 4e-3
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile=(not testIsActive) #only the SolutionViewer reads it (#2492)
-simulationSettings.solutionSettings.solutionWritePeriod=0.004
+simulationSettings.solution.file.write=(not testIsActive) #only the SolutionViewer reads it (#2492)
+simulationSettings.solution.file.writePeriod=0.004
 simulationSettings.timeIntegration.numberOfSteps = tEnd/stepSize
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
-#simulationSettings.timeIntegration.simulateInRealtime = True
+#simulationSettings.timeIntegration.realtime.active = True
 
 SC.visualizationSettings.view0.scene.drawWorldBasis = True
 SC.visualizationSettings.openGL.light0.shadow = 0.25

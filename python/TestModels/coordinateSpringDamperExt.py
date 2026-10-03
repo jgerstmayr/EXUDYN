@@ -235,10 +235,10 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
 
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.solutionWritePeriod = 0.1 #data not used
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.002 #data not used
-#simulationSettings.solutionSettings.solutionInformation = 'Nonlinear oscillations: compare linear / nonlinear case'
+simulationSettings.solution.file.write = False
+simulationSettings.solution.file.writePeriod = 0.1 #data not used
+simulationSettings.solution.sensors.writePeriod = 0.002 #data not used
+#simulationSettings.solution.file.information = 'Nonlinear oscillations: compare linear / nonlinear case'
 simulationSettings.timeIntegration.verboseMode = 1 #turn off, because of lots of output
 #simulationSettings.timeIntegration.stepInformation = 2+64+128+8
 #simulationSettings.timeIntegration.newton.relativeTolerance = 1e-3 #reduce a little bit to improve convergence
@@ -247,8 +247,8 @@ simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
 simulationSettings.timeIntegration.endTime = endTime
 
 if not testIsActive: 
-    simulationSettings.timeIntegration.simulateInRealtime = True
-    simulationSettings.timeIntegration.realtimeFactor = 2
+    simulationSettings.timeIntegration.realtime.active = True
+    simulationSettings.timeIntegration.realtime.factor = 2
 
 SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
 SC.visualizationSettings.view0.window.renderWindowSize=[1200,1024]

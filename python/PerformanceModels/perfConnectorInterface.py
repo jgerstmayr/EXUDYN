@@ -95,9 +95,9 @@ for run in runList:
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.numberOfSteps = run['numberOfSteps']
     simulationSettings.timeIntegration.endTime = run['numberOfSteps']*h
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
     simulationSettings.timeIntegration.verboseMode = 1
-    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.RK44 if run['explicit']
                      else exu.DynamicSolverType.GeneralizedAlpha)
 

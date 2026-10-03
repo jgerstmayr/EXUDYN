@@ -65,19 +65,19 @@ simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = tEnd/h
 simulationSettings.timeIntegration.endTime = tEnd
 
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 simulationSettings.timeIntegration.verboseMode = 1
-# simulationSettings.displayStatistics = True
-# simulationSettings.displayComputationTime = True
+# simulationSettings.show.statistics = True
+# simulationSettings.show.computationTime = True
 
 exu.Print("Run perfSpringDamperExplicit WITHOUT CPU timing:")
 #Solve twice (with/without computation time!)
-simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
+simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
 mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
 
 exu.Print("Run perfSpringDamperExplicit WITH CPU timing:")
-simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
+simulationSettings.show.statistics = True
+simulationSettings.show.computationTime = True
 mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.ExplicitEuler)
 
 #evaluate final (=current) output values

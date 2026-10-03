@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.256.dev1
+- Exudyn version = 1.12.257.dev1
 - last change = 2026-10-03
-- Number of issues = 2815
-- Number of resolved issues = 2570 (256 in current version)
+- Number of issues = 2816
+- Number of resolved issues = 2571 (257 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,11 +7568,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `IMPROVEMENT` `HIGH EFF` `raised by: Claude-JG` two Newton structures for time integration and static solver, with the modified Newton by default in the time integration (#2815)
+  - description: NewtonSettings is shared; with the forwarding of RG12.1 two structures are possible, most members copied, each with its own defaults - useModifiedNewton=True for the time integration; the test suite has to be evaluated again (maintainer 2026-10-04).
+  - date raised: 2026-10-03
 - `CHANGE` `HIGH EFF` `raised by: Claude-JG` item parameters renamed as decided in RG12.31: the prefix physics dropped, the friction forces, use... flags (#2814)
   - description: physicsMass -\> mass and 26 more, sphereRadius, dynamicFrictionForce/staticFrictionOffsetForce/viscousFrictionForce, factor1, rollingViscousFriction, useIntrinsicFormulation, useClassicalFormulation; the old names forward until 2031; C++, library, scripts, documentation and tests follow (maintainer 2026-10-03).
-  - date raised: 2026-10-03
-- `CHANGE` `HIGH EFF` `raised by: Claude-JG` simulationSettings renamed and restructured as decided in RG12.31, with every change the deprecation needs (#2813)
-  - description: No substructure ends in Settings (solution, linearSolver), solution.file/.sensors/.restart, show.\*, timeIntegration.realtime and .solverType, newton.active/.residualMode, camel case fixes; the old names forward until 2031; C++, library, scripts (exudev scripts --fix), documentation and tests follow (maintainer 2026-10-03).
   - date raised: 2026-10-03
 - `IDEA` `MEDIUM EFF` `raised by: Claude-JG` Jupyter notebooks for the tutorials and some examples: an evaluation first (#2811)
   - description: Tutorials, and some sections of examples, as notebooks (Jupyter or similar): what it takes in the docs build (myst-nb or nbsphinx), in the test runners, the renderer and plots inside a notebook, and the size of the repository (maintainer 2026-10-03).

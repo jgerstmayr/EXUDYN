@@ -266,18 +266,18 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
-simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
-simulationSettings.solutionSettings.solutionWritePeriod = 0.005
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
-#simulationSettings.displayComputationTime = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.solution.file.name = 'solution/coordinatesSolution.txt'
+simulationSettings.solution.file.write = (not testIsActive) #only the SolutionViewer reads it (#2492)
+simulationSettings.solution.file.writePeriod = 0.005
+simulationSettings.solution.sensors.writePeriod = 0.001
+#simulationSettings.show.computationTime = True
 #1 thread, because the multithreaded assembly sums in a non-deterministic order: with 4
 #threads the result of this model moved by up to 5.4e-14 between runs, past the 5e-14 test
 #tolerance, and at 16 elements per section 1 thread is also FASTER (0.36s vs 0.69s). Use more
 #threads for > 100 ANCF elements, but then the value is not a reference any more (#2368)
 simulationSettings.parallel.numberOfThreads = 1
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 
 doDynamic = True
 tEnd = 0.1

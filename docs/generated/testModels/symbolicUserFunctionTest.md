@@ -91,8 +91,8 @@ endTime = 50
 stepSize = 0.005
 
 simulationSettings = exu.SimulationSettings()
-#simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-simulationSettings.solutionSettings.writeSolutionToFile = False
+#simulationSettings.solution.file.writePeriod = 0.01
+simulationSettings.solution.file.write = False
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)

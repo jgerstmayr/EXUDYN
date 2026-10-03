@@ -79,8 +79,8 @@ void CMarkerKinematicTreeRigid::ComputeMarkerData(const CSystemData& cSystemData
 void CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative(const CSystemData& cSystemData, const Vector6D& v6D, MarkerData& markerData) const
 {
 	//the kinematic tree declares no derivative of its transposed Jacobian (JacobianTtimesVector_q); a connector that
-	//needs it differentiates numerically (newton.numericalDifferentiation.forODE2connectors) or is solved explicitly
-	CHECKandTHROWstring("CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative: the derivative of the Jacobian of a kinematic tree is not implemented; use newton.numericalDifferentiation.forODE2connectors = True or an explicit solver", ExudynNotImplementedError);
+	//needs it differentiates numerically (newton.numericalDifferentiation.forODE2Connectors) or is solved explicitly
+	CHECKandTHROWstring("CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative: the derivative of the Jacobian of a kinematic tree is not implemented; use newton.numericalDifferentiation.forODE2Connectors = True or an explicit solver", ExudynNotImplementedError);
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

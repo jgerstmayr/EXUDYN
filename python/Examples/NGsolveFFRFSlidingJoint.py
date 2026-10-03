@@ -434,14 +434,14 @@ SC.visualizationSettings.raytracer.advanced.searchTreeFactor = 8
 
 simulationSettings = exu.SimulationSettings()
 
-#simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.solutionWritePeriod = 0.02 #data not used
-simulationSettings.solutionSettings.sensorsWritePeriod = stepSize
+#simulationSettings.solution.file.write = False
+simulationSettings.solution.file.writePeriod = 0.02 #data not used
+simulationSettings.solution.sensors.writePeriod = stepSize
 simulationSettings.timeIntegration.verboseMode = 1 #turn off, because of lots of output
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 # simulationSettings.parallel.numberOfThreads = 4
-#simulationSettings.displayComputationTime = True
-#simulationSettings.displayStatistics = True
+#simulationSettings.show.computationTime = True
+#simulationSettings.show.statistics = True
 
 simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
 simulationSettings.timeIntegration.endTime = endTime

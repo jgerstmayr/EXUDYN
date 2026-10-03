@@ -143,16 +143,16 @@ mbs.Assemble()
 #mbs.systemData.Info()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-5  #output interval
+simulationSettings.solution.file.writePeriod = 1e-5  #output interval
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = 30#tEnd
 simulationSettings.timeIntegration.newton.useModifiedNewton=True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
-simulationSettings.linearSolverType = exu.LinearSolverType.EXUdense
+simulationSettings.show.statistics = True
+simulationSettings.show.computationTime = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EXUdense
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 SC.visualizationSettings.general.useMultiThreadedRendering = False

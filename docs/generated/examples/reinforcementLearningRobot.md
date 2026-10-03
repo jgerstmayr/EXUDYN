@@ -365,15 +365,15 @@ if False:
     # h*=0.1
     # tEnd*=3
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-    simulationSettings.solutionSettings.writeSolutionToFile = False
-    simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
+    simulationSettings.solution.file.writePeriod = 0.01
+    simulationSettings.solution.file.write = False
+    simulationSettings.solution.file.name = 'solution/coordinatesSolution.txt'
     
-    simulationSettings.solutionSettings.sensorsWritePeriod = stepSize*10
-    # simulationSettings.displayComputationTime = True
-    # simulationSettings.displayStatistics = True
+    simulationSettings.solution.sensors.writePeriod = stepSize*10
+    # simulationSettings.show.computationTime = True
+    # simulationSettings.show.statistics = True
     # simulationSettings.timeIntegration.verboseMode = 1
-    #simulationSettings.timeIntegration.simulateInRealtime = True
+    #simulationSettings.timeIntegration.realtime.active = True
     simulationSettings.timeIntegration.discontinuous.maxIterations = 1 #speed up
     #simulationSettings.timeIntegration.discontinuous.iterationTolerance = 1e-5
     
@@ -384,7 +384,7 @@ if False:
     
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
+    simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
     
     SC.visualizationSettings.view0.window.renderWindowSize=[1600,1024]
     SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
@@ -450,7 +450,7 @@ class RobotEnv(OpenAIGymInterfaceEnv):
         self.stepSize = 1e-3
         self.stepUpdateTime = 0.05
         
-        simulationSettings.solutionSettings.solutionWritePeriod = 0.1
+        simulationSettings.solution.file.writePeriod = 0.1
 
         writeSolutionToFile = False
         if 'writeSolutionToFile' in kwargs:
@@ -460,22 +460,22 @@ class RobotEnv(OpenAIGymInterfaceEnv):
         if 'useGraphics' in kwargs:
             useGraphics = kwargs['useGraphics']
 
-        simulationSettings.solutionSettings.writeSolutionToFile = writeSolutionToFile 
-        simulationSettings.solutionSettings.writeSolutionToFile = False
+        simulationSettings.solution.file.write = writeSolutionToFile 
+        simulationSettings.solution.file.write = False
 
-        simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
+        simulationSettings.solution.file.name = 'solution/coordinatesSolution.txt'
         
-        # simulationSettings.displayComputationTime = True
-        #simulationSettings.displayStatistics = True
+        # simulationSettings.show.computationTime = True
+        #simulationSettings.show.statistics = True
         #simulationSettings.timeIntegration.verboseMode = 1
-        #simulationSettings.timeIntegration.simulateInRealtime = True
+        #simulationSettings.timeIntegration.realtime.active = True
         simulationSettings.timeIntegration.discontinuous.maxIterations = 1 #speed up
         #simulationSettings.timeIntegration.discontinuous.iterationTolerance = 1e-5
         
         
         simulationSettings.timeIntegration.numberOfSteps = int(self.stepUpdateTime/self.stepSize)
         simulationSettings.timeIntegration.endTime = self.stepUpdateTime
-        simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
+        simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False #increase performance, accelerations less accurate
         
         SC.visualizationSettings.view0.window.renderWindowSize=[1600,1024]
         SC.visualizationSettings.general.graphicsUpdateInterval = 0.02

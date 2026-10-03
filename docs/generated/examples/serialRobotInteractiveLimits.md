@@ -438,23 +438,23 @@ h = 0.0005
 #SC.renderer.DoIdleTasks()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-simulationSettings.solutionSettings.solutionInformation = 'Hanging Robot Interactive Example'
+simulationSettings.solution.file.information = 'Hanging Robot Interactive Example'
 
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = h*1
-simulationSettings.solutionSettings.sensorsWritePeriod = h*10
-simulationSettings.solutionSettings.binarySolutionFile = True
+simulationSettings.solution.file.writePeriod = h*1
+simulationSettings.solution.sensors.writePeriod = h*10
+simulationSettings.solution.file.binary = True
 simulationSettings.timeIntegration.verboseMode = 0 
-#simulationSettings.solutionSettings.writeSolutionToFile = False
-# simulationSettings.timeIntegration.simulateInRealtime = True
-# simulationSettings.timeIntegration.realtimeFactor = 0.25
-simulationSettings.solutionSettings.writeInitialValues = False
+#simulationSettings.solution.file.write = False
+# simulationSettings.timeIntegration.realtime.active = True
+# simulationSettings.timeIntegration.realtime.factor = 0.25
+simulationSettings.solution.file.writeInitialValues = False
 
-simulationSettings.displayComputationTime = False
-simulationSettings.displayStatistics = False
-# simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.show.computationTime = False
+simulationSettings.show.statistics = False
+# simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 # simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=False
 
 #simulationSettings.timeIntegration.newton.useModifiedNewton = True

@@ -43,7 +43,7 @@ def Solve(mbs):
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.numberOfSteps = 200
     simulationSettings.timeIntegration.endTime = 1
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
     mbs.SolveDynamic(simulationSettings)
     return mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
 

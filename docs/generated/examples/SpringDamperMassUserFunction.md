@@ -108,13 +108,13 @@ if useGraphics:
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 100*200
 simulationSettings.timeIntegration.endTime = 1*200
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.displayStatistics = True
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-#simulationSettings.linearSolverType = exu.LinearSolverType.EXUdense
-simulationSettings.displayComputationTime = True
+simulationSettings.show.statistics = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+#simulationSettings.linearSolver.solverType = exu.LinearSolverType.EXUdense
+simulationSettings.show.computationTime = True
 
 SC.visualizationSettings.nodes.show = True
 SC.visualizationSettings.bodies.show = False

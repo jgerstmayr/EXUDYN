@@ -382,17 +382,17 @@ if __name__=='__main__':
     
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.solutionWritePeriod = 0.04
-    simulationSettings.solutionSettings.sensorsWritePeriod = 0.005
-    simulationSettings.solutionSettings.binarySolutionFile = True
-    simulationSettings.solutionSettings.writeSolutionToFile = True
-    #simulationSettings.displayComputationTime = True
-    # simulationSettings.timeIntegration.simulateInRealtime = True #DON'T do that!
-    simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False
-    simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True
+    simulationSettings.solution.file.writePeriod = 0.04
+    simulationSettings.solution.sensors.writePeriod = 0.005
+    simulationSettings.solution.file.binary = True
+    simulationSettings.solution.file.write = True
+    #simulationSettings.show.computationTime = True
+    # simulationSettings.timeIntegration.realtime.active = True #DON'T do that!
+    simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False
+    simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody = True
     
     simulationSettings.timeIntegration.verboseMode = 1
-    # simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    # simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
         
     SC.visualizationSettings.contact.showSpheres = False
     SC.visualizationSettings.view0.scene.drawWorldBasis = False
@@ -425,7 +425,7 @@ if __name__=='__main__':
         SC.visualizationSettings.general.autoFitScene = False
         SC.renderer.Stop()
     
-    if True and simulationSettings.solutionSettings.writeSolutionToFile: #set True to show animation after simulation
+    if True and simulationSettings.solution.file.write: #set True to show animation after simulation
         mbs.SolutionViewer()
     
     

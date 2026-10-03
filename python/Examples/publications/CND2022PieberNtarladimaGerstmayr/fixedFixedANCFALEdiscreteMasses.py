@@ -376,8 +376,8 @@ def BuildModel(parameterSet):
     
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.writeSolutionToFile = False
-    simulationSettings.solutionSettings.sensorsWritePeriod = 0.004
+    simulationSettings.solution.file.write = False
+    simulationSettings.solution.sensors.writePeriod = 0.004
     #simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6 #10000
     simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-8 #default:1e-10
     simulationSettings.timeIntegration.verboseMode = verboseMode
@@ -389,9 +389,9 @@ def BuildModel(parameterSet):
     simulationSettings.timeIntegration.adaptiveStep = True #disable adaptive step reduction
     ##############################################################
     # IMPORTANT!!!!!!!!!
-    #simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse #sparse solver !!!!!!!!!!!!!!!
+    #simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse #sparse solver !!!!!!!!!!!!!!!
     ##############################################################
-    simulationSettings.displayStatistics = True
+    simulationSettings.show.statistics = True
     
           
     if useGraphics:
@@ -410,8 +410,8 @@ def BuildModel(parameterSet):
     #mbs.SetObjectParameter(oCCvALE,'velocityLevel',True)
     mbs.SetPreStepUserFunction(MBSUserFunction)     #only for dynamic!
 
-    #simulationSettings.timeIntegration.simulateInRealtime = True
-    #simulationSettings.timeIntegration.realtimeFactor=1
+    #simulationSettings.timeIntegration.realtime.active = True
+    #simulationSettings.timeIntegration.realtime.factor=1
     success = mbs.SolveDynamic(simulationSettings, exudyn.DynamicSolverType.TrapezoidalIndex2)
     #success = mbs.SolveDynamic(simulationSettings)
 

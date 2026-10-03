@@ -226,6 +226,35 @@ description, and the arguments `bodyList` of the `Create...` functions and `numb
 `exu.sys['deprecationUse']['library']`; each says what to use instead. They, and the deprecated functions of the C++
 module, are removed in 2029; `exudev scripts` reports them in a script (#2807).
 
+**The simulation settings, reordered.** No substructure ends in `Settings` any more, everything of the solution file
+is in `solution.file`, of the sensors in `solution.sensors`, of the restart file in `solution.restart`, and the solver of
+`mbs.SolveDynamic` is a setting. Every old name still works until 2031, with a `DeprecationWarning` naming the new one,
+and **`exudev scripts <folder> --fix`** rewrites a script to the new names (#2813):
+
+| old | new |
+|---|---|
+| `solutionSettings` | `solution` |
+| `solutionSettings.writeSolutionToFile`, `coordinatesSolutionFileName`, `solutionWritePeriod` | `solution.file.write`, `.name`, `.writePeriod` |
+| `solutionSettings.appendToFile`, `binarySolutionFile`, `writeFileHeader`, `writeFileFooter`, `writeInitialValues` | `solution.file.append`, `.binary`, `.writeHeader`, `.writeFooter`, `.writeInitialValues` |
+| `solutionSettings.solutionInformation`, `flushFilesDOF` | `solution.file.information`, `.flushAboveCoordinates` |
+| `solutionSettings.exportVelocities`, `exportAccelerations`, ... | `solution.file.export.velocities`, `.accelerations`, ... |
+| `solutionSettings.sensorsStoreAndWriteFiles`, `sensorsWritePeriod`, `sensorsAppendToFile`, `sensorsWriteFileHeader`, `sensorsWriteFileFooter` | `solution.sensors.active`, `.writePeriod`, `.append`, `.writeHeader`, `.writeFooter` |
+| `solutionSettings.writeRestartFile`, `restartFileName`, `restartWritePeriod` | `solution.restart.write`, `.name`, `.writePeriod` |
+| `solutionSettings.outputPrecision` (files) | `solution.precision` |
+| `outputPrecision` (console) | `consolePrecision` |
+| `linearSolverSettings`, `linearSolverType` | `linearSolver`, `linearSolver.solverType` |
+| `displayComputationTime`, `displayGlobalTimers`, `displayStatistics` | `show.computationTime`, `show.globalTimers`, `show.statistics` |
+| `timeIntegration.simulateInRealtime`, `realtimeFactor`, `realtimeWaitMicroseconds` | `timeIntegration.realtime.active`, `.factor`, `.waitMicroseconds` |
+| `timeIntegration.explicitIntegration` | `timeIntegration.explicit` |
+| `timeIntegration.explicitIntegration.dynamicSolverType` | `timeIntegration.solverType` |
+| `newton.newtonResidualMode`, `newton.useNewtonSolver` | `newton.residualMode`, `newton.active` |
+| `numericalDifferentiation.forODE2connectors`, `staticSolver.constrainODE1coordinates` | `forODE2Connectors`, `constrainODE1Coordinates` |
+
+`timeIntegration.solverType` (default `GeneralizedAlpha`) is the solver `mbs.SolveDynamic` uses; a `solverType` given
+to `SolveDynamic` is used for that run and the setting is set back afterwards - `SolveDynamic` no longer leaves the
+explicit solver type written into the settings. An `exudyn.MainSolverExplicit` used directly takes the solver from
+`timeIntegration.solverType` and refuses an implicit one with a message naming the setting.
+
 **A system without coordinates** - only ground, sensors and user functions - is solved by every
 solver: time advances, the user functions are called and the sensors record (#2790).
 

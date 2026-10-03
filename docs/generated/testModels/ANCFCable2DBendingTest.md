@@ -85,16 +85,16 @@ mbs.AddObject(CoordinateConstraint(markerNumbers=[mGround,mANCF2]))
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/ANCFCable2D_bending_test.txt"
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.name = "solution/ANCFCable2D_bending_test.txt"
+simulationSettings.solution.file.write=False
 simulationSettings.timeIntegration.numberOfSteps = 1000
-#simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/1000
+#simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/1000
 simulationSettings.timeIntegration.endTime = 0.1
 simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 
 if not testIsActive: 
     SC.renderer.Start()

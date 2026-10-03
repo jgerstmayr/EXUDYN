@@ -74,10 +74,10 @@ for nBodies in nBodiesList:
 
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
 
-    #simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-    #simulationSettings.solutionSettings.sensorsWritePeriod = h*4
+    #simulationSettings.solution.file.writePeriod = 0.01
+    #simulationSettings.solution.sensors.writePeriod = h*4
     simulationSettings.timeIntegration.verboseMode = 1
     simulationSettings.timeIntegration.verboseModeFile = 0
 
@@ -88,9 +88,9 @@ for nBodies in nBodiesList:
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5#0.5
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations=True
 
-    simulationSettings.linearSolverType=exu.LinearSolverType.EigenSparse
-    simulationSettings.displayComputationTime = True
-    #simulationSettings.displayStatistics = True
+    simulationSettings.linearSolver.solverType=exu.LinearSolverType.EigenSparse
+    simulationSettings.show.computationTime = True
+    #simulationSettings.show.statistics = True
 
     SC.visualizationSettings.nodes.show = True
     SC.visualizationSettings.nodes.drawNodesAsPoint  = False

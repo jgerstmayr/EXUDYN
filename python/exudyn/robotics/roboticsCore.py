@@ -1204,16 +1204,16 @@ class InverseKinematicsNumerical():
         
         # set simulation settings for static solver 
         self.simulationSettings = exudyn.SimulationSettings()
-        self.simulationSettings.solutionSettings.writeSolutionToFile = False
-        self.simulationSettings.solutionSettings.binarySolutionFile = False
-        self.simulationSettings.linearSolverSettings.ignoreSingularJacobian = True
-        self.simulationSettings.displayComputationTime = False
-        self.simulationSettings.displayStatistics = False
+        self.simulationSettings.solution.file.write = False
+        self.simulationSettings.solution.file.binary = False
+        self.simulationSettings.linearSolver.ignoreSingularJacobian = True
+        self.simulationSettings.show.computationTime = False
+        self.simulationSettings.show.statistics = False
         
         self.simulationSettings.staticSolver.newton.maxIterations = 50 #original: 500
         self.simulationSettings.staticSolver.adaptiveStep = True
         self.simulationSettings.staticSolver.verboseMode = 0
-        self.simulationSettings.displayGlobalTimers = 0
+        self.simulationSettings.show.globalTimers = 0
         #self.simulationSettings.staticSolver.stabilizerODE2term = 1e-1
         self.staticSolver = exudyn.MainSolverStatic()
         # sparse solver settings are faster for redundant mbs
@@ -1426,7 +1426,7 @@ class InverseKinematicsNumerical():
             q = None
 
         if self.useRenderer:    
-            self.simulationSettings.solutionSettings.solutionInformation = 'success = {}\nq={}'.format(success, np.round(q, 3))
+            self.simulationSettings.solution.file.information = 'success = {}\nq={}'.format(success, np.round(q, 3))
             self.SC.renderer.DoIdleTasks() # stop before closing
             self.SC.renderer.Stop() # close rendering window! 
 

@@ -127,7 +127,7 @@ There is plenty of possibilities to interact with the solvers, being it the extr
         StructureParameter(type=TReal, 
             pythonName='realtimeIdleCPU',
             defaultValue=0.,
-            description=r'time waited for next frame to compute and draw if simulateInRealtime is True'),
+            description=r'time waited for next frame to compute and draw if timeIntegration.realtime.active is True'),
         StructureParameter(type=TReal, 
             pythonName='python',
             defaultValue=0.,

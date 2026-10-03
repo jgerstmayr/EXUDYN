@@ -72,7 +72,7 @@ def SolverErrorMessage(solver, mbs, isStatic=False,
         s += '  * check the causing nodes, objects, connectors, etc.\n'
         s += '  * check your nodes, objects, connectors, and markers\n'
         s += '  * change solver and solver settings (e.g. change index 3/index 2 solver)\n'
-        s += '  * try linearSolverSettings.ignoreSingularJacobian and EigenDense solver type in case of redundant constraints\n'
+        s += '  * try linearSolver.ignoreSingularJacobian and EigenDense solver type in case of redundant constraints\n'
         s += '  * for small systems (<1000 coordinates), try mbs. ComputeSystemDegreeOfFreedom() to check system\n'
         s += '  * step-by-step remove constraints, until you find the causing item\n'
         s += '  * step-by-step remove objects and nodes, until you find the causing item\n'
@@ -215,7 +215,7 @@ def SolveStatic(mbs, simulationSettings = None,
 @extends(exudyn.MainSystem)
 def SolveDynamic(mbs,
                 simulationSettings = None, 
-                solverType = exudyn.DynamicSolverType.GeneralizedAlpha,
+                solverType = None,
                 updateInitialValues = False,
                 storeSolver = True,
                 showHints = False,
@@ -226,8 +226,8 @@ def SolveDynamic(mbs,
 
     Args:
         mbs: the MainSystem containing the assembled system; note that mbs may be changed upon several runs of this function
-        simulationSettings: specific simulation settings out of exu.SimulationSettings(), as described in [Section](#sec:SolutionSettings); use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicitIntegration; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special [Section](#sec:overview:basics:speedup))
-        solverType: use exudyn.DynamicSolverType to set specific solver (default=generalized alpha)
+        simulationSettings: specific simulation settings out of exu.SimulationSettings(), as described in [Section](#sec:SolutionSettings); use options for newton, discontinuous settings, etc., from timeIntegration; therein, implicit second order solvers use settings from generalizedAlpha and explict solvers from explicit; be careful with settings, as the influence accuracy (step size!), convergence and performance (see special [Section](#sec:overview:basics:speedup))
+        solverType: an exudyn.DynamicSolverType for this run, which takes the place of simulationSettings.timeIntegration.solverType while the solver runs and is set back afterwards; None (default): the solver given by simulationSettings.timeIntegration.solverType (default GeneralizedAlpha)
         updateInitialValues: if True, the results are written to initial values, such at a consecutive simulation uses the results of this simulation as the initial values of the next simulation
         storeSolver: if True, the dynamicSolver object is stored in the mbs.sys dictionary as mbs.sys['dynamicSolver'], and simulationSettings are stored as mbs.sys['simulationSettings']
         showHints: show additional hints, if solver fails
@@ -261,11 +261,26 @@ def SolveDynamic(mbs,
               variableType=exu.OutputVariableType.Position))
     """
     if simulationSettings is None: simulationSettings = exudyn.SimulationSettings()
+    #the solver is a setting (#2813); a solverType given here takes its place for this run only
+    solverTypeStored = simulationSettings.timeIntegration.solverType
+    if solverType is None:
+        solverType = solverTypeStored
+    simulationSettings.timeIntegration.solverType = solverType
+    try:
+        return _SolveDynamic(mbs, simulationSettings, solverType, updateInitialValues, storeSolver, showHints,
+                             showCausingItems, autoAssemble)
+    finally:
+        simulationSettings.timeIntegration.solverType = solverTypeStored
+
+
+def _SolveDynamic(mbs, simulationSettings, solverType, updateInitialValues, storeSolver, showHints, showCausingItems,
+                  autoAssemble):
+    """SolveDynamic with the solver type decided and set in the settings"""
     success = False
     if not mbs.systemIsConsistent and autoAssemble:
         exudyn.Print('WARNING: SolveDynamic: mbs.systemIsConsistent=False, therefore calling mbs.Assemble() before solving; to avoid this, set autoAssemble=False')
         mbs.Assemble()
-        
+
     if (solverType == exudyn.DynamicSolverType.TrapezoidalIndex2 or solverType == exudyn.DynamicSolverType.GeneralizedAlpha):
     
         dynamicSolver = exudyn.MainSolverImplicitSecondOrder()
@@ -316,7 +331,6 @@ def SolveDynamic(mbs,
             solverType == exudyn.DynamicSolverType.DOPRI5 or
             solverType == exudyn.DynamicSolverType.VelocityVerlet
             ):
-        simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType = solverType
         dynamicSolver = exudyn.MainSolverExplicit()
         if storeSolver:
             mbs.sys['dynamicSolver'] = dynamicSolver #copy solver structure to sys variable
@@ -379,17 +393,17 @@ def DeactivateWritingOfSolvers(simulationSettings):
     store = {}
     store['verboseModeOld'] = simulationSettings.staticSolver.verboseMode
     simulationSettings.staticSolver.verboseMode = 0
-    store['writeSolutionToFileOld'] = simulationSettings.solutionSettings.writeSolutionToFile
-    simulationSettings.solutionSettings.writeSolutionToFile = False
-    store['sensorsStoreAndWriteFilesOld'] = simulationSettings.solutionSettings.sensorsStoreAndWriteFiles
-    simulationSettings.solutionSettings.sensorsStoreAndWriteFiles = False
+    store['writeSolutionToFileOld'] = simulationSettings.solution.file.write
+    simulationSettings.solution.file.write = False
+    store['sensorsStoreAndWriteFilesOld'] = simulationSettings.solution.sensors.active
+    simulationSettings.solution.sensors.active = False
     return store
 
 #internal function for special solver functions; uniquely restores some settings
 def RestoreSimulationSettings(simulationSettings, store):
     simulationSettings.staticSolver.verboseMode = store['verboseModeOld']
-    simulationSettings.solutionSettings.writeSolutionToFile = store['writeSolutionToFileOld']
-    simulationSettings.solutionSettings.sensorsStoreAndWriteFiles = store['sensorsStoreAndWriteFilesOld']
+    simulationSettings.solution.file.write = store['writeSolutionToFileOld']
+    simulationSettings.solution.sensors.active = store['sensorsStoreAndWriteFilesOld']
     
 
 @extends(exudyn.MainSystem)

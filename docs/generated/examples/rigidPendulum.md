@@ -66,11 +66,11 @@ simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 
 #SC.visualizationSettings.nodes.defaultSize = 0.05
 
-simulationSettings.solutionSettings.solutionInformation = "Rigid pendulum"
+simulationSettings.solution.file.information = "Rigid pendulum"
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 2
 

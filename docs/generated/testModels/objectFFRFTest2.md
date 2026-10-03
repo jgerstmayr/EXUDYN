@@ -163,8 +163,8 @@ SC.visualizationSettings.loads.drawSimplified = False
 SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.DisplacementLocal
 SC.visualizationSettings.contour.outputVariableComponent = 1 #y-component
 
-simulationSettings.solutionSettings.solutionInformation = "ObjectFFRF test"
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.information = "ObjectFFRF test"
+simulationSettings.solution.file.write=False
 
 h=1e-4
 tEnd = 0.0025
@@ -173,21 +173,21 @@ if not testIsActive:
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = h
+simulationSettings.solution.file.writePeriod = h
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.verboseModeFile = 3
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-simulationSettings.solutionSettings.sensorsWritePeriod = h
-simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/coordinatesSolutionFFRFtest.txt"
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.sensors.writePeriod = h
+simulationSettings.solution.file.name = "solution/coordinatesSolutionFFRFtest.txt"
+simulationSettings.solution.file.write=False
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
-#simulationSettings.displayStatistics = True
-#simulationSettings.displayComputationTime = True
+#simulationSettings.show.statistics = True
+#simulationSettings.show.computationTime = True
 
 #create animation:
-#simulationSettings.solutionSettings.recordImagesInterval = 0.0002
+#simulationSettings.solution.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
 if not testIsActive:

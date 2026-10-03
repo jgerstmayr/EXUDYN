@@ -85,7 +85,7 @@ sims.timeIntegration.endTime = tEnd
 sims.timeIntegration.numberOfSteps = int(tEnd/h) #original: 1e-3, fails now in Newton
 sims.timeIntegration.verboseMode = 0
 sims.timeIntegration.stepInformation = 3 #do not show step reduction
-sims.solutionSettings.coordinatesSolutionFileName = 'solution/coordinatesSolution.txt'
+sims.solution.file.name = 'solution/coordinatesSolution.txt'
 # sims.timeIntegration.newton.absoluteTolerance = 1e-8
 # sims.timeIntegration.newton.relativeTolerance = 1e-6
 

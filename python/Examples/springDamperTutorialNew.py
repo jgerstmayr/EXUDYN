@@ -63,8 +63,8 @@ tEnd = 1     #end time of simulation
 h = 0.001    #step size; leads to 1000 steps
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 5e-3  #output interval general
-simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
+simulationSettings.solution.file.writePeriod = 5e-3  #output interval general
+simulationSettings.solution.sensors.writePeriod = 5e-3  #output interval of sensors
 simulationSettings.timeIntegration.numberOfSteps = tEnd/h
 simulationSettings.timeIntegration.endTime = tEnd
 

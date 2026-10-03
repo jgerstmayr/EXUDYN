@@ -111,8 +111,8 @@ simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 #the cross-section deformation of ObjectANCFBeam carries no mass, so its mass matrix is singular for initial accelerations
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
 simulationSettings.timeIntegration.verboseMode = 0
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = 0.01
 mbs.SolveDynamic(simulationSettings)
 
 testResult = 0

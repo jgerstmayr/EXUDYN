@@ -148,8 +148,8 @@ else:
     verboseMode = 0
 
 
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = h
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = h
 #simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6 #10000
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-10 #default:1e-10
 simulationSettings.timeIntegration.verboseMode = verboseMode
@@ -160,7 +160,7 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
 simulationSettings.timeIntegration.adaptiveStep = True #disable adaptive step reduction
 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 SC.visualizationSettings.loads.show = False
       
 if useGraphics:
@@ -201,7 +201,7 @@ mbs.SetObjectParameter(oCCvALE, 'offset', 0)
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.startTime = 1
-simulationSettings.solutionSettings.appendToFile = True #continue solution
+simulationSettings.solution.file.append = True #continue solution
 simulationSettings.timeIntegration.endTime = tEnd
 
 success = mbs.SolveDynamic(simulationSettings, 

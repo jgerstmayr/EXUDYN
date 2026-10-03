@@ -295,8 +295,8 @@ if not testIsActive:
     
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/1000
-simulationSettings.solutionSettings.sensorsWritePeriod = h
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/1000
+simulationSettings.solution.sensors.writePeriod = h
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
@@ -304,15 +304,15 @@ simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 #simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
 
-simulationSettings.solutionSettings.solutionInformation = "rigid body tests"
+simulationSettings.solution.file.information = "rigid body tests"
 SC.visualizationSettings.nodes.defaultSize = 0.025
 SC.visualizationSettings.nodes.drawNodesAsPoint = False
 SC.visualizationSettings.nodes.showBasis = True
 
-#simulationSettings.displayComputationTime = True
-#simulationSettings.displayStatistics = True
+#simulationSettings.show.computationTime = True
+#simulationSettings.show.statistics = True
 
-#simulationSettings.solutionSettings.recordImagesInterval = 0.005
+#simulationSettings.solution.recordImagesInterval = 0.005
 #SC.visualizationSettings.exportImages.saveImageFileName = "images/frame"
 SC.visualizationSettings.view0.window.renderWindowSize = [1920,1080]
 SC.visualizationSettings.openGL.multiSampling = 4

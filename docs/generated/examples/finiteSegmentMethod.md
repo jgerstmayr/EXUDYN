@@ -121,12 +121,12 @@ simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-simulationSettings.displayStatistics = True
-#simulationSettings.linearSolverType  = exu.LinearSolverType.EigenSparse
+simulationSettings.show.statistics = True
+#simulationSettings.linearSolver.solverType  = exu.LinearSolverType.EigenSparse
 
 #SC.visualizationSettings.nodes.defaultSize = 0.05
 
-simulationSettings.solutionSettings.solutionInformation = "Finite segment method"
+simulationSettings.solution.file.information = "Finite segment method"
 
 SC.renderer.Start()
 

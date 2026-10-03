@@ -20,16 +20,16 @@ frames. Asking for one the item does not provide is an error of `mbs.Assemble()`
 ## When and where the values go
 
 During a simulation, the solver evaluates every sensor at the times given by
-`simulationSettings.solutionSettings.sensorsWritePeriod`, and
+`simulationSettings.solution.sensors.writePeriod`, and
 
 - writes a line `time, value[0], value[1], ...` to the file `fileName`, if `writeToFile = True` and a
 file name is given; the directory is created if it does not exist, and a header and a footer
 describe the sensor (`sensorsWriteFileHeader`, `sensorsWriteFileFooter`);
 - stores the same rows in memory if `storeInternal = True`, which `mbs.GetSensorStoredData(sensor)`
 returns as an array, one row per time;
-- does neither if `solutionSettings.sensorsStoreAndWriteFiles = False`.
+- does neither if `solution.sensors.active = False`.
 
-`solutionSettings.sensorsAppendToFile` appends to an existing file, or to the stored data, so that
+`solution.sensors.append` appends to an existing file, or to the stored data, so that
 several simulations continue one record.
 
 ## Reading a value at any time

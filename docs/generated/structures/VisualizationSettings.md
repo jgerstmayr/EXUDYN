@@ -35,7 +35,7 @@ VSettingsGeneral has the following items:
 | `reallyQuitTimeLimit`<br>`SC.visualizationSettings.general.reallyQuitTimeLimit` | UReal |  | 900 | number of seconds after which user is asked a security question before stopping simulation and closing renderer; set to 0 in order to always get asked; set to 1e10 to (nearly) never get asked |
 | `rendererPrecision`<br>`SC.visualizationSettings.general.rendererPrecision` | PInt |  | 4 | precision of general floating point numbers shown in render window: total number of digits used (max. 16) |
 | `rendererStartupTimeout`<br>`SC.visualizationSettings.general.rendererStartupTimeout` | PInt |  | 2500 | OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow) |
-| `renderWindowString`<br>`SC.visualizationSettings.general.renderWindowString` | String |  | '' | string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings) |
+| `renderWindowString`<br>`SC.visualizationSettings.general.renderWindowString` | String |  | '' | string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to information in simulationSettings.solution.file) |
 | `showHelpOnStartup`<br>`SC.visualizationSettings.general.showHelpOnStartup` | UInt |  | 5 | seconds to show help message on startup (0=deactivate) |
 | `showSolutionInformation`<br>`SC.visualizationSettings.general.showSolutionInformation` | bool |  | True | true = show solution information (from simulationSettings.solution) |
 | `showSolverInformation`<br>`SC.visualizationSettings.general.showSolverInformation` | bool |  | True | true = solver name and further information shown in render window |
@@ -286,7 +286,7 @@ VSettingsLoads has the following items:
 (sec-vsettingstraces)=
 ### VSettingsTraces
 
-Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics.
+Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solution.sensors.writePeriod) may lead to slow graphics.
 
 VSettingsTraces has the following items:
 

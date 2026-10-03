@@ -183,27 +183,27 @@ if True: #now import mesh as mechanical model to EXUDYN
     SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.DisplacementLocal
     SC.visualizationSettings.contour.outputVariableComponent = 0 #x-component
     
-    simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrder test"
+    simulationSettings.solution.file.information = "ObjectFFRFreducedOrder test"
     
     h=5e-4
     tEnd = 3
     
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.solutionWritePeriod = h
+    simulationSettings.solution.file.writePeriod = h
     simulationSettings.timeIntegration.verboseMode = 1
     #simulationSettings.timeIntegration.verboseModeFile = 3
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     
-    simulationSettings.solutionSettings.sensorsWritePeriod = h
-    simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/coordinatesSolutionCMStest.txt"
+    simulationSettings.solution.sensors.writePeriod = h
+    simulationSettings.solution.file.name = "solution/coordinatesSolutionCMStest.txt"
     
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
-    #simulationSettings.displayStatistics = True
-    #simulationSettings.displayComputationTime = True
+    #simulationSettings.show.statistics = True
+    #simulationSettings.show.computationTime = True
     
     #create animation:
-    #simulationSettings.solutionSettings.recordImagesInterval = 0.0002
+    #simulationSettings.solution.recordImagesInterval = 0.0002
     #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
     if True:

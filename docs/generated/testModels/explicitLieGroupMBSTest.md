@@ -241,9 +241,9 @@ simulationSettings.timeIntegration.endTime = 0.1
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-#simulationSettings.displayComputationTime = True
+#simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/2000
+simulationSettings.solution.sensors.writePeriod = simulationSettings.timeIntegration.endTime/2000
 if nodeType != exu.NodeType.RotationRotationVector:
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
 else:

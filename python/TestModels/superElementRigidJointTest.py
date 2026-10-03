@@ -204,36 +204,36 @@ SC.visualizationSettings.contour.reduceRange = False
 #SC.visualizationSettings.contour.maxValue = 0
 #SC.visualizationSettings.contour.minValue = -1
 
-simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrder test"
+simulationSettings.solution.file.information = "ObjectFFRFreducedOrder test"
 
 h=1e-3
 tEnd = 0.005 #standard:0.005
 if testIsActive:
     #test suite:
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
     tEnd = 0.005
     h=1e-3
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = h
+simulationSettings.solution.file.writePeriod = h
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.verboseModeFile = 0
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-simulationSettings.solutionSettings.sensorsWritePeriod = h
-simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/coordinatesSolutionCMStest.txt"
+simulationSettings.solution.sensors.writePeriod = h
+simulationSettings.solution.file.name = "solution/coordinatesSolutionCMStest.txt"
 
 useIndex2 = False
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = useIndex2
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = useIndex2
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
-#simulationSettings.displayStatistics = True
-#simulationSettings.displayComputationTime = True
+#simulationSettings.show.statistics = True
+#simulationSettings.show.computationTime = True
 
 #create animation:
-#simulationSettings.solutionSettings.recordImagesInterval = 0.0002
+#simulationSettings.solution.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
 if not testIsActive:

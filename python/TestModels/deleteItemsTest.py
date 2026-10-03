@@ -94,8 +94,8 @@ tEnd = 0.5
 stepSize = 0.002
 
 simulationSettings = exu.SimulationSettings()
-#simulationSettings.solutionSettings.solutionWritePeriod = 1e-1
-simulationSettings.solutionSettings.sensorsWritePeriod = 1e-2
+#simulationSettings.solution.file.writePeriod = 1e-1
+simulationSettings.solution.sensors.writePeriod = 1e-2
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize) #must be integer
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1

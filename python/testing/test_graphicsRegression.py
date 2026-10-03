@@ -327,9 +327,9 @@ def testGraphicsUserFunctions():
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.endTime = 0.5
     simulationSettings.timeIntegration.numberOfSteps = 50
-    simulationSettings.solutionSettings.writeSolutionToFile = False
-    simulationSettings.displayComputationTime = False
-    simulationSettings.displayStatistics = False
+    simulationSettings.solution.file.write = False
+    simulationSettings.show.computationTime = False
+    simulationSettings.show.statistics = False
     simulationSettings.timeIntegration.verboseMode = 0
     mbs.SolveDynamic(simulationSettings)
     later = graphicsRegression.Fingerprint(SC.renderer.GetGraphicsData(), perItem=initial['perItem'])

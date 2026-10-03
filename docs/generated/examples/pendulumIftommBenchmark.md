@@ -90,9 +90,9 @@ stepSize = 0.8e-3
 
 simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
 simulationSettings.timeIntegration.endTime = endTime
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/5
-simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/100
-#simulationSettings.displayComputationTime = True
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/5
+simulationSettings.solution.sensors.writePeriod = simulationSettings.timeIntegration.endTime/100
+#simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.verboseModeFile = 0
 
@@ -104,10 +104,10 @@ simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep = True
 #simulationSettings.timeIntegration.adaptiveStep = False
 
 #simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
-#simulationSettings.solutionSettings.coordinatesSolutionFileName= "coordinatesSolution.txt"
+#simulationSettings.solution.file.name= "coordinatesSolution.txt"
 
-simulationSettings.displayStatistics = True
-#simulationSettings.solutionSettings.recordImagesInterval = 0.04
+simulationSettings.show.statistics = True
+#simulationSettings.solution.recordImagesInterval = 0.04
 
 SC.visualizationSettings.nodes.defaultSize = 0.05
 useGraphics = False

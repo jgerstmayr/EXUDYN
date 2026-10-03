@@ -105,9 +105,9 @@ computeDynamic = True
 if computeDynamic:
     simulationSettings.timeIntegration.numberOfSteps = 100000000
     simulationSettings.timeIntegration.endTime = 500000
-    simulationSettings.solutionSettings.writeSolutionToFile = True
-    simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/2000
-    simulationSettings.displayComputationTime = True
+    simulationSettings.solution.file.write = True
+    simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/2000
+    simulationSettings.show.computationTime = True
     simulationSettings.timeIntegration.verboseMode = 1
 
     simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8
@@ -115,20 +115,20 @@ if computeDynamic:
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True #example only works with Newmark
     simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
-    simulationSettings.displayStatistics = True
+    simulationSettings.show.statistics = True
 
     #watch the coordinates solution while the solver writes it, in a process of its own;
     #the call returns at once, and nothing is started when windows are suppressed
     from exudyn.misc.resultsMonitor import StartResultsMonitor
-    StartResultsMonitor(simulationSettings.solutionSettings.coordinatesSolutionFileName,
+    StartResultsMonitor(simulationSettings.solution.file.name,
                         yColumns=[1,2], updatePeriod=0.5,
                         title='3 springs: displacement of the mass point')
     
     mbs.SolveDynamic(simulationSettings)
 
 else:
-    simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/staticSolution.txt"
-    simulationSettings.solutionSettings.appendToFile = False
+    simulationSettings.solution.file.name = "solution/staticSolution.txt"
+    simulationSettings.solution.file.append = False
     simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-4
     #simulationSettings.staticSolver.newton.relativeTolerance = 1e-6
     simulationSettings.staticSolver.newton.absoluteTolerance = 1e-1

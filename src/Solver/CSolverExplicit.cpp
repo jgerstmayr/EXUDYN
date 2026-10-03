@@ -43,13 +43,13 @@ void CSolverExplicitTimeInt::PreInitializeSolverSpecific(CSystem& computationalS
 	//some variables are already needed in parent initialization functions
 	const TimeIntegrationSettings& timeint = simulationSettings.timeIntegration;
 
-	dynamicSolverType = timeint.explicitIntegration.dynamicSolverType; //must be explicit; needed for GetSolverName()
+	dynamicSolverType = timeint.solverType; //must be explicit; needed for GetSolverName()
 
 	nStages = ComputeButcherTableau(dynamicSolverType, rk); //compute coefficients, number of stages, stepSizeControl
 	CHECKandTHROW(rk.time[0] == 0, "SolverExplicit: c[0] in Butcher tableau must be zero");
 
-	eliminateConstraints = timeint.explicitIntegration.eliminateConstraints;
-	useLieGroupIntegration = timeint.explicitIntegration.useLieGroupIntegration;
+	eliminateConstraints = timeint.explicitSettings.eliminateConstraints;
+	useLieGroupIntegration = timeint.explicitSettings.useLieGroupIntegration;
 	minStepSizeWarned = false;
 	nextStepSize = -1;
 
@@ -92,7 +92,7 @@ void CSolverExplicitTimeInt::PostInitializeSolverSpecific(CSystem& computational
 	//++++++++++++++++++++++++++++++++++++++
 	//initialize special for Explicit solver:
 	hasConstantMassMatrix = computationalSystem.HasConstantMassMatrix();
-	computeMassMatrixInversePerBody = simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody;
+	computeMassMatrixInversePerBody = simulationSettings.timeIntegration.explicitSettings.computeMassMatrixInversePerBody;
 
 	if (!simulationSettings.timeIntegration.reuseConstantMassMatrix) { hasConstantMassMatrix = false; }
 
@@ -330,7 +330,7 @@ bool CSolverExplicitTimeInt::Newton(CSystem& computationalSystem, const Simulati
 			computationalSystem.ComputeSystemODE1RHS(data.tempCompData, solutionODE1_t); //Ki=rk.stageDerivODE1[i]
 			STOPTIMER(timer.ODE1RHS);
 		}
-		if (simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations &&
+		if (simulationSettings.timeIntegration.explicitSettings.computeEndOfStepAccelerations &&
 			(dynamicSolverType != DynamicSolverType::VelocityVerlet)) //this is the correct acceleration at end of step
 		{
 			ComputeODE2Acceleration(computationalSystem, simulationSettings, data.tempODE2, solutionODE2_tt, data.systemMassMatrix);
@@ -663,7 +663,7 @@ bool CSolverExplicitTimeInt::ComputeODE2Acceleration(CSystem& computationalSyste
 		STARTTIMER(timer.factorization); //for mass matrix
 		data.systemMassMatrix->FinalizeMatrix();
 
-        Index factorizeOutput = data.systemMassMatrix->FactorizeNew();// simulationSettings.linearSolverSettings.ignoreSingularJacobian);
+        Index factorizeOutput = data.systemMassMatrix->FactorizeNew();// simulationSettings.linearSolver.ignoreSingularJacobian);
 		if (factorizeOutput != -1)
 		{
 			conv.linearSolverFailed = true;
@@ -841,7 +841,8 @@ Index CSolverExplicitTimeInt::ComputeButcherTableau(DynamicSolverType dynamicSol
 		}
 		default:
 		{
-			PyError("SolverExplicit: invalid explicitIntegration.dynamicSolverType (method misses implementation)!", PyErrorType::valueError);
+			PyError("SolverExplicit: simulationSettings.timeIntegration.solverType must be an explicit solver (ExplicitEuler, ExplicitMidpoint, RK33, RK44, RK67, ODE23, DOPRI5 or VelocityVerlet), but it is "
+				+ EXUstd::ToString(dynamicSolverType) + "; mbs.SolveDynamic(..., solverType=...) sets it for the run", PyErrorType::valueError);
 			return 0;
 		}
 	}

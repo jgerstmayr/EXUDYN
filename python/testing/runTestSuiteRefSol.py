@@ -115,6 +115,7 @@ def TestExamplesReferenceSolution():
         'emptySystemTest.py':124.09765181769477, #new 2026-10-02: a system without coordinates through every solver, dense and sparse (#2790)
         'homogeneousTransformationParameterTest.py':8.981932745662196, #new 2026-10-03: the HT parameters of the items, ObjectGround, Create functions, rigid markers, kinematic tree, robotics (#2793, #2794, #2795, #2798, #2799)
         'simulationSettingsDeprecationTest.py':126, #new 2026-10-03: a renamed simulation setting forwards under its old name with a DeprecationWarning (#2588)
+        'simulationSettingsRenamesTest.py':50, #new 2026-10-04: every renamed simulation setting forwards both ways to its new place (#2813)
         'rotationMarkerDeprecationTest.py':-0.13402861946207856, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
         'libraryDeprecationTest.py':4, #new 2026-10-03: a deprecated function and argument of the Python library warn once per session at the user's line and are counted (#2807)
         'homogeneousTransformationInterfaceTest.py':9.245684006275722, #new 2026-10-03: exu.HT with the node coordinates, Relative, the interpolations, angle and axis (#2810)
@@ -168,7 +169,7 @@ def TestExamplesReferenceSolution():
         'rollingDiscTangentialForces.py':1.034201740283854, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 1.034201740253807; #2026-10-01: constraints on the connector interface, reaction forces summed in another order (#2745), before 1.0342017404650015;        #new 2024-05-04: RollingDiscPenalty: switch to local computation of tangential forces
         'rollingCoinPenaltyTest.py':0.03489603106786701,
         'rotatingTableTest.py':7.838680414273867,                   #2026-10-01: Jacobian of the rigid-body spring-damper by AD (#2745), before 7.838680375029852; until 2024-05-04 (before slight change in RollingDiscPenalty): 7.838680371309492
-        'scissorPrismaticRevolute2D.py':27.20255648904438,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2connectors, 2022-01-18: 27.202556489044145,
+        'scissorPrismaticRevolute2D.py':27.20255648904438,          #new 2022-07-11 (CState Parallel); #added JacobianODE2, but example computed with numDiff forODE2Connectors, 2022-01-18: 27.202556489044145,
         'sensorUserFunctionTest.py':45.0,            
         'serialRobotTest.py':0.7681856909844541,                    #until 2022-04-21: 0.7680031232063571 wrong static torque compensation
         #value changed 2026-09-18 (#2502): the joint helpers now

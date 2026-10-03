@@ -39,8 +39,8 @@ def Solve(mbs, endTime, numberOfSteps, solverType, useRecommendedStepSize=True):
     simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize = useRecommendedStepSize
     simulationSettings.timeIntegration.numberOfSteps = numberOfSteps
     simulationSettings.timeIntegration.endTime = endTime
-    simulationSettings.solutionSettings.writeSolutionToFile = False
-    simulationSettings.solutionSettings.sensorsWritePeriod = endTime/numberOfSteps
+    simulationSettings.solution.file.write = False
+    simulationSettings.solution.sensors.writePeriod = endTime/numberOfSteps
     mbs.SolveDynamic(simulationSettings, solverType=getattr(exu.DynamicSolverType, solverType))
 
 

@@ -240,14 +240,14 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = 0.005
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.005
-simulationSettings.solutionSettings.binarySolutionFile = True
-#simulationSettings.solutionSettings.writeSolutionToFile = False
-#simulationSettings.timeIntegration.simulateInRealtime = True
+simulationSettings.solution.file.writePeriod = 0.005
+simulationSettings.solution.sensors.writePeriod = 0.005
+simulationSettings.solution.file.binary = True
+#simulationSettings.solution.file.write = False
+#simulationSettings.timeIntegration.realtime.active = True
 
 simulationSettings.timeIntegration.verboseMode = 1
-#simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+#simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 

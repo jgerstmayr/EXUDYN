@@ -736,30 +736,30 @@ if True:
         # SC.visualizationSettings.contour.minValue = -0.0003
         # SC.visualizationSettings.contour.maxValue =  0.0003
         
-        simulationSettings.solutionSettings.solutionInformation = "NGsolve/NETGEN engine test"
+        simulationSettings.solution.file.information = "NGsolve/NETGEN engine test"
         
         h=0.05e-3
         tEnd = 2
         
         simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
         simulationSettings.timeIntegration.endTime = tEnd
-        simulationSettings.solutionSettings.solutionWritePeriod = h*10 #writing already costs much time
+        simulationSettings.solution.file.writePeriod = h*10 #writing already costs much time
         simulationSettings.timeIntegration.verboseMode = 1
         #simulationSettings.timeIntegration.verboseModeFile = 3
         simulationSettings.timeIntegration.newton.useModifiedNewton = True
         
-        simulationSettings.solutionSettings.sensorsWritePeriod = h
-        #simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/coordinatesSolution.txt"
-        simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse #faster, because system size already quite large
+        simulationSettings.solution.sensors.writePeriod = h
+        #simulationSettings.solution.file.name = "solution/coordinatesSolution.txt"
+        simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse #faster, because system size already quite large
         
         simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
-        simulationSettings.displayStatistics = True
-        #simulationSettings.displayComputationTime = True
+        simulationSettings.show.statistics = True
+        #simulationSettings.show.computationTime = True
         SC.visualizationSettings.general.autoFitScene = False #for reloading of renderState to work
         
         #create animation:
         if False:
-            simulationSettings.solutionSettings.recordImagesInterval = 0.001
+            simulationSettings.solution.recordImagesInterval = 0.001
             SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
             SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
 

@@ -305,7 +305,7 @@ if True:
     #some simulation and visualization settings
     simulationSettings = exu.SimulationSettings()
     
-    simulationSettings.solutionSettings.solutionInformation = "Modal analysis example"
+    simulationSettings.solution.file.information = "Modal analysis example"
     
     stepSize=5e-3 #step size can be large, because system is linear!
     tEnd = 20
@@ -313,15 +313,15 @@ if True:
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.newton.useModifiedNewton = True #faster simulation
-    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
-    # simulationSettings.solutionSettings.writeSolutionToFile = False
+    # simulationSettings.solution.file.write = False
     simulationSettings.timeIntegration.verboseMode = 1
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     
-    simulationSettings.solutionSettings.sensorsWritePeriod = stepSize
-    simulationSettings.solutionSettings.solutionWritePeriod = stepSize*2
-    #simulationSettings.displayComputationTime = True
+    simulationSettings.solution.sensors.writePeriod = stepSize
+    simulationSettings.solution.file.writePeriod = stepSize*2
+    #simulationSettings.show.computationTime = True
     
     #++++++++++++++++
     SC.visualizationSettings.nodes.defaultSize = meshSize*0.05

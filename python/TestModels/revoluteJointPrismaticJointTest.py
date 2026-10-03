@@ -119,10 +119,10 @@ h=0.001  #use small step size to detext contact switching
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = 0.001
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
-#simulationSettings.timeIntegration.simulateInRealtime = True
-#simulationSettings.timeIntegration.realtimeFactor = 0.1
+simulationSettings.solution.file.writePeriod = 0.001
+simulationSettings.solution.sensors.writePeriod = 0.01
+#simulationSettings.timeIntegration.realtime.active = True
+#simulationSettings.timeIntegration.realtime.factor = 0.1
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
@@ -139,13 +139,13 @@ SC.visualizationSettings.connectors.showJointAxes = True
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 #testIsActive = True
 if not testIsActive:
-    simulationSettings.displayComputationTime = True
-    simulationSettings.displayStatistics = True
+    simulationSettings.show.computationTime = True
+    simulationSettings.show.statistics = True
     SC.renderer.Start()
     SC.renderer.RestoreSavedState()
     #SC.renderer.DoIdleTasks()
 else:
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
 
 #mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
 mbs.SolveDynamic(simulationSettings, showHints=True)

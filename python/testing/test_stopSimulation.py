@@ -32,9 +32,9 @@ def Settings(endTime=1.):
     simulationSettings.timeIntegration.endTime = endTime
     simulationSettings.timeIntegration.numberOfSteps = 100
     simulationSettings.timeIntegration.verboseMode = 0
-    simulationSettings.solutionSettings.writeSolutionToFile = False
-    simulationSettings.displayComputationTime = False
-    simulationSettings.displayStatistics = False
+    simulationSettings.solution.file.write = False
+    simulationSettings.show.computationTime = False
+    simulationSettings.show.statistics = False
     return simulationSettings
 
 

@@ -56,3 +56,18 @@ def testAYearThatHasComeFails(entries):
     command = [sys.executable, os.path.join(root, 'tools', 'checkDeprecations.py'), '--check', '--quiet']
     assert subprocess.run(command + ['--year', str(first - 1)], capture_output=True).returncode == 0
     assert subprocess.run(command + ['--year', str(first)], capture_output=True).returncode == 1
+
+
+def testTheRenamedSettingsAreAllInTheTestModel(entries):
+    """simulationSettingsRenamesTest.py lists every simulation setting renamed in #2813; a new one added to the
+    definitions and not to the test model fails here"""
+    import ast
+    source = open(os.path.join(root, 'python', 'TestModels', 'simulationSettingsRenamesTest.py'), encoding='utf-8').read()
+    renames = None
+    for node in ast.walk(ast.parse(source)):
+        if isinstance(node, ast.Assign) and getattr(node.targets[0], 'id', '') == 'renames':
+            renames = ast.literal_eval(node.value)
+    tested = set(old.split('.')[-1] for old in renames)
+    declared = set(entry['name'].split('.')[-1] for entry in entries
+                   if entry['source'] == 'settings' and entry['since'] == '1.12.256' and not entry['use'].startswith('deprecated'))
+    assert declared - tested == set()

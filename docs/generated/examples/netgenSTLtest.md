@@ -216,17 +216,17 @@ if True: #now import mesh as mechanical model to EXUDYN
     
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
     simulationSettings.timeIntegration.verboseMode = 1
-    simulationSettings.timeIntegration.simulateInRealtime = True
-    simulationSettings.timeIntegration.realtimeFactor = 0.01
+    simulationSettings.timeIntegration.realtime.active = True
+    simulationSettings.timeIntegration.realtime.factor = 0.01
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     
-    simulationSettings.solutionSettings.sensorsWritePeriod = h
+    simulationSettings.solution.sensors.writePeriod = h
     
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
-    #simulationSettings.displayStatistics = True
-    simulationSettings.displayComputationTime = True
+    #simulationSettings.show.statistics = True
+    simulationSettings.show.computationTime = True
     
     SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
     SC.visualizationSettings.openGL.multiSampling = 4

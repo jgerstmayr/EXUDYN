@@ -82,15 +82,15 @@ simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordi
 #simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 #simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-simulationSettings.displayStatistics = True
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-4
+simulationSettings.show.statistics = True
+simulationSettings.solution.file.writePeriod = 1e-4
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/modifiedNewton.txt"
+simulationSettings.solution.file.name = "solution/modifiedNewton.txt"
 mbs.SolveDynamic(simulationSettings)#, experimentalNewSolver=False)
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
-simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/fullNewton.txt"
+simulationSettings.solution.file.name = "solution/fullNewton.txt"
 mbs.SolveDynamic(simulationSettings)#, experimentalNewSolver=False)
 
 
@@ -113,7 +113,7 @@ sensorFromFile = np.loadtxt(OutputFile('solution/endPointPosition.txt'), comment
 sensorInternal = mbs.GetSensorStoredData(sensorEnd)
 sensorDeviation = np.max(np.abs(sensorFromFile - sensorInternal))
 exu.Print("compareFullModifiedNewton sensor file vs internal =", sensorDeviation)
-if sensorFromFile.shape != sensorInternal.shape or sensorDeviation > 1e-8: #file output has ~10 digits (solutionSettings.outputPrecision), internal data is exact
+if sensorFromFile.shape != sensorInternal.shape or sensorDeviation > 1e-8: #file output has ~10 digits (solution.precision), internal data is exact
     raise ValueError('sensor file and internal sensor data disagree: shapes '
                      + str(sensorFromFile.shape) + ' and ' + str(sensorInternal.shape)
                      + ', largest deviation ' + str(sensorDeviation))

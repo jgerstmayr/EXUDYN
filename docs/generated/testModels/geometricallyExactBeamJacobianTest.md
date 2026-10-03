@@ -65,7 +65,7 @@ def Jacobian(nodeType, numerical, velocity, inertiaFactor):
     s = exu.SimulationSettings()
     s.timeIntegration.newton.numericalDifferentiation.forODE2 = numerical
     s.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-6 if velocity else 1e-7
-    s.linearSolverType = exu.LinearSolverType.EXUdense
+    s.linearSolver.solverType = exu.LinearSolverType.EXUdense
     solver = exu.MainSolverImplicitSecondOrder()
     solver.InitializeSolver(mbs, s)
     n = mbs.systemData.ODE2Size()
@@ -105,7 +105,7 @@ mbs.AddLoad(LoadForceVector(markerNumber=mTip, loadVector=[0, -2*E*Izz/L**2, 0.0
 mbs.AddLoad(LoadTorqueVector(markerNumber=mTip, loadVector=[0.3*G*(Iyy+Izz)/L, 0, 0]))
 mbs.Assemble()
 s = exu.SimulationSettings()
-s.linearSolverType = exu.LinearSolverType.EigenSparse
+s.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 s.staticSolver.numberOfLoadSteps = 5
 s.staticSolver.newton.relativeTolerance = 1e-10
 solver = exu.MainSolverStatic()

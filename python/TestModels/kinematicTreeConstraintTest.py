@@ -139,14 +139,14 @@ simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 # simulationSettings.timeIntegration.numberOfSteps = 1#int(tEnd/h)
 # simulationSettings.timeIntegration.endTime = h*1#tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = 0.01*100
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.001*20
+simulationSettings.solution.file.writePeriod = 0.01*100
+simulationSettings.solution.sensors.writePeriod = 0.001*20
 simulationSettings.timeIntegration.verboseMode = 1
-#simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
+#simulationSettings.solution.file.writePeriod = tEnd/steps
 simulationSettings.timeIntegration.newton.useModifiedNewton=True
 
-# simulationSettings.displayComputationTime = True
-# simulationSettings.linearSolverType=exu.LinearSolverType.EigenSparse
+# simulationSettings.show.computationTime = True
+# simulationSettings.linearSolver.solverType=exu.LinearSolverType.EigenSparse
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.95 #SHOULD work with 0.9 as well
 

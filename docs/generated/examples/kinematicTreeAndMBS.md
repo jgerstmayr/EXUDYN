@@ -325,9 +325,9 @@ tEnd = 1
 h = 1e-2 #0.1
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = h
+simulationSettings.solution.file.writePeriod = h
 simulationSettings.timeIntegration.verboseMode = 1
-#simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
+#simulationSettings.solution.file.writePeriod = tEnd/steps
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
 

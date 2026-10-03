@@ -169,19 +169,19 @@ tEnd = 10000
 h = 0.001
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/1000
+simulationSettings.solution.file.write = False
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/1000
 simulationSettings.timeIntegration.verboseMode = 1
 
 #good for interactive examples, as it is independent of CPU power ...
-simulationSettings.timeIntegration.simulateInRealtime = True
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.timeIntegration.realtime.active = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e2 #if no force acts
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #0.6 works well 
 
-simulationSettings.solutionSettings.solutionInformation = "mouse interaction example: press 'D' to (de-)activate mouse drag, F2 to switch key functionality"
+simulationSettings.solution.file.information = "mouse interaction example: press 'D' to (de-)activate mouse drag, F2 to switch key functionality"
 
 #+++++++++++++++++++++++++++++++++++
 #these options are not necessary:

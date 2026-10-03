@@ -39,8 +39,8 @@ for linearSolverType in [exu.LinearSolverType.EXUdense, exu.LinearSolverType.Eig
         simulationSettings = exu.SimulationSettings()
         simulationSettings.timeIntegration.numberOfSteps = 10
         simulationSettings.timeIntegration.endTime = 1
-        simulationSettings.solutionSettings.writeSolutionToFile = False
-        simulationSettings.linearSolverType = linearSolverType
+        simulationSettings.solution.file.write = False
+        simulationSettings.linearSolver.solverType = linearSolverType
         if solver == 'static':
             mbs.SolveStatic(simulationSettings)
         else:

@@ -87,9 +87,9 @@ def Pendulum(kind):
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.verboseMode = 0
-    simulationSettings.solutionSettings.writeSolutionToFile = False
-    simulationSettings.solutionSettings.sensorsWritePeriod = stepSize
-    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    simulationSettings.solution.file.write = False
+    simulationSettings.solution.sensors.writePeriod = stepSize
+    simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     mbs.SolveDynamic(simulationSettings)
     return mbs.GetSensorStoredData(sTip)
 

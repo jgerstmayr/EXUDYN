@@ -139,7 +139,7 @@ mbs.Assemble()
 print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-#simulationSettings.solutionSettings.coordinatesSolutionFileName = 'ANCFCable2Dbending' + str(nElements) + '.txt'
+#simulationSettings.solution.file.name = 'ANCFCable2Dbending' + str(nElements) + '.txt'
 
 
 
@@ -147,10 +147,10 @@ fact = 2000
 deltaT = 0.0005*fact
 simulationSettings.timeIntegration.numberOfSteps = 1*fact
 simulationSettings.timeIntegration.endTime = deltaT
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact
-#simulationSettings.solutionSettings.outputPrecision = 4
-simulationSettings.displayComputationTime = False
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/fact
+#simulationSettings.solution.precision = 4
+simulationSettings.show.computationTime = False
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
@@ -163,8 +163,8 @@ useIndex2 = False
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = useIndex2
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = useIndex2
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
-simulationSettings.displayStatistics = False
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.show.statistics = False
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
 #SC.visualizationSettings.nodes.showNumbers = True
 SC.visualizationSettings.bodies.showNumbers = False
@@ -180,7 +180,7 @@ SC.visualizationSettings.connectors.showContact = 1
 SC.visualizationSettings.openGL.advanced.initialCenterPoint = [0.5*L,-0.25*L,0]
 #SC.visualizationSettings.openGL.lineWidth=2
 
-simulationSettings.solutionSettings.solutionInformation = "ANCF cable with sliding joint"
+simulationSettings.solution.file.information = "ANCF cable with sliding joint"
 
 #mbs.systemData.Info()
 

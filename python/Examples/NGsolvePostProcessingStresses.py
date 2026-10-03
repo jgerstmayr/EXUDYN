@@ -230,26 +230,26 @@ if __name__ == '__main__': #needed to use multiprocessing for mode computation
     SC.visualizationSettings.contour.outputVariable = varType
     SC.visualizationSettings.contour.outputVariableComponent = 0 #x-component
     
-    simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrder test"
+    simulationSettings.solution.file.information = "ObjectFFRFreducedOrder test"
     
     h=0.25e-3
     tEnd = 0.05
     
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
     simulationSettings.timeIntegration.verboseMode = 1
     #simulationSettings.timeIntegration.verboseModeFile = 3
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     
-    simulationSettings.solutionSettings.sensorsWritePeriod = h
+    simulationSettings.solution.sensors.writePeriod = h
     
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8 #SHOULD work with 0.9 as well
-    #simulationSettings.displayStatistics = True
-    #simulationSettings.displayComputationTime = True
+    #simulationSettings.show.statistics = True
+    #simulationSettings.show.computationTime = True
     
     #create animation:
-    # simulationSettings.solutionSettings.recordImagesInterval = 0.005
+    # simulationSettings.solution.recordImagesInterval = 0.005
     # SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
     SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
     SC.visualizationSettings.openGL.multiSampling = 4

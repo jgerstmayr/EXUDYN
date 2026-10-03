@@ -300,11 +300,11 @@ def main():
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
     
-    simulationSettings.timeIntegration.simulateInRealtime = True    # crucial for operating with robot
-    simulationSettings.displayStatistics = True
-    simulationSettings.solutionSettings.solutionInformation = "Exudyn-ROS turtle"
+    simulationSettings.timeIntegration.realtime.active = True    # crucial for operating with robot
+    simulationSettings.show.statistics = True
+    simulationSettings.solution.file.information = "Exudyn-ROS turtle"
     
-    simulationSettings.solutionSettings.writeSolutionToFile = False 
+    simulationSettings.solution.file.write = False 
     SC.visualizationSettings.general.autoFitScene = True
     # set up parameter for usage in WSL2 (Ubuntu 20.04) on Windows 10
     SC.visualizationSettings.view0.camera.trackMarker = mUIP

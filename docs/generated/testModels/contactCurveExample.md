@@ -164,17 +164,17 @@ mbs.Assemble()
 stepSize=0.001
 tEnd = 1
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
-simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-simulationSettings.solutionSettings.sensorsWritePeriod = stepSize  #output interval
+simulationSettings.solution.file.write = (not testIsActive)
+simulationSettings.solution.file.writePeriod = 0.01
+simulationSettings.solution.sensors.writePeriod = stepSize  #output interval
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
-# simulationSettings.timeIntegration.simulateInRealtime = True
-#simulationSettings.timeIntegration.realtimeFactor = 0.5
+# simulationSettings.timeIntegration.realtime.active = True
+#simulationSettings.timeIntegration.realtime.factor = 0.5
 # simulationSettings.timeIntegration.discontinuous.iterationTolerance = 1e-2
 # simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize = False
 
-#simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+#simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 #simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 

@@ -91,8 +91,8 @@ def Drop(kind, law):
     simulationSettings.timeIntegration.numberOfSteps = nSteps
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.verboseMode = 0
-    simulationSettings.solutionSettings.sensorsWritePeriod = tEnd/nSteps
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.sensors.writePeriod = tEnd/nSteps
+    simulationSettings.solution.file.write = False
     mbs.SolveDynamic(simulationSettings)
     data = mbs.GetSensorStoredData(sensor)
     #on one time grid: the adaptive step control puts the sensor times of the release step at different places

@@ -417,7 +417,7 @@ def AddSensorRecorder(mbs, sensorNumber, endTime, sensorsWritePeriod, sensorOutp
         mbs: mbs containing object
         sensorNumber: integer sensor number to be recorded
         endTime: end time of simulation, as given in simulationSettings.timeIntegration.endTime
-        sensorsWritePeriod: as given in simulationSettings.solutionSettings.sensorsWritePeriod
+        sensorsWritePeriod: as given in simulationSettings.solution.sensors.writePeriod
         sensorOutputSize: size of sensor data: 3 for Displacement, Position, etc. sensors; may be larger for RotationMatrix or Coordinates sensors; check this size by calling mbs.GetSensorValues(sensorNumber)
 
     Returns:
@@ -538,7 +538,7 @@ def CreateDirectoryForFile(fileName):
 
 
 def LoadSolutionFile(fileName, safeMode=False, maxRows=-1, verbose=True, hasHeader=True):
-    """read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary:
+    """read coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solution.file.name='...') into dictionary:
 
     Args:
         fileName: string containing directory and filename of stored coordinatesSolutionFile
@@ -731,7 +731,7 @@ def BinaryReadRealVector(file, intType, realType):
 
 
 def LoadBinarySolutionFile(fileName, maxRows=-1, verbose=True):
-    """read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solutionSettings.coordinatesSolutionFileName='...') into dictionary
+    """read BINARY coordinates solution file (exported during static or dynamic simulation with option exu.SimulationSettings().solution.file.name='...') into dictionary
 
     Args:
         fileName: string containing directory and filename of stored coordinatesSolutionFile
@@ -801,12 +801,12 @@ def LoadBinarySolutionFile(fileName, maxRows=-1, verbose=True):
 
 #             //not needed in binary format:
 #             //solFile << "#columns contain: time, ODE2 displacements";
-#             //if (solutionSettings.exportVelocities) { solFile << ", ODE2 velocities"; }
-#             //if (solutionSettings.exportAccelerations) { solFile << ", ODE2 accelerations"; }
+#             //if (solution.file.export.velocities) { solFile << ", ODE2 velocities"; }
+#             //if (solution.file.export.accelerations) { solFile << ", ODE2 accelerations"; }
 #             //if (nODE1) { solFile << ", ODE1 coordinates"; } //currently not available, but for future solFile structure necessary!
 #             //if (nVel1) { solFile << ", ODE1 velocities"; }
-#             //if (solutionSettings.exportAlgebraicCoordinates) { solFile << ", AE coordinates"; }
-#             //if (solutionSettings.exportDataCoordinates) { solFile << ", ODE2 velocities"; }
+#             //if (solution.file.export.algebraicCoordinates) { solFile << ", AE coordinates"; }
+#             //if (solution.file.export.dataCoordinates) { solFile << ", ODE2 velocities"; }
 #             //solFile << "\n";
 
 #             //solFile << "#number of system coordinates [nODE2, nODE1, nAlgebraic, nData] = [" <<
@@ -836,7 +836,7 @@ def LoadBinarySolutionFile(fileName, maxRows=-1, verbose=True):
         numberOfSteps, fileEnd = BinaryReadIndex(file, intType)
         
 #             //solution information: always export string, even if has zero length:
-#             ExuFile::BinaryWrite(solutionSettings.solutionInformation, solFile, bfs);
+#             ExuFile::BinaryWrite(solution.file.information, solFile, bfs);
         solutionInformation, fileEnd=BinaryReadString(file, intType)
         if int(verbose)>1: exudyn.Print('  solutionInformation="'+solutionInformation+'"')
 
@@ -981,7 +981,7 @@ def InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose=
     Args:
         mbs: MainSystem to be operated with
         simulationSettings: simulationSettings which is updated and shall be used afterwards for SolveDynamic(...) or SolveStatic(...)
-        restartFileName: string containing directory and filename of stored restart file, as given in solutionSettings.restartFileName
+        restartFileName: string containing directory and filename of stored restart file, as given in solution.restart.name
         verbose: False=no information, True=basic information
 
     Returns:

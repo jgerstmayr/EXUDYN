@@ -56,97 +56,333 @@ inline void SetDictionary(BeamSectionGeometry& data, const py::dict& d) {
 }
 
 //! AUTO: read access to structure; converting into dictionary
+inline py::dict GetDictionaryWithTypeInfo(const SolutionFileExportSettings& data) {
+    auto structureDict = py::dict();
+    auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "The quantities written into the coordinates solution file in addition to the coordinates.";
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.accelerations;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "add ABRV:ODE2 accelerations to the solution file";
+    structureDict["accelerations"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.algebraicCoordinates;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "add algebraicCoordinates (=Lagrange multipliers) to the solution file";
+    structureDict["algebraicCoordinates"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.dataCoordinates;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "add DataCoordinates to the solution file";
+    structureDict["dataCoordinates"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.ODE1Velocities;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "add coordinatesODE1_t to the solution file";
+    structureDict["ODE1Velocities"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.velocities;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "add ABRV:ODE2 velocities to the solution file";
+    structureDict["velocities"] = d;
+
+    return structureDict;
+}
+
+//! AUTO: read access to structure; converting into dictionary without type info
+inline py::dict GetDictionary(const SolutionFileExportSettings& data) {
+    auto structureDict = py::dict();
+    structureDict["accelerations"] = data.accelerations;
+    structureDict["algebraicCoordinates"] = data.algebraicCoordinates;
+    structureDict["dataCoordinates"] = data.dataCoordinates;
+    structureDict["ODE1Velocities"] = data.ODE1Velocities;
+    structureDict["velocities"] = data.velocities;
+    return structureDict;
+}
+
+//! AUTO: write access to data structure; converting dictionary d into structure
+inline void SetDictionary(SolutionFileExportSettings& data, const py::dict& d) {
+    EPyUtils::FromPython(d["accelerations"], data.accelerations, "SolutionFileExportSettings.accelerations");
+    EPyUtils::FromPython(d["algebraicCoordinates"], data.algebraicCoordinates, "SolutionFileExportSettings.algebraicCoordinates");
+    EPyUtils::FromPython(d["dataCoordinates"], data.dataCoordinates, "SolutionFileExportSettings.dataCoordinates");
+    EPyUtils::FromPython(d["ODE1Velocities"], data.ODE1Velocities, "SolutionFileExportSettings.ODE1Velocities");
+    EPyUtils::FromPython(d["velocities"], data.velocities, "SolutionFileExportSettings.velocities");
+}
+
+//! AUTO: read access to structure; converting into dictionary
+inline py::dict GetDictionaryWithTypeInfo(const SolutionFileSettings& data) {
+    auto structureDict = py::dict();
+    auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "The coordinates solution file: all coordinates of the system versus time, read by the SolutionViewer and exudyn.utilities.LoadSolutionFile.";
+    structureDict["export"] = GetDictionaryWithTypeInfo(data.exportSettings);
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.append;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "flag (true/false); if true, the solution and the solver information are appended to existing files (otherwise created); in BINARY mode, files are always replaced and this parameter is ineffective!";
+    structureDict["append"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.binary;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "if true, the solution file is written in binary format for improved speed and smaller file sizes; setting solution.precision >= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that append is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files";
+    structureDict["binary"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.flushAboveCoordinates;
+    d["type"] = "PInt";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "number of coordinates above which the buffers of the solution file are always flushed, irrespectively of solution.flushFilesImmediately; for larger files, writing takes so much time that flushing does not add considerable time";
+    structureDict["flushAboveCoordinates"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.information;
+    d["type"] = "String";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in [](#sec-utf8), but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)";
+    structureDict["information"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.name;
+    d["type"] = "FileName";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "filename and (relative) path of the solution file containing all multibody system coordinates versus time; the default is in the directory solution/, like every file a run writes by default, so that nothing is written beside the script; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binary=True)";
+    structureDict["name"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.write;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "flag (true/false), which determines if the coordinates are written to the solution file; standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional quantities, see export";
+    structureDict["write"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.writeFooter;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics";
+    structureDict["writeFooter"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.writeHeader;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)";
+    structureDict["writeHeader"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.writeInitialValues;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "flag (true/false); if true, initial values are exported for the start time; applies to the solution file and the sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation";
+    structureDict["writeInitialValues"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.writePeriod;
+    d["type"] = "UReal";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "time span (period), determines how often the solution file is written during a simulation";
+    structureDict["writePeriod"] = d;
+
+    return structureDict;
+}
+
+//! AUTO: read access to structure; converting into dictionary without type info
+inline py::dict GetDictionary(const SolutionFileSettings& data) {
+    auto structureDict = py::dict();
+    structureDict["export"] = GetDictionary(data.exportSettings);
+    structureDict["append"] = data.append;
+    structureDict["binary"] = data.binary;
+    structureDict["flushAboveCoordinates"] = data.flushAboveCoordinates;
+    structureDict["information"] = data.information;
+    structureDict["name"] = data.name;
+    structureDict["write"] = data.write;
+    structureDict["writeFooter"] = data.writeFooter;
+    structureDict["writeHeader"] = data.writeHeader;
+    structureDict["writeInitialValues"] = data.writeInitialValues;
+    structureDict["writePeriod"] = data.writePeriod;
+    return structureDict;
+}
+
+//! AUTO: write access to data structure; converting dictionary d into structure
+inline void SetDictionary(SolutionFileSettings& data, const py::dict& d) {
+    SetDictionary(data.exportSettings, py::cast<py::dict>(d["export"]));
+    EPyUtils::FromPython(d["append"], data.append, "SolutionFileSettings.append");
+    EPyUtils::FromPython(d["binary"], data.binary, "SolutionFileSettings.binary");
+    EPyUtils::FromPython(d["flushAboveCoordinates"], data.flushAboveCoordinates, EPyUtils::RangeCheck::positive, "SolutionFileSettings.flushAboveCoordinates");
+    EPyUtils::FromPython(d["information"], data.information, "SolutionFileSettings.information");
+    EPyUtils::FromPython(d["name"], data.name, "SolutionFileSettings.name");
+    EPyUtils::FromPython(d["write"], data.write, "SolutionFileSettings.write");
+    EPyUtils::FromPython(d["writeFooter"], data.writeFooter, "SolutionFileSettings.writeFooter");
+    EPyUtils::FromPython(d["writeHeader"], data.writeHeader, "SolutionFileSettings.writeHeader");
+    EPyUtils::FromPython(d["writeInitialValues"], data.writeInitialValues, "SolutionFileSettings.writeInitialValues");
+    EPyUtils::FromPython(d["writePeriod"], data.writePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionFileSettings.writePeriod");
+}
+
+//! AUTO: read access to structure; converting into dictionary
+inline py::dict GetDictionaryWithTypeInfo(const SolutionSensorsSettings& data) {
+    auto structureDict = py::dict();
+    auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Storing and writing of the sensors.";
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.active;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "flag (true/false); if false, no sensor files will be created and no sensor data will be stored; this may be advantageous for benchmarking as well as for special solvers which should not overwrite existing results (e.g. ComputeODE2Eigenvalues); settings this value to False may cause problems if sensors are required to perform operations which are needed e.g. in UserSensors as input of loads, etc.";
+    structureDict["active"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.append;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations";
+    structureDict["append"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.writeFooter;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)";
+    structureDict["writeFooter"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.writeHeader;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)";
+    structureDict["writeHeader"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.writePeriod;
+    d["type"] = "UReal";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "time span (period), determines how often the sensor output is written to file or internal storage during a simulation";
+    structureDict["writePeriod"] = d;
+
+    return structureDict;
+}
+
+//! AUTO: read access to structure; converting into dictionary without type info
+inline py::dict GetDictionary(const SolutionSensorsSettings& data) {
+    auto structureDict = py::dict();
+    structureDict["active"] = data.active;
+    structureDict["append"] = data.append;
+    structureDict["writeFooter"] = data.writeFooter;
+    structureDict["writeHeader"] = data.writeHeader;
+    structureDict["writePeriod"] = data.writePeriod;
+    return structureDict;
+}
+
+//! AUTO: write access to data structure; converting dictionary d into structure
+inline void SetDictionary(SolutionSensorsSettings& data, const py::dict& d) {
+    EPyUtils::FromPython(d["active"], data.active, "SolutionSensorsSettings.active");
+    EPyUtils::FromPython(d["append"], data.append, "SolutionSensorsSettings.append");
+    EPyUtils::FromPython(d["writeFooter"], data.writeFooter, "SolutionSensorsSettings.writeFooter");
+    EPyUtils::FromPython(d["writeHeader"], data.writeHeader, "SolutionSensorsSettings.writeHeader");
+    EPyUtils::FromPython(d["writePeriod"], data.writePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionSensorsSettings.writePeriod");
+}
+
+//! AUTO: read access to structure; converting into dictionary
+inline py::dict GetDictionaryWithTypeInfo(const SolutionRestartSettings& data) {
+    auto structureDict = py::dict();
+    auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "The restart file: the state of the system written regularly, from which a simulation can be continued.";
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.name;
+    d["type"] = "FileName";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart";
+    structureDict["name"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.write;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "flag (true/false), which determines if the restart file is written regularly, see name for details";
+    structureDict["write"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.writePeriod;
+    d["type"] = "UReal";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance";
+    structureDict["writePeriod"] = d;
+
+    return structureDict;
+}
+
+//! AUTO: read access to structure; converting into dictionary without type info
+inline py::dict GetDictionary(const SolutionRestartSettings& data) {
+    auto structureDict = py::dict();
+    structureDict["name"] = data.name;
+    structureDict["write"] = data.write;
+    structureDict["writePeriod"] = data.writePeriod;
+    return structureDict;
+}
+
+//! AUTO: write access to data structure; converting dictionary d into structure
+inline void SetDictionary(SolutionRestartSettings& data, const py::dict& d) {
+    EPyUtils::FromPython(d["name"], data.name, "SolutionRestartSettings.name");
+    EPyUtils::FromPython(d["write"], data.write, "SolutionRestartSettings.write");
+    EPyUtils::FromPython(d["writePeriod"], data.writePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionRestartSettings.writePeriod");
+}
+
+//! AUTO: read access to structure; converting into dictionary
 inline py::dict GetDictionaryWithTypeInfo(const SolutionSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
-    structureDict["structureDescription"] = "General settings for exporting the solution (results) of a simulation.";
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.appendToFile;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "flag (true/false); if true, solution and solverInformation is appended to existing file (otherwise created); in BINARY mode, files are always replaced and this parameter is ineffective!";
-    structureDict["appendToFile"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.binarySolutionFile;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "if true, the solution file is written in binary format for improved speed and smaller file sizes; setting outputPrecision >= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that appendToFile is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files";
-    structureDict["binarySolutionFile"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.coordinatesSolutionFileName;
-    d["type"] = "FileName";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; the default is in the directory solution/, like every file a run writes by default, so that nothing is written beside the script; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)";
-    structureDict["coordinatesSolutionFileName"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.exportAccelerations;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "add ABRV:ODE2 accelerations to solution file (coordinatesSolutionFile)";
-    structureDict["exportAccelerations"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.exportAlgebraicCoordinates;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "add algebraicCoordinates (=Lagrange multipliers) to solution file (coordinatesSolutionFile)";
-    structureDict["exportAlgebraicCoordinates"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.exportDataCoordinates;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "add DataCoordinates to solution file (coordinatesSolutionFile)";
-    structureDict["exportDataCoordinates"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.exportODE1Velocities;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "add coordinatesODE1_t to solution file (coordinatesSolutionFile)";
-    structureDict["exportODE1Velocities"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.exportVelocities;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "add ABRV:ODE2 velocities to solution file (coordinatesSolutionFile)";
-    structureDict["exportVelocities"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.flushFilesDOF;
-    d["type"] = "PInt";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "number of DOF, above which solution file (coordinatesSolutionFile) buffers are always flushed, irrespectively of whether flushFilesImmediately is set True or False (see also flushFilesImmediately); for larger files, writing takes so much time that flushing does not add considerable time";
-    structureDict["flushFilesDOF"] = d;
-
+    structureDict["structureDescription"] = "General settings for exporting the solution (results) of a simulation: the solution file, the sensors and the restart file.";
+    structureDict["file"] = GetDictionaryWithTypeInfo(data.file);
+    structureDict["restart"] = GetDictionaryWithTypeInfo(data.restart);
+    structureDict["sensors"] = GetDictionaryWithTypeInfo(data.sensors);
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.flushFilesImmediately;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "flush file buffers after every solution period written (coordinatesSolutionFile and sensor files); if set False, the output is written through a buffer, which is highly efficient, but during simulation, files may be always in an incomplete state; if set True, this may add a large amount of CPU time as the process waits until files are really written to hard disc (especially for simulation of small scale systems, writing 10.000s of time steps; at least 5us per step/file, depending on hardware)";
+    d["description"] = "flush file buffers after every period written (solution file and sensor files); if set False, the output is written through a buffer, which is highly efficient, but during simulation, files may be always in an incomplete state; if set True, this may add a large amount of CPU time as the process waits until files are really written to hard disc (especially for simulation of small scale systems, writing 10.000s of time steps; at least 5us per step/file, depending on hardware)";
     structureDict["flushFilesImmediately"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.outputPrecision;
+    d["value"] = data.precision;
     d["type"] = "UInt";
     d["size"] = std::vector<int>{1};
-    d["description"] = "precision for floating point numbers written to solution and sensor files";
-    structureDict["outputPrecision"] = d;
+    d["description"] = "precision for floating point numbers written to the solution and sensor files; the precision of the output to the console is consolePrecision";
+    structureDict["precision"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -158,123 +394,11 @@ inline py::dict GetDictionaryWithTypeInfo(const SolutionSettings& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.restartFileName;
-    d["type"] = "FileName";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart";
-    structureDict["restartFileName"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.restartWritePeriod;
-    d["type"] = "UReal";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance";
-    structureDict["restartWritePeriod"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.sensorsAppendToFile;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations";
-    structureDict["sensorsAppendToFile"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.sensorsStoreAndWriteFiles;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "flag (true/false); if false, no sensor files will be created and no sensor data will be stored; this may be advantageous for benchmarking as well as for special solvers which should not overwrite existing results (e.g. ComputeODE2Eigenvalues); settings this value to False may cause problems if sensors are required to perform operations which are needed e.g. in UserSensors as input of loads, etc.";
-    structureDict["sensorsStoreAndWriteFiles"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.sensorsWriteFileFooter;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)";
-    structureDict["sensorsWriteFileFooter"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.sensorsWriteFileHeader;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)";
-    structureDict["sensorsWriteFileHeader"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.sensorsWritePeriod;
-    d["type"] = "UReal";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "time span (period), determines how often the sensor output is written to file or internal storage during a simulation";
-    structureDict["sensorsWritePeriod"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.solutionInformation;
-    d["type"] = "String";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in [](#sec-utf8), but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)";
-    structureDict["solutionInformation"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.solutionWritePeriod;
-    d["type"] = "UReal";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "time span (period), determines how often the solution file (coordinatesSolutionFile) is written during a simulation";
-    structureDict["solutionWritePeriod"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.solverInformationFileName;
     d["type"] = "FileName";
     d["size"] = std::vector<int>{1};
-    d["description"] = "filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only";
+    d["description"] = "filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if file.append is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only";
     structureDict["solverInformationFileName"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.writeFileFooter;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics";
-    structureDict["writeFileFooter"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.writeFileHeader;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)";
-    structureDict["writeFileHeader"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.writeInitialValues;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "flag (true/false); if true, initial values are exported for the start time; applies to coordinatesSolution and sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation";
-    structureDict["writeInitialValues"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.writeRestartFile;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "flag (true/false), which determines if restart file is written regularly, see restartFileName for details";
-    structureDict["writeRestartFile"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.writeSolutionToFile;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "flag (true/false), which determines if (global) solution vector is written to the solution file (coordinatesSolutionFile); standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional coordinates in the solution file, see the options below";
-    structureDict["writeSolutionToFile"] = d;
 
     return structureDict;
 }
@@ -282,65 +406,43 @@ inline py::dict GetDictionaryWithTypeInfo(const SolutionSettings& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const SolutionSettings& data) {
     auto structureDict = py::dict();
-    structureDict["appendToFile"] = data.appendToFile;
-    structureDict["binarySolutionFile"] = data.binarySolutionFile;
-    structureDict["coordinatesSolutionFileName"] = data.coordinatesSolutionFileName;
-    structureDict["exportAccelerations"] = data.exportAccelerations;
-    structureDict["exportAlgebraicCoordinates"] = data.exportAlgebraicCoordinates;
-    structureDict["exportDataCoordinates"] = data.exportDataCoordinates;
-    structureDict["exportODE1Velocities"] = data.exportODE1Velocities;
-    structureDict["exportVelocities"] = data.exportVelocities;
-    structureDict["flushFilesDOF"] = data.flushFilesDOF;
+    structureDict["file"] = GetDictionary(data.file);
+    structureDict["restart"] = GetDictionary(data.restart);
+    structureDict["sensors"] = GetDictionary(data.sensors);
     structureDict["flushFilesImmediately"] = data.flushFilesImmediately;
-    structureDict["outputPrecision"] = data.outputPrecision;
+    structureDict["precision"] = data.precision;
     structureDict["recordImagesInterval"] = data.recordImagesInterval;
-    structureDict["restartFileName"] = data.restartFileName;
-    structureDict["restartWritePeriod"] = data.restartWritePeriod;
-    structureDict["sensorsAppendToFile"] = data.sensorsAppendToFile;
-    structureDict["sensorsStoreAndWriteFiles"] = data.sensorsStoreAndWriteFiles;
-    structureDict["sensorsWriteFileFooter"] = data.sensorsWriteFileFooter;
-    structureDict["sensorsWriteFileHeader"] = data.sensorsWriteFileHeader;
-    structureDict["sensorsWritePeriod"] = data.sensorsWritePeriod;
-    structureDict["solutionInformation"] = data.solutionInformation;
-    structureDict["solutionWritePeriod"] = data.solutionWritePeriod;
     structureDict["solverInformationFileName"] = data.solverInformationFileName;
-    structureDict["writeFileFooter"] = data.writeFileFooter;
-    structureDict["writeFileHeader"] = data.writeFileHeader;
-    structureDict["writeInitialValues"] = data.writeInitialValues;
-    structureDict["writeRestartFile"] = data.writeRestartFile;
-    structureDict["writeSolutionToFile"] = data.writeSolutionToFile;
     return structureDict;
 }
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(SolutionSettings& data, const py::dict& d) {
-    EPyUtils::FromPython(d["appendToFile"], data.appendToFile, "SolutionSettings.appendToFile");
-    EPyUtils::FromPython(d["binarySolutionFile"], data.binarySolutionFile, "SolutionSettings.binarySolutionFile");
-    EPyUtils::FromPython(d["coordinatesSolutionFileName"], data.coordinatesSolutionFileName, "SolutionSettings.coordinatesSolutionFileName");
-    EPyUtils::FromPython(d["exportAccelerations"], data.exportAccelerations, "SolutionSettings.exportAccelerations");
-    EPyUtils::FromPython(d["exportAlgebraicCoordinates"], data.exportAlgebraicCoordinates, "SolutionSettings.exportAlgebraicCoordinates");
-    EPyUtils::FromPython(d["exportDataCoordinates"], data.exportDataCoordinates, "SolutionSettings.exportDataCoordinates");
-    EPyUtils::FromPython(d["exportODE1Velocities"], data.exportODE1Velocities, "SolutionSettings.exportODE1Velocities");
-    EPyUtils::FromPython(d["exportVelocities"], data.exportVelocities, "SolutionSettings.exportVelocities");
-    EPyUtils::FromPython(d["flushFilesDOF"], data.flushFilesDOF, EPyUtils::RangeCheck::positive, "SolutionSettings.flushFilesDOF");
+    SetDictionary(data.file, py::cast<py::dict>(d["file"]));
+    SetDictionary(data.restart, py::cast<py::dict>(d["restart"]));
+    SetDictionary(data.sensors, py::cast<py::dict>(d["sensors"]));
     EPyUtils::FromPython(d["flushFilesImmediately"], data.flushFilesImmediately, "SolutionSettings.flushFilesImmediately");
-    EPyUtils::FromPython(d["outputPrecision"], data.outputPrecision, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.outputPrecision");
+    EPyUtils::FromPython(d["precision"], data.precision, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.precision");
     EPyUtils::FromPython(d["recordImagesInterval"], data.recordImagesInterval, "SolutionSettings.recordImagesInterval");
-    EPyUtils::FromPython(d["restartFileName"], data.restartFileName, "SolutionSettings.restartFileName");
-    EPyUtils::FromPython(d["restartWritePeriod"], data.restartWritePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.restartWritePeriod");
-    EPyUtils::FromPython(d["sensorsAppendToFile"], data.sensorsAppendToFile, "SolutionSettings.sensorsAppendToFile");
-    EPyUtils::FromPython(d["sensorsStoreAndWriteFiles"], data.sensorsStoreAndWriteFiles, "SolutionSettings.sensorsStoreAndWriteFiles");
-    EPyUtils::FromPython(d["sensorsWriteFileFooter"], data.sensorsWriteFileFooter, "SolutionSettings.sensorsWriteFileFooter");
-    EPyUtils::FromPython(d["sensorsWriteFileHeader"], data.sensorsWriteFileHeader, "SolutionSettings.sensorsWriteFileHeader");
-    EPyUtils::FromPython(d["sensorsWritePeriod"], data.sensorsWritePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.sensorsWritePeriod");
-    EPyUtils::FromPython(d["solutionInformation"], data.solutionInformation, "SolutionSettings.solutionInformation");
-    EPyUtils::FromPython(d["solutionWritePeriod"], data.solutionWritePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionSettings.solutionWritePeriod");
     EPyUtils::FromPython(d["solverInformationFileName"], data.solverInformationFileName, "SolutionSettings.solverInformationFileName");
-    EPyUtils::FromPython(d["writeFileFooter"], data.writeFileFooter, "SolutionSettings.writeFileFooter");
-    EPyUtils::FromPython(d["writeFileHeader"], data.writeFileHeader, "SolutionSettings.writeFileHeader");
-    EPyUtils::FromPython(d["writeInitialValues"], data.writeInitialValues, "SolutionSettings.writeInitialValues");
-    EPyUtils::FromPython(d["writeRestartFile"], data.writeRestartFile, "SolutionSettings.writeRestartFile");
-    EPyUtils::FromPython(d["writeSolutionToFile"], data.writeSolutionToFile, "SolutionSettings.writeSolutionToFile");
+}
+
+//! AUTO: read access to structure; converting into dictionary
+inline py::dict GetDictionaryWithTypeInfo(const SolutionSettingsDeprecated& data) {
+    auto structureDict = py::dict();
+    auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "The settings of the solution as they were named up to Exudyn 1.11: each forwards to its place in simulationSettings.solution, with a DeprecationWarning.";
+    return structureDict;
+}
+
+//! AUTO: read access to structure; converting into dictionary without type info
+inline py::dict GetDictionary(const SolutionSettingsDeprecated& data) {
+    auto structureDict = py::dict();
+    return structureDict;
+}
+
+//! AUTO: write access to data structure; converting dictionary d into structure
+inline void SetDictionary(SolutionSettingsDeprecated& data, const py::dict& d) {
 }
 
 //! AUTO: read access to structure; converting into dictionary
@@ -382,11 +484,11 @@ inline py::dict GetDictionaryWithTypeInfo(const NumericalDifferentiationSettings
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.forODE2connectors;
+    d["value"] = data.forODE2Connectors;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
     d["description"] = "flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE";
-    structureDict["forODE2connectors"] = d;
+    structureDict["forODE2Connectors"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -422,7 +524,7 @@ inline py::dict GetDictionary(const NumericalDifferentiationSettings& data) {
     structureDict["doSystemWideDifferentiation"] = data.doSystemWideDifferentiation;
     structureDict["forAE"] = data.forAE;
     structureDict["forODE2"] = data.forODE2;
-    structureDict["forODE2connectors"] = data.forODE2connectors;
+    structureDict["forODE2Connectors"] = data.forODE2Connectors;
     structureDict["jacobianConnectorDerivative"] = data.jacobianConnectorDerivative;
     structureDict["minimumCoordinateSize"] = data.minimumCoordinateSize;
     structureDict["relativeEpsilon"] = data.relativeEpsilon;
@@ -435,7 +537,7 @@ inline void SetDictionary(NumericalDifferentiationSettings& data, const py::dict
     EPyUtils::FromPython(d["doSystemWideDifferentiation"], data.doSystemWideDifferentiation, "NumericalDifferentiationSettings.doSystemWideDifferentiation");
     EPyUtils::FromPython(d["forAE"], data.forAE, "NumericalDifferentiationSettings.forAE");
     EPyUtils::FromPython(d["forODE2"], data.forODE2, "NumericalDifferentiationSettings.forODE2");
-    EPyUtils::FromPython(d["forODE2connectors"], data.forODE2connectors, "NumericalDifferentiationSettings.forODE2connectors");
+    EPyUtils::FromPython(d["forODE2Connectors"], data.forODE2Connectors, "NumericalDifferentiationSettings.forODE2Connectors");
     EPyUtils::FromPython(d["jacobianConnectorDerivative"], data.jacobianConnectorDerivative, "NumericalDifferentiationSettings.jacobianConnectorDerivative");
     EPyUtils::FromPython(d["minimumCoordinateSize"], data.minimumCoordinateSize, EPyUtils::RangeCheck::nonNegative, "NumericalDifferentiationSettings.minimumCoordinateSize");
     EPyUtils::FromPython(d["relativeEpsilon"], data.relativeEpsilon, EPyUtils::RangeCheck::nonNegative, "NumericalDifferentiationSettings.relativeEpsilon");
@@ -515,6 +617,14 @@ inline py::dict GetDictionaryWithTypeInfo(const NewtonSettings& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.active;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution";
+    structureDict["active"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.adaptInitialResidual;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
@@ -571,14 +681,6 @@ inline py::dict GetDictionaryWithTypeInfo(const NewtonSettings& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.newtonResidualMode;
-    d["type"] = "UInt";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "0 ... use residual for computation of error (standard); 1 ... use ABRV:ODE2 and ABRV:ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag";
-    structureDict["newtonResidualMode"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.relativeTolerance;
     d["type"] = "UReal";
     d["size"] = std::vector<int>{1};
@@ -587,19 +689,19 @@ inline py::dict GetDictionaryWithTypeInfo(const NewtonSettings& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.residualMode;
+    d["type"] = "UInt";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "0 ... use residual for computation of error (standard); 1 ... use ABRV:ODE2 and ABRV:ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag";
+    structureDict["residualMode"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.useModifiedNewton;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
     d["description"] = "True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration (default, but may be costly)";
     structureDict["useModifiedNewton"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.useNewtonSolver;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution";
-    structureDict["useNewtonSolver"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -617,6 +719,7 @@ inline py::dict GetDictionary(const NewtonSettings& data) {
     auto structureDict = py::dict();
     structureDict["numericalDifferentiation"] = GetDictionary(data.numericalDifferentiation);
     structureDict["absoluteTolerance"] = data.absoluteTolerance;
+    structureDict["active"] = data.active;
     structureDict["adaptInitialResidual"] = data.adaptInitialResidual;
     structureDict["maximumSolutionNorm"] = data.maximumSolutionNorm;
     structureDict["maxIterations"] = data.maxIterations;
@@ -624,10 +727,9 @@ inline py::dict GetDictionary(const NewtonSettings& data) {
     structureDict["maxModifiedNewtonRestartIterations"] = data.maxModifiedNewtonRestartIterations;
     structureDict["modifiedNewtonContractivity"] = data.modifiedNewtonContractivity;
     structureDict["modifiedNewtonJacUpdatePerStep"] = data.modifiedNewtonJacUpdatePerStep;
-    structureDict["newtonResidualMode"] = data.newtonResidualMode;
     structureDict["relativeTolerance"] = data.relativeTolerance;
+    structureDict["residualMode"] = data.residualMode;
     structureDict["useModifiedNewton"] = data.useModifiedNewton;
-    structureDict["useNewtonSolver"] = data.useNewtonSolver;
     structureDict["weightTolerancePerCoordinate"] = data.weightTolerancePerCoordinate;
     return structureDict;
 }
@@ -636,6 +738,7 @@ inline py::dict GetDictionary(const NewtonSettings& data) {
 inline void SetDictionary(NewtonSettings& data, const py::dict& d) {
     SetDictionary(data.numericalDifferentiation, py::cast<py::dict>(d["numericalDifferentiation"]));
     EPyUtils::FromPython(d["absoluteTolerance"], data.absoluteTolerance, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.absoluteTolerance");
+    EPyUtils::FromPython(d["active"], data.active, "NewtonSettings.active");
     EPyUtils::FromPython(d["adaptInitialResidual"], data.adaptInitialResidual, "NewtonSettings.adaptInitialResidual");
     EPyUtils::FromPython(d["maximumSolutionNorm"], data.maximumSolutionNorm, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.maximumSolutionNorm");
     EPyUtils::FromPython(d["maxIterations"], data.maxIterations, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.maxIterations");
@@ -643,10 +746,9 @@ inline void SetDictionary(NewtonSettings& data, const py::dict& d) {
     EPyUtils::FromPython(d["maxModifiedNewtonRestartIterations"], data.maxModifiedNewtonRestartIterations, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.maxModifiedNewtonRestartIterations");
     EPyUtils::FromPython(d["modifiedNewtonContractivity"], data.modifiedNewtonContractivity, EPyUtils::RangeCheck::positive, "NewtonSettings.modifiedNewtonContractivity");
     EPyUtils::FromPython(d["modifiedNewtonJacUpdatePerStep"], data.modifiedNewtonJacUpdatePerStep, "NewtonSettings.modifiedNewtonJacUpdatePerStep");
-    EPyUtils::FromPython(d["newtonResidualMode"], data.newtonResidualMode, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.newtonResidualMode");
     EPyUtils::FromPython(d["relativeTolerance"], data.relativeTolerance, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.relativeTolerance");
+    EPyUtils::FromPython(d["residualMode"], data.residualMode, EPyUtils::RangeCheck::nonNegative, "NewtonSettings.residualMode");
     EPyUtils::FromPython(d["useModifiedNewton"], data.useModifiedNewton, "NewtonSettings.useModifiedNewton");
-    EPyUtils::FromPython(d["useNewtonSolver"], data.useNewtonSolver, "NewtonSettings.useNewtonSolver");
     EPyUtils::FromPython(d["weightTolerancePerCoordinate"], data.weightTolerancePerCoordinate, "NewtonSettings.weightTolerancePerCoordinate");
 }
 
@@ -786,16 +888,8 @@ inline py::dict GetDictionaryWithTypeInfo(const ExplicitIntegrationSettings& dat
     d["value"] = data.computeMassMatrixInversePerBody;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded) - together with a sparse solver, linearSolverType = exu.LinearSolverType.EigenSparse: with the dense default the inverse is stored as a dense matrix and every step costs O(n^2) (#2400)";
+    d["description"] = "If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded) - together with a sparse solver, linearSolver.solverType = exu.LinearSolverType.EigenSparse: with the dense default the inverse is stored as a dense matrix and every step costs O(n^2) (#2400)";
     structureDict["computeMassMatrixInversePerBody"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.dynamicSolverType;
-    d["type"] = "DynamicSolverType";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, VelocityVerlet, ...), for detailed description see DynamicSolverType, [](#sec-dynamicsolvertype), but only referring to explicit solvers.";
-    structureDict["dynamicSolverType"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -821,7 +915,6 @@ inline py::dict GetDictionary(const ExplicitIntegrationSettings& data) {
     auto structureDict = py::dict();
     structureDict["computeEndOfStepAccelerations"] = data.computeEndOfStepAccelerations;
     structureDict["computeMassMatrixInversePerBody"] = data.computeMassMatrixInversePerBody;
-    structureDict["dynamicSolverType"] = data.dynamicSolverType;
     structureDict["eliminateConstraints"] = data.eliminateConstraints;
     structureDict["useLieGroupIntegration"] = data.useLieGroupIntegration;
     return structureDict;
@@ -831,9 +924,74 @@ inline py::dict GetDictionary(const ExplicitIntegrationSettings& data) {
 inline void SetDictionary(ExplicitIntegrationSettings& data, const py::dict& d) {
     EPyUtils::FromPython(d["computeEndOfStepAccelerations"], data.computeEndOfStepAccelerations, "ExplicitIntegrationSettings.computeEndOfStepAccelerations");
     EPyUtils::FromPython(d["computeMassMatrixInversePerBody"], data.computeMassMatrixInversePerBody, "ExplicitIntegrationSettings.computeMassMatrixInversePerBody");
-    EPyUtils::FromPython(d["dynamicSolverType"], data.dynamicSolverType, "ExplicitIntegrationSettings.dynamicSolverType");
     EPyUtils::FromPython(d["eliminateConstraints"], data.eliminateConstraints, "ExplicitIntegrationSettings.eliminateConstraints");
     EPyUtils::FromPython(d["useLieGroupIntegration"], data.useLieGroupIntegration, "ExplicitIntegrationSettings.useLieGroupIntegration");
+}
+
+//! AUTO: read access to structure; converting into dictionary
+inline py::dict GetDictionaryWithTypeInfo(const ExplicitIntegrationSettingsDeprecated& data) {
+    auto structureDict = py::dict();
+    auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "The settings of the explicit solvers as they were named up to Exudyn 1.11: each forwards to its place in simulationSettings.timeIntegration, with a DeprecationWarning.";
+    return structureDict;
+}
+
+//! AUTO: read access to structure; converting into dictionary without type info
+inline py::dict GetDictionary(const ExplicitIntegrationSettingsDeprecated& data) {
+    auto structureDict = py::dict();
+    return structureDict;
+}
+
+//! AUTO: write access to data structure; converting dictionary d into structure
+inline void SetDictionary(ExplicitIntegrationSettingsDeprecated& data, const py::dict& d) {
+}
+
+//! AUTO: read access to structure; converting into dictionary
+inline py::dict GetDictionaryWithTypeInfo(const RealtimeSettings& data) {
+    auto structureDict = py::dict();
+    auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "Simulation in realtime: the time integration waits until the CPU time has reached the simulation time.";
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.active;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues";
+    structureDict["active"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.factor;
+    d["type"] = "PReal";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "if active=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)";
+    structureDict["factor"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.waitMicroseconds;
+    d["type"] = "PInt";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "if active=True, a loop runs which waits waitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy";
+    structureDict["waitMicroseconds"] = d;
+
+    return structureDict;
+}
+
+//! AUTO: read access to structure; converting into dictionary without type info
+inline py::dict GetDictionary(const RealtimeSettings& data) {
+    auto structureDict = py::dict();
+    structureDict["active"] = data.active;
+    structureDict["factor"] = data.factor;
+    structureDict["waitMicroseconds"] = data.waitMicroseconds;
+    return structureDict;
+}
+
+//! AUTO: write access to data structure; converting dictionary d into structure
+inline void SetDictionary(RealtimeSettings& data, const py::dict& d) {
+    EPyUtils::FromPython(d["active"], data.active, "RealtimeSettings.active");
+    EPyUtils::FromPython(d["factor"], data.factor, EPyUtils::RangeCheck::positive, "RealtimeSettings.factor");
+    EPyUtils::FromPython(d["waitMicroseconds"], data.waitMicroseconds, EPyUtils::RangeCheck::positive, "RealtimeSettings.waitMicroseconds");
 }
 
 //! AUTO: read access to structure; converting into dictionary
@@ -842,9 +1000,10 @@ inline py::dict GetDictionaryWithTypeInfo(const TimeIntegrationSettings& data) {
     auto d = py::dict(); //local dict
     structureDict["structureDescription"] = "General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha.";
     structureDict["discontinuous"] = GetDictionaryWithTypeInfo(data.discontinuous);
-    structureDict["explicitIntegration"] = GetDictionaryWithTypeInfo(data.explicitIntegration);
+    structureDict["explicit"] = GetDictionaryWithTypeInfo(data.explicitSettings);
     structureDict["generalizedAlpha"] = GetDictionaryWithTypeInfo(data.generalizedAlpha);
     structureDict["newton"] = GetDictionaryWithTypeInfo(data.newton);
+    structureDict["realtime"] = GetDictionaryWithTypeInfo(data.realtime);
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.absoluteTolerance;
@@ -943,22 +1102,6 @@ inline py::dict GetDictionaryWithTypeInfo(const TimeIntegrationSettings& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.realtimeFactor;
-    d["type"] = "PReal";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)";
-    structureDict["realtimeFactor"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.realtimeWaitMicroseconds;
-    d["type"] = "PInt";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy";
-    structureDict["realtimeWaitMicroseconds"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.relativeTolerance;
     d["type"] = "UReal";
     d["size"] = std::vector<int>{1};
@@ -975,11 +1118,11 @@ inline py::dict GetDictionaryWithTypeInfo(const TimeIntegrationSettings& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.simulateInRealtime;
-    d["type"] = "bool";
+    d["value"] = data.solverType;
+    d["type"] = "DynamicSolverType";
     d["size"] = std::vector<int>{1};
-    d["description"] = "True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues";
-    structureDict["simulateInRealtime"] = d;
+    d["description"] = "the solver of mbs.SolveDynamic(...): an implicit one (GeneralizedAlpha, TrapezoidalIndex2, ...) or an explicit one (DOPRI5, ExplicitEuler, RK44, ...), see DynamicSolverType, [](#sec-dynamicsolvertype); the argument solverType of mbs.SolveDynamic, if given, takes its place for that run";
+    structureDict["solverType"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -1036,9 +1179,10 @@ inline py::dict GetDictionaryWithTypeInfo(const TimeIntegrationSettings& data) {
 inline py::dict GetDictionary(const TimeIntegrationSettings& data) {
     auto structureDict = py::dict();
     structureDict["discontinuous"] = GetDictionary(data.discontinuous);
-    structureDict["explicitIntegration"] = GetDictionary(data.explicitIntegration);
+    structureDict["explicit"] = GetDictionary(data.explicitSettings);
     structureDict["generalizedAlpha"] = GetDictionary(data.generalizedAlpha);
     structureDict["newton"] = GetDictionary(data.newton);
+    structureDict["realtime"] = GetDictionary(data.realtime);
     structureDict["absoluteTolerance"] = data.absoluteTolerance;
     structureDict["adaptiveStep"] = data.adaptiveStep;
     structureDict["adaptiveStepDecrease"] = data.adaptiveStepDecrease;
@@ -1051,11 +1195,9 @@ inline py::dict GetDictionary(const TimeIntegrationSettings& data) {
     structureDict["initialStepSize"] = data.initialStepSize;
     structureDict["minimumStepSize"] = data.minimumStepSize;
     structureDict["numberOfSteps"] = data.numberOfSteps;
-    structureDict["realtimeFactor"] = data.realtimeFactor;
-    structureDict["realtimeWaitMicroseconds"] = data.realtimeWaitMicroseconds;
     structureDict["relativeTolerance"] = data.relativeTolerance;
     structureDict["reuseConstantMassMatrix"] = data.reuseConstantMassMatrix;
-    structureDict["simulateInRealtime"] = data.simulateInRealtime;
+    structureDict["solverType"] = data.solverType;
     structureDict["startTime"] = data.startTime;
     structureDict["stepInformation"] = data.stepInformation;
     structureDict["stepSizeMaxIncrease"] = data.stepSizeMaxIncrease;
@@ -1068,9 +1210,10 @@ inline py::dict GetDictionary(const TimeIntegrationSettings& data) {
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(TimeIntegrationSettings& data, const py::dict& d) {
     SetDictionary(data.discontinuous, py::cast<py::dict>(d["discontinuous"]));
-    SetDictionary(data.explicitIntegration, py::cast<py::dict>(d["explicitIntegration"]));
+    SetDictionary(data.explicitSettings, py::cast<py::dict>(d["explicit"]));
     SetDictionary(data.generalizedAlpha, py::cast<py::dict>(d["generalizedAlpha"]));
     SetDictionary(data.newton, py::cast<py::dict>(d["newton"]));
+    SetDictionary(data.realtime, py::cast<py::dict>(d["realtime"]));
     EPyUtils::FromPython(d["absoluteTolerance"], data.absoluteTolerance, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.absoluteTolerance");
     EPyUtils::FromPython(d["adaptiveStep"], data.adaptiveStep, "TimeIntegrationSettings.adaptiveStep");
     EPyUtils::FromPython(d["adaptiveStepDecrease"], data.adaptiveStepDecrease, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.adaptiveStepDecrease");
@@ -1083,11 +1226,9 @@ inline void SetDictionary(TimeIntegrationSettings& data, const py::dict& d) {
     EPyUtils::FromPython(d["initialStepSize"], data.initialStepSize, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.initialStepSize");
     EPyUtils::FromPython(d["minimumStepSize"], data.minimumStepSize, EPyUtils::RangeCheck::positive, "TimeIntegrationSettings.minimumStepSize");
     EPyUtils::FromPython(d["numberOfSteps"], data.numberOfSteps, EPyUtils::RangeCheck::positive, "TimeIntegrationSettings.numberOfSteps");
-    EPyUtils::FromPython(d["realtimeFactor"], data.realtimeFactor, EPyUtils::RangeCheck::positive, "TimeIntegrationSettings.realtimeFactor");
-    EPyUtils::FromPython(d["realtimeWaitMicroseconds"], data.realtimeWaitMicroseconds, EPyUtils::RangeCheck::positive, "TimeIntegrationSettings.realtimeWaitMicroseconds");
     EPyUtils::FromPython(d["relativeTolerance"], data.relativeTolerance, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.relativeTolerance");
     EPyUtils::FromPython(d["reuseConstantMassMatrix"], data.reuseConstantMassMatrix, "TimeIntegrationSettings.reuseConstantMassMatrix");
-    EPyUtils::FromPython(d["simulateInRealtime"], data.simulateInRealtime, "TimeIntegrationSettings.simulateInRealtime");
+    EPyUtils::FromPython(d["solverType"], data.solverType, "TimeIntegrationSettings.solverType");
     EPyUtils::FromPython(d["startTime"], data.startTime, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.startTime");
     EPyUtils::FromPython(d["stepInformation"], data.stepInformation, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.stepInformation");
     EPyUtils::FromPython(d["stepSizeMaxIncrease"], data.stepSizeMaxIncrease, EPyUtils::RangeCheck::nonNegative, "TimeIntegrationSettings.stepSizeMaxIncrease");
@@ -1153,11 +1294,11 @@ inline py::dict GetDictionaryWithTypeInfo(const StaticSolverSettings& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.constrainODE1coordinates;
+    d["value"] = data.constrainODE1Coordinates;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
     d["description"] = "True: ODE1coordinates are constrained to initial values; False: undefined behavior, currently not supported";
-    structureDict["constrainODE1coordinates"] = d;
+    structureDict["constrainODE1Coordinates"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -1261,7 +1402,7 @@ inline py::dict GetDictionary(const StaticSolverSettings& data) {
     structureDict["adaptiveStepRecoveryIterations"] = data.adaptiveStepRecoveryIterations;
     structureDict["adaptiveStepRecoverySteps"] = data.adaptiveStepRecoverySteps;
     structureDict["computeLoadsJacobian"] = data.computeLoadsJacobian;
-    structureDict["constrainODE1coordinates"] = data.constrainODE1coordinates;
+    structureDict["constrainODE1Coordinates"] = data.constrainODE1Coordinates;
     structureDict["loadStepDuration"] = data.loadStepDuration;
     structureDict["loadStepGeometric"] = data.loadStepGeometric;
     structureDict["loadStepGeometricRange"] = data.loadStepGeometricRange;
@@ -1286,7 +1427,7 @@ inline void SetDictionary(StaticSolverSettings& data, const py::dict& d) {
     EPyUtils::FromPython(d["adaptiveStepRecoveryIterations"], data.adaptiveStepRecoveryIterations, EPyUtils::RangeCheck::nonNegative, "StaticSolverSettings.adaptiveStepRecoveryIterations");
     EPyUtils::FromPython(d["adaptiveStepRecoverySteps"], data.adaptiveStepRecoverySteps, EPyUtils::RangeCheck::nonNegative, "StaticSolverSettings.adaptiveStepRecoverySteps");
     EPyUtils::FromPython(d["computeLoadsJacobian"], data.computeLoadsJacobian, "StaticSolverSettings.computeLoadsJacobian");
-    EPyUtils::FromPython(d["constrainODE1coordinates"], data.constrainODE1coordinates, "StaticSolverSettings.constrainODE1coordinates");
+    EPyUtils::FromPython(d["constrainODE1Coordinates"], data.constrainODE1Coordinates, "StaticSolverSettings.constrainODE1Coordinates");
     EPyUtils::FromPython(d["loadStepDuration"], data.loadStepDuration, EPyUtils::RangeCheck::positive, "StaticSolverSettings.loadStepDuration");
     EPyUtils::FromPython(d["loadStepGeometric"], data.loadStepGeometric, "StaticSolverSettings.loadStepGeometric");
     EPyUtils::FromPython(d["loadStepGeometricRange"], data.loadStepGeometricRange, EPyUtils::RangeCheck::positive, "StaticSolverSettings.loadStepGeometricRange");
@@ -1337,6 +1478,14 @@ inline py::dict GetDictionaryWithTypeInfo(const LinearSolverSettings& data) {
     d["description"] = "False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!";
     structureDict["showCausingItems"] = d;
 
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.solverType;
+    d["type"] = "LinearSolverType";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type)";
+    structureDict["solverType"] = d;
+
     return structureDict;
 }
 
@@ -1347,6 +1496,7 @@ inline py::dict GetDictionary(const LinearSolverSettings& data) {
     structureDict["pivotThreshold"] = data.pivotThreshold;
     structureDict["reuseAnalyzedPattern"] = data.reuseAnalyzedPattern;
     structureDict["showCausingItems"] = data.showCausingItems;
+    structureDict["solverType"] = data.solverType;
     return structureDict;
 }
 
@@ -1356,6 +1506,7 @@ inline void SetDictionary(LinearSolverSettings& data, const py::dict& d) {
     EPyUtils::FromPython(d["pivotThreshold"], data.pivotThreshold, EPyUtils::RangeCheck::nonNegative, "LinearSolverSettings.pivotThreshold");
     EPyUtils::FromPython(d["reuseAnalyzedPattern"], data.reuseAnalyzedPattern, "LinearSolverSettings.reuseAnalyzedPattern");
     EPyUtils::FromPython(d["showCausingItems"], data.showCausingItems, "LinearSolverSettings.showCausingItems");
+    EPyUtils::FromPython(d["solverType"], data.solverType, "LinearSolverSettings.solverType");
 }
 
 //! AUTO: read access to structure; converting into dictionary
@@ -1457,13 +1608,62 @@ inline void SetDictionary(Parallel& data, const py::dict& d) {
 }
 
 //! AUTO: read access to structure; converting into dictionary
+inline py::dict GetDictionaryWithTypeInfo(const ShowSettings& data) {
+    auto structureDict = py::dict();
+    auto d = py::dict(); //local dict
+    structureDict["structureDescription"] = "What the solvers show in the console at the end of solving.";
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.computationTime;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "display computation time statistics at end of solving";
+    structureDict["computationTime"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.globalTimers;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development)";
+    structureDict["globalTimers"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.statistics;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "display general computation information at end of time step (steps, iterations, function calls, step rejections, ...";
+    structureDict["statistics"] = d;
+
+    return structureDict;
+}
+
+//! AUTO: read access to structure; converting into dictionary without type info
+inline py::dict GetDictionary(const ShowSettings& data) {
+    auto structureDict = py::dict();
+    structureDict["computationTime"] = data.computationTime;
+    structureDict["globalTimers"] = data.globalTimers;
+    structureDict["statistics"] = data.statistics;
+    return structureDict;
+}
+
+//! AUTO: write access to data structure; converting dictionary d into structure
+inline void SetDictionary(ShowSettings& data, const py::dict& d) {
+    EPyUtils::FromPython(d["computationTime"], data.computationTime, "ShowSettings.computationTime");
+    EPyUtils::FromPython(d["globalTimers"], data.globalTimers, "ShowSettings.globalTimers");
+    EPyUtils::FromPython(d["statistics"], data.statistics, "ShowSettings.statistics");
+}
+
+//! AUTO: read access to structure; converting into dictionary
 inline py::dict GetDictionaryWithTypeInfo(const SimulationSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
     structureDict["structureDescription"] = "General Settings for simulation; according settings for solution and solvers are given in subitems of this structure";
-    structureDict["linearSolverSettings"] = GetDictionaryWithTypeInfo(data.linearSolverSettings);
+    structureDict["linearSolver"] = GetDictionaryWithTypeInfo(data.linearSolver);
     structureDict["parallel"] = GetDictionaryWithTypeInfo(data.parallel);
-    structureDict["solutionSettings"] = GetDictionaryWithTypeInfo(data.solutionSettings);
+    structureDict["show"] = GetDictionaryWithTypeInfo(data.show);
+    structureDict["solution"] = GetDictionaryWithTypeInfo(data.solution);
     structureDict["staticSolver"] = GetDictionaryWithTypeInfo(data.staticSolver);
     structureDict["timeIntegration"] = GetDictionaryWithTypeInfo(data.timeIntegration);
     d = py::dict(); //reset local dict
@@ -1476,43 +1676,11 @@ inline py::dict GetDictionaryWithTypeInfo(const SimulationSettings& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.displayComputationTime;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "display computation time statistics at end of solving";
-    structureDict["displayComputationTime"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.displayGlobalTimers;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development)";
-    structureDict["displayGlobalTimers"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.displayStatistics;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "display general computation information at end of time step (steps, iterations, function calls, step rejections, ...";
-    structureDict["displayStatistics"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.linearSolverType;
-    d["type"] = "LinearSolverType";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type)";
-    structureDict["linearSolverType"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.outputPrecision;
+    d["value"] = data.consolePrecision;
     d["type"] = "UInt";
     d["size"] = std::vector<int>{1};
-    d["description"] = "precision for floating point numbers written to console; e.g. values written by solver";
-    structureDict["outputPrecision"] = d;
+    d["description"] = "precision for floating point numbers written to the console, e.g. the values written by the solver; the precision of the solution and sensor files is solution.precision";
+    structureDict["consolePrecision"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -1528,34 +1696,28 @@ inline py::dict GetDictionaryWithTypeInfo(const SimulationSettings& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const SimulationSettings& data) {
     auto structureDict = py::dict();
-    structureDict["linearSolverSettings"] = GetDictionary(data.linearSolverSettings);
+    structureDict["linearSolver"] = GetDictionary(data.linearSolver);
     structureDict["parallel"] = GetDictionary(data.parallel);
-    structureDict["solutionSettings"] = GetDictionary(data.solutionSettings);
+    structureDict["show"] = GetDictionary(data.show);
+    structureDict["solution"] = GetDictionary(data.solution);
     structureDict["staticSolver"] = GetDictionary(data.staticSolver);
     structureDict["timeIntegration"] = GetDictionary(data.timeIntegration);
     structureDict["cleanUpMemory"] = data.cleanUpMemory;
-    structureDict["displayComputationTime"] = data.displayComputationTime;
-    structureDict["displayGlobalTimers"] = data.displayGlobalTimers;
-    structureDict["displayStatistics"] = data.displayStatistics;
-    structureDict["linearSolverType"] = data.linearSolverType;
-    structureDict["outputPrecision"] = data.outputPrecision;
+    structureDict["consolePrecision"] = data.consolePrecision;
     structureDict["pauseAfterEachStep"] = data.pauseAfterEachStep;
     return structureDict;
 }
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(SimulationSettings& data, const py::dict& d) {
-    SetDictionary(data.linearSolverSettings, py::cast<py::dict>(d["linearSolverSettings"]));
+    SetDictionary(data.linearSolver, py::cast<py::dict>(d["linearSolver"]));
     SetDictionary(data.parallel, py::cast<py::dict>(d["parallel"]));
-    SetDictionary(data.solutionSettings, py::cast<py::dict>(d["solutionSettings"]));
+    SetDictionary(data.show, py::cast<py::dict>(d["show"]));
+    SetDictionary(data.solution, py::cast<py::dict>(d["solution"]));
     SetDictionary(data.staticSolver, py::cast<py::dict>(d["staticSolver"]));
     SetDictionary(data.timeIntegration, py::cast<py::dict>(d["timeIntegration"]));
     EPyUtils::FromPython(d["cleanUpMemory"], data.cleanUpMemory, "SimulationSettings.cleanUpMemory");
-    EPyUtils::FromPython(d["displayComputationTime"], data.displayComputationTime, "SimulationSettings.displayComputationTime");
-    EPyUtils::FromPython(d["displayGlobalTimers"], data.displayGlobalTimers, "SimulationSettings.displayGlobalTimers");
-    EPyUtils::FromPython(d["displayStatistics"], data.displayStatistics, "SimulationSettings.displayStatistics");
-    EPyUtils::FromPython(d["linearSolverType"], data.linearSolverType, "SimulationSettings.linearSolverType");
-    EPyUtils::FromPython(d["outputPrecision"], data.outputPrecision, EPyUtils::RangeCheck::nonNegative, "SimulationSettings.outputPrecision");
+    EPyUtils::FromPython(d["consolePrecision"], data.consolePrecision, EPyUtils::RangeCheck::nonNegative, "SimulationSettings.consolePrecision");
     EPyUtils::FromPython(d["pauseAfterEachStep"], data.pauseAfterEachStep, "SimulationSettings.pauseAfterEachStep");
 }
 
@@ -1705,7 +1867,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
     d["value"] = data.renderWindowString;
     d["type"] = "String";
     d["size"] = std::vector<int>{1};
-    d["description"] = "string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings)";
+    d["description"] = "string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to information in simulationSettings.solution.file)";
     structureDict["renderWindowString"] = d;
 
     d = py::dict(); //reset local dict
@@ -2853,7 +3015,7 @@ inline void SetDictionary(VSettingsLoads& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const VSettingsTraces& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
-    structureDict["structureDescription"] = "Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics.";
+    structureDict["structureDescription"] = "Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solution.sensors.writePeriod) may lead to slow graphics.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.lineWidth;

@@ -114,13 +114,13 @@ sDisp = mbs.AddSensor(SensorNode(nodeNumber=n1B, outputVariableType=exu.OutputVa
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 simulationSettings.staticSolver.useLoadFactor = False   #the drive follows the user function of t in [0, 1]
 simulationSettings.staticSolver.numberOfLoadSteps = numberOfLoadSteps
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-8
 simulationSettings.staticSolver.newton.absoluteTolerance = 1e-7
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = 1/numberOfLoadSteps
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = 1/numberOfLoadSteps
 
 SC.visualizationSettings.bodies.beams.axialTiling = 50
 SC.visualizationSettings.view0.scene.drawWorldBasis = True

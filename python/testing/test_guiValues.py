@@ -471,7 +471,7 @@ def testEveryFindHitNamesASettingThatExists(visualizationLeaves):
 def testEveryEnumSettingCouldBePickedFromAList(leaves, comboLists):
     """an enum that has no list is edited as free text, where a typo is a silent wrong value.
     GetComboBoxListsDict named three enum types by hand, and
-    timeIntegration.explicitIntegration.dynamicSolverType was not one of them; it builds the
+    timeIntegration.solverType was not one of them; it builds the
     lists from the module now, so a new enum arrives here by itself"""
     missing = sorted({leafType + ' (' + path + ')' for (path, _, leafType, _) in leaves
                       if leafType.endswith('Type') and leafType not in comboLists})

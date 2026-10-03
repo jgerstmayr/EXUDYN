@@ -117,8 +117,8 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 fact = 2000
 simulationSettings.timeIntegration.numberOfSteps = 1*fact
 simulationSettings.timeIntegration.endTime = 0.0001*fact
-#simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact
-simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/fact
+#simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/fact
+simulationSettings.solution.sensors.writePeriod = simulationSettings.timeIntegration.endTime/fact
 
 simulationSettings.timeIntegration.verboseMode = 1
 

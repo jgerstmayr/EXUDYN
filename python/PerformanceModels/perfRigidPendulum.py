@@ -52,17 +52,17 @@ simulationSettings.timeIntegration.endTime = 2000
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8*100 #10000
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-10
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.7
-simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
+simulationSettings.show.statistics = True
+simulationSettings.show.computationTime = True
 
 #SC.visualizationSettings.nodes.defaultSize = 0.05
 
-simulationSettings.solutionSettings.solutionInformation = "Rigid pendulum"
+simulationSettings.solution.file.information = "Rigid pendulum"
 
 if not testIsActive:
     SC.renderer.Start()

@@ -64,13 +64,13 @@ mbs.AddLoad({'loadType': 'ForceVector',  'markerNumber': bodyMarker,  'loadVecto
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.write=False
 tEnd = 1
 steps = 1000
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
-simulationSettings.displayStatistics = False
+simulationSettings.show.statistics = False
 
 mbs.SolveDynamic(simulationSettings)
 

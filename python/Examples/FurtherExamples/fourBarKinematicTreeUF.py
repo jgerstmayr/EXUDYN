@@ -163,14 +163,14 @@ SC.visualizationSettings.nodes.drawNodesAsPoint = False
 SC.visualizationSettings.view0.scene.drawWorldBasis = True
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.linearSolverSettings.ignoreSingularJacobian = True
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense
-#simulationSettings.timeIntegration.simulateInRealtime = True
+simulationSettings.linearSolver.ignoreSingularJacobian = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenDense
+#simulationSettings.timeIntegration.realtime.active = True
 simulationSettings.timeIntegration.endTime = 2
 simulationSettings.timeIntegration.numberOfSteps = 2000
 #simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 
 #solve dynamic problem with default parameters
 SC.renderer.Start()

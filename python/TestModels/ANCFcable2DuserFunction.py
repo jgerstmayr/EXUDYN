@@ -76,11 +76,11 @@ stepSize = 5e-3
 
 simulationSettings = exu.SimulationSettings()
 
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 simulationSettings.timeIntegration.verboseMode = 1 #turn off, because of lots of output
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-# simulationSettings.displayComputationTime = True
-# simulationSettings.displayStatistics = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+# simulationSettings.show.computationTime = True
+# simulationSettings.show.statistics = True
 
 simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
 simulationSettings.timeIntegration.endTime = endTime

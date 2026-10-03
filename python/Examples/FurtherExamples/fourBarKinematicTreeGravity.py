@@ -127,11 +127,11 @@ mbs.Assemble()
 mbs.ComputeSystemDegreeOfFreedom(verbose=True)
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.write=False
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) #must be integer
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.timeIntegration.simulateInRealtime = True
+simulationSettings.timeIntegration.realtime.active = True
 
 sc.visualizationSettings.view0.scene.drawWorldBasis = True
 

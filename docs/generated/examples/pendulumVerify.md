@@ -305,26 +305,26 @@ if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https:
     SC.visualizationSettings.loads.defaultSize = 10
     
     
-    simulationSettings.solutionSettings.solutionInformation = "pendulum verification"
+    simulationSettings.solution.file.information = "pendulum verification"
     
     h=0.25e-3*4
     tEnd = 0.25*8
     
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
     simulationSettings.timeIntegration.verboseMode = 1
     #simulationSettings.timeIntegration.verboseModeFile = 3
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     
-    simulationSettings.solutionSettings.sensorsWritePeriod = h
+    simulationSettings.solution.sensors.writePeriod = h
     
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
-    #simulationSettings.displayStatistics = True
-    #simulationSettings.displayComputationTime = True
+    #simulationSettings.show.statistics = True
+    #simulationSettings.show.computationTime = True
     
     #create animation:
-    # simulationSettings.solutionSettings.recordImagesInterval = 0.005
+    # simulationSettings.solution.recordImagesInterval = 0.005
     # SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
     SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
     SC.visualizationSettings.openGL.multiSampling = 4

@@ -176,7 +176,7 @@ simulationSettings.timeIntegration.numberOfSteps = int(T/h)  #1000 steps for tes
 #simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8 #10000
 simulationSettings.timeIntegration.verboseMode = 1 #10000
 
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-3
+simulationSettings.solution.file.writePeriod = 1e-3
 #simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.7 in paper of Arnold and Bruls
 

@@ -71,13 +71,13 @@ simulationSettings = exu.SimulationSettings()
 
 tEnd = 1e6
 h = 1000
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 # SC.visualizationSettings.nodes.drawNodesAsPoint = False

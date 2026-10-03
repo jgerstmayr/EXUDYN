@@ -285,9 +285,9 @@ class InvertedNPendulumEnv(OpenAIGymInterfaceEnv):
         self.simulationSettings.timeIntegration.numberOfSteps = nSubSteps #this is the number of solver steps per RL-step
         self.simulationSettings.timeIntegration.endTime = 0 #will be overwritten in step
         self.simulationSettings.timeIntegration.verboseMode = 0
-        self.simulationSettings.solutionSettings.writeSolutionToFile = False #set True only for postprocessing
-        #self.simulationSettings.timeIntegration.simulateInRealtime = True
-        self.simulationSettings.solutionSettings.solutionInformation = 'inverted '+str(self.nLinks)+'-link pendulum'
+        self.simulationSettings.solution.file.write = False #set True only for postprocessing
+        #self.simulationSettings.timeIntegration.realtime.active = True
+        self.simulationSettings.solution.file.information = 'inverted '+str(self.nLinks)+'-link pendulum'
         
         self.simulationSettings.timeIntegration.newton.useModifiedNewton = True
         

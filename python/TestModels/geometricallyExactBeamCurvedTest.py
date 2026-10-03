@@ -51,7 +51,7 @@ def Bend(force):
     mbs.AddLoad(LoadForceVector(markerNumber=mbs.AddMarker(MarkerNodePosition(nodeNumber=nodes[-1])), loadVector=[0, 0, force]))
     mbs.Assemble()
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     simulationSettings.staticSolver.numberOfLoadSteps = 20
     simulationSettings.staticSolver.newton.relativeTolerance = 1e-10
     mbs.SolveStatic(simulationSettings)

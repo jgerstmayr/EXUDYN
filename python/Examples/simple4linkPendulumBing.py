@@ -67,8 +67,8 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 10000
 simulationSettings.timeIntegration.endTime = 10
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.01
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.01
 
 SC.renderer.Start()
 SC.renderer.DoIdleTasks()

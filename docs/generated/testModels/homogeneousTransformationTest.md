@@ -76,7 +76,7 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 100
 simulationSettings.timeIntegration.endTime = 0.5
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 mbs.SolveDynamic(simulationSettings)
 
 A = mbs.GetObjectOutputBody(body['bodyNumber'], exu.OutputVariableType.RotationMatrix, localPosition=pLocal).reshape(3, 3)

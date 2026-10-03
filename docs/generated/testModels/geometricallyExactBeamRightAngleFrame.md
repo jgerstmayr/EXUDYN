@@ -78,13 +78,13 @@ sTip = mbs.AddSensor(SensorNode(nodeNumber=nodesArm2[-1], outputVariableType=exu
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 simulationSettings.staticSolver.useLoadFactor = False   #the load follows the user function of t in [0, 1]
 simulationSettings.staticSolver.numberOfLoadSteps = 240
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-8
 simulationSettings.staticSolver.newton.absoluteTolerance = 1e-7 #forces of 1 N; the default 1e-10 is below the round-off
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = 1e-4
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = 1e-4
 
 mbs.SolveStatic(simulationSettings)
 

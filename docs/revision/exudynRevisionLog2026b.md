@@ -12434,3 +12434,52 @@ with `mermaidx` and a test of the issue tracker uses, is in the test group. `ARC
 `condaEnvironments.md` say so. Checked: the html build (the SVGs on the pages, no mermaid left) and `exudev docs --pdf`
 (the charts as vector graphics, `Newton()` on one page with its caption). Test: `test_buildFigures.py` (every chart
 compiled from its current source; a changed one is stale).
+
+<a id="rg12-34"></a>
+### RG12.34 — the simulation settings renamed and restructured (2026-10-04, #2813)
+
+The map of RG12.31 as confirmed by the maintainer (2026-10-04: lower case `show.*`, `file.write`, `file.name` and
+`restart.name`, `explicit` in Python, `consolePrecision` for the top `outputPrecision`, `solverType` in `SolveDynamic`
+an override for the run).
+
+**Definitions** (`structureDefsSimulationSettings.py`): new classes `SolutionFileExportSettings`,
+`SolutionFileSettings`, `SolutionSensorsSettings`, `SolutionRestartSettings`, `RealtimeSettings`, `ShowSettings`;
+`SolutionSettings` holds `file`, `sensors`, `restart`, `precision`, `flushFilesImmediately`,
+`solverInformationFileName`, `recordImagesInterval`; `LinearSolverSettings` takes `solverType`;
+`TimeIntegrationSettings` takes `solverType` (default `GeneralizedAlpha`), `explicit` and `realtime`. **The old names**
+are deprecated members (`Deprecated('1.12.256', 2031)`): renames in their own structure (`newton.newtonResidualMode`,
+`useNewtonSolver`, `forODE2connectors`, `constrainODE1coordinates`, `outputPrecision`), paths from the top
+(`linearSolverType`, `display...`, the realtime members), and **a deprecated substructure** - `solutionSettings`,
+`linearSolverSettings`, `timeIntegration.explicitIntegration` - as a class of its own (`SolutionSettingsDeprecated`,
+...) whose members all forward, the pattern of `visualizationSettings.window`; so RG12.34.1 needed no new mechanism, only
+three fixes in `structureHeaderEmitter`: a deprecated member of the **top** structure forwards to itself (no backlink;
+the warning names it without the structure), the copy of the top structure does not copy forwarding names, and a path is
+written with the **C++ names** of its members (`CppPath`): `explicit` and `export` are keywords of C++, so their members
+are `explicitSettings` and `exportSettings` (`cplusplusName`), and the printed structure shows the Python names.
+
+**C++**: some 150 places (`CSolverBase`, the solvers, `CSystem`, the markers for `forODE2Connectors`); the explicit solver
+takes `timeIntegration.solverType` and refuses an implicit one with a message naming the setting (its default was
+DOPRI5 inside `explicitIntegration`; through `SolveDynamic` nothing changes). The binary solution file still takes the
+size of its numbers from the **console** precision (`consolePrecision >= 8`: double), as it did with `outputPrecision` -
+its description says `solution.precision`: **a question for the maintainer**, which one is meant.
+
+**`mbs.SolveDynamic(solverType=None)`**: None takes `timeIntegration.solverType`; a given one is set into the settings
+for the run and set back in a `finally`, as #2535 does for `useNewmark`.
+
+**`exudev scripts --fix`** (`checkUserScripts.py`): rewrites every renamed setting of a script - the attribute chain
+from where the old structure starts, by the AST and its byte columns, on one line; a chain over two lines, or a
+substructure held in a variable, stays reported. It also knows the deprecated members of the top structures now
+(`simulationSettings.linearSolverType`; `exu.config.outputPrecision` is not one), a rename in a shared structure without
+its parent, and no longer reports a deprecated substructure by itself. Run over `python/exudyn`, `Examples`,
+`TestModels`, `MiniExamples`, `PerformanceModels` and `python/testing`: **330 files** rewritten - the deprecation tests
+and `test_exceptions.py`/`test_settingsBacklinks.py`, which test old names on purpose, restored; the old visualization
+names (`general.drawWorldBasis`, 1.10) were rewritten with them. Texts - descriptions in `definitions/`, docstrings,
+comments, the manual - by a table of patterns (221 files), the few left by hand.
+
+**Tests**: test model `simulationSettingsRenamesTest.py` - all 50 old names written under the old name and read under
+the new one and back, 100 uses recorded; `test_checkDeprecations.py` checks that the test model lists every setting
+deprecated by #2813; `parameterConversionTest` recorded again (only the names); stubtest baseline (the deprecated
+classes and names, as in RG12.1); `test_checkUserScripts` with the new names. The test suite otherwise unchanged.
+
+**Not done**: a dictionary of settings stored by an earlier version (`SetDictionary` with `solutionSettings` keys) is not
+forwarded - the keys are not read, as before for any unknown key (RG12.34.7, left open).

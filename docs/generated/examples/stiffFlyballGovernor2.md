@@ -306,7 +306,7 @@ h = 2e-5 #RK44
 #h = 1e-3
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-simulationSettings.timeIntegration.explicitIntegration.useLieGroupIntegration = useLieGroup
+simulationSettings.timeIntegration.explicit.useLieGroupIntegration = useLieGroup
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
@@ -315,11 +315,11 @@ simulationSettings.timeIntegration.endTime = tEnd
 SC.visualizationSettings.markers.show = True
 #SC.visualizationSettings.markers.showNumbers = True
 
-#simulationSettings.displayComputationTime = True
+#simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
-simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/2000
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/2000
+simulationSettings.solution.sensors.writePeriod = simulationSettings.timeIntegration.endTime/2000
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/2000
 
 if nodeType != exu.NodeType.RotationRotationVector:
     simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True

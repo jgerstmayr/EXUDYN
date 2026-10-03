@@ -91,19 +91,19 @@ for i in range(nMasses):
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
-simulationSettings.solutionSettings.solutionWritePeriod = 0.005
-simulationSettings.solutionSettings.sensorsWritePeriod = stepSize  #output interval
+simulationSettings.solution.file.write = (not testIsActive) #only the SolutionViewer reads it (#2492)
+simulationSettings.solution.file.writePeriod = 0.005
+simulationSettings.solution.sensors.writePeriod = stepSize  #output interval
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
-#simulationSettings.timeIntegration.simulateInRealtime = True
+#simulationSettings.timeIntegration.realtime.active = True
 simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-8
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 SC.visualizationSettings.openGL.multiSampling = 1

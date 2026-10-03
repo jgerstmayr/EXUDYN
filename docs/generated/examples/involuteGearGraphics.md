@@ -195,19 +195,19 @@ stepSize = 1e-4
 tEnd = 2
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.001
-simulationSettings.solutionSettings.sensorsWritePeriod = stepSize  #output interval
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.001
+simulationSettings.solution.sensors.writePeriod = stepSize  #output interval
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
-# simulationSettings.timeIntegration.simulateInRealtime = True
-#simulationSettings.timeIntegration.realtimeFactor = 0.5
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.show.statistics = True
+simulationSettings.show.computationTime = True
+# simulationSettings.timeIntegration.realtime.active = True
+#simulationSettings.timeIntegration.realtime.factor = 0.5
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 SC.visualizationSettings.view0.window.renderWindowSize=[1600,1200]

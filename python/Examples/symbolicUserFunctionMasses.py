@@ -136,16 +136,16 @@ if ff>2: stepSize = 0.5e-5
 
 # endTime = 0.01
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-# simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.writePeriod = 0.01
+# simulationSettings.solution.file.write = False
 
 simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
 simulationSettings.timeIntegration.endTime = endTime
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.parallel.numberOfThreads = 8
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-#simulationSettings.displayComputationTime = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+#simulationSettings.show.computationTime = True
 
 SC.visualizationSettings.nodes.drawNodesAsPoint = False
 SC.visualizationSettings.nodes.tiling = 6

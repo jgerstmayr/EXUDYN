@@ -275,13 +275,13 @@ tEnd = 10
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
-# simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.solutionWritePeriod = 0.02
+# simulationSettings.solution.file.write = False
+simulationSettings.solution.file.writePeriod = 0.02
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.solutionSettings.sensorsWritePeriod = stepSize
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.displayComputationTime = True
+simulationSettings.solution.sensors.writePeriod = stepSize
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.show.computationTime = True
 
 if True: #set False if you do not like to do raytracing
     #raytracing options

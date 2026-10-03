@@ -125,7 +125,7 @@ simulationSettings.timeIntegration.startTime = 0
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 
 #SC.visualizationSettings.nodes.defaultSize = 0.05
 

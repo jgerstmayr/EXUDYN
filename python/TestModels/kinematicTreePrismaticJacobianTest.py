@@ -52,7 +52,7 @@ for (q0, alpha) in cases:
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.numberOfSteps = 100
     simulationSettings.timeIntegration.endTime = 1
-    simulationSettings.solutionSettings.writeSolutionToFile = not testIsActive
+    simulationSettings.solution.file.write = not testIsActive
     mbs.SolveDynamic(simulationSettings)
 
     q = mbs.GetNodeOutput(nGeneric, exu.OutputVariableType.Coordinates)

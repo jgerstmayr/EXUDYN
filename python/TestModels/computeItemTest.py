@@ -45,7 +45,7 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 100
 simulationSettings.timeIntegration.endTime = 0.2
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 mbs.SolveDynamic(simulationSettings) #some state that is not the initial one
 
 body = b0['bodyNumber']

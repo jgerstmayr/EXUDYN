@@ -185,8 +185,8 @@ h=0.001  #use small step size to detext contact switching
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
+simulationSettings.solution.file.writePeriod = 0.01
+simulationSettings.solution.sensors.writePeriod = 0.01
 simulationSettings.timeIntegration.verboseMode = 1 #print some progress
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
@@ -207,8 +207,8 @@ SC.visualizationSettings.view0.window.renderWindowSize = [1600,1200]
 SC.visualizationSettings.view0.scene.drawCoordinateSystem=True
 
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
-simulationSettings.displayComputationTime = True
-simulationSettings.displayStatistics = True
+simulationSettings.show.computationTime = True
+simulationSettings.show.statistics = True
 
 
 if not testIsActive:

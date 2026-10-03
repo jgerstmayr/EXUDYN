@@ -167,17 +167,17 @@ if not testIsActive:
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
-simulationSettings.solutionSettings.solutionWritePeriod = 0.04
+simulationSettings.solution.file.write = (not testIsActive)
+simulationSettings.solution.file.writePeriod = 0.04
 simulationSettings.timeIntegration.verboseMode = 1
 # simulationSettings.timeIntegration.stepInformation = 255#8192-1
 #simulationSettings.timeIntegration.verboseModeFile = 3
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.solutionSettings.sensorsWritePeriod = h
+simulationSettings.solution.sensors.writePeriod = h
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
-#simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+#simulationSettings.show.statistics = True
+simulationSettings.show.computationTime = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
  
 if not testIsActive:

@@ -42,7 +42,7 @@ for twice in [False, True]:
     simulationSettings.timeIntegration.numberOfSteps = 100
     simulationSettings.timeIntegration.endTime = 1
     simulationSettings.timeIntegration.newton.useModifiedNewton = False
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
     solver = exu.MainSolverImplicitSecondOrder()
     solver.SolveSystem(mbs, simulationSettings)
     q = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates)

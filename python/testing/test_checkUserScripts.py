@@ -161,13 +161,13 @@ def testDeprecationsTheCppWarnsAbout(tables):
 def testAFileNamedWithoutADirectoryIsWrittenBesideTheScript(tables):
     """the solution file, a sensor, a computed name - each named without a directory (#2718)"""
     found = Findings('import exudyn as exu\nss = exu.SimulationSettings()\n'
-                     "ss.solutionSettings.coordinatesSolutionFileName = 'static.txt'\n"
+                     "ss.solution.file.name = 'static.txt'\n"
                      "s = SensorNode(nodeNumber=0, fileName='node.txt')\n"
-                     "ss.solutionSettings.solverInformationFileName = 'info' + str(3) + '.txt'\n", tables)
+                     "ss.solution.solverInformationFileName = 'info' + str(3) + '.txt'\n", tables)
     assert len(found) == 3
     assert all("where the script runs; name a directory: 'solution/" in text for text in found)
     assert Findings('import exudyn as exu\nss = exu.SimulationSettings()\n'
-                    "ss.solutionSettings.coordinatesSolutionFileName = 'solution/static.txt'\n", tables) == []
+                    "ss.solution.file.name = 'solution/static.txt'\n", tables) == []
 
 
 def testTheOldDefaultSolutionFileIsReadFromItsNewPlace(tables):
@@ -176,7 +176,7 @@ def testTheOldDefaultSolutionFileIsReadFromItsNewPlace(tables):
                      "'solution/coordinatesSolution.txt'"]
     #unless the script writes that name itself - then it is a file beside the script, reported as such
     found = Findings('import numpy as np\nimport exudyn as exu\nss = exu.SimulationSettings()\n'
-                     "ss.solutionSettings.coordinatesSolutionFileName = 'coordinatesSolution.txt'\n"
+                     "ss.solution.file.name = 'coordinatesSolution.txt'\n"
                      "data = np.loadtxt('coordinatesSolution.txt')\n", tables)
     assert len(found) == 1 and 'where the script runs' in found[0]
 

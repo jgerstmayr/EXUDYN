@@ -154,13 +154,13 @@ h = 1e-3
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.verboseMode = 1
-# simulationSettings.timeIntegration.simulateInRealtime = True
+# simulationSettings.timeIntegration.realtime.active = True
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
-# simulationSettings.displayComputationTime = True
+# simulationSettings.show.computationTime = True
 
-simulationSettings.solutionSettings.solutionInformation = "rigid body tests"
+simulationSettings.solution.file.information = "rigid body tests"
 SC.visualizationSettings.nodes.defaultSize = 0.05
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 2

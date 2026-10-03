@@ -27,6 +27,18 @@ from structureModel import *                                            # noqa: 
 import typeModel as tm                                                  # noqa: E402
 
 
+def CppPath(path):
+    """a path of Python member names with the C++ names of the members: a member whose C++ name differs - explicit,
+    a keyword of C++, is explicitSettings (#2813) - is written with it"""
+    cppNames = {}
+    for definition in StructureDefinitions():
+        for member in definition['members']:
+            if member.get('cplusplusName') and '.' not in member['cplusplusName']:
+                cppNames[member['pythonName']] = member['cplusplusName']
+    return '.'.join(cppNames.get(name, name) for name in path.split('.'))
+
+
+
 #scalar types written through EPyUtils::FromPython: None and item
 #indices raise as for items; the U.../P... forms carry their range check
 scalarRangeForms = {'bool': None, 'float': None, 'Real': None, 'Index': None, 'Int': None,
@@ -94,7 +106,8 @@ def CopyOperations(parseInfo, parameterListSorted):
     """
     className = Header(parseInfo, 'class')
     members = [parameter['cplusplusName'] for parameter in parameterListSorted
-               if IsVariable(parameter) and not IsDeclarationOnly(parameter)]
+               if IsVariable(parameter) and not IsDeclarationOnly(parameter)
+               and not (IsDeprecatedParameter(parameter) and not IsStructureParameter(parameter))] #a forwarding name is not stored
     assignments = ''.join('      ' + name + ' = other.' + name + ';\n' for name in members)
     return ('  //! AUTO: copy constructor: a copy links ITSELF, not the original (#2603)\n'
             + '  ' + className + '(const ' + className + '& other)\n'
@@ -334,7 +347,8 @@ def StructureCppHeader(parseInfo):
                 #sees it once per source location instead of on every read of the setting
                 #source and name for exudyn.special.deprecations and exudyn.sys['deprecationUse'] (#2804, #2806)
                 topClass = TopClassName(Header(parseInfo, 'class')) or Header(parseInfo, 'class')
-                deprecatedPath = ConvertClassName2member(Header(parseInfo, 'class'))+'.'+parameter['pythonName']
+                isTopClass = (TopClassName(Header(parseInfo, 'class')) == Header(parseInfo, 'class'))
+                deprecatedPath = ('' if isTopClass else ConvertClassName2member(Header(parseInfo, 'class'))+'.')+parameter['pythonName']
                 deprecationWarning = ('PyDeprecated("' + topClass[0].lower() + topClass[1:] + '", "' + deprecatedPath + '", "'
                                       + topClass + ' parameter ' + deprecatedPath)
                 newName = Description(parameter) #a rename in the same structure is named with its structure (#2588)
@@ -344,7 +358,7 @@ def StructureCppHeader(parseInfo):
                 #and it must not dereference a backlink that was never set (#2603): a
                 #standalone sub-structure has none, and a segfault is not a diagnosis; a rename
                 #in the same structure needs no backlink (#2588)
-                if not DeprecatedForwardsInStructure(parameter):
+                if not DeprecatedForwardsInStructure(parameter) and not isTopClass: #the top structure is its own target
                     deprecationWarning += ('if (backlink == nullptr) { CHECKandTHROWstring("'
                         + ConvertClassName2member(Header(parseInfo, 'class')) + '.'
                         + parameter['pythonName'] + ' is deprecated and forwards to '
@@ -360,9 +374,9 @@ def StructureCppHeader(parseInfo):
             origType = parameter['type']
             typeStr = tm.Render(parameter['type'], 'cppStorage', 'structures')
             paramStr = parameter['cplusplusName']
-            paramAccessStr = paramStr if not IDPNS else 'backlink->'+Description(parameter)
-            if IDPNS and DeprecatedForwardsInStructure(parameter): #a rename in the same structure (#2588)
-                paramAccessStr = Description(parameter)
+            paramAccessStr = paramStr if not IDPNS else 'backlink->'+CppPath(Description(parameter))
+            if IDPNS and (DeprecatedForwardsInStructure(parameter) or TopClassName(Header(parseInfo, 'class')) == Header(parseInfo, 'class')):
+                paramAccessStr = CppPath(Description(parameter)) #a rename in the same structure (#2588), or a path from the top structure in it (#2813)
 
             paramStrPure = parameter['cplusplusName'] #without 'cSolver.'
             if (paramStrPure.find('.') != -1): #for linked class; mainly solver
@@ -594,7 +608,8 @@ def StructureCppHeader(parseInfo):
             if parameter['type'] == 'StdArray33F': #special case of 3x3 Matrix, which is not printable
                 s += '#ifndef __APPLE__\n' #does not compile currently
 
-            s+='    os << "  ' + paramStr + ' = " << ' + preStr + refChar + paramStr + postStr + ' << "\\n";\n'
+            label = parameter['pythonName'] if paramStr.find('.') == -1 else paramStr #the Python name, also where the C++ one differs (#2813)
+            s+='    os << "  ' + label + ' = " << ' + preStr + refChar + paramStr + postStr + ' << "\\n";\n'
 
             if parameter['type'] == 'StdArray33F': #special case of 3x3 Matrix, which is not printable
                 s += '#endif\n' #does not compile currently

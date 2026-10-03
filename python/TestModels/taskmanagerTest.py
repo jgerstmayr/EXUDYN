@@ -138,8 +138,8 @@ for nMasses in [0, 1, 2, 4]:
                         simulationSettings = exu.SimulationSettings()
                         simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
                         simulationSettings.timeIntegration.endTime = tEnd
-                        # simulationSettings.displayStatistics = True
-                        # simulationSettings.displayComputationTime = True
+                        # simulationSettings.show.statistics = True
+                        # simulationSettings.show.computationTime = True
                         simulationSettings.timeIntegration.verboseMode = 0
                         simulationSettings.staticSolver.verboseMode = 0
                         

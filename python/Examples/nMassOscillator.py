@@ -273,17 +273,17 @@ SC.visualizationSettings.general.autoFitScene = True #otherwise, renderState not
 #setup simulation settings and run interactive dialog:
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.05 #data not used
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.1 #data not used
-simulationSettings.solutionSettings.solutionInformation = 'n-mass-oscillatior'
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.05 #data not used
+simulationSettings.solution.sensors.writePeriod = 0.1 #data not used
+simulationSettings.solution.file.information = 'n-mass-oscillatior'
 simulationSettings.timeIntegration.verboseMode = 1 #turn off, because of lots of output
 
 simulationSettings.timeIntegration.numberOfSteps = int(1000)
 simulationSettings.timeIntegration.endTime = 5
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-simulationSettings.displayComputationTime = True
+simulationSettings.show.computationTime = True
 # simulationSettings.numberOfThreads = 1
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

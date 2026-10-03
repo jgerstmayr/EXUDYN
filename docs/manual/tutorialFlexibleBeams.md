@@ -137,10 +137,10 @@ Note that for 2D objects, we may only fix $X$- and $Y$-translations, as well as 
   simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
   simulationSettings.timeIntegration.endTime = tEnd
   simulationSettings.timeIntegration.verboseMode = 1
-  simulationSettings.solutionSettings.solutionWritePeriod = 0.005
-  simulationSettings.solutionSettings.writeSolutionToFile = True
+  simulationSettings.solution.file.writePeriod = 0.005
+  simulationSettings.solution.file.write = True
 
-  simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+  simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
   simulationSettings.timeIntegration.newton.useModifiedNewton = True #for faster simulation
 
   ## add some visualization settings

@@ -180,11 +180,11 @@ for testCase, nFact in testCases.items():
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.verboseMode = (not testIsActive)
     simulationSettings.staticSolver.verboseMode = (not testIsActive)
-    simulationSettings.solutionSettings.solutionWritePeriod = 0.02
-    simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
-    # simulationSettings.displayComputationTime = True
+    simulationSettings.solution.file.writePeriod = 0.02
+    simulationSettings.solution.file.write = (not testIsActive) #only the SolutionViewer reads it (#2492)
+    # simulationSettings.show.computationTime = True
 
-    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     simulationSettings.timeIntegration.newton.useModifiedNewton = True #for faster simulation
 
     simulationSettings.staticSolver.numberOfLoadSteps = numberOfLoadSteps

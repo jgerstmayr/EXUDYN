@@ -104,11 +104,11 @@ h=0.0005 #no visual differences for step sizes smaller than 0.0005
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-#simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.0005
-simulationSettings.solutionSettings.writeSolutionToFile = False
+#simulationSettings.solution.file.writePeriod = 0.01
+simulationSettings.solution.sensors.writePeriod = 0.0005
+simulationSettings.solution.file.write = False
 simulationSettings.timeIntegration.verboseMode = 1
-# simulationSettings.displayStatistics = True
+# simulationSettings.show.statistics = True
 
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True

@@ -103,9 +103,9 @@ simulationSettings = exu.SimulationSettings()
 f = 4000
 simulationSettings.timeIntegration.numberOfSteps = int(1*f)
 simulationSettings.timeIntegration.endTime = 0.0001*f
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/5000
-simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/2000
-#simulationSettings.displayComputationTime = True
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/5000
+simulationSettings.solution.sensors.writePeriod = simulationSettings.timeIntegration.endTime/2000
+#simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 #simulationSettings.timeIntegration.newton.useModifiedNewton = False
@@ -114,10 +114,10 @@ simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = simul
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.60 #0.62 is approx. the limit
 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
-simulationSettings.solutionSettings.coordinatesSolutionFileName= "solution/coordinatesSolution.txt"
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.name= "solution/coordinatesSolution.txt"
+simulationSettings.solution.file.write=False
 
-#simulationSettings.displayStatistics = True
+#simulationSettings.show.statistics = True
 
 SC.visualizationSettings.nodes.defaultSize = 0.05
 

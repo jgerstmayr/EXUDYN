@@ -35,7 +35,7 @@ The basic solvers need a `MainSystem`, usually denoted as `mbs`, to be solved. F
 - `simulationSettings`: This is a big structure, containing all solver options; note that only the according options for `staticSolver` or `timeIntegration` are used. Look at the detailed description of these options in {ref}`sec-simulationsettingsmain`. These settings influence the output rate and output quantity of the solution, solver reporting, accuracy, solver type, etc. Specifically, the `verboseMode` may be increased (2-4) to see the behavior of the solver and intermediate quantities.
 - `solverType`: Only for `mbs.SolveDynamic(...)`: This is a simpler access to the solverType given in the internal structure of
   - `timeIntegration.generalizedAlpha` and
-  - `simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType`.
+  - `simulationSettings.timeIntegration.solverType`.
 
 The function `mbs.SolveDynamic(...)` sets the according variables internally. For available solver types, see the description of `exudyn.DynamicSolverType` in {ref}`sec-dynamicsolvertype`.
 
@@ -110,7 +110,7 @@ Solver flow chart for DiscontinuousIteration(), which is run for every solved st
 ```{figure} /docs/figures/solverNewton.*
 :height: 880
 
-Solver flow chart for Newton(), which is run inside the DiscontinuousIteration(). The shown case is valid for newtonResidualMode = 0.
+Solver flow chart for Newton(), which is run inside the DiscontinuousIteration(). The shown case is valid for residualMode = 0.
 ```
 
 (sec-explicitsolver)=
@@ -234,7 +234,7 @@ Basically, the integration formulas, see {ref}`sec-rungekuttamethod` are extende
 Lie group integration is currently only available for `NodeRigidBodyRotVecLG` used in `ObjectRigidBody` (3D rigid body).
 `FFRFreducedOrder` will be extended to such nodes in the near future.
 To get Lie group integrators running with rigid body models, all 3D node types need to be set to `NodeRigidBodyRotVecLG` and
-set `explicitIntegration.useLieGroupIntegration = True`.
+set `explicit.useLieGroupIntegration = True`.
 
 ### Constraints with explicit solvers
 
@@ -242,7 +242,7 @@ Explicit solvers generally do not solve for algebraic constraints, except for ve
 All connectors having the additional `type=Constraint`, see the according object in {ref}`sec-item-objectconnectorspringdamper`ff.,
 are in general not solvable by explicit solvers.
 Currently, only `CoordinateConstraint` with one coordinate fixed to ground can be accounted for,
-if `explicitIntegration.eliminateConstraints == True`.
+if `explicit.eliminateConstraints == True`.
 However, this offers the great flexibility to compute finite elements (imported meshes or ANCF beams) to be (partially) fixed to ground.
 A `CoordinateConstraint` that fixes a coordinate with index $j$ to ground leads to the simple algebraic {ref}`ODE2 <ODE2>` equation
 
@@ -251,7 +251,7 @@ $$
 $$
 which can be solved by the implemented explicit solvers by just setting $q_j = 0$ previously to every computation and $\dot q_j = 0$ after every {ref}`RHS <RHS>` evaluation.
 
-NOTE that, if `explicitIntegration.eliminateConstraints == False`, constraints are ignored by the explicit solver (and all algebraic variables are set to zero). This may be wanted (e.g. to investigate the free motion of bodies), but in general leads to wrong and meaningless solution.
+NOTE that, if `explicit.eliminateConstraints == False`, constraints are ignored by the explicit solver (and all algebraic variables are set to zero). This may be wanted (e.g. to investigate the free motion of bodies), but in general leads to wrong and meaningless solution.
 
 (sec-implicittrapezoidalsolver)=
 ## Implicit trapezoidal rule-based, Newmark and Generalized-alpha solver

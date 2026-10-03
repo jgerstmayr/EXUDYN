@@ -348,7 +348,7 @@ SC.visualizationSettings.view0.window.renderWindowSize=[1280,720]
 SC.visualizationSettings.openGL.multiSampling = 4
 
 #create animation:
-# simulationSettings.solutionSettings.recordImagesInterval = 0.005
+# simulationSettings.solution.recordImagesInterval = 0.005
 # SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
 
@@ -356,24 +356,24 @@ SC.visualizationSettings.openGL.multiSampling = 4
 mbs.Assemble() #initialize bodies, assemble system; necessary to simulate
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionInformation = "ObjectFFRFreducedOrder test"
+simulationSettings.solution.file.information = "ObjectFFRFreducedOrder test"
 
 h=1e-3
 tEnd = 2
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = h
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = h
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.verboseModeFile = 3
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-simulationSettings.solutionSettings.sensorsWritePeriod = h
+simulationSettings.solution.sensors.writePeriod = h
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
-#simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
+#simulationSettings.show.statistics = True
+simulationSettings.show.computationTime = True
 
 
 # # Start renderer and Simulate

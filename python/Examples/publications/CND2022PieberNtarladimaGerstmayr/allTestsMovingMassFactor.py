@@ -466,9 +466,9 @@ for x in range(nb):
             simulationSettings.timeIntegration.adaptiveStep = True #disable adaptive step reduction
             ##############################################################
             # IMPORTANT!!!!!!!!!
-            simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse #sparse solver !!!!!!!!!!!!!!!
+            simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse #sparse solver !!!!!!!!!!!!!!!
             ##############################################################
-            simulationSettings.displayStatistics = False
+            simulationSettings.show.statistics = False
             
             success = mbs.SolveDynamic(simulationSettings)
 

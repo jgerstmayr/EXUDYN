@@ -64,13 +64,13 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
 tEnd = 1 #1
 steps = 1000    #1000
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-3
+simulationSettings.solution.file.writePeriod = 1e-3
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.displayStatistics = False
+simulationSettings.show.statistics = False
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.write=False
 
 if not testIsActive: 
     SC.renderer.Start()

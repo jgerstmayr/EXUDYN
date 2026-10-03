@@ -164,8 +164,8 @@ if not testIsActive:
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = 1e-5
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = 1e-5
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.minimumStepSize = 1e-10
@@ -181,9 +181,9 @@ simulationSettings.timeIntegration.adaptiveStepIncrease = 10    #after successfu
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
-#simulationSettings.timeIntegration.simulateInRealtime = True
+#simulationSettings.timeIntegration.realtime.active = True
 
 if not testIsActive:
     SC.renderer.Start()              #start graphics visualization

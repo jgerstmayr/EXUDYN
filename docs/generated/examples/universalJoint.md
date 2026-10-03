@@ -233,16 +233,16 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd #0.2 for testing
-simulationSettings.solutionSettings.solutionWritePeriod = h
-simulationSettings.solutionSettings.sensorsWritePeriod = h
+simulationSettings.solution.file.writePeriod = h
+simulationSettings.solution.sensors.writePeriod = h
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
 
-simulationSettings.timeIntegration.simulateInRealtime = True
-simulationSettings.timeIntegration.realtimeFactor = 0.2
+simulationSettings.timeIntegration.realtime.active = True
+simulationSettings.timeIntegration.realtime.factor = 0.2
 
 SC.visualizationSettings.nodes.show = False
 SC.visualizationSettings.markers.show = False
@@ -254,14 +254,14 @@ SC.visualizationSettings.openGL.lineWidth=2 #maximum
 SC.visualizationSettings.openGL.light0.shadow=0.15
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.light0.position = [8,8,10,0]
-simulationSettings.solutionSettings.solutionInformation = "Example universal joint"
+simulationSettings.solution.file.information = "Example universal joint"
 SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
 
 SC.visualizationSettings.markers.defaultSize=0.05
 
 if overconstrainedSystem:
-    simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense #use for overconstrained systems
-    simulationSettings.linearSolverSettings.ignoreSingularJacobian = True #use for overconstrained systems
+    simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenDense #use for overconstrained systems
+    simulationSettings.linearSolver.ignoreSingularJacobian = True #use for overconstrained systems
 
 
 if simulation:

@@ -69,7 +69,7 @@ if not testIsActive:
 
 simulationSettings = exu.SimulationSettings()
 
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.write=False
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 2
 
@@ -80,7 +80,7 @@ simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 #simulationSettings.timeIntegration.newton.useModifiedNewton = False #CHECK if works with modified Newton ...
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 
-#simulationSettings.displayStatistics = False
+#simulationSettings.show.statistics = False
 
 mbs.SolveDynamic(simulationSettings)
 if not testIsActive: 

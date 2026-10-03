@@ -59,15 +59,15 @@ mbs.Assemble()
 #mbs.systemData.Info()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.write=False
 
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 0.5
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-10 
 simulationSettings.timeIntegration.verboseMode = 1 
-simulationSettings.displayStatistics = False
+simulationSettings.show.statistics = False
 
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-4
+simulationSettings.solution.file.writePeriod = 1e-4
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 

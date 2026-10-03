@@ -115,9 +115,9 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 fact = 1000
 simulationSettings.timeIntegration.numberOfSteps = 1*fact
 simulationSettings.timeIntegration.endTime = 0.001*fact
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact
-simulationSettings.displayComputationTime = True
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/fact
+simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-7 #10000
@@ -131,15 +131,15 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
-simulationSettings.displayStatistics = True
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.show.statistics = True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
 #SC.visualizationSettings.nodes.showNumbers = True
 SC.visualizationSettings.bodies.showNumbers = False
 #SC.visualizationSettings.connectors.showNumbers = True
 SC.visualizationSettings.nodes.defaultSize = 0.025
 
-simulationSettings.solutionSettings.solutionInformation = "ANCF test halfcircle"
+simulationSettings.solution.file.information = "ANCF test halfcircle"
 
 solveDynamic = False
 if solveDynamic: 

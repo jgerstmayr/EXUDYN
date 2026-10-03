@@ -374,12 +374,12 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.solutionSettings.coordinatesSolutionFileName = 'solution/testCoords.txt'
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.solution.file.name = 'solution/testCoords.txt'
 
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.002
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.001
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.002
+simulationSettings.solution.sensors.writePeriod = 0.001
 simulationSettings.parallel.numberOfThreads = 1 #use 4 to speed up for > 100 ANCF elements
 
 simulationSettings.timeIntegration.endTime = tEnd
@@ -395,8 +395,8 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = True
 simulationSettings.timeIntegration.discontinuous.iterationTolerance = 1e-3
 simulationSettings.timeIntegration.discontinuous.maxIterations = discontinuousIterations #3
 
-simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = False
+simulationSettings.show.statistics = True
+simulationSettings.show.computationTime = False
 
 
 SC.visualizationSettings.general.circleTiling = 24
@@ -455,9 +455,9 @@ if staticEqulibrium: #precompute static equilibrium
             mbs.SetObjectParameter(obj, 'frictionCoefficient', 0.)
             mbs.SetObjectParameter(obj, 'frictionStiffness', 1e-8) #do not set to zero, as it needs to do some initialization...
             
-    # simulationSettings.solutionSettings.appendToFile=False
+    # simulationSettings.solution.file.append=False
     mbs.SolveStatic(simulationSettings, updateInitialValues=True)
-    # simulationSettings.solutionSettings.appendToFile=True    
+    # simulationSettings.solution.file.append=True    
 
     #check total force on support, expect: supportLeftX \approx 2*preStretch*EA
     supportLeftX = mbs.GetObjectOutput(constraintPulleyLeftX,variableType=exu.OutputVariableType.Force)

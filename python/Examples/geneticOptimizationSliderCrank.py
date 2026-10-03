@@ -203,8 +203,8 @@ def ParameterFunction(parameterSet):
     simulationSettings.timeIntegration.endTime = tEnd              
 
     
-    simulationSettings.solutionSettings.solutionWritePeriod = stepSize
-    simulationSettings.solutionSettings.writeSolutionToFile = useGraphics
+    simulationSettings.solution.file.writePeriod = stepSize
+    simulationSettings.solution.file.write = useGraphics
 
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8

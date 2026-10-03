@@ -419,23 +419,23 @@ SC.visualizationSettings.loads.defaultRadius= 0.001
 
 #SC.visualizationSettings.openGL.multiSampling = 4
 
-simulationSettings.solutionSettings.solutionInformation = "Slidercrank ACME "+solutionLabel
-simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/coordinates"+solutionLabel+".txt"
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.displayComputationTime = True
+simulationSettings.solution.file.information = "Slidercrank ACME "+solutionLabel
+simulationSettings.solution.file.name = "solution/coordinates"+solutionLabel+".txt"
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.show.computationTime = True
 
 h=1e-5
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-#simulationSettings.solutionSettings.solutionWritePeriod = h
+#simulationSettings.solution.file.writePeriod = h
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.verboseModeFile = 3
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-simulationSettings.solutionSettings.sensorsWritePeriod = h
-#simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/coordinatesSolutionFFRF.txt"
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.sensors.writePeriod = h
+#simulationSettings.solution.file.name = "solution/coordinatesSolutionFFRF.txt"
+simulationSettings.solution.file.write = False
 
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True

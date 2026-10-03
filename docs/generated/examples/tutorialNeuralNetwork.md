@@ -122,7 +122,7 @@ def ComputeStringLengths(pRigid):
 
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-simulationSettings.solutionSettings.writeSolutionToFile = not doTraining
+simulationSettings.solution.file.write = not doTraining
 
 # # this leads to flipped results => good example !
 # simulationSettings.staticSolver.numberOfLoadSteps = 10
@@ -136,8 +136,8 @@ simulationSettings.staticSolver.verboseMode = 0
 
 if False: #set to true to perform static/dynamic analysis and visualize results
     tEnd = 20 #for visualization of dynamic case
-    simulationSettings.solutionSettings.sensorsWritePeriod = stepSize
-    # simulationSettings.timeIntegration.simulateInRealtime = True
+    simulationSettings.solution.sensors.writePeriod = stepSize
+    # simulationSettings.timeIntegration.realtime.active = True
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
     

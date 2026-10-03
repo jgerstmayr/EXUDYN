@@ -72,9 +72,9 @@ def RunOne(className, full):
         numberOfSteps = max(1, int(numberOfSteps * regularFraction))
     ti.numberOfSteps = numberOfSteps
     ti.endTime = numberOfSteps * stepSize
-    simulationSettings.displayComputationTime = True        #switches the solver timers on
-    simulationSettings.solutionSettings.writeSolutionToFile = False
-    simulationSettings.solutionSettings.sensorsWritePeriod = ti.endTime #one value per sensor, not one per step
+    simulationSettings.show.computationTime = True        #switches the solver timers on
+    simulationSettings.solution.file.write = False
+    simulationSettings.solution.sensors.writePeriod = ti.endTime #one value per sensor, not one per step
 
     wallStart = time.perf_counter()
     mbs.SolveDynamic(simulationSettings, storeSolver=True)

@@ -69,7 +69,7 @@ def GetComboBoxListsDict(exu = None):
 
     EVERY enum of the module, not a hand-written list of three:
     this named OutputVariableType, LinearSolverType and ItemType, and
-    timeIntegration.explicitIntegration.dynamicSolverType - a DynamicSolverType - was therefore
+    timeIntegration.solverType - a DynamicSolverType - was therefore
     edited as free text, where a typo is a silent wrong value (#2597). A pybind11 enum is
     recognised by its __members__, so an enum added to the module arrives here by itself.
 
@@ -513,7 +513,7 @@ def ChangedSettingsCode(settingsStructure, reference=None, comment=True):
 
     Note:
         This is also what belongs in a solution file that has to be reproducible:
-        simulationSettings.solutionSettings.solutionInformation is written into the header of
+        simulationSettings.solution.file.information is written into the header of
         the solution file, and it takes any string.
     """
     changes = ChangedSettings(settingsStructure, reference)

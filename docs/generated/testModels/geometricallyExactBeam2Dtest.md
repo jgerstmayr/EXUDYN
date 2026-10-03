@@ -123,12 +123,12 @@ tEnd = 1
 steps = 2000
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
+simulationSettings.solution.file.writePeriod = tEnd/steps
 #simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.file.write = False
 
-#simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+#simulationSettings.solution.file.writePeriod = tEnd/steps
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
 simulationSettings.timeIntegration.newton.useModifiedNewton = True

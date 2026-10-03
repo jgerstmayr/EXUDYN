@@ -81,8 +81,8 @@ simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
-simulationSettings.solutionSettings.solutionInformation = "Rigid pendulum with switching constraints"
-simulationSettings.displayStatistics = True
+simulationSettings.solution.file.information = "Rigid pendulum with switching constraints"
+simulationSettings.show.statistics = True
 
 SC.visualizationSettings.openGL.multiSampling = 1
 

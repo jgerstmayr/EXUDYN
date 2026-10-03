@@ -104,13 +104,13 @@ sCoords=mbs.AddSensor(SensorNode(nodeNumber=n1, writeToFile = writeSensorFile,
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 2e-3  #output interval
+simulationSettings.solution.file.writePeriod = 2e-3  #output interval
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 #SC.renderer.Start()              #start graphics visualization

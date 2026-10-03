@@ -35,7 +35,7 @@ CSolverTimer has the following items:
 | `postNewton` | Real |  | 0. | discontinuous iteration / PostNewtonStep |
 | `python` | Real |  | 0. | time spent for Python functions |
 | `reactionForces` | Real |  | 0. | CqT * lambda |
-| `realtimeIdleCPU` | Real |  | 0. | time waited for next frame to compute and draw if simulateInRealtime is True |
+| `realtimeIdleCPU` | Real |  | 0. | time waited for next frame to compute and draw if timeIntegration.realtime.active is True |
 | `Reset(...)` | void |  | useSolverTimer | reset solver timings to initial state by assigning default values; useSolverTimer sets the useTimer flag |
 | `StartTimer(...)` | void |  | value | start timer function for a given variable; subtracts current CPU time from value |
 | `StopTimer(...)` | void |  | value | stop timer function for a given variable; adds current CPU time to value |

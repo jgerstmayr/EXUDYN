@@ -212,9 +212,9 @@ simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
 #for redundant constraints, use these two settings
-simulationSettings.linearSolverSettings.ignoreSingularJacobian=True
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense #use EigenSparse for larger systems alternatively
-#simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.ignoreSingularJacobian=True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenDense #use EigenSparse for larger systems alternatively
+#simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 # simulationSettings.timeIntegration.newton.useModifiedNewton = True
 SC.visualizationSettings.openGL.multiSampling = 4
 

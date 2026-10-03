@@ -95,8 +95,8 @@ simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 simulationSettings.timeIntegration.verboseMode = 0
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
-simulationSettings.displayStatistics = True
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.show.statistics = True
+simulationSettings.solution.file.write=False
 
 SC.visualizationSettings.nodes.defaultSize = 0.05
 
@@ -119,12 +119,12 @@ else:
 #dynamic tip displacement for index2 Newmark: s=100: -0.6386060431598312, s=1000: -0.638699952155624, s=10000: -0.6387008780175608, s=100000: -0.6387008872717617
 
 
-#simulationSettings.solutionSettings.coordinatesSolutionFileName = "staticSolution.txt"
-#simulationSettings.solutionSettings.appendToFile = False
+#simulationSettings.solution.file.name = "staticSolution.txt"
+#simulationSettings.solution.file.append = False
 simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-5
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-6
 simulationSettings.staticSolver.newton.absoluteTolerance = 1e-1
-simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2connectors = True #be compatible with old solution
+simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2Connectors = True #be compatible with old solution
 #simulationSettings.staticSolver.verboseMode = 1
 
 mbs.SolveStatic(simulationSettings)

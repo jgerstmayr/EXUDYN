@@ -232,9 +232,9 @@ if useLugreFast:
 sims.timeIntegration.relativeTolerance = sims.timeIntegration.absoluteTolerance
 
 sims.timeIntegration.endTime = tEnd
-sims.solutionSettings.writeSolutionToFile = False
-#sims.solutionSettings.sensorsWritePeriod = h
-sims.solutionSettings.sensorsWritePeriod = 1e-3
+sims.solution.file.write = False
+#sims.solution.sensors.writePeriod = h
+sims.solution.sensors.writePeriod = 1e-3
 sims.timeIntegration.verboseMode = 1
 
 # solverType=exu.DynamicSolverType.ExplicitEuler
@@ -247,7 +247,7 @@ if doImplicit:
     h=0.5e-3 #works quite well with 2e-2
 
 if useLugreRef:
-    sims.solutionSettings.sensorsWritePeriod = 2e-3
+    sims.solution.sensors.writePeriod = 2e-3
     solverType=exu.DynamicSolverType.DOPRI5
 
 

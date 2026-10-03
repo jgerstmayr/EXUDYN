@@ -80,8 +80,8 @@ mbs.Assemble()
 sims=exu.SimulationSettings()
 tEnd = 2 #2000000 steps in 1.28s on Python3.7 64bits
 sims.timeIntegration.endTime = tEnd
-sims.solutionSettings.writeSolutionToFile = False
-sims.solutionSettings.sensorsWritePeriod = 10
+sims.solution.file.write = False
+sims.solution.sensors.writePeriod = 10
 sims.timeIntegration.verboseMode = 0
 
 
@@ -97,8 +97,8 @@ printResults = False
 if True: #check automatic step size control
     #sims.timeIntegration.verboseMode = 1
     for i in range(6-2*offset):
-        #sims.solutionSettings.writeSolutionToFile = True
-        #sims.solutionSettings.solutionWritePeriod = 0
+        #sims.solution.file.write = True
+        #sims.solution.file.writePeriod = 0
         tEnd = 2
         h=1
         sims.timeIntegration.numberOfSteps = int(tEnd/h)

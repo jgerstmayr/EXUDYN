@@ -164,20 +164,20 @@ h = 4*1e-3
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = 0.01*100
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.001*20
+simulationSettings.solution.file.writePeriod = 0.01*100
+simulationSettings.solution.sensors.writePeriod = 0.001*20
 simulationSettings.timeIntegration.verboseMode = 1
-#simulationSettings.solutionSettings.solutionWritePeriod = tEnd/steps
+#simulationSettings.solution.file.writePeriod = tEnd/steps
 simulationSettings.timeIntegration.newton.useModifiedNewton=True
 
-# simulationSettings.displayComputationTime = True
-# simulationSettings.linearSolverType=exu.LinearSolverType.EigenSparse
+# simulationSettings.show.computationTime = True
+# simulationSettings.linearSolver.solverType=exu.LinearSolverType.EigenSparse
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.95
 
-simulationSettings.linearSolverSettings.ignoreSingularJacobian = True # important for redundant constraints
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense # important for redundant constraints
-simulationSettings.timeIntegration.simulateInRealtime = True
+simulationSettings.linearSolver.ignoreSingularJacobian = True # important for redundant constraints
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenDense # important for redundant constraints
+simulationSettings.timeIntegration.realtime.active = True
 SC.visualizationSettings.general.autoFitScene=True
 # SC.visualizationSettings.view0.window.renderWindowSize = [1600,1200]
 SC.visualizationSettings.view0.scene.drawCoordinateSystem=True

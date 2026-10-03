@@ -158,8 +158,8 @@ h=0.01  #use small step size to detext contact switching
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-#simulationSettings.solutionSettings.writeSolutionToFile= True #set False for CPU performance measurement
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
+#simulationSettings.solution.file.write= True #set False for CPU performance measurement
+simulationSettings.solution.sensors.writePeriod = 0.01
 
 simulationSettings.timeIntegration.verboseMode = 1
 

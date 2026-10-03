@@ -109,18 +109,18 @@ mbs.systemData.AddODE2LoadDependencies(lTorque1, list(ltgN0)+list(ltgN1))
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 5
-# simulationSettings.timeIntegration.simulateInRealtime = True
+# simulationSettings.timeIntegration.realtime.active = True
 
 # simulationSettings.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation = True
 simulationSettings.timeIntegration.computeLoadsJacobian = 2
 # simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-simulationSettings.solutionSettings.writeSolutionToFile = False #nothing reads it (#2492)
-simulationSettings.solutionSettings.solutionWritePeriod = 0.01
+simulationSettings.solution.file.write = False #nothing reads it (#2492)
+simulationSettings.solution.file.writePeriod = 0.01
 
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.displayStatistics = True
-simulationSettings.displayComputationTime = True
+simulationSettings.show.statistics = True
+simulationSettings.show.computationTime = True
 
 SC.renderer.Start()
 SC.renderer.DoIdleTasks()

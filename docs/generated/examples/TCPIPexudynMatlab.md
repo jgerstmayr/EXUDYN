@@ -149,16 +149,16 @@ try:
     simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8*100 #10000
     simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-10
     simulationSettings.timeIntegration.verboseMode = 1
-    # simulationSettings.timeIntegration.simulateInRealtime = True
+    # simulationSettings.timeIntegration.realtime.active = True
     
     simulationSettings.timeIntegration.newton.useModifiedNewton = False
     simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5
-    simulationSettings.displayStatistics = True
+    simulationSettings.show.statistics = True
     
     #SC.visualizationSettings.nodes.defaultSize = 0.05
     
-    simulationSettings.solutionSettings.solutionInformation = "Rigid pendulum"
+    simulationSettings.solution.file.information = "Rigid pendulum"
     
     SC.renderer.Start()
     

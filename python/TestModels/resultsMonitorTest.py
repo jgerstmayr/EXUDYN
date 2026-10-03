@@ -58,9 +58,9 @@ mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = 50
 simulationSettings.timeIntegration.endTime = 1
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.coordinatesSolutionFileName = solutionFile
-simulationSettings.displayComputationTime = False
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.name = solutionFile
+simulationSettings.show.computationTime = False
 simulationSettings.timeIntegration.verboseMode = 0
 mbs.SolveDynamic(simulationSettings)
 

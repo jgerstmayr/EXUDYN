@@ -39,14 +39,14 @@ def Beam(nElements, force=0, moment=0, dynamic=False):
     for i in ([0, 1] if dynamic else [0, 1, 2]):
         mbs.AddObject(ObjectConnectorCoordinate(markerNumbers=[mGround, mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodes[0], coordinate=i))]))
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     if dynamic:
         for e in elements:
             mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=e)), loadVector=[0, -9.81, 0]))
         mbs.Assemble()
         simulationSettings.timeIntegration.numberOfSteps = 1000
         simulationSettings.timeIntegration.endTime = 1
-        simulationSettings.solutionSettings.writeSolutionToFile = False
+        simulationSettings.solution.file.write = False
         mbs.SolveDynamic(simulationSettings)
     else:
         mTip = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodes[-1]))

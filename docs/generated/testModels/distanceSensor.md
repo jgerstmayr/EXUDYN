@@ -198,14 +198,14 @@ mbs.Assemble()
 tEnd = 0.25
 #tEnd = h*100
 simulationSettings = exu.SimulationSettings()
-# simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
-simulationSettings.displayComputationTime = (not testIsActive)
+# simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+simulationSettings.solution.file.write = False
+simulationSettings.solution.sensors.writePeriod = 0.01
+simulationSettings.show.computationTime = (not testIsActive)
 SC.visualizationSettings.general.graphicsUpdateInterval = 0.02
 
-# simulationSettings.timeIntegration.simulateInRealtime = True
-# simulationSettings.timeIntegration.realtimeFactor = 0.5
+# simulationSettings.timeIntegration.realtime.active = True
+# simulationSettings.timeIntegration.realtime.factor = 0.5
 simulationSettings.timeIntegration.verboseMode = 1
 
 # SC.visualizationSettings.loads.show=False

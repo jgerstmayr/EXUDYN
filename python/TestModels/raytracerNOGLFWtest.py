@@ -173,9 +173,9 @@ if False:
 tEnd = 4
 stepSize = 2e-2
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = False
-#simulationSettings.timeIntegration.simulateInRealtime = True
-#simulationSettings.timeIntegration.realtimeFactor = 0.2
+simulationSettings.solution.file.write = False
+#simulationSettings.timeIntegration.realtime.active = True
+#simulationSettings.timeIntegration.realtime.factor = 0.2
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
 

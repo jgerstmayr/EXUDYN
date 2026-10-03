@@ -67,7 +67,13 @@ settingsClassName2member = {'ContourAdvanced':'advanced','ViewAdvanced':'advance
                             'WindowDeprecated':'window',
                             'TimeIntegrationSettings':'timeIntegration', 
                             'StaticSolverSettings':'staticSolver', 
-                            'ExplicitIntegrationSettings':'explicitIntegration', 
+                            'ExplicitIntegrationSettings':'explicit',
+                            'ExplicitIntegrationSettingsDeprecated':'explicitIntegration',
+                            'SolutionSettings':'solution', 'SolutionSettingsDeprecated':'solutionSettings',
+                            'LinearSolverSettings':'linearSolver', 'LinearSolverSettingsDeprecated':'linearSolverSettings',
+                            'SolutionFileSettings':'file', 'SolutionFileExportSettings':'export',
+                            'SolutionSensorsSettings':'sensors', 'SolutionRestartSettings':'restart',
+                            'RealtimeSettings':'realtime', 'ShowSettings':'show',
                             'GeneralizedAlphaSettings':'generalizedAlpha',
                             'NewtonSettings':'newton', 
                             'DiscontinuousSettings':'discontinuous', 
@@ -96,7 +102,10 @@ def ClassHasGetSetDictionary(className):
 
 #the structures of SimulationSettings, which link to it like those of VisualizationSettings, so that a deprecated
 #member can forward to its new place (#2588)
-simulationSettingsClasses = ['SolutionSettings', 'NumericalDifferentiationSettings', 'DiscontinuousSettings',
+simulationSettingsClasses = ['SolutionFileExportSettings', 'SolutionFileSettings', 'SolutionSensorsSettings',
+                             'SolutionRestartSettings', 'SolutionSettingsDeprecated', 'ExplicitIntegrationSettingsDeprecated',
+                             'RealtimeSettings', 'LinearSolverSettingsDeprecated', 'ShowSettings',
+                             'SolutionSettings', 'NumericalDifferentiationSettings', 'DiscontinuousSettings',
                              'NewtonSettings', 'GeneralizedAlphaSettings', 'ExplicitIntegrationSettings',
                              'TimeIntegrationSettings', 'StaticSolverSettings', 'LinearSolverSettings', 'Parallel',
                              'SimulationSettings']

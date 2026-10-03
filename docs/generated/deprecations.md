@@ -75,7 +75,7 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `ObjectJointRevoluteZ.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointRevoluteZ) |
 | `ObjectJointRevoluteZ.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointRevoluteZ) |
 
-## Settings (98)
+## Settings (149)
 
 | name | since | removed in | instead | declared in |
 |---|---|---|---|---|
@@ -172,8 +172,59 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `VSettingsWindowDeprecated.showWindow` | 1.10.80 | 2030 | view0.window.showWindow | definitions (VSettingsWindowDeprecated) |
 | `VSettingsWindowDeprecated.startupTimeout` | 1.10.80 | 2030 | general.rendererStartupTimeout | definitions (VSettingsWindowDeprecated) |
 | `VisualizationSettings.window` | 1.10.80 | 2030 | Deprecated visualization settings for window; DO NOT USE | definitions (VisualizationSettings) |
+| `ExplicitIntegrationSettingsDeprecated.computeEndOfStepAccelerations` | 1.12.256 | 2031 | timeIntegration.explicit.computeEndOfStepAccelerations | definitions (ExplicitIntegrationSettingsDeprecated) |
+| `ExplicitIntegrationSettingsDeprecated.computeMassMatrixInversePerBody` | 1.12.256 | 2031 | timeIntegration.explicit.computeMassMatrixInversePerBody | definitions (ExplicitIntegrationSettingsDeprecated) |
+| `ExplicitIntegrationSettingsDeprecated.dynamicSolverType` | 1.12.256 | 2031 | timeIntegration.solverType | definitions (ExplicitIntegrationSettingsDeprecated) |
+| `ExplicitIntegrationSettingsDeprecated.eliminateConstraints` | 1.12.256 | 2031 | timeIntegration.explicit.eliminateConstraints | definitions (ExplicitIntegrationSettingsDeprecated) |
+| `ExplicitIntegrationSettingsDeprecated.useLieGroupIntegration` | 1.12.256 | 2031 | timeIntegration.explicit.useLieGroupIntegration | definitions (ExplicitIntegrationSettingsDeprecated) |
+| `LinearSolverSettingsDeprecated.ignoreSingularJacobian` | 1.12.256 | 2031 | linearSolver.ignoreSingularJacobian | definitions (LinearSolverSettingsDeprecated) |
+| `LinearSolverSettingsDeprecated.pivotThreshold` | 1.12.256 | 2031 | linearSolver.pivotThreshold | definitions (LinearSolverSettingsDeprecated) |
+| `LinearSolverSettingsDeprecated.reuseAnalyzedPattern` | 1.12.256 | 2031 | linearSolver.reuseAnalyzedPattern | definitions (LinearSolverSettingsDeprecated) |
+| `LinearSolverSettingsDeprecated.showCausingItems` | 1.12.256 | 2031 | linearSolver.showCausingItems | definitions (LinearSolverSettingsDeprecated) |
+| `NewtonSettings.newtonResidualMode` | 1.12.256 | 2031 | residualMode | definitions (NewtonSettings) |
+| `NewtonSettings.useNewtonSolver` | 1.12.256 | 2031 | active | definitions (NewtonSettings) |
+| `NumericalDifferentiationSettings.forODE2connectors` | 1.12.256 | 2031 | forODE2Connectors | definitions (NumericalDifferentiationSettings) |
 | `Parallel.multithreadedLLimitJacobians` | 1.12.244 | 2031 | multithreadedLowerLimitJacobians | definitions (Parallel) |
 | `Parallel.multithreadedLLimitLoads` | 1.12.244 | 2031 | multithreadedLowerLimitLoads | definitions (Parallel) |
 | `Parallel.multithreadedLLimitMassMatrices` | 1.12.244 | 2031 | multithreadedLowerLimitMassMatrices | definitions (Parallel) |
 | `Parallel.multithreadedLLimitResiduals` | 1.12.244 | 2031 | multithreadedLowerLimitResiduals | definitions (Parallel) |
+| `SimulationSettings.displayComputationTime` | 1.12.256 | 2031 | show.computationTime | definitions (SimulationSettings) |
+| `SimulationSettings.displayGlobalTimers` | 1.12.256 | 2031 | show.globalTimers | definitions (SimulationSettings) |
+| `SimulationSettings.displayStatistics` | 1.12.256 | 2031 | show.statistics | definitions (SimulationSettings) |
+| `SimulationSettings.linearSolverSettings` | 1.12.256 | 2031 | deprecated, use linearSolver | definitions (SimulationSettings) |
+| `SimulationSettings.linearSolverType` | 1.12.256 | 2031 | linearSolver.solverType | definitions (SimulationSettings) |
+| `SimulationSettings.outputPrecision` | 1.12.256 | 2031 | consolePrecision | definitions (SimulationSettings) |
+| `SimulationSettings.solutionSettings` | 1.12.256 | 2031 | deprecated, use solution | definitions (SimulationSettings) |
+| `SolutionSettingsDeprecated.appendToFile` | 1.12.256 | 2031 | solution.file.append | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.binarySolutionFile` | 1.12.256 | 2031 | solution.file.binary | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.coordinatesSolutionFileName` | 1.12.256 | 2031 | solution.file.name | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.exportAccelerations` | 1.12.256 | 2031 | solution.file.export.accelerations | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.exportAlgebraicCoordinates` | 1.12.256 | 2031 | solution.file.export.algebraicCoordinates | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.exportDataCoordinates` | 1.12.256 | 2031 | solution.file.export.dataCoordinates | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.exportODE1Velocities` | 1.12.256 | 2031 | solution.file.export.ODE1Velocities | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.exportVelocities` | 1.12.256 | 2031 | solution.file.export.velocities | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.flushFilesDOF` | 1.12.256 | 2031 | solution.file.flushAboveCoordinates | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.flushFilesImmediately` | 1.12.256 | 2031 | solution.flushFilesImmediately | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.outputPrecision` | 1.12.256 | 2031 | solution.precision | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.recordImagesInterval` | 1.12.256 | 2031 | solution.recordImagesInterval | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.restartFileName` | 1.12.256 | 2031 | solution.restart.name | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.restartWritePeriod` | 1.12.256 | 2031 | solution.restart.writePeriod | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.sensorsAppendToFile` | 1.12.256 | 2031 | solution.sensors.append | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.sensorsStoreAndWriteFiles` | 1.12.256 | 2031 | solution.sensors.active | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.sensorsWriteFileFooter` | 1.12.256 | 2031 | solution.sensors.writeFooter | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.sensorsWriteFileHeader` | 1.12.256 | 2031 | solution.sensors.writeHeader | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.sensorsWritePeriod` | 1.12.256 | 2031 | solution.sensors.writePeriod | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.solutionInformation` | 1.12.256 | 2031 | solution.file.information | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.solutionWritePeriod` | 1.12.256 | 2031 | solution.file.writePeriod | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.solverInformationFileName` | 1.12.256 | 2031 | solution.solverInformationFileName | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.writeFileFooter` | 1.12.256 | 2031 | solution.file.writeFooter | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.writeFileHeader` | 1.12.256 | 2031 | solution.file.writeHeader | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.writeInitialValues` | 1.12.256 | 2031 | solution.file.writeInitialValues | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.writeRestartFile` | 1.12.256 | 2031 | solution.restart.write | definitions (SolutionSettingsDeprecated) |
+| `SolutionSettingsDeprecated.writeSolutionToFile` | 1.12.256 | 2031 | solution.file.write | definitions (SolutionSettingsDeprecated) |
+| `StaticSolverSettings.constrainODE1coordinates` | 1.12.256 | 2031 | constrainODE1Coordinates | definitions (StaticSolverSettings) |
+| `TimeIntegrationSettings.explicitIntegration` | 1.12.256 | 2031 | deprecated, use timeIntegration.explicit and timeIntegration.solverType | definitions (TimeIntegrationSettings) |
+| `TimeIntegrationSettings.realtimeFactor` | 1.12.256 | 2031 | timeIntegration.realtime.factor | definitions (TimeIntegrationSettings) |
+| `TimeIntegrationSettings.realtimeWaitMicroseconds` | 1.12.256 | 2031 | timeIntegration.realtime.waitMicroseconds | definitions (TimeIntegrationSettings) |
+| `TimeIntegrationSettings.simulateInRealtime` | 1.12.256 | 2031 | timeIntegration.realtime.active | definitions (TimeIntegrationSettings) |
 | `VSettingsDialogs.fontScalingMacOS` | 1.12.15 | 2032 | dialogs.fontScaling | definitions (VSettingsDialogs) |

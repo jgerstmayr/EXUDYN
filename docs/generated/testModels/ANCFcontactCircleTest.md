@@ -147,11 +147,11 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 
-simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
-#simulationSettings.solutionSettings.outputPrecision = 4
-simulationSettings.displayComputationTime = False
+simulationSettings.solution.file.write = (not testIsActive) #only the SolutionViewer reads it (#2492)
+#simulationSettings.solution.precision = 4
+simulationSettings.show.computationTime = False
 
-simulationSettings.displayStatistics = False
+simulationSettings.show.statistics = False
 
 #SC.visualizationSettings.nodes.showNumbers = True
 SC.visualizationSettings.bodies.showNumbers = False
@@ -162,7 +162,7 @@ SC.visualizationSettings.connectors.defaultSize = 0.01
 SC.visualizationSettings.contact.contactPointsDefaultSize = 0.005
 SC.visualizationSettings.connectors.showContact = 1
 
-simulationSettings.solutionSettings.solutionInformation = "ANCF cable with imposed curvature or applied tip force/torque"
+simulationSettings.solution.file.information = "ANCF cable with imposed curvature or applied tip force/torque"
 
 simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-10 #can be quite small; WHY?
 simulationSettings.staticSolver.verboseMode = 0 #otherwise, load steps are shown ...
@@ -181,7 +181,7 @@ simulationSettings.staticSolver.stabilizerODE2term = 2 #may only act on position
 if not testIsActive: 
     simulationSettings.staticSolver.verboseMode = 1 #otherwise, load steps are shown ...
     simulationSettings.staticSolver.verboseModeFile = 0 #otherwise, load steps are shown ...
-    simulationSettings.displayStatistics = True
+    simulationSettings.show.statistics = True
     
     SC.renderer.Start()
 

@@ -141,15 +141,15 @@ class CartPoleEnv(Env):
         self.simulationSettings.timeIntegration.numberOfSteps = 1
         self.simulationSettings.timeIntegration.endTime = 0 #will be overwritten in step
         self.simulationSettings.timeIntegration.verboseMode = 0
-        self.simulationSettings.solutionSettings.writeSolutionToFile = False
-        #self.simulationSettings.timeIntegration.simulateInRealtime = True
+        self.simulationSettings.solution.file.write = False
+        #self.simulationSettings.timeIntegration.realtime.active = True
         
         self.simulationSettings.timeIntegration.newton.useModifiedNewton = True
         
         self.SC.visualizationSettings.view0.scene.drawWorldBasis=True
         self.SC.visualizationSettings.general.graphicsUpdateInterval = 0.01 #50Hz
         
-        self.simulationSettings.solutionSettings.solutionInformation = "Open AI gym"
+        self.simulationSettings.solution.file.information = "Open AI gym"
         
         self.dynamicSolver = exudyn.MainSolverImplicitSecondOrder()
         self.dynamicSolver.InitializeSolver(self.mbs, self.simulationSettings)

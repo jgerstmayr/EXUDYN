@@ -98,7 +98,7 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 simulationSettings.timeIntegration.numberOfSteps = 100000
 simulationSettings.timeIntegration.endTime = 2000
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.timeIntegration.simulateInRealtime = True
+simulationSettings.timeIntegration.realtime.active = True
 
 SC.visualizationSettings.openGL.multiSampling = 4
 SC.visualizationSettings.openGL.lineWidth = 1

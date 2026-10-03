@@ -51,7 +51,7 @@ def Run(mu, stepSize=1e-5, tEnd=0.05):
             sens[name+ov]=mbs.AddSensor(SensorNode(nodeNumber=n,outputVariableType=getattr(exu.OutputVariableType,ov),storeInternal=True))
     mbs.Assemble()
     s=exu.SimulationSettings(); s.timeIntegration.numberOfSteps=int(tEnd/stepSize); s.timeIntegration.endTime=tEnd
-    s.solutionSettings.writeSolutionToFile=False; s.solutionSettings.sensorsWritePeriod=stepSize*10
+    s.solution.file.write=False; s.solution.sensors.writePeriod=stepSize*10
     s.timeIntegration.generalizedAlpha.spectralRadius=1
     mbs.SolveDynamic(s)
     D={k:mbs.GetSensorStoredData(v)[:,1:] for k,v in sens.items()}

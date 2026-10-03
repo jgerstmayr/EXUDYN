@@ -31,63 +31,101 @@ class BeamSectionGeometry:
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 
-#information for SolutionSettings
-class SolutionSettings:
-    """General settings for exporting the solution (results) of a simulation."""
-    appendToFile: bool
-    """flag (true/false); if true, solution and solverInformation is appended to existing file (otherwise created); in BINARY mode, files are always replaced and this parameter is ineffective!"""
-    binarySolutionFile: bool
-    """if true, the solution file is written in binary format for improved speed and smaller file sizes; setting outputPrecision >= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that appendToFile is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files."""
-    coordinatesSolutionFileName: str
-    """filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; the default is in the directory solution/, like every file a run writes by default, so that nothing is written beside the script; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True)."""
-    exportAccelerations: bool
-    """add ODE2 accelerations to solution file (coordinatesSolutionFile)."""
-    exportAlgebraicCoordinates: bool
-    """add algebraicCoordinates (=Lagrange multipliers) to solution file (coordinatesSolutionFile)."""
-    exportDataCoordinates: bool
-    """add DataCoordinates to solution file (coordinatesSolutionFile)."""
-    exportODE1Velocities: bool
-    """add coordinatesODE1_t to solution file (coordinatesSolutionFile)."""
-    exportVelocities: bool
-    """add ODE2 velocities to solution file (coordinatesSolutionFile)."""
-    flushFilesDOF: int
-    """number of DOF, above which solution file (coordinatesSolutionFile) buffers are always flushed, irrespectively of whether flushFilesImmediately is set True or False (see also flushFilesImmediately); for larger files, writing takes so much time that flushing does not add considerable time."""
-    flushFilesImmediately: bool
-    """flush file buffers after every solution period written (coordinatesSolutionFile and sensor files); if set False, the output is written through a buffer, which is highly efficient, but during simulation, files may be always in an incomplete state; if set True, this may add a large amount of CPU time as the process waits until files are really written to hard disc (especially for simulation of small scale systems, writing 10.000s of time steps; at least 5us per step/file, depending on hardware)."""
-    outputPrecision: int
-    """precision for floating point numbers written to solution and sensor files."""
-    recordImagesInterval: float
-    """record frames of the main view in the renderer (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages; note that only the main view (0) can be saved in this way, while for multiple views, you have to aquire data via renderer.RedrawAndGetImage()."""
-    restartFileName: str
-    """filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart."""
-    restartWritePeriod: float
-    """time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance."""
-    sensorsAppendToFile: bool
-    """flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations."""
-    sensorsStoreAndWriteFiles: bool
-    """flag (true/false); if false, no sensor files will be created and no sensor data will be stored; this may be advantageous for benchmarking as well as for special solvers which should not overwrite existing results (e.g. ComputeODE2Eigenvalues); settings this value to False may cause problems if sensors are required to perform operations which are needed e.g. in UserSensors as input of loads, etc."""
-    sensorsWriteFileFooter: bool
-    """flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)."""
-    sensorsWriteFileHeader: bool
-    """flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)."""
-    sensorsWritePeriod: float
-    """time span (period), determines how often the sensor output is written to file or internal storage during a simulation."""
-    solutionInformation: str
+#information for SolutionFileExportSettings
+class SolutionFileExportSettings:
+    """The quantities written into the coordinates solution file in addition to the coordinates."""
+    accelerations: bool
+    """add ODE2 accelerations to the solution file."""
+    algebraicCoordinates: bool
+    """add algebraicCoordinates (=Lagrange multipliers) to the solution file."""
+    dataCoordinates: bool
+    """add DataCoordinates to the solution file."""
+    ODE1Velocities: bool
+    """add coordinatesODE1_t to the solution file."""
+    velocities: bool
+    """add ODE2 velocities to the solution file."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
+
+#information for SolutionFileSettings
+class SolutionFileSettings:
+    """The coordinates solution file: all coordinates of the system versus time, read by the SolutionViewer and exudyn.utilities.LoadSolutionFile."""
+    export: SolutionFileExportSettings
+    """which quantities are written in addition to the coordinates."""
+    append: bool
+    """flag (true/false); if true, the solution and the solver information are appended to existing files (otherwise created); in BINARY mode, files are always replaced and this parameter is ineffective!"""
+    binary: bool
+    """if true, the solution file is written in binary format for improved speed and smaller file sizes; setting solution.precision >= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that append is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files."""
+    flushAboveCoordinates: int
+    """number of coordinates above which the buffers of the solution file are always flushed, irrespectively of solution.flushFilesImmediately; for larger files, writing takes so much time that flushing does not add considerable time."""
+    information: str
     """special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in sec-utf8, but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki)."""
-    solutionWritePeriod: float
-    """time span (period), determines how often the solution file (coordinatesSolutionFile) is written during a simulation."""
-    solverInformationFileName: str
-    """filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only."""
-    writeFileFooter: bool
+    name: str
+    """filename and (relative) path of the solution file containing all multibody system coordinates versus time; the default is in the directory solution/, like every file a run writes by default, so that nothing is written beside the script; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binary=True)."""
+    write: bool
+    """flag (true/false), which determines if the coordinates are written to the solution file; standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional quantities, see export."""
+    writeFooter: bool
     """flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics."""
-    writeFileHeader: bool
+    writeHeader: bool
     """flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration)."""
     writeInitialValues: bool
-    """flag (true/false); if true, initial values are exported for the start time; applies to coordinatesSolution and sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation."""
-    writeRestartFile: bool
-    """flag (true/false), which determines if restart file is written regularly, see restartFileName for details."""
-    writeSolutionToFile: bool
-    """flag (true/false), which determines if (global) solution vector is written to the solution file (coordinatesSolutionFile); standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional coordinates in the solution file, see the options below."""
+    """flag (true/false); if true, initial values are exported for the start time; applies to the solution file and the sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation."""
+    writePeriod: float
+    """time span (period), determines how often the solution file is written during a simulation."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
+
+#information for SolutionSensorsSettings
+class SolutionSensorsSettings:
+    """Storing and writing of the sensors."""
+    active: bool
+    """flag (true/false); if false, no sensor files will be created and no sensor data will be stored; this may be advantageous for benchmarking as well as for special solvers which should not overwrite existing results (e.g. ComputeODE2Eigenvalues); settings this value to False may cause problems if sensors are required to perform operations which are needed e.g. in UserSensors as input of loads, etc."""
+    append: bool
+    """flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations."""
+    writeFooter: bool
+    """flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration)."""
+    writeHeader: bool
+    """flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration)."""
+    writePeriod: float
+    """time span (period), determines how often the sensor output is written to file or internal storage during a simulation."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
+
+#information for SolutionRestartSettings
+class SolutionRestartSettings:
+    """The restart file: the state of the system written regularly, from which a simulation can be continued."""
+    name: str
+    """filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart."""
+    write: bool
+    """flag (true/false), which determines if the restart file is written regularly, see name for details."""
+    writePeriod: float
+    """time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
+
+#information for SolutionSettings
+class SolutionSettings:
+    """General settings for exporting the solution (results) of a simulation: the solution file, the sensors and the restart file."""
+    file: SolutionFileSettings
+    """the coordinates solution file."""
+    restart: SolutionRestartSettings
+    """the restart file."""
+    sensors: SolutionSensorsSettings
+    """storing and writing of the sensors."""
+    flushFilesImmediately: bool
+    """flush file buffers after every period written (solution file and sensor files); if set False, the output is written through a buffer, which is highly efficient, but during simulation, files may be always in an incomplete state; if set True, this may add a large amount of CPU time as the process waits until files are really written to hard disc (especially for simulation of small scale systems, writing 10.000s of time steps; at least 5us per step/file, depending on hardware)."""
+    precision: int
+    """precision for floating point numbers written to the solution and sensor files; the precision of the output to the console is consolePrecision."""
+    recordImagesInterval: float
+    """record frames of the main view in the renderer (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages; note that only the main view (0) can be saved in this way, while for multiple views, you have to aquire data via renderer.RedrawAndGetImage()."""
+    solverInformationFileName: str
+    """filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if file.append is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
+
+#information for SolutionSettingsDeprecated
+class SolutionSettingsDeprecated:
+    """The settings of the solution as they were named up to Exudyn 1.11: each forwards to its place in simulationSettings.solution, with a DeprecationWarning."""
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 
@@ -102,7 +140,7 @@ class NumericalDifferentiationSettings:
     """flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification."""
     forODE2: bool
     """flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; numerical differentiation is less efficient and may lead to numerical problems, but may smoothen problems of analytical derivatives; sometimes the analytical derivative may neglect terms."""
-    forODE2connectors: bool
+    forODE2Connectors: bool
     """flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE."""
     jacobianConnectorDerivative: bool
     """True: for analytic Jacobians of connectors, the Jacobian derivative is computed, causing additional CPU costs and not beeing available for all connectors or markers (thus switching to numerical differentiation); False: Jacobian derivative is neglected in analytic Jacobians (but included in numerical Jacobians), which often has only minor influence on convergence."""
@@ -134,6 +172,8 @@ class NewtonSettings:
     """numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration)."""
     absoluteTolerance: float
     """absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance."""
+    active: bool
+    """flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution."""
     adaptInitialResidual: bool
     """flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increase significantely in the first Newton iteration; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration."""
     maximumSolutionNorm: float
@@ -148,14 +188,12 @@ class NewtonSettings:
     """maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed."""
     modifiedNewtonJacUpdatePerStep: bool
     """True: compute Jacobian at every time step (or static step), but not in every Newton iteration (except for bad convergence ==> switch to full Newton)."""
-    newtonResidualMode: int
-    """0 ... use residual for computation of error (standard); 1 ... use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag."""
     relativeTolerance: float
     """relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor)."""
+    residualMode: int
+    """0 ... use residual for computation of error (standard); 1 ... use ODE2 and ODE1 newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag."""
     useModifiedNewton: bool
     """True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration (default, but may be costly)."""
-    useNewtonSolver: bool
-    """flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution."""
     weightTolerancePerCoordinate: bool
     """flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size."""
     def GetDictionary(self) -> dict: ...
@@ -193,13 +231,29 @@ class ExplicitIntegrationSettings:
     computeEndOfStepAccelerations: bool
     """accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different."""
     computeMassMatrixInversePerBody: bool
-    """If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded) - together with a sparse solver, linearSolverType = exu.LinearSolverType.EigenSparse: with the dense default the inverse is stored as a dense matrix and every step costs O(n^2) (#2400)."""
-    dynamicSolverType: DynamicSolverType
-    """selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, VelocityVerlet, ...), for detailed description see DynamicSolverType, sec-dynamicsolvertype, but only referring to explicit solvers."""
+    """If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded) - together with a sparse solver, linearSolver.solverType = exu.LinearSolverType.EigenSparse: with the dense default the inverse is stored as a dense matrix and every step costs O(n^2) (#2400)."""
     eliminateConstraints: bool
     """True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!"""
     useLieGroupIntegration: bool
     """True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates!"""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
+
+#information for ExplicitIntegrationSettingsDeprecated
+class ExplicitIntegrationSettingsDeprecated:
+    """The settings of the explicit solvers as they were named up to Exudyn 1.11: each forwards to its place in simulationSettings.timeIntegration, with a DeprecationWarning."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
+
+#information for RealtimeSettings
+class RealtimeSettings:
+    """Simulation in realtime: the time integration waits until the CPU time has reached the simulation time."""
+    active: bool
+    """True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues."""
+    factor: float
+    """if active=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)."""
+    waitMicroseconds: int
+    """if active=True, a loop runs which waits waitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy."""
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 
@@ -208,12 +262,14 @@ class TimeIntegrationSettings:
     """General parameters used in time integration; specific parameters are provided in the according solver settings, e.g. for generalizedAlpha."""
     discontinuous: DiscontinuousSettings
     """parameters for treatment of discontinuities."""
-    explicitIntegration: ExplicitIntegrationSettings
+    explicit: ExplicitIntegrationSettings
     """special parameters for explicit time integration."""
     generalizedAlpha: GeneralizedAlphaSettings
     """parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods)."""
     newton: NewtonSettings
     """parameters for Newton method; used for implicit time integration methods only."""
+    realtime: RealtimeSettings
+    """simulation in realtime."""
     absoluteTolerance: float
     """: if automaticStepSize=True, absolute tolerance for the error control; must fulfill :math:`a_{tol} > 0`; see sec-explicitsolver."""
     adaptiveStep: bool
@@ -238,16 +294,12 @@ class TimeIntegrationSettings:
     """: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning)."""
     numberOfSteps: float
     r""": number of steps in time integration; (maximum) stepSize :math:`h` is computed from :math:`h = \frac{t_{end} - t_{start}}{n_{steps}}`; for automatic stepsize control, this stepSize is the maximum steps size, :math:`h_{max} = h`; numberOfSteps can also be a float type, but must be close to an integer (relative tolerance :math:`100\cdot\varepsilon`) as it is silently rounded to int."""
-    realtimeFactor: float
-    """if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1)."""
-    realtimeWaitMicroseconds: int
-    """if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy."""
     relativeTolerance: float
     r""": if automaticStepSize=True, relative tolerance for the error control; must fulfill :math:`r_{tol} \ge 0`; see sec-explicitsolver."""
     reuseConstantMassMatrix: bool
     """True: does not recompute constant mass matrices (e.g. of some finite elements, mass points, etc.); if False, it always recomputes the mass matrix (e.g. needed, if user changes mass parameters via Python)."""
-    simulateInRealtime: bool
-    """True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues."""
+    solverType: DynamicSolverType
+    """the solver of mbs.SolveDynamic(...): an implicit one (GeneralizedAlpha, TrapezoidalIndex2, ...) or an explicit one (DOPRI5, ExplicitEuler, RK44, ...), see DynamicSolverType, sec-dynamicsolvertype; the argument solverType of mbs.SolveDynamic, if given, takes its place for that run."""
     startTime: float
     """: start time of time integration (usually set to zero)."""
     stepInformation: int
@@ -282,7 +334,7 @@ class StaticSolverSettings:
     """Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors."""
     computeLoadsJacobian: bool
     """True: compute (currently numerical) Jacobian for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; False: jacobian of loads not considered (may lead to slow convergence or Newton failure); note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies."""
-    constrainODE1coordinates: bool
+    constrainODE1Coordinates: bool
     """True: ODE1coordinates are constrained to initial values; False: undefined behavior, currently not supported."""
     loadStepDuration: float
     """quasi-time for all load steps (added to current time in load steps)."""
@@ -320,8 +372,14 @@ class LinearSolverSettings:
     """[ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(...) and should be handled with care!"""
     showCausingItems: bool
     """False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!"""
+    solverType: LinearSolverType
+    """selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type)."""
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
+
+#information for LinearSolverSettingsDeprecated
+class LinearSolverSettingsDeprecated:
+    """The settings of the linear solver as they were named up to Exudyn 1.11: each forwards to its place in simulationSettings.linearSolver, with a DeprecationWarning."""
 
 #information for Parallel
 class Parallel:
@@ -345,14 +403,28 @@ class Parallel:
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 
+#information for ShowSettings
+class ShowSettings:
+    """What the solvers show in the console at the end of solving."""
+    computationTime: bool
+    """display computation time statistics at end of solving."""
+    globalTimers: bool
+    """display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development)."""
+    statistics: bool
+    """display general computation information at end of time step (steps, iterations, function calls, step rejections, ..."""
+    def GetDictionary(self) -> dict: ...
+    def SetDictionary(self, d: dict) -> None: ...
+
 #information for SimulationSettings
 class SimulationSettings:
     """General Settings for simulation; according settings for solution and solvers are given in subitems of this structure."""
-    linearSolverSettings: LinearSolverSettings
+    linearSolver: LinearSolverSettings
     """linear solver parameters (used for dense and sparse solvers)."""
     parallel: Parallel
     """parameters for vectorized and parallelized (multi-threaded) computations."""
-    solutionSettings: SolutionSettings
+    show: ShowSettings
+    """what the solvers show in the console at the end of solving."""
+    solution: SolutionSettings
     """settings for solution files."""
     staticSolver: StaticSolverSettings
     """static solver parameters."""
@@ -360,16 +432,8 @@ class SimulationSettings:
     """time integration parameters."""
     cleanUpMemory: bool
     """True: solvers will free memory at exit (recommended for large systems); False: keep allocated memory for repeated computations to increase performance."""
-    displayComputationTime: bool
-    """display computation time statistics at end of solving."""
-    displayGlobalTimers: bool
-    """display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development)."""
-    displayStatistics: bool
-    """display general computation information at end of time step (steps, iterations, function calls, step rejections, ..."""
-    linearSolverType: LinearSolverType
-    """selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type)."""
-    outputPrecision: int
-    """precision for floating point numbers written to console; e.g. values written by solver."""
+    consolePrecision: int
+    """precision for floating point numbers written to the console, e.g. the values written by the solver; the precision of the solution and sensor files is solution.precision."""
     pauseAfterEachStep: bool
     """pause after every time step or static load step(user press SPACE)."""
     def GetDictionary(self) -> dict: ...
@@ -413,7 +477,7 @@ class VSettingsGeneral:
     rendererStartupTimeout: int
     """OpenGL render windows startup timeout in ms (change might be necessary if CPU is very slow)."""
     renderWindowString: str
-    """string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to solutionInformation in SimulationSettings.solutionSettings)."""
+    """string shown in render window (use this, e.g., for debugging, etc.; written below EXUDYN, similar to information in simulationSettings.solution.file)."""
     showHelpOnStartup: int
     """seconds to show help message on startup (0=deactivate)."""
     showSolutionInformation: bool
@@ -667,7 +731,7 @@ class VSettingsLoads:
 
 #information for VSettingsTraces
 class VSettingsTraces:
-    """Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solutionSettings.sensorsWritePeriod) may lead to slow graphics."""
+    """Visualization settings for traces of sensors. Note that a large number of time points (influenced by simulationSettings.solution.sensors.writePeriod) may lead to slow graphics."""
     lineWidth: float
     """line width for traces."""
     listOfPositionSensors: List[int]
@@ -1245,7 +1309,7 @@ class CSolverTimer:
     reactionForces: float
     """CqT * lambda."""
     realtimeIdleCPU: float
-    """time waited for next frame to compute and draw if simulateInRealtime is True."""
+    """time waited for next frame to compute and draw if timeIntegration.realtime.active is True."""
     @overload
     def Reset(useSolverTimer) -> None: ...
     @overload

@@ -215,12 +215,12 @@ h = 5e-4*1
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.displayComputationTime = False
+simulationSettings.show.computationTime = False
 simulationSettings.timeIntegration.verboseMode = 1
 
 ## use optimized simulation settings for performance
-simulationSettings.solutionSettings.sensorsWritePeriod = simulationSettings.timeIntegration.endTime/100
-simulationSettings.solutionSettings.writeSolutionToFile = False
+simulationSettings.solution.sensors.writePeriod = simulationSettings.timeIntegration.endTime/100
+simulationSettings.solution.file.write = False
 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
 
@@ -230,8 +230,8 @@ simulationSettings.timeIntegration.newton.numericalDifferentiation.jacobianConne
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
 
 simulationSettings.timeIntegration.verboseMode = 1
-# simulationSettings.displayComputationTime = True
-simulationSettings.displayStatistics = True
+# simulationSettings.show.computationTime = True
+simulationSettings.show.statistics = True
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.7
     

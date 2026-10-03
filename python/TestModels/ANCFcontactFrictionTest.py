@@ -144,10 +144,10 @@ simulationSettings = exu.SimulationSettings() #takes currently set values or def
 fact = 300
 simulationSettings.timeIntegration.numberOfSteps = fact
 simulationSettings.timeIntegration.endTime = 0.0005*fact
-simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact
-#simulationSettings.solutionSettings.outputPrecision = 4
-#simulationSettings.displayComputationTime = True
+simulationSettings.solution.file.write = (not testIsActive) #only the SolutionViewer reads it (#2492)
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/fact
+#simulationSettings.solution.precision = 4
+#simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8 #10000
@@ -164,7 +164,7 @@ simulationSettings.timeIntegration.newton.modifiedNewtonContractivity = 1e8
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = False
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
-simulationSettings.displayStatistics = True #just in this example ...
+simulationSettings.show.statistics = True #just in this example ...
 
 SC.visualizationSettings.bodies.showNumbers = False
 SC.visualizationSettings.nodes.defaultSize = 0.01
@@ -173,7 +173,7 @@ SC.visualizationSettings.connectors.defaultSize = 0.01
 SC.visualizationSettings.contact.contactPointsDefaultSize = 0.005
 SC.visualizationSettings.connectors.showContact = 1
 
-simulationSettings.solutionSettings.solutionInformation = "ANCF cable with rigid contact"
+simulationSettings.solution.file.information = "ANCF cable with rigid contact"
 
 # testIsActive = True
 if not testIsActive: 

@@ -221,8 +221,8 @@ SC.visualizationSettings.loads.drawSimplified = False
 SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
 SC.visualizationSettings.contour.outputVariableComponent = 1 #y-component
 
-simulationSettings.solutionSettings.solutionInformation = "ObjectGenericODE2 test"
-simulationSettings.solutionSettings.writeSolutionToFile=False
+simulationSettings.solution.file.information = "ObjectGenericODE2 test"
+simulationSettings.solution.file.write=False
 
 h=1e-3
 tEnd = 0.05
@@ -231,19 +231,19 @@ tEnd = 0.05
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = h
+simulationSettings.solution.file.writePeriod = h
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.verboseModeFile = 3
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-simulationSettings.solutionSettings.sensorsWritePeriod = h
+simulationSettings.solution.sensors.writePeriod = h
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.5 #SHOULD work with 0.9 as well
-simulationSettings.displayStatistics = False
-simulationSettings.displayComputationTime = False
+simulationSettings.show.statistics = False
+simulationSettings.show.computationTime = False
 
 #create animation:
-#simulationSettings.solutionSettings.recordImagesInterval = 0.0002
+#simulationSettings.solution.recordImagesInterval = 0.0002
 #SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
 
 #testIsActive = False

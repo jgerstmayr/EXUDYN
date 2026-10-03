@@ -68,7 +68,7 @@ def Demo1(showAll = True):
     mbs.Assemble()                     #assemble system and solve
     simulationSettings = exudyn.SimulationSettings()
     simulationSettings.timeIntegration.verboseMode=1 #provide some output
-    simulationSettings.solutionSettings.coordinatesSolutionFileName = DemoSolutionFile('demo1.txt')
+    simulationSettings.solution.file.name = DemoSolutionFile('demo1.txt')
 
     mbs.SolveDynamic(simulationSettings)
     if showAll:
@@ -137,11 +137,11 @@ def Demo2(showAll = True):
     fact = 200*(1+99*showAll) #10000
     simulationSettings.timeIntegration.numberOfSteps = 1*fact
     simulationSettings.timeIntegration.endTime = 0.001*fact*0.5*4
-    simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact*20
+    simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/fact*20
     if showAll:
-        simulationSettings.solutionSettings.coordinatesSolutionFileName = DemoSolutionFile('chain.txt')
+        simulationSettings.solution.file.name = DemoSolutionFile('chain.txt')
     simulationSettings.timeIntegration.verboseMode = int(showAll)
-    simulationSettings.linearSolverType = exudyn.LinearSolverType.EigenSparse
+    simulationSettings.linearSolver.solverType = exudyn.LinearSolverType.EigenSparse
 
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 

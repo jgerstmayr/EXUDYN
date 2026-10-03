@@ -77,9 +77,9 @@ if computeDynamic:
     f = 4400000
     simulationSettings.timeIntegration.numberOfSteps = 1*f
     simulationSettings.timeIntegration.endTime = 0.005*f
-    simulationSettings.solutionSettings.writeSolutionToFile = True
-    simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/5000
-    simulationSettings.displayComputationTime = True
+    simulationSettings.solution.file.write = True
+    simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/5000
+    simulationSettings.show.computationTime = True
     simulationSettings.timeIntegration.verboseMode = 1
 
     simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8
@@ -88,7 +88,7 @@ if computeDynamic:
     simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize = 1
     simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 6.055454452393343e-06 #eps^(1/3)
     # simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
-    simulationSettings.displayStatistics = True
+    simulationSettings.show.statistics = True
 
     SC.visualizationSettings.nodes.showNumbers = True
     SC.visualizationSettings.bodies.showNumbers = True
@@ -101,8 +101,8 @@ if computeDynamic:
     exu.special.InfoStat()
 
 else:
-    simulationSettings.solutionSettings.coordinatesSolutionFileName = "solution/staticSolution.txt"
-    simulationSettings.solutionSettings.appendToFile = False
+    simulationSettings.solution.file.name = "solution/staticSolution.txt"
+    simulationSettings.solution.file.append = False
     simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon = 1e-4
     #simulationSettings.staticSolver.newton.relativeTolerance = 1e-6
     simulationSettings.staticSolver.newton.absoluteTolerance = 1e-1

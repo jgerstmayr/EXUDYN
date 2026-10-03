@@ -96,9 +96,9 @@ h=0.001  #use small step size to detext contact switching
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = 0.005
-#simulationSettings.timeIntegration.simulateInRealtime = True
-simulationSettings.timeIntegration.realtimeFactor = 0.5
+simulationSettings.solution.file.writePeriod = 0.005
+#simulationSettings.timeIntegration.realtime.active = True
+simulationSettings.timeIntegration.realtime.factor = 0.5
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
@@ -118,13 +118,13 @@ SC.visualizationSettings.openGL.lineWidth=2
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 useGraphics = True
 if useGraphics:
-    simulationSettings.displayComputationTime = True
-    simulationSettings.displayStatistics = True
+    simulationSettings.show.computationTime = True
+    simulationSettings.show.statistics = True
     SC.renderer.Start()
     ## reload previous render configuration
     SC.renderer.RestoreSavedState()
 else:
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
 
 ## start solver
 mbs.SolveDynamic(simulationSettings, showHints=True)

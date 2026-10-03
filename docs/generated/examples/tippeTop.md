@@ -132,21 +132,21 @@ tEnd = 40
 h = 2*1e-4
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.002
-#simulationSettings.displayComputationTime = True
-#simulationSettings.displayGlobalTimers= True
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.002
+#simulationSettings.show.computationTime = True
+#simulationSettings.show.globalTimers= True
 simulationSettings.timeIntegration.verboseMode = 1
-# simulationSettings.timeIntegration.simulateInRealtime = True #turn this off to run faster!
+# simulationSettings.timeIntegration.realtime.active = True #turn this off to run faster!
 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 
 SC.visualizationSettings.nodes.defaultSize = 0.01
 
 
-simulationSettings.solutionSettings.outputPrecision = 6
-simulationSettings.solutionSettings.exportVelocities = False
-simulationSettings.solutionSettings.exportAccelerations = False
+simulationSettings.solution.precision = 6
+simulationSettings.solution.file.export.velocities = False
+simulationSettings.solution.file.export.accelerations = False
 
 simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2 = False
 simulationSettings.timeIntegration.newton.useModifiedNewton = False

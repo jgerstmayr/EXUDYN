@@ -92,6 +92,7 @@ computeItemTest
 emptySystemTest
 homogeneousTransformationParameterTest
 simulationSettingsDeprecationTest
+simulationSettingsRenamesTest
 rotationMarkerDeprecationTest
 libraryDeprecationTest
 homogeneousTransformationInterfaceTest

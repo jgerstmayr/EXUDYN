@@ -118,9 +118,9 @@ if not testIsActive:
 
 stepSize = 0.002
 simulationSettings = exu.SimulationSettings()
-#simulationSettings.displayComputationTime = True
+#simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = (not testIsActive)
-simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive)
+simulationSettings.solution.file.write = (not testIsActive)
 
 simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
 simulationSettings.timeIntegration.endTime = endTime

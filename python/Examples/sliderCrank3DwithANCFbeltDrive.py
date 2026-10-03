@@ -432,7 +432,7 @@ simulationSettings = exu.SimulationSettings()
 
 simulationSettings.timeIntegration.numberOfSteps = tSim*1000
 simulationSettings.timeIntegration.endTime = tSim
-simulationSettings.solutionSettings.writeSolutionToFile = True
+simulationSettings.solution.file.write = True
 simulationSettings.timeIntegration.verboseMode = 1
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-10
 
@@ -447,7 +447,7 @@ simulationSettings.timeIntegration.newton.modifiedNewtonContractivity = 1e8
 
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 
 
 
@@ -462,7 +462,7 @@ SC.visualizationSettings.connectors.showContact = True
 
 #create animation:
 if False:
-    simulationSettings.solutionSettings.recordImagesInterval = 0.002
+    simulationSettings.solution.recordImagesInterval = 0.002
     SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
     SC.visualizationSettings.view0.window.renderWindowSize = [1920,1080]
     SC.visualizationSettings.openGL.multiSampling = 4

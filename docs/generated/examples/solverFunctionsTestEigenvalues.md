@@ -108,7 +108,7 @@ simulationSettings.staticSolver.verboseMode = 1
 #simulationSettings.staticSolver.newton.absoluteTolerance = 1e-8
 simulationSettings.staticSolver.newton.relativeTolerance = 1e-6 #1e-5 works for 64 elements
 simulationSettings.staticSolver.newton.maxIterations = 20 #50 for bending into circle
-#simulationSettings.displayComputationTime = True
+#simulationSettings.show.computationTime = True
 
     
 SC.renderer.Start()

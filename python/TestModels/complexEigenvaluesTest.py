@@ -90,13 +90,13 @@ tEnd = 1     #end time of simulation
 h = 0.001    #step size; leads to 1000 steps
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 5e-3 #output interval general
-simulationSettings.solutionSettings.sensorsWritePeriod = 5e-3  #output interval of sensors
+simulationSettings.solution.file.writePeriod = 5e-3 #output interval general
+simulationSettings.solution.sensors.writePeriod = 5e-3  #output interval of sensors
 simulationSettings.timeIntegration.numberOfSteps = tEnd/h
 simulationSettings.timeIntegration.endTime = tEnd
 
 simulationSettings.timeIntegration.verboseMode = 1             #show some solver output
-# simulationSettings.displayComputationTime = True               #show how fast
+# simulationSettings.show.computationTime = True               #show how fast
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
 
@@ -203,7 +203,7 @@ tEnd = 1.5     #end time of simulation
 h = 0.002    #step size; leads to 1000 steps
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.sensorsWritePeriod = h  #output interval of sensors
+simulationSettings.solution.sensors.writePeriod = h  #output interval of sensors
 simulationSettings.timeIntegration.numberOfSteps = tEnd/h
 simulationSettings.timeIntegration.endTime = tEnd
 
@@ -275,7 +275,7 @@ mbs.Assemble()
 SC.visualizationSettings.loads.show=False
 SC.visualizationSettings.openGL.multiSampling=4
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.sensorsWritePeriod = 1e-3
+simulationSettings.solution.sensors.writePeriod = 1e-3
 simulationSettings.timeIntegration.numberOfSteps=1000
 
 #useAbsoluteValues is used to compare with GE, thus having double eigen values

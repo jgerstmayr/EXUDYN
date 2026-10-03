@@ -123,13 +123,13 @@ sVel=mbs.AddSensor(SensorBody(bodyNumber=massPoint, storeInternal=True,
 mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.005
-simulationSettings.solutionSettings.sensorsWritePeriod = stepSize  #output interval
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.005
+simulationSettings.solution.sensors.writePeriod = stepSize  #output interval
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
 simulationSettings.timeIntegration.endTime = tEnd
-#simulationSettings.timeIntegration.simulateInRealtime = True
-#simulationSettings.timeIntegration.realtimeFactor = 0.5
+#simulationSettings.timeIntegration.realtime.active = True
+#simulationSettings.timeIntegration.realtime.factor = 0.5
 #simulationSettings.timeIntegration.discontinuous.iterationTolerance = 1e-2
 #simulationSettings.timeIntegration.discontinuous.maxIterations = 3
 # simulationSettings.timeIntegration.discontinuous.useRecommendedStepSize = False
@@ -138,7 +138,7 @@ simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 SC.visualizationSettings.view0.window.renderWindowSize=[1600,1400]

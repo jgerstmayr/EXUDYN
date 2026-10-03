@@ -188,11 +188,11 @@ mbs.Assemble()
 #mbs.systemData.Info()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-5  #output interval
-simulationSettings.solutionSettings.sensorsWritePeriod = 1e-5  #output interval
+simulationSettings.solution.file.writePeriod = 1e-5  #output interval
+simulationSettings.solution.sensors.writePeriod = 1e-5  #output interval
 
 descrStr = "Laval rotor, resonance="+str(round(fRes,3))+", "+modeStr[mode]
-simulationSettings.solutionSettings.solutionInformation = descrStr
+simulationSettings.solution.file.information = descrStr
 
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
@@ -218,13 +218,13 @@ simulationSettings.timeIntegration.endTime = 2.5
 createAnimation=True
 if createAnimation:
     SC.renderer.DoIdleTasks()    #wait for pressing SPACE bar to continue
-    simulationSettings.solutionSettings.recordImagesInterval = 0.01
+    simulationSettings.solution.recordImagesInterval = 0.01
     if mode == 1:
         simulationSettings.timeIntegration.endTime = 1
-        simulationSettings.solutionSettings.recordImagesInterval = 0.0025
+        simulationSettings.solution.recordImagesInterval = 0.0025
     if mode == 2:
         simulationSettings.timeIntegration.endTime = 0.5
-        simulationSettings.solutionSettings.recordImagesInterval = 0.001
+        simulationSettings.solution.recordImagesInterval = 0.001
         
     SC.visualizationSettings.exportImages.saveImageFileName = "images/frame"
 

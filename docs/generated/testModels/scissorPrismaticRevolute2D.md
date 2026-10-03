@@ -58,31 +58,31 @@ simulationSettings = exu.SimulationSettings()
 f = 500
 simulationSettings.timeIntegration.numberOfSteps = int(1*f)
 simulationSettings.timeIntegration.endTime = 0.02*f #make small steps to see something during simulation
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/5000
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/5000
 
-simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
-simulationSettings.displayComputationTime = True
+simulationSettings.solution.file.write = (not testIsActive) #only the SolutionViewer reads it (#2492)
+simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.timeIntegration.verboseModeFile = 0
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = False
 simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep = True
 
-#added JacobianODE2, but example computed with numDiff forODE2connectors, 2022-01-18: 27.202556489044145 :
-simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2connectors=True 
+#added JacobianODE2, but example computed with numDiff forODE2Connectors, 2022-01-18: 27.202556489044145 :
+simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2Connectors=True 
 
 simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = simulationSettings.timeIntegration.generalizedAlpha.useNewmark
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.61
 simulationSettings.timeIntegration.adaptiveStep = False
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
 simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = True
-simulationSettings.solutionSettings.coordinatesSolutionFileName= "solution/coordinatesSolution.txt"
+simulationSettings.solution.file.name= "solution/coordinatesSolution.txt"
 
 
-simulationSettings.displayComputationTime = False
-simulationSettings.displayStatistics = True
+simulationSettings.show.computationTime = False
+simulationSettings.show.statistics = True
 
 
 if not testIsActive: #only start graphics once, but after background is set
@@ -221,7 +221,7 @@ exu.sys['testResult'] = 1e-2*(resUy + resIt)
 #+++++++++++++++++++++++++++++++++++
 #plot data:
 
-#if simulationSettings.solutionSettings.writeSolutionToFile:
+#if simulationSettings.solution.file.write:
 #    import matplotlib.pyplot as plt
 #    import matplotlib.ticker as ticker
 

@@ -364,12 +364,12 @@ h=0.001  #use small step size to detext contact switching
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile= False #set False for CPU performance measurement
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.01
-simulationSettings.solutionSettings.outputPrecision = 16
+simulationSettings.solution.file.write= False #set False for CPU performance measurement
+simulationSettings.solution.sensors.writePeriod = 0.01
+simulationSettings.solution.precision = 16
 
 simulationSettings.timeIntegration.verboseMode = 1
-#simulationSettings.linearSolverSettings.ignoreSingularJacobian = True
+#simulationSettings.linearSolver.ignoreSingularJacobian = True
 
 # simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
 # simulationSettings.timeIntegration.generalizedAlpha.useNewmark = True
@@ -386,7 +386,7 @@ if False: #record animation frames:
     SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
     SC.visualizationSettings.view0.window.renderWindowSize=[1600,1024]
     SC.visualizationSettings.openGL.multiSampling = 4
-    simulationSettings.solutionSettings.recordImagesInterval = 0.02
+    simulationSettings.solution.recordImagesInterval = 0.02
     
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 useGraphics = True

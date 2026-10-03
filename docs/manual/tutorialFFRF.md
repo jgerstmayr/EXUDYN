@@ -196,9 +196,9 @@ Set simulation settings and run the simulation:
     simulationSettings.timeIntegration.endTime = tEnd
     simulationSettings.timeIntegration.verboseMode = 1
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
-    simulationSettings.solutionSettings.sensorsWritePeriod = h
+    simulationSettings.solution.sensors.writePeriod = h
     simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.8
-    simulationSettings.displayComputationTime = True
+    simulationSettings.show.computationTime = True
 
     mbs.SolveDynamic(simulationSettings=simulationSettings)
 

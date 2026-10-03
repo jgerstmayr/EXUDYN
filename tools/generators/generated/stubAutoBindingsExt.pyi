@@ -141,7 +141,7 @@ class MainSystem:
     ...
 
     @overload
-    def SolveDynamic(self, simulationSettings=None, solverType=exudyn.DynamicSolverType.GeneralizedAlpha, updateInitialValues=False, storeSolver=True, showHints=False, showCausingItems=True, autoAssemble=True) -> bool: 
+    def SolveDynamic(self, simulationSettings=None, solverType=None, updateInitialValues=False, storeSolver=True, showHints=False, showCausingItems=True, autoAssemble=True) -> bool: 
         """solves the dynamic mbs problem using simulationSettings and solver type; see MainSolverImplicitSecondOrder, sec-mainsolverimplicitsecondorder, for further details of the dynamic solver; this function is also available in exudyn (using exudyn.SolveDynamic(...))."""
     ...
 

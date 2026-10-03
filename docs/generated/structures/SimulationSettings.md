@@ -6,10 +6,94 @@
 
 This section includes hierarchical structures for simulation settings, e.g., time integration, static solver, Newton iteration and solution file export.
 
+(sec-solutionfileexportsettings)=
+### SolutionFileExportSettings
+
+The quantities written into the coordinates solution file in addition to the coordinates.
+
+SolutionFileExportSettings has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
+| Name | type / function return type | size | default value / function args | description |
+|---|---|---|---|---|
+| `accelerations`<br>`simulationSettings.solution.file.export.accelerations` | bool |  | True | add {ref}`ODE2 <ODE2>` accelerations to the solution file |
+| `algebraicCoordinates`<br>`simulationSettings.solution.file.export.algebraicCoordinates` | bool |  | True | add algebraicCoordinates (=Lagrange multipliers) to the solution file |
+| `dataCoordinates`<br>`simulationSettings.solution.file.export.dataCoordinates` | bool |  | True | add DataCoordinates to the solution file |
+| `ODE1Velocities`<br>`simulationSettings.solution.file.export.ODE1Velocities` | bool |  | True | add coordinatesODE1_t to the solution file |
+| `velocities`<br>`simulationSettings.solution.file.export.velocities` | bool |  | True | add {ref}`ODE2 <ODE2>` velocities to the solution file |
+
+
+
+(sec-solutionfilesettings)=
+### SolutionFileSettings
+
+The coordinates solution file: all coordinates of the system versus time, read by the SolutionViewer and exudyn.utilities.LoadSolutionFile.
+
+SolutionFileSettings has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
+| Name | type / function return type | size | default value / function args | description |
+|---|---|---|---|---|
+| `export`<br>`simulationSettings.solution.file.export` | SolutionFileExportSettings |  |  | which quantities are written in addition to the coordinates |
+| `append`<br>`simulationSettings.solution.file.append` | bool |  | False | flag (true/false); if true, the solution and the solver information are appended to existing files (otherwise created); in BINARY mode, files are always replaced and this parameter is ineffective! |
+| `binary`<br>`simulationSettings.solution.file.binary` | bool |  | False | if true, the solution file is written in binary format for improved speed and smaller file sizes; setting solution.precision >= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that append is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files |
+| `flushAboveCoordinates`<br>`simulationSettings.solution.file.flushAboveCoordinates` | PInt |  | 10000 | number of coordinates above which the buffers of the solution file are always flushed, irrespectively of solution.flushFilesImmediately; for larger files, writing takes so much time that flushing does not add considerable time |
+| `information`<br>`simulationSettings.solution.file.information` | String |  | '' | special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in [](#sec-utf8), but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki) |
+| `name`<br>`simulationSettings.solution.file.name` | FileName |  | 'solution/coordinatesSolution' | filename and (relative) path of the solution file containing all multibody system coordinates versus time; the default is in the directory solution/, like every file a run writes by default, so that nothing is written beside the script; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binary=True) |
+| `write`<br>`simulationSettings.solution.file.write` | bool |  | True | flag (true/false), which determines if the coordinates are written to the solution file; standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional quantities, see export |
+| `writeFooter`<br>`simulationSettings.solution.file.writeFooter` | bool |  | True | flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics |
+| `writeHeader`<br>`simulationSettings.solution.file.writeHeader` | bool |  | True | flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration) |
+| `writeInitialValues`<br>`simulationSettings.solution.file.writeInitialValues` | bool |  | True | flag (true/false); if true, initial values are exported for the start time; applies to the solution file and the sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation |
+| `writePeriod`<br>`simulationSettings.solution.file.writePeriod` | UReal |  | 0.01 | time span (period), determines how often the solution file is written during a simulation |
+
+
+
+(sec-solutionsensorssettings)=
+### SolutionSensorsSettings
+
+Storing and writing of the sensors.
+
+SolutionSensorsSettings has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
+| Name | type / function return type | size | default value / function args | description |
+|---|---|---|---|---|
+| `active`<br>`simulationSettings.solution.sensors.active` | bool |  | True | flag (true/false); if false, no sensor files will be created and no sensor data will be stored; this may be advantageous for benchmarking as well as for special solvers which should not overwrite existing results (e.g. ComputeODE2Eigenvalues); settings this value to False may cause problems if sensors are required to perform operations which are needed e.g. in UserSensors as input of loads, etc. |
+| `append`<br>`simulationSettings.solution.sensors.append` | bool |  | False | flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations |
+| `writeFooter`<br>`simulationSettings.solution.sensors.writeFooter` | bool |  | False | flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration) |
+| `writeHeader`<br>`simulationSettings.solution.sensors.writeHeader` | bool |  | True | flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration) |
+| `writePeriod`<br>`simulationSettings.solution.sensors.writePeriod` | UReal |  | 0.01 | time span (period), determines how often the sensor output is written to file or internal storage during a simulation |
+
+
+
+(sec-solutionrestartsettings)=
+### SolutionRestartSettings
+
+The restart file: the state of the system written regularly, from which a simulation can be continued.
+
+SolutionRestartSettings has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
+| Name | type / function return type | size | default value / function args | description |
+|---|---|---|---|---|
+| `name`<br>`simulationSettings.solution.restart.name` | FileName |  | 'solution/restartFile.txt' | filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart |
+| `write`<br>`simulationSettings.solution.restart.write` | bool |  | False | flag (true/false), which determines if the restart file is written regularly, see name for details |
+| `writePeriod`<br>`simulationSettings.solution.restart.writePeriod` | UReal |  | 0.01 | time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance |
+
+
+
 (sec-solutionsettings)=
 ### SolutionSettings
 
-General settings for exporting the solution (results) of a simulation.
+General settings for exporting the solution (results) of a simulation: the solution file, the sensors and the restart file.
 
 SolutionSettings has the following items:
 
@@ -18,33 +102,24 @@ SolutionSettings has the following items:
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
-| `appendToFile`<br>`simulationSettings.solutionSettings.appendToFile` | bool |  | False | flag (true/false); if true, solution and solverInformation is appended to existing file (otherwise created); in BINARY mode, files are always replaced and this parameter is ineffective! |
-| `binarySolutionFile`<br>`simulationSettings.solutionSettings.binarySolutionFile` | bool |  | False | if true, the solution file is written in binary format for improved speed and smaller file sizes; setting outputPrecision >= 8 uses double (8 bytes), otherwise float (4 bytes) is used; note that appendToFile is ineffective and files are always replaced without asking! If not provided, file ending will read .sol in case of binary files and .txt in case of text files |
-| `coordinatesSolutionFileName`<br>`simulationSettings.solutionSettings.coordinatesSolutionFileName` | FileName |  | 'solution/coordinatesSolution' | filename and (relative) path of solution file (coordinatesSolutionFile) containing all multibody system coordinates versus time; the default is in the directory solution/, like every file a run writes by default, so that nothing is written beside the script; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only; filename ending will be added automatically if not provided: .txt in case of text mode and .sol in case of binary solution files (binarySolutionFile=True) |
-| `exportAccelerations`<br>`simulationSettings.solutionSettings.exportAccelerations` | bool |  | True | add {ref}`ODE2 <ODE2>` accelerations to solution file (coordinatesSolutionFile) |
-| `exportAlgebraicCoordinates`<br>`simulationSettings.solutionSettings.exportAlgebraicCoordinates` | bool |  | True | add algebraicCoordinates (=Lagrange multipliers) to solution file (coordinatesSolutionFile) |
-| `exportDataCoordinates`<br>`simulationSettings.solutionSettings.exportDataCoordinates` | bool |  | True | add DataCoordinates to solution file (coordinatesSolutionFile) |
-| `exportODE1Velocities`<br>`simulationSettings.solutionSettings.exportODE1Velocities` | bool |  | True | add coordinatesODE1_t to solution file (coordinatesSolutionFile) |
-| `exportVelocities`<br>`simulationSettings.solutionSettings.exportVelocities` | bool |  | True | add {ref}`ODE2 <ODE2>` velocities to solution file (coordinatesSolutionFile) |
-| `flushFilesDOF`<br>`simulationSettings.solutionSettings.flushFilesDOF` | PInt |  | 10000 | number of DOF, above which solution file (coordinatesSolutionFile) buffers are always flushed, irrespectively of whether flushFilesImmediately is set True or False (see also flushFilesImmediately); for larger files, writing takes so much time that flushing does not add considerable time |
-| `flushFilesImmediately`<br>`simulationSettings.solutionSettings.flushFilesImmediately` | bool |  | False | flush file buffers after every solution period written (coordinatesSolutionFile and sensor files); if set False, the output is written through a buffer, which is highly efficient, but during simulation, files may be always in an incomplete state; if set True, this may add a large amount of CPU time as the process waits until files are really written to hard disc (especially for simulation of small scale systems, writing 10.000s of time steps; at least 5us per step/file, depending on hardware) |
-| `outputPrecision`<br>`simulationSettings.solutionSettings.outputPrecision` | UInt |  | 10 | precision for floating point numbers written to solution and sensor files |
-| `recordImagesInterval`<br>`simulationSettings.solutionSettings.recordImagesInterval` | Real |  | -1. | record frames of the main view in the renderer (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages; note that only the main view (0) can be saved in this way, while for multiple views, you have to aquire data via renderer.RedrawAndGetImage() |
-| `restartFileName`<br>`simulationSettings.solutionSettings.restartFileName` | FileName |  | 'solution/restartFile.txt' | filename and (relative) path of text file for storing solution after every restartWritePeriod if writeRestartFile=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart |
-| `restartWritePeriod`<br>`simulationSettings.solutionSettings.restartWritePeriod` | UReal |  | 0.01 | time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance |
-| `sensorsAppendToFile`<br>`simulationSettings.solutionSettings.sensorsAppendToFile` | bool |  | False | flag (true/false); if true, sensor output is appended to existing file (otherwise created) or in case of internal storage, it is appended to existing currently stored data; this allows storing sensor values over different simulations |
-| `sensorsStoreAndWriteFiles`<br>`simulationSettings.solutionSettings.sensorsStoreAndWriteFiles` | bool |  | True | flag (true/false); if false, no sensor files will be created and no sensor data will be stored; this may be advantageous for benchmarking as well as for special solvers which should not overwrite existing results (e.g. ComputeODE2Eigenvalues); settings this value to False may cause problems if sensors are required to perform operations which are needed e.g. in UserSensors as input of loads, etc. |
-| `sensorsWriteFileFooter`<br>`simulationSettings.solutionSettings.sensorsWriteFileFooter` | bool |  | False | flag (true/false); if true, file footer is written for sensor output (turn off, e.g. for multiple runs of time integration) |
-| `sensorsWriteFileHeader`<br>`simulationSettings.solutionSettings.sensorsWriteFileHeader` | bool |  | True | flag (true/false); if true, file header is written for sensor output (turn off, e.g. for multiple runs of time integration) |
-| `sensorsWritePeriod`<br>`simulationSettings.solutionSettings.sensorsWritePeriod` | UReal |  | 0.01 | time span (period), determines how often the sensor output is written to file or internal storage during a simulation |
-| `solutionInformation`<br>`simulationSettings.solutionSettings.solutionInformation` | String |  | '' | special information added to header of solution file (e.g. parameters and settings, modes, ...); character encoding my be UTF-8, restricted to characters in [](#sec-utf8), but for compatibility, it is recommended to use ASCII characters only (95 characters, see wiki) |
-| `solutionWritePeriod`<br>`simulationSettings.solutionSettings.solutionWritePeriod` | UReal |  | 0.01 | time span (period), determines how often the solution file (coordinatesSolutionFile) is written during a simulation |
-| `solverInformationFileName`<br>`simulationSettings.solutionSettings.solverInformationFileName` | FileName |  | 'solution/solverInformation.txt' | filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if solutionSettings.appendToFile is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only |
-| `writeFileFooter`<br>`simulationSettings.solutionSettings.writeFileFooter` | bool |  | True | flag (true/false); if true, information at end of simulation is written: convergence, total solution time, statistics |
-| `writeFileHeader`<br>`simulationSettings.solutionSettings.writeFileHeader` | bool |  | True | flag (true/false); if true, file header is written (turn off, e.g. for multiple runs of time integration) |
-| `writeInitialValues`<br>`simulationSettings.solutionSettings.writeInitialValues` | bool |  | True | flag (true/false); if true, initial values are exported for the start time; applies to coordinatesSolution and sensor files; this may not be wanted in the append file mode if the initial values are identical to the final values of a previous computation |
-| `writeRestartFile`<br>`simulationSettings.solutionSettings.writeRestartFile` | bool |  | False | flag (true/false), which determines if restart file is written regularly, see restartFileName for details |
-| `writeSolutionToFile`<br>`simulationSettings.solutionSettings.writeSolutionToFile` | bool |  | True | flag (true/false), which determines if (global) solution vector is written to the solution file (coordinatesSolutionFile); standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional coordinates in the solution file, see the options below |
+| `file`<br>`simulationSettings.solution.file` | SolutionFileSettings |  |  | the coordinates solution file |
+| `restart`<br>`simulationSettings.solution.restart` | SolutionRestartSettings |  |  | the restart file |
+| `sensors`<br>`simulationSettings.solution.sensors` | SolutionSensorsSettings |  |  | storing and writing of the sensors |
+| `flushFilesImmediately`<br>`simulationSettings.solution.flushFilesImmediately` | bool |  | False | flush file buffers after every period written (solution file and sensor files); if set False, the output is written through a buffer, which is highly efficient, but during simulation, files may be always in an incomplete state; if set True, this may add a large amount of CPU time as the process waits until files are really written to hard disc (especially for simulation of small scale systems, writing 10.000s of time steps; at least 5us per step/file, depending on hardware) |
+| `precision`<br>`simulationSettings.solution.precision` | UInt |  | 10 | precision for floating point numbers written to the solution and sensor files; the precision of the output to the console is consolePrecision |
+| `recordImagesInterval`<br>`simulationSettings.solution.recordImagesInterval` | Real |  | -1. | record frames of the main view in the renderer (images) during solving: amount of time to wait until next image (frame) is recorded; set recordImages = -1. if no images shall be recorded; set, e.g., recordImages = 0.01 to record an image every 10 milliseconds (requires that the time steps / load steps are sufficiently small!); for file names, etc., see VisualizationSettings.exportImages; note that only the main view (0) can be saved in this way, while for multiple views, you have to aquire data via renderer.RedrawAndGetImage() |
+| `solverInformationFileName`<br>`simulationSettings.solution.solverInformationFileName` | FileName |  | 'solution/solverInformation.txt' | filename and (relative) path of text file showing detailed information during solving; detail level according to yourSolver.verboseModeFile; if file.append is true, the information is appended in every solution step; directory will be created if it does not exist; character encoding of string is up to your filesystem, but for compatibility, it is recommended to use letters, numbers and '_' only |
+
+
+
+(sec-solutionsettingsdeprecated)=
+### SolutionSettingsDeprecated
+
+The settings of the solution as they were named up to Exudyn 1.11: each forwards to its place in simulationSettings.solution, with a DeprecationWarning.
+
+SolutionSettingsDeprecated has the following items:
+
+*(none: this structure has no items in the Python interface. A deprecated item keeps working and is described where it moved to.)*
 
 
 
@@ -64,7 +139,7 @@ NumericalDifferentiationSettings has the following items:
 | `doSystemWideDifferentiation`<br>`simulationSettings.timeIntegration.newton.numericalDifferentiation.doSystemWideDifferentiation`<br>`simulationSettings.staticSolver.newton.numericalDifferentiation.doSystemWideDifferentiation` | bool |  | False | True: system wide differentiation (e.g. all {ref}`ODE2 <ODE2>` equations w.r.t. all {ref}`ODE2 <ODE2>` coordinates); False: only local (object) differentiation |
 | `forAE`<br>`simulationSettings.timeIntegration.newton.numericalDifferentiation.forAE`<br>`simulationSettings.staticSolver.newton.numericalDifferentiation.forAE` | bool |  | False | flag (true/false); false = perform direct computation of jacobian for algebraic equations (AE), true = use numerical differentiation; as there must always exist an analytical implemented jacobian for AE, 'true' should only be used for verification |
 | `forODE2`<br>`simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2`<br>`simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2` | bool |  | False | flag (true/false); false = perform direct computation (e.g., using autodiff) of jacobian for ODE2 equations, true = use numerical differentiation; numerical differentiation is less efficient and may lead to numerical problems, but may smoothen problems of analytical derivatives; sometimes the analytical derivative may neglect terms |
-| `forODE2connectors`<br>`simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2connectors`<br>`simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2connectors` | bool |  | False | flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE |
+| `forODE2Connectors`<br>`simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2Connectors`<br>`simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2Connectors` | bool |  | False | flag (true/false); false: if also forODE2==false, perform direct computation of jacobian for ODE2 terms for connectors; else: use numerical differentiation; NOTE: THIS FLAG IS FOR DEVELOPMENT AND WILL BE ERASED IN FUTURE |
 | `jacobianConnectorDerivative`<br>`simulationSettings.timeIntegration.newton.numericalDifferentiation.jacobianConnectorDerivative`<br>`simulationSettings.staticSolver.newton.numericalDifferentiation.jacobianConnectorDerivative` | bool |  | True | True: for analytic Jacobians of connectors, the Jacobian derivative is computed, causing additional CPU costs and not beeing available for all connectors or markers (thus switching to numerical differentiation); False: Jacobian derivative is neglected in analytic Jacobians (but included in numerical Jacobians), which often has only minor influence on convergence |
 | `minimumCoordinateSize`<br>`simulationSettings.timeIntegration.newton.numericalDifferentiation.minimumCoordinateSize`<br>`simulationSettings.staticSolver.newton.numericalDifferentiation.minimumCoordinateSize` | UReal |  | 0.01 | minimum size of coordinates in relative differentiation parameter |
 | `relativeEpsilon`<br>`simulationSettings.timeIntegration.newton.numericalDifferentiation.relativeEpsilon`<br>`simulationSettings.staticSolver.newton.numericalDifferentiation.relativeEpsilon` | UReal |  | 1e-7 | relative differentiation parameter epsilon; the numerical differentiation parameter $\varepsilon$ follows from the formula ($\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, \|q_i + [q^{Ref}_i]\|)$, with $\varepsilon_\mathrm{relative}$=relativeEpsilon, $q_{min} = $minimumCoordinateSize, $q_i$ is the current coordinate which is differentiated, and $qRef_i$ is the reference coordinate of the current coordinate |
@@ -104,6 +179,7 @@ NewtonSettings has the following items:
 |---|---|---|---|---|
 | `numericalDifferentiation`<br>`simulationSettings.timeIntegration.newton.numericalDifferentiation`<br>`simulationSettings.staticSolver.newton.numericalDifferentiation` | NumericalDifferentiationSettings |  |  | numerical differentiation parameters for numerical jacobian (e.g. Newton in static solver or implicit time integration) |
 | `absoluteTolerance`<br>`simulationSettings.timeIntegration.newton.absoluteTolerance`<br>`simulationSettings.staticSolver.newton.absoluteTolerance` | UReal |  | 1e-10 | absolute tolerance of residual for Newton (needed e.g. if residual is fulfilled right at beginning); condition: sqrt(q*q)/numberOfCoordinates <= absoluteTolerance |
+| `active`<br>`simulationSettings.timeIntegration.newton.active`<br>`simulationSettings.staticSolver.newton.active` | bool |  | True | flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution |
 | `adaptInitialResidual`<br>`simulationSettings.timeIntegration.newton.adaptInitialResidual`<br>`simulationSettings.staticSolver.newton.adaptInitialResidual` | bool |  | True | flag (true/false); false = standard; True: if initialResidual is very small (or zero), it may increase significantely in the first Newton iteration; to achieve relativeTolerance, the initialResidual will by updated by a higher residual within the first Newton iteration |
 | `maximumSolutionNorm`<br>`simulationSettings.timeIntegration.newton.maximumSolutionNorm`<br>`simulationSettings.staticSolver.newton.maximumSolutionNorm` | UReal |  | 1e38 | this is the maximum allowed value for solutionU.L2NormSquared() which is the square of the square norm (i.e., value=$u_1^2$+$u_2^2$+...), and solutionV/A...; if the norm of solution vectors is larger, Newton method is stopped; the default value is chosen such that it would still work for single precision numbers (float) |
 | `maxIterations`<br>`simulationSettings.timeIntegration.newton.maxIterations`<br>`simulationSettings.staticSolver.newton.maxIterations` | UInt |  | 25 | maximum number of iterations (including modified + restart Newton iterations); after that total number of iterations, the static/dynamic solver refines the step size or stops with an error |
@@ -111,10 +187,9 @@ NewtonSettings has the following items:
 | `maxModifiedNewtonRestartIterations`<br>`simulationSettings.timeIntegration.newton.maxModifiedNewtonRestartIterations`<br>`simulationSettings.staticSolver.newton.maxModifiedNewtonRestartIterations` | UInt |  | 7 | maximum number of iterations for modified Newton after a Jacobian update; after that number of iterations, the full Newton method is started for this step |
 | `modifiedNewtonContractivity`<br>`simulationSettings.timeIntegration.newton.modifiedNewtonContractivity`<br>`simulationSettings.staticSolver.newton.modifiedNewtonContractivity` | PReal |  | 0.5 | maximum contractivity (=reduction of error in every Newton iteration) accepted by modified Newton; if contractivity is greater, a Jacobian update is computed |
 | `modifiedNewtonJacUpdatePerStep`<br>`simulationSettings.timeIntegration.newton.modifiedNewtonJacUpdatePerStep`<br>`simulationSettings.staticSolver.newton.modifiedNewtonJacUpdatePerStep` | bool |  | False | True: compute Jacobian at every time step (or static step), but not in every Newton iteration (except for bad convergence ==> switch to full Newton) |
-| `newtonResidualMode`<br>`simulationSettings.timeIntegration.newton.newtonResidualMode`<br>`simulationSettings.staticSolver.newton.newtonResidualMode` | UInt |  | 0 | 0 ... use residual for computation of error (standard); 1 ... use {ref}`ODE2 <ODE2>` and {ref}`ODE1 <ODE1>` newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag |
 | `relativeTolerance`<br>`simulationSettings.timeIntegration.newton.relativeTolerance`<br>`simulationSettings.staticSolver.newton.relativeTolerance` | UReal |  | 1e-8 | relative tolerance of residual for Newton (general goal of Newton is to decrease the residual by this factor) |
+| `residualMode`<br>`simulationSettings.timeIntegration.newton.residualMode`<br>`simulationSettings.staticSolver.newton.residualMode` | UInt |  | 0 | 0 ... use residual for computation of error (standard); 1 ... use {ref}`ODE2 <ODE2>` and {ref}`ODE1 <ODE1>` newton increment for error (set relTol and absTol to same values!) ==> may be advantageous if residual is zero, e.g., in kinematic analysis; TAKE CARE with this flag |
 | `useModifiedNewton`<br>`simulationSettings.timeIntegration.newton.useModifiedNewton`<br>`simulationSettings.staticSolver.newton.useModifiedNewton` | bool |  | False | True: compute Jacobian only at first call to solver; the Jacobian (and its factorizations) is not computed in each Newton iteration, even not in every (time integration) step; False: Jacobian (and factorization) is computed in every Newton iteration (default, but may be costly) |
-| `useNewtonSolver`<br>`simulationSettings.timeIntegration.newton.useNewtonSolver`<br>`simulationSettings.staticSolver.newton.useNewtonSolver` | bool |  | True | flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution |
 | `weightTolerancePerCoordinate`<br>`simulationSettings.timeIntegration.newton.weightTolerancePerCoordinate`<br>`simulationSettings.staticSolver.newton.weightTolerancePerCoordinate` | bool |  | False | flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size |
 
 
@@ -156,11 +231,39 @@ ExplicitIntegrationSettings has the following items:
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
-| `computeEndOfStepAccelerations`<br>`simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations` | bool |  | True | accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different |
-| `computeMassMatrixInversePerBody`<br>`simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody` | bool |  | False | If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded) - together with a sparse solver, linearSolverType = exu.LinearSolverType.EigenSparse: with the dense default the inverse is stored as a dense matrix and every step costs O(n^2) (#2400) |
-| `dynamicSolverType`<br>`simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType` | DynamicSolverType |  | DynamicSolverType::DOPRI5 | selection of explicit solver type (DOPRI5, ExplicitEuler, ExplicitMidpoint, RK44, RK67, VelocityVerlet, ...), for detailed description see DynamicSolverType, [](#sec-dynamicsolvertype), but only referring to explicit solvers. |
-| `eliminateConstraints`<br>`simulationSettings.timeIntegration.explicitIntegration.eliminateConstraints` | bool |  | True | True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)! |
-| `useLieGroupIntegration`<br>`simulationSettings.timeIntegration.explicitIntegration.useLieGroupIntegration` | bool |  | True | True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates! |
+| `computeEndOfStepAccelerations`<br>`simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations` | bool |  | True | accelerations are computed at stages of the explicit integration scheme; if the user needs accelerations at the end of a step, this flag needs to be activated; if True, this causes a second call to the RHS of the equations, which may DOUBLE COMPUTATIONAL COSTS for one-step-methods; if False, the accelerations are re-used from the last stage, being slightly different |
+| `computeMassMatrixInversePerBody`<br>`simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody` | bool |  | False | If true, the solver assumes the bodies to be independent and computes the inverse of the mass matrix for all bodies independently; this may lead to WRONG RESULTS, if bodies share nodes, e.g., two MassPoint objects put on the same node or a beam with a mass point attached at a shared node; however, it may speed up explicit time integration for large systems significantly (multi-threaded) - together with a sparse solver, linearSolver.solverType = exu.LinearSolverType.EigenSparse: with the dense default the inverse is stored as a dense matrix and every step costs O(n^2) (#2400) |
+| `eliminateConstraints`<br>`simulationSettings.timeIntegration.explicit.eliminateConstraints` | bool |  | True | True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)! |
+| `useLieGroupIntegration`<br>`simulationSettings.timeIntegration.explicit.useLieGroupIntegration` | bool |  | True | True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates! |
+
+
+
+(sec-explicitintegrationsettingsdeprecated)=
+### ExplicitIntegrationSettingsDeprecated
+
+The settings of the explicit solvers as they were named up to Exudyn 1.11: each forwards to its place in simulationSettings.timeIntegration, with a DeprecationWarning.
+
+ExplicitIntegrationSettingsDeprecated has the following items:
+
+*(none: this structure has no items in the Python interface. A deprecated item keeps working and is described where it moved to.)*
+
+
+
+(sec-realtimesettings)=
+### RealtimeSettings
+
+Simulation in realtime: the time integration waits until the CPU time has reached the simulation time.
+
+RealtimeSettings has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
+| Name | type / function return type | size | default value / function args | description |
+|---|---|---|---|---|
+| `active`<br>`simulationSettings.timeIntegration.realtime.active` | bool |  | False | True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues |
+| `factor`<br>`simulationSettings.timeIntegration.realtime.factor` | PReal |  | 1 | if active=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1) |
+| `waitMicroseconds`<br>`simulationSettings.timeIntegration.realtime.waitMicroseconds` | PInt |  | 1000 | if active=True, a loop runs which waits waitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy |
 
 
 
@@ -177,9 +280,10 @@ TimeIntegrationSettings has the following items:
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `discontinuous`<br>`simulationSettings.timeIntegration.discontinuous` | DiscontinuousSettings |  |  | parameters for treatment of discontinuities |
-| `explicitIntegration`<br>`simulationSettings.timeIntegration.explicitIntegration` | ExplicitIntegrationSettings |  |  | special parameters for explicit time integration |
+| `explicit`<br>`simulationSettings.timeIntegration.explicit` | ExplicitIntegrationSettings |  |  | special parameters for explicit time integration |
 | `generalizedAlpha`<br>`simulationSettings.timeIntegration.generalizedAlpha` | GeneralizedAlphaSettings |  |  | parameters for generalized-alpha, implicit trapezoidal rule or Newmark (options only apply for these methods) |
 | `newton`<br>`simulationSettings.timeIntegration.newton` | NewtonSettings |  |  | parameters for Newton method; used for implicit time integration methods only |
+| `realtime`<br>`simulationSettings.timeIntegration.realtime` | RealtimeSettings |  |  | simulation in realtime |
 | `absoluteTolerance`<br>`simulationSettings.timeIntegration.absoluteTolerance` | UReal |  | 1e-8 | $a_{tol}$: if automaticStepSize=True, absolute tolerance for the error control; must fulfill $a_{tol} > 0$; see [](#sec-explicitsolver) |
 | `adaptiveStep`<br>`simulationSettings.timeIntegration.adaptiveStep` | bool |  | True | True: the step size may be reduced if step fails; no automatic stepsize control |
 | `adaptiveStepDecrease`<br>`simulationSettings.timeIntegration.adaptiveStepDecrease` | UReal |  | 0.5 | Multiplicative factor (MUST BE: 0 < factor < 1) for step size to decrese due to discontinuousIteration or Newton errors |
@@ -192,11 +296,9 @@ TimeIntegrationSettings has the following items:
 | `initialStepSize`<br>`simulationSettings.timeIntegration.initialStepSize` | UReal |  | 0 | $h_{init}$: if automaticStepSize=True, initial step size; if initialStepSize==0, max. stepSize, which is (endTime-startTime)/numberOfSteps, is used as initial guess; a good choice of initialStepSize may help the solver to start up faster. |
 | `minimumStepSize`<br>`simulationSettings.timeIntegration.minimumStepSize` | PReal |  | 1e-8 | $h_{min}$: if automaticStepSize=True or adaptiveStep=True: lower limit of time step size, before integrator stops with adaptiveStep; lower limit of automaticStepSize control (continues but raises warning) |
 | `numberOfSteps`<br>`simulationSettings.timeIntegration.numberOfSteps` | PReal |  | 100 | $n_{steps}$: number of steps in time integration; (maximum) stepSize $h$ is computed from $h = \frac{t_{end} - t_{start}}{n_{steps}}$; for automatic stepsize control, this stepSize is the maximum steps size, $h_{max} = h$; numberOfSteps can also be a float type, but must be close to an integer (relative tolerance $100\cdot\varepsilon$) as it is silently rounded to int |
-| `realtimeFactor`<br>`simulationSettings.timeIntegration.realtimeFactor` | PReal |  | 1 | if simulateInRealtime=True, this factor is used to make the simulation slower than realtime (factor < 1) or faster than realtime (factor > 1) |
-| `realtimeWaitMicroseconds`<br>`simulationSettings.timeIntegration.realtimeWaitMicroseconds` | PInt |  | 1000 | if simulateInRealtime=True, a loop runs which waits realtimeWaitMicroseconds until checking again if the realtime is reached; using larger values leads to less CPU usage but less accurate realtime accuracy; smaller values (< 1000) increase CPU usage but improve realtime accuracy |
 | `relativeTolerance`<br>`simulationSettings.timeIntegration.relativeTolerance` | UReal |  | 1e-8 | $r_{tol}$: if automaticStepSize=True, relative tolerance for the error control; must fulfill $r_{tol} \ge 0$; see [](#sec-explicitsolver) |
 | `reuseConstantMassMatrix`<br>`simulationSettings.timeIntegration.reuseConstantMassMatrix` | bool |  | True | True: does not recompute constant mass matrices (e.g. of some finite elements, mass points, etc.); if False, it always recomputes the mass matrix (e.g. needed, if user changes mass parameters via Python) |
-| `simulateInRealtime`<br>`simulationSettings.timeIntegration.simulateInRealtime` | bool |  | False | True: simulate in realtime; the solver waits for computation of the next step until the CPU time reached the simulation time; if the simulation is slower than realtime, it simply continues |
+| `solverType`<br>`simulationSettings.timeIntegration.solverType` | DynamicSolverType |  | DynamicSolverType::GeneralizedAlpha | the solver of mbs.SolveDynamic(...): an implicit one (GeneralizedAlpha, TrapezoidalIndex2, ...) or an explicit one (DOPRI5, ExplicitEuler, RK44, ...), see DynamicSolverType, [](#sec-dynamicsolvertype); the argument solverType of mbs.SolveDynamic, if given, takes its place for that run |
 | `startTime`<br>`simulationSettings.timeIntegration.startTime` | UReal |  | 0 | $t_{start}$: start time of time integration (usually set to zero) |
 | `stepInformation`<br>`simulationSettings.timeIntegration.stepInformation` | UInt |  | 67 | add up the following binary flags: 0 ... show only step time, 1 ... show time to go, 2 ... show newton iterations (Nit) per step or period, 4 ... show Newton jacobians (jac) per step or period, 8 ... show discontinuous iterations (Dit) per step or period, 16 ... show step size (dt), 32 ... show CPU time spent; 64 ... show adaptive step reduction warnings; 128 ... show step increase information; 1024 ... show every time step; time is usually shown in fractions of seconds (s), hours (h), or days |
 | `stepSizeMaxIncrease`<br>`simulationSettings.timeIntegration.stepSizeMaxIncrease` | UReal |  | 2 | $f_{maxInc}$: if automaticStepSize=True, maximum increase of step size per step, see [](#sec-explicitsolver); make this factor smaller (but $> 1$) if too many rejected steps |
@@ -226,7 +328,7 @@ StaticSolverSettings has the following items:
 | `adaptiveStepRecoveryIterations`<br>`simulationSettings.staticSolver.adaptiveStepRecoveryIterations` | UInt |  | 7 | Number of max. (Newton iterations + discontinuous iterations) at which a step increase is considered; in order to immediately increase steps after reduction, chose a high value |
 | `adaptiveStepRecoverySteps`<br>`simulationSettings.staticSolver.adaptiveStepRecoverySteps` | UInt |  | 4 | Number of steps needed after which steps will be increased after previous step reduction due to discontinuousIteration or Newton errors |
 | `computeLoadsJacobian`<br>`simulationSettings.staticSolver.computeLoadsJacobian` | bool |  | True | True: compute (currently numerical) Jacobian for loads, causing additional computational costs; this is advantageous in cases where loads are related nonlinearly to coordinates; False: jacobian of loads not considered (may lead to slow convergence or Newton failure); note that computeLoadsJacobian has no effect in case of doSystemWideDifferentiation, as this anyway includes all load dependencies |
-| `constrainODE1coordinates`<br>`simulationSettings.staticSolver.constrainODE1coordinates` | bool |  | True | True: ODE1coordinates are constrained to initial values; False: undefined behavior, currently not supported |
+| `constrainODE1Coordinates`<br>`simulationSettings.staticSolver.constrainODE1Coordinates` | bool |  | True | True: ODE1coordinates are constrained to initial values; False: undefined behavior, currently not supported |
 | `loadStepDuration`<br>`simulationSettings.staticSolver.loadStepDuration` | PReal |  | 1 | quasi-time for all load steps (added to current time in load steps) |
 | `loadStepGeometric`<br>`simulationSettings.staticSolver.loadStepGeometric` | bool |  | False | if loadStepGeometric=false, the load steps are incremental (arithmetic series, e.g. 0.1,0.2,0.3,...); if true, the load steps are increased in a geometric series, e.g. for $n=8$ numberOfLoadSteps and $d = 1000$ loadStepGeometricRange, it follows: $1000^{1/8}/1000=0.00237$, $1000^{2/8}/1000=0.00562$, $1000^{3/8}/1000=0.0133$, ..., $1000^{7/8}/1000=0.422$, $1000^{8/8}/1000=1$ |
 | `loadStepGeometricRange`<br>`simulationSettings.staticSolver.loadStepGeometricRange` | PReal |  | 1000 | if loadStepGeometric=true, the load steps are increased in a geometric series, see loadStepGeometric |
@@ -253,10 +355,22 @@ LinearSolverSettings has the following items:
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
-| `ignoreSingularJacobian`<br>`simulationSettings.linearSolverSettings.ignoreSingularJacobian` | bool |  | False | [ONLY implemented for dense, Eigen matrix mode] False: standard way, fails if jacobian is singular; True: use Eigen's FullPivLU (thus only works with LinearSolverType.EigenDense) which handles over- and underdetermined systems; can often resolve redundant constraints, but MAY ALSO LEAD TO ERRONEOUS RESULTS! |
-| `pivotThreshold`<br>`simulationSettings.linearSolverSettings.pivotThreshold` | UReal |  | 0 | [ONLY available for EXUdense and EigenDense (FullPivot) solver] threshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity |
-| `reuseAnalyzedPattern`<br>`simulationSettings.linearSolverSettings.reuseAnalyzedPattern` | bool |  | False | [ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(...) and should be handled with care! |
-| `showCausingItems`<br>`simulationSettings.linearSolverSettings.showCausingItems` | bool |  | True | False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care! |
+| `ignoreSingularJacobian`<br>`simulationSettings.linearSolver.ignoreSingularJacobian` | bool |  | False | [ONLY implemented for dense, Eigen matrix mode] False: standard way, fails if jacobian is singular; True: use Eigen's FullPivLU (thus only works with LinearSolverType.EigenDense) which handles over- and underdetermined systems; can often resolve redundant constraints, but MAY ALSO LEAD TO ERRONEOUS RESULTS! |
+| `pivotThreshold`<br>`simulationSettings.linearSolver.pivotThreshold` | UReal |  | 0 | [ONLY available for EXUdense and EigenDense (FullPivot) solver] threshold for dense linear solver, can be used to detect close to singular solutions, setting this to, e.g., 1e-12; solver then reports on equations that are causing close to singularity |
+| `reuseAnalyzedPattern`<br>`simulationSettings.linearSolver.reuseAnalyzedPattern` | bool |  | False | [ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(...) and should be handled with care! |
+| `showCausingItems`<br>`simulationSettings.linearSolver.showCausingItems` | bool |  | True | False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care! |
+| `solverType`<br>`simulationSettings.linearSolver.solverType` | LinearSolverType |  | LinearSolverType::EXUdense | selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type) |
+
+
+
+(sec-linearsolversettingsdeprecated)=
+### LinearSolverSettingsDeprecated
+
+The settings of the linear solver as they were named up to Exudyn 1.11: each forwards to its place in simulationSettings.linearSolver, with a DeprecationWarning.
+
+LinearSolverSettingsDeprecated has the following items:
+
+*(none: this structure has no items in the Python interface. A deprecated item keeps working and is described where it moved to.)*
 
 
 
@@ -283,6 +397,24 @@ Parallel has the following items:
 
 
 
+(sec-showsettings)=
+### ShowSettings
+
+What the solvers show in the console at the end of solving.
+
+ShowSettings has the following items:
+
+```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
+```
+
+| Name | type / function return type | size | default value / function args | description |
+|---|---|---|---|---|
+| `computationTime`<br>`simulationSettings.show.computationTime` | bool |  | False | display computation time statistics at end of solving |
+| `globalTimers`<br>`simulationSettings.show.globalTimers` | bool |  | True | display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development) |
+| `statistics`<br>`simulationSettings.show.statistics` | bool |  | False | display general computation information at end of time step (steps, iterations, function calls, step rejections, ... |
+
+
+
 (sec-simulationsettings)=
 ### SimulationSettings
 
@@ -295,23 +427,71 @@ SimulationSettings has the following items:
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
-| `linearSolverSettings`<br>`simulationSettings.linearSolverSettings` | LinearSolverSettings |  |  | linear solver parameters (used for dense and sparse solvers) |
+| `linearSolver`<br>`simulationSettings.linearSolver` | LinearSolverSettings |  |  | linear solver parameters (used for dense and sparse solvers) |
 | `parallel`<br>`simulationSettings.parallel` | Parallel |  |  | parameters for vectorized and parallelized (multi-threaded) computations |
-| `solutionSettings`<br>`simulationSettings.solutionSettings` | SolutionSettings |  |  | settings for solution files |
+| `show`<br>`simulationSettings.show` | ShowSettings |  |  | what the solvers show in the console at the end of solving |
+| `solution`<br>`simulationSettings.solution` | SolutionSettings |  |  | settings for solution files |
 | `staticSolver`<br>`simulationSettings.staticSolver` | StaticSolverSettings |  |  | static solver parameters |
 | `timeIntegration`<br>`simulationSettings.timeIntegration` | TimeIntegrationSettings |  |  | time integration parameters |
 | `cleanUpMemory`<br>`simulationSettings.cleanUpMemory` | bool |  | False | True: solvers will free memory at exit (recommended for large systems); False: keep allocated memory for repeated computations to increase performance |
-| `displayComputationTime`<br>`simulationSettings.displayComputationTime` | bool |  | False | display computation time statistics at end of solving |
-| `displayGlobalTimers`<br>`simulationSettings.displayGlobalTimers` | bool |  | True | display global timer statistics at end of solving (e.g., for contact, but also for internal timings during development) |
-| `displayStatistics`<br>`simulationSettings.displayStatistics` | bool |  | False | display general computation information at end of time step (steps, iterations, function calls, step rejections, ... |
-| `linearSolverType`<br>`simulationSettings.linearSolverType` | LinearSolverType |  | LinearSolverType::EXUdense | selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type) |
-| `outputPrecision`<br>`simulationSettings.outputPrecision` | UInt |  | 6 | precision for floating point numbers written to console; e.g. values written by solver |
+| `consolePrecision`<br>`simulationSettings.consolePrecision` | UInt |  | 6 | precision for floating point numbers written to the console, e.g. the values written by the solver; the precision of the solution and sensor files is solution.precision |
 | `pauseAfterEachStep`<br>`simulationSettings.pauseAfterEachStep` | bool |  | False | pause after every time step or static load step(user press SPACE) |
 
 
 The following parameter changes have been made:
 
+- `simulationSettings.solutionSettings.appendToFile` → `simulationSettings.solution.file.append` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.binarySolutionFile` → `simulationSettings.solution.file.binary` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.coordinatesSolutionFileName` → `simulationSettings.solution.file.name` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.exportAccelerations` → `simulationSettings.solution.file.export.accelerations` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.exportAlgebraicCoordinates` → `simulationSettings.solution.file.export.algebraicCoordinates` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.exportDataCoordinates` → `simulationSettings.solution.file.export.dataCoordinates` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.exportODE1Velocities` → `simulationSettings.solution.file.export.ODE1Velocities` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.exportVelocities` → `simulationSettings.solution.file.export.velocities` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.flushFilesDOF` → `simulationSettings.solution.file.flushAboveCoordinates` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.flushFilesImmediately` → `simulationSettings.solution.flushFilesImmediately` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.outputPrecision` → `simulationSettings.solution.precision` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.recordImagesInterval` → `simulationSettings.solution.recordImagesInterval` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.restartFileName` → `simulationSettings.solution.restart.name` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.restartWritePeriod` → `simulationSettings.solution.restart.writePeriod` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.sensorsAppendToFile` → `simulationSettings.solution.sensors.append` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.sensorsStoreAndWriteFiles` → `simulationSettings.solution.sensors.active` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.sensorsWriteFileFooter` → `simulationSettings.solution.sensors.writeFooter` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.sensorsWriteFileHeader` → `simulationSettings.solution.sensors.writeHeader` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.sensorsWritePeriod` → `simulationSettings.solution.sensors.writePeriod` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.solutionInformation` → `simulationSettings.solution.file.information` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.solutionWritePeriod` → `simulationSettings.solution.file.writePeriod` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.solverInformationFileName` → `simulationSettings.solution.solverInformationFileName` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.writeFileFooter` → `simulationSettings.solution.file.writeFooter` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.writeFileHeader` → `simulationSettings.solution.file.writeHeader` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.writeInitialValues` → `simulationSettings.solution.file.writeInitialValues` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.writeRestartFile` → `simulationSettings.solution.restart.write` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.solutionSettings.writeSolutionToFile` → `simulationSettings.solution.file.write` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2connectors` → `simulationSettings.timeIntegration.newton.numericalDifferentiation.forODE2Connectors` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2connectors` → `simulationSettings.staticSolver.newton.numericalDifferentiation.forODE2Connectors` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.timeIntegration.newton.newtonResidualMode` → `simulationSettings.timeIntegration.newton.residualMode` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.staticSolver.newton.newtonResidualMode` → `simulationSettings.staticSolver.newton.residualMode` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.timeIntegration.newton.useNewtonSolver` → `simulationSettings.timeIntegration.newton.active` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.staticSolver.newton.useNewtonSolver` → `simulationSettings.staticSolver.newton.active` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations` → `simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody` → `simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.timeIntegration.explicitIntegration.dynamicSolverType` → `simulationSettings.timeIntegration.solverType` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.timeIntegration.explicitIntegration.eliminateConstraints` → `simulationSettings.timeIntegration.explicit.eliminateConstraints` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.timeIntegration.explicitIntegration.useLieGroupIntegration` → `simulationSettings.timeIntegration.explicit.useLieGroupIntegration` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.timeIntegration.realtimeFactor` → `simulationSettings.timeIntegration.realtime.factor` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.timeIntegration.realtimeWaitMicroseconds` → `simulationSettings.timeIntegration.realtime.waitMicroseconds` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.timeIntegration.simulateInRealtime` → `simulationSettings.timeIntegration.realtime.active` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.staticSolver.constrainODE1coordinates` → `simulationSettings.staticSolver.constrainODE1Coordinates` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.linearSolverSettings.ignoreSingularJacobian` → `simulationSettings.linearSolver.ignoreSingularJacobian` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.linearSolverSettings.pivotThreshold` → `simulationSettings.linearSolver.pivotThreshold` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.linearSolverSettings.reuseAnalyzedPattern` → `simulationSettings.linearSolver.reuseAnalyzedPattern` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.linearSolverSettings.showCausingItems` → `simulationSettings.linearSolver.showCausingItems` (changed in version 1.12.256, expires: 2031)
 - `simulationSettings.parallel.multithreadedLLimitJacobians` → `simulationSettings.parallel.multithreadedLowerLimitJacobians` (changed in version 1.12.244, expires: 2031)
 - `simulationSettings.parallel.multithreadedLLimitLoads` → `simulationSettings.parallel.multithreadedLowerLimitLoads` (changed in version 1.12.244, expires: 2031)
 - `simulationSettings.parallel.multithreadedLLimitMassMatrices` → `simulationSettings.parallel.multithreadedLowerLimitMassMatrices` (changed in version 1.12.244, expires: 2031)
 - `simulationSettings.parallel.multithreadedLLimitResiduals` → `simulationSettings.parallel.multithreadedLowerLimitResiduals` (changed in version 1.12.244, expires: 2031)
+- `simulationSettings.displayComputationTime` → `simulationSettings.show.computationTime` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.displayGlobalTimers` → `simulationSettings.show.globalTimers` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.displayStatistics` → `simulationSettings.show.statistics` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.linearSolverType` → `simulationSettings.linearSolver.solverType` (changed in version 1.12.256, expires: 2031)
+- `simulationSettings.outputPrecision` → `simulationSettings.consolePrecision` (changed in version 1.12.256, expires: 2031)

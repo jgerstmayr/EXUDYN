@@ -188,12 +188,12 @@ mbs.Assemble()
 
 simulationSettings = exu.SimulationSettings()
 
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-1
-simulationSettings.solutionSettings.solutionInformation = "Mass-spring-damper:"+caseName
+simulationSettings.solution.file.writePeriod = 1e-1
+simulationSettings.solution.file.information = "Mass-spring-damper:"+caseName
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1 #SHOULD work with 0.9 as well
-#simulationSettings.timeIntegration.simulateInRealtime = True
-#simulationSettings.timeIntegration.realtimeFactor = 0.2
+#simulationSettings.timeIntegration.realtime.active = True
+#simulationSettings.timeIntegration.realtime.factor = 0.2
 
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #data obtained from SC.renderer.GetState(); use np.round(d['modelRotation'],4)
@@ -259,12 +259,12 @@ plots={'fontSize':16,'sizeInches':(12,12),'nPoints':200,
 #setup simulation settings and run interactive dialog:
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
-simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.solutionWritePeriod = 0.1 #data not used
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.1 #data not used
-simulationSettings.solutionSettings.solutionInformation = 'Nonlinear oscillations: compare linear / nonlinear case'
+simulationSettings.solution.file.write = False
+simulationSettings.solution.file.writePeriod = 0.1 #data not used
+simulationSettings.solution.sensors.writePeriod = 0.1 #data not used
+simulationSettings.solution.file.information = 'Nonlinear oscillations: compare linear / nonlinear case'
 simulationSettings.timeIntegration.verboseMode = 0 #turn off, because of lots of output
-simulationSettings.solutionSettings.writeInitialValues = False
+simulationSettings.solution.file.writeInitialValues = False
 #simulationSettings.timeIntegration.stepInformation = 2+64+128+8
 # simulationSettings.timeIntegration.newton.relativeTolerance = 1e-3 #reduce a little bit to improve convergence
 

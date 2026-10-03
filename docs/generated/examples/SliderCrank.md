@@ -125,7 +125,7 @@ simulationSettings.timeIntegration.endTime = 2              #1s for test suite /
 #simulationSettings.timeIntegration.newton.relativeTolerance = 1e-10 #10000
 simulationSettings.timeIntegration.verboseMode = 1 #10000
 
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-3
+simulationSettings.solution.file.writePeriod = 1e-3
 
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 

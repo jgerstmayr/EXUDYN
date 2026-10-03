@@ -271,8 +271,8 @@ h=0.0002  #use small step size to detext contact switching
 
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.writeSolutionToFile= False
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.0005
+simulationSettings.solution.file.write= False
+simulationSettings.solution.sensors.writePeriod = 0.0005
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6
@@ -288,7 +288,7 @@ if False: #record animation frames:
     SC.visualizationSettings.exportImages.saveImageFileName = "animation/frame"
     SC.visualizationSettings.view0.window.renderWindowSize=[1980,1080]
     SC.visualizationSettings.openGL.multiSampling = 4
-    simulationSettings.solutionSettings.recordImagesInterval = 0.01
+    simulationSettings.solution.recordImagesInterval = 0.01
     
 SC.visualizationSettings.general.autoFitScene = False #use loaded render state
 useGraphics = True

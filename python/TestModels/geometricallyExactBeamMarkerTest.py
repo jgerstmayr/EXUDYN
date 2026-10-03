@@ -61,8 +61,8 @@ def Pendulum(throughElements):
     mbs.Assemble()
     s = exu.SimulationSettings()
     s.timeIntegration.numberOfSteps = 200; s.timeIntegration.endTime = 0.5
-    s.solutionSettings.writeSolutionToFile = False
-    s.linearSolverType = exu.LinearSolverType.EigenSparse
+    s.solution.file.write = False
+    s.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     mbs.SolveDynamic(s)
     return mbs.GetNodeOutput(nodes[-1], exu.OutputVariableType.Position)
 

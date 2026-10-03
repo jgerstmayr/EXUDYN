@@ -57,14 +57,14 @@ simulationSettings.timeIntegration.numberOfSteps = 10000
 simulationSettings.timeIntegration.endTime = 10
 
 #remove this if you want to simulate fast:
-simulationSettings.timeIntegration.simulateInRealtime = True #otherwise, nothing is visible
+simulationSettings.timeIntegration.realtime.active = True #otherwise, nothing is visible
 
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = 0.01
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = 0.01
 
 simulationSettings.timeIntegration.verboseMode = 1
-# simulationSettings.displayStatistics = True
-# simulationSettings.displayComputationTime = True
+# simulationSettings.show.statistics = True
+# simulationSettings.show.computationTime = True
 
 #simulate:
 SC.renderer.Start()

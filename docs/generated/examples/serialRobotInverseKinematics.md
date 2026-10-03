@@ -238,19 +238,19 @@ h = 0.002 #500 steps take 0.16 seconds, 0.3ms / step (83% Python + inverse kinem
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h) 
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solutionSettings.solutionWritePeriod = 0.02 
+simulationSettings.solution.file.writePeriod = 0.02 
 # determines the timesteps in which the solution is saved; when it is decreased more solutions are saved, which also 
 # enables the solutionViewer to
 
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.005
-#simulationSettings.solutionSettings.writeSolutionToFile = False
-# simulationSettings.timeIntegration.simulateInRealtime = True
-# simulationSettings.timeIntegration.realtimeFactor = 0.025 # slow down simulation to look at
+simulationSettings.solution.sensors.writePeriod = 0.005
+#simulationSettings.solution.file.write = False
+# simulationSettings.timeIntegration.realtime.active = True
+# simulationSettings.timeIntegration.realtime.factor = 0.025 # slow down simulation to look at
 
 simulationSettings.timeIntegration.verboseMode = 1
-simulationSettings.displayComputationTime = True
-# simulationSettings.displayStatistics = True
-#simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.show.computationTime = True
+# simulationSettings.show.statistics = True
+#simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
 # solver type

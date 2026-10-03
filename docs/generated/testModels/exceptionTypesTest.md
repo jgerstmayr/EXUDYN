@@ -131,7 +131,7 @@ def SolverCannotSolve():
     localMbs.Assemble()
 
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
     simulationSettings.staticSolver.verboseMode = 0
     localMbs.SolveStatic(simulationSettings)
 
@@ -157,7 +157,7 @@ def UserFunctionRaises():
     simulationSettings.timeIntegration.numberOfSteps = 10
     simulationSettings.timeIntegration.endTime = 0.05
     simulationSettings.timeIntegration.verboseMode = 0
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
     localMbs.SolveDynamic(simulationSettings)
 
 

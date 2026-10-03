@@ -176,8 +176,8 @@ simulationSettings.timeIntegration.numberOfSteps = 1000
 simulationSettings.timeIntegration.endTime = 5
 
 #for redundant constraints, the following two settings:
-simulationSettings.linearSolverSettings.ignoreSingularJacobian=True
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenDense
+simulationSettings.linearSolver.ignoreSingularJacobian=True
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenDense
 
 mbs.SolveDynamic(simulationSettings = simulationSettings,
                  solverType=exu.DynamicSolverType.GeneralizedAlpha)

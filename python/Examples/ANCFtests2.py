@@ -112,15 +112,15 @@ mbs.Assemble()
 #print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-#simulationSettings.solutionSettings.coordinatesSolutionFileName = 'ANCFCable2Dbending' + str(nElements) + '.txt'
+#simulationSettings.solution.file.name = 'ANCFCable2Dbending' + str(nElements) + '.txt'
 
 fact = 1000
 simulationSettings.timeIntegration.numberOfSteps = 1*fact
 simulationSettings.timeIntegration.endTime = 0.002*fact
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/fact
-simulationSettings.displayComputationTime = False
-simulationSettings.displayStatistics = True
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/fact
+simulationSettings.show.computationTime = False
+simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True
@@ -133,7 +133,7 @@ SC.visualizationSettings.bodies.showNumbers = False
 #SC.visualizationSettings.connectors.showNumbers = True
 SC.visualizationSettings.nodes.defaultSize = 0.05
 
-simulationSettings.solutionSettings.solutionInformation = "ANCF cable with imposed curvature or applied tip force/torque"
+simulationSettings.solution.file.information = "ANCF cable with imposed curvature or applied tip force/torque"
 
 solveDynamic = True
 if solveDynamic: 
@@ -203,7 +203,7 @@ else:
         simulationSettings.staticSolver.numberOfLoadSteps  = 8
         simulationSettings.staticSolver.newton.relativeTolerance = 1e-7
         simulationSettings.staticSolver.verboseMode = 1
-        simulationSettings.displayStatistics = True
+        simulationSettings.show.statistics = True
         mbs.SolveStatic(simulationSettings)
 
 

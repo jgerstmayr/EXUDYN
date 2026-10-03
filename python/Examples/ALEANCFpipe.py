@@ -134,16 +134,16 @@ mbs.Assemble()
 print(mbs)
 
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values
-#simulationSettings.solutionSettings.coordinatesSolutionFileName = 'ANCFCable2Dbending' + str(nElements) + '.txt'
-#simulationSettings.outputPrecision = 16
+#simulationSettings.solution.file.name = 'ANCFCable2Dbending' + str(nElements) + '.txt'
+#simulationSettings.consolePrecision = 16
 
 fact = 20000
 simulationSettings.timeIntegration.numberOfSteps = 1*fact
 simulationSettings.timeIntegration.endTime = 0.001*fact
-simulationSettings.solutionSettings.writeSolutionToFile = True
-simulationSettings.solutionSettings.solutionWritePeriod = simulationSettings.timeIntegration.endTime/2000
-#simulationSettings.solutionSettings.outputPrecision = 4
-simulationSettings.displayComputationTime = True
+simulationSettings.solution.file.write = True
+simulationSettings.solution.file.writePeriod = simulationSettings.timeIntegration.endTime/2000
+#simulationSettings.solution.precision = 4
+simulationSettings.show.computationTime = True
 simulationSettings.timeIntegration.verboseMode = 1
 
 simulationSettings.timeIntegration.newton.relativeTolerance = 1e-8 #10000
@@ -159,7 +159,7 @@ simulationSettings.timeIntegration.newton.modifiedNewtonContractivity = 1e8
 # simulationSettings.timeIntegration.generalizedAlpha.useNewmark = False
 simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 0.6 #0.6 works well 
 simulationSettings.pauseAfterEachStep = False
-simulationSettings.displayStatistics = True
+simulationSettings.show.statistics = True
 
 #SC.visualizationSettings.nodes.showNumbers = True
 SC.visualizationSettings.bodies.showNumbers = False
@@ -170,7 +170,7 @@ SC.visualizationSettings.connectors.defaultSize = 0.01
 SC.visualizationSettings.contact.contactPointsDefaultSize = 0.005
 SC.visualizationSettings.connectors.showContact = 1
 
-simulationSettings.solutionSettings.solutionInformation = "ANCF cable with imposed curvature or applied tip force/torque"
+simulationSettings.solution.file.information = "ANCF cable with imposed curvature or applied tip force/torque"
 
 solveDynamic = True
 if solveDynamic: 

@@ -112,24 +112,24 @@ for run in runList:
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.numberOfSteps = run['numberOfSteps']
     simulationSettings.timeIntegration.endTime = tEnd
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    simulationSettings.solution.file.write = False
     simulationSettings.timeIntegration.verboseMode = 1
-    simulationSettings.displayComputationTime = False
+    simulationSettings.show.computationTime = False
 
-    simulationSettings.timeIntegration.explicitIntegration.useLieGroupIntegration = False
+    simulationSettings.timeIntegration.explicit.useLieGroupIntegration = False
 
     #EigenSparse is ESSENTIAL here, not a tuning detail: with the default dense linear solver this
     #model costs O(N^2) per step even under explicit integration - measured 2026-09-12, per-step time
     #quadruples on every doubling of nBodies (250/500/1000/2000 -> 2.5/10.1/42/168 ms) and nBodies=2000
     #runs ~280x slower than with EigenSparse (32.6 s against 0.115 s for 200 steps). See issue #2398.
-    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 
     #explicitIntegration.computeMassMatrixInversePerBody inverts the mass matrix per body instead
     #of solving a system, and this chain is exactly what the flag is made for: no two bodies share
     #a node, which is the precondition (it would be wrong for a beam or an FEM body). With the flag
     #off, the explicit runs largely measure the Eigen solver rather than the object computation this
     #model is here to measure - see issue #2400.
-    simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True
+    simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody = True
 
     if run['implicit']:
         simulationSettings.timeIntegration.newton.useModifiedNewton = True

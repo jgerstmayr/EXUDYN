@@ -135,9 +135,9 @@ items=gContact.GetItemsInBox(pMin=[-4,-4,0], pMax=[4,4,20])
 tEnd = 2
 #tEnd = h*100
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.writeSolutionToFile = False
-#simulationSettings.displayComputationTime = True
-#simulationSettings.displayStatistics = True
+simulationSettings.solution.file.write = False
+#simulationSettings.show.computationTime = True
+#simulationSettings.show.statistics = True
 simulationSettings.timeIntegration.verboseMode = 1
 #simulationSettings.parallel.numberOfThreads = 4
 

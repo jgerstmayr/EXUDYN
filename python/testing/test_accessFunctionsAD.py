@@ -98,7 +98,7 @@ def BuildBeam():
 def Jacobian(mbs, numerical):
     """the ODE2 stiffness part of the system Jacobian, analytic or numerical, at zero velocities"""
     s = exu.SimulationSettings()
-    s.timeIntegration.newton.numericalDifferentiation.forODE2connectors = numerical
+    s.timeIntegration.newton.numericalDifferentiation.forODE2Connectors = numerical
     s.timeIntegration.newton.numericalDifferentiation.relativeEpsilon = 1e-7
     solver = exu.MainSolverImplicitSecondOrder()
     solver.InitializeSolver(mbs, s)

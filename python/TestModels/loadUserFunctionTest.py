@@ -84,10 +84,10 @@ for case in cases:
     SC.visualizationSettings.general.renderWindowString = 'Test case: '+case
     
     simulationSettings = exu.SimulationSettings()
-    #simulationSettings.solutionSettings.solutionWritePeriod = 0.01
-    simulationSettings.solutionSettings.writeSolutionToFile = False
+    #simulationSettings.solution.file.writePeriod = 0.01
+    simulationSettings.solution.file.write = False
     simulationSettings.timeIntegration.verboseMode = 1
-    simulationSettings.timeIntegration.simulateInRealtime = (not testIsActive) #for visualization to be viewed by user!
+    simulationSettings.timeIntegration.realtime.active = (not testIsActive) #for visualization to be viewed by user!
     
     simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
     simulationSettings.timeIntegration.endTime = endTime

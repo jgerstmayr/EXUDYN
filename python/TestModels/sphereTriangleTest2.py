@@ -151,9 +151,9 @@ for solverNum, solver in enumerate(solverList):
     mbs.Assemble()
     
     simulationSettings = exu.SimulationSettings()
-    simulationSettings.solutionSettings.writeSolutionToFile = (not testIsActive) #only the SolutionViewer reads it (#2492)
-    simulationSettings.solutionSettings.solutionWritePeriod = 0.005
-    simulationSettings.solutionSettings.sensorsWritePeriod = 0.001  #output interval
+    simulationSettings.solution.file.write = (not testIsActive) #only the SolutionViewer reads it (#2492)
+    simulationSettings.solution.file.writePeriod = 0.005
+    simulationSettings.solution.sensors.writePeriod = 0.001  #output interval
 
     simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
     simulationSettings.timeIntegration.endTime = tEnd
@@ -161,12 +161,12 @@ for solverNum, solver in enumerate(solverList):
     # simulationSettings.timeIntegration.endTime = stepSize
     simulationSettings.timeIntegration.verboseMode = 1
 
-    #simulationSettings.timeIntegration.simulateInRealtime = True
+    #simulationSettings.timeIntegration.realtime.active = True
     simulationSettings.timeIntegration.newton.absoluteTolerance = 1e-6
     simulationSettings.timeIntegration.newton.relativeTolerance = 1e-6
     #simulationSettings.timeIntegration.generalizedAlpha.computeInitialAccelerations = False
-    simulationSettings.timeIntegration.explicitIntegration.computeEndOfStepAccelerations = False #speedup
-    simulationSettings.timeIntegration.explicitIntegration.computeMassMatrixInversePerBody = True #speedup
+    simulationSettings.timeIntegration.explicit.computeEndOfStepAccelerations = False #speedup
+    simulationSettings.timeIntegration.explicit.computeMassMatrixInversePerBody = True #speedup
     simulationSettings.timeIntegration.stepInformation = 3 #remove flag 64 which shows step reduction warnings
 
     if isExplicitSolver:
@@ -179,9 +179,9 @@ for solverNum, solver in enumerate(solverList):
         simulationSettings.timeIntegration.discontinuous.iterationTolerance = 1
 
     simulationSettings.timeIntegration.newton.useModifiedNewton = True
-    simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+    simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
     
-    simulationSettings.displayStatistics = True
+    simulationSettings.show.statistics = True
     SC.visualizationSettings.view0.scene.drawCoordinateSystem = False
     SC.visualizationSettings.general.showSolverInformation = False
     

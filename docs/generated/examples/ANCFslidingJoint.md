@@ -111,23 +111,23 @@ stepSize = 0.5e-3
 
 simulationSettings = exu.SimulationSettings()
 
-#simulationSettings.solutionSettings.writeSolutionToFile = False
-simulationSettings.solutionSettings.solutionWritePeriod = 0.02 #data not used
-simulationSettings.solutionSettings.binarySolutionFile = True
-simulationSettings.solutionSettings.outputPrecision = 6 #float
-simulationSettings.solutionSettings.sensorsWritePeriod = 0.002 #data not used
+#simulationSettings.solution.file.write = False
+simulationSettings.solution.file.writePeriod = 0.02 #data not used
+simulationSettings.solution.file.binary = True
+simulationSettings.solution.precision = 6 #float
+simulationSettings.solution.sensors.writePeriod = 0.002 #data not used
 simulationSettings.timeIntegration.verboseMode = 1 #turn off, because of lots of output
-simulationSettings.linearSolverType = exu.LinearSolverType.EigenSparse
+simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 simulationSettings.parallel.numberOfThreads = 1
-simulationSettings.displayComputationTime = True
-simulationSettings.displayStatistics = True
+simulationSettings.show.computationTime = True
+simulationSettings.show.statistics = True
 
 simulationSettings.timeIntegration.numberOfSteps = int(endTime/stepSize)
 simulationSettings.timeIntegration.endTime = endTime
 simulationSettings.timeIntegration.newton.useModifiedNewton = True
 
-#simulationSettings.timeIntegration.simulateInRealtime = True
-#simulationSettings.timeIntegration.realtimeFactor = 0.5
+#simulationSettings.timeIntegration.realtime.active = True
+#simulationSettings.timeIntegration.realtime.factor = 0.5
 
 SC.visualizationSettings.openGL.multiSampling = 4
 

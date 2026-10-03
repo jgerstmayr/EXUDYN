@@ -104,7 +104,7 @@ mbs.Assemble()
 #mbs.systemData.Info()
 
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.solutionWritePeriod = 1e-2  #output interval
+simulationSettings.solution.file.writePeriod = 1e-2  #output interval
 simulationSettings.timeIntegration.numberOfSteps = steps
 simulationSettings.timeIntegration.endTime = tEnd
 simulationSettings.timeIntegration.generalizedAlpha.useIndex2Constraints = True

@@ -130,7 +130,7 @@ mbs.Assemble()
 SC.visualizationSettings.loads.show=False
 SC.visualizationSettings.openGL.multiSampling=4
 simulationSettings = exu.SimulationSettings()
-simulationSettings.solutionSettings.sensorsWritePeriod = 1e-3
+simulationSettings.solution.sensors.writePeriod = 1e-3
 simulationSettings.timeIntegration.numberOfSteps=1000
 
 [eigenValues, eVectors] = mbs.ComputeODE2Eigenvalues()
