@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  20:44:07 (last modified)
+* @date         2026-10-03  11:06:22 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -39,7 +39,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        MainObjectJointGeneric
-* @brief        A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes.
+* @brief        A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. The three rotation axes and sliding axes are those of the markers' frames; a rotation of these frames is given to the markers as their localHT.
 
 ```{image} /docs/figures/UniversalJoint.png
 :width: 400
@@ -100,6 +100,9 @@ public: // AUTO:
     virtual VisualizationObject* GetVisualizationObject() const { return visualizationObjectJointGeneric; }
     //! AUTO: Set pointer to visualization base class object (do this only in object factory; type is NOT CHECKED!!!)
     virtual void SetVisualizationObject(VisualizationObject* pVisualizationObject) { visualizationObjectJointGeneric = (VisualizationObjectJointGeneric*)pVisualizationObject; }
+
+    //! AUTO:  Check consistency prior to CSystem::Assemble(); needs to find all possible violations such that Assemble() would fail
+    virtual bool CheckPreAssembleConsistency(const MainSystem& mainSystem, STDstring& errorString) const override;
 
     //! AUTO:  Get type name of object (without keyword 'Object'...!); could also be realized via a string -> type conversion?
     virtual const char* GetTypeName() const override

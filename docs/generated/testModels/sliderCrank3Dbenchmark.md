@@ -204,9 +204,10 @@ if not testIsActive:
 
     #add TSD to measure full revolutions; measures around local Z-axis
     nGeneric=mbs.AddNode(NodeGenericData(initialCoordinates=[0], numberOfDataCoordinates=1)) #for infinite rotations
-    oTSD = mbs.AddObject(TorsionalSpringDamper(markerNumbers=[markerGroundA, markerCrankA], nodeNumber=nGeneric,
-                                               rotationMarker0=RotationMatrixY(0.5*pi),
-                                               rotationMarker1=RotationMatrixY(0.5*pi),
+    HTcrank = HomogeneousTransformation(RotationMatrixY(0.5*pi), [0,0,0]) #turned, so that z is the crank axis
+    oTSD = mbs.AddObject(TorsionalSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HomogeneousTransformation(RotationMatrixY(0.5*pi), pA))),
+                                                              mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localHT=HTcrank))],
+                                               nodeNumber=nGeneric,
                                                visualization=VTorsionalSpringDamper(show=False)))
     sCrankAngle=mbs.AddSensor(SensorObject(objectNumber = oTSD, storeInternal=True,fileName='solution/crankAngle.txt',
                              outputVariableType=exu.OutputVariableType.Rotation))

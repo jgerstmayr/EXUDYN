@@ -29,7 +29,7 @@ The parameters of the item; in a dictionary, its type is 'ContactCurveCircles':
 | **circlesRadii** | NumpyVector |  | [] | (symbol: $[r_{c0},r_{c1}, \ldots]\tp \in \Rcal^{n_c}$) Vector containing radii of $n_c$ circles [SI:m]; number according to size of markerNumbers-1 |
 | **segmentsData** | PyMatrixContainer |  | [] | (symbol: $\Dm \in \Rcal^{n_s \times 4}$) matrix containing a set of two planar point coordinates in each row, representing segments attached to marker $m0$ and undergoing contact with the circles; for segment $s0$ row 0 reads $[p_{0x,s0},\,p_{0y,s0},\,p_{1x,s0},\,p_{1y,s0}]$; note that the segments must be ordered such that going from $\pv_0$ to $\pv_1$, the exterior lies on the right (positive) side. MatrixContainer has to be provided in dense mode! |
 | **polynomialData** | PyMatrixContainer |  | [] | (symbol: $\Pm \in \Rcal^{n_s \times n_p}$) matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode! |
-| **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the $x-y$-plane |
+| **rotationMarker0** | Matrix3D | 9 | [[1,0,0], [0,1,0], [0,0,1]] | local rotation matrix for marker 0, used only for drawing the curve - the contact is computed in the frame of marker 0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT |
 | **dynamicFriction** | UReal |  | 0. | (symbol: $\mu_d$) dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, [](#sec-module-physics) |
 | **frictionProportionalZone** | UReal |  | 0.001 | (symbol: $v_{reg}$) limit velocity [m/s] up to which the friction is proportional to velocity (for regularization / avoid numerical oscillations), see StribeckFunction in exudyn.physics (named regVel there!), [](#sec-module-physics) |
 | **contactStiffness** | Real |  | 0. | (symbol: $k_c$) normal contact stiffness [SI:N/(m*m)] |
@@ -76,7 +76,7 @@ Available as `OutputVariableType` in sensors, `Get...Output()` and other functio
 
 | intermediate variables | symbol | description |
 |---|---|---|
-| marker m0 position, orientation | $\LU{0}{\pv}_{m0}$, $\LU{0,m0}{\Rot}$ | the frame carrying the curve; `rotationMarker0` turns it so that the curve lies in its $x$-$y$ plane |
+| marker m0 position, orientation | $\LU{0}{\pv}_{m0}$, $\LU{0,m0}{\Rot}$ | the frame carrying the curve, which lies in its $x$-$y$ plane; a rotation of it is given to the marker as its `localHT` |
 | circle markers | $\LU{0}{\pv}_{c_i}$ | centers of the $n_c$ circles with radii `circlesRadii` |
 | segments | $\Dm$ | `segmentsData`: one straight segment per row, two planar points in the curve frame |
 | polynomials | $\Pm$ | `polynomialData`: optional coefficients that bend each segment |

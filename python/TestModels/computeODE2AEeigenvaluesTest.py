@@ -108,9 +108,6 @@ mB0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=p0))
 mB1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b1, localPosition=-p0))
 
 mbs.AddObject(GenericJoint(markerNumbers=[mB1,mB0], constrainedAxes=[1,1,1, 1,0,0],
-                           rotationMarker0=np.eye(3),
-                           rotationMarker1=np.eye(3),
-                           # rotationMarker1=R1.T,
                            visualization=VGenericJoint(axesRadius=beamH*2, axesLength=beamW*1.05)))
 
 mbs.CreateCartesianSpringDamper(bodyOrNodeList=[b1, oGround],

@@ -216,21 +216,23 @@ sMarkerB1= mbs.AddSensor(SensorMarker(markerNumber=markerB1,outputVariableType=e
 #%%++++++++++++++++++++++++++++++++++++++++++++++++
 #add joints:
 useJoints = True
+def RotatedMarker(marker, rotation):
+    """a marker on the same body, its frame turned by rotation: the frame of a joint"""
+    data = mbs.GetMarker(marker)
+    return mbs.AddMarker(MarkerBodyRigid(bodyNumber=data['bodyNumber'],
+                                         localHT=np.array(data['localHT']) @ HomogeneousTransformation(rotation, [0,0,0])))
 if useJoints:
-    oJointRW = mbs.AddObject(GenericJoint(markerNumbers=[markerR, markerB1],
+    oJointRW = mbs.AddObject(GenericJoint(markerNumbers=[RotatedMarker(markerR, RotationMatrixZ(pi*0.5)), markerB1],
                                           constrainedAxes=[1,1,1,1,0,1],
-                                          rotationMarker0=RotationMatrixZ(pi*0.5),
                                           visualization=VGenericJoint(axesRadius=0.5*dY, axesLength=5*dY)))
     
-    oJointFW = mbs.AddObject(GenericJoint(markerNumbers=[markerF, markerH3],
+    oJointFW = mbs.AddObject(GenericJoint(markerNumbers=[RotatedMarker(markerF, RotationMatrixZ(pi*0.5)), markerH3],
                                           constrainedAxes=[1,1,1,1,0,1],
-                                          rotationMarker0=RotationMatrixZ(pi*0.5),
                                           visualization=VGenericJoint(axesRadius=0.5*dY, axesLength=5*dY)))
     
-    oJointSteer = mbs.AddObject(GenericJoint(markerNumbers=[markerB2, markerH2],
+    oJointSteer = mbs.AddObject(GenericJoint(markerNumbers=[RotatedMarker(markerB2, RotationMatrixY(-lam)),
+                                                            RotatedMarker(markerH2, RotationMatrixY(-lam))],
                                           constrainedAxes=[1,1,1,1,1,0],
-                                          rotationMarker0=RotationMatrixY(-lam),
-                                          rotationMarker1=RotationMatrixY(-lam),
                                           visualization=VGenericJoint(axesRadius=0.5*dY, axesLength=3*5*dY)))
 #%%++++++++++++++++++++++++++++++++++++++++++++++++
 #add 'rolling disc' for wheels:

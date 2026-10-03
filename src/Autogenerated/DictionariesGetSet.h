@@ -1365,35 +1365,35 @@ inline py::dict GetDictionaryWithTypeInfo(const Parallel& data) {
     structureDict["structureDescription"] = "Settings for linear solver, both dense and sparse (Eigen).";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.multithreadedLimitJacobians;
+    d["value"] = data.multithreadedLowerLimitJacobians;
     d["type"] = "PInt";
     d["size"] = std::vector<int>{1};
     d["description"] = "compute jacobians (ODE2, AE, ...) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)";
-    structureDict["multithreadedLimitJacobians"] = d;
+    structureDict["multithreadedLowerLimitJacobians"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.multithreadedLimitLoads;
+    d["value"] = data.multithreadedLowerLimitLoads;
     d["type"] = "PInt";
     d["size"] = std::vector<int>{1};
     d["description"] = "compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)";
-    structureDict["multithreadedLimitLoads"] = d;
+    structureDict["multithreadedLowerLimitLoads"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.multithreadedLimitMassMatrices;
+    d["value"] = data.multithreadedLowerLimitMassMatrices;
     d["type"] = "PInt";
     d["size"] = std::vector<int>{1};
     d["description"] = "compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)";
-    structureDict["multithreadedLimitMassMatrices"] = d;
+    structureDict["multithreadedLowerLimitMassMatrices"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.multithreadedLimitResiduals;
+    d["value"] = data.multithreadedLowerLimitResiduals;
     d["type"] = "PInt";
     d["size"] = std::vector<int>{1};
     d["description"] = "compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)";
-    structureDict["multithreadedLimitResiduals"] = d;
+    structureDict["multithreadedLowerLimitResiduals"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -1433,10 +1433,10 @@ inline py::dict GetDictionaryWithTypeInfo(const Parallel& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const Parallel& data) {
     auto structureDict = py::dict();
-    structureDict["multithreadedLimitJacobians"] = data.multithreadedLimitJacobians;
-    structureDict["multithreadedLimitLoads"] = data.multithreadedLimitLoads;
-    structureDict["multithreadedLimitMassMatrices"] = data.multithreadedLimitMassMatrices;
-    structureDict["multithreadedLimitResiduals"] = data.multithreadedLimitResiduals;
+    structureDict["multithreadedLowerLimitJacobians"] = data.multithreadedLowerLimitJacobians;
+    structureDict["multithreadedLowerLimitLoads"] = data.multithreadedLowerLimitLoads;
+    structureDict["multithreadedLowerLimitMassMatrices"] = data.multithreadedLowerLimitMassMatrices;
+    structureDict["multithreadedLowerLimitResiduals"] = data.multithreadedLowerLimitResiduals;
     structureDict["numberOfThreads"] = data.numberOfThreads;
     structureDict["taskSplitMinItems"] = data.taskSplitMinItems;
     structureDict["taskSplitTasksPerThread"] = data.taskSplitTasksPerThread;
@@ -1446,10 +1446,10 @@ inline py::dict GetDictionary(const Parallel& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(Parallel& data, const py::dict& d) {
-    EPyUtils::FromPython(d["multithreadedLimitJacobians"], data.multithreadedLimitJacobians, EPyUtils::RangeCheck::positive, "Parallel.multithreadedLimitJacobians");
-    EPyUtils::FromPython(d["multithreadedLimitLoads"], data.multithreadedLimitLoads, EPyUtils::RangeCheck::positive, "Parallel.multithreadedLimitLoads");
-    EPyUtils::FromPython(d["multithreadedLimitMassMatrices"], data.multithreadedLimitMassMatrices, EPyUtils::RangeCheck::positive, "Parallel.multithreadedLimitMassMatrices");
-    EPyUtils::FromPython(d["multithreadedLimitResiduals"], data.multithreadedLimitResiduals, EPyUtils::RangeCheck::positive, "Parallel.multithreadedLimitResiduals");
+    EPyUtils::FromPython(d["multithreadedLowerLimitJacobians"], data.multithreadedLowerLimitJacobians, EPyUtils::RangeCheck::positive, "Parallel.multithreadedLowerLimitJacobians");
+    EPyUtils::FromPython(d["multithreadedLowerLimitLoads"], data.multithreadedLowerLimitLoads, EPyUtils::RangeCheck::positive, "Parallel.multithreadedLowerLimitLoads");
+    EPyUtils::FromPython(d["multithreadedLowerLimitMassMatrices"], data.multithreadedLowerLimitMassMatrices, EPyUtils::RangeCheck::positive, "Parallel.multithreadedLowerLimitMassMatrices");
+    EPyUtils::FromPython(d["multithreadedLowerLimitResiduals"], data.multithreadedLowerLimitResiduals, EPyUtils::RangeCheck::positive, "Parallel.multithreadedLowerLimitResiduals");
     EPyUtils::FromPython(d["numberOfThreads"], data.numberOfThreads, EPyUtils::RangeCheck::positive, "Parallel.numberOfThreads");
     EPyUtils::FromPython(d["taskSplitMinItems"], data.taskSplitMinItems, EPyUtils::RangeCheck::positive, "Parallel.taskSplitMinItems");
     EPyUtils::FromPython(d["taskSplitTasksPerThread"], data.taskSplitTasksPerThread, EPyUtils::RangeCheck::positive, "Parallel.taskSplitTasksPerThread");

@@ -1596,6 +1596,9 @@ find out about the settings of a model. It is the group a user notices most and 
     is told the new one instead of being ignored. `simulationSettings` uses none of it, although
     it is the same generator and the same structure machinery, so a renamed solver setting
     simply disappears.
+    - **RG12.1.1** **DONE 2026-10-03** (#2800) — [log](exudynRevisionLog2026b.md#rg12-1-1) - *(maintainer
+      2026-10-03)* `multithreadedLowerLimit...` instead of `multithreadedLimit...`, which said less; the old
+      `multithreadedLLimit...` forward until 2031 (five years), not 2028.
 
 <a id="rg12-2"></a>
 **RG12.2** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg12-2) *(group RG12; maintainer 2026-09-22)*
@@ -1957,6 +1960,54 @@ find out about the settings of a model. It is the group a user notices most and 
       (`Position` or `Position2D`, ...), declared as `requestedNodeTypes` in the definitions for the documentation
       only (RG13.5.0.3); `Inspect` does not answer them yet - a list of alternatives per node would need its own
       form, or the C++ check generated from the declaration first.
+
+<a id="rg12-31"></a>
+**RG12.31** *(group RG12; maintainer 2026-10-03: "list them - I decide")* **Settings and item parameters that
+could be renamed or restructured** (#2802). The candidates found by a pass over all members of `SimulationSettings`
+and all parameters of the item definitions; each one is a decision of the maintainer, and each decided one becomes a
+sub-step with its own issue, done with the deprecation of RG12.1/RG12.2 (old name forwarding, removal five years
+after). *Status: a list, nothing decided.* Settings:
+    - **RG12.31.1** two `outputPrecision`: the top one is for the console, `solutionSettings.outputPrecision` for the
+      files - `consoleOutputPrecision`, or the top one into a small structure with the other console members
+      (`displayComputationTime`, `displayStatistics`, `displayGlobalTimers`);
+    - **RG12.31.2** `linearSolverType` beside `linearSolverSettings` - into it, as `linearSolverSettings.solverType`;
+    - **RG12.31.3** `timeIntegration.simulateInRealtime`, `realtimeFactor`, `realtimeWaitMicroseconds` - a structure
+      `timeIntegration.realtime` (`active`, `factor`, `waitMicroseconds`);
+    - **RG12.31.4** `numericalDifferentiation.forODE2connectors` - `forODE2Connectors`, and
+      `staticSolver.constrainODE1coordinates` - `constrainODE1Coordinates` (the capital of every other name);
+    - **RG12.31.5** inside `newton`: `newtonResidualMode` - `residualMode`; `useNewtonSolver` (false = linear) -
+      `useNewton` or `linear` with the opposite meaning;
+    - **RG12.31.6** `solutionSettings`: three files with three patterns (`coordinatesSolutionFileName`,
+      `solverInformationFileName`, `restartFileName`; `solutionWritePeriod`, `sensorsWritePeriod`,
+      `restartWritePeriod`; `writeFileHeader`, `sensorsWriteFileHeader`), and `flushFilesDOF` (a number of
+      coordinates) - substructures `solutionFile`, `sensorFiles`, `restartFile` with the same members; the largest
+      one, and the one most scripts use;
+    - **RG12.31.7** `explicitIntegration.dynamicSolverType` selects the explicit solver only - `explicitSolverType`.
+
+  Item parameters:
+    - **RG12.31.8** `ObjectJointGeneric.axesRadius/axesLength` against `axisRadius/axisLength` of
+      `JointRevoluteZ`/`JointPrismaticX` (visualization) - one spelling;
+    - **RG12.31.9** radii: `radiusSphere` (`ContactSphereTorus`, `ContactSphereTriangle`) - `sphereRadius`, as
+      `circleRadius`, `discRadius`, `cylinderRadius`; `ContactConvexRoll.rBoundingSphere` - `boundingSphereRadius`;
+    - **RG12.31.10** the friction of `ObjectConnectorCoordinateSpringDamperExt`: `fDynamicFriction`,
+      `fStaticFrictionOffset`, `fViscousFriction` - without the `f`, as in `ContactConvexRoll`;
+    - **RG12.31.11** `constrainRotation` (`JointPrismatic2D`, `JointSliding2D`) against `constrainRotations`
+      (`JointSliding`, beside `constrainTranslations`) - one form;
+    - **RG12.31.12** `ObjectConnectorCoordinate.factorValue1` against `factor0`/`factor1` of
+      `CoordinateSpringDamperExt` - `factor1`;
+    - **RG12.31.13** `ObjectConnectorRollingDiscPenalty` has `viscousFriction` and `rollingFrictionViscous` -
+      `rollingViscousFriction`, if both stay;
+    - **RG12.31.14** `MarkerSuperElementRigid.useAlternativeApproach` says nothing - `useAlternativeRotationMode`
+      (the name of the C++ argument since RG9.3.4.4);
+    - **RG12.31.15** the prefix `physics` (`physicsMass`, `physicsInertia`, `physicsAxialStiffness`, ... - 30
+      parameters of bodies and finite elements) that connectors (`stiffness`, `damping`) and contacts do not
+      have - drop it, or keep it as the mark of a body's physical data; touches most scripts, so for 2.0 if at all;
+    - **RG12.31.16** flags in three patterns (`intrinsicFormulation`, `classicalFormulation`,
+      `usePenaltyFormulation`, `useReducedOrderIntegration`) - `use...` for all, the lowest priority.
+
+  Not listed: `localPosition` of the rigid markers beside `localHT` (its deprecation is RG14.2.15/RG16.5), the
+  names of the internal members (`temp...`, RG14.2.16), and `axisMarker0` of `LinearSpringDamper`/`JointPrismatic2D`,
+  an axis and not a rotation, which stays.
 
 ## RG13 — Item documentation
 
@@ -2322,9 +2373,9 @@ done.
       - **RG14.2.16.2** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-14-2) - (3) as proposed: the two
         matrices of `GeneralContact` are `tempMatrix`/`tempMatrix2`, the two numbers `postNewtonError`/`postNewtonStepSize`;
         the index arrays keep their generic names. 25 members remain, each with a user.
-    - **RG14.2.15** *(maintainer 2026-10-01; to be considered in all marker and connector work from now on; the parameter
-      `localHT` in the rigid markers DONE 2026-10-03 with RG16.3.3, #2795 - open: the flag and the deprecation of
-      `rotationMarker0/1` in the joints, the documentation and the examples moved to `localHT`)*
+    - **RG14.2.15** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg14-2-15) *(maintainer 2026-10-01; the
+      parameter `localHT` in the rigid markers with RG16.3.3, #2795; the deprecation, once per session and removed in
+      2031, the documentation and the examples with #2745)*
       **Markers with a rotation; the joints' `rotationMarker0/1` deprecated.** A rigid marker gets a local frame:
       **`localHT`** (a homogeneous transformation in the body) as the alternative to `localPosition`, which is
       deprecated later; the marker frame is then body frame × `localHT`, and the connector receives it as
@@ -2339,6 +2390,9 @@ done.
       `MarkerSuperElementRigid`, `MarkerKinematicTreeRigid`) and their L0; the flag and the deprecation warning in
       the joints; the documentation and the examples moved to `localHT`. Until then, new marker and connector code
       takes the frame from `MarkerRigid` and does not add new uses of `rotationMarker0/1`.
+      - **RG14.2.15.1** **DONE 2026-10-03** (#2801) — [log](exudynRevisionLog2026b.md#rg14-2-15) - found while
+        moving the Create functions: `RigidBodySpringDamper` multiplied `rotationMarker0` from the left of the marker
+        frame, all joints and its own page from the right.
 
 <a id="rg14-2-9"></a>
 **RG14.2.9 in detail** *(proposed 2026-10-01; **decided as proposed by the maintainer, 2026-10-01**: (a) the term
@@ -2554,7 +2608,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
-| RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures - done but RG14.2.15: the flag and the deprecation of the joints' `rotationMarker0/1`, the documentation and the examples moved to the markers' `localHT` (the parameter itself is in since RG16.3.3); RG14.2.9.4 and RG14.2.12 are in the list below |
+| RG12.31 | #2802 | settings and item parameters that could be renamed: a list for the maintainer's decision |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
@@ -2601,5 +2655,5 @@ The title of each says what the step **does**; the sentence after it says why it
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Deprecate the joints' `rotationMarker0/1`** (RG14.2.15, #2745): the markers carry the rotation (`localHT`), and
-   item parameters can now be deprecated (RG12.2).
+3. **Decide the renames of RG12.31** (#2802): settings and item parameters with a name that says less than it
+   could; each decided one is a small step on the deprecation mechanism of RG12.1/RG12.2.

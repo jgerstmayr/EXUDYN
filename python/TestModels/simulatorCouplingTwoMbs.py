@@ -233,9 +233,11 @@ for iWheel in range(nWheels):
     if iWheel < 2: #only on back wheels
         #torsional spring damper acts around Z-axis -> requires rotation marker to rotate from x to z axis
         #damping here represents a P-control on andular velocity using the offset
-        oTSD = mbs0.AddObject(TorsionalSpringDamper(markerNumbers=[mCarAxle, mWheel],
-                                                    rotationMarker0 = RotationMatrixY(0.5*pi)@initialRotation,
-                                                    rotationMarker1 = RotationMatrixY(0.5*pi),
+        #its markers are turned, so that z is the wheel axis
+        mCarAxleDrive = mbs0.AddMarker(MarkerBodyRigid(bodyNumber=bCar,
+                                                       localHT=HomogeneousTransformation(RotationMatrixY(0.5*pi)@initialRotation, pOff)))
+        mWheelDrive = mbs0.AddMarker(MarkerBodyRigid(bodyNumber=b0, localHT=HomogeneousTransformation(RotationMatrixY(0.5*pi), [0,0,0])))
+        oTSD = mbs0.AddObject(TorsionalSpringDamper(markerNumbers=[mCarAxleDrive, mWheelDrive],
                                                     damping=kDrive,
                                                     velocityOffset=omegaDriveSet
                                                     ))

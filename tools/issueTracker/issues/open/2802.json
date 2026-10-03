@@ -1,0 +1,12 @@
+{
+  "number": 2802,
+  "title": "settings and item parameters that could be renamed or restructured, for the maintainer's decision",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "maintainer 2026-10-03: search simulation settings and item parameter names that could be renamed or restructured; listed as revision2026b step RG12.31 for decision.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "workingRemarks": "the list is plan step RG12.31 (16 candidates); waits for the maintainer's decision, each decided one gets its own issue"
+}

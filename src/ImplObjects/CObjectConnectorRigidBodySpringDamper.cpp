@@ -35,8 +35,9 @@ void CObjectConnectorRigidBodySpringDamper::ComputeSpringForceTorque(const Marke
 	const ConstSizeMatrixBase<TReal, 9>& A1 = markers[1].frame.GetRotation();
 	const SlimVectorBase<TReal, 3>& p0 = markers[0].frame.GetTranslation();
 	const SlimVectorBase<TReal, 3>& p1 = markers[1].frame.GetTranslation();
-	ConstSizeMatrixBase<TReal, 9> A0all = Matrix3DAs<TReal>(parameters.rotationMarker0) * A0;
-	ConstSizeMatrixBase<TReal, 9> A1all = A1 * Matrix3DAs<TReal>(parameters.rotationMarker1);
+	//the marker frame times rotationMarker0, as for all joints and as documented; it was rotationMarker0 times the frame (#2801)
+	ConstSizeMatrixBase<TReal, 9> A0all = ApplyRotationMarker(A0, parameters.rotationMarker0);
+	ConstSizeMatrixBase<TReal, 9> A1all = ApplyRotationMarker(A1, parameters.rotationMarker1);
 
 	if (parameters.intrinsicFormulation)
 	{

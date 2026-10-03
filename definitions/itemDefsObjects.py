@@ -6671,11 +6671,11 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
             pythonName='rotationMarker0',
             defaultValue='EXUmath::unitMatrix3D',
-            description=r'local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0'),
+            description=r'local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT'),
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
             pythonName='rotationMarker1',
             defaultValue='EXUmath::unitMatrix3D',
-            description=r'local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1'),
+            description=r'local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT'),
         ItemParameter(type=TVectorND(6), destination=DestComp+DestParam,
             pythonName='offset',
             defaultValue='Vector6D({0.,0.,0.,0.,0.,0.})',
@@ -6741,6 +6741,7 @@ mbs.AddObject(RigidBodySpringDamper(markerNumbers = [mGround, mBody],
             pythonName='GetType',
             implementation='return CObjectType::Connector;',
             description=r'return object type (for node treatment in computation)'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
             implementation='return "ConnectorRigidBodySpringDamper";',
@@ -7168,11 +7169,11 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
             pythonName='rotationMarker0',
             defaultValue='EXUmath::unitMatrix3D',
-            description=r'local rotation matrix for marker 0; transforms joint into marker coordinates'),
+            description=r'local rotation matrix for marker 0; transforms joint into marker coordinates; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT'),
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
             pythonName='rotationMarker1',
             defaultValue='EXUmath::unitMatrix3D',
-            description=r'local rotation matrix for marker 1; transforms joint into marker coordinates'),
+            description=r'local rotation matrix for marker 1; transforms joint into marker coordinates; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT'),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='offset',
             defaultValue=0.,
@@ -7236,6 +7237,7 @@ mbs.AddObject(TorsionalSpringDamper(markerNumbers = [mGround, mBody],
             pythonName='GetType',
             implementation='return CObjectType::Connector;',
             description=r'return object type (for node treatment in computation)'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
             implementation='return "ConnectorTorsionalSpringDamper";',
@@ -11968,7 +11970,7 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
 
     | intermediate variables | symbol | description |
     |---|---|---|
-    | marker m0 position, orientation | $\LU{0}{\pv}_{m0}$, $\LU{0,m0}{\Rot}$ | the frame carrying the curve; `rotationMarker0` turns it so that the curve lies in its $x$-$y$ plane |
+    | marker m0 position, orientation | $\LU{0}{\pv}_{m0}$, $\LU{0,m0}{\Rot}$ | the frame carrying the curve, which lies in its $x$-$y$ plane; a rotation of it is given to the marker as its `localHT` |
     | circle markers | $\LU{0}{\pv}_{c_i}$ | centers of the $n_c$ circles with radii `circlesRadii` |
     | segments | $\Dm$ | `segmentsData`: one straight segment per row, two planar points in the curve frame |
     | polynomials | $\Pm$ | `polynomialData`: optional coefficients that bend each segment |
@@ -12026,7 +12028,7 @@ constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number o
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
             pythonName='rotationMarker0',
             defaultValue='EXUmath::unitMatrix3D',
-            description=r'local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the $x-y$-plane'),
+            description=r'local rotation matrix for marker 0, used only for drawing the curve - the contact is computed in the frame of marker 0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT'),
         ItemParameter(type=TReal(minimum=0), destination=DestComp+DestParam,
             pythonName='dynamicFriction',
             defaultValue=0.,
@@ -12198,7 +12200,7 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 6;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    overallDescription=r"""A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes. 
+    overallDescription=r"""A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. The three rotation axes and sliding axes are those of the markers' frames; a rotation of these frames is given to the markers as their localHT. 
 
 ```{image} /docs/figures/UniversalJoint.png
 :width: 400
@@ -12374,11 +12376,11 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
             pythonName='rotationMarker0',
             defaultValue='EXUmath::unitMatrix3D',
-            description=r"""$\LU{m0,J0}{\Rot}$local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0"""),
+            description=r"""$\LU{m0,J0}{\Rot}$local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT"""),
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
             pythonName='rotationMarker1',
             defaultValue='EXUmath::unitMatrix3D',
-            description=r"""$\LU{m1,J1}{\Rot}$local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1"""),
+            description=r"""$\LU{m1,J1}{\Rot}$local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT"""),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='activeConnector',
             defaultValue=True,
@@ -12439,6 +12441,7 @@ def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters):
             description=r'return object type (for node treatment in computation)'),
         ItemFunctionDef('GetAlgebraicEquationsSize',
             implementation='return 6;'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
             implementation='return "JointGeneric";',
@@ -12485,7 +12488,7 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 5;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    overallDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), [](#sec-rigidbodyutilities-addrevolutejoint), for two rigid bodies (or ground). 
+    overallDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), [](#sec-rigidbodyutilities-addrevolutejoint), for two rigid bodies (or ground). 
 
 ```{image} /docs/figures/RevoluteJointZ.png
 :width: 400
@@ -12619,11 +12622,11 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
             pythonName='rotationMarker0',
             defaultValue='EXUmath::unitMatrix3D',
-            description=r"""$\LU{m0,J0}{\Rot}$local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0"""),
+            description=r"""$\LU{m0,J0}{\Rot}$local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT"""),
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
             pythonName='rotationMarker1',
             defaultValue='EXUmath::unitMatrix3D',
-            description=r"""$\LU{m1,J1}{\Rot}$local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1"""),
+            description=r"""$\LU{m1,J1}{\Rot}$local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT"""),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='activeConnector',
             defaultValue=True,
@@ -12655,6 +12658,7 @@ definitions.append(ItemDefinition(
             description=r'return object type (for node treatment in computation)'),
         ItemFunctionDef('GetAlgebraicEquationsSize',
             implementation='return 5;'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
             implementation='return "JointRevoluteZ";',
@@ -12701,7 +12705,7 @@ definitions.append(ItemDefinition(
     addProtectedC=r"""    static constexpr Index nConstraints = 5;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    overallDescription=r"""A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), [](#sec-rigidbodyutilities-addprismaticjoint), for two rigid bodies (or ground). 
+    overallDescription=r"""A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), [](#sec-rigidbodyutilities-addprismaticjoint), for two rigid bodies (or ground). 
 
 ```{image} /docs/figures/PrismaticJointX.png
 :width: 400
@@ -12712,10 +12716,10 @@ definitions.append(ItemDefinition(
     inertia = InertiaCuboid(density=1000, sideLengths=[0.1,0.1,0.1])
     node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0))
     body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
-    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
-    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
-    mbs.AddObject(ObjectJointPrismaticX(markerNumbers=[mGround, mBody], rotationMarker0=RotationMatrixZ(0.5*np.pi),
-                                        rotationMarker1=RotationMatrixZ(0.5*np.pi)))
+    HTjoint = HomogeneousTransformation(RotationMatrixZ(0.5*np.pi), [0,0,0]) #the joint x-axis is the global y-axis
+    mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localHT=HTjoint))
+    mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HTjoint))
+    mbs.AddObject(ObjectJointPrismaticX(markerNumbers=[mGround, mBody]))
     mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[1,1,1])) #only the y-part moves the body
 
     mbs.Assemble()
@@ -12832,11 +12836,11 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
             pythonName='rotationMarker0',
             defaultValue='EXUmath::unitMatrix3D',
-            description=r"""$\LU{m0,J0}{\Rot}$local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0"""),
+            description=r"""$\LU{m0,J0}{\Rot}$local rotation matrix for marker $m0$; translation and rotation axes for marker $m0$ are defined in the local body coordinate system and additionally transformed by rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT"""),
         ItemParameter(type=TMatrixND(3, 3), destination=DestComp+DestParam,
             pythonName='rotationMarker1',
             defaultValue='EXUmath::unitMatrix3D',
-            description=r"""$\LU{m1,J1}{\Rot}$local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1"""),
+            description=r"""$\LU{m1,J1}{\Rot}$local rotation matrix for marker $m1$; translation and rotation axes for marker $m1$ are defined in the local body coordinate system and additionally transformed by rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT"""),
         ItemParameter(type=TBool, destination=DestComp+DestParam,
             pythonName='activeConnector',
             defaultValue=True,
@@ -12868,6 +12872,7 @@ definitions.append(ItemDefinition(
             description=r'return object type (for node treatment in computation)'),
         ItemFunctionDef('GetAlgebraicEquationsSize',
             implementation='return 5;'),
+        ItemFunctionDef('CheckPreAssembleConsistency'),
         ItemFunction(type='const char*', destination=DestMain, cFlags=CFConst,
             pythonName='GetTypeName',
             implementation='return "JointPrismaticX";',

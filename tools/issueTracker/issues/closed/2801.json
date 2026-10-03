@@ -1,0 +1,15 @@
+{
+  "number": 2801,
+  "title": "ObjectConnectorRigidBodySpringDamper multiplies rotationMarker0 from the wrong side",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "found in revision2026b step RG14.2.15: the connector computes A0all = rotationMarker0*A0, its documentation, CreateRigidBodySpringDamper (MR0 = A0^T R) and all other joints use A0*rotationMarker0; a rotationMarker0 different from the unit matrix on a rotated marker 0 gave the wrong frame.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 11:25",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ObjectConnectorRigidBodySpringDamper applies rotationMarker0 after the frame of marker 0, as the joints do and as documented; models with a rotationMarker0 other than the unit matrix move differently",
+  "resolvedInVersion": "1.12.247"
+}

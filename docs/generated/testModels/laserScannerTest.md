@@ -236,13 +236,13 @@ for iWheel in range(nWheels):
     mWheel = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0,0,0]))
     markerWheels += [mWheel]
 
-    mCarAxle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bCar, localPosition=pOff))
+    mCarAxle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bCar, localHT=HomogeneousTransformation(initialRotation, pOff))) #the joint frame on the car
     markerCarAxles += [mCarAxle]
 
     lockedAxis0 = 0
     if doBreaking: lockedAxis0 = 1
     #if iWheel==0 or iWheel==1: freeAxis = 1 #lock rotation
-    mbs.AddObject(GenericJoint(markerNumbers=[mWheel,mCarAxle],rotationMarker1=initialRotation,
+    mbs.AddObject(GenericJoint(markerNumbers=[mWheel,mCarAxle],
                                constrainedAxes=[1,1,1,lockedAxis0,1,1])) #revolute joint for wheel
 
     #does not work, because revolute joint does not accept off-axis

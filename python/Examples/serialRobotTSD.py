@@ -199,15 +199,11 @@ torsionalSDlist = []
 
 for i in range(len(jointList)):
     joint = jointList[i]
-    rot0 = mbs.GetObject(joint)['rotationMarker0']
-    rot1 = mbs.GetObject(joint)['rotationMarker1']
-    markers = mbs.GetObject(joint)['markerNumbers']
+    markers = mbs.GetObject(joint)['markerNumbers'] #their frames are the joint's
     nGeneric=mbs.AddNode(NodeGenericData(initialCoordinates=[0], 
                                          numberOfDataCoordinates=1)) #for infinite rotations
     tsd = mbs.AddObject(TorsionalSpringDamper(markerNumbers=markers,
                                         nodeNumber=nGeneric,
-                                        rotationMarker0=rot0,
-                                        rotationMarker1=rot1,                                            
                                         stiffness=Pcontrol[i],
                                         damping=Dcontrol[i],
                                         visualization=VTorsionalSpringDamper(drawSize=0.1)

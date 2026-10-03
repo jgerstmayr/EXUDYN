@@ -26,7 +26,7 @@ from exudyn.basicUtilities import Normalize
 
 from exudyn.rigidBodyUtilities import ComputeOrthonormalBasis, \
     RotationMatrix2EulerParameters, AngularVelocity2EulerParameters_t, RotationMatrix2RotXYZ, AngularVelocity2RotXYZ_t, \
-    RotationMatrix2RotationVector, HT2translation, HT2rotationMatrix
+    RotationMatrix2RotationVector, HT2translation, HT2rotationMatrix, HomogeneousTransformation
 
 import exudyn.itemInterface as eii
 from exudyn.itemInterface import ObjectGround, VObjectGround, SensorUserFunction
@@ -283,6 +283,19 @@ def GetMarkersPosRot(mbs, name, internBodyNodeMarkerList, localPosition0, localP
                                      configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
     
     return [mBody0, mBody1, p0, p1, A0, A1]
+
+
+def _RotationIntoMarker(mbs, marker, bodyNodeMarker, localPosition, rotation):
+    """the rotation of a joint or connector on its side, given to the marker as localHT if the marker was created here
+    (a MarkerBodyRigid or MarkerNodeRigid); returns what remains for rotationMarker0/1, which is deprecated (#2745): the unit
+    matrix, or the rotation itself for a marker the caller gave, which is not changed"""
+    if isinstance(bodyNodeMarker, exudyn.MarkerIndex):
+        return rotation
+    if isinstance(bodyNodeMarker, exudyn.NodeIndex):
+        mbs.SetMarkerParameter(marker, 'localHT', HomogeneousTransformation(rotation, [0., 0., 0.]))
+    else:
+        mbs.SetMarkerParameter(marker, 'localHT', HomogeneousTransformation(rotation, localPosition))
+    return np.eye(3)
 
 
 #internal: convert exudyn jointType to axis vector
@@ -1069,7 +1082,10 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
         MR0 = rotationMatrixJoint
         MR1 = _MatMul3x3(_MatMul3x3(A1.T, A0), rotationMatrixJoint)
 
-            
+    #the rotations are the markers' (#2745)
+    MR0 = _RotationIntoMarker(mbs, mBody0, internBodyNodeMarkerList[0], localPosition0, MR0)
+    MR1 = _RotationIntoMarker(mbs, mBody1, internBodyNodeMarkerList[1], localPosition1, MR1)
+
     oConnector = mbs.AddObject(eii.ObjectConnectorRigidBodySpringDamper(name=name,markerNumbers = [mBody0,mBody1],
                                                                         stiffness = stiffness, damping = damping, 
                                                                         offset = offset,
@@ -1201,8 +1217,12 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
         mName0 = 'Marker0:'+name
         mName1 = 'Marker1:'+name
 
-    if mBody0 is None: mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localPosition=pJ0))
-    if mBody1 is None: mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localPosition=pJ1))
+    if mBody0 is None: #the rotation is the marker's (#2745)
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localHT=HomogeneousTransformation(MR0, pJ0)))
+        MR0 = np.eye(3)
+    if mBody1 is None:
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localHT=HomogeneousTransformation(MR1, pJ1)))
+        MR1 = np.eye(3)
 
     if unlimitedRotations:
         nGeneric = mbs.AddNode(eii.NodeGenericData(initialCoordinates=[0], 
@@ -1320,8 +1340,12 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
         mName0 = 'Marker0:'+name
         mName1 = 'Marker1:'+name
 
-    if mBody0 is None: mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localPosition=pJ0))
-    if mBody1 is None: mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localPosition=pJ1))
+    if mBody0 is None: #the rotation is the marker's (#2745)
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localHT=HomogeneousTransformation(MR0, pJ0)))
+        MR0 = np.eye(3)
+    if mBody1 is None:
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localHT=HomogeneousTransformation(MR1, pJ1)))
+        MR1 = np.eye(3)
     
     oJoint = mbs.AddObject(eii.ObjectJointRevoluteZ(name=name,markerNumbers=[mBody0,mBody1],
                                                 rotationMarker0=MR0,
@@ -1414,8 +1438,12 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
         mName0 = 'Marker0:'+name
         mName1 = 'Marker1:'+name
 
-    if mBody0 is None: mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localPosition=pJ0))
-    if mBody1 is None: mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localPosition=pJ1))
+    if mBody0 is None: #the rotation is the marker's (#2745)
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localHT=HomogeneousTransformation(MR0, pJ0)))
+        MR0 = np.eye(3)
+    if mBody1 is None:
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localHT=HomogeneousTransformation(MR1, pJ1)))
+        MR1 = np.eye(3)
     
     oJoint = mbs.AddObject(eii.ObjectJointPrismaticX(name=name,markerNumbers=[mBody0,mBody1],
                                                 rotationMarker0=MR0,
@@ -1595,8 +1623,12 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
         mName0 = 'Marker0:'+name
         mName1 = 'Marker1:'+name
 
-    if mBody0 is None: mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localPosition=pJ0))
-    if mBody1 is None: mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localPosition=pJ1))
+    if mBody0 is None: #the rotation is the marker's (#2745)
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localHT=HomogeneousTransformation(MR0, pJ0)))
+        MR0 = np.eye(3)
+    if mBody1 is None:
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localHT=HomogeneousTransformation(MR1, pJ1)))
+        MR1 = np.eye(3)
     
     oJoint = mbs.AddObject(eii.ObjectJointGeneric(name=name,markerNumbers=[mBody0,mBody1],
                                                   constrainedAxes = constrainedAxes,

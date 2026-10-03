@@ -50,11 +50,13 @@ for nodes in [nodesLeg1, nodesLeg2]:
         mbs.AddObject(ObjectBeamGeometricallyExact(nodeNumbers=[nodes[i], nodes[i+1]], physicsLength=lElement, sectionData=section))
 
 mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=mbs.AddNode(NodePointGround())))
-mbs.AddObject(GenericJoint(markerNumbers=[mGround, mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesLeg1[0]))],
-                           rotationMarker0=rotationLeg1))
-mbs.AddObject(GenericJoint(markerNumbers=[mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesLeg1[-1])),
-                                          mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesLeg2[0]))],
-                           rotationMarker0=rotationLeg1.T))
+#the clamping in the frame of the first leg, the corner turned back: rotations of the markers (localHT)
+mGroundLeg1 = mbs.AddMarker(MarkerNodeRigid(nodeNumber=mbs.GetMarker(mGround)['nodeNumber'],
+                                            localHT=HomogeneousTransformation(rotationLeg1, [0,0,0])))
+mbs.AddObject(GenericJoint(markerNumbers=[mGroundLeg1, mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesLeg1[0]))]))
+mbs.AddObject(GenericJoint(markerNumbers=[mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesLeg1[-1],
+                                                                        localHT=HomogeneousTransformation(rotationLeg1.T, [0,0,0]))),
+                                          mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesLeg2[0]))]))
 
 def LoadElbow(mbs, t, loadVector):
     force = 50*t if t < 1 else (50*(2-t) if t < 2 else 0)

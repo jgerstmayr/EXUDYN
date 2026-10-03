@@ -96,19 +96,18 @@ for i in range(nBodies):
 
     nodeList += [nRB]
     objectList += [oRB]
-    mPos = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB, localPosition = [-0.5*sx,0,0]))
     lastDeltaRot2 = deltaRot2
     if i == 0:
          lastDeltaRot2 = RotationMatrixZ(0)
+    #the joint frame is the markers': turned back on this body, as the end marker of the last body is turned forward
+    mPos = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB, localHT=HomogeneousTransformation(lastDeltaRot2.T, [-0.5*sx,0,0])))
         
     mbs.AddObject(GenericJoint(markerNumbers = [mPos, mPosLast], 
                                constrainedAxes=[1,1,1, 1,0,1],
-                               rotationMarker0=lastDeltaRot2.T,
-                               rotationMarker1=lastDeltaRot2,
                                visualization=VGenericJoint(axesRadius = 0.5*sy, axesLength=1.1*sz)))
 
-    #marker for next chain body
-    mPosLast = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB, localPosition = [0.5*sx,0,0]))
+    #marker for next chain body, turned for the joint to it
+    mPosLast = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oRB, localHT=HomogeneousTransformation(deltaRot2, [0.5*sx,0,0])))
 
     #add damping to bodies:
     mbs.AddObject(ObjectConnectorCartesianSpringDamper(markerNumbers = [mPosGround, mPosLast],

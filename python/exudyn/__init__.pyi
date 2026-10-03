@@ -1194,13 +1194,13 @@ class LinearSolverSettings:
 
 class Parallel:
     """Settings for linear solver, both dense and sparse (Eigen)."""
-    multithreadedLimitJacobians: int
+    multithreadedLowerLimitJacobians: int
     """compute jacobians (ODE2, AE, ...) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)."""
-    multithreadedLimitLoads: int
+    multithreadedLowerLimitLoads: int
     """compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)."""
-    multithreadedLimitMassMatrices: int
+    multithreadedLowerLimitMassMatrices: int
     """compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)."""
-    multithreadedLimitResiduals: int
+    multithreadedLowerLimitResiduals: int
     """compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)."""
     numberOfThreads: int
     """number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores); currently, only one solver can be started with multithreading; if you use several mbs in parallel (co-simulation), you should use serial computing."""

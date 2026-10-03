@@ -252,7 +252,7 @@ is what most answers need to start from, see {ref}`sec-commandline`.
 8. In `GenerateStraightLineANCFCable2D`
 
   - coordinate constraints can be used to constrain position and rotation, e.g., `fixedConstraintsNode0 = [1,1,0,1]` for a beam aligned along the global x-axis;
-  - this **does not work** for beams with arbitrary rotation in reference configuration, e.g., 45°. Use a GenericJoint with a rotationMarker instead.
+  - this **does not work** for beams with arbitrary rotation in reference configuration, e.g., 45°. Use a GenericJoint with markers whose `localHT` contains the rotation instead.
 
 9. What is the difference between MarkerBodyPosition and MarkerBodyRigid?
 

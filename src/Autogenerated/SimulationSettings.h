@@ -834,10 +834,10 @@ public: // AUTO:
 class Parallel // AUTO: 
 {
 public: // AUTO: 
-  Index multithreadedLimitJacobians;              //!< AUTO: must be > 0; compute jacobians (ODE2, AE, ...) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
-  Index multithreadedLimitLoads;                  //!< AUTO: must be > 0; compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
-  Index multithreadedLimitMassMatrices;           //!< AUTO: must be > 0; compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
-  Index multithreadedLimitResiduals;              //!< AUTO: must be > 0; compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index multithreadedLowerLimitJacobians;         //!< AUTO: must be > 0; compute jacobians (ODE2, AE, ...) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index multithreadedLowerLimitLoads;             //!< AUTO: must be > 0; compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index multithreadedLowerLimitMassMatrices;      //!< AUTO: must be > 0; compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index multithreadedLowerLimitResiduals;         //!< AUTO: must be > 0; compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
   Index numberOfThreads;                          //!< AUTO: must be > 0; number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores); currently, only one solver can be started with multithreading; if you use several mbs in parallel (co-simulation), you should use serial computing
   Index taskSplitMinItems;                        //!< AUTO: must be > 0; number of items from which on the tasks are split into subtasks (which slightly increases threading performance; this may be critical for smaller number of objects, should be roughly between 50 and 5000; flag is copied into MainSystem internal flag at InitializeSolverData(...)
   Index taskSplitTasksPerThread;                  //!< AUTO: must be > 0; this is the number of subtasks that every thread receives; minimum is 1, the maximum should not be larger than 100; this factor is 1 as long as the taskSplitMinItems is not reached; flag is copied into MainSystem internal flag at InitializeSolverData(...)
@@ -852,10 +852,10 @@ public: // AUTO:
   Parallel()
   {
     backlink=nullptr;
-    multithreadedLimitJacobians = 20;
-    multithreadedLimitLoads = 20;
-    multithreadedLimitMassMatrices = 20;
-    multithreadedLimitResiduals = 20;
+    multithreadedLowerLimitJacobians = 20;
+    multithreadedLowerLimitLoads = 20;
+    multithreadedLowerLimitMassMatrices = 20;
+    multithreadedLowerLimitResiduals = 20;
     numberOfThreads = 1;
     taskSplitMinItems = 50;
     taskSplitTasksPerThread = 16;
@@ -867,34 +867,34 @@ public: // AUTO:
   }
 
   // AUTO: access functions
-  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use multithreadedLimitJacobians
-  void PySetMultithreadedLLimitJacobians(const Index& multithreadedLimitJacobiansInit) ;
-  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use multithreadedLimitJacobians
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use multithreadedLowerLimitJacobians
+  void PySetMultithreadedLLimitJacobians(const Index& multithreadedLowerLimitJacobiansInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use multithreadedLowerLimitJacobians
   Index PyGetMultithreadedLLimitJacobians() const ;
 
-  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use multithreadedLimitLoads
-  void PySetMultithreadedLLimitLoads(const Index& multithreadedLimitLoadsInit) ;
-  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use multithreadedLimitLoads
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use multithreadedLowerLimitLoads
+  void PySetMultithreadedLLimitLoads(const Index& multithreadedLowerLimitLoadsInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use multithreadedLowerLimitLoads
   Index PyGetMultithreadedLLimitLoads() const ;
 
-  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use multithreadedLimitMassMatrices
-  void PySetMultithreadedLLimitMassMatrices(const Index& multithreadedLimitMassMatricesInit) ;
-  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use multithreadedLimitMassMatrices
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use multithreadedLowerLimitMassMatrices
+  void PySetMultithreadedLLimitMassMatrices(const Index& multithreadedLowerLimitMassMatricesInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use multithreadedLowerLimitMassMatrices
   Index PyGetMultithreadedLLimitMassMatrices() const ;
 
-  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use multithreadedLimitResiduals
-  void PySetMultithreadedLLimitResiduals(const Index& multithreadedLimitResidualsInit) ;
-  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use multithreadedLimitResiduals
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use multithreadedLowerLimitResiduals
+  void PySetMultithreadedLLimitResiduals(const Index& multithreadedLowerLimitResidualsInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use multithreadedLowerLimitResiduals
   Index PyGetMultithreadedLLimitResiduals() const ;
 
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
     os << "Parallel" << ":\n";
-    os << "  multithreadedLimitJacobians = " << multithreadedLimitJacobians << "\n";
-    os << "  multithreadedLimitLoads = " << multithreadedLimitLoads << "\n";
-    os << "  multithreadedLimitMassMatrices = " << multithreadedLimitMassMatrices << "\n";
-    os << "  multithreadedLimitResiduals = " << multithreadedLimitResiduals << "\n";
+    os << "  multithreadedLowerLimitJacobians = " << multithreadedLowerLimitJacobians << "\n";
+    os << "  multithreadedLowerLimitLoads = " << multithreadedLowerLimitLoads << "\n";
+    os << "  multithreadedLowerLimitMassMatrices = " << multithreadedLowerLimitMassMatrices << "\n";
+    os << "  multithreadedLowerLimitResiduals = " << multithreadedLowerLimitResiduals << "\n";
     os << "  numberOfThreads = " << numberOfThreads << "\n";
     os << "  taskSplitMinItems = " << taskSplitMinItems << "\n";
     os << "  taskSplitTasksPerThread = " << taskSplitTasksPerThread << "\n";
@@ -1035,40 +1035,40 @@ public: // AUTO:
 
 //! implementation:
 
-inline void Parallel::PySetMultithreadedLLimitJacobians(const Index& multithreadedLimitJacobiansInit) { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitJacobians is deprecated! use parallel.multithreadedLimitJacobians instead!");
-    multithreadedLimitJacobians= (const Index&)multithreadedLimitJacobiansInit; 
+inline void Parallel::PySetMultithreadedLLimitJacobians(const Index& multithreadedLowerLimitJacobiansInit) { 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitJacobians is deprecated! use parallel.multithreadedLowerLimitJacobians instead!");
+    multithreadedLowerLimitJacobians= (const Index&)multithreadedLowerLimitJacobiansInit; 
     }
 inline Index Parallel::PyGetMultithreadedLLimitJacobians() const { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitJacobians is deprecated! use parallel.multithreadedLimitJacobians instead!");
-    return Index(multithreadedLimitJacobians); 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitJacobians is deprecated! use parallel.multithreadedLowerLimitJacobians instead!");
+    return Index(multithreadedLowerLimitJacobians); 
     }
 
-inline void Parallel::PySetMultithreadedLLimitLoads(const Index& multithreadedLimitLoadsInit) { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitLoads is deprecated! use parallel.multithreadedLimitLoads instead!");
-    multithreadedLimitLoads= (const Index&)multithreadedLimitLoadsInit; 
+inline void Parallel::PySetMultithreadedLLimitLoads(const Index& multithreadedLowerLimitLoadsInit) { 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitLoads is deprecated! use parallel.multithreadedLowerLimitLoads instead!");
+    multithreadedLowerLimitLoads= (const Index&)multithreadedLowerLimitLoadsInit; 
     }
 inline Index Parallel::PyGetMultithreadedLLimitLoads() const { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitLoads is deprecated! use parallel.multithreadedLimitLoads instead!");
-    return Index(multithreadedLimitLoads); 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitLoads is deprecated! use parallel.multithreadedLowerLimitLoads instead!");
+    return Index(multithreadedLowerLimitLoads); 
     }
 
-inline void Parallel::PySetMultithreadedLLimitMassMatrices(const Index& multithreadedLimitMassMatricesInit) { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitMassMatrices is deprecated! use parallel.multithreadedLimitMassMatrices instead!");
-    multithreadedLimitMassMatrices= (const Index&)multithreadedLimitMassMatricesInit; 
+inline void Parallel::PySetMultithreadedLLimitMassMatrices(const Index& multithreadedLowerLimitMassMatricesInit) { 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitMassMatrices is deprecated! use parallel.multithreadedLowerLimitMassMatrices instead!");
+    multithreadedLowerLimitMassMatrices= (const Index&)multithreadedLowerLimitMassMatricesInit; 
     }
 inline Index Parallel::PyGetMultithreadedLLimitMassMatrices() const { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitMassMatrices is deprecated! use parallel.multithreadedLimitMassMatrices instead!");
-    return Index(multithreadedLimitMassMatrices); 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitMassMatrices is deprecated! use parallel.multithreadedLowerLimitMassMatrices instead!");
+    return Index(multithreadedLowerLimitMassMatrices); 
     }
 
-inline void Parallel::PySetMultithreadedLLimitResiduals(const Index& multithreadedLimitResidualsInit) { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitResiduals is deprecated! use parallel.multithreadedLimitResiduals instead!");
-    multithreadedLimitResiduals= (const Index&)multithreadedLimitResidualsInit; 
+inline void Parallel::PySetMultithreadedLLimitResiduals(const Index& multithreadedLowerLimitResidualsInit) { 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitResiduals is deprecated! use parallel.multithreadedLowerLimitResiduals instead!");
+    multithreadedLowerLimitResiduals= (const Index&)multithreadedLowerLimitResidualsInit; 
     }
 inline Index Parallel::PyGetMultithreadedLLimitResiduals() const { 
-    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitResiduals is deprecated! use parallel.multithreadedLimitResiduals instead!");
-    return Index(multithreadedLimitResiduals); 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitResiduals is deprecated! use parallel.multithreadedLowerLimitResiduals instead!");
+    return Index(multithreadedLowerLimitResiduals); 
     }
 
 #endif //#ifdef include once...

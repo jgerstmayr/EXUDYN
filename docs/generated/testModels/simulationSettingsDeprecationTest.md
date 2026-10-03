@@ -12,7 +12,7 @@ You can view and download this file on Github: [simulationSettingsDeprecationTes
 #
 # Details:  A renamed simulation setting keeps working under its old name, with a DeprecationWarning that names
 #           the new one (#2588): parallel.multithreadedLLimitLoads (and ...Residuals, ...Jacobians,
-#           ...MassMatrices) is parallel.multithreadedLimitLoads now. Writing the old name writes the new one,
+#           ...MassMatrices) is parallel.multithreadedLowerLimitLoads now. Writing the old name writes the new one,
 #           reading it reads the new one - also in a copy of the settings and in settings constructed on their own.
 #
 # Author:   Johannes Gerstmayr
@@ -36,11 +36,11 @@ for (k, name) in enumerate(['Loads', 'Residuals', 'Jacobians', 'MassMatrices']):
         warnings.simplefilter('always')
         setattr(simulationSettings.parallel, 'multithreadedLLimit' + name, 30 + k) #the old name
         oldValue = getattr(simulationSettings.parallel, 'multithreadedLLimit' + name)
-    newValue = getattr(simulationSettings.parallel, 'multithreadedLimit' + name)
+    newValue = getattr(simulationSettings.parallel, 'multithreadedLowerLimit' + name)
     warned = [str(entry.message) for entry in caught if issubclass(entry.category, DeprecationWarning)]
     if newValue != 30 + k or oldValue != 30 + k:
         errors += 1
-    if len(warned) != 2 or ('parallel.multithreadedLimit' + name) not in warned[0]:
+    if len(warned) != 2 or ('parallel.multithreadedLowerLimit' + name) not in warned[0]:
         errors += 1
     total += newValue
 
@@ -50,7 +50,7 @@ settingsCopy = copy.copy(simulationSettings)
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
     settingsCopy.parallel.multithreadedLLimitLoads = 7
-if settingsCopy.parallel.multithreadedLimitLoads != 7 or simulationSettings.parallel.multithreadedLimitLoads == 7:
+if settingsCopy.parallel.multithreadedLowerLimitLoads != 7 or simulationSettings.parallel.multithreadedLowerLimitLoads == 7:
     errors += 1
 
 exu.Print('simulationSettingsDeprecationTest: errors', errors)

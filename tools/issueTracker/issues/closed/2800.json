@@ -1,0 +1,15 @@
+{
+  "number": 2800,
+  "title": "parallel.multithreadedLowerLimit... instead of multithreadedLimit...",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "LOW",
+  "description": "maintainer 2026-10-03, after revision2026b step RG12.1: the double L of multithreadedLLimit... meant lower limit; the settings are multithreadedLowerLimitLoads, ...Residuals, ...Jacobians, ...MassMatrices; the old LLimit names forward until 2031.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 11:25",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "parallel.multithreadedLowerLimitLoads, ...Residuals, ...Jacobians, ...MassMatrices; the old multithreadedLLimit names forward with a DeprecationWarning until 2031",
+  "resolvedInVersion": "1.12.246"
+}

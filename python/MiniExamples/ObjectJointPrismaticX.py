@@ -24,10 +24,10 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 inertia = InertiaCuboid(density=1000, sideLengths=[0.1,0.1,0.1])
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0))
 body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, physicsMass=inertia.Mass(), physicsInertia=inertia.GetInertia6D()))
-mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localPosition=[0,0,0]))
-mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
-mbs.AddObject(ObjectJointPrismaticX(markerNumbers=[mGround, mBody], rotationMarker0=RotationMatrixZ(0.5*np.pi),
-                                    rotationMarker1=RotationMatrixZ(0.5*np.pi)))
+HTjoint = HomogeneousTransformation(RotationMatrixZ(0.5*np.pi), [0,0,0]) #the joint x-axis is the global y-axis
+mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localHT=HTjoint))
+mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HTjoint))
+mbs.AddObject(ObjectJointPrismaticX(markerNumbers=[mGround, mBody]))
 mbs.AddLoad(LoadForceVector(markerNumber=mBody, loadVector=[1,1,1])) #only the y-part moves the body
 
 mbs.Assemble()

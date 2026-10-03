@@ -29,8 +29,8 @@ void CObjectConnectorTorsionalSpringDamper::ComputeSpringTorque(const MarkerRigi
 
 	const ConstSizeMatrixBase<TReal, 9>& A0 = markers[0].frame.GetRotation();
 	const ConstSizeMatrixBase<TReal, 9>& A1 = markers[1].frame.GetRotation();
-	A0all = A0 * Matrix3DAs<TReal>(parameters.rotationMarker0);
-	ConstSizeMatrixBase<TReal, 9> A1all = A1 * Matrix3DAs<TReal>(parameters.rotationMarker1);
+	A0all = ApplyRotationMarker(A0, parameters.rotationMarker0);
+	ConstSizeMatrixBase<TReal, 9> A1all = ApplyRotationMarker(A1, parameters.rotationMarker1);
 
 	//relative rotation
 	ConstSizeMatrixBase<TReal, 9> relRot = A0all.GetTransposed() * A1all;

@@ -1697,12 +1697,11 @@ def AddRevoluteJoint(mbs, body0, body1, point, axis, useGlobalFrame=True,
     MR0 = A0.T @ AJ  
     MR1 = A1.T @ AJ  
     
-    mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=body0, localPosition=pJ0))
-    mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=body1, localPosition=pJ1))
+    #the rotations are the markers' (#2745)
+    mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=body0, localHT=HomogeneousTransformation(MR0, pJ0)))
+    mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=body1, localHT=HomogeneousTransformation(MR1, pJ1)))
     
     oJoint = mbs.AddObject(eii.ObjectJointRevoluteZ(markerNumbers=[mBody0,mBody1],
-                                                rotationMarker0=MR0,
-                                                rotationMarker1=MR1,
              visualization=eii.VRevoluteJointZ(show=showJoint, axisRadius=axisRadius, axisLength=axisLength) ))
 
     return [oJoint, mBody0, mBody1]
@@ -1780,12 +1779,11 @@ def AddPrismaticJoint(mbs, body0, body1, point, axis, useGlobalFrame=True,
     MR0 = A0.T @ AJ  
     MR1 = A1.T @ AJ  
     
-    mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=body0, localPosition=pJ0))
-    mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=body1, localPosition=pJ1))
+    #the rotations are the markers' (#2745)
+    mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=body0, localHT=HomogeneousTransformation(MR0, pJ0)))
+    mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=body1, localHT=HomogeneousTransformation(MR1, pJ1)))
     
     oJoint = mbs.AddObject(eii.ObjectJointPrismaticX(markerNumbers=[mBody0,mBody1],
-                                                rotationMarker0=MR0,
-                                                rotationMarker1=MR1,
              visualization=eii.VPrismaticJointX(show=showJoint, axisRadius=axisRadius, axisLength=axisLength) ))
 
     return [oJoint, mBody0, mBody1]

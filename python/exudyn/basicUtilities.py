@@ -253,23 +253,21 @@ def GetJointArgs(mbs, markerNumber0=None, markerNumber1=None,
         mbs: multibody system where new marker is added to
         markerNumber0: markerNumber of existing rigid body marker
         markerNumber1: markerNumber of existing rigid body marker
-        rotationMarker0: joint marker rotation matrix for markerNumber0 (must be MarkerBodyRigid)
-        rotationMarker1: joint marker rotation matrix for markerNumber1 (must be MarkerBodyRigid)
+        rotationMarker0: joint marker rotation matrix for markerNumber0 (must be MarkerBodyRigid); deprecated as the joints' rotationMarker0: better give the rotation to markerNumber0 as its localHT
+        rotationMarker1: joint marker rotation matrix for markerNumber1 (must be MarkerBodyRigid); deprecated, as rotationMarker0
         bodyNumber0: existing body used to create new marker
         bodyNumber1: existing body used to create new marker
 
     Returns:
-        returns dict with 'markerNumbers' list, 'rotationMarker0' and 'rotationMarker1', ready to be used as args
+        returns dict with the 'markerNumbers' list, ready to be used as args; the new marker carries the joint's rotation as its localHT; a rotationMarker0/1 given for the existing marker is passed on as the joint's (deprecated) rotationMarker0/1
 
     Example:
         #oBody0 = mbs.CreateRigidBody(...)
         #oBody1 = mbs.CreateRigidBody(...)
-        marker0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oBody0,localPosition=[1,0,0]))
-        rotM0 = RotationMatrixX(0.5*pi)
+        marker0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oBody0,
+                                                localHT=HomogeneousTransformation(RotationMatrixX(0.5*pi), [1,0,0])))
         #create joint from one marker (with rotation) and other body
-        mbs.AddObject(RevoluteJointZ(**GetJointArgs(mbs, markerNumber0=marker0,
-                                                    rotationMarker0=rotM0,
-                                                    bodyNumber1=oBody1)
+        mbs.AddObject(RevoluteJointZ(**GetJointArgs(mbs, markerNumber0=marker0, bodyNumber1=oBody1)
     """
     rotationMarkerThis = np.eye(3)
     if markerNumber0 is not None:
@@ -306,18 +304,16 @@ def GetJointArgs(mbs, markerNumber0=None, markerNumber1=None,
                                   configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
     
     pLocal = rotRefBody.T @ (pMarker - pRefBody)
-    markerNumberNew = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bodyNumber, localPosition=pLocal))
+    #the new marker carries the rotation of the joint as its localHT (#2745)
+    localHT = np.eye(4)
+    localHT[0:3,0:3] = rotRefBody.T @ rotationMarkerNew @ rotationMarkerThis
+    localHT[0:3,3] = pLocal
+    markerNumberNew = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bodyNumber, localHT=localHT))
 
-    if markerNumber0 is not None: #create markerNumber1, rotationMarker1
-        return {'markerNumbers':[markerNumber0, markerNumberNew],
-                'rotationMarker0':rotationMarkerThis,
-                'rotationMarker1':rotRefBody.T @ rotationMarkerNew @ rotationMarkerThis,
-                }
-    else: #create markerNumber0, rotationMarker0, bodyNumber1 
-        return {'markerNumbers':[markerNumberNew, markerNumber1],
-                'rotationMarker0':rotRefBody.T @ rotationMarkerNew @ rotationMarkerThis,
-                'rotationMarker1':rotationMarkerThis,
-                }
+    args = {'markerNumbers': [markerNumber0, markerNumberNew] if markerNumber0 is not None else [markerNumberNew, markerNumber1]}
+    if np.linalg.norm(np.array(rotationMarkerThis) - np.eye(3)) != 0: #the existing marker cannot take it: the deprecated way
+        args['rotationMarker0' if markerNumber0 is not None else 'rotationMarker1'] = rotationMarkerThis
+    return args
 
 
 def ShowOnlyObjects(mbs, objectNumbers=[], showOthers=False):

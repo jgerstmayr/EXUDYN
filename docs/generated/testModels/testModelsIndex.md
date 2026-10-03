@@ -92,6 +92,7 @@ computeItemTest
 emptySystemTest
 homogeneousTransformationParameterTest
 simulationSettingsDeprecationTest
+rotationMarkerDeprecationTest
 homogeneousTransformationTest
 inspectTest
 energiesTest

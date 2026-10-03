@@ -33,8 +33,8 @@ void CObjectJointPrismaticX::ComputeConstraintEquationsTemplate(const MarkerRigi
 	equations.SetNumberOfItems(nConstraints);
 	const ConstSizeMatrixBase<TReal, 9>& A0 = markers[0].frame.GetRotation();
 	const ConstSizeMatrixBase<TReal, 9>& A1 = markers[1].frame.GetRotation();
-	ConstSizeMatrixBase<TReal, 9> A0all = A0 * Matrix3DAs<TReal>(parameters.rotationMarker0);
-	ConstSizeMatrixBase<TReal, 9> A1all = A1 * Matrix3DAs<TReal>(parameters.rotationMarker1);
+	ConstSizeMatrixBase<TReal, 9> A0all = ApplyRotationMarker(A0, parameters.rotationMarker0);
+	ConstSizeMatrixBase<TReal, 9> A1all = ApplyRotationMarker(A1, parameters.rotationMarker1);
 	SlimVectorBase<TReal, 3> vx0 = A0all.template GetColumnVector<3>(0);
 	SlimVectorBase<TReal, 3> vz0 = A0all.template GetColumnVector<3>(2);
 	SlimVectorBase<TReal, 3> vx1 = A1all.template GetColumnVector<3>(0);

@@ -12219,3 +12219,41 @@ to an HT, a list of HTs or a user function, stops the generator.
 byte-identical. `test_itemParameterDeprecation.py` renames it in a copy of the definition and reads what the
 generators emit: the order (last in every path), the forwarding, the Python signature, the refusal of a name with no
 target. How to rename: `definitions/README.md` (*Members*), `CODING_STYLE.md` §10.5.
+
+<a id="rg12-1-1"></a>
+### RG12.1.1 — multithreadedLowerLimit (2026-10-03, #2800)
+
+*(Maintainer 2026-10-03.)* The settings of RG12.1 are `parallel.multithreadedLowerLimitLoads`, `...Residuals`,
+`...Jacobians`, `...MassMatrices` - the limit is a lower one, below which the work stays on one thread;
+`multithreadedLimit...` existed only between two commits of the same day and is not deprecated. The old
+`multithreadedLLimit...` forward until **2031** (five years, the maintainer's rule for removals from now on), not 2028
+as written in RG12.1. The `SolverData` fields, `simulationSettingsDeprecationTest.py`, the stubtest baseline and the
+reference of `parameterConversionTest.py` follow.
+
+<a id="rg14-2-15"></a>
+### RG14.2.15 — the joints' rotationMarker0/1 deprecated (2026-10-03, #2745, #2801)
+
+**The warning**: `Main<Item>::CheckPreAssembleConsistency` of `JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`,
+`ConnectorRigidBodySpringDamper`, `ConnectorTorsionalSpringDamper` and `ContactCurveCircles` (`rotationMarker0` only)
+calls one function that issues a `DeprecationWarning` the first time an item with a rotation other than the unit
+matrix is assembled - **once per session** (a static flag), as the maintainer asked; removal 2031. The parameters stay
+parameters (not RG12.2 renames: there is no new name, the rotation moves to another item); their descriptions say
+**deprecated** and what to use. **The flag the step planned** is a test instead: `ApplyRotationMarker(A, R)` in
+`MarkerData.h` returns `A` without the product if `R` is exactly the unit matrix, which is the case for every model
+without the deprecated parameter. `ContactCurveCircles` never used its `rotationMarker0` for the contact, only for
+drawing; its description says so.
+
+**#2801**: `CObjectConnectorRigidBodySpringDamper` computed `rotationMarker0 * A0`, all joints and its own page
+`A0 * rotationMarker0`; `CreateRigidBodySpringDamper` passes the rotation assuming the latter. Fixed; no reference
+changed, as no test model had a non-unit `rotationMarker0` on it.
+
+**Moved to `localHT`**: the `Create...` functions of `mainSystemExtensions` (the rotation goes into the marker they
+create; a marker given by the caller is not changed, and keeps the rotation in the deprecated parameter),
+`AddRevoluteJoint`/`AddPrismaticJoint`, `GetJointArgs`, the robotics `Robot.CreateRedundantCoordinateMBS` and the
+inverse kinematics (a copy of a base marker with the composed `localHT`), the MiniExample of `JointPrismaticX`, the
+overall descriptions of the three joints, `tutorialRigidBody.md`, `gettingStartedFAQ.md`, thirteen test models and five
+examples; `ROSMobileManipulator.py` takes the markers of the revolute joint, which carry the axle frame now (not run:
+needs ROS). `homogeneousTransformationParameterTest.py` keeps one use, as the comparison. New test model
+`rotationMarkerDeprecationTest.py`: a `GenericJoint` and a `RigidBodySpringDamper`, each turned by `rotationMarker0/1`
+and by `localHT`, move the same (difference 0 and 1e-16), and two `Assemble()` give at most one warning. The
+references of `geometricallyExactBeamRightAngleFrame.py` and `rightAngleFrame.py` stay.

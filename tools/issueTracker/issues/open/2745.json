@@ -10,5 +10,5 @@
   "dateRaised": "2026-09-29",
   "deadline": "2027-03-28",
   "file": "src/Main/MarkerData.h",
-  "workingRemarks": "maintainer 2026-09-30: continue with RG14.2 - fallback, per-thread temporaries only, performance baseline from the MiniExamples first, two-layer interface per marker kind, unified ComputeConnectorForce, homogeneous transformations for rigid markers; proposal in tmp/evalRG14_2_connectorInterface.md"
+  "workingRemarks": "maintainer 2026-09-30: continue with RG14.2 - fallback, per-thread temporaries only, performance baseline from the MiniExamples first, two-layer interface per marker kind, unified ComputeConnectorForce, homogeneous transformations for rigid markers; proposal in tmp/evalRG14_2_connectorInterface.md; RG14.2.15 done 2026-10-03: rotationMarker0/1 deprecated (warning once per session, removed 2031), library, docs and examples on localHT; RG14.2 complete, the issue stays open for RG14.3"
 }

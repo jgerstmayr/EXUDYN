@@ -55,9 +55,9 @@ for nodes in [nodesArm1, nodesArm2]:
 
 mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=mbs.AddNode(NodePointGround())))
 mbs.AddObject(GenericJoint(markerNumbers=[mGround, mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesArm1[0]))]))
-mbs.AddObject(GenericJoint(markerNumbers=[mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesArm1[-1])),
-                                          mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesArm2[0]))],
-                           rotationMarker0=rotationArm2))
+mbs.AddObject(GenericJoint(markerNumbers=[mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesArm1[-1],
+                                                                        localHT=HomogeneousTransformation(rotationArm2, [0,0,0]))),
+                                          mbs.AddMarker(MarkerNodeRigid(nodeNumber=nodesArm2[0]))]))
 
 def LoadTip(mbs, t, loadVector):
     return [forceMax*t, 0, imperfection*forceMax*t]

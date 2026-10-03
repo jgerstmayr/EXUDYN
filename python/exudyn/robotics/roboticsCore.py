@@ -90,6 +90,18 @@ dictJointType2coordinate6D = {
 #preerb.HT must be added for joint axes definitions and for currentHT
 #inertia and COM need to be converted by localHT of StdDH into ModDH configuration!!!
 
+def _MarkerWithRotation(mbs, marker, rotation):
+    """a marker with the frame of the given marker turned by rotation, added as a copy with its localHT (#2745); returns
+    (marker, rotationMarker): the copy and the unit matrix, or - for a marker without localHT - the marker itself and
+    the rotation, for the deprecated rotationMarker0 of the joint"""
+    data = mbs.GetMarker(marker)
+    if 'localHT' not in data or np.linalg.norm(np.array(rotation) - np.eye(3)) == 0:
+        return (marker, np.array(rotation))
+    data = {key: value for (key, value) in data.items() if key not in ['name', 'localPosition', 'offset'] and key[0] != 'V'}
+    data['localHT'] = np.array(data['localHT']) @ erb.HomogeneousTransformation(rotation, [0., 0., 0.])
+    return (mbs.AddMarker(data), np.eye(3))
+
+
 class VRobotLink:
     """class to define visualization of RobotLink
     """
@@ -825,18 +837,19 @@ class Robot:
             bodyList+=[dictLink['bodyNumber']]
         
             #++++++++++++++++++++++++
-            #add markers and joints
-            mLink1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=dictLink['bodyNumber'], localPosition=pThis))
+            #add markers and joints; the markers carry the rotation of the joint as localHT (#2745)
+            mLink1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=dictLink['bodyNumber'], localHT=erb.HomogeneousTransformation(AthisT, pThis)))
 
             if i == 0:
                 lastMarkerRotation = erb.HT2rotationMatrix(link.preHT)@lastMarkerRotation #is rotationMarkerBase
-                mLink0LastBody = baseMarker
+                (mLink0LastBody, rotationMarker0) = _MarkerWithRotation(mbs, baseMarker, lastMarkerRotation)
             else:
                 lastMarkerRotation = erb.HT2rotationMatrix(link.preHT)
                 marker0Position = erb.HT2translation(link.preHT) #this is defined in the parent link!
                 parentBody = bodyList[self.GetParentIndex(i)]
-                mLink0LastBody = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=parentBody, 
-                                                               localPosition=marker0Position))
+                mLink0LastBody = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=parentBody,
+                                                               localHT=erb.HomogeneousTransformation(lastMarkerRotation, marker0Position)))
+                rotationMarker0 = np.eye(3)
 
             markerList0+=[mLink0LastBody]
             markerList1+=[mLink1]
@@ -852,8 +865,7 @@ class Robot:
             
             marker0 = mLink0LastBody
             marker1 = mLink1
-            rotationMarker0 = lastMarkerRotation
-            rotationMarker1 = AthisT
+            rotationMarker1 = np.eye(3) #in the marker; rotationMarker0 only for a base marker that cannot take it
 
             jointLink = mbs.AddObject(eii.GenericJoint(markerNumbers=[marker0, marker1],
                                                     constrainedAxes=constrainedAxes,
@@ -912,7 +924,7 @@ class Robot:
                     PDcontrol = link.GetPDcontrol()
                     #linear spring-damper allows control in translational direction
                     objectSD = mbs.AddObject(eii.LinearSpringDamper(markerNumbers=[marker0, marker1],
-                                                                axisMarker0 = jointAxis,
+                                                                axisMarker0 = rotationMarker0 @ jointAxis, #the joint axis in marker 0
                                                                 stiffness=PDcontrol[0],
                                                                 damping=PDcontrol[1],
                                                                 visualization=eii.VLinearSpringDamper(show=False)
@@ -1178,8 +1190,9 @@ class InverseKinematicsNumerical():
 
         self.robotDict = self.robot.CreateKinematicTree(self.mbsIK)
         
+        #the tool frame, with its rotation, is the marker's (#2745): the sensors read the pose of the tool center point
         self.mTool = self.mbsIK.AddMarker(eii.MarkerKinematicTreeRigid(objectNumber=self.robotDict['objectKinematicTree'], linkNumber=self.nLinks-1, 
-                                                                           localPosition=erb.HT2translation(self.robot.tool.HT)))
+                                                                           localHT=self.robot.tool.HT))
         
         self.sToolTrans = self.mbsIK.AddSensor(eii.SensorMarker(markerNumber=self.mTool, 
                                               outputVariableType=exudyn.OutputVariableType.Position, storeInternal=False))
@@ -1190,13 +1203,11 @@ class InverseKinematicsNumerical():
     
         if 1: # 
             self.constraintTool= self.mbsIK.AddObject(eii.GenericJoint(markerNumbers=[self.mGroundEE , self.mTool],
-                                                   rotationMarker1=erb.HT2rotationMatrix(self.robot.tool.HT), 
                                                    alternativeConstraints = self.useAlternativeConstraints))
 
         else: 
             self.constraintTool= self.mbsIK.AddObject(eii.RigidBodySpringDamper(markerNumbers=[self.mGroundEE , self.mTool], 
-                                                              stiffness=np.eye(6)*1e8 , damping = np.eye(6)*1e3, 
-                                                              rotationMarker1=erb.HT2rotationMatrix(self.robot.tool.HT))) 
+                                                              stiffness=np.eye(6)*1e8 , damping = np.eye(6)*1e3)) 
 
         #restore PDcontrol for robot!        
         for i in range(self.nLinks):     
@@ -1380,10 +1391,8 @@ class InverseKinematicsNumerical():
         R = erb.HT2rotationMatrix(T)
         trans = (erb.HT2translation(T))
         
-        # set the position of the Ground to match the desired EE position (in global "ground" sytem)
-        self.mbsIK.SetMarkerParameter(self.mGroundEE, 'localPosition', trans)
-        # set the desired rotation 
-        self.mbsIK.SetObjectParameter(self.constraintTool, 'rotationMarker0', R)
+        # the desired pose of the tool center point is the frame of the ground marker (in global "ground" sytem)
+        self.mbsIK.SetMarkerParameter(self.mGroundEE, 'localHT', erb.HomogeneousTransformation(R, trans))
         
         try: 
             if self.useRenderer: 

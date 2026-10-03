@@ -3967,9 +3967,9 @@ class ObjectConnectorRigidBodySpringDamper:
 
         damping: damping [SI:N/(m/s) or Nm/(rad/s)] of translational, torsional and coupled dampers; very similar to stiffness, however, the rotational velocity is computed from the angular velocity vector; type: array_like
 
-        rotationMarker0: local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0; type: array_like
+        rotationMarker0: local rotation matrix for marker 0; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT; type: array_like
 
-        rotationMarker1: local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1; type: array_like
+        rotationMarker1: local rotation matrix for marker 1; stiffness, damping, etc. components are measured in local coordinates relative to rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT; type: array_like
 
         offset: translational and rotational offset considered in the spring force calculation; type: array_like
 
@@ -4170,9 +4170,9 @@ class ObjectConnectorTorsionalSpringDamper:
 
         damping: torsional damping [SI:Nm/(rad/s)]; type: float
 
-        rotationMarker0: local rotation matrix for marker 0; transforms joint into marker coordinates; type: array_like
+        rotationMarker0: local rotation matrix for marker 0; transforms joint into marker coordinates; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT; type: array_like
 
-        rotationMarker1: local rotation matrix for marker 1; transforms joint into marker coordinates; type: array_like
+        rotationMarker1: local rotation matrix for marker 1; transforms joint into marker coordinates; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT; type: array_like
 
         offset: rotational offset considered in the spring torque calculation (this can be used as rotation control input!); type: float
 
@@ -5950,7 +5950,7 @@ class ObjectContactCurveCircles:
 
         polynomialData: matrix containing coefficients for special polynomial enhancements of the linear segments; each row contains coefficients for polynomials for the according segment, prescribing slopes at beginning and end of segment as well as curvature at beginning and end of segment; slopes and curvatures are defined in a local x/y coordinate system where x is the segment axis (start: x=0; x-axis points towards end point) and the segment normal is in y-direction; MatrixContainer has to be provided in dense mode!; type: PyMatrixContainer
 
-        rotationMarker0: local rotation matrix for marker 0; used to rotate marker coordinates such that the curve lies in the :math:`x-y`-plane; type: array_like
+        rotationMarker0: local rotation matrix for marker 0, used only for drawing the curve - the contact is computed in the frame of marker 0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT; type: array_like
 
         dynamicFriction: dynamic friction coefficient for friction model, see StribeckFunction in exudyn.physics, sec-module-physics; type: float
 
@@ -6046,7 +6046,7 @@ class VObjectJointGeneric:
 class ObjectJointGeneric:
     r"""A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers.
     
-    An additional local rotation (rotationMarker) can be used to adjust the three rotation axes and/or sliding axes.
+    The three rotation axes and sliding axes are those of the markers' frames; a rotation of these frames is given to the markers as their localHT.
     
     ```{image} /docs/figures/UniversalJoint.png
     :width: 400
@@ -6059,9 +6059,9 @@ class ObjectJointGeneric:
 
         constrainedAxes: flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; for :math:`j_i`, two values are possible: 0=free axis, 1=constrained axis; type: array_like
 
-        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; type: array_like
+        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT; type: array_like
 
-        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; type: array_like
+        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT; type: array_like
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -6149,7 +6149,7 @@ class VObjectJointRevoluteZ:
 class ObjectJointRevoluteZ:
     """A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint :math:`z`-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate.
     
-    An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), sec-rigidbodyutilities-addrevolutejoint, for two rigid bodies (or ground).
+    The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddRevoluteJoint(...), sec-rigidbodyutilities-addrevolutejoint, for two rigid bodies (or ground).
     
     ```{image} /docs/figures/RevoluteJointZ.png
     :width: 400
@@ -6165,9 +6165,9 @@ class ObjectJointRevoluteZ:
 
         markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; type: array_like
+        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT; type: array_like
 
-        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; type: array_like
+        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT; type: array_like
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 
@@ -6237,7 +6237,7 @@ class VObjectJointPrismaticX:
 class ObjectJointPrismaticX:
     """A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t.
     
-    the joint :math:`y` and :math:`z` axes, allowing a relative motion along the joint :math:`x` axis (defined in local coordinates of marker 0 / joint J0 coordinates). An additional local rotation (rotationMarker) can be used to transform the markers' coordinate systems into the joint coordinate system. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), sec-rigidbodyutilities-addprismaticjoint, for two rigid bodies (or ground).
+    the joint :math:`y` and :math:`z` axes, allowing a relative motion along the joint :math:`x` axis (defined in local coordinates of marker 0 / joint J0 coordinates). The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use the exudyn.rigidbodyUtilities function AddPrismaticJoint(...), sec-rigidbodyutilities-addprismaticjoint, for two rigid bodies (or ground).
     
     ```{image} /docs/figures/PrismaticJointX.png
     :width: 400
@@ -6248,9 +6248,9 @@ class ObjectJointPrismaticX:
 
         markerNumbers: list of markers used in connector; type: ArrayMarkerIndex
 
-        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; type: array_like
+        rotationMarker0: local rotation matrix for marker :math:`m0`; translation and rotation axes for marker :math:`m0` are defined in the local body coordinate system and additionally transformed by rotationMarker0; **deprecated** (removed in 2031): give the rotation to marker 0 as its localHT; type: array_like
 
-        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; type: array_like
+        rotationMarker1: local rotation matrix for marker :math:`m1`; translation and rotation axes for marker :math:`m1` are defined in the local body coordinate system and additionally transformed by rotationMarker1; **deprecated** (removed in 2031): give the rotation to marker 1 as its localHT; type: array_like
 
         activeConnector: flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint; type: bool
 

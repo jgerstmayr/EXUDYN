@@ -135,21 +135,19 @@ For the **first two possibilities only**, following `rigidBodyTutorial3withMarke
                                                                axesLength=1.4*w)))
 ```
 
-In addition, transformation matrices (`rotationMarker0/1`) can be added, see the joint description.
+The joint axes are those of the markers' frames; a marker turns its frame by its `localHT`, see the joint description.
 
  **Option 2** is using the revolute joint, which allows a free rotation around the local z-axis of marker 0 (`markerGround` in our example)
 
 ```python
   #revolute joint option 2:
   mbs.AddObject(ObjectJointRevoluteZ(markerNumbers = [markerGround, markerBody0J0],
-                                     rotationMarker0=np.eye(3),
-                                     rotationMarker1=np.eye(3),
                                      visualization=VObjectJointRevoluteZ(axisRadius=0.2*w,
                                                                          axisLength=1.4*w)
                                      ))
 ```
 
-Additional transformation matrices (`rotationMarker0/1`) can be added in order to chose any rotation axis.
+Any other rotation axis is chosen by the rotation in the markers' `localHT`, e.g., `MarkerBodyRigid(bodyNumber=b0, localHT=HomogeneousTransformation(RotationMatrixY(0.5*np.pi), [0,0,0]))`.
 
  Note that an error in the definition of markers for the joints can be also detected in the render window (if you completed the example), e.g., if you change the following marker in the lines above,
 

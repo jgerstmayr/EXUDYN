@@ -101,14 +101,14 @@ if True:
                            gravity = g,
                            graphicsDataList = [graphicsCOM0, graphicsBody3])
     n1B = mbs.GetObject(b1)['nodeNumber']
+    #the marker with the rotation of the joint r0B, which its marker 0 carries
+    rotationJoint0 = np.array(mbs.GetMarker(mbs.GetObject(r0B)['markerNumbers'][0])['localHT'])[0:3,0:3]
     mb1B = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b1B, 
-                                            localPosition=[0.1,-0.05,0.05], #global position
+                                            localHT=HomogeneousTransformation(rotationJoint0, [0.1,-0.05,0.05]), #global position
                                             ) )
 
     #just build joint from one marker:
     jargs = GetJointArgs(mbs, markerNumber0=mb1B, 
-                         # rotationMarker0=RotationMatrixX(-0.5*pi),
-                         rotationMarker0=mbs.GetObject(r0B)['rotationMarker0'],
                          bodyNumber1=oGround)
     r1B=mbs.AddObject(RevoluteJointZ(**jargs ))
     # exu.Print('joint r0=',mbs.GetObject(r0B) )

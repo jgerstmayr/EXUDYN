@@ -234,8 +234,8 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
     MotorDataNode = [0]*4
     cWheelBrakes = [0]*4
     for i in range(4):     
-        RM0 = mbs.GetObject(mobileRobotBackDic['oAxlesList'][i])['rotationMarker0']
-        RM1 = mbs.GetObject(mobileRobotBackDic['oAxlesList'][i])['rotationMarker1']
+        #the markers of the revolute joint carry the frame of the axle (localHT), the motor and brake use them as well
+        mAxleWheel = mbs.GetObject(mobileRobotBackDic['oAxlesList'][i])['markerNumbers']
         
     # wheel controller for KAIROS Platform  
         paramOpt = {'kMotor': 100, 'fact_dMotor': 0.5} 
@@ -243,16 +243,11 @@ def SimulationMobileRobot(funcStatMachine,myROSInterface, p0=[0,0], theta0=0, fl
         dWheelControl = kWheelControl * paramOpt['fact_dMotor']
         MotorDataNode[i] = mbs.AddNode(NodeGenericData(numberOfDataCoordinates = 1, initialCoordinates=[0]))
         WheelSpringDamper[i] = mbs.AddObject(TorsionalSpringDamper(name='Wheel{}Motor'.format(i), 
-                                            markerNumbers=[mobileRobotBackDic['mAxlesList'][i], mobileRobotBackDic['mWheelsList'][i]],
+                                            markerNumbers=mAxleWheel,
                                             nodeNumber= MotorDataNode[i], # for continuous Rotation
-                                            stiffness = kWheelControl, damping =  dWheelControl, offset = 0,
-                                            rotationMarker0=RM0, 
-                                            rotationMarker1=RM1))
-        cWheelBrakes[i] = mbs.AddObject(GenericJoint(markerNumbers=
-                                                [mobileRobotBackDic['mAxlesList'][i], mobileRobotBackDic['mWheelsList'][i]], 
+                                            stiffness = kWheelControl, damping =  dWheelControl, offset = 0))
+        cWheelBrakes[i] = mbs.AddObject(GenericJoint(markerNumbers=mAxleWheel, 
                                                 constrainedAxes = [0]*6, 
-                                                rotationMarker0=RM0, 
-                                                rotationMarker1=RM1, 
                                                 ))
         mbs.variables['flagBrakeActive'] = False
 

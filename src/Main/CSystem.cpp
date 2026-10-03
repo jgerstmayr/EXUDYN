@@ -1308,7 +1308,7 @@ void CSystem::ComputeMassMatrix(TemporaryComputationDataArray& tempArray, Genera
 	else //GeneralMatrix is sparse matrix
 	{
 		Index nThreads = ExuThreading::TaskManager::GetNumThreads();
-		bool doParallel = (nThreads > 1) && (cSystemData.objectsBodyWithODE2CoordsNoUF.NumberOfItems() >= solverData.multithreadedLimitMassMatrix);
+		bool doParallel = (nThreads > 1) && (cSystemData.objectsBodyWithODE2CoordsNoUF.NumberOfItems() >= solverData.multithreadedLowerLimitMassMatrix);
 		const ArrayIndex& processObjectsSerial = doParallel ? cSystemData.objectsBodyWithODE2CoordsUF : cSystemData.objectsBodyWithODE2Coords;
 		//const ArrayIndex& processObjectsSerial = cSystemData.objectsBodyWithODE2Coords;
 
@@ -1515,7 +1515,7 @@ void CSystem::ComputeSystemODE2RHS(TemporaryComputationDataArray& tempArray, Vec
 
 	int nItems = cSystemData.listComputeObjectODE2LhsNoUF.NumberOfItems();
 	Index nThreads = ExuThreading::TaskManager::GetNumThreads();
-	if (nThreads > 1 && (nItems >= solverData.multithreadedLimitResiduals) )
+	if (nThreads > 1 && (nItems >= solverData.multithreadedLowerLimitResiduals) )
 	{
 		//std::mutex mtx;           // mutex for critical section
 		outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
@@ -1716,7 +1716,7 @@ void CSystem::ComputeODE2LoadsRHS(TemporaryComputationDataArray& tempArray, Vect
 	Index nThreads = ExuThreading::TaskManager::GetNumThreads();
 	Index nItems = cSystemData.listOfLoadsNoUF.NumberOfItems(); 
 
-	if (nThreads > 1 && nItems >= solverData.multithreadedLimitLoads)
+	if (nThreads > 1 && nItems >= solverData.multithreadedLowerLimitLoads)
 	{
         tempArray.SetNumberOfItems(nThreads); //only affected, if nThreads changed
 		for (Index i = 0; i < nThreads; i++)
@@ -2265,7 +2265,7 @@ void CSystem::ComputeAlgebraicEquations(TemporaryComputationDataArray& tempArray
 	int nItemsNodesObjectsNoUF = nItemsObjectsNoUF + nItemsNodes;
 
 	Index nThreads = ExuThreading::TaskManager::GetNumThreads();
-	bool doParallel = (nThreads > 1) && (nItemsNodesObjectsNoUF >= solverData.multithreadedLimitResiduals);
+	bool doParallel = (nThreads > 1) && (nItemsNodesObjectsNoUF >= solverData.multithreadedLowerLimitResiduals);
 
 	//+++++++++++++++++++++++++++++++++++++++
 	//parallel objects, no user function
@@ -2416,7 +2416,7 @@ Real CSystem::PostNewtonStep(TemporaryComputationDataArray& tempArray, Real& rec
 		{
             tempArray.SetNumberOfItems(nThreads); //only affected, if nThreads changed
 			
-            if (nItems >= solverData.multithreadedLimitResiduals)
+            if (nItems >= solverData.multithreadedLowerLimitResiduals)
             {
                 outputBuffer.SetSuspendWriting(true); //may not write to python during parallel computation
                 doMultiThreading = true;
@@ -3303,7 +3303,7 @@ void CSystem::ComputeODE2ProjectedReactionForces(TemporaryComputationDataArray& 
 	int nItemsNodesObjectsNoUF = nItemsObjectsNoUF + cSystemData.nodesODE2WithAE.NumberOfItems();
 
 	Index nThreads = ExuThreading::TaskManager::GetNumThreads();
-	bool doParallel = (nThreads > 1) && (nItemsNodesObjectsNoUF >= solverData.multithreadedLimitResiduals);
+	bool doParallel = (nThreads > 1) && (nItemsNodesObjectsNoUF >= solverData.multithreadedLowerLimitResiduals);
 
 	//+++++++++++++++++++++++++++++++++++++++
 	//parallel objects, no user function

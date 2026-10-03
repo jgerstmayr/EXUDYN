@@ -58,7 +58,7 @@ void CObjectJointGeneric::ComputeConstraintEquationsTemplate(const MarkerRigid<T
 	equations.SetNumberOfItems(nConstraints);
 	const ConstSizeMatrixBase<TReal, 9>& A0 = markers[0].frame.GetRotation();
 	const ConstSizeMatrixBase<TReal, 9>& A1 = markers[1].frame.GetRotation();
-	ConstSizeMatrixBase<TReal, 9> A0all = A0 * Matrix3DAs<TReal>(parameters.rotationMarker0);
+	ConstSizeMatrixBase<TReal, 9> A0all = ApplyRotationMarker(A0, parameters.rotationMarker0);
 	SlimVectorBase<TReal, 3> relativePosition = markers[1].frame.GetTranslation() - markers[0].frame.GetTranslation();
 	const bool allTranslationsConstrained = parameters.constrainedAxes[0] == 1 && parameters.constrainedAxes[1] == 1 && parameters.constrainedAxes[2] == 1;
 	const Index constrainedRotations = parameters.constrainedAxes[3] + parameters.constrainedAxes[4] + parameters.constrainedAxes[5];
@@ -83,7 +83,7 @@ void CObjectJointGeneric::ComputeConstraintEquationsTemplate(const MarkerRigid<T
 
 		if (constrainedRotations > 0)
 		{
-			ConstSizeMatrixBase<TReal, 9> A1all = A1 * Matrix3DAs<TReal>(parameters.rotationMarker1);
+			ConstSizeMatrixBase<TReal, 9> A1all = ApplyRotationMarker(A1, parameters.rotationMarker1);
 			if (constrainedRotations == 3) //rigid joint (at least regarding rotations)
 			{
 				SlimVectorBase<TReal, 3> vx0 = A0all.template GetColumnVector<3>(0);

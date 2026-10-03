@@ -58,6 +58,12 @@ vLoc = np.array([L,0,0]) #last to next joint
 #g = [0,0,-9.81]
 g = [0,-9.81,0]
 
+def RotatedMarker(marker, rotation):
+    """a marker on the same body, its frame turned by rotation: the frame of a joint"""
+    data = mbs.GetMarker(marker)
+    return mbs.AddMarker(MarkerBodyRigid(bodyNumber=data['bodyNumber'],
+                                         localHT=np.array(data['localHT']) @ HomogeneousTransformation(rotation, [0,0,0])))
+
 #create a chain of bodies:
 for i in range(5):
     #print("Build Object", i)
@@ -80,30 +86,22 @@ for i in range(5):
     if True:
         if i != 2:
             if not useGenericJoint:
-                mbs.AddObject(ObjectJointRevoluteZ(markerNumbers = [mPosLast, mPos0], 
-                                                  rotationMarker0=Alist[i],
-                                                  rotationMarker1=Alist[i],
+                mbs.AddObject(ObjectJointRevoluteZ(markerNumbers = [RotatedMarker(mPosLast, Alist[i]), RotatedMarker(mPos0, Alist[i])], #the joint frames
                                                   visualization=VObjectJointRevoluteZ(axisRadius=0.5*d, axisLength=1.2*d)
                                                   )) 
             else: #compare to GenericJoint
-                mbs.AddObject(ObjectJointGeneric(markerNumbers = [mPosLast, mPos0], 
+                mbs.AddObject(ObjectJointGeneric(markerNumbers = [RotatedMarker(mPosLast, Alist[i]), RotatedMarker(mPos0, Alist[i])], #the joint frames
                                                  constrainedAxes=[1,1,1,1,1,0],
-                                                 rotationMarker0=Alist[i],
-                                                 rotationMarker1=Alist[i],
                                                  visualization=VGenericJoint(axesRadius=0.5*d, axesLength=1.2*d)
                                                  )) 
         else:
             if not useGenericJoint:
-                mbs.AddObject(ObjectJointPrismaticX(markerNumbers = [mPosLast, mPos0], 
-                                                  rotationMarker0=Alist[i],
-                                                  rotationMarker1=Alist[i],
+                mbs.AddObject(ObjectJointPrismaticX(markerNumbers = [RotatedMarker(mPosLast, Alist[i]), RotatedMarker(mPos0, Alist[i])], #the joint frames
                                                   visualization=VObjectJointPrismaticX(axisRadius=0.5*d, axisLength=1.2*d)
                                                   )) 
             else: #compare to GenericJoint
-                mbs.AddObject(ObjectJointGeneric(markerNumbers = [mPosLast, mPos0], 
+                mbs.AddObject(ObjectJointGeneric(markerNumbers = [RotatedMarker(mPosLast, Alist[i]), RotatedMarker(mPos0, Alist[i])], #the joint frames
                                                  constrainedAxes=[0,1,1,1,1,1],
-                                                 rotationMarker0=Alist[i],
-                                                 rotationMarker1=Alist[i],
                                                  visualization=VGenericJoint(axesRadius=0.5*d, axesLength=1.2*d)
                                                  )) 
             #add spring, to limit motion in prismatic joint:

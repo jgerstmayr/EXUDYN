@@ -272,12 +272,12 @@ for iWheel in range(nWheels):
     mWheel = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0,0,0]))
     markerWheels += [mWheel]
 
-    mCarAxle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bCar, localPosition=pOff))
+    mCarAxle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bCar, localHT=HomogeneousTransformation(initialRotation, pOff))) #the joint frame on the car
     markerCarAxles += [mCarAxle]
 
     lockedAxis0 = 0 # could be used to lock an Axis
     #if iWheel==0 or iWheel==1: freeAxis = 1 #lock rotation
-    mbs.AddObject(GenericJoint(markerNumbers=[mWheel,mCarAxle],rotationMarker1=initialRotation,
+    mbs.AddObject(GenericJoint(markerNumbers=[mWheel,mCarAxle],
                                constrainedAxes=[1,1,1,lockedAxis0,1,1])) #revolute joint for wheel
 
     nGeneric = mbs.AddNode(NodeGenericData(initialCoordinates=[0,0,0], numberOfDataCoordinates=3))
@@ -337,18 +337,21 @@ def WheelVelocities2MecanumXYphi(w, R, Lx, Ly):
 pControl = 100 # P-control on wheel velocity
 mbs.variables['wheelMotor'] = []
 mbs.variables['loadWheel'] = []
+def RotatedMarker(marker, rotation):
+    """a marker on the same body, its frame turned by rotation: the frame of a joint or connector"""
+    data = mbs.GetMarker(marker)
+    return mbs.AddMarker(MarkerBodyRigid(bodyNumber=data['bodyNumber'],
+                                         localHT=np.array(data['localHT']) @ HomogeneousTransformation(rotation, [0,0,0])))
+
 for i in range(4):
-    # Torsional springdamper always acts in z-Axis
-    RM1 = RotationMatrixY(np.pi/2) 
-    RM0 = RotationMatrixY(np.pi/2)
+    # Torsional springdamper always acts in z-Axis: its markers are turned about y, so that z is the wheel axis
+    RM = RotationMatrixY(np.pi/2)
     nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates = 1, initialCoordinates=[0])) # records multiples of 2*pi
     mbs.variables['wheelMotor'] += [mbs.AddObject(TorsionalSpringDamper(name='Wheel{}Motor'.format(i), 
                                             # mobileRobotBackDic['mAxlesList'][i]
-                                            markerNumbers=[markerCarAxles[i], markerWheels[i]],
+                                            markerNumbers=[RotatedMarker(markerCarAxles[i], RM), RotatedMarker(markerWheels[i], RM)],
                                             nodeNumber= nData, # for continuous Rotation
-                                            stiffness = 0, damping = pControl, 
-                                            rotationMarker0=RM0, 
-                                            rotationMarker1=RM1))]
+                                            stiffness = 0, damping = pControl))]
 #%% 
 # function to read data from Lidar sensors into array of global [x,y] values. 
 def GetCurrentData(mbs, Rot, pos): 

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 227 | 1.12.245 |
+| 1.12 | Metheney | 229 | 1.12.247 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.247** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectConnectorRigidBodySpringDamper multiplies rotationMarker0 from the wrong side (#2801)
+  - description: found in revision2026b step RG14.2.15: the connector computes A0all = rotationMarker0\*A0, its documentation, CreateRigidBodySpringDamper (MR0 = A0^T R) and all other joints use A0\*rotationMarker0; a rotationMarker0 different from the unit matrix on a rotated marker 0 gave the wrong frame.
+  - **notes:** ObjectConnectorRigidBodySpringDamper applies rotationMarker0 after the frame of marker 0, as the joints do and as documented; models with a rotationMarker0 other than the unit matrix move differently
+  - date resolved: **2026-10-03 11:25**, date raised: 2026-10-03
+- **1.12.246** `CHANGE` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` parallel.multithreadedLowerLimit... instead of multithreadedLimit... (#2800)
+  - description: maintainer 2026-10-03, after revision2026b step RG12.1: the double L of multithreadedLLimit... meant lower limit; the settings are multithreadedLowerLimitLoads, ...Residuals, ...Jacobians, ...MassMatrices; the old LLimit names forward until 2031.
+  - **notes:** parallel.multithreadedLowerLimitLoads, ...Residuals, ...Jacobians, ...MassMatrices; the old multithreadedLLimit names forward with a DeprecationWarning until 2031
+  - date resolved: **2026-10-03 11:25**, date raised: 2026-10-03
 - **1.12.245** `EXTENSION` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` item parameters cannot be deprecated (#2589)
   - description: When an item parameter is renamed there is no path that keeps an old script working: unlike visualizationSettings, the item interfaces have no deprecation mechanism. Wanted (maintainer, 2026-09-22): the same feature for item parameters, either restricted to the classes of itemInterface.py - which is generated, so one place - or extended to the Get/Set functions of the items themselves. If it reaches the C++ side, the deprecated names must be searched LAST, so that the common case pays nothing.
   - **notes:** An item parameter can be renamed with its old name kept: it is still taken in the item class, in a dictionary and by GetObjectParameter/SetObjectParameter, with a DeprecationWarning naming the new one.

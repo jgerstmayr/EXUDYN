@@ -80,10 +80,11 @@ for mode in range(2):
                                 constrainedAxes=[1,1,1,1,0,1],
                                 visualization=VObjectJointGeneric(axesRadius=0.01, axesLength=0.12)))
     
-    oTSD = mbs.AddObject(TorsionalSpringDamper(markerNumbers=[markerSupportGround,markerSupportPlane],
+    #the torsional spring-damper acts about z: its markers are turned, so that z is the y-axis
+    HTsupport = HomogeneousTransformation(RotationMatrixX(0.5*pi), [0,0,0])
+    oTSD = mbs.AddObject(TorsionalSpringDamper(markerNumbers=[mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HTsupport)),
+                                                              mbs.AddMarker(MarkerBodyRigid(bodyNumber=bPlane, localHT=HTsupport))],
                                                stiffness=0, damping=0,
-                                               rotationMarker0=RotationMatrixX(0.5*pi), #rotation marker is around z-axis=>change to y-axis
-                                               rotationMarker1=RotationMatrixX(0.5*pi),
                                                ))
     #++++++++++++++++++++
     #joint between wheel/frame and ground:

@@ -258,17 +258,13 @@ limits += [[-0.75*pi,0.75*pi],
            ]
 for i in range(len(jointList)):
     joint = jointList[i]
-    rot0 = mbs.GetObject(joint)['rotationMarker0']
-    rot1 = mbs.GetObject(joint)['rotationMarker1']
-    markers = mbs.GetObject(joint)['markerNumbers']
+    markers = mbs.GetObject(joint)['markerNumbers'] #their frames are the joint's
     
     nGeneric=mbs.AddNode(NodeGenericData(initialCoordinates=[0], 
                                          numberOfDataCoordinates=1)) #for infinite rotations
     nGenericList += [nGeneric]
     tsd = mbs.AddObject(TorsionalSpringDamper(markerNumbers=markers,
                                         nodeNumber=nGeneric,
-                                        rotationMarker0=rot0,
-                                        rotationMarker1=rot1,                                            
                                         stiffness=Pcontrol[i],
                                         damping=Dcontrol[i],
                                         springTorqueUserFunction=UFtsd,

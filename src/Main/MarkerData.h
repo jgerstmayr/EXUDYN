@@ -352,6 +352,22 @@ inline ConstSizeMatrixBase<TReal, 9> Matrix3DAs(const Matrix3D& matrix)
 	return result;
 }
 
+//! true if a 3x3 matrix is exactly the unit matrix - a rotationMarker0/1 of a joint that is not given (#2745)
+inline bool IsUnitMatrix3D(const Matrix3D& A)
+{
+	const Real* a = A.GetDataPointer();
+	return a[0] == 1. && a[1] == 0. && a[2] == 0. && a[3] == 0. && a[4] == 1. && a[5] == 0. && a[6] == 0. && a[7] == 0. && a[8] == 1.;
+}
+
+//! A*rotationMarker, the frame of a joint on a marker; the product only for a deprecated rotationMarker0/1 that is not
+//! the unit matrix, as the markers carry their rotation in localHT (#2745)
+template<class TReal>
+inline ConstSizeMatrixBase<TReal, 9> ApplyRotationMarker(const ConstSizeMatrixBase<TReal, 9>& A, const Matrix3D& rotationMarker)
+{
+	if (IsUnitMatrix3D(rotationMarker)) { return A; }
+	return A * Matrix3DAs<TReal>(rotationMarker);
+}
+
 //! temporaries of one marker on the connector interface, per thread (TemporaryComputationData), kept between its L0
 //! and L1 functions (#2745)
 class MarkerTemp
