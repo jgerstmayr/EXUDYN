@@ -485,6 +485,12 @@ def HTPartOf(member):
     return member.get('partOfHT', '') or ''
 
 
+def IsDeprecatedItemParameter(member):
+    """a renamed item parameter: its old name, kept with deprecated=Deprecated(since, expires) and the new name as
+    its description; not stored, forwarded to the new one, searched last (#2589)"""
+    return 'Function' not in member['kind'] and member.get('deprecated', None) is not None
+
+
 def HTListOf(member):
     """(rotations, translations): the names of the stored lists a list of HTs is composed of (#2798), None otherwise"""
     return member.get('htListOf', None)

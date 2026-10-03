@@ -54,6 +54,11 @@ ItemFunctionDef('GetNumberOfNodes', implementation='return 1;')
   three default to `CppValue(<C++ default>, 'None', ...)`: `None` is "not given"; the dictionary
   holds all three, and an HT and a part given together must agree (`EPyUtils::HTFromDictionary`,
   #2793).
+- **A renamed parameter** keeps its old name as `ItemParameter(type=<as the new one>, destination=<as
+  the new one>, pythonName='<old>', deprecated=Deprecated('<version>', <year>),
+  defaultValue=NoDefaultValue, description=r'<new>')`. It is not stored: the dictionary,
+  `Get`/`SetObjectParameter` and the keyword of the Python item class forward it to the new one with
+  a `DeprecationWarning`, tested after every current name; the page lists it below the table (#2589).
 - A function with `implementation=None` is a declaration whose body is in the hand-written `.cpp`;
   `''` is an empty body. `isVirtual` defaults to `True`.
 

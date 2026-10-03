@@ -1598,7 +1598,8 @@ find out about the settings of a model. It is the group a user notices most and 
     simply disappears.
 
 <a id="rg12-2"></a>
-**RG12.2** *(group RG12; maintainer 2026-09-22)* **Item parameters can be deprecated** (#2589).
+**RG12.2** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg12-2) *(group RG12; maintainer 2026-09-22)*
+    **Item parameters can be deprecated** (#2589).
     The case that actually hurts: an item parameter is renamed and every script that used the
     old name stops working, with no message that says what to write instead. Two levels are
     possible - the generated classes of `itemInterface.py`, which is one place and covers what a
@@ -2553,7 +2554,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
-| RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures - done but RG14.2.15: the flag and the deprecation of the joints' `rotationMarker0/1`, the documentation and the examples moved to the markers' `localHT` (the parameter itself is in since RG16.3.3); RG14.2.9.4 and RG14.2.12 are in the list below |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
@@ -2601,4 +2601,5 @@ The title of each says what the step **does**; the sentence after it says why it
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Let item parameters be deprecated and renamed** (RG12.2, #2589), now that both settings have the mechanism.
+3. **Deprecate the joints' `rotationMarker0/1`** (RG14.2.15, #2745): the markers carry the rotation (`localHT`), and
+   item parameters can now be deprecated (RG12.2).

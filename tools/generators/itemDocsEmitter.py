@@ -231,8 +231,13 @@ def WriteFile(parseInfo, parameterList):
         requestedNodeString = ''
 
 
+        deprecatedNames = [] #renamed parameters: listed below the table, not in it (#2589)
         for parameter in parameterList:
-            if (parameter['lineType'].find('V') != -1) & (parameter['cFlags'].find('I') != -1): #also include parent class members!
+            if parameter.get('deprecated') is not None and parameter['lineType'].find('V') != -1:
+                deprecatedNames.append('`' + parameter['pythonName'] + '` (deprecated since ' + str(parameter['deprecated'].since)
+                                       + ', removed in ' + str(parameter['deprecated'].expires) + '): use `'
+                                       + parameter['parameterDescription'] + '`')
+            elif (parameter['lineType'].find('V') != -1) & (parameter['cFlags'].find('I') != -1): #also include parent class members!
                 sString = ''
                 if (parameter['type'] == 'String'):
                     sString="'"
@@ -286,6 +291,8 @@ def WriteFile(parseInfo, parameterList):
 
         cWriter.DefFinishTable()
         vWriter.DefFinishTable()
+        if len(deprecatedNames) != 0:
+            cWriter.sMarkdown += chr(10) + 'Renamed parameters, still taken with a `DeprecationWarning`: ' + '; '.join(deprecatedNames) + '.' + chr(10)
 
         #now assemble visualization and computation tables:
 

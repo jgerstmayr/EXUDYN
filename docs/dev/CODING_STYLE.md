@@ -320,7 +320,9 @@ file: the new member takes the place of the old, and the old name stays as a
 `StructureParameter(..., cFlags=SFDeprecated, deprecated=Deprecated(since, expires),
 defaultValue=NoDefaultValue, description=r'<new>')`; `<new>` is the new name if the member stays in
 its structure, else its path from the top structure (`view0.scene.drawWorldBasis`). The generator
-writes the forwarding, the warning and the line of the reference manual (#2588).
+writes the forwarding, the warning and the line of the reference manual (#2588). An **item
+parameter** is renamed the same way, with `ItemParameter(..., deprecated=Deprecated(...),
+description=r'<new name>')` - see `definitions/README.md`, *Members* (#2589).
 
 ### 10.6 Writing the message
 

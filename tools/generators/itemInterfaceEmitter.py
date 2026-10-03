@@ -148,6 +148,9 @@ def ItemDocstrings(definition):
             description = CleanStringForPyiDescription(parameterDescription).strip()
             if typeHint and typeHint not in description: #the type stays readable; Args have no '(type)'
                 description += ('' if description == '' else ';') + ' type: ' + typeHint
+            if im.IsDeprecatedItemParameter(member): #a renamed parameter (#2589)
+                description = ('deprecated since ' + str(member['deprecated'].since) + ', removed in '
+                               + str(member['deprecated'].expires) + ': use ' + im.Description(member))
             thisDataDocString['inputs'].append({'name': member['pythonName'],
                                                 'description': description.strip()})
         elif member['pythonName'] == 'GetRequestedMarkerType':
@@ -212,6 +215,7 @@ def ItemClasses(definition):
     vDefaultDict = '{'
     vDefaultDictEmpty = True
 
+    deprecatedPieces = [] #the renamed parameters, after all others (#2589)
     for member in definition['members']:
         if im.IsInterfaceParameter(member) and not im.IsReadOnly(member):
             typeName = im.TypeName(member)
@@ -267,6 +271,14 @@ def ItemClasses(definition):
 
             tempPythonClassInit = sIndent+sIndent+'self.' + pythonName + ' = ' + parameterWithCheck + '\n'
             tempPythonIter = sIndent+sIndent+'yield ' + "'" + pythonName + "'" + ', self.' + pythonName + '\n'
+            if im.IsDeprecatedItemParameter(member): #a renamed parameter: given only if used (#2589)
+                tempPythonClass = ', ' + pythonName + ' = None'
+                tempVPythonDict = "'" + pythonName + "': None"
+                tempPythonClassInit = sIndent+sIndent+'self.' + pythonName + ' = ' + pythonName + '\n'
+                tempPythonIter = (sIndent+sIndent+'if self.' + pythonName + ' is not None:\n'
+                                  + sIndent*3+'yield ' + "'" + pythonName + "'" + ', self.' + pythonName + '\n')
+                deprecatedPieces.append((tempPythonClass, tempPythonClassInit, tempPythonIter)) #last, so that the
+                continue                                                                          #positions stay
 
             if 'V' in im.Destination(member): #visualization
                 vPythonClass += tempPythonClass
@@ -283,6 +295,10 @@ def ItemClasses(definition):
                 sPythonClassInit += tempPythonClassInit
                 sPythonIter += tempPythonIter
 
+    for (tempPythonClass, tempPythonClassInit, tempPythonIter) in deprecatedPieces:
+        sPythonClass += tempPythonClass
+        sPythonClassInit += tempPythonClassInit
+        sPythonIter += tempPythonIter
     vDefaultDict += '}'
     sPythonClass += ', visualization = ' + vDefaultDict + '):\n' #add visualization structure (must always be there...)
     sPythonClass += sPythonClassInit + sIndent+sIndent+'self.visualization = CopyDictLevel1(visualization)\n\n'

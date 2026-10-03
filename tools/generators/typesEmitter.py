@@ -95,12 +95,17 @@ def ItemData(definition):
         data['accessFunctionTypes'] = list(member['accessFunctionTypes'])
     data['outputVariables'] = [entry['outputVariable'].name for entry in (definition.get('outputVariables') or [])]
     parameters, visualization = {}, {}
+    deprecated = {}
     for member in definition['members']:
-        if im.IsInterfaceParameter(member) and not im.IsReadOnly(member):
+        if im.IsDeprecatedItemParameter(member): #a renamed parameter: old name -> new name (#2589)
+            deprecated[member['pythonName']] = im.Description(member)
+        elif im.IsInterfaceParameter(member) and not im.IsReadOnly(member):
             target = visualization if 'V' in im.Destination(member) else parameters
             target[member['pythonName']] = Parameter(member)
     data['parameters'] = parameters
     data['visualization'] = visualization
+    if len(deprecated) != 0:
+        data['deprecatedParameters'] = deprecated
     return data
 
 

@@ -161,6 +161,9 @@ array writes `HomogeneousTransformation(A, r)` (#2781).
 **Renamed settings keep working.** A simulation setting that is renamed answers to its old name with a
 `DeprecationWarning` that names the new one, as the visualization settings do: `parallel.multithreadedLLimitLoads`,
 `...Residuals`, `...Jacobians` and `...MassMatrices` are `parallel.multithreadedLimitLoads` and so on (#2588).
+The same holds for item parameters: a renamed one is still taken under its old name - in the item class, in a
+dictionary and by `mbs.GetObjectParameter`/`SetObjectParameter` - with a warning naming the new one; the page of the
+item lists it (#2589).
 
 **More markers on more bodies.** `ObjectRotationalMass1D` takes forces and connectors anywhere on
 its table, not only on its axis; `ObjectANCFBeam` takes `MarkerBodyRigid`, so torques and joints with

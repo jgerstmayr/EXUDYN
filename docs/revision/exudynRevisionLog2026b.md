@@ -12193,3 +12193,29 @@ no-abbreviations rule); the old names forward with a `DeprecationWarning` until 
 are renamed too. Test model `simulationSettingsDeprecationTest.py` (writing and reading the old names, the warning
 naming the new one, a copy); `test_settingsBacklinks.py` reads every member of a standalone `SimulationSettings` and of
 a copy.
+
+<a id="rg12-2"></a>
+### RG12.2 — item parameters can be deprecated (2026-10-03, #2589)
+
+**The level** (the step left it open): **both** - the C++ `Get`/`Set` of the items, which covers the dictionary of
+`AddObject`, `GetObjectParameter` and `SetObjectParameter`, and the Python item classes, which take the old name as a
+keyword. **The declaration** mirrors the settings: the old name stays as `ItemParameter(..., deprecated=Deprecated(since,
+expires), defaultValue=NoDefaultValue, description=r'<new name>')` - the field `deprecated` of `ItemParameter` existed,
+nothing read it. **The generators** (`itemHeaderEmitter`, `itemInterfaceEmitter`, `typesEmitter`, `itemDocsEmitter`):
+the old name is not stored; `SetWithDictionary` writes it into the new parameter **after** all current ones, if it is
+given and not `None`; `GetParameter`/`SetParameter` test it **after** the chain of the current names, just before
+"illegal parameter name" - so a model with the current names does no extra comparison, as the step asked; each with a
+`DeprecationWarning` that names the version, the year of removal and the new name; the conversion is the new
+parameter's own (`ParameterWriteStatement`), so ranges are checked as for the new name. `GetObject` does not list the
+old name. The Python class takes it as the **last** keyword (`mass = None`, so the positions of the current parameters do
+not move) and gives it to the dictionary only if it is set; its docstring says what to use. The page lists the renamed
+parameters below the table; `exudyn.types` has `deprecatedParameters`. A name that forwards to no interface parameter, or
+to an HT, a list of HTs or a user function, stops the generator.
+
+**Checked**: no item has a renamed parameter today, so `ObjectMassPoint.physicsMass` was renamed for one build -
+`ObjectMassPoint(mass=3.)`, `{'objectType':'MassPoint', 'mass':7.}`, `GetObjectParameter(o, 'mass')`,
+`SetObjectParameter(o, 'mass', 5.)` all reached `physicsMass` with the warning, `GetObject` listed no `mass`, a typo
+(`mas`) was still "illegal parameter name" - and taken out again; without a renamed parameter the generated files are
+byte-identical. `test_itemParameterDeprecation.py` renames it in a copy of the definition and reads what the
+generators emit: the order (last in every path), the forwarding, the Python signature, the refusal of a name with no
+target. How to rename: `definitions/README.md` (*Members*), `CODING_STYLE.md` §10.5.

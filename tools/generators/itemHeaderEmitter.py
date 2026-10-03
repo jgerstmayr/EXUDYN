@@ -154,7 +154,7 @@ def ItemCppHeaders(definition):
     usesBodyGraphicsData = False #the MAIN class calls the Py...BodyGraphicsData... functions
     usesHT = False #an HT parameter: the main class converts it with Pymodules/PyHomogeneousTransformation.h (#2793)
     for parameter in parameterList:
-        if (IsOwnVariable(parameter)) and not HTPartOf(parameter) and not HTListOf(parameter): #only if it is a member variable; the part of an HT and a list of HTs are not stored
+        if (IsOwnVariable(parameter)) and not HTPartOf(parameter) and not HTListOf(parameter) and not IsDeprecatedItemParameter(parameter): #only if it is a member variable; the part of an HT, a list of HTs and a deprecated name are not stored
             cntParameters[DestinationNr(Destination(parameter))] += 1
         if TypeName(parameter) in ['HomogeneousTransformation', 'HomogeneousTransformationList'] and IsVariable(parameter):
             usesHT = True
@@ -283,7 +283,7 @@ def ItemCppHeaders(definition):
 
     #process variables:    
     for parameter in parameterList:
-        if (IsOwnVariable(parameter) and not HTPartOf(parameter) and not HTListOf(parameter) and
+        if (IsOwnVariable(parameter) and not HTPartOf(parameter) and not HTListOf(parameter) and not IsDeprecatedItemParameter(parameter) and
             not IsInternalSetGetParameter(TypeName(parameter)) ): #only if it is a member variable but not special one with conversion
         
             isPyFunction = (TypeName(parameter).find('PyFunction') != -1) 
@@ -334,7 +334,7 @@ def ItemCppHeaders(definition):
             sList[i]+=space4+'{\n'
         
             for parameter in parameterList:
-                if (IsVariable(parameter) and not HTPartOf(parameter) and not HTListOf(parameter) and
+                if (IsVariable(parameter) and not HTPartOf(parameter) and not HTListOf(parameter) and not IsDeprecatedItemParameter(parameter) and
                     not IsInternalSetGetParameter(TypeName(parameter)) ): #only if it is a variable and not variable with internal conversion; include parent members
                     strDefault = DefaultValue(parameter)
                     if len(strDefault) or (TypeName(parameter) == 'String'): #only add initialization if default value exists
@@ -415,7 +415,12 @@ def ItemCppHeaders(definition):
     parameterReadStr = ''  # functions and checks to read (get) parameters
     parameterWriteStr = '' # functions and checks to write (set) parameters
 
+    deprecatedParameters = [] #renamed parameters, forwarded after all others (#2589)
+    parameterAccess = {} #pythonName -> (parameter, typeCastStr, destStr, parRead) of the parameters they forward to
     for parameter in parameterList:
+        if IsDeprecatedItemParameter(parameter):
+            deprecatedParameters.append(parameter)
+            continue
         i = DestinationNr(Destination(parameter)) #sList: [sParamComp, sParamMain, sComp, sMain, sVisu]
         paramStr = CppName(parameter)
         functionStr = paramStr
@@ -604,6 +609,7 @@ def ItemCppHeaders(definition):
                     #if (TypeName(parameter) == 'String') | (TypeName(parameter) == 'Vector2D') | (TypeName(parameter) == 'Vector3D') | (TypeName(parameter) == 'Vector4D') | (TypeName(parameter) == 'Vector6D') | (TypeName(parameter) == 'Vector7D'):
                     parWrite += ParameterWriteStatement(parameter, typeCastStr, destStr, pyName, fromDictionary=False, className=classStr)
 
+                parameterAccess[pyName] = (parameter, typeCastStr, destStr, parRead)
                 #+++++++++++++++++
                 #parameter read
                 if parRead != '':
@@ -660,6 +666,30 @@ def ItemCppHeaders(definition):
                 
             sList[i]+='\n\n'
     
+    #the deprecated names, after all others - the common case pays nothing (#2589)
+    deprecatedDictWrite = ''
+    for parameter in deprecatedParameters:
+        oldName = parameter['pythonName']
+        newName = str(parameter['description'])
+        if newName not in parameterAccess:
+            raise ValueError(classStr + '.' + oldName + ': deprecated, but the parameter it forwards to, ' + repr(newName)
+                             + ', is not an interface parameter of the item')
+        (target, targetCast, targetDest, targetRead) = parameterAccess[newName]
+        if HTPartOf(target) or HTListOf(target) or TypeName(target) == 'HomogeneousTransformation' or 'PyFunction' in TypeName(target):
+            raise ValueError(classStr + '.' + oldName + ': a deprecated name cannot forward to ' + newName + ' of type ' + TypeName(target))
+        (since, expires) = (parameter['deprecated'].since, parameter['deprecated'].expires)
+        warning = ('PyDeprecated("' + classStr + ': the parameter ' + oldName + ' is deprecated since ' + str(since)
+                   + ' and removed in ' + str(expires) + '; use ' + newName + '"); ')
+        deprecatedDictWrite += (space8 + 'if (EPyUtils::DictItemExists(d, "' + oldName + '") && !d["' + oldName + '"].is_none()) { ' + warning
+                                + ParameterWriteStatement(target, targetCast, targetDest, oldName, fromDictionary=True, className=classStr)
+                                + ' } //! AUTO: deprecated, forwards to ' + newName + '\n')
+        readExpression = targetRead if targetRead.startswith('EPyUtils::ToPython(') else 'py::cast(' + targetRead + ')'
+        parameterReadStr += ('if (parameterName.compare("' + oldName + '") == 0) { ' + warning + 'return ' + readExpression
+                             + '; } //! AUTO: deprecated, searched last\n        else ')
+        parameterWriteStr += ('if (parameterName.compare("' + oldName + '") == 0) { ' + warning
+                              + ParameterWriteStatement(target, targetCast, targetDest, oldName, fromDictionary=False, className=classStr)
+                              + ' } //! AUTO: deprecated, searched last\n        else ')
+
     #add outputVariableType function automatically if defined:
     outputVariableNames = OutputVariableNames(definition)
     if len(outputVariableNames) != 0:
@@ -685,7 +715,8 @@ def ItemCppHeaders(definition):
     sList[3] += space4+'{\n'
     for i in range(nClasses):
         sList[3] += dictListWrite[i]
-    
+    sList[3] += deprecatedDictWrite
+        
     if Header(definition, 'classType') == 'Object': #if parameters have changed (e.g. with ModifyObject(..) ), some functions may be necessary to be reset
         sList[3] += space8+'GetCObject()->ParametersHaveChanged();\n'
         

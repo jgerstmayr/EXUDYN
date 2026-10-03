@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 226 | 1.12.244 |
+| 1.12 | Metheney | 227 | 1.12.245 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.245** `EXTENSION` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` item parameters cannot be deprecated (#2589)
+  - description: When an item parameter is renamed there is no path that keeps an old script working: unlike visualizationSettings, the item interfaces have no deprecation mechanism. Wanted (maintainer, 2026-09-22): the same feature for item parameters, either restricted to the classes of itemInterface.py - which is generated, so one place - or extended to the Get/Set functions of the items themselves. If it reaches the C++ side, the deprecated names must be searched LAST, so that the common case pays nothing.
+  - **notes:** An item parameter can be renamed with its old name kept: it is still taken in the item class, in a dictionary and by GetObjectParameter/SetObjectParameter, with a DeprecationWarning naming the new one.
+  - date resolved: **2026-10-03 09:59**, date raised: 2026-09-22
 - **1.12.244** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` simulationSettings has no deprecation mechanism (#2588)
   - description: A member of visualizationSettings can be marked deprecated in the definitions - Deprecated(since, expires) plus the SFDeprecated flag, 93 members carry it today - and a user who sets the old name gets a message that names the new one. simulationSettings uses none of it, although the mechanism is the same generator and the same structure machinery: a renamed solver setting simply disappears. Apply it there.
   - **notes:** simulationSettings members can be renamed or moved with the old name kept as deprecated, forwarding with a DeprecationWarning; parallel.multithreadedLLimit... are parallel.multithreadedLimit... now.

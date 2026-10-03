@@ -73,6 +73,7 @@ def _Member(member, lineDefinition, source, structureClassNames):
     #what the headers need, and the two used to be the same string put through a converter that
     #guessed (#2682)
     line['defaultValueDocument'] = _DefaultValueDocument(member)
+    line['deprecated'] = member.get('deprecated', None) if 'Function' not in member['kind'] else None #a renamed item parameter (#2589)
     if member.get('userFunction') is not None:
         line['userFunction'] = member['userFunction']
         line['userFunctionExample'] = member.get('userFunctionExample') or ''
