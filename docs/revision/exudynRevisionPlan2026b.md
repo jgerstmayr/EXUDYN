@@ -1993,7 +1993,8 @@ could be renamed or restructured** (#2802). The candidates found by a pass over 
 and all parameters of the item definitions; each one is a decision of the maintainer, and each decided one becomes a
 sub-step with its own issue, done with the deprecation of RG12.1/RG12.2 (old name forwarding, removal five years
 after). *Status: the settings answered by the maintainer 2026-10-03 and revised into the map below, **which waits for
-the maintainer's decision to continue**; the item parameters (RG12.31.8 to .16) are not decided yet.* Settings, as first
+the maintainer's decision to continue**; the item parameters (RG12.31.8 to .16) answered 2026-10-03, realized in
+RG12.35.* Settings, as first
 listed (each with the maintainer's answer):
     - **RG12.31.1** two `outputPrecision`: the top one is for the console, `solutionSettings.outputPrecision` for the
       files - `consoleOutputPrecision`, or the top one into a small structure with the other console members
@@ -2077,25 +2078,47 @@ listed (each with the maintainer's answer):
 
   Item parameters:
     - **RG12.31.8** `ObjectJointGeneric.axesRadius/axesLength` against `axisRadius/axisLength` of
-      `JointRevoluteZ`/`JointPrismaticX` (visualization) - one spelling;
+      `JointRevoluteZ`/`JointPrismaticX` (visualization) - one spelling; *answer*: **keep** - the generic joint has
+      several axes;
     - **RG12.31.9** radii: `radiusSphere` (`ContactSphereTorus`, `ContactSphereTriangle`) - `sphereRadius`, as
       `circleRadius`, `discRadius`, `cylinderRadius` (`ContactConvexRoll.rBoundingSphere` is read-only and computed, no
-      longer given by a user, and needs no deprecation);
+      longer given by a user, and needs no deprecation); *answer*: yes, `sphereRadius`;
     - **RG12.31.10** the friction of `ObjectConnectorCoordinateSpringDamperExt`: `fDynamicFriction`,
-      `fStaticFrictionOffset`, `fViscousFriction` - without the `f`, as in `ContactConvexRoll`;
+      `fStaticFrictionOffset`, `fViscousFriction` - without the `f`, as in `ContactConvexRoll`; *answer*: the `f` is
+      *force* - these are forces, the normal force included, not coefficients as in `ContactConvexRoll` -, so the
+      word goes to the end: `dynamicFrictionForce`, `staticFrictionOffsetForce`, `viscousFrictionForce` **(?)** the last
+      one has the unit N/(m s) in its description, which is not a force: a force per velocity would be N s/m - a
+      wrong unit, or a name that should not end in `Force`;
     - **RG12.31.11** `constrainRotation` (`JointPrismatic2D`, `JointSliding2D`) against `constrainRotations`
-      (`JointSliding`, beside `constrainTranslations`) - one form;
+      (`JointSliding`, beside `constrainTranslations`) - one form; *answer*: **keep** - a 2D joint has one rotation;
     - **RG12.31.12** `ObjectConnectorCoordinate.factorValue1` against `factor0`/`factor1` of
-      `CoordinateSpringDamperExt` - `factor1`;
+      `CoordinateSpringDamperExt` - `factor1`; *answer*: yes;
     - **RG12.31.13** `ObjectConnectorRollingDiscPenalty` has `viscousFriction` and `rollingFrictionViscous` -
-      `rollingViscousFriction`, if both stay;
+      `rollingViscousFriction`, if both stay; *answer*: yes, both stay (different meanings), `rollingViscousFriction`
+      **(?)** its description says *rolling friction [SI:1] ... a force proportional to the contact normal force* - a
+      coefficient of Coulomb type, not proportional to a velocity; then `rollingFriction` would say what it is, and
+      "viscous" would mislead;
     - **RG12.31.14** `MarkerSuperElementRigid.useAlternativeApproach` says nothing - `useAlternativeRotationMode`
-      (the name of the C++ argument since RG9.3.4.4);
+      (the name of the C++ argument since RG9.3.4.4); *answer*: true, but **keep** - `MarkerSuperElementRigid` is
+      revised later, not now;
     - **RG12.31.15** the prefix `physics` (`physicsMass`, `physicsInertia`, `physicsAxialStiffness`, ... - 30
       parameters of bodies and finite elements) that connectors (`stiffness`, `damping`) and contacts do not
       have - drop it, or keep it as the mark of a body's physical data; touches most scripts, so for 2.0 if at all;
+      *answer*: **drop it, now** (in 1.13): the geometric and kinematic parameters are physics as well and carry no
+      such mark, and for the beams it makes no sense; users adapt, and can switch the warnings off. 27 names, no
+      collision with an existing parameter of the same item (checked): `physicsMass` - `mass`, `physicsInertia` -
+      `inertia`, `physicsCenterOfMass` - `centerOfMass`, `physicsLength`, `physicsMassPerLength`, `physicsDensity`,
+      `physicsThickness`, the stiffnesses and dampings of the beams and plates (`axialStiffness`, `bendingDamping`,
+      `torsionalBendingStiffness`, ...), `physicsReferenceAxialStrain`, `physicsReferenceCurvature`,
+      `physicsCrossSectionInertia`, `physicsMassProportionalDamping`, `physicsCurvatureCoefficients`,
+      `physicsStrainCoefficients`, `physicsMovingMassFactor`, `physicsAddALEvariation` - `addALEvariation`,
+      `physicsUseCouplingTerms` - `useCouplingTerms`, and the read-only `physicsCenterOfMassTilde`; about 290 scripts
+      and documents and 310 places in `src/` use them **(?)** the C++ members renamed with them (one name everywhere,
+      rule 10), or only the Python names, with `cplusplusName` keeping the old C++ name (a smaller diff, two names);
     - **RG12.31.16** flags in three patterns (`intrinsicFormulation`, `classicalFormulation`,
-      `usePenaltyFormulation`, `useReducedOrderIntegration`) - `use...` for all, the lowest priority.
+      `usePenaltyFormulation`, `useReducedOrderIntegration`) - `use...` for all, the lowest priority; *answer*: yes:
+      `intrinsicFormulation` - `useIntrinsicFormulation` (`RigidBodySpringDamper`), `classicalFormulation` -
+      `useClassicalFormulation` (`JointSliding2D`).
 
   Not listed: `localPosition` of the rigid markers beside `localHT` (its deprecation is RG14.2.15/RG16.5), the
   names of the internal members (`temp...`, RG14.2.16), and `axisMarker0` of `LinearSpringDamper`/`JointPrismatic2D`,
@@ -2127,6 +2150,27 @@ of Exudyn uses an old name afterwards and every user script keeps working with a
       from the deprecations, so that it cannot miss one), `parameterConversionTest` and the stubtest baseline, the
       settings dialog (its tree shows the new structure), dictionaries of settings stored by an earlier version
       (`SetDictionary` with old keys - forwarded, or refused with the new name).
+
+<a id="rg12-35"></a>
+**RG12.35** *(group RG12; maintainer 2026-10-03; after the answers on the marks (?) of RG12.31)* **The item
+parameters renamed as decided in RG12.31** (#2814): `sphereRadius`, the three friction forces of
+`CoordinateSpringDamperExt`, `factor1`, `rollingViscousFriction`, `useIntrinsicFormulation`, `useClassicalFormulation`,
+and the prefix `physics` dropped from 27 parameters - every old name a renamed parameter of RG12.2 (forwarding with a
+warning until 2031; all existed in 1.11.0):
+    - **RG12.35.1** `definitions/itemDefs*.py`: the new names, the old ones as `ItemParameter(..., deprecated=
+      Deprecated(...), description=r'<new name>')`, the descriptions and MiniExamples that name an old one; the C++
+      members as decided;
+    - **RG12.35.2** the C++ that uses the members (`src/`, about 310 places for `physics...`);
+    - **RG12.35.3** the Python library: the `Create...` functions whose arguments carry the names (`CreateMassPoint(physicsMass=...)`,
+      ...) - the new argument names, the old ones as `DeprecatedArgument`; `rigidBodyUtilities`, `FEM`, `beams`,
+      `robotics`; nothing in `python/exudyn` uses an old name;
+    - **RG12.35.4** the scripts with `exudev scripts --fix` (RG12.34.5), which then also rewrites renamed item
+      parameters - keyword of an item class and key of an item dictionary; Examples, TestModels, MiniExamples,
+      PerformanceModels; the test suite unchanged;
+    - **RG12.35.5** the documentation: manual, tutorials, the item pages (generated), `revisions.md` with the table;
+    - **RG12.35.6** the tests: the old names forward (a test model generated from the declarations), the reference of
+      `parameterConversionTest`, the stubtest baseline, `exudev scripts` over the repository reports nothing but the
+      deprecation tests.
 
 <a id="rg12-32"></a>
 **RG12.32** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg12-32) *(group RG12; maintainer 2026-10-03: "think
@@ -2876,6 +2920,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG17.1 | #2811 | notebooks for tutorials and examples: the evaluation |
+| RG12.35 | #2814 | the item parameters renamed as decided in RG12.31: `physics` dropped, the friction forces, `use...` flags |
 | RG12.34 | #2813 | the simulation settings renamed and restructured as decided in RG12.31, with scripts, documentation and tests |
 | RG12.31 | #2802 | settings and item parameters that could be renamed: a list for the maintainer's decision |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |

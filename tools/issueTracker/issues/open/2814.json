@@ -1,0 +1,11 @@
+{
+  "number": 2814,
+  "title": "item parameters renamed as decided in RG12.31: the prefix physics dropped, the friction forces, use... flags",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "effort": "HIGH",
+  "description": "physicsMass -> mass and 26 more, sphereRadius, dynamicFrictionForce/staticFrictionOffsetForce/viscousFrictionForce, factor1, rollingViscousFriction, useIntrinsicFormulation, useClassicalFormulation; the old names forward until 2031; C++, library, scripts, documentation and tests follow (maintainer 2026-10-03).",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01"
+}

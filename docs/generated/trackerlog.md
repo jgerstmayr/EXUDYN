@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.256.dev1
 - last change = 2026-10-03
-- Number of issues = 2814
+- Number of issues = 2815
 - Number of resolved issues = 2570 (256 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` `HIGH EFF` `raised by: Claude-JG` item parameters renamed as decided in RG12.31: the prefix physics dropped, the friction forces, use... flags (#2814)
+  - description: physicsMass -\> mass and 26 more, sphereRadius, dynamicFrictionForce/staticFrictionOffsetForce/viscousFrictionForce, factor1, rollingViscousFriction, useIntrinsicFormulation, useClassicalFormulation; the old names forward until 2031; C++, library, scripts, documentation and tests follow (maintainer 2026-10-03).
+  - date raised: 2026-10-03
 - `CHANGE` `HIGH EFF` `raised by: Claude-JG` simulationSettings renamed and restructured as decided in RG12.31, with every change the deprecation needs (#2813)
   - description: No substructure ends in Settings (solution, linearSolver), solution.file/.sensors/.restart, show.\*, timeIntegration.realtime and .solverType, newton.active/.residualMode, camel case fixes; the old names forward until 2031; C++, library, scripts (exudev scripts --fix), documentation and tests follow (maintainer 2026-10-03).
   - date raised: 2026-10-03
