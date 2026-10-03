@@ -60,6 +60,8 @@ hand-maintained one is wrong the next day (the rule of RG3.9).
 | **RG13** Item documentation | a full documentation and a MiniExample for every item |
 | **RG14** Marker values computed where they are used | connectors, constraints and loads compute their marker values themselves; for automatic differentiation |
 | **RG15** Objects computing from given coordinates | bodies and finite elements take their coordinates as arguments; for automatic differentiation |
+| **RG16** Homogeneous transformations | `exu.HT` and the frames of items, markers and joints as one transformation |
+| **RG17** Notebooks | tutorials and examples as notebooks |
 
 ## RG1 — Release and publication
 
@@ -385,66 +387,7 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 **RG3.7** **DONE 2026-09-22** (#2593) — [log](exudynRevisionLog2026b.md#rg3-7) · [plan text](exudynRevisionLog2026b.md#plan-rg3-7) — Display math opened at the end of a text line swallows the text.
 
 <a id="rg3-8"></a>
-**RG3.8** *(group RG3; found in RG3.3, extended by the maintainer 2026-09-23)* **The
-    unreferenced figures are the trace of figures the conversion lost** (#2594). Fourteen `.pdf`
-    and `.eps` files in `docs/figures/` are referenced by nothing; copies are in
-    `tmp/unusedFigures/` and nothing has left version control.
-
-    **The maintainer copied the 1.11.0 documentation to `tmp/docs`**, which answers where they
-    came from: **every one of the thirteen names appears in the old `.tex` chapters**
-    (`theory.tex`, `itemDefinition.tex`, `tutorial.tex`, `solver.tex`, `GUI.tex`). They are not
-    leftovers, they are figures the documentation used to show.
-
-    An audit of `tmp/docs/theDoc/*.tex` against the current sources: **60 figures in the old
-    chapters, 44 in the new ones.** Most of the difference is not a loss — the HCB and
-    free-free mode series are 29 single images that the Markdown replaced with four montages, and
-    the singles are still in `docs/figures/modesHinge/`. What IS lost is small and specific:
-
-    | figure | state |
-    |---|---|
-    | `generalContactANCF2Dcircle` | `.pdf` only, no png twin — the figure AND its caption are gone from the contact theory, where `theory.tex` explained the cable/circle intersection with it |
-    | `generalContactSpheres` | `.pdf` only — the only "references" in the current tree are a test model that happens to carry the same name |
-    | `ObjectJointALEmoving2D` | `.pdf` only — the item page of `ObjectJointALEMoving2D` has no figure |
-    | `intro2.jpg` | exists, referenced by nothing |
-
-    The other eleven `.pdf`/`.eps` are the **vector originals of png twins that the documentation
-    does use**. So two questions, and they are different:
-
-    - **the four lost figures** have to come back into the Markdown, with their captions;
-    - **the format**: the maintainer asks whether to convert them to SVG. What decides it is the
-      PDF of RG3.3: the LaTeX builder **cannot include SVG** — that is exactly the error the
-      README badges produced (*"a suitable image for latex builder not found:
-      ['image/svg+xml']"*). Sphinx solves it with image candidates: an image written as
-      `figures/name.*` picks `.svg` for the html build and `.pdf` for the LaTeX one. So the
-      answer is not one format but a pair — **SVG for the browser, PDF for the PDF, one name**
-      — and photographs and screenshots stay raster. The vector originals then stop being
-      unreferenced and become the source they always were.
-
-<a id="rg3-8-1"></a>
-**RG3.8.1** **DONE 2026-09-24** (#2594) — [log](exudynRevisionLog2026b.md#rg3-8-1) · [plan text](exudynRevisionLog2026b.md#plan-rg3-8-1) — The three contact-friction figures are vector.
-
-<a id="rg3-8-2"></a>
-**RG3.8.2** **DONE 2026-09-25** (#2594, #2650) — [log](exudynRevisionLog2026b.md#rg3-8-2) · [plan text](exudynRevisionLog2026b.md#plan-rg3-8-2) — Three more figures are vector, two became text, and what they replaced is out of the tree.
-
-<a id="rg3-8-3"></a>
-**RG3.8.3** **DONE 2026-09-25** (#2651) — [log](exudynRevisionLog2026b.md#rg3-8-3) · [plan text](exudynRevisionLog2026b.md#plan-rg3-8-3) — Three item pictures were in the repository and on no page.
-
-<a id="rg3-8-4"></a>
-**RG3.8.4** **DONE 2026-09-26** (#2594) — [log](exudynRevisionLog2026b.md#rg3-8-4) · [plan text](exudynRevisionLog2026b.md#plan-rg3-8-4) — The four lost figures are three, and they are back.
-
-<a id="rg3-8-5"></a>
-**RG3.8.5** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg3-8-5) (#2594) *(from RG3.8; measured 2026-09-26)* **The seventeen vector originals whose png the
-    documentation uses.** `CommonTangents3D`, `ConvexRolling`, `ObjectFFRFsketch`,
-    `SphereSphereContact` and thirteen more exist as `.png` **and** as `.pdf` or `.eps`, and every
-    reference names the `.png`. Writing them as `.*` would give the PDF the vector original at no
-    cost, which is what RG3.8 wanted.
-
-    **Why it is not done in passing**: the risk is that a `.pdf` twin is *not* the same picture as
-    its `.png` - they were exported at different times over ten years - and the failure is silent,
-    because the HTML shows one and the PDF the other and nobody compares two builds. So the step is
-    **one comparison per pair first**, and only the pairs that match are switched. Until then the
-    `.png` is what both builds show, which is at least the same thing twice.
-
+**RG3.8** **DONE 2026-10-03** (#2594) — [log](exudynRevisionLog2026b.md#rg3-8-1) · [plan text](exudynRevisionLog2026b.md#plan-rg3-8) — The unreferenced figures are the trace of figures the conversion lost. (all sub-steps done; the figures are back and vector where an original exists)
 
 <a id="rg3-9"></a>
 **RG3.9** **DONE 2026-09-23** (#2598) — [log](exudynRevisionLog2026b.md#rg3-9) · [plan text](exudynRevisionLog2026b.md#plan-rg3-9) — Three corrections to the landing pages and the developer chapters.
@@ -494,26 +437,10 @@ gaps it names are the first candidates. The maintainer's own findings go here as
 **RG3.21** **DONE 2026-09-27** (#2673) — [log](exudynRevisionLog2026b.md#rg3-21) · [plan text](exudynRevisionLog2026b.md#plan-rg3-21) — The pages that still describe the state before a step that is done.
 
 <a id="rg3-30"></a>
-**RG3.30** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg3-30) *(maintainer 2026-10-03)* **The flow charts as
-TikZ again** (#2812). The mermaid charts of `introduction.md`,
-    `solver.md` and `theoryContact.md` are of low quality next to the TikZ figures of the old LaTeX documentation
-    (`tmp/oldDocs/theDoc`, ten `tikzpicture`s in `introduction.tex` and `solver.tex`): arrows, colors and fonts, and
-    they fit the page. **Their current content stays** (the charts were brought up to date with the solver), only the
-    drawing changes. *Proposal*: one small standalone `.tex` per chart in `docs/figures/tikz/`, the TikZ of the old
-    figure brought to the current content, smaller fonts so that it fits the page; an exudev command (`exudev figures`)
-    compiles only what changed - it needs LaTeX, which the regular docs build does not - into a PDF (vector, for the
-    PDF build) and an image for the web (SVG with `dvisvgm` or `pdftocairo`, or a PNG), both committed, referenced as
-    `figure.*` like the other figures with a vector original (RG3.8.5); the mermaid source goes.
+**RG3.30** **DONE 2026-10-03** (#2812) — [log](exudynRevisionLog2026b.md#rg3-30) · [plan text](exudynRevisionLog2026b.md#plan-rg3-30) — The flow charts as TikZ again.
 
 <a id="rg3-29"></a>
-**RG3.29** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg3-29) *(maintainer 2026-10-03)* **The Python-C++
-    command interface in sections** (#2808): the Exudyn module page has a section per group of members -
-    *Module functions*, `exudyn.config`, `exudyn.experimental`, `exudyn.special` with `solver`, `exceptions`, `beams`,
-    `userInterface` and `deprecations`, `exudyn.variables and exudyn.sys` - declared in `definitions/pybindModule.py`, so
-    they are in the table of contents; *Settings that persist between runs*, with *The plot windows of PlotSensor*, is
-    the manual page `userSettings.md` again (outside the interface chapter; it reverses the move of RG3.23, which
-    put it under the module); *The environment variables* is the last page of the chapter, after the type definitions,
-    from `definitions/pybindEnvironment.py`.
+**RG3.29** **DONE 2026-10-03** (#2808) — [log](exudynRevisionLog2026b.md#rg3-29) · [plan text](exudynRevisionLog2026b.md#plan-rg3-29) — The Python-C++ command interface in sections.
 
 <a id="rg3-22"></a>
 **RG3.22** **DONE 2026-09-27** (#2659) — [log](exudynRevisionLog2026b.md#rg3-22) · [plan text](exudynRevisionLog2026b.md#plan-rg3-22) — The simulation settings section says how to look a setting up.
@@ -639,12 +566,7 @@ The steps are numbered in the order they were raised and stand here in the order
 **RG4.2** **DONE 2026-09-26** (#2413) — [log](exudynRevisionLog2026b.md#rg4-2) · [plan text](exudynRevisionLog2026b.md#plan-rg4-2) — `ObjectContactConvexRoll.pContact` is a computed value that Python reads.
 
 <a id="rg4-3"></a>
-**RG4.3** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg4-3) - a warning and the documentation, no change of the
-    solver. *(group RG4; revision2026 step R10.3)* **Explicit integration cost** (#2398, #2400). With the default dense linear solver
-    an explicit step on a chain of point masses costs O(N^2) (168 ms per step at N=2000; 400 times
-    faster with `EigenSparse`), and `computeMassMatrixInversePerBody` changes nothing unless a
-    sparse solver is selected as well. At least warn at large N; better, avoid the global solve
-    in explicit integration where the flag makes it unnecessary.
+**RG4.3** **DONE 2026-10-02** (#2398) — [log](exudynRevisionLog2026b.md#rg4-3) · [plan text](exudynRevisionLog2026b.md#plan-rg4-3) — Explicit integration cost.
 
 <a id="rg4-4"></a>
 **RG4.4** **DONE 2026-09-23** (#2603) — [log](exudynRevisionLog2026b.md#rg4-4) · [plan text](exudynRevisionLog2026b.md#plan-rg4-4) — Two lines of Python segfault the process.
@@ -770,9 +692,7 @@ The steps are numbered in the order they were raised and stand here in the order
       (a cross-section mode), not a solver problem -, then the penalty factor and the number of elements.
 
 <a id="rg4-18"></a>
-**RG4.18** *(group RG4; maintainer 2026-10-02)* **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg4-18) - **A system
-    without coordinates is solved** (#2790): nODE2 = nODE1 = 0 (and no algebraic equations) - at least the explicit
-    solvers; check where it breaks.
+**RG4.18** **DONE 2026-10-02** (#2790) — [log](exudynRevisionLog2026b.md#rg4-18) · [plan text](exudynRevisionLog2026b.md#plan-rg4-18) — A system without coordinates is solved.
 
 ## RG5 — Performance
 
@@ -931,225 +851,7 @@ This group is that revision and what has to happen before it can start.
 **RG6.6** **DONE 2026-09-24** (#2643) — [log](exudynRevisionLog2026b.md#rg6-6) · [plan text](exudynRevisionLog2026b.md#plan-rg6-6) — macOS: the settings dialog aborted the process.
 
 <a id="rg6-7"></a>
-**RG6.7** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg6-7-done) *(group RG6; maintainer 2026-09-27)*
-    **GraphicsData gets a Sphere and a CurvedTriangleList** (#2709). Bigger than it sounds, because every consumer of the graphics data
-    has to follow - even the minimal implementation with temporary workarounds: the GraphicsData
-    classes and their dictionary, the OpenGL renderer, the raytracer, the pybind interfaces,
-    `SC.renderer.GetGraphicsData()`, the documentation, and the graphics regression test (RG2.3.3).
-
-    **A limitation to resolve with it**: spheres are already special. The OpenGL renderer treats the
-    spheres of nodes separately, because there can be very many of them; the **raytracer does not draw
-    `glSpheres` at all**; `GetGraphicsData()` does return them (measured 2026-09-27). A Sphere that is
-    fully part of GraphicsData has to be drawn the same way by all three.
-
-    - **RG6.7.1** **DONE 2026-09-30, decided** — [log](exudynRevisionLog2026b.md#rg6-7-1) - what the sphere
-      can do, and what the curved triangle is (#2710). **Decided (maintainer, 2026-09-30)**:
-      - the element is the **6-node quadratic triangle with optional normals at its six nodes**;
-      - it is **split into flat triangles when the graphics data is drawn**, the normals interpolated with
-        the shape functions; the split is **adaptive**: the angle between the normals of a triangle (given or
-        computed from the geometry), approximated cheaply by $|\nv_i \times \nv_j|$, against a threshold
-        angle, with a maximum number of subdivisions per direction - two settings, **one global setting each**,
-        in `openGL.advanced` although the raytracer reads them as well: `curvedTriangleTilingAngle` (degrees,
-        default 3) and `curvedTriangleMaxTiling` (default 5), names to be confirmed by the implementation;
-      - **the raytracer does the same**: the normals were never the problem, the flat shape of the sub-triangles
-        is; a raytracer for curved geometry would be the real answer and is not planned;
-      - **the sphere is a GraphicsData type, and the nodes are drawn with it** - a node is no separate graphics
-        feature any more but gets a sphere shape; the order of drawing stays, so that with transparent faces
-        the nodes are seen through the objects.
-    - **RG6.7.2** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-2) - the 6-node triangle: the
-      dictionary (`TriangleList` with six indices per triangle and optional normals per point), the adaptive split
-      with the two settings, `GetGraphicsData()` returning the split, `exudyn.graphics` helpers
-      (`NGsolveMesh2PointsAndTrigs(..., triangles6=True)`, `FromPointsAndTrigs` with six columns);
-      - **RG6.7.2.1** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-2-1) - the superelements with six
-        columns in `triangleMesh` (the FFRF bodies and the FEM surface of quadratic meshes, `FEMinterface`), whose points
-        deform in every frame; and the contour colors on 6-node triangles (`AddBodyGraphicsDataColored` applied them to
-        flat triangles only); the surfaces that `VolumeToSurfaceElements` builds for Tet10 (Abaqus imports) get their
-        6-node triangles (2026-10-03, [log](exudynRevisionLog2026b.md#rg6-7-done)); a Hex20 face is drawn by its corners -
-        its 8 nodes have none on the diagonals a split into triangles needs (*not decided to be resolved*, see the list
-        below);
-      - **RG6.7.2.2** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-2-2) - **the split when drawing**, as
-        decided in RG6.7.1 (the first implementation split when the graphics data was built, a misunderstanding):
-        `GraphicsData` keeps `glTriangles6` only; OpenGL splits per frame, the raytracer per image,
-        `GetGraphicsData()` per call, each with the settings of that moment - a change of
-        `curvedTriangleTilingAngle` shows at once. The edges (`showFaceEdges`) are the curved edges, not those of the
-        split. Defaults **15°** (24 segments around a full cylinder) and at most **8** subdivisions;
-      - **RG6.7.2.3** **DONE 2026-10-03, measured** — [log](exudynRevisionLog2026b.md#rg6-7-done) - the split cached per
-        GraphicsData for OpenGL (`SplitTriangles6Cached`), 60 ms per frame for $9\cdot10^4$ triangles6 saved - the cost of the split per frame for large quadratic meshes (an NGsolve
-        surface of $10^5$ triangles6 at 15°: up to 64 flat triangles each); if it shows, cache the split per
-        GraphicsData, invalidated by the graphics update and by the two settings;
-    - **RG6.7.3** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-3) - the sphere type in GraphicsData,
-      drawn by OpenGL, the raytracer (a ray-sphere intersection in its search tree) and `GetGraphicsData()`; the
-      nodes drawn through it, in the order of today;
-      - **RG6.7.3.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-2-2) - the raytraced sphere fell
-        apart into rings (maintainer's screenshot): $|\mathbf{o}-\mathbf{c}|^2-r^2$ cancels in float when the camera
-        is far from a small sphere; now the distance of the center from the ray, which is stable;
-    - **RG6.7.4** the graphics tests (RG2.3.3) and the documentation grow with both - **DONE with RG6.7.2 and
-      RG6.7.3**: the cases `Sphere`, `Spheres` and `Triangles6` of `testEveryGraphicsFunction`, the manual
-      (*GraphicsData: Spheres*, the key `triangles6` of *GraphicsData: TriangleList*).
-    - **RG6.7.5** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg6-7-done) *(proposed by the maintainer
-      2026-10-01)* - **anisotropic tiling**: a cylinder patch is curved in
-      one direction only, but the split subdivides both, $n^2$ triangles where $2n$ would do. The way: a number of
-      subdivisions **per edge**, $n_{01}, n_{12}, n_{20}$, each from the angle between the normals of that edge's three
-      nodes; the interior triangulated to match the three edge counts (rows of strips between the two most subdivided
-      edges, the third edge's points joined by a fan). The counts must come from what two neighbours share - the
-      edge's own nodes and their given normals, or, without normals, the edge's tangents at its ends - so that the
-      shared edge is split alike on both sides and no cracks appear; the isotropic split of today has that problem
-      already (one $n$ per triangle) and would lose it. A cylinder of 6-node triangles then needs $2n$ instead of
-      $n^2$ flat triangles per element.
-    - **RG6.7.6** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-6) - *decided (maintainer 2026-10-01): switched for 1.13* - **`TriangleList` and `Spheres` as $(n\times 3)$ arrays**: points,
-      normals, triangles (and $(n\times 4)$ colors, $(n\times 6)$ triangles6) as rows, not flat lists. Measured
-      2026-10-01: the C++ reader (`PyWriteBodyGraphicsDataList`) casts each key to a flat `std::vector<float>` and
-      **rejects** a nested list or a 2D array today, so the flat form is all there is. Sub-steps:
-      - **RG6.7.6.1** the reader accepts both - flat as now, and rows of 3 (4, 6), as list or 2D numpy array;
-      - **RG6.7.6.2** the documentation (manual *GraphicsData*, the docstrings) shows only the rows;
-      - **RG6.7.6.3** `exudyn.graphics` returns rows (`Brick`, `Cylinder`, `FromPointsAndTrigs`, `Transform`,
-        `MergeTriangleLists`, ...) and reads both; `graphicsDataUtilities.py` likewise;
-      - **RG6.7.6.4** the read-back (`mbs.GetObject(..., addGraphicsData=True)`, `GetBodyGraphicsDataList`) returns rows.
-      - **RG6.7.6.5** the note in `docs/manual/revisions.md`: a script that indexes a returned list as flat
-        (`g['points'][3*i+1]`) must reshape it, `np.array(g['points']).reshape(-1,3)` works for both forms.
-      **Decided (maintainer, 2026-10-01)**: the returned form switches **already for 1.13**, not in 2.0. `Lines` and
-      `edges3` read rows since RG6.7.7.2; `PyReadNumbers<T>` (`VisualizationSystemContainer.cpp`) is the reader the other
-      keys get in RG6.7.6.1.
-    - **RG6.7.7** *(maintainer 2026-10-01)* **Quadratic (3-node) lines and edges**, the line counterpart of the 6-node
-      triangle. Today a `TriangleList`'s `edges` are point pairs, drawn as straight `GLLine`s, and `Lines` takes two
-      points per line - a feature edge on a curved surface of 6-node triangles (the rim of a cylinder) can only be a
-      chord. Sub-steps:
-      **RG6.7.7.1 to RG6.7.7.5 DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-7).
-      - **RG6.7.7.1** `TriangleList` gets the key **`edges3`**: three point indices per edge, `[p0, p1, m01, ...]` - the
-        corners first, then the mid node, the order of `triangles6`; points and colors shared with the triangles,
-        `edgeColor` as for `edges`. Drawn always, like `edges`; `showFaceEdges` keeps drawing the element edges of the
-        6-node triangles.
-      - **RG6.7.7.2** `Lines` gets the key **`shape`**: `'linear'` (the default, also when the key is missing; two points
-        per line) or `'quadratic'` (three points per line, `[p0, p1, m01]` as for `edges3`; colors per point as now);
-        later other shapes in the same way (splines). The points (and colors) as rows, $(2n\times3)$ / $(3n\times3)$
-        and $(2n\times4)$ / $(3n\times4)$, with the flat lists still read - as for every GraphicsData (RG6.7.6).
-      - **RG6.7.7.3** C++: **`GLLine3`** (three points, three colors, item) and a list `glLines3` in `BodyGraphicsData`
-        and `GraphicsData`, kept as they are and split when drawn (OpenGL, raytracer as lines,
-        `ComputeMaxScene`), by one function beside `SplitTriangle6`: the number of segments from the angle between the
-        curve's end tangents $\tv_0 = 4\mv - 3\pv_0 - \pv_1$, $\tv_1 = 3\pv_1 + \pv_0 - 4\mv$ against
-        `curvedTriangleTilingAngle`, at most `curvedTriangleMaxTiling` - a quarter circle at 15° gets 6 segments, as
-        the edge of a neighbouring 6-node triangle does. The count depends only on the three points of the edge,
-        which two neighbours share, so it is the edge rule RG6.7.5 needs as well. The curved element edges of the
-        6-node triangles (RG6.7.2.2) use the same function.
-      - **RG6.7.7.4** **`SC.renderer.GetGraphicsData(flatShapes=False)`**: by default the **native** shapes - the
-        6-node triangles under `triangles6` and the quadratic lines under `lines3`, beside the flat `triangles` and
-        `lines`; with `flatShapes=True` everything flat by **one fixed refinement** (each 6-node triangle into the 4
-        triangles on its six nodes, each quadratic line into 2 lines), independent of the tiling settings. This
-        replaces the split by the current settings that `GetGraphicsData()` returns since RG6.7.2.2, and makes the
-        graphics references independent of `curvedTriangleTilingAngle`.
-      - **RG6.7.7.5** the `exudyn.graphics` helpers keep `edges3` and the line shapes (`MergeTriangleLists`,
-        `Transform`/`Move`, `InvertTriangles`); `Triangles6ToTriangles` turns an `edges3` into two `edges`;
-        `graphics.Lines` gets `shape`.
-      - the visual check: `python/Examples/graphicsCurvedShapes.py` (curved shapes beside the flat ones of `exudyn.graphics`,
-        quadratic lines, spheres, a rotating body), row K13 of the manual GUI check (RG2.4);
-      - **RG6.7.7.9** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg6-7-7-9) - the maintainer's look at
-        `graphicsCurvedShapes.py`: element edges that could not be switched off, seams in the shading; `formatVersion`
-        stays 1;
-      - **RG6.7.7.8** **DONE 2026-10-02** (#2769) - `MergeTriangleLists` did not offset the `edges` of `g2` when `g1`
-        had none; now as for `edges3`, test `testMergeOffsetsTheEdgesOfTheSecondList`.
-      - **RG6.7.7.6** **the primitives on quadratic shapes** - `Cylinder`, `Tube`, `Torus`, `SolidOfRevolution`, the
-        partial `Sphere`, `Arrow`, ... built from 6-node triangles with `edges3` on their rims. **In part DONE
-        2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-6): `Cylinder` (full, partial, hollow), `SolidOfRevolution`
-        and with it `Arrow`, `Basis`, `Frame`, `RigidLink`, `BallBearingRings`, and `Torus`; the split with at least 2
-        subdivisions for a curved element and the edges of a 6-node triangle in its tiling; then `Tube` and the `Sphere`
-        with edges or between two latitudes. **The rest DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg6-7-done):
-        `LinkedCylinders` (arcs, tangents and bores) and the hollow `Sphere`; `SpheresToTriangleList` stays flat on
-        purpose - it makes contact meshes - and so does `SolidExtrusion` of a polygon. *Compatibility of
-        `nTiles`* (maintainer's question): `nTiles` keeps its meaning - **the number of flat segments around** - and
-        the primitive uses $\lceil$`nTiles`/2$\rceil$ quadratic elements, each covering two of today's segments.
-        For a script to never look coarser than today, the split of a *curved* 6-node triangle or 3-node line has
-        **at least 2** subdivisions (one stays for a flat one, where the mid nodes add nothing); it gets more only
-        where `curvedTriangleTilingAngle` asks for them. So a default cylinder (`nTiles=16`: 8 elements of 45°) shows
-        24 segments at 15°, and a script with `nTiles=64` shows at least its 64. The data (points, triangles) shrink
-        to about half, the drawn triangles never fall below today's.
-      - **RG6.7.7.7** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-7) - the examples and test models
-        with very large `nTiles` (chosen to hide the facets) are revised, most to about half the value, once RG6.7.7.6
-        is in - checked by image, not by rule.
-      - **RG6.7.7.11** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-11) - *(maintainer 2026-10-02)* **the
-        frame of the rigid markers**: `visualizationSettings.markers.showBasis` and `basisSize` (the names of the
-        nodes); simplified three RGB lines, else three arrows as the node basis with heads half as long (#2791) - the
-        rigid markers get their own rotation with `localHT` (RG16.3.3).
-      - **RG6.7.7.10** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg6-7-7-8) (written up there as RG6.7.7.8,
-        a number taken by #2769) - *(found in RG6.7.7.7; needs no
-        decision)* **single bright pixels of the raytracer on curved
-        triangles at coarse tiling** (#2787): at `nTiles` 32 and below a few pixels of a `SolidOfRevolution` and a half
-        sphere are white - rays between neighbouring curved triangles or their flat split; the split along a shared
-        edge is to be checked for watertightness.
-
-    <a id="rg6-7-sketch"></a>
-    **The interface, sketched 2026-10-01** (for the maintainer; nothing implemented). What exists, read in the code:
-    `GraphicsData` (C++, what is drawn) already has `glSpheres` - `GLSphere` = item, point, color, radius,
-    resolution - and the nodes already go into it (`DrawNode` → `AddSphere`); OpenGL draws them, and
-    `GetGraphicsData()` returns them as `spheres`. Missing are two links: the **body graphics** (`BodyGraphicsData`,
-    the converted `VgraphicsData` of a body: lines, circles, texts, triangles - no spheres) and the **raytracer**,
-    which intersects triangles only. The dictionary types today: `Line`, `Lines`, `Circle`, `Text`, `TriangleList`.
-
-    *Python - the dictionaries.* One new type and one new key:
-
-    ```python
-    #spheres: arrays like 'Lines'; one sphere is n = 1
-    {'type': 'Spheres',
-     'points': [x0,y0,z0, x1,y1,z1, ...],      #centers, 3n floats
-     'radii':  [r0, r1, ...] or r,             #n values, or one for all
-     'colors': [R0,G0,B0,A0, ...] or [R,G,B,A],#n colors, or one for all
-     'resolution': 8}                          #nTiles of today's graphics.Sphere (OpenGL; the raytracer is exact)
-
-    #curved triangles: a key of 'TriangleList', so that one list can carry flat and curved triangles
-    {'type': 'TriangleList', 'points': [...], 'colors': [...], 'normals': [...],   #normals optional, per point
-     'triangles':   [i0,i1,i2, ...],                      #flat, as today
-     'triangles6':  [c0,c1,c2, m01,m12,m20, ...],         #NEW: 6-node quadratic triangles
-     'edges': [...]}                                       #as today
-    #node order of a 6-node triangle: corners c0,c1,c2 counter-clockwise seen from outside, then the mid-side
-    #nodes m01 (between c0 and c1), m12, m20 - the order of NETGEN/NGsolve second-order surface elements
-    ```
-
-    *Python - the helpers* (`exudyn.graphics`):
-
-    | function | change |
-    |---|---|
-    | `Sphere(point, radius, color, nTiles, ...)` | returns `Spheres` with one point for a full sphere; with `addEdges`, a partial sphere (`majorAngleMin/Max`) or `innerRadius` it returns a `TriangleList` as today - those cannot be a `GLSphere` |
-    | `Spheres(points, radii, colors, nTiles)` (new) | many spheres in one dictionary - particles, point clouds - one item instead of n |
-    | `NGsolveMesh2PointsAndTrigs(..., meshOrder=2)` | returns `triangles6` for a second-order mesh instead of four flat triangles per element; the FEM surface of quadratic meshes the same |
-    | `Move`, `Transform`, `MergeTriangleLists`, `BoundingBoxSingle`, `ToPointsAndTrigs`, STL export | learn `Spheres` (transform centers, scale radii) and `triangles6`; those that need flat triangles (STL, `ToPointsAndTrigs`) split with the same rule as the renderer |
-
-    *C++ - where the new data goes.*
-
-    ```cpp
-    class BodyGraphicsData {            //the converted VgraphicsData of a body
-        ResizableArray<GLLine> glLines; ResizableArray<GLCircleXY> glCirclesXY; ResizableArray<GLText> glTexts;
-        ResizableArray<GLTriangle> glTriangles;
-        ResizableArray<GLSphere> glSpheres;               //NEW: 'Spheres'
-        ResizableArray<GLTriangle6> glTriangles6;         //NEW: 'triangles6', kept for the read-back and the split
-    };
-    class GLTriangle6 { Index itemID; std::array<Float3,6> points, normals; std::array<Float4,6> colors; bool hasNormals; };
-    ```
-
-    `GraphicsData` (what is drawn) gets **no** curved triangles: they are split into `GLTriangle`s when the body
-    graphics are transformed into it, so the OpenGL renderer, the raytracer, `GetGraphicsData()` and the graphics
-    fingerprints see flat triangles only, as decided. The split of a rigid body's graphics is the same in every frame:
-    it is done once at the conversion and cached in `BodyGraphicsData`, redone when `curvedTriangleTilingAngle` or
-    `curvedTriangleMaxTiling` changes; a superelement's `triangleMesh` with six columns deforms, so it is split in
-    every frame. Spheres are transformed (center; radius unchanged, scaled only by an explicit scale) into
-    `GraphicsData.glSpheres`, the list the nodes already use, in the same drawing order.
-
-    | consumer | `Spheres` | `triangles6` |
-    |---|---|---|
-    | `PyWriteBodyGraphicsDataList` (dictionary → C++) | new branch | new key in `TriangleList` |
-    | `PyGetBodyGraphicsDataList` (C++ → dictionary, `mbs.GetObject`) | new branch | the 6-node form, as given |
-    | body graphics → `GraphicsData` (`UpdateGraphics` of the bodies) | transform into `glSpheres` | split (cached) into `glTriangles` |
-    | OpenGL | nothing new | nothing new |
-    | raytracer | **new**: ray-sphere intersection with the exact normal; the spheres in the search tree by their bounding boxes, after the triangles; shadows the same | nothing new |
-    | `GetGraphicsData()` | nothing new (`spheres` exists) | the split triangles |
-    | graphics tests (RG2.3.3) | spheres counted per item; references re-recorded where `graphics.Sphere` was a TriangleList | more triangles; references re-recorded |
-    | settings | - | `openGL.advanced.curvedTriangleTilingAngle` (3°), `curvedTriangleMaxTiling` (5) |
-
-    **Decided (maintainer, 2026-10-01)**: (a) one `Spheres` type with arrays; (b) `graphics.Sphere` returns it by
-    default, but only for a whole sphere - not with edges, as a part of a sphere or hollow; scripts that treat the
-    result as a `TriangleList` go through the helpers; (c) `triangles6` as a key of `TriangleList`; (d) **not** the
-    cached split: `GraphicsData` (C++) gets its own structure for the 6-node triangle, which the `triangles6` of a
-    `TriangleList` map to (the points duplicated per triangle, as for `GLTriangle` - the meshes are not kept), and
-    `GLSphere`, which exists, is the internal structure of the sphere. The split into flat triangles happens where
-    the 6-node triangles are drawn.
+**RG6.7** **DONE 2026-10-03** (#2709) — [log](exudynRevisionLog2026b.md#rg6-7-done) · [plan text](exudynRevisionLog2026b.md#plan-rg6-7) — GraphicsData gets a Sphere and a CurvedTriangleList.
 
 <a id="rg6-8"></a>
 **RG6.8** *(group RG6; maintainer 2026-09-29)* **The graphics fixes before 1.13** - *"many are graphics
@@ -1166,7 +868,7 @@ This group is that revision and what has to happen before it can start.
       give triangles of the wrong orientation - with ngsolve (optional package): the normals of
       `fem.GetSurfaceTriangles()` against the outward normals. `ImportMeshFromNGsolve` flipped the surface of
       NETGEN, which points outward already; `test_femSurfaceOrientation.py`;
-    - **RG6.8.4** (#2308) erratic shadows with `modelCentricView=False` and lights in the camera frame -
+    - **RG6.8.4** **DONE 2026-09-30** (#2308; to be seen on screen in the manual check, row K12) erratic shadows with `modelCentricView=False` and lights in the camera frame -
       a small raytracer image against a reference, as in RG2.3.3.4. **Analysed 2026-09-30**
       ([log](exudynRevisionLog2026b.md#rg6-8-4)): the shadows are OpenGL stencil shadow volumes, which the
       raytracer does not use, so its image cannot show the defect; the likely cause is the clipping of the
@@ -1279,206 +981,13 @@ revision (info document D15).
 **RG9.2** **DONE 2026-09-23** (#2628, #2629) — [log](exudynRevisionLog2026b.md#rg9-2) · [plan text](exudynRevisionLog2026b.md#plan-rg9-2) — Fourteen item sources included an exception header they do not use, and paid pybind11 for it.
 
 <a id="rg9-3"></a>
-**RG9.3** **DONE 2026-10-03** (#2744 resolved) *(group RG9; maintainer 2026-09-29)* **Access functions as single functions of the objects**
-    (#2744). `GetAccessFunctionBody(AccessFunctionType, localPosition, Matrix& value)` serves every access
-    type through one function and a switch, and carries workarounds - the vector of
-    `JacobianTtimesVector_q` travels in the output matrix, `OwnMarkersOnly` (RG4.10) says what a
-    declaration cannot. Single functions per access type, with interfaces that say what they take and
-    return, avoid them.
-    - **RG9.3.1** **DONE 2026-09-29, decided 2026-10-02** — the evaluation, in
-      `tmp/evalRG9_3_accessFunctions.md` (not kept in the repository): which objects provide which
-      access functions today, which markers and loads call them, and what the best interface is for each.
-      Proposed: one virtual function per access type, and the flags derived from the functions a
-      definition declares (with RG9.3.2); **decided (maintainer, 2026-10-02): as recommended** - option A (single
-      virtual functions) and C (the flags from the definition), RG9.3.4 first; the question whether the Jacobians stay
-      hand-written is evaluated after the split (RG9.3.5);
-    - **RG9.3.2** **DONE 2026-10-02** with RG9.3.4.4 — a check that the access function flags an object declares
-      (`ItemAccessFunctionTypes`) and the functions its definition declares agree - possibly by deriving the flags
-      from the functions;
-    - **RG9.3.3** the migration, object by object - realized in RG9.3.4.
-    - **RG9.3.4** *(maintainer 2026-10-02)* **the split of `GetAccessFunctionBody`** — .1-.3 **DONE 2026-10-02**, .4 **DONE 2026-10-03** (first in
-      part 2026-10-02) — [log](exudynRevisionLog2026b.md#rg9-3-4):
-      - **RG9.3.4.1** the class of access functions: in `CObjectBody`, one virtual function per access type with an
-        interface that says what it takes and returns - `GetPositionJacobian(localPosition, jacobian)` (3 x n),
-        `GetRotationJacobian(localPosition, jacobian)`, `GetMassWeightedPositionJacobian(jacobian)`,
-        `GetJacobianTransposedTimesVectorDerivative(localPosition, forceTorque, result)` (the vector as an argument, a
-        return value for "zero"), `IsValidLocalPosition(localPosition, reason)` (the restrictions now found at run time
-        - "on the axis", "at the center of mass" - checked at `Assemble()`); base implementations that raise
-        *"<object> provides no <access>"*; documented in one place; `GetAccessFunctionBody` calls them meanwhile, so
-        the callers do not change yet;
-      - **RG9.3.4.2** the objects, one by one (17 objects and `MarkerBodyCable2DShape`): the switch split into the
-        functions, compared with the old switch on the test models; the commented-out and dead cases removed
-        (`ObjectRotationalMass1D`, `ObjectANCFCable`, `ObjectANCFBeam`); `ObjectBeamGeometricallyExact` provides what it
-        declares or declares nothing (with RG4.8);
-      - **RG9.3.4.3** the callers (the markers, the loads, `GeneralContact`) call the single functions;
-        `GetAccessFunctionBody` and the input-through-output convention of `JacobianTtimesVector_q` go;
-      - **RG9.3.4.4** = RG9.3.2: the flags derived from the functions a definition declares; `OwnMarkersOnly` becomes
-        "declares none"; `SuperElementAlternativeRotationMode` moves to the marker; **done 2026-10-02: the check**
-        (rule 7 of the definition validator: a body declares a type exactly if it provides its function). **The rest DONE
-        2026-10-03** — [log](exudynRevisionLog2026b.md#rg9-3-4-4): the flags derived instead of declared, the own
-        markers declared apart (`ownMarkers=`, `ownMarkerTypes=`), `OwnMarkersOnly` derived, and
-        `SuperElementAlternativeRotationMode` an argument of `GetAccessFunctionSuperElement`;
-    - **RG9.3.5** **DONE 2026-10-02** (evaluated with a switch; (a)-(c) decided by the maintainer and done, the switch
-      removed) — [log](exudynRevisionLog2026b.md#rg9-3-5), [decision](exudynRevisionLog2026b.md#rg9-3-5-decided) - *(maintainer 2026-10-02; after RG9.3.4; "with a switch, so performance can
-      be compared")* **evaluation: hand-written Jacobians or AD of a templated `GetPosition`**. To answer: what changes - a template cannot be virtual, so the object would provide a templated
-      position function plus a virtual wrapper per number type (Real, the AD types of RG14), or the markers call
-      object-specific templates; the impact on the implementation of each object (17), on the markers and on the
-      definitions; what would be gained in performance (the Jacobian by AD costs a pass with n directions against a
-      hand-written matrix today) and in code (the hand-written Jacobians and their derivatives
-      `JacobianTtimesVector_q` disappear); and what RG15 (objects computing from given coordinates) changes about it.
-      The result is a proposal, not a migration. **Done**: `exu.experimental.accessFunctionsByAD` (1: AD, 2: the general
-      path with the hand-written functions) for `ObjectRigidBody` (Euler parameters, Tait-Bryan angles),
-      `ObjectRigidBody2D` and `ObjectANCFCable2D`; the same results (Euler parameters: to the Newton tolerance); AD costs
-      +40 % to +80 % solver time on chains of rigid bodies joined by connectors, +2 % on an ANCF cable; found #2774.
-      **Proposed**: (a) the hand-written Jacobians stay for the bodies that are hot in connector-heavy models (rigid
-      bodies, mass points) - their fast projections without forming a Jacobian matter more than AD; (b) AD provides
-      what is missing or approximated today - the derivative of `J^T f` of the ANCF cables and beams (none, or taken
-      as zero), and the access functions of new objects, from one templated position (with RG15); (c) a cheaper AD
-      seeds only the coordinates the position is nonlinear in (the rotation parameters: 4 directions instead of 7);
-      (d) the switch goes when (a)-(c) are decided.
-    - **RG9.3.6** **DONE 2026-10-02** (1)-(3), (4) moved to RG9.3.7 — [log](exudynRevisionLog2026b.md#rg9-3-6) -
-      *(maintainer 2026-10-02)* **the leftovers found in the evaluation and the split** (#2773): (1) the
-      check of a marker on a body without rotation access reports the marker index as the object number (and spells
-      *orienation*); (2) dead code - the `if (false)` branch of `CObjectANCFCable2DBase::GetPositionJacobian` (the exact
-      derivative of the normal, equal to the version in use; `ObjectALEANCFCable2D` uses the exact one), the
-      commented-out calls of `GetAccessFunctionBody` (relative coordinate markers, `CObjectRigidBody`,
-      `VisualizationObject.h`), the incomplete commented-out block of `CObjectFFRFreducedOrder::GetMassWeightedPositionJacobian`,
-      the double `SetAll` in `CObjectANCFBeam::GetMassWeightedPositionJacobian`; (3)
-      `CMarkerKinematicTreeRigid::ComputeMarkerDataJacobianDerivative` raises unconditionally, the code after it is
-      unreachable; (4) ideas: `ObjectRotationalMass1D` could provide the position Jacobian off its axis as
-      `ObjectRigidBody2D` does, `ObjectANCFBeam` a rotation Jacobian from its slopes. The three findings of section 7
-      of the evaluation (the beam that declared four types and provided none, the undeclared case of `ObjectANCFBeam`,
-      the commented-out cases) are done in RG9.3.4.2.
-    - **RG9.3.7** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg9-3-7) - *(maintainer 2026-10-02: the
-      leftovers that need a decision go into a step of their own; done as proposed)* **two access
-      functions a body could provide** (#2775): the position Jacobian of `ObjectRotationalMass1D` off its axis (it would
-      depend on the angle, as for `ObjectRigidBody2D`; `Assemble()` refuses connector and load markers there today), and
-      a rotation Jacobian of `ObjectANCFBeam` from its slopes (which slopes, which orthogonalization). For the
-      maintainer's decision.
-    - **RG9.3.8** **DONE 2026-10-02** (15 bodies; the rest in RG9.5.6) — [log](exudynRevisionLog2026b.md#rg9-5) -
-      *(found in RG9.3.7 and RG4.17.1; needs no decision)* **every body's access functions against finite
-      differences** (#2777): one pytest that builds each body type at deformed, rotated coordinates and checks, at
-      several local positions, `GetPositionJacobian` and `GetRotationJacobian` against finite differences of the
-      position and the rotation matrix, and `GetJacobianTransposedTimesVectorDerivative` against the numerical
-      derivative of $\Jm^T\fv$. Both bugs of 2026-10-02 - the position Jacobian of `ObjectANCFBeam` sized for 8 of its
-      18 coordinates, the rotation Jacobian of the slope nodes not the derivative of their rotation - were found by
-      chance; this test would have found them. **After RG9.5** (maintainer 2026-10-02): the access functions are not
-      reachable from Python today; with `mbs.ComputeItem` and its numerical-derivative helper this test is short.
+**RG9.3** **DONE 2026-10-03** (#2744) — [log](exudynRevisionLog2026b.md#rg9-3-4) · [plan text](exudynRevisionLog2026b.md#plan-rg9-3) — Access functions as single functions of the objects.
 
 <a id="rg9-4"></a>
-**RG9.4** **DONE 2026-10-03** (#2202 resolved; RG9.4.3.2 is in the list
-    [*not decided to be resolved*](#not-decided)) *(group RG9; maintainer 2026-09-30)* **Kinetic and potential energy as output variables**
-    (#2202). `OutputVariableType.KineticEnergy` and `PotentialEnergy` exist (bits 32 and 33) and no item
-    provides them. They are added where they make sense - rigid bodies, flexible bodies, superelements
-    and connectors - and nowhere else; a test then checks the conservation of energy of a free
-    oscillation, as the literature does for the beam benchmarks (RG4.8.11). One step per object type:
-    - **RG9.4.1** **DECIDED 2026-09-30** (maintainer) - the convention: `PotentialEnergy` of an object is
-      its **elastic** energy, zero in the reference configuration; only objects for which it is meaningful
-      report `KineticEnergy` or `PotentialEnergy`. An object with a **user function** reports no energy; an
-      object that cannot report it raises an exception **with the reason**. The energies are added only where
-      the computation is straightforward and duplicates no larger code - for a beam from the existing
-      `ComputeODE2LHS` functions, or a simple loop over the integration points (bending and axial strain
-      energy; inefficient but simple is acceptable). The energy is one number for the item: **`localPosition`
-      must be `[0,0,0]`**, so that nobody takes it for a quantity at a point. The inspection of RG12.29 lists
-      the energies among the output variables only where they can be computed. **Loads are wanted as well**,
-      at least constant and mass-proportional ones (the potential of the load through its marker's position)
-      - planned in RG9.4.6 and RG9.4.7;
-    - **RG9.4.2** **DONE 2026-10-01** (#2202, #2766) — [log](exudynRevisionLog2026b.md#rg9-4-2) - the simple objects first: `ObjectMassPoint`, `ObjectMassPoint2D`, `ObjectMass1D`,
-      `ObjectRotationalMass1D`, `ObjectRigidBody`, `ObjectRigidBody2D` (kinetic), the linear spring-dampers
-      (coordinate, Cartesian, torsional, linear; potential), and a **test model for energies** that shows
-      the effect on several simple, independent mechanisms (a free oscillator, a pendulum on a spring, a
-      rotating body), each with its conserved or dissipated total;
-    - **RG9.4.3** the heavier objects: `ObjectConnectorRigidBodySpringDamper`, the ANCF cables and beams,
-      `ObjectBeamGeometricallyExact(2D)`, the ALE cable - kinetic and elastic energy, by the rule above.
-      **Kinetic energy DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - for all of them from
-      their mass matrix, and the potential energy of the rigid-body spring-damper.
-      - **RG9.4.3.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3-1) - the elastic energy of
-        `ANCFCable2D`, `ALEANCFCable2D`, `ANCFCable`, `ANCFBeam`, `BeamGeometricallyExact(2D)` and `ANCFThinPlate`:
-        the rule selection of each element moved into one function that the forces and the energy share, the
-        strains are the ones of the forces; $\partial V/\partial\qv$ equals the elastic forces to $10^{-10}$; and the
-        potential of `ObjectConnectorGravity`;
-      - **RG9.4.3.2** **the objects without energy** - *not now* (maintainer, 2026-10-01: the special and contact
-        objects need no energy right away, with friction it may be difficult); the list is kept here. What an
-        object provides is answered by `mbs.Inspect(item, exu.InspectType.OutputVariables)` (RG12.29), which is
-        where this list comes from (all MiniExamples, 2026-10-01); an energy added to an object removes it here:
-
-        | objects | energy | why, or what would have to be done |
-        |---|---|---|
-        | `ContactCoordinate`, `ContactSphereSphere`, `ContactSphereTorus`, `ContactConvexRoll`, `ContactCurveCircles`, `ContactCircleCable2D`, `ContactFrictionCircleCable2D`, `ConnectorRollingDiscPenalty` | none yet | the integral of the normal penalty force over the penetration ($\frac{1}{2}k g^2$ linear, $\frac{2}{5}k g^{5/2}$ Hertz), zero without contact; friction and damping dissipate; one function per contact law, each with its own data states |
-        | `ConnectorCoordinateSpringDamperExt` | none yet | the spring $\frac{1}{2}k(u-u_\mathrm{off})^2$ plus the bristle of the stick-slip friction $\frac{1}{2}k_b x_b^2$ in its data coordinate |
-        | `ConnectorReevingSystemSprings` | none yet | the axial springs of the rope segments, $\sum\frac{1}{2}\frac{EA}{L}\Delta L^2$ with its own length bookkeeping |
-        | `ConnectorHydraulicActuatorSimple` | none | the energy of the compressed oil is not elastic energy of the structure; first-order pressure states |
-        | all constraints and joints (`ConnectorCoordinate`, `ConnectorCoordinateVector`, `ConnectorDistance`, `Joint...`) | none | ideal constraints do no work |
-        | `ObjectGround`, `ObjectGenericODE1` | none | no motion; first-order coordinates |
-        | the spring-dampers, `GenericODE2`, `FFRF`, `FFRFreducedOrder`, `KinematicTree`, `ANCFCable2D` **with a force user function** | none while the user function is set | the user function defines the force; `PotentialEnergyAvailable()` of the object, and `mbs.Inspect` does not list it |
-
-    - **RG9.4.4** superelements: `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectGenericODE2`,
-      `ObjectKinematicTree` - kinetic energy from the mass matrix, elastic energy from the stiffness matrix
-      where the object has one. **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - and
-      **RG9.4.4.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3-1) - the potential energy of
-      `ObjectKinematicTree`: the springs of the P control, the constant joint forces and the built-in gravity;
-    - **RG9.4.5** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg9-4-5) - what an object **should** provide
-      against what it provides now. **Decided (maintainer, 2026-10-02)**: a rigid body reports a zero potential energy -
-      it may get a built-in gravity later, and then its behavior does not change. So every body provides both,
-      a connector the potential energy only;
-    - **RG9.4.6** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - `LoadPotentialEnergy` and
-      `CreateLoadEnergySensor` in `exudyn.advancedUtilities`. The energy of a load, for constant and mass-proportional loads: the potential of the force
-      through the position of its marker, computed by a user sensor (`LoadEnergyUserSensor`) - a load has no
-      output variable today, only a sensor that reads its value;
-    - **RG9.4.7** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg9-4-3) - `SystemEnergy` in
-      `exudyn.advancedUtilities`. A utility class `SystemEnergy` (a user sensor): its `__init__` collects the objects that
-      provide kinetic and potential energy - with a flag to skip those that should and do not, with the
-      current parameters - and the loads, and `ComputeSystemEnergies` returns the totals, as long as there
-      is no MainSystem function for the energy of the system.
-    - **RG9.4.8** **DONE 2026-10-01** (#2767) — [log](exudynRevisionLog2026b.md#rg9-4-3-1) - the energy tests as
-      **test models**, where users look for examples (maintainer, 2026-10-01): `test_energies.py` goes into
-      `energiesTest.py`, a new `energiesFlexibleBodiesTest.py` keeps the energy of a free oscillation of each beam
-      and plate element and of a kinematic tree (the conservation test this step asked for), and
-      `test_connectorOutputVariables.py` became `connectorOutputVariablesTest.py`; the rule is in `CLAUDE.md` and
-      `docs/dev/WORKFLOW.md` §5. **RG9.4.8.1** **CLOSED 2026-10-01** (maintainer): `test_specialBeams.py` and
-      `test_computedParameters.py` stay in `python/testing/`.
+**RG9.4** **DONE 2026-10-03** (#2202) — [log](exudynRevisionLog2026b.md#rg9-4-2) · [plan text](exudynRevisionLog2026b.md#plan-rg9-4) — Kinetic and potential energy as output variables.
 
 <a id="rg9-5"></a>
-**RG9.5** *(group RG9; maintainer 2026-10-02)* **`mbs.ComputeItem`: the computation functions of an item from Python**
-    (#2779). Python reaches an item's computation only through its output variables (position, velocity, ...). The
-    access functions of a body (`GetPositionJacobian`, `GetRotationJacobian`, `GetJacobianTransposedTimesVectorDerivative`),
-    its `ComputeODE2LHS` and mass matrix, the equations and Jacobians of a constraint, the forces of a connector, the
-    Jacobians of a node or marker are not reachable - which a test of them (RG9.3.8), the debugging of an item and a
-    user who implements one all need. Proposed by the maintainer: an interface like `mbs.Inspect`,
-    `mbs.ComputeItem(itemIndex, what, [optional parameters])`, computing **at the current state** (anything else is far
-    more complicated); as many functions as possible defined once in a base class (`CObjectBody`, `CObjectConnector`,
-    `CNodeODE2`, `CMarker`), each kind adding only its Python interface; and a small Python helper for the numerical
-    derivative (of a position, a rotation matrix, a residual) that makes the comparison of a computed Jacobian a line.
-    - **RG9.5.1** **DECIDED 2026-10-02** (maintainer: the name `mbs.ComputeItem`/`exu.ComputeItemType`, renamed from `ItemCompute` (#2783); the helper in `exudyn.advancedUtilities`; `what=None` the list of what applies to the item; one `vector` for force and torque) — [log](exudynRevisionLog2026b.md#rg9-5) -
-      the evaluation and the proposal, for the maintainer's decisions: which functions per kind of item, the
-      names of `what`, the arguments (local position, force/torque, factors), what is returned (numpy arrays, dicts), how
-      the current state is set (`mbs.systemData`), what a call on an item that does not provide a function raises, and
-      the place of the numerical-derivative helper;
-    - **RG9.5.2** to **RG9.5.5** **DONE 2026-10-02** (#2779) - the access functions of the bodies (position and rotation Jacobians, the derivative of $\Jm^T\fv$, the
-      mass-weighted position Jacobian, `IsValidLocalPosition`) and the helper; then RG9.3.8;
-    - **RG9.5.3** the computation functions of the objects: `ComputeODE2LHS`, the mass matrix, the ODE2 Jacobians;
-    - **RG9.5.4** connectors and constraints: the force on the interface, the algebraic equations, C_q, the reaction
-      forces;
-    - **RG9.5.5** nodes and markers: the node's position and rotation Jacobians and `GetRotationJacobianTTimesVector_q`,
-      the marker's kinematics (L0) and its Jacobians.
-    - **RG9.5.6** **DONE 2026-10-02** (the ODE2 Jacobian and all bodies; `IsValidLocalPosition` and the node Jacobians of
-      algebraic equations left out, see the log) — [log](exudynRevisionLog2026b.md#rg9-5-6) - *(found in RG9.5; needs no
-      decision)* **what `mbs.ComputeItem` does not compute yet** (#2782): the ODE2
-      Jacobian of an object or connector (analytic where it has one, else numerical as the solver does),
-      `IsValidLocalPosition`, the Jacobians of a node with algebraic equations; and the bodies the test of RG9.3.8 does
-      not build yet - `ObjectFFRF`, `ObjectFFRFreducedOrder`, `ObjectKinematicTree`, `ObjectALEANCFCable2D`,
-      `ObjectGenericODE2` -, and the derivative of the Lie group node by composed increments.
-    - **RG9.5.7** *(found in RG9.5.6; maintainer 2026-10-02: the marker stays fixed to the beam, not co-moving with the
-      axial displacement - co-moving makes sense only along a list of beams, as the sliding joints do; observed: the
-      Jacobian agrees, the velocity of the marker does not - [log](exudynRevisionLog2026b.md#rg9-5-7); **DECIDED
-      2026-10-03 (maintainer): left as it is** - the marker velocity keeps the Eulerian term; #2784 closed)*
-      **`ObjectALEANCFCable2D`: what a marker on it is**
-      (#2784): its position Jacobian has a zero column for the ALE coordinate (since #2786, before 8 columns, which failed
-      every connector and load through a body marker after RG14.2.13), while its velocity
-      output - the material velocity - depends on the ALE velocity; off the axis the Jacobian also differs from the
-      derivative of the velocity output by 2 %. Either a marker is a material point (the Jacobian gets the ALE column, and
-      forces act on the ALE coordinate), or a point fixed along the axis (its velocity is J q_t, without the ALE term);
-      and which derivative of the normal is right off the axis.
+**RG9.5** **DONE 2026-10-03** (#2779) — [log](exudynRevisionLog2026b.md#rg9-5) · [plan text](exudynRevisionLog2026b.md#plan-rg9-5) — `mbs.ComputeItem`: the computation functions of an item from Python. (RG9.5.1 to RG9.5.6 done, RG9.5.7 decided to stay as it is)
 
 ## RG10 — Tooling and process
 
@@ -1490,35 +999,7 @@ Open in the tracker for this group: **#2541** (`exudyn.config` and `exudyn.speci
 file, so an editor cannot complete them).
 
 <a id="rg10-1"></a>
-**RG10.1** *(group RG10; maintainer request 2026-09-15; revision2026 step R8.6)* **DONE 2026-09-27**
-    (#2712) — [log](exudynRevisionLog2026b.md#rg10-1) — `exudev scripts <folder>`, a maintainer tool
-    for now, as the maintainer decided for teaching; **it stays a maintainer tool** (maintainer, 2026-09-30).
-    **Checker for user scripts after the 1.12 API changes.** Teaching folders and user projects hold Exudyn scripts written
-    against 1.x. A static checker (parses, never runs) reports per file and line: names the script
-    uses but no longer gets from a star import (`np`, `sin`, `graphics`, ...; revision2026 step R4.22.3), removed
-    names with their replacement (revision2026 step R4.22.1, revision2026 step R4.22.2), and submodules used without their import, with the
-    import line to add. The name lists come from the modules' `__all__` and from the table
-    [API changes for the 1.12 release notes](exudynRevisionInfo2026.md#api-changes-v2), which is
-    complete since the revision closed. Decide then whether it ships in the
-    package (users run it) or stays in `tools/`. It is the mechanical half of the
-    {ref}`revisions chapter <sec-revisions>`: the chapter tells a user what to do, the checker
-    finds the places. Worth having before the 1.13 release (RG1.4), which is when users meet
-    the changes.
-
-    - **RG10.1.1** *(maintainer 2026-09-27)* **running the scripts too** (#2713): copy them into a
-      local space and execute them as the examples are run, with a timeout. A script is checked
-      first for paths that do not travel - absolute ones such as `C:\`, relative ones such as `../`
-      or `..\` - because a copied script with such a path reads or writes elsewhere, or fails for a
-      reason that is not the Exudyn version.
-    - **RG10.1.2** **DONE 2026-09-27** — [log](exudynRevisionLog2026b.md#rg10-1-2) - **the
-      repository's own scripts** (#2714): the checker reports 54 findings in 17 of
-      the 342 examples, test models and mini examples. **Four are real breaks** in scripts that no
-      suite runs - `NGsolveGeometry.py`, `humanRobotInteraction.py` and `stlFileImport.py` call
-      `AddEdgesAndSmoothenNormals` without `graphics.`, `nMassOscillatorEigenmodes.py` uses
-      `graphics` without importing it - and the rest are deprecated forms that still work
-      (`exu.StartRenderer`, `general.drawWorldBasis`, `exu.SolveDynamic`, ...). The examples are
-      what users copy.
-
+**RG10.1** **DONE 2026-09-27** (#2712) — [log](exudynRevisionLog2026b.md#rg10-1) · [plan text](exudynRevisionLog2026b.md#plan-rg10-1) — Checker for user scripts after the 1.12 API changes: exudev scripts, a maintainer tool.
 
 <a id="rg10-2"></a>
 **RG10.2** **DONE 2026-09-23** (#2600) — [log](exudynRevisionLog2026b.md#rg10-2) · [plan text](exudynRevisionLog2026b.md#plan-rg10-2) — The issue table of `exudev issue serve` did not say what its columns are, and left out the priority.
@@ -1539,31 +1020,7 @@ file, so an editor cannot complete them).
 **RG10.5** **DONE 2026-09-23** (#2619) — [log](exudynRevisionLog2026b.md#rg10-5) · [plan text](exudynRevisionLog2026b.md#plan-rg10-5) — VS Code cannot follow a C++ include.
 
 <a id="rg10-6"></a>
-**RG10.6** **DONE 2026-09-24** (#2632) — [log](exudynRevisionLog2026b.md#rg10-6) —
-    **The TestModels imported the test suite to find out whether they are being tested.**
-    Nine lines in every model became one, `testIsActive = exu.sys.get('testIsActive',
-    False)`, and with them went the second way of running a test. The sub-steps, each with
-    its own log entry:
-
-    - **RG10.6.1** — [log](exudynRevisionLog2026b.md#rg10-6-1) — the channel: the runners write
-      `exu.sys['testIsActive']`, read `exu.sys['testResult']` and honour
-      `exu.sys['testTolerance']`, in the in-process runner, in the parallel worker and for
-      the mini examples.
-    - **RG10.6.2** — one model, `bricardMechanism.py`, with an identical number.
-    - **RG10.6.3** — [log](exudynRevisionLog2026b.md#rg10-6-3) — all 129 models, the 98
-      hard-coded `testError = result - <number>` lines gone, every one of the 139 results
-      identical to the run before the sweep.
-    - **RG10.6.4** — the 24 mini examples, which are generated, so the change is in
-      `tools/generators/miniExampleEmitter.py` and in the `miniExample` bodies.
-    - **RG10.6.5** — [log](exudynRevisionLog2026b.md#rg10-6-5) — `modelUnitTests.py` and
-      `runUnitTests.py` are deleted; their ten test functions are test models.
-    - **RG10.6.6** — [log](exudynRevisionLog2026b.md#rg10-6-6) — the documentation, which was a
-      gap and not a correction: `docs/dev/WORKFLOW.md` says what a test model looks like.
-    - **RG10.6.7** — [log](exudynRevisionLog2026b.md#rg10-6-7) — the one hidden tolerance:
-      `kinematicTreeAndMBStest.py` states `exu.sys['testTolerance']` instead of multiplying
-      its result by 1e-7. The only reference solution that moved.
-    - **RG10.6.8** — [log](exudynRevisionLog2026b.md#rg10-6-8) — the seven performance models,
-      `AddTiming` into `exu.sys['testTimings']`, and `ExudynTestStructure` deleted.
+**RG10.6** **DONE 2026-09-24** (#2632) — [log](exudynRevisionLog2026b.md#rg10-6) · [plan text](exudynRevisionLog2026b.md#plan-rg10-6) — The TestModels imported the test suite to find out whether they are being tested.
 
 <a id="rg10-7"></a>
 **RG10.7** **DONE 2026-09-24** (#2638) — [log](exudynRevisionLog2026b.md#rg10-7) · [plan text](exudynRevisionLog2026b.md#plan-rg10-7) — The plan carried the full text of the steps that are finished.
@@ -1591,10 +1048,7 @@ file, so an editor cannot complete them).
 **RG10.13** **DONE 2026-09-29** (#2752) — [log](exudynRevisionLog2026b.md#rg10-13) · [plan text](exudynRevisionLog2026b.md#plan-rg10-13) — `exudev issue plot`.
 
 <a id="rg10-14"></a>
-**RG10.14** *(group RG10; maintainer 2026-09-30)* **DONE 2026-09-30** (#2760) — [log](exudynRevisionLog2026b.md#rg10-14) —
-    **`exudev` runs the pytest files and the MiniExample performance run**: `exudev pytest [--graphics]
-    [--gate] [--record] [-k] [--processes]` and `exudev perf --mini [--full] [--processes] [--only] [--compare]`;
-    `build --complete` runs the pytest files last.
+**RG10.14** **DONE 2026-09-30** (#2760) — [log](exudynRevisionLog2026b.md#rg10-14) · [plan text](exudynRevisionLog2026b.md#plan-rg10-14) — `exudev` runs the pytest files and the MiniExample performance run.
 
 ## RG11 — Misc
 
@@ -1616,174 +1070,16 @@ to what it computes: how a parameter is named, what happens when a name changes,
 find out about the settings of a model. It is the group a user notices most and reads least about.
 
 <a id="rg12-1"></a>
-**RG12.1** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg12-1) *(group RG12; maintainer
-    2026-09-22)* **`simulationSettings` gets the deprecation mechanism** (#2588). `visualizationSettings` has it: a member is marked `Deprecated(since,
-    expires)` in the definitions - 93 members carry it today - and a user who sets the old name
-    is told the new one instead of being ignored. `simulationSettings` uses none of it, although
-    it is the same generator and the same structure machinery, so a renamed solver setting
-    simply disappears.
-    - **RG12.1.1** **DONE 2026-10-03** (#2800) — [log](exudynRevisionLog2026b.md#rg12-1-1) - *(maintainer
-      2026-10-03)* `multithreadedLowerLimit...` instead of `multithreadedLimit...`, which said less; the old
-      `multithreadedLLimit...` forward until 2031 (five years), not 2028.
+**RG12.1** **DONE 2026-10-03** (#2588) — [log](exudynRevisionLog2026b.md#rg12-1) · [plan text](exudynRevisionLog2026b.md#plan-rg12-1) — `simulationSettings` gets the deprecation mechanism.
 
 <a id="rg12-2"></a>
-**RG12.2** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg12-2) *(group RG12; maintainer 2026-09-22)*
-    **Item parameters can be deprecated** (#2589).
-    The case that actually hurts: an item parameter is renamed and every script that used the
-    old name stops working, with no message that says what to write instead. Two levels are
-    possible - the generated classes of `itemInterface.py`, which is one place and covers what a
-    script writes, or the `Get`/`Set` functions of the items themselves, which also covers
-    `mbs.GetObjectParameter`. If it reaches the C++ side, **the deprecated names are searched
-    last**, so that the common case pays nothing.
+**RG12.2** **DONE 2026-10-03** (#2589) — [log](exudynRevisionLog2026b.md#rg12-2) · [plan text](exudynRevisionLog2026b.md#plan-rg12-2) — Item parameters can be deprecated.
 
 <a id="rg12-3"></a>
 **RG12.3** **DONE 2026-09-24** (#2590) — [log](exudynRevisionLog2026b.md#rg12-3) · [plan text](exudynRevisionLog2026b.md#plan-rg12-3) — What did this model actually change?
 
 <a id="rg12-4"></a>
-**RG12.4** *(group RG12; maintainer 2026-09-25)* **DONE 2026-09-26, RG12.4.7 2026-10-03** (#2664, resolved; #2796, #2797) —
-    **A user function is one typed Python function, and
-    everything else is generated from it** (#2664). **After RG3.14** - the descriptions have to be
-    Markdown first, because this step makes the documentation block an output rather than a text.
-
-    Traced for `ObjectGenericODE2.forceUserFunction` on 2026-09-25, the same signature is stated in
-    **five** places and checked in none:
-
-    | where | what it says |
-    |---|---|
-    | `definitions/itemDefsObjects.py`, the `ItemParameter` | `type=TPyFunctionVectorMbsScalarIndex2Vector` |
-    | `definitions/definitionTypes.py` | that type as `std::function<StdVector(const MainSystem&,Real,Index,StdVector,StdVector)>` |
-    | `definitions/itemDefsObjects.py`, the prose | `forceUserFunction(mbs, t, itemNumber, q, q_t)` and an argument table with its own type column |
-    | `python/exudyn/itemInterface.py`, `userFunctionArgsDict` | `[[types], ['mbs','arg0','arg1','arg2','arg3'], ['StdVector']]` |
-    | `src/System/evaluateUserFunctions.cpp` | the call, by hand |
-
-    **The registry already exists and is half filled in**: `userFunctionArgsDict` is generated, is
-    shipped, and `advancedUtilities.py` builds the symbolic function interface out of it - with
-    `arg0` for `t` and `StdVector` for a numpy array. That is the thing to fix, and the rest follows
-    from it.
-
-    **The source is an ordinary Python function**, not a string - the maintainer, 2026-09-25:
-    *"I wanted it ... not to be given in a string, but defined in the Python code ... because this
-    avoids problems in the definition itself and immediately becomes Python"*. It stands in the
-    definition file immediately above the `definitions.append(...)` it belongs to, and is passed to
-    its parameter by object:
-
-    ```python
-    def ObjectGenericODE2_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: Index,
-                                           q: np.ndarray, q_t: np.ndarray) -> np.ndarray:
-        r"""compute the generalized user force vector for the ODE2 equations
-
-        Args:
-            t: current time
-            q: generalized coordinates, $\qv \in \Rcal^{n_{ODE2}}$
-        Returns:
-            the force vector, $\fv_{user} \in \Rcal^{n_{ODE2}}$
-        """
-
-    ... ItemParameter(..., pythonName='forceUserFunction',
-                      userFunction=ObjectGenericODE2_forceUserFunction)
-    ```
-
-    The `def` is named `<Item>_<parameter>` because one definition file holds 35 of them and four
-    are called `forceUserFunction`; **the name the documentation prints is the parameter's**
-    **`pythonName`**, so a page still reads `forceUserFunction(mbs, t, itemNumber, q, q_t)`. The
-    annotation types - `Real`, `Index`, `MainSystem`, `np.ndarray` and five more - are ordinary
-    Python names in `definitions/definitionTypes.py`, so a definition file stays importable and
-    readable in an editor. Nothing is executed: the function object is used only to find its source,
-    which is read with `ast`, so an annotation is reported **as it is written**.
-
-    Note what moved: the **size of an argument is a formula in its description**, not part of its
-    type. That is the maintainer's own correction of the idea and it is what makes the whole thing
-    possible - RG3.14.5 could not put the arguments into a code block because 35 of the 228 rows said
-    the size as a formula, and a formula does not render inside one. Typed as `np.ndarray` and
-    described as $\qv \in \Rcal^{n_{ODE2}}$, both halves are in the right place.
-
-    - **RG12.4.1** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg12-4-1) - the vocabulary: the annotation types and `userFunction=` in `definitions/definitionTypes.py`, and the
-      reader that turns one into names, Python types, the docstring and the `Args:`/`Returns:` lines.
-      `ast` only: the block is parsed, never run, so a type may be a name that does not exist at
-      generation time.
-    - **RG12.4.2** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg12-4-2) - one function,
-      end to end: `ObjectGround.graphicsDataUserFunction`. Its block is generated from the def,
-      `userFunctionArgsDict` carries the real argument names, and the page is unchanged apart
-      from one blank line that was inside the example's code fence. The trial item is not the
-      `ObjectGenericODE2.forceUserFunction` this step first named: that item has four blocks and
-      one shared example, which is a reordering question and not a mechanism question.
-    - **RG12.4.3** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg12-4-3) - the check:
-      the number of arguments, each argument's type, the return type and that the docstring
-      describes every argument, all against the `std::function` that
-      `definitionTypes.userFunctionSignatures` maps the parameter's type to. A size is not
-      compared, because a size is not in the type. `tools/checkDefinitions.py` reports a finding
-      with the file and the line, and the generator refuses to emit.
-    - **RG12.4.4** **DONE 2026-09-25** — [log](exudynRevisionLog2026b.md#rg12-4-4) - a `Protocol`
-      per user function in `itemInterface.py`, generated from the def, **and** the parameter of
-      the item class annotated with it - `Union[ObjectGroundGraphicsDataUserFunction, int]`,
-      because 0 is the value that means no user function. Without the annotation an editor has
-      nothing to complete at the place where a user writes the function.
-    - **RG12.4.5** **DONE 2026-09-26** — the remaining signatures, in the order of the item files; **23 distinct
-      signatures under 17 names in 35 blocks**, so two thirds of the work is naming arguments that
-      are already written down in the prose. A block is converted by a script that refuses what it
-      does not recognise; what it refuses is done by hand.
-        - **RG12.4.5.1** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-4-5-1) - the
-          vocabulary of sizes (`Vector6D`, `Matrix3D`, `Array`, and a size that is not fixed as the
-          leading `$\in ...$` of the argument's description), and the five items of
-          `itemDefsLoads.py` and `itemDefsSensors.py`: six user functions of 23.
-        - **RG12.4.5.2** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-4-5-2) - the
-          connectors of `itemDefsObjects.py`: eight items, ten user functions, of which two
-          documented arguments that do not exist and one was written over two lines.
-          `ObjectConnectorRigidBodySpringDamper` is **not** among them - its second block does not
-          list its arguments at all - and goes with RG12.4.5.3.
-        - **RG12.4.5.3** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-4-5-3) - the
-          bodies, the joint and the rigid body spring damper: **all 34 user functions are defs**.
-        - **RG12.4.5.4** **DONE 2026-09-26** - the gate: `tools/checkDefinitions.py` reports a
-          parameter of a `PyFunction...` type that carries no def, so a new user function cannot be
-          written as prose again.
-    - **RG12.4.6** **DONE 2026-09-26** — [log](exudynRevisionLog2026b.md#rg12-4-6) - what became
-      redundant: the argument table is generated for every user function, the `\_` escapes are
-      gone with RG3.14, and `advancedUtilities`' hand-built `F(...)` message now also names the
-      generated `Protocol`, which is carried in `userFunctionArgsDict` as a fourth entry.
-    - **RG12.4.7** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg12-4-7) (#2796, #2797) *(maintainer,
-      2026-09-25)* — **the `TPyFunction...` group type disappears from a definition**. *"Can the types like `TPyFunctionMbsScalarIndexScalar5` then also be eliminated?
-      They are common interfaces also for the C++-side, but if the automatic mechanisms allow to also
-      generate the appropriate function signatures ... then it would be removed. One could just define
-      every different user function in `PySymbolicUserFunctionSet.h`, instead of having the current
-      groups."*
-
-      **It can, and the def is the source that makes it possible.** Measured 2026-09-25: 24 group
-      names in `definitionTypes.userFunctionSignatures`, named after their signature
-      (`MbsScalarIndexScalar5` = `Real(const MainSystem&,Real,Index,Real,Real,Real,Real,Real)`), used
-      **53 times** in `definitions/` - four items share `MbsScalarIndexScalar5`, four share
-      `VectorMbsScalarIndex2Vector`, and nine names are used once. The group is a **lookup key, not a
-      C++ type**: the generated item header declares the member as the `std::function<...>` text, so
-      nothing in C++ ever names the group except `PySymbolicUserFunctionSet.h`, which declares one
-      member per group and dispatches an if-chain of (item, user function) onto it.
-
-      The def already states the whole signature - once RG12.4.5 gives every argument a **sized**
-      annotation (`Vector6D`, `Matrix3D`, `Vector`, `ArrayIndex`), `cppToAnnotation` is
-      one-to-one and the `std::function<...>` is **derivable from the annotations**. Then `type=` says
-      nothing the def does not.
-
-        - **RG12.4.7.1** — **the proof, changing no output**: derive the `std::function<...>` from
-          each def's annotations and compare it with
-          `definitionTypes.userFunctionSignatures[type]`. Every converted user function must agree,
-          and the comparison joins `CheckAgainstCpp`, which today reads the mapping in one direction
-          only. Nothing is removed while the two disagree anywhere, and a disagreement is a finding
-          with a file and a line, not a broken build.
-        - **RG12.4.7.2** — **the removal**: `type=` goes from a user function parameter, the emitters
-          take the signature from the def, and the group name becomes an emitted detail. Where the
-          generated C++ wants a name it is `<Item><Parameter>` - the name the `Protocol` already has -
-          so `PySymbolicUserFunctionSet.h` can declare one member per user function instead of one per
-          group, which is what the maintainer asked for. **Identical signatures collapse into one member**
-          (maintainer, 2026-09-30).
-
-      **The restriction the maintainer names is real and it is in the symbolic set.** A symbolic user
-      function is evaluated through `EvaluateBool`, `EvaluateReal`, `EvaluateStdVector`,
-      `EvaluateStdVector2D`, `EvaluateStdVector3D` and `EvaluateStdVector6D` - **six** return shapes,
-      and `PySymbolicUserFunctionSet.h` dispatches **15** (item, user function) pairs of the 35.
-      There is no `Evaluate` for `py::object` (graphics data, `MatrixContainer`), for `NumpyMatrix`,
-      or for `StdArrayIndex`/`ConfigurationType` arguments. So one member per user function does not
-      make every user function symbolic: a member can only bind to an `Evaluate` that exists. The step
-      therefore makes the restriction **stated** - the generator says which user functions have no
-      symbolic path, in one place - instead of leaving it to be discovered at the call.
-
+**RG12.4** **DONE 2026-09-26** (#2664) — [log](exudynRevisionLog2026b.md#rg12-4-1) · [plan text](exudynRevisionLog2026b.md#plan-rg12-4) — A user function is one typed Python function, and everything else is generated from it.
 
 <a id="rg12-5"></a>
 **RG12.5** **DONE 2026-09-28** (#2666) — [plan text](exudynRevisionLog2026b.md#plan-rg12-5) — User settings that persist between runs: one `~/.exudyn` file, and what may be in it.
@@ -1816,58 +1112,7 @@ find out about the settings of a model. It is the group a user notices most and 
 **RG3.24** **DONE 2026-09-27** (#2681) — [log](exudynRevisionLog2026b.md#rg3-24) · [plan text](exudynRevisionLog2026b.md#plan-rg3-24) — The generator API still says "Latex".
 
 <a id="rg12-13"></a>
-**RG12.13** **DONE 2026-09-26** (#2686) — [log](exudynRevisionLog2026b.md#rg12-13) —
-    **A stored dialog geometry is used.** `RestoreWindowGeometry` asked
-    `visualizationSettings.dialogs.storeDialogPositions` first and returned early, so what the store
-    button of RG12.11 wrote was never read back - measured: the window was asked for the default
-    `900x700` while `1122x1751+7+14` was stored. **The flag now decides only what its name says**,
-    whether a dialog stores *itself* when it closes, which is where `RememberWindowGeometry` still
-    asks it.
-
-    `StoreDialogPositions(settingsStructure=None)` **asks the structure being edited first**, because
-    `GetRendererSystemContainer()` is None whenever no container is attached to a running renderer: for
-    `python -m exudyn dialogs`, and for any script before `renderer.Start()`, the flag was False
-    however it was set, and such a dialog could never store itself either.
-
-    **And a stored size is cut down to the current screen**, for the reason the position is checked at
-    all: a settings dialog is taller than it is wide and its buttons are in the bottom row, so a size
-    stored on a larger or a rotated monitor put the close button off the screen. The maintainer's own
-    file - 1751 pixels high - is exactly that case on a 1234-pixel screen. The reachability rule for
-    the position is unchanged.
-
-    - **RG12.13.1** *(parked, 2026-09-26)* **the error that could not be reproduced.** The maintainer
-      reported that opening the visualization settings with a `config.json` holding a `dialogs` entry
-      *"reports an error"*. Their exact file, through the load path and through the same dialog built
-      in a withdrawn window, raises **nothing**, and every reader of the section returns what it
-      should. They have since **deleted the file** - *"as it might have been in an invalid state"* -
-      so there is nothing left to chase. It stays here so that a recurrence is recognised rather than
-      investigated from the beginning; what is needed then is the text of the error.
-    - **RG12.13.2** **DONE 2026-09-26** (#2690) **a version in the settings file.** *"there should be a version in
-      the config file, as we may change the structure or anything in the future, and only a version
-      can help to decide whether or how an older file can be used."* The structure changed twice in
-      one day - the `resultsMonitor` section was folded in, the `dialogs` section was added - so the
-      case is real and not hypothetical.
-
-      **Which version is the decision, and it matters more than it looks**: the micro version is
-      derived from the count of resolved issues, so an exact match on the full version
-      (`1.12.95.dev1`) throws a user's settings away **on every issue that is resolved**, and on every
-      patch release.
-
-      **The maintainer chose option C, and said how small it should be**: *"just add a version
-      number 1 for now. As soon as exudyn was released (so no earlier than that makes sense for users
-      out there) AND that we changed behavior of the config.json, we can increment the version just
-      using 2. Very simple, no deep tech; similar as in FEM. But we need a version in the long term,
-      so that we know whether a user stores a very old file that is not readable any more."*
-
-      `overrideSettings.fileFormatVersion = 1` is written into every file by `Save`, always the
-      current one whatever the file said, and `Load` **ignores** a file that does not carry exactly
-      that number, with one note naming both versions and saying to store the settings again. It is
-      never a section and never reaches `exudyn.special.overrideSettings`.
-
-      **And nothing remembers the format that was not versioned** (maintainer, 2026-09-26): *"the
-      config file was just alive a few hours, we don't track something like that in the memory of the
-      code."* The rule is the rule - a file carries the number or it is not read - and the code says
-      that and no more.
+**RG12.13** **DONE 2026-09-26** (#2686) — [log](exudynRevisionLog2026b.md#rg12-13) · [plan text](exudynRevisionLog2026b.md#plan-rg12-13) — A stored dialog geometry is used.
 
 <a id="rg12-14"></a>
 **RG12.14** **DONE 2026-09-26** (#2687) — [log](exudynRevisionLog2026b.md#rg12-14) · [plan text](exudynRevisionLog2026b.md#plan-rg12-14) — The override settings can be read again.
@@ -1879,12 +1124,7 @@ find out about the settings of a model. It is the group a user notices most and 
 **RG12.16** **DONE 2026-09-26** (#2689) — [log](exudynRevisionLog2026b.md#rg12-16) · [plan text](exudynRevisionLog2026b.md#plan-rg12-16) — The render window and the SolutionViewer remember their size and position.
 
 <a id="rg12-19"></a>
-**RG12.19** **DONE 2026-09-27** (#2693) — [log](exudynRevisionLog2026b.md#rg12-19) —
-    **Two buttons: one for the settings, one for the positions**, each showing what it will write
-    before it writes it. The **render window** geometry rides along in the settings button, by the
-    maintainer's decision: *"I opt to store it in the config file in the visualizationSettings, because
-    it is the straightforward way and becomes now natural, because it is only stored if it differs from
-    default."*
+**RG12.19** **DONE 2026-09-27** (#2693) — [log](exudynRevisionLog2026b.md#rg12-19) · [plan text](exudynRevisionLog2026b.md#plan-rg12-19) — Two buttons: one for the settings, one for the positions.
 
 <a id="rg12-20"></a>
 **RG12.20** **DONE 2026-09-27** (#2694) — [log](exudynRevisionLog2026b.md#rg12-20) · [plan text](exudynRevisionLog2026b.md#plan-rg12-20) — Where the render window is, and what happens when the file and the session disagree.
@@ -1988,168 +1228,10 @@ find out about the settings of a model. It is the group a user notices most and 
       form, or the C++ check generated from the declaration first.
 
 <a id="rg12-31"></a>
-**RG12.31** **DONE 2026-10-04** (decided; realized in RG12.34 and RG12.35) *(group RG12; maintainer 2026-10-03: "list them - I decide")* **Settings and item parameters that
-could be renamed or restructured** (#2802). The candidates found by a pass over all members of `SimulationSettings`
-and all parameters of the item definitions; each one is a decision of the maintainer, and each decided one becomes a
-sub-step with its own issue, done with the deprecation of RG12.1/RG12.2 (old name forwarding, removal five years
-after). *Status: the settings answered by the maintainer 2026-10-03 and revised into the map below, **which waits for
-the maintainer's decision to continue**; the item parameters (RG12.31.8 to .16) answered 2026-10-03, realized in
-RG12.35.* Settings, as first
-listed (each with the maintainer's answer):
-    - **RG12.31.1** two `outputPrecision`: the top one is for the console, `solutionSettings.outputPrecision` for the
-      files - `consoleOutputPrecision`, or the top one into a small structure with the other console members
-      (`displayComputationTime`, `displayStatistics`, `displayGlobalTimers`); *answer*: the top one stays,
-      `solutionSettings.outputPrecision` becomes `solution.precision`; the three `display...` become `show.*`;
-    - **RG12.31.2** `linearSolverType` beside `linearSolverSettings` - into it, as `linearSolverSettings.solverType`;
-      *answer*: yes, as `linearSolver.solverType`;
-    - **RG12.31.3** `timeIntegration.simulateInRealtime`, `realtimeFactor`, `realtimeWaitMicroseconds` - a structure
-      `timeIntegration.realtime` (`active`, `factor`, `waitMicroseconds`); *answer*: yes;
-    - **RG12.31.4** `numericalDifferentiation.forODE2connectors` - `forODE2Connectors`, and
-      `staticSolver.constrainODE1coordinates` - `constrainODE1Coordinates` (the capital of every other name);
-      *answer*: yes, Exudyn's camel case;
-    - **RG12.31.5** inside `newton`: `newtonResidualMode` - `residualMode`; `useNewtonSolver` (false = linear) -
-      `useNewton` or `linear` with the opposite meaning; *answer*: `residualMode`, and `active`;
-    - **RG12.31.6** `solutionSettings`: three files with three patterns (`coordinatesSolutionFileName`,
-      `solverInformationFileName`, `restartFileName`; `solutionWritePeriod`, `sensorsWritePeriod`,
-      `restartWritePeriod`; `writeFileHeader`, `sensorsWriteFileHeader`), and `flushFilesDOF` (a number of
-      coordinates) - substructures `solutionFile`, `sensorFiles`, `restartFile` with the same members; the largest
-      one, and the one most scripts use; *answer*: `solution.file` for everything of the coordinates solution file,
-      its `export...` flags in `solution.file.export`, and `solution.sensors`, `solution.restart`;
-    - **RG12.31.7** `explicitIntegration.dynamicSolverType` selects the explicit solver only - `explicitSolverType`;
-      *answer*: `timeIntegration.solverType` (default `GeneralizedAlpha`), so that the solver is visible in the settings
-      and a second implicit solver has its switch; `mbs.SolveDynamic` adapted; and `explicitIntegration` becomes
-      `explicit`;
-    - **RG12.31.17** *(maintainer 2026-10-03)* **no substructure ends in `Settings`** - a design flaw:
-      `solutionSettings` becomes `solution`, `linearSolverSettings` becomes `linearSolver`; the names of the classes
-      (`SolutionSettings`, ...) stay.
-
-  **The map, revised from the answers** - every name of `SimulationSettings` that changes; the old one forwards with a
-  `DeprecationWarning` until 2031 (all of them existed in 1.11.0). Marked **(?)**: where the answer left a choice, or
-  where something looked strange to me - for the maintainer to confirm before anything is changed.
-
-  | old | new |
-  |---|---|
-  | `displayComputationTime`, `displayStatistics`, `displayGlobalTimers` | `show.computationTime`, `show.statistics`, `show.globalTimers` **(?)** lower case as every member, not `show.ComputationTime` |
-  | `outputPrecision` (console) | stays |
-  | `linearSolverSettings` | `linearSolver` |
-  | `linearSolverType` | `linearSolver.solverType` |
-  | `solutionSettings` | `solution` |
-  | `solutionSettings.outputPrecision` | `solution.precision` (solution and sensor files) |
-  | `solutionSettings.writeSolutionToFile` | `solution.file.write` **(?)** or `solution.file.active`, as `newton.active` |
-  | `solutionSettings.coordinatesSolutionFileName` | `solution.file.fileName` **(?)** or `solution.file.name` |
-  | `solutionSettings.solutionWritePeriod` | `solution.file.writePeriod` |
-  | `solutionSettings.appendToFile` | `solution.file.append` |
-  | `solutionSettings.binarySolutionFile` | `solution.file.binary` |
-  | `solutionSettings.writeFileHeader`, `writeFileFooter` | `solution.file.writeHeader`, `solution.file.writeFooter` |
-  | `solutionSettings.writeInitialValues` | `solution.file.writeInitialValues` |
-  | `solutionSettings.solutionInformation` | `solution.file.information` (the text written into its header) |
-  | `solutionSettings.flushFilesDOF` | `solution.file.flushAboveCoordinates` **(?)** a number of coordinates above which the file is always flushed |
-  | `solutionSettings.exportVelocities`, `exportAccelerations`, `exportODE1Velocities`, `exportAlgebraicCoordinates`, `exportDataCoordinates` | `solution.file.export.velocities`, `.accelerations`, `.ODE1Velocities`, `.algebraicCoordinates`, `.dataCoordinates` |
-  | `solutionSettings.sensorsStoreAndWriteFiles` | `solution.sensors.active` **(?)** it switches storing and writing of all sensors |
-  | `solutionSettings.sensorsWritePeriod`, `sensorsAppendToFile` | `solution.sensors.writePeriod`, `solution.sensors.append` |
-  | `solutionSettings.sensorsWriteFileHeader`, `sensorsWriteFileFooter` | `solution.sensors.writeHeader`, `solution.sensors.writeFooter` |
-  | `solutionSettings.writeRestartFile`, `restartFileName`, `restartWritePeriod` | `solution.restart.write`, `solution.restart.fileName`, `solution.restart.writePeriod` (as `file`, whichever is decided there) |
-  | `solutionSettings.flushFilesImmediately` | `solution.flushFilesImmediately` (all files) |
-  | `solutionSettings.solverInformationFileName` | `solution.solverInformationFileName` **(?)** a file of its own; or `solution.solverInformation.fileName` |
-  | `solutionSettings.recordImagesInterval` | `solution.recordImagesInterval` **(?)** images, not a file of the solution; stays where it is |
-  | `timeIntegration.simulateInRealtime`, `realtimeFactor`, `realtimeWaitMicroseconds` | `timeIntegration.realtime.active`, `.factor`, `.waitMicroseconds` |
-  | `timeIntegration.explicitIntegration` | `timeIntegration.explicit` **(?)** `explicit` is a keyword of C++: the Python name only, the C++ member keeps another name (`cplusplusName`) |
-  | `timeIntegration.explicitIntegration.dynamicSolverType` | `timeIntegration.solverType`, default `GeneralizedAlpha` |
-  | `newton.newtonResidualMode`, `newton.useNewtonSolver` | `newton.residualMode`, `newton.active` (time integration and static solver, a shared structure) |
-  | `newton.numericalDifferentiation.forODE2connectors` | `newton.numericalDifferentiation.forODE2Connectors` |
-  | `staticSolver.constrainODE1coordinates` | `staticSolver.constrainODE1Coordinates` |
-
-  **`mbs.SolveDynamic` and `timeIntegration.solverType` (?)**: `solverType=None` as the default of `SolveDynamic`, which
-  then takes `timeIntegration.solverType` (default `GeneralizedAlpha` - the same result as today); a `solverType` given
-  to `SolveDynamic` overrides the setting for that call, **without writing it into the settings** - today it writes
-  `explicitIntegration.dynamicSolverType` into the user's `simulationSettings` and leaves it there, which is the kind of
-  side effect #2535 removed for `useNewmark`. The C++ explicit solver reads the setting as now.
-
-  **What stays as it is**: `parallel.*` (renamed in RG12.1.1), `pauseAfterEachStep`, `cleanUpMemory`, the members of
-  `staticSolver` and `timeIntegration` not in the table, the class names; `visualizationSettings`, whose substructures
-  carry no `Settings`.
-
-  **One mechanism to check first**: a deprecated **substructure** (`solutionSettings`, `linearSolverSettings`,
-  `explicitIntegration`) forwarding to the renamed one, so that `simulationSettings.solutionSettings.sensorsWritePeriod`
-  reaches `solution.sensors.writePeriod`: the old member names then stay as deprecated members of the renamed class,
-  forwarding to their new place by a path from the top structure (RG12.1). RG12.1 forwards plain members; whether a
-  deprecated member of structure type works the same - and in a structure that two places share (`NewtonSettings`) -
-  is RG12.34.1.
-
-  Item parameters:
-    - **RG12.31.8** `ObjectJointGeneric.axesRadius/axesLength` against `axisRadius/axisLength` of
-      `JointRevoluteZ`/`JointPrismaticX` (visualization) - one spelling; *answer*: **keep** - the generic joint has
-      several axes;
-    - **RG12.31.9** radii: `radiusSphere` (`ContactSphereTorus`, `ContactSphereTriangle`) - `sphereRadius`, as
-      `circleRadius`, `discRadius`, `cylinderRadius` (`ContactConvexRoll.rBoundingSphere` is read-only and computed, no
-      longer given by a user, and needs no deprecation); *answer*: yes, `sphereRadius`;
-    - **RG12.31.10** the friction of `ObjectConnectorCoordinateSpringDamperExt`: `fDynamicFriction`,
-      `fStaticFrictionOffset`, `fViscousFriction` - without the `f`, as in `ContactConvexRoll`; *answer*: the `f` is
-      *force* - these are forces, the normal force included, not coefficients as in `ContactConvexRoll` -, so the
-      word goes to the end: `dynamicFrictionForce`, `staticFrictionOffsetForce`, `viscousFrictionForce` **(?)** the last
-      one has the unit N/(m s) in its description, which is not a force: a force per velocity would be N s/m - a
-      wrong unit, or a name that should not end in `Force`;
-    - **RG12.31.11** `constrainRotation` (`JointPrismatic2D`, `JointSliding2D`) against `constrainRotations`
-      (`JointSliding`, beside `constrainTranslations`) - one form; *answer*: **keep** - a 2D joint has one rotation;
-    - **RG12.31.12** `ObjectConnectorCoordinate.factorValue1` against `factor0`/`factor1` of
-      `CoordinateSpringDamperExt` - `factor1`; *answer*: yes;
-    - **RG12.31.13** `ObjectConnectorRollingDiscPenalty` has `viscousFriction` and `rollingFrictionViscous` -
-      `rollingViscousFriction`, if both stay; *answer*: yes, both stay (different meanings), `rollingViscousFriction`
-      **(?)** its description says *rolling friction [SI:1] ... a force proportional to the contact normal force* - a
-      coefficient of Coulomb type, not proportional to a velocity; then `rollingFriction` would say what it is, and
-      "viscous" would mislead;
-    - **RG12.31.14** `MarkerSuperElementRigid.useAlternativeApproach` says nothing - `useAlternativeRotationMode`
-      (the name of the C++ argument since RG9.3.4.4); *answer*: true, but **keep** - `MarkerSuperElementRigid` is
-      revised later, not now;
-    - **RG12.31.15** the prefix `physics` (`physicsMass`, `physicsInertia`, `physicsAxialStiffness`, ... - 30
-      parameters of bodies and finite elements) that connectors (`stiffness`, `damping`) and contacts do not
-      have - drop it, or keep it as the mark of a body's physical data; touches most scripts, so for 2.0 if at all;
-      *answer*: **drop it, now** (in 1.13): the geometric and kinematic parameters are physics as well and carry no
-      such mark, and for the beams it makes no sense; users adapt, and can switch the warnings off. 27 names, no
-      collision with an existing parameter of the same item (checked): `physicsMass` - `mass`, `physicsInertia` -
-      `inertia`, `physicsCenterOfMass` - `centerOfMass`, `physicsLength`, `physicsMassPerLength`, `physicsDensity`,
-      `physicsThickness`, the stiffnesses and dampings of the beams and plates (`axialStiffness`, `bendingDamping`,
-      `torsionalBendingStiffness`, ...), `physicsReferenceAxialStrain`, `physicsReferenceCurvature`,
-      `physicsCrossSectionInertia`, `physicsMassProportionalDamping`, `physicsCurvatureCoefficients`,
-      `physicsStrainCoefficients`, `physicsMovingMassFactor`, `physicsAddALEvariation` - `addALEvariation`,
-      `physicsUseCouplingTerms` - `useCouplingTerms`, and the read-only `physicsCenterOfMassTilde`; about 290 scripts
-      and documents and 310 places in `src/` use them **(?)** the C++ members renamed with them (one name everywhere,
-      rule 10), or only the Python names, with `cplusplusName` keeping the old C++ name (a smaller diff, two names);
-    - **RG12.31.16** flags in three patterns (`intrinsicFormulation`, `classicalFormulation`,
-      `usePenaltyFormulation`, `useReducedOrderIntegration`) - `use...` for all, the lowest priority; *answer*: yes:
-      `intrinsicFormulation` - `useIntrinsicFormulation` (`RigidBodySpringDamper`), `classicalFormulation` -
-      `useClassicalFormulation` (`JointSliding2D`).
-
-  Not listed: `localPosition` of the rigid markers beside `localHT` (its deprecation is RG14.2.15/RG16.5), the
-  names of the internal members (`temp...`, RG14.2.16), and `axisMarker0` of `LinearSpringDamper`/`JointPrismatic2D`,
-  an axis and not a rotation, which stays.
+**RG12.31** **DONE 2026-10-04** (#2802) — [plan text](exudynRevisionLog2026b.md#plan-rg12-31) — Settings and item parameters that could be renamed or restructured.
 
 <a id="rg12-34"></a>
-**RG12.34** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg12-34) *(group RG12; maintainer 2026-10-03; the
-map of RG12.31 confirmed 2026-10-04)* **The simulation settings renamed and restructured as decided in RG12.31** (#2813) - every change a deprecation needs, so that nothing
-of Exudyn uses an old name afterwards and every user script keeps working with a warning until 2031:
-    - **RG12.34.1** the mechanism: a deprecated member of structure type (a renamed substructure) forwarding, also for
-      a shared structure, and the old member names as deprecated members of the renamed classes; a test of it before
-      the definitions change;
-    - **RG12.34.2** `definitions/structureDefsSimulationSettings.py`: the new substructures (`show`, `solution.file`,
-      `solution.file.export`, `solution.sensors`, `solution.restart`, `timeIntegration.realtime`), the renamed members,
-      every old name as `Deprecated('1.12...', 2031)` with its new path; descriptions that name an old name;
-    - **RG12.34.3** the C++ that reads the settings (`src/`, some 60 places of `solutionSettings.` alone), and the
-      solvers for `timeIntegration.solverType`;
-    - **RG12.34.4** the Python library: `exudyn.solver` (`SolveDynamic(solverType=None)`, no writing into the
-      settings), the utilities, the GUI dialogs and the results monitor, `processing.py`; nothing in `python/exudyn` uses
-      an old name (`exudev scripts python/exudyn` reports nothing);
-    - **RG12.34.5** **`exudev scripts --fix`**: rewrites the renamed settings in a script, from the same table of
-      deprecations - a tool for users as well; then the scripts of the repository with it: `Examples`, `TestModels`,
-      `MiniExamples` (from the definitions), `PerformanceModels`, `pytest` files, `tmp/` not; some 330 files use an old
-      name today; the test suite with unchanged results is the check;
-    - **RG12.34.6** the documentation: the user manual (tutorials, `solver.md`, the getting-started pages, the FAQ),
-      the descriptions in `definitions/` and the docstrings that name a setting, the pybind descriptions,
-      `revisions.md` (one paragraph with the table); the generated pages follow;
-    - **RG12.34.7** the tests: a test model that sets and reads every old name and finds it at its new place (generated
-      from the deprecations, so that it cannot miss one), `parameterConversionTest` and the stubtest baseline, the
-      settings dialog (its tree shows the new structure), dictionaries of settings stored by an earlier version
-      (`SetDictionary` with old keys - forwarded, or refused with the new name).
+**RG12.34** **DONE 2026-10-04** (#2813) — [log](exudynRevisionLog2026b.md#rg12-34) · [plan text](exudynRevisionLog2026b.md#plan-rg12-34) — The simulation settings renamed and restructured as decided in RG12.31.
 
 <a id="rg12-36"></a>
 **RG12.36** *(group RG12; maintainer 2026-10-04; later)* **Two Newton structures, and the modified Newton by default in
@@ -2159,93 +1241,13 @@ its own defaults - above all `timeIntegration.newton.useModifiedNewton = True`, 
 the results of many test models (iterations, step sizes): the test suite is evaluated again, model by model, before.
 
 <a id="rg12-35"></a>
-**RG12.35** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg12-35) *(group RG12; maintainer 2026-10-03; the
-answers on the marks (?) 2026-10-04: `viscousFrictionFactor`, `rollingViscousFriction` with the unit s/m, the C++
-members renamed with them)* **The item parameters renamed as decided in RG12.31** (#2814): `sphereRadius`, the three friction forces of
-`CoordinateSpringDamperExt`, `factor1`, `rollingViscousFriction`, `useIntrinsicFormulation`, `useClassicalFormulation`,
-and the prefix `physics` dropped from 27 parameters - every old name a renamed parameter of RG12.2 (forwarding with a
-warning until 2031; all existed in 1.11.0):
-    - **RG12.35.1** `definitions/itemDefs*.py`: the new names, the old ones as `ItemParameter(..., deprecated=
-      Deprecated(...), description=r'<new name>')`, the descriptions and MiniExamples that name an old one; the C++
-      members as decided;
-    - **RG12.35.2** the C++ that uses the members (`src/`, about 310 places for `physics...`);
-    - **RG12.35.3** the Python library: the `Create...` functions whose arguments carry the names (`CreateMassPoint(physicsMass=...)`,
-      ...) - the new argument names, the old ones as `DeprecatedArgument`; `rigidBodyUtilities`, `FEM`, `beams`,
-      `robotics`; nothing in `python/exudyn` uses an old name;
-    - **RG12.35.4** the scripts with `exudev scripts --fix` (RG12.34.5), which then also rewrites renamed item
-      parameters - keyword of an item class and key of an item dictionary; Examples, TestModels, MiniExamples,
-      PerformanceModels; the test suite unchanged;
-    - **RG12.35.5** the documentation: manual, tutorials, the item pages (generated), `revisions.md` with the table;
-    - **RG12.35.6** the tests: the old names forward (a test model generated from the declarations), the reference of
-      `parameterConversionTest`, the stubtest baseline, `exudev scripts` over the repository reports nothing but the
-      deprecation tests.
+**RG12.35** **DONE 2026-10-04** (#2814) — [log](exudynRevisionLog2026b.md#rg12-35) · [plan text](exudynRevisionLog2026b.md#plan-rg12-35) — The item parameters renamed as decided in RG12.31.
 
 <a id="rg12-32"></a>
-**RG12.32** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg12-32) *(group RG12; maintainer 2026-10-03: "think
-about the user"; proposal **accepted** 2026-10-03, with .5 added)* **A deprecation warns where the user wrote the
-deprecated name** (#2804). The warning about
-`rotationMarker0/1` (RG14.2.15) comes from `CheckPreAssembleConsistency`, so Python attributes it to the line of
-`mbs.Assemble()`, and the message has to say which item - the user still searches for the line that wrote it.
-*Proposal:*
-    - **RG12.32.1** **one switch**, `exudyn.special.deprecations` (a small module, like `exudyn.special.userInterface`):
-      `warnOnce = True` (default) - each deprecated name warns once per session, a set of the names already warned
-      about; `warnOnce = False` - every use warns, for debugging a script; one function `Warn(key, message,
-      stacklevel)` that all deprecations call, from Python and - through `PyDeprecated`, which imports it - from C++:
-      the settings of RG12.1, the item renames of RG12.2, the renderer functions and the deprecated parameters. The
-      one-per-session flag in C++ (RG14.2.15) goes. Changes RG12.1/RG12.2 from "every use" to "once per name", and
-      their two test models count accordingly.
-    - **RG12.32.2** **declared, not hand-written**: an item parameter that stays but is deprecated (no new name:
-      `rotationMarker0/1`) gets `deprecated=Deprecated(since, expires, stays=True)` and its advice as
-      `deprecatedAdvice`; RG12.2's renames keep theirs. The generators emit the warning **in the item class of
-      `itemInterface.py`**, when the argument differs from the default, with the stacklevel of the user's call - so
-      the warning names the line `ObjectJointGeneric(..., rotationMarker0=A)` - and in the generated
-      `SetWithDictionary`/`SetParameter` for the dictionary and `SetObjectParameter` paths (one warning per
-      call path, the switch decides). `CheckPreAssembleConsistency` of the five items goes back to what it was.
-    - **RG12.32.3** **no warning from the library itself**: a `Create...` function given a `MarkerIndex` with a
-      rotation adds a copy of that marker with the composed `localHT` (as `_MarkerWithRotation` of the robotics),
-      instead of passing the rotation on in the deprecated parameter.
-    - **RG12.32.4** **`exudev scripts` reports deprecated item parameters** (#2805, **DONE**): `checkUserScripts.py` reads
-      the declarations of RG12.32.2 and RG12.2 from `definitions/` and reports a keyword of an item class
-      (`ObjectJointGeneric(rotationMarker0=...)`, also through `GenericJoint`) and a key of an item dictionary
-      (`'rotationMarker0':`) with the advice; and the removed `ObjectContactCurveCircles.rotationMarker0` (#2803) in
-      its table of removed names. Independent of .1-.3 for the reading part.
-    - **RG12.32.5** *(maintainer 2026-10-03)* **every use is recorded** (#2806, **DONE**): `exu.sys['deprecationUse']`,
-      grouped by source (`simulationSettings`, `visualizationSettings`, `items`, `functions`), a count per name;
-      always written, `exu.special.deprecations.recordUse = False` turns it off. A test reads it instead of catching
-      warnings.
-
-  *Done as proposed (.1-.5), with one change in .2*: the warning of an item parameter is generated into
-  `SetWithDictionary`/`SetParameter` only, not also into the Python item class - the class only builds the dictionary,
-  so warning there too would warn twice for one use; since `AddObject` is called from the user's script, the warning
-  names that line all the same.
+**RG12.32** **DONE 2026-10-03** (#2804, #2805, #2806) — [log](exudynRevisionLog2026b.md#rg12-32) · [plan text](exudynRevisionLog2026b.md#plan-rg12-32) — A deprecation warns where the user wrote the deprecated name, once, and is counted.
 
 <a id="rg12-33"></a>
-**RG12.33** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg12-33) *(group RG12; maintainer 2026-10-03:
-"deprecation also in the library ... outdated parameters rejected by some build check"; proposal **accepted** 2026-10-03)* **Deprecations of the Python library, declared
-and checked** (#2807). The C++ side declares each deprecation with `Deprecated(since, expires)` in `definitions/`; the
-Python library does it by hand - a docstring saying DEPRECATED, an `exu.Print('WARNING: ...')` - about 20 places
-(`AddRevoluteJoint`, `AddPrismaticJoint`, `AddRigidBody`, `AddSensorRecorder`, `bodyList` and `eulerParametersRef` of
-the `Create...`/FEM functions, two arguments of `GeneticOptimization`, `GenerateStraightLine...` of `beams`,
-`ReadNodesFromAbaqusInp`, ...), without a version, without a year of removal and with nothing that finds them.
-*Proposal:*
-    - **RG12.33.1** **one notion, the same everywhere**: every deprecation carries `since` and `expires` (a year), and
-      is found by the one word `Deprecated(`. In the library: `exudyn.misc.deprecation` with `Deprecated(since, expires,
-      use=...)` as a **decorator** of a function (`@Deprecated('1.9', 2031, use='mbs.CreateRevoluteJoint')`) and a
-      function `DeprecatedArgument(name, value, since, expires, use=...)` for an argument; both call
-      `exu.special.deprecations.Warn('library', '<module>.<function>[.<argument>]', ...)` - so the library warns, once
-      per session, counted in `deprecationUse['library']`, like the C++. The docstring line is written by the decorator
-      (no second place). The hand-written C++ deprecations (`PyDeprecated` of the renderer and the module functions)
-      get `since`/`expires` too, as arguments.
-    - **RG12.33.2** **the existing ones moved to it**, with `since` from the history (the release that deprecated
-      them; the version where unknown: 1.12) and `expires` five years after that, at least 2027 - each one listed in
-      the step for the maintainer to confirm or remove at once.
-    - **RG12.33.3** **a build check**, `tools/checkDeprecations.py`, part of `exudev generate --all-checks`: collects
-      all deprecations - `definitions/` (settings, item parameters, functions), the decorators and `DeprecatedArgument`
-      calls of `python/exudyn` (AST), the `PyDeprecated` calls of `src/` - and **fails** for one whose year has come
-      (outdated: to be removed), **warns** for one in its last year, and **fails** for a deprecation without `expires`;
-      it writes the list as a page of the developer documentation (what, where, since, expires), generated.
-    - **RG12.33.4** `exudev scripts` reads the library's deprecations from the same collection, so a user script that
-      calls `AddRevoluteJoint` or passes `bodyList` is reported as well.
+**RG12.33** **DONE 2026-10-03** (#2807) — [log](exudynRevisionLog2026b.md#rg12-33) · [plan text](exudynRevisionLog2026b.md#plan-rg12-33) — Deprecations of the Python library, declared and checked.
 
 ## RG13 — Item documentation
 
@@ -2262,14 +1264,7 @@ What depends on it: the graphics regression test takes every item through its Mi
 **RG13.1** **DONE 2026-09-27** (#2715) — [log](exudynRevisionLog2026b.md#rg13-1) · [plan text](exudynRevisionLog2026b.md#plan-rg13-1) — The state of the documentation, item by item.
 
 <a id="rg13-2"></a>
-**RG13.2** *(group RG13; maintainer 2026-09-27)* **CLOSED 2026-09-28** - done by RG13.4 and RG13.5
-    (maintainer's decision). **What the ideal documentation of an item contains**
-    (#2716), per item type - node, object, marker, load, sensor - and per kind of object - body,
-    connector, constraint, and the other object types. From that and the table of RG13.1: **a
-    detailed plan that makes it work** for every item, as further steps of this group.
-
-    The maintainer's direction - what *equations* means per kind, and a general section per kind -
-    is in the [log](exudynRevisionLog2026b.md#decisions-2026-09-29).
+**RG13.2** **CLOSED 2026-09-28** — [log](exudynRevisionLog2026b.md#decisions-2026-09-29) · [plan text](exudynRevisionLog2026b.md#plan-rg13-2) — What the ideal documentation of an item contains.
 
 <a id="rg13-3"></a>
 **RG13.3** *(group RG13; maintainer 2026-09-27)* **Each description synchronized once with its
@@ -2293,114 +1288,10 @@ What depends on it: the graphics regression test takes every item through its Mi
 **RG13.4** **DONE 2026-09-29** (#2721) — [log](exudynRevisionLog2026b.md#rg13-4) · [plan text](exudynRevisionLog2026b.md#plan-rg13-4) — The development documents per item type.
 
 <a id="rg13-5"></a>
-**RG13.5** *(group RG13; maintainer 2026-09-27)* **The documentation of the items, written by the
-    documents of RG13.4** (#2725) - **DONE 2026-09-28**, `ObjectBeamGeometricallyExact` on 2026-09-30 by
-    RG4.8.9. *"start a new step RG13.5, which adds according documentation for
-    these types, again adding 13.5.1 for nodes, .2 for objects, ..."*. A kind is written when its
-    document of RG13.4 is agreed: nodes, loads and sensors now, objects and markers after them.
-
-    - **RG13.5.0** **the frame the pages are written into**, first (maintainer's decision,
-      2026-09-27):
-      - **RG13.5.0.1** **DONE 2026-09-27** (#2724) — [log](exudynRevisionLog2026b.md#rg13-5-0-1) -
-        the fields of an item: `classDescription` is `overallDescription` - the brief text, used for
-        the class, the docstring and the paragraph under the heading - and `equations` is
-        `detailedDescription`, the full text after the generated part of the page. Items only; the
-        structures keep `classDescription`.
-      - **RG13.5.0.2** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-0-2) - the
-        general section of each kind of item, in a new definitions file
-        `definitions/itemKindDefinitions.py` (maintainer's decision), with an `overallDescription` -
-        today's paragraph of the index page - and a `detailedDescription`, written by .1 to .5.
-      - **RG13.5.0.3** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-0-3) - the
-        generated frame of every item page: *Interface* instead of *Additional information*, the
-        types in words (which markers, nodes, connectors and loads fit), the Python names on one
-        line, headings of their own for parameters, output variables and the detailed description;
-        `requestedNodeTypes` declared for the node markers. Generating the C++ check of the node
-        markers from that declaration is #2727.
-      - **RG13.5.0.4** **DONE 2026-09-28** (#2727) — [log](exudynRevisionLog2026b.md#rg13-5-0-4) -
-        **the declared node types and the C++ check agree, and a test says so.** Every node marker
-        with a declaration is attached to every node; what `Assemble()` accepts must be what
-        `requestedNodeTypes` says (48 combinations, all agree), and a node marker that measures a
-        position or an orientation without a declaration fails. The C++ check is not generated
-        from the declaration: it is one rule on the marker type bits for all markers, not one per
-        marker, and the test is what keeps the two from drifting apart.
-      - **RG13.5.0.5** **DONE 2026-09-28** (#2729) — [log](exudynRevisionLog2026b.md#rg13-5-0-5) -
-        **every item on a new page of the PDF** (maintainer): a raw LaTeX `\clearpage` opens every
-        generated item page; the HTML build ignores it.
-      - **RG13.5.0.7** **DONE 2026-09-29** (#2739) — [log](exudynRevisionLog2026b.md#rg13-5-0-7) -
-        **the general section of a kind is a page of its own** (maintainer): *Node* -> *General info
-        for all nodes* with its sub-sections -> `NodePoint`, `NodePoint2D`, ... as siblings; no
-        *Items* heading.
-      - **RG13.5.0.8** **DONE 2026-09-29** (#2741) — [log](exudynRevisionLog2026b.md#rg13-5-0-8) -
-        **parameter tables** (maintainer): the symbol opens the description, `(symbol: $\fv$)`, instead
-        of following the name; the columns of the parameter, output variable and marker tables have
-        fixed widths in the PDF.
-      - **RG13.5.0.6** **DONE 2026-09-29** (#2737) — [log](exudynRevisionLog2026b.md#rg13-5-0-6) -
-        **the Create functions and the examples of a page, declared** (maintainer): a line
-        **Simpler** before the parameters names the Create functions that add an object or load
-        (`createFunctions`), and mentions of them in the texts are kept to that line; the basic items
-        and all sensors name their examples (`examples`), the others keep the search by name.
-    - **RG13.5.1** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-1) - nodes - the
-      table of coordinates, the frame and interpretation, the action on the equations of motion,
-      constraints, singularities; the slopes of the slope nodes. Found on the way: the Euler parameter
-      constraint is the node's, not the object's, and the default slopes of two nodes were parallel
-      (#2728, corrected on the maintainer's decision the same day).
-    - **RG13.5.2** objects, by group (maintainer 2026-09-28), bodies first:
-      - **RG13.5.2.1** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-1) - bodies -
-        rigid bodies, mass points, 1D masses, ground; with the general section of the bodies: marker
-        interfaces and the approach to the Jacobians.
-      - **RG13.5.2.2** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-2) - flexible
-        bodies - the nonlinear finite elements; `ObjectBeamGeometricallyExact` by RG4.8.9. Found on
-        the way: `ObjectANCFCable` declared an angular velocity it does not have (#2733, corrected).
-      - **RG13.5.2.3** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-3) - super
-        elements - FFRF, reduced order FFRF, generic ODE2, kinematic tree. Found on the way: two of them
-        admit body markers that fail (RG4.10, #2734).
-      - **RG13.5.2.4** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-4) - connectors -
-        spring-dampers, contact, penalty joints. Found on the way: two defects of
-        `ObjectContactCoordinate` (RG4.11, #2735).
-      - **RG13.5.2.5** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-5) - constraints
-        and joints.
-      - **RG13.5.2.6** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-2-5) - the general
-        objects - `ObjectGenericODE1`.
-      - **RG13.5.2.7** *(maintainer 2026-09-30)* **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg13-5-2-7) -
-        the pages of `ObjectFFRF` and `ObjectFFRFreducedOrder` linked three example pages, which the PDF
-        leaves out (#2758): the scripts are named and listed in the field `examples`, and
-        `tools/checkDefinitions.py` rejects such a link.
-    - **RG13.5.3** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-3) - markers - the
-      general marker section with the generated table of all markers, and **Marker quantities** and
-      **Jacobians** for the 13 markers that had little or no text; the five with long texts of their
-      own (the two relative-coordinate markers, the two superelement markers, the kinematic tree
-      marker) keep them. Found on the way: the shape markers accept any body (RG4.9, #2731).
-      - **RG13.5.3.1** **DONE 2026-09-29** (#2738) — [log](exudynRevisionLog2026b.md#rg13-5-3-1) -
-        the HTML comments of `MarkerSuperElementRigid` removed, what was valid of them restored as
-        text; `MarkerKinematicTreeRigid` written from the C++. Found on the way: the prismatic joint
-        Jacobian of `ObjectKinematicTree` (RG4.13, #2740).
-    - **RG13.5.4** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-4) - loads - the
-      load, its frame, the generalized forces with the transformation.
-    - **RG13.5.5** **DONE 2026-09-28** — [log](exudynRevisionLog2026b.md#rg13-5-5) - sensors - the
-      general sensor section, and each sensor with what is its own.
+**RG13.5** **DONE 2026-09-30** (#2725) — [log](exudynRevisionLog2026b.md#rg13-5-0-1) · [plan text](exudynRevisionLog2026b.md#plan-rg13-5) — The documentation of the items, written by the documents of RG13.4. (nodes, objects, markers, loads, sensors written; ObjectBeamGeometricallyExact by RG4.8.9)
 
 <a id="rg13-6"></a>
-**RG13.6** *(group RG13; maintainer 2026-09-28)* **A MiniExample for every item** (#2732) - the goal
-    RG13 was created with: the short script under *Mini example* on the page of every item, run by the
-    test suite. 74 of the 97 items have none (RG13.1). RG2.3.3.5 takes every item through its
-    MiniExample and waits for this. It starts with nodes, markers, loads and sensors, whose examples
-    are short, and follows the pages of RG13.5 kind by kind.
-
-    **What a MiniExample is**: [definitions/README.md](../../definitions/README.md) §*The mini
-    example*.
-
-    - **RG13.6.1** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-6-1) - nodes (15 of
-      16; `NodeGenericAE` waits for RG4.12, #2736).
-    - **RG13.6.2** to **RG13.6.4** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-6-2) -
-      markers, loads, sensors: every one has a MiniExample.
-    - **RG13.6.5** **DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg13-6-5) - objects: all but
-      three have a MiniExample.
-    - **RG13.6.6** *(maintainer 2026-09-29: later; #2732 closed 2026-10-03, the step is in the list
-      [*not decided to be resolved*](#not-decided))* `ObjectFFRF` and `ObjectFFRFreducedOrder` get their
-      MiniExamples when tetrahedral finite elements are part of Exudyn itself; until then a mesh comes from
-      a file or from NGsolve, and their pages name a complete model instead (`NGsolveFFRF.py`,
-      `NGsolveCMStutorial.py`, `objectFFRFreducedOrderTest.py`). `ObjectBeamGeometricallyExact` has its
-      MiniExample since RG4.8.9.
+**RG13.6** **DONE 2026-10-03** (#2732) — [log](exudynRevisionLog2026b.md#rg13-6-1) · [plan text](exudynRevisionLog2026b.md#plan-rg13-6) — A MiniExample for every item. (a MiniExample for every item but ObjectFFRF/ObjectFFRFreducedOrder (RG13.6.6, not decided))
 
 <a id="rg13-7"></a>
 **RG13.7** **DONE 2026-09-29** (#2742) — [log](exudynRevisionLog2026b.md#rg13-7) · [plan text](exudynRevisionLog2026b.md#plan-rg13-7) — How to set up a new item.
@@ -2416,303 +1307,10 @@ how future items and the user elements (RG7, RG8) are written, so it is decided 
 done.
 
 <a id="rg14-1"></a>
-**RG14.1** *(group RG14; maintainer 2026-09-29)* **CLOSED 2026-10-01, superseded by RG14.2** (maintainer) —
-    in `tmp/evalRG14_1_markerData.md` (not kept in the repository). Proposed: connectors and loads call
-    marker functions with a compact temporary, after RG9.3, loads first; GeneralContact keeps its
-    precomputation; the AD benefit needs the body side of RG15. **The evaluation** (#2745): what `MarkerData` holds
-    and costs today, who computes and who reads which part of it (connectors, constraints, loads,
-    `GeneralContact`), and the options - a smaller temporary per marker, marker functions a connector
-    calls, what automatic differentiation needs from them. The result is a proposal for the maintainer:
-    whether, and which option.
+**RG14.1** **CLOSED 2026-10-01** — [plan text](exudynRevisionLog2026b.md#plan-rg14-1) — The evaluation.
 
 <a id="rg14-2"></a>
-**RG14.2** *(group RG14; maintainer 2026-09-30, after reading RG14.1)* **The migration** (#2745). The
-    maintainer's frame: a **fallback** to today's path until there is evidence that the new one computes
-    the same; **no temporary data per item**, only per system and thread, fewer temporaries with generic
-    names; **measure first**; two layers - the connector computes from a small structure without
-    precomputed matrices, the system computes the marker data per marker kind (position, rigid,
-    coordinate) and transports only what is needed, templated for automatic differentiation; a unified
-    `ComputeConnectorForce`; homogeneous transformations for rigid markers, internally and later perhaps
-    for the user; a pilot connector, then classes of connectors, each a step; `GeneralContact` compatible.
-    The proposal is in `tmp/evalRG14_2_connectorInterface.md` (not kept in the repository): L0 marker
-    kinematics (fixed size, templated, a homogeneous transformation for rigid markers), L1 a connector
-    force as a pure function of them, L2 the system function per marker kind with the inner Jacobian by
-    AD over the marker kinematics - which does not need RG15 -, a `Legacy` branch and an experimental
-    switch as the fallback. Sub-steps, as proposed there:
-    - **RG14.2.1** **DONE 2026-09-30** — [log](exudynRevisionLog2026b.md#rg14-2-1) - the MiniExample
-      performance run `python/testing/runMiniExamplePerformance.py [--full] [--processes N]`: the generated
-      MiniExamples with a dynamic solve appended, `miniExamplePerformanceTest` in the item definitions, ~2 s
-      per example in full and a tenth in the regular run, in parallel on 80 % of the physical cores, the
-      solver timers recorded, not in fast mode, `--compare` of two logs; the baseline log of the full run;
-      **RG14.2.1.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-1-1) - the legacy path and
-      the new one side by side in the performance run, `python/PerformanceModels/perfConnectorInterface.py`;
-    - **RG14.2.2** the interface decided (the questions in section 9 of the evaluation). **Decided
-      2026-09-30** (maintainer): one global experimental switch as the fallback; the field is
-      `miniExamplePerformanceTest`; the regular performance run a tenth of the full one; loads **not**
-      before the rigid-marker connectors; automatic differentiation is for later, not in the first
-      migration. **Decided 2026-10-01** (maintainer) on the three open points: (a) the rigid marker keeps
-      the mixed form - $\Hm$, $\vv$ global, $\tomega$ local - with a `BodyTwist` function, possibly a member
-      of the homogeneous transformation; (b) automatic differentiation over separate vectors with a
-      seeding helper, as proposed; (e) the second layer, one function per marker kind, **in `CSystem`**;
-    - **RG14.2.3** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-3) - L0, the per-thread
-      `MarkerTemp`, the marker functions and the dispatch with `Legacy` for every connector - results identical;
-    - **RG14.2.4** the pilot `ObjectConnectorSpringDamper`, its inner Jacobian by AD, compared with the
-      legacy path in results, Newton iterations and timers. **The force (ODE2) part DONE 2026-10-01** —
-      [log](exudynRevisionLog2026b.md#rg14-2-3) - results identical, the right-hand side up to 20 % faster
-      on rigid bodies; **RG14.2.4.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-4-1) - the
-      inner Jacobian by AD with the seeding helper, in `CSystem` (`ComputeJacobianODE2PositionMarkers`), equal to
-      the analytic legacy Jacobian to round-off, the same Newton iterations;
-    - **RG14.2.5** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-5) - the other position-marker
-      connectors: `CartesianSpringDamper` (force and Jacobian by AD), `ConnectorGravity` (force, and a Jacobian by AD
-      where the legacy path differentiates numerically: the Jacobian 5× faster), `HydraulicActuatorSimple` (force; its
-      Jacobian stays numerical, it couples to its ODE1 node); **RG14.2.6** **DONE 2026-10-01** —
-      [log](exudynRevisionLog2026b.md#rg14-2-6) - the coordinate-marker connectors: L0 `MarkerCoordinate`, L2 with
-      the Jacobian by AD, `CoordinateSpringDamper`; `CoordinateSpringDamperExt` (friction states, post Newton) and
-      `ContactCoordinate` go with the contact connectors (RG14.2.10);
-    - **RG14.2.7** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-7) - the loads.
-    - **RG14.2.8** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-8) - the rigid-marker force
-      connectors (`RigidBodySpringDamper`, `LinearSpringDamper`, `TorsionalSpringDamper`) on `MarkerRigid` with the
-      frame as a homogeneous transformation, forces and torques per marker; their Jacobians stay numerical.
-    - **RG14.2.8.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-8-1) - the connector Jacobian of
-      the rigid-marker connectors by AD, **decided as proposed (maintainer 2026-10-01)**; the intrinsic formulation of
-      the rigid-body spring-damper and the user functions stay numerical.
-      - **RG14.2.8.1.1** **DONE 2026-10-01** (#2770) - `RotXYZGTv_qTemplate`, $\partial(\Gm\tp\vv)/\partial\qv$ for
-        Tait-Bryan angles, had a wrong sign in entry (2,1); found by the comparison of RG14.2.8.1.
-      *Today*: these three connectors declare no Jacobian function, so `CSystem::JacobianODE2RHS` differentiates the
-      whole connector numerically - one evaluation of its right-hand side (marker data with Jacobians for both markers,
-      the physics, the projection) per coordinate of both bodies, for the positions and again for the velocities: up
-      to $2\times14+1$ evaluations per connector with Euler parameters. The analytic marker Jacobians and
-      `ComputeMarkerDataJacobianDerivative` exist for `MarkerBodyRigid` and `MarkerNodeRigid`, but only the connectors
-      with an analytic Jacobian use them (spring-damper, Cartesian, coordinate, gravity); the rigid ones do not.
-      *Proposed*: the same chain as for position markers, with 12 directions - per marker 3 translations and 3
-      rotation increments, the positions and rotations seeded with `factorODE2`, the velocities and angular
-      velocities with `factorODE2_t` in the same directions. The rotation increment is global,
-      $\Rot(\delta\thetav) = (\Im + \delta\tilde\thetav)\Rot$, so that it chains with the marker's rotation Jacobian
-      ($\omegav = \Jm_{rot}\dot\qv$, global); the local angular velocity is formed in the AD type as
-      $\Rot(\delta\thetav)\tp(\Rot\,\tomega_{local} + \delta\omegav)$. The connector returns force and torque per
-      marker, so the inner Jacobian is four $6\times6$ blocks $\partial(\fv_i,\ttau_i)/\partial(\pv_k,\thetav_k)$, chained
-      as $[\Jm_{pos,i};\Jm_{rot,i}]\tp \Km_{ik} [\Jm_{pos,k};\Jm_{rot,k}]$, plus `ComputeMarkerDataJacobianDerivative` per
-      marker with **its own** force and torque (`ChainConnectorJacobian` generalized from "force on marker 1, reaction on
-      marker 0" to a force and torque per marker). $\partial\vv/\partial\qv$ and $\partial\omegav/\partial\qv$ neglected,
-      as for the position markers. `BodyTwist` (RG14.2.2 (a)) comes with it.
-      *Needed*: the physics of the three connectors as templates; `RotationMatrix2RotXYZ` templated (today `Real`
-      only), and for the intrinsic formulation `GetRelativeMotionTo`/`LogSO3`/`ExpSE3` checked for `AutoDiff`;
-      `atan2` (and `asin`) added to `AutoDiff`, which has `sin`, `cos`, `atan`, `exp`, `sqrt` but not these. A
-      user function keeps the numerical Jacobian.
-      *Markers*: `MarkerBodyRigid` and `MarkerNodeRigid` (analytic Jacobian and its derivative); `MarkerKinematicTreeRigid`
-      and `MarkerSuperElementRigid` have no Jacobian derivative and stay numerical, as for the analytic connectors today
-      (unless `jacobianConnectorDerivative` is switched off).
-      *Expected gain*, from the benchmark of RG14.2.8 (100 bodies, rigid-body spring-damper, generalized-alpha): the
-      numerical Jacobian is 0.47 s of 0.75 s; one AD pass (about 5-15 force evaluations' worth) plus the analytic chain
-      instead of up to 29 evaluations - a Jacobian 3-5× faster, the implicit total about 1.5-2× (the gravity connector,
-      the same change on position markers, measured 5× on the Jacobian). Explicit solvers gain nothing. The Jacobian
-      becomes exact instead of numerical; on Euler parameters it lacks the normalization direction, as for the
-      gravity (+6 % Newton steps there). Checked against the numerical legacy Jacobian ($10^{-6}$) and in
-      `perfConnectorInterface.py` with an implicit rigid run.
-    - **RG14.2.9** constraints and joints on L0/L1/L2 - see [RG14.2.9 in detail](#rg14-2-9) below.
-    - **RG14.2.10** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-10) - the contact connectors (with
-      RG4.16): `ContactSphereSphere`, `ContactSphereTriangle`, `ContactSphereTorus`, `ContactConvexRoll`,
-      `ConnectorRollingDiscPenalty`, `ContactCoordinate`, `ConnectorCoordinateSpringDamperExt`;
-    - **RG14.2.11** **DECIDED 2026-10-02** (maintainer: *these items stay on the old path*) — [log](exudynRevisionLog2026b.md#rg14-2-11) -
-      the special markers (shape, cable, many markers): the items that stay on the path of the marker data, and why;
-      they keep that path as their own - since RG14.2.17 the default of the connector's functions of the interface;
-      RG14.2.13 removes the switch, not the path;
-    - **RG14.2.12** **MEASURED 2026-10-02, not now** — [log](exudynRevisionLog2026b.md#rg14-2-12) - `GeneralContact` on
-      L0: the gain is about 2 %, it keeps its precomputation (as RG14.1 proposed); to be looked at again when the
-      projection comes from the bodies (RG9.3.4);
-    - **RG14.2.13** **DONE 2026-10-02** (the switch and the legacy functions; the output variables moved to RG14.2.18) —
-      [log](exudynRevisionLog2026b.md#rg14-2-13) - output variables and sensors through the connector force, then the
-      legacy switch and the unused temporaries removed; the path of the marker data stays for the items of RG14.2.11
-      (decided).
-    - **RG14.2.18** **DONE 2026-10-02** ((1) and (3) done, (2) and (4) stay, with reasons; maintainer: *do as
-      suggested, keep overheads and duplication small*) — [log](exudynRevisionLog2026b.md#rg14-2-18) -
-      *(found in RG14.2.13)* **what still goes through the marker data
-      structure on the interface items**: (1) the output variables and sensors - `GetOutputVariableConnector` of every
-      connector reads a `MarkerDataStructure`, which `CSensorObject::GetSensorValues` and `MainSystem::GetObjectOutput`
-      allocate per call; the physics are shared with the interface, so it is the transport, not duplicated code - the
-      output variables from the kinematics of the interface, and a per-thread structure for the rest; (2) `PostNewtonStep`
-      of the contact and spring-damper connectors, the same; (3) `ContactSphereSphere` with friction and
-      `ContactSphereTriangle` on markers without orientation keep their own `ComputeODE2LHS` - a mixed interface (one
-      rigid, one position marker) would end that; (4) `ObjectConnectorCoordinate` at velocity level keeps its
-      equations and Jacobian on the marker data - the interface at velocity level needs the Jacobian by the velocities
-      (`AE_ODE2_t`).
-    - **RG14.2.19** **DONE 2026-10-02** (no reader found: no declaration needed) — [log](exudynRevisionLog2026b.md#rg14-2-19) -
-      *(found in RG14.2.18; #241, open since 2019, needs no decision)* **`PostNewtonStep` without the
-      marker Jacobians**: `CSystem::PostNewtonStep` computes the marker data structure with `computeJacobian = true` for
-      every connector with a discontinuous iteration, in every Newton iteration. 10 of the 16 implementations read no
-      Jacobian (the contacts on spheres, triangles, tori, convex rolls, coordinates, the spring-dampers); the cable
-      contacts, `ContactCurveCircles` and the sliding joints read their markers' `jacobian` (the shape functions of the
-      cable markers) through `ComputeGap` and similar. A declared function of the connector - *its PostNewtonStep needs
-      the Jacobians* - with the default true, false for the ten, and a measurement on a contact model (expected: the
-      Jacobians of rigid body markers are a few % of a contact model's step).
-    - **RG14.2.20** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-20) - *(found in RG14.2.18; needs no
-      decision)* **a sensor's value vector without allocation** (#2778):
-      after RG14.2.18 a sensor evaluation still allocates its value `Vector` once (4 M allocations for 200 sensors over
-      20000 steps); a `ResizableVector` kept per sensor, or the value written into the storage directly.
-    - **RG14.2.17** **DONE 2026-10-02** (maintainer: *yes, do the proposed way*) — [log](exudynRevisionLog2026b.md#rg14-2-17) -
-      **the dispatch in the connector instead of in `CSystem`.** Today `CSystem` asks `GetConnectorInterface()` and switches on the enum to its
-      L2 functions (`ComputeODE2LHS*Markers`, `ComputeJacobianODE2*Markers`, the constraint functions). Proposed: one
-      virtual function per operation in `CObjectConnector` - the right-hand side, the Jacobian, the constraint equations
-      and their Jacobian, the reaction forces - whose default is the path of the marker data, and which a connector on
-      the interface overrides by calling the shared L2 chain of its kind of markers. The L2 chains move out of
-      `CSystem.cpp` into one file of free functions (templates where the AD types need them), not into intermediate
-      parent classes: a connector chooses its kind at run time (`ContactSphereSphere` on position or rigid markers),
-      which a parent class cannot express, and the generator would need the parents in its headers. Gained: `CSystem`
-      no longer knows the kinds of connectors, a new kind touches one file, and the enum is gone; not gained:
-      performance (a virtual call replaces a switch plus a virtual call). Proposed to be done with RG14.2.13; done before
-      it, so that RG14.2.13 only removes the switch.
-    - **RG14.2.14** **DONE 2026-10-02** (.1-.4) *(maintainer 2026-10-01)* **`MarkerTemp` without `MarkerData`.** Why it holds one today: the L0/L1
-      pair of a marker (`GetKinematicsRigid`/`AddGeneralizedForceTorque`, `GetODE2Size`/`AddGeneralizedForce`,
-      `GetKinematicsCoordinate`/`AddGeneralizedForceCoordinate`) has a **default in `CMarker`** that calls the old
-      `ComputeMarkerData` and keeps its Jacobians in `temp.markerData` between the two calls - so that every marker
-      works on the new path before it is migrated. Measured 2026-10-01: own implementations exist for
-      `MarkerBodyRigid` (through `CObjectBody::GetKinematicsRigid`/`AddForceTorque`, which needs no `MarkerData`),
-      `MarkerBodyPosition`, `MarkerNodePosition` and `MarkerNodeCoordinate`; `MarkerNodeRigid`,
-      `MarkerSuperElementRigid/Position`, `MarkerKinematicTreeRigid`, the beam/cable/relative-coordinate markers
-      still go through the default. The clean form: every marker implements its pair, and what it keeps between
-      the two calls is **its own small fixed-size state** (a node index and $\Gm$ as a `ConstSizeMatrix<3*4>` for a
-      node marker; the body's $\Gm_{loc}$ for a body marker), so `MarkerTemp` becomes a small union-like buffer of
-      fixed size instead of a `MarkerData` with two `ResizableMatrix`; the `MarkerData` of the fallback moves to
-      the legacy path (a per-thread `MarkerDataStructure` that exists anyway) and disappears with it
-      (RG14.2.13). Done marker by marker, together with RG14.2.11; nothing to gain from doing it before.
-      *Sub-steps (2026-10-02; the inventory of the markers in the [log](exudynRevisionLog2026b.md#rg14-2-14-1)):*
-      - **RG14.2.14.1** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-14-1) - `MarkerTemp` gets the
-        fixed-size state of a rigid frame (rotation, G, G_local); `ObjectRigidBody` keeps it there instead of two
-        `ResizableMatrix`; `MarkerNodeRigid` gets its own L0/L1 for the 3D rigid body nodes;
-      - **RG14.2.14.2** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-14-2) - the coordinate markers
-        that a coordinate connector takes: `MarkerNodeRotationCoordinate` on its own L0/L1; `MarkerNodeODE1Coordinate`,
-        `MarkerNodeCoordinates` and the relative coordinate markers stay on the default (reasons in the log);
-      - **RG14.2.14.3** **DONE 2026-10-02** (the superelement markers; the kinematic tree stays on the default) —
-        [log](exudynRevisionLog2026b.md#rg14-2-14-3) - `MarkerSuperElementPosition`/`Rigid` and `MarkerKinematicTreeRigid` - their Jacobians are
-        dense in many coordinates, their own L1 projects without forming them where possible;
-      - **RG14.2.14.4** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-14-3) - the Jacobian chains (`ConnectorJacobianODE2*Markers`, `ConstraintJacobian*Markers`) take the
-        marker Jacobians from a function of the marker (`GetJacobiansRigid`/`Position`) instead of `ComputeMarkerData`;
-        then the `MarkerData` of `MarkerTemp` serves only the markers that keep the path of the marker data
-        (RG14.2.11) and moves to a per-thread structure (`TemporaryMarkerDataStructure`).
-    - **RG14.2.16** *(maintainer 2026-10-02)* **`TemporaryComputationData` smaller**: it holds 22 members per thread
-      (measured 2026-10-02), most for the legacy path and its matrices: `markerDataStructure` (connectors, constraints and
-      loads on the legacy path, `GeneralContact`), `localJacobianAE_ODE2/_ODE2_t/_ODE1/_AE` (the hand-written constraint
-      Jacobians and the numerical one), `generalizedLoad`/`loadJacobian` (loads), `localJacobian`/`localJacobian_t`
-      (numerical differentiation, the analytic legacy connectors, contact), `jacobianTemp`, `jacobianODE2Container`,
-      `numericalJacobianf0/f1`, `tempIndex`-`tempIndex4`, `tempValue`/`tempValue2`, and `markerTemp[2]` of the new path.
-      The goal: per thread only what the new path needs - the marker temporaries (after RG14.2.14 small and fixed in
-      size), one local vector and one local matrix with generic names, the sparse buffers - and nothing kept for a
-      single caller. Sub-steps when it starts: (1) the inventory as a table, member by member: which function uses it,
-      on which path; (2) the members used only by the legacy path go with it (RG14.2.13); (3) the rest renamed to
-      generic temporaries and shared. **Blocking**: the legacy path and its switch (RG14.2.13), which waits for the
-      special markers (RG14.2.11), the contact connectors and `GeneralContact` (RG14.2.10, RG14.2.12) and the
-      remaining constraints (`JointRollingDisc`, `ConnectorCoordinateVector`, the sliding joints); the numerical
-      differentiation of objects and connectors, which stays; and the objects' own `ComputeODE2LHS`/mass matrix
-      temporaries until RG15.
-      - **RG14.2.16.1** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-16-1) - the inventory, member by
-        member, grouped: no member serves the legacy path any more, so (2) has nothing left to remove; (3) proposed -
-        the two matrices of one `GeneralContact` caller into its own temporaries, `tempIndex[4]`, `tempValue`/`2`
-        named for `PostNewtonStep`.
-      - **RG14.2.16.2** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-14-2) - (3) as proposed: the two
-        matrices of `GeneralContact` are `tempMatrix`/`tempMatrix2`, the two numbers `postNewtonError`/`postNewtonStepSize`;
-        the index arrays keep their generic names. 25 members remain, each with a user.
-    - **RG14.2.15** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg14-2-15) *(maintainer 2026-10-01; the
-      parameter `localHT` in the rigid markers with RG16.3.3, #2795; the deprecation, once per session and removed in
-      2031, the documentation and the examples with #2745)*
-      **Markers with a rotation; the joints' `rotationMarker0/1` deprecated.** A rigid marker gets a local frame:
-      **`localHT`** (a homogeneous transformation in the body) as the alternative to `localPosition`, which is
-      deprecated later; the marker frame is then body frame × `localHT`, and the connector receives it as
-      `MarkerRigid.frame` (RG14.2.8) - nothing changes at L1/L2. The joints and connectors with
-      `rotationMarker0/1` (eight objects: `JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, the
-      connectors `CartesianSpringDamper`, `RigidBodySpringDamper`, `LinearSpringDamper`, `TorsionalSpringDamper`
-      and `ContactCurveCircles`) then have **two rotations in a row** - marker and
-      connector - and the connector's ones are deprecated: internally a flag *rotation markers are not identity*,
-      set at `CheckPreAssembleConsistency`, so that the extra products are computed only in that deprecated case.
-      *(2026-10-02: the parameter and its deprecation are planned together with the homogeneous transformations of
-      the user interface, RG16.5.)* Sub-steps when it starts: the parameter in the rigid markers (`MarkerBodyRigid`, `MarkerNodeRigid`,
-      `MarkerSuperElementRigid`, `MarkerKinematicTreeRigid`) and their L0; the flag and the deprecation warning in
-      the joints; the documentation and the examples moved to `localHT`. Until then, new marker and connector code
-      takes the frame from `MarkerRigid` and does not add new uses of `rotationMarker0/1`.
-      - **RG14.2.15.1** **DONE 2026-10-03** (#2801) — [log](exudynRevisionLog2026b.md#rg14-2-15) - found while
-        moving the Create functions: `RigidBodySpringDamper` multiplied `rotationMarker0` from the left of the marker
-        frame, all joints and its own page from the right.
-      - **RG14.2.15.2** **DONE 2026-10-03** (#2803) — [log](exudynRevisionLog2026b.md#rg14-2-15-2) - *(maintainer
-        2026-10-03: "what for?")* `ObjectContactCurveCircles.rotationMarker0` **removed without deprecation**: the
-        contact never used it, only the drawing, and `Assemble()` refused any value but the unit matrix.
-
-<a id="rg14-2-9"></a>
-**RG14.2.9 in detail** *(proposed 2026-10-01; **decided as proposed by the maintainer, 2026-10-01**: (a) the term
-$\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ available and off, (b) and (c) as written)* - constraints and joints on the
-connector interface.
-
-*What the code does today.* 13 constraint objects (`CObjectConstraint`, derived from `CObjectConnector`), by the
-marker kind they request:
-
-| kind | constraints | lines of the .cpp |
-|---|---|---|
-| position | `ConnectorDistance`, `JointSpherical`, `JointRevolute2D` | 160, 179, 140 |
-| position + orientation (rigid) | `JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, `JointPrismatic2D`, `JointRollingDisc` | 706, 382, 314, 219, 347 |
-| coordinate | `ConnectorCoordinate`; vector: `ConnectorCoordinateVector` | 172, 310 |
-| special (cable, ALE, sliding) | `JointSliding`, `JointSliding2D`, `JointALEMoving2D` | 397, 421, 375 |
-
-Each writes its equations $\gv$ in `ComputeAlgebraicEquations(localAE, markerData, t, itemIndex, velocityLevel)` and its
-Jacobian $\Cm_\qv$ **by hand** in `ComputeJacobianAE`, from the marker data with all Jacobians
-(`ComputeMarkerDataStructure`). `CSystem` asks for them at four places: the equations (`ComputeAlgebraicEquations`),
-the Newton matrix (`JacobianAE`: $\Cm_\qv$ and $\Cm_\qv\tp$), **the reaction forces in every right-hand side**
-(`ComputeODE2ProjectedReactionForces`: the full local $\Cm_\qv$, $m\times n$, formed and multiplied with $\lambdav$), and
-the initial accelerations ($(\Cm_\qv\dot\qv)_\qv$, numerical over `ComputeConstraintJacobianTimesVector`). The term
-$\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ is **not** in the Newton matrix today.
-
-*Proposed.* The constraint's equations become a template of the marker kinematics only,
-`ComputeConstraintEquations<TReal>(markers, t, itemIndex, velocityLevel, g)` - the joint's geometry, nothing else,
-on `MarkerPosition`, `MarkerRigid` or `MarkerCoordinate`. `CSystem` does the rest, once per marker kind:
-1. the equations: the template with `Real`;
-2. $\Cm_\qv$ by AD over the marker kinematics (the directions of RG14.2.4.1 for position markers, of RG14.2.8.1 for
-   rigid ones, chained with the marker Jacobians) - no hand-written `ComputeJacobianAE`;
-3. the reaction forces without the $m\times n$ matrix: $\fv_k = (\partial\gv/\partial\pv_k)\tp\lambdav$,
-   $\ttau_k = (\partial\gv/\partial\thetav_k)\tp\lambdav$ projected with `AddGeneralizedForce(Torque)` - $\Cm_\qv\tp\lambdav$
-   is a connector force with $\lambdav$ as a parameter;
-4. velocity-level constraints (`UsesVelocityLevel`, index 2) seed the velocity directions instead.
-
-*Sub-steps*, each with the fallback switch and the comparison of residuals, $\Cm_\qv$ and reaction forces (to round-off,
-both are analytic), solutions and timers:
-- **RG14.2.9.1** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-9-1) - the interface in
-  `CObjectConnector`/`CSystem` and the pilot `JointSpherical` (position markers), then `ConnectorDistance` and
-  `JointRevolute2D`;
-  - **RG14.2.9.1.1** **DONE 2026-10-01** (#2771) - `solver.ComputeAlgebraicEquations` and `ComputeODE1RHS` linked the
-    residual with an end index where a count belongs, and added the equations to an uninitialized residual;
-- **RG14.2.9.2** **DONE 2026-10-01** — [log](exudynRevisionLog2026b.md#rg14-2-9-2) - `ConnectorCoordinate` (coordinate markers);
-- **RG14.2.9.3** the rigid joints `JointGeneric`, `JointRevoluteZ`, `JointPrismaticX`, `JointPrismatic2D` - after
-  RG14.2.8.1, which brings the rotation directions; their equations are ported as they are (RG14.3 then rewrites
-  them on $\Hm_0^{-1}\Hm_1$); **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg14-2-9-3),
-  `JointGeneric`: [log](exudynRevisionLog2026b.md#rg14-2-9-3-generic);
-  - **RG14.2.9.3.1** **DONE 2026-10-02** (#2772) - the hand-written Jacobian of `JointGeneric` ignored
-    `alternativeConstraints`; on the new path the joint has the Jacobian of its own equations;
-- **RG14.2.9.4** **ON HOLD (maintainer, 2026-10-02)**; it blocks no other step. *What it means*: the Newton matrix
-  of a constrained system contains $\Cm_\qv\tp$ but not the derivative of the reaction forces $\Cm_\qv\tp\lambdav$ by the
-  coordinates, $\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ - the "geometric stiffness" of the joints. It is zero for linear
-  constraints (coordinate constraints, the translations of joints with global equations) and small while the
-  Lagrange multipliers are small; with large reaction forces at large rotations it would improve the convergence of
-  Newton, and it changes no solution, only the iterations. *What it would need*: (1) the second derivatives of the
-  equations - the templates of RG14.2.9 take a nested `AutoDiff<12, AutoDiff<12>>` as they are, at 144 directions per
-  rigid joint, or the derivative of the reaction-force function $(\partial\gv/\partial\pv_k)\tp\lambdav$ by AD, which
-  needs the same; (2) the derivative of the marker Jacobians with $\lambdav$ as the force -
-  `ComputeMarkerDataJacobianDerivative`, as for the connectors (RG14.2.8.1); (3) a `newton` setting, off by default,
-  and the chain into the ODE2-ODE2 block of the Newton matrix; (4) tests of convergence on large-rotation models.
-  *Why on hold*: the gain is limited to models with large reaction forces at large rotations, the cost per joint is
-  high (a 144-direction AD pass), and modified Newton usually hides the missing term; it may not be worth adding in
-  general. Correction of the original proposal: it is not "almost free";
-- `JointRollingDisc`, `ConnectorCoordinateVector` and the special joints go with RG14.2.11, or stay legacy.
-
-*For the maintainer to decide*:
-(a) whether $\partial(\Cm_\qv\tp\lambdav)/\partial\qv$ enters the Newton matrix - available almost free by AD of item 3
-(the connector Jacobian of a force with $\lambdav$ fixed); it improves Newton convergence for large rotations but changes
-results within the tolerance and needs re-recorded references; proposed: available, **off** by default
-(a `newton` flag), so the port itself changes nothing;
-(b) the split against RG14.3: RG14.2.9 moves the joints onto the interface with their equations unchanged; RG14.3
-reformulates and unifies the equations - proposed as written here;
-(c) the order: the rigid joints wait for RG14.2.8.1 - proposed.
-
-*Expected gain.* The right-hand side no longer forms $\Cm_\qv$ for the reaction forces (today one full
-`ComputeMarkerDataStructure` and `ComputeJacobianAE` per constraint and evaluation); the Newton matrix about as today.
-The larger gain is the code: about 590 lines of hand-written `ComputeJacobianAE` in the eight ported constraints
-(234 of them in `JointGeneric`) are replaced by one AD chain per marker kind - and with them the class of errors that a
-hand-written $\Cm_\qv$ allows.
+**RG14.2** **DONE 2026-10-04** (#2745) — [log](exudynRevisionLog2026b.md#rg14-2-1) · [plan text](exudynRevisionLog2026b.md#plan-rg14-2) — The migration. (the migration done; RG14.2.9.4 and RG14.2.12 in the list of what is not decided)
 
 <a id="rg14-3"></a>
 **RG14.3** *(group RG14; maintainer 2026-10-01)* **Joints and their Jacobians on homogeneous transformations.**
@@ -2735,15 +1333,7 @@ this is **a real performance question** with more cases: objects with one node (
 objects would get their coordinates from the interface.
 
 <a id="rg15-1"></a>
-**RG15.1** *(group RG15; maintainer 2026-09-29)* **DONE 2026-09-29, for the maintainer's decision** —
-    in `tmp/evalRG15_1_objectCoordinates.md` (not kept in the repository). Found: five finite elements
-    already gather their coordinates and use automatic differentiation for the Jacobian. Proposed: that
-    pattern as the standard, the rotation parametrizations as templated functions for the rigid bodies,
-    decided together with RG14. **The evaluation** (#2746): how the objects read their
-    coordinates today, what passing them would cost (measured, RG5), which kinds of objects there are -
-    one node with linked data, several nodes, super elements, the kinematic tree -, and what automatic
-    differentiation needs. The result is a proposal for the maintainer, including whether RG14 and RG15
-    are one interface.
+**RG15.1** **DONE 2026-09-29** — [plan text](exudynRevisionLog2026b.md#plan-rg15-1) — The evaluation.
 
 ## RG16 — Homogeneous transformations
 
@@ -2756,138 +1346,25 @@ in C++ (RG8) - shall meet the newer interfaces from the start, not deprecated on
 the joints an HT means fewer variables and one way of doing things.
 
 <a id="rg16-1"></a>
-**RG16.1** *(group RG16; maintainer 2026-10-02; a step of its own, independent of the interface steps)* **The C++
-    class and its Python binding** (#2780).
-    - **RG16.1.1** to **RG16.1.5** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg16-1),
-      [RG16.1.5](exudynRevisionLog2026b.md#rg16-1-5) (the HT as an item parameter waits for RG16.2)
-    - **RG16.1.7** **DONE 2026-10-02** - *(maintainer 2026-10-02)* `exu.HT` also takes the 16 values of a 4x4 matrix row
-      by row, as a sensor stores the output variable (#2792): `exu.HT(values)`.
-    - **RG16.1.6** **DONE 2026-10-02** — [log](exudynRevisionLog2026b.md#rg16-1-6) - *(maintainer 2026-10-02: "make
-      this the standard way")* **the output variable `HomogeneousTransformation` as `exu.HT`** (#2789): the
-      Get...Output functions return an `exu.HT`; a sensor stores the 16 values row by row.
-    - **RG16.1.1** the class into a file of its own, out of the `exulie` namespace; it stores only the 12 numbers it
-      needs (rotation and translation);
-    - **RG16.1.2** performance for what is hot - $\Hm\vv$, $\Hm^{-1}$, $\Hm_1\Hm_2$, set (from $\Am$ and $\vv$, or from
-      an HT) and get ($\Am$, $\vv$) -: fixed-size loops the compiler unrolls, and a flag *no rotation*, set when a frame
-      is set without one, so that products skip the rotation; setting the flag must not cost (AVX2 latencies), and a
-      global `constexpr` switches the behaviour, to measure both; the Lie group operators are not the hot cases;
-    - **RG16.1.3** tests of the operations, and a measurement against today's class;
-    - **RG16.1.4** the binding `exudyn.HT` with its operators, set and get, conversion from and to 4x4 arrays; a note
-      in `rigidBodyUtilities.HomogeneousTransformation` on the faster C++ class;
-    - **RG16.1.5** the HT used inside the rigid items (stored as in `ObjectGround` or `ObjectRigidBody`), and an output
-      variable HT wherever position and rotation are available.
+**RG16.1** **DONE 2026-10-02** (#2780) — [log](exudynRevisionLog2026b.md#rg16-1) · [plan text](exudynRevisionLog2026b.md#plan-rg16-1) — The C++ class and its Python binding. (the class, its binding and the output variable)
 
 <a id="rg16-2"></a>
-**RG16.2** *(group RG16; maintainer 2026-10-02)* **DECIDED 2026-10-02** (the decisions in the
-    [log](exudynRevisionLog2026b.md#rg16-2-decided)) —
-    [log](exudynRevisionLog2026b.md#rg16-2) - **The evaluation: HT in the user interface of the rigid items**
-    (#2781), for the maintainer's decisions - unification, clarity, simplicity. The main cases: `ObjectRigidBody`,
-    `ObjectGround`, the rigid body nodes, the `Marker...Rigid`. Can they take an HT instead of position and rotation, in
-    a compatibility mode: both initialized with `None` (can the interface tell which of them a user set?), the default
-    the zero position and the unit rotation, internally only the HT, and both still exported together with the HT? Or
-    a global flag that switches back to position and rotation - possibly set automatically as soon as an item interface
-    is given a position or a rotation matrix? The interface is not the performance question. What already exists (the
-    `localHT` of RG14.2.15) is homogenized with it.
+**RG16.2** **DECIDED 2026-10-02** — [log](exudynRevisionLog2026b.md#rg16-2-decided) · [plan text](exudynRevisionLog2026b.md#plan-rg16-2) — The evaluation: HT in the user interface of the rigid items.
 
-**RG16.3** **DONE 2026-10-03** except RG16.3.4 (in the list [*not decided to be resolved*](#not-decided); #2781
-    resolved) *(group RG16)* **The cases that break nothing for users**, as decided in RG16.2 (2026-10-02): an HT
-    parameter next to the position and rotation of today, both `None` for "not given", giving both raises, a 4x4 numpy
-    array in the dictionary (an `exu.HT` accepted), only where it makes sense:
-    - **RG16.3.1** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-3-1) (#2793) `ObjectGround`: the HT is the internal storage; `referenceHT` next to `referencePosition` and
-      `referenceRotation`, which the get/set interface keeps (and composes from the stored HT);
-    - **RG16.3.2** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-3-2) (#2794) `CreateRigidBody` (and `CreateGround`): `referenceHT` and `initialHT` - the transformation added to the
-      reference -, translated into the node's reference and initial coordinates; rigid bodies and their nodes themselves
-      take no HT (their state is their coordinates);
-    - **RG16.3.3** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-3-3) (#2795) the rigid body markers (`MarkerBodyRigid`, `MarkerNodeRigid`, `MarkerKinematicTreeRigid`): `localHT`,
-      the marker frame = body or node frame x `localHT` (RG14.2.15, RG16.5); and `MarkerSuperElementRigid`
-      *(maintainer 2026-10-02)*, where `localHT` replaces `offset` and adds a rotation - needed when the joints'
-      `rotationMarker0/1` are deprecated, as a joint on a superelement then has no other place for its rotation.
-    - **RG16.3.4** *(found in RG16.3.3)* a translation in the `localHT` of `MarkerNodeRigid` - today refused at
-      `Assemble`, as the position Jacobian and the derivative of its transposed product need the offset in the node
-      (the formulas of `CObjectRigidBody` for 3D rigid body nodes; for the slope nodes and `NodeRigidBody2D` to be
-      decided) - when a case needs it.
+<a id="rg16-3"></a>
+**RG16.3** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-3-1) · [plan text](exudynRevisionLog2026b.md#plan-rg16-3) — The cases that break nothing for users.
 
-**RG16.4** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-4) *(group RG16)* **The further steps** - the
-    mode switch, the kinematic tree and the robotics utilities on HT -, planned after RG16.3:
-    - **RG16.4.1** (#2798) `ObjectKinematicTree.jointHTs`: the joint transformations and offsets as one list of HTs, a
-      view of the two stored lists (a list of HTs in the generator, `htListOf`);
-    - **RG16.4.2** (#2799) numpy reads an `exu.HT` as its 4x4 matrix (`__array__`); the HT functions of
-      `rigidBodyUtilities` and the robotics classes take an `exu.HT`, `Robot.CreateKinematicTree` gives `jointHTs`;
-    - **RG16.4.3** the mode switch: **not needed** - RG16.2 decided per item, with `None` for not given, no global mode.
+<a id="rg16-4"></a>
+**RG16.4** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-4) · [plan text](exudynRevisionLog2026b.md#plan-rg16-4) — The further steps.
 
 <a id="rg16-5"></a>
-**RG16.5** **DONE 2026-10-03 by RG16.3.3** (the decision of RG16.2: `localHT` and `localPosition` next to each other,
-    `None` for not given, no break) *(group RG16; maintainer 2026-10-02)* **`localHT` in the rigid markers**, with RG14.2.15: a parameter
-    `localHT`, by default `exudyn.HT0()` or `None` (to decide later between `localPosition` and `localHT`); where the
-    change is made (the item interface); the break it would be - `localPosition` gone from `mbs.GetMarker()` and from
-    the parameters -, handled by the deprecation of item parameters (RG12.2), or started together with it: for the
-    maintainer's decision in RG16.2.
+**RG16.5** **DONE 2026-10-03** — [plan text](exudynRevisionLog2026b.md#plan-rg16-5) — `localHT` in the rigid markers.
 
 <a id="rg16-6"></a>
-**RG16.6** **DECIDED 2026-10-03** (the decisions below the proposal) *(group RG16; maintainer 2026-10-03: "the premier
-place for rigid body transformations")* **What `exu.HT` offers, and how its parts are named** (#2809). Everything about the
-HT was introduced after 1.11.0, so names change without deprecation until 1.13.
-*Today*: `HT(rotation=None, translation=None)` (also a 4x4 matrix or its 16 values), the properties `rotation` and
-`translation`, `Get()`, `Set(rotation, translation)`, `SetIdentity()`, `SetTranslation(t)` (with the unit rotation),
-`SetRotationX/Y/Z(angle)`, `HT44()`, `Inverse()`, `Invert()`, `RotateVector(v)`, `RotateVectorTransposed(v)`,
-`HasNoRotation()`, `H1*H2`, `H*v`, `==`, `np.array(H)`.
-*Proposal:*
-    - **RG16.6.1** **`position` instead of `translation`**: the word of the items (`referencePosition`,
-      `localPosition`, the `Position` output variable) and of the node coordinates below; the property `position`, the
-      constructor `HT(rotation=None, position=None)`, `Set(rotation, position)`, `SetPosition(p)` (keeps the rotation;
-      today's `SetTranslation` also resets it, which a name does not say - `HT(position=p)` does that). `Get()` returns
-      `[rotation, position]`.
-    - **RG16.6.2** **the node coordinates, both ways**, on the C++ conversions of `RigidBodyMath.h`
-      (`RotationMatrix2EP`/`EP2RotationMatrix`, `RotationMatrix2RotXYZ`/`RotXYZ2RotationMatrix`,
-      `LogSO3`/`ExpSO3` for the rotation vector); the rotation parameters with the names of the nodes:
-        - `GetEP()` (4 Euler parameters), `GetRxyz()` (3 Tait-Bryan angles, the parameters of `NodeRigidBodyRxyz`),
-          `GetRotationVector()` (3, of `NodeRigidBodyRotVecLG`);
-        - `GetPositionEP()` (7 = position and Euler parameters, the reference coordinates of `NodeRigidBodyEP`),
-          `GetPositionRxyz()` (6), `GetPositionRotationVector()` (6), each a numpy array;
-        - the other way, one function with keywords, as the constructor: `Set(rotation=None, position=None,
-          eulerParameters=None, Rxyz=None, rotationVector=None)` - at most one of the rotation parameters, a part not
-          given stays as it is; and the same keywords for `HT(...)`, so that `exu.HT(position=p, Rxyz=[0,0,0.5])` is one
-          line; `SetPositionEP(q7)`, `SetPositionRxyz(q6)`, `SetPositionRotationVector(q6)` for node coordinates
-          as they come from `mbs.GetNodeOutput(n, exu.OutputVariableType.Coordinates)` plus the reference.
-    - **RG16.6.3** further functions that nodes, markers and items need, each to keep or drop:
-        - `Relative(H1)` = $\Hm_0^{-1}\Hm_1$, the frame of `H1` seen from this one - what a joint computes between its
-          two markers; cheaper than `Inverse()*H1`;
-        - `GetRotationXY()` / `GetPosition2D()`: the angle and the position of a planar frame (`NodeRigidBody2D`,
-          `referenceCoordinates=[x, y, phi]`), and `HT(position2D=, angle=)` - only if 2D models should use HT;
-        - `Interpolate(H1, factor)` - position linear, rotation on SO(3) - for animations and the robotics
-          trajectories;
-        - `RotationAngle()` and `RotationAxis()` of the rotation, the size of a frame error in a test or a controller;
-        - `exu.HT.FromRotationAxis(axis, angle)` (Rodrigues) as a second static constructor beside `SetRotationX/Y/Z`.
-    - **RG16.6.4** **names kept**: `rotation` (not `A`), `HT44()`, `Inverse()`/`Invert()`, `RotateVector...`,
-      `HasNoRotation()`; `SetRotationX/Y/Z` keep their meaning (the rotation and zero position).
-
-*Decided (maintainer 2026-10-03):*
-    - **translation**, not position: it is the word of consecutive transformations, and what people and tools
-      expect of an HT; the items keep their positions (a local position is a position). Both names could coexist later,
-      not now.
-    - **`Relative()`** as proposed.
-    - **`InterpolateSO3` and `InterpolateSE3`**: the rotation on SO(3) with the translation linear, and the screw motion
-      on SE(3).
-    - **`RotationAngle()` and `RotationAxis()`** from the rotation vector; for no rotation the axis raises, or is
-      `[0,0,0]` with `raiseError=False` (`raise` is a keyword of Python).
-    - **Set and From unified**: no static constructors; every `Set...` returns the HT, so that
-      `exu.HT().SetRotationAxis(axis, angle)` is the constructor; `SetRotationAxis(axis, angle)` added beside
-      `SetRotationX/Y/Z`.
-    - **2D** (`GetPosition2D`, the angle in the plane): considered, **not implemented** - only if a planar model needs it.
-    - **`HasNoRotation()`** also for a unit matrix given from Python (the Python setters check it, the C++ side does
-      not); whether the flag pays off is measured in RG5.1.1.
-    - The node coordinates as proposed; their functions are named after the coordinates: `GetCoordinatesEP()`,
-      `GetCoordinatesRxyz()`, `GetCoordinatesRotationVector()` and the three `SetCoordinates...` (not
-      `GetPositionEP`, as the HT says translation and the node coordinates are what is meant).
+**RG16.6** **DECIDED 2026-10-03** (#2809) — [plan text](exudynRevisionLog2026b.md#plan-rg16-6) — What `exu.HT` offers, and how its parts are named.
 
 <a id="rg16-7"></a>
-**RG16.7** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg16-7) *(group RG16; after the decision of RG16.6)*
-**`exu.HT` as decided in RG16.6** (#2810): the bindings on the
-existing C++ functions (no second implementation of a conversion), the names changed where decided; **examples in the
-documentation** of the HT (`definitions/pybindDataStructures.py`, section *HT*): `.rotation` and `.position` read and
-written, a product and a point, the node coordinates of a rigid body from an HT and back
-(`CreateRigidBody(referenceHT=...)` and `GetPositionEP()` giving the same reference coordinates), and a test model of
-the whole interface against `rigidBodyUtilities`.
+**RG16.7** **DONE 2026-10-03** (#2810) — [log](exudynRevisionLog2026b.md#rg16-7) · [plan text](exudynRevisionLog2026b.md#plan-rg16-7) — `exu.HT` as decided in RG16.6.
 
 ## RG17 — Notebooks
 
@@ -2918,20 +1395,22 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG1.4 | - | **the 1.13 release** - the first public one after the revision |
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
-| RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models |
-| RG2.4 | #2748 | the manual GUI check, per release and platform (list and model done) |
-| RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397) |
+| RG2.3 | #2582, #2776 | the graphics regression suite - open: RG2.3.3.7 an image per item for its page, RG2.3.3.8 the raytracer that can hang in `RedrawAndGetImage` |
+| RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
+| RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
+| RG4.15 | #1848, #1947 | the open bugs before 1.13: RG4.15.8 `GeneralContact` against the sphere contact |
+| RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame with a consistent Jacobian (RG4.17.2) |
+| RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |
-| RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame - the inconsistent rotation Jacobian of the slope nodes fixed (RG4.17.1); the stall remains with a consistent Jacobian (RG4.17.2) |
-| RG4.15 | #1848, #1947 | the open bugs and fixes before 1.13: `GeneralContact` against the sphere contact |
-| RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
+| RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
-| RG17.1 | #2811 | notebooks for tutorials and examples: the evaluation |
+| RG12.29.2 | - | the node types a node marker requests, answered by `mbs.Inspect` (and the C++ check generated from the declaration) |
 | RG12.36 | #2815 | two Newton structures, the modified Newton by default in the time integration; the test suite evaluated again |
-| RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
-| RG15.1 | #2746 | evaluation: objects compute from coordinates passed in |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
+| RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
+| RG15 | #2746 | objects computing from coordinates passed in: the work after the evaluation of RG15.1, not planned yet |
+| RG17.1 | #2811 | notebooks for tutorials and examples: the evaluation |
 
 <a id="not-decided"></a>
 ### Not decided to be resolved
@@ -2961,6 +1440,9 @@ whether it becomes a step.
 
 | where | issue | what it is |
 |---|---|---|
+| RG12.34 | #2813, resolved | the binary solution file takes the size of its numbers from `consolePrecision` (8 and more: double), its description says `solution.precision` - which one is meant (maintainer) |
+| RG12.34.7 | #2813, resolved | a dictionary of settings stored by Exudyn 1.11 (`SetDictionary` with `solutionSettings`, ...) is not forwarded to the new names - its old keys are not read |
+| RG16.6.3 | #2809, resolved | `GetPosition2D`/the angle of a planar frame: considered, implemented only if a planar model needs it |
 
 *#2608 was done by RG6.2.11. The decision on the chapters of the user manual
 (#2657, #2662), which stood below, is carried out and is in the
@@ -2970,10 +1452,18 @@ whether it becomes a step.
 
 The title of each says what the step **does**; the sentence after it says why it comes here.
 
-1. **Run the integration round of the institute, then release 1.13** (RG2.2, RG1.4). It is
-   the only item on this page that needs **other people's time**, so it starts before the
-   rest is ready, not after.
-2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
-   the last condition of 1.13 that one person can meet alone.
-3. **Decide which precision the binary solution file takes** (RG12.34: the console's today, its description says
-   the solution's), then RG12.36 (#2815) when the test suite may be evaluated again.
+1. **Run the integration round of the institute, then release 1.13** (RG2.2, RG1.4). It is the only item on this
+   page that needs **other people's time**, so it starts before the rest is ready, not after.
+2. **Do the manual GUI check on Windows** (RG2.4), with the curved GraphicsData (row K13) and the TikZ figures in
+   the PDF. It is the last condition of 1.13 that one person can meet alone.
+3. **Decide the precision of the binary solution file** (raised by RG12.34): a one-line change either way, and the
+   last open question of the renamed settings before 1.13 makes them public.
+4. **Finish the steps that are nearly done**, each small and without a decision left:
+   - RG2.3.3.8 (#2776): the raytracer hang - a timeout or the cause, before the graphics suite is relied on;
+   - RG12.29.2: the requested node types in `mbs.Inspect`, from the declaration that exists since RG13.5.0.3;
+   - RG10.1.1 (#2713): `exudev scripts` runs the scripts - the checker parses them already, and with `--fix`
+     a run is the check that a rewritten script still works;
+   - RG12.34.7: settings dictionaries of 1.11 forwarded in `SetDictionary`, as the attributes are.
+5. **Then the larger open steps of 1.13**: RG4.15.8 (`GeneralContact` against the sphere contact) and RG4.17.2
+   (the beam stall), which are bugs a user can meet; RG12.36 (the modified Newton by default) after the release,
+   because it changes the results of many test models.
