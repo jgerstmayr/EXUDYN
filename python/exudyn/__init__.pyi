@@ -741,6 +741,22 @@ class HT:
         """The transformation between this one (factor=0) and other (factor=1) on SE(3): a screw motion, in which translation and rotation are coupled, as a rigid body moves with constant twist."""
         ...
     @overload
+    def LogSE3(self) -> ArrayLike: 
+        """The logarithm on SE(3): the motion vector [U, Omega], 6 components as numpy array, from which SetExpSE3 gives this HT back; Omega is the rotation vector, U the translation in the coordinates of the screw motion."""
+        ...
+    @overload
+    def SetExpSE3(self, vector: ArrayLike) -> HT: 
+        """Set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the screw motion of constant twist; returns the HT."""
+        ...
+    @overload
+    def LogR3xSO3(self) -> ArrayLike: 
+        """The logarithm on R3xSO(3): the translation and the rotation vector, each on its own, 6 components as numpy array - the same numbers as GetCoordinatesRotationVector()."""
+        ...
+    @overload
+    def SetExpR3xSO3(self, vector: ArrayLike) -> HT: 
+        """Set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT."""
+        ...
+    @overload
     def HT44(self) -> ArrayLike: 
         """The 4x4 matrix [A p; 0 1] as numpy array."""
         ...

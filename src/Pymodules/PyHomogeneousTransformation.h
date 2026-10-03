@@ -276,6 +276,52 @@ public:
 		return result;
 	}
 
+	//! the 6 components [U, Omega] of a motion vector as numpy array
+	static py::array_t<Real> MotionVectorPy(const Vector3D& U, const Vector3D& Omega)
+	{
+		Real v[6] = { U[0], U[1], U[2], Omega[0], Omega[1], Omega[2] };
+		return py::array_t<Real>(6, v);
+	}
+
+	//! a motion vector [U, Omega] from Python, 6 components
+	static void MotionVectorFromPython(const py::object& vector, Vector3D& U, Vector3D& Omega, const char* where)
+	{
+		std::vector<Real> v = py::cast<std::vector<Real>>(vector);
+		CHECKandTHROW(v.size() == 6, (STDstring(where) + ": the vector must have 6 components").c_str());
+		U = Vector3D({ v[0], v[1], v[2] });
+		Omega = Vector3D({ v[3], v[4], v[5] });
+	}
+
+	//! the logarithm on SE(3): the motion vector [U, Omega] with H = ExpSE3([U, Omega]) (#2819)
+	py::array_t<Real> LogSE3Py() const
+	{
+		Vector3D U, Omega;
+		EXUlie::LogSE3Vector(static_cast<const HomogeneousTransformation&>(*this), U, Omega);
+		return MotionVectorPy(U, Omega);
+	}
+
+	//! set from the exponential map on SE(3) of the motion vector [U, Omega] (#2819)
+	void SetExpSE3Py(const py::object& vector)
+	{
+		Vector3D U, Omega;
+		MotionVectorFromPython(vector, U, Omega, "HT.SetExpSE3(...)");
+		HomogeneousTransformation H = EXUlie::ExpSE3(U, Omega);
+		SetRotationMatrixChecked(H.GetRotation());
+		GetTranslation() = H.GetTranslation();
+	}
+
+	//! the logarithm on R3xSO(3): the translation and the rotation vector, each on its own (#2819)
+	py::array_t<Real> LogR3xSO3Py() const { return MotionVectorPy(GetTranslation(), GetRotationVector()); }
+
+	//! set from the exponential map on R3xSO(3) of [U, Omega]: the translation U, the rotation ExpSO3(Omega) (#2819)
+	void SetExpR3xSO3Py(const py::object& vector)
+	{
+		Vector3D U, Omega;
+		MotionVectorFromPython(vector, U, Omega, "HT.SetExpR3xSO3(...)");
+		SetRotationMatrixChecked(EXUlie::ExpSO3(Omega));
+		GetTranslation() = U;
+	}
+
 	STDstring ToString() const
 	{
 		return "HT(rotation=" + EXUstd::ToString(GetRotation()) + ", translation=" + EXUstd::ToString(GetTranslation()) + ")";

@@ -1,0 +1,13 @@
+{
+  "number": 2821,
+  "title": "the robotics classes use exu.HT instead of the 4x4 numpy arrays of rigidBodyUtilities",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "HIGH",
+  "description": "The maintainer, 2026-10-04: 'the robotics.Robot class (and the related classes) still use the Python HomogeneousTransformation', and the examples using the Robot class. Robot, RobotLink, RobotBase, RobotTool, the DH conversions, LinkHT/JointHT/COMHT, the inverse kinematics and robotics.models/mobile/special/future work on numpy 4x4 arrays and HTtranslate/HTrotate; a user gives HT=HTtranslate(...). The transition keeps scripts working that give numpy arrays. revision2026b step RG16.10.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "file": "python/exudyn/robotics/roboticsCore.py"
+}

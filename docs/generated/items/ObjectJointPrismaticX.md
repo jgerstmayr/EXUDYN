@@ -36,7 +36,7 @@ The parameters of the item; in a dictionary, its type is 'JointPrismaticX':
 | **visualization** | VObjectJointPrismaticX |  |  | parameters for visualization of item |
 
 
-Deprecated parameters, which still work and give a `DeprecationWarning` when set other than their default: `rotationMarker0` (deprecated since 1.12.244, removed in 2031): give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)); `rotationMarker1` (deprecated since 1.12.244, removed in 2031): give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)).
+Deprecated parameters, which still work and give a `DeprecationWarning` when set other than their default: `rotationMarker0` (deprecated since 1.12.244, removed in 2031): give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p)); `rotationMarker1` (deprecated since 1.12.244, removed in 2031): give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p)).
 
 ## Visualization parameters
 
@@ -150,7 +150,7 @@ $$
 inertia = InertiaCuboid(density=1000, sideLengths=[0.1,0.1,0.1])
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0))
 body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
-HTjoint = HomogeneousTransformation(RotationMatrixZ(0.5*np.pi), [0,0,0]) #the joint x-axis is the global y-axis
+HTjoint = exu.HT().SetRotationZ(0.5*np.pi) #the joint x-axis is the global y-axis
 mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localHT=HTjoint))
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HTjoint))
 mbs.AddObject(ObjectJointPrismaticX(markerNumbers=[mGround, mBody]))

@@ -1,0 +1,17 @@
+{
+  "number": 2820,
+  "title": "the library builds the frames of markers with exu.HT, and the Create functions no longer pass rotationMarker0/1",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-10-04: 'ObjectJointPrismaticX.py uses localHT, but uses HomogeneousTransformation from rigidBodyUtilities, not the exudyn function => check whether other scripts / files in the library use HomogeneousTransformation'; 'robotics.CreateRedundantCoordinateMBS uses rotationMarker; CreateFunctions still use rotationMarker'. Since #2804 the rotation of a joint is in its markers' localHT, and the Create functions pass a unit rotationMarker0/1 - the deprecated parameter, which a reader of the library takes as the way to do it. The library and the definitions (MiniExamples, the advice of the deprecated rotationMarker parameters) build the localHT with exu.HT. revision2026b step RG16.9.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 21:19",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/mainSystemExtensions.py",
+  "releaseNotes": "The Create functions and robotics.Robot.CreateRedundantCoordinateMBS give the rotation of a joint to its markers only (localHT built with exu.HT) and no longer pass rotationMarker0/1.",
+  "resolvedInVersion": "1.12.265"
+}

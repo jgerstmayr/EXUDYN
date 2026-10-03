@@ -14269,3 +14269,47 @@ Newton with the comment the maintainer gave - after their `exu.SimulationSetting
 and `connectorOutputVariablesTest` got a settings object instead of two `exu.SimulationSettings()` in its calls; their
 references are unchanged. The 15 MiniExamples have new references (largest change 4.6e-8, `LoadTorqueVector`).
 `runTestExamples.py`: all examples pass. `docs/manual/revisions.md` says the change under "What can break a script".
+
+<a id="rg16-8"></a>
+### RG16.8, RG16.9, RG16.12.1/.2 — `exu.HT`: logarithm and exponential map, the library's frames, two examples (2026-10-04, #2819, #2820, #2823)
+
+*(Maintainer 2026-10-04, one message: the HT of `rigidBodyUtilities` still used in the robotics classes, their
+examples and `ObjectJointPrismaticX.py`; `rotationMarker` still passed by the Create functions and
+`CreateRedundantCoordinateMBS`; 4+4 examples and test models with `referenceHT`/`localHT`, among them
+`solutionViewerTest.py`, `rigidBodyTutorial3.py` and a PreStepUserFunction example with `InterpolateSE3/SO3`;
+`jointHTs` for `ObjectKinematicTree`; go to definition of the Create functions; `LogSE3`/`R3xSO3` and the Exp maps
+in `exu.HT` - "add steps and issues for everything above and solve if possible the smaller issues right away". Seven
+issues, #2819 to #2825; steps RG16.8 to RG16.13 and RG12.37.)*
+
+**RG16.8** (#2819): `LogSE3()` returns the motion vector `[U, Omega]` (6 components) with `SetExpSE3(v)` its inverse,
+on `EXUlie::LogSE3Vector`/`ExpSE3`; `LogR3xSO3()` the translation and the rotation vector (the numbers of
+`GetCoordinatesRotationVector()`, under the name of the group), `SetExpR3xSO3(v)` the inverse on `ExpSO3`. The Set
+functions return the HT, as decided in RG16.6; a vector of other than 6 components raises. `LogSE3` gives in vector
+form what `lieGroupBasics.LogSE3` gives as 4x4 matrix. Checked in `homogeneousTransformationInterfaceTest.py` against
+`lieGroupBasics` (`ExpSE3`, `LogSE3`), both ways, and `H * exu.HT().SetExpSE3(f * H.Relative(H1).LogSE3())` equal
+to `InterpolateSE3(H1, f)`; the result of the test model is unchanged. The documentation of the HT shows the last.
+
+**RG16.9** (#2820): the library passed a unit `rotationMarker0/1` - the deprecated parameter - in five Create functions
+and twice in `CreateRedundantCoordinateMBS`, since the rotation is the markers' (#2745, #2804); a reader took that for
+the way to do it. `rigidBodyUtilities._RotationMarkerArgs(rotation0, rotation1)` gives them as keyword arguments only
+for a rotation that is not the unit matrix - which `_MarkerWithRotation` leaves only for a marker without `localHT`,
+none of the rigid markers since RG16.5. The `localHT` of the markers is built with `exu.HT(rotation=, translation=)`
+in `mainSystemExtensions`, `GetJointArgs`, `_MarkerWithRotation` and `CreateRedundantCoordinateMBS`; `HomogeneousTransformation`
+is no longer imported by `mainSystemExtensions`. The MiniExample of `ObjectJointPrismaticX` takes
+`exu.HT().SetRotationZ(0.5*np.pi)`, and the advice of the ten deprecated `rotationMarker0/1` says
+`localHT=exu.HT(rotation=A, translation=p)`. The rest of the library (robotics, `graphics`, `plot`, `lieGroupBasics`,
+`CreateKinematicTree`) is RG16.10, RG16.11 and RG16.13.
+
+**RG16.12.1, .2** (#2823): `Examples/homogeneousTransformationInterpolation.py` - four `ObjectGround` items whose
+`referenceHT` a PreStepUserFunction sets, a system without coordinates; two pairs between the same frames (a quarter
+turn about z, a half turn about [1,1,1]), each with `InterpolateSO3` and `InterpolateSE3`, the start and end frames
+drawn transparent, the frames and the twist `LogSE3()` of each pair written into
+`visualizationSettings.general.renderWindowString` at every step (the solution information of the settings is read
+once, at the start of the solver, so a text that changes goes there). At the end both bodies of a pair are in the end
+frame (2.6e-15). `solutionViewerTest.py`: the chain of 100 bodies is built from products of `exu.HT` - joint frame,
+half body, turn - with `CreateRigidBody(referenceHT=)` and `RevoluteJointZ` on two `MarkerBodyRigid` with `localHT`,
+instead of rotation matrices and `CreateRevoluteJoint` with an axis; the result 6.641077375990 is unchanged to 1e-13.
+Both run in `runTestExamples.py`.
+
+**RG12.37** (#2825): the options for go to definition tried with jedi and mypy on a copy of the package; written into
+the step, the decision is the maintainer's.

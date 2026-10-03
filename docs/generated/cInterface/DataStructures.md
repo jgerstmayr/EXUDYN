@@ -113,6 +113,8 @@ H5 = exu.HT(H44)                                           #from a 4x4 matrix, o
 #the frame of H2 seen from H3, and frames in between:
 Hrel = H3.Relative(H2)                                     #H3.Inverse()*H2
 Hhalf = H3.InterpolateSE3(H2, 0.5)                         #halfway, a screw motion
+v = Hrel.LogSE3()                                          #the motion vector [U, Omega] of the screw motion
+Hquarter = H3 * exu.HT().SetExpSE3(0.25*v)                 #a quarter of the way, as InterpolateSE3(H2, 0.25)
 
 #the coordinates of the rigid body nodes:
 q7 = H3.GetCoordinatesEP()                                 #[x,y,z, ep0,ep1,ep2,ep3] for NodeRigidBodyEP
@@ -152,6 +154,10 @@ The class **HT** has the following **functions and structures**:
 - **`Relative(other)`**: the frame of other seen from this one, H.Inverse()*other, without computing the inverse: what a joint computes between the frames of its two markers
 - **`InterpolateSO3(other, factor)`**: the transformation between this one (factor=0) and other (factor=1): the translation linear and the rotation on SO(3), about one fixed axis with the angle in proportion
 - **`InterpolateSE3(other, factor)`**: the transformation between this one (factor=0) and other (factor=1) on SE(3): a screw motion, in which translation and rotation are coupled, as a rigid body moves with constant twist
+- **`LogSE3()`**: the logarithm on SE(3): the motion vector [U, Omega], 6 components as numpy array, from which SetExpSE3 gives this HT back; Omega is the rotation vector, U the translation in the coordinates of the screw motion
+- **`SetExpSE3(vector)`**: set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the screw motion of constant twist; returns the HT
+- **`LogR3xSO3()`**: the logarithm on R3xSO(3): the translation and the rotation vector, each on its own, 6 components as numpy array - the same numbers as GetCoordinatesRotationVector()
+- **`SetExpR3xSO3(vector)`**: set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT
 - **`HT44()`**: the 4x4 matrix [A p; 0 1] as numpy array
 - **`Inverse()`**: the inverse transformation [A^T, -A^T p], an HT
 - **`Invert()`**: invert the transformation in place

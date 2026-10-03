@@ -1,0 +1,17 @@
+{
+  "number": 2819,
+  "title": "exu.HT offers the logarithm and the exponential map on SE(3) and R3xSO(3)",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-10-04: 'exudyn.HT misses the LogSE3/R3xSO3 as well as the according Exp features; they are all in the C++ core and it would be nice to have them directly available.' LogSE3() and LogR3xSO3() give the 6 components [U, Omega] of the motion vector, SetExpSE3(v) and SetExpR3xSO3(v) set the HT from it and return it, as the other Set functions do (RG16.6). On EXUlie::LogSE3Vector, ExpSE3 and ExpSO3 of RigidBodyMath.h. revision2026b step RG16.8.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "dateResolved": "2026-10-03 21:19",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Pymodules/PyHomogeneousTransformation.h",
+  "releaseNotes": "exu.HT gives and takes the logarithm and exponential map: LogSE3() and SetExpSE3(v) for the motion vector of a screw motion, LogR3xSO3() and SetExpR3xSO3(v) for the translation and the rotation vector.",
+  "resolvedInVersion": "1.12.264"
+}

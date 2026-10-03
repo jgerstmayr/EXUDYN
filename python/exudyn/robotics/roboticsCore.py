@@ -826,7 +826,7 @@ class Robot:
         
             #++++++++++++++++++++++++
             #add markers and joints; the markers carry the rotation of the joint as localHT (#2745)
-            mLink1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=dictLink['bodyNumber'], localHT=erb.HomogeneousTransformation(AthisT, pThis)))
+            mLink1 = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=dictLink['bodyNumber'], localHT=exudyn.HT(rotation=AthisT, translation=pThis)))
 
             if i == 0:
                 lastMarkerRotation = erb.HT2rotationMatrix(link.preHT)@lastMarkerRotation #is rotationMarkerBase
@@ -836,7 +836,7 @@ class Robot:
                 marker0Position = erb.HT2translation(link.preHT) #this is defined in the parent link!
                 parentBody = bodyList[self.GetParentIndex(i)]
                 mLink0LastBody = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=parentBody,
-                                                               localHT=erb.HomogeneousTransformation(lastMarkerRotation, marker0Position)))
+                                                               localHT=exudyn.HT(rotation=lastMarkerRotation, translation=marker0Position)))
                 rotationMarker0 = np.eye(3)
 
             markerList0+=[mLink0LastBody]
@@ -857,8 +857,7 @@ class Robot:
 
             jointLink = mbs.AddObject(eii.GenericJoint(markerNumbers=[marker0, marker1],
                                                     constrainedAxes=constrainedAxes,
-                                                    rotationMarker0=rotationMarker0,
-                                                    rotationMarker1=rotationMarker1,
+                                                    **erb._RotationMarkerArgs(rotationMarker0, rotationMarker1), #only a rotation the base marker cannot take (#2820)
                                                     visualization=eii.VObjectJointGeneric(show=showMBSjoint, axesRadius = r*0.25, 
                                                                   axesLength=wJ*1.1, color=graphics.color.grey)))
 
@@ -898,8 +897,7 @@ class Robot:
                     #torsional spring-damper allows control of rotation
                     objectSD = mbs.AddObject(eii.TorsionalSpringDamper(markerNumbers=[marker0, marker1],
                                                         nodeNumber=nGeneric,
-                                                        rotationMarker0=rotationMarker0,
-                                                        rotationMarker1=rotationMarker1,                                            
+                                                        **erb._RotationMarkerArgs(rotationMarker0, rotationMarker1), #only a rotation the base marker cannot take (#2820)
                                                         stiffness=PDcontrol[0],
                                                         damping=PDcontrol[1],
                                                         visualization=eii.VTorsionalSpringDamper(show=False)

@@ -2,7 +2,10 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Test for AddRevoluteJoint utility function
+# Details:  A chain of 100 rigid bodies, each turned against the previous one, linked by revolute joints and
+#           falling under gravity; the frames of the chain are homogeneous transformations (exu.HT): the
+#           bodies take theirs as referenceHT, the joint markers as localHT. The solution is shown again
+#           with the SolutionViewer.
 #
 # Author:   Johannes Gerstmayr 
 # Date:     2021-07-01
@@ -28,68 +31,39 @@ color = [0.1,0.1,0.8,1]
 L = 0.4 #length of bodies
 d = 0.1 #diameter of bodies
 
-oGround=mbs.AddObject(ObjectGround(referencePosition= [-0.5*L,0,0])) 
-mPosLast = mbs.AddMarker(MarkerBodyRigid(bodyNumber = oGround, localPosition=[0,0,0]))
-A0 = np.eye(3)
-Alast = A0 #previous marker
-bodyLast = oGround
-
-Alist=[]
-axisList=[]
-A=RotationMatrixX(0)
-
+oGround=mbs.AddObject(ObjectGround(referenceHT=exu.HT(translation=[-0.5*L,0,0])))
 nBodies = 100
-for i in range(nBodies):
-    delta = 0.01*pi
-    #A = RotationMatrixZ(delta)
-    v0= A@[0,0,1]
-    Alist+=[A]
-    axisList+=[v0]
-    A = A @ RotationMatrixX(delta)@RotationMatrixZ(2*delta)
-
-
-p0 = [0.,0.,0] #reference position
-vLoc = np.array([L,0,0]) #last to next joint
+delta = 0.01*pi
 g = [0,0,9.81]
-#g = [0,9.81,0]
 
-#create a chain of bodies:
+#the frames of the chain are homogeneous transformations (exu.HT): the joint frame of each body is the joint
+#frame of the previous one, moved along the body by L and turned by Hturn; the body sits halfway in between
+Hhalf = exu.HT(translation=[0.5*L,0,0])                    #from a joint to the body center, and on to the next joint
+Hturn = exu.HT().SetRotationX(delta) * exu.HT().SetRotationZ(2*delta) #the turn from one body to the next
+Hjoint = exu.HT()                                          #the first joint at the origin; its z-axis is the joint axis
+bodyLast = oGround
+HturnLast = exu.HT()                                       #the ground is not turned against the first body
+
 for i in range(nBodies):
-    #print("Build Object", i)
     inertia = InertiaCuboid(density=1000, sideLengths=[L,d,d])
-    p0 += Alist[i] @ (0.5*vLoc)
-    #p0 += (0.5*vLoc)
-
-    ep0 = eulerParameters0 #no rotation
     graphicsBody = graphics.Brick([0,0,0], [0.96*L,d,d], graphics.color.steelblue)
     oRB = mbs.CreateRigidBody(inertia=inertia,
-                              referencePosition=p0,
-                              referenceRotationMatrix=Alist[i],
+                              referenceHT=Hjoint*Hhalf,
                               gravity=g,
                               graphicsDataList=[graphicsBody])
     nRB= mbs.GetObject(oRB)['nodeNumber']
 
-    body0 = bodyLast
-    body1 = oRB
-    # point = mbs.GetObjectOutputBody(oRB,exu.OutputVariableType.Position,
-    #                                 localPosition=[-0.5*L,0,0],
-    #                                 configuration=exu.ConfigurationType.Reference)
-    #axis = [0,0,1]
-    axis = axisList[i]
-    mbs.CreateRevoluteJoint(bodyNumbers=[body0, body1], position=[0.5*L,0,0], 
-                            axis=Alast.T@axis, useGlobalFrame=False, 
-                            axisRadius=0.6*d, axisLength=1.2*d)
-    # mbs.CreateRevoluteJoint(bodyNumbers=[body0, body1], position=point, 
-    #                         axis=axis, useGlobalFrame=True, 
-    #                         axisRadius=0.6*d, axisLength=1.2*d)
+    #the joint frame in each body is the localHT of its marker: at the end of the previous body, turned to this
+    #body, and at the start of this body
+    mLast = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bodyLast, localHT=Hhalf*HturnLast))
+    mThis = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oRB, localHT=Hhalf.Inverse()))
+    mbs.AddObject(RevoluteJointZ(markerNumbers=[mLast, mThis],
+                                 visualization=VRevoluteJointZ(axisRadius=0.6*d, axisLength=1.2*d)))
 
     bodyLast = oRB
-    
-    p0 += Alist[i] @ (0.5*vLoc)
-    #p0 += (0.5*vLoc)
-    Alast = Alist[i]
+    HturnLast = Hturn
+    Hjoint = Hjoint*Hhalf*Hhalf*Hturn                      #the next joint frame
 
-#mbs.AddLoad(LoadForceVector(markerNumber=mPosLast, loadVector=[0,0,20]))
 
 mbs.Assemble()
 

@@ -266,7 +266,7 @@ def GetJointArgs(mbs, markerNumber0=None, markerNumber1=None,
         #oBody0 = mbs.CreateRigidBody(...)
         #oBody1 = mbs.CreateRigidBody(...)
         marker0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oBody0,
-                                                localHT=HomogeneousTransformation(RotationMatrixX(0.5*pi), [1,0,0])))
+                                                localHT=exu.HT(rotation=RotationMatrixX(0.5*pi), translation=[1,0,0])))
         #create joint from one marker (with rotation) and other body
         mbs.AddObject(RevoluteJointZ(**GetJointArgs(mbs, markerNumber0=marker0, bodyNumber1=oBody1)
     """
@@ -306,9 +306,7 @@ def GetJointArgs(mbs, markerNumber0=None, markerNumber1=None,
     
     pLocal = rotRefBody.T @ (pMarker - pRefBody)
     #the new marker carries the rotation of the joint as its localHT (#2745)
-    localHT = np.eye(4)
-    localHT[0:3,0:3] = rotRefBody.T @ rotationMarkerNew @ rotationMarkerThis
-    localHT[0:3,3] = pLocal
+    localHT = exudyn.HT(rotation=rotRefBody.T @ rotationMarkerNew @ rotationMarkerThis, translation=pLocal)
     markerNumberNew = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bodyNumber, localHT=localHT))
 
     #the existing marker: a copy turned by the rotation, so that the joint takes no deprecated rotationMarker0/1 (#2804)

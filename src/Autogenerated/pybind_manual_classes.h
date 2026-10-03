@@ -536,6 +536,12 @@
         .def("Relative", &PyHT::Relative, "the frame of other seen from this one, H.Inverse()*other, without computing the inverse: what a joint computes between the frames of its two markers", py::arg("other"))
         .def("InterpolateSO3", &PyHT::InterpolateSO3, "the transformation between this one (factor=0) and other (factor=1): the translation linear and the rotation on SO(3), about one fixed axis with the angle in proportion", py::arg("other"), py::arg("factor"))
         .def("InterpolateSE3", &PyHT::InterpolateSE3, "the transformation between this one (factor=0) and other (factor=1) on SE(3): a screw motion, in which translation and rotation are coupled, as a rigid body moves with constant twist", py::arg("other"), py::arg("factor"))
+        .def("LogSE3", &PyHT::LogSE3Py, "the logarithm on SE(3): the motion vector [U, Omega], 6 components as numpy array, from which SetExpSE3 gives this HT back; Omega is the rotation vector, U the translation in the coordinates of the screw motion")
+        .def("SetExpSE3", [](PyHT& item, const py::object& vector) -> PyHT& {
+            item.SetExpSE3Py(vector); return item; }, "set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the screw motion of constant twist; returns the HT", py::return_value_policy::reference_internal, py::arg("vector"))
+        .def("LogR3xSO3", &PyHT::LogR3xSO3Py, "the logarithm on R3xSO(3): the translation and the rotation vector, each on its own, 6 components as numpy array - the same numbers as GetCoordinatesRotationVector()")
+        .def("SetExpR3xSO3", [](PyHT& item, const py::object& vector) -> PyHT& {
+            item.SetExpR3xSO3Py(vector); return item; }, "set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT", py::return_value_policy::reference_internal, py::arg("vector"))
         .def("HT44", &PyHT::GetHT44Py, "the 4x4 matrix [A p; 0 1] as numpy array")
         .def("Inverse", &PyHT::GetInversePy, "the inverse transformation [A^T, -A^T p], an HT")
         .def("Invert", &PyHT::Invert, "invert the transformation in place")

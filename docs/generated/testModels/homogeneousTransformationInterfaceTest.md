@@ -14,7 +14,8 @@ You can view and download this file on Github: [homogeneousTransformationInterfa
 #           parameters, Tait-Bryan angles Rxyz and the rotation vector, against exudyn.rigidBodyUtilities;
 #           the coordinates of the rigid body nodes, the same as CreateRigidBody(referenceHT=...) gives its
 #           node; Relative, InterpolateSO3 and InterpolateSE3, RotationAngle and RotationAxis,
-#           SetRotationAxis, the Set functions returning the HT, and HasNoRotation for a unit matrix.
+#           SetRotationAxis, the Set functions returning the HT, and HasNoRotation for a unit matrix;
+#           LogSE3/SetExpSE3 against exudyn.lieGroupBasics and LogR3xSO3/SetExpR3xSO3 (#2819).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-03
@@ -76,6 +77,17 @@ Check(Hhalf.translation, 0.5 * (p + H1.translation), what='InterpolateSO3 transl
 Check(H.Relative(Hhalf).RotationAngle(), 0.5 * H.Relative(H1).RotationAngle(), what='InterpolateSO3 angle')
 HhalfSE3 = H.InterpolateSE3(H1, 0.5)
 Check((H * H.Relative(HhalfSE3) * H.Relative(HhalfSE3)).HT44(), H1.HT44(), 1e-12, 'InterpolateSE3 halfway') #constant twist: two half steps
+
+#the logarithm and the exponential map on SE(3) and R3xSO(3), against lieGroupBasics (#2819)
+from exudyn.lieGroupBasics import ExpSE3, LogSE3, Skew2Vec
+v = H.LogSE3()
+logH = LogSE3(H.HT44())                                       #4x4: the skew matrix of Omega and U
+Check(v, list(logH[0:3, 3]) + list(Skew2Vec(logH[0:3, 0:3])), what='LogSE3')
+Check(exu.HT().SetExpSE3(v).HT44(), H.HT44(), what='SetExpSE3(LogSE3())')
+Check(exu.HT().SetExpSE3([0.1, 0.2, -0.3, 0.4, -0.1, 0.2]).HT44(), ExpSE3(np.array([0.1, 0.2, -0.3, 0.4, -0.1, 0.2])), what='SetExpSE3')
+Check((H * exu.HT().SetExpSE3(0.5 * H.Relative(H1).LogSE3())).HT44(), HhalfSE3.HT44(), what='SetExpSE3 as InterpolateSE3')
+Check(H.LogR3xSO3(), H.GetCoordinatesRotationVector(), what='LogR3xSO3')
+Check(exu.HT().SetExpR3xSO3(H.LogR3xSO3()).HT44(), H.HT44(), what='SetExpR3xSO3(LogR3xSO3())')
 
 #angle and axis
 H3 = exu.HT().SetRotationAxis([0, 3, 4], 0.8) #the Set functions return the HT

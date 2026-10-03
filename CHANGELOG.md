@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 245 | 1.12.263 |
+| 1.12 | Metheney | 247 | 1.12.265 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.265** `CHANGE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the library builds the frames of markers with exu.HT, and the Create functions no longer pass rotationMarker0/1 (#2820)
+  - description: The maintainer, 2026-10-04: 'ObjectJointPrismaticX.py uses localHT, but uses HomogeneousTransformation from rigidBodyUtilities, not the exudyn function =\> check whether other scripts / files in the library use HomogeneousTransformation'; 'robotics.CreateRedundantCoordinateMBS uses rotationMarker; CreateFunctions still use rotationMarker'. Since \#2804 the rotation of a joint is in its markers' localHT, and the Create functions pass a unit rotationMarker0/1 - the deprecated parameter, which a reader of the library takes as the way to do it. The library and the definitions (MiniExamples, the advice of the deprecated rotationMarker parameters) build the localHT with exu.HT. revision2026b step RG16.9.
+  - **notes:** The Create functions and robotics.Robot.CreateRedundantCoordinateMBS give the rotation of a joint to its markers only (localHT built with exu.HT) and no longer pass rotationMarker0/1.
+  - date resolved: **2026-10-03 21:19**, date raised: 2026-10-03
+- **1.12.264** `EXTENSION` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exu.HT offers the logarithm and the exponential map on SE(3) and R3xSO(3) (#2819)
+  - description: The maintainer, 2026-10-04: 'exudyn.HT misses the LogSE3/R3xSO3 as well as the according Exp features; they are all in the C++ core and it would be nice to have them directly available.' LogSE3() and LogR3xSO3() give the 6 components \[U, Omega\] of the motion vector, SetExpSE3(v) and SetExpR3xSO3(v) set the HT from it and return it, as the other Set functions do (RG16.6). On EXUlie::LogSE3Vector, ExpSE3 and ExpSO3 of RigidBodyMath.h. revision2026b step RG16.8.
+  - **notes:** exu.HT gives and takes the logarithm and exponential map: LogSE3() and SetExpSE3(v) for the motion vector of a screw motion, LogR3xSO3() and SetExpR3xSO3(v) for the translation and the rotation vector.
+  - date resolved: **2026-10-03 21:19**, date raised: 2026-10-03
 - **1.12.263** `FIX` `LOW` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` LoadBinarySolutionFile prints verbose= on every call (#2818)
   - description: basicUtilities.LoadBinarySolutionFile prints 'verbose=' and the value unconditionally - a debug line left in. Found with binarySolutionFileTest.py (RG12.34).
   - **notes:** LoadBinarySolutionFile no longer prints verbose= on every call.

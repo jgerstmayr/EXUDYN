@@ -55,6 +55,7 @@ geneticOptimizationSliderCrank
 graphicsCurvedShapes
 graphicsDataExample
 gyroStability
+homogeneousTransformationInterpolation
 humanRobotInteraction
 HydraulicActuator2Arms
 HydraulicActuatorStaticInitialization

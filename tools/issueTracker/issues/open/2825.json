@@ -1,0 +1,13 @@
+{
+  "number": 2825,
+  "title": "go to definition of mbs.CreateRigidBody reaches the Python function, not only the stub",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The maintainer, 2026-10-04: 'The Create... functions are injected into MainSystem, thus the direct navigation to these functions is not possible. If I use spyder or VS Code and I click on CreateRigidBody, it directs me to the .pyi file. Is there a fix for that?' The stub declares each added function as a method of MainSystem with its own copy of the signature and the first sentence of the docstring; the function itself is MainSystemCreateRigidBody in exudyn/misc/mainSystemExtensions.py. revision2026b step RG16.14. [2026-10-03, Claude-JG]: The step is revision2026b step RG12.37, not RG16.14 (it is not about the HT). Tried on a copy of the package with jedi 0.20 and mypy: (a) CreateRigidBody = _MainSystemCreateRigidBody in the stub - mypy types it from the function, jedi's go to definition lands on that stub line and its inference reaches the source; (b) a class-scoped import in the stub - jedi goes straight to the source, mypy refuses it; (c) the stub docstring names the function. Recommended (a) with return annotations on the functions; the maintainer decides after a look in VS Code.",
+  "dateRaised": "2026-10-03",
+  "deadline": "2027-04-01",
+  "file": "tools/generators/mainSystemExtensionDocsEmitter.py"
+}

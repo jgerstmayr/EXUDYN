@@ -206,6 +206,8 @@ H5 = exu.HT(H44)                                           #from a 4x4 matrix, o
 #the frame of H2 seen from H3, and frames in between:
 Hrel = H3.Relative(H2)                                     #H3.Inverse()*H2
 Hhalf = H3.InterpolateSE3(H2, 0.5)                         #halfway, a screw motion
+v = Hrel.LogSE3()                                          #the motion vector [U, Omega] of the screw motion
+Hquarter = H3 * exu.HT().SetExpSE3(0.25*v)                 #a quarter of the way, as InterpolateSE3(H2, 0.25)
 
 #the coordinates of the rigid body nodes:
 q7 = H3.GetCoordinatesEP()                                 #[x,y,z, ep0,ep1,ep2,ep3] for NodeRigidBodyEP
@@ -323,6 +325,33 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='InterpolateSE3', cName='Interpol
                        description="the transformation between this one (factor=0) and other (factor=1) on SE(3): a screw motion, in which translation and rotation are coupled, as a rigid body moves with constant twist",
                        argTypes=['HT', 'float'],
                        returnType='HT',
+                       )
+
+#the logarithm and the exponential map on SE(3) and R3xSO(3), of the C++ core (#2819)
+pb.DefPyFunctionAccess(cClass=classStr, pyName='LogSE3', cName='LogSE3Py',
+                       description="the logarithm on SE(3): the motion vector [U, Omega], 6 components as numpy array, from which SetExpSE3 gives this HT back; Omega is the rotation vector, U the translation in the coordinates of the screw motion",
+                       returnType='ArrayLike',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='SetExpSE3',
+                       cName='[](PyHT& item, const py::object& vector) -> PyHT& {\n            item.SetExpSE3Py(vector); return item; }',
+                       argList=['vector'],
+                       description="set from the exponential map on SE(3) of the motion vector [U, Omega], 6 components: the screw motion of constant twist; returns the HT",
+                       argTypes=['ArrayLike'],
+                       returnType='HT', isLambdaFunction=True, options='py::return_value_policy::reference_internal',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='LogR3xSO3', cName='LogR3xSO3Py',
+                       description="the logarithm on R3xSO(3): the translation and the rotation vector, each on its own, 6 components as numpy array - the same numbers as GetCoordinatesRotationVector()",
+                       returnType='ArrayLike',
+                       )
+
+pb.DefPyFunctionAccess(cClass=classStr, pyName='SetExpR3xSO3',
+                       cName='[](PyHT& item, const py::object& vector) -> PyHT& {\n            item.SetExpR3xSO3Py(vector); return item; }',
+                       argList=['vector'],
+                       description="set from the exponential map on R3xSO(3) of [U, Omega], 6 components: the translation U and the rotation of the rotation vector Omega, each on its own; returns the HT",
+                       argTypes=['ArrayLike'],
+                       returnType='HT', isLambdaFunction=True, options='py::return_value_policy::reference_internal',
                        )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='HT44', cName='GetHT44Py',

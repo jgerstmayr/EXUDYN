@@ -118,23 +118,23 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `ObjectConnectorCoordinateSpringDamperExt.fStaticFrictionOffset` | 1.12.258 | 2031 | staticFrictionOffsetForce | definitions (ObjectConnectorCoordinateSpringDamperExt) |
 | `ObjectConnectorCoordinateSpringDamperExt.fViscousFriction` | 1.12.258 | 2031 | viscousFrictionFactor | definitions (ObjectConnectorCoordinateSpringDamperExt) |
 | `ObjectConnectorRigidBodySpringDamper.intrinsicFormulation` | 1.12.258 | 2031 | useIntrinsicFormulation | definitions (ObjectConnectorRigidBodySpringDamper) |
-| `ObjectConnectorRigidBodySpringDamper.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectConnectorRigidBodySpringDamper) |
-| `ObjectConnectorRigidBodySpringDamper.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectConnectorRigidBodySpringDamper) |
+| `ObjectConnectorRigidBodySpringDamper.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p)) | definitions (ObjectConnectorRigidBodySpringDamper) |
+| `ObjectConnectorRigidBodySpringDamper.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p)) | definitions (ObjectConnectorRigidBodySpringDamper) |
 | `ObjectConnectorRollingDiscPenalty.rollingFrictionViscous` | 1.12.258 | 2031 | rollingViscousFriction | definitions (ObjectConnectorRollingDiscPenalty) |
-| `ObjectConnectorTorsionalSpringDamper.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectConnectorTorsionalSpringDamper) |
-| `ObjectConnectorTorsionalSpringDamper.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectConnectorTorsionalSpringDamper) |
+| `ObjectConnectorTorsionalSpringDamper.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p)) | definitions (ObjectConnectorTorsionalSpringDamper) |
+| `ObjectConnectorTorsionalSpringDamper.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p)) | definitions (ObjectConnectorTorsionalSpringDamper) |
 | `ObjectContactSphereTorus.radiusSphere` | 1.12.258 | 2031 | sphereRadius | definitions (ObjectContactSphereTorus) |
 | `ObjectContactSphereTriangle.radiusSphere` | 1.12.258 | 2031 | sphereRadius | definitions (ObjectContactSphereTriangle) |
 | `ObjectFFRFreducedOrder.physicsCenterOfMass` | 1.12.258 | 2031 | centerOfMass | definitions (ObjectFFRFreducedOrder) |
 | `ObjectFFRFreducedOrder.physicsCenterOfMassTilde` | 1.12.258 | 2031 | centerOfMassTilde | definitions (ObjectFFRFreducedOrder) |
 | `ObjectFFRFreducedOrder.physicsInertia` | 1.12.258 | 2031 | inertia | definitions (ObjectFFRFreducedOrder) |
 | `ObjectFFRFreducedOrder.physicsMass` | 1.12.258 | 2031 | mass | definitions (ObjectFFRFreducedOrder) |
-| `ObjectJointGeneric.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointGeneric) |
-| `ObjectJointGeneric.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointGeneric) |
-| `ObjectJointPrismaticX.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointPrismaticX) |
-| `ObjectJointPrismaticX.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointPrismaticX) |
-| `ObjectJointRevoluteZ.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointRevoluteZ) |
-| `ObjectJointRevoluteZ.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=HomogeneousTransformation(A, p)) | definitions (ObjectJointRevoluteZ) |
+| `ObjectJointGeneric.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p)) | definitions (ObjectJointGeneric) |
+| `ObjectJointGeneric.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p)) | definitions (ObjectJointGeneric) |
+| `ObjectJointPrismaticX.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p)) | definitions (ObjectJointPrismaticX) |
+| `ObjectJointPrismaticX.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p)) | definitions (ObjectJointPrismaticX) |
+| `ObjectJointRevoluteZ.rotationMarker0` | 1.12.244 | 2031 | give the rotation to marker 0 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p)) | definitions (ObjectJointRevoluteZ) |
+| `ObjectJointRevoluteZ.rotationMarker1` | 1.12.244 | 2031 | give the rotation to marker 1 as its localHT, e.g. MarkerBodyRigid(bodyNumber=b, localHT=exu.HT(rotation=A, translation=p)) | definitions (ObjectJointRevoluteZ) |
 | `ObjectJointSliding2D.classicalFormulation` | 1.12.258 | 2031 | useClassicalFormulation | definitions (ObjectJointSliding2D) |
 | `ObjectMass1D.physicsMass` | 1.12.258 | 2031 | mass | definitions (ObjectMass1D) |
 | `ObjectMassPoint.physicsMass` | 1.12.258 | 2031 | mass | definitions (ObjectMassPoint) |

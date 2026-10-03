@@ -24,7 +24,7 @@ nGround = mbs.AddNode(NodePointGround(referenceCoordinates=[0,0,0]))
 inertia = InertiaCuboid(density=1000, sideLengths=[0.1,0.1,0.1])
 node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0,0,0]+eulerParameters0))
 body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=inertia.Mass(), inertia=inertia.GetInertia6D()))
-HTjoint = HomogeneousTransformation(RotationMatrixZ(0.5*np.pi), [0,0,0]) #the joint x-axis is the global y-axis
+HTjoint = exu.HT().SetRotationZ(0.5*np.pi) #the joint x-axis is the global y-axis
 mBody = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body, localHT=HTjoint))
 mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localHT=HTjoint))
 mbs.AddObject(ObjectJointPrismaticX(markerNumbers=[mGround, mBody]))

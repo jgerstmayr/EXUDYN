@@ -1633,8 +1633,20 @@ def _MarkerWithRotation(mbs, marker, rotation):
     if 'localHT' not in data:
         return (marker, np.array(rotation))
     data = {key: value for (key, value) in data.items() if key not in ['name', 'localPosition', 'offset'] and key[0] != 'V'}
-    data['localHT'] = np.array(data['localHT']) @ HomogeneousTransformation(rotation, [0., 0., 0.])
+    data['localHT'] = exu.HT(data['localHT']) * exu.HT(rotation=rotation)
     return (mbs.AddMarker(data), np.eye(3))
+
+
+@docmeta(public=False)
+def _RotationMarkerArgs(rotation0, rotation1):
+    """the deprecated rotationMarker0/1 of a joint as keyword arguments, only for a rotation that is not the unit matrix -
+    which _MarkerWithRotation leaves only for a marker without localHT; the joint then takes its frames from its markers
+    alone (#2820)"""
+    args = {}
+    for (name, rotation) in [('rotationMarker0', rotation0), ('rotationMarker1', rotation1)]:
+        if np.linalg.norm(np.array(rotation) - np.eye(3)) != 0:
+            args[name] = rotation
+    return args
 
 
 @Deprecated('1.11.0', 2029, use='mbs.CreateRevoluteJoint')
