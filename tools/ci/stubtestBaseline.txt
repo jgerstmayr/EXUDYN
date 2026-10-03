@@ -60,6 +60,10 @@ exudyn.MatrixContainer
 exudyn.NewtonSettings
 exudyn.NumericalDifferentiationSettings
 exudyn.Parallel
+exudyn.Parallel.multithreadedLLimitJacobians
+exudyn.Parallel.multithreadedLLimitLoads
+exudyn.Parallel.multithreadedLLimitMassMatrices
+exudyn.Parallel.multithreadedLLimitResiduals
 exudyn.Renderer
 exudyn.SimulationSettings
 exudyn.SimulationSettings.GetDictionaryWithTypeInfo

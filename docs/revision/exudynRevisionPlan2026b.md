@@ -1590,8 +1590,8 @@ to what it computes: how a parameter is named, what happens when a name changes,
 find out about the settings of a model. It is the group a user notices most and reads least about.
 
 <a id="rg12-1"></a>
-**RG12.1** *(group RG12; maintainer 2026-09-22)* **`simulationSettings` gets the deprecation
-    mechanism** (#2588). `visualizationSettings` has it: a member is marked `Deprecated(since,
+**RG12.1** **DONE 2026-10-03** — [log](exudynRevisionLog2026b.md#rg12-1) *(group RG12; maintainer
+    2026-09-22)* **`simulationSettings` gets the deprecation mechanism** (#2588). `visualizationSettings` has it: a member is marked `Deprecated(since,
     expires)` in the definitions - 93 members carry it today - and a user who sets the old name
     is told the new one instead of being ignored. `simulationSettings` uses none of it, although
     it is the same generator and the same structure machinery, so a renamed solver setting
@@ -2553,7 +2553,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: the Linux and macOS ones, which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
-| RG12.1 | #2588 | `simulationSettings` gets the deprecation mechanism |
 | RG12.2 | #2589 | let an item parameter be deprecated and renamed |
 | RG14.2 | #2745 | connectors, constraints, loads and contact connectors compute from small marker structures - done but RG14.2.15: the flag and the deprecation of the joints' `rotationMarker0/1`, the documentation and the examples moved to the markers' `localHT` (the parameter itself is in since RG16.3.3); RG14.2.9.4 and RG14.2.12 are in the list below |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
@@ -2602,5 +2601,4 @@ The title of each says what the step **does**; the sentence after it says why it
    rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4, #2748), with the curved GraphicsData (row K13). It is
    the last condition of 1.13 that one person can meet alone.
-3. **Give `simulationSettings` the deprecation mechanism** (RG12.1, #2588). It is the one
-   `visualizationSettings` already has, and RG12.2 (#2589) cannot start until both have it.
+3. **Let item parameters be deprecated and renamed** (RG12.2, #2589), now that both settings have the mechanism.

@@ -343,10 +343,10 @@ void CSolverBase::InitializeSolverData(CSystem& computationalSystem, const Simul
 	}
 
 	//++++++++++++++++++++++++++++++
-	computationalSystem.GetSolverData().multithreadedLLimitLoads = simulationSettings.parallel.multithreadedLLimitLoads;
-	computationalSystem.GetSolverData().multithreadedLLimitResiduals = simulationSettings.parallel.multithreadedLLimitResiduals;
-	computationalSystem.GetSolverData().multithreadedLLimitJacobians = simulationSettings.parallel.multithreadedLLimitJacobians;
-	computationalSystem.GetSolverData().multithreadedLLimitMassMatrix = simulationSettings.parallel.multithreadedLLimitMassMatrices;
+	computationalSystem.GetSolverData().multithreadedLimitLoads = simulationSettings.parallel.multithreadedLimitLoads;
+	computationalSystem.GetSolverData().multithreadedLimitResiduals = simulationSettings.parallel.multithreadedLimitResiduals;
+	computationalSystem.GetSolverData().multithreadedLimitJacobians = simulationSettings.parallel.multithreadedLimitJacobians;
+	computationalSystem.GetSolverData().multithreadedLimitMassMatrix = simulationSettings.parallel.multithreadedLimitMassMatrices;
 
 	computationalSystem.GetSolverData().taskSplitMinItems = simulationSettings.parallel.taskSplitMinItems;
 	computationalSystem.GetSolverData().taskSplitTasksPerThread = simulationSettings.parallel.taskSplitTasksPerThread;

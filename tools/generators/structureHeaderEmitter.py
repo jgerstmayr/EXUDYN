@@ -332,17 +332,22 @@ def StructureCppHeader(parseInfo):
                 #a real Python DeprecationWarning, not a printed line (#2522): the user can filter
                 #it, promote it with -W error::DeprecationWarning, and
                 #sees it once per source location instead of on every read of the setting
-                deprecationWarning = 'PyDeprecated("VisualizationSettings parameter '
+                deprecationWarning = 'PyDeprecated("' + (TopClassName(Header(parseInfo, 'class')) or Header(parseInfo, 'class')) + ' parameter '
                 deprecationWarning += ConvertClassName2member(Header(parseInfo, 'class'))+'.'+parameter['pythonName']
-                deprecationWarning += ' is deprecated! use '+Description(parameter)+' instead!");'+lineBreakIDP
+                newName = Description(parameter) #a rename in the same structure is named with its structure (#2588)
+                if DeprecatedForwardsInStructure(parameter):
+                    newName = ConvertClassName2member(Header(parseInfo, 'class')) + '.' + newName
+                deprecationWarning += ' is deprecated! use '+newName+' instead!");'+lineBreakIDP
                 #and it must not dereference a backlink that was never set (#2603): a
-                #standalone sub-structure has none, and a segfault is not a diagnosis
-                deprecationWarning += ('if (backlink == nullptr) { CHECKandTHROWstring("'
-                    + ConvertClassName2member(Header(parseInfo, 'class')) + '.'
-                    + parameter['pythonName'] + ' is deprecated and forwards to '
-                    + Description(parameter) + ', which needs the settings structure it belongs'
-                    ' to; this one was constructed on its own and is not linked"); }'
-                    + lineBreakIDP)
+                #standalone sub-structure has none, and a segfault is not a diagnosis; a rename
+                #in the same structure needs no backlink (#2588)
+                if not DeprecatedForwardsInStructure(parameter):
+                    deprecationWarning += ('if (backlink == nullptr) { CHECKandTHROWstring("'
+                        + ConvertClassName2member(Header(parseInfo, 'class')) + '.'
+                        + parameter['pythonName'] + ' is deprecated and forwards to '
+                        + Description(parameter) + ', which needs the settings structure it belongs'
+                        ' to; this one was constructed on its own and is not linked"); }'
+                        + lineBreakIDP)
                 (version, expDate) = DParameter2VersionExpiration(parameter)
                 if expDate <= yearStr:
                     print('parameter outdated '+expDate+':', Header(parseInfo, 'class')+'::'+parameter['cplusplusName'])
@@ -353,6 +358,8 @@ def StructureCppHeader(parseInfo):
             typeStr = tm.Render(parameter['type'], 'cppStorage', 'structures')
             paramStr = parameter['cplusplusName']
             paramAccessStr = paramStr if not IDPNS else 'backlink->'+Description(parameter)
+            if IDPNS and DeprecatedForwardsInStructure(parameter): #a rename in the same structure (#2588)
+                paramAccessStr = Description(parameter)
 
             paramStrPure = parameter['cplusplusName'] #without 'cSolver.'
             if (paramStrPure.find('.') != -1): #for linked class; mainly solver

@@ -315,6 +315,13 @@ Use `PyDeprecated(message)`, never `PyWarning`. It raises a real Python `Depreca
 `-W error::DeprecationWarning` finds every use before a release removes the old name, and Python
 shows it once per call site instead of once per call.
 
+A **setting** (`simulationSettings`, `visualizationSettings`) is renamed or moved in its definition
+file: the new member takes the place of the old, and the old name stays as a
+`StructureParameter(..., cFlags=SFDeprecated, deprecated=Deprecated(since, expires),
+defaultValue=NoDefaultValue, description=r'<new>')`; `<new>` is the new name if the member stays in
+its structure, else its path from the top structure (`view0.scene.drawWorldBasis`). The generator
+writes the forwarding, the warning and the line of the reference manual (#2588).
+
 ### 10.6 Writing the message
 
 - Say what is wrong and what to change, not that something is wrong.

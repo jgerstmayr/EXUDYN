@@ -420,7 +420,7 @@ outcome: !ExudynValueError !ExudynValueError int=2.0 !ExudynTypeError !ExudynTyp
   NodeGenericODE1: numberOfODE1Coordinates(class,dict,set)
   NodeGenericODE2: numberOfODE2Coordinates(class,dict,set)
   ObjectContactFrictionCircleCable2D: numberOfContactSegments(class,dict,set)
-  SimulationSettings.parallel: multithreadedLLimitJacobians(attribute,dict) multithreadedLLimitLoads(attribute,dict) multithreadedLLimitMassMatrices(attribute,dict) multithreadedLLimitResiduals(attribute,dict) numberOfThreads(attribute,dict) taskSplitMinItems(attribute,dict) taskSplitTasksPerThread(attribute,dict)
+  SimulationSettings.parallel: multithreadedLimitJacobians(attribute,dict) multithreadedLimitLoads(attribute,dict) multithreadedLimitMassMatrices(attribute,dict) multithreadedLimitResiduals(attribute,dict) numberOfThreads(attribute,dict) taskSplitMinItems(attribute,dict) taskSplitTasksPerThread(attribute,dict)
   SimulationSettings.solutionSettings: flushFilesDOF(attribute,dict)
   SimulationSettings.staticSolver: numberOfLoadSteps(attribute,dict)
   SimulationSettings.timeIntegration: realtimeWaitMicroseconds(attribute,dict)

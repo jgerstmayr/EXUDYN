@@ -12172,3 +12172,24 @@ object with own markers and none of the body functions (`ObjectGenericODE2`, `Ob
 **`SuperElementAlternativeRotationMode`** - bit 31, a mode of `MarkerSuperElementRigid` (`useAlternativeApproach`)
 packed into the access type - is the argument `alternativeRotationMode` of `GetAccessFunctionSuperElement` now, and
 the enumeration value is gone (`revisions.md`, *What can break*). `NEW_ITEM.md` says how to declare it.
+
+<a id="rg12-1"></a>
+### RG12.1 — `simulationSettings` gets the deprecation mechanism (2026-10-03, #2588)
+
+**What was missing**: the generator writes the forwarding of a deprecated member through `backlink->` - a pointer to the
+top structure - and only the visualization settings had backlinks (`ClassHasBackLink`, `TopClassName`); the warning
+said "VisualizationSettings parameter" whatever the structure. **Changed**: the eleven structures of
+`SimulationSettings` (`structureModel.simulationSettingsClasses`) link to it the same way - a backlink per
+sub-structure, `Init`, the top class linking itself and keeping its links when copied (#2603) -, the forward declaration
+in `SimulationSettings.h`; the warning names the top structure. **New for both**: a deprecated member whose description
+is a name without a path is a **rename in its own structure** and forwards to that member directly, without a
+backlink - which also works in a structure that two places share (`NewtonSettings` in the time integration and the
+static solver), where a path from the top could only name one of them; the warning and the list of changed parameters
+of the reference manual name it with its structure. How to deprecate a setting: `CODING_STYLE.md` §10.5.
+
+**The first use** *(maintainer 2026-10-03)*: `parallel.multithreadedLLimitLoads`, `...Residuals`, `...Jacobians`,
+`...MassMatrices` are `multithreadedLimit...` now (the double L abbreviated "lower limit", against the
+no-abbreviations rule); the old names forward with a `DeprecationWarning` until 2028, the internal `SolverData` fields
+are renamed too. Test model `simulationSettingsDeprecationTest.py` (writing and reading the old names, the warning
+naming the new one, a copy); `test_settingsBacklinks.py` reads every member of a standalone `SimulationSettings` and of
+a copy.

@@ -272,10 +272,10 @@ Parallel has the following items:
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
-| `multithreadedLLimitJacobians`<br>`simulationSettings.parallel.multithreadedLLimitJacobians` | PInt |  | 20 | compute jacobians (ODE2, AE, ...) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...) |
-| `multithreadedLLimitLoads`<br>`simulationSettings.parallel.multithreadedLLimitLoads` | PInt |  | 20 | compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...) |
-| `multithreadedLLimitMassMatrices`<br>`simulationSettings.parallel.multithreadedLLimitMassMatrices` | PInt |  | 20 | compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...) |
-| `multithreadedLLimitResiduals`<br>`simulationSettings.parallel.multithreadedLLimitResiduals` | PInt |  | 20 | compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...) |
+| `multithreadedLimitJacobians`<br>`simulationSettings.parallel.multithreadedLimitJacobians` | PInt |  | 20 | compute jacobians (ODE2, AE, ...) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...) |
+| `multithreadedLimitLoads`<br>`simulationSettings.parallel.multithreadedLimitLoads` | PInt |  | 20 | compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...) |
+| `multithreadedLimitMassMatrices`<br>`simulationSettings.parallel.multithreadedLimitMassMatrices` | PInt |  | 20 | compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...) |
+| `multithreadedLimitResiduals`<br>`simulationSettings.parallel.multithreadedLimitResiduals` | PInt |  | 20 | compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...) |
 | `numberOfThreads`<br>`simulationSettings.parallel.numberOfThreads` | PInt |  | 1 | number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores); currently, only one solver can be started with multithreading; if you use several mbs in parallel (co-simulation), you should use serial computing |
 | `taskSplitMinItems`<br>`simulationSettings.parallel.taskSplitMinItems` | PInt |  | 50 | number of items from which on the tasks are split into subtasks (which slightly increases threading performance; this may be critical for smaller number of objects, should be roughly between 50 and 5000; flag is copied into MainSystem internal flag at InitializeSolverData(...) |
 | `taskSplitTasksPerThread`<br>`simulationSettings.parallel.taskSplitTasksPerThread` | PInt |  | 16 | this is the number of subtasks that every thread receives; minimum is 1, the maximum should not be larger than 100; this factor is 1 as long as the taskSplitMinItems is not reached; flag is copied into MainSystem internal flag at InitializeSolverData(...) |
@@ -307,3 +307,11 @@ SimulationSettings has the following items:
 | `linearSolverType`<br>`simulationSettings.linearSolverType` | LinearSolverType |  | LinearSolverType::EXUdense | selection of numerical linear solver: exu.LinearSolverType.EXUdense (dense matrix inverse), exu.LinearSolverType.EigenSparse (sparse matrix LU-factorization), ... (enumeration type) |
 | `outputPrecision`<br>`simulationSettings.outputPrecision` | UInt |  | 6 | precision for floating point numbers written to console; e.g. values written by solver |
 | `pauseAfterEachStep`<br>`simulationSettings.pauseAfterEachStep` | bool |  | False | pause after every time step or static load step(user press SPACE) |
+
+
+The following parameter changes have been made:
+
+- `simulationSettings.parallel.multithreadedLLimitJacobians` → `simulationSettings.parallel.multithreadedLimitJacobians` (changed in version 1.12.244, expires: 2028)
+- `simulationSettings.parallel.multithreadedLLimitLoads` → `simulationSettings.parallel.multithreadedLimitLoads` (changed in version 1.12.244, expires: 2028)
+- `simulationSettings.parallel.multithreadedLLimitMassMatrices` → `simulationSettings.parallel.multithreadedLimitMassMatrices` (changed in version 1.12.244, expires: 2028)
+- `simulationSettings.parallel.multithreadedLLimitResiduals` → `simulationSettings.parallel.multithreadedLimitResiduals` (changed in version 1.12.244, expires: 2028)

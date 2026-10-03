@@ -158,6 +158,10 @@ array writes `HomogeneousTransformation(A, r)` (#2781).
 
 ### What is new to use
 
+**Renamed settings keep working.** A simulation setting that is renamed answers to its old name with a
+`DeprecationWarning` that names the new one, as the visualization settings do: `parallel.multithreadedLLimitLoads`,
+`...Residuals`, `...Jacobians` and `...MassMatrices` are `parallel.multithreadedLimitLoads` and so on (#2588).
+
 **More markers on more bodies.** `ObjectRotationalMass1D` takes forces and connectors anywhere on
 its table, not only on its axis; `ObjectANCFBeam` takes `MarkerBodyRigid`, so torques and joints with
 rotations act on its cross sections (#2775).

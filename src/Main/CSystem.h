@@ -49,10 +49,10 @@ public:
 	Index taskSplitMinItems;      //limit at which task is split into sub-tasks; 
 	Index taskSplitTasksPerThread; //this is the amount of bunches into which the tasks are split; for 4 threads, this gives 4*16 total tasks
 
-	Index multithreadedLLimitLoads; //! absolute lower limit below which, no multithreading will be active
-	Index multithreadedLLimitResiduals; //! absolute lower lower limit below which, no multithreading will be active
-	Index multithreadedLLimitJacobians; //! absolute lower lower limit below which, no multithreading will be active
-	Index multithreadedLLimitMassMatrix; //! absolute lower lower limit below which, no multithreading will be active
+	Index multithreadedLimitLoads; //! absolute lower limit below which, no multithreading will be active
+	Index multithreadedLimitResiduals; //! absolute lower lower limit below which, no multithreading will be active
+	Index multithreadedLimitJacobians; //! absolute lower lower limit below which, no multithreading will be active
+	Index multithreadedLimitMassMatrix; //! absolute lower lower limit below which, no multithreading will be active
 
 	SolverData()
 	{
@@ -70,10 +70,10 @@ public:
 		taskSplitMinItems = 50;      //limit at which task is split into sub-tasks; 
 		taskSplitTasksPerThread = 16; //this is the amount of bunches into which the tasks are split; for 4 threads, this gives 4*16 total tasks
 
-		multithreadedLLimitLoads = 100; //! absolute lower limit below which, no multithreading will be active
-		multithreadedLLimitResiduals = 100; //! for ODE2, [ODE1], AE and CqT*lambda; absolute lower lower limit below which, no multithreading will be active
-		multithreadedLLimitJacobians = 100; //! absolute lower lower limit below which, no multithreading will be active
-		multithreadedLLimitMassMatrix = 100; //! absolute lower lower limit below which, no multithreading will be active
+		multithreadedLimitLoads = 100; //! absolute lower limit below which, no multithreading will be active
+		multithreadedLimitResiduals = 100; //! for ODE2, [ODE1], AE and CqT*lambda; absolute lower lower limit below which, no multithreading will be active
+		multithreadedLimitJacobians = 100; //! absolute lower lower limit below which, no multithreading will be active
+		multithreadedLimitMassMatrix = 100; //! absolute lower lower limit below which, no multithreading will be active
 
 	}
 };

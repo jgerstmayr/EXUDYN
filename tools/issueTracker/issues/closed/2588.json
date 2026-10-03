@@ -2,10 +2,14 @@
   "number": 2588,
   "title": "simulationSettings has no deprecation mechanism",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "A member of visualizationSettings can be marked deprecated in the definitions - Deprecated(since, expires) plus the SFDeprecated flag, 93 members carry it today - and a user who sets the old name gets a message that names the new one. simulationSettings uses none of it, although the mechanism is the same generator and the same structure machinery: a renamed solver setting simply disappears. Apply it there.",
   "dateRaised": "2026-09-22",
-  "deadline": "2027-03-21"
+  "deadline": "2027-03-21",
+  "dateResolved": "2026-10-03 09:41",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "simulationSettings members can be renamed or moved with the old name kept as deprecated, forwarding with a DeprecationWarning; parallel.multithreadedLLimit... are parallel.multithreadedLimit... now.",
+  "resolvedInVersion": "1.12.244"
 }

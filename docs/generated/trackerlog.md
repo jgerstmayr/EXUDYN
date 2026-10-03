@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.243.dev1
+- Exudyn version = 1.12.244.dev1
 - last change = 2026-10-03
 - Number of issues = 2800
-- Number of resolved issues = 2557 (243 in current version)
+- Number of resolved issues = 2558 (244 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7583,9 +7583,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-09-27
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` item parameters cannot be deprecated (#2589)
   - description: When an item parameter is renamed there is no path that keeps an old script working: unlike visualizationSettings, the item interfaces have no deprecation mechanism. Wanted (maintainer, 2026-09-22): the same feature for item parameters, either restricted to the classes of itemInterface.py - which is generated, so one place - or extended to the Get/Set functions of the items themselves. If it reaches the C++ side, the deprecated names must be searched LAST, so that the common case pays nothing.
-  - date raised: 2026-09-22
-- `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` simulationSettings has no deprecation mechanism (#2588)
-  - description: A member of visualizationSettings can be marked deprecated in the definitions - Deprecated(since, expires) plus the SFDeprecated flag, 93 members carry it today - and a user who sets the old name gets a message that names the new one. simulationSettings uses none of it, although the mechanism is the same generator and the same structure machinery: a renamed solver setting simply disappears. Apply it there.
   - date raised: 2026-09-22
 - `TESTING` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` a graphics regression suite: several models, several visualization settings (#2582)
   - description: The drawing code is exercised by exactly one model (\#2562): raytracerNOGLFWtest.py, one set of visualization settings, one checksum. A checksum changes with any visualization change and does not say what changed, so it can only ever be "different" or "equal". What is wanted is a suite over several models and several settings - show/hide of nodes, markers, loads and sensors, different colours and text settings - comparing either low-resolution reference images that a human can also look at, or counts extracted from the graphics data (triangles, lines, texts per item), or both: the counts say WHAT changed, the images say whether it still looks right. Needs the extraction API of the issue filed beside this one.

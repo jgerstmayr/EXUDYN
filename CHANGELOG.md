@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 225 | 1.12.243 |
+| 1.12 | Metheney | 226 | 1.12.244 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.244** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` simulationSettings has no deprecation mechanism (#2588)
+  - description: A member of visualizationSettings can be marked deprecated in the definitions - Deprecated(since, expires) plus the SFDeprecated flag, 93 members carry it today - and a user who sets the old name gets a message that names the new one. simulationSettings uses none of it, although the mechanism is the same generator and the same structure machinery: a renamed solver setting simply disappears. Apply it there.
+  - **notes:** simulationSettings members can be renamed or moved with the old name kept as deprecated, forwarding with a DeprecationWarning; parallel.multithreadedLLimit... are parallel.multithreadedLimit... now.
+  - date resolved: **2026-10-03 09:41**, date raised: 2026-09-22
 - **1.12.243** `CHANGE` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` access functions: single functions per access type in the objects, with precise interfaces (#2744)
   - description: The maintainer, 2026-09-29: GetAccessFunctionBody(AccessFunctionType, localPosition, Matrix& value) serves every access type through one function and a switch, with workarounds (e.g. the vector for JacobianTtimesVector\_q passed in the output matrix). Revise into single functions per access type in the objects, with interfaces that say what they take and return. First: which objects need which access functions and what would be best for them. Then possibly a check that the declared access function flags (ItemAccessFunctionTypes) and the functions a definition declares agree. revision2026b step RG9.3.
   - **notes:** The access function types of an object are derived from the access functions it provides; AccessFunctionType.SuperElementAlternativeRotationMode is removed, the mode is an argument of the super element access function.

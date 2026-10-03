@@ -91,6 +91,7 @@ accessFunctionsTest
 computeItemTest
 emptySystemTest
 homogeneousTransformationParameterTest
+simulationSettingsDeprecationTest
 homogeneousTransformationTest
 inspectTest
 energiesTest

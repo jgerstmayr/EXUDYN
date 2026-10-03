@@ -137,3 +137,13 @@ def testASubStructureWithoutALinkRaisesInsteadOfCrashing():
         with pytest.raises(Exception) as raised:
             standalone.drawWorldBasis
     assert 'not linked' in str(raised.value)
+
+
+def testAStandaloneSimulationSettingsCanBeRead():
+    """SimulationSettings link their sub-structures as VisualizationSettings do (#2588): every member of a
+    standalone structure and of a copy can be read, the deprecated ones included"""
+    import copy
+    for settings in [exudyn.SimulationSettings(), copy.copy(exudyn.SimulationSettings())]:
+        (read, deprecated, problems) = ReadEveryMember(settings)
+        assert problems == [], 'a standalone SimulationSettings cannot be read: ' + str(problems[:5])
+        assert read > 100 and deprecated >= 4

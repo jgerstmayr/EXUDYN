@@ -94,15 +94,31 @@ def ClassHasGetSetDictionary(className):
         or className == 'StaticSolverSettings'
         or className == 'LinearSolverSettings')
 
+#the structures of SimulationSettings, which link to it like those of VisualizationSettings, so that a deprecated
+#member can forward to its new place (#2588)
+simulationSettingsClasses = ['SolutionSettings', 'NumericalDifferentiationSettings', 'DiscontinuousSettings',
+                             'NewtonSettings', 'GeneralizedAlphaSettings', 'ExplicitIntegrationSettings',
+                             'TimeIntegrationSettings', 'StaticSolverSettings', 'LinearSolverSettings', 'Parallel',
+                             'SimulationSettings']
+
 def ClassHasBackLink(className):
     return (className == 'VisualizationSettings'
-            or className.startswith('VSettings'))
+            or className.startswith('VSettings')
+            or className in simulationSettingsClasses)
 
 def TopClassName(className):
     if className.startswith('VSettings') or className == 'VisualizationSettings':
         return 'VisualizationSettings'
+    elif className in simulationSettingsClasses:
+        return 'SimulationSettings'
     else:
         return ''
+
+
+def DeprecatedForwardsInStructure(parameter):
+    """True if a deprecated member forwards to a member of its own structure - a rename: its description is that
+    member's name, without a path; else the description is the path from the top structure (#2588)"""
+    return '.' not in Description(parameter)
     
 #if it is a substructure, return True; if topclass, return False
 def HasTopClass(className):
@@ -378,6 +394,8 @@ def ParameterChangesList(parseInfo, parameterListSorted, typicalPaths):
                 oldParameterStr = path.replace('SC.','') +'.'+ parameter['pythonName']
                 baseParameter = oldParameterStr.split('.')[0]
                 newParameterStr = baseParameter+'.'+Description(parameter)
+                if DeprecatedForwardsInStructure(parameter): #a rename in the same structure (#2588)
+                    newParameterStr = path.replace('SC.','') + '.' + Description(parameter)
                 (version, expDate) = DParameter2VersionExpiration(parameter)
                 parameterChangesList.append([oldParameterStr, newParameterStr, version, expDate])
     return parameterChangesList

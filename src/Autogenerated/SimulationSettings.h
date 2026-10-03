@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-02 (last modfied)
+* @date         AUTO: 2026-10-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -22,6 +22,8 @@
 #include "Utilities/BasicDefinitions.h"
 #include "Main/OutputVariable.h"
 #include "Linalg/BasicLinalg.h"
+
+class SimulationSettings; //! AUTO: forward declaration for backlink
 
 class SolutionSettings // AUTO: 
 {
@@ -54,11 +56,15 @@ public: // AUTO:
   bool writeRestartFile;                          //!< AUTO: flag (true/false), which determines if restart file is written regularly, see restartFileName for details
   bool writeSolutionToFile;                       //!< AUTO: flag (true/false), which determines if (global) solution vector is written to the solution file (coordinatesSolutionFile); standard quantities that are written are: solution is written as displacements and coordinatesODE1; for additional coordinates in the solution file, see the options below
 
+private: // AUTO: 
+  SimulationSettings* backlink; //!< AUTO: backlink for global access of structure
+
 
 public: // AUTO: 
   //! AUTO: default constructor with parameter initialization
   SolutionSettings()
   {
+    backlink=nullptr;
     appendToFile = false;
     binarySolutionFile = false;
     coordinatesSolutionFileName = "solution/coordinatesSolution";
@@ -86,6 +92,10 @@ public: // AUTO:
     writeRestartFile = false;
     writeSolutionToFile = true;
   };
+  void Init(SimulationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+  }
 
   // AUTO: access functions
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -137,7 +147,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-02 (last modfied)
+* @date         AUTO: 2026-10-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -157,11 +167,15 @@ public: // AUTO:
   Real minimumCoordinateSize;                     //!< AUTO: must be >= 0; minimum size of coordinates in relative differentiation parameter
   Real relativeEpsilon;                           //!< AUTO: must be >= 0; relative differentiation parameter epsilon; the numerical differentiation parameter \f$\varepsilon\f$ follows from the formula (\f$\varepsilon = \varepsilon_\mathrm{relative}*max(q_{min}, |q_i + [q^{Ref}_i]|)\f$, with \f$\varepsilon_\mathrm{relative}\f$=relativeEpsilon, \f$q_{min} = \f$minimumCoordinateSize, \f$q_i\f$ is the current coordinate which is differentiated, and \f$qRef_i\f$ is the reference coordinate of the current coordinate
 
+private: // AUTO: 
+  SimulationSettings* backlink; //!< AUTO: backlink for global access of structure
+
 
 public: // AUTO: 
   //! AUTO: default constructor with parameter initialization
   NumericalDifferentiationSettings()
   {
+    backlink=nullptr;
     addReferenceCoordinatesToEpsilon = false;
     doSystemWideDifferentiation = false;
     forAE = false;
@@ -171,6 +185,10 @@ public: // AUTO:
     minimumCoordinateSize = 0.01;
     relativeEpsilon = 1e-7;
   };
+  void Init(SimulationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+  }
 
   // AUTO: access functions
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -203,7 +221,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-02 (last modfied)
+* @date         AUTO: 2026-10-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -219,16 +237,24 @@ public: // AUTO:
   Index maxIterations;                            //!< AUTO: must be >= 0; maximum number of discontinuous (post Newton) iterations
   bool useRecommendedStepSize;                    //!< AUTO: some objects (contact-related) provide a recommendedStepSize; if True, this recommendation is used, but may lead to very small step sizes and solver could fail if restrictions are too hard; set to False to ignore this recommendation
 
+private: // AUTO: 
+  SimulationSettings* backlink; //!< AUTO: backlink for global access of structure
+
 
 public: // AUTO: 
   //! AUTO: default constructor with parameter initialization
   DiscontinuousSettings()
   {
+    backlink=nullptr;
     ignoreMaxIterations = true;
     iterationTolerance = 1;
     maxIterations = 5;
     useRecommendedStepSize = true;
   };
+  void Init(SimulationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+  }
 
   // AUTO: access functions
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -257,7 +283,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-02 (last modfied)
+* @date         AUTO: 2026-10-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -283,11 +309,15 @@ public: // AUTO:
   bool useNewtonSolver;                           //!< AUTO: flag (true/false); false = linear computation, true = use Newton solver for nonlinear solution
   bool weightTolerancePerCoordinate;              //!< AUTO: flag (true/false); false = compute error as L2-Norm of residual; true = compute error as (L2-Norm of residual) / (sqrt(number of coordinates)), which can help to use common tolerance independent of system size
 
+private: // AUTO: 
+  SimulationSettings* backlink; //!< AUTO: backlink for global access of structure
+
 
 public: // AUTO: 
   //! AUTO: default constructor with parameter initialization
   NewtonSettings()
   {
+    backlink=nullptr;
     absoluteTolerance = 1e-10;
     adaptInitialResidual = true;
     maximumSolutionNorm = 1e38;
@@ -302,6 +332,11 @@ public: // AUTO:
     useNewtonSolver = true;
     weightTolerancePerCoordinate = false;
   };
+  void Init(SimulationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+    numericalDifferentiation.Init(backlinkInit);
+  }
 
   // AUTO: access functions
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -340,7 +375,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-02 (last modfied)
+* @date         AUTO: 2026-10-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -362,11 +397,15 @@ public: // AUTO:
   bool useIndex2Constraints;                      //!< AUTO: set useIndex2Constraints = true in order to use index2 (velocity level constraints) formulation
   bool useNewmark;                                //!< AUTO: if true, use Newmark method with beta and gamma instead of generalized-Alpha
 
+private: // AUTO: 
+  SimulationSettings* backlink; //!< AUTO: backlink for global access of structure
+
 
 public: // AUTO: 
   //! AUTO: default constructor with parameter initialization
   GeneralizedAlphaSettings()
   {
+    backlink=nullptr;
     computeInitialAccelerations = true;
     lieGroupAddTangentOperator = true;
     lieGroupSimplifiedKinematicRelations = false;
@@ -378,6 +417,10 @@ public: // AUTO:
     useIndex2Constraints = false;
     useNewmark = false;
   };
+  void Init(SimulationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+  }
 
   // AUTO: access functions
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -412,7 +455,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-02 (last modfied)
+* @date         AUTO: 2026-10-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -429,17 +472,25 @@ public: // AUTO:
   bool eliminateConstraints;                      //!< AUTO: True: make explicit solver work for simple CoordinateConstraints, which are eliminated for ground constraints (e.g. fixed nodes in finite element models). False: incompatible constraints are ignored (BE CAREFUL)!
   bool useLieGroupIntegration;                    //!< AUTO: True: use Lie group integration for rigid body nodes; must be turned on for Lie group nodes (without data coordinates) to work properly; does not work for nodes with data coordinates!
 
+private: // AUTO: 
+  SimulationSettings* backlink; //!< AUTO: backlink for global access of structure
+
 
 public: // AUTO: 
   //! AUTO: default constructor with parameter initialization
   ExplicitIntegrationSettings()
   {
+    backlink=nullptr;
     computeEndOfStepAccelerations = true;
     computeMassMatrixInversePerBody = false;
     dynamicSolverType = DynamicSolverType::DOPRI5;
     eliminateConstraints = true;
     useLieGroupIntegration = true;
   };
+  void Init(SimulationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+  }
 
   // AUTO: access functions
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -469,7 +520,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-02 (last modfied)
+* @date         AUTO: 2026-10-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -508,11 +559,15 @@ public: // AUTO:
   Index verboseMode;                              //!< AUTO: must be >= 0; 0 ... no output, 1 ... show short step information every 2 seconds (every 30 seconds after 1 hour CPU time), 2 ... show every step information, 3 ... show also solution vector, 4 ... show also mass matrix and jacobian (implicit methods), 5 ... show also Jacobian inverse (implicit methods)
   Index verboseModeFile;                          //!< AUTO: must be >= 0; same behaviour as verboseMode, but outputs all solver information to file
 
+private: // AUTO: 
+  SimulationSettings* backlink; //!< AUTO: backlink for global access of structure
+
 
 public: // AUTO: 
   //! AUTO: default constructor with parameter initialization
   TimeIntegrationSettings()
   {
+    backlink=nullptr;
     absoluteTolerance = 1e-8;
     adaptiveStep = true;
     adaptiveStepDecrease = 0.5;
@@ -537,6 +592,14 @@ public: // AUTO:
     verboseMode = 0;
     verboseModeFile = 0;
   };
+  void Init(SimulationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+    discontinuous.Init(backlinkInit);
+    explicitIntegration.Init(backlinkInit);
+    generalizedAlpha.Init(backlinkInit);
+    newton.Init(backlinkInit);
+  }
 
   // AUTO: access functions
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -588,7 +651,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-02 (last modfied)
+* @date         AUTO: 2026-10-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -620,11 +683,15 @@ public: // AUTO:
   Index verboseMode;                              //!< AUTO: must be >= 0; 0 ... no output, 1 ... show errors and load steps, 2 ... show short Newton step information (error), 3 ... show also solution vector, 4 ... show also jacobian, 5 ... show also Jacobian inverse
   Index verboseModeFile;                          //!< AUTO: must be >= 0; same behaviour as verboseMode, but outputs all solver information to file
 
+private: // AUTO: 
+  SimulationSettings* backlink; //!< AUTO: backlink for global access of structure
+
 
 public: // AUTO: 
   //! AUTO: default constructor with parameter initialization
   StaticSolverSettings()
   {
+    backlink=nullptr;
     adaptiveStep = true;
     adaptiveStepDecrease = 0.25;
     adaptiveStepIncrease = 2;
@@ -644,6 +711,12 @@ public: // AUTO:
     verboseMode = 1;
     verboseModeFile = 0;
   };
+  void Init(SimulationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+    discontinuous.Init(backlinkInit);
+    newton.Init(backlinkInit);
+  }
 
   // AUTO: access functions
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -688,7 +761,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-02 (last modfied)
+* @date         AUTO: 2026-10-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -704,16 +777,24 @@ public: // AUTO:
   bool reuseAnalyzedPattern;                      //!< AUTO: [ONLY available for sparse matrices] True: the Eigen SparseLU solver offers the possibility to reuse an analyzed pattern of a previous factorization; this may reduce total factorization time by a factor of 2 or 3, depending on the matrix type; however, if the matrix patterns heavily change between computations, this may even slow down performance; this flag is set for SparseMatrices in InitializeSolverData(...) and should be handled with care!
   bool showCausingItems;                          //!< AUTO: False: no output, if solver fails; True: if redundant equations appear, they are resolved such that according solution variables are set to zero; in case of redundant constraints, this may help, but it may lead to erroneous behaviour; for static problems, this may suppress static motion or resolve problems in case of instabilities, but should in general be considered with care!
 
+private: // AUTO: 
+  SimulationSettings* backlink; //!< AUTO: backlink for global access of structure
+
 
 public: // AUTO: 
   //! AUTO: default constructor with parameter initialization
   LinearSolverSettings()
   {
+    backlink=nullptr;
     ignoreSingularJacobian = false;
     pivotThreshold = 0;
     reuseAnalyzedPattern = false;
     showCausingItems = true;
   };
+  void Init(SimulationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+  }
 
   // AUTO: access functions
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -742,7 +823,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-02 (last modfied)
+* @date         AUTO: 2026-10-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -753,39 +834,67 @@ public: // AUTO:
 class Parallel // AUTO: 
 {
 public: // AUTO: 
-  Index multithreadedLLimitJacobians;             //!< AUTO: must be > 0; compute jacobians (ODE2, AE, ...) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
-  Index multithreadedLLimitLoads;                 //!< AUTO: must be > 0; compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
-  Index multithreadedLLimitMassMatrices;          //!< AUTO: must be > 0; compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
-  Index multithreadedLLimitResiduals;             //!< AUTO: must be > 0; compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index multithreadedLimitJacobians;              //!< AUTO: must be > 0; compute jacobians (ODE2, AE, ...) multi-threaded; this is the limit number of according objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index multithreadedLimitLoads;                  //!< AUTO: must be > 0; compute loads multi-threaded; this is the limit number of loads from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index multithreadedLimitMassMatrices;           //!< AUTO: must be > 0; compute bodies mass matrices multi-threaded; this is the limit number of bodies from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
+  Index multithreadedLimitResiduals;              //!< AUTO: must be > 0; compute RHS vectors, AE, and reaction forces multi-threaded; this is the limit number of objects from which on parallelization is used; flag is copied into MainSystem internal flag at InitializeSolverData(...)
   Index numberOfThreads;                          //!< AUTO: must be > 0; number of threads used for parallel computation (1 == scalar processing); do not use more threads than available threads (in most cases it is good to restrict to the number of cores); currently, only one solver can be started with multithreading; if you use several mbs in parallel (co-simulation), you should use serial computing
   Index taskSplitMinItems;                        //!< AUTO: must be > 0; number of items from which on the tasks are split into subtasks (which slightly increases threading performance; this may be critical for smaller number of objects, should be roughly between 50 and 5000; flag is copied into MainSystem internal flag at InitializeSolverData(...)
   Index taskSplitTasksPerThread;                  //!< AUTO: must be > 0; this is the number of subtasks that every thread receives; minimum is 1, the maximum should not be larger than 100; this factor is 1 as long as the taskSplitMinItems is not reached; flag is copied into MainSystem internal flag at InitializeSolverData(...)
   bool useLoadBalancing;                          //!< AUTO: if True, parallel computation uses load balancing, which may give better performance in case of non-equilibrated loads; (mobile) Intel CPUs may perform better without load balancing; this flag is coupled to exudyn.special.solver.multiThreadingLoadBalancing (overwritten when solver starts with multithreading)
+
+private: // AUTO: 
+  SimulationSettings* backlink; //!< AUTO: backlink for global access of structure
 
 
 public: // AUTO: 
   //! AUTO: default constructor with parameter initialization
   Parallel()
   {
-    multithreadedLLimitJacobians = 20;
-    multithreadedLLimitLoads = 20;
-    multithreadedLLimitMassMatrices = 20;
-    multithreadedLLimitResiduals = 20;
+    backlink=nullptr;
+    multithreadedLimitJacobians = 20;
+    multithreadedLimitLoads = 20;
+    multithreadedLimitMassMatrices = 20;
+    multithreadedLimitResiduals = 20;
     numberOfThreads = 1;
     taskSplitMinItems = 50;
     taskSplitTasksPerThread = 16;
     useLoadBalancing = true;
   };
+  void Init(SimulationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    backlink = backlinkInit;
+  }
 
   // AUTO: access functions
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use multithreadedLimitJacobians
+  void PySetMultithreadedLLimitJacobians(const Index& multithreadedLimitJacobiansInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use multithreadedLimitJacobians
+  Index PyGetMultithreadedLLimitJacobians() const ;
+
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use multithreadedLimitLoads
+  void PySetMultithreadedLLimitLoads(const Index& multithreadedLimitLoadsInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use multithreadedLimitLoads
+  Index PyGetMultithreadedLLimitLoads() const ;
+
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use multithreadedLimitMassMatrices
+  void PySetMultithreadedLLimitMassMatrices(const Index& multithreadedLimitMassMatricesInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use multithreadedLimitMassMatrices
+  Index PyGetMultithreadedLLimitMassMatrices() const ;
+
+  //! AUTO: Set function (needed in pybind) for: DEPRECATED; Instead use multithreadedLimitResiduals
+  void PySetMultithreadedLLimitResiduals(const Index& multithreadedLimitResidualsInit) ;
+  //! AUTO: Read (Copy) access to: DEPRECATED; Instead use multithreadedLimitResiduals
+  Index PyGetMultithreadedLLimitResiduals() const ;
+
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
   virtual void Print(std::ostream& os) const
   {
     os << "Parallel" << ":\n";
-    os << "  multithreadedLLimitJacobians = " << multithreadedLLimitJacobians << "\n";
-    os << "  multithreadedLLimitLoads = " << multithreadedLLimitLoads << "\n";
-    os << "  multithreadedLLimitMassMatrices = " << multithreadedLLimitMassMatrices << "\n";
-    os << "  multithreadedLLimitResiduals = " << multithreadedLLimitResiduals << "\n";
+    os << "  multithreadedLimitJacobians = " << multithreadedLimitJacobians << "\n";
+    os << "  multithreadedLimitLoads = " << multithreadedLimitLoads << "\n";
+    os << "  multithreadedLimitMassMatrices = " << multithreadedLimitMassMatrices << "\n";
+    os << "  multithreadedLimitResiduals = " << multithreadedLimitResiduals << "\n";
     os << "  numberOfThreads = " << numberOfThreads << "\n";
     os << "  taskSplitMinItems = " << taskSplitMinItems << "\n";
     os << "  taskSplitTasksPerThread = " << taskSplitTasksPerThread << "\n";
@@ -808,7 +917,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-02 (last modfied)
+* @date         AUTO: 2026-10-03 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -844,7 +953,54 @@ public: // AUTO:
     linearSolverType = LinearSolverType::EXUdense;
     outputPrecision = 6;
     pauseAfterEachStep = false;
+    Init(this);
   };
+  //! AUTO: copy constructor: a copy links ITSELF, not the original (#2603)
+  SimulationSettings(const SimulationSettings& other)
+  {
+    linearSolverSettings = other.linearSolverSettings;
+    parallel = other.parallel;
+    solutionSettings = other.solutionSettings;
+    staticSolver = other.staticSolver;
+    timeIntegration = other.timeIntegration;
+    cleanUpMemory = other.cleanUpMemory;
+    displayComputationTime = other.displayComputationTime;
+    displayGlobalTimers = other.displayGlobalTimers;
+    displayStatistics = other.displayStatistics;
+    linearSolverType = other.linearSolverType;
+    outputPrecision = other.outputPrecision;
+    pauseAfterEachStep = other.pauseAfterEachStep;
+    Init(this);
+  }
+  //! AUTO: copy assignment, for the same reason
+  SimulationSettings& operator=(const SimulationSettings& other)
+  {
+    if (this != &other)
+    {
+      linearSolverSettings = other.linearSolverSettings;
+      parallel = other.parallel;
+      solutionSettings = other.solutionSettings;
+      staticSolver = other.staticSolver;
+      timeIntegration = other.timeIntegration;
+      cleanUpMemory = other.cleanUpMemory;
+      displayComputationTime = other.displayComputationTime;
+      displayGlobalTimers = other.displayGlobalTimers;
+      displayStatistics = other.displayStatistics;
+      linearSolverType = other.linearSolverType;
+      outputPrecision = other.outputPrecision;
+      pauseAfterEachStep = other.pauseAfterEachStep;
+      Init(this);
+    }
+    return *this;
+  }
+  void Init(SimulationSettings* backlinkInit) //!< AUTO: called from parent structure
+  {
+    linearSolverSettings.Init(backlinkInit);
+    parallel.Init(backlinkInit);
+    solutionSettings.Init(backlinkInit);
+    staticSolver.Init(backlinkInit);
+    timeIntegration.Init(backlinkInit);
+  }
 
   // AUTO: access functions
   //! AUTO: print function used in ostream operator (print is virtual and can thus be overloaded)
@@ -875,5 +1031,44 @@ public: // AUTO:
 };
 
 
+
+
+//! implementation:
+
+inline void Parallel::PySetMultithreadedLLimitJacobians(const Index& multithreadedLimitJacobiansInit) { 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitJacobians is deprecated! use parallel.multithreadedLimitJacobians instead!");
+    multithreadedLimitJacobians= (const Index&)multithreadedLimitJacobiansInit; 
+    }
+inline Index Parallel::PyGetMultithreadedLLimitJacobians() const { 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitJacobians is deprecated! use parallel.multithreadedLimitJacobians instead!");
+    return Index(multithreadedLimitJacobians); 
+    }
+
+inline void Parallel::PySetMultithreadedLLimitLoads(const Index& multithreadedLimitLoadsInit) { 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitLoads is deprecated! use parallel.multithreadedLimitLoads instead!");
+    multithreadedLimitLoads= (const Index&)multithreadedLimitLoadsInit; 
+    }
+inline Index Parallel::PyGetMultithreadedLLimitLoads() const { 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitLoads is deprecated! use parallel.multithreadedLimitLoads instead!");
+    return Index(multithreadedLimitLoads); 
+    }
+
+inline void Parallel::PySetMultithreadedLLimitMassMatrices(const Index& multithreadedLimitMassMatricesInit) { 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitMassMatrices is deprecated! use parallel.multithreadedLimitMassMatrices instead!");
+    multithreadedLimitMassMatrices= (const Index&)multithreadedLimitMassMatricesInit; 
+    }
+inline Index Parallel::PyGetMultithreadedLLimitMassMatrices() const { 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitMassMatrices is deprecated! use parallel.multithreadedLimitMassMatrices instead!");
+    return Index(multithreadedLimitMassMatrices); 
+    }
+
+inline void Parallel::PySetMultithreadedLLimitResiduals(const Index& multithreadedLimitResidualsInit) { 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitResiduals is deprecated! use parallel.multithreadedLimitResiduals instead!");
+    multithreadedLimitResiduals= (const Index&)multithreadedLimitResidualsInit; 
+    }
+inline Index Parallel::PyGetMultithreadedLLimitResiduals() const { 
+    PyDeprecated("SimulationSettings parameter parallel.multithreadedLLimitResiduals is deprecated! use parallel.multithreadedLimitResiduals instead!");
+    return Index(multithreadedLimitResiduals); 
+    }
 
 #endif //#ifdef include once...
