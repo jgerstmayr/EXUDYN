@@ -20,7 +20,7 @@ mbs.SolveDynamic(exu.SimulationSettings())
 #obtain current ODE2 system vector including reference values:
 uTotal = mbs.systemData.GetODE2CoordinatesTotal()
 
-#obtain current ODE2 system vector without reference values 
+#obtain current ODE2 system vector without reference values
 #  (e.g., after static simulation finished):
 u = mbs.systemData.GetODE2Coordinates()
 #set initial ODE2 vector for next simulation (only coordinates!):
@@ -28,9 +28,11 @@ mbs.systemData.SetODE2Coordinates(coordinates=u,
                configuration=exu.ConfigurationType.Initial)
 
 #faster access with reference access (copy=False):
-u3 = mbs.systemData.GetODE2Coordinates(copy=False)[3]
+uReference = mbs.systemData.GetODE2Coordinates(copy=False)
+u2 = uReference[2]
 #we can also modify data, but this may be dangerous!
-u3 += 1
+uReference[2] += 1
+print('u2 =', u2, ', now:', mbs.systemData.GetODE2Coordinates()[2])
 #NOTE: reference access is possible throughout simulation and may
 #      allow faster user functions, but is potentially dangerous
 #      to erroneous behavior: for safety, compare with copy=True results!
@@ -40,6 +42,24 @@ mbs.systemData.Info()
 #print LTG lists for objects and loads:
 mbs.systemData.InfoLTG()
 ```
+
+```text
+u2 = 0.24999999999999897 , now: 1.249999999999999
+node0:
+    {'nodeType': 'Point', 'referenceCoordinates': array([0., 0., 0.]), 'initialCoordinates': array([0., 0., 0.]), 'initialVelocities': array([0., 0., 0.]), 'name': 'node0', 'Vshow': True, 'VdrawSize': -1.0, 'Vcolor': [-1.0, -1.0, -1.0, -1.0]}
+object0:
+    {'objectType': 'MassPoint', 'mass': 10.0, 'nodeNumber': 0, 'name': 'object0', 'Vshow': True, 'VgraphicsData': [{'graphicsData': '<not requested>'}]}
+marker0:
+    {'markerType': 'NodePosition', 'nodeNumber': 0, 'name': 'marker0', 'Vshow': True}
+load0:
+    {'loadType': 'ForceVector', 'markerNumber': 0, 'loadVector': array([2., 0., 5.]), 'bodyFixed': False, 'loadVectorUserFunction': 0, 'name': 'load0', 'Vshow': True}
+object 0 ODE2 LTG=[0,1,2]
+object 0 ODE1 LTG=[]
+object 0 AE LTG  =[]
+object 0 Data LTG=[]
+```
+
+(from the notebook `python/Notebooks/reference/mainSystem.ipynb`)
 
 
 The class **MainSystemData** has the following **functions and structures**:

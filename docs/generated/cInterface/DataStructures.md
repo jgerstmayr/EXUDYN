@@ -13,8 +13,12 @@ which are not described here as they are native to Pybind11, but can be passed a
 The MatrixContainer is a versatile representation for dense and sparse matrices. NOTE: if the MatrixContainer is constructed from a numpy array or a list of lists, both representing a dense matrix, it will go into dense mode; if it is initialized with a scipy sparse csr matrix, it will go into sparse mode. Examples:
 
 
+Example notebook `python/Notebooks/reference/matrixContainer.ipynb`; it needs scipy:
+
+
 ```python
 #Create empty MatrixContainer:
+import numpy as np
 from scipy.sparse import csr_matrix
 from exudyn import MatrixContainer
 mc = MatrixContainer() #empty matrix, dense mode
@@ -29,7 +33,7 @@ mcDense2 = MatrixContainer([[1,2],[3,4]])
 #container can be initialized with a scipy csr sparse matrix, then being stored as sparse matrix
 mcSparse = MatrixContainer(csr_matrix(matrix))
 
-#Set with dense pyArray (a numpy array): 
+#Set with dense pyArray (a numpy array):
 pyArray = np.array(matrix)
 mc.SetWithDenseMatrix(pyArray, useDenseMatrix = True)
 
@@ -40,19 +44,27 @@ mc.SetWithDenseMatrix([[]], useDenseMatrix = True)
 mc.SetWithDenseMatrix([[1,2],[3,4]], useDenseMatrix = False)
 
 #Set with sparse triplets (list of lists or numpy array):
-mc.SetWithSparseMatrix([[0,0,13.3],[1,1,4.2],[1,2,42.]], 
-                       numberOfRows=2, numberOfColumns=3, 
+mc.SetWithSparseMatrix([[0,0,13.3],[1,1,4.2],[1,2,42.]],
+                       numberOfRows=2, numberOfColumns=3,
                        useDenseMatrix=True)
 
 print(mc)
-#gives dense matrix:
-#[[13.3  0.   0. ]
-# [ 0.   4.2 42. ]]
+```
 
+```text
+[[13.3  0.   0. ]
+ [ 0.   4.2 42. ]]
+```
+
+
+With a scipy matrix, and triplets added later:
+
+
+```python
 #Set with scipy matrix:
 #WARNING: only use csr_matrix
 #         csc_matrix would basically run, but gives the transposed!!!
-spmat = csr_matrix(matrix) 
+spmat = csr_matrix(matrix)
 mc.SetWithSparseMatrix(spmat) #takes rows and column format automatically
 
 #initialize and add triplets later on
@@ -60,7 +72,15 @@ mc.Initialize(3,3,useDenseMatrix=False)
 mc.AddSparseMatrix(spmat, factor=1)
 #can also add smaller matrix
 mc.AddSparseMatrix(csr_matrix(np.eye(2)), factor=0.5)
-print('mc8=',mc)
+print('mc=',mc)
+```
+
+```text
+mc= {'numberOfRows': 3, 'numberOfColumns': 3, 'triplets': array([[0. , 0. , 1. ],
+       [1. , 1. , 1. ],
+       [2. , 2. , 1. ],
+       [0. , 0. , 0.5],
+       [1. , 1. , 0.5]])}
 ```
 
 
@@ -252,21 +272,27 @@ mat10 = SC.renderer.materials.New()
 mat10.reflectivity = 0.8
 SC.renderer.materials.Append(mat10) #returns index of mat10
 
-#10 default graphics materials in Exudyn
-#listed here with default color and some properties:
-#note the increased computational costs for reflection & transparency
-#the material names are as follows:
-SC.renderer.materials[0].name == "default"    #steel blue
-SC.renderer.materials[1].name == "matt"       #green
-SC.renderer.materials[2].name == "steel"      #grey (reflection)
-SC.renderer.materials[3].name == "plastic"    #red (reflection)
-SC.renderer.materials[4].name == "chrome"     #light grey (reflection)
-SC.renderer.materials[5].name == "shiny"      #orange (reflection)
-SC.renderer.materials[6].name == "transparent"#(transparency,slight refraction)
-SC.renderer.materials[7].name == "glass"      #light grey (reflection,transparency,refraction)
-SC.renderer.materials[8].name == "mirror"     #light grey (reflection)
-SC.renderer.materials[9].name == "emission"   #light yellow
+#10 default graphics materials in Exudyn, with their default color and some properties;
+#note the increased computational costs for reflection and transparency:
+#  0 default:     steel blue
+#  1 matt:        green
+#  2 steel:       grey (reflection)
+#  3 plastic:     red (reflection)
+#  4 chrome:      light grey (reflection)
+#  5 shiny:       orange (reflection)
+#  6 transparent: (transparency, slight refraction)
+#  7 glass:       light grey (reflection, transparency, refraction)
+#  8 mirror:      light grey (reflection)
+#  9 emission:    light yellow
+SC2 = exu.SystemContainer()
+print([SC2.renderer.materials[i].name for i in range(10)])
 ```
+
+```text
+['default', 'matt', 'steel', 'plastic', 'chrome', 'shiny', 'transparent', 'glass', 'mirror', 'emission']
+```
+
+(from the notebook `python/Notebooks/reference/systemContainer.ipynb`)
 
 
 The class **GraphicsMaterialList** has the following **functions and structures**:

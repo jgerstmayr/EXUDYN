@@ -19,6 +19,7 @@
 # Usage:    python tools/runNotebooks.py                 #all notebooks
 #           python tools/runNotebooks.py tutorialRigidBody #one, by name
 #           python tools/runNotebooks.py --check         #the notebooks whose outputs are older than their code
+#           python tools/runNotebooks.py --test HT       #run, but store nothing (test_referenceNotebooks.py)
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-04
@@ -101,8 +102,8 @@ def RunCell(code, namespace, plt):
     return outputs
 
 
-def Worker(path):
-    """run one notebook in this interpreter and write its outputs into it"""
+def Worker(path, store=True):
+    """run one notebook in this interpreter and write its outputs into it; store=False only runs it"""
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
@@ -125,6 +126,8 @@ def Worker(path):
         for output in cell['outputs']:
             if output['output_type'] == 'execute_result':
                 output['execution_count'] = count
+    if not store:
+        return 0
     notebook['metadata'].setdefault('exudyn', {})['codeHash'] = CodeHash(notebook)
     with open(path, 'w', encoding='utf-8', newline='\n') as file:
         json.dump(notebook, file, indent=1, ensure_ascii=False)
@@ -133,12 +136,13 @@ def Worker(path):
 
 
 def main():
-    if len(sys.argv) == 3 and sys.argv[1] == '--worker':
+    if len(sys.argv) == 3 and sys.argv[1] in ['--worker', '--worker-test']:
         os.chdir(os.path.dirname(os.path.abspath(sys.argv[2])))
-        return Worker(sys.argv[2])
+        return Worker(sys.argv[2], store=(sys.argv[1] == '--worker'))
 
     check = '--check' in sys.argv[1:]
-    names = [name for name in sys.argv[1:] if name != '--check']
+    test = '--test' in sys.argv[1:]
+    names = [name for name in sys.argv[1:] if name not in ['--check', '--test']]
     paths = sorted(glob.glob(os.path.join(notebookDirectory, '**', '*.ipynb'), recursive=True))
     if names:
         paths = [p for p in paths if os.path.splitext(os.path.basename(p))[0] in names]
@@ -158,7 +162,8 @@ def main():
         environment = dict(os.environ, EXUDYN_SUPPRESS_UI_WINDOW_OPEN='1', EXUDYN_OUTPUTDIRECTORY=outputDirectory)
         environment.pop('PYTHONPATH', None)
         for path in paths:
-            result = subprocess.run([sys.executable, os.path.abspath(__file__), '--worker', path], env=environment)
+            result = subprocess.run([sys.executable, os.path.abspath(__file__), '--worker-test' if test else '--worker', path],
+                                    env=environment)
             print(('ran:    ' if result.returncode == 0 else 'FAILED: ') + os.path.relpath(path, repositoryRoot))
             failures += (result.returncode != 0)
     return 1 if failures else 0

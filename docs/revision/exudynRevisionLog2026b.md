@@ -14651,3 +14651,42 @@ code of the previous commit.
 
 **RG16.12.5**: `tutorialRigidBodyCreate` is the notebook of `rigidBodyTutorial3.py`, with `referenceHT` and the frame as
 `exu.HT`; #2823 is complete.
+
+<a id="rg17-4"></a>
+### RG17.4 — the examples of the reference manual are notebooks (2026-10-04, #2831, #2841, #2842)
+
+*(Maintainer 2026-10-04: "do RG17.4 as proposed".)*
+
+**Five notebooks** in `python/Notebooks/reference/`, beside `HT.ipynb`: `generalInformation` (the introduction of the
+interface, the module access, the system container functions, the module and the type definitions: 8 examples),
+`mainSystem` (the MainSystem, its extensions, nodes to sensors, `systemData`, `GeneralContact`: 10), `systemContainer`
+(the container, the renderer, the material list: 3), `symbolic` (8), `matrixContainer` (1, needs scipy). One notebook
+holds the examples of a definition file, each as a **part**: its cells are tagged `part-<name>`, and
+`AddDocuNotebook(path, part='<name>')` writes only them - the code, its printed text, then "(from the notebook
+`...`)". A cell tagged also `remove-cell` is the setup the example needs but does not show (a rigid body for the
+sensor of the type definitions, a system with a sensor for the general extensions, a marker for the general
+contact). `AddDocuNotebook` refuses a part that has no cell and a notebook that stores an error. The Markdown cells
+outside the parts (headings, the setup explained) are only in the notebook.
+
+**Kept as code blocks** (4): the three of *Exceptions and error messages* - a traceback, `mbs.AddObject('abc')` and
+the user error it raises - and the copy example (#2842 below).
+
+**What running them found** - the examples had been read, never run:
+- `exu.config.precision` does not exist: `outputPrecision`; `numberOfDigits` was undefined;
+- `SC.Append(mbsCopy)`: the function is `AppendSystem` - **#2841**: the reference manual (`pybindSystemContainer.py`,
+  the MainSystem introduction) and two error messages (`CSystem.cpp`, `MainSystem.cpp`) named `Append`; fixed;
+- `SC.AppendSystem(copy.copy(mbs))` ends in an **access violation** when the container is deleted or Python exits:
+  the container deletes the copy, which its Python object deletes again - **#2842**, RG17.4.3;
+- `GetODE2Coordinates(copy=False)[3]` of a mass point with three coordinates (index 2 now), and `u3 += 1` changed a
+  float, not the vector: the example writes into the reference and prints the effect;
+- `SymReal.sin(8)` does not exist: `esym.sin(8)`; the `VariableSet` example used `esym` without defining it;
+- `CreateSymbolicUserFunction(mbs, UFload, load, 'loadUserFunction')` passed the load before it existed and in the
+  place of the name: the load is added first, the function made for it and set with `SetLoadParameter`;
+- the `GeneralContact` example passed `...` as arguments: a sphere on a marker and the friction pairings now;
+- the renderer example used `general.drawWorldBasis`, deprecated: `view0.scene.drawWorldBasis`;
+- the material names, ten comparisons whose results nobody saw, are printed;
+- `np` was used without import in the MatrixContainer example; the general extensions plotted `PlotSensor(...)`.
+
+**The test**: `python/testing/test_referenceNotebooks.py` runs each reference notebook in a subprocess
+(`runNotebooks.py --test`: the cells executed, nothing written; skipped if scipy or matplotlib is missing and the
+notebook names it) and checks for every notebook, the tutorials included, that its stored hash is that of its code.

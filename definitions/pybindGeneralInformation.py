@@ -31,74 +31,33 @@ In the following, some basic steps and concepts for usage are shown, references 
 """, section='General information on Python-C++ interface', sectionLevel=1, sectionLabel='sec:generalPythonInterface')
 
 pb.AddDocu(r"""To import the module, just include the Exudyn module in Python:""")
-pb.AddDocuCodeBlock(code="""
-import exudyn as exu
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/generalInformation.ipynb', part='import')
 
 #pb.AddDocuList(itemList=['\\texttt{import exudyn as exu}'], itemText='[]')
 pb.AddDocu(r"""For compatibility with examples and other users, we recommend to use the `exu` abbreviation throughout. In addition, you may work with a convenient interface for your items, therefore also always include:""")
-pb.AddDocuCodeBlock(code="""
-from exudyn.itemInterface import *
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/generalInformation.ipynb', part='itemInterface')
 #pb.AddDocuList(itemList=['\\texttt{from exudyn.itemInterface import *}'], itemText='[]')
 pb.AddDocu(r"""Note that including `exudyn.utilities` will cover `itemInterface`. Also note that `from ... import *` is not recommended in general and it will not work in certain cases, e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace imports in your files afterwards by removing the star import.""")
 
 pb.AddDocu(r"""The general hub to multibody dynamics models is provided by the classes `SystemContainer` and `MainSystem`, except for some very basic system functionality (which is inside the Exudyn module). 
 
 You can create a new `SystemContainer`, which is a class that is initialized by assigning a system container to a variable, usually denoted as `SC`:""")
-pb.AddDocuCodeBlock(code="""
-SC = exu.SystemContainer()
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/generalInformation.ipynb', part='systemContainer')
 #pb.AddDocuList(itemList=['\\texttt{SC = exu.SystemContainer()}'], itemText='[]')
 pb.AddDocu(r"""Note that creating a second `exu.SystemContainer()` will be independent of `SC` and therefore makes no sense if you do not intend to work with two different containers.
 """)
 
 pb.AddDocu(r"""To add a MainSystem to system container `SC` and store as variable `mbs`, write:""")
 
-pb.AddDocuCodeBlock(code="""
-mbs = SC.AddSystem()
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/generalInformation.ipynb', part='addSystem')
 #pb.AddDocuList(itemList=['\\texttt{mbs = SC.AddSystem()}'], itemText='[]')
 
 pb.AddDocu(r"""Furthermore, there are a couple of commands available directly in the `exudyn` module, given in the following subsections. Regarding the **(basic) module access**, functions are related to the `exudyn = exu` module, see these examples:""")
 
-pb.AddDocuCodeBlock(code="""
-#  import exudyn module:
-import exudyn as exu
-#  print detailed exudyn version, Python version (at which it is compiled):
-exu.config.Version(addDetails = True)
-#  set precision of C++ output to console
-exu.config.precision = numberOfDigits
-#  turn on/off output to console
-exu.config.printToConsole = False
-#  invalid index, may depend on compilation settings:
-nInvalid = exu.InvalidIndex() #the invalid index, depends on architecture and version
-#  run basic demos (without/with graphics):
-exu.demos.Demo1()
-exu.demos.Demo2()
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/generalInformation.ipynb', part='moduleAccess')
 
 pb.AddDocu(r"""Understanding the usage of functions for python object `SystemContainer` of the module `exudyn`, the following examples might help:""")
-pb.AddDocuCodeBlock(code="""
-#import exudyn module:
-import exudyn as exu
-#  import utilities (includes itemInterface, basicUtilities, 
-#                  advancedUtilities, rigidBodyUtilities, graphics):
-from exudyn.utilities import *
-#  create system container and store in SC:
-SC = exu.SystemContainer()
-#  add a MainSystem (multibody system) to system container SC and store as mbs:
-mbs = SC.AddSystem()
-#  add a second MainSystem to system container SC and store as mbs2:
-mbs2 = SC.AddSystem()
-#  print number of systems available:
-nSys = SC.NumberOfSystems()
-exu.Print(nSys) #or just print(nSys)
-#  delete reference to mbs and mbs2 (usually not necessary):
-del mbs, mbs2
-#  reset system container (mbs becomes invalid):
-SC.Reset()
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/generalInformation.ipynb', part='containers')
 pb.AddDocu(r"""If you run a parameter variation (check `Examples/parameterVariationExample.py`), you may reset or delete the created `MainSystem` `mbs` and the `SystemContainer` `SC` before creating new instances in order to avoid memory growth.""")
 
 #+++++++++++++++++++++++++++++++++++
@@ -148,7 +107,7 @@ og = mbs.AddObject(ObjectGround()) #copy data of ObjectGround() into C++
 o0 = mbs.GetObject(0)              #get copy of internal data as dictionary
 
 mbsCopy=copy.copy(mbs)             #mbsCopy is now a real copy of mbs; uses pickle; experimental!
-SC.Append(mbsCopy)                 #this is needed to work with mbsCopy
+SC.AppendSystem(mbsCopy)                #this is needed to work with mbsCopy
 
 del o0                             #delete the local dictionary; C++ data not affected
 del mbs, mbs2                      #references to mbs deleted (C++ data still available)

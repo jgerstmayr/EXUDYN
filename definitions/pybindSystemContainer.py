@@ -35,13 +35,7 @@ pb.DefPyStartClass(classStr, pyClassStr,
 
 pb.AddDocu(r"""The `visualizationSettings`, see [](#sec-visualizationsettingsmain), can be edited when pressing the key V in the render window and it holds the renderer substructure (type: Renderer) to start and stop the renderer, and to interact with the renderer. Regarding the **(basic) module access**, functions are related to the `exudyn = exu` module, see also the introduction of this chapter and this example:""")
 
-pb.AddDocuCodeBlock(code="""
-import exudyn as exu
-#create system container and store by reference in SC:
-SC = exu.SystemContainer() 
-#add MainSystem to SC:
-mbs = SC.AddSystem()
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/systemContainer.ipynb', part='systemContainer')
 
 pb.DefStartTable(pyClassStr)
 
@@ -59,7 +53,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='AddSystem', cName='AddMainSystem
                         returnType='MainSystem',
                         )
 
-pb.DefPyFunctionAccess(cClass=classStr, pyName='Append', cName='AppendMainSystem', 
+pb.DefPyFunctionAccess(cClass=classStr, pyName='AppendSystem', cName='AppendMainSystem', 
                         description="append an exsiting computational system to the system container; returns the number of MainSystem in system container", options='py::return_value_policy::reference',
                         argList=['mainSystem'],
                         argTypes=['MainSystem'],

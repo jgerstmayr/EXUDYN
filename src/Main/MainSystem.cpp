@@ -74,7 +74,7 @@ void MainSystem::Reset()
 
 void MainSystem::SystemHasChanged()
 {
-	if (!HasMainSystemContainer()) { PyWarning("MainSystem has not been yet linked to a system container. Having a MainSystem mbs, you should do first:\nSC=exudyn.SystemContainer()\nSC.Append(mbs)\n"); }
+	if (!HasMainSystemContainer()) { PyWarning("MainSystem has not been yet linked to a system container. Having a MainSystem mbs, you should do first:\nSC=exudyn.SystemContainer()\nSC.AppendSystem(mbs)\n"); }
 	GetCSystem().SystemHasChanged();
 	GetVisualizationSystem().SetSystemHasChanged(true);
 }

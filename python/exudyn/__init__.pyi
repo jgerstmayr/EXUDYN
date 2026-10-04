@@ -3332,7 +3332,7 @@ class MainSystem:
 
     Interactions with the system are done via MainSystem, either through, e.g., ``mbs.AddObject(...)`` or with create functions, such as ``mbs.CreateRigidBody(...)``; States are accessible via ``mbs.systemData``
     The MainSystem shall only be created from a SystemContainer ``SC`` using ``SC.AddSystem()``; do not use ``exu.MainSystem()``, as the latter one would not be linked to a SystemContainer
-    Having already a valid ``mbs``, you may use ``SC.Append(mbs).``
+    Having already a valid ``mbs``, you may use ``SC.AppendSystem(mbs)``.
     """
     @overload
     def Assemble(self) -> None: 
@@ -4133,7 +4133,7 @@ class SystemContainer:
         """Add a new computational system."""
         ...
     @overload
-    def Append(self, mainSystem: MainSystem) -> int: 
+    def AppendSystem(self, mainSystem: MainSystem) -> int: 
         """Append an exsiting computational system to the system container; returns the number of MainSystem in system container."""
         ...
     @overload

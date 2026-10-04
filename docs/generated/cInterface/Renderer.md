@@ -14,12 +14,14 @@ mbs = SC.AddSystem()
 mbs.CreateMassPoint(mass=1)
 
 mbs.Assemble()
-SC.visualizationSettings.general.drawWorldBasis = True
+SC.visualizationSettings.view0.scene.drawWorldBasis = True
 SC.renderer.Start()
 SC.renderer.DoIdleTasks() #wait until user presses space, etc.
 mbs.SolveDynamic()
 SC.renderer.Stop()
 ```
+
+(from the notebook `python/Notebooks/reference/systemContainer.ipynb`)
 
 
 The class **MainRenderer** has the following **functions and structures**:

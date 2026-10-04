@@ -346,7 +346,8 @@ alternatives (#2817). The test model `inspectTest.py` shows it.
 **Tutorials as notebooks.** `python/Notebooks/` holds the tutorials as Jupyter notebooks, stored with the outputs of
 their last run; the documentation shows them with these outputs, and `python/Examples/notebooks/` holds the same code as
 scripts. `exudev notebooks` runs them and stores the outputs. `exudyn.interactive.ShowImage(SC)` shows the scene in a notebook -
-an image of the raytracer, without a window (#2831).
+an image of the raytracer, without a window (#2831). The examples of the Python-C++ interface chapter are notebooks
+of `python/Notebooks/reference/`, which the tests run, so each example on these pages shows what it printed.
 
 **Kinetic and potential energy as output variables** (`OutputVariableType.KineticEnergy`,
 `PotentialEnergy`) of the bodies, beams, plates, superelements and spring-dampers, and

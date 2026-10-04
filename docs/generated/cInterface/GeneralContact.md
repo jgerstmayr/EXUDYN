@@ -12,9 +12,12 @@ For further explanations and theoretical backgrounds, see [](#seccontacttheory).
 #Add GeneralContact to mbs:
 gContact = mbs.AddGeneralContact()
 #Add contact elements, e.g.:
-gContact.AddSphereWithMarker(...) #use appropriate arguments
-gContact.SetFrictionPairings(...) #set friction pairings and adjust searchTree if needed.
+gContact.AddSphereWithMarker(marker, radius=0.1, contactStiffness=1e5, contactDamping=1e2,
+                             frictionMaterialIndex=0)
+gContact.SetFrictionPairings(0.2*np.ones((1,1))) #set friction pairings and adjust searchTree if needed.
 ```
+
+(from the notebook `python/Notebooks/reference/mainSystem.ipynb`)
 
 
 The class **GeneralContact** has the following **functions and structures**:

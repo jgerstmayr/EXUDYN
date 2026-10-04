@@ -35,7 +35,7 @@ pb = PybindInterface()
 pb.CreateNewRSTfile('MainSystem')
 classStr = 'MainSystem'
 pb.DefPyStartClass(classStr, classStr, 
-                    r"""MainSystem is the class which defines a (multibody) system and it's instance if usually called `mbs`. Interactions with the system are done via MainSystem, either through, e.g., `mbs.AddObject(...)` or with create functions, such as `mbs.CreateRigidBody(...)`; States are accessible via `mbs.systemData`. The MainSystem shall only be created from a SystemContainer `SC` using `SC.AddSystem()`; do not use `exu.MainSystem()`, as the latter one would not be linked to a SystemContainer. Having already a valid `mbs`, you may use `SC.Append(mbs).` """,
+                    r"""MainSystem is the class which defines a (multibody) system and it's instance if usually called `mbs`. Interactions with the system are done via MainSystem, either through, e.g., `mbs.AddObject(...)` or with create functions, such as `mbs.CreateRigidBody(...)`; States are accessible via `mbs.systemData`. The MainSystem shall only be created from a SystemContainer `SC` using `SC.AddSystem()`; do not use `exu.MainSystem()`, as the latter one would not be linked to a SystemContainer. Having already a valid `mbs`, you may use `SC.AppendSystem(mbs)`. """,
                     forbidPythonConstructor=False)
 
 pb.AddDocu(
@@ -44,11 +44,7 @@ pb.AddDocu(
             "For compatibility, it is recommended to denote the variable holding this system as mbs, the multibody dynamics system. "+
             "It can be created, visualized and computed. Use the following functions for system manipulation.")
 
-pb.AddDocuCodeBlock(code="""
-import exudyn as exu
-SC = exu.SystemContainer()
-mbs = SC.AddSystem()
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/mainSystem.ipynb', part='mainSystem')
 
 pb.DefStartTable(classStr)
 
@@ -324,18 +320,7 @@ pb.DefFinishTable()#only finalize latex table
 #create extensions
 pb.DefStartClass('MainSystem extensions (create)',r"""This section represents extensions to MainSystem, which are direct calls to Python functions; the 'create' extensions to simplify the creation of multibody systems, such as CreateMassPoint(...); these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import `exudyn.misc.mainSystemExtensions` or `exudyn.utilities`""", subSection=True,labelName='sec:mainsystem:pythonExtensionsCreate')
 
-pb.AddDocuCodeBlock(code="""
-import exudyn as exu           
-from exudyn.utilities import * 
-#alternative: import exudyn.misc.mainSystemExtensions
-SC = exu.SystemContainer()
-mbs = SC.AddSystem()
-#
-#create rigid body
-b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1]),
-                       referencePosition = [1,0,0], 
-                       gravity = [0,0,-9.81])
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/mainSystem.ipynb', part='create')
 
 
 pb.ExtensionMarkdown('MainSystemCreateExt') #written by tools/generators/mainSystemExtensionDocsEmitter.py
@@ -345,21 +330,7 @@ pb.ExtensionMarkdown('MainSystemCreateExt') #written by tools/generators/mainSys
 #function extensions
 pb.DefStartClass('MainSystem extensions (general)',r"""This section represents general extensions to MainSystem, which are direct calls to Python functions, such as PlotSensor or SolveDynamic; these extensions allow a more intuitive interaction with the MainSystem class, see the following example. For activation, import `exudyn.misc.mainSystemExtensions` or `exudyn.utilities`""", subSection=True,labelName='sec:mainsystem:pythonExtensions')
 
-pb.AddDocuCodeBlock(code="""
-#this example sketches the usage 
-#for complete examples see Examples/ or TestModels/ folders
-#create some multibody system (mbs) first:
-# ... 
-#
-#compute system degree of freedom: 
-mbs.ComputeSystemDegreeOfFreedom(verbose=True)
-#
-#call solver function directly from mbs:
-mbs.SolveDynamic(exu.SimulationSettings())
-#
-#plot sensor directly from mbs:
-mbs.PlotSensor(...)
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/mainSystem.ipynb', part='extensions')
 
 
 pb.ExtensionMarkdown('MainSystemExt') #written by tools/generators/mainSystemExtensionDocsEmitter.py
@@ -378,13 +349,7 @@ pb.AddDocu('This section provides functions for adding, reading and modifying no
             '(history) variables -- which are not providing unknowns in the nonlinear solver but will be solved '+
             'in an additional nonlinear iteration for e.g., contact, friction or plasticity.')
 
-pb.AddDocuCodeBlock(code="""
-import exudyn as exu               #EXUDYN package including C++ core part
-from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
-SC = exu.SystemContainer()         #container of systems
-mbs = SC.AddSystem()               #add a new system to work with
-nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/mainSystem.ipynb', part='node')
 
 pb.DefStartTable(classStr+':nodes')
 
@@ -505,14 +470,7 @@ pb.AddDocu('This section provides functions for adding, reading and modifying ob
             'two markers, which can be, e.g., position, rigid or coordinate markers. Thus, the dependence of objects is '+
             'either on the coordinates of the marker-objects/nodes or on nodes which the objects possess themselves.')
 
-pb.AddDocuCodeBlock(code="""
-import exudyn as exu               #EXUDYN package including C++ core part
-from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
-SC = exu.SystemContainer()         #container of systems
-mbs = SC.AddSystem()               #add a new system to work with
-nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
-mbs.AddObject(ObjectMassPoint2D(mass=10, nodeNumber=nMP ))
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/mainSystem.ipynb', part='object')
 
 pb.DefStartTable(classStr+':objects')
 #pb.DefPyFunctionAccess(cClass=classStr, pyName='AddObject', cName='[](MainSystem& mainSystem, py::object pyObject) {return mainSystem.AddMainObjectPyClass(pyObject); }', 
@@ -639,15 +597,7 @@ pb.AddDocu('This section provides functions for adding, reading and modifying ma
             'generalized forces). Markers provide unique interfaces for loads, sensors and constraints in order to address '+
             'these quantities independently of the structure of the object or node (e.g., rigid or flexible body).')
 
-pb.AddDocuCodeBlock(code="""
-import exudyn as exu               #EXUDYN package including C++ core part
-from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
-SC = exu.SystemContainer()         #container of systems
-mbs = SC.AddSystem()               #add a new system to work with
-nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
-mbs.AddObject(ObjectMassPoint2D(mass=10, nodeNumber=nMP ))
-mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/mainSystem.ipynb', part='marker')
 
 pb.DefStartTable(classStr+':markers')
 
@@ -735,16 +685,7 @@ pb.AddDocu('This section provides functions for adding, reading and modifying op
             'Loads are used to act on the quantities which are dual to the primal kinematic quantities, '+
             'such as displacement and rotation. Loads represent, e.g., forces, torques or generalized forces.')
 
-pb.AddDocuCodeBlock(code="""
-import exudyn as exu               #EXUDYN package including C++ core part
-from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
-SC = exu.SystemContainer()         #container of systems
-mbs = SC.AddSystem()               #add a new system to work with
-nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
-mbs.AddObject(ObjectMassPoint2D(mass=10, nodeNumber=nMP ))
-mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
-mbs.AddLoad(Force(markerNumber = mMP, loadVector=[0.001,0,0]))
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/mainSystem.ipynb', part='load')
 
 pb.DefStartTable(classStr+':loads')
 
@@ -828,22 +769,7 @@ pb.DefStartClass(classStr+': Sensor', '', subSection=True, labelName='sec:mainsy
 pb.AddDocu('This section provides functions for adding, reading and modifying operating sensors. '+
             'Sensors are used to measure information in nodes, objects, markers, and loads for output in a file.')
 
-pb.AddDocuCodeBlock(code="""
-import exudyn as exu               #EXUDYN package including C++ core part
-from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
-SC = exu.SystemContainer()         #container of systems
-mbs = SC.AddSystem()               #add a new system to work with
-nMP = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
-mbs.AddObject(ObjectMassPoint(mass=10, nodeNumber=nMP ))
-mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
-mbs.AddLoad(Force(markerNumber = mMP, loadVector=[2,0,5]))
-sMP = mbs.AddSensor(SensorNode(nodeNumber=nMP, storeInternal=True,
-                               outputVariableType=exu.OutputVariableType.Position))
-mbs.Assemble()
-mbs.SolveDynamic(exu.SimulationSettings())
-from exudyn.plot import PlotSensor
-PlotSensor(mbs, sMP, components=[0,1,2])
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/mainSystem.ipynb', part='sensor')
 
 pb.DefStartTable(classStr+':sensors')
 

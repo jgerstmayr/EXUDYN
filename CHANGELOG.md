@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 262 | 1.12.281 |
+| 1.12 | Metheney | 263 | 1.12.282 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.282** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SystemContainer.Append is documented, the function is AppendSystem (#2841)
+  - description: The reference manual (pybindSystemContainer.py, the MainSystem introduction and the copy example of the general information) and two error messages of CSystem.cpp and MainSystem.cpp tell to call SC.Append(mbs); the SystemContainer has no Append - its function is AppendSystem (PybindModule.cpp), which simulatorCouplingTwoMbs.py uses. Found by running the examples of the reference manual as notebooks, revision2026b step RG17.4.
+  - **notes:** Fixed: the reference manual (SystemContainer, the MainSystem introduction, the copy example) and the error messages of CSystem.cpp and MainSystem.cpp name SC.AppendSystem(mbs), the function the SystemContainer has.
+  - date resolved: **2026-10-04 14:48**, date raised: 2026-10-04
 - **1.12.281** `EXAMPLE` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` examples and test models that show referenceHT, localHT and exu.HT (#2823)
   - description: The maintainer, 2026-10-04: 'referenceHT, localHT, etc. is rarely used'; 'a couple of examples and test models (like 4+4) should use referenceHT / localHT, just to show how it works and for the tests' - solutionViewerTest.py, rigidBodyTutorial3.py (better as Jupyter tutorial, RG17), and 'a pure prestepuserfunction example showing 4 bodies transformed with the InterpolateSE3/SO3 features, writing the transformations into the renderer (with the solution information string)'. revision2026b step RG16.12. \[2026-10-03, Claude-JG\]: Done 2026-10-04: the example homogeneousTransformationInterpolation.py (RG16.12.1) and solutionViewerTest.py on exu.HT with referenceHT and localHT (RG16.12.2); open: two examples, four test models, rigidBodyTutorial3 as notebook (RG16.12.3 to .5).
   - **notes:** Done: the notebook tutorialRigidBodyCreate (python/Notebooks/) replaces rigidBodyTutorial3.py; it names referenceHT and shows the frame of a body as exu.HT, together with the examples and test models of revision2026b step RG16.12.

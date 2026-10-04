@@ -36,21 +36,7 @@ pb.DefPyStartClass(classStr,pyClassStr,
 
 #pb.AddDocu()
 
-pb.AddDocuCodeBlock(code="""
-import exudyn as exu
-from exudyn.utilities import *
-import exudyn.graphics as graphics
-SC = exu.SystemContainer()
-mbs = SC.AddSystem()
-mbs.CreateMassPoint(mass=1)
-
-mbs.Assemble()
-SC.visualizationSettings.general.drawWorldBasis = True
-SC.renderer.Start()
-SC.renderer.DoIdleTasks() #wait until user presses space, etc.
-mbs.SolveDynamic()
-SC.renderer.Stop()
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/systemContainer.ipynb', part='renderer')
 
 pb.DefStartTable(classStr)
 

@@ -42,56 +42,7 @@ pb.DefPyStartClass(classStr, pyClassStr, 'The MatrixContainer is a versatile rep
                     subSection=True, 
                     labelName='sec:MatrixContainer') #section with this label was earlier in theory section
 
-pb.AddDocuCodeBlock(code="""
-#Create empty MatrixContainer:
-from scipy.sparse import csr_matrix
-from exudyn import MatrixContainer
-mc = MatrixContainer() #empty matrix, dense mode
-
-#Create MatrixContainer with dense matrix:
-#container can be initialized with a dense matrix, using list of lists or a numpy array, e.g.:
-matrix = np.eye(3)
-#stores matrices internally in dense mode:
-mcDense1 = MatrixContainer(matrix)
-mcDense2 = MatrixContainer([[1,2],[3,4]])
-
-#container can be initialized with a scipy csr sparse matrix, then being stored as sparse matrix
-mcSparse = MatrixContainer(csr_matrix(matrix))
-
-#Set with dense pyArray (a numpy array): 
-pyArray = np.array(matrix)
-mc.SetWithDenseMatrix(pyArray, useDenseMatrix = True)
-
-#Set empty matrix:
-mc.SetWithDenseMatrix([[]], useDenseMatrix = True)
-
-#Set with list of lists, stored as sparse matrix:
-mc.SetWithDenseMatrix([[1,2],[3,4]], useDenseMatrix = False)
-
-#Set with sparse triplets (list of lists or numpy array):
-mc.SetWithSparseMatrix([[0,0,13.3],[1,1,4.2],[1,2,42.]], 
-                       numberOfRows=2, numberOfColumns=3, 
-                       useDenseMatrix=True)
-
-print(mc)
-#gives dense matrix:
-#[[13.3  0.   0. ]
-# [ 0.   4.2 42. ]]
-
-#Set with scipy matrix:
-#WARNING: only use csr_matrix
-#         csc_matrix would basically run, but gives the transposed!!!
-spmat = csr_matrix(matrix) 
-mc.SetWithSparseMatrix(spmat) #takes rows and column format automatically
-
-#initialize and add triplets later on
-mc.Initialize(3,3,useDenseMatrix=False)
-mc.AddSparseMatrix(spmat, factor=1)
-#can also add smaller matrix
-mc.AddSparseMatrix(csr_matrix(np.eye(2)), factor=0.5)
-print('mc8=',mc)
-
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/matrixContainer.ipynb')
 
 pb.DefStartTable(pyClassStr)
 
@@ -439,44 +390,7 @@ pyClassStr = 'GraphicsMaterialList'
 pb.DefPyStartClass(classStr, pyClassStr, "The GraphicsMaterialList contains the list of materials (material properties) for visualization; currently, only the raytracer uses materials. Materials can be accessed via the variable materials in renderer of SystemContainer.", 
                     subSection=True, labelName='sec:GraphicsMaterialList')
 
-pb.AddDocuCodeBlock(code="""
-#access material 0:
-mat0 = SC.renderer.materials[0]
-#convert into dictionary for easier processing:
-matDict = mat0.GetDictionary()
-matDict['alpha'] = 0.5
-#change material (e.g., using a data base):
-mat0.SetDictionary(matDict)
-#or directly update material
-mat0.name = 'new name'
-mat0.emission = [0.8,0.6,0.]
-
-#update material in renderer:
-SC.renderer.materials.Set(0,mat0)
-#update material directly with dictionary:
-SC.renderer.materials.Set(0,matDict)
-
-#create new material:
-mat10 = SC.renderer.materials.New()
-mat10.reflectivity = 0.8
-SC.renderer.materials.Append(mat10) #returns index of mat10
-
-#10 default graphics materials in Exudyn
-#listed here with default color and some properties:
-#note the increased computational costs for reflection & transparency
-#the material names are as follows:
-SC.renderer.materials[0].name == "default"    #steel blue
-SC.renderer.materials[1].name == "matt"       #green
-SC.renderer.materials[2].name == "steel"      #grey (reflection)
-SC.renderer.materials[3].name == "plastic"    #red (reflection)
-SC.renderer.materials[4].name == "chrome"     #light grey (reflection)
-SC.renderer.materials[5].name == "shiny"      #orange (reflection)
-SC.renderer.materials[6].name == "transparent"#(transparency,slight refraction)
-SC.renderer.materials[7].name == "glass"      #light grey (reflection,transparency,refraction)
-SC.renderer.materials[8].name == "mirror"     #light grey (reflection)
-SC.renderer.materials[9].name == "emission"   #light yellow
-
-""") #keep empty line for RST
+pb.AddDocuNotebook('python/Notebooks/reference/systemContainer.ipynb', part='materials') #keep empty line for RST
 
 
 pb.DefStartTable(pyClassStr)

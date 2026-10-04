@@ -27,18 +27,7 @@ pb.AddDocu(text='This section defines a couple of structures (C++: enum aka enum
             section='Type definitions', sectionLevel=1,sectionLabel='sec:cinterface:typedef')
 
 #sLenum = '\section{}\n \n\n'
-pb.AddDocuCodeBlock("""
-#Conversion to integer is possible: 
-x = int(exu.OutputVariableType.Displacement)
-#also conversion from integer: 
-varType = exu.OutputVariableType(8)
-#use in settings:
-SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.StressLocal
-#use outputVariableType in sensor:
-mbs.AddSensor(SensorBody(bodyNumber=rigid, storeInternal=True,
-                         outputVariableType=exu.OutputVariableType.Displacement))
-#
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/generalInformation.ipynb', part='enums')
 
 pb.CppCode('\n//        pybinding to enum classes:\n')
 

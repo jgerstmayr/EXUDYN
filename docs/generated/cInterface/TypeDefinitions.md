@@ -5,17 +5,18 @@
 This section defines a couple of structures (C++: enum aka enumeration type), which are used to select, e.g., a configuration type or a variable type. In the background, these types are integer numbers, but for safety, the types should be used as type variables. See this examples:
 
 ```python
-#Conversion to integer is possible: 
+#Conversion to integer is possible:
 x = int(exu.OutputVariableType.Displacement)
-#also conversion from integer: 
+#also conversion from integer:
 varType = exu.OutputVariableType(8)
 #use in settings:
 SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.StressLocal
 #use outputVariableType in sensor:
-mbs.AddSensor(SensorBody(bodyNumber=rigid, storeInternal=True,
-                         outputVariableType=exu.OutputVariableType.Displacement))
-#
+sensor = mbs.AddSensor(SensorBody(bodyNumber=rigid, storeInternal=True,
+                                  outputVariableType=exu.OutputVariableType.Displacement))
 ```
+
+(from the notebook `python/Notebooks/reference/generalInformation.ipynb`)
 
 
 (sec-outputvariabletype)=

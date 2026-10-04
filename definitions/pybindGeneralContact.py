@@ -53,15 +53,7 @@ pb.AddDocu(
             '[numberOfSpheresMarkerBased, numberOfANCFCable2D, numberOfTrigsRigidBodyBased], see also'+
             'the output of GetPythonObject().')
 
-pb.AddDocuCodeBlock(code="""
-#...
-#code snippet, must be placed anywhere before mbs.Assemble()
-#Add GeneralContact to mbs:
-gContact = mbs.AddGeneralContact()
-#Add contact elements, e.g.:
-gContact.AddSphereWithMarker(...) #use appropriate arguments
-gContact.SetFrictionPairings(...) #set friction pairings and adjust searchTree if needed.
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/mainSystem.ipynb', part='generalContact')
 
 pb.DefStartTable(pyClassStr)
 

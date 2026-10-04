@@ -47,6 +47,17 @@ y = x/3.       #directly evaluates to 14
 esym.SetRecording(True)
 ```
 
+```text
+a:  a  =  42.0
+c:  (((a + (13 * 7)) + 1) - 3)  =  131.0
+d:  ((a + (13 * sin(a))) + cos(7))  =  30.839122131440067
+d:  ((a + (13 * sin(a))) + cos(7))  =  27.63179787837662
+d:  ((a + (13 * sin(a))) + cos(7))  =  27.63179787837662
+f= 1007.048934256198 , diff= 11.908573304574846
+```
+
+(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
+
 To create a symbolic Real, use `aa=symbolic.Real(1.23)` to build a Python object aa with value 1.23. In order to use a named value, use `pi=symbolic.Real('pi',3.14)`. Note that in the following, we use the abbreviation `SymReal=exudyn.symbolic.Real`. Member functions of `SymReal`, which are **not recorded**, are:
 
 The class **symbolic.Real** has the following **functions and structures**:
@@ -106,8 +117,10 @@ c = (a <= b)
 c = (a >= b)
 
 #in most cases, we can also mix with float:
-c = a*7 + SymReal.sin(8)
+c = a*7 + esym.sin(8)
 ```
+
+(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
 
 Mathematical functions may be called with an `SymReal` or with a `float`. Most standard mathematical functions exist for `symbolic`, e.g., as `symbolic.abs`. **HINT**: function names are lower-case for compatibility with Python's math library. Thus, you can easily exchange math.sin with esym.sin, and you may want to use a generic name, such as myMath=symbolic in order to switch between Python and symbolic user functions. The following functions exist:
 
@@ -184,7 +197,7 @@ import numpy as np
 esym = exu.symbolic
 
 SymVector = esym.Vector
-SymReal = esym.Real 
+SymReal = esym.Real
 
 a = SymReal('a',42.)
 b = SymReal(13)
@@ -209,6 +222,17 @@ print('v1*v2: ',v1*v2,"=",(v1*v2).Evaluate()) #evaluate as Real
 #access of vector component:
 print('v1[2]: ',v1[2],"=",v1[2].Evaluate())   #evaluate as Real
 ```
+
+```text
+v1:  [1,3,2]
+v2 initial:  [1,3,2]
+v2 now:  [a,42,(a - (3 * 13))] = [42. 42.  3.]
+v1+v2:  ([1,3,2] + [a,42,(a - (3 * 13))]) = [43. 45.  5.]
+v1*v2:  ([1,3,2] * [a,42,(a - (3 * 13))]) = 174.0
+v1[2]:  [1,3,2][2] = 2.0
+```
+
+(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
 
 To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use `v=symbolic.Vector('myVec',[3,4.2,5])`. Vectors can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Vector([x,x**2,3.14])`, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation `SymVector=exudyn.symbolic.Vector`. Note that only functions are able to be recorded. Member functions of `SymVector` are:
 
@@ -253,7 +277,7 @@ u = v+w
 u = v-w
 u = -v
 #scalar multiplication; evaluates to SymReal:
-x = v*w 
+x = v*w
 #NOTE: component-wise multiplication, returns SymVector:
 u = v.MultComponents(w)
 
@@ -262,6 +286,8 @@ v += w
 v -= w
 v *= SymReal(0.5)
 ```
+
+(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
 
 
 ## symbolic.Matrix
@@ -276,7 +302,7 @@ import numpy as np
 esym = exu.symbolic
 
 SymMatrix = esym.Matrix
-SymReal = esym.Real 
+SymReal = esym.Real
 
 a = SymReal('a',42.)
 b = SymReal(13)
@@ -296,6 +322,15 @@ m1 -= 3*m3
 print('m1: ',m1)
 print('m2: ',m2)
 ```
+
+```text
+m1:  ((3 * ([[1,3,2],[4,5,6]] + [[a,(3 * 13),2],
+[4,5,6]])) - (3 * [[a,(3 * 13),2],
+[4,5,6]]))
+m2:  [[0,1,1],[1,0,1],[1,1,0]]
+```
+
+(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
 
 To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to build a Python object aa. In order to use a named matrix, use `v=symbolic.Matrix('myMat',[3,4.2,5])`. Matrixs can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Matrix([x,x**2,3.14])`, however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation `SymMatrix=exudyn.symbolic.Matrix`. Member functions of `SymMatrix` are:
 
@@ -339,6 +374,8 @@ m1 -= m1
 m1 *= 3.14
 ```
 
+(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
+
 
 ## symbolic.VariableSet
 
@@ -349,10 +386,11 @@ A container for symbolic variables, in particular for exchange between user func
 ```python
 import exudyn as exu
 import math
-SymReal = exu.symbolic.Real
+esym = exu.symbolic
+SymReal = esym.Real
 
 #use global variable set:
-variables = exu.symbolic.variables
+variables = esym.variables
 
 #create a named Real
 a = SymReal('a',42.)
@@ -381,6 +419,16 @@ print('x:',x,"=",x.Evaluate()) #3.33
 #create your own variable set
 mySet = esym.VariableSet()
 ```
+
+```text
+{'pi': 3.14159, 'a': 42}
+pi= 3.141592653589793
+a= a
+x= 42.0
+x: a = 3.33
+```
+
+(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
 
 
 The class **symbolic.VariableSet** has the following **functions and structures**:
@@ -418,26 +466,37 @@ mbs = SC.AddSystem()
 def UFload(mbs, t, load):
     return load*esym.sin(10*(2*pi)*t)
 
-#create symbolic user function from Python user function:
-symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, load, 'loadUserFunction',verbose=1)
-
 #add ground and mass point:
 oGround = mbs.CreateGround()
 oMassPoint = mbs.CreateMassPoint(referencePosition=[1.+0.05,0,0], mass=1)
 
 #add marker and load:
 mc = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.GetObject(oMassPoint)['nodeNumber'], coordinate=0))
-load = mbs.AddLoad(LoadCoordinate(markerNumber=mc, load=10,
-                                  loadUserFunction=symFuncLoad))
+load = mbs.AddLoad(LoadCoordinate(markerNumber=mc, load=10))
+
+#create symbolic user function from Python user function, for this load:
+symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, 'loadUserFunction', load, verbose=1)
+mbs.SetLoadParameter(load, 'loadUserFunction', symFuncLoad)
 
 #print string of symbolic expression of user function (to check if it looks ok):
 print('load user function: ',symFuncLoad)
 
 #test evaluate user function; requires args of user function:
 print('load user function: ',symFuncLoad.Evaluate(mbs, 0.025, 10.))
-    
+
 #now you could add further items or simulate ...
 ```
+
+```text
+Function Name: UFload
+Number of Arguments: 3
+Argument Names: ('mbs', 't', 'load')
+return value= (load * sin((62.8319 * t)))
+load user function:  (load * sin((62.8319 * t)))
+load user function:  10.0
+```
+
+(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
 
 
 The class **symbolic.UserFunction** has the following **functions and structures**:

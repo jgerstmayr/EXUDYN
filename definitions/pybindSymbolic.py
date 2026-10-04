@@ -43,42 +43,7 @@ symbolicModule.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 symbolicModule.AddDocu(r"""The symbolic Real type allows to replace Python's float by a symbolic quantity. The `symbolic.Real` may be directly set to a float and be evaluated as float. However, turning on recording by using `exudyn.symbolic.SetRecording(True)` (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
             )
 
-symbolicModule.AddDocuCodeBlock(code="""
-import exudyn as exu
-esym = exu.symbolic     #abbreviation
-SymReal = esym.Real     #abbreviation
-
-#create some variables
-a = SymReal('a',42.)    #use named expression
-b = SymReal(13)         #b is 13
-c = a+b*7.+1.-3         #c stores expression tree
-d = c                   #d and c are containing same tree!
-print('a: ',a,' = ',a.Evaluate())
-print('c: ',c,' = ',c.Evaluate())
-
-#use special functions:
-d = a+b*esym.sin(a)+esym.cos(SymReal(7))
-print('d: ',d,' = ',d.Evaluate())
-
-a.SetValue(14)          #variable a set to new value; influences d
-print('d: ',d,' = ',d.Evaluate())
-
-a = SymReal(1000)       #a is now a new variable; not updated in d!
-print('d: ',d,' = ',d.Evaluate())
-
-#compute derivatives (automatic differentiation):
-x = SymReal("x",0.5)
-f = a+b*esym.sin(x)+esym.cos(SymReal(7))+x**4
-print('f=',f.Evaluate(), ', diff=',f.Diff(x))
-
-#turn off recording of trees (globally for all symbolic.Real!):
-esym.SetRecording(False)
-x = SymReal(42) #now, only represents a value
-y = x/3.       #directly evaluates to 14
-
-#back to default behavior, otherwise expr. only evaluated:
-esym.SetRecording(True)
-""")
+symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='real')
 
 symbolicModule.AddDocu(r"""To create a symbolic Real, use `aa=symbolic.Real(1.23)` to build a Python object aa with value 1.23. In order to use a named value, use `pi=symbolic.Real('pi',3.14)`. Note that in the following, we use the abbreviation `SymReal=exudyn.symbolic.Real`. Member functions of `SymReal`, which are **not recorded**, are:""")
 
@@ -137,33 +102,7 @@ symbolicModule.DefFinishTable()#only finalize latex table
 
 symbolicModule.AddDocu(r"""The remaining operators and mathematical functions are recorded within expressions. Main mathematical operators for `SymReal` exist, similar to Python, such as:""")
 
-symbolicModule.AddDocuCodeBlock(code="""
-a = SymReal(1)
-b = SymReal(2)
-
-r1 = a+b
-r1 = a-b
-r1 = a*b
-r1 = a/b
-r1 = -a
-r1 = a**b
-
-c = SymReal(3.3)
-c += b
-c -= b
-c *= b
-c /= b
-
-c = (a == b)
-c = (a != b)
-c = (a < b)
-c = (a > b)
-c = (a <= b)
-c = (a >= b)
-
-#in most cases, we can also mix with float:
-c = a*7 + SymReal.sin(8)
-""")
+symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='realOperators')
 
 symbolicModule.AddDocu(r"""Mathematical functions may be called with an `SymReal` or with a `float`. Most standard mathematical functions exist for `symbolic`, e.g., as `symbolic.abs`. **HINT**: function names are lower-case for compatibility with Python's math library. Thus, you can easily exchange math.sin with esym.sin, and you may want to use a generic name, such as myMath=symbolic in order to switch between Python and symbolic user functions. The following functions exist:""")
 
@@ -278,37 +217,7 @@ symbolicModule.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 symbolicModule.AddDocu(r"""A symbolic Vector type to replace Python's (1D) numpy array in symbolic expressions. The `symbolic.Vector` may be directly set to a list of floats or (1D) numpy array and be evaluated as array. However, turning on recording by using `exudyn.symbolic.SetRecording(True)` (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
             )
 
-symbolicModule.AddDocuCodeBlock(code="""
-import exudyn as exu
-import numpy as np
-esym = exu.symbolic
-
-SymVector = esym.Vector
-SymReal = esym.Real 
-
-a = SymReal('a',42.)
-b = SymReal(13)
-c = a-3*b
-
-#create from list:
-v1 = SymVector([1,3,2])
-print('v1: ',v1)
-
-#create from numpy array:
-v2 = SymVector(np.array([1,3,2]))
-print('v2 initial: ',v2)
-
-#create from list, mixing symbolic expressions and numbers:
-v2 = SymVector([a,42,c])
-
-print('v2 now: ',v2,"=",v2.Evaluate())
-print('v1+v2: ',v1+v2,"=",(v1+v2).Evaluate()) #evaluate as vector
-
-print('v1*v2: ',v1*v2,"=",(v1*v2).Evaluate()) #evaluate as Real
-
-#access of vector component:
-print('v1[2]: ',v1[2],"=",v1[2].Evaluate())   #evaluate as Real
-""")
+symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='vector')
 
 symbolicModule.AddDocu(r"""To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use `v=symbolic.Vector('myVec',[3,4.2,5])`. Vectors can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Vector([x,x**2,3.14])`, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation `SymVector=exudyn.symbolic.Vector`. Note that only functions are able to be recorded. Member functions of `SymVector` are:""")
 
@@ -395,23 +304,7 @@ symbolicModule.DefFinishTable()#only finalize latex table
 
 symbolicModule.AddDocu(r"""Standard vector operators are available for `SymVector`, see the following examples:""")
 
-symbolicModule.AddDocuCodeBlock(code="""
-v = SymVector([1,3,2])
-w = SymVector([3.3,2.2,1.1])
-
-u = v+w
-u = v-w
-u = -v
-#scalar multiplication; evaluates to SymReal:
-x = v*w 
-#NOTE: component-wise multiplication, returns SymVector:
-u = v.MultComponents(w)
-
-#inplace operators:
-v += w
-v -= w
-v *= SymReal(0.5)
-""")
+symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='vectorOperators')
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #currently, only latex + RST binding:
@@ -423,33 +316,7 @@ symbolicModule.DefPyStartClass(classStr, pyClassStr, '', subSection=True)
 symbolicModule.AddDocu(r"""A symbolic Matrix type to replace Python's (2D) numpy array in symbolic expressions. The `symbolic.Matrix` may be directly set to a list of list of floats or (2D) numpy array and be evaluated as array. However, turning on recording by using `exudyn.symbolic.SetRecording(True)` (on by default), results are stored as expression trees, which may be evaluated in C++ or Python, in particular in user functions, see the following example:"""
             )
 
-symbolicModule.AddDocuCodeBlock(code="""
-import exudyn as exu
-import numpy as np
-esym = exu.symbolic
-
-SymMatrix = esym.Matrix
-SymReal = esym.Real 
-
-a = SymReal('a',42.)
-b = SymReal(13)
-
-#create matrix from list of lists
-m1 = SymMatrix([[1,3,2],[4,5,6]])
-
-#create symbolic matrix from list of lists
-m3 = SymMatrix([[a,3*b,2],[4,5,6]])
-
-#create from numpy array
-m2 = SymMatrix(np.ones((3,3))-np.eye(3))
-
-m1 += m3
-m1 *= 3
-m1 -= 3*m3
-print('m1: ',m1)
-print('m2: ',m2)
-
-""")
+symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='matrix')
 
 symbolicModule.AddDocu(r"""To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to build a Python object aa. In order to use a named matrix, use `v=symbolic.Matrix('myMat',[3,4.2,5])`. Matrixs can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Matrix([x,x**2,3.14])`, however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation `SymMatrix=exudyn.symbolic.Matrix`. Member functions of `SymMatrix` are:""")
 
@@ -534,30 +401,7 @@ symbolicModule.DefFinishTable()#only finalize latex table
 
 symbolicModule.AddDocu(r"""Standard Matrix operators are available for `SymMatrix`, see the following examples:""")
 
-symbolicModule.AddDocuCodeBlock(code="""
-m1 = SymMatrix([[1,7],[4,5]])
-m2 = SymMatrix([[1,2.2],[4,4.3]])
-v = SymVector([1.5,3])
-
-m3 = m1+m2
-m3 = m1-m2
-m3 = m1*m2
-
-#multiply with scalar
-m3 = 13*m2
-m3 = m2*3.14
-
-#multiply with vector
-m3 = m2*v
-
-#transposed:
-m3 = v*m2 #equals numpy operation m2.T @ v
-
-#inplace operators:
-m1 += m1
-m1 -= m1
-m1 *= 3.14
-""")
+symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='matrixOperators')
 
 
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -572,41 +416,7 @@ symbolicModule.AddDocu("A container for symbolic variables, in particular for ex
             "For details, see the following example:"
             )
 
-symbolicModule.AddDocuCodeBlock(code="""
-import exudyn as exu
-import math
-SymReal = exu.symbolic.Real
-
-#use global variable set:
-variables = exu.symbolic.variables
-
-#create a named Real
-a = SymReal('a',42.)
-
-#regular way to add variable:
-variables.Add('pi', math.pi)
-
-#add named variable (doesn't need a name):
-variables.Add(a)
-
-#print current variable set
-print(variables)
-
-print('pi=',variables.Get('pi').Evaluate()) #3.14
-print('a=',variables.Get('a')) #prints 'a'
-
-x=variables.Get('a')
-print('x=',x.Evaluate()) #x=42
-
-#override a
-variables.Set('a',3.33)
-
-#x is depending on a:
-print('x:',x,"=",x.Evaluate()) #3.33
-
-#create your own variable set
-mySet = esym.VariableSet()
-""")
+symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='variableSet')
 
 symbolicModule.DefStartTable(pyClassStr)
 
@@ -707,39 +517,7 @@ symbolicModule.AddDocu("A class for creating and handling symbolic user function
             "For details, see the following example:"
             )
 
-symbolicModule.AddDocuCodeBlock(code="""
-import exudyn as exu
-esym = exu.symbolic
-from exudyn.utilities import * #advancedUtilities with user function utilities included
-SymReal = exu.symbolic.Real
-
-SC = exu.SystemContainer()
-mbs = SC.AddSystem()
-
-#regular Python user function with esym math functions
-def UFload(mbs, t, load):
-    return load*esym.sin(10*(2*pi)*t)
-
-#create symbolic user function from Python user function:
-symFuncLoad = CreateSymbolicUserFunction(mbs, UFload, load, 'loadUserFunction',verbose=1)
-
-#add ground and mass point:
-oGround = mbs.CreateGround()
-oMassPoint = mbs.CreateMassPoint(referencePosition=[1.+0.05,0,0], mass=1)
-
-#add marker and load:
-mc = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.GetObject(oMassPoint)['nodeNumber'], coordinate=0))
-load = mbs.AddLoad(LoadCoordinate(markerNumber=mc, load=10,
-                                  loadUserFunction=symFuncLoad))
-
-#print string of symbolic expression of user function (to check if it looks ok):
-print('load user function: ',symFuncLoad)
-
-#test evaluate user function; requires args of user function:
-print('load user function: ',symFuncLoad.Evaluate(mbs, 0.025, 10.))
-    
-#now you could add further items or simulate ...
-""")
+symbolicModule.AddDocuNotebook('python/Notebooks/reference/symbolic.ipynb', part='userFunction')
 
 symbolicModule.DefStartTable(pyClassStr)
 

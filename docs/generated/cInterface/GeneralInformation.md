@@ -16,11 +16,15 @@ To import the module, just include the Exudyn module in Python:
 import exudyn as exu
 ```
 
+(from the notebook `python/Notebooks/reference/generalInformation.ipynb`)
+
 For compatibility with examples and other users, we recommend to use the `exu` abbreviation throughout. In addition, you may work with a convenient interface for your items, therefore also always include:
 
 ```python
 from exudyn.itemInterface import *
 ```
+
+(from the notebook `python/Notebooks/reference/generalInformation.ipynb`)
 
 Note that including `exudyn.utilities` will cover `itemInterface`. Also note that `from ... import *` is not recommended in general and it will not work in certain cases, e.g., if you like to compute on a cluster. However, it greatly simplifies life for smaller models and you may replace imports in your files afterwards by removing the star import.
 
@@ -32,6 +36,8 @@ You can create a new `SystemContainer`, which is a class that is initialized by 
 SC = exu.SystemContainer()
 ```
 
+(from the notebook `python/Notebooks/reference/generalInformation.ipynb`)
+
 Note that creating a second `exu.SystemContainer()` will be independent of `SC` and therefore makes no sense if you do not intend to work with two different containers.
 
 To add a MainSystem to system container `SC` and store as variable `mbs`, write:
@@ -40,30 +46,43 @@ To add a MainSystem to system container `SC` and store as variable `mbs`, write:
 mbs = SC.AddSystem()
 ```
 
+(from the notebook `python/Notebooks/reference/generalInformation.ipynb`)
+
 Furthermore, there are a couple of commands available directly in the `exudyn` module, given in the following subsections. Regarding the **(basic) module access**, functions are related to the `exudyn = exu` module, see these examples:
 
 ```python
 #  import exudyn module:
 import exudyn as exu
 #  print detailed exudyn version, Python version (at which it is compiled):
-exu.config.Version(addDetails = True)
+print(exu.config.Version(addDetails = True))
 #  set precision of C++ output to console
-exu.config.precision = numberOfDigits
+exu.config.outputPrecision = 8
 #  turn on/off output to console
 exu.config.printToConsole = False
+exu.config.printToConsole = True
 #  invalid index, may depend on compilation settings:
 nInvalid = exu.InvalidIndex() #the invalid index, depends on architecture and version
-#  run basic demos (without/with graphics):
-exu.demos.Demo1()
-exu.demos.Demo2()
+#  run basic demos (without/with graphics); they return [mbs, SC]:
+exu.demos.Demo1(showAll=False)
+[mbsDemo, SCdemo] = exu.demos.Demo2(showAll=False)
 ```
+
+```text
+1.12.281.dev1; Python3.13.15; Windows x86_64 FLOAT64
++++++++++++++++++++++++++++++++
+EXUDYN V1.12.281.dev1 solver: implicit second order time integration
+STEP100, t = 1s, timeToGo = 0s, Nit/step = 1
+Solver terminated successfully after 0.0004336 seconds.
+```
+
+(from the notebook `python/Notebooks/reference/generalInformation.ipynb`)
 
 Understanding the usage of functions for python object `SystemContainer` of the module `exudyn`, the following examples might help:
 
 ```python
 #import exudyn module:
 import exudyn as exu
-#  import utilities (includes itemInterface, basicUtilities, 
+#  import utilities (includes itemInterface, basicUtilities,
 #                  advancedUtilities, rigidBodyUtilities, graphics):
 from exudyn.utilities import *
 #  create system container and store in SC:
@@ -80,6 +99,12 @@ del mbs, mbs2
 #  reset system container (mbs becomes invalid):
 SC.Reset()
 ```
+
+```text
+2
+```
+
+(from the notebook `python/Notebooks/reference/generalInformation.ipynb`)
 
 If you run a parameter variation (check `Examples/parameterVariationExample.py`), you may reset or delete the created `MainSystem` `mbs` and the `SystemContainer` `SC` before creating new instances in order to avoid memory growth.
 
@@ -126,7 +151,7 @@ og = mbs.AddObject(ObjectGround()) #copy data of ObjectGround() into C++
 o0 = mbs.GetObject(0)              #get copy of internal data as dictionary
 
 mbsCopy=copy.copy(mbs)             #mbsCopy is now a real copy of mbs; uses pickle; experimental!
-SC.Append(mbsCopy)                 #this is needed to work with mbsCopy
+SC.AppendSystem(mbsCopy)                #this is needed to work with mbsCopy
 
 del o0                             #delete the local dictionary; C++ data not affected
 del mbs, mbs2                      #references to mbs deleted (C++ data still available)

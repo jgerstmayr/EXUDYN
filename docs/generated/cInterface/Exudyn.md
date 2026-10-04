@@ -15,6 +15,8 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 ```
 
+(from the notebook `python/Notebooks/reference/generalInformation.ipynb`)
+
 
 The class **exudyn** has the following **functions and structures**:
 

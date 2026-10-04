@@ -30,13 +30,7 @@ pb.DefPyStartClass('','', '')
 
 pb.AddDocu(r"""These are the access functions to the Exudyn module. General usage is explained in [](#sec-generalpythoninterface) and examples are provided there. The C++ module `exudyn` is the root level object linked between Python and C++.In the installed site-packages, the according file is usually denoted as `exudynCPP.pyd` for the regular module, which is compiled for the baseline instruction set and runs on any 64-bit CPU, and `exudynCPPfast.pyd` for the optional module without range checks, which additionally uses the AVX2 vector extensions (may depend on your installation).""")
 
-pb.AddDocuCodeBlock(code="""
-#import exudyn module:
-import exudyn as exu
-#create systemcontainer and mbs:
-SC = exu.SystemContainer()
-mbs = SC.AddSystem()
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/generalInformation.ipynb', part='module')
 pb.DefStartTable('exudyn')
 
 pb.DefPyFunctionAccess('', 'Help', 'PyHelp', 

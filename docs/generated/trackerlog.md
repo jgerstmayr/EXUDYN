@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.281.dev1
+- Exudyn version = 1.12.282.dev1
 - last change = 2026-10-04
-- Number of issues = 2841
-- Number of resolved issues = 2595 (281 in current version)
+- Number of issues = 2843
+- Number of resolved issues = 2596 (282 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8310,6 +8310,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> <span class="textred">`HIGH`</span> `MEDIUM EFF` `raised by: Claude-JG` SystemContainer.AppendSystem of a MainSystem that Python owns crashes at the end (#2842)
+  - description: SC.AppendSystem(mbsCopy) with mbsCopy = copy.copy(mbs) - the example 'Copying and referencing C++ objects' of the reference manual - ends in an access violation when SC is deleted or the interpreter exits: AppendMainSystem stores the pointer and MainSystemContainer::Reset() deletes every MainSystem it holds, while the copy made by pickle belongs to its Python object, which deletes it again; deleting mbsCopy before SC leaves a dangling pointer in SC. The same holds for a MainSystem appended to a second container (simulatorCouplingTwoMbs.py). Needs an ownership rule: the container deletes only the systems it created (AddSystem), and AppendSystem keeps the appended one alive (keep\_alive) and unlinks it in Reset. Found by running the examples of the reference manual as notebooks, revision2026b step RG17.4.
+  - date raised: 2026-10-04
 - <span class="textred">`BUG`</span> <span class="textred">`HIGH`</span> `MEDIUM EFF` `raised by: Claude-JG` the raytracer can hang in RedrawAndGetImage when tests run in parallel (#2776)
   - description: Twice on 2026-10-02 the full pytest run (pytest -n 8 python/testing) hung in test\_graphicsRegression.py::testRaytracerImages, in SC.renderer.RedrawAndGetImage(useRaytracer=True) (faulthandler traceback), with all workers idle - a wait, not a loop; a third and fourth run passed, and 8 processes rendering the same images 15 times each in parallel did not hang. The raytracer starts the TaskManager for its ParallelFor (Raytracer::SoftwareRenderer, ExuThreading::EnterTaskManager) unless it is already running; a deadlock there, or a TaskManager left running by a previous test in the same worker, are the candidates. The hung processes stayed and could not be ended from the session.
   - date raised: 2026-10-02

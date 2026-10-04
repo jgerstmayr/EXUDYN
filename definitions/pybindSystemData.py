@@ -37,41 +37,7 @@ pb.DefPyStartClass(classStr,pyClassStr,
 
 # pb.AddDocu('')
 
-pb.AddDocuCodeBlock(code="""
-import exudyn as exu               #EXUDYN package including C++ core part
-from exudyn.itemInterface import * #conversion of data to exudyn dictionaries
-SC = exu.SystemContainer()         #container of systems
-mbs = SC.AddSystem()               #add a new system to work with
-nMP = mbs.AddNode(NodePoint(referenceCoordinates=[0,0,0]))
-mbs.AddObject(ObjectMassPoint(mass=10, nodeNumber=nMP ))
-mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
-mbs.AddLoad(Force(markerNumber = mMP, loadVector=[2,0,5]))
-mbs.Assemble()
-mbs.SolveDynamic(exu.SimulationSettings())
-
-#obtain current ODE2 system vector including reference values:
-uTotal = mbs.systemData.GetODE2CoordinatesTotal()
-
-#obtain current ODE2 system vector without reference values 
-#  (e.g., after static simulation finished):
-u = mbs.systemData.GetODE2Coordinates()
-#set initial ODE2 vector for next simulation (only coordinates!):
-mbs.systemData.SetODE2Coordinates(coordinates=u,
-               configuration=exu.ConfigurationType.Initial)
-
-#faster access with reference access (copy=False):
-u3 = mbs.systemData.GetODE2Coordinates(copy=False)[3]
-#we can also modify data, but this may be dangerous!
-u3 += 1
-#NOTE: reference access is possible throughout simulation and may
-#      allow faster user functions, but is potentially dangerous
-#      to erroneous behavior: for safety, compare with copy=True results!
-
-#print detailed information on items:
-mbs.systemData.Info()
-#print LTG lists for objects and loads:
-mbs.systemData.InfoLTG()
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/mainSystem.ipynb', part='systemData')
 
 pb.DefStartTable(classStr)
 

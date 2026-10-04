@@ -8,17 +8,19 @@ The `visualizationSettings`, see [](#sec-visualizationsettingsmain), can be edit
 ```python
 import exudyn as exu
 #create system container and store by reference in SC:
-SC = exu.SystemContainer() 
+SC = exu.SystemContainer()
 #add MainSystem to SC:
 mbs = SC.AddSystem()
 ```
+
+(from the notebook `python/Notebooks/reference/systemContainer.ipynb`)
 
 
 The class **SystemContainer** has the following **functions and structures**:
 
 - **`Reset()`**: delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.renderer.Attach() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )
 - **`AddSystem()`**: add a new computational system
-- **`Append(mainSystem)`**: append an exsiting computational system to the system container; returns the number of MainSystem in system container
+- **`AppendSystem(mainSystem)`**: append an exsiting computational system to the system container; returns the number of MainSystem in system container
 - **`NumberOfSystems()`**: obtain number of multibody systems available in system container
 - **`GetSystem(systemNumber)`**: obtain multibody systems with index from system container
 - **`visualizationSettings`**: this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. EXAMPLE: `SC = exu.SystemContainer(); SC.visualizationSettings.autoFitScene=False`

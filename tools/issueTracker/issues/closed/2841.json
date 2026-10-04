@@ -1,0 +1,15 @@
+{
+  "number": 2841,
+  "title": "SystemContainer.Append is documented, the function is AppendSystem",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The reference manual (pybindSystemContainer.py, the MainSystem introduction and the copy example of the general information) and two error messages of CSystem.cpp and MainSystem.cpp tell to call SC.Append(mbs); the SystemContainer has no Append - its function is AppendSystem (PybindModule.cpp), which simulatorCouplingTwoMbs.py uses. Found by running the examples of the reference manual as notebooks, revision2026b step RG17.4.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "dateResolved": "2026-10-04 14:48",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Fixed: the reference manual (SystemContainer, the MainSystem introduction, the copy example) and the error messages of CSystem.cpp and MainSystem.cpp name SC.AppendSystem(mbs), the function the SystemContainer has.",
+  "resolvedInVersion": "1.12.282"
+}

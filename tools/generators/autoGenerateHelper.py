@@ -291,17 +291,23 @@ class DeclarationWriter:
         self.sMarkdown += ('\n```' + 'python'*pythonStyle + '\n'
                            + RemoveIndentation(code, '', False).strip('\n') + '\n```\n\n')
 
-    def AddDocuNotebook(self, notebookPath):
+    def AddDocuNotebook(self, notebookPath, part=None):
         """an example as a notebook of python/Notebooks/reference/ instead of a code block: its Markdown cells, its
         code cells and the text outputs that tools/runNotebooks.py stored - so the example on the page is code that
-        ran, with what it printed (#2831)"""
+        ran, with what it printed (#2831). With part, only the cells tagged part-<part> - one notebook holds the
+        examples of a definition file, each shown where it belongs - followed by the name of the notebook."""
         import json
         notebook = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
                                                notebookPath), encoding='utf-8'))
         if len(notebook['cells']) == 0 or ('`' + notebookPath + '`') not in ''.join(notebook['cells'][0]['source']):
             raise ValueError('AddDocuNotebook: the first cell of ' + notebookPath + ' must name the notebook as `'
                              + notebookPath + '`')
-        for cell in notebook['cells']:
+        cells = notebook['cells']
+        if part is not None:
+            cells = [cell for cell in cells if 'part-' + part in cell.get('metadata', {}).get('tags', [])]
+            if len(cells) == 0:
+                raise ValueError('AddDocuNotebook: ' + notebookPath + ' has no cell tagged part-' + part)
+        for cell in cells:
             source = ''.join(cell['source']).rstrip()
             if source == '':
                 continue
@@ -309,6 +315,8 @@ class DeclarationWriter:
                 self.sMarkdown += '\n' + source + '\n\n'
                 continue
             tags = cell.get('metadata', {}).get('tags', [])
+            if any(output['output_type'] == 'error' for output in cell.get('outputs', [])):
+                raise ValueError('AddDocuNotebook: ' + notebookPath + ' stores an error; run it with "exudev notebooks"')
             if 'remove-cell' in tags:    #setup the example needs, not shown
                 continue
             if 'remove-input' not in tags:
@@ -318,6 +326,8 @@ class DeclarationWriter:
                 text = (''.join(text) if isinstance(text, list) else text).rstrip()
                 if output['output_type'] in ['stream', 'execute_result'] and text != '':
                     self.sMarkdown += '```text\n' + text + '\n```\n\n'
+        if part is not None:
+            self.sMarkdown += '(from the notebook `' + notebookPath + '`)\n\n'
 
     def AddDocuList(self, itemList, itemText=''):
         if len(itemList) != 0:
