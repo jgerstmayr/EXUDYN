@@ -295,6 +295,9 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`explicitLie
 - **output**: 4D vector as np.array containing four Euler parameters entry zero of output represent the scalar part of Euler parameters
 
 
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`inactiveConnectorForceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/inactiveConnectorForceTest.py) (TM)
+
+
 (sec-rigidbodyutilities-rotationmatrix2rotzyz)=
 ## Function: RotationMatrix2RotZYZ
 

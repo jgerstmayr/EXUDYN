@@ -1,0 +1,89 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  An inactive connector (activeConnector = False) adds no force, and reports none (#984):
+#           each penalty connector and contact between the ground and a rigid body that is displaced,
+#           rotated and moving, built once inactive - its Force, ForceLocal, Torque and TorqueLocal
+#           output must be zero - and once active, where they are not.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-05
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+forceTypes = [exu.OutputVariableType.Force, exu.OutputVariableType.ForceLocal,
+              exu.OutputVariableType.Torque, exu.OutputVariableType.TorqueLocal]
+
+
+def DataNode(mbs, n):
+    #the first data coordinate of the contacts is the gap of the last step: negative, in contact
+    return mbs.AddNode(NodeGenericData(numberOfDataCoordinates=n, initialCoordinates=[-0.1]+[0]*(n-1)))
+
+
+#each connector between a ground marker and a body marker (rigid or coordinate), with a force where it is active
+connectors = {
+    'SpringDamper': lambda mbs, mG, mB, cG, cB, active: mbs.AddObject(SpringDamper(markerNumbers=[mG, mB],
+        stiffness=100, damping=1, referenceLength=1, activeConnector=active)),
+    'CartesianSpringDamper': lambda mbs, mG, mB, cG, cB, active: mbs.AddObject(CartesianSpringDamper(
+        markerNumbers=[mG, mB], stiffness=[100]*3, damping=[1]*3, activeConnector=active)),
+    'RigidBodySpringDamper': lambda mbs, mG, mB, cG, cB, active: mbs.AddObject(RigidBodySpringDamper(
+        markerNumbers=[mG, mB], stiffness=100*np.eye(6), damping=np.eye(6), activeConnector=active)),
+    'TorsionalSpringDamper': lambda mbs, mG, mB, cG, cB, active: mbs.AddObject(TorsionalSpringDamper(
+        markerNumbers=[mG, mB], stiffness=100, damping=1, activeConnector=active)),
+    'LinearSpringDamper': lambda mbs, mG, mB, cG, cB, active: mbs.AddObject(LinearSpringDamper(
+        markerNumbers=[mG, mB], stiffness=100, damping=1, activeConnector=active)),
+    'CoordinateSpringDamper': lambda mbs, mG, mB, cG, cB, active: mbs.AddObject(CoordinateSpringDamper(
+        markerNumbers=[cG, cB], stiffness=100, damping=1, activeConnector=active)),
+    'ConnectorGravity': lambda mbs, mG, mB, cG, cB, active: mbs.AddObject(ObjectConnectorGravity(
+        markerNumbers=[mG, mB], mass0=1e10, mass1=1, activeConnector=active)),
+    'ContactSphereSphere': lambda mbs, mG, mB, cG, cB, active: mbs.AddObject(ObjectContactSphereSphere(
+        markerNumbers=[mG, mB], nodeNumber=DataNode(mbs, 4), spheresRadii=[1, 1], contactStiffness=100,
+        contactDamping=1, dynamicFriction=0.2, activeConnector=active)),
+    'ContactSphereTriangle': lambda mbs, mG, mB, cG, cB, active: mbs.AddObject(ObjectContactSphereTriangle(
+        markerNumbers=[mB, mG], nodeNumber=DataNode(mbs, 4), sphereRadius=1,
+        trianglePoints=exu.Vector3DList([[0, -2, 0], [3, -2, 0], [0, 2, 0]]), contactStiffness=100,
+        contactDamping=1, dynamicFriction=0.2, activeConnector=active)),
+    }
+
+
+def ForceOutputs(build, active):
+    """the norms of the force and torque outputs a connector has, as a dict"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    oGround = mbs.AddObject(ObjectGround())
+    node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[1.2, 0.1, -0.05] + list(RotXYZ2EulerParameters([0.1, 0.2, 0.3])),
+                                       initialVelocities=[0.3, 0.2, 0.1, 0, 0, 0, 0]))
+    body = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=1, inertia=[1, 1, 1, 0, 0, 0]))
+    mG = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
+    mB = mbs.AddMarker(MarkerBodyRigid(bodyNumber=body))
+    cG = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=mbs.AddNode(NodePointGround()), coordinate=0))
+    cB = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=node, coordinate=0))
+    connector = build(mbs, mG, mB, cG, cB, active)
+    mbs.Assemble()
+    outputs = {}
+    for variableType in forceTypes:
+        try:
+            outputs[variableType] = np.linalg.norm(mbs.GetObjectOutput(connector, variableType))
+        except Exception:
+            pass    #the connector does not have this output variable
+    return outputs
+
+
+testResult = 0
+for (name, build) in connectors.items():
+    inactive = ForceOutputs(build, False)
+    active = ForceOutputs(build, True)
+    exu.Print(name + ': inactive', sum(inactive.values()), ', active', sum(active.values()))
+    testResult += 1000*sum(inactive.values()) + sum(active.values())    #an inactive force spoils the result
+
+exu.Print('solution of inactiveConnectorForceTest=', testResult)
+exu.sys['testResult'] = testResult

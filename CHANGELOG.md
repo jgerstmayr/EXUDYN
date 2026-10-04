@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 285 | 1.12.305 |
+| 1.12 | Metheney | 288 | 1.12.322 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,18 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.322** `CHECK` `HIGH` `MEDIUM EFF` `resolved by: Claude-JG` return value policy (#1512)
+  - description: check return value policy of GeneralContact (as example for further decisions); see if reference in ALL access functions makes no problems if object is deleted on Python side
+  - **notes:** The GeneralContact returned by mbs.AddGeneralContact() and mbs.GetGeneralContact() keeps its MainSystem alive.
+  - date resolved: **2026-10-05 00:44**, date raised: 2023-04-13
+- **1.12.321** `CHECK` `LOW EFF` `resolved by: Claude-JG` OutputVariableConnector (#984)
+  - description: check all penalty-based connectors if OutputVariable for forces is only computed if activeConnector=True
+  - **notes:** An inactive RigidBodySpringDamper, LinearSpringDamper and TorsionalSpringDamper (activeConnector=False) reports zero force and torque in its output variables, as the other connectors do; test model inactiveConnectorForceTest.py.
+  - date resolved: **2026-10-05 00:44**, date raised: 2022-03-14
+- **1.12.320** `CHECK` `MEDIUM EFF` `resolved by: Claude-JG` allocation failure (#121)
+  - description: assert that every allocation in Matrix, Vector, ResizableArray, ... is performed with try/catch - compare Matrix::AllocateMemory(...)
+  - **notes:** Every allocation of ResizableArray goes through one function that catches a failed allocation and raises an error with the size requested, as Vector and Matrix do.
+  - date resolved: **2026-10-05 00:44**, date raised: 2019-05-13
 - **1.12.305** `TESTING` `NORMAL` `MEDIUM EFF` `resolved by: Claude-JG` ANCFBeam (#1500)
   - description: check for advanced right-angle frame
   - **notes:** rightAngleFrame.py is the right-angle frame, driven past its buckling point (\#2762); with ObjectANCFBeam the static solver stalls, which is \#2763.

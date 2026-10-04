@@ -62,6 +62,22 @@ private: //make protected if derived class shall be created
 	Index maxNumberOfItems;	//!<maximum number of items currently storable
 	Index numberOfItems;	//!<current number of items stored; this is the size which is operated at
 
+	//! allocate numberOfItemsNew items; a failed allocation raises an error with the size requested (#121)
+	static T* AllocateItems(Index numberOfItemsNew)
+	{
+		try
+		{
+			return new T[numberOfItemsNew];
+		}
+		catch (const std::bad_alloc& e) {
+			pout << "Allocation failed: " << e.what() << '\n';
+			pout << "requested memory = " << sizeof(T)*numberOfItemsNew / pow(2, 20) << " MB, number of items = " << numberOfItemsNew << "\n";
+
+			CHECKandTHROWstring("ResizableArray: Allocation failed");
+		}
+		return nullptr;
+	}
+
 public:
 	// ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	// CONSTRUCTOR, DESTRUCTOR
@@ -78,16 +94,7 @@ public:
 
 		if (maxNumberOfItems > 0) 
 		{ 
-			try
-			{
-				data = new T[maxNumberOfItems];
-			}
-			catch (const std::bad_alloc& e) {
-				pout << "Allocation failed: " << e.what() << '\n';
-				pout << "requested memory = " << sizeof(T)*maxNumberOfItems / pow(2, 20) << " MB, number of items = " << maxNumberOfItems << "\n";
-
-				CHECKandTHROWstring("ResizableArray(maxNumberOfItems): Allocation failed");
-			}
+			data = AllocateItems(maxNumberOfItems);
 		}
 	}
 
@@ -100,7 +107,7 @@ public:
 		maxNumberOfItems = (Index)listOfItems.size();
 		if (maxNumberOfItems > 0) 
 		{ 
-			data = new T[maxNumberOfItems]; 
+			data = AllocateItems(maxNumberOfItems);
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 			array_new_counts++;
 #endif
@@ -120,7 +127,7 @@ public:
 		maxNumberOfItems = (Index)vector.size();
 		if (maxNumberOfItems > 0)
 		{
-			data = new T[maxNumberOfItems];
+			data = AllocateItems(maxNumberOfItems);
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 			array_new_counts++;
 #endif
@@ -138,7 +145,7 @@ public:
 		maxNumberOfItems = numberOfItems;
 		if (maxNumberOfItems > 0)
 		{
-			data = new T[maxNumberOfItems];
+			data = AllocateItems(maxNumberOfItems);
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 			array_new_counts++;
 #endif
@@ -555,17 +562,7 @@ void ResizableArray<T>::SetMaxNumberOfItems(Index newNumberOfItems)
 {
     if (newNumberOfItems != 0)
     {
-		T* ndata = nullptr;
-		try
-		{
-			ndata = new T[newNumberOfItems];
-		}
-		catch (const std::bad_alloc& e) {
-			pout << "Allocation failed: " << e.what() << '\n';
-			pout << "requested memory = " << sizeof(T)*newNumberOfItems / pow(2, 20) << " MB, number of items = " << newNumberOfItems << "\n";
-
-			CHECKandTHROWstring("ResizableArray: Allocation failed");
-		}
+		T* ndata = AllocateItems(newNumberOfItems);
 
 #ifdef __EXUDYN_RUNTIME_CHECKS__
 		array_new_counts++;

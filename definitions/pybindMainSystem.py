@@ -210,7 +210,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetSystemJacobianUserFunction', 
 #contact:                                      
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddGeneralContact', cName='AddGeneralContact', 
                         description="add a new general contact, used to enable efficient contact computation between objects (nodes or markers)", 
-                        options='py::return_value_policy::reference',
+                        options='py::return_value_policy::reference_internal',
                         returnType='GeneralContact',
                         )
 
@@ -218,7 +218,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='GetGeneralContact', cName='GetGe
                         description="get read/write access to GeneralContact with index generalContactNumber stored in mbs; Examples shows how to access the GeneralContact object added with last AddGeneralContact() command:",
                         example = 'gc=mbs.GetGeneralContact(mbs.NumberOfGeneralContacts()-1)',
                         argList=['generalContactNumber'],
-                        options='py::return_value_policy::reference',
+                        options='py::return_value_policy::reference_internal',
                         argTypes=['int'],
                         returnType='GeneralContact',
                         )

@@ -187,6 +187,7 @@ void CObjectConnectorRigidBodySpringDamper::GetOutputVariableConnector(OutputVar
 	ComputeSpringForceTorque(markers, markerData.GetTime(), itemIndex, Ajoint, vLocPos, vLocVel, vLocRot, vLocAngVel, fLocVec6D,
 		(variableType == OutputVariableType::ForceLocal ||
 		variableType == OutputVariableType::TorqueLocal));
+	if (!parameters.activeConnector) { fLocVec6D.SetAll(0.); } //an inactive connector reports no force and torque (#984)
 
 	LinkedDataVector fPosLoc(fLocVec6D, 0, 3);
 	LinkedDataVector fRotLoc(fLocVec6D, 3, 3);

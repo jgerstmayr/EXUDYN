@@ -15217,3 +15217,22 @@ but undefined). The options and decisions are RG4.19.1-.9 in the plan.
 - The list "already planned elsewhere" is removed from RG4.19: those issues are in their own steps.
 - Next, also decided: the small fixes RG4.19.1-.3, RG4.15.9 (the setting), RG4.15.10 (#2849), and #2237 (crashes
   with `PlotSensor` on macOS: look for an initialization in the solver that a compiler may leave undefined).
+
+<a id="rg4-19-1"></a>
+### RG4.19.1-.3 — three small fixes from the evaluated issues (2026-10-05, #984, #1512, #121)
+
+*(Maintainer 2026-10-05: "adjust/close the mentioned issues as decided and also your 'closed as done' and 'small
+fixes'".)*
+
+- **#984**: `GetOutputVariableConnector` of `RigidBodySpringDamper` and `LinearSpringDamper` computed the spring force
+  whether the connector was active or not - the right-hand side was right, the output was not (120.8 and 120.3 N
+  while inactive). The new test model found the same for `TorsionalSpringDamper` once its body was rotated (30 N m).
+  All three report zero while inactive. Test model `inactiveConnectorForceTest.py`: nine penalty connectors and
+  contacts on a displaced, rotated, moving rigid body, once inactive - all outputs zero - and once active.
+- **#1512**: `AddGeneralContact` and `GetGeneralContact` return with `return_value_policy::reference_internal`
+  (`definitions/pybindMainSystem.py`), so the `GeneralContact` keeps its `MainSystem` alive;
+  `test_generalContactLifetime.py`. A `DeleteGeneralContact` still leaves a Python object that refers to a deleted
+  contact, and a `MainSystem` does not keep its `SystemContainer` alive - raised as #2851 (RG4.19.10).
+- **#121**: `ResizableArray::AllocateItems` is the one allocation of the class, with the `bad_alloc` check that the
+  size constructor and `SetMaxNumberOfItems` had each by itself; the constructors from an initializer list, a
+  `std::vector` and a `SlimArray` use it too.

@@ -1,0 +1,15 @@
+{
+  "number": 984,
+  "title": "OutputVariableConnector",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "check all penalty-based connectors if OutputVariable for forces is only computed if activeConnector=True",
+  "dateRaised": "2022-03-14",
+  "deadline": "2022-05-13",
+  "dateResolved": "2026-10-05 00:44",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "An inactive RigidBodySpringDamper, LinearSpringDamper and TorsionalSpringDamper (activeConnector=False) reports zero force and torque in its output variables, as the other connectors do; test model inactiveConnectorForceTest.py.",
+  "resolvedInVersion": "1.12.321"
+}

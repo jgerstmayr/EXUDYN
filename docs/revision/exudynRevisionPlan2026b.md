@@ -793,15 +793,14 @@ The steps are numbered in the order they were raised and stand here in the order
     few with a run - see the [log](exudynRevisionLog2026b.md#rg4-19). Resolved as done in the meantime: #124, #209,
     #380, #390, #613, #1192, #1395, #1500. The maintainer's decisions of 2026-10-05 are in the
     [log](exudynRevisionLog2026b.md#rg4-19-decisions). The options, small first:
-    - **RG4.19.1** *(option, small)* (#984) `RigidBodySpringDamper` and `LinearSpringDamper` report a `ForceLocal`
-      while `activeConnector = False` (measured: 120.8 and 120.3 N); the other penalty connectors and the contacts
-      report zero.
-    - **RG4.19.2** *(option, small)* (#1512) `AddGeneralContact` / `GetGeneralContact` return with
-      `return_value_policy::reference`: the Python object does not keep the system alive, so it can outlive it or a
-      `DeleteGeneralContact`; `reference_internal` ties it to the system.
-    - **RG4.19.3** *(option, small)* (#121) every allocation with a check: `Vector`, `Matrix` and
-      `ResizableArray` (its size constructor and `SetMaxNumberOfItems`) catch `bad_alloc`; three constructors of `ResizableArray` (initializer
-      list, `std::vector`, `SlimArray`) do not.
+    - **RG4.19.1** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-1) (#984) an inactive
+      `RigidBodySpringDamper`, `LinearSpringDamper` and `TorsionalSpringDamper` reports no force or torque; test model
+      `inactiveConnectorForceTest.py`;
+    - **RG4.19.2** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-1) (#1512) the `GeneralContact` of
+      `AddGeneralContact` / `GetGeneralContact` keeps its system alive (`reference_internal`); the same question for
+      a `MainSystem` and its `SystemContainer` is #2851;
+    - **RG4.19.3** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-1) (#121) every allocation of
+      `ResizableArray` goes through one function that catches `bad_alloc`, as `Vector` and `Matrix` do.
     - **RG4.19.4** *(option, medium)* (#1337) a singular system Jacobian in `CSolverBase::Newton` is a `SysError`; with
       `adaptiveStep` it could be a failed step that is reduced. It also bears on RG4.17.3 (c).
     - **RG4.19.5** *(option, a run first)* (#1290) `ObjectContactFrictionCircleCable2D` shows tangential forces with
@@ -817,6 +816,8 @@ The steps are numbered in the order they were raised and stand here in the order
       #1683, #1684, #1956 (done by the revisions: `GetDictionary` of the system, the `Inspect`/`Compute` functions of
       `MainSystem`, the item pages); #1681 abandoned (a wrong name). Kept: #142, #591, #1167, #1247, #1740, #1776,
       #1910, and #1920 - a check to investigate before it becomes an extension.
+    - **RG4.19.10** *(option, a check)* (#2851) a `MainSystem` does not keep its `SystemContainer` alive
+      (`AddSystem` returns with `return_value_policy::reference`), found with RG4.19.2.
     - Not here, they need a Linux machine or a screen: #2204, #2205 (perspective), #2277, #2278 (GLFW on Linux) - RG6.8.
 
 ## RG5 — Performance
@@ -1836,7 +1837,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #2848, #2849 | the open bugs before 1.13: `GeneralContact`, the contact model of its implicit solver (decision) and the torque on triangle bodies |
 | RG12.39 | #2850 | a restart from the restart file: how it works with a model script, then a proposal |
-| RG4.19 | #121, #692, #984, #1290, #1337, #1512 | the open bugs and checks, evaluated: options and decisions (RG4.19.1-.9) |
+| RG4.19 | #692, #1290, #1337, #2851 | the open bugs and checks, evaluated: options and decisions (RG4.19.1-.9) |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |

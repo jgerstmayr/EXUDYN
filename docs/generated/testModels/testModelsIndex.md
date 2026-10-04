@@ -110,6 +110,7 @@ genericODE1duplicateNodeTest
 contactSphereTorusMomentumTest
 explicitSolversPostNewtonTest
 contactComparisonTest
+inactiveConnectorForceTest
 kinematicTreePrismaticJacobianTest
 kinematicTreeTest
 kinematicTreeUserFunctionTest

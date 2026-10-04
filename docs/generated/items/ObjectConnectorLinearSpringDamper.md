@@ -174,4 +174,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Displace
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`energiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`chainDriveExample.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/chainDriveExample.py) (Ex), [`energiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesTest.py) (TM), [`inactiveConnectorForceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/inactiveConnectorForceTest.py) (TM)

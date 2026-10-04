@@ -177,4 +177,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node1, exu.OutputVariableType.Position
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`connectorGravityTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorGravityTest.py) (TM), [`energiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesTest.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`connectorGravityTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/connectorGravityTest.py) (TM), [`energiesTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/energiesTest.py) (TM), [`inactiveConnectorForceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/inactiveConnectorForceTest.py) (TM)

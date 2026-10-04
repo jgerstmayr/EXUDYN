@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.319.dev1
+- Exudyn version = 1.12.322.dev1
 - last change = 2026-10-05
-- Number of issues = 2851
-- Number of resolved issues = 2633 (319 in current version)
+- Number of issues = 2852
+- Number of resolved issues = 2636 (322 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHECK` `LOW EFF` `raised by: Claude-JG` a MainSystem does not keep its SystemContainer alive (#2851)
+  - description: SC.AddSystem() returns the MainSystem with return\_value\_policy::reference: a script that keeps mbs but drops SC (del SC, or SC created inside a function that returns mbs) works on a system the container has deleted. GetGeneralContact keeps its system alive since \#1512 (reference\_internal); the same for AddSystem/GetSystem would tie mbs to SC. Check what else depends on the current behaviour (SC.Reset, the renderer) before changing it.
+  - date raised: 2026-10-05
 - `EXTENSION` `HIGH EFF` `raised by: Claude-JG` a restart mechanism: how a simulation continues from its restart file (#2850)
   - description: The maintainer, 2026-10-05: before a restart function is written, evaluate how a restart works together with a model script - where the restart file is injected, for example that the system detects a restart file and loads its state from it. The restart file is written already (simulationSettings.solution.restart); a prototype that reads it is \_InitializeFromRestartFile in basicUtilities.py, not public. Successor of \#1565.
   - date raised: 2026-10-05
@@ -7900,9 +7903,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` solver (#1529)
   - description: solver functions GetSystemJacobian() and GetSystemMassMatrix() need to be extended with arg sparseTriplets=False; if True, it will return CSR sparse triplets, useful for large matrices, e.g. in eigenvalue computation in linearized system
   - date raised: 2023-04-26
-- `CHECK` <span class="textred">`HIGH`</span> `MEDIUM EFF` return value policy (#1512)
-  - description: check return value policy of GeneralContact (as example for further decisions); see if reference in ALL access functions makes no problems if object is deleted on Python side
-  - date raised: 2023-04-13
 - `CHANGE` `LOW EFF` StaticSolver (#1493)
   - description: add exception in case that Lie group nodes are used with static solver, which cannot work
   - date raised: 2023-04-06
@@ -7990,9 +7990,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` ALEANCFCable2D (#987)
   - description: add description - specifically regarding OutputVariables, special terms not available in ANCFCable2D (and add reference to ASME CND paper)
   - date raised: 2022-03-15
-- `CHECK` `LOW EFF` OutputVariableConnector (#984)
-  - description: check all penalty-based connectors if OutputVariable for forces is only computed if activeConnector=True
-  - date raised: 2022-03-14
 - `TESTING` `MEDIUM EFF` ContactFrictionCircleCable2D (#973)
   - description: adapt old tests and create new beltdrive test
   - date raised: 2022-03-09
@@ -8214,9 +8211,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2019-05-21
 - `CHANGE` `LOW EFF` Linalg Override (#123)
   - description: Add override statement to all derived classes in linalg for safety
-  - date raised: 2019-05-13
-- `CHECK` `MEDIUM EFF` allocation failure (#121)
-  - description: assert that every allocation in Matrix, Vector, ResizableArray, ... is performed with try/catch - compare Matrix::AllocateMemory(...)
   - date raised: 2019-05-13
 - `EXTENSION` <span class="textblue">`LOW`</span> `MEDIUM EFF` Destructors/Cleanup (#98)
   - description: add destructors/cleanup to MainSystemData and all other system functions (check new commands)

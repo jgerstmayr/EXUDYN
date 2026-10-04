@@ -147,4 +147,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Position)
 ```
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactComparisonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactComparisonTest.py) (TM), [`sphereTriangleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest.py) (TM), [`sphereTriangleTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest2.py) (TM)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`contactComparisonTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/contactComparisonTest.py) (TM), [`inactiveConnectorForceTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/inactiveConnectorForceTest.py) (TM), [`sphereTriangleTest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest.py) (TM), [`sphereTriangleTest2.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/TestModels/sphereTriangleTest2.py) (TM)

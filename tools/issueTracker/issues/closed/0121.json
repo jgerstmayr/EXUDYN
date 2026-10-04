@@ -1,0 +1,15 @@
+{
+  "number": 121,
+  "title": "allocation failure",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "assert that every allocation in Matrix, Vector, ResizableArray, ... is performed with try/catch - compare Matrix::AllocateMemory(...)",
+  "dateRaised": "2019-05-13",
+  "deadline": "2019-07-12",
+  "dateResolved": "2026-10-05 00:44",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Every allocation of ResizableArray goes through one function that catches a failed allocation and raises an error with the size requested, as Vector and Matrix do.",
+  "resolvedInVersion": "1.12.320"
+}

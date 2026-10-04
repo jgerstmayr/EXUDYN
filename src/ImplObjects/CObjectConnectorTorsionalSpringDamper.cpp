@@ -122,6 +122,7 @@ void CObjectConnectorTorsionalSpringDamper::GetOutputVariableConnector(OutputVar
 	MarkerRigid<Real> markers[2];
 	GetMarkersRigid(markerData, markers);
 	ComputeSpringTorque(markers, markerData.GetTime(), itemIndex, A0all, angle, omega, torque);
+	if (!parameters.activeConnector) { torque = 0.; } //an inactive connector reports no torque (#984)
 
 	switch (variableType)
 	{

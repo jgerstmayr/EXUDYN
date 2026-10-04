@@ -104,6 +104,7 @@ void CObjectConnectorLinearSpringDamper::GetOutputVariableConnector(OutputVariab
 	MarkerRigid<Real> markers[2];
 	GetMarkersRigid(markerData, markers);
 	ComputeSpringForce(markers, markerData.GetTime(), itemIndex, A0, displacement, velocity, force);
+	if (!parameters.activeConnector) { force = 0.; } //an inactive connector reports no force (#984)
 	//Vector3D fTrans = A0 * (parameters.axisMarker0 * force);
 
 	switch (variableType)
