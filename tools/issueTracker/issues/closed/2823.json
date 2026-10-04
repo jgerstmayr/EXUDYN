@@ -2,12 +2,16 @@
   "number": 2823,
   "title": "examples and test models that show referenceHT, localHT and exu.HT",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "EXAMPLE",
   "priority": "NORMAL",
   "effort": "MEDIUM",
   "description": "The maintainer, 2026-10-04: 'referenceHT, localHT, etc. is rarely used'; 'a couple of examples and test models (like 4+4) should use referenceHT / localHT, just to show how it works and for the tests' - solutionViewerTest.py, rigidBodyTutorial3.py (better as Jupyter tutorial, RG17), and 'a pure prestepuserfunction example showing 4 bodies transformed with the InterpolateSE3/SO3 features, writing the transformations into the renderer (with the solution information string)'. revision2026b step RG16.12. [2026-10-03, Claude-JG]: Done 2026-10-04: the example homogeneousTransformationInterpolation.py (RG16.12.1) and solutionViewerTest.py on exu.HT with referenceHT and localHT (RG16.12.2); open: two examples, four test models, rigidBodyTutorial3 as notebook (RG16.12.3 to .5).",
   "dateRaised": "2026-10-03",
   "deadline": "2027-04-01",
-  "file": "python/Examples"
+  "dateResolved": "2026-10-04 14:30",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/Examples",
+  "releaseNotes": "Done: the notebook tutorialRigidBodyCreate (python/Notebooks/) replaces rigidBodyTutorial3.py; it names referenceHT and shows the frame of a body as exu.HT, together with the examples and test models of revision2026b step RG16.12.",
+  "resolvedInVersion": "1.12.281"
 }

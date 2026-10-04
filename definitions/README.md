@@ -267,7 +267,7 @@ link it, do not repeat it.
 | **Detailed description** | written, `detailedDescription`, headings by kind (below) |
 | user functions | generated from the `def` (#2664) |
 | **Mini example** | written, `miniExample` (below) |
-| examples, test models | `examples=['Examples/rigidBodyTutorial3.py', ...]`, relative to `python/`, chosen for the basic items and all sensors; without it, every script that names the item |
+| examples, test models | `examples=['Examples/notebooks/tutorialRigidBodyCreate.py', ...]`, relative to `python/`, chosen for the basic items and all sensors; without it, every script that names the item |
 
 ### The detailed description, by kind
 

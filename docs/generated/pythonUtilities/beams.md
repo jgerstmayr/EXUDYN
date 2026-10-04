@@ -133,7 +133,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFcableCa
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beamTutorial.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/beamTutorial.py) (Ex), [`pendulumGeomExactBeam2Dsimple.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2Dsimple.py) (Ex)
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`pendulumGeomExactBeam2Dsimple.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/pendulumGeomExactBeam2Dsimple.py) (Ex)
 
 
 (sec-beams-generatecirculararcancfcable2d)=

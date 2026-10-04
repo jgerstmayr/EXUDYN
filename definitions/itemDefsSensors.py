@@ -148,7 +148,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult'] = mbs.GetSensorValues(sForce)[0] #10
     """,
     miniExamplePerformanceTest={'numberOfSteps': 759980},
-    examples=['Examples/springDamperTutorial.py', 'Examples/springDamperTutorialNew.py', 'Examples/pendulum2Dconstraint.py', 'Examples/plotSensorExamples.py'],
+    examples=['Examples/notebooks/tutorialSpringDamper.py', 'Examples/notebooks/tutorialSpringDamperCreate.py', 'Examples/pendulum2Dconstraint.py', 'Examples/plotSensorExamples.py'],
     detailedDescription=r"""    #### Attached to
 
     The object `objectNumber`, usually a connector, constraint or joint, which is measured as a whole and
@@ -240,7 +240,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult'] = mbs.GetSensorValues(sPoint)[1] #0.7
     """,
     miniExamplePerformanceTest={'numberOfSteps': 1650230},
-    examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py'],
+    examples=['Examples/notebooks/tutorialSpringDamperCreate.py', 'Examples/notebooks/tutorialRigidBody.py', 'Examples/notebooks/tutorialRigidBodyCreate.py', 'Examples/fourBarMechanism3D.py'],
     detailedDescription=r"""    #### Attached to
 
     The body `bodyNumber`, at the point `localPosition` $\pLocB$. The local position is given in the

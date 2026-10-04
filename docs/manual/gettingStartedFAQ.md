@@ -50,7 +50,7 @@ is what most answers need to start from, see {ref}`sec-commandline`.
 - Typical Python **syntax error** with missing braces:
 
   ```
-    File "C:\DATA\cpp\EXUDYN_git\python\Examples\springDamperTutorial.py", line 42
+    File "C:\myModels\springDamper.py", line 42
         nGround=mbs.AddNode(NodePointGround(referenceCoordinates = [0,0,0]))
                ^
     SyntaxError: invalid syntax

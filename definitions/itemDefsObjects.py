@@ -80,7 +80,7 @@ definitions.append(ItemDefinition(
     """,
     miniExamplePerformanceTest={'numberOfSteps': 973260},
     createFunctions=['CreateGround'],
-    examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py'],
+    examples=['Examples/basicTutorial2024.py', 'Examples/notebooks/tutorialSpringDamperCreate.py', 'Examples/notebooks/tutorialRigidBody.py', 'Examples/notebooks/tutorialRigidBodyCreate.py'],
     detailedDescription=r"""    #### Equations
 
     `ObjectGround` has no coordinates and no equations: it is a fixed body to which joints, connectors
@@ -240,7 +240,7 @@ definitions.append(ItemDefinition(
     overallDescription=r'A 3D mass point which is attached to a position-based node, usually NodePoint.',
     classType=ClassTypeObject,
     createFunctions=['CreateMassPoint'],
-    examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorial.py', 'Examples/springDamperTutorialNew.py', 'Examples/cartesianSpringDamper.py', 'Examples/coordinateSpringDamper.py'],
+    examples=['Examples/basicTutorial2024.py', 'Examples/notebooks/tutorialSpringDamper.py', 'Examples/notebooks/tutorialSpringDamperCreate.py', 'Examples/cartesianSpringDamper.py', 'Examples/coordinateSpringDamper.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -380,7 +380,7 @@ definitions.append(ItemDefinition(
     overallDescription=r'A 2D mass point which is attached to a position-based 2D node.',
     classType=ClassTypeObject,
     createFunctions=['CreateMassPoint'],
-    examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/pendulum2Dconstraint.py', 'Examples/cartesianSpringDamper.py', 'Examples/SliderCrank.py'],
+    examples=['Examples/basicTutorial2024.py', 'Examples/notebooks/tutorialSpringDamperCreate.py', 'Examples/pendulum2Dconstraint.py', 'Examples/cartesianSpringDamper.py', 'Examples/SliderCrank.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -846,7 +846,7 @@ definitions.append(ItemDefinition(
     """,
     miniExamplePerformanceTest={'numberOfSteps': 607590},
     createFunctions=['CreateRigidBody'],
-    examples=['Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py'],
+    examples=['Examples/notebooks/tutorialRigidBody.py', 'Examples/notebooks/tutorialRigidBodyCreate.py', 'Examples/fourBarMechanism3D.py'],
     detailedDescription=r"""    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
     #### Definition of quantities
@@ -1197,7 +1197,7 @@ definitions.append(ItemDefinition(
     overallDescription=r'A 2D rigid body which is attached to a rigid body 2D node. The body obtains coordinates, position, velocity, etc. from the underlying 2D node.',
     classType=ClassTypeObject,
     createFunctions=['CreateRigidBody'],
-    examples=['Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/rigidPendulum.py'],
+    examples=['Examples/notebooks/tutorialRigidBody.py', 'Examples/notebooks/tutorialRigidBodyCreate.py', 'Examples/rigidPendulum.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -6156,7 +6156,7 @@ definitions.append(ItemDefinition(
     overallDescription=r'An simple spring-damper element with additional force, connecting to position-based markers.',
     classType=ClassTypeObject,
     createFunctions=['CreateSpringDamper'],
-    examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/SpringDamperMassUserFunction.py', 'TestModels/loadUserFunctionTest.py'],
+    examples=['Examples/basicTutorial2024.py', 'Examples/notebooks/tutorialSpringDamperCreate.py', 'Examples/SpringDamperMassUserFunction.py', 'TestModels/loadUserFunctionTest.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -7620,7 +7620,7 @@ definitions.append(ItemDefinition(
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r"""A 1D (scalar) spring-damper element acting on single ABRV:ODE2 coordinates and connecting to coordinate-based markers. NOTE that the coordinate markers only measure the coordinate (=displacement), but the reference position is not included as compared to position-based markers!; the spring-damper can also act on rotational coordinates.""",
     classType=ClassTypeObject,
-    examples=['Examples/springDamperTutorial.py', 'Examples/coordinateSpringDamper.py', 'Examples/plotSensorExamples.py', 'Examples/slidercrankWithMassSpring.py', 'TestModels/CoordinateSpringDamperTest.py'],
+    examples=['Examples/notebooks/tutorialSpringDamper.py', 'Examples/coordinateSpringDamper.py', 'Examples/plotSensorExamples.py', 'Examples/slidercrankWithMassSpring.py', 'TestModels/CoordinateSpringDamperTest.py'],
     detailedDescription=r"""    #### Definition of quantities
 
     | intermediate variables | symbol | description |
@@ -12556,7 +12556,7 @@ definitions.append(ItemDefinition(
     """,
     miniExamplePerformanceTest={'numberOfSteps': 343660},
     createFunctions=['CreateGenericJoint'],
-    examples=['Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3withMarkers.py', 'Examples/fourBarMechanism3D.py', 'TestModels/genericJointUserFunctionTest.py'],
+    examples=['Examples/notebooks/tutorialRigidBody.py', 'Examples/fourBarMechanism3D.py', 'TestModels/genericJointUserFunctionTest.py'],
     detailedDescription=r"""    (sec-objectjointgeneric-definitionofquantities)=
     #### Definition of quantities
 
@@ -12822,7 +12822,7 @@ definitions.append(ItemDefinition(
     overallDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use `mbs.CreateRevoluteJoint(...)` for two rigid bodies (or ground).""",
     classType=ClassTypeObject,
     createFunctions=['CreateRevoluteJoint'],
-    examples=['Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py'],
+    examples=['Examples/notebooks/tutorialRigidBodyCreate.py', 'Examples/notebooks/tutorialRigidBody.py'],
     detailedDescription=r"""    (sec-objectjointrevolutez-definitionofquantities)=
     #### Definition of quantities
 

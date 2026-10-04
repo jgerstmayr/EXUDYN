@@ -162,4 +162,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(nBody, exu.OutputVariableType.Rotation
 ```
 
 
-Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`rigidBodyTutorial3withMarkers.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3withMarkers.py) (Ex)
+Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`tutorialRigidBodyCreate.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/notebooks/tutorialRigidBodyCreate.py) (Ex), [`tutorialRigidBody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/notebooks/tutorialRigidBody.py) (Ex)

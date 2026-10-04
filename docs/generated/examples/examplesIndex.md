@@ -27,7 +27,6 @@ ANCFtestHalfcircle
 ANCFtests2
 ballBearningModel
 basicTutorial2024
-beamTutorial
 beltDriveALE
 beltDriveReevingSystem
 beltDrivesComparison
@@ -124,10 +123,6 @@ reinforcementLearningRobot
 rendererNOGLFWexample
 rigid3Dexample
 rigidBodyIMUtest
-rigidBodyTutorial
-rigidBodyTutorial2
-rigidBodyTutorial3
-rigidBodyTutorial3withMarkers
 rigidPendulum
 rigidRotor3DbasicBehaviour
 rigidRotor3DFWBW
@@ -156,8 +151,6 @@ solutionViewerTest
 solverFunctionsTestEigenvalues
 SpringDamperMasspointSystem
 SpringDamperMassUserFunction
-springDamperTutorial
-springDamperTutorialNew
 springDamperUserFunctionNumbaJIT
 springMassFriction
 springsDeactivateConnectors

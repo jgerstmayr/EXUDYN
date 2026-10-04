@@ -1,10 +1,8 @@
 # Tutorial
 
-This section will show:
-
-- A basic tutorial for a 1D mass and spring-damper with initial displacements, shortest possible model with practically no special settings
-- A more advanced rigid-body model, including 3D rigid bodies and revolute joints
-- Links to examples section
+The tutorials start with a mass point on a spring-damper, the shortest possible model, continue with 3D rigid bodies
+and revolute joints, and show flexible beams, symbolic user functions and a flexible body of the floating frame of
+reference formulation.
 
 A large number of examples, some of them quite advanced, can be found in:
 
@@ -25,16 +23,4 @@ come twice: built from the items, and with the `Create` functions.
 /docs/generated/notebooks/tutorialFlexibleBeams
 /docs/generated/notebooks/tutorialSymbolic
 /docs/generated/notebooks/tutorialFFRF
-```
-
-The previous tutorial pages, until they are removed:
-
-```{toctree}
-:maxdepth: 1
-
-tutorialSpringDamper
-tutorialRigidBody
-tutorialFlexibleBeams
-tutorialSymbolic
-tutorialFFRF
 ```

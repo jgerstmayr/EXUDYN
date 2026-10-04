@@ -51,7 +51,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[1] #-4.905
     """,
     miniExamplePerformanceTest={'numberOfSteps': 1584910},
-    examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py'],
+    examples=['Examples/basicTutorial2024.py', 'Examples/notebooks/tutorialSpringDamperCreate.py', 'Examples/notebooks/tutorialRigidBody.py', 'Examples/notebooks/tutorialRigidBodyCreate.py'],
     detailedDescription=r"""    #### Marker quantities
 
     None that a connector reads: the marker exists to take a load proportional to the mass of the body,
@@ -129,7 +129,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Displacement)[2] #-0.1
     """,
     miniExamplePerformanceTest={'numberOfSteps': 920110},
-    examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidPendulum.py', 'Examples/pendulum2Dconstraint.py', 'Examples/cartesianSpringDamper.py'],
+    examples=['Examples/notebooks/tutorialSpringDamperCreate.py', 'Examples/notebooks/tutorialRigidBodyCreate.py', 'Examples/rigidPendulum.py', 'Examples/pendulum2Dconstraint.py', 'Examples/cartesianSpringDamper.py'],
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -231,7 +231,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Rotation)[2] #0.01
     """,
     miniExamplePerformanceTest={'numberOfSteps': 226940},
-    examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py'],
+    examples=['Examples/notebooks/tutorialSpringDamperCreate.py', 'Examples/notebooks/tutorialRigidBody.py', 'Examples/notebooks/tutorialRigidBodyCreate.py'],
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |
@@ -532,7 +532,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.1
     """,
     miniExamplePerformanceTest={'numberOfSteps': 1414030},
-    examples=['Examples/springDamperTutorial.py', 'Examples/coordinateSpringDamper.py', 'Examples/SliderCrank.py', 'Examples/plotSensorExamples.py', 'Examples/SpringDamperMassUserFunction.py'],
+    examples=['Examples/notebooks/tutorialSpringDamper.py', 'Examples/coordinateSpringDamper.py', 'Examples/SliderCrank.py', 'Examples/plotSensorExamples.py', 'Examples/SpringDamperMassUserFunction.py'],
     detailedDescription=r"""    #### Marker quantities
 
     | quantity | symbol | as computed |

@@ -47,8 +47,8 @@ The process is **not** stopped when the script ends, so the plot is still there 
 simulation is over; the returned `subprocess.Popen` is the handle for a script that wants it gone.
 Nothing is started when windows are suppressed
 (`EXUDYN_SUPPRESS_UI_WINDOW_OPEN`, `exudyn.special.userInterface.suppressPlots`), so a test that runs such a
-script neither opens a window nor leaves a process behind. `springDamperTutorial.py` watches a sensor
-file this way and `3SpringsDistance.py` the coordinates solution.
+script neither opens a window nor leaves a process behind. `3SpringsDistance.py` watches the coordinates
+solution this way.
 
 ## Finding the file
 

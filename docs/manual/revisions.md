@@ -344,8 +344,8 @@ that apply. A node marker answers the node types its node must provide as requir
 alternatives (#2817). The test model `inspectTest.py` shows it.
 
 **Tutorials as notebooks.** `python/Notebooks/` holds the tutorials as Jupyter notebooks, stored with the outputs of
-their last run; the documentation shows them with these outputs, and `python/Examples/tutorialSpringDamper.py` and
-`tutorialRigidBody.py` are the same code as scripts. `exudyn.interactive.ShowImage(SC)` shows the scene in a notebook -
+their last run; the documentation shows them with these outputs, and `python/Examples/notebooks/` holds the same code as
+scripts. `exudev notebooks` runs them and stores the outputs. `exudyn.interactive.ShowImage(SC)` shows the scene in a notebook -
 an image of the raytracer, without a window (#2831).
 
 **Kinetic and potential energy as output variables** (`OutputVariableType.KineticEnergy`,

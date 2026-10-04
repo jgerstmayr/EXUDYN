@@ -67,7 +67,7 @@ definitions.append(ItemDefinition(
     """,
     miniExamplePerformanceTest={'numberOfSteps': 1201600},
     createFunctions=['CreateForce'],
-    examples=['Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial3.py', 'Examples/rigidPendulum.py', 'Examples/doublePendulum2D.py', 'Examples/pendulum2Dconstraint.py'],
+    examples=['Examples/notebooks/tutorialSpringDamperCreate.py', 'Examples/notebooks/tutorialRigidBodyCreate.py', 'Examples/rigidPendulum.py', 'Examples/doublePendulum2D.py', 'Examples/pendulum2Dconstraint.py'],
     detailedDescription=r"""    #### Load and its frame
 
     The force $\fv$ = `loadVector`, or the return value of `loadVectorUserFunction`, acts at the point
@@ -190,7 +190,7 @@ definitions.append(ItemDefinition(
     """,
     miniExamplePerformanceTest={'numberOfSteps': 577350},
     createFunctions=['CreateTorque'],
-    examples=['Examples/rigidBodyTutorial3.py', 'Examples/SliderCrank.py', 'Examples/rigidBodyIMUtest.py'],
+    examples=['Examples/notebooks/tutorialRigidBodyCreate.py', 'Examples/SliderCrank.py', 'Examples/rigidBodyIMUtest.py'],
     detailedDescription=r"""    #### Load and its frame
 
     The torque $\ttau$ = `loadVector`, or the return value of `loadVectorUserFunction`, acts on the body
@@ -302,7 +302,7 @@ definitions.append(ItemDefinition(
     overallDescription=r'Load attached to MarkerBodyMass marker, applying a 3D vector load (e.g. the vector [0,-g,0] is used to apply gravitational loading of size g in negative y-direction).',
     classType=ClassTypeLoad,
     createFunctions=['CreateMassPoint', 'CreateRigidBody'],
-    examples=['Examples/basicTutorial2024.py', 'Examples/springDamperTutorialNew.py', 'Examples/rigidBodyTutorial.py', 'Examples/rigidBodyTutorial2.py', 'Examples/rigidBodyTutorial3.py'],
+    examples=['Examples/basicTutorial2024.py', 'Examples/notebooks/tutorialSpringDamperCreate.py', 'Examples/notebooks/tutorialRigidBody.py', 'Examples/notebooks/tutorialRigidBodyCreate.py'],
     detailedDescription=r"""    #### Load and its frame
 
     The load $\bv$ = `loadVector`, or the return value of `loadVectorUserFunction`, is a force **per
@@ -421,7 +421,7 @@ definitions.append(ItemDefinition(
     exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.Coordinates) #0.1667
     """,
     miniExamplePerformanceTest={'numberOfSteps': 1285720},
-    examples=['Examples/springDamperTutorial.py', 'Examples/coordinateSpringDamper.py', 'Examples/plotSensorExamples.py', 'Examples/slidercrankWithMassSpring.py', 'TestModels/CoordinateSpringDamperTest.py'],
+    examples=['Examples/notebooks/tutorialSpringDamper.py', 'Examples/coordinateSpringDamper.py', 'Examples/plotSensorExamples.py', 'Examples/slidercrankWithMassSpring.py', 'TestModels/CoordinateSpringDamperTest.py'],
     detailedDescription=r"""    #### Load and its frame
 
     The scalar $f$ = `load`, or the return value of `loadUserFunction`, acts on one coordinate: the one

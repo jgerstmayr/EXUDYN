@@ -37,7 +37,7 @@ oGround = mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0.5,-1
                                                                    size=4)])
 
 #++++++++++++++++++++++++++++++++++++++
-#1) mass point + spring-damper + force (as in springDamperTutorialNew.py)
+#1) mass point + spring-damper + force (as in the notebook tutorialSpringDamperCreate)
 oMass = mbs.CreateMassPoint(name='mass', referencePosition=[1.5,0.8,0], initialDisplacement=[-0.1,0,0],
                             mass=1.6, drawSize=0.15, color=graphics.color.red)
 oSD = mbs.CreateSpringDamper(name='springDamper', bodyNumbers=[oGround, oMass],
@@ -47,7 +47,7 @@ sForce = mbs.AddSensor(SensorObject(objectNumber=oSD, storeInternal=True,
                                     outputVariableType=exu.OutputVariableType.ForceLocal))
 
 #++++++++++++++++++++++++++++++++++++++
-#2) 3D double pendulum of rigid bodies with revolute joints (as in rigidBodyTutorial3)
+#2) 3D double pendulum of rigid bodies with revolute joints (as in the notebook tutorialRigidBodyCreate)
 L, w = 1, 0.1
 iCube = InertiaCuboid(density=2000, sideLengths=[L,w,w])
 b0 = mbs.CreateRigidBody(name='link0', inertia=iCube, referencePosition=[0.5*L,0,0], gravity=[0,-9.81,0],

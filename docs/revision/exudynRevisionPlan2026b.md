@@ -1559,7 +1559,9 @@ referenceHT / localHT, just to show how it works and for the tests")* **Examples
       `bicycleIftommBenchmarkMarkerBasedJoints.py` and twelve test models give `localHT` with `exu.HT` now; the
       parameters themselves are tested by `homogeneousTransformationParameterTest.py` (referenceHT of ground and bodies,
       localHT of the rigid markers, jointHTs) and `homogeneousTransformationTest.py` (the output variable and sensor);
-    - **RG16.12.5** `rigidBodyTutorial3.py` with `exu.HT`, as a notebook - after the evaluation of RG17.1.
+    - **RG16.12.5** **DONE 2026-10-04 by RG17.2.7** — [log](exudynRevisionLog2026b.md#rg17-3) the notebook
+      `tutorialRigidBodyCreate` replaces `rigidBodyTutorial3.py`: it names `referenceHT` and shows the frame of a body as
+      `exu.HT`.
 
 <a id="rg16-13"></a>
 **RG16.13** *(group RG16; maintainer 2026-10-04: "ObjectKinematicTree still has only jointTransformations and
@@ -1668,11 +1670,12 @@ notebook is JSON):
       the old pages in a second table of contents until RG17.3 removes them.
 
 <a id="rg17-3"></a>
-**RG17.3** *(group RG17; after the maintainer has compared the notebooks with the old tutorials)* **The tutorials
-are the notebooks** (#2831): the old pages `docs/manual/tutorial*.md` removed, with their figures that no notebook
+**RG17.3** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg17-3) *(group RG17; after the maintainer has
+compared the notebooks with the old tutorials; maintainer 2026-10-04: "the new RG17.3 tutorials are really good -
+remove the old ones")* **The tutorials are the notebooks** (#2831): the old pages `docs/manual/tutorial*.md` removed, with their figures that no notebook
 uses; the old scripts removed (*ask before deleting*): `springDamperTutorial.py`, `springDamperTutorialNew.py`,
-`rigidBodyTutorial.py`, `rigidBodyTutorial2.py`, `rigidBodyTutorial3.py`, keeping one alternative as a notebook -
-`rigidBodyTutorialWithMarkers.ipynb`, the model built from nodes, objects and markers instead of the Create functions;
+`rigidBodyTutorial.py`, `rigidBodyTutorial2.py`, `rigidBodyTutorial3.py`, `rigidBodyTutorial3withMarkers.py` and
+`beamTutorial.py` - the alternative built from nodes, objects and markers is the notebook `tutorialRigidBody`;
 `exudev notebooks` to run them (the tool of RG17.2.2), and `runNotebooks.py --check` in the release checks: a notebook
 whose code changed since its outputs were stored.
 
@@ -1733,10 +1736,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
-| RG16.12.5 | #2823 | `rigidBodyTutorial3.py` with `exu.HT` as a notebook, after RG17.1 |
 | RG15 | #2746 | objects computing from coordinates passed in: the work after the evaluation of RG15.1, not planned yet |
 | RG16.13 | #2828, #2829 | `ObjectKinematicTree` on the HT directly: RG16.13.6 to RG16.13.9 |
-| RG17.3 | #2831 | the tutorials are the notebooks: after the maintainer's comparison |
 | RG17.4 | #2831 | every example of the reference manual a notebook |
 | RG17.5 | #2831 | the snippets of the user manual as notebooks: a proposal |
 

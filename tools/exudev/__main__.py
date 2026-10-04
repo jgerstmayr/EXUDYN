@@ -397,6 +397,19 @@ def BuildParsers():
     scripts.add_argument('--check', action='store_true', help='fail if anything was found')
     scripts.set_defaults(function=commands.Scripts)
 
+    notebooks = subParsers.add_parser('notebooks', parents=[globalParser],
+        help='run the notebooks of python/Notebooks and store their outputs',
+        description='Runs the notebooks (all, or the ones named) with tools/runNotebooks.py, without a '
+                    'window, and stores their outputs - text, plots, images of ShowImage - in them; the '
+                    'documentation shows these outputs. The environment needs exudyn and what the '
+                    'notebooks import (matplotlib; networkx and ngsolve for two tutorials), e.g. '
+                    '--env venvP313. --check runs nothing and lists the notebooks whose code changed '
+                    'after their outputs were stored (#2831).')
+    notebooks.add_argument('names', nargs='*', help='notebook names without .ipynb, e.g. tutorialRigidBody')
+    notebooks.add_argument('--check', action='store_true',
+                           help='only list the notebooks whose outputs are older than their code')
+    notebooks.set_defaults(function=commands.Notebooks)
+
     figures = subParsers.add_parser('figures', parents=[globalParser, versionParser],
         help='compile the TikZ flow charts of the documentation that changed (needs LaTeX)',
         description='Compiles every chart in docs/figures/tikz/ whose source changed into '

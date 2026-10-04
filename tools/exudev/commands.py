@@ -484,6 +484,13 @@ def CheckReleaseReady(options):
                         'no commit:\n    ' + changes.replace('\n', '\n    ')
                         + '\n  commit them, or "--allow-dirty" if this is deliberate')
 
+    #the notebooks show the outputs of their code, not of an older version of it (#2831)
+    result = subprocess.run([sys.executable, os.path.join('tools', 'runNotebooks.py'), '--check'],
+                            cwd=runner.RepositoryRoot(), capture_output=True, text=True)
+    if result.returncode != 0:
+        problems.append('notebooks with outputs older than their code ("exudev notebooks <name>"):\n'
+                        + result.stdout.strip())
+
     tracker = IssueTracker()
     release = tracker.CurrentRelease()
     if not release.get('name', '').strip():
@@ -991,6 +998,16 @@ def Scripts(options):
     if options.check:
         argv += ['--check']
     return [Step('check user scripts (' + environment + ')',
+                 argv=runner.InEnvironment(environment, argv, options), cwd=root)]
+
+
+def Notebooks(options):
+    """The notebooks of python/Notebooks run and their outputs stored: tools/runNotebooks.py (#2831);
+    with --check only the notebooks whose code changed after their outputs were stored."""
+    root = runner.RepositoryRoot()
+    environment = options.env or runner.generatorEnvironment
+    argv = ['python', 'tools/runNotebooks.py'] + options.names + (['--check'] if options.check else [])
+    return [Step(('check' if options.check else 'run') + ' the notebooks (' + environment + ')',
                  argv=runner.InEnvironment(environment, argv, options), cwd=root)]
 
 

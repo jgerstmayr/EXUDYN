@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.280.dev1
+- Exudyn version = 1.12.281.dev1
 - last change = 2026-10-04
 - Number of issues = 2841
-- Number of resolved issues = 2594 (280 in current version)
+- Number of resolved issues = 2595 (281 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7583,9 +7583,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` ObjectKinematicTree computes directly with homogeneous transformations (#2829)
   - description: The maintainer, 2026-10-04: 'check the main relevant functions in KinematicTree (I suppose ComputeTreeTransformations and ComputeMassMatrixAndODE2LHS); make two local implementations in C++, with a exudyn.experimental switch for the testing. Probably, the evaluations need to be slightly adjusted, as the Featherstone version uses an inverse of the HTs. Most functions like Translation2T66 are just wrappers that did the T66 and the HT path, but with an optimized version just with the HTs, it should be easier to implement and faster. If comparison shows that the new path with HTs works, the old T66 functions could mostly go; probably some 6D motion and force computations will stay - possibly in a more suitable/faster form.' revision2026b step RG16.13.6 to RG16.13.9.
   - date raised: 2026-10-04
-- `EXAMPLE` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` examples and test models that show referenceHT, localHT and exu.HT (#2823)
-  - description: The maintainer, 2026-10-04: 'referenceHT, localHT, etc. is rarely used'; 'a couple of examples and test models (like 4+4) should use referenceHT / localHT, just to show how it works and for the tests' - solutionViewerTest.py, rigidBodyTutorial3.py (better as Jupyter tutorial, RG17), and 'a pure prestepuserfunction example showing 4 bodies transformed with the InterpolateSE3/SO3 features, writing the transformations into the renderer (with the solution information string)'. revision2026b step RG16.12. \[2026-10-03, Claude-JG\]: Done 2026-10-04: the example homogeneousTransformationInterpolation.py (RG16.12.1) and solutionViewerTest.py on exu.HT with referenceHT and localHT (RG16.12.2); open: two examples, four test models, rigidBodyTutorial3 as notebook (RG16.12.3 to .5).
-  - date raised: 2026-10-03
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
   - date raised: 2026-09-29

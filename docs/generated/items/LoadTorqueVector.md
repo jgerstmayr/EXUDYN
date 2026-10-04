@@ -115,4 +115,4 @@ exu.sys['testResult'] = mbs.GetNodeOutput(node, exu.OutputVariableType.AngularVe
 ```
 
 
-Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`rigidBodyTutorial3.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyTutorial3.py) (Ex), [`SliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SliderCrank.py) (Ex), [`rigidBodyIMUtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyIMUtest.py) (Ex)
+Examples (Ex) and TestModels (TM) that show this item, with weblink to github: [`tutorialRigidBodyCreate.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/notebooks/tutorialRigidBodyCreate.py) (Ex), [`SliderCrank.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/SliderCrank.py) (Ex), [`rigidBodyIMUtest.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/rigidBodyIMUtest.py) (Ex)

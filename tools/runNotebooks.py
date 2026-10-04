@@ -12,8 +12,13 @@
 #           (EXUDYN_OUTPUTDIRECTORY). No Jupyter package is needed: the cells are executed one after
 #           the other in one namespace, as a kernel would.
 #
+#           A run stores a hash of the code cells in the metadata of the notebook; --check compares
+#           it, so a notebook whose code changed after its outputs were stored is found without
+#           running anything (the release checks call it).
+#
 # Usage:    python tools/runNotebooks.py                 #all notebooks
 #           python tools/runNotebooks.py tutorialRigidBody #one, by name
+#           python tools/runNotebooks.py --check         #the notebooks whose outputs are older than their code
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-04
@@ -25,6 +30,7 @@ import ast
 import base64
 import contextlib
 import glob
+import hashlib
 import io
 import json
 import os
@@ -48,6 +54,12 @@ plotSizeInches = (12.8, 6.4)
 
 def Source(cell):
     return ''.join(cell['source']) if isinstance(cell['source'], list) else cell['source']
+
+
+def CodeHash(notebook):
+    """the hash of the code cells, which the outputs were computed from"""
+    code = '\n\n'.join(Source(cell) for cell in notebook['cells'] if cell['cell_type'] == 'code')
+    return hashlib.sha256(code.encode('utf-8')).hexdigest()[:16]
 
 
 def Lines(text):
@@ -113,6 +125,7 @@ def Worker(path):
         for output in cell['outputs']:
             if output['output_type'] == 'execute_result':
                 output['execution_count'] = count
+    notebook['metadata'].setdefault('exudyn', {})['codeHash'] = CodeHash(notebook)
     with open(path, 'w', encoding='utf-8', newline='\n') as file:
         json.dump(notebook, file, indent=1, ensure_ascii=False)
         file.write('\n')
@@ -124,10 +137,22 @@ def main():
         os.chdir(os.path.dirname(os.path.abspath(sys.argv[2])))
         return Worker(sys.argv[2])
 
-    names = sys.argv[1:]
+    check = '--check' in sys.argv[1:]
+    names = [name for name in sys.argv[1:] if name != '--check']
     paths = sorted(glob.glob(os.path.join(notebookDirectory, '**', '*.ipynb'), recursive=True))
     if names:
         paths = [p for p in paths if os.path.splitext(os.path.basename(p))[0] in names]
+    if check:
+        stale = []
+        for path in paths:
+            notebook = json.load(open(path, encoding='utf-8'))
+            if notebook['metadata'].get('exudyn', {}).get('codeHash') != CodeHash(notebook):
+                stale.append(path)
+        for path in stale:
+            print('outputs older than the code: ' + os.path.relpath(path, repositoryRoot))
+        print(str(len(paths) - len(stale)) + ' of ' + str(len(paths)) + ' notebooks have the outputs of their code'
+              + ('' if not stale else '; "exudev notebooks <name>" runs them'))
+        return 1 if stale else 0
     failures = 0
     with tempfile.TemporaryDirectory() as outputDirectory:
         environment = dict(os.environ, EXUDYN_SUPPRESS_UI_WINDOW_OPEN='1', EXUDYN_OUTPUTDIRECTORY=outputDirectory)

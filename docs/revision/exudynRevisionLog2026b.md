@@ -14622,3 +14622,32 @@ the flags) are part of this commit; all 24 images drawn again with them.
 
 **New steps**: RG6.9 (#2839), the curves of the connectors; RG13.8 (#2840), the documentation of the drawing - 74
 `UpdateGraphics` functions to inventory first.
+
+<a id="rg17-3"></a>
+### RG17.3, RG16.12.5 — the tutorials are the notebooks (2026-10-04, #2831, #2823)
+
+*(Maintainer 2026-10-04: "the new RG17.3 tutorials are really good - remove the old ones.")*
+
+**Removed**: the pages `docs/manual/tutorialSpringDamper.md`, `tutorialRigidBody.md`, `tutorialFlexibleBeams.md`,
+`tutorialSymbolic.md` and `tutorialFFRF.md`; their figures `TutorialBeams.png`, `TutorialFFRFpendulum.png`,
+`TutorialRigidBody1desc.png` and `plotSpringDamper.png/.pdf` (no other page uses them; `DrawSystemGraphExample` stays,
+`README.rst` shows it); the scripts `springDamperTutorial.py`, `springDamperTutorialNew.py`, `rigidBodyTutorial.py`,
+`rigidBodyTutorial2.py`, `rigidBodyTutorial3.py`, `rigidBodyTutorial3withMarkers.py`, `beamTutorial.py`, and their
+generated pages in `docs/generated/examples/` (the examples emitter leaves the page of a removed script behind).
+`tutorial.md` lists only the notebooks.
+
+**References moved**: the `examples=` of 22 item definitions name the scripts of the notebooks
+(`Examples/notebooks/tutorialSpringDamper.py` for `springDamperTutorial.py`, `...Create.py` for the `New` one,
+`tutorialRigidBody.py` for `rigidBodyTutorial(2, 3withMarkers)`, `tutorialRigidBodyCreate.py` for
+`rigidBodyTutorial3`, `tutorialFlexibleBeams.py` for `beamTutorial`), duplicates dropped; `resultsMonitor.md` names
+only `3SpringsDistance.py` as the example of `StartResultsMonitor` (the old spring-damper script was the other one);
+the syntax error of `gettingStartedFAQ.md` is in a user's file; `revisions.md` names `python/Examples/notebooks/`.
+
+**Running them**: `tools/runNotebooks.py` stores a hash of the code cells in the metadata of each notebook
+(`metadata.exudyn.codeHash`); `--check` lists the notebooks whose code changed after their outputs were stored, and
+`exudev release` refuses them. `exudev notebooks [names] [--check]` runs the tool (`--env venvP313` for networkx and
+ngsolve). The hashes of the eight notebooks were written without running them again: their outputs are those of the
+code of the previous commit.
+
+**RG16.12.5**: `tutorialRigidBodyCreate` is the notebook of `rigidBodyTutorial3.py`, with `referenceHT` and the frame as
+`exu.HT`; #2823 is complete.
