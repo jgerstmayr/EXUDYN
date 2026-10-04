@@ -739,9 +739,11 @@ The steps are numbered in the order they were raised and stand here in the order
       2026-10-04: "Do the next solo steps")* `GeneralContact`, implicit sphere-triangle contact, as the fourth case of
       the drop, and a sliding ball against the rigid-body solution: it agrees; the friction of the implicit solver
       now keeps the sliding/sticking state its active set gives, as `ObjectContactSphereSphere` does;
-    - **RG4.15.9** *(open, a decision)* (#2848) the implicit `GeneralContact` keeps a contact only while its force
-      presses, the explicit one - and the contact objects - while the bodies penetrate: with damping the ball
-      rebounds to 0.1391 instead of 0.1352. Which is the model?
+    - **RG4.15.9** *(open; decided 2026-10-05)* (#2848) the implicit `GeneralContact` keeps a contact only while its
+      force presses, the explicit one - and the contact objects - while the bodies penetrate: with damping the ball
+      rebounds to 0.1391 instead of 0.1352. The maintainer: a setting of `GeneralContact` that switches the implicit
+      solver to the behaviour of the contact objects; `GeneralContact` is to be restructured later, and the same
+      behaviour now is what that needs.
     - **RG4.15.10** *(open)* (#2849) `GeneralContact`: the normal force of a sphere-triangle contact gives the
       triangle body a torque only with friction - the bug RG4.15.4 fixed for `ObjectContactSphereTorus`; right-hand
       side and Jacobian.
@@ -776,12 +778,10 @@ The steps are numbered in the order they were raised and stand here in the order
       0.0018 - no bifurcation), its condition 5.5e12 is that of the geometrically exact beam; a Newton iteration by hand
       with equilibrated dense solves, line search and iterative refinement stalls alike. A single cantilever (lateral
       buckling, torsion $L/GJ$) agrees with the geometrically exact beam.
-    - **RG4.17.3** *(open, options)* what to do with it (#2763): (a) keep the geometrically exact beam in
-      `rightAngleFrame.py` and say in the description of `ObjectANCFBeam` that a thin twisted section needs small load
-      steps (the least); (b) a better predictor in the static solver - the tangent extrapolation of the last two
-      converged steps instead of the last state; (c) an arc-length / adaptive step reduction that halves the step
-      after a stall (whether `staticSolver.adaptiveStep`, on by default, gets past the point with a smaller `minimumStepSize` is the first check); (d) the strain
-      measures of `ObjectANCFBeam` for the twist of a thin section - the slowest, and a research question.
+    - **RG4.17.3** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-decisions) *(maintainer 2026-10-05:
+      "(a) document in the script and issue; and close the case")* `rightAngleFrame.py` keeps the geometrically exact
+      beam, and its Details say where and why the ANCF variant stops; #2763 closed with the same text. Not taken:
+      (b) a better predictor, (c) step reduction or arc length after a stall, (d) the strain measures of the ANCF beam.
 
 <a id="rg4-18"></a>
 **RG4.18** **DONE 2026-10-02** (#2790) — [log](exudynRevisionLog2026b.md#rg4-18) · [plan text](exudynRevisionLog2026b.md#plan-rg4-18) — A system without coordinates is solved.
@@ -791,8 +791,8 @@ The steps are numbered in the order they were raised and stand here in the order
     issues that would indicate that something should be corrected or resolved. List them as options in a new step")*
     **The open BUG, FIX and CHECK issues, evaluated: options.** 40 were open; each was checked against the code, a
     few with a run - see the [log](exudynRevisionLog2026b.md#rg4-19). Resolved as done in the meantime: #124, #209,
-    #380, #390, #613, #1192, #1395, #1500. Already planned elsewhere: #2140, #2236 (RG6.8.5), #2237, #2350 (RG6.8.6),
-    #2763 (RG4.17.3), #2848, #2849 (RG4.15.9/.10), #1845, #2326 (after 1.13, RG4.15). The options, small first:
+    #380, #390, #613, #1192, #1395, #1500. The maintainer's decisions of 2026-10-05 are in the
+    [log](exudynRevisionLog2026b.md#rg4-19-decisions). The options, small first:
     - **RG4.19.1** *(option, small)* (#984) `RigidBodySpringDamper` and `LinearSpringDamper` report a `ForceLocal`
       while `activeConnector = False` (measured: 120.8 and 120.3 N); the other penalty connectors and the contacts
       report zero.
@@ -808,15 +808,15 @@ The steps are numbered in the order they were raised and stand here in the order
       all friction stiffness and damping zero.
     - **RG4.19.6** *(option, a run first)* (#692) the transposed `AE_ODE2_t` block of the system Jacobian for
       velocity-level constraints against a numerical one (a rolling disc).
-    - **RG4.19.7** *(decision)* (#2130, with #2848 of RG4.15.9) whether the contact objects switch on the sign of the
-      force instead of the gap - the same question for the contact objects as RG4.15.9 asks for `GeneralContact`.
-    - **RG4.19.8** *(decision)* (#1565) `InitializeFromRestartFile` is public and raises "not fully implemented":
-      finish it, or take it out of the public functions until it is.
-    - **RG4.19.9** *(decision: close or keep)* checks that name no defect, ideas rather than corrections: #142, #171,
-      #172, #173, #174, #436 (linear algebra style and performance - RG5 measures instead), #591 (FFRF forces against a
-      paper), #1167, #1247 (user function call overhead - RG5), #1683, #1684, #1910 (API ideas, really EXTENSION),
-      #1740 (symbolic examples in the documentation), #1776 (a paper on linearization). The proposal: close #171,
-      #172, #173, #174, #436 as not worth a change; retype #1683, #1684, #1910 as EXTENSION; keep the rest.
+    - **RG4.19.7** **DECIDED 2026-10-05** (#2130 closed) the contact objects stay as they are - in contact while the
+      bodies penetrate, so that the damping may pull: that is what the restitution models of `impactModel` assume,
+      and the linear spring-damper law is the same idea. `GeneralContact` gets a setting to do the same (RG4.15.9).
+    - **RG4.19.8** **DECIDED 2026-10-05** (#1565 closed, superseded by #2850) `InitializeFromRestartFile` is no longer
+      public; how a restart works is RG12.39.
+    - **RG4.19.9** **DECIDED 2026-10-05** closed #171, #172, #173, #174, #436 (not worth a change), and #1677, #1682,
+      #1683, #1684, #1956 (done by the revisions: `GetDictionary` of the system, the `Inspect`/`Compute` functions of
+      `MainSystem`, the item pages); #1681 abandoned (a wrong name). Kept: #142, #591, #1167, #1247, #1740, #1776,
+      #1910, and #1920 - a check to investigate before it becomes an extension.
     - Not here, they need a Linux machine or a screen: #2204, #2205 (perspective), #2277, #2278 (GLFW on Linux) - RG6.8.
 
 ## RG5 — Performance
@@ -1423,6 +1423,15 @@ docstrings; argument annotations only where they help a reader; a check that eve
 <a id="rg12-33"></a>
 **RG12.33** **DONE 2026-10-03** (#2807) — [log](exudynRevisionLog2026b.md#rg12-33) · [plan text](exudynRevisionLog2026b.md#plan-rg12-33) — Deprecations of the Python library, declared and checked.
 
+<a id="rg12-39"></a>
+**RG12.39** *(group RG12; maintainer 2026-10-05, from RG4.19.8)* **How a simulation continues from its restart file**
+    (#2850). The restart file is written (`simulationSettings.solution.restart`: `write`, `name`, `writePeriod`), and
+    a prototype that reads it back is `_InitializeFromRestartFile` in `basicUtilities.py`, not public since #1565 was
+    closed. Before a function is written, evaluate how a restart works together with the model script: where the
+    restart file comes in - for example the system detects that one is available and loads its state from it -,
+    what else a restart needs (the time, the solver's state, sensors and files that continue), and what the user
+    writes. Then a proposal, for the maintainer's decision.
+
 ## RG13 — Item documentation
 
 *(Group created by the maintainer, 2026-09-27.)* **Every item gets a full documentation and a
@@ -1826,8 +1835,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #2848, #2849 | the open bugs before 1.13: `GeneralContact`, the contact model of its implicit solver (decision) and the torque on triangle bodies |
-| RG4.19 | #121, #984, #1290, #1337, #1512, #1565, #2130 | the open bugs and checks, evaluated: options and decisions (RG4.19.1-.9) |
-| RG4.17 | #2763 | `ObjectANCFBeam`: the stall of the right-angle frame - options (RG4.17.3) |
+| RG12.39 | #2850 | a restart from the restart file: how it works with a model script, then a proposal |
+| RG4.19 | #121, #692, #984, #1290, #1337, #1512 | the open bugs and checks, evaluated: options and decisions (RG4.19.1-.9) |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
@@ -1879,5 +1888,4 @@ The title of each says what the step **does**; the sentence after it says why it
 2. **Do the manual GUI check on Windows** (RG2.4), with the curved GraphicsData (row K13) and the TikZ figures in
    the PDF. It is the last condition of 1.13 that one person can meet alone.
 3. **Finish the steps that are nearly done**, each small and without a decision left: none left at the moment.
-4. **Then the larger open steps of 1.13**: RG4.15.9/.10 (`GeneralContact`) and RG4.17.3
-   (the beam stall, analysed; RG4.17.3 needs a choice of the options), which are bugs a user can meet.
+4. **Then the larger open steps of 1.13**: RG4.15.9/.10 (`GeneralContact`), which are bugs a user can meet.

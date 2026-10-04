@@ -19,6 +19,11 @@ You can view and download this file on Github: [rightAngleFrame.py](https://gith
 #           load-driven computation stops at the critical load 1.088 N, and follows the post-buckling
 #           path, on which P stays close to 1.088 N while the tip moves out of the plane. A small
 #           out-of-plane force is the imperfection.
+#           With ObjectANCFBeam (useGeometricallyExact = False) the static solver stops at about 3 % of
+#           the drive (P = 0.31 N): there the Newton iteration converges only from very close to the
+#           solution, although its Jacobian is consistent and the constrained tangent stiffness is
+#           positive definite; neither more elements, another penalty factor, another linear solver
+#           nor more load steps change it, and without the imperfection the drive is completed (#2763).
 #           K. Nachbagauer, J. Gerstmayr. Structural and Continuum Mechanics Approaches for a 3D Shear
 #           Deformable ANCF Beam Finite Element: Application to Buckling and Nonlinear Dynamic Examples,
 #           Journal of Computational and Nonlinear Dynamics, Vol. 9(1), pp. 011013-1 - 011013-8, 2013.
@@ -38,7 +43,7 @@ import numpy as np
 
 testIsActive = exu.sys.get('testIsActive', False)
 
-useGeometricallyExact = True    #False: ObjectANCFBeam, whose Newton iteration stalls near 2e-7 after a few percent of the drive (#2763)
+useGeometricallyExact = True    #False: ObjectANCFBeam, whose static solve stops at about 3 % of the drive (#2763, see Details)
 nElements = 16                  #per arm
 uxMax = 2e-3                    #prescribed displacement of the tip along the first arm (x); 200 steps of 1e-5 follow the post-buckling path, much larger steps may jump to another branch
 imperfection = 1e-4             #out-of-plane force at the tip [N]

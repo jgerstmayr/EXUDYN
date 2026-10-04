@@ -2,10 +2,14 @@
   "number": 173,
   "title": "LinkedDataVector",
   "author": "JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "CHECK",
   "effort": "MEDIUM",
   "description": "Check that the Vector is declared as const LinkedDataVectors if it is returned by a function; otherwise unforeseeable problems might occur",
   "dateRaised": "2019-06-07",
-  "deadline": "2019-08-06"
+  "deadline": "2019-08-06",
+  "dateResolved": "2026-10-05 00:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "won't fix (maintainer 2026-10-05, revision2026b step RG4.19.9): a style consideration that is not worth a change",
+  "resolvedInVersion": "1.12.308"
 }

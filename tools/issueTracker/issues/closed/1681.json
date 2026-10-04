@@ -1,0 +1,15 @@
+{
+  "number": 1681,
+  "title": "ItemIndices",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add option to add force/torque directly; add gravity to bodies",
+  "dateRaised": "2023-10-29",
+  "deadline": "2024-04-26",
+  "dateResolved": "2026-10-05 00:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "abandoned (maintainer 2026-10-05, revision2026b step RG4.19.9): a wrong name",
+  "resolvedInVersion": "1.12.313"
+}

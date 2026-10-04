@@ -1,0 +1,15 @@
+{
+  "number": 436,
+  "title": "virtual functions",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "make virtual functions consistent for some system classes like MainSystem, etc. which have no derived classes",
+  "dateRaised": "2020-07-21",
+  "deadline": "2020-09-19",
+  "dateResolved": "2026-10-05 00:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "won't fix (maintainer 2026-10-05, revision2026b step RG4.19.9): a style consideration that is not worth a change",
+  "resolvedInVersion": "1.12.310"
+}

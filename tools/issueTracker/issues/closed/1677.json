@@ -2,10 +2,14 @@
   "number": 1677,
   "title": "systemData",
   "author": "JG",
-  "status": "RAISED",
+  "status": "CLOSED",
   "type": "EXTENSION",
   "effort": "MEDIUM",
   "description": "add GetDict(), Set(systemDict=[Dict]) functions which returns the whole dictionary for the system; containing list of nodes, objects, ...; each item is represented by its dictionary; could be used for set/get in future",
   "dateRaised": "2023-10-29",
-  "deadline": "2024-04-26"
+  "deadline": "2024-04-26",
+  "dateResolved": "2026-10-05 00:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "obsolete - done by the revisions (maintainer 2026-10-05, revision2026b step RG4.19.9): mbs.GetDictionary() gives the whole system as a dictionary",
+  "resolvedInVersion": "1.12.312"
 }

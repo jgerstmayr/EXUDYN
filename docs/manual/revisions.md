@@ -101,6 +101,10 @@ well, so that a run writes nothing beside the script. A script that reads the so
 that sets its own file names keeps them. `exudev scripts <folder>` finds both, and every file a script
 names without a directory.
 
+**`InitializeFromRestartFile` is gone** from `exudyn.utilities`: it raised "not fully implemented" in
+every version. The restart file is still written (`simulationSettings.solution.restart`); how a
+simulation continues from it is #2850.
+
 **Item dictionaries are more forgiving, not less**: a parameter that is left out keeps its default
 or its current value, where it used to raise `KeyError`.
 

@@ -15191,3 +15191,29 @@ body: `RigidBodySpringDamper` reports `ForceLocal` 120.8 N and `LinearSpringDamp
 `CartesianSpringDamper`, `TorsionalSpringDamper`, `CoordinateSpringDamper(Ext)`, `ConnectorGravity` and the sphere
 contacts report zero. #1512 - a `GeneralContact` kept in Python after the system was deleted still answered (no crash,
 but undefined). The options and decisions are RG4.19.1-.9 in the plan.
+
+<a id="rg4-19-decisions"></a>
+### RG4.19, RG4.17.3, RG4.15.9 — the maintainer's decisions on the evaluated issues (2026-10-05)
+
+*(Maintainer 2026-10-05, on RG4.17.2, RG4.15.8 and RG4.19.)*
+
+- **RG4.17.3 (#2763)**: option (a) - the script and the issue say where and why the ANCF frame stops; the issue is
+  closed. `rightAngleFrame.py`: a paragraph in its Details, the comment of `useGeometricallyExact` points to it.
+- **RG4.15.9 (#2848) and RG4.19.7 (#2130)**: the restitution models (`impactModel = 2`) recover the coefficient of
+  restitution from a nonlinear spring-damper that does not look at negative contact forces; the linear law,
+  generalized, does the same and includes them. So the contact objects stay as they are (#2130 closed), and
+  `GeneralContact` gets a setting that makes its implicit solver behave like them. `GeneralContact` will be
+  restructured; the same behaviour now is what the restructuring compares against, and its defects are fully
+  resolved then.
+- **RG4.19.8 (#1565)**: a restart is a nice-to-have, but the mechanism is to be evaluated first - how a restart
+  works with a model script and where the restart file comes in. #1565 closed, superseded by #2850 (RG12.39);
+  `InitializeFromRestartFile` is renamed `_InitializeFromRestartFile` and left out of `__all__`, the two
+  descriptions that named it no longer do, `exudev scripts` reports it as gone, and `revisions.md` says so.
+- **RG4.19.9**: closed as not worth a change #171, #172, #173, #174, #436; closed as done by the revisions #1677
+  (`GetDictionary` of the system), #1682, #1683, #1684 (the `Inspect`/`Compute` functions of `MainSystem`), #1956
+  (the item pages); #1681 abandoned (a wrong name). #1920 (an autodiff Jacobian for `ObjectContactSphereSphere`)
+  stays a check: the object has no Jacobian of its own - the system differentiates it numerically - and it is not
+  a duplicate, though it would follow from RG14; to be investigated before it becomes an extension.
+- The list "already planned elsewhere" is removed from RG4.19: those issues are in their own steps.
+- Next, also decided: the small fixes RG4.19.1-.3, RG4.15.9 (the setting), RG4.15.10 (#2849), and #2237 (crashes
+  with `PlotSensor` on macOS: look for an initialization in the solver that a compiler may leave undefined).

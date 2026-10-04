@@ -1,0 +1,15 @@
+{
+  "number": 2130,
+  "title": "ObjectContact",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "CHECK",
+  "effort": "HIGH",
+  "description": "consider changing contact objects like SphereSphere, SphereTriangle, etc. to switch in PostNewtonStep based on force sign rather than gap sign; possibly use global switch",
+  "dateRaised": "2025-07-05",
+  "deadline": "2026-01-01",
+  "dateResolved": "2026-10-05 00:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "won't fix (maintainer 2026-10-05, revision2026b step RG4.19.7): the contact objects stay in contact while the bodies penetrate, as the restitution models assume; GeneralContact gets a setting to do the same (#2848)",
+  "resolvedInVersion": "1.12.318"
+}

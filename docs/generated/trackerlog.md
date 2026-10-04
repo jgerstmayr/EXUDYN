@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.305.dev1
-- last change = 2026-10-04
-- Number of issues = 2850
-- Number of resolved issues = 2619 (305 in current version)
+- Exudyn version = 1.12.319.dev1
+- last change = 2026-10-05
+- Number of issues = 2851
+- Number of resolved issues = 2633 (319 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` a restart mechanism: how a simulation continues from its restart file (#2850)
+  - description: The maintainer, 2026-10-05: before a restart function is written, evaluate how a restart works together with a model script - where the restart file is injected, for example that the system detects a restart file and loads its state from it. The restart file is written already (simulationSettings.solution.restart); a prototype that reads it is \_InitializeFromRestartFile in basicUtilities.py, not public. Successor of \#1565.
+  - date raised: 2026-10-05
 - `CHECK` `LOW EFF` `raised by: Claude-JG` GeneralContact: the implicit solver keeps a contact only while its force presses, the explicit one while the bodies penetrate (#2848)
   - description: With contact damping, the active set of the implicit solver (PostNewton) takes a contact only if k\*gap + d\*v\_n \< 0; the explicit solver, and ObjectContactSphereSphere / SphereTriangle / Coordinate in both, take it while gap \< 0, so the damping can pull at the end of a contact. A ball dropped onto a triangle rebounds to 0.1391 implicit against 0.1352 (contactComparisonTest.py). Decision: which of the two is the model, and then make both solvers do it.
   - date raised: 2026-10-04
@@ -7735,9 +7738,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` ObjectContact (#2131)
   - description: add rolling resistance
   - date raised: 2025-07-05
-- `CHECK` `HIGH EFF` ObjectContact (#2130)
-  - description: consider changing contact objects like SphereSphere, SphereTriangle, etc. to switch in PostNewtonStep based on force sign rather than gap sign; possibly use global switch
-  - date raised: 2025-07-05
 - `EXTENSION` `LOW EFF` Screw graphics (#2120)
   - description: add function to generate graphics for screw
   - date raised: 2025-07-02
@@ -7768,9 +7768,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `CHANGE` `MEDIUM EFF` solver (#1977)
   - description: check if solver can raise full solver error message in exception, in order to alleviate tracing during automated code evaluation in SolveStatic and SolveDynamic
   - date raised: 2025-03-30
-- `DOCU` `HUGE EFF` items docu (#1956)
-  - description: add representative figure to each item
-  - date raised: 2025-02-09
 - `TESTING` `LOW EFF` CreateLinearSpringDamper (#1954)
   - description: add test example
   - date raised: 2025-02-05
@@ -7873,21 +7870,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXAMPLE` `MEDIUM EFF` generated examples (#1719)
   - description: add set of generically generated examples, generated examples
   - date raised: 2023-12-08
-- `CHECK` `HIGH EFF` ObjectIndex (#1684)
-  - description: consider functionality such as ComputeMassMatrix; ComputeODE2RHS, etc.; would require some default simulation settings (store in mainsystem?)
-  - date raised: 2023-10-29
-- `CHECK` `HIGH EFF` ItemIndices (#1683)
-  - description: consider direct access to outputvariables in node: nodeIndex.current.position; at least nodeIndex.GetOutput(variableType, configuration) would be valuable
-  - date raised: 2023-10-29
-- `EXTENSION` `MEDIUM EFF` ItemIndices (#1682)
-  - description: add previous CallFunction functionalities to NodeIndex, etc.; IsNodeGroup(group), IsNodeType(type), SizeODE2(), ...,
-  - date raised: 2023-10-29
-- `EXTENSION` `MEDIUM EFF` ItemIndices (#1681)
-  - description: add option to add force/torque directly; add gravity to bodies
-  - date raised: 2023-10-29
-- `EXTENSION` `MEDIUM EFF` systemData (#1677)
-  - description: add GetDict(), Set(systemDict=\[Dict\]) functions which returns the whole dictionary for the system; containing list of nodes, objects, ...; each item is represented by its dictionary; could be used for set/get in future
-  - date raised: 2023-10-29
 - `EXTENSION` `HIGH EFF` ItemIndices (#1676)
   - description: consider overriding \_\_getattr\_\_ and \_\_setattr\_\_ methods through pybind (or in Python with patching); this should allow to access data directly mapped via the dictionary
   - date raised: 2023-10-29
@@ -7909,9 +7891,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `LOW EFF` static members (#1614)
   - description: LinearSolver GeneralMatrixEXUdense::FactorizeNew has static ResizableMatrix m, which should be turned into class members; add reset method to free memory at solver finalization
   - date raised: 2023-06-11
-- `FIX` `MEDIUM EFF` utilities InitializeFromRestartFile (#1565)
-  - description: finalize C++ functionality and Python function
-  - date raised: 2023-05-14
 - `EXTENSION` `HIGH EFF` KinematicTree (#1549)
   - description: consider extension w.r.t. rigid body node at basis (Lie group node in explicit integration...); add baseNode (default=invalid), inertia could be added via a separate rigid body?
   - date raised: 2023-05-02
@@ -8194,9 +8173,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` item number textures (#517)
   - description: add special textures for item numbers
   - date raised: 2020-12-22
-- `CHECK` `MEDIUM EFF` virtual functions (#436)
-  - description: make virtual functions consistent for some system classes like MainSystem, etc. which have no derived classes
-  - date raised: 2020-07-21
 - `EXTENSION` `MEDIUM EFF` drawing information (#410)
   - description: add consistent drawing information in show field of every item
   - date raised: 2020-05-24
@@ -8230,18 +8206,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` Jacobians (#194)
   - description: Make unique member function names for rotation/orientation jacobians in nodes and bodies
   - date raised: 2019-06-25
-- `CHECK` `MEDIUM EFF` Iterator begin (#174)
-  - description: Check if const consistency is realizable
-  - date raised: 2019-06-07
-- `CHECK` `MEDIUM EFF` LinkedDataVector (#173)
-  - description: Check that the Vector is declared as const LinkedDataVectors if it is returned by a function; otherwise unforeseeable problems might occur
-  - date raised: 2019-06-07
-- `CHECK` `LOW EFF` Matrix Init (#172)
-  - description: Consider to put this funciton into constructor and call constructor instead of init
-  - date raised: 2019-06-07
-- `CHECK` `LOW EFF` Matrix delete (#171)
-  - description: Consider not to set data=NULL in order to detect memory which is deleted twice
-  - date raised: 2019-06-07
 - `EXTENSION` `MEDIUM EFF` SlimArray (#161)
   - description: Add template specializations to SlimArray\<T,2..4\> similar to SlimVector to speed up initialization of short vectors
   - date raised: 2019-06-02
@@ -8266,6 +8230,3 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` GeneralContact: a triangle body gets no torque from the normal force of a sphere-triangle contact without friction (#2849)
   - description: In the sphere-triangle contact of GeneralContact the torque (trigPP - rigid.position) x fVec on the rigid body of the triangles is added only if dryFriction != 0; the normal force at the contact point also has a moment about the body's reference point, so a moving triangle body without friction gets no torque from its contacts. The same condition in the Jacobian. Ground triangles are not affected.
   - date raised: 2026-10-04
-- <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectANCFBeam: the Newton iteration stalls near 2e-7 in the right-angle frame (#2763)
-  - description: rightAngleFrame.py with ObjectANCFBeam (useGeometricallyExact = False), displacement-driven: from load step 7 on, Newton stagnates at a relative error of 1e-7 to 3e-7 (tolerance 1e-8; with 1e-6 the same at 1e-6 to 2e-6) and the static solver fails at 3 % of the drive; the geometrically exact beam converges in 4.7 iterations per step. Found 2026-10-01 in RG4.8.13; an inconsistent Jacobian of the ANCF beam is the first suspect (the original header said: very bad convergence for ANCFBeam).
-  - date raised: 2026-09-30

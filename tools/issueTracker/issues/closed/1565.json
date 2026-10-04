@@ -1,0 +1,15 @@
+{
+  "number": 1565,
+  "title": "utilities InitializeFromRestartFile",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "FIX",
+  "effort": "MEDIUM",
+  "description": "finalize C++ functionality and Python function",
+  "dateRaised": "2023-05-14",
+  "deadline": "2023-11-10",
+  "dateResolved": "2026-10-05 00:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "superseded by #2850 (maintainer 2026-10-05, revision2026b step RG4.19.8): how a restart works with a model script is evaluated first; InitializeFromRestartFile is no longer public",
+  "resolvedInVersion": "1.12.311"
+}

@@ -31,7 +31,7 @@ __all__ = [
     'UIWindowSuppressed', 'OutputFilePath', 'CreateDirectoryForFile', 'LoadSolutionFile',
     'NumpyInt8ArrayToString', 'BinaryReadIndex', 'BinaryReadReal', 'BinaryReadString',
     'BinaryReadArrayIndex', 'BinaryReadRealVector', 'LoadBinarySolutionFile', 'RecoverSolutionFile',
-    'InitializeFromRestartFile', 'SetSolutionState', 'AnimateSolution',
+    'SetSolutionState', 'AnimateSolution',
     ]
 
 #define some constants which would require external libraries
@@ -972,17 +972,15 @@ def RecoverSolutionFile(fileName, newFileName, verbose=0):
                 cnt += 1
 
 
-def InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose=True):
-    """recover initial coordinates, time, etc. from given restart file
+#a prototype, not public: how a simulation continues from its restart file is still to be decided (#2850)
+def _InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose=True):
+    """recover initial coordinates, time, etc. from given restart file; modifies simulationSettings and sets the according initial conditions in mbs
 
     Args:
         mbs: MainSystem to be operated with
         simulationSettings: simulationSettings which is updated and shall be used afterwards for SolveDynamic(...) or SolveStatic(...)
         restartFileName: string containing directory and filename of stored restart file, as given in solution.restart.name
         verbose: False=no information, True=basic information
-
-    Returns:
-        modifies simulationSettings and sets according initial conditions in mbs
     """
     raise ValueError('InitializeFromRestartFile: not fully implemented')
 

@@ -1,0 +1,15 @@
+{
+  "number": 1683,
+  "title": "ItemIndices",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "CHECK",
+  "effort": "HIGH",
+  "description": "consider direct access to outputvariables in node: nodeIndex.current.position; at least nodeIndex.GetOutput(variableType, configuration) would be valuable",
+  "dateRaised": "2023-10-29",
+  "deadline": "2024-04-26",
+  "dateResolved": "2026-10-05 00:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "obsolete - done by the revisions (maintainer 2026-10-05, revision2026b step RG4.19.9): the Inspect and Compute functions of MainSystem",
+  "resolvedInVersion": "1.12.315"
+}

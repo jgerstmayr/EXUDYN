@@ -186,7 +186,7 @@ definitions.append(StructureDefinition(
         StructureParameter(type=TFileName,
             pythonName='name',
             defaultValue='solution/restartFile.txt',
-            description=r"""filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart"""),
+            description=r"""filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed"""),
         StructureParameter(type=TReal(minimum=0),
             pythonName='writePeriod',
             defaultValue=0.01,

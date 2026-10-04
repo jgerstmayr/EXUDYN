@@ -1,0 +1,15 @@
+{
+  "number": 1956,
+  "title": "items docu",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "DOCU",
+  "effort": "HUGE",
+  "description": "add representative figure to each item",
+  "dateRaised": "2025-02-09",
+  "deadline": "2025-08-08",
+  "dateResolved": "2026-10-05 00:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "obsolete - done by the revisions (maintainer 2026-10-05, revision2026b step RG4.19.9): every item has its own documentation page",
+  "resolvedInVersion": "1.12.317"
+}

@@ -95,7 +95,7 @@ class SolutionSensorsSettings:
 class SolutionRestartSettings:
     """The restart file: the state of the system written regularly, from which a simulation can be continued."""
     name: str
-    """filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart."""
+    """filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed."""
     write: bool
     """flag (true/false), which determines if the restart file is written regularly, see name for details."""
     writePeriod: float

@@ -1,0 +1,15 @@
+{
+  "number": 1682,
+  "title": "ItemIndices",
+  "author": "JG",
+  "status": "CLOSED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "add previous CallFunction functionalities to NodeIndex, etc.; IsNodeGroup(group), IsNodeType(type), SizeODE2(), ...,",
+  "dateRaised": "2023-10-29",
+  "deadline": "2024-04-26",
+  "dateResolved": "2026-10-05 00:24",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "obsolete - done by the revisions (maintainer 2026-10-05, revision2026b step RG4.19.9): the Inspect and Compute functions of MainSystem",
+  "resolvedInVersion": "1.12.314"
+}

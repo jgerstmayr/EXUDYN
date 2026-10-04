@@ -106,6 +106,7 @@ removedNames = {
     'eye2D':          'np.eye(2)',
     'eye3D':          'np.eye(3)',
     'LoadImage':      'SC.renderer.GetGraphicsData(), which exudyn.plot.PlotImage draws directly (#2700)',
+    'InitializeFromRestartFile': 'nothing yet: it never worked (it raised "not fully implemented"); a restart is #2850',
     }
 for (alias, name) in [('GraphicsDataOrthoCubePoint', 'Brick'), ('GraphicsDataCube', 'Cuboid'),
                       ('GraphicsDataOrthoCube', 'BrickXYZ'), ('GraphicsDataSphere', 'Sphere'),

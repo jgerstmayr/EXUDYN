@@ -84,7 +84,7 @@ SolutionRestartSettings has the following items:
 
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
-| `name`<br>`simulationSettings.solution.restart.name` | FileName |  | 'solution/restartFile.txt' | filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed; use Python utility function InitializeFromRestartFile(...) to consistently restart |
+| `name`<br>`simulationSettings.solution.restart.name` | FileName |  | 'solution/restartFile.txt' | filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed |
 | `write`<br>`simulationSettings.solution.restart.write` | bool |  | False | flag (true/false), which determines if the restart file is written regularly, see name for details |
 | `writePeriod`<br>`simulationSettings.solution.restart.writePeriod` | UReal |  | 0.01 | time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance |
 
