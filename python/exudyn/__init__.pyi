@@ -2865,6 +2865,8 @@ class GeneralContact:
     """activate/deactivate contact between spheres."""
     sphereSphereFrictionRecycle:bool
     """False: compute static friction force based on tangential velocity; True: recycle friction from previous PostNewton step, which greatly improves convergence, but may lead to unphysical artifacts; will be solved in future by step reduction."""
+    keepContactWhilePenetrating:bool
+    """True: a sphere-sphere or sphere-triangle contact acts while the bodies penetrate (their gap is negative), and the damping may pull at the end of a contact - as ObjectContactSphereSphere and ObjectContactSphereTriangle do, and as the restitution models assume; False: it acts only while its contact force presses (stiffness times gap plus damping times normal velocity is negative), so the damping never pulls - except a sphere-triangle contact with an explicit solver, which acts while the bodies penetrate in both cases."""
     minRelDistanceSpheresTriangles:float
     """(default=1e-10) tolerance (relative to sphere radiues) below which the contact between triangles and spheres is ignored; used for spheres directly attached to triangles."""
     frictionProportionalZone:float

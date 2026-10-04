@@ -15254,3 +15254,25 @@ Test model `generalContactTriangleMomentumTest.py`, after `contactSphereTorusMom
 free plate meshed into triangles, off its center, without gravity. The total angular momentum about the origin stays
 at its initial value to 3e-9 without friction and 8e-10 with friction (before: off by 7e-3 of 0.015 without
 friction), the linear momentum to 1e-16.
+
+<a id="rg4-15-9"></a>
+### RG4.15.9 — GeneralContact: a contact that acts while the bodies penetrate (2026-10-05, #2848)
+
+*(Maintainer 2026-10-05: "GeneralContact can include a further setting (please add) in order to change the contact
+switch behavior and match the ObjectContact.. behavior.")*
+
+`GeneralContact.keepContactWhilePenetrating` (default `False`): `GeneralContactSettings`, `PyGeneralContact` and
+`definitions/pybindGeneralContact.py`; `GeneralContact::ContactActs(gap, contactForce)` decides at the three places
+that asked `contactForce < 0`: the active sets of the sphere-sphere and of the sphere-triangle contact (the implicit
+solver), and the right-hand side of the sphere-sphere contact with an explicit solver. With `True` they ask `gap < 0`.
+
+The explicit sphere-triangle contact acts while the bodies penetrate in both cases, as before: making it ask the
+force by default moved four test models (`generalContactCylinderTest.py`, `generalContactCylinderTrigsTest.py`,
+`generalContactFrictionTests.py`, `generalContactImplicit1.py`) by 12 % to 290 %, so the default keeps the former
+behaviour everywhere and the description of the setting names this exception - for the restructuring of
+`GeneralContact`, which the maintainer has announced.
+
+`contactComparisonTest.py`, fifth case: `GeneralContact` with the setting is identical to the contact objects until
+the ball leaves the ground and rebounds to 0.13511 instead of 0.13523 with 20000 steps; with 80000 steps both give
+0.1351859, equal to 2e-15 - the two differ only in the step in which the contact ends. `revisions.md` says what the
+setting does.

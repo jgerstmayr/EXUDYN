@@ -66,6 +66,9 @@ public:
 	bool GetSphereSphereFrictionRecycle() const { return settings.sphereSphereFrictionRecycle; }
 	void SetSphereSphereFrictionRecycle(bool flag) { settings.sphereSphereFrictionRecycle = flag; }
 
+	bool GetKeepContactWhilePenetrating() const { return settings.keepContactWhilePenetrating; }
+	void SetKeepContactWhilePenetrating(bool flag) { settings.keepContactWhilePenetrating = flag; }
+
 	Real GetMinRelDistanceSpheresTriangles() const { return settings.minRelDistanceSpheresTriangles; }
 	void SetMinRelDistanceSpheresTriangles(Real value) { settings.minRelDistanceSpheresTriangles = value; }
 
@@ -346,6 +349,7 @@ public:
 		auto d = py::dict();
 		d["sphereSphereContact"] = settings.sphereSphereContact;
 		d["sphereSphereFrictionRecycle"] = settings.sphereSphereFrictionRecycle;
+		d["keepContactWhilePenetrating"] = settings.keepContactWhilePenetrating;
 		d["globalContactIndexOffsets"] = EPyUtils::ArrayIndex2NumPy(globalContactIndexOffsets);
 		d["frictionPairings"] = EPyUtils::ToPython(settings.frictionPairings);
 		d["frictionProportionalZone "] = settings.frictionProportionalZone;

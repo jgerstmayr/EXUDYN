@@ -191,6 +191,11 @@ item lists it (#2589).
 its table, not only on its axis; `ObjectANCFBeam` takes `MarkerBodyRigid`, so torques and joints with
 rotations act on its cross sections (#2775).
 
+**`GeneralContact` can keep a contact while the bodies penetrate.** With
+`keepContactWhilePenetrating = True` a sphere-sphere or sphere-triangle contact acts as long as the
+bodies penetrate, and its damping may pull at the end of the contact, as `ObjectContactSphereSphere` and
+`ObjectContactSphereTriangle` do; by default it acts only while its force presses (#2848).
+
 **What an item computes, from Python.** `mbs.ComputeItem(item, what)` computes, at the current state,
 what the solver computes for one object, node or marker - the position and rotation Jacobians of a
 body at a local position, its mass matrix and right-hand side, the forces of a connector, the

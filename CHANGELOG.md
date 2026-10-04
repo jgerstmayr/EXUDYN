@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 289 | 1.12.323 |
+| 1.12 | Metheney | 290 | 1.12.324 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.324** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GeneralContact: the implicit solver keeps a contact only while its force presses, the explicit one while the bodies penetrate (#2848)
+  - description: With contact damping, the active set of the implicit solver (PostNewton) takes a contact only if k\*gap + d\*v\_n \< 0; the explicit solver, and ObjectContactSphereSphere / SphereTriangle / Coordinate in both, take it while gap \< 0, so the damping can pull at the end of a contact. A ball dropped onto a triangle rebounds to 0.1391 implicit against 0.1352 (contactComparisonTest.py). Decision: which of the two is the model, and then make both solvers do it.
+  - **notes:** GeneralContact.keepContactWhilePenetrating = True: a sphere-sphere or sphere-triangle contact acts while the bodies penetrate, and its damping may pull at the end of the contact, as ObjectContactSphereSphere and ObjectContactSphereTriangle do; by default it acts only while its contact force presses (contactComparisonTest.py).
+  - date resolved: **2026-10-05 01:15**, date raised: 2026-10-04
 - **1.12.323** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GeneralContact: a triangle body gets no torque from the normal force of a sphere-triangle contact without friction (#2849)
   - description: In the sphere-triangle contact of GeneralContact the torque (trigPP - rigid.position) x fVec on the rigid body of the triangles is added only if dryFriction != 0; the normal force at the contact point also has a moment about the body's reference point, so a moving triangle body without friction gets no torque from its contacts. The same condition in the Jacobian. Ground triangles are not affected.
   - **notes:** GeneralContact: the rigid body of the triangles of a sphere-triangle contact gets the torque of the contact force also without friction, so that linear and angular momentum are conserved; test model generalContactTriangleMomentumTest.py.

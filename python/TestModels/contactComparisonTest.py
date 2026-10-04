@@ -17,7 +17,10 @@
 #           it rebounds higher, because its implicit solver keeps a contact only while the contact
 #           force presses - the contact objects, and GeneralContact with an explicit solver, keep it
 #           while the ball penetrates and let the damping pull: identical until the release, then a
-#           rebound to 0.1391 instead of 0.1352.
+#           rebound to 0.1391 instead of 0.1352. With keepContactWhilePenetrating = True (#2848) it does
+#           what the contact objects do, the fifth case: identical until the release, a rebound to 0.13511
+#           instead of 0.13523, and both converge to 0.1351859 with smaller steps (equal to 2e-15 with
+#           80000 steps) - they differ only in the step where the contact ends.
 #           Then a ball that slides with friction (#1947): ObjectContactSphereTriangle and
 #           GeneralContact, implicit, against the rigid-body solution - the ball rolls after
 #           t = 2 v0/(7 mu g) with 5/7 of its initial velocity. Measured: both to 3e-7 while it
@@ -81,9 +84,10 @@ def Drop(kind, law, z0=z0, vx=0, mu=0, frictionProportionalZone=1e-3, sensorType
         mbs.AddLoad(LoadForceVector(markerNumber=mBall, loadVector=[0, 0, -m*g]))
         friction = {'dynamicFriction': mu, 'frictionProportionalZone': frictionProportionalZone} if mu != 0 else {}
         nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0, 0, 0, 0]))
-        if kind == 'general':
+        if kind in ['general', 'generalPenetrating']:
             #the linear law only; stiffnesses in series, dampings in parallel
             gContact = mbs.AddGeneralContact()
+            gContact.keepContactWhilePenetrating = (kind == 'generalPenetrating')
             gContact.frictionProportionalZone = frictionProportionalZone
             gContact.SetFrictionPairings(mu*np.eye(1))
             gContact.SetSearchTreeCellSize(numberOfCells=[1, 1, 1])
@@ -128,7 +132,7 @@ laws = {'linear': {'contactStiffness': k, 'contactDamping': d},
 t = np.linspace(0, tEnd, nSteps+1)
 testResult = 0
 for (lawName, law) in laws.items():
-    kinds = ['coordinate', 'sphere', 'triangle'] + (['general'] if lawName == 'linear' else [])
+    kinds = ['coordinate', 'sphere', 'triangle'] + (['general', 'generalPenetrating'] if lawName == 'linear' else [])
     z = dict((kind, Drop(kind, law)) for kind in kinds)
     release = np.argmax((t > 0.14) & (z['coordinate'] > r))    #the ball leaves the ground again
     exu.Print(lawName + ':')
@@ -137,6 +141,9 @@ for (lawName, law) in laws.items():
     if 'general' in z:
         exu.Print('  GeneralContact  : until release', np.abs(z['general'][:release] - z['sphere'][:release]).max(),
                   ', rebound to', z['general'][release:].max(), 'instead of', z['sphere'][release:].max())
+        exu.Print('  GeneralContact, keepContactWhilePenetrating: until release',
+                  np.abs(z['generalPenetrating'][:release] - z['sphere'][:release]).max(), ', rebound to',
+                  z['generalPenetrating'][release:].max(), ', largest difference', np.abs(z['generalPenetrating'] - z['sphere']).max())
     exu.Print('  until release   :', np.abs(z['coordinate'][:release] - z['sphere'][:release]).max())
     exu.Print('  after release   :', np.abs(z['coordinate'] - z['sphere']).max())
     #the ratio of the velocities leaving and hitting the ground, from the rebound height; gravity acts during the contact

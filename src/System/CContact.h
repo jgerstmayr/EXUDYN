@@ -185,6 +185,7 @@ public:
 
 	bool sphereSphereContact;						//!< if false, contact between spheres is deactivated
 	bool sphereSphereFrictionRecycle;				//!< if true, static friction force is recycled from previous PostNewton step, which greatly improves convergence but may behave unphysically
+	bool keepContactWhilePenetrating;				//!< if true, a sphere-sphere or sphere-triangle contact acts while the bodies penetrate (gap < 0), as the contact objects do; otherwise only while its force presses (#2848)
 	Real frictionProportionalZone;					//!< regularization for friction (m/s); global for all contacts
 	Real minRelDistanceSpheresTriangles;			//!< minimum relative distance between spheres and triangles, below that there is no contact computation
 	bool excludeOverlappingTrigSphereContacts;		//!< for consistent, closed meshes, we can exclude duplicate contacts
@@ -218,6 +219,7 @@ public:
 
 		sphereSphereContact = true;
 		sphereSphereFrictionRecycle = false;
+		keepContactWhilePenetrating = false;
 		frictionProportionalZone = 0.001;
 
 		minRelDistanceSpheresTriangles = 1e-10;
@@ -265,6 +267,12 @@ public: //make public in order to directly access from Python
 	VisuGeneralContact visualization;	//!< data structure for visualization
 
 	GeneralContactSettings settings; //!< settings for GeneralContact, easy to be modified via Python
+
+	//! whether a sphere-sphere or sphere-triangle contact with this gap and contact force (negative: pressing) acts (#2848)
+	bool ContactActs(Real gap, Real contactForce) const
+	{
+		return settings.keepContactWhilePenetrating ? (gap < 0.) : (contactForce < 0.);
+	}
 
 protected:
 

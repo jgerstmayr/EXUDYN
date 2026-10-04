@@ -99,6 +99,11 @@ pb.DefDataAccess('sphereSphereFrictionRecycle','False: compute static friction f
                        dataType='bool',
                        )
 
+pb.CppCode('        .def_property("keepContactWhilePenetrating", &PyGeneralContact::GetKeepContactWhilePenetrating, &PyGeneralContact::SetKeepContactWhilePenetrating)\n')
+pb.DefDataAccess('keepContactWhilePenetrating','True: a sphere-sphere or sphere-triangle contact acts while the bodies penetrate (their gap is negative), and the damping may pull at the end of a contact - as ObjectContactSphereSphere and ObjectContactSphereTriangle do, and as the restitution models assume; False: it acts only while its contact force presses (stiffness times gap plus damping times normal velocity is negative), so the damping never pulls - except a sphere-triangle contact with an explicit solver, which acts while the bodies penetrate in both cases',
+                       dataType='bool',
+                       )
+
 pb.CppCode('        .def_property("minRelDistanceSpheresTriangles", &PyGeneralContact::GetMinRelDistanceSpheresTriangles, &PyGeneralContact::SetMinRelDistanceSpheresTriangles)\n') 
 pb.DefDataAccess('minRelDistanceSpheresTriangles','(default=1e-10) tolerance (relative to sphere radiues) below which the contact between triangles and spheres is ignored; used for spheres directly attached to triangles ',
                        dataType='float',

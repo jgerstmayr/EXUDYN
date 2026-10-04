@@ -1358,7 +1358,7 @@ void GeneralContact::ComputeContactMarkerBasedSpheres(TemporaryComputationDataAr
 				if (opMode != CCactiveSets)
 				{
 					//note that there are small roundoff errors, which causes slight non-symmetry in forces and accumulated errors in time integration!
-					if ((opMode == CCode2rhsFromActiveSets) || contactForce < 0.)
+					if ((opMode == CCode2rhsFromActiveSets) || ContactActs(gap, contactForce))
 					{
 						//add generalized forces:
 						//marker J (positive):    (according to computation of relative position)
@@ -1400,7 +1400,7 @@ void GeneralContact::ComputeContactMarkerBasedSpheres(TemporaryComputationDataAr
 				}
 				else //compute active sets/PostNewton
 				{
-					if (contactForce < 0.) //may be positive because of velocity term
+					if (ContactActs(gap, contactForce)) //the force may be positive because of the velocity term
 					{
 						frictionRegularizedRegion = true;
 						if (dryFriction != 0.)
@@ -1952,7 +1952,7 @@ void GeneralContact::ComputeContactTrigsRigidBodyBased(TemporaryComputationDataA
 			else
 			{
 				//allActiveContacts[gi]->AppendPure(gj);
-				if (contactForce < 0.) //may be positive because of velocity term
+				if (ContactActs(gap, contactForce)) //the force may be positive because of the velocity term
 				{
 					frictionRegularizedRegion = true;
 					if (dryFriction != 0.)

@@ -739,11 +739,10 @@ The steps are numbered in the order they were raised and stand here in the order
       2026-10-04: "Do the next solo steps")* `GeneralContact`, implicit sphere-triangle contact, as the fourth case of
       the drop, and a sliding ball against the rigid-body solution: it agrees; the friction of the implicit solver
       now keeps the sliding/sticking state its active set gives, as `ObjectContactSphereSphere` does;
-    - **RG4.15.9** *(open; decided 2026-10-05)* (#2848) the implicit `GeneralContact` keeps a contact only while its
-      force presses, the explicit one - and the contact objects - while the bodies penetrate: with damping the ball
-      rebounds to 0.1391 instead of 0.1352. The maintainer: a setting of `GeneralContact` that switches the implicit
-      solver to the behaviour of the contact objects; `GeneralContact` is to be restructured later, and the same
-      behaviour now is what that needs.
+    - **RG4.15.9** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-15-9) (#2848) `GeneralContact` gets the
+      setting `keepContactWhilePenetrating`: a sphere-sphere or sphere-triangle contact then acts while the bodies
+      penetrate, as the contact objects do; by default it acts only while its force presses, as before. The fifth
+      case of `contactComparisonTest.py`.
     - **RG4.15.10** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-15-10) (#2849) `GeneralContact`: the
       contact force of a sphere-triangle contact gives the triangle body its torque also without friction; test model
       `generalContactTriangleMomentumTest.py`.
@@ -1889,4 +1888,4 @@ The title of each says what the step **does**; the sentence after it says why it
 2. **Do the manual GUI check on Windows** (RG2.4), with the curved GraphicsData (row K13) and the TikZ figures in
    the PDF. It is the last condition of 1.13 that one person can meet alone.
 3. **Finish the steps that are nearly done**, each small and without a decision left: none left at the moment.
-4. **Then the larger open steps of 1.13**: RG4.15.9 (the contact setting of `GeneralContact`).
+4. **Then the larger open steps of 1.13**: none in RG4 at the moment; RG4.19.4-.6 and .10 are open options.
