@@ -334,7 +334,9 @@ matplotlib**: a test model that fails for a missing package of the `[tests]` ext
         The evaluation run of 2026-09-30 (`tmp/miniExampleImages/`) showed what the MiniExamples need first:
         the raytracer draws no spheres (RG6.7.3), most bodies have no graphics of their own, and the node
         frames and load arrows dominate.
-      - **RG2.3.3.8** *(found 2026-10-02)* **the raytracer can hang in `RedrawAndGetImage`** (#2776): twice the full
+      - **RG2.3.3.8** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg2-3-3-8) *(maintainer 2026-10-04: "Do the
+        suggested next 3 steps")* *(found 2026-10-02)* **the raytracer can hang in `RedrawAndGetImage`** (#2776) - it was
+        a failed multithreaded solve that left its worker threads running: twice the full
         pytest run hung in `testRaytracerImages`, all workers idle - a wait, not a loop; two later runs and a stress run
         of 8 processes did not. Candidates: the start of the `TaskManager` for the raytracer's `ParallelFor`, or a
         `TaskManager` left running by a previous test in the same worker. To find before a release; until then a hung
@@ -1765,7 +1767,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG1.4 | - | **the 1.13 release** - the first public one after the revision |
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
-| RG2.3 | #2582, #2776 | the graphics regression suite - open: RG2.3.3.8 the raytracer that can hang in `RedrawAndGetImage` |
+| RG2.3 | #2582 | the graphics regression suite |
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #1848, #1947 | the open bugs before 1.13: RG4.15.8 `GeneralContact` against the sphere contact |

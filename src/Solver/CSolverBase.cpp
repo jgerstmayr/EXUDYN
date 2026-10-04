@@ -618,14 +618,18 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 			FinalizeSolver(computationalSystem, simulationSettings);
 		}, "CSolverBase::FinalizeSolver");
 	}
+	//a failed solve stops its threads and closes its files as FinalizeSolver would: worker threads left running made
+	//the next multithreaded computation, the raytracer or the end of the process hang (#2776)
 	catch (const std::exception& exception) //every Exudyn class and every pybind class is one
 	{
 		WriteErrorToSolverFile(file.solverFile, exception.what());
+		StopThreadsAndCloseFiles();
 		throw;
 	}
 	catch (...)
 	{
 		WriteErrorToSolverFile(file.solverFile, "unknown exception (not derived from std::exception)");
+		StopThreadsAndCloseFiles();
 		throw;
 	}
 

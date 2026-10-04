@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 273 | 1.12.292 |
+| 1.12 | Metheney | 274 | 1.12.293 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.293** <span class="textred">`BUG`</span> `HIGH` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the raytracer can hang in RedrawAndGetImage when tests run in parallel (#2776)
+  - description: Twice on 2026-10-02 the full pytest run (pytest -n 8 python/testing) hung in test\_graphicsRegression.py::testRaytracerImages, in SC.renderer.RedrawAndGetImage(useRaytracer=True) (faulthandler traceback), with all workers idle - a wait, not a loop; a third and fourth run passed, and 8 processes rendering the same images 15 times each in parallel did not hang. The raytracer starts the TaskManager for its ParallelFor (Raytracer::SoftwareRenderer, ExuThreading::EnterTaskManager) unless it is already running; a deadlock there, or a TaskManager left running by a previous test in the same worker, are the candidates. The hung processes stayed and could not be ended from the session.
+  - **notes:** Fixed: a multithreaded solve (parallel.numberOfThreads \> 1) that fails, e.g. because a user function raises, stops its worker threads and closes its files; before, the threads kept running, and a later multithreaded solve, the raytracer, or the end of the Python process could hang.
+  - date resolved: **2026-10-04 20:49**, date raised: 2026-10-02
 - **1.12.292** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactCurveCircles draws its points with a deprecated setting (#2846)
   - description: The points of the curve of ObjectContactCurveCircles are drawn with the deprecated visualizationSettings.connectors.contactPointsDefaultSize (0.02); the setting it is deprecated for is contact.contactPointsDefaultSize (0.001), which the other contacts use. Found with revision2026b step RG13.8.2; the maintainer, 2026-10-04: the change is ok.
   - **notes:** ObjectContactCurveCircles draws the points of its curve with visualizationSettings.contact.contactPointsDefaultSize (default 0.001), as the other contacts, instead of the deprecated connectors.contactPointsDefaultSize.

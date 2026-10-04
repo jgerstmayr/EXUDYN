@@ -15037,3 +15037,29 @@ radius `0.5 * contact.contactPointsDefaultSize` (default 0.001, the setting of t
 deprecated `connectors.contactPointsDefaultSize` (0.02) - twenty times smaller by default. The definition names the new
 setting in `drawingSettings`, and no C++ reads `connectors.contactPointsDefaultSize` any more. The graphics references do
 not change: the mini example does not show contacts (`connectors.showContact` is False by default).
+
+<a id="rg2-3-3-8"></a>
+### RG2.3.3.8 — the hang: a failed multithreaded solve left its threads running (2026-10-04, #2776)
+
+*(Maintainer 2026-10-04: "Do the suggested next 3 steps.")*
+
+**Not reproduced by the raytracer alone**: eight processes ran all tests of `test_graphicsRegression.py` in random
+order, 15 rounds each, with a stack dump after 60 s of any call - none hung.
+
+**Found on the machine**: a pytest worker of the run of 2026-10-02 was still alive - one thread, one core busy for two
+days (204 000 s of CPU). A script that does what some test models do - a solve with `parallel.numberOfThreads = 4`
+whose user function raises - and then nothing, the raytracer or another multithreaded solve, printed its last line
+and then **did not end**, with the same signature: one thread, busy. Without the failing solve, or with one thread,
+it ended.
+
+**The cause**: `CSolverBase::SolveSystem` calls `FinalizeSolver` - which stops the threads of the `TaskManager` and
+closes the files (`StopThreadsAndCloseFiles`) - only when the steps return; an exception (a user function that raises,
+a solver failure) passed it by. The worker threads kept spinning; the next solve found the manager running and
+stopped it with a warning, the raytracer ran its job on those workers with every thread taking the place of thread 0,
+and at the end of the process the threads were terminated while the main thread still waited for them to stop - the
+spin that never ended. The raytracer was only where the next use of the threads happened in that worker.
+
+**The fix**: both `catch` blocks of `SolveSystem` call `StopThreadsAndCloseFiles()` before they rethrow, so a failed
+solve leaves no threads and no open files. `python/testing/test_solverThreads.py` runs a failing 4-thread solve
+followed by nothing, the raytracer, and a second solve, each in a process of its own with a timeout - all three end.
+The spinning worker of 2026-10-02 and the script of this search were stopped.

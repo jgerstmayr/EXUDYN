@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.292.dev1
+- Exudyn version = 1.12.293.dev1
 - last change = 2026-10-04
 - Number of issues = 2847
-- Number of resolved issues = 2606 (292 in current version)
+- Number of resolved issues = 2607 (293 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8295,9 +8295,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> <span class="textred">`HIGH`</span> `MEDIUM EFF` `raised by: Claude-JG` the raytracer can hang in RedrawAndGetImage when tests run in parallel (#2776)
-  - description: Twice on 2026-10-02 the full pytest run (pytest -n 8 python/testing) hung in test\_graphicsRegression.py::testRaytracerImages, in SC.renderer.RedrawAndGetImage(useRaytracer=True) (faulthandler traceback), with all workers idle - a wait, not a loop; a third and fourth run passed, and 8 processes rendering the same images 15 times each in parallel did not hang. The raytracer starts the TaskManager for its ParallelFor (Raytracer::SoftwareRenderer, ExuThreading::EnterTaskManager) unless it is already running; a deadlock there, or a TaskManager left running by a previous test in the same worker, are the candidates. The hung processes stayed and could not be ended from the session.
-  - date raised: 2026-10-02
 - <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectANCFBeam: the Newton iteration stalls near 2e-7 in the right-angle frame (#2763)
   - description: rightAngleFrame.py with ObjectANCFBeam (useGeometricallyExact = False), displacement-driven: from load step 7 on, Newton stagnates at a relative error of 1e-7 to 3e-7 (tolerance 1e-8; with 1e-6 the same at 1e-6 to 2e-6) and the static solver fails at 3 % of the drive; the geometrically exact beam converges in 4.7 iterations per step. Found 2026-10-01 in RG4.8.13; an inconsistent Jacobian of the ANCF beam is the first suspect (the original header said: very bad convergence for ANCFBeam).
   - date raised: 2026-09-30
