@@ -71,6 +71,12 @@ The parameters of `VObjectFFRFreducedOrder`, given as `visualization`:
 | **triangleMesh** | NumpyMatrixI |  | [] | a matrix of node numbers referring to the mesh nodes of the object, one triangle per row: 3 columns for flat triangles, or 6 for 6-node triangles drawn curved - the corners counterclockwise seen from outside, then the mid nodes of the edges 0-1, 1-2 and 2-0, as in GraphicsData triangles6; the mesh uses the nodes to visualize the underlying object; contour plot colors are still computed in the local frame! |
 | **showNodes** | Bool |  | False | set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF' |
 
+## Drawing
+
+Drawn as [all super elements](#sec-drawing-objectssuperelement); its `triangleMesh` on the nodes of the mesh, deformed with `bodies.deformationScaleFactor`, and with `showNodes` its nodes.
+
+Settings beyond those of all super elements: [`nodes.defaultSize`](#sec-vsettingsnodes), [`nodes.drawNodesAsPoint`](#sec-vsettingsnodes), [`nodes.show`](#sec-vsettingsnodes), [`nodes.showNumbers`](#sec-vsettingsnodes), [`nodes.tiling`](#sec-vsettingsnodes), [`openGL.advanced.initialMaxSceneSize`](#sec-vsettingsopengladvanced).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

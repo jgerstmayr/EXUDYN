@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 271 | 1.12.290 |
+| 1.12 | Metheney | 272 | 1.12.291 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.291** `DOCU` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the documentation says how each item is drawn and which settings it uses (#2840)
+  - description: The maintainer, 2026-10-04: 'the graphics visualization has no docs about how the items are drawn. Which (default) settings are used for tiling, colors, etc. - only available via the code. So, this should be completed and possibly improved if some misleading or inappropriate settings are used in the UpdateGraphics functions. This is mainly for the objects, but also for other items (but they would probably have a generic description for most nodes, markers, etc.).' revision2026b step RG13.8.
+  - **notes:** Every item page of the reference manual has a section Drawing: how the item is drawn, as all items of its kind and beyond, and the visualization settings that act on it, linked.
+  - date resolved: **2026-10-04 19:22**, date raised: 2026-10-04
 - **1.12.290** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Drawing parameters and settings that do nothing or something else than they say (#2843)
   - description: Found by the inventory of the drawing functions (tools/itemDrawingReport.py, docs/revision/itemDrawingState.md, revision2026b step RG13.8.1): (1) ObjectConnectorDistance.drawSize ('link size') is not read - the connector is a line; (2) ObjectConnectorGravity has show, drawSize ('diameter of spring') and color but no drawing; (3) ObjectConnectorCoordinateVector has show and color but no drawing; (4) 13 more items have show but draw nothing (Node1D, the generic nodes, ObjectGenericODE1, the coordinate markers, LoadCoordinate, SensorLoad, SensorUserFunction); (5) ObjectContactCurveCircles says its circles use circleTiling, the code uses general.cylinderTiling; (6) ObjectANCFThinPlate reads view0.scene.showMeshEdges when it builds its graphics data, a view setting the other items leave to the renderer; (7) a load with a Python user function is drawn with its user function only if general.useMultiThreadedRendering is False, a symbolic one always - nowhere said; (8) the line of a 3D beam without section geometry interpolates its contour colors over 0..L while it runs from -L/2 to L/2; (9) the tiling of connectors and joints mixes general.cylinderTiling, axesTiling, sphereTiling and circleTiling (circleTiling\*4 for the contact circles, 4\*cylinderTiling for rolling discs) without a rule. To decide per finding: draw, remove the parameter, or say what it does.
   - **notes:** Visualization: connectors.drawSimplified draws springs and ObjectConnectorDistance as lines (default) or as a tube and a rod of drawSize; ObjectConnectorGravity is drawn as a line between its markers if shown, its drawSize is removed; SensorLoad is drawn at the marker of its load; the parameter show of items that draw nothing (Node1D, generic nodes, ObjectGenericODE1, coordinate markers, LoadCoordinate, SensorUserFunction) and show/color of ObjectConnectorCoordinateVector are removed - exudev scripts finds them in a script; ObjectContactCurveCircles draws circles with circleTiling.

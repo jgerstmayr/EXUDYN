@@ -56,6 +56,7 @@ def ObjectGround_graphicsDataUserFunction(mbs: MainSystem,
 
 definitions.append(ItemDefinition(
     className='ObjectGround',
+    drawing=r'Its `graphicsData`, at its reference position, and what its `graphicsDataUserFunction` returns.',
     image='itemImages/ObjectGround.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nODE2coordinates = 0;
 """,
@@ -233,6 +234,7 @@ SC.renderer.Stop()
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectMassPoint',
+    drawing=r'Its `graphicsData`, moved with the node; without `graphicsData` only the node is seen.',
     image='itemImages/ObjectMassPoint.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nODE2coordinates = 3;
 """,
@@ -374,6 +376,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectMassPoint2D',
+    drawing=r'Its `graphicsData`, moved with the node; without `graphicsData` only the node is seen.',
     addProtectedC=r"""    static constexpr Index nODE2coordinates = 2;
 """,
     cParentClass=ParentClassCObjectBody,
@@ -511,6 +514,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectMass1D',
+    drawing=r'Its `graphicsData`, moved along the axis of its reference rotation by the coordinate of its node.',
     cParentClass=ParentClassCObjectBody,
     overallDescription=r'A 1D (translational) mass which is attached to Node1D. Note, that the mass does not need to have the interpretation as a translational mass.',
     classType=ClassTypeObject,
@@ -657,6 +661,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectRotationalMass1D',
+    drawing=r'Its `graphicsData`, rotated about the axis of its reference rotation by the coordinate of its node.',
     cParentClass=ParentClassCObjectBody,
     overallDescription=r'A 1D rotational inertia (mass) which is attached to Node1D.',
     classType=ClassTypeObject,
@@ -820,6 +825,7 @@ def ObjectRigidBody_graphicsDataUserFunction(mbs: MainSystem, itemNumber: Index)
 
 definitions.append(ItemDefinition(
     className='ObjectRigidBody',
+    drawing=r'Its `graphicsData` in the body frame, and what its `graphicsDataUserFunction` returns; with a contour plot (`contour.rigidBodiesColored`) colored by the value at the reference point.',
     image='itemImages/ObjectRigidBody.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nDim3D = 3; //used to avoid pure 3 in code where dimensionality applies
     static constexpr Index nDisplacementCoordinates = 3; //code currently implemented for 3 displacemnet coordinates; this constant used to change this in future implementation
@@ -1190,6 +1196,7 @@ def ObjectRigidBody2D_graphicsDataUserFunction(mbs: MainSystem, itemNumber: Inde
 
 definitions.append(ItemDefinition(
     className='ObjectRigidBody2D',
+    drawing=r'Its `graphicsData` in the body frame, and what its `graphicsDataUserFunction` returns; with a contour plot (`contour.rigidBodiesColored`) colored by the value at the reference point.',
     image='itemImages/ObjectRigidBody2D.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nODE2coordinates = 3;
 """,
@@ -1457,6 +1464,8 @@ def ObjectGenericODE2_graphicsDataUserFunction(mbs: MainSystem, itemNumber: Inde
 
 definitions.append(ItemDefinition(
     className='ObjectGenericODE2',
+    drawing=r'Its `triangleMesh` on the nodes, deformed with `bodies.deformationScaleFactor`, and with `showNodes` its nodes; or what its `graphicsDataUserFunction` returns.',
+    drawingSettings=['nodes.defaultSize', 'nodes.drawNodesAsPoint', 'nodes.show', 'nodes.showNumbers', 'nodes.tiling', 'openGL.advanced.initialMaxSceneSize'],
     addIncludesC=r"""//#include <pybind11/numpy.h>//for NumpyMatrix
 //#include <pybind11/stl.h>//for NumpyMatrix
 //#include <pybind11/pybind11.h>
@@ -1803,6 +1812,7 @@ def ObjectGenericODE1_rhsUserFunction(mbs: MainSystem, t: Real, itemNumber: Inde
 
 definitions.append(ItemDefinition(
     className='ObjectGenericODE1',
+    drawing=r'The item draws nothing.',
     addIncludesC=r"""#include <pybind11/numpy.h>//for NumpyMatrix
 #include <pybind11/stl.h>//for NumpyMatrix
 #include <pybind11/pybind11.h>
@@ -2016,6 +2026,8 @@ def ObjectKinematicTree_forceUserFunction(mbs: MainSystem, t: Real, itemNumber: 
 
 definitions.append(ItemDefinition(
     className='ObjectKinematicTree',
+    drawing=r'Per link its `graphicsDataList` in the link frame; a link without graphics data as a cylinder from the previous joint with `showLinks`, and its revolute axis as a cylinder with `showJoints`; the frames of the joints and of the centers of mass with `bodies.kinematicTree.showJointFrames` and `showCOMframes`, of size `frameSize`.',
+    drawingSettings=['bodies.kinematicTree.frameSize', 'bodies.kinematicTree.showCOMframes', 'bodies.kinematicTree.showFramesNumbers', 'bodies.kinematicTree.showJointFrames', 'general.cylinderTiling'],
     image='itemImages/ObjectKinematicTree.png', #the representative image of the page (#2830)
     addIncludesC=r"""#include "Linalg/KinematicsBasics.h"//for transformations
 #include "Pymodules/PyMatrixVector.h"//for some matrix and vector lists
@@ -2598,6 +2610,8 @@ def ObjectFFRF_massMatrixUserFunction(mbs: MainSystem, t: Real, itemNumber: Inde
 
 definitions.append(ItemDefinition(
     className='ObjectFFRF',
+    drawing=r'Its `triangleMesh` on the nodes, deformed with `bodies.deformationScaleFactor`, and with `showNodes` its nodes.',
+    drawingSettings=['nodes.defaultSize', 'nodes.drawNodesAsPoint', 'nodes.show', 'nodes.showNumbers', 'nodes.tiling', 'openGL.advanced.initialMaxSceneSize'],
     addIncludesC=r"""#include <pybind11/numpy.h>//for NumpyMatrix
 #include <pybind11/stl.h>//for NumpyMatrix
 #include <pybind11/pybind11.h>
@@ -3129,6 +3143,8 @@ def ObjectFFRFreducedOrder_massMatrixUserFunction(mbs: MainSystem, t: Real, item
 
 definitions.append(ItemDefinition(
     className='ObjectFFRFreducedOrder',
+    drawing=r'Its `triangleMesh` on the nodes of the mesh, deformed with `bodies.deformationScaleFactor`, and with `showNodes` its nodes.',
+    drawingSettings=['nodes.defaultSize', 'nodes.drawNodesAsPoint', 'nodes.show', 'nodes.showNumbers', 'nodes.tiling', 'openGL.advanced.initialMaxSceneSize'],
     image='itemImages/ObjectFFRFreducedOrder.png', #the representative image of the page (#2830)
     addIncludesC=r"""#include <pybind11/numpy.h>//for NumpyMatrix
 #include <pybind11/stl.h>//for NumpyMatrix
@@ -3738,6 +3754,8 @@ class MainSystem; //AUTO; for std::function / userFunction; avoid including Main
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectANCFCable',
+    drawing=r'A tube of radius `radius` along the axis, of `bodies.beams.axialTiling` segments and `general.cylinderTiling` around, or a line if the radius is 0.',
+    drawingSettings=['bodies.beams.axialTiling', 'bodies.beams.crossSectionFilled', 'bodies.beams.reducedAxialInterploation', 'general.cylinderTiling'],
     addProtectedC=r"""    mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set
     mutable ConstSizeMatrix<12*12> precomputedMassMatrix; //!< if massMatrixComputed=true, this contains the (constant) mass matrix for faster computation
 """,
@@ -4153,6 +4171,8 @@ def ObjectANCFCable2D_bendingMomentUserFunction(mbs: MainSystem, t: Real, itemNu
 
 definitions.append(ItemDefinition(
     className='ObjectANCFCable2D',
+    drawing=r'A band of height `drawHeight` along the axis, of `bodies.beams.axialTiling` segments, or a line if `drawHeight` is 0; the `bodies.beams.drawVertical...` settings draw a value (e.g. a force) across it.',
+    drawingSettings=['bodies.beams.axialTiling', 'bodies.beams.crossSectionFilled', 'bodies.beams.crossSectionTiling', 'bodies.beams.drawVertical', 'bodies.beams.drawVerticalColor', 'bodies.beams.drawVerticalFactor', 'bodies.beams.drawVerticalLines', 'bodies.beams.drawVerticalOffset', 'bodies.beams.drawVerticalValues', 'bodies.beams.reducedAxialInterploation', 'general.rendererPrecision'],
     image='itemImages/ObjectANCFCable2D.png', #the representative image of the page (#2830)
     addIncludesC=r"""#include "ImplObjects/CObjectANCFCable2DBase.h"
 class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
@@ -4698,6 +4718,8 @@ cable = ObjectANCFCable2D(massPerLength=rhoA,
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectALEANCFCable2D',
+    drawing=r'A band of height `drawHeight` along the axis, of `bodies.beams.axialTiling` segments, or a line if `drawHeight` is 0; the `bodies.beams.drawVertical...` settings draw a value (e.g. a force) across it.',
+    drawingSettings=['bodies.beams.axialTiling', 'bodies.beams.crossSectionFilled', 'bodies.beams.crossSectionTiling', 'bodies.beams.drawVertical', 'bodies.beams.drawVerticalColor', 'bodies.beams.drawVerticalFactor', 'bodies.beams.drawVerticalLines', 'bodies.beams.drawVerticalOffset', 'bodies.beams.drawVerticalValues', 'bodies.beams.reducedAxialInterploation', 'general.rendererPrecision'],
     addIncludesC=r"""#include "ImplObjects/CObjectANCFCable2DBase.h"
 """,
     addProtectedC=r"""    mutable bool massTermsALEComputed; //!< flag which shows that ALE mass terms have been computed; will be set to false at time when parameters are set
@@ -4939,6 +4961,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectANCFBeam',
+    drawing=r'Its `sectionGeometry` extruded along the axis, of `bodies.beams.axialTiling` segments; without section geometry a line, colored along it in a contour plot.',
+    drawingSettings=['bodies.beams.axialTiling'],
     addIncludesC=r"""#include "Main/StructuralElementsDataStructures.h"
 #include "Autogenerated/BeamSectionGeometry.h"
 """,
@@ -5241,6 +5265,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectBeamGeometricallyExact2D',
+    drawing=r'A band of height `drawHeight` along the axis, of `bodies.beams.axialTiling` segments, or a line if `drawHeight` is 0; the `bodies.beams.drawVertical...` settings draw a value across it.',
+    drawingSettings=['bodies.beams.axialTiling', 'bodies.beams.crossSectionFilled', 'bodies.beams.drawVertical', 'bodies.beams.drawVerticalColor', 'bodies.beams.drawVerticalFactor', 'bodies.beams.drawVerticalLines', 'bodies.beams.drawVerticalOffset', 'bodies.beams.drawVerticalValues', 'general.rendererPrecision'],
     addProtectedC=r"""    static constexpr Index maxNNodes = 3; //!< max number of nodes
     static constexpr Index maxODE2coordinates = 9; //!< max size of coordinates used e.g. for ConstSizeVectors
     mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set
@@ -5563,6 +5589,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectBeamGeometricallyExact',
+    drawing=r'Its `sectionGeometry` extruded along the axis, of `bodies.beams.axialTiling` segments; without section geometry a line, colored along it in a contour plot.',
+    drawingSettings=['bodies.beams.axialTiling'],
     image='itemImages/ObjectBeamGeometricallyExact.png', #the representative image of the page (#2830)
     addIncludesC=r"""#include "Main/StructuralElementsDataStructures.h"
 #include "Autogenerated/BeamSectionGeometry.h"
@@ -5794,6 +5822,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectANCFThinPlate',
+    drawing=r'The mid surface, or with `bodies.shells.drawSolid` both surfaces and the edges at `bodies.shells.thicknessFactor` times the thickness, as n x n quads per element, n = `bodies.beams.axialTiling`/2; the outline of the element as lines with `view0.scene.showMeshEdges`.',
+    drawingSettings=['bodies.beams.axialTiling', 'bodies.shells.drawSolid', 'bodies.shells.thicknessFactor', 'contour.nodesColored', 'openGL.faceEdgesColor', 'view0.scene.showMeshEdges'],
     image='itemImages/ObjectANCFThinPlate.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nODE2coordinates = 36; //!< fixed size of coordinates used e.g. for ConstSizeVectors
     mutable bool massMatrixComputed; //!< flag which shows that mass matrix has been computed; will be set to false at time when parameters are set
@@ -6121,6 +6151,8 @@ def ObjectConnectorSpringDamper_springForceUserFunction(mbs: MainSystem, t: Real
 
 definitions.append(ItemDefinition(
     className='ObjectConnectorSpringDamper',
+    drawing=r'A spring of diameter `drawSize` between the markers: `connectors.springNumberOfWindings` windings of `connectors.curveTiling` segments, lines with `connectors.drawSimplified`, otherwise a tube.',
+    drawingSettings=['connectors.curveTiling', 'connectors.drawSimplified', 'connectors.springNumberOfWindings', 'general.cylinderTiling'],
     image='itemImages/ObjectConnectorSpringDamper.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
@@ -6489,6 +6521,8 @@ def ObjectConnectorCartesianSpringDamper_springForceUserFunction(mbs: MainSystem
 
 definitions.append(ItemDefinition(
     className='ObjectConnectorCartesianSpringDamper',
+    drawing=r'Three springs of diameter `drawSize`, along x, y and z from marker 0 to marker 1, drawn as the spring of ObjectConnectorSpringDamper.',
+    drawingSettings=['connectors.curveTiling', 'connectors.drawSimplified', 'connectors.springNumberOfWindings', 'general.cylinderTiling'],
     image='itemImages/ObjectConnectorCartesianSpringDamper.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
@@ -6809,6 +6843,8 @@ def ObjectConnectorRigidBodySpringDamper_postNewtonStepUserFunction(
 
 definitions.append(ItemDefinition(
     className='ObjectConnectorRigidBodySpringDamper',
+    drawing=r'A sphere of diameter `drawSize` at each marker and a cylinder between them; with `connectors.showJointAxes` the frames of both markers.',
+    drawingSettings=['connectors.jointAxesLength', 'connectors.jointAxesRadius', 'connectors.showJointAxes', 'general.axesTiling', 'general.cylinderTiling', 'general.sphereTiling'],
     image='itemImages/ObjectConnectorRigidBodySpringDamper.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
@@ -7094,6 +7130,8 @@ def ObjectConnectorLinearSpringDamper_springForceUserFunction(mbs: MainSystem, t
 
 definitions.append(ItemDefinition(
     className='ObjectConnectorLinearSpringDamper',
+    drawing=r'A cylinder of diameter `drawSize` between the markers if `drawAsCylinder`, otherwise the spring of ObjectConnectorSpringDamper, with spheres at the markers.',
+    drawingSettings=['connectors.curveTiling', 'connectors.drawSimplified', 'connectors.springNumberOfWindings', 'general.cylinderTiling', 'general.sphereTiling'],
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
@@ -7333,6 +7371,8 @@ def ObjectConnectorTorsionalSpringDamper_springTorqueUserFunction(mbs: MainSyste
 
 definitions.append(ItemDefinition(
     className='ObjectConnectorTorsionalSpringDamper',
+    drawing=r'At each marker a short cylinder and a double arrow along the axis of rotation, of size `drawSize`.',
+    drawingSettings=['general.axesTiling'],
     image='itemImages/ObjectConnectorTorsionalSpringDamper.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
@@ -7587,6 +7627,8 @@ def ObjectConnectorCoordinateSpringDamper_springForceUserFunction(mbs: MainSyste
 
 definitions.append(ItemDefinition(
     className='ObjectConnectorCoordinateSpringDamper',
+    drawing=r'A spring of diameter `drawSize` between the positions of the markers, if they have one, drawn as the spring of ObjectConnectorSpringDamper.',
+    drawingSettings=['connectors.curveTiling', 'connectors.drawSimplified', 'connectors.springNumberOfWindings', 'general.cylinderTiling'],
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
@@ -7822,6 +7864,8 @@ def ObjectConnectorCoordinateSpringDamperExt_springForceUserFunction(mbs: MainSy
 
 definitions.append(ItemDefinition(
     className='ObjectConnectorCoordinateSpringDamperExt',
+    drawing=r'A spring of diameter `drawSize` between the positions of the markers, if they have one, drawn as the spring of ObjectConnectorSpringDamper.',
+    drawingSettings=['connectors.curveTiling', 'connectors.drawSimplified', 'connectors.springNumberOfWindings', 'general.cylinderTiling'],
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
@@ -8183,6 +8227,7 @@ def UFforce(mbs, t, itemNumber, u, v, k, d, offset, vOffset, muDynamic, myStatic
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectConnectorGravity',
+    drawing=r'If shown - `show` is False by default -, a line between the markers.',
     cParentClass=ParentClassCObjectConnector,
     overallDescription=r'A connector for additing forces due to gravitational fields beween two bodies, which can be used for aerospace and small-scale astronomical problems. NOTE: DO NOT USE this connector for adding gravitational forces (loads), which should be using LoadMassProportional, which is acting global and always in the same direction.',
     classType=ClassTypeObject,
@@ -8405,6 +8450,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectConnectorHydraulicActuatorSimple',
+    drawing=r'The cylinder and the piston of the given radii and lengths, with spheres at the mounts, in `colorCylinder` and `colorPiston`.',
+    drawingSettings=['general.cylinderTiling', 'general.sphereTiling'],
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConnector,
@@ -8783,6 +8830,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectConnectorReevingSystemSprings',
+    drawing=r'The rope as one tube of radius `ropeRadius` along the spans and the arcs on the sheaves, the arcs with `connectors.curveTiling` segments per turn, `general.cylinderTiling` around.',
+    drawingSettings=['connectors.curveTiling', 'general.cylinderTiling'],
     image='itemImages/ObjectConnectorReevingSystemSprings.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
@@ -9088,6 +9137,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectConnectorDistance',
+    drawing=r'A line between the markers with `connectors.drawSimplified`, otherwise a rod of diameter `drawSize`.',
+    drawingSettings=['connectors.drawSimplified', 'general.cylinderTiling'],
     image='itemImages/ObjectConnectorDistance.png', #the representative image of the page (#2830)
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'Connector which enforces constant or prescribed distance between two bodies/nodes.',
@@ -9289,6 +9340,7 @@ def ObjectConnectorCoordinate_offsetUserFunction_t(mbs: MainSystem, t: Real, ite
 
 definitions.append(ItemDefinition(
     className='ObjectConnectorCoordinate',
+    drawing=r'A circle of diameter `drawSize` at the position of each marker, the one of marker 0 red.',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConstraint,
@@ -9557,6 +9609,7 @@ def ObjectConnectorCoordinateVector_jacobianUserFunction(mbs: MainSystem, t: Rea
 
 definitions.append(ItemDefinition(
     className='ObjectConnectorCoordinateVector',
+    drawing=r'The item draws nothing.',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCObjectConstraint,
@@ -9771,6 +9824,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectConnectorRollingDiscPenalty',
+    drawing=r'The disc of width `discWidth`, with 4 times `general.cylinderTiling` segments, and its axis.',
+    drawingSettings=['general.cylinderTiling'],
     image='itemImages/ObjectConnectorRollingDiscPenalty.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nDataVariables = 3; //number of data variables for tangential and normal contact
 """,
@@ -10159,6 +10214,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectContactConvexRoll',
+    drawing=r'The contact point, a small sphere.',
     addIncludesC=r"""constexpr Index CObjectContactConvexRollMaxPolynomialCoefficients = 20; //maximum number of polynomial coefficients, polynomial order needs to be n-1
 constexpr Index CObjectContactConvexRollMaxIterationsContact = 20; // maximum number of iterations t find roots of polynomial for contact
 constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of equidistant sample points to check convexity of given polynomial at assembly time.
@@ -10446,6 +10502,8 @@ constexpr Index CObjectContactConvexRollNEvalConvexityCheck = 1000; // number of
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectContactCoordinate',
+    drawing=r'With `connectors.showContact`, a circle at each marker of diameter `drawSize` (or `contact.contactPointsDefaultSize`), red while in contact.',
+    drawingSettings=['connectors.showContact', 'contact.contactPointsDefaultSize'],
     addPublicC=r"""    static constexpr Index dataIndexImpactVelocity = 1; //!< index in the data node of the last impact velocity (#2750)
 """,
     cParentClass=ParentClassCObjectConnector,
@@ -10633,6 +10691,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectContactCircleCable2D',
+    drawing=r'With `connectors.showContact`, the circle (`showContactCircle`, 4 times `general.circleTiling` segments), the contact points of the cable, and lines where it penetrates.',
+    drawingSettings=['connectors.showContact', 'contact.contactPointsDefaultSize', 'general.circleTiling'],
     addIncludesC=r"""constexpr Index CObjectContactCircleCable2DmaxNumberOfSegments = 12; //maximum number of contact segments
 """,
     cParentClass=ParentClassCObjectConnector,
@@ -10797,6 +10857,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectContactFrictionCircleCable2D',
+    drawing=r'With `connectors.showContact`, the circle (`showContactCircle`, 4 times `general.circleTiling` segments), the contact points of the cable, colored by stick and slip, and with `contact.showContactForces` the contact forces.',
+    drawingSettings=['connectors.showContact', 'contact.contactForcesFactor', 'contact.contactPointsDefaultSize', 'contact.showContactForces', 'contact.showContactForcesValues', 'general.circleTiling', 'general.rendererPrecision'],
     addIncludesC=r"""constexpr Index CObjectContactFrictionCircleCable2DmaxNumberOfSegments = 12; //maximum number of contact segments
 """,
     addPublicC=r"""    static const Index isStickCase = 0; //AUTO: value which represents stick
@@ -11403,6 +11465,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectContactSphereSphere',
+    drawing=r'The two spheres with `contact.showSpheres`, in `contact.colorSpheres`.',
+    drawingSettings=['contact.colorSpheres', 'contact.showSpheres', 'contact.tilingSpheres'],
     image='itemImages/ObjectContactSphereSphere.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nDataVariables = 4; //number of data variables for tangential and normal contact
     static constexpr Index dataIndexGap = 0; //!< index in data node representing gap
@@ -11788,6 +11852,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectContactSphereTorus',
+    drawing=r'The sphere with `contact.showSpheres` and the center circle of the torus with `contact.showTori`.',
+    drawingSettings=['contact.colorSpheres', 'contact.colorTori', 'contact.showSpheres', 'contact.showTori', 'contact.tilingSpheres', 'general.circleTiling'],
     addProtectedC=r"""    static constexpr Index nDataVariables = 4; //number of data variables for tangential and normal contact
     static constexpr Index dataIndexGap = 0; //!< index in data node representing gap
     static constexpr Index dataIndexVtangent = 1; //!< index in data node representing tangent velocity
@@ -12016,6 +12082,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectContactSphereTriangle',
+    drawing=r'The sphere with `contact.showSpheres` and the triangle with `contact.showTriangles`.',
+    drawingSettings=['contact.colorSpheres', 'contact.colorTriangles', 'contact.showSpheres', 'contact.showTriangles', 'general.sphereTiling'],
     addProtectedC=r"""    static constexpr Index nDataVariables = 4; //number of data variables for tangential and normal contact
     static constexpr Index dataIndexGap = 0; //!< index in data node representing gap
     static constexpr Index dataIndexVtangent = 1; //!< index in data node representing tangent velocity
@@ -12230,6 +12298,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectContactCurveCircles',
+    drawing=r'With `connectors.showContact`, the curve as lines with points at its segments, and the circles of the markers with `general.circleTiling` segments.',
+    drawingSettings=['connectors.contactPointsDefaultSize', 'connectors.showContact', 'contact.tilingCurves', 'general.circleTiling', 'general.sphereTiling'],
     addIncludesC=r"""#include "Pymodules/PyMatrixContainer.h"//for data matrices
 constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number of markers upon which arrays do not require memory allocation
 """,
@@ -12487,6 +12557,8 @@ def ObjectJointGeneric_offsetUserFunction_t(mbs: MainSystem, t: Real, itemNumber
 
 definitions.append(ItemDefinition(
     className='ObjectJointGeneric',
+    drawing=r'By the free rotations: two spheres for a rigid joint, the axis as two cylinders of `axesRadius` and `axesLength` for one free rotation; with `connectors.showJointAxes` the frames of both markers.',
+    drawingSettings=['connectors.jointAxesLength', 'connectors.jointAxesRadius', 'connectors.showJointAxes', 'general.axesTiling', 'general.cylinderTiling', 'general.sphereTiling'],
     image='UniversalJoint.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
@@ -12772,6 +12844,8 @@ def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectJointRevoluteZ',
+    drawing=r'The axis as two cylinders of `axisRadius` and `axisLength`, the thinner one at marker 0; with `connectors.showJointAxes` the frames of both markers.',
+    drawingSettings=['connectors.jointAxesLength', 'connectors.jointAxesRadius', 'connectors.showJointAxes', 'general.axesTiling', 'general.cylinderTiling'],
     image='RevoluteJointZ.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
@@ -12981,6 +13055,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectJointPrismaticX',
+    drawing=r'The sliding axis as a cylinder at marker 0 inside a tube of `axisRadius` at marker 1, of length `axisLength`; with `connectors.showJointAxes` the frames of both markers.',
+    drawingSettings=['connectors.jointAxesLength', 'connectors.jointAxesRadius', 'connectors.showJointAxes', 'general.axesTiling', 'general.cylinderTiling'],
     image='PrismaticJointX.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
@@ -13192,6 +13268,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectJointSpherical',
+    drawing=r'A sphere of radius `jointRadius` at each marker, and a cylinder between them.',
+    drawingSettings=['general.cylinderTiling', 'general.sphereTiling'],
     image='SphericalJoint.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nConstraints = 3;
 """,
@@ -13395,6 +13473,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectJointRollingDisc',
+    drawing=r'The disc of width `discWidth`, with 4 times `general.cylinderTiling` segments, and its axis.',
+    drawingSettings=['general.cylinderTiling'],
     image='itemImages/ObjectJointRollingDisc.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nConstraints = 3;
 """,
@@ -13620,6 +13700,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectJointRevolute2D',
+    drawing=r'A circle of diameter `drawSize` at each marker, the one of marker 0 red.',
     image='itemImages/ObjectJointRevolute2D.png', #the representative image of the page (#2830)
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers',
@@ -13741,6 +13822,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectJointPrismatic2D',
+    drawing=r'A circle of diameter `drawSize` at each marker, the one of marker 0 red, and a line between them.',
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A prismatic joint in 2D; allows the relative motion of two bodies, using two RigidMarkers.',
     classType=ClassTypeObject,
@@ -13882,6 +13964,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectJointSliding',
+    drawing=r'A sphere of diameter `drawSize` at each marker.',
     addProtectedC=r"""    static constexpr Index slidingCoordinateIndex = 0; //!< index of alqebraic coordinate
     static constexpr Index forcesStartIndex = 1; //!< starting index of alqebraic coordinates for forces
     static constexpr Index torquesStartIndex = 4; //!< starting index of alqebraic coordinates for torques (if existing)
@@ -14201,6 +14284,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectJointSliding2D',
+    drawing=r'A circle of diameter `drawSize` at each marker, the one of marker 0 red.',
     image='itemImages/ObjectJointSliding2D.png', #the representative image of the page (#2830)
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r'A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.',
@@ -14538,6 +14622,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectJointALEMoving2D',
+    drawing=r'A circle of diameter `drawSize` at marker 0 and at the sliding position, with a cross there.',
     cParentClass=ParentClassCObjectConstraint,
     overallDescription=r"""A specialized axially moving joint (without rotation) in 2D between a ALE Cable2D (marker1) and a position-based marker (marker0); ALE=Arbitrary Lagrangian Eulerian; the data coordinate x[0] provides the current index in slidingMarkerNumbers, and the ABRV:ODE2 coordinate q[0] provides the (given) moving coordinate in the cable element.""",
     classType=ClassTypeObject,

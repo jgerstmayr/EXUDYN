@@ -43,3 +43,12 @@ beams; `length` is the length of the element in its reference configuration.
 The elements share their nodes, and a beam is a chain of elements. `exudyn.beams` creates such
 chains, e.g. `GenerateStraightLineANCFCable2D` and `GenerateStraightLineANCFCable`, and the markers
 on a node of the chain connect it to the rest of the model.
+
+(sec-drawing-objectsfiniteelement)=
+## Drawing
+
+A finite element is drawn if `bodies.show` and its own `show` are True, in its `color`
+or `bodies.defaultColor`; in a contour plot (`contour.outputVariable`, `contour.outputVariableComponent`) colored by
+the values along it. `bodies.showNumbers` writes its number.
+
+The settings: [`bodies.show`](#sec-vsettingsbodies), [`bodies.showNumbers`](#sec-vsettingsbodies), [`bodies.defaultColor`](#sec-vsettingsbodies), [`contour.outputVariable`](#sec-vsettingscontour), [`contour.outputVariableComponent`](#sec-vsettingscontour).

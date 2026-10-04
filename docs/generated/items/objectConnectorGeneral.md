@@ -47,3 +47,15 @@ formulations with a discontinuous contact state. They need a `NodeGenericData`, 
 coordinates hold the state of the last post Newton step - gap, friction regime, impact velocity -,
 and the solver repeats a step when the state changes (active set strategy). `mbs.CreateSphereSphereContact`
 and its relatives add the node, the markers and the connector.
+
+(sec-drawing-objectsconnector)=
+## Drawing
+
+A connector is drawn if `connectors.show` and its own `show` are True, between the positions
+of its markers, in its `color` or `connectors.defaultColor`; a `drawSize` of -1 takes `connectors.defaultSize`.
+`connectors.showNumbers` writes its number. Circles and cylinders take the tilings of `general`
+(`general.circleTiling`, `general.cylinderTiling`, `general.sphereTiling`, `general.axesTiling` for frames and
+arrows), items that are large compared to the others 4 times as many; space curves such as the windings of a spring
+take `connectors.curveTiling`. `connectors.drawSimplified` draws springs and the distance connector as lines.
+
+The settings: [`connectors.show`](#sec-vsettingsconnectors), [`connectors.showNumbers`](#sec-vsettingsconnectors), [`connectors.defaultColor`](#sec-vsettingsconnectors), [`connectors.defaultSize`](#sec-vsettingsconnectors).

@@ -65,6 +65,12 @@ The parameters of `VObjectConnectorHydraulicActuatorSimple`, given as `visualiza
 | **colorCylinder** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA cylinder color; if R==-1, use default connector color |
 | **colorPiston** | Float4 | 4 | [0.8,0.8,0.8,1.] | RGBA piston color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); the cylinder and the piston of the given radii and lengths, with spheres at the mounts, in `colorCylinder` and `colorPiston`.
+
+Settings beyond those of all connectors: [`general.cylinderTiling`](#sec-vsettingsgeneral), [`general.sphereTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

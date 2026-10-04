@@ -45,6 +45,10 @@ The parameters of `VObjectMass1D`, given as `visualization`:
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **graphicsData** | BodyGraphicsData |  |  | Structure contains data for body visualization; data is defined in special list / dictionary structure |
 
+## Drawing
+
+Drawn as [all bodies](#sec-drawing-objectsbody); its `graphicsData`, moved along the axis of its reference rotation by the coordinate of its node.
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

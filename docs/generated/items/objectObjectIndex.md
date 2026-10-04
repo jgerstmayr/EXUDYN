@@ -6,5 +6,6 @@ A Object provides equations, using coordinates from Nodes. General objects lead 
 ```{toctree}
 :maxdepth: 1
 
+objectObjectGeneral
 ObjectGenericODE1
 ```

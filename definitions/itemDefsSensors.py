@@ -642,6 +642,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='SensorLoad',
+    drawing=r'At the position of the marker of its load, if the marker has a position; a load on a coordinate has none.',
     cParentClass=ParentClassCSensor,
     overallDescription=r"""A sensor attached to a load, which measures the value of the load.""",
     classType=ClassTypeSensor,
@@ -749,6 +750,7 @@ def SensorUserFunction_sensorUserFunction(mbs: MainSystem, t: Real, sensorNumber
 
 definitions.append(ItemDefinition(
     className='SensorUserFunction',
+    drawing=r'The item draws nothing.',
     cParentClass=ParentClassCSensor,
     overallDescription=r'A sensor defined by a user function. The sensor is intended to collect sensor values of a list of given sensors and recombine the output into a new value for output or control purposes. It is also possible to use this sensor without any dependence on other sensors in order to generate output for, e.g., any quantities in mbs or solvers.',
     classType=ClassTypeSensor,

@@ -36,6 +36,9 @@ The parameters of `VSensorObject`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; sensors can be shown at the position assiciated with the object - note that in some cases, there might be no such position (e.g. data object)! |
 
+## Drawing
+
+Drawn as [all sensors](#sec-drawing-sensors).
 (description-sensorobject)=
 ## Detailed description
 

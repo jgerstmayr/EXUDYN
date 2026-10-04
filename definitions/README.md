@@ -264,6 +264,7 @@ link it, do not repeat it.
 | **Simpler**: the Create functions that add the item | `createFunctions=['CreateRigidBody']`, objects and loads; the one place a page names them |
 | **Interface** | generated from the declared types: `itemTypes`, `requestedTypes`, `accessFunctionTypes`, and `requestedNodeTypes` of a node marker (which also generates the check of `Assemble` and the answer of `mbs.Inspect`, #2817) |
 | **Parameters**, **Visualization parameters**, **Output variables** | generated from the `description` of each member |
+| **Drawing** | `drawing=r'...'`, what the item draws beyond the drawing of its kind (`drawing` and `drawingSettings` of the kind in `itemKindDefinitions.py`, which the page links), or `'The item draws nothing.'`; `drawingSettings=['general.cylinderTiling', ...]`, the visualization settings its drawing reads beyond those of its kind - `test_itemDrawing.py` compares them with the C++ (#2840) |
 | **Detailed description** | written, `detailedDescription`, headings by kind (below) |
 | user functions | generated from the `def` (#2664) |
 | **Mini example** | written, `miniExample` (below) |

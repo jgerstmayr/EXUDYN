@@ -52,6 +52,12 @@ The parameters of `VObjectConnectorReevingSystemSprings`, given as `visualizatio
 | **ropeRadius** | float |  | 0.001 | radius of rope, drawn as one tube along the free spans and the arcs on the sheaves; visualizationSettings.general.cylinderTiling segments around it, connectors.curveTiling segments per full turn of an arc |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); the rope as one tube of radius `ropeRadius` along the spans and the arcs on the sheaves, the arcs with `connectors.curveTiling` segments per turn, `general.cylinderTiling` around.
+
+Settings beyond those of all connectors: [`connectors.curveTiling`](#sec-vsettingsconnectors), [`general.cylinderTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

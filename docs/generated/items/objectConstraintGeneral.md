@@ -36,3 +36,12 @@ Constraints that fix the same motion twice - two revolute joints on one axis, a 
 planar joints in 3D - make the Jacobian of the constraints singular, and the solver fails.
 `mbs.ComputeSystemDegreeOfFreedom()` counts the redundant constraints; the `EigenDense` linear solver
 with `linearSolver.ignoreSingularJacobian` can handle some of them.
+
+(sec-drawing-objectsconstraint)=
+## Drawing
+
+A constraint is drawn as a connector: if `connectors.show` and its own `show` are True,
+in its `color` or `connectors.defaultColor`, a `drawSize` of -1 takes `connectors.defaultSize`, and
+`connectors.showNumbers` writes its number.
+
+The settings: [`connectors.show`](#sec-vsettingsconnectors), [`connectors.showNumbers`](#sec-vsettingsconnectors), [`connectors.defaultColor`](#sec-vsettingsconnectors), [`connectors.defaultSize`](#sec-vsettingsconnectors).

@@ -53,6 +53,12 @@ The parameters of `VObjectANCFThinPlate`, given as `visualization`:
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; the plate is drawn as n x n quads per element, n = bodies.beams.axialTiling/2, at least 2, on its surfaces if it has a thickness; the outline of the element is drawn as lines if view0.scene.showMeshEdges is set when the graphics data is built (the curved surface is drawn as flat quads, so the renderer cannot find the element edges itself) |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color of the object; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all finite elements](#sec-drawing-objectsfiniteelement); the mid surface, or with `bodies.shells.drawSolid` both surfaces and the edges at `bodies.shells.thicknessFactor` times the thickness, as n x n quads per element, n = `bodies.beams.axialTiling`/2; the outline of the element as lines with `view0.scene.showMeshEdges`.
+
+Settings beyond those of all finite elements: [`bodies.beams.axialTiling`](#sec-vsettingsbeams), [`bodies.shells.drawSolid`](#sec-vsettingsshells), [`bodies.shells.thicknessFactor`](#sec-vsettingsshells), [`contour.nodesColored`](#sec-vsettingscontour), [`openGL.faceEdgesColor`](#sec-vsettingsopengl), [`view0.scene.showMeshEdges`](#sec-vsettingsscene).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

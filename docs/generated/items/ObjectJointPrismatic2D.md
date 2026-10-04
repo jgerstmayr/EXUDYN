@@ -43,6 +43,9 @@ The parameters of `VObjectJointPrismatic2D`, given as `visualization`:
 | **drawSize** | float |  | -1. | drawing size = radius of revolute joint; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all joints](#sec-drawing-objectsjoint); a circle of diameter `drawSize` at each marker, the one of marker 0 red, and a line between them.
 (description-objectjointprismatic2d)=
 ## Detailed description
 

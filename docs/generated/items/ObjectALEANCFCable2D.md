@@ -56,6 +56,12 @@ The parameters of `VObjectALEANCFCable2D`, given as `visualization`:
 | **drawHeight** | float |  | 0. | if beam is drawn with rectangular shape, this is the drawing height |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color of the object; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all finite elements](#sec-drawing-objectsfiniteelement); a band of height `drawHeight` along the axis, of `bodies.beams.axialTiling` segments, or a line if `drawHeight` is 0; the `bodies.beams.drawVertical...` settings draw a value (e.g. a force) across it.
+
+Settings beyond those of all finite elements: [`bodies.beams.axialTiling`](#sec-vsettingsbeams), [`bodies.beams.crossSectionFilled`](#sec-vsettingsbeams), [`bodies.beams.crossSectionTiling`](#sec-vsettingsbeams), [`bodies.beams.drawVertical`](#sec-vsettingsbeams), [`bodies.beams.drawVerticalColor`](#sec-vsettingsbeams), [`bodies.beams.drawVerticalFactor`](#sec-vsettingsbeams), [`bodies.beams.drawVerticalLines`](#sec-vsettingsbeams), [`bodies.beams.drawVerticalOffset`](#sec-vsettingsbeams), [`bodies.beams.drawVerticalValues`](#sec-vsettingsbeams), [`bodies.beams.reducedAxialInterploation`](#sec-vsettingsbeams), [`general.rendererPrecision`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

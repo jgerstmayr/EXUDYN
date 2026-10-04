@@ -41,6 +41,9 @@ The parameters of `VMarkerKinematicTreeRigid`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
+## Drawing
+
+Drawn as [all markers](#sec-drawing-markers).
 (description-markerkinematictreerigid)=
 ## Detailed description
 

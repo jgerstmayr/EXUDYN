@@ -287,6 +287,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='NodeRigidBodyEP',
+    drawing=r'With `nodes.showBasis`, also its frame, of length `nodes.basisSize`.',
+    drawingSettings=['general.axesTiling', 'nodes.basisSize', 'nodes.showBasis'],
     addProtectedC=r"""    static constexpr Index nRotationCoordinates = 4;//AUTO: 
     static constexpr Index nDisplacementCoordinates = 3;
     Index globalAECoordinateIndex;
@@ -498,6 +500,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='NodeRigidBodyRxyz',
+    drawing=r'With `nodes.showBasis`, also its frame, of length `nodes.basisSize`.',
+    drawingSettings=['general.axesTiling', 'nodes.basisSize', 'nodes.showBasis'],
     addProtectedC=r"""    static constexpr Index nRotationCoordinates = 3;
     static constexpr Index nDisplacementCoordinates = 3;
 """,
@@ -673,6 +677,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='NodeRigidBodyRotVecLG',
+    drawing=r'With `nodes.showBasis`, also its frame, of length `nodes.basisSize`.',
+    drawingSettings=['general.axesTiling', 'nodes.basisSize', 'nodes.showBasis'],
     addProtectedC=r"""    static constexpr Index nRotationCoordinates = 3;
     static constexpr Index nDisplacementCoordinates = 3;
 """,
@@ -839,6 +845,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='NodeRigidBody2D',
+    drawing=r'With `nodes.showBasis`, also its frame, of length `nodes.basisSize`.',
+    drawingSettings=['general.axesTiling', 'nodes.basisSize', 'nodes.showBasis'],
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 2D rigid body node for rigid bodies or beams. The node has 2 displacement degrees of freedom and one rotation coordinate (rotation around z-axis: $\psi_0$). All coordinates are ABRV:ODE2, used for second order differetial equations.""",
     classType=ClassTypeNode,
@@ -969,6 +977,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='Node1D',
+    drawing=r'The item draws nothing.',
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A node with one ABRV:ODE2 coordinate for one dimensional (1D) problems. Use e.g. for scalar dynamic equations (Mass1D) and mass-spring-damper mechanisms, representing either translational or rotational degrees of freedom: in most cases, Node1D is equivalent to NodeGenericODE2 using one coordinate, however, it offers a transformation to 3D translational or rotational motion and allows to couple this node to 2D or 3D bodies.""",
     classType=ClassTypeNode,
@@ -1071,6 +1080,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='NodePoint2DSlope1',
+    drawing=r'With `nodes.showNodalSlopes`, also its slope vector.',
+    drawingSettings=['nodes.showNodalSlopes'],
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A 2D point/slope vector node for planar Bernoulli-Euler ANCF (absolute nodal coordinate formulation) beam elements. The node has 4 displacement degrees of freedom (2 for displacement of point node and 2 for the slope vector 'slopex'); all coordinates lead to second order differential equations; the slope vector defines the directional derivative w.r.t the local axial (x) coordinate, denoted as $()^\prime$; in straight configuration aligned at the global x-axis, the slope vector reads $\rv^\prime=[r_x^\prime\;\;r_y^\prime]^T=[1\;\;0]^T$.""",
     classType=ClassTypeNode,
@@ -1210,6 +1221,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='NodePointSlope1',
+    drawing=r'With `nodes.showNodalSlopes`, also its slope vector.',
+    drawingSettings=['nodes.showNodalSlopes'],
     addPublicC=r"""    static constexpr Index nODE2coordinates = 6;//AUTO: number of coordinates, used for fixed-size templates
 """,
     cParentClass=ParentClassCNodeODE2,
@@ -1339,6 +1352,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='NodePointSlope12',
+    drawing=r'With `nodes.showNodalSlopes`, also its slope vectors.',
+    drawingSettings=['nodes.showNodalSlopes'],
     addPublicC=r"""    static constexpr Index nODE2coordinates = 9;//AUTO: number of coordinates, used for fixed-size templates
 """,
     cParentClass=ParentClassCNodeODE2,
@@ -1482,6 +1497,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='NodePointSlope23',
+    drawing=r'With `nodes.showNodalSlopes`, also its slope vectors.',
+    drawingSettings=['nodes.showNodalSlopes'],
     addPublicC=r"""    static constexpr Index nODE2coordinates = 9;//AUTO: number of coordinates, used for fixed-size templates
 """,
     cParentClass=ParentClassCNodeODE2,
@@ -1640,6 +1657,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='NodeGenericODE2',
+    drawing=r'The item draws nothing.',
     cParentClass=ParentClassCNodeODE2,
     overallDescription=r"""A node containing a number of ABRV:ODE2 variables. Use this node e.g. for scalar dynamic equations (Mass1D), for ObjectGenericODE2 or for the Eulerian coordinate in the ALECable element. NOTE: referenceCoordinates and all initialCoordinates(\_t) must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
@@ -1735,6 +1753,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='NodeGenericODE1',
+    drawing=r'The item draws nothing.',
     cParentClass=ParentClassCNodeODE1,
     overallDescription=r"""A node containing a number of ABRV:ODE1 variables. Use this node e.g. for linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
@@ -1811,6 +1830,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='NodeGenericAE',
+    drawing=r'The item draws nothing.',
     cParentClass=ParentClassCNodeAE,
     overallDescription=r"""A node containing a number of ABRV:AE variables. Use e.g. linear state space systems. NOTE: referenceCoordinates and initialCoordinates must be initialized, because no default values exist.""",
     classType=ClassTypeNode,
@@ -1871,6 +1891,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='NodeGenericData',
+    drawing=r'The item draws nothing.',
     cParentClass=ParentClassCNodeData,
     overallDescription=r'A node containing a number of data (history) variables. Use this node e.g. for contact (active set), friction or plasticity (history variables).',
     classType=ClassTypeNode,

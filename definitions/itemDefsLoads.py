@@ -167,6 +167,7 @@ def LoadTorqueVector_loadVectorUserFunction(mbs: MainSystem, t: Real, loadVector
 
 definitions.append(ItemDefinition(
     className='LoadTorqueVector',
+    drawing=r'A double arrow.',
     image='itemImages/LoadTorqueVector.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
@@ -401,6 +402,7 @@ def LoadCoordinate_loadUserFunction(mbs: MainSystem, t: Real, load: Real) -> Rea
 
 definitions.append(ItemDefinition(
     className='LoadCoordinate',
+    drawing=r'The item draws nothing.',
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCLoad,

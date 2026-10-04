@@ -48,6 +48,11 @@ The parameters of `VObjectContactCoordinate`, given as `visualization`:
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); with `connectors.showContact`, a circle at each marker of diameter `drawSize` (or `contact.contactPointsDefaultSize`), red while in contact.
+
+Settings beyond those of all connectors: [`connectors.showContact`](#sec-vsettingsconnectors), [`contact.contactPointsDefaultSize`](#sec-vsettingscontact).
 (description-objectcontactcoordinate)=
 ## Detailed description
 

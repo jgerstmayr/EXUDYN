@@ -50,6 +50,12 @@ The parameters of `VObjectConnectorCartesianSpringDamper`, given as `visualizati
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); three springs of diameter `drawSize`, along x, y and z from marker 0 to marker 1, drawn as the spring of ObjectConnectorSpringDamper.
+
+Settings beyond those of all connectors: [`connectors.curveTiling`](#sec-vsettingsconnectors), [`connectors.drawSimplified`](#sec-vsettingsconnectors), [`connectors.springNumberOfWindings`](#sec-vsettingsconnectors), [`general.cylinderTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

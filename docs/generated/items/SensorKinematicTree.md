@@ -38,6 +38,9 @@ The parameters of `VSensorKinematicTree`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
+## Drawing
+
+Drawn as [all sensors](#sec-drawing-sensors).
 (description-sensorkinematictree)=
 ## Detailed description
 

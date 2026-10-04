@@ -1414,7 +1414,7 @@ What depends on it: the graphics regression test takes every item through its Mi
 **RG13.7** **DONE 2026-09-29** (#2742) — [log](exudynRevisionLog2026b.md#rg13-7) · [plan text](exudynRevisionLog2026b.md#plan-rg13-7) — How to set up a new item.
 
 <a id="rg13-8"></a>
-**RG13.8** *(maintainer 2026-10-04)* **How an item is drawn** (#2840): the drawing of the items is documented nowhere but in the
+**RG13.8** **DONE 2026-10-04** *(maintainer 2026-10-04)* **How an item is drawn** (#2840): the drawing of the items is documented nowhere but in the
 74 `UpdateGraphics` functions - which settings they use for size, tiling and color, what `drawSize = -1` means, what a
 color of `[-1,-1,-1,-1]` takes. Proposed:
     - **RG13.8.1** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg13-8-1) *(maintainer 2026-10-04: "continue
@@ -1422,10 +1422,11 @@ color of `[-1,-1,-1,-1]` takes. Proposed:
       size and color, what it draws (and what not, e.g. the windings of a spring or the axes of a joint); written as a
       table, and where a setting is misleading or does not fit (e.g. `general.cylinderTiling` for the arcs of a rope,
       RG6.9), raised;
-    - **RG13.8.2** a section *Drawing* in the generated frame of each item page, from a declaration in the definition
+    - **RG13.8.2** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg13-8-2) *(maintainer 2026-10-04: "Do next
+      RG13.8 steps")* a section *Drawing* in the generated frame of each item page, from a declaration in the definition
       (e.g. `drawing=r'...'` and the settings it uses, which the emitter links to the settings page), so that the page
       and the code are checked against each other where possible;
-    - **RG13.8.3** the general rules once per kind, in `itemKindDefinitions.py`: nodes, markers, loads and sensors are
+    - **RG13.8.3** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg13-8-2) the general rules once per kind, in `itemKindDefinitions.py`: nodes, markers, loads and sensors are
       drawn alike within their kind (size, color, number), objects one by one;
     - **RG13.8.4** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg13-8-4) *(maintainer 2026-10-04: the
       decisions per finding, see the log)* (#2843) the findings of the inventory: parameters that are not read (`ObjectConnectorDistance.drawSize`),
@@ -1762,7 +1763,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582, #2776 | the graphics regression suite - open: RG2.3.3.8 the raytracer that can hang in `RedrawAndGetImage` |
-| RG13.8 | #2840 | how an item is drawn: an inventory of the `UpdateGraphics` functions, then on the pages |
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #1848, #1947 | the open bugs before 1.13: RG4.15.8 `GeneralContact` against the sphere contact |

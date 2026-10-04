@@ -48,6 +48,12 @@ The parameters of `VObjectConnectorLinearSpringDamper`, given as `visualization`
 | **drawAsCylinder** | Bool |  | False | if this flag is True, the spring-damper is represented as cylinder; this may fit better if the spring-damper represents an actuator |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); a cylinder of diameter `drawSize` between the markers if `drawAsCylinder`, otherwise the spring of ObjectConnectorSpringDamper, with spheres at the markers.
+
+Settings beyond those of all connectors: [`connectors.curveTiling`](#sec-vsettingsconnectors), [`connectors.drawSimplified`](#sec-vsettingsconnectors), [`connectors.springNumberOfWindings`](#sec-vsettingsconnectors), [`general.cylinderTiling`](#sec-vsettingsgeneral), [`general.sphereTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

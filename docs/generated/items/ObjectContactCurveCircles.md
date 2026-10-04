@@ -53,6 +53,12 @@ The parameters of `VObjectContactCurveCircles`, given as `visualization`:
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; draws curve and circles with given radii; uses visualizationSettings circleTiling for circles and circleTiling/2 for tiling of non-straight segments |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); with `connectors.showContact`, the curve as lines with points at its segments, and the circles of the markers with `general.circleTiling` segments.
+
+Settings beyond those of all connectors: [`connectors.contactPointsDefaultSize`](#sec-vsettingsconnectors), [`connectors.showContact`](#sec-vsettingsconnectors), [`contact.tilingCurves`](#sec-vsettingscontact), [`general.circleTiling`](#sec-vsettingsgeneral), [`general.sphereTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

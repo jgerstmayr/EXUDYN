@@ -59,3 +59,15 @@ A node marker needs the node to provide what it measures: `MarkerNodePosition` a
 `MarkerNodeRigid` a position and an orientation, `MarkerNodeRotationCoordinate` an orientation. The
 **Interface** of each node lists the markers and the objects that fit. `MarkerNodeCoordinate` and
 `MarkerNodeCoordinates` act on single coordinates and fit every node with {ref}`ODE2 <ODE2>` coordinates.
+
+(sec-drawing-nodes)=
+## Drawing
+
+A node is drawn if `nodes.show` and its own `show` are True: as a sphere of diameter
+`nodes.defaultSize` with `nodes.tiling` segments, or as a point with `nodes.drawNodesAsPoint`, in
+`nodes.defaultColor` or its own `color`; a size of -1 takes a fraction of `openGL.advanced.initialMaxSceneSize`. In a
+contour plot (`contour.outputVariable`, `contour.outputVariableComponent`) with `contour.nodesColored`, it takes the
+color of its value. `nodes.showNumbers` writes its number. A node without a position - `Node1D`, the generic nodes -
+draws nothing.
+
+The settings: [`nodes.show`](#sec-vsettingsnodes), [`nodes.defaultSize`](#sec-vsettingsnodes), [`nodes.defaultColor`](#sec-vsettingsnodes), [`nodes.drawNodesAsPoint`](#sec-vsettingsnodes), [`nodes.tiling`](#sec-vsettingsnodes), [`nodes.showNumbers`](#sec-vsettingsnodes), [`contour.outputVariable`](#sec-vsettingscontour), [`contour.outputVariableComponent`](#sec-vsettingscontour), [`contour.nodesColored`](#sec-vsettingscontour), [`openGL.advanced.initialMaxSceneSize`](#sec-vsettingsopengladvanced).

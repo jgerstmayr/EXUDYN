@@ -28,14 +28,11 @@ The parameters of the item; in a dictionary, its type is 'ObjectODE2Coordinates'
 
 ## Visualization parameters
 
-The parameters of `VMarkerObjectODE2Coordinates`, given as `visualization`:
+`VMarkerObjectODE2Coordinates` has no parameters.
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
+## Drawing
 
-| Name | type | size | default value | description |
-|---|---|---|---|---|
-
+The item draws nothing.
 (description-markerobjectode2coordinates)=
 ## Detailed description
 

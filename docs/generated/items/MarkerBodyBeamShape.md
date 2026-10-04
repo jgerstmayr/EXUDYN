@@ -36,6 +36,9 @@ The parameters of `VMarkerBodyBeamShape`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
+## Drawing
+
+Drawn as [all markers](#sec-drawing-markers); spheres at the points of the beam it acts on.
 (description-markerbodybeamshape)=
 ## Detailed description
 

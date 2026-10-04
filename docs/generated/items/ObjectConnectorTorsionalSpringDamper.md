@@ -59,6 +59,12 @@ The parameters of `VObjectConnectorTorsionalSpringDamper`, given as `visualizati
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); at each marker a short cylinder and a double arrow along the axis of rotation, of size `drawSize`.
+
+Settings beyond those of all connectors: [`general.axesTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

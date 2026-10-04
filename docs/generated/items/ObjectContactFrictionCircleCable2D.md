@@ -49,6 +49,12 @@ The parameters of `VObjectContactFrictionCircleCable2D`, given as `visualization
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); with `connectors.showContact`, the circle (`showContactCircle`, 4 times `general.circleTiling` segments), the contact points of the cable, colored by stick and slip, and with `contact.showContactForces` the contact forces.
+
+Settings beyond those of all connectors: [`connectors.showContact`](#sec-vsettingsconnectors), [`contact.contactForcesFactor`](#sec-vsettingscontact), [`contact.contactPointsDefaultSize`](#sec-vsettingscontact), [`contact.showContactForces`](#sec-vsettingscontact), [`contact.showContactForcesValues`](#sec-vsettingscontact), [`general.circleTiling`](#sec-vsettingsgeneral), [`general.rendererPrecision`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

@@ -29,13 +29,11 @@ The parameters of the item; in a dictionary, its type is 'GenericAE':
 
 ## Visualization parameters
 
-The parameters of `VNodeGenericAE`, given as `visualization`:
+`VNodeGenericAE` has no parameters.
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
+## Drawing
 
-| Name | type | size | default value | description |
-|---|---|---|---|---|
+The item draws nothing.
 
 ## Output variables
 

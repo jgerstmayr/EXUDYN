@@ -45,6 +45,9 @@ The parameters of `VLoadMassProportional`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
+## Drawing
+
+Drawn as [all loads](#sec-drawing-loads).
 (description-loadmassproportional)=
 ## Detailed description
 

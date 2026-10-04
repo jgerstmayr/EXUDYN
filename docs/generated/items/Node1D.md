@@ -30,13 +30,11 @@ The parameters of the item; in a dictionary, its type is '1D':
 
 ## Visualization parameters
 
-The parameters of `VNode1D`, given as `visualization`:
+`VNode1D` has no parameters.
 
-```{tabularcolumns} |\Y{0.2}|\Y{0.14}|\Y{0.06}|\Y{0.15}|\Y{0.45}|
-```
+## Drawing
 
-| Name | type | size | default value | description |
-|---|---|---|---|---|
+The item draws nothing.
 
 ## Output variables
 

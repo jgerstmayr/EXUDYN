@@ -48,6 +48,12 @@ The parameters of `VObjectBeamGeometricallyExact`, given as `visualization`:
 | **sectionGeometry** | BeamSectionGeometry |  | BeamSectionGeometry() | defines cross section shape used for visualization and contact |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color of the object; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all finite elements](#sec-drawing-objectsfiniteelement); its `sectionGeometry` extruded along the axis, of `bodies.beams.axialTiling` segments; without section geometry a line, colored along it in a contour plot.
+
+Settings beyond those of all finite elements: [`bodies.beams.axialTiling`](#sec-vsettingsbeams).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

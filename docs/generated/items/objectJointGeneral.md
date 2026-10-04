@@ -26,3 +26,14 @@ axis and compute the markers and the joint frames.
 The multipliers of a joint are its reaction forces and torques; the output variables give them -
 `ForceLocal` and `TorqueLocal` in the joint frame $J0$ of marker 0 for most joints, `Force` in the
 global frame for the spherical joint -, as the page of each joint lists them.
+
+(sec-drawing-objectsjoint)=
+## Drawing
+
+A joint is drawn as a connector: if `connectors.show` and its own `show` are True, at the
+positions of its markers, in its `color` or `connectors.defaultColor`, a `drawSize` of -1 takes
+`connectors.defaultSize`, and `connectors.showNumbers` writes its number. The 3D joints draw their axes as cylinders
+(`general.cylinderTiling`) and, with `connectors.showJointAxes`, the frames of their markers
+(`connectors.jointAxesLength`, `connectors.jointAxesRadius`, `general.axesTiling`); the 2D joints draw circles.
+
+The settings: [`connectors.show`](#sec-vsettingsconnectors), [`connectors.showNumbers`](#sec-vsettingsconnectors), [`connectors.defaultColor`](#sec-vsettingsconnectors), [`connectors.defaultSize`](#sec-vsettingsconnectors).

@@ -52,6 +52,12 @@ The parameters of `VObjectGenericODE2`, given as `visualization`:
 | **showNodes** | Bool |  | False | set true, nodes are drawn uniquely via the mesh, eventually using the floating reference frame, even in the visualization of the node is show=False; node numbers are shown with indicator 'NF' |
 | **graphicsDataUserFunction** | ObjectGenericODE2GraphicsDataUserFunction |  | 0 | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics data is draw in global coordinates; it can be used to implement user element visualization, e.g., beam elements or simple mechanical systems; note that this user function may significantly slow down visualization |
 
+## Drawing
+
+Drawn as [all super elements](#sec-drawing-objectssuperelement); its `triangleMesh` on the nodes, deformed with `bodies.deformationScaleFactor`, and with `showNodes` its nodes; or what its `graphicsDataUserFunction` returns.
+
+Settings beyond those of all super elements: [`nodes.defaultSize`](#sec-vsettingsnodes), [`nodes.drawNodesAsPoint`](#sec-vsettingsnodes), [`nodes.show`](#sec-vsettingsnodes), [`nodes.showNumbers`](#sec-vsettingsnodes), [`nodes.tiling`](#sec-vsettingsnodes), [`openGL.advanced.initialMaxSceneSize`](#sec-vsettingsopengladvanced).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

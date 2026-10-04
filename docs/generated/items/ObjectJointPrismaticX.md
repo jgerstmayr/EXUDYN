@@ -52,6 +52,12 @@ The parameters of `VObjectJointPrismaticX`, given as `visualization`:
 | **axisLength** | float |  | 0.4 | length of joint axis to draw |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all joints](#sec-drawing-objectsjoint); the sliding axis as a cylinder at marker 0 inside a tube of `axisRadius` at marker 1, of length `axisLength`; with `connectors.showJointAxes` the frames of both markers.
+
+Settings beyond those of all joints: [`connectors.jointAxesLength`](#sec-vsettingsconnectors), [`connectors.jointAxesRadius`](#sec-vsettingsconnectors), [`connectors.showJointAxes`](#sec-vsettingsconnectors), [`general.axesTiling`](#sec-vsettingsgeneral), [`general.cylinderTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

@@ -58,6 +58,12 @@ The parameters of `VObjectContactSphereTriangle`, given as `visualization`:
 | **show** | Bool |  | False | set true, if item is shown in visualization and false if it is not shown; draws spheres by given radii |
 | **color** | Float4 | 4 | [0.7,0.7,0.7,1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); the sphere with `contact.showSpheres` and the triangle with `contact.showTriangles`.
+
+Settings beyond those of all connectors: [`contact.colorSpheres`](#sec-vsettingscontact), [`contact.colorTriangles`](#sec-vsettingscontact), [`contact.showSpheres`](#sec-vsettingscontact), [`contact.showTriangles`](#sec-vsettingscontact), [`general.sphereTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

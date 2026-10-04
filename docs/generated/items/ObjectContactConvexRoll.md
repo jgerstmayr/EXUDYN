@@ -55,6 +55,10 @@ The parameters of `VObjectContactConvexRoll`, given as `visualization`:
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); the contact point, a small sphere.
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

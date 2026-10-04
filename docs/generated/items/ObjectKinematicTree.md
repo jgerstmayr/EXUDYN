@@ -66,6 +66,12 @@ The parameters of `VObjectKinematicTree`, given as `visualization`:
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color for object; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 | **graphicsDataList** | BodyGraphicsDataList |  |  | Structure contains data for link/joint visualization; data is defined as list of BodyGraphicsData where every BodyGraphicsData corresponds to one link/joint; must either be emtpy list or length must agree with number of links |
 
+## Drawing
+
+Drawn as [all super elements](#sec-drawing-objectssuperelement); per link its `graphicsDataList` in the link frame; a link without graphics data as a cylinder from the previous joint with `showLinks`, and its revolute axis as a cylinder with `showJoints`; the frames of the joints and of the centers of mass with `bodies.kinematicTree.showJointFrames` and `showCOMframes`, of size `frameSize`.
+
+Settings beyond those of all super elements: [`bodies.kinematicTree.frameSize`](#sec-vsettingskinematictree), [`bodies.kinematicTree.showCOMframes`](#sec-vsettingskinematictree), [`bodies.kinematicTree.showFramesNumbers`](#sec-vsettingskinematictree), [`bodies.kinematicTree.showJointFrames`](#sec-vsettingskinematictree), [`general.cylinderTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

@@ -43,6 +43,12 @@ The parameters of `VNodeRigidBodyRxyz`, given as `visualization`:
 | **drawSize** | float |  | -1. | drawing size (diameter, dimensions of underlying cube, etc.) for item; size == -1.f means that default size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | Default RGBA color for nodes; 4th value is alpha-transparency; R=-1.f means, that default color is used |
 
+## Drawing
+
+Drawn as [all nodes](#sec-drawing-nodes); with `nodes.showBasis`, also its frame, of length `nodes.basisSize`.
+
+Settings beyond those of all nodes: [`general.axesTiling`](#sec-vsettingsgeneral), [`nodes.basisSize`](#sec-vsettingsnodes), [`nodes.showBasis`](#sec-vsettingsnodes).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

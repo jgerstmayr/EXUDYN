@@ -47,6 +47,12 @@ The parameters of `VObjectJointSpherical`, given as `visualization`:
 | **jointRadius** | float |  | 0.1 | radius of joint to draw |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all joints](#sec-drawing-objectsjoint); a sphere of radius `jointRadius` at each marker, and a cylinder between them.
+
+Settings beyond those of all joints: [`general.cylinderTiling`](#sec-vsettingsgeneral), [`general.sphereTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

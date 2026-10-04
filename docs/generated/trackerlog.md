@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.290.dev1
+- Exudyn version = 1.12.291.dev1
 - last change = 2026-10-04
 - Number of issues = 2846
-- Number of resolved issues = 2604 (290 in current version)
+- Number of resolved issues = 2605 (291 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,10 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `DOCU` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` the documentation says how each item is drawn and which settings it uses (#2840)
-  - description: The maintainer, 2026-10-04: 'the graphics visualization has no docs about how the items are drawn. Which (default) settings are used for tiling, colors, etc. - only available via the code. So, this should be completed and possibly improved if some misleading or inappropriate settings are used in the UpdateGraphics functions. This is mainly for the objects, but also for other items (but they would probably have a generic description for most nodes, markers, etc.).' revision2026b step RG13.8.
-  - **remarks:** For the inventory (found with \#2837): UpdateGraphicsBeam3D without section geometry colors the line of a contour plot with LinearInterpolate(value1, value2, 0, L, x), but x runs from -L/2 to L/2 and value1, value2 are taken at the local positions 0 and L - the colors are those of the middle and of a point beyond the end.
-  - date raised: 2026-10-04
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
   - date raised: 2026-09-29

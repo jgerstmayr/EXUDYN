@@ -161,6 +161,60 @@ def CreateFunctionsMarkdown(definition):
             + ' this item, with what it needs, in one call.\n\n')
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#the drawing of an item and of its kind (#2840)
+_settingAnchors = None
+
+def SettingLink(path):
+    """a visualization setting such as 'nodes.defaultSize' as a link to the section of its structure; raises if the
+    setting does not exist, so that a page names only settings there are"""
+    global _settingAnchors
+    if _settingAnchors is None:
+        import structureModel
+        _settingAnchors = {}
+        definitions = dict((d['className'], d) for d in structureModel.StructureDefinitions())
+        def Walk(className, prefix):
+            for member in definitions[className]['members']:
+                typeName = str(member.get('type', ''))
+                name = prefix + member['pythonName']
+                if typeName in definitions:
+                    Walk(typeName, name + '.')
+                else:
+                    _settingAnchors[name] = 'sec-' + className.lower()
+        Walk('VisualizationSettings', '')
+    if path not in _settingAnchors:
+        raise ValueError('drawingSettings: ' + repr(path) + ' is not a visualization setting')
+    return '[`' + path + '`](#' + _settingAnchors[path] + ')'
+
+
+def DrawingAnchor(kind):
+    """the label of the section Drawing on the general page of a kind: 'Objects (Body)' -> 'sec-drawing-objectsbody'"""
+    return 'sec-drawing-' + re.sub('[^a-z]', '', kind.lower())
+
+
+def ItemKind(definition):
+    """the kind of an item, as the kinds of itemKindDefinitions.py name them"""
+    classType = definition.get('classType', '')
+    return 'Objects (' + definition.get('objectType', '') + ')' if classType == 'Object' else classType + 's'
+
+
+def DrawingMarkdown(definition):
+    """the section Drawing of an item page: the drawing of its kind, linked, what the item draws itself, and the
+    settings it reads beyond those of its kind (#2840)"""
+    text = (definition.get('drawing') or '').strip()
+    settings = definition.get('drawingSettings') or []
+    kind = ItemKind(definition)
+    if text == 'The item draws nothing.' and not settings:
+        body = text + '\n\n'
+    else:
+        body = ('Drawn as [all ' + kindPlural[kind] + '](#' + DrawingAnchor(kind) + ')'
+                + ('; ' + text[0].lower() + text[1:] if text else '.') + '\n\n')
+        if settings:
+            body += ('Settings beyond those of all ' + kindPlural[kind] + ': '
+                     + ', '.join(SettingLink(setting) for setting in settings) + '.\n\n')
+    return MarkdownHeading('Drawing', 1) + '\n\n' + LatexText2Markdown(body)
+
+
 def ItemExamples(definition):
     """the examples a definition names, as paths relative to python/; None if it names none (#2737)"""
     examples = definition.get('examples')
@@ -301,6 +355,9 @@ def WriteFile(parseInfo, parameterList):
 
         cWriter.DefFinishTable()
         vWriter.DefFinishTable()
+        if vWriter.sMarkdown.rstrip().endswith('|---|---|---|---|---|'): #no visualization parameters: no empty table (#2843)
+            vWriter = DeclarationWriter()
+            vWriter.AddDocu('`V' + parseInfo['class'] + '` has no parameters.', section='Visualization parameters', sectionLevel=1)
         if len(deprecatedNames) != 0:
             cWriter.sMarkdown += chr(10) + 'Renamed parameters, still taken with a `DeprecationWarning`: ' + '; '.join(deprecatedNames) + '.' + chr(10)
         if len(deprecatedUse) != 0:
@@ -334,6 +391,9 @@ def WriteFile(parseInfo, parameterList):
 
         writer += cWriter
         writer += vWriter
+        if not writer.sMarkdown.endswith('\n\n'):
+            writer.sMarkdown += '\n'
+        writer.sMarkdown += DrawingMarkdown(rawItemDefinitions[parseInfo['class']])
 
 #        if len(parseInfo['outputVariables']) != 0:
 #            dictOV = eval(parseInfo['outputVariables']) #output variables are given as a string, representing a dictionary with OutputVariables and descriptions
@@ -466,12 +526,21 @@ def WriteMarkdownPages(markdownItemList, folderDict, typeConversion, itemIntros,
         kindEntry = itemIntros[typeConversion[key]]
         typeText = MarkdownBanner(key) + LatexText2Markdown(kindEntry['overallDescription']) + '\n\n'
         typeText += '```{toctree}\n:maxdepth: 1\n\n'
-        if kindEntry['detailedDescription'].strip() != '':
+        if kindEntry['detailedDescription'].strip() != '' or kindEntry.get('drawing', '').strip() != '':
             #the general section of the kind is a page of its own and the first entry of the kind,
             #so that it and every item are siblings in the navigation (#2739)
             generalName = ItemTypeFileName(key)[:-len('Index')] + 'General'
             generalText = (LatexText2Markdown(RemoveIndentation2(kindEntry['detailedDescription'],
                                                                  removeAllSpaces=False)) + '\n\n')
+            if kindEntry.get('drawing', '').strip() != '':
+                #how all items of the kind are drawn, which their pages link to (#2840)
+                generalText += (MarkdownLabel(DrawingAnchor(typeConversion[key]).replace('-', ':')) + '\n'
+                                + MarkdownHeading('Drawing', 1) + '\n\n'
+                                + LatexText2Markdown(RemoveIndentation2(kindEntry['drawing'], removeAllSpaces=False))
+                                + '\n\n')
+                if kindEntry['drawingSettings']:
+                    generalText += ('The settings: ' + ', '.join(SettingLink(setting) for setting in kindEntry['drawingSettings'])
+                                    + '.\n\n')
             if typeConversion[key] == 'Markers':
                 #the table of all markers, generated from their declared types like the Interface
                 #block of every page (#2725)
@@ -554,6 +623,8 @@ def main():
                  'createFunctions':'',  #the mbs.Create... functions that add the item (#2737)
                  'examples':'',         #the examples of the page, instead of those found by name (#2737)
                  'image':'',            #the representative image of the item, a file in docs/figures/ (#2830)
+                 'drawing':'',          #how the item is drawn, in words, beyond the drawing of its kind (#2840)
+                 'drawingSettings':'',  #the visualization settings its drawing reads beyond those of its kind (#2840)
                  'miniExamplePerformanceTest':''} #the steps of the MiniExample's performance run (#2745); not on the page
     #this defines the columns of the line, which is then filled into this structure
     lineDefinition = ['lineType',       #[V|F[v]]P: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; P ... write Pybind11 interface

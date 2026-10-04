@@ -35,3 +35,13 @@ the kinematic tree has `MarkerKinematicTreeRigid` at a link. Their Jacobians are
 nodes, weighted. The general body markers act on the FFRF objects' **reference frame** only, and not
 at all on `ObjectGenericODE2` and `ObjectKinematicTree`, where `Assemble()` refuses them; the page of
 each object says which.
+
+(sec-drawing-objectssuperelement)=
+## Drawing
+
+A super element is drawn if `bodies.show` and its own `show` are True: its triangle mesh
+on its nodes, the deformation scaled by `bodies.deformationScaleFactor`, in its `color` or `bodies.defaultColor`;
+in a contour plot (`contour.outputVariable`, `contour.outputVariableComponent`) colored by the values at the nodes.
+`bodies.showNumbers` writes its number.
+
+The settings: [`bodies.show`](#sec-vsettingsbodies), [`bodies.showNumbers`](#sec-vsettingsbodies), [`bodies.defaultColor`](#sec-vsettingsbodies), [`bodies.deformationScaleFactor`](#sec-vsettingsbodies), [`contour.outputVariable`](#sec-vsettingscontour), [`contour.outputVariableComponent`](#sec-vsettingscontour).

@@ -514,6 +514,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='MarkerNodeCoordinate',
+    drawing=r'The item draws nothing.',
     cParentClass=ParentClassCMarker,
     overallDescription=r"""A node-Marker attached to a ABRV:ODE2 coordinate of a node; this marker allows to connect a coordinate-based constraint or connector to a nodal coordinate (also NodeGround); for ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinate`.""",
     classType=ClassTypeMarker,
@@ -597,6 +598,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='MarkerNodeCoordinates',
+    drawing=r'The item draws nothing.',
     cParentClass=ParentClassCMarker,
     overallDescription=r"""A node-Marker attached to all ABRV:ODE2 coordinates of a node. IN CONTRAST to MarkerNodeCoordinate, the marker coordinates INCLUDE the reference values! For ABRV:ODE1 coordinates use `MarkerNodeODE1Coordinates`.""",
     classType=ClassTypeMarker,
@@ -671,6 +673,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='MarkerNodeODE1Coordinate',
+    drawing=r'The item draws nothing.',
     cParentClass=ParentClassCMarker,
     overallDescription=r'A node-Marker attached to a ABRV:ODE1 coordinate of a node.',
     classType=ClassTypeMarker,
@@ -744,6 +747,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='MarkerNodeRotationCoordinate',
+    drawing=r'The item draws nothing.',
     cParentClass=ParentClassCMarker,
     #checked by Assemble, as all requestedNodeTypes (#2817)
     requestedNodeTypes=[['Orientation']],
@@ -1102,6 +1106,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='MarkerSuperElementPosition',
+    drawing=r'At the weighted position of its mesh nodes, deformed with `bodies.deformationScaleFactor`.',
+    drawingSettings=['bodies.deformationScaleFactor'],
     cParentClass=ParentClassCMarker,
     overallDescription=r'A position marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it is in its current implementation inefficient for large number of meshNodeNumbers). The marker acts on the mesh (interface) nodes, not on the underlying nodes of the object.',
     classType=ClassTypeMarker,
@@ -1242,6 +1248,8 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='MarkerSuperElementRigid',
+    drawing=r'At the weighted position of its mesh nodes, deformed with `bodies.deformationScaleFactor`, with its frame.',
+    drawingSettings=['bodies.deformationScaleFactor'],
     cParentClass=ParentClassCMarker,
     overallDescription=r'A position and orientation (rigid-body) marker attached to a SuperElement, such as ObjectFFRF, ObjectGenericODE2 and ObjectFFRFreducedOrder (for which it may be inefficient). The marker acts on the mesh nodes, not on the underlying nodes of the object. Note that in contrast to the MarkerSuperElementPosition, this marker needs a set of interface nodes which are not aligned at one line, such that these node points can represent a rigid body motion. Note that definitions of marker positions are slightly different from MarkerSuperElementPosition.',
     classType=ClassTypeMarker,
@@ -1691,6 +1699,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='MarkerObjectODE2Coordinates',
+    drawing=r'The item draws nothing.',
     cParentClass=ParentClassCMarker,
     overallDescription=r'A Marker attached to all coordinates of an object (currently only body is possible), e.g. to apply special constraints or loads on all coordinates. The measured coordinates INCLUDE reference + current coordinates.',
     classType=ClassTypeMarker,
@@ -1768,6 +1777,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='MarkerBodyCable2DShape',
+    drawing=r'Circles at the points of the cable it acts on.',
     addProtectedC=r"""    static constexpr Index maxNumberOfSegments = 12; //maximum number of contact segments
 """,
     cParentClass=ParentClassCMarker,
@@ -1866,6 +1876,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='MarkerBodyCable2DCoordinates',
+    drawing=r'Circles at the points of the cable it acts on.',
     cParentClass=ParentClassCMarker,
     overallDescription=r'A special Marker attached to the coordinates of a 2D ANCF beam finite element with cubic interpolation.',
     classType=ClassTypeMarker,
@@ -1952,6 +1963,7 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='MarkerBodyBeamShape',
+    drawing=r'Spheres at the points of the beam it acts on.',
     cParentClass=ParentClassCMarker,
     overallDescription=r'A special Marker attached to a 3D beam finite element which provides at least position and tangent to the beam axis.',
     classType=ClassTypeMarker,

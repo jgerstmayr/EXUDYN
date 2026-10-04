@@ -46,6 +46,11 @@ The parameters of `VObjectContactCircleCable2D`, given as `visualization`:
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); with `connectors.showContact`, the circle (`showContactCircle`, 4 times `general.circleTiling` segments), the contact points of the cable, and lines where it penetrates.
+
+Settings beyond those of all connectors: [`connectors.showContact`](#sec-vsettingsconnectors), [`contact.contactPointsDefaultSize`](#sec-vsettingscontact), [`general.circleTiling`](#sec-vsettingsgeneral).
 (description-objectcontactcirclecable2d)=
 ## Detailed description
 

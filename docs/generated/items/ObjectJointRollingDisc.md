@@ -50,6 +50,12 @@ The parameters of `VObjectJointRollingDisc`, given as `visualization`:
 | **discWidth** | float |  | 0.1 | width of disc for drawing |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all joints](#sec-drawing-objectsjoint); the disc of width `discWidth`, with 4 times `general.cylinderTiling` segments, and its axis.
+
+Settings beyond those of all joints: [`general.cylinderTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

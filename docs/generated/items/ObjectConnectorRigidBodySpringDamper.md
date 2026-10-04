@@ -61,6 +61,12 @@ The parameters of `VObjectConnectorRigidBodySpringDamper`, given as `visualizati
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); a sphere of diameter `drawSize` at each marker and a cylinder between them; with `connectors.showJointAxes` the frames of both markers.
+
+Settings beyond those of all connectors: [`connectors.jointAxesLength`](#sec-vsettingsconnectors), [`connectors.jointAxesRadius`](#sec-vsettingsconnectors), [`connectors.showJointAxes`](#sec-vsettingsconnectors), [`general.axesTiling`](#sec-vsettingsgeneral), [`general.cylinderTiling`](#sec-vsettingsgeneral), [`general.sphereTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

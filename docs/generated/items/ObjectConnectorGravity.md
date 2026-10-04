@@ -43,6 +43,10 @@ The parameters of `VObjectConnectorGravity`, given as `visualization`:
 | **show** | Bool |  | False | set true to draw a line between the two markers, e.g. to see which bodies attract each other |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); if shown - `show` is False by default -, a line between the markers.
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

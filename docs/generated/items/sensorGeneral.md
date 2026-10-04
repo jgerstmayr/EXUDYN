@@ -52,3 +52,13 @@ other sensor.
 
 Sensors are drawn as small symbols; with `visualizationSettings.sensors.traces` the positions, and
 vectors or frames, of position sensors are drawn along their history.
+
+(sec-drawing-sensors)=
+## Drawing
+
+A sensor is drawn if `sensors.show` and its own `show` are True, at the position it measures: a symbol
+of size `sensors.defaultSize` - a fraction of `openGL.advanced.initialMaxSceneSize` if -1 -, simple with
+`sensors.drawSimplified`, in `sensors.defaultColor`. `sensors.showNumbers` writes its number. A sensor without a
+position draws nothing; traces of sensors are drawn with `sensors.traces`.
+
+The settings: [`sensors.show`](#sec-vsettingssensors), [`sensors.defaultSize`](#sec-vsettingssensors), [`sensors.defaultColor`](#sec-vsettingssensors), [`sensors.drawSimplified`](#sec-vsettingssensors), [`sensors.showNumbers`](#sec-vsettingssensors), [`openGL.advanced.initialMaxSceneSize`](#sec-vsettingsopengladvanced).

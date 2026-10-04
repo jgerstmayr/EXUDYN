@@ -50,6 +50,10 @@ The parameters of `VObjectConnectorCoordinate`, given as `visualization`:
 | **drawSize** | float |  | -1. | drawing size = link size; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all constraints](#sec-drawing-objectsconstraint); a circle of diameter `drawSize` at the position of each marker, the one of marker 0 red.
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

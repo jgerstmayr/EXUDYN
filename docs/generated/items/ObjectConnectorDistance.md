@@ -47,6 +47,12 @@ The parameters of `VObjectConnectorDistance`, given as `visualization`:
 | **drawSize** | float |  | -1. | the diameter of the rod drawn between the markers if visualizationSettings.connectors.drawSimplified is False; -1 means a tenth of connectors.defaultSize; with drawSimplified, the connector is a line |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all constraints](#sec-drawing-objectsconstraint); a line between the markers with `connectors.drawSimplified`, otherwise a rod of diameter `drawSize`.
+
+Settings beyond those of all constraints: [`connectors.drawSimplified`](#sec-vsettingsconnectors), [`general.cylinderTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

@@ -44,6 +44,12 @@ The parameters of `VObjectConnectorCoordinateSpringDamper`, given as `visualizat
 | **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all connectors](#sec-drawing-objectsconnector); a spring of diameter `drawSize` between the positions of the markers, if they have one, drawn as the spring of ObjectConnectorSpringDamper.
+
+Settings beyond those of all connectors: [`connectors.curveTiling`](#sec-vsettingsconnectors), [`connectors.drawSimplified`](#sec-vsettingsconnectors), [`connectors.springNumberOfWindings`](#sec-vsettingsconnectors), [`general.cylinderTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

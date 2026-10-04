@@ -57,6 +57,17 @@ markers therefore means something different with the one and with the other.
 are added by the Create functions: `CreateRevoluteJoint` adds two `MarkerBodyRigid`, `CreateForce` a
 `MarkerBodyPosition` or `MarkerBodyRigid`, `CreateRigidBody` with gravity a `MarkerBodyMass`.
 
+(sec-drawing-markers)=
+## Drawing
+
+A marker with a position is drawn if `markers.show` and its own `show` are True: as a symbol of size
+`markers.defaultSize` - a fraction of `openGL.advanced.initialMaxSceneSize` if -1 -, three crossed lines with
+`markers.drawSimplified`, a cube otherwise, in `markers.defaultColor`; with `markers.showBasis` the frame of a marker
+that has an orientation, of length `markers.basisSize` (`general.axesTiling`). `markers.showNumbers` writes its
+number. A marker on coordinates has no position and draws nothing.
+
+The settings: [`markers.show`](#sec-vsettingsmarkers), [`markers.defaultSize`](#sec-vsettingsmarkers), [`markers.defaultColor`](#sec-vsettingsmarkers), [`markers.drawSimplified`](#sec-vsettingsmarkers), [`markers.showNumbers`](#sec-vsettingsmarkers), [`markers.showBasis`](#sec-vsettingsmarkers), [`markers.basisSize`](#sec-vsettingsmarkers), [`general.axesTiling`](#sec-vsettingsgeneral), [`openGL.advanced.initialMaxSceneSize`](#sec-vsettingsopengladvanced).
+
 ## All markers
 
 ```{tabularcolumns} |\Y{0.3}|\Y{0.3}|\Y{0.2}|\Y{0.2}|

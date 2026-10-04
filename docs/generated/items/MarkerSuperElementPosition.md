@@ -41,6 +41,11 @@ The parameters of `VMarkerSuperElementPosition`, given as `visualization`:
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **showMarkerNodes** | Bool |  | True | set true, if all nodes are shown (similar to marker, but with less intensity) |
 
+## Drawing
+
+Drawn as [all markers](#sec-drawing-markers); at the weighted position of its mesh nodes, deformed with `bodies.deformationScaleFactor`.
+
+Settings beyond those of all markers: [`bodies.deformationScaleFactor`](#sec-vsettingsbodies).
 (description-markersuperelementposition)=
 ## Detailed description
 

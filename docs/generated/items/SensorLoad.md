@@ -35,6 +35,9 @@ The parameters of `VSensorLoad`, given as `visualization`:
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; the sensor is drawn at the position of the marker of its load, if the marker has a position |
 
+## Drawing
+
+Drawn as [all sensors](#sec-drawing-sensors); at the position of the marker of its load, if the marker has a position; a load on a coordinate has none.
 (description-sensorload)=
 ## Detailed description
 

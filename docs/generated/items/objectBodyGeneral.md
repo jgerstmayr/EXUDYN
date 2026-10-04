@@ -52,3 +52,13 @@ lists the body markers its access functions allow.
 
 `mbs.CreateGround`, `mbs.CreateMassPoint` and `mbs.CreateRigidBody` add a body with its node - and
 with a `gravity` argument a `MarkerBodyMass` with a `LoadMassProportional`.
+
+(sec-drawing-objectsbody)=
+## Drawing
+
+A body is drawn if `bodies.show` and its own `show` are True: its `graphicsData`, in its frame,
+with the colors given there; `bodies.defaultColor` where a color is -1. In a contour plot (`contour.outputVariable`,
+`contour.outputVariableComponent`) with `contour.rigidBodiesColored`, the body takes the color of its value.
+`bodies.showNumbers` writes its number.
+
+The settings: [`bodies.show`](#sec-vsettingsbodies), [`bodies.showNumbers`](#sec-vsettingsbodies), [`bodies.defaultColor`](#sec-vsettingsbodies), [`contour.outputVariable`](#sec-vsettingscontour), [`contour.outputVariableComponent`](#sec-vsettingscontour), [`contour.rigidBodiesColored`](#sec-vsettingscontour).

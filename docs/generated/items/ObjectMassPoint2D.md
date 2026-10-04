@@ -45,6 +45,10 @@ The parameters of `VObjectMassPoint2D`, given as `visualization`:
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 | **graphicsData** | BodyGraphicsData |  |  | Structure contains data for body visualization; data is defined in special list / dictionary structure |
 
+## Drawing
+
+Drawn as [all bodies](#sec-drawing-objectsbody); its `graphicsData`, moved with the node; without `graphicsData` only the node is seen.
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

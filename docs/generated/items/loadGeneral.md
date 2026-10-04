@@ -51,3 +51,16 @@ it has to use itself to increase the load.
 unless a marker is given instead of a body; and the
 `gravity` argument of `CreateMassPoint` and `CreateRigidBody` adds a `MarkerBodyMass` with a
 `LoadMassProportional`.
+
+(sec-drawing-loads)=
+## Drawing
+
+A load on a marker with a position is drawn if `loads.show` and its own `show` are True: an arrow at the
+marker, of length `loads.defaultSize` - a fraction of `openGL.advanced.initialMaxSceneSize` if -1 -, or, with
+`loads.fixedLoadSize` False, of the length of the load times `loads.loadSizeFactor`; lines with
+`loads.drawSimplified`, otherwise a 3D arrow of radius `loads.defaultRadius` (`general.axesTiling`), in
+`loads.defaultColor`. With `loads.drawWithUserFunction`, the value of the user function is drawn - of a symbolic one
+always, of a Python one only with `general.useMultiThreadedRendering` False, as the render thread cannot call Python.
+`loads.showNumbers` writes its number. A load on a coordinate draws nothing.
+
+The settings: [`loads.show`](#sec-vsettingsloads), [`loads.defaultSize`](#sec-vsettingsloads), [`loads.defaultRadius`](#sec-vsettingsloads), [`loads.defaultColor`](#sec-vsettingsloads), [`loads.drawSimplified`](#sec-vsettingsloads), [`loads.fixedLoadSize`](#sec-vsettingsloads), [`loads.loadSizeFactor`](#sec-vsettingsloads), [`loads.drawWithUserFunction`](#sec-vsettingsloads), [`loads.showNumbers`](#sec-vsettingsloads), [`general.axesTiling`](#sec-vsettingsgeneral), [`general.useMultiThreadedRendering`](#sec-vsettingsgeneral), [`openGL.advanced.initialMaxSceneSize`](#sec-vsettingsopengladvanced).

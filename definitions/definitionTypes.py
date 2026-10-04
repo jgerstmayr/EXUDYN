@@ -962,14 +962,15 @@ def _ResolveFunctionReference(reference, className, classType, parentClass):
 
 
 #%%************************************************************************************************
-def ItemKindDefinition(kind, overallDescription, detailedDescription=''):
+def ItemKindDefinition(kind, overallDescription, detailedDescription='', drawing='', drawingSettings=[]):
     """Use site: what all items of one kind have in common - the page of the kind in the reference
     manual (#2725). kind is the name of that page: 'Nodes', 'Objects (Body)', ..., 'Sensors';
     overallDescription is the paragraph under its heading, detailedDescription the general section
     that every item of the kind refers to - a page of its own, 'General info for all nodes', the
-    first entry of the kind (#2739)"""
+    first entry of the kind (#2739); drawing is how every item of the kind is drawn, and drawingSettings the visualization
+    settings that this drawing reads, as 'nodes.defaultSize' - an item names only those beyond them (#2840)"""
     return {'kind': kind, 'overallDescription': overallDescription,
-            'detailedDescription': detailedDescription}
+            'detailedDescription': detailedDescription, 'drawing': drawing, 'drawingSettings': list(drawingSettings)}
 
 
 #%%************************************************************************************************

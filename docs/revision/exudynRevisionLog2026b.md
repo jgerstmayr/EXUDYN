@@ -14996,3 +14996,35 @@ Tests: `testConnectorLinesAndSensorLoad` (the distance connector a line, then a 
 SensorLoad drawn); the settings variant `connectors.drawSimplified=False` replaces `springDraw3D=True` in
 `settings.json`; the conversion reference lists `drawSimplified` and no longer the removed parameters.
 `itemDrawingState.md` written again: 14 items draw nothing, none with a parameter left.
+
+<a id="rg13-8-2"></a>
+### RG13.8.2, RG13.8.3 — every item page says how it is drawn (2026-10-04, #2840)
+
+*(Maintainer 2026-10-04: "Do next RG13.8 steps".)*
+
+**RG13.8.3, the kinds**: each entry of `itemKindDefinitions.py` has `drawing`, how all items of the kind are drawn - the
+switches (`nodes.show` and the item's `show`, ...), size and color and what -1 means, the contour plot, the numbers, the
+tilings of `general` and when an item takes 4 times as many, what draws nothing - and `drawingSettings`, the settings
+that drawing reads. `ItemKindDefinition` takes both. The page *General info for all <kind>* gets a section *Drawing* with
+a label `sec-drawing-<kind>` and the settings as links to their structure on the page of the visualization settings;
+*Objects (Object)*, which had no general page, gets one (its only item, `ObjectGenericODE1`, draws nothing).
+
+**RG13.8.2, the items**: two new fields of the definitions, `drawing` - what the item draws beyond its kind, in one or
+two sentences, or `'The item draws nothing.'` - and `drawingSettings`, the settings its drawing reads beyond those of
+its kind. They were seeded once from the C++ (`itemDrawingReport.py`: the settings read, minus those of the kind) and
+the texts written from the code of each `UpdateGraphics`: 64 items have a text, 14 say that they draw nothing, the
+nodes, markers, loads and sensors that draw as their kind have none; 44 items name settings of their own. The emitter
+writes, after *Visualization parameters*, the section **Drawing**: "Drawn as [all joints](#sec-drawing-objectsjoint);
+the axis as two cylinders ...", then "Settings beyond those of all joints: [`connectors.jointAxesLength`](...), ...".
+A setting that does not exist stops the generator (`SettingLink` resolves each path through the structure
+definitions). An item without visualization parameters gets "`V<item>` has no parameters." instead of an empty table.
+`definitions/README.md` names the two fields.
+
+**Checked against the code**: `python/testing/test_itemDrawing.py` - for every item, each setting its drawing reads is
+named by its kind or by itself, and it names none that its drawing does not read; an item without drawing code says
+that it draws nothing; every kind has its drawing. A change of an `UpdateGraphics` that reads another setting fails
+the test until the definition says so.
+
+Seen on the way, not changed: `ObjectContactCurveCircles` reads the deprecated `connectors.contactPointsDefaultSize`
+(0.02) for the points of its curve; `contact.contactPointsDefaultSize`, the setting the deprecation points to, is 0.001,
+and switching would make the points twenty times smaller - to be decided with the deprecation of the setting.

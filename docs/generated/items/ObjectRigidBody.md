@@ -52,6 +52,10 @@ The parameters of `VObjectRigidBody`, given as `visualization`:
 | **graphicsDataUserFunction** | ObjectRigidBodyGraphicsDataUserFunction |  | 0 | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function; the graphics elements need to be defined in the local body coordinates and are transformed by mbs to global coordinates |
 | **graphicsData** | BodyGraphicsData |  |  | Structure contains data for body visualization; data is defined in special list / dictionary structure |
 
+## Drawing
+
+Drawn as [all bodies](#sec-drawing-objectsbody); its `graphicsData` in the body frame, and what its `graphicsDataUserFunction` returns; with a contour plot (`contour.rigidBodiesColored`) colored by the value at the reference point.
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

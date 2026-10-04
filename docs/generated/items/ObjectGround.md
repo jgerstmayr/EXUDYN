@@ -46,6 +46,10 @@ The parameters of `VObjectGround`, given as `visualization`:
 | **graphicsDataUserFunction** | ObjectGroundGraphicsDataUserFunction |  | 0 | A Python function which returns a bodyGraphicsData object, which is a list of graphics data in a dictionary computed by the user function |
 | **graphicsData** | BodyGraphicsData |  |  | Structure contains data for body visualization; data is defined in special list / dictionary structure |
 
+## Drawing
+
+Drawn as [all bodies](#sec-drawing-objectsbody); its `graphicsData`, at its reference position, and what its `graphicsDataUserFunction` returns.
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:

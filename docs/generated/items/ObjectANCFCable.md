@@ -52,6 +52,12 @@ The parameters of `VObjectANCFCable`, given as `visualization`:
 | **radius** | float |  | 0. | if radius==0, only the centerline is drawn; else, a cylinder with radius is drawn; circumferential tiling follows general.cylinderTiling and beam axis tiling follows bodies.beams.axialTiling |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color of the object; if R==-1, use default color |
 
+## Drawing
+
+Drawn as [all finite elements](#sec-drawing-objectsfiniteelement); a tube of radius `radius` along the axis, of `bodies.beams.axialTiling` segments and `general.cylinderTiling` around, or a line if the radius is 0.
+
+Settings beyond those of all finite elements: [`bodies.beams.axialTiling`](#sec-vsettingsbeams), [`bodies.beams.crossSectionFilled`](#sec-vsettingsbeams), [`bodies.beams.reducedAxialInterploation`](#sec-vsettingsbeams), [`general.cylinderTiling`](#sec-vsettingsgeneral).
+
 ## Output variables
 
 Available as `OutputVariableType` in sensors, `Get...Output()` and other functions:
