@@ -1577,7 +1577,7 @@ referenceHT / localHT, just to show how it works and for the tests")* **Examples
 <a id="rg16-13"></a>
 **RG16.13** *(group RG16; maintainer 2026-10-04: "ObjectKinematicTree still has only jointTransformations and
 jointOffsets, but I believe that jointHTs would be much more convenient and could also boost the internal
-computations (?)")* **`ObjectKinematicTree` and its `jointHTs`** (#2824). The parameter exists since RG16.4.1 (#2798):
+computations (?)")* **DONE 2026-10-04** **`ObjectKinematicTree` and its `jointHTs`** (#2824). The parameter exists since RG16.4.1 (#2798):
 `jointHTs` takes a list of `exu.HT` or 4x4 matrices (the type `HomogeneousTransformationList` of the definitions) and
 is a view of the two stored lists `jointTransformations` and `jointOffsets`; `Robot.CreateKinematicTree` gives it.
     - **RG16.13.1** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-13) `mbs.CreateKinematicTree` passes
@@ -1609,7 +1609,7 @@ is a view of the two stored lists `jointTransformations` and `jointOffsets`; `Ro
       setting), the old path as it is;
     - **RG16.13.8** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-13-6) the comparison: every test model and MiniExample of the kinematic tree with both paths (equal to
       round-off), and the time per evaluation on trees of 6 and of 50 links;
-    - **RG16.13.9** if the HT path agrees and is not slower: it becomes the only one, the switch goes, and the T66
+    - **RG16.13.9** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-13-9) if the HT path agrees and is not slower: it becomes the only one, the switch goes, and the T66
       functions of `KinematicsBasics.h` go with it - except what the 6D motion and force algebra still needs, possibly in a
       more suitable form;
     - **RG16.13.10** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-13-6) (#2845) the `forceUserFunction` of
@@ -1775,7 +1775,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15 | #2746 | objects computing from coordinates passed in: the work after the evaluation of RG15.1, not planned yet |
-| RG16.13 | #2828, #2829 | `ObjectKinematicTree` on the HT directly: RG16.13.6 to RG16.13.9 |
 
 <a id="not-decided"></a>
 ### Not decided to be resolved

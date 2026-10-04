@@ -4,8 +4,7 @@
 # Details:  The forceUserFunction of ObjectKinematicTree, which receives the joint coordinates q and velocities q_t
 #           (#2845): two equal trees of a revolute and a prismatic joint under gravity, the first damped by the D control
 #           of the tree (jointDControlVector), the second by a user function that returns the same forces from q_t;
-#           both must move alike. Run with exudyn.experimental.kinematicTreeHT as well, the computation on the
-#           placements of the links (#2829).
+#           both must move alike.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-04
@@ -44,26 +43,22 @@ def Tree(mbs, userFunction=0):
 def UFforce(mbs, t, itemNumber, q, q_t):
     return [-damping[0]*q_t[0], -damping[1]*q_t[1]]
 
-result = 0
-for useHT in [False, True]:
-    exu.experimental.kinematicTreeHT = useHT
-    SC = exu.SystemContainer()
-    mbs = SC.AddSystem()
-    nControl = Tree(mbs)
-    nUser = Tree(mbs, UFforce)
-    mbs.Assemble()
+SC = exu.SystemContainer()
+mbs = SC.AddSystem()
+nControl = Tree(mbs)
+nUser = Tree(mbs, UFforce)
+mbs.Assemble()
 
-    simulationSettings = exu.SimulationSettings()
-    simulationSettings.timeIntegration.numberOfSteps = 500
-    simulationSettings.timeIntegration.endTime = 1
-    simulationSettings.solution.file.write = False
-    mbs.SolveDynamic(simulationSettings)
+simulationSettings = exu.SimulationSettings()
+simulationSettings.timeIntegration.numberOfSteps = 500
+simulationSettings.timeIntegration.endTime = 1
+simulationSettings.solution.file.write = False
+mbs.SolveDynamic(simulationSettings)
 
-    qControl = mbs.GetNodeOutput(nControl, exu.OutputVariableType.Coordinates)
-    qUser = mbs.GetNodeOutput(nUser, exu.OutputVariableType.Coordinates)
-    exu.Print('kinematicTreeHT=', useHT, ': q control=', qControl, ', q user function=', qUser)
-    result += np.sum(qControl) + (1 if np.linalg.norm(qControl - qUser) > 1e-10 else 0) #the second part must be zero
-exu.experimental.kinematicTreeHT = False
+qControl = mbs.GetNodeOutput(nControl, exu.OutputVariableType.Coordinates)
+qUser = mbs.GetNodeOutput(nUser, exu.OutputVariableType.Coordinates)
+exu.Print('q control=', qControl, ', q user function=', qUser)
+result = np.sum(qControl) + (1 if np.linalg.norm(qControl - qUser) > 1e-10 else 0) #the second part must be zero
 
 exu.Print('kinematicTreeUserFunctionTest result=', result)
 exu.sys['testResult'] = result

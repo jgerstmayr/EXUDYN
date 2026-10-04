@@ -4310,8 +4310,6 @@ class Experimental:
     """debug output of the EigenDense solver with full pivoting: 0 (default) = none, 1 = rank and information, 2 = also the matrices."""
     markerSuperElementRigidTexpSO3:int
     """if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters."""
-    kinematicTreeHT:bool
-    """if True, ObjectKinematicTree computes its kinematics, mass matrix and forces on the placements of its links (homogeneous transformations) instead of the transformations of Featherstone; the same results, for the comparison of #2829; default False."""
 
 class Special:
     """special attributes and functions, such as global (solver) flags or helper functions; not intended for regular users; for available features, see the C++ code class PySpecial"""

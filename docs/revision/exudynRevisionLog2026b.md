@@ -14906,3 +14906,31 @@ The time per evaluation (mass matrix and forces, RK44 with four of each per step
 revolute and prismatic joints: 6 links 4.29 us (Featherstone) against 3.19 us (placements); 50 links 126.9 us against
 127.7 us - there the solution of the 50x50 mass matrix in each stage dominates. The placements agree to round-off and
 are not slower: RG16.13.9 follows.
+
+<a id="rg16-13-9"></a>
+### RG16.13.9 — the kinematic tree computes on the placements only (2026-10-04, #2829)
+
+*(Maintainer 2026-10-04: "do as far as possible RG16.13.6-.9".)* RG16.13.8: the placements agree to round-off and are
+not slower. So:
+
+- `ComputeTreeTransformations` and `ComputeMassMatrixAndODE2LHS` are the HT functions of RG16.13.7, the old ones are
+  gone with `JointTransformMotionSubspace66`, `GetNegativeGravity6D` and `AddExternalForces6D`, and so is the switch
+  `exudyn.experimental.kinematicTreeHT`;
+- `ComputeTreeTransformations` returns the **placements** of the links (in the base, or in their parents), no longer
+  their inverses: the twelve `T66toRotationTranslationInverse` of the `Get...KinematicTree` functions,
+  `ComputeRigidBodyMarkerDataKT`, `ComputeJacobian`, the potential energy and `UpdateGraphics` take rotation and
+  translation as they are; `UpdateGraphics` asks for the placements in the base instead of composing them itself;
+- `ComputeMassMatrixAndODE2LHS` lost its unused argument `ltg`;
+- the temporary members `linkInertias`, `motionSubspaces`, `jointTempT66` and `jointForces` of the definition are gone
+  (the work arrays are per thread in `KinematicTreeHT`), and the type `InertiaList`; `jointTransformationsTemp(Vis)` hold
+  the placements and say so;
+- `KinematicsBasics.h` keeps only the types `Transformation66` (= `HomogeneousTransformation`) and
+  `Transformation66List` - the names stay, because the definitions and the generators use them; all T66 functions,
+  `InertiaAtRefPoint` and a second, conflicting `Matrix6DList` went. The algebra of motions, forces and inertias - "what
+  the 6D motion and force algebra still needs, in a more suitable form" - is the namespace `KinematicTreeHT` of
+  `CObjectKinematicTree.cpp`: placement, joint motion, joint force, motion to the link, force to the parent, inertia.
+
+Results: `createKinematicTreeTest.py` moves by -1.2e-13 (of 3.34), its reference is updated; every other test model
+keeps its value. `kinematicTreeUserFunctionTest.py` runs one computation now. The AVX2 reference of
+`createKinematicTreeTest.py` (`AVX2ReferenceSolutionUpdate`, 3.340830142730491) is not re-measured here - the fast
+module is a release test (`runTestSuite.py --fast-module`).

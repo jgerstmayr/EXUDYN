@@ -630,7 +630,6 @@ THomogeneousTransformationList     = TypeSpec('HomogeneousTransformationList')
 TAccessFunctionType                = TypeSpec('AccessFunctionType')
 TBodyGraphicsDataList              = TypeSpec('BodyGraphicsDataList')
 TCNodeGroup                        = TypeSpec('CNodeGroup')
-TInertiaList                       = TypeSpec('InertiaList')
 TJointTypeList                     = TypeSpec('JointTypeList')
 TSTDstring                         = TypeSpec('STDstring')
 

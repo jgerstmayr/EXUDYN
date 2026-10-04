@@ -305,8 +305,6 @@ pb.DefDataAccess('experimental.eigenFullPivotLUsolverDebugLevel','debug output o
                        dataType='int', isTopLevel = True)
 pb.DefDataAccess('experimental.markerSuperElementRigidTexpSO3','if nonzero (default), MarkerSuperElementRigid uses the additional tangent operator TexpSO3 of the rotation parameters',
                        dataType='int', isTopLevel = True)
-pb.DefDataAccess('experimental.kinematicTreeHT','if True, ObjectKinematicTree computes its kinematics, mass matrix and forces on the placements of its links (homogeneous transformations) instead of the transformations of Featherstone; the same results, for the comparison of #2829; default False',
-                       dataType='bool', isTopLevel = True)
 
 pb.AddDocu('', section='exudyn.special', sectionLevel=1, sectionLabel='sec-exudyn-special')
 pb.CppCode('        m.attr("special") = py::cast(&pySpecial);\n') 

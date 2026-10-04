@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 269 | 1.12.288 |
+| 1.12 | Metheney | 270 | 1.12.289 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.289** `IMPROVEMENT` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectKinematicTree computes directly with homogeneous transformations (#2829)
+  - description: The maintainer, 2026-10-04: 'check the main relevant functions in KinematicTree (I suppose ComputeTreeTransformations and ComputeMassMatrixAndODE2LHS); make two local implementations in C++, with a exudyn.experimental switch for the testing. Probably, the evaluations need to be slightly adjusted, as the Featherstone version uses an inverse of the HTs. Most functions like Translation2T66 are just wrappers that did the T66 and the HT path, but with an optimized version just with the HTs, it should be easier to implement and faster. If comparison shows that the new path with HTs works, the old T66 functions could mostly go; probably some 6D motion and force computations will stay - possibly in a more suitable/faster form.' revision2026b step RG16.13.6 to RG16.13.9.
+  - **notes:** ObjectKinematicTree computes its kinematics, mass matrix and forces on the placements of its links (homogeneous transformations); the results agree with the earlier computation to round-off, about 25% faster for small trees.
+  - date resolved: **2026-10-04 17:15**, date raised: 2026-10-04
 - **1.12.288** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectKinematicTree.forceUserFunction receives no velocities (#2845)
   - description: The forceUserFunction(mbs, t, itemNumber, q, q\_t) of ObjectKinematicTree is called with tempVector2 as q\_t, which nothing fills: the function receives an empty list (or a stale one) instead of the joint velocities. No example or test model uses this user function. Found while moving the joint forces into one function for both paths of revision2026b step RG16.13.7.
   - **notes:** Fixed: the forceUserFunction of ObjectKinematicTree receives the joint velocities q\_t; it received an empty vector.
