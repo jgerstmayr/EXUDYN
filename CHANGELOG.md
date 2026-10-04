@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 263 | 1.12.282 |
+| 1.12 | Metheney | 264 | 1.12.283 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.283** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a 3D beam without section geometry is drawn with a coordinate frame at every tile (#2837)
+  - description: UpdateGraphicsBeam3D (ObjectBeamGeometricallyExact, ObjectANCFBeam) draws a beam without polygonal section geometry as a line - and, marked 'temporary!' in the code, an orthonormal basis of size nodes.basisSize at each of the axialTiling points, also when nodes are not shown. Found with the item images of revision2026b step RG3.31: the default drawing of a beam is a row of arrows. The basis belongs to a setting (or goes), not to every line-drawn beam.
+  - **notes:** Fixed: a 3D beam (ObjectANCFBeam, ObjectBeamGeometricallyExact) without section geometry is drawn as a line; it no longer draws a coordinate frame at every tiling point. The frames are those of its nodes (visualizationSettings.nodes.showBasis).
+  - date resolved: **2026-10-04 15:01**, date raised: 2026-10-04
 - **1.12.282** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SystemContainer.Append is documented, the function is AppendSystem (#2841)
   - description: The reference manual (pybindSystemContainer.py, the MainSystem introduction and the copy example of the general information) and two error messages of CSystem.cpp and MainSystem.cpp tell to call SC.Append(mbs); the SystemContainer has no Append - its function is AppendSystem (PybindModule.cpp), which simulatorCouplingTwoMbs.py uses. Found by running the examples of the reference manual as notebooks, revision2026b step RG17.4.
   - **notes:** Fixed: the reference manual (SystemContainer, the MainSystem introduction, the copy example) and the error messages of CSystem.cpp and MainSystem.cpp name SC.AppendSystem(mbs), the function the SystemContainer has.

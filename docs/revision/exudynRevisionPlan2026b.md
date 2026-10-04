@@ -506,7 +506,8 @@ where one fits), for the items whose page gains from a picture.
       maintainer's settings of the images (1080 x 700, lightRadiusVariations 41, ...) kept and all images drawn
       again; `itemImages.py` sets the window flags itself, so that the FFRF scene opens no window also in a session
       that imported exudyn before.
-    - **RG3.31.4** *open* (#2837) a 3D beam without polygonal section geometry is drawn as a line with an orthonormal
+    - **RG3.31.4** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg3-31-4) *(maintainer 2026-10-04: "fix
+      RG3.31.4")* (#2837) a 3D beam without polygonal section geometry is drawn as a line with an orthonormal
       basis at every tile (`UpdateGraphicsBeam3D`, marked "temporary!" in the code), found with the image of
       `ObjectBeamGeometricallyExact`.
 
@@ -1737,7 +1738,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582, #2776 | the graphics regression suite - open: RG2.3.3.8 the raytracer that can hang in `RedrawAndGetImage` |
-| RG3.31.4 | #2837 | a 3D beam without section geometry is drawn with a frame at every tile |
 | RG6.9 | #2839 | curves of connectors with a tiling of their own, as watertight tubes; spring windings in 3D |
 | RG13.8 | #2840 | how an item is drawn: an inventory of the `UpdateGraphics` functions, then on the pages |
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |

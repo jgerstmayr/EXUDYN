@@ -339,24 +339,12 @@ void UpdateGraphicsBeam3D(const VisualizationSettings& visualizationSettings, Vi
 	{
 		Float3 p0;
 		Float3 p1;
-		//drawn as line:
+		//drawn as line, as the 2D beams are; the frames are those of the nodes (nodes.showBasis), not a triad at every tile (#2837)
 		for (Index i = 0; i <= tiling; i++)
 		{
 			Real x = (Real)i *deltaX - 0.5*L;
 			Vector3D pLoc({ x, 0., 0. });
-			HomogeneousTransformation HT1 = cObject->GetLocalPositionFrame(pLoc, ConfigurationType::Visualization);
-
-			p1.CopyFrom(HT1.GetTranslation());
-
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-			//temporary!
-			//Matrix3D A = cObject->GetRotationMatrix(pLoc, ConfigurationType::Visualization);
-			//Vector3D pos = cObject->GetPosition(pLoc, ConfigurationType::Visualization);
-			//pout << "pos" << i << "=" << pos << "\n";
-			EXUvis::DrawOrthonormalBasis(HT1.GetTranslation(), HT1.GetRotation(), visualizationSettings.nodes.basisSize, 0.025*visualizationSettings.nodes.basisSize,
-				vSystem->graphicsData, itemID, 1.f, true,
-				visualizationSettings.general.axesTiling, 2.5, itemNumber, "B");
-			//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+			p1.CopyFrom(cObject->GetPosition(pLoc, ConfigurationType::Visualization));
 
 			if (i != 0)
 			{

@@ -2,12 +2,16 @@
   "number": 2837,
   "title": "a 3D beam without section geometry is drawn with a coordinate frame at every tile",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "FIX",
   "priority": "NORMAL",
   "effort": "LOW",
   "description": "UpdateGraphicsBeam3D (ObjectBeamGeometricallyExact, ObjectANCFBeam) draws a beam without polygonal section geometry as a line - and, marked 'temporary!' in the code, an orthonormal basis of size nodes.basisSize at each of the axialTiling points, also when nodes are not shown. Found with the item images of revision2026b step RG3.31: the default drawing of a beam is a row of arrows. The basis belongs to a setting (or goes), not to every line-drawn beam.",
   "dateRaised": "2026-10-04",
   "deadline": "2027-04-02",
-  "file": "src/Graphics/VisualizationItemHelpers.h"
+  "dateResolved": "2026-10-04 15:01",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/VisualizationItemHelpers.h",
+  "releaseNotes": "Fixed: a 3D beam (ObjectANCFBeam, ObjectBeamGeometricallyExact) without section geometry is drawn as a line; it no longer draws a coordinate frame at every tiling point. The frames are those of its nodes (visualizationSettings.nodes.showBasis).",
+  "resolvedInVersion": "1.12.283"
 }

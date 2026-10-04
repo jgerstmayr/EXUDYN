@@ -14690,3 +14690,19 @@ the user error it raises - and the copy example (#2842 below).
 **The test**: `python/testing/test_referenceNotebooks.py` runs each reference notebook in a subprocess
 (`runNotebooks.py --test`: the cells executed, nothing written; skipped if scipy or matplotlib is missing and the
 notebook names it) and checks for every notebook, the tutorials included, that its stored hash is that of its code.
+
+<a id="rg3-31-4"></a>
+### RG3.31.4 — a 3D beam without section geometry is a line (2026-10-04, #2837)
+
+*(Maintainer 2026-10-04: "fix RG3.31.4".)*
+
+`UpdateGraphicsBeam3D` (`VisualizationItemHelpers.h`), used by `ObjectANCFBeam` and `ObjectBeamGeometricallyExact`,
+drew a beam without `sectionGeometry` as a line **and** an orthonormal basis of `nodes.basisSize` at each of the
+`bodies.beams.axialTiling` points - code marked "temporary!", so each element carried axialTiling + 1 triads. It draws
+the line only now, from `GetPosition` at the tiling points, as the 2D beams do; the frames of a beam are those of its
+nodes (`nodes.showBasis`). The graphics references of the mini examples `ObjectANCFBeam`,
+`ObjectBeamGeometricallyExact` and `NodePointSlope23` recorded again: their lines stay, the triads (lines, cones, the
+texts "B") are gone. The item image of `ObjectBeamGeometricallyExact` has a section geometry and does not change.
+
+Seen on the way and remarked at #2840 (RG13.8.1): the line of a contour plot interpolates between the values at the
+local positions 0 and L, while the line runs from -L/2 to L/2.
