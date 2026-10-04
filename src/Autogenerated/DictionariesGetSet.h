@@ -18,8 +18,52 @@
   #include <pybind11/stl_bind.h>
   namespace py = pybind11;
 
+  #include <functional>
+  #include <map>
+
   namespace EPyUtils {
- //add namespace for access to dictionaries//! AUTO: read access to structure; converting into dictionary
+ //add namespace for access to dictionaries
+
+//! AUTO: a settings dictionary written onto the current settings (#2813): a key that is not given keeps its current value,
+//! a key of an earlier Exudyn - a renamed or moved setting, renames is [(old path, new path)] - goes to its new place,
+//! and a key that is neither is ignored, as SetDictionary always did
+inline py::dict ForwardSettingsDictionary(const py::dict& current, const py::dict& given,
+    const std::vector<std::pair<std::string, std::string>>& renames)
+{
+    py::dict result = py::module_::import("copy").attr("deepcopy")(current);
+    std::map<std::string, std::string> renameMap(renames.begin(), renames.end());
+    auto SetPath = [&result](const std::string& path, const py::handle& value)
+    {
+        py::dict level = result;
+        size_t start = 0;
+        size_t dot = path.find('.');
+        while (dot != std::string::npos)
+        {
+            std::string key = path.substr(start, dot - start);
+            if (!level.contains(key) || !py::isinstance<py::dict>(level[key.c_str()])) { return; }
+            level = py::cast<py::dict>(level[key.c_str()]);
+            start = dot + 1;
+            dot = path.find('.', start);
+        }
+        std::string key = path.substr(start);
+        if (level.contains(key)) { level[key.c_str()] = value; }
+    };
+    std::function<void(const py::dict&, const std::string&)> Walk = [&](const py::dict& level, const std::string& prefix)
+    {
+        for (auto item : level)
+        {
+            std::string path = prefix + py::cast<std::string>(item.first);
+            auto rename = renameMap.find(path);
+            if (rename != renameMap.end()) { SetPath(rename->second, item.second); }
+            else if (py::isinstance<py::dict>(item.second)) { Walk(py::cast<py::dict>(item.second), path + "."); }
+            else { SetPath(path, item.second); }
+        }
+    };
+    Walk(given, "");
+    return result;
+}
+
+//! AUTO: read access to structure; converting into dictionary
 inline py::dict GetDictionaryWithTypeInfo(const PyBeamSection& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
@@ -1709,7 +1753,64 @@ inline py::dict GetDictionary(const SimulationSettings& data) {
 }
 
 //! AUTO: write access to data structure; converting dictionary d into structure
-inline void SetDictionary(SimulationSettings& data, const py::dict& d) {
+inline void SetDictionary(SimulationSettings& data, const py::dict& dGiven) {
+    py::dict d = ForwardSettingsDictionary(GetDictionary(data), dGiven, {
+        {"parallel.multithreadedLLimitLoads", "parallel.multithreadedLowerLimitLoads"},
+        {"parallel.multithreadedLLimitResiduals", "parallel.multithreadedLowerLimitResiduals"},
+        {"parallel.multithreadedLLimitJacobians", "parallel.multithreadedLowerLimitJacobians"},
+        {"parallel.multithreadedLLimitMassMatrices", "parallel.multithreadedLowerLimitMassMatrices"},
+        {"staticSolver.newton.numericalDifferentiation.forODE2connectors", "staticSolver.newton.numericalDifferentiation.forODE2Connectors"},
+        {"staticSolver.newton.newtonResidualMode", "staticSolver.newton.residualMode"},
+        {"staticSolver.newton.useNewtonSolver", "staticSolver.newton.active"},
+        {"staticSolver.constrainODE1coordinates", "staticSolver.constrainODE1Coordinates"},
+        {"timeIntegration.newton.numericalDifferentiation.forODE2connectors", "timeIntegration.newton.numericalDifferentiation.forODE2Connectors"},
+        {"timeIntegration.newton.newtonResidualMode", "timeIntegration.newton.residualMode"},
+        {"timeIntegration.newton.useNewtonSolver", "timeIntegration.newton.active"},
+        {"timeIntegration.explicitIntegration.dynamicSolverType", "timeIntegration.solverType"},
+        {"timeIntegration.explicitIntegration.eliminateConstraints", "timeIntegration.explicit.eliminateConstraints"},
+        {"timeIntegration.explicitIntegration.useLieGroupIntegration", "timeIntegration.explicit.useLieGroupIntegration"},
+        {"timeIntegration.explicitIntegration.computeEndOfStepAccelerations", "timeIntegration.explicit.computeEndOfStepAccelerations"},
+        {"timeIntegration.explicitIntegration.computeMassMatrixInversePerBody", "timeIntegration.explicit.computeMassMatrixInversePerBody"},
+        {"timeIntegration.simulateInRealtime", "timeIntegration.realtime.active"},
+        {"timeIntegration.realtimeFactor", "timeIntegration.realtime.factor"},
+        {"timeIntegration.realtimeWaitMicroseconds", "timeIntegration.realtime.waitMicroseconds"},
+        {"linearSolverSettings.pivotThreshold", "linearSolver.pivotThreshold"},
+        {"linearSolverSettings.ignoreSingularJacobian", "linearSolver.ignoreSingularJacobian"},
+        {"linearSolverSettings.reuseAnalyzedPattern", "linearSolver.reuseAnalyzedPattern"},
+        {"linearSolverSettings.showCausingItems", "linearSolver.showCausingItems"},
+        {"solutionSettings.coordinatesSolutionFileName", "solution.file.name"},
+        {"solutionSettings.writeSolutionToFile", "solution.file.write"},
+        {"solutionSettings.writeFileHeader", "solution.file.writeHeader"},
+        {"solutionSettings.writeFileFooter", "solution.file.writeFooter"},
+        {"solutionSettings.writeInitialValues", "solution.file.writeInitialValues"},
+        {"solutionSettings.solutionWritePeriod", "solution.file.writePeriod"},
+        {"solutionSettings.binarySolutionFile", "solution.file.binary"},
+        {"solutionSettings.appendToFile", "solution.file.append"},
+        {"solutionSettings.flushFilesImmediately", "solution.flushFilesImmediately"},
+        {"solutionSettings.flushFilesDOF", "solution.file.flushAboveCoordinates"},
+        {"solutionSettings.exportAccelerations", "solution.file.export.accelerations"},
+        {"solutionSettings.exportAlgebraicCoordinates", "solution.file.export.algebraicCoordinates"},
+        {"solutionSettings.exportDataCoordinates", "solution.file.export.dataCoordinates"},
+        {"solutionSettings.exportODE1Velocities", "solution.file.export.ODE1Velocities"},
+        {"solutionSettings.exportVelocities", "solution.file.export.velocities"},
+        {"solutionSettings.outputPrecision", "solution.precision"},
+        {"solutionSettings.writeRestartFile", "solution.restart.write"},
+        {"solutionSettings.restartFileName", "solution.restart.name"},
+        {"solutionSettings.restartWritePeriod", "solution.restart.writePeriod"},
+        {"solutionSettings.sensorsAppendToFile", "solution.sensors.append"},
+        {"solutionSettings.sensorsWriteFileHeader", "solution.sensors.writeHeader"},
+        {"solutionSettings.sensorsWriteFileFooter", "solution.sensors.writeFooter"},
+        {"solutionSettings.sensorsWritePeriod", "solution.sensors.writePeriod"},
+        {"solutionSettings.sensorsStoreAndWriteFiles", "solution.sensors.active"},
+        {"solutionSettings.solutionInformation", "solution.file.information"},
+        {"solutionSettings.solverInformationFileName", "solution.solverInformationFileName"},
+        {"solutionSettings.recordImagesInterval", "solution.recordImagesInterval"},
+        {"linearSolverType", "linearSolver.solverType"},
+        {"displayComputationTime", "show.computationTime"},
+        {"displayGlobalTimers", "show.globalTimers"},
+        {"displayStatistics", "show.statistics"},
+        {"outputPrecision", "consolePrecision"},
+        });
     SetDictionary(data.linearSolver, py::cast<py::dict>(d["linearSolver"]));
     SetDictionary(data.parallel, py::cast<py::dict>(d["parallel"]));
     SetDictionary(data.show, py::cast<py::dict>(d["show"]));
@@ -5219,7 +5320,102 @@ inline py::dict GetDictionary(const VisualizationSettings& data) {
 }
 
 //! AUTO: write access to data structure; converting dictionary d into structure
-inline void SetDictionary(VisualizationSettings& data, const py::dict& d) {
+inline void SetDictionary(VisualizationSettings& data, const py::dict& dGiven) {
+    py::dict d = ForwardSettingsDictionary(GetDictionary(data), dGiven, {
+        {"contour.showColorBar", "contour.advanced.showColorBar"},
+        {"contour.colorBarPrecision", "contour.advanced.colorBarPrecision"},
+        {"contour.colorBarTiling", "contour.advanced.colorBarTiling"},
+        {"openGL.shadow", "openGL.light0.shadow"},
+        {"openGL.lightPositionsInCameraFrame", "openGL.light0.useCameraFrame"},
+        {"openGL.enableLight0", "openGL.light0.enable"},
+        {"openGL.light0position", "openGL.light0.position"},
+        {"openGL.light0diffuse", "openGL.light0.diffuse"},
+        {"openGL.light0specular", "openGL.light0.specular"},
+        {"openGL.light0constantAttenuation", "openGL.light0.constantAttenuation"},
+        {"openGL.light0linearAttenuation", "openGL.light0.linearAttenuation"},
+        {"openGL.light0quadraticAttenuation", "openGL.light0.quadraticAttenuation"},
+        {"openGL.enableLight1", "openGL.light1.enable"},
+        {"openGL.light1position", "openGL.light1.position"},
+        {"openGL.light1diffuse", "openGL.light1.diffuse"},
+        {"openGL.light1specular", "openGL.light1.specular"},
+        {"openGL.light1constantAttenuation", "openGL.light1.constantAttenuation"},
+        {"openGL.light1linearAttenuation", "openGL.light1.linearAttenuation"},
+        {"openGL.light1quadraticAttenuation", "openGL.light1.quadraticAttenuation"},
+        {"openGL.facesTransparent", "view0.scene.facesTransparent"},
+        {"openGL.showFaces", "view0.scene.showFaces"},
+        {"openGL.showFaceEdges", "view0.scene.showFaceEdges"},
+        {"openGL.showMeshFaces", "view0.scene.showMeshFaces"},
+        {"openGL.showMeshEdges", "view0.scene.showMeshEdges"},
+        {"openGL.showLines", "view0.scene.showLines"},
+        {"openGL.shadowPolygonOffset", "openGL.advanced.shadowPolygonOffset"},
+        {"openGL.polygonOffset", "openGL.advanced.polygonOffset"},
+        {"openGL.shadeModelSmooth", "openGL.advanced.shadeModelSmooth"},
+        {"openGL.depthSorting", "openGL.advanced.depthSorting"},
+        {"openGL.textLineWidth", "openGL.advanced.textLineWidth"},
+        {"openGL.textLineSmooth", "openGL.advanced.textLineSmooth"},
+        {"openGL.enableLighting", "openGL.advanced.enableLighting"},
+        {"openGL.lightModelLocalViewer", "openGL.advanced.lightModelLocalViewer"},
+        {"openGL.lightModelTwoSide", "openGL.advanced.lightModelTwoSide"},
+        {"openGL.lineSmooth", "openGL.advanced.lineSmooth"},
+        {"openGL.initialCenterPoint", "openGL.advanced.initialCenterPoint"},
+        {"openGL.initialZoom", "openGL.advanced.initialZoom"},
+        {"openGL.initialMaxSceneSize", "openGL.advanced.initialMaxSceneSize"},
+        {"openGL.initialModelRotation", "openGL.advanced.initialModelRotation"},
+        {"openGL.clippingPlaneNormal", "view0.camera.clippingPlaneNormal"},
+        {"openGL.clippingPlaneDistance", "view0.camera.clippingPlaneDistance"},
+        {"openGL.clippingPlaneColor", "openGL.advanced.clippingPlaneColor"},
+        {"openGL.perspective", "view0.camera.perspective"},
+        {"openGL.light0ambient", "openGL.dummy"},
+        {"openGL.light1ambient", "openGL.dummy"},
+        {"openGL.materialAmbientAndDiffuse", "openGL.materialSpecular"},
+        {"raytracer.enable", "view0.camera.useRaytracer"},
+        {"raytracer.backgroundColorReflections", "raytracer.advanced.backgroundColorReflections"},
+        {"raytracer.lightRadius", "openGL.light0.lightRadius"},
+        {"raytracer.shadowScalingFactor", "raytracer.advanced.shadowScalingFactor"},
+        {"raytracer.shadowSmoothingSteps", "raytracer.advanced.shadowSmoothingSteps"},
+        {"raytracer.tilesPerThread", "raytracer.advanced.tilesPerThread"},
+        {"raytracer.zOffsetCamera", "openGL.dummy"},
+        {"raytracer.zBiasLines", "raytracer.advanced.zBiasLines"},
+        {"raytracer.showText", "raytracer.advanced.showText"},
+        {"raytracer.searchTreeFactor", "raytracer.advanced.searchTreeFactor"},
+        {"raytracer.ambientLightColor", "openGL.lightModelAmbient"},
+        {"general.drawWorldBasis", "view0.scene.drawWorldBasis"},
+        {"general.worldBasisSize", "view0.scene.worldBasisSize"},
+        {"general.drawCoordinateSystem", "view0.scene.drawCoordinateSystem"},
+        {"general.textSize", "view0.window.globalFontSize"},
+        {"general.showComputationInfo", "view0.window.showComputationInfo"},
+        {"interactive.lockModelView", "view0.window.lockModelView"},
+        {"interactive.trackMarker", "view0.camera.trackMarker"},
+        {"interactive.trackMarkerMbsNumber", "view0.camera.trackMarkerMbsNumber"},
+        {"interactive.trackMarkerPosition", "view0.camera.trackMarkerPosition"},
+        {"interactive.trackMarkerOrientation", "view0.camera.trackMarkerOrientation"},
+        {"interactive.keypressRotationStep", "interactive.advanced.keypressRotationStep"},
+        {"interactive.mouseMoveRotationFactor", "interactive.advanced.mouseMoveRotationFactor"},
+        {"interactive.keypressTranslationStep", "interactive.advanced.keypressTranslationStep"},
+        {"interactive.zoomStepFactor", "interactive.advanced.zoomStepFactor"},
+        {"interactive.joystickScaleTranslation", "interactive.advanced.joystickScaleTranslation"},
+        {"interactive.joystickScaleRotation", "interactive.advanced.joystickScaleRotation"},
+        {"interactive.highlightColor", "interactive.advanced.highlightColor"},
+        {"interactive.highlightOtherColor", "interactive.advanced.highlightOtherColor"},
+        {"interactive.selectionHighlights", "interactive.advanced.selectionHighlights"},
+        {"interactive.selectionLeftMouse", "interactive.advanced.selectionLeftMouse"},
+        {"interactive.selectionRightMouse", "interactive.advanced.selectionRightMouse"},
+        {"interactive.selectionRightMouseGraphicsData", "interactive.advanced.selectionRightMouseGraphicsData"},
+        {"interactive.selectionLeftMouseItemTypes", "interactive.advanced.selectionLeftMouseItemTypes"},
+        {"interactive.pauseWithSpacebar", "interactive.advanced.pauseWithSpacebar"},
+        {"dialogs.fontScalingMacOS", "dialogs.fontScaling"},
+        {"window.renderWindowSize", "view0.window.renderWindowSize"},
+        {"window.showWindow", "view0.window.showWindow"},
+        {"window.alwaysOnTop", "view0.window.alwaysOnTop"},
+        {"window.maximize", "view0.window.maximize"},
+        {"window.showMouseCoordinates", "view0.window.showMouseCoordinates"},
+        {"window.showRenderStateInfo", "view0.window.showRenderStateInfo"},
+        {"window.startupTimeout", "general.rendererStartupTimeout"},
+        {"window.reallyQuitTimeLimit", "general.reallyQuitTimeLimit"},
+        {"window.limitWindowToScreenSize", "general.limitWindowToScreenSize"},
+        {"window.ignoreKeys", "interactive.ignoreKeys"},
+        {"window.keyPressUserFunction", "interactive.keyPressUserFunction"},
+        });
     SetDictionary(data.nodes, py::cast<py::dict>(d["nodes"]));
     SetDictionary(data.bodies, py::cast<py::dict>(d["bodies"]));
     SetDictionary(data.connectors, py::cast<py::dict>(d["connectors"]));

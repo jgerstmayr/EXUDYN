@@ -1314,6 +1314,9 @@ find out about the settings of a model. It is the group a user notices most and 
 
 <a id="rg12-34"></a>
 **RG12.34** **DONE 2026-10-04** (#2813) — [log](exudynRevisionLog2026b.md#rg12-34) · [plan text](exudynRevisionLog2026b.md#plan-rg12-34) — The simulation settings renamed and restructured as decided in RG12.31.
+    - **RG12.34.7** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg12-34-7) *(maintainer 2026-10-04: "Do the
+      suggested next 3 steps")* (#2847) `SetDictionary` of the simulation and visualization settings takes a dictionary of
+      Exudyn 1.11: its old keys go to their new places, and the keys it does not give keep their values;
     - **RG12.34.8** **DONE 2026-10-04** (#2816, #2818) — [log](exudynRevisionLog2026b.md#rg12-34-8) - the binary
       solution file takes the size of its numbers from `solution.precision` (maintainer 2026-10-04); the debug print
       of `LoadBinarySolutionFile` removed.
@@ -1809,7 +1812,6 @@ whether it becomes a step.
 
 | where | issue | what it is |
 |---|---|---|
-| RG12.34.7 | #2813, resolved | a dictionary of settings stored by Exudyn 1.11 (`SetDictionary` with `solutionSettings`, ...) is not forwarded to the new names - its old keys are not read |
 | RG16.6.3 | #2809, resolved | `GetPosition2D`/the angle of a planar frame: considered, implemented only if a planar model needs it |
 
 *#2608 was done by RG6.2.11. The decision on the chapters of the user manual
@@ -1825,9 +1827,7 @@ The title of each says what the step **does**; the sentence after it says why it
 2. **Do the manual GUI check on Windows** (RG2.4), with the curved GraphicsData (row K13) and the TikZ figures in
    the PDF. It is the last condition of 1.13 that one person can meet alone.
 3. **Finish the steps that are nearly done**, each small and without a decision left:
-   - RG2.3.3.8 (#2776): the raytracer hang - a timeout or the cause, before the graphics suite is relied on;
    - RG10.1.1 (#2713): `exudev scripts` runs the scripts - the checker parses them already, and with `--fix`
-     a run is the check that a rewritten script still works;
-   - RG12.34.7: settings dictionaries of 1.11 forwarded in `SetDictionary`, as the attributes are.
+     a run is the check that a rewritten script still works.
 4. **Then the larger open steps of 1.13**: RG4.15.8 (`GeneralContact` against the sphere contact) and RG4.17.2
    (the beam stall), which are bugs a user can meet.

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 274 | 1.12.293 |
+| 1.12 | Metheney | 275 | 1.12.294 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.294** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SetDictionary of the settings takes a dictionary of Exudyn 1.11 (#2847)
+  - description: A dictionary of simulation or visualization settings stored by Exudyn 1.11 (GetDictionary) uses the old names and structures - solutionSettings, linearSolverType, window, openGL.light0position, ...; SetDictionary did not read those keys, and it required every key of the current structures. Revision2026b step RG12.34.7, raised by RG12.34 (\#2813).
+  - **notes:** SimulationSettings.SetDictionary and VisualizationSettings.SetDictionary take a dictionary stored by Exudyn 1.11, with the old names (solutionSettings, linearSolverType, window, ...), and dictionaries with only some keys; keys not given keep their current values.
+  - date resolved: **2026-10-04 21:00**, date raised: 2026-10-04
 - **1.12.293** <span class="textred">`BUG`</span> `HIGH` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the raytracer can hang in RedrawAndGetImage when tests run in parallel (#2776)
   - description: Twice on 2026-10-02 the full pytest run (pytest -n 8 python/testing) hung in test\_graphicsRegression.py::testRaytracerImages, in SC.renderer.RedrawAndGetImage(useRaytracer=True) (faulthandler traceback), with all workers idle - a wait, not a loop; a third and fourth run passed, and 8 processes rendering the same images 15 times each in parallel did not hang. The raytracer starts the TaskManager for its ParallelFor (Raytracer::SoftwareRenderer, ExuThreading::EnterTaskManager) unless it is already running; a deadlock there, or a TaskManager left running by a previous test in the same worker, are the candidates. The hung processes stayed and could not be ended from the session.
   - **notes:** Fixed: a multithreaded solve (parallel.numberOfThreads \> 1) that fails, e.g. because a user function raises, stops its worker threads and closes its files; before, the threads kept running, and a later multithreaded solve, the raytracer, or the end of the Python process could hang.

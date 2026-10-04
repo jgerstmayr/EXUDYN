@@ -1,0 +1,15 @@
+{
+  "number": 2847,
+  "title": "SetDictionary of the settings takes a dictionary of Exudyn 1.11",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "LOW",
+  "description": "A dictionary of simulation or visualization settings stored by Exudyn 1.11 (GetDictionary) uses the old names and structures - solutionSettings, linearSolverType, window, openGL.light0position, ...; SetDictionary did not read those keys, and it required every key of the current structures. Revision2026b step RG12.34.7, raised by RG12.34 (#2813).",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "dateResolved": "2026-10-04 21:00",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SimulationSettings.SetDictionary and VisualizationSettings.SetDictionary take a dictionary stored by Exudyn 1.11, with the old names (solutionSettings, linearSolverType, window, ...), and dictionaries with only some keys; keys not given keep their current values.",
+  "resolvedInVersion": "1.12.294"
+}

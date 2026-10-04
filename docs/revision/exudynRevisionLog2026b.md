@@ -15063,3 +15063,25 @@ spin that never ended. The raytracer was only where the next use of the threads 
 solve leaves no threads and no open files. `python/testing/test_solverThreads.py` runs a failing 4-thread solve
 followed by nothing, the raytracer, and a second solve, each in a process of its own with a timeout - all three end.
 The spinning worker of 2026-10-02 and the script of this search were stopped.
+
+<a id="rg12-34-7"></a>
+### RG12.34.7 — a settings dictionary of Exudyn 1.11 is read (2026-10-04, #2847)
+
+*(Maintainer 2026-10-04: "Do the suggested next 3 steps.")*
+
+`SetDictionary` of `SimulationSettings` and `VisualizationSettings` - generated, in `DictionariesGetSet.h` - required
+every key of today's structures and read none of the renamed ones: a dictionary stored by 1.11 (`solutionSettings`,
+`linearSolverType`, `window`, `openGL.light0position`, ...) failed on the first missing key. Now it first builds the
+dictionary to apply with `ForwardSettingsDictionary(GetDictionary(data), given, renames)`: the current settings, onto
+which every key given is written - a renamed key at its new place, a key that is neither current nor renamed ignored,
+as before. So a dictionary of 1.11 is read, and a dictionary with only some keys changes only those.
+
+The table of renames is generated (`structureHeaderEmitter.py`, `RenamedSettings`) from the deprecated members of the
+definitions, the same declarations that forward the attributes: each under the path of the structure it belongs to -
+also in a deprecated structure such as `solutionSettings` or `window` - and the place its description names (a path
+with a dot from the top of the tree, a name without one in the same structure): 55 renames of the simulation settings,
+93 of the visualization settings. The other structures (`SetDictionary` of a substructure) are unchanged.
+
+Test: `simulationSettingsRenamesTest.py` also gives each of its 50 old names as a dictionary of one key, which must reach
+its new place while `timeIntegration.endTime`, not given, keeps its value, and three old keys of the visualization
+settings; its result is unchanged (50).

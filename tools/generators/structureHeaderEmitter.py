@@ -120,6 +120,72 @@ def CopyOperations(parseInfo, parameterListSorted):
 
 #************************************************
 #create the C++ header text of one structure
+#the settings whose SetDictionary takes a dictionary of an earlier Exudyn, or with only some keys (#2813, RG12.34.7)
+forwardingRoots = ['SimulationSettings', 'VisualizationSettings']
+
+
+def RenamedSettings(rootClassName):
+    """[(old path, new path)] of a settings tree: every deprecated member, under the path of the structure it belongs
+    to - also in a deprecated structure such as solutionSettings -, and the place its description names: a path with
+    a dot from the top of the tree, a name without one in the same structure"""
+    definitions = dict((definition['className'], definition) for definition in StructureDefinitions())
+    renames = []
+    def Walk(className, prefix):
+        for member in definitions[className]['members']:
+            typeName = str(member.get('type', ''))
+            if typeName in definitions:
+                Walk(typeName, prefix + member['pythonName'] + '.')
+            elif member.get('deprecated') is not None:
+                target = member['description'].strip()
+                renames.append((prefix + member['pythonName'], target if '.' in target else prefix + target))
+    Walk(rootClassName, '')
+    return renames
+
+
+#the helper that forwards a settings dictionary, written once into DictionariesGetSet.h (#2813)
+forwardSettingsHelper = r'''
+//! AUTO: a settings dictionary written onto the current settings (#2813): a key that is not given keeps its current value,
+//! a key of an earlier Exudyn - a renamed or moved setting, renames is [(old path, new path)] - goes to its new place,
+//! and a key that is neither is ignored, as SetDictionary always did
+inline py::dict ForwardSettingsDictionary(const py::dict& current, const py::dict& given,
+    const std::vector<std::pair<std::string, std::string>>& renames)
+{
+    py::dict result = py::module_::import("copy").attr("deepcopy")(current);
+    std::map<std::string, std::string> renameMap(renames.begin(), renames.end());
+    auto SetPath = [&result](const std::string& path, const py::handle& value)
+    {
+        py::dict level = result;
+        size_t start = 0;
+        size_t dot = path.find('.');
+        while (dot != std::string::npos)
+        {
+            std::string key = path.substr(start, dot - start);
+            if (!level.contains(key) || !py::isinstance<py::dict>(level[key.c_str()])) { return; }
+            level = py::cast<py::dict>(level[key.c_str()]);
+            start = dot + 1;
+            dot = path.find('.', start);
+        }
+        std::string key = path.substr(start);
+        if (level.contains(key)) { level[key.c_str()] = value; }
+    };
+    std::function<void(const py::dict&, const std::string&)> Walk = [&](const py::dict& level, const std::string& prefix)
+    {
+        for (auto item : level)
+        {
+            std::string path = prefix + py::cast<std::string>(item.first);
+            auto rename = renameMap.find(path);
+            if (rename != renameMap.end()) { SetPath(rename->second, item.second); }
+            else if (py::isinstance<py::dict>(item.second)) { Walk(py::cast<py::dict>(item.second), path + "."); }
+            else { SetPath(path, item.second); }
+        }
+    };
+    Walk(given, "");
+    return result;
+}
+
+'''
+
+
 def StructureCppHeader(parseInfo):
     """returns [header text, dictionary get/set text, implementation text]; parseInfo is the
     structure definition of definitions/"""
@@ -321,7 +387,14 @@ def StructureCppHeader(parseInfo):
 
     sDictSet = ''
     sDictSet += '//! AUTO: write access to data structure; converting dictionary d into structure\n'
-    sDictSet += 'inline void SetDictionary(' + Header(parseInfo, 'class') + '& data, const py::dict& d) {\n'
+    if Header(parseInfo, 'class') in forwardingRoots:
+        #a dictionary of an earlier Exudyn, or with only some keys, onto the current values (#2813)
+        sDictSet += 'inline void SetDictionary(' + Header(parseInfo, 'class') + '& data, const py::dict& dGiven) {\n'
+        sDictSet += '    py::dict d = ForwardSettingsDictionary(GetDictionary(data), dGiven, {\n'
+        sDictSet += ''.join('        {"' + old + '", "' + new + '"},\n' for (old, new) in RenamedSettings(Header(parseInfo, 'class')))
+        sDictSet += '        });\n'
+    else:
+        sDictSet += 'inline void SetDictionary(' + Header(parseInfo, 'class') + '& data, const py::dict& d) {\n'
     
     #************************************
     #access functions and dictionaries for visualization dialog ...:
@@ -829,7 +902,8 @@ def main():
                   '  #include <pybind11/stl.h>\n'+
                   '  #include <pybind11/stl_bind.h>\n'+
                   '  namespace py = pybind11;\n\n'+
-                  '  namespace EPyUtils {\n //add namespace for access to dictionaries'
+                  '  #include <functional>\n  #include <map>\n\n'+
+                  '  namespace EPyUtils {\n //add namespace for access to dictionaries\n' + forwardSettingsHelper
                   , fileMode='w')
 
     totalNumberOfLines = 0

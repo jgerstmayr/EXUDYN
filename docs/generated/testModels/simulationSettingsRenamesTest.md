@@ -12,7 +12,8 @@ You can view and download this file on Github: [simulationSettingsRenamesTest.py
 #
 # Details:  The simulation settings renamed and restructured in Exudyn 1.13 (#2813): every old name still works,
 #           with a DeprecationWarning, and reaches its new place - written under the old name, read under the
-#           new one, and the other way round; every use is counted in exu.sys['deprecationUse']. The list of
+#           new one, and the other way round; every use is counted in exu.sys['deprecationUse']; the old keys of
+#           a dictionary given to SetDictionary reach their new place too. The list of
 #           names is checked against the declarations by python/testing/test_checkDeprecations.py, so that it
 #           cannot miss one.
 #
@@ -132,6 +133,33 @@ nUses = Uses() - used
 exu.Print('simulationSettingsRenamesTest:', len(renames), 'old names,', nUses, 'uses recorded, errors', errors)
 if nUses != 2 * len(renames):
     errors += 1
+
+#a dictionary of an earlier Exudyn, given to SetDictionary: each old key reaches its new place, and the keys that are
+#not given keep their values (RG12.34.7)
+def NestedDictionary(path, value):
+    d = value
+    for name in reversed(path.split('.')):
+        d = {name: d}
+    return d
+
+for (old, new) in renames.items():
+    settings = exu.SimulationSettings()
+    settings.timeIntegration.endTime = 7.5     #not in the dictionary: stays
+    value = Other(Get(settings, new))
+    settings.SetDictionary(NestedDictionary(old, value))
+    if Get(settings, new) != value or settings.timeIntegration.endTime != 7.5:
+        errors += 1
+        exu.Print('simulationSettingsRenamesTest: the dictionary key', old, 'does not reach', new)
+
+#the same for the visualization settings, with three of their renamed keys
+SC = exu.SystemContainer()
+SC.visualizationSettings.SetDictionary({'window': {'renderWindowSize': [333, 222]}, 'general': {'drawWorldBasis': True},
+                                        'openGL': {'light0position': [1., 2., 3., 0.]}})
+visualizationSettings = SC.visualizationSettings
+if (list(visualizationSettings.view0.window.renderWindowSize) != [333, 222] or not visualizationSettings.view0.scene.drawWorldBasis
+        or list(visualizationSettings.openGL.light0.position) != [1., 2., 3., 0.]):
+    errors += 1
+    exu.Print('simulationSettingsRenamesTest: a renamed key of the visualization settings does not reach its new place')
 
 u = len(renames) + errors
 exu.Print('solution of simulationSettingsRenamesTest=', u)
