@@ -1091,6 +1091,9 @@ file, so an editor cannot complete them).
 
 <a id="rg10-1"></a>
 **RG10.1** **DONE 2026-09-27** (#2712) — [log](exudynRevisionLog2026b.md#rg10-1) · [plan text](exudynRevisionLog2026b.md#plan-rg10-1) — Checker for user scripts after the 1.12 API changes: exudev scripts, a maintainer tool.
+    - **RG10.1.1** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg10-1-1) *(maintainer 2026-10-04: "Do the
+      suggested next 3 steps")* (#2713) `exudev scripts --run` runs each script in a copy of its folder, without windows,
+      with a timeout, after a check for paths outside the folder.
 
 <a id="rg10-2"></a>
 **RG10.2** **DONE 2026-09-23** (#2600) — [log](exudynRevisionLog2026b.md#rg10-2) · [plan text](exudynRevisionLog2026b.md#plan-rg10-2) — The issue table of `exudev issue serve` did not say what its columns are, and left out the priority.
@@ -1779,7 +1782,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
-| RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15 | #2746 | objects computing from coordinates passed in: the work after the evaluation of RG15.1, not planned yet |
@@ -1826,8 +1828,6 @@ The title of each says what the step **does**; the sentence after it says why it
    page that needs **other people's time**, so it starts before the rest is ready, not after.
 2. **Do the manual GUI check on Windows** (RG2.4), with the curved GraphicsData (row K13) and the TikZ figures in
    the PDF. It is the last condition of 1.13 that one person can meet alone.
-3. **Finish the steps that are nearly done**, each small and without a decision left:
-   - RG10.1.1 (#2713): `exudev scripts` runs the scripts - the checker parses them already, and with `--fix`
-     a run is the check that a rewritten script still works.
+3. **Finish the steps that are nearly done**, each small and without a decision left: none left at the moment.
 4. **Then the larger open steps of 1.13**: RG4.15.8 (`GeneralContact` against the sphere contact) and RG4.17.2
    (the beam stall), which are bugs a user can meet.

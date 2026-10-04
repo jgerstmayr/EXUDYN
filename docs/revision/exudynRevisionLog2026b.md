@@ -15085,3 +15085,23 @@ with a dot from the top of the tree, a name without one in the same structure): 
 Test: `simulationSettingsRenamesTest.py` also gives each of its 50 old names as a dictionary of one key, which must reach
 its new place while `timeIntegration.endTime`, not given, keeps its value, and three old keys of the visualization
 settings; its result is unchanged (50).
+
+<a id="rg10-1-1"></a>
+### RG10.1.1 — exudev scripts runs the scripts, in a copy (2026-10-04, #2713)
+
+*(Maintainer 2026-10-04: "Do the suggested next 3 steps.")*
+
+`tools/checkUserScripts.py --run` (and `exudev scripts <folders> --run [--timeout 120]`): after the static check, each
+script that imports exudyn runs in a process of its own, in a copy of its folder - each folder copied once into a
+temporary folder (without `__pycache__` and `.git`), removed afterwards -, so that what it writes stays out of the
+user's folder; without windows (`EXUDYN_SUPPRESS_UI_WINDOW_OPEN`), `exudyn.special.solver.timeout` of 2 s
+(`--solver-timeout`) as the examples are run, and a timeout for the whole script. A script with a string that names a
+path outside its folder - `C:/...`, `\\server`, `/home/...`, `../data` (`PathsOutsideTheFolder`) - is not run: its copy
+would read or write somewhere else, or fail for a reason that is not the Exudyn version. The report: per script failed
+(the last line of its error), timed out, or needs a package (a `ModuleNotFoundError` of another package); a summary
+line; `--check` fails also for a failed or timed-out run. `--fix` and `--run` together check that a rewritten script
+still runs.
+
+Test: `testRunningScriptsInACopy` in `test_checkUserScripts.py` - a script that writes a file (it does not appear in the
+original folder), one that raises, one that needs a package that is not installed, and the path check. Tried on
+`python/Examples/notebooks`: 7 scripts, all ran, in 10 s.

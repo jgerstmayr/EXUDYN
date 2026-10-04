@@ -200,3 +200,23 @@ def testRemovedVisualizationParameters(tables):
     assert all('removed' in text for text in findings)
     assert any('VNode1D(show' in text for text in findings)
     assert any("'VdrawSize' of ConnectorGravity" in text for text in findings)
+
+
+def testRunningScriptsInACopy(tmp_path):
+    """--run (#2713): a script runs in a copy of its folder - the files it writes stay out of the original -, a failing
+    one reports its error, a missing package is named, and a path outside the folder keeps a script from running"""
+    folder = tmp_path / 'scripts'
+    folder.mkdir()
+    (folder / 'ok.py').write_text("import exudyn as exu\nopen('written.txt', 'w').write('x')\n")
+    (folder / 'broken.py').write_text("import exudyn as exu\nraise ValueError('broken script')\n")
+    (folder / 'needs.py').write_text("import exudyn as exu\nimport aPackageThatIsNotInstalled\n")
+    outside = ast.parse("import exudyn as exu\ndata = open('../secret.txt')\n")
+    assert checker.PathsOutsideTheFolder(outside) == [(2, '../secret.txt')]
+    assert checker.PathsOutsideTheFolder(ast.parse("x = 'C:/data/model.stl'\ny = 'solution/a.txt'\n")) == [(1, 'C:/data/model.stl')]
+
+    results = checker.RunScripts([(str(folder / name), name) for name in ['ok.py', 'broken.py', 'needs.py']], timeout=60)
+    results = dict((shown, (result, text)) for (shown, result, text) in results)
+    assert results['ok.py'] == ('ran', '')
+    assert results['broken.py'][0] == 'failed' and 'broken script' in results['broken.py'][1]
+    assert results['needs.py'] == ('needs', 'aPackageThatIsNotInstalled')
+    assert not (folder / 'written.txt').exists()

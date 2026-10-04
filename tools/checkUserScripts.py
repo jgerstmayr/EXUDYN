@@ -18,6 +18,11 @@
 #   - a file the script writes without naming a directory - a solution file, a sensor file, the
 #     results of a parameter variation - which lands beside the script, and the default solution
 #     file read back by its old name: the files a run writes by default are in solution/ (#2718).
+# With --run it also RUNS them (#2713): each folder of scripts is copied into a temporary folder, and each script runs
+# there in a process of its own, without windows, with a timeout and a solver timeout, as the examples are run; a
+# script that names a path outside its folder - 'C:/...', '/home/...', '../data' - is not run, because its copy would
+# read or write somewhere else. It reports per script: ran, failed (with the last line of the error), timed out, or
+# needs a package that is not installed.
 # It checks every .py file under the folders it is given that imports exudyn; the others are counted
 # and skipped. A file that does not parse - Python 2, say - is reported as such.
 #
@@ -28,6 +33,7 @@
 #   python tools/checkUserScripts.py <folder or file> [...]          #report
 #   python tools/checkUserScripts.py <folder> --check                 #exit 1 if anything was found
 #   python tools/checkUserScripts.py <folder> --fix                   #rewrite the renamed settings in place (#2813)
+#   python tools/checkUserScripts.py <folder> --run [--timeout 120]   #check, then run each script in a copy (#2713)
 #   exudev scripts <folder> [...]                                     #the same, through the driver
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 import argparse
@@ -36,7 +42,11 @@ import builtins
 import glob
 import io
 import os
+import re
+import shutil
+import subprocess
 import sys
+import tempfile
 import warnings
 
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -629,6 +639,73 @@ def ApplyFixes(source, fixes):
     return '\n'.join(lines)
 
 
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#running the scripts in a copy (#2713)
+def PathsOutsideTheFolder(tree):
+    """[(line, path)]: the strings of a script that name an absolute path - 'C:/...', '\\\\server', '/home/...' - or
+    leave its folder - '../data' -: a copy of the script would read or write somewhere else"""
+    found = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            text = node.value.strip()
+            if (re.match(r'^[A-Za-z]:[\\/]', text) or text.startswith('\\\\') or re.match(r'^/[\w.-]+/', text)
+                    or '../' in text or '..\\' in text):
+                found.append((node.lineno, text))
+    return found
+
+
+#the process a script runs in: no windows (the environment), a solver timeout, the script as __main__
+_runner = """
+import sys, runpy
+import exudyn as exu
+exu.special.solver.timeout = float(sys.argv[2])
+script = sys.argv[1]
+sys.argv = [script]
+runpy.run_path(script, run_name='__main__')
+"""
+
+
+def RunScript(path, workFolder, timeout=120, solverTimeout=2):
+    """run a copied script in its folder; returns (result, text): 'ran', 'failed' with the last line of the error,
+    'timeout', or 'needs' with the package that is missing"""
+    environment = dict(os.environ, EXUDYN_SUPPRESS_UI_WINDOW_OPEN='1')
+    environment.pop('EXUDYN_OUTPUTDIRECTORY', None)      #the copy is the place for its files
+    try:
+        result = subprocess.run([sys.executable, '-c', _runner, path, str(solverTimeout)], cwd=workFolder,
+                                env=environment, capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return ('timeout', 'did not end within ' + str(timeout) + ' s')
+    if result.returncode == 0:
+        return ('ran', '')
+    lines = [line for line in result.stderr.strip().split('\n') if line.strip()]
+    last = lines[-1] if lines else 'exit code ' + str(result.returncode)
+    missing = re.match(r"ModuleNotFoundError: No module named '([^'.]+)", last)
+    if missing and missing.group(1) != 'exudyn':
+        return ('needs', missing.group(1))
+    return ('failed', last)
+
+
+def RunScripts(scripts, timeout=120, solverTimeout=2, keep=False):
+    """scripts: [(path, shown name)]; each folder copied once into a temporary folder, each script run in its copy;
+    returns [(shown, result, text)]"""
+    workRoot = tempfile.mkdtemp(prefix='exudevScripts')
+    copies = {}
+    results = []
+    try:
+        for (path, shown) in scripts:
+            folder = os.path.dirname(os.path.abspath(path))
+            if folder not in copies:
+                copies[folder] = os.path.join(workRoot, str(len(copies)))
+                shutil.copytree(folder, copies[folder], ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '.git'))
+            copy = os.path.join(copies[folder], os.path.basename(path))
+            (result, text) = RunScript(copy, copies[folder], timeout, solverTimeout)
+            results.append((shown, result, text))
+    finally:
+        if not keep:
+            shutil.rmtree(workRoot, ignore_errors=True)
+    return results
+
+
 def PythonFiles(paths):
     files = []
     for path in paths:
@@ -646,6 +723,11 @@ def main():
     parser.add_argument('--check', action='store_true', help='exit 1 if anything was found')
     parser.add_argument('--fix', action='store_true', help='rewrite the renamed settings and item parameters in place; what cannot be '
                         'rewritten automatically is still reported')
+    parser.add_argument('--run', action='store_true', help='also run each script, in a copy of its folder, without '
+                        'windows, with a timeout (#2713); a script that names a path outside its folder is not run')
+    parser.add_argument('--timeout', type=float, default=120, help='seconds a script may run with --run (default 120)')
+    parser.add_argument('--solver-timeout', type=float, default=2, dest='solverTimeout',
+                        help='seconds each solve may take with --run, exudyn.special.solver.timeout (default 2)')
     parser.add_argument('--base', default=os.getcwd(),
                         help='print the paths relative to this folder (default: the current one)')
     args = parser.parse_args()
@@ -655,6 +737,8 @@ def main():
               'library': DeprecatedLibrary()}
 
     (checked, skipped, withFindings, total, unreadable) = (0, 0, 0, 0, [])
+    toRun = []           #(path, shown) of the scripts --run runs
+    notRun = []          #(shown, line, path) of those it does not run
     for path in PythonFiles(args.paths):
         shown = os.path.relpath(path, args.base) if os.path.abspath(path).startswith(
             os.path.abspath(args.base)) else path
@@ -685,6 +769,12 @@ def main():
                     print(shown + ': ' + str(len(fixes)) + ' rename(s) rewritten')
                     source = fixed
                     tree = ast.parse(source, filename=path)
+        if args.run:
+            outside = PathsOutsideTheFolder(tree)
+            if outside:
+                notRun.append((shown,) + outside[0])
+            else:
+                toRun.append((path, shown))
         findings = CheckTree(tree, tables)
         if findings:
             withFindings += 1
@@ -699,7 +789,21 @@ def main():
           + str(withFindings) + ' of them' + (', ' + str(len(unreadable)) + ' that do not parse'
                                               if unreadable else '')
           + '; ' + str(skipped) + ' other .py files skipped')
-    return 1 if args.check and (total != 0 or unreadable) else 0
+    failedRuns = 0
+    if args.run:
+        for (shown, line, path) in notRun:
+            print(shown + ':' + str(line) + ': not run - the path ' + repr(path) + ' is outside the folder of the script')
+        results = RunScripts(toRun, args.timeout, args.solverTimeout)
+        for (shown, result, text) in results:
+            if result != 'ran':
+                print(shown + ': ' + {'failed': 'failed: ', 'timeout': 'timeout: ', 'needs': 'not run to its end - needs the package '}[result]
+                      + text)
+        counts = dict((kind, sum(1 for r in results if r[1] == kind)) for kind in ['ran', 'failed', 'timeout', 'needs'])
+        failedRuns = counts['failed'] + counts['timeout']
+        print('ran ' + str(len(results)) + ' scripts in a copy: ' + str(counts['ran']) + ' ran, ' + str(counts['failed'])
+              + ' failed, ' + str(counts['timeout']) + ' timed out, ' + str(counts['needs']) + ' need a package; '
+              + str(len(notRun)) + ' not run for a path outside their folder')
+    return 1 if args.check and (total != 0 or unreadable or failedRuns) else 0
 
 
 if __name__ == '__main__':

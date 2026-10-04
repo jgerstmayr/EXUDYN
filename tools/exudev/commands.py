@@ -997,6 +997,8 @@ def Scripts(options):
     argv += ['--base', os.getcwd()]      #the report names the files as the user named the folders
     if options.check:
         argv += ['--check']
+    if options.run:
+        argv += ['--run', '--timeout', str(options.timeout)]
     return [Step('check user scripts (' + environment + ')',
                  argv=runner.InEnvironment(environment, argv, options), cwd=root)]
 

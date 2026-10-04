@@ -395,6 +395,9 @@ def BuildParsers():
                     'Nothing is run and nothing is changed (#2712, #2718).')
     scripts.add_argument('paths', nargs='+', help='folders (searched recursively) or .py files')
     scripts.add_argument('--check', action='store_true', help='fail if anything was found')
+    scripts.add_argument('--run', action='store_true', help='also run each script, in a copy of its folder, without '
+                         'windows and with a timeout; a script that names a path outside its folder is not run (#2713)')
+    scripts.add_argument('--timeout', type=float, default=120, help='seconds a script may run with --run (default 120)')
     scripts.set_defaults(function=commands.Scripts)
 
     notebooks = subParsers.add_parser('notebooks', parents=[globalParser],
