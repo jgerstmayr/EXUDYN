@@ -744,9 +744,9 @@ The steps are numbered in the order they were raised and stand here in the order
       rebounds to 0.1391 instead of 0.1352. The maintainer: a setting of `GeneralContact` that switches the implicit
       solver to the behaviour of the contact objects; `GeneralContact` is to be restructured later, and the same
       behaviour now is what that needs.
-    - **RG4.15.10** *(open)* (#2849) `GeneralContact`: the normal force of a sphere-triangle contact gives the
-      triangle body a torque only with friction - the bug RG4.15.4 fixed for `ObjectContactSphereTorus`; right-hand
-      side and Jacobian.
+    - **RG4.15.10** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-15-10) (#2849) `GeneralContact`: the
+      contact force of a sphere-triangle contact gives the triangle body its torque also without friction; test model
+      `generalContactTriangleMomentumTest.py`.
 
     After 1.13, not urgent: #1845 (`ComputePostProcessingModes` with threads), #1565
     (`InitializeFromRestartFile`), #2326 (the slider crank benchmark after the revised IFToMM model);
@@ -1889,4 +1889,4 @@ The title of each says what the step **does**; the sentence after it says why it
 2. **Do the manual GUI check on Windows** (RG2.4), with the curved GraphicsData (row K13) and the TikZ figures in
    the PDF. It is the last condition of 1.13 that one person can meet alone.
 3. **Finish the steps that are nearly done**, each small and without a decision left: none left at the moment.
-4. **Then the larger open steps of 1.13**: RG4.15.9/.10 (`GeneralContact`), which are bugs a user can meet.
+4. **Then the larger open steps of 1.13**: RG4.15.9 (the contact setting of `GeneralContact`).

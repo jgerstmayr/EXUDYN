@@ -133,6 +133,7 @@ def TestExamplesReferenceSolution():
         'contactSphereTorusMomentumTest.py':4.227231105376637, #2026-09-30: step size recommended also where a contact ends (#2109); before 4.227231105610667; #momentum conservation of the sphere-torus contact (#2127)
         'explicitSolversPostNewtonTest.py':4.563482002223654, #2026-10-01: Jacobian of the torsional spring-damper by AD (#2745); before 4.563482002223096;  #2026-09-30: DOPRI5 with large steps added, and the step size recommended where a contact ends (#2109); before 4.097033066855782; #PostNewton states with every explicit integrator (#2754)
         'contactComparisonTest.py':4.561317500364976, #2026-10-04: GeneralContact as a fourth case and the sliding ball (#1848, #1947); before 1.200116276111891; #2026-09-30: step size recommended also where a contact ends (#2109); before 1.200040705928356; #deepest points and end heights, three contact objects, two laws (#2749, #2750)
+        'generalContactTriangleMomentumTest.py':4.035299999516676, #new 2026-10-05: momentum conservation of the GeneralContact sphere-triangle contact (#2849)
         'inactiveConnectorForceTest.py':16204.677320386909, #new 2026-10-05: an inactive connector reports no force (#984)
         'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164064,

@@ -15236,3 +15236,21 @@ fixes'".)*
 - **#121**: `ResizableArray::AllocateItems` is the one allocation of the class, with the `bad_alloc` check that the
   size constructor and `SetMaxNumberOfItems` had each by itself; the constructors from an initializer list, a
   `std::vector` and a `SlimArray` use it too.
+
+<a id="rg4-15-10"></a>
+### RG4.15.10 — GeneralContact: the torque of a sphere-triangle contact on the triangle body (2026-10-05, #2849)
+
+*(Maintainer 2026-10-05: "RG4.15.10: please resolve that bug".)*
+
+The right-hand side of the sphere-triangle contact added the torque $(\pv_{c} - \pv_{J}) \times \fv$ of the
+contact force on the rigid body of the triangles only if the pair had friction; the normal force acts at the contact
+point as well. Now always - the bug RG4.15.4 fixed for `ObjectContactSphereTorus`. The Jacobian gets the matching
+term $-\tilde{\pv}_{J}\, \partial \fv/\partial \qv$ in the rows of the rotation of the triangle body
+(`AddJacobianTerms`, `normalTorqueFactorJ`), for the pairs without friction: there it saves 3 % of the Newton
+iterations of the test; with friction it cost 0.6 %, so the friction terms stay as they were. Ground triangles are
+not affected, and no other test model changed.
+
+Test model `generalContactTriangleMomentumTest.py`, after `contactSphereTorusMomentumTest.py`: a free ball hits a
+free plate meshed into triangles, off its center, without gravity. The total angular momentum about the origin stays
+at its initial value to 3e-9 without friction and 8e-10 with friction (before: off by 7e-3 of 0.015 without
+friction), the linear momentum to 1e-16.

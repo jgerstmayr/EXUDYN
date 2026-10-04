@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.322.dev1
+- Exudyn version = 1.12.323.dev1
 - last change = 2026-10-05
 - Number of issues = 2852
-- Number of resolved issues = 2636 (322 in current version)
+- Number of resolved issues = 2637 (323 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8221,6 +8221,3 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` GeneralContact: a triangle body gets no torque from the normal force of a sphere-triangle contact without friction (#2849)
-  - description: In the sphere-triangle contact of GeneralContact the torque (trigPP - rigid.position) x fVec on the rigid body of the triangles is added only if dryFriction != 0; the normal force at the contact point also has a moment about the body's reference point, so a moving triangle body without friction gets no torque from its contacts. The same condition in the Jacobian. Ground triangles are not affected.
-  - date raised: 2026-10-04

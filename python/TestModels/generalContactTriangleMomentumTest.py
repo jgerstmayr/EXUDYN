@@ -1,0 +1,95 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  Momentum conservation of the sphere-triangle contact of GeneralContact (#2849): a free ball hits
+#           a free plate off its center, both rigid bodies, no gravity; the plate is a brick meshed into
+#           triangles. The contact forces are internal, so the total linear and angular momentum of the two
+#           bodies are conserved, with and without friction. Measured: the angular momentum about the
+#           origin stays at its initial value to 3e-9 (without friction) and 8e-10 (with friction), the
+#           linear momentum to 1e-16 - the torque of the normal force on the plate, which acts at the
+#           contact point and not at the reference point of the plate, was missing without friction
+#           (angular momentum off by 7e-3 of 0.015).
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-05
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import exudyn.graphics as graphics
+
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+def Run(mu, stepSize=1e-5, tEnd=0.02):
+    """the ball and the plate; returns the total angular and linear momentum over time"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    rBall = 0.01
+    iBall = InertiaSphere(mass=0.1, radius=rBall)
+    plateSize = [0.2, 0.2, 0.02]
+    iPlate = InertiaCuboid(density=1000, sideLengths=plateSize)
+    nBall = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.07, 0.03, 0.0205] + eulerParameters0,
+                                        initialVelocities=[0.3, 0.1, -1] + list(AngularVelocity2EulerParameters_t([0, 0, 20], eulerParameters0))))
+    nPlate = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0, 0, 0] + eulerParameters0,
+                                         initialVelocities=[0, 0, 0] + list(AngularVelocity2EulerParameters_t([0, 1, 2], eulerParameters0))))
+    ball = mbs.AddObject(ObjectRigidBody(nodeNumber=nBall, mass=iBall.Mass(), inertia=iBall.GetInertia6D()))
+    plate = mbs.AddObject(ObjectRigidBody(nodeNumber=nPlate, mass=iPlate.Mass(), inertia=iPlate.GetInertia6D()))
+
+    gContact = mbs.AddGeneralContact()
+    gContact.frictionProportionalZone = 1e-3
+    gContact.SetFrictionPairings(mu*np.eye(1))
+    gContact.SetSearchTreeCellSize(numberOfCells=[4, 4, 4])
+    [points, triangles] = graphics.ToPointsAndTrigs(graphics.Brick([0, 0, 0], plateSize))
+    gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mbs.AddMarker(MarkerBodyRigid(bodyNumber=plate)),
+                                        contactStiffness=2e6, contactDamping=2e2, frictionMaterialIndex=0,
+                                        pointList=points, triangleList=triangles)
+    gContact.AddSphereWithMarker(mbs.AddMarker(MarkerNodeRigid(nodeNumber=nBall)), radius=rBall,
+                                 contactStiffness=2e6, contactDamping=2e2, frictionMaterialIndex=0)
+
+    sensors = {}
+    for (name, node) in [('ball', nBall), ('plate', nPlate)]:
+        for variable in ['Position', 'Velocity', 'AngularVelocity', 'RotationMatrix']:
+            sensors[name+variable] = mbs.AddSensor(SensorNode(nodeNumber=node, storeInternal=True,
+                                                              outputVariableType=getattr(exu.OutputVariableType, variable)))
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = int(tEnd/stepSize)
+    simulationSettings.timeIntegration.endTime = tEnd
+    simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
+    simulationSettings.timeIntegration.generalizedAlpha.spectralRadius = 1
+    simulationSettings.solution.file.write = False
+    simulationSettings.solution.sensors.writePeriod = stepSize*10
+    mbs.SolveDynamic(simulationSettings)
+
+    data = dict((key, mbs.GetSensorStoredData(sensor)[:, 1:]) for (key, sensor) in sensors.items())
+    def Momentum(name, inertia):
+        J = inertia.Inertia()
+        m = inertia.Mass()
+        angular = []
+        linear = []
+        for k in range(len(data[name+'Position'])):
+            A = data[name+'RotationMatrix'][k].reshape(3, 3)
+            v = data[name+'Velocity'][k]
+            angular.append(np.cross(data[name+'Position'][k], m*v) + A @ J @ A.T @ data[name+'AngularVelocity'][k])
+            linear.append(m*v)
+        return np.array(angular), np.array(linear)
+    (angularBall, linearBall) = Momentum('ball', iBall)
+    (angularPlate, linearPlate) = Momentum('plate', iPlate)
+    return angularBall + angularPlate, linearBall + linearPlate
+
+
+testResult = 0
+for mu in [0, 0.3]:
+    (L, P) = Run(mu)
+    errorL = np.abs(L-L[0]).max()
+    errorP = np.abs(P-P[0]).max()
+    exu.Print('friction', mu, ': angular momentum', L[-1].round(8), ', largest change', errorL, ', of the linear momentum', errorP)
+    testResult += sum(L[-1]) + (errorL < 1e-7) + (errorP < 1e-12)
+
+exu.Print('solution of generalContactTriangleMomentumTest=', testResult)
+exu.sys['testResult'] = testResult

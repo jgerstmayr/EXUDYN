@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 288 | 1.12.322 |
+| 1.12 | Metheney | 289 | 1.12.323 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.323** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GeneralContact: a triangle body gets no torque from the normal force of a sphere-triangle contact without friction (#2849)
+  - description: In the sphere-triangle contact of GeneralContact the torque (trigPP - rigid.position) x fVec on the rigid body of the triangles is added only if dryFriction != 0; the normal force at the contact point also has a moment about the body's reference point, so a moving triangle body without friction gets no torque from its contacts. The same condition in the Jacobian. Ground triangles are not affected.
+  - **notes:** GeneralContact: the rigid body of the triangles of a sphere-triangle contact gets the torque of the contact force also without friction, so that linear and angular momentum are conserved; test model generalContactTriangleMomentumTest.py.
+  - date resolved: **2026-10-05 00:59**, date raised: 2026-10-04
 - **1.12.322** `CHECK` `HIGH` `MEDIUM EFF` `resolved by: Claude-JG` return value policy (#1512)
   - description: check return value policy of GeneralContact (as example for further decisions); see if reference in ALL access functions makes no problems if object is deleted on Python side
   - **notes:** The GeneralContact returned by mbs.AddGeneralContact() and mbs.GetGeneralContact() keeps its MainSystem alive.

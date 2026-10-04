@@ -747,7 +747,7 @@ inline void AddJacobianTerms(TemporaryComputationData& tempArrayThreadID,
  	const ArrayIndex& allLTGsGi, const ArrayIndex& allLTGsGj,
 	const Matrix3D& rTildeNI, const Matrix3D& rTildeNJ, bool computeFrictionTerms, Real factRegularizedFriction,
 	const Matrix3D& JacFc, const Matrix3D& JacTorqueFc,
-	SparseTripletVector& triplets)
+	SparseTripletVector& triplets, Real normalTorqueFactorJ = 0.)
 {
 	ResizableMatrix& m = tempArrayThreadID.localJacobian;
 	ResizableMatrix& temp = tempArrayThreadID.tempMatrix; //used as temporary matrix
@@ -781,6 +781,13 @@ inline void AddJacobianTerms(TemporaryComputationData& tempArrayThreadID,
 			EXUmath::MultMatrixTransposedMatrixTemplate(rotJACj, temp2, temp);
 			m += temp;
 		}
+		if (normalTorqueFactorJ != 0. && rotColumnsj != 0)
+		{
+			//JrotJ.T*d(TcJ)/dposJ*JposJ of the torque of the contact force about the reference point of J (#2849)
+			EXUmath::MultMatrixMatrixTemplate(normalTorqueFactorJ * rTildeNJ * JacFc, JACj, temp);
+			EXUmath::MultMatrixTransposedMatrixTemplate(rotJACj, temp, temp2);
+			m += temp2;
+		}
 		EXUmath::AddMatrixToSparseTripletVector(triplets, m, allLTGsGj, allLTGsGj);
 
 		if (columnsi)
@@ -809,6 +816,13 @@ inline void AddJacobianTerms(TemporaryComputationData& tempArrayThreadID,
 				temp2 -= temp;
 				EXUmath::MultMatrixTransposedMatrixTemplate(rotJACj, temp2, temp);
 				m += temp;
+			}
+			if (normalTorqueFactorJ != 0. && rotColumnsj != 0)
+			{
+				//JrotJ.T*d(TcJ)/dposI*JposI (#2849)
+				EXUmath::MultMatrixMatrixTemplate(-normalTorqueFactorJ * rTildeNJ * JacFc, JACi, temp);
+				EXUmath::MultMatrixTransposedMatrixTemplate(rotJACj, temp, temp2);
+				m += temp2;
 			}
 
 			EXUmath::AddMatrixToSparseTripletVector<ResizableMatrix, false>(triplets, m, allLTGsGj, allLTGsGi, 1.);
@@ -1898,9 +1912,9 @@ void GeneralContact::ComputeContactTrigsRigidBodyBased(TemporaryComputationDataA
 				if (allPositionJacobians[trigJacIndex]->NumberOfColumns() != 0) //special case: COGround has (0,0) Jacobian
 				{
 					EXUmath::MultMatrixTransposedVector(*allPositionJacobians[trigJacIndex], fVec, ode2Lhs);
-					if (dryFriction != 0. && allRotationJacobians[trigJacIndex]->NumberOfColumns() != 0)
+					if (allRotationJacobians[trigJacIndex]->NumberOfColumns() != 0)
 					{
-						//add torque
+						//add torque; the normal force acts at the contact point as well, with or without friction (#2849)
 						EXUmath::MultMatrixTransposedVectorAdd(*allRotationJacobians[trigJacIndex],
 							(trigPP - rigid.position).CrossProduct(fVec), ode2Lhs);
 					}
@@ -2370,7 +2384,7 @@ void GeneralContact::JacobianODE2LHS(const CSystem& cSystem, TemporaryComputatio
 			AddJacobianTerms(tempArray[threadID],
 				columnsi, columnsj, JACi, JACj, rotColumnsi, rotColumnsj, rotJACi, rotJACj,
 				*allLTGs[sphereIjacIndex], *allLTGs[trigJjacIndex], rTildeNI, rTildeNJ, computeFrictionTerms, factRegularizedFriction, JacFc, JacTorqueFc,
-				triplets);
+				triplets, dryFriction == 0. ? -1. : 0.); //the torque -rTildeNJ*fVec of the contact force on the triangle body; with friction it slowed the Newton iteration (#2849)
 
 		}
 		//}//serial
