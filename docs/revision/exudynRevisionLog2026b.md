@@ -15105,3 +15105,26 @@ still runs.
 Test: `testRunningScriptsInACopy` in `test_checkUserScripts.py` - a script that writes a file (it does not appear in the
 original folder), one that raises, one that needs a package that is not installed, and the path check. Tried on
 `python/Examples/notebooks`: 7 scripts, all ran, in 10 s.
+
+<a id="rg4-17-2"></a>
+### RG4.17.2 — the stall of the ANCF right-angle frame, analysed (2026-10-04, #2763)
+
+*(Maintainer 2026-10-04: "Do the next solo steps.")*
+
+`rightAngleFrame.py` with `ObjectANCFBeam` (`useGeometricallyExact = False`), scripts in the scratchpad:
+
+- **Where**: the static solver stops at $t \approx 0.0328$, a tip force of about 0.31 N. The point does not move with
+  8 or 16 elements, `crossSectionPenaltyFactor` 0.1, 1 or 10, EigenSparse or EigenDense, 200 or 800 load steps.
+  Without the imperfection (1e-4) the run ends at $t = 1$; the geometrically exact beam reaches $P = 1.096$.
+  Up to $t = 0.03$ both beams follow the same path (out-of-plane tip displacement 4.515e-5 → 3.812e-5).
+- **The model is right**: the full system Jacobian equals a numerical one in all blocks (relative ≤ 2.5e-8), the
+  residual is smooth along a step; the tangent stiffness projected onto the constraints is positive definite
+  (smallest eigenvalue 0.0018), so no bifurcation; its condition 5.5e12 is that of the geometrically exact beam.
+  A single cantilever of the frame's arm agrees with the geometrically exact beam in lateral-torsional buckling and
+  in torsion (twist/torque = 4.0863 = $L/GJ$). A corner by body markers instead of node markers stalls at the same
+  point.
+- **The solver is not the cause**: a Newton iteration by hand (numpy) at $t = 0.0335$ with equilibrated dense
+  solves, a line search and iterative refinement stalls alike; its step is dominated by a change of about 0.036 of
+  the reaction forces of the clamp.
+- **So**: the region of convergence of Newton's method is very small there - the nonlinearity of the slope
+  parametrization in the twist of a thin section. The options are RG4.17.3; #2763 stays open.

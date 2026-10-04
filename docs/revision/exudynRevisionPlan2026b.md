@@ -760,12 +760,20 @@ The steps are numbered in the order they were raised and stand here in the order
       `ObjectANCFBeam` of RG9.3.7, through one set of functions); C_q of the corner joint now equals the numerical one.
       The stall is **not** gone: it remains with the numerical system Jacobian too, so it is no longer an
       inconsistent Jacobian.
-    - **RG4.17.2** *(open, needs no decision)* **the stall with a consistent Jacobian**: from load step 7 (3 % of the
-      drive) the residual grows by a constant factor 1.41 per Newton iteration, with the analytic and with the
-      system-wide numerical Jacobian alike; the condition number of the system Jacobian is 5e12 (the thin section,
-      $w/h = 1/50$, with `crossSectionPenaltyFactor = [1,1,1]`). Next: the eigenvalues of the tangent stiffness at the
-      stall against those of the geometrically exact beam - a zero or negative one is a bifurcation of the ANCF model
-      (a cross-section mode), not a solver problem -, then the penalty factor and the number of elements.
+    - **RG4.17.2** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg4-17-2) *(maintainer 2026-10-04: "Do the
+      next solo steps")* **the stall analysed: no error in the model or the solver, but a very small region of Newton
+      convergence of the ANCF frame** at $P \approx 0.31$ N ($t = 0.033$), the same for 8 or 16 elements, penalty
+      factor 0.1 to 10, sparse or dense solver, 200 or 800 load steps; without the imperfection the run ends at $t=1$.
+      The Jacobian is consistent in all blocks, the constrained tangent is positive definite (smallest eigenvalue
+      0.0018 - no bifurcation), its condition 5.5e12 is that of the geometrically exact beam; a Newton iteration by hand
+      with equilibrated dense solves, line search and iterative refinement stalls alike. A single cantilever (lateral
+      buckling, torsion $L/GJ$) agrees with the geometrically exact beam.
+    - **RG4.17.3** *(open, options)* what to do with it (#2763): (a) keep the geometrically exact beam in
+      `rightAngleFrame.py` and say in the description of `ObjectANCFBeam` that a thin twisted section needs small load
+      steps (the least); (b) a better predictor in the static solver - the tangent extrapolation of the last two
+      converged steps instead of the last state; (c) an arc-length / adaptive step reduction that halves the step
+      after a stall (whether `staticSolver.adaptiveStep`, on by default, gets past the point with a smaller `minimumStepSize` is the first check); (d) the strain
+      measures of `ObjectANCFBeam` for the twist of a thin section - the slowest, and a research question.
 
 <a id="rg4-18"></a>
 **RG4.18** **DONE 2026-10-02** (#2790) — [log](exudynRevisionLog2026b.md#rg4-18) · [plan text](exudynRevisionLog2026b.md#plan-rg4-18) — A system without coordinates is solved.
@@ -1777,7 +1785,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #1848, #1947 | the open bugs before 1.13: RG4.15.8 `GeneralContact` against the sphere contact |
-| RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame with a consistent Jacobian (RG4.17.2) |
+| RG4.17 | #2763 | `ObjectANCFBeam`: the stall of the right-angle frame - options (RG4.17.3) |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
@@ -1830,4 +1838,4 @@ The title of each says what the step **does**; the sentence after it says why it
    the PDF. It is the last condition of 1.13 that one person can meet alone.
 3. **Finish the steps that are nearly done**, each small and without a decision left: none left at the moment.
 4. **Then the larger open steps of 1.13**: RG4.15.8 (`GeneralContact` against the sphere contact) and RG4.17.2
-   (the beam stall), which are bugs a user can meet.
+   (the beam stall, analysed; RG4.17.3 needs a choice of the options), which are bugs a user can meet.
