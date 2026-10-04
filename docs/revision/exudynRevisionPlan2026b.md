@@ -1414,7 +1414,8 @@ What depends on it: the graphics regression test takes every item through its Mi
 **RG13.8** *(maintainer 2026-10-04)* **How an item is drawn** (#2840): the drawing of the items is documented nowhere but in the
 74 `UpdateGraphics` functions - which settings they use for size, tiling and color, what `drawSize = -1` means, what a
 color of `[-1,-1,-1,-1]` takes. Proposed:
-    - **RG13.8.1** an inventory, per item: the settings and the parameters its `UpdateGraphics` reads, its default
+    - **RG13.8.1** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg13-8-1) *(maintainer 2026-10-04: "continue
+      with 1-3")* an inventory, per item: the settings and the parameters its `UpdateGraphics` reads, its default
       size and color, what it draws (and what not, e.g. the windings of a spring or the axes of a joint); written as a
       table, and where a setting is misleading or does not fit (e.g. `general.cylinderTiling` for the arcs of a rope,
       RG6.9), raised;
@@ -1422,7 +1423,13 @@ color of `[-1,-1,-1,-1]` takes. Proposed:
       (e.g. `drawing=r'...'` and the settings it uses, which the emitter links to the settings page), so that the page
       and the code are checked against each other where possible;
     - **RG13.8.3** the general rules once per kind, in `itemKindDefinitions.py`: nodes, markers, loads and sensors are
-      drawn alike within their kind (size, color, number), objects one by one.
+      drawn alike within their kind (size, color, number), objects one by one;
+    - **RG13.8.4** *open* (#2843) the findings of the inventory: parameters that are not read (`ObjectConnectorDistance.drawSize`),
+      items with drawing parameters and no drawing (`ObjectConnectorGravity`, `ObjectConnectorCoordinateVector`, and
+      `show` of 13 items that draw nothing), a description that names another setting than the code
+      (`ObjectContactCurveCircles`), a view setting read into the graphics data (`ObjectANCFThinPlate`), the load drawn
+      with its user function only without multithreaded rendering, the contour of the 3D beam line, the tiling of
+      connectors and joints without a rule - per finding: draw it, remove the parameter, or say what it does.
 
 ## RG14 — Marker values computed where they are used
 
@@ -1739,6 +1746,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582, #2776 | the graphics regression suite - open: RG2.3.3.8 the raytracer that can hang in `RedrawAndGetImage` |
+| RG13.8.4 | #2843 | the findings of the drawing inventory: parameters not read, drawing parameters without drawing, tiling without a rule |
 | RG13.8 | #2840 | how an item is drawn: an inventory of the `UpdateGraphics` functions, then on the pages |
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |

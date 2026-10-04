@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.285.dev1
 - last change = 2026-10-04
-- Number of issues = 2843
+- Number of issues = 2844
 - Number of resolved issues = 2599 (285 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHECK` `MEDIUM EFF` `raised by: Claude-JG` Drawing parameters and settings that do nothing or something else than they say (#2843)
+  - description: Found by the inventory of the drawing functions (tools/itemDrawingReport.py, docs/revision/itemDrawingState.md, revision2026b step RG13.8.1): (1) ObjectConnectorDistance.drawSize ('link size') is not read - the connector is a line; (2) ObjectConnectorGravity has show, drawSize ('diameter of spring') and color but no drawing; (3) ObjectConnectorCoordinateVector has show and color but no drawing; (4) 13 more items have show but draw nothing (Node1D, the generic nodes, ObjectGenericODE1, the coordinate markers, LoadCoordinate, SensorLoad, SensorUserFunction); (5) ObjectContactCurveCircles says its circles use circleTiling, the code uses general.cylinderTiling; (6) ObjectANCFThinPlate reads view0.scene.showMeshEdges when it builds its graphics data, a view setting the other items leave to the renderer; (7) a load with a Python user function is drawn with its user function only if general.useMultiThreadedRendering is False, a symbolic one always - nowhere said; (8) the line of a 3D beam without section geometry interpolates its contour colors over 0..L while it runs from -L/2 to L/2; (9) the tiling of connectors and joints mixes general.cylinderTiling, axesTiling, sphereTiling and circleTiling (circleTiling\*4 for the contact circles, 4\*cylinderTiling for rolling discs) without a rule. To decide per finding: draw, remove the parameter, or say what it does.
+  - date raised: 2026-10-04
 - `DOCU` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` the documentation says how each item is drawn and which settings it uses (#2840)
   - description: The maintainer, 2026-10-04: 'the graphics visualization has no docs about how the items are drawn. Which (default) settings are used for tiling, colors, etc. - only available via the code. So, this should be completed and possibly improved if some misleading or inappropriate settings are used in the UpdateGraphics functions. This is mainly for the objects, but also for other items (but they would probably have a generic description for most nodes, markers, etc.).' revision2026b step RG13.8.
   - **remarks:** For the inventory (found with \#2837): UpdateGraphicsBeam3D without section geometry colors the line of a contour plot with LinearInterpolate(value1, value2, 0, L, x), but x runs from -L/2 to L/2 and value1, value2 are taken at the local positions 0 and L - the colors are those of the middle and of a point beyond the end.

@@ -14755,3 +14755,41 @@ appended copy, which works afterwards in a second container; the system of anoth
 container deleted - each solved, no crash at the end. `simulatorCouplingTwoMbs.py`, which appends the system of another
 container, passes as before. The copy example of the reference manual is the part `copy` of `generalInformation.ipynb`
 now; its comments say that the container keeps the copy.
+
+<a id="rg13-8-1"></a>
+### RG13.8.1 — the inventory of the drawing functions (2026-10-04, #2840, #2843)
+
+*(Maintainer 2026-10-04: "Continue with 1-3 of the suggested next tasks.")*
+
+**The tool**: `tools/itemDrawingReport.py` reads the C++ and writes
+[itemDrawingState.md](itemDrawingState.md), one row per item: the visualization settings its drawing reads, the
+visualization parameters of its definition it reads and those it does not, the primitives it draws with, the file and
+the helpers. The drawing of an item is its `Visualization<Item>::UpdateGraphics`, its `CallUserFunction` (the graphics
+user functions of ground, rigid bodies and `ObjectGenericODE2`), the helpers they call
+(`VisualizationItemHelpers.h`, the EXUvis functions of `VisualizationPrimitives.cpp`, followed recursively), and for
+an item without an `UpdateGraphics` of its own the one of the class its visualization derives from (the FFRF objects
+and `ObjectGenericODE2` draw as `ObjectSuperElement`). A setting is read as `visualizationSettings.a.b` or through a
+local reference to a structure (`DrawConnectorSpring`); parameters flagged for no interface are left out. Like
+`itemDocumentationReport.py`, it changes nothing and is run again rather than edited; it is the base for the section
+*Drawing* of RG13.8.2.
+
+**What it says**: 81 `UpdateGraphics` functions for 97 items; 16 items draw nothing. Settings read across kinds are the
+tilings of `general` (`cylinderTiling` in 17 bodies, connectors, joints and contacts, `axesTiling` for frames and arrows,
+`sphereTiling`, `circleTiling` for 2D contact circles), `nodes.*` for the nodes of the superelements,
+`bodies.deformationScaleFactor` for the superelement markers, `general.rendererPrecision` for numbers drawn by the 2D
+cables and the friction contact.
+
+**What does not fit** - raised as **#2843**, planned as RG13.8.4, nothing changed here:
+1. `ObjectConnectorDistance.drawSize` ("link size") is not read; the connector is a line;
+2. `ObjectConnectorGravity` has `show`, `drawSize` ("diameter of spring") and `color` and no drawing;
+3. `ObjectConnectorCoordinateVector` has `show` and `color` and no drawing;
+4. 13 more items have `show` and draw nothing: `Node1D`, the four generic nodes, `ObjectGenericODE1`, five coordinate
+   markers, `LoadCoordinate`, `SensorLoad`, `SensorUserFunction` (the item pages can say so, RG13.8.2);
+5. `ObjectContactCurveCircles` says its circles use `circleTiling`; the code uses `general.cylinderTiling`;
+6. `ObjectANCFThinPlate` reads `view0.scene.showMeshEdges` while building its graphics data - a view setting that the
+   other items leave to the renderer, so a second view or a change of it without a redraw is wrong;
+7. a load with a Python user function is drawn with the value of its user function only if
+   `general.useMultiThreadedRendering` is False (a symbolic one always) - said nowhere;
+8. the contour colors of the line of a 3D beam without section geometry (remarked at #2840 by RG3.31.4);
+9. the tiling of connectors and joints mixes four `general` tilings - `circleTiling*4` for the contact circles,
+   `4*cylinderTiling` for rolling discs - without a rule; RG6.9 gave the curves of connectors `connectors.curveTiling`.
