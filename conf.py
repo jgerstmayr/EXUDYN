@@ -92,6 +92,7 @@ templates_path = ['_templates']
 exclude_patterns = ['rotorAnsys.rst',
                     'src/*','msvc/*','include/*','libs/*','python/*',
                     'tools/generators/generated/*',   #generated RST fragments, not documents
+                    'docs/generated/notebooks/snippets/*', #examples the manual pages include (#2831)
                     '_build/*','build/*','dist/*','tmp/*','.pytest_cache/*',
                     'README.md',                      #the GitHub landing page, like README.rst
                     'docs/generated/README.md',       #what the directory is, for humans in git

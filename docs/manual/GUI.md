@@ -137,19 +137,7 @@ next hit, and the drop-down beside it lists the hits so that one can be picked.
 
 The appearance of visualization settings dialogs may be adjusted by directly modifying `exudyn.misc.GUI` variables (this may change in the future). For example write in your code before opening the render window (treeEdit and treeview both mean the settings dialog currently used for visualization settings and partially for right-mouse-click):
 
-```python
-  import exudyn.misc.GUI
-  exudyn.misc.GUI.dialogDefaultWidth             #unscaled width of, e.g., right-mouse-button dialog
-  exudyn.misc.GUI.treeEditDefaultWidth = 800
-  exudyn.misc.GUI.treeEditDefaultHeight = 600
-  exudyn.misc.GUI.treeEditMaxInitialHeight = 600 #otherwise height is increased for larger screens
-  exudyn.misc.GUI.treeEditOpenItems = ['general','contact'] #these tree items are opened when a dialog is opened the first time
-  exudyn.misc.GUI.treeEditLastOpenItems          #which folders were open when a dialog was last used in this process; the next dialog opens with them (None until a dialog was used)
-  #
-  exudyn.misc.GUI.treeviewDefaultFontSize        #this is the base font size of the dialog (also right-mouse-button dialog)
-  exudyn.misc.GUI.useRenderWindowDisplayScaling  #if True, the scaling will follow the current scaling of the render window; if False, it will use the `tkinter` internal scaling, which uses the main screen where the dialog is created (which won't scale well, if the window is moved to another screen).
-  #
-  exudyn.misc.GUI.textHeightFactor = 1.45        #this factor is used to increase height of lines in tree view as compared to font size
+```{include} /docs/generated/notebooks/snippets/visualization-dialogs.md
 ```
 
 (fig-visualizationsettings)=
@@ -163,27 +151,7 @@ Note: Press 'V' in render window to open dialog.
 
 The visualization settings structure can be accessed in the system container `SC` (access per reference, no copying!), accessing every value or structure directly, e.g.,
 
-```python
-  SC.visualizationSettings.nodes.defaultSize = 0.001      #draw nodes very small
-
-  #change openGL parameters; current values can be obtained from SC.renderer.GetState()
-  #change zoom factor:
-  SC.visualizationSettings.openGL.advanced.initialZoom = 0.2
-  #set the center point of the scene (can be attached to moving object):
-  SC.visualizationSettings.openGL.advanced.initialCenterPoint = [0.192, -0.0039,-0.075]
-
-  #turn of auto-fit:
-  SC.visualizationSettings.general.autoFitScene = False
-
-  #change smoothness of a cylinder:
-  SC.visualizationSettings.general.cylinderTiling = 100
-
-  #make round objects flat:
-  SC.visualizationSettings.openGL.advanced.shadeModelSmooth = False
-
-  #turn on coloured plot, using y-component of displacements:
-  SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displacement
-  SC.visualizationSettings.contour.outputVariableComponent = 1 #0=x, 1=y, 2=z
+```{include} /docs/generated/notebooks/snippets/visualization-settings.md
 ```
 
 (sec-overview-basics-commandandhelp)=
@@ -199,25 +167,12 @@ To print values, always use `print(...)` to see the string representation of an 
 
  Useful examples (single lines) may be:
 
-```python
-  x=5 #or change any other variable used in Python user functions
-  print(mbs) #print current mbs overview
-  print(mbs.GetSensorValues(0))
-  #adjust simulation end time, in long-run simulations:
-  mbs.sys['dynamicSolver'].it.endTime = 1
-  #adjust output behavior
-  mbs.sys['dynamicSolver'].output.verboseMode = 0
+```{include} /docs/generated/notebooks/snippets/visualization-commands.md
 ```
 
  You can also do quite fancy things during simulation, e.g., to deactivate joints (of course this may result in strange behavior):
 
-```python
-  n=mbs.systemData.NumberOfObjects()
-  for i in range(n):
-      d = mbs.GetObject(i)
-      #if 'Joint' in d['objectType']:
-      if 'activeConnector' in d:
-          mbs.SetObjectParameter(i, 'activeConnector', False)
+```{include} /docs/generated/notebooks/snippets/visualization-deactivate.md
 ```
 
 Note that you could also change `visualizationSettings` in this way, but the Visualization settings dialog is much more convenient.
@@ -240,23 +195,10 @@ What the camera looks at, how a view is kept, and how it can be made to follow t
 The system container function `SC.renderer.GetState()` returns a dictionary with current information on the renderer.
 This information is updated whenever the renderer performs redrawing or when according changes in the renderer are performed.
 
-When starting with an empty `mbs` and calling `SC.renderer.Start()`, the `SC.renderer.GetState()` will return a dictionary similar to:
+After `SC.renderer.Start()`, `SC.renderer.GetState()` returns a dictionary such as this one - here of a renderer that
+opened no window:
 
-```python
-  {'centerPoint': [0.0, 0.0, 0.0],
-  'rotationCenterPoint': [0.0, 0.0, 0.0],
-  'maxSceneSize': 1.0,
-  'zoom': 0.4,
-  'boundingBox': [[-1.0,-1.0,-1.0],[1.0,1.0,1.0]],
-  'currentWindowSize': [1024, 768],
-  'currentWindowPosition': [-1, -1],
-  'displayScaling': 1.0,
-  'modelRotation': [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
-  'mouseCoordinates': [0.0, 0.0],
-  'openGLcoordinates': [0.0, 0.0],
-  'joystickPosition': [0.0, 0.0, 0.0],
-  'joystickRotation': [0.0, 0.0, 0.0],
-  'joystickAvailable': -1}
+```{include} /docs/generated/notebooks/snippets/visualization-renderState.md
 ```
 
 Most entries in `renderState` are having single precision due to compatibility with values entered in OpenGL.
@@ -296,16 +238,7 @@ The **simplest way to store the model view** is to **press CTRL-F3** when the re
 
 Then, just copy the code after `SC.renderer.Start`, see the following code snippet:
 
-```python
-  import exudyn as exu
-  SC=exu.SystemContainer()
-  SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
-  SC.renderer.Start()
-  SC.renderer.SetModelView(zoom=8.8,rotationVector=[-0.8120557,0.4727261,0.7176849],centerPoint=[1.562,-1.526,0])
-  #+++++++++++++++
-  #do simulation here
-  #+++++++++++++++
-  SC.renderer.Stop()
+```{include} /docs/generated/notebooks/snippets/visualization-modelView.md
 ```
 
 ---
@@ -314,18 +247,7 @@ If you are using an interactive Python, there is a automated way to store and re
 see also {ref}`sec-renderstate`.
 A simple way is to reload the stored render state (model view) after simulating your model once at the end of the simulation (note that `visualizationSettings.general.autoFitScene` should be set False if you want to use the stored zoom factor):
 
-```python
-  import exudyn as exu
-  SC=exu.SystemContainer()
-  SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
-  SC.renderer.Start()
-  SC.renderer.RestoreSavedState() #the view of the previous run, if there is one
-  #+++++++++++++++
-  #do simulation here and adjust model view settings with mouse
-  #+++++++++++++++
-
-  #store model view for next run:
-  SC.renderer.Stop() #stores render state in exu.sys['renderState']
+```{include} /docs/generated/notebooks/snippets/visualization-restoreState.md
 ```
 
 ---
@@ -335,7 +257,7 @@ Since version 1.10.98, the `ZoomAll` and `SetModelView` also work without starti
 
 If you wish to include all details of your view, like to rotation, you can obtain the current model view from the console after a simulation, e.g.,
 
-```python
+```text
   In[1] : SC.renderer.GetState()
   Out[1]:
   {'centerPoint': [1.0, 0.0, 0.0],
@@ -350,18 +272,7 @@ If you wish to include all details of your view, like to rotation, you can obtai
 which contains the last state of the renderer (NOTE: here, only part of the render state is shown for simplicity!).
 Now copy the output and set this with `SC.renderer.SetState` in your Python code to have a fixed model view in every simulation (`SC.renderer.SetState` AFTER `SC.renderer.Start()`):
 
-```python
-  SC.visualizationSettings.general.autoFitScene = False #prevent from autozoom
-  SC.renderer.Start()
-  renderState={'centerPoint': [1.0, 0.0, 0.0],
-               'maxSceneSize': 2.0,
-               'zoom': 1.0,
-               'currentWindowSize': [1024, 768],
-               'modelRotation':     [[ 0.34202015,  0.        ,  0.9396926 ],
-                                    [-0.60402274,  0.76604444,  0.21984631],
-                                    [-0.7198463 , -0.6427876 ,  0.26200265]])
-  SC.renderer.SetState(renderState)
-  #.... further code for simulation here
+```{include} /docs/generated/notebooks/snippets/visualization-setState.md
 ```
 
 Note that in the current version of Exudyn there is more data stored in render state, which is not used in `SC.renderer.SetState`,
@@ -375,8 +286,7 @@ see also {ref}`sec-renderstate`.
 For some models, it may be advantageous to track the translation and/or rotation of certain bodies, e.g., for cars, (wheeled) robots or bicycles.
 Since Exudyn 1.4.18 you can attach view to a marker, using the visualization setting
 
-```python
-  SC.visualizationSettings.view0.camera.trackMarker = nMarker
+```{include} /docs/generated/notebooks/snippets/visualization-trackMarker.md
 ```
 
 in which `nMarker` represents the desired marker number to follow.
@@ -386,23 +296,7 @@ The following paragraph represents a slower, slightly outdated approach, which m
 To do so, the current render state (`SC.renderer.GetState()`, `SC.renderer.SetState(...)`) can be obtained and modified, in order to always follow a certain position.
 As this needs to be done during redraw of every frame, it is conveniently done in a graphicsUserFunction, e.g., within the ground body. This is shown in the following example, in which `mbs.variables['nTrackNode']` is a node number to be tracked:
 
-```python
-  #mbs.variables['nTrackNode'] contains node number
-  def UFgraphics(mbs, objectNum):
-      n = mbs.variables['nTrackNode']
-      p = mbs.GetNodeOutput(n,exu.OutputVariableType.Position,
-                            configuration=exu.ConfigurationType.Visualization)
-      rs=SC.renderer.GetState() #get current render state
-      A = np.array(rs['modelRotation'])
-      p = A.T @ p #transform point into model view coordinates
-      rs['centerPoint']=[p[0],p[1],p[2]]
-      SC.renderer.SetState(rs)  #modify render state
-      return []
-
-  #add object with graphics user function
-  oGround2 = mbs.AddObject(ObjectGround(visualization=
-                 VObjectGround(graphicsDataUserFunction=UFgraphics)))
-  #.... further code for simulation here
+```{include} /docs/generated/notebooks/snippets/visualization-trackNode.md
 ```
 
 NOTE that this approach is slower and it may lead to a (usually silient) crash after closing the renderer, as the renderer thread is somehow coupled to Python which is prohibited from Python side.
@@ -452,19 +346,11 @@ see
 
 - `exu.SimulationSettings().solution.file.name`
 
-You can call the `SolutionViewer` either in the model, or at the command line / IPython to load a previous solution (belonging to the same mbs underlying the solution!):
+**By default and as a recommended way**, if no solution is provided, `SolutionViewer` reloads the solution of the
+previous simulation that is referred to from `mbs.sys['simulationSettings']`. The solution of an earlier run - belonging
+to the same mbs - is loaded with `LoadSolutionFile`, in the model or at the command line / IPython:
 
-```python
-  from exudyn.utilities import LoadSolutionFile
-  sol = LoadSolutionFile('solution/coordinatesSolution.txt')
-  mbs.SolutionViewer(solution=sol)
-```
-
-**By default and as a recommended way**, if no solution is provided, `SolutionViewer` tries to reload the solution of the previous simulation that is referred to from `mbs.sys['simulationSettings']`:
-
-```python
-  #... mbs has been previously solved
-  mbs.SolutionViewer()
+```{include} /docs/generated/notebooks/snippets/visualization-solutionViewer.md
 ```
 
 An example for the `SolutionViewer` is integrated into the `Examples/` directory, see `solutionViewerTest.py`. \

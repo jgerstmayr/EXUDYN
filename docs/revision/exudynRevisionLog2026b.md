@@ -14793,3 +14793,50 @@ cables and the friction contact.
 8. the contour colors of the line of a 3D beam without section geometry (remarked at #2840 by RG3.31.4);
 9. the tiling of connectors and joints mixes four `general` tilings - `circleTiling*4` for the contact circles,
    `4*cylinderTiling` for rolling discs - without a rule; RG6.9 gave the curves of connectors `connectors.curveTiling`.
+
+<a id="rg17-5"></a>
+### RG17.5 — the examples of the user manual are notebooks (2026-10-04, #2831, #2844)
+
+*(Maintainer 2026-10-04: "RG17.5: sounds good. 70 is really a lot, so I ask to see if some of them can be fusioned into
+one example, with the text in between or restructuring the text a little bit to fit into less notebooks. Julia can't be
+tested; graphicsData could go into one example with all cases at the end, refering to that in the GraphicsData
+section, etc.")*
+
+**Counted again**: 55 Python blocks in the manual pages (not 70 - the tutorial pages are gone): `introductionAdvanced`
+17 (Julia 11), `GUI` 15, `userSettings` 6, `performanceErrors` 4, `introductionBasics` 4, `gettingStartedFAQ` 4,
+`resultsMonitor` 2, `gettingStartedExample` 2, `revisions` 1.
+
+**The mechanism**: the notebooks of `python/Notebooks/snippets/` get no page and no script; `notebookEmitter.py` writes
+fragments, `docs/generated/notebooks/snippets/<notebook>.md` (the whole notebook but its first cell) and
+`<notebook>-<part>.md` (the cells tagged `part-<part>`), each ending with "(from the notebook `...`)", their images
+referred to from the root of the documentation. A manual page includes a fragment where its example stands,
+```{include} /docs/generated/notebooks/snippets/solving-settings.md```; `conf.py` excludes the fragments as documents.
+The emitter refuses a notebook that stores an error. `test_referenceNotebooks.py` runs the snippet notebooks as it
+runs the reference notebooks.
+
+**Fused, three notebooks for 25 blocks**:
+- `graphics` - the section *GraphicsData* had an example under each type, the section *Raytracing* a sketch with
+  `...`: one model now, with a line, the same with `graphics.Lines`, straight and quadratic lines, a circle, a text,
+  spheres, a tetrahedron from points and triangles, a brick with edges and a chrome sphere, drawn with the raytracer
+  by `ShowImage` - shown once, in a new subsection at the end of *GraphicsData*; *Raytracing* says in one sentence what
+  to set and points to it. 6 blocks;
+- `solving` - *Basics* (the simulation settings: two blocks fused into one, "is created, and its values are modified";
+  the output settings; the renderer around the solver) and *Performance and errors* (catching a solver failure, the
+  parameter function, the error of a user function - the hidden cell gives the spring a user function that divides
+  by zero, and the page shows `<class 'ZeroDivisionError'>`). 7 blocks in 6 parts;
+- `visualization` - the page *Renderer, graphics and visualization*: the GUI variables, the settings in the script,
+  the commands during a simulation and deactivating connectors, the render state (the dictionary written by hand is
+  now the printed state of a renderer without a window), the model view with `SetModelView`, `RestoreSavedState`,
+  `SetState` (its block had a syntax error: a `]])` closing the dictionary), following a marker and a node, the
+  solution viewer (two blocks fused; `LoadSolutionFile(OutputFilePath(...))`, so that it reads where the solver wrote
+  also with `exudyn.config.outputDirectory`). 12 blocks in 11 parts.
+
+**Kept, 30 blocks**: Julia (11, no Julia here); outputs and sessions that are not code - the FAQ's line listing, its two
+error messages, the console output and solution file of *Getting started*, the IPython session of the render state
+(now a `text` block) (6); code that touches the user's machine or needs a window - the six of *User settings* (they
+write `~/.exudyn/config.json` or need open windows), the two of the results monitor (a separate process),
+`sys.exudynFast` (must come before the first import), the image of the render window (a window), the copy line of the
+settings dialog (what the dialog shows), `HighlightItem` of the FAQ (object 7 of the error message above it), the
+imports of `revisions.md` (13).
+
+**Found**: the raytracer draws no `Circle` - **#2844**, RG6.8.7; the example says so.

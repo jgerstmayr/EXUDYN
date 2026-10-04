@@ -42,50 +42,18 @@ python -m exudyn dialogs sim
 **CTRL-F** finds a setting by name and *copy line* gives the Python statement that sets it, ready to
 paste into the script; see {ref}`sec-commandline`.
 
- The simulation settings structure is created with
+The simulation settings structure is created, and its values are modified, e.g.:
 
-```python
-  simulationSettings = exu.SimulationSettings()
-```
-
-Hereafter, values of the structure can be modified, e.g.,
-
-```python
-  tEnd = 10 #10 seconds of simulation time:
-  h = 0.01  #step size (gives 1000 steps)
-  simulationSettings.timeIntegration.endTime = tEnd
-  #steps for time integration must be integer:
-  simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
-  #assigns a new tolerance for Newton's method:
-  simulationSettings.timeIntegration.newton.relativeTolerance = 1e-9
-  #write some output while the solver is active (SLOWER):
-  simulationSettings.timeIntegration.verboseMode = 2
-  #write solution every 0.1 seconds:
-  simulationSettings.solution.file.writePeriod = 0.1
-  #use sparse matrix storage and solver (package Eigen):
-  simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
+```{include} /docs/generated/notebooks/snippets/solving-settings.md
 ```
 
 ## Generating output and results
 
 The solvers provide a number of options in `solution` to generate a solution file. As a default, exporting the solution of all system coordinates (on position, velocity, ... level) to the solution file is activated with a writing period of 0.01 seconds.
 
- Typical output settings are:
+Typical output settings are:
 
-```python
-  #create a new simulationSettings structure:
-  simulationSettings = exu.SimulationSettings()
-
-  #activate writing to solution file:
-  simulationSettings.solution.file.write = True
-  #write results every 1ms:
-  simulationSettings.solution.file.writePeriod = 0.001
-
-  #assign new filename to solution file
-  simulationSettings.solution.file.name= "myOutput.txt"
-
-  #do not export certain coordinates:
-  simulationSettings.solution.file.export.dataCoordinates = False
+```{include} /docs/generated/notebooks/snippets/solving-output.md
 ```
 
 Furthermore, you can use sensors to record particular information, e.g., the displacement of a body's local
@@ -99,11 +67,7 @@ or triads given by rotation matrices. For further information, see the `sensors.
 
 A model is drawn by the renderer, which is started and stopped around the solver:
 
-```python
-SC.renderer.Start()               #open the window
-mbs.SolveDynamic(simulationSettings)
-SC.renderer.DoIdleTasks()         #wait for a key press, so the window stays
-SC.renderer.Stop()                #close it
+```{include} /docs/generated/notebooks/snippets/solving-renderer.md
 ```
 
 The window, what it shows, how to save an image or an animation from it and how to

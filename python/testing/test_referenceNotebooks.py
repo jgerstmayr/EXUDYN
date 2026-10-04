@@ -2,7 +2,8 @@
 # This is an EXUDYN test file
 #
 # Details:  The notebooks of python/Notebooks/ (#2831): the examples of the reference manual
-#           (python/Notebooks/reference/) run with the exudyn of this build, so an example on a page
+#           (python/Notebooks/reference/) and of the user manual (python/Notebooks/snippets/) run with
+#           the exudyn of this build, so an example on a page
 #           cannot go stale; and every notebook, tutorials included, stores the outputs of its
 #           current code (tools/runNotebooks.py --check), which the documentation shows.
 #
@@ -29,7 +30,8 @@ spec = importlib.util.spec_from_file_location('runNotebooks', runnerPath)
 runner = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(runner)
 
-referenceNotebooks = sorted(glob.glob(os.path.join(root, 'python', 'Notebooks', 'reference', '*.ipynb')))
+referenceNotebooks = sorted(glob.glob(os.path.join(root, 'python', 'Notebooks', 'reference', '*.ipynb'))
+                            + glob.glob(os.path.join(root, 'python', 'Notebooks', 'snippets', '*.ipynb')))
 allNotebooks = sorted(glob.glob(os.path.join(root, 'python', 'Notebooks', '**', '*.ipynb'), recursive=True))
 #packages a reference example may need beyond numpy; without them the example is skipped, not failed
 optionalPackages = ['scipy', 'matplotlib']

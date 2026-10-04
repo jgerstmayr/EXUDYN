@@ -63,32 +63,7 @@ The basic things to know are:
 - If software rendering of a single frame gets to long (>4 seconds), timeouts become active and it may occasionally not work. There are some options to compensate, see above.
 - In general, it is **recommended to start with default settings and experiment** with changes using the visualization settings dialog.
 
- To add raytracing to your project, do like this:
-
-```python
-  ...
-  #sphere with chrome
-  graphics.Sphere(radius=radius,
-                  color=graphics.color.dodgerblue[0:3]+[graphics.material.indexChrome],
-                  nTiles=32)
-  ground = mbs.CreateGround(referencePosition=[0,0,0],
-                            graphicsDataList=[gSphere])
-
-  #add mbs components
-  #assemble
-  #solve
-  ...
-  #after computation, switch to raytracing
-  SC.visualizationSettings.openGL.multiSampling = 1
-  SC.visualizationSettings.raytracer.imageSizeFactor = 3 #reduce resolution for first tests!
-  SC.visualizationSettings.openGL.light1.enable = False
-  SC.visualizationSettings.raytracer.numberOfThreads = 16 #adjust to your n-threads
-  SC.visualizationSettings.view0.camera.useRaytracer = True
-
-  mbs.SolutionViewer()
-```
-
- Have fun!
+To add raytracing to your project, give the triangles a material, e.g. `color=graphics.color.dodgerblue[0:3]+[graphics.material.indexChrome]`, and set `view0.camera.useRaytracer = True` before `mbs.SolutionViewer()`; the example at the end of {ref}`sec-graphicsdata` does so and shows the image.
 
 (sec-graphicsdata)=
 ## GraphicsData
@@ -134,31 +109,6 @@ GraphicsData `'type' = 'Line'` draws a polygonal line between all specified poin
 | color | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency |
 | data | array | mandatory | the points of the polygonal line as rows of x,y,z coordinates |
 
- **Example**:
-
-```python
-  #rectangle with side length 1:
-  graphicsData = {'type':'Line',
-                  'color': [1,0,0,1], #red
-                  'data': [[0,0,0],
-                           [1,0,0],
-                           [1,1,0],
-                           [0,1,0],
-                           [0,0,0]]}
-
-  vGround=VObjectGround(graphicsData=[graphicsData])
-  oGround=mbs.AddObject(ObjectGround(referencePosition= [0,0,0],
-                                   visualization=vGround))
-```
-
- Certainly this can be done **much more elegant and shorter with** `graphics.Lines`:
-
-```python
-  import exudyn.graphics as graphics
-  graphicsData = graphics.Lines([[0,0,0],[1,0,0],[1,1,0],[0,1,0],[0,0,0]],
-                                color=graphics.color.red)
-```
-
 ### GraphicsData: Lines
 
 GraphicsData `'type': 'Lines'` draws a list of $n$ lines, straight with 2 points each or quadratic (curved) with 3 points each:
@@ -169,17 +119,6 @@ GraphicsData `'type': 'Lines'` draws a list of $n$ lines, straight with 2 points
 | colors | array | mandatory | the RGBA colors of the line points as rows, $2n \times 4$ or $3n \times 4$ (or flat) |
 | shape | string | 'linear' | 'linear' for straight lines, 'quadratic' for curved ones, each a quadratic curve through its three points; they are kept as they are and split into straight lines when drawn, with the settings of that moment: as many segments as the angle between the curve's end tangents needs against `visualizationSettings.openGL.advanced.curvedTriangleTilingAngle`, at most `curvedTriangleMaxTiling`; `graphics.Lines(..., shape='quadratic')` builds such a polyline from the points along the curve |
 
- **Example**:
-
-```python
-  graphicsData = {'type':'Lines',
-                  'points': [[0,0,0], [1,0,0],  [1,0,0], [1,1,0]], #two lines: an L-shape with side length 1
-                  'colors': [[0,0,1,1]]*4}                          #blue
-  arc = {'type':'Lines', 'shape':'quadratic',                       #a quarter circle, approximately
-         'points': [[1,0,0], [0,1,0], [0.7071,0.7071,0]],           #end points, then the mid point
-         'colors': [[1,0,0,1]]*3}
-```
-
 ### GraphicsData: Circle
 
 GraphicsData `'type' = 'Circle'` draws a polygonal line between all specified points:
@@ -189,15 +128,6 @@ GraphicsData `'type' = 'Circle'` draws a polygonal line between all specified po
 | color | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency |
 | radius | float | mandatory | radius of circle |
 | position | list | mandatory | list of float triples of x,y,z coordinates of center point of the circle |
-
- **Example**:
-
-```python
-  graphicsData = {'type':'Circle',
-                  'color': [0,0,1,1],  #blue
-                  'radius': 0.5,
-                  'position':[2,3,0]}
-```
 
 ### GraphicsData: Text
 
@@ -222,13 +152,6 @@ GraphicsData `'type' = 'Spheres'` draws $n$ spheres; the OpenGL renderer draws t
 | colors | array | [0,0,0,1] | one RGBA color [R,G,B,A] for all spheres, or one row [R,G,B,A] per sphere, $n \times 4$; a material index in A as for `TriangleList` |
 | resolution | int | 8 | number of segments of a half circle when drawn by OpenGL, rounded down to a power of 2 |
 
- **Example**:
-
-```python
-  graphicsData = graphics.Spheres(points=[[0,0,0],[1,0,0]], radii=[0.1,0.2],
-                                  colors=[graphics.color.red, graphics.color.green])
-```
-
 ### GraphicsData: TriangleList
 
 GraphicsData `'type' = 'TriangleList'` draws a mesh with flat triangles for given points and connectivity; triangles may look smoothened by using appropriate normals; edges may be added optionally:
@@ -244,7 +167,15 @@ GraphicsData `'type' = 'TriangleList'` draws a mesh with flat triangles for give
 | edges3 | array | [] | quadratic (curved) edges, rows [p0, p1, m01] of three point indices: the end points, then the mid point - the order of `triangles6`; for feature edges on a surface of 6-node triangles, such as the rim of a cylinder; drawn as the quadratic lines of `Lines`, in `edgeColor` |
 | edgeColor | list | [0,0,0,1] | list of 4 floats to define RGB-color and transparency of edges |
 
-Examples of `GraphicsData` can be found in the Python examples and in the file `graphics.py`, see Section {ref}`sec-module-graphics`.
+(sec-graphicsdata-example)=
+### GraphicsData: an example of all types
+
+One model with each type of `GraphicsData` - as a dictionary, and as the functions of `exudyn.graphics` return it -
+and a chrome sphere, drawn with the raytracer. More are in the Python examples and in `graphics.py`, see Section
+{ref}`sec-module-graphics`.
+
+```{include} /docs/generated/notebooks/snippets/graphics.md
+```
 
 (sec-overview-advanced-contact)=
 ## Contact problems

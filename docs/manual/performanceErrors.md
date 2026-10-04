@@ -34,26 +34,12 @@ keeps working:
 The case with a concrete action behind it: a solve that fails is a normal event in a parameter
 study, and it should not end the study.
 
-```python
-  try:
-      mbs.SolveDynamic(simulationSettings)
-  except exudyn.SolverError:
-      #the solver stopped: retry with smaller steps
-      simulationSettings.timeIntegration.numberOfSteps *= 10
-      mbs.SolveDynamic(simulationSettings)
-  except exudyn.ModelError as e:
-      #the model itself is wrong - retrying will not help
-      print('this model cannot be solved:', e)
+```{include} /docs/generated/notebooks/snippets/solving-solverError.md
 ```
 
  In a parameter variation, score the failed run instead of letting it stop the sweep:
 
-```python
-  def ParameterFunction(parameterDict):
-      ...
-      try: mbs.SolveDynamic(simulationSettings)
-      except exudyn.ExudynError: return 1e10   #a very bad score, so the optimizer moves away from here
-      return mbs.GetSensorValues(sensorNumber)[0]
+```{include} /docs/generated/notebooks/snippets/solving-parameterFunction.md
 ```
 
  Note that `except exudyn.ExudynError` does **not** catch
@@ -66,11 +52,7 @@ reports it as a `ModelError`, because a user function is part of the model. The 
 exception is **not** lost: it is attached as `__cause__`, with its own traceback,
 so Spyder and VS Code show the chain and jump to the line inside your function.
 
-```python
-  try:
-      mbs.SolveDynamic(simulationSettings)
-  except exudyn.ModelError as e:
-      print(type(e.__cause__))   #<class 'ZeroDivisionError'>, raised in your user function
+```{include} /docs/generated/notebooks/snippets/solving-userFunctionError.md
 ```
 
 (sec-overview-basics-errors-where)=

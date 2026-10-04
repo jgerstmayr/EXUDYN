@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 266 | 1.12.285 |
+| 1.12 | Metheney | 267 | 1.12.286 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.286** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` tutorials as Jupyter notebooks: build, test and the first notebook (#2831)
+  - description: The realization of the evaluation of revision2026b step RG17.1 (\#2811): notebooks without stored outputs, rendered by myst-nb in the documentation, run by runTestExamples.py, images of the scene with the raytracer; the first notebook is rigidBodyTutorial3 with exu.HT (RG16.12.5). revision2026b step RG17.2.
+  - **notes:** Done: the tutorials (python/Notebooks/), the examples of the reference manual (python/Notebooks/reference/) and of the user manual pages on graphics, solving and the renderer (python/Notebooks/snippets/) are notebooks with stored outputs; the documentation shows them with what they printed, and the tests run them.
+  - date resolved: **2026-10-04 16:11**, date raised: 2026-10-04
 - **1.12.285** <span class="textred">`BUG`</span> `HIGH` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SystemContainer.AppendSystem of a MainSystem that Python owns crashes at the end (#2842)
   - description: SC.AppendSystem(mbsCopy) with mbsCopy = copy.copy(mbs) - the example 'Copying and referencing C++ objects' of the reference manual - ends in an access violation when SC is deleted or the interpreter exits: AppendMainSystem stores the pointer and MainSystemContainer::Reset() deletes every MainSystem it holds, while the copy made by pickle belongs to its Python object, which deletes it again; deleting mbsCopy before SC leaves a dangling pointer in SC. The same holds for a MainSystem appended to a second container (simulatorCouplingTwoMbs.py). Needs an ownership rule: the container deletes only the systems it created (AddSystem), and AppendSystem keeps the appended one alive (keep\_alive) and unlinks it in Reset. Found by running the examples of the reference manual as notebooks, revision2026b step RG17.4.
   - **notes:** Fixed: SC.AppendSystem(mbs) with a copy of a system (copy.copy) or the system of another container no longer crashes Python when the container is deleted: the container keeps an appended system alive but does not delete it, and SC.Reset() leaves it to its owner.

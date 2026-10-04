@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.285.dev1
+- Exudyn version = 1.12.286.dev1
 - last change = 2026-10-04
-- Number of issues = 2844
-- Number of resolved issues = 2599 (285 in current version)
+- Number of issues = 2845
+- Number of resolved issues = 2600 (286 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7575,9 +7575,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - description: The maintainer, 2026-10-04: 'the graphics visualization has no docs about how the items are drawn. Which (default) settings are used for tiling, colors, etc. - only available via the code. So, this should be completed and possibly improved if some misleading or inappropriate settings are used in the UpdateGraphics functions. This is mainly for the objects, but also for other items (but they would probably have a generic description for most nodes, markers, etc.).' revision2026b step RG13.8.
   - **remarks:** For the inventory (found with \#2837): UpdateGraphicsBeam3D without section geometry colors the line of a contour plot with LinearInterpolate(value1, value2, 0, L, x), but x runs from -L/2 to L/2 and value1, value2 are taken at the local positions 0 and L - the colors are those of the middle and of a point beyond the end.
   - date raised: 2026-10-04
-- `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` tutorials as Jupyter notebooks: build, test and the first notebook (#2831)
-  - description: The realization of the evaluation of revision2026b step RG17.1 (\#2811): notebooks without stored outputs, rendered by myst-nb in the documentation, run by runTestExamples.py, images of the scene with the raytracer; the first notebook is rigidBodyTutorial3 with exu.HT (RG16.12.5). revision2026b step RG17.2.
-  - date raised: 2026-10-04
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` ObjectKinematicTree computes directly with homogeneous transformations (#2829)
   - description: The maintainer, 2026-10-04: 'check the main relevant functions in KinematicTree (I suppose ComputeTreeTransformations and ComputeMassMatrixAndODE2LHS); make two local implementations in C++, with a exudyn.experimental switch for the testing. Probably, the evaluations need to be slightly adjusted, as the Featherstone version uses an inverse of the HTs. Most functions like Translation2T66 are just wrappers that did the T66 and the HT path, but with an optimized version just with the HTs, it should be easier to implement and faster. If comparison shows that the new path with HTs works, the old T66 functions could mostly go; probably some 6D motion and force computations will stay - possibly in a more suitable/faster form.' revision2026b step RG16.13.6 to RG16.13.9.
   - date raised: 2026-10-04
@@ -8308,6 +8305,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` The raytracer draws no GraphicsData Circle (#2844)
+  - description: GraphicsData of type 'Circle' (graphics.Circle, and the circles that 2D items draw with AddCircleXY: the 2D joints, contact circles, slope nodes) are drawn by OpenGL but not by the raytracer: Raytracing.cpp converts lines, quadratic lines, triangles, spheres and texts, not glCircles. Found with the GraphicsData example of the user manual as notebook (revision2026b step RG17.5).
+  - date raised: 2026-10-04
 - <span class="textred">`BUG`</span> <span class="textred">`HIGH`</span> `MEDIUM EFF` `raised by: Claude-JG` the raytracer can hang in RedrawAndGetImage when tests run in parallel (#2776)
   - description: Twice on 2026-10-02 the full pytest run (pytest -n 8 python/testing) hung in test\_graphicsRegression.py::testRaytracerImages, in SC.renderer.RedrawAndGetImage(useRaytracer=True) (faulthandler traceback), with all workers idle - a wait, not a loop; a third and fourth run passed, and 8 processes rendering the same images 15 times each in parallel did not hang. The raytracer starts the TaskManager for its ParallelFor (Raytracer::SoftwareRenderer, ExuThreading::EnterTaskManager) unless it is already running; a deadlock there, or a TaskManager left running by a previous test in the same worker, are the candidates. The hung processes stayed and could not be ended from the session.
   - date raised: 2026-10-02
