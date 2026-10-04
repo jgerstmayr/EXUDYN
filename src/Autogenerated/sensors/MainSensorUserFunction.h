@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-04  17:26:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,7 +113,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "sensorUserFunction")) { cSensorUserFunction->GetParameters().sensorUserFunction = d["sensorUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "storeInternal")) { EPyUtils::FromPython(d["storeInternal"], cSensorUserFunction->GetParameters().storeInternal, "SensorUserFunction.storeInternal"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
-        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationSensorUserFunction->GetShow(), "SensorUserFunction.Vshow"); }
     }
 
     //! AUTO:  dictionary read access
@@ -128,7 +127,6 @@ public: // AUTO:
         d["sensorUserFunction"] = (py::object)cSensorUserFunction->GetParameters().sensorUserFunction;
         d["storeInternal"] = (bool)cSensorUserFunction->GetParameters().storeInternal;
         d["name"] = (std::string)name;
-        d["Vshow"] = (bool)visualizationSensorUserFunction->GetShow();
         return d;
     }
 
@@ -142,7 +140,6 @@ public: // AUTO:
         else if (parameterName.compare("fileName") == 0) { return py::cast((std::string)cSensorUserFunction->GetParameters().fileName); } //! AUTO: get parameter
         else if (parameterName.compare("sensorUserFunction") == 0) { return cSensorUserFunction->GetParameters().sensorUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("storeInternal") == 0) { return py::cast((bool)cSensorUserFunction->GetParameters().storeInternal); } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationSensorUserFunction->GetShow()); } //! AUTO: get parameter
         else {PyError(STDstring("SensorUserFunction::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -158,7 +155,6 @@ public: // AUTO:
         else if (parameterName.compare("fileName") == 0) { EPyUtils::FromPython(value, cSensorUserFunction->GetParameters().fileName); } //! AUTO: set parameter
         else if (parameterName.compare("sensorUserFunction") == 0) { cSensorUserFunction->GetParameters().sensorUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("storeInternal") == 0) { EPyUtils::FromPython(value, cSensorUserFunction->GetParameters().storeInternal, "SensorUserFunction.storeInternal"); } //! AUTO: set parameter
-        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationSensorUserFunction->GetShow(), "SensorUserFunction.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("SensorUserFunction::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
     }
 

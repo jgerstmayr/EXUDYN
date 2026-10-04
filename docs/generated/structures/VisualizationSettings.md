@@ -24,9 +24,9 @@ VSettingsGeneral has the following items:
 | `backgroundColorBottom`<br>`SC.visualizationSettings.general.backgroundColorBottom` | Float4 | 4 | [0.8,0.8,1.0,1.0] | red, green, blue and alpha values for bottom background color in case that useGradientBackground = True |
 | `boundingBoxZoomAllFactor`<br>`SC.visualizationSettings.general.boundingBoxZoomAllFactor` | PFloat |  | 1.2 | factor on boundingBox for zoom all (without minimum offset) |
 | `boundingBoxZoomAllOffset`<br>`SC.visualizationSettings.general.boundingBoxZoomAllOffset` | UFloat |  | 0.01 | minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative |
-| `circleTiling`<br>`SC.visualizationSettings.general.circleTiling` | PInt |  | 16 | global number of segments for circles; if smaller than 2, 2 segments are used (flat) |
+| `circleTiling`<br>`SC.visualizationSettings.general.circleTiling` | PInt |  | 16 | global number of segments for circles; if smaller than 2, 2 segments are used (flat); the circles of the 2D cable contacts (ObjectContactCircleCable2D, ObjectContactFrictionCircleCable2D), large compared to the cable, take 4 times as many |
 | `coordinateSystemSize`<br>`SC.visualizationSettings.general.coordinateSystemSize` | PFloat |  | 5. | size of coordinate system relative to font size |
-| `cylinderTiling`<br>`SC.visualizationSettings.general.cylinderTiling` | PInt |  | 16 | global number of segments for cylinders; if smaller than 2, 2 segments are used (flat) |
+| `cylinderTiling`<br>`SC.visualizationSettings.general.cylinderTiling` | PInt |  | 16 | global number of segments for cylinders; if smaller than 2, 2 segments are used (flat); also around the rope of a reeving system and the wire of a spring drawn as a tube; the disc of ObjectJointRollingDisc and ObjectConnectorRollingDiscPenalty, large compared to the joint, takes 4 times as many; space curves use connectors.curveTiling |
 | `graphicsUpdateInterval`<br>`SC.visualizationSettings.general.graphicsUpdateInterval` | UFloat |  | 0.1 | interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed |
 | `limitWindowToScreenSize`<br>`SC.visualizationSettings.general.limitWindowToScreenSize` | bool |  | True | True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize |
 | `linuxDisplayScaleFactor`<br>`SC.visualizationSettings.general.linuxDisplayScaleFactor` | PFloat |  | 1. | Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts |
@@ -225,16 +225,16 @@ VSettingsConnectors has the following items:
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `contactPointsDefaultSize`<br>`SC.visualizationSettings.connectors.contactPointsDefaultSize` | float |  | 0.02 | DEPRECATED: do not use! global contact points size; if -1.f, connector size is relative to maxSceneSize |
-| `curveTiling`<br>`SC.visualizationSettings.connectors.curveTiling` | PInt |  | 32 | number of segments of a full turn of a curve drawn by a connector: a winding of a spring, the arc of a rope on a sheave (ObjectConnectorReevingSystemSprings); an arc gets the share of its angle, at least one segment |
+| `curveTiling`<br>`SC.visualizationSettings.connectors.curveTiling` | PInt |  | 32 | number of segments of a full turn of a space curve drawn by a connector: a winding of a spring, the arc of a rope on a sheave (ObjectConnectorReevingSystemSprings); an arc gets the share of its angle, at least one segment; circles and cylinders take the tilings of general |
 | `defaultColor`<br>`SC.visualizationSettings.connectors.defaultColor` | Float4 | 4 | [0.2,0.2,1.,1.] | default RGBA color for connectors; 4th value is alpha-transparency |
 | `defaultSize`<br>`SC.visualizationSettings.connectors.defaultSize` | float |  | 0.1 | global connector size; if -1.f, connector size is relative to maxSceneSize |
+| `drawSimplified`<br>`SC.visualizationSettings.connectors.drawSimplified` | bool |  | True | draw connectors with lines: the windings of springs, ObjectConnectorDistance; False draws the windings as a tube with a tenth of the spring radius and the distance connector as a rod of its drawSize |
 | `jointAxesLength`<br>`SC.visualizationSettings.connectors.jointAxesLength` | float |  | 0.2 | global joint axes length |
 | `jointAxesRadius`<br>`SC.visualizationSettings.connectors.jointAxesRadius` | float |  | 0.02 | global joint axes radius |
 | `show`<br>`SC.visualizationSettings.connectors.show` | bool |  | True | flag to decide, whether the connectors are shown |
 | `showContact`<br>`SC.visualizationSettings.connectors.showContact` | bool |  | False | flag to decide, whether contact points, lines, etc. are shown for special cable-circle contacts; for spheres, triangles, tori, see visualizationSettings.contact |
 | `showJointAxes`<br>`SC.visualizationSettings.connectors.showJointAxes` | bool |  | False | flag to decide, whether contact joint axes of 3D joints are shown |
 | `showNumbers`<br>`SC.visualizationSettings.connectors.showNumbers` | bool |  | False | flag to decide, whether the connector(=object) number is shown |
-| `springDraw3D`<br>`SC.visualizationSettings.connectors.springDraw3D` | bool |  | False | flag to draw the windings of springs as a tube with a tenth of the spring radius, instead of lines |
 | `springNumberOfWindings`<br>`SC.visualizationSettings.connectors.springNumberOfWindings` | PInt |  | 8 | number of windings for springs drawn as helical spring |
 
 
@@ -276,8 +276,8 @@ VSettingsLoads has the following items:
 | `defaultColor`<br>`SC.visualizationSettings.loads.defaultColor` | Float4 | 4 | [0.7,0.1,0.1,1.] | default RGBA color for loads; 4th value is alpha-transparency |
 | `defaultRadius`<br>`SC.visualizationSettings.loads.defaultRadius` | float |  | 0.005 | global radius of load axis if drawn in 3D |
 | `defaultSize`<br>`SC.visualizationSettings.loads.defaultSize` | float |  | 0.2 | global load size; if -1.f, load size is relative to maxSceneSize |
-| `drawSimplified`<br>`SC.visualizationSettings.loads.drawSimplified` | bool |  | True | draw markers with simplified symbols |
-| `drawWithUserFunction`<br>`SC.visualizationSettings.loads.drawWithUserFunction` | bool |  | True | draw loads like force vectors time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; user functions can only be drawn, if they are either symbolic or for Python user functions if useMultiThreadedRendering=False |
+| `drawSimplified`<br>`SC.visualizationSettings.loads.drawSimplified` | bool |  | True | draw loads with simplified symbols |
+| `drawWithUserFunction`<br>`SC.visualizationSettings.loads.drawWithUserFunction` | bool |  | True | draw loads with the value of their user function, time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; a symbolic user function is always drawn so, a Python user function only with general.useMultiThreadedRendering=False, because the render thread cannot call Python; otherwise the load is drawn with its loadVector |
 | `fixedLoadSize`<br>`SC.visualizationSettings.loads.fixedLoadSize` | bool |  | True | if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size |
 | `loadSizeFactor`<br>`SC.visualizationSettings.loads.loadSizeFactor` | float |  | 0.1 | if fixedLoadSize=false, then this scaling factor is used to draw the load vector |
 | `show`<br>`SC.visualizationSettings.loads.show` | bool |  | True | flag to decide, whether the loads are shown |

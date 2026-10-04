@@ -50,7 +50,7 @@ The parameters of `VObjectANCFThinPlate`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
-| **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section |
+| **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; the plate is drawn as n x n quads per element, n = bodies.beams.axialTiling/2, at least 2, on its surfaces if it has a thickness; the outline of the element is drawn as lines if view0.scene.showMeshEdges is set when the graphics data is built (the curved surface is drawn as flat quads, so the renderer cannot find the element edges itself) |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA color of the object; if R==-1, use default color |
 
 ## Output variables

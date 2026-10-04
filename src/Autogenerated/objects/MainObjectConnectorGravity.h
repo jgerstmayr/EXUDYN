@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-04  17:26:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -113,7 +113,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorGravity->GetParameters().activeConnector, "ObjectConnectorGravity.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
         if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorGravity->GetShow(), "ObjectConnectorGravity.Vshow"); }
-        if (EPyUtils::DictItemExists(d, "VdrawSize")) { EPyUtils::FromPython(d["VdrawSize"], visualizationObjectConnectorGravity->GetDrawSize(), "ObjectConnectorGravity.VdrawSize"); }
         if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorGravity->GetColor(), "ObjectConnectorGravity.Vcolor"); }
         GetCObject()->ParametersHaveChanged();
     }
@@ -131,7 +130,6 @@ public: // AUTO:
         d["activeConnector"] = (bool)cObjectConnectorGravity->GetParameters().activeConnector;
         d["name"] = (std::string)name;
         d["Vshow"] = (bool)visualizationObjectConnectorGravity->GetShow();
-        d["VdrawSize"] = (float)visualizationObjectConnectorGravity->GetDrawSize();
         d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectConnectorGravity->GetColor());
         return d;
     }
@@ -147,7 +145,6 @@ public: // AUTO:
         else if (parameterName.compare("minDistanceRegularization") == 0) { return py::cast((Real)cObjectConnectorGravity->GetParameters().minDistanceRegularization); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorGravity->GetParameters().activeConnector); } //! AUTO: get parameter
         else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorGravity->GetShow()); } //! AUTO: get parameter
-        else if (parameterName.compare("VdrawSize") == 0) { return py::cast((float)visualizationObjectConnectorGravity->GetDrawSize()); } //! AUTO: get parameter
         else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectConnectorGravity->GetColor())); } //! AUTO: get parameter
         else {PyError(STDstring("ObjectConnectorGravity::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
@@ -165,7 +162,6 @@ public: // AUTO:
         else if (parameterName.compare("minDistanceRegularization") == 0) { EPyUtils::FromPython(value, cObjectConnectorGravity->GetParameters().minDistanceRegularization, EPyUtils::RangeCheck::nonNegative, "ObjectConnectorGravity.minDistanceRegularization"); } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectConnectorGravity->GetParameters().activeConnector, "ObjectConnectorGravity.activeConnector"); } //! AUTO: set parameter
         else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorGravity->GetShow(), "ObjectConnectorGravity.Vshow"); } //! AUTO: set parameter
-        else if (parameterName.compare("VdrawSize") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorGravity->GetDrawSize(), "ObjectConnectorGravity.VdrawSize"); } //! AUTO: set parameter
         else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorGravity->GetColor(), "ObjectConnectorGravity.Vcolor"); } //! AUTO: set parameter
         else {PyError(STDstring("ObjectConnectorGravity::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();

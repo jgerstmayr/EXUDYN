@@ -942,7 +942,7 @@ namespace EXUvis {
 	{
 		const VSettingsConnectors& connectors = visualizationSettings.connectors;
 		DrawSpring(p0, p1, connectors.springNumberOfWindings, connectors.curveTiling, radius, color, graphicsData, itemID,
-			connectors.springDraw3D ? 0.1 * radius : 0., visualizationSettings.general.cylinderTiling);
+			connectors.drawSimplified ? 0. : 0.1 * radius, visualizationSettings.general.cylinderTiling);
 	}
 
 	void DrawTube(const std::vector<Vector3D>& points, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,

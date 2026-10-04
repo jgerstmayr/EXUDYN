@@ -44,7 +44,7 @@ The parameters of `VObjectConnectorDistance`, given as `visualization`:
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-| **drawSize** | float |  | -1. | drawing size = link size; size == -1.f means that default connector size is used |
+| **drawSize** | float |  | -1. | the diameter of the rod drawn between the markers if visualizationSettings.connectors.drawSimplified is False; -1 means a tenth of connectors.defaultSize; with drawSimplified, the connector is a line |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
 ## Output variables

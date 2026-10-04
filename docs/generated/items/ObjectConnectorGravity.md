@@ -40,8 +40,7 @@ The parameters of `VObjectConnectorGravity`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
-| **show** | Bool |  | False | set true, if item is shown in visualization and false if it is not shown |
-| **drawSize** | float |  | -1. | drawing size = diameter of spring; size == -1.f means that default connector size is used |
+| **show** | Bool |  | False | set true to draw a line between the two markers, e.g. to see which bodies attract each other |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
 ## Output variables

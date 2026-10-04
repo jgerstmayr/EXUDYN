@@ -37,7 +37,6 @@ The parameters of `VNode1D`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
-| **show** | Bool |  | False | set true, if item is shown in visualization and false if it is not shown; The node1D is represented as reference position and displacement along the global x-axis, which must not agree with the representation in the object using the Node1D |
 
 ## Output variables
 

@@ -36,7 +36,6 @@ The parameters of `VMarkerNodeODE1Coordinate`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
-| **show** | Bool |  | False | currently not available; set true, if item is shown in visualization and false if it is not shown |
 
 (description-markernodeode1coordinate)=
 ## Detailed description

@@ -1427,7 +1427,8 @@ color of `[-1,-1,-1,-1]` takes. Proposed:
       and the code are checked against each other where possible;
     - **RG13.8.3** the general rules once per kind, in `itemKindDefinitions.py`: nodes, markers, loads and sensors are
       drawn alike within their kind (size, color, number), objects one by one;
-    - **RG13.8.4** *open* (#2843) the findings of the inventory: parameters that are not read (`ObjectConnectorDistance.drawSize`),
+    - **RG13.8.4** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg13-8-4) *(maintainer 2026-10-04: the
+      decisions per finding, see the log)* (#2843) the findings of the inventory: parameters that are not read (`ObjectConnectorDistance.drawSize`),
       items with drawing parameters and no drawing (`ObjectConnectorGravity`, `ObjectConnectorCoordinateVector`, and
       `show` of 13 items that draw nothing), a description that names another setting than the code
       (`ObjectContactCurveCircles`), a view setting read into the graphics data (`ObjectANCFThinPlate`), the load drawn
@@ -1761,7 +1762,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582, #2776 | the graphics regression suite - open: RG2.3.3.8 the raytracer that can hang in `RedrawAndGetImage` |
-| RG13.8.4 | #2843 | the findings of the drawing inventory: parameters not read, drawing parameters without drawing, tiling without a rule |
 | RG13.8 | #2840 | how an item is drawn: an inventory of the `UpdateGraphics` functions, then on the pages |
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |

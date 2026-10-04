@@ -143,8 +143,7 @@ nodesANCF = [-1,-1]
 if useALE:
     ANCFElementType = ALECable2D
     nALE = mbs.AddNode(NodeGenericODE2(numberOfODE2Coordinates=1, referenceCoordinates=[0], 
-                                          initialCoordinates=[0], initialCoordinates_t=[0], 
-                                          visualization = VNode1D(show = False)))#, color = [0.,0.,0.,1.])
+                                          initialCoordinates=[0], initialCoordinates_t=[0]))
     mALE = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber = nALE, coordinate=0, 
                                               visualization = {'show':True})) #ALE velocity
     nodesANCF = [-1,-1, nALE]

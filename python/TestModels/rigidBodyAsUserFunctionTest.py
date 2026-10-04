@@ -135,8 +135,7 @@ if True: #rigid body as user function
         mbs.AddObject(CoordinateVectorConstraint(markerNumbers=[mNodeGround, mRB2],
                                                  scalingMarker0=[], scalingMarker1=[],
                                                  quadraticTermMarker0=[], quadraticTermMarker1=np.array([[0,0,0,1,1,1,1]]),
-                                                 offset=[1],
-                                                 visualization=VCoordinateVectorConstraint(show=False)))
+                                                 offset=[1]))
 #end: user function for rigid body
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 

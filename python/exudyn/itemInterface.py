@@ -1514,17 +1514,12 @@ Rigid2D = NodeRigidBody2D
 VRigid2D = VNodeRigidBody2D
 
 class VNode1D:
-    """Visualization data for Node1D.
-    
-    Args:
-        show: set true, if item is shown in visualization and false if it is not shown; The node1D is represented as reference position and displacement along the global x-axis, which must not agree with the representation in the object using the Node1D; type: bool
-
-    """
-    def __init__(self, show = False):
-        self.show = show
+    """Visualization data for Node1D."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -1549,7 +1544,7 @@ class Node1D:
         Node has/provides the following types: ``GenericODE2``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [0.], initialCoordinates = [0.], initialVelocities = [0.], visualization = {'show': False}):
+    def __init__(self, name = '', referenceCoordinates = [0.], initialCoordinates = [0.], initialVelocities = [0.], visualization = {}):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
@@ -1562,7 +1557,6 @@ class Node1D:
         yield 'referenceCoordinates', self.referenceCoordinates
         yield 'initialCoordinates', self.initialCoordinates
         yield 'initialVelocities', self.initialVelocities
-        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))
@@ -1822,17 +1816,12 @@ class NodePointSlope23:
         return str(dict(self))
 
 class VNodeGenericODE2:
-    """Visualization data for NodeGenericODE2.
-    
-    Args:
-        show: set true, if item is shown in visualization and false if it is not shown; type: bool
-
-    """
-    def __init__(self, show = False):
-        self.show = show
+    """Visualization data for NodeGenericODE2."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -1859,7 +1848,7 @@ class NodeGenericODE2:
         Node has/provides the following types: ``GenericODE2``
 
     """
-    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], initialCoordinates_t = [], numberOfODE2Coordinates = 0, visualization = {'show': False}):
+    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], initialCoordinates_t = [], numberOfODE2Coordinates = 0, visualization = {}):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
@@ -1874,23 +1863,17 @@ class NodeGenericODE2:
         yield 'initialCoordinates', self.initialCoordinates
         yield 'initialCoordinates_t', self.initialCoordinates_t
         yield 'numberOfODE2Coordinates', self.numberOfODE2Coordinates
-        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))
 
 class VNodeGenericODE1:
-    """Visualization data for NodeGenericODE1.
-    
-    Args:
-        show: set true, if item is shown in visualization and false if it is not shown; type: bool
-
-    """
-    def __init__(self, show = False):
-        self.show = show
+    """Visualization data for NodeGenericODE1."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -1912,7 +1895,7 @@ class NodeGenericODE1:
         visualization: visualization data, see VNodeGenericODE1
 
     """
-    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], numberOfODE1Coordinates = 0, visualization = {'show': False}):
+    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], numberOfODE1Coordinates = 0, visualization = {}):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
@@ -1925,23 +1908,17 @@ class NodeGenericODE1:
         yield 'referenceCoordinates', self.referenceCoordinates
         yield 'initialCoordinates', self.initialCoordinates
         yield 'numberOfODE1Coordinates', self.numberOfODE1Coordinates
-        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))
 
 class VNodeGenericAE:
-    """Visualization data for NodeGenericAE.
-    
-    Args:
-        show: set true, if item is shown in visualization and false if it is not shown; type: bool
-
-    """
-    def __init__(self, show = False):
-        self.show = show
+    """Visualization data for NodeGenericAE."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -1963,7 +1940,7 @@ class NodeGenericAE:
         visualization: visualization data, see VNodeGenericAE
 
     """
-    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], numberOfAECoordinates = 0, visualization = {'show': False}):
+    def __init__(self, name = '', referenceCoordinates = [], initialCoordinates = [], numberOfAECoordinates = 0, visualization = {}):
         self.name = name
         self.referenceCoordinates = np.array(referenceCoordinates)
         self.initialCoordinates = np.array(initialCoordinates)
@@ -1976,23 +1953,17 @@ class NodeGenericAE:
         yield 'referenceCoordinates', self.referenceCoordinates
         yield 'initialCoordinates', self.initialCoordinates
         yield 'numberOfAECoordinates', self.numberOfAECoordinates
-        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))
 
 class VNodeGenericData:
-    """Visualization data for NodeGenericData.
-    
-    Args:
-        show: set true, if item is shown in visualization and false if it is not shown; type: bool
-
-    """
-    def __init__(self, show = False):
-        self.show = show
+    """Visualization data for NodeGenericData."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -2015,7 +1986,7 @@ class NodeGenericData:
         Node has/provides the following types: ``GenericData``
 
     """
-    def __init__(self, name = '', initialCoordinates = [], numberOfDataCoordinates = 0, visualization = {'show': False}):
+    def __init__(self, name = '', initialCoordinates = [], numberOfDataCoordinates = 0, visualization = {}):
         self.name = name
         self.initialCoordinates = np.array(initialCoordinates)
         self.numberOfDataCoordinates = numberOfDataCoordinates
@@ -2026,7 +1997,6 @@ class NodeGenericData:
         yield 'name', self.name
         yield 'initialCoordinates', self.initialCoordinates
         yield 'numberOfDataCoordinates', self.numberOfDataCoordinates
-        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))
@@ -2704,17 +2674,12 @@ class ObjectGenericODE2:
         return str(dict(self))
 
 class VObjectGenericODE1:
-    """Visualization data for ObjectGenericODE1.
-    
-    Args:
-        show: set true, if item is shown in visualization and false if it is not shown; type: bool
-
-    """
-    def __init__(self, show = True):
-        self.show = show
+    """Visualization data for ObjectGenericODE1."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -2741,7 +2706,7 @@ class ObjectGenericODE1:
         Object has/provides the following types: ``MultiNoded``
 
     """
-    def __init__(self, name = '', nodeNumbers = [], systemMatrix = [], rhsVector = [], rhsUserFunction: Union[ObjectGenericODE1RhsUserFunction, int] = 0, visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumbers = [], systemMatrix = [], rhsVector = [], rhsUserFunction: Union[ObjectGenericODE1RhsUserFunction, int] = 0, visualization = {}):
         self.name = name
         self.nodeNumbers = copy.copy(nodeNumbers)
         self.systemMatrix = CheckForValidNumpyArray(systemMatrix)
@@ -2756,7 +2721,6 @@ class ObjectGenericODE1:
         yield 'systemMatrix', self.systemMatrix
         yield 'rhsVector', self.rhsVector
         yield 'rhsUserFunction', self.rhsUserFunction
-        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))
@@ -3930,7 +3894,7 @@ class VObjectANCFThinPlate:
     """Visualization data for ObjectANCFThinPlate.
     
     Args:
-        show: set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section; type: bool
+        show: set true, if item is shown in visualization and false if it is not shown; the plate is drawn as n x n quads per element, n = bodies.beams.axialTiling/2, at least 2, on its surfaces if it has a thickness; the outline of the element is drawn as lines if view0.scene.showMeshEdges is set when the graphics data is built (the curved surface is drawn as flat quads, so the renderer cannot find the element edges itself); type: bool
 
         color: RGBA color of the object; if R==-1, use default color; type: [float,float,float,float]
 
@@ -4769,21 +4733,17 @@ class VObjectConnectorGravity:
     """Visualization data for ObjectConnectorGravity.
     
     Args:
-        show: set true, if item is shown in visualization and false if it is not shown; type: bool
-
-        drawSize: drawing size = diameter of spring; size == -1.f means that default connector size is used; type: float
+        show: set true to draw a line between the two markers, e.g. to see which bodies attract each other; type: bool
 
         color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
     """
-    def __init__(self, show = False, drawSize = -1., color = [-1.,-1.,-1.,-1.]):
+    def __init__(self, show = False, color = [-1.,-1.,-1.,-1.]):
         self.show = show
-        self.drawSize = drawSize
         self.color = np.array(color)
 
     def __iter__(self):
         yield 'show', self.show
-        yield 'drawSize', self.drawSize
         yield 'color', self.color
 
     def __repr__(self):
@@ -4817,7 +4777,7 @@ class ObjectConnectorGravity:
         Requested Marker type: ``Position``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], gravitationalConstant = 6.6743e-11, mass0 = 0., mass1 = 0., minDistanceRegularization = 0., activeConnector = True, visualization = {'show': False, 'drawSize': -1., 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], gravitationalConstant = 6.6743e-11, mass0 = 0., mass1 = 0., minDistanceRegularization = 0., activeConnector = True, visualization = {'show': False, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.gravitationalConstant = gravitationalConstant
@@ -4837,7 +4797,6 @@ class ObjectConnectorGravity:
         yield 'minDistanceRegularization', self.minDistanceRegularization
         yield 'activeConnector', self.activeConnector
         yield 'Vshow', dict(self.visualization)["show"]
-        yield 'VdrawSize', dict(self.visualization)["drawSize"]
         yield 'Vcolor', dict(self.visualization)["color"]
 
     def __repr__(self):
@@ -5128,7 +5087,7 @@ class VObjectConnectorDistance:
     Args:
         show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        drawSize: drawing size = link size; size == -1.f means that default connector size is used; type: float
+        drawSize: the diameter of the rod drawn between the markers if visualizationSettings.connectors.drawSimplified is False; -1 means a tenth of connectors.defaultSize; with drawSimplified, the connector is a line; type: float
 
         color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 
@@ -5282,21 +5241,12 @@ CoordinateConstraint = ObjectConnectorCoordinate
 VCoordinateConstraint = VObjectConnectorCoordinate
 
 class VObjectConnectorCoordinateVector:
-    """Visualization data for ObjectConnectorCoordinateVector.
-    
-    Args:
-        show: set true, if item is shown in visualization and false if it is not shown; type: bool
-
-        color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
-
-    """
-    def __init__(self, show = True, color = [-1.,-1.,-1.,-1.]):
-        self.show = show
-        self.color = np.array(color)
+    """Visualization data for ObjectConnectorCoordinateVector."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
-        yield 'color', self.color
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -5337,7 +5287,7 @@ class ObjectConnectorCoordinateVector:
         Requested Marker type: ``Coordinate``
 
     """
-    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], scalingMarker0 = [], scalingMarker1 = [], quadraticTermMarker0 = [], quadraticTermMarker1 = [], offset = [], velocityLevel = False, constraintUserFunction: Union[ObjectConnectorCoordinateVectorConstraintUserFunction, int] = 0, jacobianUserFunction: Union[ObjectConnectorCoordinateVectorJacobianUserFunction, int] = 0, activeConnector = True, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', markerNumbers = [ exudyn.InvalidIndex(), exudyn.InvalidIndex() ], scalingMarker0 = [], scalingMarker1 = [], quadraticTermMarker0 = [], quadraticTermMarker1 = [], offset = [], velocityLevel = False, constraintUserFunction: Union[ObjectConnectorCoordinateVectorConstraintUserFunction, int] = 0, jacobianUserFunction: Union[ObjectConnectorCoordinateVectorJacobianUserFunction, int] = 0, activeConnector = True, visualization = {}):
         self.name = name
         self.markerNumbers = copy.copy(markerNumbers)
         self.scalingMarker0 = CheckForValidNumpyArray(scalingMarker0)
@@ -5364,8 +5314,6 @@ class ObjectConnectorCoordinateVector:
         yield 'constraintUserFunction', self.constraintUserFunction
         yield 'jacobianUserFunction', self.jacobianUserFunction
         yield 'activeConnector', self.activeConnector
-        yield 'Vshow', dict(self.visualization)["show"]
-        yield 'Vcolor', dict(self.visualization)["color"]
 
     def __repr__(self):
         return str(dict(self))
@@ -7399,17 +7347,12 @@ class MarkerNodeRigid:
         return str(dict(self))
 
 class VMarkerNodeCoordinate:
-    """Visualization data for MarkerNodeCoordinate.
-    
-    Args:
-        show: set true, if item is shown in visualization and false if it is not shown; type: bool
-
-    """
-    def __init__(self, show = True):
-        self.show = show
+    """Visualization data for MarkerNodeCoordinate."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -7430,7 +7373,7 @@ class MarkerNodeCoordinate:
         Marker has/provides the following types: ``Node``, ``Coordinate``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.coordinate = coordinate
@@ -7441,23 +7384,17 @@ class MarkerNodeCoordinate:
         yield 'name', self.name
         yield 'nodeNumber', self.nodeNumber
         yield 'coordinate', self.coordinate
-        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))
 
 class VMarkerNodeCoordinates:
-    """Visualization data for MarkerNodeCoordinates.
-    
-    Args:
-        show: set true, if item is shown in visualization and false if it is not shown; type: bool
-
-    """
-    def __init__(self, show = True):
-        self.show = show
+    """Visualization data for MarkerNodeCoordinates."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -7478,7 +7415,7 @@ class MarkerNodeCoordinates:
         Marker has/provides the following types: ``Node``, ``Coordinate``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), visualization = {}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.visualization = CopyDictLevel1(visualization)
@@ -7487,23 +7424,17 @@ class MarkerNodeCoordinates:
         yield 'markerType', 'NodeCoordinates'
         yield 'name', self.name
         yield 'nodeNumber', self.nodeNumber
-        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))
 
 class VMarkerNodeODE1Coordinate:
-    """Visualization data for MarkerNodeODE1Coordinate.
-    
-    Args:
-        show: currently not available; set true, if item is shown in visualization and false if it is not shown; type: bool
-
-    """
-    def __init__(self, show = False):
-        self.show = show
+    """Visualization data for MarkerNodeODE1Coordinate."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -7524,7 +7455,7 @@ class MarkerNodeODE1Coordinate:
         Marker has/provides the following types: ``Node``, ``Coordinate``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {'show': False}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), coordinate = exudyn.InvalidIndex(), visualization = {}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.coordinate = coordinate
@@ -7535,23 +7466,17 @@ class MarkerNodeODE1Coordinate:
         yield 'name', self.name
         yield 'nodeNumber', self.nodeNumber
         yield 'coordinate', self.coordinate
-        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))
 
 class VMarkerNodeRotationCoordinate:
-    """Visualization data for MarkerNodeRotationCoordinate.
-    
-    Args:
-        show: set true, if item is shown in visualization and false if it is not shown; type: bool
-
-    """
-    def __init__(self, show = True):
-        self.show = show
+    """Visualization data for MarkerNodeRotationCoordinate."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -7572,7 +7497,7 @@ class MarkerNodeRotationCoordinate:
         Marker has/provides the following types: ``Node``, ``Coordinate``
 
     """
-    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), rotationCoordinate = exudyn.InvalidIndex(), visualization = {'show': True}):
+    def __init__(self, name = '', nodeNumber = exudyn.InvalidIndex(), rotationCoordinate = exudyn.InvalidIndex(), visualization = {}):
         self.name = name
         self.nodeNumber = nodeNumber
         self.rotationCoordinate = rotationCoordinate
@@ -7583,7 +7508,6 @@ class MarkerNodeRotationCoordinate:
         yield 'name', self.name
         yield 'nodeNumber', self.nodeNumber
         yield 'rotationCoordinate', self.rotationCoordinate
-        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))
@@ -7909,17 +7833,12 @@ class MarkerKinematicTreeRigid:
         return str(dict(self))
 
 class VMarkerObjectODE2Coordinates:
-    """Visualization data for MarkerObjectODE2Coordinates.
-    
-    Args:
-        show: set true, if item is shown in visualization and false if it is not shown; type: bool
-
-    """
-    def __init__(self, show = True):
-        self.show = show
+    """Visualization data for MarkerObjectODE2Coordinates."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -7940,7 +7859,7 @@ class MarkerObjectODE2Coordinates:
         Marker has/provides the following types: ``Object``, ``Body``, ``Coordinate``
 
     """
-    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), visualization = {'show': True}):
+    def __init__(self, name = '', objectNumber = exudyn.InvalidIndex(), visualization = {}):
         self.name = name
         self.objectNumber = objectNumber
         self.visualization = CopyDictLevel1(visualization)
@@ -7949,7 +7868,6 @@ class MarkerObjectODE2Coordinates:
         yield 'markerType', 'ObjectODE2Coordinates'
         yield 'name', self.name
         yield 'objectNumber', self.objectNumber
-        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))
@@ -8124,7 +8042,7 @@ class LoadForceVector:
 
         bodyFixed: if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used; type: bool
 
-        loadVectorUserFunction: A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object; type: LoadForceVectorLoadVectorUserFunction
+        loadVectorUserFunction: A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); the render window draws the load with the value of the user function if visualizationSettings.loads.drawWithUserFunction is True and the user function is symbolic, or a Python function with visualizationSettings.general.useMultiThreadedRendering = False - the render thread cannot call Python -, otherwise with loadVector; a sensor (SensorLoad) returns the force of the user function in any case; type: LoadForceVectorLoadVectorUserFunction
 
         visualization: visualization data, see VLoadForceVector
 
@@ -8273,17 +8191,12 @@ Gravity = LoadMassProportional
 VGravity = VLoadMassProportional
 
 class VLoadCoordinate:
-    """Visualization data for LoadCoordinate.
-    
-    Args:
-        show: set true, if item is shown in visualization and false if it is not shown; type: bool
-
-    """
-    def __init__(self, show = True):
-        self.show = show
+    """Visualization data for LoadCoordinate."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -8306,7 +8219,7 @@ class LoadCoordinate:
         Requested Marker type: ``Coordinate``
 
     """
-    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), load = 0., loadUserFunction: Union[LoadCoordinateLoadUserFunction, int] = 0, visualization = {'show': True}):
+    def __init__(self, name = '', markerNumber = exudyn.InvalidIndex(), load = 0., loadUserFunction: Union[LoadCoordinateLoadUserFunction, int] = 0, visualization = {}):
         self.name = name
         self.markerNumber = markerNumber
         self.load = load
@@ -8319,7 +8232,6 @@ class LoadCoordinate:
         yield 'markerNumber', self.markerNumber
         yield 'load', self.load
         yield 'loadUserFunction', self.loadUserFunction
-        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))
@@ -8688,7 +8600,7 @@ class VSensorLoad:
     """Visualization data for SensorLoad.
     
     Args:
-        show: set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED; type: bool
+        show: set true, if item is shown in visualization and false if it is not shown; the sensor is drawn at the position of the marker of its load, if the marker has a position; type: bool
 
     """
     def __init__(self, show = True):
@@ -8738,17 +8650,12 @@ class SensorLoad:
         return str(dict(self))
 
 class VSensorUserFunction:
-    """Visualization data for SensorUserFunction.
-    
-    Args:
-        show: set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED; type: bool
-
-    """
-    def __init__(self, show = True):
-        self.show = show
+    """Visualization data for SensorUserFunction."""
+    def __init__(self):
+        pass
 
     def __iter__(self):
-        yield 'show', self.show
+        yield from ()
 
     def __repr__(self):
         return str(dict(self))
@@ -8776,7 +8683,7 @@ class SensorUserFunction:
         visualization: visualization data, see VSensorUserFunction
 
     """
-    def __init__(self, name = '', sensorNumbers = [], factors = [], writeToFile = True, fileName = '', sensorUserFunction: Union[SensorUserFunctionSensorUserFunction, int] = 0, storeInternal = False, visualization = {'show': True}):
+    def __init__(self, name = '', sensorNumbers = [], factors = [], writeToFile = True, fileName = '', sensorUserFunction: Union[SensorUserFunctionSensorUserFunction, int] = 0, storeInternal = False, visualization = {}):
         self.name = name
         self.sensorNumbers = copy.copy(sensorNumbers)
         self.factors = np.array(factors)
@@ -8795,7 +8702,6 @@ class SensorUserFunction:
         yield 'fileName', self.fileName
         yield 'sensorUserFunction', self.sensorUserFunction
         yield 'storeInternal', self.storeInternal
-        yield 'Vshow', dict(self.visualization)["show"]
 
     def __repr__(self):
         return str(dict(self))

@@ -33,7 +33,7 @@ The parameters of `VSensorLoad`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
-| **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED |
+| **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; the sensor is drawn at the position of the marker of its load, if the marker has a position |
 
 (description-sensorload)=
 ## Detailed description

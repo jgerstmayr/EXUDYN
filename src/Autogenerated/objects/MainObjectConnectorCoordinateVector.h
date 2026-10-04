@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  09:23:36 (last modified)
+* @date         2026-10-04  17:26:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -120,8 +120,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "jacobianUserFunction")) { cObjectConnectorCoordinateVector->GetParameters().jacobianUserFunction = d["jacobianUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "activeConnector")) { EPyUtils::FromPython(d["activeConnector"], cObjectConnectorCoordinateVector->GetParameters().activeConnector, "ObjectConnectorCoordinateVector.activeConnector"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
-        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectConnectorCoordinateVector->GetShow(), "ObjectConnectorCoordinateVector.Vshow"); }
-        if (EPyUtils::DictItemExists(d, "Vcolor")) { EPyUtils::FromPython(d["Vcolor"], visualizationObjectConnectorCoordinateVector->GetColor(), "ObjectConnectorCoordinateVector.Vcolor"); }
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -141,8 +139,6 @@ public: // AUTO:
         d["jacobianUserFunction"] = (py::object)cObjectConnectorCoordinateVector->GetParameters().jacobianUserFunction;
         d["activeConnector"] = (bool)cObjectConnectorCoordinateVector->GetParameters().activeConnector;
         d["name"] = (std::string)name;
-        d["Vshow"] = (bool)visualizationObjectConnectorCoordinateVector->GetShow();
-        d["Vcolor"] = EPyUtils::ToPythonMember(visualizationObjectConnectorCoordinateVector->GetColor());
         return d;
     }
 
@@ -160,8 +156,6 @@ public: // AUTO:
         else if (parameterName.compare("constraintUserFunction") == 0) { return cObjectConnectorCoordinateVector->GetParameters().constraintUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("jacobianUserFunction") == 0) { return cObjectConnectorCoordinateVector->GetParameters().jacobianUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
         else if (parameterName.compare("activeConnector") == 0) { return py::cast((bool)cObjectConnectorCoordinateVector->GetParameters().activeConnector); } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectConnectorCoordinateVector->GetShow()); } //! AUTO: get parameter
-        else if (parameterName.compare("Vcolor") == 0) { return py::cast(EPyUtils::ToPythonMember(visualizationObjectConnectorCoordinateVector->GetColor())); } //! AUTO: get parameter
         else {PyError(STDstring("ObjectConnectorCoordinateVector::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -181,8 +175,6 @@ public: // AUTO:
         else if (parameterName.compare("constraintUserFunction") == 0) { cObjectConnectorCoordinateVector->GetParameters().constraintUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("jacobianUserFunction") == 0) { cObjectConnectorCoordinateVector->GetParameters().jacobianUserFunction = value; } //! AUTO: set parameter
         else if (parameterName.compare("activeConnector") == 0) { EPyUtils::FromPython(value, cObjectConnectorCoordinateVector->GetParameters().activeConnector, "ObjectConnectorCoordinateVector.activeConnector"); } //! AUTO: set parameter
-        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorCoordinateVector->GetShow(), "ObjectConnectorCoordinateVector.Vshow"); } //! AUTO: set parameter
-        else if (parameterName.compare("Vcolor") == 0) { EPyUtils::FromPython(value, visualizationObjectConnectorCoordinateVector->GetColor(), "ObjectConnectorCoordinateVector.Vcolor"); } //! AUTO: set parameter
         else {PyError(STDstring("ObjectConnectorCoordinateVector::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

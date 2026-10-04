@@ -108,8 +108,7 @@ else:
                                              #markerNumbers=[mCoords0, mCoords1], #ALTERNATIVELY: with markers on nodes (but only works for max. 2 nodes!)
                                              scalingMarker0=np.zeros((2,4)), #needed to define number of algebraic equations; rows=nAE, cols=len(q) of mCoordsGround + mCoords0
                                              constraintUserFunction=UFconstraint,
-                                             jacobianUserFunction=UFjacobian,
-                                             visualization=VCoordinateVectorConstraint(show=False)))
+                                             jacobianUserFunction=UFjacobian))
 
  
 #q

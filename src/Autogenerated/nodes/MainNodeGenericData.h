@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-04  17:26:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -129,7 +129,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "numberOfDataCoordinates")) { EPyUtils::FromPython(d["numberOfDataCoordinates"], cNodeGenericData->GetParameters().numberOfDataCoordinates, EPyUtils::RangeCheck::nonNegative, "NodeGenericData.numberOfDataCoordinates"); }
         if (EPyUtils::DictItemExists(d, "initialCoordinates")) { EPyUtils::FromPython(d["initialCoordinates"], GetParameters().initialCoordinates, "NodeGenericData.initialCoordinates"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
-        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationNodeGenericData->GetShow(), "NodeGenericData.Vshow"); }
     }
 
     //! AUTO:  dictionary read access
@@ -140,7 +139,6 @@ public: // AUTO:
         d["numberOfDataCoordinates"] = (Index)cNodeGenericData->GetParameters().numberOfDataCoordinates;
         d["initialCoordinates"] = EPyUtils::ToPython(GetParameters().initialCoordinates);
         d["name"] = (std::string)name;
-        d["Vshow"] = (bool)visualizationNodeGenericData->GetShow();
         return d;
     }
 
@@ -150,7 +148,6 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
         else if (parameterName.compare("initialCoordinates") == 0) { return EPyUtils::ToPython(GetParameters().initialCoordinates); } //! AUTO: get parameter
         else if (parameterName.compare("numberOfDataCoordinates") == 0) { return py::cast((Index)cNodeGenericData->GetParameters().numberOfDataCoordinates); } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationNodeGenericData->GetShow()); } //! AUTO: get parameter
         else {PyError(STDstring("NodeGenericData::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -162,7 +159,6 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("initialCoordinates") == 0) { EPyUtils::FromPython(value, GetParameters().initialCoordinates, "NodeGenericData.initialCoordinates"); } //! AUTO: set parameter
         else if (parameterName.compare("numberOfDataCoordinates") == 0) { EPyUtils::FromPython(value, cNodeGenericData->GetParameters().numberOfDataCoordinates, EPyUtils::RangeCheck::nonNegative, "NodeGenericData.numberOfDataCoordinates"); } //! AUTO: set parameter
-        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationNodeGenericData->GetShow(), "NodeGenericData.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("NodeGenericData::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
     }
 

@@ -35,7 +35,6 @@ The parameters of `VSensorUserFunction`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
-| **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED |
 
 (description-sensoruserfunction)=
 ## Detailed description

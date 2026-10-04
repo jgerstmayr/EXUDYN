@@ -111,10 +111,16 @@ void VisualizationObjectConnectorDistance::UpdateGraphics(const VisualizationSet
 
 	if (color[0] != -1.f) { currentColor = color; }
 
-	//float r = 0.5f*drawSize; //radius of spring
-	//if (drawSize == -1.f) { r = 0.5f*visualizationSettings.connectors.defaultSize; } //use default size
-
-	vSystem->graphicsData.AddLine(pos[0], pos[1], currentColor, currentColor, itemID);
+	if (visualizationSettings.connectors.drawSimplified)
+	{
+		vSystem->graphicsData.AddLine(pos[0], pos[1], currentColor, currentColor, itemID);
+	}
+	else //a rod of diameter drawSize (#2843)
+	{
+		float r = 0.5f*drawSize;
+		if (drawSize == -1.f) { r = 0.05f*visualizationSettings.connectors.defaultSize; }
+		EXUvis::DrawCylinder(pos[0], pos[1] - pos[0], r, currentColor, vSystem->graphicsData, itemID, visualizationSettings.general.cylinderTiling);
+	}
 
 	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }

@@ -471,7 +471,7 @@ void VisualizationObjectContactCurveCircles::UpdateGraphics(const VisualizationS
 			vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[1+jCircle]]->GetPosition(*vSystem->systemData, pMarker, ConfigurationType::Visualization);
 			//note: everything is done in plane of marker0! the distance is measured from the circle marker points to the segments, but in the plane of marker0!!!
 			//vSystem->systemData->GetCMarkers()[cItem->GetMarkerNumbers()[1 + jCircle]]->GetRotationMatrix(*vSystem->systemData, rotMarker, ConfigurationType::Visualization);
-			EXUvis::DrawCircle(pMarker, refRot, cItem->GetParameters().circlesRadii[jCircle], currentColor, vSystem->graphicsData, itemID, visualizationSettings.general.cylinderTiling);
+			EXUvis::DrawCircle(pMarker, refRot, cItem->GetParameters().circlesRadii[jCircle], currentColor, vSystem->graphicsData, itemID, visualizationSettings.general.circleTiling); //as its description says (#2843)
 		}
 	}
 

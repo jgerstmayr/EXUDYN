@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  09:23:36 (last modified)
+* @date         2026-10-04  17:26:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -130,7 +130,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "numberOfAECoordinates")) { EPyUtils::RequireGiven(d["numberOfAECoordinates"], 0, "NodeGenericAE.numberOfAECoordinates"); EPyUtils::FromPython(d["numberOfAECoordinates"], cNodeGenericAE->GetParameters().numberOfAECoordinates, EPyUtils::RangeCheck::positive, "NodeGenericAE.numberOfAECoordinates"); } else { EPyUtils::RequireGiven(py::cast(cNodeGenericAE->GetParameters().numberOfAECoordinates), 0, "NodeGenericAE.numberOfAECoordinates"); }
         if (EPyUtils::DictItemExists(d, "initialCoordinates")) { EPyUtils::FromPython(d["initialCoordinates"], GetParameters().initialCoordinates, "NodeGenericAE.initialCoordinates"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
-        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationNodeGenericAE->GetShow(), "NodeGenericAE.Vshow"); }
     }
 
     //! AUTO:  dictionary read access
@@ -142,7 +141,6 @@ public: // AUTO:
         d["numberOfAECoordinates"] = (Index)cNodeGenericAE->GetParameters().numberOfAECoordinates;
         d["initialCoordinates"] = EPyUtils::ToPython(GetParameters().initialCoordinates);
         d["name"] = (std::string)name;
-        d["Vshow"] = (bool)visualizationNodeGenericAE->GetShow();
         return d;
     }
 
@@ -153,7 +151,6 @@ public: // AUTO:
         else if (parameterName.compare("referenceCoordinates") == 0) { return EPyUtils::ToPython(cNodeGenericAE->GetParameters().referenceCoordinates); } //! AUTO: get parameter
         else if (parameterName.compare("initialCoordinates") == 0) { return EPyUtils::ToPython(GetParameters().initialCoordinates); } //! AUTO: get parameter
         else if (parameterName.compare("numberOfAECoordinates") == 0) { return py::cast((Index)cNodeGenericAE->GetParameters().numberOfAECoordinates); } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationNodeGenericAE->GetShow()); } //! AUTO: get parameter
         else {PyError(STDstring("NodeGenericAE::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -166,7 +163,6 @@ public: // AUTO:
         else if (parameterName.compare("referenceCoordinates") == 0) { EPyUtils::FromPython(value, cNodeGenericAE->GetParameters().referenceCoordinates, "NodeGenericAE.referenceCoordinates"); } //! AUTO: set parameter
         else if (parameterName.compare("initialCoordinates") == 0) { EPyUtils::FromPython(value, GetParameters().initialCoordinates, "NodeGenericAE.initialCoordinates"); } //! AUTO: set parameter
         else if (parameterName.compare("numberOfAECoordinates") == 0) { EPyUtils::FromPython(value, cNodeGenericAE->GetParameters().numberOfAECoordinates, EPyUtils::RangeCheck::positive, "NodeGenericAE.numberOfAECoordinates"); } //! AUTO: set parameter
-        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationNodeGenericAE->GetShow(), "NodeGenericAE.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("NodeGenericAE::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
     }
 

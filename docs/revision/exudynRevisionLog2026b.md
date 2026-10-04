@@ -14934,3 +14934,65 @@ Results: `createKinematicTreeTest.py` moves by -1.2e-13 (of 3.34), its reference
 keeps its value. `kinematicTreeUserFunctionTest.py` runs one computation now. The AVX2 reference of
 `createKinematicTreeTest.py` (`AVX2ReferenceSolutionUpdate`, 3.340830142730491) is not re-measured here - the fast
 module is a release test (`runTestSuite.py --fast-module`).
+
+<a id="rg13-8-4"></a>
+### RG13.8.4 — the findings of the drawing inventory, decided and done (2026-10-04, #2843)
+
+*(Maintainer 2026-10-04, per finding: (1) "keep, fix + should go in line with new setting springDraw3D => change to
+drawSimplified (no deprecation needed!); new flag acts on springs, distance connector and whatever uses lines"; (2)
+"remove drawSize and set show per default false (no deprecation needed); then add feature to draw lines between
+markers -> more a debug feature"; (3) "remove show and color"; (4) "SensorLoad could be possibly shown at the
+position/marker of the load? for the remaining items remove show; so the visualization becomes empty. Again, no
+deprecation if no effects of the change"; (5) "should use circleTiling"; (6) "this is because the plate subdivides the
+triangles and would need cubic quad drawing elements. If there is no new solution with the new 6-node trigs, I would
+stay with the current way"; (7) "add this to the user function description and to the drawing of loads"; (8) "could
+only show localForce and localTorque, displacements, velocities, ..., but no stresses, or things on the cross-section.
+Decide with a simple workaround"; (9) "some require a higher resolution than others. Go with these settings and
+document them. Curves for connectors are something different, they are for space curves like a spring, not circles
+and cylinders"; and: "for the removed show/color flags: if they were set by the user, then they have to fix them. If
+possible, the scripts checker could find them.")*
+
+1. **`connectors.drawSimplified`** (default True) replaces `connectors.springDraw3D` of RG6.9, which no release had:
+   with it, springs and `ObjectConnectorDistance` are lines; without, the windings are a tube and the distance
+   connector a rod of diameter `drawSize` (-1: a tenth of `connectors.defaultSize`) - so `drawSize` is read now and
+   says what it is. The other connectors that draw lines draw them as helpers (frames, numbers), not as their body.
+   `itemImages.py` draws with `drawSimplified = False`; the image of `ObjectConnectorDistance` is a rod now. The
+   description of `loads.drawSimplified` said "markers"; it says loads.
+2. **`ObjectConnectorGravity`**: `drawSize` removed; `show` was already False by default; if shown, a line between the
+   two markers in its color (an `UpdateGraphics` of its own instead of `;`).
+3. **`ObjectConnectorCoordinateVector`**: `show` and `color` removed - its visualization class is empty.
+4. **`show` removed** from the 12 other items that draw nothing (the inventory counted 14 with the two above, not 13):
+   `Node1D`, `NodeGenericODE2/ODE1/AE/Data`, `ObjectGenericODE1`, `MarkerNodeCoordinate(s)`, `MarkerNodeODE1Coordinate`,
+   `MarkerNodeRotationCoordinate`, `MarkerObjectODE2Coordinates`, `LoadCoordinate`, `SensorUserFunction`; their
+   visualization classes are empty - `itemInterfaceEmitter.py` writes an empty class (`pass`, an empty iterator) for
+   an item without visualization parameters. **`SensorLoad`** keeps `show` and is drawn as `SensorMarker` is, at the
+   position of the marker of its load, if that marker has one (a load on a coordinate has none).
+   No deprecation: the parameters did nothing. A script that gives them fails; **`exudev scripts`** reports them -
+   `removedVisualizationParameters` of `checkUserScripts.py`, found as the keyword of `V<item>` / `V<short name>` and as
+   the key `V<parameter>` of an item dictionary (test `testRemovedVisualizationParameters`). The repository's own uses
+   - `beltDriveALE.py` (`VNode1D(show=False)` on a `NodeGenericODE2`), `coordinateVectorConstraint.py` (2),
+   `coordinateVectorConstraintGenericODE2.py`, `rigidBodyAsUserFunctionTest.py` - are gone; `revisions.md` lists the
+   change under *What can break a script*.
+5. **`ObjectContactCurveCircles`** draws its circles with `general.circleTiling`, as its description says.
+6. **`ObjectANCFThinPlate`** keeps reading `view0.scene.showMeshEdges`: the 6-node triangles of the renderer would draw
+   the element on quadratic patches and the renderer could draw their edges, but the diagonal of the two triangles of
+   each quad would be drawn as a mesh edge as well, and the contour colors per point would be lost - no clean
+   solution, so the current way stays; the description of its `show` says how it is drawn and why.
+7. **Loads with a user function**: the description of `loadVectorUserFunction` of `LoadForceVector` said the load is
+   drawn with `loadVector` only - which was no longer true; it and `loads.drawWithUserFunction` say now: with the value
+   of the user function if `drawWithUserFunction`, for a symbolic user function always, for a Python one only with
+   `general.useMultiThreadedRendering = False`, because the render thread cannot call Python.
+8. **The line of a 3D beam** without section geometry takes its contour values at both ends, -L/2 and L/2, where the
+   line starts and ends, and interpolates between them (before: at 0 and L, over 0..L) - right for the quantities of
+   the axis (displacements, velocities, the section forces and torques); the beams have no quantities over the
+   cross-section to draw on a line.
+9. **The tilings** stay and are documented: `general.circleTiling` says that the circles of the 2D cable contacts take
+   4 times as many segments, `general.cylinderTiling` that the discs of `ObjectJointRollingDisc` and
+   `ObjectConnectorRollingDiscPenalty` take 4 times as many - both large compared to their item - and that it is the
+   tiling around a rope or a spring wire; `connectors.curveTiling` says it is for space curves, while circles and
+   cylinders take the tilings of `general`.
+
+Tests: `testConnectorLinesAndSensorLoad` (the distance connector a line, then a rod; the gravity connector a line; the
+SensorLoad drawn); the settings variant `connectors.drawSimplified=False` replaces `springDraw3D=True` in
+`settings.json`; the conversion reference lists `drawSimplified` and no longer the removed parameters.
+`itemDrawingState.md` written again: 14 items draw nothing, none with a parameter left.

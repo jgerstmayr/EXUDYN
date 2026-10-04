@@ -315,14 +315,16 @@ void UpdateGraphicsBeam3D(const VisualizationSettings& visualizationSettings, Vi
 	if (EXUstd::IsOfTypeAndNotNone(cObject->GetOutputVariableTypes(), visualizationSettings.contour.outputVariable) )
 	{
 		Vector& value = vSystem->tempVector;
-		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
+		//the values at both ends, -L/2 and L/2, where the line starts and ends; quantities of the axis (displacement,
+		//velocity, the forces of the section) are interpolated along it (#2843)
+		cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ -0.5*L,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
 		if (visualizationSettings.contour.outputVariableComponent < value.NumberOfItems())
 		{
 			EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color1);
 			value1 = item.color1[0]; 
 			//item.color1 = Float4({ 0.,0.,0.,vSystem->contourPlotFlag }); //transparency of -2. indicates a contour value ... hack!
 
-			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ L,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
+			cObject->GetOutputVariableBody(visualizationSettings.contour.outputVariable, Vector3D({ 0.5*L,0.,0. }), ConfigurationType::Visualization, value, itemNumber);
 			EXUvis::ComputeContourColor<Vector>(value, visualizationSettings.contour.outputVariable, visualizationSettings.contour.outputVariableComponent, item.color2);
 			value2 = item.color2[0];
 
@@ -350,8 +352,8 @@ void UpdateGraphicsBeam3D(const VisualizationSettings& visualizationSettings, Vi
 			{
 				if (contourPlot)
 				{
-					item.color1[0] = (float)EXUstd::LinearInterpolate(value1, value2, 0, (float)L, (float)(x - deltaX));
-					item.color2[0] = (float)EXUstd::LinearInterpolate(value1, value2, 0, (float)L, (float)x);
+					item.color1[0] = (float)EXUstd::LinearInterpolate(value1, value2, (float)(-0.5*L), (float)(0.5*L), (float)(x - deltaX));
+					item.color2[0] = (float)EXUstd::LinearInterpolate(value1, value2, (float)(-0.5*L), (float)(0.5*L), (float)x);
 				}
 				item.point1 = p0;
 				item.point2 = p1;

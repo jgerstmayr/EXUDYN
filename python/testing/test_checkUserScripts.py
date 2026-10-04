@@ -186,3 +186,17 @@ def testASettingThatBecameADummyIsToBeRemoved(tables):
                      'SC.visualizationSettings.openGL.light0ambient = 0.5\n', tables)
     assert len(found) == 1 and found[0].endswith('it has no effect; remove it')
 
+
+
+def testRemovedVisualizationParameters(tables):
+    """show of an item that draws nothing, and drawSize of the gravity connector, are gone (#2843): found as the
+    keyword of the visualization class and as the key of an item dictionary; show of an item that draws is not"""
+    findings = Findings('import exudyn as exu\n'
+                        'mbs.AddNode(Node1D(visualization=VNode1D(show=False)))\n'
+                        'v = VCoordinateVectorConstraint(show=False, color=[1,0,0,1])\n'
+                        "mbs.AddObject({'objectType': 'ConnectorGravity', 'markerNumbers': [0,1], 'VdrawSize': 0.1})\n"
+                        'v2 = VMassPoint(show=False)\n', tables)
+    assert len(findings) == 4
+    assert all('removed' in text for text in findings)
+    assert any('VNode1D(show' in text for text in findings)
+    assert any("'VdrawSize' of ConnectorGravity" in text for text in findings)

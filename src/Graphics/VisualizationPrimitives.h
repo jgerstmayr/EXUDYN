@@ -147,7 +147,7 @@ namespace EXUvis {
 		Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID, Real wireRadius = 0., Index nTilesWire = 12);
 
 	//! draw the spring of a connector as all connectors draw it: connectors.springNumberOfWindings windings of
-	//! connectors.curveTiling segments, as lines or, with connectors.springDraw3D, as a tube (#2839)
+	//! connectors.curveTiling segments, as lines or, without connectors.drawSimplified, as a tube (#2839, #2843)
 	void DrawConnectorSpring(const Vector3D& p0, const Vector3D& p1, Real radius, const Float4& color, GraphicsData& graphicsData,
 		Index itemID, const VisualizationSettings& visualizationSettings);
 

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  09:23:36 (last modified)
+* @date         2026-10-04  17:26:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -130,7 +130,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "numberOfODE1Coordinates")) { EPyUtils::RequireGiven(d["numberOfODE1Coordinates"], 0, "NodeGenericODE1.numberOfODE1Coordinates"); EPyUtils::FromPython(d["numberOfODE1Coordinates"], cNodeGenericODE1->GetParameters().numberOfODE1Coordinates, EPyUtils::RangeCheck::positive, "NodeGenericODE1.numberOfODE1Coordinates"); } else { EPyUtils::RequireGiven(py::cast(cNodeGenericODE1->GetParameters().numberOfODE1Coordinates), 0, "NodeGenericODE1.numberOfODE1Coordinates"); }
         if (EPyUtils::DictItemExists(d, "initialCoordinates")) { EPyUtils::FromPython(d["initialCoordinates"], GetParameters().initialCoordinates, "NodeGenericODE1.initialCoordinates"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
-        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationNodeGenericODE1->GetShow(), "NodeGenericODE1.Vshow"); }
     }
 
     //! AUTO:  dictionary read access
@@ -142,7 +141,6 @@ public: // AUTO:
         d["numberOfODE1Coordinates"] = (Index)cNodeGenericODE1->GetParameters().numberOfODE1Coordinates;
         d["initialCoordinates"] = EPyUtils::ToPython(GetParameters().initialCoordinates);
         d["name"] = (std::string)name;
-        d["Vshow"] = (bool)visualizationNodeGenericODE1->GetShow();
         return d;
     }
 
@@ -153,7 +151,6 @@ public: // AUTO:
         else if (parameterName.compare("referenceCoordinates") == 0) { return EPyUtils::ToPython(cNodeGenericODE1->GetParameters().referenceCoordinates); } //! AUTO: get parameter
         else if (parameterName.compare("initialCoordinates") == 0) { return EPyUtils::ToPython(GetParameters().initialCoordinates); } //! AUTO: get parameter
         else if (parameterName.compare("numberOfODE1Coordinates") == 0) { return py::cast((Index)cNodeGenericODE1->GetParameters().numberOfODE1Coordinates); } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationNodeGenericODE1->GetShow()); } //! AUTO: get parameter
         else {PyError(STDstring("NodeGenericODE1::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -166,7 +163,6 @@ public: // AUTO:
         else if (parameterName.compare("referenceCoordinates") == 0) { EPyUtils::FromPython(value, cNodeGenericODE1->GetParameters().referenceCoordinates, "NodeGenericODE1.referenceCoordinates"); } //! AUTO: set parameter
         else if (parameterName.compare("initialCoordinates") == 0) { EPyUtils::FromPython(value, GetParameters().initialCoordinates, "NodeGenericODE1.initialCoordinates"); } //! AUTO: set parameter
         else if (parameterName.compare("numberOfODE1Coordinates") == 0) { EPyUtils::FromPython(value, cNodeGenericODE1->GetParameters().numberOfODE1Coordinates, EPyUtils::RangeCheck::positive, "NodeGenericODE1.numberOfODE1Coordinates"); } //! AUTO: set parameter
-        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationNodeGenericODE1->GetShow(), "NodeGenericODE1.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("NodeGenericODE1::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
     }
 

@@ -122,7 +122,6 @@ items = {
       'initialVelocities': {'type': 'Vector', 'size': '', 'range': '', 'default': '[0.]', 'mustBeGiven': False, 'description': 'initial velocity coordinate (in vector form)'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown; The node1D is represented as reference position and displacement along the global x-axis, which must not agree with the representation in the object using the Node1D'},
     },
   },
   'NodePoint2DSlope1': {
@@ -201,7 +200,6 @@ items = {
       'numberOfODE2Coordinates': {'type': 'PInt', 'size': '', 'range': '> 0', 'default': '0', 'mustBeGiven': True, 'description': 'number of generic ODE2 coordinates'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
     },
   },
   'NodeGenericODE1': {
@@ -215,7 +213,6 @@ items = {
       'numberOfODE1Coordinates': {'type': 'PInt', 'size': '', 'range': '> 0', 'default': '0', 'mustBeGiven': True, 'description': 'number of generic ODE1 coordinates'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
     },
   },
   'NodeGenericAE': {
@@ -229,7 +226,6 @@ items = {
       'numberOfAECoordinates': {'type': 'PInt', 'size': '', 'range': '> 0', 'default': '0', 'mustBeGiven': True, 'description': 'number of generic AE coordinates'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
     },
   },
   'NodeGenericData': {
@@ -242,7 +238,6 @@ items = {
       'numberOfDataCoordinates': {'type': 'UInt', 'size': '', 'range': '>= 0', 'default': '0', 'mustBeGiven': False, 'description': 'number of generic data coordinates (history variables)'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
     },
   },
   'NodePointGround': {
@@ -427,7 +422,6 @@ items = {
       'rhsUserFunction': {'type': 'ObjectGenericODE1RhsUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python user function which computes the right-hand-side (rhs) of the first order ODE; see description below'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
     },
   },
   'ObjectKinematicTree': {
@@ -703,7 +697,7 @@ items = {
       'useReducedOrderIntegration': {'type': 'Index', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': '0/false: use highest Gauss integration for virtual work of strains'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown; note that all quantities are computed at the beam centerline, even if drawn on surface of cylinder of beam; this effects, e.g., Displacement or Velocity, which is drawn constant over cross section'},
+      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown; the plate is drawn as n x n quads per element, n = bodies.beams.axialTiling/2, at least 2, on its surfaces if it has a thickness; the outline of the element is drawn as lines if view0.scene.showMeshEdges is set when the graphics data is built (the curved surface is drawn as flat quads, so the renderer cannot find the element edges itself)'},
       'color': {'type': 'Float4', 'size': '4', 'range': '', 'default': '[-1.,-1.,-1.,-1.]', 'mustBeGiven': False, 'description': 'RGBA color of the object; if R==-1, use default color'},
     },
     'deprecatedParameters': {'physicsThickness': 'thickness', 'physicsDensity': 'density', 'physicsMassProportionalDamping': 'massProportionalDamping', 'physicsStrainCoefficients': 'strainCoefficients', 'physicsCurvatureCoefficients': 'curvatureCoefficients'},
@@ -900,8 +894,7 @@ items = {
       'activeConnector': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
-      'drawSize': {'type': 'float', 'size': '', 'range': '', 'default': '-1.', 'mustBeGiven': False, 'description': 'drawing size = diameter of spring; size == -1.f means that default connector size is used'},
+      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'set true to draw a line between the two markers, e.g. to see which bodies attract each other'},
       'color': {'type': 'Float4', 'size': '4', 'range': '', 'default': '[-1.,-1.,-1.,-1.]', 'mustBeGiven': False, 'description': 'RGBA connector color; if R==-1, use default color'},
     },
   },
@@ -985,7 +978,7 @@ items = {
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
-      'drawSize': {'type': 'float', 'size': '', 'range': '', 'default': '-1.', 'mustBeGiven': False, 'description': 'drawing size = link size; size == -1.f means that default connector size is used'},
+      'drawSize': {'type': 'float', 'size': '', 'range': '', 'default': '-1.', 'mustBeGiven': False, 'description': 'the diameter of the rod drawn between the markers if visualizationSettings.connectors.drawSimplified is False; -1 means a tenth of connectors.defaultSize; with drawSimplified, the connector is a line'},
       'color': {'type': 'Float4', 'size': '4', 'range': '', 'default': '[-1.,-1.,-1.,-1.]', 'mustBeGiven': False, 'description': 'RGBA connector color; if R==-1, use default color'},
     },
   },
@@ -1030,8 +1023,6 @@ items = {
       'activeConnector': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'flag, which determines, if the connector is active; used to deactivate (temporarily) a connector or constraint'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
-      'color': {'type': 'Float4', 'size': '4', 'range': '', 'default': '[-1.,-1.,-1.,-1.]', 'mustBeGiven': False, 'description': 'RGBA connector color; if R==-1, use default color'},
     },
   },
   'ObjectConnectorRollingDiscPenalty': {
@@ -1561,7 +1552,6 @@ items = {
       'coordinate': {'type': 'UInt', 'size': '', 'range': '>= 0', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': True, 'description': 'coordinate of node to which marker is attached to'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
     },
   },
   'MarkerNodeCoordinates': {
@@ -1573,7 +1563,6 @@ items = {
       'nodeNumber': {'type': 'NodeIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'node number to which marker is attached to'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
     },
   },
   'MarkerNodeODE1Coordinate': {
@@ -1586,7 +1575,6 @@ items = {
       'coordinate': {'type': 'UInt', 'size': '', 'range': '>= 0', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': True, 'description': 'coordinate of node to which marker is attached to'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'currently not available; set true, if item is shown in visualization and false if it is not shown'},
     },
   },
   'MarkerNodeRotationCoordinate': {
@@ -1599,7 +1587,6 @@ items = {
       'rotationCoordinate': {'type': 'UInt', 'size': '', 'range': '>= 0', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': True, 'description': 'rotation coordinate: 0=x, 1=y, 2=z'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
     },
   },
   'MarkerBodiesRelativeTranslationCoordinate': {
@@ -1693,7 +1680,6 @@ items = {
       'objectNumber': {'type': 'ObjectIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': 'body number to which marker is attached to'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
     },
   },
   'MarkerBodyCable2DShape': {
@@ -1744,7 +1730,7 @@ items = {
       'markerNumber': {'type': 'MarkerIndex', 'size': '', 'range': '', 'default': 'exudyn.InvalidIndex()', 'mustBeGiven': False, 'description': "marker's number to which load is applied"},
       'loadVector': {'type': 'Vector3D', 'size': '3', 'range': '', 'default': '[0.,0.,0.]', 'mustBeGiven': False, 'description': 'vector-valued load [SI:N]; in case of a user function, this vector is ignored'},
       'bodyFixed': {'type': 'Bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used'},
-      'loadVectorUserFunction': {'type': 'LoadForceVectorLoadVectorUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object'},
+      'loadVectorUserFunction': {'type': 'LoadForceVectorLoadVectorUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); the render window draws the load with the value of the user function if visualizationSettings.loads.drawWithUserFunction is True and the user function is symbolic, or a Python function with visualizationSettings.general.useMultiThreadedRendering = False - the render thread cannot call Python -, otherwise with loadVector; a sensor (SensorLoad) returns the force of the user function in any case'},
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
@@ -1793,7 +1779,6 @@ items = {
       'loadUserFunction': {'type': 'LoadCoordinateLoadUserFunction', 'size': '', 'range': '', 'default': '0', 'mustBeGiven': False, 'description': 'A Python function which defines the time-dependent load and replaces the load; see description below; see also notes on loadFactor and drawing in LoadForceVector!'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
     },
   },
   'SensorNode': {
@@ -1908,7 +1893,7 @@ items = {
       'storeInternal': {'type': 'Bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED'},
+      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown; the sensor is drawn at the position of the marker of its load, if the marker has a position'},
     },
   },
   'SensorUserFunction': {
@@ -1925,7 +1910,6 @@ items = {
       'storeInternal': {'type': 'Bool', 'size': '', 'range': '', 'default': 'False', 'mustBeGiven': False, 'description': 'true: store sensor data in memory (faster, but may consume large amounts of memory); false: internal storage not available'},
     },
     'visualization': {
-      'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED'},
     },
   },
 }

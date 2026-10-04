@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  19:23:37 (last modified)
+* @date         2026-10-04  17:26:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -111,7 +111,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "nodeNumber")) { EPyUtils::ItemIndexFromPython<NodeIndex>(d["nodeNumber"], cMarkerNodeCoordinate->GetParameters().nodeNumber); }
         if (EPyUtils::DictItemExists(d, "coordinate")) { EPyUtils::RequireGiven(d["coordinate"], EXUstd::InvalidIndex, "MarkerNodeCoordinate.coordinate"); EPyUtils::FromPython(d["coordinate"], cMarkerNodeCoordinate->GetParameters().coordinate, EPyUtils::RangeCheck::nonNegative, "MarkerNodeCoordinate.coordinate"); } else { EPyUtils::RequireGiven(py::cast(cMarkerNodeCoordinate->GetParameters().coordinate), EXUstd::InvalidIndex, "MarkerNodeCoordinate.coordinate"); }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
-        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationMarkerNodeCoordinate->GetShow(), "MarkerNodeCoordinate.Vshow"); }
     }
 
     //! AUTO:  dictionary read access
@@ -122,7 +121,6 @@ public: // AUTO:
         d["nodeNumber"] = (NodeIndex)cMarkerNodeCoordinate->GetParameters().nodeNumber;
         d["coordinate"] = (Index)cMarkerNodeCoordinate->GetParameters().coordinate;
         d["name"] = (std::string)name;
-        d["Vshow"] = (bool)visualizationMarkerNodeCoordinate->GetShow();
         return d;
     }
 
@@ -132,7 +130,6 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { return py::cast((std::string)name); } //! AUTO: get parameter
         else if (parameterName.compare("nodeNumber") == 0) { return py::cast((NodeIndex)cMarkerNodeCoordinate->GetParameters().nodeNumber); } //! AUTO: get parameter
         else if (parameterName.compare("coordinate") == 0) { return py::cast((Index)cMarkerNodeCoordinate->GetParameters().coordinate); } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationMarkerNodeCoordinate->GetShow()); } //! AUTO: get parameter
         else {PyError(STDstring("MarkerNodeCoordinate::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -144,7 +141,6 @@ public: // AUTO:
         if (parameterName.compare("name") == 0) { EPyUtils::FromPython(value, name); } //! AUTO: set parameter
         else if (parameterName.compare("nodeNumber") == 0) { EPyUtils::ItemIndexFromPython<NodeIndex>(value, cMarkerNodeCoordinate->GetParameters().nodeNumber); } //! AUTO: set parameter
         else if (parameterName.compare("coordinate") == 0) { EPyUtils::FromPython(value, cMarkerNodeCoordinate->GetParameters().coordinate, EPyUtils::RangeCheck::nonNegative, "MarkerNodeCoordinate.coordinate"); } //! AUTO: set parameter
-        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationMarkerNodeCoordinate->GetShow(), "MarkerNodeCoordinate.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("MarkerNodeCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
     }
 

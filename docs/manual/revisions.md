@@ -30,6 +30,11 @@ release that carries it**.
 
 ### What can break a script
 
+**Visualization parameters of items that draw nothing are gone**: `show` of `Node1D`, the generic nodes,
+`ObjectGenericODE1`, the coordinate markers, `LoadCoordinate` and `SensorUserFunction`, `show` and `color` of
+`ObjectConnectorCoordinateVector`, and `drawSize` of `ObjectConnectorGravity`. A script that gives them, e.g.
+`visualization=VCoordinateVectorConstraint(show=False)`, leaves them out; `exudev scripts` finds them (#2843).
+
 **`exudyn.AccessFunctionType.SuperElementAlternativeRotationMode` is gone**: it was a mode of
 `MarkerSuperElementRigid` (`useAlternativeApproach`), not an access type, and is passed as an argument
 now (#2744).
@@ -358,9 +363,11 @@ that cannot compute its energy - with a user function defining its force - says 
 show them.
 
 **Springs and ropes drawn as tubes.** `visualizationSettings.connectors.curveTiling` is the number of segments of a
-full turn of a spring winding or of the arc of a rope on a sheave, and `connectors.springDraw3D` draws the windings
-of the springs as a tube instead of lines; the rope of `ObjectConnectorReevingSystemSprings` is one closed tube
-along its spans and arcs (#2839). A 3D beam without section geometry is drawn as a line (#2837).
+full turn of a spring winding or of the arc of a rope on a sheave, and `connectors.drawSimplified = False` draws the windings
+of the springs as a tube instead of lines and `ObjectConnectorDistance` as a rod of its `drawSize`; the rope of
+`ObjectConnectorReevingSystemSprings` is one closed tube along its spans and arcs (#2839, #2843). A 3D beam without
+section geometry is drawn as a line, and its contour colors follow it (#2837, #2843). `ObjectConnectorGravity`, if
+shown, is a line between its markers, and `SensorLoad` is drawn at the marker of its load (#2843).
 
 ### What is new to read
 

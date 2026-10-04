@@ -2,10 +2,14 @@
   "number": 2843,
   "title": "Drawing parameters and settings that do nothing or something else than they say",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHECK",
   "effort": "MEDIUM",
   "description": "Found by the inventory of the drawing functions (tools/itemDrawingReport.py, docs/revision/itemDrawingState.md, revision2026b step RG13.8.1): (1) ObjectConnectorDistance.drawSize ('link size') is not read - the connector is a line; (2) ObjectConnectorGravity has show, drawSize ('diameter of spring') and color but no drawing; (3) ObjectConnectorCoordinateVector has show and color but no drawing; (4) 13 more items have show but draw nothing (Node1D, the generic nodes, ObjectGenericODE1, the coordinate markers, LoadCoordinate, SensorLoad, SensorUserFunction); (5) ObjectContactCurveCircles says its circles use circleTiling, the code uses general.cylinderTiling; (6) ObjectANCFThinPlate reads view0.scene.showMeshEdges when it builds its graphics data, a view setting the other items leave to the renderer; (7) a load with a Python user function is drawn with its user function only if general.useMultiThreadedRendering is False, a symbolic one always - nowhere said; (8) the line of a 3D beam without section geometry interpolates its contour colors over 0..L while it runs from -L/2 to L/2; (9) the tiling of connectors and joints mixes general.cylinderTiling, axesTiling, sphereTiling and circleTiling (circleTiling*4 for the contact circles, 4*cylinderTiling for rolling discs) without a rule. To decide per finding: draw, remove the parameter, or say what it does.",
   "dateRaised": "2026-10-04",
-  "deadline": "2027-04-02"
+  "deadline": "2027-04-02",
+  "dateResolved": "2026-10-04 17:51",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Visualization: connectors.drawSimplified draws springs and ObjectConnectorDistance as lines (default) or as a tube and a rod of drawSize; ObjectConnectorGravity is drawn as a line between its markers if shown, its drawSize is removed; SensorLoad is drawn at the marker of its load; the parameter show of items that draw nothing (Node1D, generic nodes, ObjectGenericODE1, coordinate markers, LoadCoordinate, SensorUserFunction) and show/color of ObjectConnectorCoordinateVector are removed - exudev scripts finds them in a script; ObjectContactCurveCircles draws circles with circleTiling.",
+  "resolvedInVersion": "1.12.290"
 }

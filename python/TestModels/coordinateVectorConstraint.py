@@ -75,8 +75,7 @@ else:
     mbs.AddObject(CoordinateVectorConstraint(markerNumbers=[mCoordsGround, mCoords0],
                                              scalingMarker0=np.zeros((1,2)), #needed to define number of algebraic equations; rows=nAE, cols=len(q) of mCoordsGround + mCoords0
                                              constraintUserFunction=UFconstraint,
-                                             jacobianUserFunction=UFjacobian,
-                                             visualization=VCoordinateVectorConstraint(show=False)))
+                                             jacobianUserFunction=UFjacobian))
         
 #
 mbs.AddLoad(Force(markerNumber = mTip0, loadVector = [0, -mass*g, 0])) 
@@ -125,8 +124,7 @@ if doublePendulum:
         mbs.AddObject(CoordinateVectorConstraint(markerNumbers=[mCoords0, mCoords1],
                                                  scalingMarker0=np.zeros((1,2+2)), #needed to define number of algebraic equations; rows=nAE, cols=len(q) of mCoordsGround + mCoords0
                                                  constraintUserFunction=UFconstraint2,
-                                                 jacobianUserFunction=UFjacobian2,
-                                                 visualization=VCoordinateVectorConstraint(show=False)))
+                                                 jacobianUserFunction=UFjacobian2))
 
  
     #

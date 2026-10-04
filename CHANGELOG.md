@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 270 | 1.12.289 |
+| 1.12 | Metheney | 271 | 1.12.290 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.290** `CHECK` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Drawing parameters and settings that do nothing or something else than they say (#2843)
+  - description: Found by the inventory of the drawing functions (tools/itemDrawingReport.py, docs/revision/itemDrawingState.md, revision2026b step RG13.8.1): (1) ObjectConnectorDistance.drawSize ('link size') is not read - the connector is a line; (2) ObjectConnectorGravity has show, drawSize ('diameter of spring') and color but no drawing; (3) ObjectConnectorCoordinateVector has show and color but no drawing; (4) 13 more items have show but draw nothing (Node1D, the generic nodes, ObjectGenericODE1, the coordinate markers, LoadCoordinate, SensorLoad, SensorUserFunction); (5) ObjectContactCurveCircles says its circles use circleTiling, the code uses general.cylinderTiling; (6) ObjectANCFThinPlate reads view0.scene.showMeshEdges when it builds its graphics data, a view setting the other items leave to the renderer; (7) a load with a Python user function is drawn with its user function only if general.useMultiThreadedRendering is False, a symbolic one always - nowhere said; (8) the line of a 3D beam without section geometry interpolates its contour colors over 0..L while it runs from -L/2 to L/2; (9) the tiling of connectors and joints mixes general.cylinderTiling, axesTiling, sphereTiling and circleTiling (circleTiling\*4 for the contact circles, 4\*cylinderTiling for rolling discs) without a rule. To decide per finding: draw, remove the parameter, or say what it does.
+  - **notes:** Visualization: connectors.drawSimplified draws springs and ObjectConnectorDistance as lines (default) or as a tube and a rod of drawSize; ObjectConnectorGravity is drawn as a line between its markers if shown, its drawSize is removed; SensorLoad is drawn at the marker of its load; the parameter show of items that draw nothing (Node1D, generic nodes, ObjectGenericODE1, coordinate markers, LoadCoordinate, SensorUserFunction) and show/color of ObjectConnectorCoordinateVector are removed - exudev scripts finds them in a script; ObjectContactCurveCircles draws circles with circleTiling.
+  - date resolved: **2026-10-04 17:51**, date raised: 2026-10-04
 - **1.12.289** `IMPROVEMENT` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectKinematicTree computes directly with homogeneous transformations (#2829)
   - description: The maintainer, 2026-10-04: 'check the main relevant functions in KinematicTree (I suppose ComputeTreeTransformations and ComputeMassMatrixAndODE2LHS); make two local implementations in C++, with a exudyn.experimental switch for the testing. Probably, the evaluations need to be slightly adjusted, as the Featherstone version uses an inverse of the HTs. Most functions like Translation2T66 are just wrappers that did the T66 and the HT path, but with an optimized version just with the HTs, it should be easier to implement and faster. If comparison shows that the new path with HTs works, the old T66 functions could mostly go; probably some 6D motion and force computations will stay - possibly in a more suitable/faster form.' revision2026b step RG16.13.6 to RG16.13.9.
   - **notes:** ObjectKinematicTree computes its kinematics, mass matrix and forces on the placements of its links (homogeneous transformations); the results agree with the earlier computation to round-off, about 25% faster for small trees.

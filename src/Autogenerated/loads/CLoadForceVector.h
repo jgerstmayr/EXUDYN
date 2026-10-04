@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-23  22:48:23 (last modified)
+* @date         2026-10-04  17:30:16 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -34,7 +34,7 @@ public: // AUTO:
     Index markerNumber;                           //!< AUTO: marker's number to which load is applied
     Vector3D loadVector;                          //!< AUTO: vector-valued load [SI:N]; in case of a user function, this vector is ignored
     bool bodyFixed;                               //!< AUTO: if bodyFixed is true, the load is defined in body-fixed (local) coordinates, leading to a follower force; if false: global coordinates are used
-    PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,StdVector3D)> > loadVectorUserFunction;//!< AUTO: A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); NOTE that forces are drawn using the value of loadVector; thus the current values according to the user function are NOT shown in the render window; however, a sensor (SensorLoad) returns the user function force which is applied to the object; to draw forces with current user function values, use a graphicsDataUserFunction of a ground object
+    PythonUserFunctionBase< std::function<StdVector3D(const MainSystem&,Real,StdVector3D)> > loadVectorUserFunction;//!< AUTO: A Python function which defines the time-dependent load and replaces loadVector; see description below; NOTE that in static computations, the loadFactor is always 1 for forces computed by user functions (this means for the static computation, that a user function returning [t*5,t*1,0] corresponds to loadVector=[5,1,0] without a user function); the render window draws the load with the value of the user function if visualizationSettings.loads.drawWithUserFunction is True and the user function is symbolic, or a Python function with visualizationSettings.general.useMultiThreadedRendering = False - the render thread cannot call Python -, otherwise with loadVector; a sensor (SensorLoad) returns the force of the user function in any case
     //! AUTO: default constructor with parameter initialization
     CLoadForceVectorParameters()
     {

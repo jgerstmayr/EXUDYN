@@ -720,9 +720,8 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
             pythonName='show',
             defaultValue=True,
-            description=r'set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED'),
-        ItemFunctionDef('UpdateGraphics',
-            implementation=';'),
+            description=r'set true, if item is shown in visualization and false if it is not shown; the sensor is drawn at the position of the marker of its load, if the marker has a position'),
+        ItemFunctionDef('UpdateGraphics'),
         ],
     ))
 
@@ -872,10 +871,6 @@ if False:
             pythonName='EvaluateUserFunction',
             args='Vector& sensorValues, const MainSystemBase& mainSystem, Real t, ConfigurationType configuration',
             description=r'call to user function implemented in separate file to avoid including pybind and MainSystem.h at too many places'),
-        ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
-            pythonName='show',
-            defaultValue=True,
-            description=r'set true, if item is shown in visualization and false if it is not shown; sensor visualization CURRENTLY NOT IMPLEMENTED'),
         ItemFunctionDef('UpdateGraphics',
             implementation=';'),
         ],

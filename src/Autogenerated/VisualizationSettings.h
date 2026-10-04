@@ -34,9 +34,9 @@ public: // AUTO:
   Float4 backgroundColorBottom;                   //!< AUTO: red, green, blue and alpha values for bottom background color in case that useGradientBackground = True
   float boundingBoxZoomAllFactor;                 //!< AUTO: must be > 0; factor on boundingBox for zoom all (without minimum offset)
   float boundingBoxZoomAllOffset;                 //!< AUTO: must be >= 0; minimum offset to bounding box of scene in window - width or height, whatever is smaller; adjust for very small or large scenes; may be negative
-  Index circleTiling;                             //!< AUTO: must be > 0; global number of segments for circles; if smaller than 2, 2 segments are used (flat)
+  Index circleTiling;                             //!< AUTO: must be > 0; global number of segments for circles; if smaller than 2, 2 segments are used (flat); the circles of the 2D cable contacts (ObjectContactCircleCable2D, ObjectContactFrictionCircleCable2D), large compared to the cable, take 4 times as many
   float coordinateSystemSize;                     //!< AUTO: must be > 0; size of coordinate system relative to font size
-  Index cylinderTiling;                           //!< AUTO: must be > 0; global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)
+  Index cylinderTiling;                           //!< AUTO: must be > 0; global number of segments for cylinders; if smaller than 2, 2 segments are used (flat); also around the rope of a reeving system and the wire of a spring drawn as a tube; the disc of ObjectJointRollingDisc and ObjectConnectorRollingDiscPenalty, large compared to the joint, takes 4 times as many; space curves use connectors.curveTiling
   float graphicsUpdateInterval;                   //!< AUTO: must be >= 0; interval of graphics update during simulation in seconds; 0.1 = 10 frames per second; low numbers might slow down computation speed
   bool limitWindowToScreenSize;                   //!< AUTO: True: size for render window of respective view is limited to screen size; False: larger window sizes (e.g. for rendering) allowed according to renderWindowSize
   float linuxDisplayScaleFactor;                  //!< AUTO: must be > 0; Scaling factor for linux, which cannot determined from system by now; adjust this value to scale dialog fonts and renderer fonts
@@ -726,16 +726,16 @@ class VSettingsConnectors // AUTO:
 {
 public: // AUTO: 
   float contactPointsDefaultSize;                 //!< AUTO: DEPRECATED: do not use! global contact points size; if -1.f, connector size is relative to maxSceneSize
-  Index curveTiling;                              //!< AUTO: must be > 0; number of segments of a full turn of a curve drawn by a connector: a winding of a spring, the arc of a rope on a sheave (ObjectConnectorReevingSystemSprings); an arc gets the share of its angle, at least one segment
+  Index curveTiling;                              //!< AUTO: must be > 0; number of segments of a full turn of a space curve drawn by a connector: a winding of a spring, the arc of a rope on a sheave (ObjectConnectorReevingSystemSprings); an arc gets the share of its angle, at least one segment; circles and cylinders take the tilings of general
   Float4 defaultColor;                            //!< AUTO: default RGBA color for connectors; 4th value is alpha-transparency
   float defaultSize;                              //!< AUTO: global connector size; if -1.f, connector size is relative to maxSceneSize
+  bool drawSimplified;                            //!< AUTO: draw connectors with lines: the windings of springs, ObjectConnectorDistance; False draws the windings as a tube with a tenth of the spring radius and the distance connector as a rod of its drawSize
   float jointAxesLength;                          //!< AUTO: global joint axes length
   float jointAxesRadius;                          //!< AUTO: global joint axes radius
   bool show;                                      //!< AUTO: flag to decide, whether the connectors are shown
   bool showContact;                               //!< AUTO: flag to decide, whether contact points, lines, etc. are shown for special cable-circle contacts; for spheres, triangles, tori, see visualizationSettings.contact
   bool showJointAxes;                             //!< AUTO: flag to decide, whether contact joint axes of 3D joints are shown
   bool showNumbers;                               //!< AUTO: flag to decide, whether the connector(=object) number is shown
-  bool springDraw3D;                              //!< AUTO: flag to draw the windings of springs as a tube with a tenth of the spring radius, instead of lines
   Index springNumberOfWindings;                   //!< AUTO: must be > 0; number of windings for springs drawn as helical spring
 
 private: // AUTO: 
@@ -751,13 +751,13 @@ public: // AUTO:
     curveTiling = 32;
     defaultColor = Float4({0.2f,0.2f,1.f,1.f});
     defaultSize = 0.1f;
+    drawSimplified = true;
     jointAxesLength = 0.2f;
     jointAxesRadius = 0.02f;
     show = true;
     showContact = false;
     showJointAxes = false;
     showNumbers = false;
-    springDraw3D = false;
     springNumberOfWindings = 8;
   };
   void Init(VisualizationSettings* backlinkInit) //!< AUTO: called from parent structure
@@ -774,13 +774,13 @@ public: // AUTO:
     os << "  curveTiling = " << curveTiling << "\n";
     os << "  defaultColor = " << defaultColor << "\n";
     os << "  defaultSize = " << defaultSize << "\n";
+    os << "  drawSimplified = " << drawSimplified << "\n";
     os << "  jointAxesLength = " << jointAxesLength << "\n";
     os << "  jointAxesRadius = " << jointAxesRadius << "\n";
     os << "  show = " << show << "\n";
     os << "  showContact = " << showContact << "\n";
     os << "  showJointAxes = " << showJointAxes << "\n";
     os << "  showNumbers = " << showNumbers << "\n";
-    os << "  springDraw3D = " << springDraw3D << "\n";
     os << "  springNumberOfWindings = " << springNumberOfWindings << "\n";
     os << "\n";
   }
@@ -885,8 +885,8 @@ public: // AUTO:
   Float4 defaultColor;                            //!< AUTO: default RGBA color for loads; 4th value is alpha-transparency
   float defaultRadius;                            //!< AUTO: global radius of load axis if drawn in 3D
   float defaultSize;                              //!< AUTO: global load size; if -1.f, load size is relative to maxSceneSize
-  bool drawSimplified;                            //!< AUTO: draw markers with simplified symbols
-  bool drawWithUserFunction;                      //!< AUTO: draw loads like force vectors time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; user functions can only be drawn, if they are either symbolic or for Python user functions if useMultiThreadedRendering=False
+  bool drawSimplified;                            //!< AUTO: draw loads with simplified symbols
+  bool drawWithUserFunction;                      //!< AUTO: draw loads with the value of their user function, time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; a symbolic user function is always drawn so, a Python user function only with general.useMultiThreadedRendering=False, because the render thread cannot call Python; otherwise the load is drawn with its loadVector
   bool fixedLoadSize;                             //!< AUTO: if true, the load is drawn with a fixed vector length in direction of the load vector, independently of the load size
   float loadSizeFactor;                           //!< AUTO: if fixedLoadSize=false, then this scaling factor is used to draw the load vector
   bool show;                                      //!< AUTO: flag to decide, whether the loads are shown

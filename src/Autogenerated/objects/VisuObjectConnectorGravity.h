@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-10-04  17:26:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -25,7 +25,6 @@
 class VisualizationObjectConnectorGravity: public VisualizationObject // AUTO:
 {
 protected: // AUTO:
-    float drawSize;                               //!< AUTO: drawing size = diameter of spring; size == -1.f means that default connector size is used
     Float4 color;                                 //!< AUTO: RGBA connector color; if R==-1, use default color
 
 public: // AUTO:
@@ -33,29 +32,18 @@ public: // AUTO:
     VisualizationObjectConnectorGravity()
     {
         show = false;
-        drawSize = -1.f;
         color = Float4({-1.f,-1.f,-1.f,-1.f});
     };
 
     // AUTO: access functions
     //! AUTO:  Update visualizationSystem -> graphicsData for item; index shows item Number in CData
-    virtual void UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber) override
-    {
-        ;
-    }
+    virtual void UpdateGraphics(const VisualizationSettings& visualizationSettings, VisualizationSystem* vSystem, Index itemNumber) override;
 
     //! AUTO:  this function is needed to distinguish connector objects from body objects
     virtual bool IsConnector() const override
     {
         return true;
     }
-
-    //! AUTO:  Write (Reference) access to:drawing size = diameter of spring; size == -1.f means that default connector size is used
-    void SetDrawSize(const float& value) { drawSize = value; }
-    //! AUTO:  Read (Reference) access to:drawing size = diameter of spring; size == -1.f means that default connector size is used
-    const float& GetDrawSize() const { return drawSize; }
-    //! AUTO:  Read (Reference) access to:drawing size = diameter of spring; size == -1.f means that default connector size is used
-    float& GetDrawSize() { return drawSize; }
 
     //! AUTO:  Write (Reference) access to:RGBA connector color; if R==-1, use default color
     void SetColor(const Float4& value) { color = value; }

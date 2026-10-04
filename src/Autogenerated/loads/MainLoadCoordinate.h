@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-18  21:48:31 (last modified)
+* @date         2026-10-04  17:26:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -110,7 +110,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "load")) { EPyUtils::FromPython(d["load"], cLoadCoordinate->GetParameters().load, "LoadCoordinate.load"); }
         if (EPyUtils::DictItemExists(d, "loadUserFunction")) { cLoadCoordinate->GetParameters().loadUserFunction = d["loadUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
-        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationLoadCoordinate->GetShow(), "LoadCoordinate.Vshow"); }
     }
 
     //! AUTO:  dictionary read access
@@ -122,7 +121,6 @@ public: // AUTO:
         d["load"] = (Real)cLoadCoordinate->GetParameters().load;
         d["loadUserFunction"] = (py::object)cLoadCoordinate->GetParameters().loadUserFunction;
         d["name"] = (std::string)name;
-        d["Vshow"] = (bool)visualizationLoadCoordinate->GetShow();
         return d;
     }
 
@@ -133,7 +131,6 @@ public: // AUTO:
         else if (parameterName.compare("markerNumber") == 0) { return py::cast((MarkerIndex)cLoadCoordinate->GetParameters().markerNumber); } //! AUTO: get parameter
         else if (parameterName.compare("load") == 0) { return py::cast((Real)cLoadCoordinate->GetParameters().load); } //! AUTO: get parameter
         else if (parameterName.compare("loadUserFunction") == 0) { return cLoadCoordinate->GetParameters().loadUserFunction.GetPythonDictionary(); } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationLoadCoordinate->GetShow()); } //! AUTO: get parameter
         else {PyError(STDstring("LoadCoordinate::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -146,7 +143,6 @@ public: // AUTO:
         else if (parameterName.compare("markerNumber") == 0) { EPyUtils::ItemIndexFromPython<MarkerIndex>(value, cLoadCoordinate->GetParameters().markerNumber); } //! AUTO: set parameter
         else if (parameterName.compare("load") == 0) { EPyUtils::FromPython(value, cLoadCoordinate->GetParameters().load, "LoadCoordinate.load"); } //! AUTO: set parameter
         else if (parameterName.compare("loadUserFunction") == 0) { cLoadCoordinate->GetParameters().loadUserFunction = value; } //! AUTO: set parameter
-        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationLoadCoordinate->GetShow(), "LoadCoordinate.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("LoadCoordinate::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
     }
 

@@ -201,7 +201,7 @@ settingVariants = [
     {'loads.show': False}, {'loads.showNumbers': True}, {'loads.drawSimplified': False},
     {'loads.fixedLoadSize': False},
     {'sensors.show': False}, {'sensors.showNumbers': True}, {'sensors.drawSimplified': False},
-    {'general.cylinderTiling': 32}, {'connectors.curveTiling': 16}, {'connectors.springDraw3D': True},
+    {'general.cylinderTiling': 32}, {'connectors.curveTiling': 16}, {'connectors.drawSimplified': False},
     ]
 
 
@@ -467,3 +467,32 @@ def testMarkerFrames():
         counts[(showBasis, simplified)] = (len(data['lines']['items']), len(data['triangles']['items']))
     assert counts[(True, True)][0] - counts[(False, True)][0] == 3       #three lines for the one rigid marker
     assert counts[(True, False)][1] > counts[(False, False)][1]          #three arrows of triangles
+
+
+def testConnectorLinesAndSensorLoad():
+    """connectors.drawSimplified: the distance connector a line, or a rod of its drawSize; the gravity connector, shown,
+    a line between its markers; a SensorLoad drawn at the marker of its load (#2843)"""
+    from exudyn.utilities import SensorLoad
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    oGround = mbs.CreateGround()
+    oMass0 = mbs.CreateMassPoint(referencePosition=[1, 0, 0], mass=1)
+    oMass1 = mbs.CreateMassPoint(referencePosition=[1, 1, 0], mass=1)
+    oDistance = mbs.CreateDistanceConstraint(bodyNumbers=[oGround, oMass0], drawSize=0.02)
+    from exudyn.utilities import ObjectConnectorGravity, VObjectConnectorGravity, MarkerBodyPosition
+    markers = [mbs.AddMarker(MarkerBodyPosition(bodyNumber=body)) for body in [oMass0, oMass1]]
+    oGravity = mbs.AddObject(ObjectConnectorGravity(markerNumbers=markers, mass0=1, mass1=1,
+                                                    visualization=VObjectConnectorGravity(show=True)))
+    load = mbs.CreateForce(bodyNumber=oMass1, loadVector=[0, 1, 0])
+    mbs.AddSensor(SensorLoad(loadNumber=load, storeInternal=True))
+    mbs.Assemble()
+
+    lines = graphicsRegression.Fingerprint(SC.renderer.GetGraphicsData(), perItem=True)['groups']
+    distance = lines['Object ' + str(int(oDistance))]
+    assert 'lines' in distance and 'triangles' not in distance
+    assert 'lines' in lines['Object ' + str(int(oGravity))]
+    assert 'Sensor 0' in lines
+
+    SC.visualizationSettings.connectors.drawSimplified = False
+    rods = graphicsRegression.Fingerprint(SC.renderer.GetGraphicsData(), perItem=True)['groups']
+    assert 'triangles' in rods['Object ' + str(int(oDistance))]

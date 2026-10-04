@@ -181,6 +181,16 @@ removedItemParameters = {
                                                       'to marker 0 as its localHT (#2803)',
     }
 
+#VISUALIZATION PARAMETERS THAT ARE GONE, by item: (item class, parameter) -> what to do instead; found as the keyword of
+#the visualization class V<item> and as the key 'V<parameter>' of an item dictionary (#2843)
+_drawsNothing = 'the item draws nothing; leave the visualization out (#2843)'
+removedVisualizationParameters = {(className, 'show'): _drawsNothing for className in [
+    'Node1D', 'NodeGenericODE2', 'NodeGenericODE1', 'NodeGenericAE', 'NodeGenericData', 'ObjectGenericODE1',
+    'ObjectConnectorCoordinateVector', 'MarkerNodeCoordinate', 'MarkerNodeCoordinates', 'MarkerNodeODE1Coordinate',
+    'MarkerNodeRotationCoordinate', 'MarkerObjectODE2Coordinates', 'LoadCoordinate', 'SensorUserFunction']}
+removedVisualizationParameters[('ObjectConnectorCoordinateVector', 'color')] = _drawsNothing
+removedVisualizationParameters[('ObjectConnectorGravity', 'drawSize')] = 'the connector is drawn as a line; leave drawSize out (#2843)'
+
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #what definitions/ says is deprecated
@@ -289,6 +299,12 @@ def DeprecatedItemParameters():
     for ((className, parameter), advice) in removedItemParameters.items():
         for name in Names(className, shortNames.get(className, '')):
             found.setdefault(parameter, {})[name] = (advice, '', '')
+    for ((className, parameter), advice) in removedVisualizationParameters.items():
+        shortName = shortNames.get(className, '')
+        for name in ['V' + className] + (['V' + shortName] if shortName else []):  #VNode1D(show=False)
+            found.setdefault(parameter, {})[name] = (advice, '', '')
+        for name in Names(className, shortName)[len([className] + ([shortName] if shortName else [])):]:
+            found.setdefault('V' + parameter, {})[name] = (advice, '', '')            #{'nodeType':'1D', 'Vshow':False}
     return found
 
 

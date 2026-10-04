@@ -316,6 +316,10 @@ def ItemClasses(definition):
     sPythonClass += sIndent+space4+'return str(dict(self))\n'
     sPythonClass += '\n' #one empty line at end of class
 
+    #an item that draws nothing has no visualization parameters, and its class is empty (#2843)
+    if vPythonClassInit == '':
+        vPythonClassInit = sIndent+sIndent+'pass\n'
+        vPythonIter = sIndent+sIndent+'yield from ()\n'
     vPythonClass += '):\n'
     vPythonClass += vPythonClassInit + '\n'
     vPythonClass += sIndent+'def __iter__(self):\n'

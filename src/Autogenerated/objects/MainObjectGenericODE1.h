@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-25  09:23:36 (last modified)
+* @date         2026-10-04  17:26:47 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -120,7 +120,6 @@ public: // AUTO:
         if (EPyUtils::DictItemExists(d, "rhsVector")) { EPyUtils::FromPython(d["rhsVector"], cObjectGenericODE1->GetParameters().rhsVector); }
         if (EPyUtils::DictItemExists(d, "rhsUserFunction")) { cObjectGenericODE1->GetParameters().rhsUserFunction = d["rhsUserFunction"]; }
         if (EPyUtils::DictItemExists(d, "name")) { EPyUtils::FromPython(d["name"], name); }
-        if (EPyUtils::DictItemExists(d, "Vshow")) { EPyUtils::FromPython(d["Vshow"], visualizationObjectGenericODE1->GetShow(), "ObjectGenericODE1.Vshow"); }
         GetCObject()->ParametersHaveChanged();
     }
 
@@ -137,7 +136,6 @@ public: // AUTO:
         d["tempCoordinates"] = EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates());
         d["tempCoordinates_t"] = EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates_t());
         d["name"] = (std::string)name;
-        d["Vshow"] = (bool)visualizationObjectGenericODE1->GetShow();
         return d;
     }
 
@@ -152,7 +150,6 @@ public: // AUTO:
         else if (parameterName.compare("coordinateIndexPerNode") == 0) { return py::cast(EPyUtils::ToPythonMember(cObjectGenericODE1->GetParameters().coordinateIndexPerNode)); } //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinates") == 0) { return EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates()); } //! AUTO: get parameter
         else if (parameterName.compare("tempCoordinates_t") == 0) { return EPyUtils::ToPython(cObjectGenericODE1->GetTempCoordinates_t()); } //! AUTO: get parameter
-        else if (parameterName.compare("Vshow") == 0) { return py::cast((bool)visualizationObjectGenericODE1->GetShow()); } //! AUTO: get parameter
         else {PyError(STDstring("ObjectGenericODE1::GetParameter(...): illegal parameter name ")+parameterName+" cannot be read", PyErrorType::valueError);} // AUTO: add warning for user
         return py::object();
     }
@@ -166,7 +163,6 @@ public: // AUTO:
         else if (parameterName.compare("systemMatrix") == 0) { EPyUtils::FromPython(value, cObjectGenericODE1->GetParameters().systemMatrix); } //! AUTO: set parameter
         else if (parameterName.compare("rhsVector") == 0) { EPyUtils::FromPython(value, cObjectGenericODE1->GetParameters().rhsVector); } //! AUTO: set parameter
         else if (parameterName.compare("rhsUserFunction") == 0) { cObjectGenericODE1->GetParameters().rhsUserFunction = value; } //! AUTO: set parameter
-        else if (parameterName.compare("Vshow") == 0) { EPyUtils::FromPython(value, visualizationObjectGenericODE1->GetShow(), "ObjectGenericODE1.Vshow"); } //! AUTO: set parameter
         else {PyError(STDstring("ObjectGenericODE1::SetParameter(...): illegal parameter name ")+parameterName+" cannot be modified", PyErrorType::valueError);} // AUTO: add warning for user
         GetCObject()->ParametersHaveChanged();
     }

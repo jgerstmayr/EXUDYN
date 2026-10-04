@@ -1779,7 +1779,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
     d["value"] = data.circleTiling;
     d["type"] = "PInt";
     d["size"] = std::vector<int>{1};
-    d["description"] = "global number of segments for circles; if smaller than 2, 2 segments are used (flat)";
+    d["description"] = "global number of segments for circles; if smaller than 2, 2 segments are used (flat); the circles of the 2D cable contacts (ObjectContactCircleCable2D, ObjectContactFrictionCircleCable2D), large compared to the cable, take 4 times as many";
     structureDict["circleTiling"] = d;
 
     d = py::dict(); //reset local dict
@@ -1795,7 +1795,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsGeneral& data) {
     d["value"] = data.cylinderTiling;
     d["type"] = "PInt";
     d["size"] = std::vector<int>{1};
-    d["description"] = "global number of segments for cylinders; if smaller than 2, 2 segments are used (flat)";
+    d["description"] = "global number of segments for cylinders; if smaller than 2, 2 segments are used (flat); also around the rope of a reeving system and the wire of a spring drawn as a tube; the disc of ObjectJointRollingDisc and ObjectConnectorRollingDiscPenalty, large compared to the joint, takes 4 times as many; space curves use connectors.curveTiling";
     structureDict["cylinderTiling"] = d;
 
     d = py::dict(); //reset local dict
@@ -2715,7 +2715,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsConnectors& data) {
     d["value"] = data.curveTiling;
     d["type"] = "PInt";
     d["size"] = std::vector<int>{1};
-    d["description"] = "number of segments of a full turn of a curve drawn by a connector: a winding of a spring, the arc of a rope on a sheave (ObjectConnectorReevingSystemSprings); an arc gets the share of its angle, at least one segment";
+    d["description"] = "number of segments of a full turn of a space curve drawn by a connector: a winding of a spring, the arc of a rope on a sheave (ObjectConnectorReevingSystemSprings); an arc gets the share of its angle, at least one segment; circles and cylinders take the tilings of general";
     structureDict["curveTiling"] = d;
 
     d = py::dict(); //reset local dict
@@ -2733,6 +2733,14 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsConnectors& data) {
     d["size"] = std::vector<int>{1};
     d["description"] = "global connector size; if -1.f, connector size is relative to maxSceneSize";
     structureDict["defaultSize"] = d;
+
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.drawSimplified;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "draw connectors with lines: the windings of springs, ObjectConnectorDistance; False draws the windings as a tube with a tenth of the spring radius and the distance connector as a rod of its drawSize";
+    structureDict["drawSimplified"] = d;
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
@@ -2784,14 +2792,6 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsConnectors& data) {
 
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
-    d["value"] = data.springDraw3D;
-    d["type"] = "bool";
-    d["size"] = std::vector<int>{1};
-    d["description"] = "flag to draw the windings of springs as a tube with a tenth of the spring radius, instead of lines";
-    structureDict["springDraw3D"] = d;
-
-    d = py::dict(); //reset local dict
-    d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.springNumberOfWindings;
     d["type"] = "PInt";
     d["size"] = std::vector<int>{1};
@@ -2808,13 +2808,13 @@ inline py::dict GetDictionary(const VSettingsConnectors& data) {
     structureDict["curveTiling"] = data.curveTiling;
     structureDict["defaultColor"] = EPyUtils::ToPythonMember(data.defaultColor);
     structureDict["defaultSize"] = data.defaultSize;
+    structureDict["drawSimplified"] = data.drawSimplified;
     structureDict["jointAxesLength"] = data.jointAxesLength;
     structureDict["jointAxesRadius"] = data.jointAxesRadius;
     structureDict["show"] = data.show;
     structureDict["showContact"] = data.showContact;
     structureDict["showJointAxes"] = data.showJointAxes;
     structureDict["showNumbers"] = data.showNumbers;
-    structureDict["springDraw3D"] = data.springDraw3D;
     structureDict["springNumberOfWindings"] = data.springNumberOfWindings;
     return structureDict;
 }
@@ -2825,13 +2825,13 @@ inline void SetDictionary(VSettingsConnectors& data, const py::dict& d) {
     EPyUtils::FromPython(d["curveTiling"], data.curveTiling, EPyUtils::RangeCheck::positive, "VSettingsConnectors.curveTiling");
     EPyUtils::FromPython(d["defaultColor"], data.defaultColor, "VSettingsConnectors.defaultColor");
     EPyUtils::FromPython(d["defaultSize"], data.defaultSize, "VSettingsConnectors.defaultSize");
+    EPyUtils::FromPython(d["drawSimplified"], data.drawSimplified, "VSettingsConnectors.drawSimplified");
     EPyUtils::FromPython(d["jointAxesLength"], data.jointAxesLength, "VSettingsConnectors.jointAxesLength");
     EPyUtils::FromPython(d["jointAxesRadius"], data.jointAxesRadius, "VSettingsConnectors.jointAxesRadius");
     EPyUtils::FromPython(d["show"], data.show, "VSettingsConnectors.show");
     EPyUtils::FromPython(d["showContact"], data.showContact, "VSettingsConnectors.showContact");
     EPyUtils::FromPython(d["showJointAxes"], data.showJointAxes, "VSettingsConnectors.showJointAxes");
     EPyUtils::FromPython(d["showNumbers"], data.showNumbers, "VSettingsConnectors.showNumbers");
-    EPyUtils::FromPython(d["springDraw3D"], data.springDraw3D, "VSettingsConnectors.springDraw3D");
     EPyUtils::FromPython(d["springNumberOfWindings"], data.springNumberOfWindings, EPyUtils::RangeCheck::positive, "VSettingsConnectors.springNumberOfWindings");
 }
 
@@ -2957,7 +2957,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLoads& data) {
     d["value"] = data.drawSimplified;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "draw markers with simplified symbols";
+    d["description"] = "draw loads with simplified symbols";
     structureDict["drawSimplified"] = d;
 
     d = py::dict(); //reset local dict
@@ -2965,7 +2965,7 @@ inline py::dict GetDictionaryWithTypeInfo(const VSettingsLoads& data) {
     d["value"] = data.drawWithUserFunction;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "draw loads like force vectors time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; user functions can only be drawn, if they are either symbolic or for Python user functions if useMultiThreadedRendering=False";
+    d["description"] = "draw loads with the value of their user function, time dependent; make sure that fixedLoadSize=false, while otherwise only the direction will change; a symbolic user function is always drawn so, a Python user function only with general.useMultiThreadedRendering=False, because the render thread cannot call Python; otherwise the load is drawn with its loadVector";
     structureDict["drawWithUserFunction"] = d;
 
     d = py::dict(); //reset local dict

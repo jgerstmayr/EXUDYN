@@ -37,7 +37,6 @@ The parameters of `VMarkerNodeRotationCoordinate`, given as `visualization`:
 
 | Name | type | size | default value | description |
 |---|---|---|---|---|
-| **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
 
 (description-markernoderotationcoordinate)=
 ## Detailed description
