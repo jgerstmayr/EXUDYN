@@ -1428,6 +1428,9 @@ color of `[-1,-1,-1,-1]` takes. Proposed:
       and the code are checked against each other where possible;
     - **RG13.8.3** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg13-8-2) the general rules once per kind, in `itemKindDefinitions.py`: nodes, markers, loads and sensors are
       drawn alike within their kind (size, color, number), objects one by one;
+    - **RG13.8.5** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg13-8-5) *(maintainer 2026-10-04: "the change
+      is ok")* (#2846) `ObjectContactCurveCircles` draws the points of its curve with `contact.contactPointsDefaultSize`
+      instead of the deprecated `connectors.contactPointsDefaultSize`;
     - **RG13.8.4** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg13-8-4) *(maintainer 2026-10-04: the
       decisions per finding, see the log)* (#2843) the findings of the inventory: parameters that are not read (`ObjectConnectorDistance.drawSize`),
       items with drawing parameters and no drawing (`ObjectConnectorGravity`, `ObjectConnectorCoordinateVector`, and

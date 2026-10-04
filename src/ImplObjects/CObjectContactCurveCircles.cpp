@@ -414,7 +414,7 @@ void VisualizationObjectContactCurveCircles::UpdateGraphics(const VisualizationS
 	const ResizableMatrix& polyData = cItem->GetParameters().polynomialData.GetInternalDenseMatrix();
 
 	Float4 contactColor = Float4({ 1.,0.,0.,1. });//red color means contact ...
-	Real rDraw = 0.5f * visualizationSettings.connectors.contactPointsDefaultSize;
+	Real rDraw = 0.5f * visualizationSettings.contact.contactPointsDefaultSize; //the setting the deprecated connectors.contactPointsDefaultSize points to (#2846)
 	Vector3D firstItemPos({ 0,0,0 });
 
 	LinkedDataVector data = ((CNodeData*)cItem->GetCNode(0))->GetVisualizationCoordinateVector();

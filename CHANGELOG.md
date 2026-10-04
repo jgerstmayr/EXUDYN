@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 272 | 1.12.291 |
+| 1.12 | Metheney | 273 | 1.12.292 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.292** `FIX` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectContactCurveCircles draws its points with a deprecated setting (#2846)
+  - description: The points of the curve of ObjectContactCurveCircles are drawn with the deprecated visualizationSettings.connectors.contactPointsDefaultSize (0.02); the setting it is deprecated for is contact.contactPointsDefaultSize (0.001), which the other contacts use. Found with revision2026b step RG13.8.2; the maintainer, 2026-10-04: the change is ok.
+  - **notes:** ObjectContactCurveCircles draws the points of its curve with visualizationSettings.contact.contactPointsDefaultSize (default 0.001), as the other contacts, instead of the deprecated connectors.contactPointsDefaultSize.
+  - date resolved: **2026-10-04 20:27**, date raised: 2026-10-04
 - **1.12.291** `DOCU` `NORMAL` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the documentation says how each item is drawn and which settings it uses (#2840)
   - description: The maintainer, 2026-10-04: 'the graphics visualization has no docs about how the items are drawn. Which (default) settings are used for tiling, colors, etc. - only available via the code. So, this should be completed and possibly improved if some misleading or inappropriate settings are used in the UpdateGraphics functions. This is mainly for the objects, but also for other items (but they would probably have a generic description for most nodes, markers, etc.).' revision2026b step RG13.8.
   - **notes:** Every item page of the reference manual has a section Drawing: how the item is drawn, as all items of its kind and beyond, and the visualization settings that act on it, linked.

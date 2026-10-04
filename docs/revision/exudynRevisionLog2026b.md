@@ -15028,3 +15028,12 @@ the test until the definition says so.
 Seen on the way, not changed: `ObjectContactCurveCircles` reads the deprecated `connectors.contactPointsDefaultSize`
 (0.02) for the points of its curve; `contact.contactPointsDefaultSize`, the setting the deprecation points to, is 0.001,
 and switching would make the points twenty times smaller - to be decided with the deprecation of the setting.
+
+<a id="rg13-8-5"></a>
+### RG13.8.5 — ObjectContactCurveCircles with the contact setting (2026-10-04, #2846)
+
+*(Maintainer 2026-10-04: "ObjectContactCurveCircles: the change is ok.")* The points of the curve are drawn with the
+radius `0.5 * contact.contactPointsDefaultSize` (default 0.001, the setting of the other contacts) instead of the
+deprecated `connectors.contactPointsDefaultSize` (0.02) - twenty times smaller by default. The definition names the new
+setting in `drawingSettings`, and no C++ reads `connectors.contactPointsDefaultSize` any more. The graphics references do
+not change: the mini example does not show contacts (`connectors.showContact` is False by default).

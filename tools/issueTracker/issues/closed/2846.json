@@ -1,0 +1,16 @@
+{
+  "number": 2846,
+  "title": "ObjectContactCurveCircles draws its points with a deprecated setting",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "LOW",
+  "description": "The points of the curve of ObjectContactCurveCircles are drawn with the deprecated visualizationSettings.connectors.contactPointsDefaultSize (0.02); the setting it is deprecated for is contact.contactPointsDefaultSize (0.001), which the other contacts use. Found with revision2026b step RG13.8.2; the maintainer, 2026-10-04: the change is ok.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "dateResolved": "2026-10-04 20:27",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectContactCurveCircles.cpp",
+  "releaseNotes": "ObjectContactCurveCircles draws the points of its curve with visualizationSettings.contact.contactPointsDefaultSize (default 0.001), as the other contacts, instead of the deprecated connectors.contactPointsDefaultSize.",
+  "resolvedInVersion": "1.12.292"
+}

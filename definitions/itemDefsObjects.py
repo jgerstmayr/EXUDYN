@@ -12299,7 +12299,7 @@ definitions.append(ItemDefinition(
 definitions.append(ItemDefinition(
     className='ObjectContactCurveCircles',
     drawing=r'With `connectors.showContact`, the curve as lines with points at its segments, and the circles of the markers with `general.circleTiling` segments.',
-    drawingSettings=['connectors.contactPointsDefaultSize', 'connectors.showContact', 'contact.tilingCurves', 'general.circleTiling', 'general.sphereTiling'],
+    drawingSettings=['connectors.showContact', 'contact.contactPointsDefaultSize', 'contact.tilingCurves', 'general.circleTiling', 'general.sphereTiling'],
     addIncludesC=r"""#include "Pymodules/PyMatrixContainer.h"//for data matrices
 constexpr Index CObjectContactCurveCirclesMaxConstSize = 100; //maximum number of markers upon which arrays do not require memory allocation
 """,
