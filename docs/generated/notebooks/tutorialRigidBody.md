@@ -2,83 +2,93 @@
 (notebook-tutorialrigidbody)=
 # Rigid bodies and joints
 
-Two rigid bodies, the first hanging on the ground with a revolute joint about $z$, the second hanging on the first
-with a revolute joint about $x$, both under gravity: a double pendulum in 3D. The frames of the bodies are given as
-homogeneous transformations, `exu.HT`.
+Notebook `python/Notebooks/tutorialRigidBody.ipynb` - the same model with the `Create` functions is
+`python/Notebooks/tutorialRigidBodyCreate.ipynb`.
 
-*This page is the notebook `python/Notebooks/tutorialRigidBody.ipynb`; the same code is the example `python/Examples/tutorialRigidBody.py`.*
+A double pendulum in 3D: two rigid bodies, the first attached to the ground with a revolute joint about $z$, the
+second to the first with a revolute joint about $x$, under gravity. The joints are built from **markers** and
+**joint objects**, which shows what the `Create` functions do and works for any kind of body, also flexible ones; the
+outputs below each cell are those of the last run.
 
 ```python
 import exudyn as exu
-from exudyn.utilities import InertiaCuboid, SensorBody, RotationMatrixX, RotationMatrixY
+from exudyn.utilities import InertiaCuboid, MarkerBodyRigid, GenericJoint, VObjectJointGeneric, \
+                             ObjectJointRevoluteZ, VObjectJointRevoluteZ, SensorBody, RotationMatrixX, RotationMatrixY
 from exudyn.interactive import ShowImage
 import exudyn.graphics as graphics
 import numpy as np
 
 SC = exu.SystemContainer()
 mbs = SC.AddSystem()
-```
 
-Parameters, and a ground that is drawn as a checkerboard below the pendulum.
-
-```python
 g = [0,-9.81,0]     #gravity
-L = 1               #length of the bodies
-w = 0.1             #width of the bodies
-
+L = 1               #length
+w = 0.1             #width
 oGround = mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0.5,-1.6,0], normal=[0,1,0], size=3)])
 ```
 
-The first body: a cuboid of length $L$, whose center of mass is moved by $-L/4$ along its axis - the inertia
-class `InertiaCuboid` computes mass, center of mass and inertia tensor, `Translated` moves them. Its reference frame
-is at $[L/2, 0, 0]$, without rotation, `exu.HT(translation=...)`. The basis drawn at the center of mass shows where it
-is.
+The first link, a rigid body with its center of mass moved by $-L/4$ along its axis; `CreateRigidBody` adds a node, a
+body and its gravity load. Its frame is at $[L/2,0,0]$, given as homogeneous transformation `exu.HT`.
 
 ```python
 iCube0 = InertiaCuboid(density=5000, sideLengths=[L,w,w]).Translated([-0.25*L,0,0])
-
-b0 = mbs.CreateRigidBody(inertia=iCube0,
-                         referenceHT=exu.HT(translation=[0.5*L,0,0]),
-                         gravity=g,
-                         graphicsDataList=[graphics.Brick(size=[L,w,w], color=graphics.color.red),
-                                           graphics.Basis(origin=iCube0.com, length=2*w)])
-
-oJoint0 = mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[0,0,0], axis=[0,0,1],
-                                  axisRadius=0.2*w, axisLength=1.4*w)
+graphicsBody0 = graphics.RigidLink(p0=[-0.5*L,0,0], p1=[0.5*L,0,0], axis0=[0,0,1], axis1=[0,0,0],
+                                   radius=[0.5*w,0.5*w], thickness=w, width=[1.2*w,1.2*w], color=graphics.color.red)
+b0 = mbs.CreateRigidBody(inertia=iCube0, referenceHT=exu.HT(translation=[0.5*L,0,0]), gravity=g,
+                         graphicsDataList=[graphics.Basis(origin=iCube0.com, length=2*w), graphicsBody0])
 ```
 
-The second body hangs at the end of the first and points along $z$: its frame is at $[L, 0, L/2]$; the joint
-between the two turns about the global $x$-axis.
+A joint connects two **markers**, here two rigid body markers: on the ground at $[0,0,0]$ and on the body at its left
+end. The joint axes are those of the markers' frames; a marker turns its frame by its `localHT`.
+
+**Option 1** is the `GenericJoint`, which defines any joint with translations and rotations fixed or free - here all
+but the rotation about $z$. **Option 2** is `ObjectJointRevoluteZ`, a free rotation about the local $z$-axis of
+marker 0; any other axis is chosen by the rotation of the markers' `localHT`, e.g.
+`MarkerBodyRigid(bodyNumber=b0, localHT=exu.HT().SetRotationY(0.5*np.pi))`.
 
 ```python
-b1 = mbs.CreateRigidBody(inertia=InertiaCuboid(density=5000, sideLengths=[w,w,L]),
-                         referenceHT=exu.HT(translation=[L,0,0.5*L]),
-                         gravity=g,
-                         graphicsDataList=[graphics.Brick(size=[w,w,L], color=graphics.color.lightgreen)])
+markerGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0,0,0]))
+markerBody0J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[-0.5*L,0,0]))
 
-oJoint1 = mbs.CreateRevoluteJoint(bodyNumbers=[b0, b1], position=[L,0,0], axis=[1,0,0],
-                                  axisRadius=0.2*w, axisLength=1.4*w)
+#option 1:
+oJoint0 = mbs.AddObject(GenericJoint(markerNumbers=[markerGround, markerBody0J0], constrainedAxes=[1,1,1,1,1,0],
+                                     visualization=VObjectJointGeneric(axesRadius=0.2*w, axesLength=1.4*w)))
+#option 2, the same joint:
+#oJoint0 = mbs.AddObject(ObjectJointRevoluteZ(markerNumbers=[markerGround, markerBody0J0],
+#                                             visualization=VObjectJointRevoluteZ(axisRadius=0.2*w, axisLength=1.4*w)))
 ```
 
-A force at the tip and a torque on the second body, and a sensor for the position of the tip.
+A wrong marker position shows in the render window: with `localPosition=[-0.4*L,0,0]`, the two parts of the joint
+would be drawn `0.1*L` apart.
+
+The second link and its joint about $x$, again from two markers; the generic joint leaves the rotation about $x$ free:
 
 ```python
-lForce = mbs.CreateForce(bodyNumber=b1, loadVector=[0,0.5,0], localPosition=[0,0,0.5*L])
-lTorque = mbs.CreateTorque(bodyNumber=b1, loadVector=[0.1,0,0])
+graphicsBody1 = graphics.RigidLink(p0=[0,0,-0.5*L], p1=[0,0,0.5*L], axis0=[1,0,0], axis1=[0,0,0],
+                                   radius=[0.06,0.05], thickness=0.1, width=[0.12,0.12], color=graphics.color.lightgreen)
+b1 = mbs.CreateRigidBody(inertia=InertiaCuboid(density=5000, sideLengths=[0.1,0.1,1]),
+                         referenceHT=exu.HT(translation=[L,0,0.5*L]), gravity=g, graphicsDataList=[graphicsBody1])
 
-sTip = mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*L], storeInternal=True,
-                                outputVariableType=exu.OutputVariableType.Position))
+markerBody0J1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0, localPosition=[0.5*L,0,0]))
+markerBody1J0 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b1, localPosition=[0,0,-0.5*L]))
+oJoint1 = mbs.AddObject(GenericJoint(markerNumbers=[markerBody0J1, markerBody1J0], constrainedAxes=[1,1,1,0,1,1],
+                                     visualization=VObjectJointGeneric(axesRadius=0.2*w, axesLength=1.4*w)))
+
+sens1 = mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*L], storeInternal=True,
+                                 outputVariableType=exu.OutputVariableType.Position))
 mbs.Assemble()
-dof = mbs.ComputeSystemDegreeOfFreedom()
-print('degrees of freedom:', dof['degreeOfFreedom'])
+dof = mbs.ComputeSystemDegreeOfFreedom(verbose=True)
 ```
 
 ```text
-degrees of freedom: 2
+ODE2 coordinates          = 14
+total constraints         = 14
+redundant constraints     = 0
+pure algebraic constraints= 2
+degree of freedom         = 2
 ```
 
-The model in its reference configuration, without the nodes and the gravity loads. The view is turned so that
-the three axes can be seen.
+The model in its reference configuration, with the joint axes:
 
 ```python
 SC.visualizationSettings.nodes.show = False
@@ -86,13 +96,14 @@ SC.visualizationSettings.loads.show = False
 SC.visualizationSettings.connectors.showJointAxes = True
 SC.visualizationSettings.general.showSolverInformation = False
 view = RotationMatrixX(-0.4) @ RotationMatrixY(-0.5)
-image = ShowImage(SC, size=[640,480], modelRotation=view)
+image = ShowImage(SC, size=[1280,960], modelRotation=view)
 ```
 
-![](images/tutorialRigidBody_0.png)
+```{image} images/tutorialRigidBody_0.png
+:width: 640px
+```
 
-Four seconds with steps of 1 ms. The Euler parameters of the rigid body nodes add one algebraic equation per
-body, so the solver is an implicit one, here the index-2 trapezoidal rule.
+Four seconds with the index 2 trapezoidal rule, and the tip position over time:
 
 ```python
 tEnd = 4
@@ -100,30 +111,14 @@ h = 1e-3
 simulationSettings = exu.SimulationSettings()
 simulationSettings.timeIntegration.numberOfSteps = int(tEnd/h)
 simulationSettings.timeIntegration.endTime = tEnd
-simulationSettings.solution.file.writePeriod = 0.01
+simulationSettings.solution.file.writePeriod = 0.005
 
-mbs.SolveDynamic(simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
-
-image = ShowImage(SC, size=[640,480], modelRotation=view) #the state at the end
+mbs.SolveDynamic(simulationSettings=simulationSettings, solverType=exu.DynamicSolverType.TrapezoidalIndex2)
+mbs.PlotSensor(sensorNumbers=[sens1], components=[1], closeAll=True)
 ```
 
-![](images/tutorialRigidBody_1.png)
-
-The vertical position of the tip over time; the frame of a body at the end, as `exu.HT`:
-
-```python
-mbs.PlotSensor(sensorNumbers=[sTip], components=[1], closeAll=True)
-
-H = mbs.GetObjectOutputBody(b1, exu.OutputVariableType.HomogeneousTransformation, localPosition=[0,0,0])
-print('position of body 1:', np.round(H.translation, 4))
-print('rotation angle of body 1 (rad):', round(H.RotationAngle(), 4))
+```{image} images/tutorialRigidBody_1.png
+:width: 640px
 ```
-
-```text
-position of body 1: [-0.329  -0.9634  0.4621]
-rotation angle of body 1 (rad): 2.1108
-```
-
-![](images/tutorialRigidBody_2.png)
 
 In a script, `mbs.SolutionViewer()` shows the stored motion forward and backward in the render window.

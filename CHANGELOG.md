@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 260 | 1.12.279 |
+| 1.12 | Metheney | 261 | 1.12.280 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.280** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GenerateBeamElementsAlongLine fails without nodeNumberStart and nodeNumberEnd (#2838)
+  - description: beams.GenerateBeamElementsAlongLine, the function that replaces the deprecated GenerateStraightBeam, passed its defaults nodeNumberStart=None and nodeNumberEnd=None to GenerateStraightBeam, which takes -1 for no node: every call without them raised 'failed to convert to NodeIndex, but received None'; it also warned that GenerateStraightBeam is deprecated. Found with the flexible beams tutorial notebook (revision2026b step RG17.2). Now None is passed as -1 and the implementation is called without the warning.
+  - **notes:** beams.GenerateBeamElementsAlongLine works without nodeNumberStart and nodeNumberEnd and no longer warns about the deprecated function it uses.
+  - date resolved: **2026-10-04 13:38**, date raised: 2026-10-04
 - **1.12.279** `DOCU` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` representative images for the item pages that lack one (#2830)
   - description: The maintainer, 2026-10-04: 'I think that most of them are too difficult to do them automatically. Suggestion: check which items (mostly bodies, loads, joints) would make sense to have a representative image - and which ones do not yet have one ... add a couple of images, some maybe from a Testmodel or within 1-2 scripts that are hand-made and which extract the images for the missing cases ... use the non-simplified drawing modes for springs, basis vectors, etc.; extract images with raytracer and try to adjust them yourself.' Replaces RG2.3.3.7, an automatic image per item. revision2026b step RG3.31.
   - **notes:** 23 item pages show a representative image of the item, drawn by the raytracer: the ground, mass point, planar rigid body, kinematic tree, beams, thin plate, FFRF body, the loads, spring-dampers, distance constraint, reeving system, rolling discs, planar joints, sphere contact and the rigid body marker.

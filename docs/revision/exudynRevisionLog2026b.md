@@ -14573,3 +14573,52 @@ polygonal section geometry is drawn with an orthonormal basis per tile, code mar
 
 **The notebook** `tutorialRigidBody.ipynb` looked at its checkerboard from below for the same reason; its view is now
 `RotationMatrixX(-0.4) @ RotationMatrixY(-0.5)`, run again.
+
+<a id="rg17-2-6"></a>
+### RG17.2.6, RG17.2.7, RG3.31.5 — the notebooks name themselves, all tutorials as notebooks, the joint images (2026-10-04, #2830, #2831, #2838, #2839, #2840)
+
+*(Maintainer 2026-10-04: the notebooks name their file "in a special texttt-like font"; the two notebooks "look
+basically good", but "it should integrate the information of the current tutorials"; two tutorials each for mass
+points and rigid bodies, "one with Create functions and one with direct items setup"; "adapt all other tutorials to the
+ipynb format"; plots at 50% of their size, "a little bit wider (7:4 or 8:4)"; renderer images at 2x the resolution;
+RG17.4 only where straightforward; the maintainer's settings of `itemImages.py`, images to be drawn again; the FFRF
+scene "still opens the render window"; one image for `ObjectJointRevoluteZ`; a new image for `ObjectRigidBody`; the
+reeving system's tiling; a step for the documentation of the drawing.)*
+
+**Names**: the first cell of every notebook names it - "Notebook `python/Notebooks/tutorialRigidBody.ipynb`", "Example
+notebook `python/Notebooks/reference/HT.ipynb`" -, and `notebookEmitter` and `AddDocuNotebook` raise if it does not; the
+line the emitter added to the page is gone.
+
+**Sizes**: `runNotebooks.py` stores a plot at 12.8 x 6.4 inch and 100 dpi (1280 x 640 pixels, 8:4, after
+`tight_layout`), and `ShowImage` labels its figure `exudyn.ShowImage`, so that it keeps its pixels; the notebooks ask
+`ShowImage` for twice the size they show (1280 x 960); the emitter writes every image as `{image}` with the width of
+half its pixels, read from the PNG header - sharp, and the fonts of `PlotSensor` half as large.
+
+**The tutorials** (`python/Notebooks/`, the cells written from the tutorial pages, their text shortened where the
+notebook shows it): `tutorialSpringDamper` builds the mass point from `Point`, `MassPoint`, `MarkerNodeCoordinate`,
+`CoordinateSpringDamper`, `LoadCoordinate` and sensors, as the old page did, and compares with the exact solution;
+`tutorialSpringDamperCreate` is the former notebook with the Create functions; `tutorialRigidBody` builds the joints
+from markers with `GenericJoint` (option 2, `ObjectJointRevoluteZ`, as comment), `tutorialRigidBodyCreate` with
+`CreateRevoluteJoint` and carries the explanations of the old page (node types, `Assemble`, the degree of freedom,
+`DrawSystemGraph` - it needs networkx, so the cell catches the `ImportError` -, the solvers); `tutorialFlexibleBeams`
+with `GenerateBeamElementsAlongLine` instead of the deprecated `GenerateStraightBeam`; `tutorialSymbolic`;
+`tutorialFFRF` (ngsolve). The notebooks ran in `venvP313` (networkx and ngsolve there, exudyn built from this tree),
+4 to 10 s each. `docs/manual/tutorial.md` lists the seven; the old pages stay in a second table of contents until
+RG17.3. The scripts are `python/Examples/notebooks/<name>.py` now, a directory the emitter owns.
+
+**#2838**: `GenerateBeamElementsAlongLine` - the replacement of the deprecated function - failed for every call without
+`nodeNumberStart`/`nodeNumberEnd` (None passed where -1 means "no node") and warned about the deprecated function it
+calls; fixed, found by the beam notebook.
+
+**RG3.31.5**: the images of `ObjectRigidBody`, `ObjectJointGeneric`, `ObjectJointRevoluteZ`, `ObjectJointPrismaticX`
+and `ObjectJointSpherical` were Markdown in the overall description, which is also the docstring of the Python class;
+they are the `image` field now. `RevoluteJointZ.png` (the joint alone) removed, `RevoluteJointZ2.png` (between two
+bodies) renamed to it; `docs/figures/ObjectRigidBody.png` replaced by `itemImages/ObjectRigidBody.png`. The FFRF scene
+opened a window in the maintainer's session: `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` is read when exudyn is imported, and in
+Spyder it was imported before; `itemImages.py` now sets `exu.special.userInterface.SuppressAll(True)` around each scene
+and sets the flags back. The maintainer's changes of `itemImages.py` (1080 x 700, `lightRadiusVariations = 41`, shadow
+smoothing, line width 3, floors with two sizes, ...) and of `NGsolveCMStutorial.py` (`exu.Print`, `useGraphics` from
+the flags) are part of this commit; all 24 images drawn again with them.
+
+**New steps**: RG6.9 (#2839), the curves of the connectors; RG13.8 (#2840), the documentation of the drawing - 74
+`UpdateGraphics` functions to inventory first.

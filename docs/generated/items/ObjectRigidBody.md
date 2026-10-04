@@ -7,10 +7,10 @@
 # ObjectRigidBody
 
 A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class `RigidBodyInertia`, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) of `exudyn.rigidBodyUtilities` to handle inertia, {ref}`COM <COM>` and mass.
-
-```{image} /docs/figures/ObjectRigidBody.png
-:width: 400
+```{image} /docs/figures/itemImages/ObjectRigidBody.png
+:width: 500
 ```
+
 
 **Simpler**: [`mbs.CreateRigidBody`](#sec-mainsystemextensions-createrigidbody) adds this item, with what it needs, in one call.
 

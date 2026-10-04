@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  13:23:06 (last modified)
+* @date         2026-10-04  13:22:27 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -59,11 +59,6 @@ public: // AUTO:
 /** ***********************************************************************************************
 * @class        CObjectJointGeneric
 * @brief        A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. The three rotation axes and sliding axes are those of the markers' frames; a rotation of these frames is given to the markers as their localHT.
-
-```{image} /docs/figures/UniversalJoint.png
-:width: 400
-```
-
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

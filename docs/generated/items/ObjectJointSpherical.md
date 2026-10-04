@@ -7,10 +7,10 @@
 # ObjectJointSpherical
 
 A spherical joint, which constrains the relative translation between two position based markers.
-
 ```{image} /docs/figures/SphericalJoint.png
-:width: 400
+:width: 500
 ```
+
 
 **Simpler**: [`mbs.CreateSphericalJoint`](#sec-mainsystemextensions-createsphericaljoint) adds this item, with what it needs, in one call.
 

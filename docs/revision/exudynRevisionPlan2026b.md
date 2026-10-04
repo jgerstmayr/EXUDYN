@@ -499,6 +499,13 @@ where one fits), for the items whose page gains from a picture.
       adjusted by hand, image by image;
     - **RG3.31.3** **DONE 2026-10-04** the images in `docs/figures/`, each named on the page of its item (`{image}` in the
       `detailedDescription`, as the joints do), and a look at every page.
+    - **RG3.31.5** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg17-2-6) *(maintainer 2026-10-04)* the images
+      of the rigid body and the joints move from the overall description (where they also went into the docstrings)
+      to the field `image`; `ObjectJointRevoluteZ` shows only the joint between two bodies (`RevoluteJointZ2.png`
+      renamed to `RevoluteJointZ.png`, the other removed); `ObjectRigidBody` gets an image of `itemImages.py`; the
+      maintainer's settings of the images (1080 x 700, lightRadiusVariations 41, ...) kept and all images drawn
+      again; `itemImages.py` sets the window flags itself, so that the FFRF scene opens no window also in a session
+      that imported exudyn before.
     - **RG3.31.4** *open* (#2837) a 3D beam without polygonal section geometry is drawn as a line with an orthonormal
       basis at every tile (`UpdateGraphicsBeam3D`, marked "temporary!" in the code), found with the image of
       `ObjectBeamGeometricallyExact`.
@@ -918,6 +925,18 @@ This group is that revision and what has to happen before it can start.
 
 <a id="rg6-7"></a>
 **RG6.7** **DONE 2026-10-03** (#2709) — [log](exudynRevisionLog2026b.md#rg6-7-done) · [plan text](exudynRevisionLog2026b.md#plan-rg6-7) — GraphicsData gets a Sphere and a CurvedTriangleList.
+
+<a id="rg6-9"></a>
+**RG6.9** *(maintainer 2026-10-04)* **Curves of connectors drawn with a tiling of their own, as watertight tubes** (#2839).
+`ObjectConnectorReevingSystemSprings` draws its rope arcs with `general.cylinderTiling` segments, whatever the angle of
+the arc; the spring windings of the spring-dampers use `connectors.springNumberOfWindings` and lines.
+    - **RG6.9.1** a setting `connectors.curveTiling` - segments per full turn of a curve -, the number of segments of an
+      arc in proportion to its angle; used by the rope of the reeving system and the windings of the spring-dampers
+      (`ObjectConnectorSpringDamper`, `CartesianSpringDamper`, `CoordinateSpringDamper(Ext)`, `LinearSpringDamper`);
+    - **RG6.9.2** a function of `EXUvis` that draws a watertight tube along a polyline (one ring of vertices per point,
+      shared by the neighboring segments, normals from the ring), used by the reeving system and - with a new flag,
+      e.g. `connectors.springDraw3D` - by the windings, which are lines today;
+    - **RG6.9.3** the graphics regression references and the item images of the connectors drawn again.
 
 <a id="rg6-8"></a>
 **RG6.8** *(group RG6; maintainer 2026-09-29)* **The graphics fixes before 1.13** - *"many are graphics
@@ -1390,6 +1409,20 @@ What depends on it: the graphics regression test takes every item through its Mi
 <a id="rg13-7"></a>
 **RG13.7** **DONE 2026-09-29** (#2742) — [log](exudynRevisionLog2026b.md#rg13-7) · [plan text](exudynRevisionLog2026b.md#plan-rg13-7) — How to set up a new item.
 
+<a id="rg13-8"></a>
+**RG13.8** *(maintainer 2026-10-04)* **How an item is drawn** (#2840): the drawing of the items is documented nowhere but in the
+74 `UpdateGraphics` functions - which settings they use for size, tiling and color, what `drawSize = -1` means, what a
+color of `[-1,-1,-1,-1]` takes. Proposed:
+    - **RG13.8.1** an inventory, per item: the settings and the parameters its `UpdateGraphics` reads, its default
+      size and color, what it draws (and what not, e.g. the windings of a spring or the axes of a joint); written as a
+      table, and where a setting is misleading or does not fit (e.g. `general.cylinderTiling` for the arcs of a rope,
+      RG6.9), raised;
+    - **RG13.8.2** a section *Drawing* in the generated frame of each item page, from a declaration in the definition
+      (e.g. `drawing=r'...'` and the settings it uses, which the emitter links to the settings page), so that the page
+      and the code are checked against each other where possible;
+    - **RG13.8.3** the general rules once per kind, in `itemKindDefinitions.py`: nodes, markers, loads and sensors are
+      drawn alike within their kind (size, color, number), objects one by one.
+
 ## RG14 — Marker values computed where they are used
 
 *(Group created by the maintainer, 2026-09-29.)* Today every connector, joint, constraint and load gets
@@ -1625,12 +1658,19 @@ notebook is JSON):
     - **RG17.2.5** the systematic way for the examples of the reference manual, shown on one: `pb.AddDocuNotebook(path)`
       in `definitions/pybind*.py` instead of `pb.AddDocuCodeBlock(code)` - the code cells, the Markdown cells as text and
       the stored text outputs on the page; the example of `exu.HT` is `python/Notebooks/reference/HT.ipynb`.
+    - **RG17.2.6** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg17-2-6) *(maintainer 2026-10-04)* every
+      notebook names itself, `python/Notebooks/<name>.ipynb` in code font, in its first cell (the emitter and
+      `AddDocuNotebook` refuse one that does not); plots stored at 12.8 x 6.4 inch (8:4) and `ShowImage` images at twice
+      the size, both shown at half their pixels; the scripts in `python/Examples/notebooks/`;
+    - **RG17.2.7** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg17-2-6) all tutorials as notebooks, with the
+      text of the tutorial pages: `tutorialSpringDamper` (items) and `tutorialSpringDamperCreate`, `tutorialRigidBody`
+      (markers and joints) and `tutorialRigidBodyCreate`, `tutorialFlexibleBeams`, `tutorialSymbolic`, `tutorialFFRF`;
+      the old pages in a second table of contents until RG17.3 removes them.
 
 <a id="rg17-3"></a>
-**RG17.3** *(group RG17; after the maintainer has compared the two notebooks with the old tutorials)* **The tutorials
-are the notebooks** (#2831): `docs/manual/tutorialSpringDamper.md` and `tutorialRigidBody.md` replaced by the pages of the
-notebooks (their text carried over where the notebook says less), then the flexible beams, FFRF and symbolic tutorials;
-the old scripts removed (*ask before deleting*): `springDamperTutorial.py`, `springDamperTutorialNew.py`,
+**RG17.3** *(group RG17; after the maintainer has compared the notebooks with the old tutorials)* **The tutorials
+are the notebooks** (#2831): the old pages `docs/manual/tutorial*.md` removed, with their figures that no notebook
+uses; the old scripts removed (*ask before deleting*): `springDamperTutorial.py`, `springDamperTutorialNew.py`,
 `rigidBodyTutorial.py`, `rigidBodyTutorial2.py`, `rigidBodyTutorial3.py`, keeping one alternative as a notebook -
 `rigidBodyTutorialWithMarkers.ipynb`, the model built from nodes, objects and markers instead of the Create functions;
 `exudev notebooks` to run them (the tool of RG17.2.2), and `runNotebooks.py --check` in the release checks: a notebook
@@ -1644,7 +1684,12 @@ general contact, module, renderer, system container, system data, types) become 
 `python/Notebooks/reference/`, one per class or section; what a snippet needs but does not show (a system with a body,
 a solved model) is a cell tagged `remove-cell`; the text before a block that only introduces it moves into the notebook
 as Markdown. Then: the reference notebooks run in the test suite (a pytest that executes their code cells), and the
-examples cannot go stale.
+examples cannot go stale. *(Maintainer 2026-10-04: "only if it works out straight-forward. If a couple of them would be
+too complicated, you can also keep them in the old format. But a clean test for all is certainly an added value.")*
+Of the 36, 24 are found by their `code="""..."""`: 11 in `pybindMainSystem.py`/`pybindSystemData.py`/
+`pybindSystemContainer.py`/`pybindRenderer.py` are short models that can run as they are; the 10 of
+`pybindGeneralInformation.py` are fragments of one introduction (imports, a system) and an error message - one
+notebook with them as cells, the error kept as text.
 
 <a id="rg17-5"></a>
 **RG17.5** *(group RG17; maintainer 2026-10-04: "a suggestion for the other examples in the docs ... would probably
@@ -1675,6 +1720,8 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582, #2776 | the graphics regression suite - open: RG2.3.3.8 the raytracer that can hang in `RedrawAndGetImage` |
 | RG3.31.4 | #2837 | a 3D beam without section geometry is drawn with a frame at every tile |
+| RG6.9 | #2839 | curves of connectors with a tiling of their own, as watertight tubes; spring windings in 3D |
+| RG13.8 | #2840 | how an item is drawn: an inventory of the `UpdateGraphics` functions, then on the pages |
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #1848, #1947 | the open bugs before 1.13: RG4.15.8 `GeneralContact` against the sphere contact |

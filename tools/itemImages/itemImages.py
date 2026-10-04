@@ -29,7 +29,7 @@ from exudyn.utilities import InertiaCuboid, InertiaCylinder, InertiaSphere, Rota
 
 repositoryRoot = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 imageDirectory = os.path.join(repositoryRoot, 'docs', 'figures', 'itemImages')
-imageSize = [800, 600]
+imageSize = [1080, 700]
 scenes = {}             #item name -> function(SC, mbs) that builds the scene and returns the view rotation
 floorColors = dict(color=[0.85, 0.85, 0.85, 1], alternatingColor=[0.7, 0.7, 0.7, 1])
 
@@ -48,15 +48,21 @@ def Settings(SC):
     v.view0.scene.drawWorldBasis = False
     v.general.showSolverInformation = False
     v.raytracer.advanced.showText = False
-    v.raytracer.lightRadiusVariations = 21
-    v.raytracer.multiSampling = 2
+    v.raytracer.lightRadiusVariations = 41
+    v.raytracer.advanced.shadowScalingFactor = 1
+    v.raytracer.advanced.shadowSmoothingSteps = 4
+    v.raytracer.numberOfThreads = 32
+    v.raytracer.multiSampling = 3
     v.openGL.light0.position = [3, 10, 7, 1]           #a positional light: the 4th component 1
-    v.openGL.light0.lightRadius = 0.4
+    v.openGL.light0.lightRadius = 0.8
     v.openGL.light0.shadow = 0.4
+    v.openGL.lineWidth = 3
+    v.general.cylinderTiling = 64 #currently for the reeving system
     v.nodes.show = False
     v.markers.show = False
     v.loads.show = False
     v.loads.drawSimplified = False
+    v.loads.defaultRadius = 0.015
     v.connectors.springNumberOfWindings = 10
     v.connectors.showJointAxes = True
     v.openGL.multiSampling = 4
@@ -72,16 +78,18 @@ def ViewZ(angleX=0.45, angleZ=-0.5):
     return RotationMatrixZ(angleZ) @ RotationMatrixX(0.5*np.pi - angleX)   #the settings take the rotation of the camera
 
 
-def Floor(mbs, y=0., size=4., center=[0, 0, 0]):
+def Floor(mbs, y=0., size=4., size2=None, center=[0, 0, 0]):
     """a checkerboard below the scene, for the shadows"""
+    if size2 is None: size2 = size
     return mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[center[0], y, center[2]], normal=[0, 1, 0],
-                                                                    size=size, **floorColors)])
+                                                                    size=size, size2=size2, **floorColors)])
 
 
-def FloorZ(mbs, z=0., size=4., center=[0, 0, 0]):
+def FloorZ(mbs, z=0., size=4., size2=None, center=[0, 0, 0]):
     """a checkerboard in the x-y plane, for the planar scenes and those with z up"""
+    if size2 is None: size2 = size
     return mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[center[0], center[1], z], normal=[0, 0, 1],
-                                                                    size=size, **floorColors)])
+                                                                    size=size, size2=size2, **floorColors)])
 
 
 def Block(mbs, position, size=[0.3, 0.3, 0.3], color=graphics.color.steelblue, rotation=None, gravity=[0, 0, 0]):
@@ -112,6 +120,19 @@ def Render(itemName):
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
+    #no window, also when exudyn was imported before (Spyder), where EXUDYN_SUPPRESS_UI_WINDOW_OPEN is not read
+    #again: the flags themselves, set back afterwards
+    userInterface = exu.special.userInterface
+    flags = {name: getattr(userInterface, name) for name in dir(userInterface) if name.startswith('suppress')}
+    userInterface.SuppressAll(True)
+    try:
+        RenderScene(itemName, plt)
+    finally:
+        for (name, value) in flags.items():
+            setattr(userInterface, name, value)
+
+
+def RenderScene(itemName, plt):
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
     Settings(SC)
@@ -151,6 +172,16 @@ def _(SC, mbs):
     return View()
 
 
+@Scene('ObjectRigidBody')
+def _(SC, mbs):
+    Floor(mbs, y=-0.35, size=1.8)
+    inertia = InertiaCuboid(1000, [0.8, 0.3, 0.4])
+    mbs.CreateRigidBody(inertia=inertia, referenceHT=exu.HT(rotation=RotationMatrixY(0.4) @ RotationMatrixZ(0.15)),
+                        graphicsDataList=[graphics.Brick(size=[0.8, 0.3, 0.4], color=graphics.color.steelblue),
+                                          graphics.Basis(origin=[0.4, 0.15, 0.2], length=0.3, radius=0.012)])
+    return View(0.45, -0.5)
+
+
 @Scene('ObjectMassPoint')
 def _(SC, mbs):
     Floor(mbs, y=-1.0, size=1.6)
@@ -188,7 +219,7 @@ def _(SC, mbs):
                       jointType=exu.JointType.RevoluteZ, jointHT=exu.HT(translation=[0.6, 0, 0]),
                       graphicsDataList=[joint([0, 0, 1]), graphics.Brick(centerPoint=[0.25, 0, 0], size=[0.5, 0.06, 0.06],
                                                                          color=graphics.color.lightgreen)])]
-    mbs.CreateKinematicTree(listOfTreeLinks=links, referenceCoordinates=[0.6, 0.5, -1.2],
+    mbs.CreateKinematicTree(listOfTreeLinks=links, referenceCoordinates=[-0.6, 0.5, -1.2],
                             baseGraphicsDataList=[graphics.Cylinder(pAxis=[0, -0.1, 0], vAxis=[0, 0.05, 0], radius=0.15,
                                                                     color=graphics.color.grey, nTiles=32)])
     SC.visualizationSettings.bodies.kinematicTree.showJointFrames = False
@@ -198,7 +229,7 @@ def _(SC, mbs):
 @Scene('ObjectANCFCable2D')
 def _(SC, mbs):
     from exudyn.beams import GenerateStraightLineANCFCable2D
-    FloorZ(mbs, z=-0.15, size=2.6, center=[1, -0.5, 0])
+    FloorZ(mbs, z=-0.15, size=2.4, size2=1.6, center=[1, -0.5, 0])
     Wall(mbs, [-0.05, 0, 0], size=[0.1, 0.4, 0.2])
     cable = ObjectANCFCable2D(massPerLength=10, bendingStiffness=200, axialStiffness=1e6,
                               visualization=VObjectANCFCable2D(drawHeight=0.04))
@@ -325,7 +356,7 @@ def _(SC, mbs):
 def _(SC, mbs):
     Floor(mbs, y=-0.25, size=2, center=[0.6, 0, 0])
     oGround = Wall(mbs, [-0.05, 0, 0])
-    oBody = Block(mbs, [1.0, 0.1, 0.1])
+    oBody = Block(mbs, [1.0, 0.2, 0.2])
     mbs.CreateCartesianSpringDamper(bodyNumbers=[oGround, oBody], localPosition1=[-0.15, 0, 0], stiffness=[100, 100, 100],
                                     drawSize=0.1)
     return View(0.45, -0.4)
@@ -414,7 +445,7 @@ def _(SC, mbs):
 
 @Scene('ObjectJointRevolute2D')
 def _(SC, mbs):
-    FloorZ(mbs, z=-0.1, size=2, center=[0.4, -0.3, 0])
+    FloorZ(mbs, z=-0.1, size=1.2, size2=0.8, center=[0.4, -0.3, 0])
     oGround = mbs.CreateGround(graphicsDataList=[graphics.Cylinder(pAxis=[0, 0, -0.1], vAxis=[0, 0, 0.16], radius=0.05,
                                                                    color=graphics.color.grey, nTiles=32)])
     angle = 0.5
@@ -434,7 +465,7 @@ def _(SC, mbs):
 @Scene('ObjectJointSliding2D')
 def _(SC, mbs):
     from exudyn.beams import GenerateStraightLineANCFCable2D
-    FloorZ(mbs, z=-0.15, size=2.6, center=[1, -0.3, 0])
+    FloorZ(mbs, z=-0.15, size=2.6, size2=1.7, center=[1, -0.3, 0])
     mbs.CreateGround(graphicsDataList=[graphics.Brick(centerPoint=[-0.05, 0, 0], size=[0.1, 0.3, 0.2], color=graphics.color.grey),
                                        graphics.Brick(centerPoint=[2.05, 0, 0], size=[0.1, 0.3, 0.2], color=graphics.color.grey)])
     cable = ObjectANCFCable2D(massPerLength=1, bendingStiffness=50, axialStiffness=1e6, visualization=VObjectANCFCable2D(drawHeight=0.03))

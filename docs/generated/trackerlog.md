@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.279.dev1
+- Exudyn version = 1.12.280.dev1
 - last change = 2026-10-04
-- Number of issues = 2838
-- Number of resolved issues = 2593 (279 in current version)
+- Number of issues = 2841
+- Number of resolved issues = 2594 (280 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,12 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `DOCU` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` the documentation says how each item is drawn and which settings it uses (#2840)
+  - description: The maintainer, 2026-10-04: 'the graphics visualization has no docs about how the items are drawn. Which (default) settings are used for tiling, colors, etc. - only available via the code. So, this should be completed and possibly improved if some misleading or inappropriate settings are used in the UpdateGraphics functions. This is mainly for the objects, but also for other items (but they would probably have a generic description for most nodes, markers, etc.).' revision2026b step RG13.8.
+  - date raised: 2026-10-04
+- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` curves of connectors drawn with a tiling of their own, as watertight tubes (#2839)
+  - description: The maintainer, 2026-10-04: 'CObjectConnectorReevingSystemSprings: graphics uses nTile = visualizationSettings.general.cylinderTiling, which is wrong; first: the nTiles should depend on the angle; second: it should be a new SC.visualizationSettings.connectors.curveTiling or a similar name, which should also be used by windings resolution in spring-dampers. And we need a function to draw watertight curves along a line, which could be used then both for the reeving system and the spring windings (if drawn in 3D - with a new flag).' revision2026b step RG6.9.
+  - date raised: 2026-10-04
 - `FIX` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` a 3D beam without section geometry is drawn with a coordinate frame at every tile (#2837)
   - description: UpdateGraphicsBeam3D (ObjectBeamGeometricallyExact, ObjectANCFBeam) draws a beam without polygonal section geometry as a line - and, marked 'temporary!' in the code, an orthonormal basis of size nodes.basisSize at each of the axialTiling points, also when nodes are not shown. Found with the item images of revision2026b step RG3.31: the default drawing of a beam is a row of arrows. The basis belongs to a setting (or goes), not to every line-drawn beam.
   - date raised: 2026-10-04

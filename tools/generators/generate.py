@@ -99,7 +99,7 @@ stages = [
     #the notebooks are the one place of a tutorial: their page and their example script (#2831); the
     #stored outputs come from tools/runNotebooks.py, which is not a stage - it runs the models
     Stage('tools/generators/notebookEmitter.py', ['python/Notebooks'],
-          ['docs/generated/notebooks', 'python/Examples/tutorialRigidBody.py', 'python/Examples/tutorialSpringDamper.py'],
+          ['docs/generated/notebooks', 'python/Examples/notebooks'],
           writesOnlyWhenChanged=True),
     Stage('tools/generators/examplesDocsEmitter.py',
           ['python/Examples', 'python/TestModels'],

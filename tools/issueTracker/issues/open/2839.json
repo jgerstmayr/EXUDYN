@@ -1,0 +1,13 @@
+{
+  "number": 2839,
+  "title": "curves of connectors drawn with a tiling of their own, as watertight tubes",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "IMPROVEMENT",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "The maintainer, 2026-10-04: 'CObjectConnectorReevingSystemSprings: graphics uses nTile = visualizationSettings.general.cylinderTiling, which is wrong; first: the nTiles should depend on the angle; second: it should be a new SC.visualizationSettings.connectors.curveTiling or a similar name, which should also be used by windings resolution in spring-dampers. And we need a function to draw watertight curves along a line, which could be used then both for the reeving system and the spring windings (if drawn in 3D - with a new flag).' revision2026b step RG6.9.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "file": "src/ImplObjects/CObjectConnectorReevingSystemSprings.cpp"
+}

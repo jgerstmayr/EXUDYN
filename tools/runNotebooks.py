@@ -39,7 +39,11 @@ notebookDirectory = os.path.join(repositoryRoot, 'python', 'Notebooks')
 noticePrefixes = ('NOTE: EXUDYN_SUPPRESS_UI_WINDOW_OPEN', 'NOTE: EXUDYN_OUTPUTDIRECTORY', 'NOTE: SolutionViewer opens no window',
                   'NOTE: the renderer is suppressed', 'NOTE: plots are suppressed', 'NOTE: PlotSensor opens no window',
                   'NOTE: ShowImage')
-imageDpi = None           #the resolution of the figure itself: ShowImage keeps its pixels, PlotSensor 640 x 480
+imageDpi = 100
+#a plot (PlotSensor, matplotlib) is stored at twice the size of its default 6.4 x 4.8 inch and wider, 8:4: the page shows
+#it at half its pixels, so it is sharp and its fonts, which PlotSensor makes large for the screen, are half as large;
+#an image of ShowImage keeps its pixels - the notebook asks for twice the size it wants to show
+plotSizeInches = (12.8, 6.4)
 
 
 def Source(cell):
@@ -73,6 +77,9 @@ def RunCell(code, namespace, plt):
     if plt is not None:
         for number in plt.get_fignums():
             figure = plt.figure(number)
+            if figure.get_label() != 'exudyn.ShowImage':
+                figure.set_size_inches(*plotSizeInches)
+                figure.tight_layout()
             png = io.BytesIO()
             figure.savefig(png, format='png', dpi=imageDpi)
             outputs.append({'output_type': 'display_data', 'metadata': {},

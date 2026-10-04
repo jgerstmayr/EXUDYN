@@ -35,7 +35,7 @@ import numpy as np
 import time
 
 
-useGraphics = True
+useGraphics = not exu.special.userInterface.suppressDialogs
 fileName = OutputFilePath('solution/netgenHinge', 'NGsolveCMStutorial') #generated output, not input: goes to the ignored solution/ (#2491)
 
 #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -113,7 +113,7 @@ if True: #needs netgen/ngsolve to be installed to compute mesh, see e.g.: https:
     [bfM, bfK, fes] = fem.ImportMeshFromNGsolve(mesh, density=rho, youngsModulus=Emodulus, poissonsRatio=nu)
     meshCreated = True
     if (meshH==0.04): 
-        print('save file')
+        exu.Print('save file')
         fem.SaveToFile(fileName)
 
 
@@ -125,43 +125,43 @@ if True: #now import mesh as mechanical model to EXUDYN
     boltP1=[0,0,0]
     boltP2=[0,-b,0]
     nodesOnBolt = fem.GetNodesOnCylinder(boltP1, boltP2, radius=0.5*d)
-    #print("boundary nodes bolt=", nodesOnBolt)
+    #exu.Print("boundary nodes bolt=", nodesOnBolt)
     nodesOnBoltWeights = fem.GetNodeWeightsFromSurfaceAreas(nodesOnBolt)
 
     bushingP1=[L,0,0]
     bushingP2=[L,-b,0]
     nodesOnBushing = fem.GetNodesOnCylinder(bushingP1, bushingP2, radius=0.5*d)
-    #print("boundary nodes bushing=", nodesOnBushing)
+    #exu.Print("boundary nodes bushing=", nodesOnBushing)
     nodesOnBushingWeights = fem.GetNodeWeightsFromSurfaceAreas(nodesOnBushing)
 
-    print("nNodes=",fem.NumberOfNodes())
+    exu.Print("nNodes=",fem.NumberOfNodes())
 
     strMode = ''
     if True: #pure eigenmodes
-        print("compute eigen modes... ")
+        exu.Print("compute eigen modes... ")
         start_time = time.time()
         
         if False: #faster but not so accurate
             fem.ComputeEigenmodesNGsolve(bfM, bfK, nModes, excludeRigidBodyModes = 6)
         else:
             fem.ComputeEigenmodes(nModes, excludeRigidBodyModes = 6, useSparseSolver = True)
-        print("eigen modes computation needed %.3f seconds" % (time.time() - start_time))
-        print("eigen freq.=", fem.GetEigenFrequenciesHz())
+        exu.Print("eigen modes computation needed %.3f seconds" % (time.time() - start_time))
+        exu.Print("eigen freq.=", fem.GetEigenFrequenciesHz())
 
     else:
         strMode = 'HCB'    
         #boundaryList = [nodesOnBolt, nodesOnBolt, nodesOnBushing] #for visualization, use first interface twice
         boundaryList = [nodesOnBolt, nodesOnBushing] 
             
-        print("compute HCB modes... ")
+        exu.Print("compute HCB modes... ")
         start_time = time.time()
         fem.ComputeHurtyCraigBamptonModes(boundaryNodesList=boundaryList, 
                                       nEigenModes=nModes, 
                                       useSparseSolver=True,
                                       computationMode = HCBstaticModeSelection.RBE2)
         
-        print("eigen freq.=", fem.GetEigenFrequenciesHz())
-        print("HCB modes needed %.3f seconds" % (time.time() - start_time))
+        exu.Print("eigen freq.=", fem.GetEigenFrequenciesHz())
+        exu.Print("HCB modes needed %.3f seconds" % (time.time() - start_time))
     
         
     
@@ -171,7 +171,7 @@ if True: #now import mesh as mechanical model to EXUDYN
         mat = KirchhoffMaterial(Emodulus, nu, rho)
         varType = exu.OutputVariableType.StressLocal
         #varType = exu.OutputVariableType.StrainLocal
-        print("ComputePostProcessingModes ... (may take a while)")
+        exu.Print("ComputePostProcessingModes ... (may take a while)")
         start_time = time.time()
         #without NGsolve:
         if True: #faster with ngsolve
@@ -180,7 +180,7 @@ if True: #now import mesh as mechanical model to EXUDYN
         else:
             fem.ComputePostProcessingModes(material=mat, 
                                             outputVariableType=varType)
-        print("   ... needed %.3f seconds" % (time.time() - start_time))
+        exu.Print("   ... needed %.3f seconds" % (time.time() - start_time))
         SC.visualizationSettings.contour.reduceRange=True
         SC.visualizationSettings.contour.outputVariable = varType
         SC.visualizationSettings.contour.outputVariableComponent = 0 #x-component
@@ -190,7 +190,7 @@ if True: #now import mesh as mechanical model to EXUDYN
         SC.visualizationSettings.contour.outputVariableComponent = 0
     
     #%%+++++++++++++++++++++++++++++++++++++++++++++++++++++
-    print("create CMS element ...")
+    exu.Print("create CMS element ...")
     cms = ObjectFFRFreducedOrderInterface(fem)
     
     objFFRF = cms.AddObjectFFRFreducedOrder(mbs, positionRef=[0,0,0], 
@@ -342,34 +342,27 @@ if True: #now import mesh as mechanical model to EXUDYN
     SC.visualizationSettings.view0.window.renderWindowSize=[1920,1080]
     SC.visualizationSettings.openGL.multiSampling = 4
 
-    useGraphics=True
-    if True:
-        if useGraphics:
-            SC.visualizationSettings.general.autoFitScene=False
+    if useGraphics:
+        SC.visualizationSettings.general.autoFitScene=False
 
-            SC.renderer.Start()
-            SC.renderer.RestoreSavedState() #load last model view
-        
-            SC.renderer.DoIdleTasks() #press space to continue
+        SC.renderer.Start()
+        SC.renderer.RestoreSavedState() #load last model view
+    
+        SC.renderer.DoIdleTasks() #press space to continue
 
-        if True:
-            # mbs.SolveDynamic(solverType=exu.DynamicSolverType.TrapezoidalIndex2, 
-            #                   simulationSettings=simulationSettings)
-            mbs.SolveDynamic(simulationSettings=simulationSettings)
-        else:
-            mbs.SolveStatic(simulationSettings=simulationSettings)
+    mbs.SolveDynamic(simulationSettings=simulationSettings)
 
-        if varType == exu.OutputVariableType.StressLocal:
-            mises = CMSObjectComputeNorm(mbs, 0, exu.OutputVariableType.StressLocal, 'Mises')
-            print('max von-Mises stress=',mises)
+    if varType == exu.OutputVariableType.StressLocal:
+        mises = CMSObjectComputeNorm(mbs, 0, exu.OutputVariableType.StressLocal, 'Mises')
+        exu.Print('max von-Mises stress=',mises)
+    
+    if useGraphics:
+        SC.renderer.DoIdleTasks()
+        SC.renderer.Stop() #safely close rendering window!
+    
+    if False:
         
-        if useGraphics:
-            SC.renderer.DoIdleTasks()
-            SC.renderer.Stop() #safely close rendering window!
-        
-        if False:
-            
-            mbs.PlotSensor(sensorNumbers=[sensBushingVel], components=[1])
+        mbs.PlotSensor(sensorNumbers=[sensBushingVel], components=[1])
 
 #%%
 if False:

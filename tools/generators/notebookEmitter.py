@@ -32,7 +32,7 @@ toolsDirectory = os.path.dirname(os.path.abspath(__file__))
 repositoryRoot = os.path.dirname(os.path.dirname(toolsDirectory))
 notebookDirectory = 'python/Notebooks'
 pageDirectory = 'docs/generated/notebooks'
-scriptDirectory = 'python/Examples'
+scriptDirectory = 'python/Examples/notebooks'
 
 
 def Source(cell):
@@ -70,9 +70,8 @@ def Page(name, notebook):
         source = Source(cell).rstrip()
         if cell['cell_type'] == 'markdown':
             lines += [source, '']
-            if first:   #below the title: where the notebook is
-                lines += ['*This page is the notebook `' + origin + '`; the same code is the example `'
-                          + scriptDirectory + '/' + name + '.py`.*', '']
+            if first and ('`' + origin + '`') not in source:   #the notebook says where it is, in its first cell
+                raise ValueError('notebookEmitter: the first cell of ' + origin + ' must name the notebook as `' + origin + '`')
             first = False
             continue
         if cell['cell_type'] != 'code' or source == '':
@@ -90,7 +89,10 @@ def Page(name, notebook):
                 if 'image/png' in data:
                     imageName = name + '_' + str(len(images)) + '.png'
                     images[imageName] = base64.b64decode(Text(data['image/png']))
-                    lines += ['![](images/' + imageName + ')', '']
+                    #shown at half its pixels: the runner stores plots and ShowImage images at twice the size
+                    png = images[imageName]
+                    width = int.from_bytes(png[16:20], 'big') if png[1:4] == b'PNG' else 1280
+                    lines += ['```{image} images/' + imageName, ':width: ' + str(width//2) + 'px', '```', '']
                 elif 'text/plain' in data:
                     lines += ['```text', Text(data['text/plain']).rstrip(), '```', '']
             elif output['output_type'] == 'error':
@@ -144,10 +146,14 @@ def main():
             Write(pageDirectory + '/images/' + imageName, data, binary=True)
             written.add('images/' + imageName)
         Write(scriptDirectory + '/' + name + '.py', Script(name, notebook))
+        written.add('script:' + name + '.py')
     #what no notebook writes any more goes, so that a removed notebook leaves no page behind
     for full in glob.glob(os.path.join(repositoryRoot, pageDirectory, '**', '*'), recursive=True):
         relative = os.path.relpath(full, os.path.join(repositoryRoot, pageDirectory)).replace(os.sep, '/')
         if os.path.isfile(full) and relative not in written:
+            os.remove(full)
+    for full in glob.glob(os.path.join(repositoryRoot, scriptDirectory, '*.py')):
+        if 'script:' + os.path.basename(full) not in written:
             os.remove(full)
     print('notebookEmitter: ' + str(len(Notebooks())) + ' notebook(s)')
 

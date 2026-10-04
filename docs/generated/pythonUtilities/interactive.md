@@ -102,13 +102,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 
 
 
-Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`tutorialRigidBody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/tutorialRigidBody.py) (Ex), [`tutorialSpringDamper.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/tutorialSpringDamper.py) (Ex)
-
-
 (sec-interactive-convertimages2video)=
 ## Function: ConvertImages2Video
 
-[`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1102)
+[`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1103)
 
 - **function description**: function to call ffmpeg in the background and convert images to video; requires ffmpeg-python to be installed
 - **input**:
@@ -136,7 +133,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`tutorialRig
 (sec-interactive-interactiveimages2video)=
 ## Function: InteractiveImages2Video
 
-[`InteractiveImages2Video(closeAfterCreation = False, fontSize = 11)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1160)
+[`InteractiveImages2Video(closeAfterCreation = False, fontSize = 11)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1161)
 
 - **function description**: interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed
 

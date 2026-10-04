@@ -119,12 +119,14 @@ def GenerateBeamElementsAlongLine(mbs, positionStart, positionEnd, numberOfEleme
         returns a dict containing created items {'nodes', 'elements', 'nodePositions', constraintObjects', 'loads'}
     """
 
-    beamData = GenerateStraightBeam(mbs=mbs, 
+    #the implementation of the deprecated function, without its warning; None is 'no node given' there as -1 (#2838)
+    beamData = GenerateStraightBeam.__wrapped__(mbs=mbs, 
                                     positionOfNode0=positionStart, positionOfNode1=positionEnd,
                                     numberOfElements=numberOfElements, beamTemplate=beamTemplate,
                                     gravity=gravity, 
                                     fixedConstraintsNode0=groundConstraintsStart, fixedConstraintsNode1=groundConstraintsEnd,
-                                    nodeNumber0=nodeNumberStart, nodeNumber1=nodeNumberEnd)
+                                    nodeNumber0=-1 if nodeNumberStart is None else nodeNumberStart,
+                                    nodeNumber1=-1 if nodeNumberEnd is None else nodeNumberEnd)
 
     [beamNodeList, beamObjectList, loadList, cableNodePositionList, cableCoordinateConstraintList] = beamData
     beamElementsDict = {'nodes': beamNodeList, 

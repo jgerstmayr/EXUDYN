@@ -1092,6 +1092,7 @@ def ShowImage(systemContainer, size=[800, 600], modelRotation=None, zoomAll=True
             plt.imsave(fileName, image)
         if show:
             figure = plt.figure(figsize=(image.shape[1]/100, image.shape[0]/100), dpi=100)
+            figure.set_label('exudyn.ShowImage') #its pixels are the image: a notebook runner does not resize it
             figure.add_axes([0, 0, 1, 1]).imshow(image)
             figure.axes[0].axis('off')
             if not UIWindowSuppressed('Plots', 'ShowImage'): #in a notebook the figure is shown inline anyway

@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  14:46:52 (last modified)
+* @date         2026-10-04  13:22:27 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -46,16 +46,6 @@ public: // AUTO:
 /** ***********************************************************************************************
 * @class        CObjectJointRevoluteZ
 * @brief        A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint \f$z\f$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use `mbs.CreateRevoluteJoint(...)` for two rigid bodies (or ground).
-
-```{image} /docs/figures/RevoluteJointZ.png
-:width: 400
-```
-
-
-```{image} /docs/figures/RevoluteJointZ2.png
-:width: 400
-```
-
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)

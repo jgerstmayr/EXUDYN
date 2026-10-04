@@ -1,0 +1,17 @@
+{
+  "number": 2838,
+  "title": "GenerateBeamElementsAlongLine fails without nodeNumberStart and nodeNumberEnd",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "beams.GenerateBeamElementsAlongLine, the function that replaces the deprecated GenerateStraightBeam, passed its defaults nodeNumberStart=None and nodeNumberEnd=None to GenerateStraightBeam, which takes -1 for no node: every call without them raised 'failed to convert to NodeIndex, but received None'; it also warned that GenerateStraightBeam is deprecated. Found with the flexible beams tutorial notebook (revision2026b step RG17.2). Now None is passed as -1 and the implementation is called without the warning.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "dateResolved": "2026-10-04 13:38",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/beams.py",
+  "releaseNotes": "beams.GenerateBeamElementsAlongLine works without nodeNumberStart and nodeNumberEnd and no longer warns about the deprecated function it uses.",
+  "resolvedInVersion": "1.12.280"
+}

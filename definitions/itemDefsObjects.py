@@ -820,16 +820,12 @@ def ObjectRigidBody_graphicsDataUserFunction(mbs: MainSystem, itemNumber: Index)
 
 definitions.append(ItemDefinition(
     className='ObjectRigidBody',
+    image='itemImages/ObjectRigidBody.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nDim3D = 3; //used to avoid pure 3 in code where dimensionality applies
     static constexpr Index nDisplacementCoordinates = 3; //code currently implemented for 3 displacemnet coordinates; this constant used to change this in future implementation
 """,
     cParentClass=ParentClassCObjectBody,
-    overallDescription=r"""A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class `RigidBodyInertia`, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) of `exudyn.rigidBodyUtilities` to handle inertia, ABRV:COM and mass. 
-
-```{image} /docs/figures/ObjectRigidBody.png
-:width: 400
-```
-""",
+    overallDescription=r"""A 3D rigid body which is attached to a 3D rigid body node. The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about $x$ or $z$ axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class `RigidBodyInertia`, see [](#sec-rigidbodyutilities-rigidbodyinertia---init--) of `exudyn.rigidBodyUtilities` to handle inertia, ABRV:COM and mass.""",
     classType=ClassTypeObject,
     miniExample=r"""    #a rigid body thrown with a spin about a principal axis, under gravity
     inertia = InertiaCuboid(density=1000, sideLengths=[0.4,0.2,0.1])
@@ -12532,17 +12528,13 @@ def ObjectJointGeneric_offsetUserFunction_t(mbs: MainSystem, t: Real, itemNumber
 
 definitions.append(ItemDefinition(
     className='ObjectJointGeneric',
+    image='UniversalJoint.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     addProtectedC=r"""    static constexpr Index nConstraints = 6;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    overallDescription=r"""A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. The three rotation axes and sliding axes are those of the markers' frames; a rotation of these frames is given to the markers as their localHT. 
-
-```{image} /docs/figures/UniversalJoint.png
-:width: 400
-```
-""",
+    overallDescription=r"""A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. The three rotation axes and sliding axes are those of the markers' frames; a rotation of these frames is given to the markers as their localHT.""",
     classType=ClassTypeObject,
     miniExample=r"""    #a joint whose constrained axes are chosen: here all but the rotation about z - a revolute joint -
     #holding a rigid body pendulum at its end
@@ -12821,22 +12813,13 @@ def UFoffset(mbs, t, itemNumber, offsetUserFunctionParameters):
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectJointRevoluteZ',
+    image='RevoluteJointZ.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     addProtectedC=r"""    static constexpr Index nConstraints = 5;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    overallDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use `mbs.CreateRevoluteJoint(...)` for two rigid bodies (or ground). 
-
-```{image} /docs/figures/RevoluteJointZ.png
-:width: 400
-```
- 
-
-```{image} /docs/figures/RevoluteJointZ2.png
-:width: 400
-```
-""",
+    overallDescription=r"""A revolute joint in 3D; constrains the position of two rigid body markers and the rotation about two axes, while the joint $z$-rotation axis (defined in local coordinates of marker 0 / joint J0 coordinates) can freely rotate. The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use `mbs.CreateRevoluteJoint(...)` for two rigid bodies (or ground).""",
     classType=ClassTypeObject,
     createFunctions=['CreateRevoluteJoint'],
     examples=['Examples/rigidBodyTutorial3.py', 'Examples/rigidBodyTutorial3withMarkers.py'],
@@ -13039,17 +13022,13 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectJointPrismaticX',
+    image='PrismaticJointX.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     addProtectedC=r"""    static constexpr Index nConstraints = 5;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    overallDescription=r"""A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use `mbs.CreatePrismaticJoint(...)` for two rigid bodies (or ground). 
-
-```{image} /docs/figures/PrismaticJointX.png
-:width: 400
-```
-""",
+    overallDescription=r"""A prismatic joint in 3D; constrains the relative rotation of two rigid body markers and relative motion w.r.t. the joint $y$ and $z$ axes, allowing a relative motion along the joint $x$ axis (defined in local coordinates of marker 0 / joint J0 coordinates). The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use `mbs.CreatePrismaticJoint(...)` for two rigid bodies (or ground).""",
     classType=ClassTypeObject,
     miniExample=r"""    #a body that may only slide along the x-axis of the joint frame, here turned to the global y-axis
     inertia = InertiaCuboid(density=1000, sideLengths=[0.1,0.1,0.1])
@@ -13254,15 +13233,11 @@ definitions.append(ItemDefinition(
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 definitions.append(ItemDefinition(
     className='ObjectJointSpherical',
+    image='SphericalJoint.png', #the representative image of the page (#2830)
     addProtectedC=r"""    static constexpr Index nConstraints = 3;
 """,
     cParentClass=ParentClassCObjectConstraint,
-    overallDescription=r"""A spherical joint, which constrains the relative translation between two position based markers. 
-
-```{image} /docs/figures/SphericalJoint.png
-:width: 400
-```
-""",
+    overallDescription=r"""A spherical joint, which constrains the relative translation between two position based markers.""",
     classType=ClassTypeObject,
     miniExample=r"""    #a point of a rigid body held at a ground point, free to rotate: a spherical pendulum
     inertia = InertiaCuboid(density=1000, sideLengths=[1,0.1,0.1])

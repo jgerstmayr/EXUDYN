@@ -2460,10 +2460,6 @@ class ObjectRigidBody:
     
     The rotation parametrization of the rigid body follows the rotation parametrization of the node. Use Euler parameters in the general case (no singularities) in combination with implicit solvers (GeneralizedAlpha or TrapezoidalIndex2), Tait-Bryan angles for special cases, e.g., rotors where no singularities occur if you rotate about :math:`x` or :math:`z` axis, or use Lie-group formulation with rotation vector together with explicit solvers. REMARK: Use the class ``RigidBodyInertia``, see sec-rigidbodyutilities-rigidbodyinertia---init-- of ``exudyn.rigidBodyUtilities`` to handle inertia, COM and mass.
     
-    ```{image} /docs/figures/ObjectRigidBody.png
-    :width: 400
-    ```
-    
     Args:
         name: objects's unique name; type: str
 
@@ -6369,10 +6365,6 @@ class ObjectJointGeneric:
     
     The three rotation axes and sliding axes are those of the markers' frames; a rotation of these frames is given to the markers as their localHT.
     
-    ```{image} /docs/figures/UniversalJoint.png
-    :width: 400
-    ```
-    
     Args:
         name: constraints's unique name
 
@@ -6472,15 +6464,6 @@ class ObjectJointRevoluteZ:
     
     The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use ``mbs.CreateRevoluteJoint(...)`` for two rigid bodies (or ground).
     
-    ```{image} /docs/figures/RevoluteJointZ.png
-    :width: 400
-    ```
-    
-    
-    ```{image} /docs/figures/RevoluteJointZ2.png
-    :width: 400
-    ```
-    
     Args:
         name: constraints's unique name
 
@@ -6560,10 +6543,6 @@ class ObjectJointPrismaticX:
     
     the joint :math:`y` and :math:`z` axes, allowing a relative motion along the joint :math:`x` axis (defined in local coordinates of marker 0 / joint J0 coordinates). The joint coordinate system is the frame of the markers; a rotation of it is given to the markers as their localHT. For easier definition of the joint, use ``mbs.CreatePrismaticJoint(...)`` for two rigid bodies (or ground).
     
-    ```{image} /docs/figures/PrismaticJointX.png
-    :width: 400
-    ```
-    
     Args:
         name: constraints's unique name
 
@@ -6636,10 +6615,6 @@ class VObjectJointSpherical:
 
 class ObjectJointSpherical:
     """A spherical joint, which constrains the relative translation between two position based markers.
-    
-    ```{image} /docs/figures/SphericalJoint.png
-    :width: 400
-    ```
     
     Args:
         name: constraints's unique name

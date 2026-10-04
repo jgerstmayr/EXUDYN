@@ -7,10 +7,10 @@
 # ObjectJointGeneric
 
 A generic joint in 3D; constrains components of the absolute position and rotations of two points given by PointMarkers or RigidMarkers. The three rotation axes and sliding axes are those of the markers' frames; a rotation of these frames is given to the markers as their localHT.
-
 ```{image} /docs/figures/UniversalJoint.png
-:width: 400
+:width: 500
 ```
+
 
 **Simpler**: [`mbs.CreateGenericJoint`](#sec-mainsystemextensions-creategenericjoint) adds this item, with what it needs, in one call.
 

@@ -298,6 +298,9 @@ class DeclarationWriter:
         import json
         notebook = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
                                                notebookPath), encoding='utf-8'))
+        if len(notebook['cells']) == 0 or ('`' + notebookPath + '`') not in ''.join(notebook['cells'][0]['source']):
+            raise ValueError('AddDocuNotebook: the first cell of ' + notebookPath + ' must name the notebook as `'
+                             + notebookPath + '`')
         for cell in notebook['cells']:
             source = ''.join(cell['source']).rstrip()
             if source == '':
