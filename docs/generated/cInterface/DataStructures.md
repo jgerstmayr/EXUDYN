@@ -292,7 +292,9 @@ print([SC2.renderer.materials[i].name for i in range(10)])
 ['default', 'matt', 'steel', 'plastic', 'chrome', 'shiny', 'transparent', 'glass', 'mirror', 'emission']
 ```
 
-(from the notebook `python/Notebooks/reference/systemContainer.ipynb`)
+```{container} notebookorigin
+systemContainer.ipynb
+```
 
 
 The class **GraphicsMaterialList** has the following **functions and structures**:

@@ -36,7 +36,7 @@ if definitionsDirectory not in sys.path:
 import generatorPaths as paths                                                          # noqa: E402
 import enumEmitter                                                                      # noqa: E402
 import outputVariableEmitter                                                            # noqa: E402
-from autoGenerateHelper import DeclarationWriter, GetDateStr, WriteTextIfDifferent             # noqa: E402
+from autoGenerateHelper import DeclarationWriter, GetDateStr, WriteTextIfDifferent, NotebookOrigins  # noqa: E402
 from autoGenerateHelper import MarkdownLabel                                            # noqa: E402
 from latexToMarkdown import NormalizeHeadings, DropRepeatedTitle                                 # noqa: E402
 from autoGenerateHelper import localListFunctionNames, localListClassNames, localListEnumNames  # noqa: E402
@@ -180,7 +180,7 @@ def WriteMarkdownPages(writer):
         #(#2660)
         title = markdownPageTitles.get(name, name)
         (label, body) = DropRepeatedTitle(text.strip(), title)
-        page = NormalizeHeadings(Banner(title, label) + body) + '\n'
+        page = NotebookOrigins(NormalizeHeadings(Banner(title, label) + body)) + '\n'
         with io.open(os.path.join(markdownDir, name + '.md'), 'w', encoding='utf8',
                      newline='\n') as file:
             file.write(page)

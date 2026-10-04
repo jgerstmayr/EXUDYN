@@ -56,7 +56,9 @@ d:  ((a + (13 * sin(a))) + cos(7))  =  27.63179787837662
 f= 1007.048934256198 , diff= 11.908573304574846
 ```
 
-(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
+```{container} notebookorigin
+symbolic.ipynb
+```
 
 To create a symbolic Real, use `aa=symbolic.Real(1.23)` to build a Python object aa with value 1.23. In order to use a named value, use `pi=symbolic.Real('pi',3.14)`. Note that in the following, we use the abbreviation `SymReal=exudyn.symbolic.Real`. Member functions of `SymReal`, which are **not recorded**, are:
 
@@ -119,8 +121,6 @@ c = (a >= b)
 #in most cases, we can also mix with float:
 c = a*7 + esym.sin(8)
 ```
-
-(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
 
 Mathematical functions may be called with an `SymReal` or with a `float`. Most standard mathematical functions exist for `symbolic`, e.g., as `symbolic.abs`. **HINT**: function names are lower-case for compatibility with Python's math library. Thus, you can easily exchange math.sin with esym.sin, and you may want to use a generic name, such as myMath=symbolic in order to switch between Python and symbolic user functions. The following functions exist:
 
@@ -232,8 +232,6 @@ v1*v2:  ([1,3,2] * [a,42,(a - (3 * 13))]) = 174.0
 v1[2]:  [1,3,2][2] = 2.0
 ```
 
-(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
-
 To create a symbolic Vector, use `aa=symbolic.Vector([3,4.2,5]` to build a Python object aa with values [3,4.2,5]. In order to use a named vector, use `v=symbolic.Vector('myVec',[3,4.2,5])`. Vectors can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Vector([x,x**2,3.14])`, however, this cannot become a named vector as it contains expressions. There is a significance difference to numpy, such that '*' represents the scalar vector multplication which gives a scalar. Furthermore, the comparison operator '==' gives only True, if all components are equal, and the operator '!=' gives True, if any component is unequal. Note that in the following, we use the abbreviation `SymVector=exudyn.symbolic.Vector`. Note that only functions are able to be recorded. Member functions of `SymVector` are:
 
 The class **symbolic.Vector** has the following **functions and structures**:
@@ -287,8 +285,6 @@ v -= w
 v *= SymReal(0.5)
 ```
 
-(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
-
 
 ## symbolic.Matrix
 
@@ -329,8 +325,6 @@ m1:  ((3 * ([[1,3,2],[4,5,6]] + [[a,(3 * 13),2],
 [4,5,6]]))
 m2:  [[0,1,1],[1,0,1],[1,1,0]]
 ```
-
-(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
 
 To create a symbolic Matrix, use `aa=symbolic.Matrix([[3,4.2],[3.3,1.2]]` to build a Python object aa. In order to use a named matrix, use `v=symbolic.Matrix('myMat',[3,4.2,5])`. Matrixs can be also created from mixed symbolic expressions and numbers, such as `v=symbolic.Matrix([x,x**2,3.14])`, however, this cannot become a named matrix as it contains expressions. There is a significance difference to numpy, such that '*' represents the matrix multplication (compute components from row times column operations). Note that in the following, we use the abbreviation `SymMatrix=exudyn.symbolic.Matrix`. Member functions of `SymMatrix` are:
 
@@ -373,8 +367,6 @@ m1 += m1
 m1 -= m1
 m1 *= 3.14
 ```
-
-(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
 
 
 ## symbolic.VariableSet
@@ -427,8 +419,6 @@ a= a
 x= 42.0
 x: a = 3.33
 ```
-
-(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
 
 
 The class **symbolic.VariableSet** has the following **functions and structures**:
@@ -495,8 +485,6 @@ return value= (load * sin((62.8319 * t)))
 load user function:  (load * sin((62.8319 * t)))
 load user function:  10.0
 ```
-
-(from the notebook `python/Notebooks/reference/symbolic.ipynb`)
 
 
 The class **symbolic.UserFunction** has the following **functions and structures**:

@@ -1,0 +1,16 @@
+{
+  "number": 2852,
+  "title": "the reference pages name the notebook of an example after every code cell",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "effort": "LOW",
+  "description": "The maintainer, 2026-10-05: in the pages of the Python-C++ interface, '(from the notebook ...)' follows every code cell that comes from a notebook; it shall appear once per notebook and page, after its first code cell, smaller and directly under the cell, and only the file name.",
+  "dateRaised": "2026-10-05",
+  "deadline": "2027-04-03",
+  "dateResolved": "2026-10-05 01:46",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/autoGenerateHelper.py",
+  "releaseNotes": "The pages of the Python-C++ interface name the notebook an example comes from once, after its first code cell on the page, as its file name, small and directly under the cell.",
+  "resolvedInVersion": "1.12.325"
+}

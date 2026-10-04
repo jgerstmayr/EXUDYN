@@ -59,7 +59,9 @@ object 0 AE LTG  =[]
 object 0 Data LTG=[]
 ```
 
-(from the notebook `python/Notebooks/reference/mainSystem.ipynb`)
+```{container} notebookorigin
+mainSystem.ipynb
+```
 
 
 The class **MainSystemData** has the following **functions and structures**:

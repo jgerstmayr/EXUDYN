@@ -487,7 +487,11 @@ latex_elements = {
     'papersize': 'a4paper',
     'pointsize': '10pt',
     #mathtools for \prescript (the \LU family), xcolor for the \termA/B/C of the theory chapter
+    #sphinxclassnotebookorigin: the notebook an example comes from, small and close under its code cell, the
+    #container of class notebookorigin that tools/generators/autoGenerateHelper.py writes
     'preamble': ('\\usepackage{amssymb}\n\\usepackage{mathtools}\n\\usepackage{xcolor}\n'
+                 + '\\newenvironment{sphinxclassnotebookorigin}{\\par\\vspace{-0.6\\baselineskip}'
+                 + '\\footnotesize\\color{darkgray}}{\\par\\smallskip}\n'
                  + '%the math macros of conf.py, written by conf.py itself:\n'
                  + '\n'.join(latexMacroDefinitions) + '\n'),
     }

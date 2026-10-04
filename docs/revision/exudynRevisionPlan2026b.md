@@ -524,6 +524,12 @@ converter removes the lines a LaTeX comment leaves inside `$$...$$`, `docs/manua
 strange => remove")* **The start page says nothing about how the documentation is made**: the paragraph on the
 hand-written table of contents left `index.md`; `docs/dev/README.md` names `index.md` in the repository layout.
 
+<a id="rg3-34"></a>
+**RG3.34** **DONE 2026-10-05** (#2852) — [log](exudynRevisionLog2026b.md#rg3-34) *(group RG3; maintainer 2026-10-05: "This
+remark shall appear only once after the first code cell of a notebook ... smaller and directly under the cell ...
+only show the filename")* **The pages of the Python-C++ interface name the notebook of an example once**: after its
+first code cell on the page, as its file name, small and close under the cell.
+
 
 ## RG4 — Implementation problems and bugs
 

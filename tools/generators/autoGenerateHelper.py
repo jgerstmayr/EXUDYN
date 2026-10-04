@@ -199,6 +199,34 @@ def MarkdownCell(text):
 #declaration run: the three outputs it writes. Its Def... methods are the declaration calls that
 #definitions/pybind*.py is written in, and pybindTypes.declarationCalls lists them by name, so a
 #method renamed here is renamed there (#2681)
+#the name of the notebook a page shows examples from, after the first code cell that comes from it: small and close
+#under the cell, in html by docs/_static/custom.css and in the PDF by the environment sphinxclassnotebookorigin of
+#conf.py. AddDocuNotebook writes a mark after the first code cell of each part; NotebookOrigins turns the first mark
+#of each notebook on a page into its file name and drops the others
+notebookOriginMark = '<!--notebook origin: '
+
+
+def NotebookOrigins(page):
+    """the page with the file name of each notebook after its first code cell on the page only"""
+    shown = set()
+    lines = []
+    skipBlank = False
+    for line in page.split('\n'):
+        if skipBlank and line == '':
+            skipBlank = False
+            continue
+        skipBlank = False
+        if line.startswith(notebookOriginMark):
+            notebookPath = line[len(notebookOriginMark):-len('-->')]
+            if notebookPath in shown:
+                skipBlank = True    #the blank line after the mark goes with it
+                continue
+            shown.add(notebookPath)
+            line = '```{container} notebookorigin\n' + os.path.basename(notebookPath) + '\n```'
+        lines.append(line)
+    return '\n'.join(lines)
+
+
 class DeclarationWriter:
     def __init__(self, sPy='', sPyi='', sMarkdown=''):
         self.sPy = sPy
@@ -295,7 +323,8 @@ class DeclarationWriter:
         """an example as a notebook of python/Notebooks/reference/ instead of a code block: its Markdown cells, its
         code cells and the text outputs that tools/runNotebooks.py stored - so the example on the page is code that
         ran, with what it printed (#2831). With part, only the cells tagged part-<part> - one notebook holds the
-        examples of a definition file, each shown where it belongs - followed by the name of the notebook."""
+        examples of a definition file, each shown where it belongs; the name of the notebook follows the first code cell
+        of the part, and NotebookOrigins keeps it only where a page shows the notebook first."""
         import json
         notebook = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
                                                notebookPath), encoding='utf-8'))
@@ -307,6 +336,7 @@ class DeclarationWriter:
             cells = [cell for cell in cells if 'part-' + part in cell.get('metadata', {}).get('tags', [])]
             if len(cells) == 0:
                 raise ValueError('AddDocuNotebook: ' + notebookPath + ' has no cell tagged part-' + part)
+        originPending = part is not None
         for cell in cells:
             source = ''.join(cell['source']).rstrip()
             if source == '':
@@ -326,8 +356,9 @@ class DeclarationWriter:
                 text = (''.join(text) if isinstance(text, list) else text).rstrip()
                 if output['output_type'] in ['stream', 'execute_result'] and text != '':
                     self.sMarkdown += '```text\n' + text + '\n```\n\n'
-        if part is not None:
-            self.sMarkdown += '(from the notebook `' + notebookPath + '`)\n\n'
+            if originPending and 'remove-input' not in tags:
+                self.sMarkdown += notebookOriginMark + notebookPath + '-->\n\n'
+                originPending = False
 
     def AddDocuList(self, itemList, itemText=''):
         if len(itemList) != 0:

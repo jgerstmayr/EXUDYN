@@ -13,7 +13,9 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 ```
 
-(from the notebook `python/Notebooks/reference/systemContainer.ipynb`)
+```{container} notebookorigin
+systemContainer.ipynb
+```
 
 
 The class **SystemContainer** has the following **functions and structures**:

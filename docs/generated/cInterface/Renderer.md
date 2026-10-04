@@ -21,7 +21,9 @@ mbs.SolveDynamic()
 SC.renderer.Stop()
 ```
 
-(from the notebook `python/Notebooks/reference/systemContainer.ipynb`)
+```{container} notebookorigin
+systemContainer.ipynb
+```
 
 
 The class **MainRenderer** has the following **functions and structures**:

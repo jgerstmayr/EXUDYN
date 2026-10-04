@@ -17,7 +17,9 @@ gContact.AddSphereWithMarker(marker, radius=0.1, contactStiffness=1e5, contactDa
 gContact.SetFrictionPairings(0.2*np.ones((1,1))) #set friction pairings and adjust searchTree if needed.
 ```
 
-(from the notebook `python/Notebooks/reference/mainSystem.ipynb`)
+```{container} notebookorigin
+mainSystem.ipynb
+```
 
 
 The class **GeneralContact** has the following **functions and structures**:

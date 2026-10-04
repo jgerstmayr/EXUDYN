@@ -16,7 +16,9 @@ sensor = mbs.AddSensor(SensorBody(bodyNumber=rigid, storeInternal=True,
                                   outputVariableType=exu.OutputVariableType.Displacement))
 ```
 
-(from the notebook `python/Notebooks/reference/generalInformation.ipynb`)
+```{container} notebookorigin
+generalInformation.ipynb
+```
 
 
 (sec-outputvariabletype)=

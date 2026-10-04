@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 290 | 1.12.324 |
+| 1.12 | Metheney | 291 | 1.12.325 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.325** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the reference pages name the notebook of an example after every code cell (#2852)
+  - description: The maintainer, 2026-10-05: in the pages of the Python-C++ interface, '(from the notebook ...)' follows every code cell that comes from a notebook; it shall appear once per notebook and page, after its first code cell, smaller and directly under the cell, and only the file name.
+  - **notes:** The pages of the Python-C++ interface name the notebook an example comes from once, after its first code cell on the page, as its file name, small and directly under the cell.
+  - date resolved: **2026-10-05 01:46**, date raised: 2026-10-05
 - **1.12.324** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` GeneralContact: the implicit solver keeps a contact only while its force presses, the explicit one while the bodies penetrate (#2848)
   - description: With contact damping, the active set of the implicit solver (PostNewton) takes a contact only if k\*gap + d\*v\_n \< 0; the explicit solver, and ObjectContactSphereSphere / SphereTriangle / Coordinate in both, take it while gap \< 0, so the damping can pull at the end of a contact. A ball dropped onto a triangle rebounds to 0.1391 implicit against 0.1352 (contactComparisonTest.py). Decision: which of the two is the model, and then make both solvers do it.
   - **notes:** GeneralContact.keepContactWhilePenetrating = True: a sphere-sphere or sphere-triangle contact acts while the bodies penetrate, and its damping may pull at the end of the contact, as ObjectContactSphereSphere and ObjectContactSphereTriangle do; by default it acts only while its contact force presses (contactComparisonTest.py).

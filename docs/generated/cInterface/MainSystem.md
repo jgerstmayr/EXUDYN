@@ -11,7 +11,9 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 ```
 
-(from the notebook `python/Notebooks/reference/mainSystem.ipynb`)
+```{container} notebookorigin
+mainSystem.ipynb
+```
 
 
 The class **MainSystem** has the following **functions and structures**:
@@ -138,8 +140,6 @@ b1=mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,0.
                        referencePosition = [1,0,0],
                        gravity = [0,0,-9.81])
 ```
-
-(from the notebook `python/Notebooks/reference/mainSystem.ipynb`)
 
 
 
@@ -1307,8 +1307,6 @@ pure algebraic constraints= 0
 degree of freedom         = 3
 ```
 
-(from the notebook `python/Notebooks/reference/mainSystem.ipynb`)
-
 
 
 (sec-mainsystemextensions-solutionviewer)=
@@ -1693,8 +1691,6 @@ mbs = SC.AddSystem()               #add a new system to work with
 nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
 ```
 
-(from the notebook `python/Notebooks/reference/mainSystem.ipynb`)
-
 
 The class **MainSystem** has the following **functions and structures** regarding **nodes**:
 
@@ -1818,8 +1814,6 @@ mbs = SC.AddSystem()               #add a new system to work with
 nMP = mbs.AddNode(NodePoint2D(referenceCoordinates=[0,0]))
 oMP = mbs.AddObject(ObjectMassPoint2D(mass=10, nodeNumber=nMP ))
 ```
-
-(from the notebook `python/Notebooks/reference/mainSystem.ipynb`)
 
 
 The class **MainSystem** has the following **functions and structures** regarding **objects**:
@@ -1949,8 +1943,6 @@ mbs.AddObject(ObjectMassPoint2D(mass=10, nodeNumber=nMP ))
 mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
 ```
 
-(from the notebook `python/Notebooks/reference/mainSystem.ipynb`)
-
 
 The class **MainSystem** has the following **functions and structures** regarding **markers**:
 
@@ -2038,8 +2030,6 @@ mMP = mbs.AddMarker(MarkerNodePosition(nodeNumber = nMP))
 lMP = mbs.AddLoad(Force(markerNumber = mMP, loadVector=[0.001,0,0]))
 ```
 
-(from the notebook `python/Notebooks/reference/mainSystem.ipynb`)
-
 
 The class **MainSystem** has the following **functions and structures** regarding **loads**:
 
@@ -2126,8 +2116,6 @@ mbs.SolveDynamic(exu.SimulationSettings())
 from exudyn.plot import PlotSensor
 PlotSensor(mbs, sMP, components=[0,1,2])
 ```
-
-(from the notebook `python/Notebooks/reference/mainSystem.ipynb`)
 
 
 The class **MainSystem** has the following **functions and structures** regarding **sensors**:

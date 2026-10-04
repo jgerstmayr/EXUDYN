@@ -15305,3 +15305,24 @@ started it (`output.multiThreadingMode != 0`, reset when it stops). Test
 
 Whether this was the crash with `PlotSensor` in Spyder on macOS cannot be checked here: #2237 stays open for the
 check on the macOS machine (RG6.8.6).
+
+<a id="rg3-34"></a>
+### RG3.34 — the notebook of an example, named once (2026-10-05, #2852)
+
+*(Maintainer 2026-10-05: "for notebooks included via the pybind... definitions, after every code cell there is the
+'(from the notebook ...)' remark. This remark shall appear only once after the first code cell of a notebook. It would
+be nice, if the remark would be smaller and directly under the cell with less vertical space. And it is sufficient to
+only show the filename without the text and braces".)*
+
+`AddDocuNotebook` (`tools/generators/autoGenerateHelper.py`) wrote the remark after each part of a notebook - a page
+of the interface shows several parts of one notebook, `GeneralInformation.md` seven, `MainSystem.md` and
+`Symbolic.md` eight. Now it writes a mark after the first code cell of each part, and `NotebookOrigins`, called by
+`pybindEmitter.py` for each page, turns the first mark of each notebook on the page into a container of class
+`notebookorigin` with the file name and drops the others: one per page now, on all ten pages. The class is small,
+grey and pulled up under the cell - `docs/_static/custom.css` for html, the environment
+`sphinxclassnotebookorigin` in the LaTeX preamble of `conf.py` for the PDF (Sphinx wraps a container of class `x` in
+`sphinxclassx` if it exists).
+
+The fragments of the manual pages (`notebookEmitter.py`, `python/Notebooks/snippets/`) still end with "(from the
+notebook ...)" each: a fragment is a file of its own, included by a page, so whether it is the first of its notebook
+on that page is not known where it is written.
