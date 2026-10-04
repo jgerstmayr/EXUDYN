@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.295.dev1
+- Exudyn version = 1.12.297.dev1
 - last change = 2026-10-04
-- Number of issues = 2848
-- Number of resolved issues = 2609 (295 in current version)
+- Number of issues = 2850
+- Number of resolved issues = 2611 (297 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHECK` `LOW EFF` `raised by: Claude-JG` GeneralContact: the implicit solver keeps a contact only while its force presses, the explicit one while the bodies penetrate (#2848)
+  - description: With contact damping, the active set of the implicit solver (PostNewton) takes a contact only if k\*gap + d\*v\_n \< 0; the explicit solver, and ObjectContactSphereSphere / SphereTriangle / Coordinate in both, take it while gap \< 0, so the damping can pull at the end of a contact. A ball dropped onto a triangle rebounds to 0.1391 implicit against 0.1352 (contactComparisonTest.py). Decision: which of the two is the model, and then make both solvers do it.
+  - date raised: 2026-10-04
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
   - date raised: 2026-09-29
@@ -7774,10 +7777,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `LOW EFF` CreateLinearSpringDamper (#1953)
   - description: add create function to MainSystem
   - date raised: 2025-02-05
-- `FIX` `MEDIUM EFF` GeneralContact (#1947)
-  - description: check difference of friction force computation of SphereSphereContact (see notes in .cpp file) and GeneralContact
-  - **remarks:** planned before 1.13 as revision2026b step RG4.15.8 (2026-09-29)
-  - date raised: 2025-02-03
 - `EXTENSION` `MEDIUM EFF` URDF (#1941)
   - description: include parent names and create correct parent indices in URDF files by using link name lists; store list of base link names as well and do reordering
   - date raised: 2024-11-12
@@ -7829,10 +7828,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HIGH EFF` MatrixContainer (#1863)
   - description: consider functionality to link to sparse CSR scipy matrix rather than using the current CSR format - as a minimal solution do copying on C++ level; Problem: scipy CSR uses other format than Exudyns Triplets
   - date raised: 2024-10-02
-- `FIX` `HIGH EFF` GeneralContact (#1848)
-  - description: Test and improve implicit SPHERE-TRIG contact
-  - **remarks:** planned before 1.13 as revision2026b step RG4.15.8 (2026-09-29)
-  - date raised: 2024-06-02
 - `FIX` `MEDIUM EFF` ComputePostProcessingModes (#1845)
   - description: numberOfThreads\> 1 not working: conversion of vectorInput to np.array makes problems
   - date raised: 2024-05-29
@@ -8292,6 +8287,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
+- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` GeneralContact: a triangle body gets no torque from the normal force of a sphere-triangle contact without friction (#2849)
+  - description: In the sphere-triangle contact of GeneralContact the torque (trigPP - rigid.position) x fVec on the rigid body of the triangles is added only if dryFriction != 0; the normal force at the contact point also has a moment about the body's reference point, so a moving triangle body without friction gets no torque from its contacts. The same condition in the Jacobian. Ground triangles are not affected.
+  - date raised: 2026-10-04
 - <span class="textred">`BUG`</span> `MEDIUM EFF` `raised by: Claude-JG` ObjectANCFBeam: the Newton iteration stalls near 2e-7 in the right-angle frame (#2763)
   - description: rightAngleFrame.py with ObjectANCFBeam (useGeometricallyExact = False), displacement-driven: from load step 7 on, Newton stagnates at a relative error of 1e-7 to 3e-7 (tolerance 1e-8; with 1e-6 the same at 1e-6 to 2e-6) and the static solver fails at 3 % of the drive; the geometrically exact beam converges in 4.7 iterations per step. Found 2026-10-01 in RG4.8.13; an inconsistent Jacobian of the ANCF beam is the first suspect (the original header said: very bad convergence for ANCFBeam).
   - date raised: 2026-09-30

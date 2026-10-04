@@ -20,6 +20,17 @@ You can view and download this file on Github: [contactComparisonTest.py](https:
 #           against 0.0963927 of an independent RK4 integration of the same law.
 #           The same for a nonlinear law with the impact model of Gonthier et al. / Carvalho-Martins,
 #           which ObjectContactCoordinate has since #2750.
+#           A fourth case is GeneralContact, a sphere on a ground triangle, implicit (#1848): its
+#           stiffnesses act in series and its dampings in parallel, so each gets 2k and d/2. Without
+#           damping it agrees with the others to 1e-15; with damping it releases the ball earlier and
+#           it rebounds higher, because its implicit solver keeps a contact only while the contact
+#           force presses - the contact objects, and GeneralContact with an explicit solver, keep it
+#           while the ball penetrates and let the damping pull: identical until the release, then a
+#           rebound to 0.1391 instead of 0.1352.
+#           Then a ball that slides with friction (#1947): ObjectContactSphereTriangle and
+#           GeneralContact, implicit, against the rigid-body solution - the ball rolls after
+#           t = 2 v0/(7 mu g) with 5/7 of its initial velocity. Measured: both to 3e-7 while it
+#           slides, to 6e-4 when it rolls (the regularized friction and the penetration).
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-09-29
@@ -45,9 +56,14 @@ tEnd = 0.3      #one contact and the rebound
 nSteps = 20000
 
 
-def Drop(kind, law):
-    """the height of the ball's center over time, for one of the three contact objects and a contact law
-    (a dict of the law's parameters)"""
+trianglePoints = [[-1, -1, 0], [2, -1, 0], [0, 2, 0]]    #the ground triangle, around the path of the sliding ball
+
+
+def Drop(kind, law, z0=z0, vx=0, mu=0, frictionProportionalZone=1e-3, sensorType=exu.OutputVariableType.Position,
+         component=3):
+    """a component of a sensor of the ball over time - the height of its center by default -, for one of the four
+    contact cases, a contact law (a dict of the law's parameters), and a ball that starts at height z0 with the
+    velocity vx and slides with the friction coefficient mu"""
     nImpact = 1 if law.get('impactModel', 0) != 0 else 0
     SC = exu.SystemContainer()
     mbs = SC.AddSystem()
@@ -66,26 +82,40 @@ def Drop(kind, law):
                                           storeInternal=True, writeToFile=False))
         component = 1
     else:
-        node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.1, 0.1, z0] + eulerParameters0))
+        node = mbs.AddNode(NodeRigidBodyEP(referenceCoordinates=[0.1, 0.1, z0] + eulerParameters0,
+                                           initialVelocities=[vx, 0, 0, 0, 0, 0, 0]))
         ball = mbs.AddObject(ObjectRigidBody(nodeNumber=node, mass=m,
                                              inertia=InertiaSphere(mass=m, radius=r).GetInertia6D()))
         mBall = mbs.AddMarker(MarkerBodyRigid(bodyNumber=ball))
         mbs.AddLoad(LoadForceVector(markerNumber=mBall, loadVector=[0, 0, -m*g]))
+        friction = {'dynamicFriction': mu, 'frictionProportionalZone': frictionProportionalZone} if mu != 0 else {}
         nData = mbs.AddNode(NodeGenericData(numberOfDataCoordinates=4, initialCoordinates=[0, 0, 0, 0]))
-        if kind == 'sphere':
+        if kind == 'general':
+            #the linear law only; stiffnesses in series, dampings in parallel
+            gContact = mbs.AddGeneralContact()
+            gContact.frictionProportionalZone = frictionProportionalZone
+            gContact.SetFrictionPairings(mu*np.eye(1))
+            gContact.SetSearchTreeCellSize(numberOfCells=[1, 1, 1])
+            gContact.AddTrianglesRigidBodyBased(rigidBodyMarkerIndex=mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround)),
+                                                contactStiffness=2*law['contactStiffness'],
+                                                contactDamping=0.5*law['contactDamping'], frictionMaterialIndex=0,
+                                                pointList=trianglePoints, triangleList=[[0, 1, 2]])
+            gContact.AddSphereWithMarker(mbs.AddMarker(MarkerNodeRigid(nodeNumber=node)), radius=r,
+                                         contactStiffness=2*law['contactStiffness'],
+                                         contactDamping=0.5*law['contactDamping'], frictionMaterialIndex=0)
+        elif kind == 'sphere':
             R = 1   #a ground sphere whose top is at z=0, right below the ball
             mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround, localPosition=[0.1, 0.1, -R]))
             mbs.AddObject(ObjectContactSphereSphere(markerNumbers=[mGround, mBall], nodeNumber=nData,
-                                                    spheresRadii=[R, r], **law))
+                                                    spheresRadii=[R, r], **law, **friction))
         else:
             #the sphere is marker 0, the triangle marker 1
             mGround = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oGround))
             mbs.AddObject(ObjectContactSphereTriangle(markerNumbers=[mBall, mGround], nodeNumber=nData, sphereRadius=r,
-                                                      trianglePoints=exu.Vector3DList([[-1, -1, 0], [1, -1, 0], [0, 1, 0]]),
-                                                      **law))
-        sensor = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=exu.OutputVariableType.Position,
+                                                      trianglePoints=exu.Vector3DList(trianglePoints),
+                                                      **law, **friction))
+        sensor = mbs.AddSensor(SensorNode(nodeNumber=node, outputVariableType=sensorType,
                                           storeInternal=True, writeToFile=False))
-        component = 3
     mbs.Assemble()
     simulationSettings = exu.SimulationSettings()
     simulationSettings.timeIntegration.newton.useModifiedNewton = False #Just for the test; modified Newton is usually faster
@@ -107,17 +137,34 @@ laws = {'linear': {'contactStiffness': k, 'contactDamping': d},
 t = np.linspace(0, tEnd, nSteps+1)
 testResult = 0
 for (lawName, law) in laws.items():
-    z = dict((kind, Drop(kind, law)) for kind in ['coordinate', 'sphere', 'triangle'])
+    kinds = ['coordinate', 'sphere', 'triangle'] + (['general'] if lawName == 'linear' else [])
+    z = dict((kind, Drop(kind, law)) for kind in kinds)
     release = np.argmax((t > 0.14) & (z['coordinate'] > r))    #the ball leaves the ground again
     exu.Print(lawName + ':')
     exu.Print('  deepest point   :', z['coordinate'].min(), z['sphere'].min(), z['triangle'].min())
     exu.Print('  sphere-triangle :', np.abs(z['sphere'] - z['triangle']).max())
+    if 'general' in z:
+        exu.Print('  GeneralContact  : until release', np.abs(z['general'][:release] - z['sphere'][:release]).max(),
+                  ', rebound to', z['general'][release:].max(), 'instead of', z['sphere'][release:].max())
     exu.Print('  until release   :', np.abs(z['coordinate'][:release] - z['sphere'][:release]).max())
     exu.Print('  after release   :', np.abs(z['coordinate'] - z['sphere']).max())
     #the ratio of the velocities leaving and hitting the ground, from the rebound height; gravity acts during the contact
     exu.Print('  rebound ratio   :', np.sqrt(2*g*(z['sphere'][release:].max() - r))/np.sqrt(2*g*(z0 - r)))
     #the deepest points of the three and the heights at the end - moves if any of the three changes
     testResult += sum(z[kind].min() + z[kind][-1] for kind in z)
+
+#sliding with friction: the ball starts on the ground with the velocity v0 and no rotation; it slides until
+#t = 2 v0/(7 mu g) and then rolls with 5/7 v0
+v0 = 1
+mu = 0.2
+tRoll = 2*v0/(7*mu*g)
+zRest = r - m*g/k       #the static penetration
+for kind in ['triangle', 'general']:
+    vx = Drop(kind, laws['linear'], z0=zRest, vx=v0, mu=mu, sensorType=exu.OutputVariableType.Velocity, component=1)
+    iHalf = np.argmax(t >= 0.5*tRoll)
+    exu.Print(kind + ': velocity while sliding', vx[iHalf], 'instead of', v0 - mu*g*t[iHalf],
+              ', when rolling', vx[-1], 'instead of', 5/7*v0)
+    testResult += vx[iHalf] + vx[-1]
 
 exu.Print('solution of contactComparisonTest=', testResult)
 exu.sys['testResult'] = testResult

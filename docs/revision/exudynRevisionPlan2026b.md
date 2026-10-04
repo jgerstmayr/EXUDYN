@@ -735,8 +735,16 @@ The steps are numbered in the order they were raised and stand here in the order
     - **RG4.15.7** **DONE 2026-09-30** (#1424) — [log](exudynRevisionLog2026b.md#rg4-15-3) — the numerical
       ODE1 Jacobian with coordinates an object addresses twice: each column once, as for ODE2; test model
       `genericODE1duplicateNodeTest.py`;
-    - **RG4.15.8** (#1848, #1947) `GeneralContact`: implicit sphere-triangle contact and its friction against
-      `ObjectContactSphereSphere` - the drop of RG4.15.1 as a fourth case.
+    - **RG4.15.8** **DONE 2026-10-04** (#1848, #1947) — [log](exudynRevisionLog2026b.md#rg4-15-8) *(maintainer
+      2026-10-04: "Do the next solo steps")* `GeneralContact`, implicit sphere-triangle contact, as the fourth case of
+      the drop, and a sliding ball against the rigid-body solution: it agrees; the friction of the implicit solver
+      now keeps the sliding/sticking state its active set gives, as `ObjectContactSphereSphere` does;
+    - **RG4.15.9** *(open, a decision)* (#2848) the implicit `GeneralContact` keeps a contact only while its force
+      presses, the explicit one - and the contact objects - while the bodies penetrate: with damping the ball
+      rebounds to 0.1391 instead of 0.1352. Which is the model?
+    - **RG4.15.10** *(open)* (#2849) `GeneralContact`: the normal force of a sphere-triangle contact gives the
+      triangle body a torque only with friction - the bug RG4.15.4 fixed for `ObjectContactSphereTorus`; right-hand
+      side and Jacobian.
 
     After 1.13, not urgent: #1845 (`ComputePostProcessingModes` with threads), #1565
     (`InitializeFromRestartFile`), #2326 (the slider crank benchmark after the revised IFToMM model);
@@ -1784,7 +1792,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.3 | #2582 | the graphics regression suite |
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
-| RG4.15 | #1848, #1947 | the open bugs before 1.13: RG4.15.8 `GeneralContact` against the sphere contact |
+| RG4.15 | #2848, #2849 | the open bugs before 1.13: `GeneralContact`, the contact model of its implicit solver (decision) and the torque on triangle bodies |
 | RG4.17 | #2763 | `ObjectANCFBeam`: the stall of the right-angle frame - options (RG4.17.3) |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |
@@ -1837,5 +1845,5 @@ The title of each says what the step **does**; the sentence after it says why it
 2. **Do the manual GUI check on Windows** (RG2.4), with the curved GraphicsData (row K13) and the TikZ figures in
    the PDF. It is the last condition of 1.13 that one person can meet alone.
 3. **Finish the steps that are nearly done**, each small and without a decision left: none left at the moment.
-4. **Then the larger open steps of 1.13**: RG4.15.8 (`GeneralContact` against the sphere contact) and RG4.17.2
+4. **Then the larger open steps of 1.13**: RG4.15.9/.10 (`GeneralContact`) and RG4.17.3
    (the beam stall, analysed; RG4.17.3 needs a choice of the options), which are bugs a user can meet.

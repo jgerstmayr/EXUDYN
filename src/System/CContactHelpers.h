@@ -50,8 +50,11 @@ namespace ContactHelper
 	{
 		relVel = deltaVtangent.GetL2Norm();
 
-		//BUG? in case that forceFrictionMode = True and frictionRegularizedRegion =False, it MUST always go to else branch!
-		if (relVel < frictionProportionalZone || (frictionRegularizedRegion && forceFrictionMode)) //would also work for frictionProportionalZone=0 ==> no proportional zone!
+		//with forceFrictionMode, the region given decides alone, as in ObjectContactSphereSphere (#1947); a velocity below
+		//frictionProportionalZone during the Newton iteration does not switch a sliding contact back to the regularized force
+		bool regularized = forceFrictionMode ? (frictionRegularizedRegion && frictionProportionalZone != 0.)
+			: (relVel < frictionProportionalZone); //frictionProportionalZone=0 ==> no proportional zone
+		if (regularized)
 		{
 			//as long as vVel < frictionProportionalZone, friction force shall linearly increase
 			forceVector = (dryFriction * contactPressure / frictionProportionalZone) * deltaVtangent;

@@ -1,0 +1,12 @@
+{
+  "number": 2848,
+  "title": "GeneralContact: the implicit solver keeps a contact only while its force presses, the explicit one while the bodies penetrate",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "With contact damping, the active set of the implicit solver (PostNewton) takes a contact only if k*gap + d*v_n < 0; the explicit solver, and ObjectContactSphereSphere / SphereTriangle / Coordinate in both, take it while gap < 0, so the damping can pull at the end of a contact. A ball dropped onto a triangle rebounds to 0.1391 implicit against 0.1352 (contactComparisonTest.py). Decision: which of the two is the model, and then make both solvers do it.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "file": "src/System/CContact.cpp"
+}

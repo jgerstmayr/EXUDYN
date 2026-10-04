@@ -15128,3 +15128,33 @@ original folder), one that raises, one that needs a package that is not installe
   the reaction forces of the clamp.
 - **So**: the region of convergence of Newton's method is very small there - the nonlinearity of the slope
   parametrization in the twist of a thin section. The options are RG4.17.3; #2763 stays open.
+
+<a id="rg4-15-8"></a>
+### RG4.15.8 — GeneralContact against the contact objects (2026-10-04, #1848, #1947)
+
+*(Maintainer 2026-10-04: "Do the next solo steps.")*
+
+`contactComparisonTest.py` gets `GeneralContact` - a sphere with a marker on a ground triangle, implicit - as a fourth
+case of the drop (the linear law; `GeneralContact` has no impact model). Its stiffnesses act in series and its
+dampings in parallel, so sphere and triangle get $2k$ and $d/2$ each.
+
+- **The normal contact (#1848)**: without damping it agrees with `ObjectContactSphereSphere` to 9e-16. With damping
+  it agrees until the ball leaves the ground, then it leaves 1.5e-5 s earlier and rebounds to 0.1391 instead of
+  0.1352: the active set of the implicit solver takes a contact only while $k\,g + d\,v_n < 0$ (the force
+  presses), while the contact objects and the explicit `GeneralContact` take it while $g < 0$ and let the damping
+  pull at the end. The explicit `GeneralContact` (RK44) converges to the value of the contact objects with smaller
+  steps (difference 7e-5 at 20000 steps, 4e-9 at 80000). Which model is right is a decision: RG4.15.9 (#2848).
+- **The friction (#1947)**: the note in `CObjectContactSphereSphere.cpp` ("this is wrong in GeneralContact!") is
+  about `ContactHelper::ComputeFrictionForce` with a friction mode forced by the active set: a contact the set
+  marks as sliding was switched to the regularized force as soon as its velocity fell below
+  `frictionProportionalZone` within the Newton iteration - which the Jacobian, built for sliding, did not know.
+  Now the forced mode alone decides, as in the sphere contact. The signs and the regularization of the two
+  agree otherwise. `generalContactImplicit2.py` moves from 0.5000000538 to 0.5000000384 (exact: 0.5).
+- **A sliding ball**, new in the test: it starts with $v_0 = 1$, $\mu = 0.2$ and rolls after
+  $2 v_0/(7 \mu g)$ with $5/7\,v_0$. `ObjectContactSphereTriangle` and `GeneralContact` agree with this to 3e-7
+  while it slides and to 6e-4 when it rolls (regularized friction, penetration). `ObjectContactSphereSphere` is
+  not compared there: its ground is a sphere of radius 1, on which the ball rolls away.
+- Found on the way: the triangle body of a sphere-triangle contact gets the moment of the normal force only with
+  friction - RG4.15.10 (#2849); ground triangles are not affected.
+
+The test result moves to 4.561317500364976 (the fourth case and the sliding ball).

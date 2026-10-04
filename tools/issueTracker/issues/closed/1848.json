@@ -1,0 +1,15 @@
+{
+  "number": 1848,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "HIGH",
+  "description": "Test and improve implicit SPHERE-TRIG contact",
+  "dateRaised": "2024-06-02",
+  "deadline": "2024-11-29",
+  "dateResolved": "2026-10-04 23:03",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "GeneralContact, implicit sphere-triangle contact, agrees with ObjectContactSphereSphere in a drop (contactComparisonTest.py) - to 1e-15 without damping; with damping it releases the ball when the contact force no longer presses (#2848).",
+  "resolvedInVersion": "1.12.296"
+}

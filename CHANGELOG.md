@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 275 | 1.12.294 |
+| 1.12 | Metheney | 277 | 1.12.297 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.297** `FIX` `MEDIUM EFF` `resolved by: Claude-JG` GeneralContact (#1947)
+  - description: check difference of friction force computation of SphereSphereContact (see notes in .cpp file) and GeneralContact
+  - **notes:** GeneralContact with an implicit solver keeps the sliding or sticking state of a friction contact that its active set gives during the Newton iteration, as ObjectContactSphereSphere does; a sliding ball agrees with the rigid-body solution (contactComparisonTest.py).
+  - date resolved: **2026-10-04 23:03**, date raised: 2025-02-03
+- **1.12.296** `FIX` `HIGH EFF` `resolved by: Claude-JG` GeneralContact (#1848)
+  - description: Test and improve implicit SPHERE-TRIG contact
+  - **notes:** GeneralContact, implicit sphere-triangle contact, agrees with ObjectContactSphereSphere in a drop (contactComparisonTest.py) - to 1e-15 without damping; with damping it releases the ball when the contact force no longer presses (\#2848).
+  - date resolved: **2026-10-04 23:03**, date raised: 2024-06-02
 - **1.12.294** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SetDictionary of the settings takes a dictionary of Exudyn 1.11 (#2847)
   - description: A dictionary of simulation or visualization settings stored by Exudyn 1.11 (GetDictionary) uses the old names and structures - solutionSettings, linearSolverType, window, openGL.light0position, ...; SetDictionary did not read those keys, and it required every key of the current structures. Revision2026b step RG12.34.7, raised by RG12.34 (\#2813).
   - **notes:** SimulationSettings.SetDictionary and VisualizationSettings.SetDictionary take a dictionary stored by Exudyn 1.11, with the old names (solutionSettings, linearSolverType, window, ...), and dictionaries with only some keys; keys not given keep their current values.

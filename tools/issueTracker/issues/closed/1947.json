@@ -1,0 +1,15 @@
+{
+  "number": 1947,
+  "title": "GeneralContact",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "effort": "MEDIUM",
+  "description": "check difference of friction force computation of SphereSphereContact (see notes in .cpp file) and GeneralContact",
+  "dateRaised": "2025-02-03",
+  "deadline": "2025-08-02",
+  "dateResolved": "2026-10-04 23:03",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "GeneralContact with an implicit solver keeps the sliding or sticking state of a friction contact that its active set gives during the Newton iteration, as ObjectContactSphereSphere does; a sliding ball agrees with the rigid-body solution (contactComparisonTest.py).",
+  "resolvedInVersion": "1.12.297"
+}

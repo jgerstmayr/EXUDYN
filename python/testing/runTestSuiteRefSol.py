@@ -87,7 +87,7 @@ def TestExamplesReferenceSolution():
         'generalContactCylinderTrigsTest.py':5.5497178858649,     #2026-10-02: the contact mesh of graphics.Cylinder from 6-node triangles - the same facets on more triangles (#2709), before 5.48690843091258; new 2024-03-17 (internal sphere-sphere contact)
         'generalContactFrictionTests.py':12.022654145378834,        #changed 2025-05-06 (seems to now be closer to linux; differences with object8); new 2024-03-17: 12.027740342293988 (doubled damping; fixed sphere-sphere and trig-sphere contact); old: 12.464092000879125,        #new 2022-07-11 (CState Parallel); #before 2022-01-25 (changed some velocity computation in GeneralContact): 10.133183086232139, #changed GeneralContact and implicit solver; before 2022-01-18: 10.132106712933348 , 
         'generalContactImplicit1.py':0.7758155402165082,             #new 2026-09-11
-        'generalContactImplicit2.py':0.5000000537869635,             #new 2026-09-11
+        'generalContactImplicit2.py':0.5000000383827361,             #2026-10-04: forced friction mode, #1947 (exact 0.5; was 0.5000000537869635)
         'generalContactSpheresTest.py':-1.113854772025744,         #new 2022-07-22 (parallel Lie group updates); new 2022-07-11 (CState Parallel); #before 2022-01-25(minor diff, due to round off errors in multithreading; now changed to 1 thread):-1.113854772026123, #changed GeneralContact and implicit solver; before 2022-01-18: -1.0947542400425323, #before 2021-12-02: -1.0947542400427703,
         'genericJointUserFunctionTest.py':1.1922383967562884,
         'genericODE2test.py':0.03604546349894506,                  #new 2022-07-11 (CState Parallel); #changed to some analytic Connector jacobians (CartSpringDamper), implicit solver(modified Newton restart, etc.); before 2022-01-18: 0.036045463498793825,
@@ -132,7 +132,7 @@ def TestExamplesReferenceSolution():
         'genericODE1duplicateNodeTest.py':3.1091750014354522, #numerical ODE1 Jacobian with a coordinate addressed twice (#1424)
         'contactSphereTorusMomentumTest.py':4.227231105376637, #2026-09-30: step size recommended also where a contact ends (#2109); before 4.227231105610667; #momentum conservation of the sphere-torus contact (#2127)
         'explicitSolversPostNewtonTest.py':4.563482002223654, #2026-10-01: Jacobian of the torsional spring-damper by AD (#2745); before 4.563482002223096;  #2026-09-30: DOPRI5 with large steps added, and the step size recommended where a contact ends (#2109); before 4.097033066855782; #PostNewton states with every explicit integrator (#2754)
-        'contactComparisonTest.py':1.200116276111891, #2026-09-30: step size recommended also where a contact ends (#2109); before 1.200040705928356; #deepest points and end heights, three contact objects, two laws (#2749, #2750)
+        'contactComparisonTest.py':4.561317500364976, #2026-10-04: GeneralContact as a fourth case and the sliding ball (#1848, #1947); before 1.200116276111891; #2026-09-30: step size recommended also where a contact ends (#2109); before 1.200040705928356; #deepest points and end heights, three contact objects, two laws (#2749, #2750)
         'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164064,
         'kinematicTreeUserFunctionTest.py': 0.14522556021139263,      #new 2026-10-04: the forceUserFunction of ObjectKinematicTree gets the velocities (#2845)

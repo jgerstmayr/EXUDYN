@@ -1,0 +1,12 @@
+{
+  "number": 2849,
+  "title": "GeneralContact: a triangle body gets no torque from the normal force of a sphere-triangle contact without friction",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "In the sphere-triangle contact of GeneralContact the torque (trigPP - rigid.position) x fVec on the rigid body of the triangles is added only if dryFriction != 0; the normal force at the contact point also has a moment about the body's reference point, so a moving triangle body without friction gets no torque from its contacts. The same condition in the Jacobian. Ground triangles are not affected.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "file": "src/System/CContact.cpp"
+}
