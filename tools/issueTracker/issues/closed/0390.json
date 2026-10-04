@@ -1,0 +1,15 @@
+{
+  "number": 390,
+  "title": "SlimVector",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "check if erasing all <rule of 5> methods in SlimVector work and speed up code performance",
+  "dateRaised": "2020-05-16",
+  "deadline": "2020-07-15",
+  "dateResolved": "2026-10-04 23:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "SlimVector: the copy and move constructors and assignments are the compiler's defaults.",
+  "resolvedInVersion": "1.12.301"
+}

@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.297.dev1
+- Exudyn version = 1.12.305.dev1
 - last change = 2026-10-04
 - Number of issues = 2850
-- Number of resolved issues = 2611 (297 in current version)
+- Number of resolved issues = 2619 (305 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7924,9 +7924,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `CHECK` <span class="textred">`HIGH`</span> `MEDIUM EFF` return value policy (#1512)
   - description: check return value policy of GeneralContact (as example for further decisions); see if reference in ALL access functions makes no problems if object is deleted on Python side
   - date raised: 2023-04-13
-- `TESTING` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` ANCFBeam (#1500)
-  - description: check for advanced right-angle frame
-  - date raised: 2023-04-08
 - `CHANGE` `LOW EFF` StaticSolver (#1493)
   - description: add exception in case that Lie group nodes are used with static solver, which cannot work
   - date raised: 2023-04-06
@@ -7948,9 +7945,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` InteractiveDialog (#1414)
   - description: extend for explicit solver; needs internally different setup of solvers; use dynamicSolverType with default generalizedAlpha changable to Newmark/Index2 as well as explicit solvers
   - date raised: 2023-01-22
-- `TESTING` `LOW EFF` ComputeLinearizedSystem (#1395)
-  - description: add test model
-  - date raised: 2023-01-12
 - `CHECK` `MEDIUM EFF` Newton (#1337)
   - description: C++: check if SysError(s) in CSolverBase::Newton() can be changed into regular failure and step reduction for adaptiveStep
   - date raised: 2022-12-26
@@ -7978,9 +7972,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` generalizedAlpha scaling (#1194)
   - description: turn on/off scaling in interface to test symmetric solver speedup
   - date raised: 2022-07-11
-- `CHECK` `LOW EFF` ExplicitSolver (#1192)
-  - description: Newton / startOfStep: check if dataCoords should also be copied
-  - date raised: 2022-07-10
 - `EXTENSION` `MEDIUM EFF` ContactFrictionCircleCable2D (#1189)
   - description: add velocity offset to MarkerCable2DShape
   - date raised: 2022-07-08
@@ -8182,9 +8173,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `HIGH EFF` sensor dependencies (#614)
   - description: add functionality to compute sensor-dependencies (for LTG computation), used in controller connectors? alternatively add dependentNodes to existing connectors
   - date raised: 2021-03-21
-- `TESTING` `LOW EFF` MarkerObjectODE2Coordinates (#613)
-  - description: add simple test into TestModels
-  - date raised: 2021-03-21
 - `EXTENSION` `LOW EFF` recommendedStepSize (#608)
   - description: add recommendedStepSize to ContactCoordinate element
   - date raised: 2021-03-20
@@ -8215,12 +8203,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `LOW EFF` add sensor miniexamples (#401)
   - description: .
   - date raised: 2020-05-21
-- `CHECK` `MEDIUM EFF` SlimVector (#390)
-  - description: check if erasing all \<rule of 5\> methods in SlimVector work and speed up code performance
-  - date raised: 2020-05-16
-- `CHECK` `MEDIUM EFF` mass matrix update (#380)
-  - description: mass matrix is not updated in Generalized Alpha solver in CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian - may be critical for 3d rigid bodies
-  - date raised: 2020-05-06
 - `EXTENSION` `HUGE EFF` autodiff (#354)
   - description: add consistent object (not connector) differentiation either manually or with autodiff
   - date raised: 2020-03-05
@@ -8245,9 +8227,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `CHANGE` `MEDIUM EFF` PostNewtonStep (#252)
   - description: post newton step object functions shall be called from solver including a ResizableVector& dataVariables to be changed; post newton function shall not use direct write access to nodal data coordinates
   - date raised: 2019-08-27
-- `CHECK` `MEDIUM EFF` contact iteration (#209)
-  - description: make simple example for contact to check changing jacobian matrices from ContactCoordinate
-  - date raised: 2019-06-28
 - `EXTENSION` `MEDIUM EFF` Jacobians (#194)
   - description: Make unique member function names for rotation/orientation jacobians in nodes and bodies
   - date raised: 2019-06-25
@@ -8269,9 +8248,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `CHECK` `MEDIUM EFF` Vector performance (#142)
   - description: check Vector operator\[\], and ConstVector performance regarding inlining
   - date raised: 2019-05-21
-- `CHECK` `LOW EFF` ConstSizeVector (#124)
-  - description: check if begin/end() overriding of Vector:: function is needed?
-  - date raised: 2019-05-13
 - `CHANGE` `LOW EFF` Linalg Override (#123)
   - description: Add override statement to all derived classes in linalg for safety
   - date raised: 2019-05-13

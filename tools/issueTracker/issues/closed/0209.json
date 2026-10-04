@@ -1,0 +1,15 @@
+{
+  "number": 209,
+  "title": "contact iteration",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "make simple example for contact to check changing jacobian matrices from ContactCoordinate",
+  "dateRaised": "2019-06-28",
+  "deadline": "2019-08-27",
+  "dateResolved": "2026-10-04 23:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "contactComparisonTest.py drops a ball with ObjectContactCoordinate, implicit, whose Jacobian changes with the contact state, and compares it with three other contact implementations (#2749).",
+  "resolvedInVersion": "1.12.299"
+}

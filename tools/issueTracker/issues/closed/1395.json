@@ -1,0 +1,15 @@
+{
+  "number": 1395,
+  "title": "ComputeLinearizedSystem",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "add test model",
+  "dateRaised": "2023-01-12",
+  "deadline": "2023-07-11",
+  "dateResolved": "2026-10-04 23:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "ComputeLinearizedSystem is tested by mainSystemExtensionsTests.py.",
+  "resolvedInVersion": "1.12.304"
+}

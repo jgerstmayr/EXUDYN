@@ -15158,3 +15158,36 @@ dampings in parallel, so sphere and triangle get $2k$ and $d/2$ each.
   friction - RG4.15.10 (#2849); ground triangles are not affected.
 
 The test result moves to 4.561317500364976 (the fourth case and the sliding ball).
+
+<a id="rg4-19"></a>
+### RG4.19 — the open BUG, FIX and CHECK issues, evaluated (2026-10-04)
+
+*(Maintainer 2026-10-04: "Also evaluate the currently open issues. In particular bugs, fix, check, etc. issues that
+would indicate that something should be corrected or resolved. List them as options in a new step at an appropriate
+RG. Also close issues that have been resolved in the meantime.")*
+
+Of 239 open issues, 40 were BUG, FIX or CHECK; the TESTING, CHANGE and DOCU issues were read for ones done in the
+meantime. Each was checked against the code; three with a run.
+
+**Resolved, done in the meantime:**
+
+- #124 `ConstSizeVector` begin/end: `ConstSizeVectorBase` is not derived from `VectorBase` - it holds its data in an
+  array - so it needs its own `begin()`/`end()`; nothing to change.
+- #209 a contact example with changing Jacobians of `ObjectContactCoordinate`: `contactComparisonTest.py` (#2749) drops
+  a ball with it, implicit, and compares with three other contact implementations.
+- #380 the mass matrix in the Jacobian of the generalized-α solver: when it is not constant, it is computed with every
+  residual, so the Jacobian of a Newton iteration uses the mass matrix of that iterate; the term
+  $(\partial \Mm/\partial \qv)\,\ddot\qv$ is not in the Jacobian, as in a modified Newton method.
+- #390 the rule of five in `SlimVector`: the copy and move members are `= default`.
+- #613 a test of `MarkerObjectODE2Coordinates`: `coordinateVectorConstraintGenericODE2.py`.
+- #1192 the explicit solver and the data coordinates at the start of a step: `SolveSteps`, shared by all dynamic
+  solvers, copies the whole current state, data coordinates included, into `startOfStepState`.
+- #1395 a test of `ComputeLinearizedSystem`: `mainSystemExtensionsTests.py`.
+- #1500 the right-angle frame for `ObjectANCFBeam`: `rightAngleFrame.py` (#2762); the ANCF variant stalls, which is
+  #2763.
+
+**Measured for the options:** #984 - each penalty connector built with `activeConnector = False` on a moving rigid
+body: `RigidBodySpringDamper` reports `ForceLocal` 120.8 N and `LinearSpringDamper` 120.3 N; `SpringDamper`,
+`CartesianSpringDamper`, `TorsionalSpringDamper`, `CoordinateSpringDamper(Ext)`, `ConnectorGravity` and the sphere
+contacts report zero. #1512 - a `GeneralContact` kept in Python after the system was deleted still answered (no crash,
+but undefined). The options and decisions are RG4.19.1-.9 in the plan.

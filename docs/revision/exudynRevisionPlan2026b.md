@@ -786,6 +786,39 @@ The steps are numbered in the order they were raised and stand here in the order
 <a id="rg4-18"></a>
 **RG4.18** **DONE 2026-10-02** (#2790) — [log](exudynRevisionLog2026b.md#rg4-18) · [plan text](exudynRevisionLog2026b.md#plan-rg4-18) — A system without coordinates is solved.
 
+<a id="rg4-19"></a>
+**RG4.19** *(group RG4; maintainer 2026-10-04: "evaluate the currently open issues. In particular bugs, fix, check, etc.
+    issues that would indicate that something should be corrected or resolved. List them as options in a new step")*
+    **The open BUG, FIX and CHECK issues, evaluated: options.** 40 were open; each was checked against the code, a
+    few with a run - see the [log](exudynRevisionLog2026b.md#rg4-19). Resolved as done in the meantime: #124, #209,
+    #380, #390, #613, #1192, #1395, #1500. Already planned elsewhere: #2140, #2236 (RG6.8.5), #2237, #2350 (RG6.8.6),
+    #2763 (RG4.17.3), #2848, #2849 (RG4.15.9/.10), #1845, #2326 (after 1.13, RG4.15). The options, small first:
+    - **RG4.19.1** *(option, small)* (#984) `RigidBodySpringDamper` and `LinearSpringDamper` report a `ForceLocal`
+      while `activeConnector = False` (measured: 120.8 and 120.3 N); the other penalty connectors and the contacts
+      report zero.
+    - **RG4.19.2** *(option, small)* (#1512) `AddGeneralContact` / `GetGeneralContact` return with
+      `return_value_policy::reference`: the Python object does not keep the system alive, so it can outlive it or a
+      `DeleteGeneralContact`; `reference_internal` ties it to the system.
+    - **RG4.19.3** *(option, small)* (#121) every allocation with a check: `Vector`, `Matrix` and
+      `ResizableArray` (its size constructor and `SetMaxNumberOfItems`) catch `bad_alloc`; three constructors of `ResizableArray` (initializer
+      list, `std::vector`, `SlimArray`) do not.
+    - **RG4.19.4** *(option, medium)* (#1337) a singular system Jacobian in `CSolverBase::Newton` is a `SysError`; with
+      `adaptiveStep` it could be a failed step that is reduced. It also bears on RG4.17.3 (c).
+    - **RG4.19.5** *(option, a run first)* (#1290) `ObjectContactFrictionCircleCable2D` shows tangential forces with
+      all friction stiffness and damping zero.
+    - **RG4.19.6** *(option, a run first)* (#692) the transposed `AE_ODE2_t` block of the system Jacobian for
+      velocity-level constraints against a numerical one (a rolling disc).
+    - **RG4.19.7** *(decision)* (#2130, with #2848 of RG4.15.9) whether the contact objects switch on the sign of the
+      force instead of the gap - the same question for the contact objects as RG4.15.9 asks for `GeneralContact`.
+    - **RG4.19.8** *(decision)* (#1565) `InitializeFromRestartFile` is public and raises "not fully implemented":
+      finish it, or take it out of the public functions until it is.
+    - **RG4.19.9** *(decision: close or keep)* checks that name no defect, ideas rather than corrections: #142, #171,
+      #172, #173, #174, #436 (linear algebra style and performance - RG5 measures instead), #591 (FFRF forces against a
+      paper), #1167, #1247 (user function call overhead - RG5), #1683, #1684, #1910 (API ideas, really EXTENSION),
+      #1740 (symbolic examples in the documentation), #1776 (a paper on linearization). The proposal: close #171,
+      #172, #173, #174, #436 as not worth a change; retype #1683, #1684, #1910 as EXTENSION; keep the rest.
+    - Not here, they need a Linux machine or a screen: #2204, #2205 (perspective), #2277, #2278 (GLFW on Linux) - RG6.8.
+
 ## RG5 — Performance
 
 Measurement first, then the code that is actually hot. revision2026 step R2.16 measured the linear
@@ -1793,6 +1826,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #2848, #2849 | the open bugs before 1.13: `GeneralContact`, the contact model of its implicit solver (decision) and the torque on triangle bodies |
+| RG4.19 | #121, #984, #1290, #1337, #1512, #1565, #2130 | the open bugs and checks, evaluated: options and decisions (RG4.19.1-.9) |
 | RG4.17 | #2763 | `ObjectANCFBeam`: the stall of the right-angle frame - options (RG4.17.3) |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |

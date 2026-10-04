@@ -1,0 +1,16 @@
+{
+  "number": 1500,
+  "title": "ANCFBeam",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "priority": "NORMAL",
+  "effort": "MEDIUM",
+  "description": "check for advanced right-angle frame",
+  "dateRaised": "2023-04-08",
+  "deadline": "2023-10-05",
+  "dateResolved": "2026-10-04 23:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "rightAngleFrame.py is the right-angle frame, driven past its buckling point (#2762); with ObjectANCFBeam the static solver stalls, which is #2763.",
+  "resolvedInVersion": "1.12.305"
+}

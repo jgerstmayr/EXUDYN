@@ -1,0 +1,15 @@
+{
+  "number": 380,
+  "title": "mass matrix update",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "mass matrix is not updated in Generalized Alpha solver in CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian - may be critical for 3d rigid bodies",
+  "dateRaised": "2020-05-06",
+  "deadline": "2020-07-05",
+  "dateResolved": "2026-10-04 23:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Checked: when the mass matrix is not constant, the generalized-alpha solver computes it with every residual, so the Jacobian of a Newton iteration uses the mass matrix of that iterate; the derivative of the mass matrix times the accelerations is not in the Jacobian.",
+  "resolvedInVersion": "1.12.300"
+}

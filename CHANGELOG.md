@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 277 | 1.12.297 |
+| 1.12 | Metheney | 285 | 1.12.305 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,38 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.305** `TESTING` `NORMAL` `MEDIUM EFF` `resolved by: Claude-JG` ANCFBeam (#1500)
+  - description: check for advanced right-angle frame
+  - **notes:** rightAngleFrame.py is the right-angle frame, driven past its buckling point (\#2762); with ObjectANCFBeam the static solver stalls, which is \#2763.
+  - date resolved: **2026-10-04 23:09**, date raised: 2023-04-08
+- **1.12.304** `TESTING` `LOW EFF` `resolved by: Claude-JG` ComputeLinearizedSystem (#1395)
+  - description: add test model
+  - **notes:** ComputeLinearizedSystem is tested by mainSystemExtensionsTests.py.
+  - date resolved: **2026-10-04 23:09**, date raised: 2023-01-12
+- **1.12.303** `CHECK` `LOW EFF` `resolved by: Claude-JG` ExplicitSolver (#1192)
+  - description: Newton / startOfStep: check if dataCoords should also be copied
+  - **notes:** Checked: all dynamic solvers, the explicit ones included, copy the whole current state - data coordinates included - into the start-of-step state at the beginning of each step.
+  - date resolved: **2026-10-04 23:09**, date raised: 2022-07-10
+- **1.12.302** `TESTING` `LOW EFF` `resolved by: Claude-JG` MarkerObjectODE2Coordinates (#613)
+  - description: add simple test into TestModels
+  - **notes:** MarkerObjectODE2Coordinates is tested by coordinateVectorConstraintGenericODE2.py.
+  - date resolved: **2026-10-04 23:09**, date raised: 2021-03-21
+- **1.12.301** `CHECK` `MEDIUM EFF` `resolved by: Claude-JG` SlimVector (#390)
+  - description: check if erasing all \<rule of 5\> methods in SlimVector work and speed up code performance
+  - **notes:** SlimVector: the copy and move constructors and assignments are the compiler's defaults.
+  - date resolved: **2026-10-04 23:09**, date raised: 2020-05-16
+- **1.12.300** `CHECK` `MEDIUM EFF` `resolved by: Claude-JG` mass matrix update (#380)
+  - description: mass matrix is not updated in Generalized Alpha solver in CSolverImplicitSecondOrderTimeInt::ComputeNewtonJacobian - may be critical for 3d rigid bodies
+  - **notes:** Checked: when the mass matrix is not constant, the generalized-alpha solver computes it with every residual, so the Jacobian of a Newton iteration uses the mass matrix of that iterate; the derivative of the mass matrix times the accelerations is not in the Jacobian.
+  - date resolved: **2026-10-04 23:09**, date raised: 2020-05-06
+- **1.12.299** `CHECK` `MEDIUM EFF` `resolved by: Claude-JG` contact iteration (#209)
+  - description: make simple example for contact to check changing jacobian matrices from ContactCoordinate
+  - **notes:** contactComparisonTest.py drops a ball with ObjectContactCoordinate, implicit, whose Jacobian changes with the contact state, and compares it with three other contact implementations (\#2749).
+  - date resolved: **2026-10-04 23:09**, date raised: 2019-06-28
+- **1.12.298** `CHECK` `LOW EFF` `resolved by: Claude-JG` ConstSizeVector (#124)
+  - description: check if begin/end() overriding of Vector:: function is needed?
+  - **notes:** Checked: ConstSizeVectorBase is not derived from VectorBase and holds its data in an array, so it needs its own begin() and end(); nothing to change.
+  - date resolved: **2026-10-04 23:09**, date raised: 2019-05-13
 - **1.12.297** `FIX` `MEDIUM EFF` `resolved by: Claude-JG` GeneralContact (#1947)
   - description: check difference of friction force computation of SphereSphereContact (see notes in .cpp file) and GeneralContact
   - **notes:** GeneralContact with an implicit solver keeps the sliding or sticking state of a friction contact that its active set gives during the Newton iteration, as ObjectContactSphereSphere does; a sliding ball agrees with the rigid-body solution (contactComparisonTest.py).

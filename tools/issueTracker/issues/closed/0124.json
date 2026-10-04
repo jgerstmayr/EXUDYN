@@ -1,0 +1,15 @@
+{
+  "number": 124,
+  "title": "ConstSizeVector",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "check if begin/end() overriding of Vector:: function is needed?",
+  "dateRaised": "2019-05-13",
+  "deadline": "2019-07-12",
+  "dateResolved": "2026-10-04 23:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Checked: ConstSizeVectorBase is not derived from VectorBase and holds its data in an array, so it needs its own begin() and end(); nothing to change.",
+  "resolvedInVersion": "1.12.298"
+}

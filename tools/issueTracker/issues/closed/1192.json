@@ -1,0 +1,15 @@
+{
+  "number": 1192,
+  "title": "ExplicitSolver",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "LOW",
+  "description": "Newton / startOfStep: check if dataCoords should also be copied",
+  "dateRaised": "2022-07-10",
+  "deadline": "2022-09-08",
+  "dateResolved": "2026-10-04 23:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "Checked: all dynamic solvers, the explicit ones included, copy the whole current state - data coordinates included - into the start-of-step state at the beginning of each step.",
+  "resolvedInVersion": "1.12.303"
+}

@@ -1,0 +1,15 @@
+{
+  "number": 613,
+  "title": "MarkerObjectODE2Coordinates",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "TESTING",
+  "effort": "LOW",
+  "description": "add simple test into TestModels",
+  "dateRaised": "2021-03-21",
+  "deadline": "2021-05-20",
+  "dateResolved": "2026-10-04 23:09",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "MarkerObjectODE2Coordinates is tested by coordinateVectorConstraintGenericODE2.py.",
+  "resolvedInVersion": "1.12.302"
+}
