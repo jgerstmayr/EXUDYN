@@ -194,7 +194,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`serialRobot
 (sec-plot-plotfft)=
 ## Function: PlotFFT
 
-[`PlotFFT(frequency, data, xLabel = 'frequency', yLabel = 'magnitude', label = '', freqStart = 0, freqEnd = -1, logScaleX = True, logScaleY = True, majorGrid = True, minorGrid = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L916)
+[`PlotFFT(frequency, data, xLabel = 'frequency', yLabel = 'magnitude', label = '', freqStart = 0, freqEnd = -1, logScaleX = True, logScaleY = True, majorGrid = True, minorGrid = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L917)
 
 - **function description**: plot fft spectrum of signal
 - **input**:
@@ -218,7 +218,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`nMassOscill
 (sec-plot-filestripspaces)=
 ## Function: FileStripSpaces
 
-[`FileStripSpaces(filename, outputFilename, fileCommentChar = '', removeDoubleChars = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L977)
+[`FileStripSpaces(filename, outputFilename, fileCommentChar = '', removeDoubleChars = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L978)
 
 - **function description**: strip spaces at beginning / end of lines; this may be sometimes necessary when reading solutions from files that are space-separated
 - **input**:
@@ -232,7 +232,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`nMassOscill
 (sec-plot-dataarrayfromsensorlist)=
 ## Function: DataArrayFromSensorList
 
-[`DataArrayFromSensorList(mbs, sensorNumbers, positionList = [], time = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1008)
+[`DataArrayFromSensorList(mbs, sensorNumbers, positionList = [], time = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1009)
 
 - **function description**: helper function to create data array from outputs defined by sensorNumbers list [+optional positionList which must have, e.g., local arc-length of beam according to sensor numbers]; if time=='', current sensor values will be used; if time!=[], evaluation will be based on loading values from file or sensor internal data and evaluate at that time
 - **input**:
@@ -249,7 +249,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-plot---imagedatafromgraphicsdata)=
 ## Function: __ImageDataFromGraphicsData
 
-[`__ImageDataFromGraphicsData(graphicsData, trianglesAsLines, circleSegments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1043)
+[`__ImageDataFromGraphicsData(graphicsData, trianglesAsLines, circleSegments)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1044)
 
 - **function description**: the polylines and triangles PlotImage draws, from the dictionary of SC.renderer.GetGraphicsData(): a circle becomes a closed polyline, and with trianglesAsLines a triangle becomes its closed outline
 
@@ -257,7 +257,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-plot-plotimage)=
 ## Function: PlotImage
 
-[`PlotImage(imageData, HT = np.eye(4), axesEqual = True, plot3D = False, lineWidths = 1, lineStyles = '-', triangleEdgeColors = 'black', triangleEdgeWidths = 0.5, removeAxes = True, orthogonalProjection = True, title = '', figureName = '', fileName = '', fontSize = 16, closeAll = False, azim = 0., elev = 0., trianglesAsLines = True, circleSegments = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1088)
+[`PlotImage(imageData, HT = np.eye(4), axesEqual = True, plot3D = False, lineWidths = 1, lineStyles = '-', triangleEdgeColors = 'black', triangleEdgeWidths = 0.5, removeAxes = True, orthogonalProjection = True, title = '', figureName = '', fileName = '', fontSize = 16, closeAll = False, azim = 0., elev = 0., trianglesAsLines = True, circleSegments = 16)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/plot.py#L1089)
 
 - **function description**: plot the scene of a SystemContainer as 2D or 3D vector graphics using matplotlib, e.g. for a figure in a paper
 - **input**:

@@ -94,35 +94,80 @@ H1 = exu.HT(rotation=RotationMatrixZ(0.5), translation=[1,0,0])
 H2 = exu.HT(translation=[0,2,0])                           #translation only
 H3 = exu.HT(Rxyz=[0,0,0.5], translation=[1,0,0])           #the same as H1, from Tait-Bryan angles
 H4 = exu.HT().SetRotationAxis([1,1,0], np.pi/4)            #the Set functions return the HT
+print(H3 == H1)
+```
 
-#read and write access to the parts:
+```text
+True
+```
+
+
+Read and write access to the parts:
+
+
+```python
 A = H1.rotation                                            #3x3 numpy array
 p = H1.translation                                         #numpy array [1,0,0]
 H1.translation = [0,0,1]                                   #writing a part keeps the other
 H1.rotation = np.eye(3)                                    #a unit matrix: H1.HasNoRotation() is True
 A, p = H3.Get()                                            #both parts
 H3.Set(rotationVector=[0,0,0.5])                           #only the rotation; the translation stays
+print(H1.HasNoRotation(), H3.translation)
+```
 
-#composition, points, inverse, numpy:
+```text
+True [1. 0. 0.]
+```
+
+
+Composition, points, inverse, numpy: an HT is indexed and multiplied like its 4x4 matrix.
+
+
+```python
 H = H3 * H2                                                #first H2, then H3: an HT
 x = H3 * [0.1,0,0]                                         #a point transformed, a numpy array
 Hinv = H.Inverse()
 H44 = H.HT44()                                             #4x4 numpy array; also np.array(H)
 H5 = exu.HT(H44)                                           #from a 4x4 matrix, or its 16 values as a sensor stores them
+print(x, H[0:3,3], (H @ Hinv).HasNoRotation() or np.allclose(np.array(H @ Hinv), np.eye(4)))
+```
 
-#the frame of H2 seen from H3, and frames in between:
+```text
+[1.08775826 0.04794255 0.        ] [0.04114892 1.75516512 0.        ] True
+```
+
+
+The frame of H2 seen from H3, frames in between, and the motion vector of the screw motion:
+
+
+```python
 Hrel = H3.Relative(H2)                                     #H3.Inverse()*H2
 Hhalf = H3.InterpolateSE3(H2, 0.5)                         #halfway, a screw motion
 v = Hrel.LogSE3()                                          #the motion vector [U, Omega] of the screw motion
 Hquarter = H3 * exu.HT().SetExpSE3(0.25*v)                 #a quarter of the way, as InterpolateSE3(H2, 0.25)
+print(np.round(v, 4))
+```
 
-#the coordinates of the rigid body nodes:
+```text
+[-0.4791  2.2082  0.      0.      0.     -0.5   ]
+```
+
+
+The coordinates of the rigid body nodes, both ways:
+
+
+```python
 q7 = H3.GetCoordinatesEP()                                 #[x,y,z, ep0,ep1,ep2,ep3] for NodeRigidBodyEP
 q6 = H3.GetCoordinatesRxyz()                               #[x,y,z, rotX,rotY,rotZ] for NodeRigidBodyRxyz
 ep = H3.GetEP()                                            #only the rotation, as Euler parameters
 H6 = exu.HT().SetCoordinatesRotationVector([1,0,0, 0,0,0.5])
 angle = H6.RotationAngle()                                 #0.5
 axis = H6.RotationAxis()                                   #[0,0,1]
+print(np.round(q7, 4), angle, axis)
+```
+
+```text
+[1.     0.     0.     0.9689 0.     0.     0.2474] 0.4999999999999999 [0. 0. 1.]
 ```
 
 

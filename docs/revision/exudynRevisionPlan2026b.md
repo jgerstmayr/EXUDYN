@@ -1592,12 +1592,63 @@ candidate: `rigidBodyTutorial3.py` with `exu.HT` (RG16.12.5).
       `PlotSensor` shows inline as matplotlib does;
     - **first**: `rigidBodyTutorial3` (RG16.12.5), then the spring-damper tutorial (the first one a reader meets, RG3.27);
       the others after the first two have been looked at.
-    RG17.2 realizes it after the decision.
+    **Decided (maintainer 2026-10-04)**: `python/Notebooks/`; the tutorial pages of the documentation and the PDF are
+    the *views* of the notebooks; the outputs are **stored** - stale outputs in the hand-written tutorials are what
+    stored, regenerated outputs avoid; `exudyn.interactive.ShowImage(SC)` yes; 1-2 tutorials first, as extra tutorials,
+    to compare; no tutorial twice - the example scripts are generated from the notebooks; the old tutorial files go after
+    the cleanup, the three rigid body variants shrunk to one alternative; a suggestion for the other examples of the
+    documentation and, most important, a systematic way for the examples of `definitions/pybind*.py`.
 
 <a id="rg17-2"></a>
-**RG17.2** *(group RG17; after the decision on RG17.1)* **Tutorials as notebooks** (#2831): `myst-nb` in `conf.py` and
-the dev environments, the check against stored outputs, the notebooks in `runTestExamples.py`, the image helper, and
-the first notebook `rigidBodyTutorial3` with `exu.HT`.
+**RG17.2** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg17-2) *(group RG17; after the decision on RG17.1)*
+**The notebook tooling and the first notebooks** (#2831), without `myst-nb` - a converter of our own, as for every other
+page (the package `myst` that was installed is not `myst-nb` and is not needed; `nbformat` is not needed either, a
+notebook is JSON):
+    - **RG17.2.1** `exudyn.interactive.ShowImage(SC, size, modelRotation, zoomAll, show, fileName)`: the scene as an image
+      of the raytracer, no window, shown with matplotlib;
+    - **RG17.2.2** `tools/runNotebooks.py`: runs each notebook in an interpreter of its own (no window, files to a
+      temporary directory) and stores the outputs in it - printed text, the value of the last expression, the figures as
+      PNG; no Jupyter package needed;
+    - **RG17.2.3** `tools/generators/notebookEmitter.py`, a stage of the regeneration: per notebook the page
+      `docs/generated/notebooks/<name>.md` (code, stored outputs, images) and the example script
+      `python/Examples/<name>.py` with a generated header - so `runTestExamples.py` runs every notebook; cells tagged
+      `remove-cell` (Jupyter's cell tags) run but are not shown, `remove-input` shows only the output;
+    - **RG17.2.4** the first two, as extra tutorials beside the old ones (`docs/manual/tutorial.md`):
+      `tutorialSpringDamper.ipynb` (exact solution and Exudyn in one plot) and `tutorialRigidBody.ipynb` (frames with
+      `exu.HT`, images of the reference and the final state);
+    - **RG17.2.5** the systematic way for the examples of the reference manual, shown on one: `pb.AddDocuNotebook(path)`
+      in `definitions/pybind*.py` instead of `pb.AddDocuCodeBlock(code)` - the code cells, the Markdown cells as text and
+      the stored text outputs on the page; the example of `exu.HT` is `python/Notebooks/reference/HT.ipynb`.
+
+<a id="rg17-3"></a>
+**RG17.3** *(group RG17; after the maintainer has compared the two notebooks with the old tutorials)* **The tutorials
+are the notebooks** (#2831): `docs/manual/tutorialSpringDamper.md` and `tutorialRigidBody.md` replaced by the pages of the
+notebooks (their text carried over where the notebook says less), then the flexible beams, FFRF and symbolic tutorials;
+the old scripts removed (*ask before deleting*): `springDamperTutorial.py`, `springDamperTutorialNew.py`,
+`rigidBodyTutorial.py`, `rigidBodyTutorial2.py`, `rigidBodyTutorial3.py`, keeping one alternative as a notebook -
+`rigidBodyTutorialWithMarkers.ipynb`, the model built from nodes, objects and markers instead of the Create functions;
+`exudev notebooks` to run them (the tool of RG17.2.2), and `runNotebooks.py --check` in the release checks: a notebook
+whose code changed since its outputs were stored.
+
+<a id="rg17-4"></a>
+**RG17.4** *(group RG17; maintainer 2026-10-04: "most important: the definitions/pybind... examples ... a systematic way
+would make a lot of sense")* **Every example of the reference manual a notebook** (#2831): the 36 `AddDocuCodeBlock`
+of `definitions/pybind*.py` (General information 10, MainSystem 8, symbolic 8, data structures 3, one each in enums,
+general contact, module, renderer, system container, system data, types) become notebooks in
+`python/Notebooks/reference/`, one per class or section; what a snippet needs but does not show (a system with a body,
+a solved model) is a cell tagged `remove-cell`; the text before a block that only introduces it moves into the notebook
+as Markdown. Then: the reference notebooks run in the test suite (a pytest that executes their code cells), and the
+examples cannot go stale.
+
+<a id="rg17-5"></a>
+**RG17.5** *(group RG17; maintainer 2026-10-04: "a suggestion for the other examples in the docs ... would probably
+require a part that is not shown")* **The snippets of the user manual** (#2831), **proposal**: the manual pages hold
+about 70 Python blocks besides the tutorials - `introductionAdvanced.md` 17, `GUI.md` 15, `userSettings.md` 6,
+`performanceErrors.md` 4, `introductionBasics.md` 4, `gettingStartedFAQ.md` 4, `resultsMonitor.md` 2,
+`gettingStartedExample.md` 2. Most are fragments (one call with a comment) that only make sense in a model; they become
+notebooks of `python/Notebooks/snippets/`, one per page, with the model they need as `remove-cell`, and the page includes
+the converted cell where the block stands (a MyST `{include}` of a fragment the emitter writes, or a directive of our
+own). Blocks that are not code to run - the FAQ's error messages, a command line - stay as they are.
 
 ## Next steps recommended
 
@@ -1632,7 +1683,9 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG16.12.5 | #2823 | `rigidBodyTutorial3.py` with `exu.HT` as a notebook, after RG17.1 |
 | RG15 | #2746 | objects computing from coordinates passed in: the work after the evaluation of RG15.1, not planned yet |
 | RG16.13 | #2828, #2829 | `ObjectKinematicTree` on the HT directly: RG16.13.6 to RG16.13.9 |
-| RG17.2 | #2831 | tutorials as notebooks: the recommendation of RG17.1 waits for the maintainer |
+| RG17.3 | #2831 | the tutorials are the notebooks: after the maintainer's comparison |
+| RG17.4 | #2831 | every example of the reference manual a notebook |
+| RG17.5 | #2831 | the snippets of the user manual as notebooks: a proposal |
 
 <a id="not-decided"></a>
 ### Not decided to be resolved

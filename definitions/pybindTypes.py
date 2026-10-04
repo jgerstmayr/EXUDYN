@@ -15,7 +15,7 @@
 
 #the declaration calls; each writes C++ binding code, stub text and documentation (see
 #DeclarationWriter in src/pythonGenerator/autoGenerateHelper.py)
-declarationCalls = ['AddDocu', 'AddDocuCodeBlock', 'AddDocuList', 'AddEnumValue', 'CreateNewRSTfile',
+declarationCalls = ['AddDocu', 'AddDocuCodeBlock', 'AddDocuNotebook', 'AddDocuList', 'AddEnumValue', 'CreateNewRSTfile',
                     'DefDataAccess', 'DefFinishTable', 'DefOperator', 'DefStartClass',
                     'DefStartTable', 'DefPyFinishClass', 'DefPyFunctionAccess', 'DefPyStartClass',
                     'DefStartEnumClass']

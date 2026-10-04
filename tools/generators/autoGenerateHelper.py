@@ -291,6 +291,31 @@ class DeclarationWriter:
         self.sMarkdown += ('\n```' + 'python'*pythonStyle + '\n'
                            + RemoveIndentation(code, '', False).strip('\n') + '\n```\n\n')
 
+    def AddDocuNotebook(self, notebookPath):
+        """an example as a notebook of python/Notebooks/reference/ instead of a code block: its Markdown cells, its
+        code cells and the text outputs that tools/runNotebooks.py stored - so the example on the page is code that
+        ran, with what it printed (#2831)"""
+        import json
+        notebook = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                                               notebookPath), encoding='utf-8'))
+        for cell in notebook['cells']:
+            source = ''.join(cell['source']).rstrip()
+            if source == '':
+                continue
+            if cell['cell_type'] == 'markdown':
+                self.sMarkdown += '\n' + source + '\n\n'
+                continue
+            tags = cell.get('metadata', {}).get('tags', [])
+            if 'remove-cell' in tags:    #setup the example needs, not shown
+                continue
+            if 'remove-input' not in tags:
+                self.sMarkdown += '\n```python\n' + source + '\n```\n\n'
+            for output in cell.get('outputs', []):
+                text = output.get('text', output.get('data', {}).get('text/plain', ''))
+                text = (''.join(text) if isinstance(text, list) else text).rstrip()
+                if output['output_type'] in ['stream', 'execute_result'] and text != '':
+                    self.sMarkdown += '```text\n' + text + '\n```\n\n'
+
     def AddDocuList(self, itemList, itemText=''):
         if len(itemList) != 0:
             for item in itemList:

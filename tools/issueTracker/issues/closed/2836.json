@@ -1,0 +1,17 @@
+{
+  "number": 2836,
+  "title": "PlotSensor fails for data given as numpy array when an output directory is set",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "mbs.PlotSensor(sensorNumbers=[data]) with a numpy matrix raised 'The truth value of an array with more than one element is ambiguous' when exudyn.config.outputDirectory is set (EXUDYN_OUTPUTDIRECTORY, as the runners and the notebook runner do): the array was passed to OutputFilePath as if it were a file name. Found with the first tutorial notebook (revision2026b step RG17.2). Data given as array is now taken as it is.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "dateResolved": "2026-10-04 10:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/plot.py",
+  "releaseNotes": "PlotSensor plots data given as numpy array also when an output directory is set (exudyn.config.outputDirectory).",
+  "resolvedInVersion": "1.12.278"
+}

@@ -11,9 +11,14 @@ A large number of examples, some of them quite advanced, can be found in:
 - `python/Examples`
 - `python/TestModels`
 
+The first two are also notebooks, in `python/Notebooks/`: the pages show their code and the outputs of the last
+run, and the same code is an example in `python/Examples/`.
+
 ```{toctree}
 :maxdepth: 2
 
+/docs/generated/notebooks/tutorialSpringDamper
+/docs/generated/notebooks/tutorialRigidBody
 tutorialSpringDamper
 tutorialRigidBody
 tutorialFlexibleBeams

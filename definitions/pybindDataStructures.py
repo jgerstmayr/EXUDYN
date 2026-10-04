@@ -178,45 +178,8 @@ pyClassStr = 'HT'
 pb.DefPyStartClass(classStr, pyClassStr, 'The HT is a homogeneous transformation - a rotation matrix A and a translation p, the 4x4 matrix [A p; 0 1] -, the frame of a rigid body, marker or joint, and the place for transformations of rigid bodies: it converts from and to the coordinates of the rigid body nodes (Euler parameters, Tait-Bryan angles Rxyz, rotation vector), composes, inverts and interpolates. It is the C++ class of Exudyn, faster than the 4x4 numpy arrays of exudyn.rigidBodyUtilities: it stores the 12 numbers it needs, and a transformation without rotation (identity, SetTranslation, a unit matrix) skips the rotation in its products. The Set functions return the HT itself, so that they chain. Examples:',
                     subSection=True, labelName='sec:HT')
 
-pb.AddDocuCodeBlock(code="""
-import exudyn as exu
-import numpy as np
-from exudyn.rigidBodyUtilities import RotationMatrixZ
-H0 = exu.HT()                                              #identity
-H1 = exu.HT(rotation=RotationMatrixZ(0.5), translation=[1,0,0])
-H2 = exu.HT(translation=[0,2,0])                           #translation only
-H3 = exu.HT(Rxyz=[0,0,0.5], translation=[1,0,0])           #the same as H1, from Tait-Bryan angles
-H4 = exu.HT().SetRotationAxis([1,1,0], np.pi/4)            #the Set functions return the HT
-
-#read and write access to the parts:
-A = H1.rotation                                            #3x3 numpy array
-p = H1.translation                                         #numpy array [1,0,0]
-H1.translation = [0,0,1]                                   #writing a part keeps the other
-H1.rotation = np.eye(3)                                    #a unit matrix: H1.HasNoRotation() is True
-A, p = H3.Get()                                            #both parts
-H3.Set(rotationVector=[0,0,0.5])                           #only the rotation; the translation stays
-
-#composition, points, inverse, numpy:
-H = H3 * H2                                                #first H2, then H3: an HT
-x = H3 * [0.1,0,0]                                         #a point transformed, a numpy array
-Hinv = H.Inverse()
-H44 = H.HT44()                                             #4x4 numpy array; also np.array(H)
-H5 = exu.HT(H44)                                           #from a 4x4 matrix, or its 16 values as a sensor stores them
-
-#the frame of H2 seen from H3, and frames in between:
-Hrel = H3.Relative(H2)                                     #H3.Inverse()*H2
-Hhalf = H3.InterpolateSE3(H2, 0.5)                         #halfway, a screw motion
-v = Hrel.LogSE3()                                          #the motion vector [U, Omega] of the screw motion
-Hquarter = H3 * exu.HT().SetExpSE3(0.25*v)                 #a quarter of the way, as InterpolateSE3(H2, 0.25)
-
-#the coordinates of the rigid body nodes:
-q7 = H3.GetCoordinatesEP()                                 #[x,y,z, ep0,ep1,ep2,ep3] for NodeRigidBodyEP
-q6 = H3.GetCoordinatesRxyz()                               #[x,y,z, rotX,rotY,rotZ] for NodeRigidBodyRxyz
-ep = H3.GetEP()                                            #only the rotation, as Euler parameters
-H6 = exu.HT().SetCoordinatesRotationVector([1,0,0, 0,0,0.5])
-angle = H6.RotationAngle()                                 #0.5
-axis = H6.RotationAxis()                                   #[0,0,1]
-""")
+#the examples are a notebook: they ran, and the page shows what they printed (#2831)
+pb.AddDocuNotebook('python/Notebooks/reference/HT.ipynb')
 
 pb.DefStartTable(pyClassStr)
 

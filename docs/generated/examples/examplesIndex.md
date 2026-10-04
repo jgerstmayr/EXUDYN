@@ -177,6 +177,8 @@ testGymDoublePendulumEnv
 testHDF5loadSave
 tippeTop
 tutorialNeuralNetwork
+tutorialRigidBody
+tutorialSpringDamper
 universalJoint
 xExudynConfigSpecial
 ```

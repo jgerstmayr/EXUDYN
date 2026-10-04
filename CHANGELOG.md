@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 258 | 1.12.277 |
+| 1.12 | Metheney | 259 | 1.12.278 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.278** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` PlotSensor fails for data given as numpy array when an output directory is set (#2836)
+  - description: mbs.PlotSensor(sensorNumbers=\[data\]) with a numpy matrix raised 'The truth value of an array with more than one element is ambiguous' when exudyn.config.outputDirectory is set (EXUDYN\_OUTPUTDIRECTORY, as the runners and the notebook runner do): the array was passed to OutputFilePath as if it were a file name. Found with the first tutorial notebook (revision2026b step RG17.2). Data given as array is now taken as it is.
+  - **notes:** PlotSensor plots data given as numpy array also when an output directory is set (exudyn.config.outputDirectory).
+  - date resolved: **2026-10-04 10:55**, date raised: 2026-10-04
 - **1.12.277** `DOCU` `LOW` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the start page of the documentation talks about how the documentation is made (#2835)
   - description: Feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: 'The text This page is the table of contents, and it is hand-written ... in index.html reads strange =\> remove.' Root cause: a note for maintainers on a page for readers. Removed there; the information is in the repository layout of docs/dev/README.md. revision2026b step RG3.33.
   - **notes:** The start page of the documentation no longer explains how the documentation is made.

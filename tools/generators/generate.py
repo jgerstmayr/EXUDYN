@@ -76,7 +76,7 @@ stages = [
           #but data for conf.py, and lives with the other generator data
           ['docs/generated/pythonUtilities', G + 'confHelperPyUtilities.py']),
     Stage('tools/generators/pybindEmitter.py',
-          ['definitions', G + 'MainSystemExt.md', G + 'MainSystemCreateExt.md'],
+          ['definitions', G + 'MainSystemExt.md', G + 'MainSystemCreateExt.md', 'python/Notebooks/reference'],
           [A + 'pybind_manual_classes.h', A + 'OutputVariableTypes.h', A + 'EnumTypes.h',
            G + 'stubAutoBindings.pyi', G + 'stubSymbolic.pyi', G + 'stubEnums.pyi',
            #Markdown; confHelper.py is not documentation but data
@@ -96,6 +96,11 @@ stages = [
     #(#2591)
     Stage('tools/generators/keyBindingsEmitter.py', ['python/exudyn/misc/keyBindings.py'],
           ['docs/generated/mouseBindings.md', 'docs/generated/keyBindings.md']),
+    #the notebooks are the one place of a tutorial: their page and their example script (#2831); the
+    #stored outputs come from tools/runNotebooks.py, which is not a stage - it runs the models
+    Stage('tools/generators/notebookEmitter.py', ['python/Notebooks'],
+          ['docs/generated/notebooks', 'python/Examples/tutorialRigidBody.py', 'python/Examples/tutorialSpringDamper.py'],
+          writesOnlyWhenChanged=True),
     Stage('tools/generators/examplesDocsEmitter.py',
           ['python/Examples', 'python/TestModels'],
           ['docs/generated/examples', 'docs/generated/testModels',

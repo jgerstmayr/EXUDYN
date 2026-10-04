@@ -343,6 +343,11 @@ as lists of the exported enumerations; `what` is a member of `exu.InspectType`, 
 that apply. A node marker answers the node types its node must provide as requirements, each a list of
 alternatives (#2817). The test model `inspectTest.py` shows it.
 
+**Tutorials as notebooks.** `python/Notebooks/` holds the tutorials as Jupyter notebooks, stored with the outputs of
+their last run; the documentation shows them with these outputs, and `python/Examples/tutorialSpringDamper.py` and
+`tutorialRigidBody.py` are the same code as scripts. `exudyn.interactive.ShowImage(SC)` shows the scene in a notebook -
+an image of the raytracer, without a window (#2831).
+
 **Kinetic and potential energy as output variables** (`OutputVariableType.KineticEnergy`,
 `PotentialEnergy`) of the bodies, beams, plates, superelements and spring-dampers, and
 `exudyn.advancedUtilities.SystemEnergy` for the energy of a whole system with its loads; an item

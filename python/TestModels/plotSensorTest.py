@@ -1,7 +1,8 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # This is an EXUDYN example
 #
-# Details:  Test model and example for exudyn.plot.PlotSensor, using several sensors and plotting results
+# Details:  Test model and example for exudyn.plot.PlotSensor, using several sensors and plotting results; data given
+#           as numpy array, also with an output directory set
 #
 # Author:   Johannes Gerstmayr
 # Date:     2021-07-01
@@ -133,6 +134,15 @@ mbs.PlotSensor(sensorNumbers=sObject, components=[0,1,2], title='Revolute joint 
 #a sensor given by NUMBER is read from exudyn.config.outputDirectory, a file name given here is
 #read as it is - so the model resolves it itself (#2454)
 mbs.PlotSensor(sensorNumbers=[sNode]*3+ [OutputFilePath(filedir+'plotSensorNode.txt')]*3, components=[0,1,2]*2, closeAll=closeAll)
+#data given as numpy array (time in the first column) is plotted as it is, also with an output directory set (#2836)
+import numpy as np
+dataArray = np.column_stack((np.linspace(0,1,11), np.linspace(0,1,11)**2))
+outputDirectoryBefore = exu.config.outputDirectory
+exu.config.outputDirectory = 'solution'
+try:
+    mbs.PlotSensor(sensorNumbers=[dataArray], components=[0], labels=['data as array'], closeAll=closeAll)
+finally:
+    exu.config.outputDirectory = outputDirectoryBefore
 
 if closeAll:
     plt.close('all')

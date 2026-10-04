@@ -61,7 +61,7 @@ def ConfigureDialogColumns(tkWindow):
 #public API of this module; kept complete by tools/checkAll.py (#2444)
 __all__ = [
     'openDialogs', 'ConfigureDialogColumns', 'InteractiveDialog', 'AnimateModes', 'SolutionViewer',
-    'ConvertImages2Video', 'InteractiveImages2Video',
+    'ShowImage', 'ConvertImages2Video', 'InteractiveImages2Video',
     ]
 
 class InteractiveDialog:
@@ -1047,6 +1047,58 @@ def SolutionViewer(mainSystem, solution=None, rowIncrement = 1, timeout=0.04, ru
 
 
 #%%
+def ShowImage(systemContainer, size=[800, 600], modelRotation=None, zoomAll=True, show=True, fileName=''):
+    """the current scene as an image, rendered by the raytracer without a window, and shown with matplotlib; made
+    for notebooks, where no render window opens, and for documentation images
+
+    Args:
+        systemContainer: the SystemContainer whose systems are drawn, with its visualizationSettings
+        size: [width, height] of the image in pixels; the render window size of the settings is set back afterwards
+        modelRotation: the rotation of the view as 3x3 matrix, e.g. RotationMatrixX(0.4)@RotationMatrixY(-0.5), for this
+                       image; None takes openGL.advanced.initialModelRotation of the settings
+        zoomAll: if True, the view is fitted to the scene first; set False to keep a view set by
+                 SC.renderer.SetModelView(...) or a stored render state
+        show: if True, the image is drawn with matplotlib (inline in a notebook); False only returns it
+        fileName: if not empty, the image is also written to this file (e.g. 'images/scene.png')
+
+    Returns:
+        the image as numpy array of shape (height, width, 3), RGB values 0 to 255
+
+    Example:
+        mbs.Assemble()
+        exudyn.interactive.ShowImage(SC)   #the scene in the reference configuration
+    """
+    window = systemContainer.visualizationSettings.view0.window
+    advanced = systemContainer.visualizationSettings.openGL.advanced
+    sizeBefore = list(window.renderWindowSize)
+    rotationBefore = np.array(advanced.initialModelRotation)
+    window.renderWindowSize = list(size)
+    if modelRotation is not None: #the raytracer without a window takes its view from the settings
+        advanced.initialModelRotation = np.array(modelRotation).tolist()
+    try:
+        if zoomAll:
+            systemContainer.renderer.ZoomAll()
+        image = systemContainer.renderer.RedrawAndGetImage(useRaytracer=True)
+    finally:
+        window.renderWindowSize = sizeBefore
+        advanced.initialModelRotation = rotationBefore.tolist()
+
+    if show or fileName != '':
+        try:
+            import matplotlib.pyplot as plt
+        except ImportError:
+            raise ImportError('ShowImage: matplotlib is needed to show or write the image: pip install matplotlib')
+        if fileName != '':
+            plt.imsave(fileName, image)
+        if show:
+            figure = plt.figure(figsize=(image.shape[1]/100, image.shape[0]/100), dpi=100)
+            figure.add_axes([0, 0, 1, 1]).imshow(image)
+            figure.axes[0].axis('off')
+            if not UIWindowSuppressed('Plots', 'ShowImage'): #in a notebook the figure is shown inline anyway
+                plt.show()
+    return image
+
+
 def ConvertImages2Video(workingDir='images', 
                         inputPattern='frame%05d.png', 
                         outputFile='animation.mp4', 

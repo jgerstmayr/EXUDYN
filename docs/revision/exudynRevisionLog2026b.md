@@ -14493,3 +14493,47 @@ of the checks of `exudev generate --all-checks`) refuses a blank line inside dis
 **RG3.33** (#2835): the paragraph "This page is the table of contents, and it is hand-written ..." was a note for
 maintainers on the page every reader opens first; removed, and `docs/dev/README.md` names `index.md` as the
 hand-written table of contents in its repository layout.
+
+<a id="rg17-2"></a>
+### RG17.2 — the notebook tooling and the first notebooks (2026-10-04, #2831, #2836)
+
+*(Maintainer 2026-10-04 on RG17.1: myst and nbformat installed ("myst-nb does not exist"); "some tutorials show outputs
+which are already outdated. So these outputs would help to stay consistent"; 1-2 tutorials first, as extra tutorials;
+`interactive.ShowImage(SC)` "is perfect"; `python/Notebooks/`, the tutorial pages "just the views of these notebooks";
+"duplication of the tutorials shall go ... the example .py files are generated from the notebooks (preferred)"; the old
+tutorial files removed after the cleanup; a suggestion for the other examples of the documentation; "most important:
+the definitions/pybind... examples".)*
+
+**Without myst-nb.** The package installed as `myst` (1.0.4) is a different project; `myst-nb` is the notebook extension
+of MyST, but it is not needed: the documentation is built from converted pages anyway, and a notebook is JSON. So the
+tooling is two scripts and no new dependency:
+- `tools/runNotebooks.py` runs every notebook of `python/Notebooks/` (or those named) in an interpreter of its own, in
+  the notebook's directory, with `EXUDYN_SUPPRESS_UI_WINDOW_OPEN` and the output files in a temporary directory; the
+  cells run one after the other in one namespace; the outputs - printed text without the notices of the window
+  suppression, the value of a last expression, every matplotlib figure as PNG at its own resolution - are stored in the
+  notebook (nbformat 4). A failing cell stops the notebook and the tool returns 1.
+- `tools/generators/notebookEmitter.py`, a stage of `tools/regenerate.py`, writes the page
+  `docs/generated/notebooks/<name>.md` - Markdown cells as they are, code cells as Python blocks, the stored outputs as
+  text blocks and images (`images/<name>_<n>.png`) - and the example `python/Examples/<name>.py` with a generated first
+  line and an example header from the first cell. It writes only what changed and removes what no notebook writes. Cell
+  tags: `remove-cell` runs but is not shown, `remove-input` shows only the output.
+- `exudyn.interactive.ShowImage(SC, size=[800,600], modelRotation=None, zoomAll=True, show=True, fileName='')`: the
+  raytracer's image of the scene, without a window, drawn with matplotlib. The raytracer without an open renderer takes
+  its view from the settings, not from `SC.renderer.SetModelView` (measured: the state changed, the image did not), so
+  the view is `modelRotation`, set as `openGL.advanced.initialModelRotation` for the one image.
+
+**The first two notebooks**, extra tutorials in `docs/manual/tutorial.md` beside the old ones:
+`tutorialSpringDamper.ipynb` (the mass point of `springDamperTutorialNew.py`, an image of the model, exact and numerical
+solution in one plot, the force) and `tutorialRigidBody.ipynb` (`rigidBodyTutorial3.py` with the frames as `exu.HT`, the
+gravity loads and nodes not drawn, images of the reference and the final state from a turned view, the tip position,
+the final frame of a body as `exu.HT`).
+
+**The reference manual**: `pb.AddDocuNotebook('python/Notebooks/reference/HT.ipynb')` replaces the code block of the HT
+section; the page shows the code cells and what they printed (`True`, the translations, the motion vector, the node
+coordinates); `AddDocuNotebook` is a declaration call of `pybindTypes.declarationCalls`, and `pybindEmitter` reads
+`python/Notebooks/reference`.
+
+**#2836**: `mbs.PlotSensor(sensorNumbers=[array])` with data as numpy array raised "The truth value of an array ... is
+ambiguous" whenever an output directory is set - the array went to `OutputFilePath` as if it were a file name. Found by
+the notebook runner, which sets `EXUDYN_OUTPUTDIRECTORY`; fixed, and `plotSensorTest.py` plots an array with an output
+directory set (it fails without the fix, result unchanged).

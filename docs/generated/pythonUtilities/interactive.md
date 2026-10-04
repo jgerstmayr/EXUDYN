@@ -78,10 +78,37 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 - **NOTE**: this function is directly available in MainSystem (mbs); it should be directly called as mbs.SolutionViewer(...). For description of the interface, see the MainSystem Python extensions, {ref}`sec-mainsystemextensions-solutionviewer`
 
 
+(sec-interactive-showimage)=
+## Function: ShowImage
+
+[`ShowImage(systemContainer, size = [800, 600], modelRotation = None, zoomAll = True, show = True, fileName = '')`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1050)
+
+- **function description**: the current scene as an image, rendered by the raytracer without a window, and shown with matplotlib; made for notebooks, where no render window opens, and for documentation images
+- **input**:
+  - `systemContainer`: the SystemContainer whose systems are drawn, with its visualizationSettings
+  - `size`: [width, height] of the image in pixels; the render window size of the settings is set back afterwards
+  - `modelRotation`: the rotation of the view as 3x3 matrix, e.g. RotationMatrixX(0.4)@RotationMatrixY(-0.5), for this image; None takes openGL.advanced.initialModelRotation of the settings
+  - `zoomAll`: if True, the view is fitted to the scene first; set False to keep a view set by SC.renderer.SetModelView(...) or a stored render state
+  - `show`: if True, the image is drawn with matplotlib (inline in a notebook); False only returns it
+  - `fileName`: if not empty, the image is also written to this file (e.g. 'images/scene.png')
+- **output**: the image as numpy array of shape (height, width, 3), RGB values 0 to 255
+
+*example*:
+
+```python
+  mbs.Assemble()
+  exudyn.interactive.ShowImage(SC)   #the scene in the reference configuration
+```
+
+
+
+Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`tutorialRigidBody.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/tutorialRigidBody.py) (Ex), [`tutorialSpringDamper.py`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/Examples/tutorialSpringDamper.py) (Ex)
+
+
 (sec-interactive-convertimages2video)=
 ## Function: ConvertImages2Video
 
-[`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1050)
+[`ConvertImages2Video(workingDir = 'images', inputPattern = 'frame%05d.png', outputFile = 'animation.mp4', inputFrameRate = 25, outputFrameRate = 25, compressionCRF = 28, startNumber = 0, totalFrames = None)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1102)
 
 - **function description**: function to call ffmpeg in the background and convert images to video; requires ffmpeg-python to be installed
 - **input**:
@@ -109,7 +136,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`CMSexampleC
 (sec-interactive-interactiveimages2video)=
 ## Function: InteractiveImages2Video
 
-[`InteractiveImages2Video(closeAfterCreation = False, fontSize = 11)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1108)
+[`InteractiveImages2Video(closeAfterCreation = False, fontSize = 11)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/interactive.py#L1160)
 
 - **function description**: interactive dialog to convert generated images to videos using ffmpeg library; see also ConvertImages2Video() for meaning of values; requires ffmpeg-python to be installed
 

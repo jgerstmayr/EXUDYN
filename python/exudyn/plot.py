@@ -694,7 +694,8 @@ def PlotSensor(mbs, sensorNumbers=[], components=0, xLabel=None, yLabel=None, la
 
         #the file name of a SENSOR was written by the solver into exudyn.config.outputDirectory, so
         #it is read from there; a file name passed by the user keeps its own path (#2454)
-        if sensorDict.get('userFileName', False):
+        #data given as numpy array stays as it is (#2836)
+        if sensorDict.get('userFileName', False) or sensorDict.get('numpyArray', False):
             sensorFileNames += [sensorDict['fileName']]
         else:
             sensorFileNames += [OutputFilePath(sensorDict['fileName'], 'PlotSensor')]
