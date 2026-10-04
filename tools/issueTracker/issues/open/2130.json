@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "consider changing contact objects like SphereSphere, SphereTriangle, etc. to switch in PostNewtonStep based on force sign rather than gap sign; possibly use global switch",
   "dateRaised": "2025-07-05",
-  "deadline": "2026-01-01"
+  "deadline": "2026-01-01",
+  "workingRemarks": "The same question for GeneralContact is #2848 (RG4.15.9); this one is RG4.19.7."
 }
