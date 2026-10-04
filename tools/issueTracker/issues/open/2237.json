@@ -8,5 +8,5 @@
   "description": "Check Spyder-issues and crashes with PlotSensor on MacOS systems",
   "dateRaised": "2026-01-26",
   "deadline": "2026-07-25",
-  "workingRemarks": "planned before 1.13 as revision2026b step RG6.8.6 (2026-09-29)"
+  "workingRemarks": "planned before 1.13 as revision2026b step RG6.8.6 (2026-09-29); RG6.8.6.1 (2026-10-05): a solver destroyed by the garbage collector while another solve ran stopped that solve's threads (fixed, test_solverThreads.py); the consistency flags of a directly created MainSystem were uninitialized (fixed). Whether this was the crash: check on macOS in Spyder."
 }

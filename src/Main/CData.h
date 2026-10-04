@@ -32,7 +32,7 @@ public: //
 	CSystemState visualizationState;                     //!< visualization state coordinates; usually updated at end of computation step; uses semaphores between rendering and computation threads
 
 private:
-	bool systemIsConsistent;							 //!< variable is set after check of system consistency ==> in order to draw or compute system; usually set after Assemble()
+	bool systemIsConsistent = false;					 //!< variable is set after check of system consistency ==> in order to draw or compute system; usually set after Assemble()
 
 public: // 
 

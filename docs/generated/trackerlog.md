@@ -7665,7 +7665,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-01-27
 - `FIX` `MEDIUM EFF` MacOS (#2237)
   - description: Check Spyder-issues and crashes with PlotSensor on MacOS systems
-  - **remarks:** planned before 1.13 as revision2026b step RG6.8.6 (2026-09-29)
+  - **remarks:** planned before 1.13 as revision2026b step RG6.8.6 (2026-09-29); RG6.8.6.1 (2026-10-05): a solver destroyed by the garbage collector while another solve ran stopped that solve's threads (fixed, test\_solverThreads.py); the consistency flags of a directly created MainSystem were uninitialized (fixed). Whether this was the crash: check on macOS in Spyder.
   - date raised: 2026-01-26
 - `FIX` `LOW EFF` linux (#2236)
   - description: fix wrong initialization for time in renderer on linux systems

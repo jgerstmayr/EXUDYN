@@ -1018,6 +1018,11 @@ the arc; the spring windings of the spring-dampers use `connectors.springNumberO
     - **RG6.8.6** (#2237, #2350) macOS: PlotSensor in Spyder; `raytracerNOGLFWtest.py`, excluded on macOS
       since 1.11.0 because offscreen `RedrawAndGetImage` crashes - when the macOS machine is there
       (around 2026-10-20), the manual check P1 in Spyder and the test model without its exclusion;
+        - **RG6.8.6.1** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg6-8-6-1) *(maintainer 2026-10-05:
+          "investigate if there is something in the code that would explain, and fix it then")* (#2237) a solver
+          that is destroyed stops only the threads it started: the garbage collector of a console that runs a
+          script again destroyed the solver of the earlier run while the new one ran, and stopped its threads; the
+          consistency flags of a system are initialized. Whether this was the crash is the check on macOS.
     - **RG6.8.7** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg6-8-7) *(maintainer 2026-10-04: "by
       converting them to lines, so only a small fix")* (#2844) the raytracer draws no `GraphicsData` of type `Circle` (and none of the circles the
       2D items draw), found by the `GraphicsData` example of RG17.5.

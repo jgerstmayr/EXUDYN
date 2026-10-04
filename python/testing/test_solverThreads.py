@@ -60,3 +60,56 @@ def testAFailedMultithreadedSolveStopsItsThreads(after, tmp_path):
                             timeout=120)
     assert result.returncode == 0, result.stdout + result.stderr
     assert 'the solve failed' in result.stdout and 'done' in result.stdout
+
+
+#a solver that is destroyed while another one runs - the garbage collector frees the solver of an earlier run, as a
+#console like Spyder does when a script runs again - must not stop the threads of the running one (#2237)
+scriptOldSolver = r'''
+import gc
+import exudyn as exu
+from exudyn.utilities import *
+def Model():
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    previous = mbs.CreateGround()
+    for i in range(50):
+        body = mbs.CreateMassPoint(referencePosition=[i+1,0,0], mass=1, gravity=[0,-9.81,0])
+        mbs.CreateSpringDamper(bodyNumbers=[previous, body], stiffness=1e3, damping=1)
+        previous = body
+    mbs.Assemble()
+    return SC, mbs
+simulationSettings = exu.SimulationSettings()
+simulationSettings.parallel.numberOfThreads = 4
+simulationSettings.timeIntegration.numberOfSteps = 100
+simulationSettings.timeIntegration.endTime = 0.1
+simulationSettings.solution.file.write = False
+simulationSettings.timeIntegration.verboseMode = 1
+SC1, mbs1 = Model()
+oldSolvers = [exu.MainSolverImplicitSecondOrder()]
+oldSolvers[0].SolveSystem(mbs1, simulationSettings)
+print('first solve done')
+SC2, mbs2 = Model()
+def PreStep(mbs, t):
+    if t > 0.05 and oldSolvers:
+        oldSolvers.clear()
+        gc.collect()
+        print('old solver destroyed')
+    return True
+mbs2.SetPreStepUserFunction(PreStep)
+exu.MainSolverImplicitSecondOrder().SolveSystem(mbs2, simulationSettings)
+print('done')
+'''
+
+
+def testADestroyedSolverLeavesTheThreadsOfAnotherOne(tmp_path):
+    environment = dict(os.environ, EXUDYN_SUPPRESS_UI_WINDOW_OPEN='1', EXUDYN_OUTPUTDIRECTORY=str(tmp_path))
+    environment.pop('PYTHONPATH', None)
+    result = subprocess.run([sys.executable, '-c', scriptOldSolver], env=environment, capture_output=True, text=True,
+                            timeout=120)
+    assert result.returncode == 0, result.stdout + result.stderr
+    output = result.stdout
+    assert 'done' in output
+    #each solve stops its own threads once, at its end - the second not before the old solver is destroyed
+    betweenTheSolves = output[output.index('first solve done'):output.index('old solver destroyed')]
+    assert 'Stop multi-threading' not in betweenTheSolves, output
+    assert output.count('Stop multi-threading') == 2, output

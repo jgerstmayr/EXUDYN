@@ -89,7 +89,7 @@ protected:
 	PythonUserFunctions pythonUserFunctions; //!< user functions and MainSystem
 	//Index numberOfThreads;				//!< multithreading information set by solver
 
-	bool systemIsConsistent;				//!< variable is set after check of system consistency ==> in order to draw or compute system; usually set after Assemble()
+	bool systemIsConsistent = false;		//!< variable is set after check of system consistency ==> in order to draw or compute system; usually set after Assemble()
 	ResizableArray<GeneralContact*> generalContacts;	//!< array of general contacts, that are not objects
 
 public:

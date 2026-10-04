@@ -790,8 +790,9 @@ void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationS
 
 void CSolverBase::StopThreadsAndCloseFiles()
 {
-	//Index nThreads = simulationSettings.parallel.numberOfThreads;
-	if (ExuThreading::TaskManager::IsRunning())
+	//only the threads this solver started: the task manager is global, and a solver that is destroyed - by the garbage
+	//collector, while another solver runs - must not stop the threads of the other one (#2237)
+	if (output.multiThreadingMode != 0 && ExuThreading::TaskManager::IsRunning())
 	{
 		VerboseWrite(1, "Stop multi-threading\n");
         ExuThreading::ExitTaskManager(1); // output.numberOfThreadsUsed);

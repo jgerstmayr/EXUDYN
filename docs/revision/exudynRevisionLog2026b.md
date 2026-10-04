@@ -15276,3 +15276,32 @@ behaviour everywhere and the description of the setting names this exception - f
 the ball leaves the ground and rebounds to 0.13511 instead of 0.13523 with 20000 steps; with 80000 steps both give
 0.1351859, equal to 2e-15 - the two differ only in the step in which the contact ends. `revisions.md` says what the
 setting does.
+
+<a id="rg6-8-6-1"></a>
+### RG6.8.6.1 — what in the solver could explain the macOS crashes (2026-10-05, #2237)
+
+*(Maintainer 2026-10-05: "I remember that this happened from time to time and it must be a compiler issue and has to
+do with initializations in the solver. Could you investigate if there is something in the code that would explain,
+and fix it then.")*
+
+**Initializations.** The generated solver structures (`CSolverTimer`, `SolverLocalData`, `SolverIterationData`,
+`SolverConvergenceData`, `SolverOutputData`) initialize every member in their constructors - checked with a script
+over `CSolverStructures.h`. The solver classes `CSolverImplicitSecondOrderTimeInt`, `CSolverExplicitTimeInt` and
+`CSolverStatic` have no constructor, but each member is set in `PreInitializeSolverSpecific` or
+`PostInitializeSolverSpecific` before it is read. The `std::atomic_flag`s of `PostProcessData` and `GraphicsData`
+are cleared in their constructors. Uninitialized was `systemIsConsistent` of `CSystem` and `CData` for a
+`MainSystem` created directly in Python (`exu.MainSystem()`), which does not run `Reset()`: both are `false` now. A
+`bool` that is neither 0 nor 1 is undefined behaviour that clang may turn into anything; no case was seen.
+
+**What was wrong: a destroyed solver stopped the threads of another.** The task manager of the multithreading is
+global, and `~CSolverBase` called `StopThreadsAndCloseFiles`, which stopped it if it ran - whoever had started it.
+A console that runs a script again - Spyder - keeps the earlier `SystemContainer`, system and solver
+(`mbs.sys['dynamicSolver']`) until the garbage collector frees them, at any time, also while the new run solves.
+Reproduced: a solver of a first multithreaded run, destroyed in a pre-step function of a second one, printed "Stop
+multi-threading" and stopped the threads the second solve was using; it went on serially here, but its temporary
+data were sized for four threads. Now `StopThreadsAndCloseFiles` stops the task manager only if this solver
+started it (`output.multiThreadingMode != 0`, reset when it stops). Test
+`testADestroyedSolverLeavesTheThreadsOfAnotherOne` in `test_solverThreads.py`, which failed before.
+
+Whether this was the crash with `PlotSensor` in Spyder on macOS cannot be checked here: #2237 stays open for the
+check on the macOS machine (RG6.8.6).
