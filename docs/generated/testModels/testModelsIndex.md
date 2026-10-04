@@ -19,6 +19,7 @@ SpringDamperMesh
 SwitchingConstraintsTest
 abaqusImportTest
 allExudynModulesTest
+appendSystemTest
 ANCFBeamTest
 ANCFcable2DuserFunction
 ANCFCableBeamDampingTest

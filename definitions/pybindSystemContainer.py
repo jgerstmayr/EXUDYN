@@ -54,7 +54,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='AddSystem', cName='AddMainSystem
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AppendSystem', cName='AppendMainSystem', 
-                        description="append an exsiting computational system to the system container; returns the number of MainSystem in system container", options='py::return_value_policy::reference',
+                        description="append an existing MainSystem - a copy, or the system of another container - to the system container; returns its index in the container. The container keeps the system alive but does not own it: SC.Reset() and the end of the container leave it to its owner, and the system of another container gets that container back (#2842)", options='py::return_value_policy::reference',
                         argList=['mainSystem'],
                         argTypes=['MainSystem'],
                         returnType='int',

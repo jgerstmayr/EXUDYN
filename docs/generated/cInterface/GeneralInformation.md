@@ -68,11 +68,11 @@ exu.demos.Demo1(showAll=False)
 ```
 
 ```text
-1.12.281.dev1; Python3.13.15; Windows x86_64 FLOAT64
+1.12.284.dev1; Python3.13.15; Windows x86_64 FLOAT64
 +++++++++++++++++++++++++++++++
-EXUDYN V1.12.281.dev1 solver: implicit second order time integration
+EXUDYN V1.12.284.dev1 solver: implicit second order time integration
 STEP100, t = 1s, timeToGo = 0s, Nit/step = 1
-Solver terminated successfully after 0.0004336 seconds.
+Solver terminated successfully after 0.0003146 seconds.
 ```
 
 (from the notebook `python/Notebooks/reference/generalInformation.ipynb`)
@@ -151,14 +151,16 @@ og = mbs.AddObject(ObjectGround()) #copy data of ObjectGround() into C++
 o0 = mbs.GetObject(0)              #get copy of internal data as dictionary
 
 mbsCopy=copy.copy(mbs)             #mbsCopy is now a real copy of mbs; uses pickle; experimental!
-SC.AppendSystem(mbsCopy)                #this is needed to work with mbsCopy
+SC.AppendSystem(mbsCopy)           #this is needed to work with mbsCopy; SC keeps it alive
 
 del o0                             #delete the local dictionary; C++ data not affected
 del mbs, mbs2                      #references to mbs deleted (C++ data still available)
-del mbsCopy                        #now also copy of mbs destroyed
-del SC                             #references to SystemContainer deleted
+del mbsCopy                        #the name is gone; the copy lives as long as SC
+del SC                             #references to SystemContainer deleted; the copy goes as well
 #at this point, mbs and SC are not available any more (data will be cleaned up by Python)
 ```
+
+(from the notebook `python/Notebooks/reference/generalInformation.ipynb`)
 
 (sec-cinterface-exceptions)=
 ### Exceptions and Error Messages

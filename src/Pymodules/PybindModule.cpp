@@ -559,7 +559,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 		//System functions:
 		.def("AddSystem", &MainSystemContainer::AddMainSystem, "add a new computational system", py::return_value_policy::reference, py::keep_alive<0, 1>())
 
-		.def("AppendSystem", &MainSystemContainer::AppendMainSystem, "append an existing computational system")
+		.def("AppendSystem", &MainSystemContainer::AppendMainSystem, "append an existing computational system; the container keeps it alive and does not delete it (#2842)", py::keep_alive<1, 2>())
 
 		.def_property("visualizationSettings", &MainSystemContainer::PyGetVisualizationSettings, &MainSystemContainer::PySetVisualizationSettings)//, py::return_value_policy::reference)
 

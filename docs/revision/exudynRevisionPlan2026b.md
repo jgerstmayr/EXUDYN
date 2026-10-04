@@ -1681,7 +1681,7 @@ uses; the old scripts removed (*ask before deleting*): `springDamperTutorial.py`
 whose code changed since its outputs were stored.
 
 <a id="rg17-4"></a>
-**RG17.4** **DONE 2026-10-04** (but RG17.4.3) — [log](exudynRevisionLog2026b.md#rg17-4) *(group RG17; maintainer 2026-10-04: "most important: the definitions/pybind... examples ... a systematic way
+**RG17.4** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg17-4) *(group RG17; maintainer 2026-10-04: "most important: the definitions/pybind... examples ... a systematic way
 would make a lot of sense")* **Every example of the reference manual a notebook** (#2831): the 36 `AddDocuCodeBlock`
 of `definitions/pybind*.py` (General information 10, MainSystem 8, symbolic 8, data structures 3, one each in enums,
 general contact, module, renderer, system container, system data, types) become notebooks in
@@ -1705,7 +1705,8 @@ notebook with them as cells, the error kept as text. *(Maintainer 2026-10-04: "d
       `python/testing/test_referenceNotebooks.py` runs every reference notebook (`runNotebooks.py --test`, nothing
       stored) and checks that every notebook stores the outputs of its current code; running them found the
       errors listed in the log, among them #2841 (fixed) and #2842;
-    - **RG17.4.3** *open* (#2842) `SC.AppendSystem` of a `MainSystem` that Python owns (a copy, or the system of
+    - **RG17.4.3** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg17-4-3) *(maintainer 2026-10-04: "continue
+      with 1-3")* (#2842) `SC.AppendSystem` of a `MainSystem` that Python owns (a copy, or the system of
       another container) is deleted twice - an access violation at the end of the copy example of *Copying and
       referencing C++ objects*; the container shall delete only the systems it created and keep an appended one alive;
       then the copy example becomes a part of `generalInformation.ipynb`.
@@ -1752,7 +1753,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG14.3 | #2745 | joints and their Jacobians on homogeneous transformations, after RG14.2.9 |
 | RG15 | #2746 | objects computing from coordinates passed in: the work after the evaluation of RG15.1, not planned yet |
 | RG16.13 | #2828, #2829 | `ObjectKinematicTree` on the HT directly: RG16.13.6 to RG16.13.9 |
-| RG17.4.3 | #2842 | `SC.AppendSystem` of a system Python owns: deleted twice, an access violation |
 | RG17.5 | #2831 | the snippets of the user manual as notebooks: a proposal |
 
 <a id="not-decided"></a>

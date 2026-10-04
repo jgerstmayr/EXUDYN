@@ -201,6 +201,16 @@ class MainSystemContainer // : public SystemContainer
 {
 protected:
 	ResizableArray<MainSystem*> mainSystems;			//!< contains one or a set of complete multibody/finite element systems
+
+	//! a system added with AppendSystem belongs to Python or to another container: Reset() does not delete it but gives
+	//! it back the container and index it had before (#2842)
+	struct AppendedSystem
+	{
+		MainSystem* mainSystem;
+		MainSystemContainer* previousContainer;
+		Index previousIndex;
+	};
+	std::vector<AppendedSystem> appendedSystems;
 	VisualizationSystemContainer visualizationSystems;  //!< contains all linking to visualization
 	//should be after visualizationSystems due to initialization
 	MainRenderer renderer;								//!< substructure mainly for Python: in Python this represents the substructure which handles all rendering tasks
@@ -301,6 +311,9 @@ public:
 
 	//! append an existing mainSystem, which is already initialized to SystemContainer
 	Index AppendMainSystem(MainSystem& mainSystem);
+
+	//! link a mainSystem into the container (the part of AddMainSystem and AppendMainSystem they share)
+	Index LinkMainSystem(MainSystem& mainSystem);
 
 	//! delete all MainSystems, detach render engine from main systems and and, delete all VisualizationSystems
 	void Reset();

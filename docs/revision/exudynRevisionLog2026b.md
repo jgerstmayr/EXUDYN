@@ -14734,3 +14734,24 @@ other recorded files differed by rounding and were set back), and `settings.json
 `connectors.curveTiling=16` and `connectors.springDraw3D=True` now. The item images of `ObjectConnectorSpringDamper`,
 `ObjectConnectorCartesianSpringDamper` and `ObjectConnectorReevingSystemSprings` drawn again, with `curveTiling = 64`
 and `springDraw3D = True` in `itemImages.py`. The reference of `parameterConversionTest.py` lists the two new settings.
+
+<a id="rg17-4-3"></a>
+### RG17.4.3 — SC.AppendSystem does not delete what it did not create (2026-10-04, #2842)
+
+*(Maintainer 2026-10-04: "Continue with 1-3 of the suggested next tasks.")*
+
+`MainSystemContainer::Reset()` - also called by the destructor - deleted every `MainSystem` in its list. A system added
+by `AppendSystem` is not the container's: a copy (`copy.copy(mbs)`, made by pickle) belongs to its Python object, the
+system of another container to that container. Both were deleted twice - an access violation when the container or
+Python ended -, and a copy whose Python name was deleted first left a dangling pointer in the container.
+
+Now: the container records what `AppendSystem` added (`appendedSystems`, with the container and index the system had
+before), `Reset()` does not reset or delete those, and gives a system the container and index it had back; the binding
+holds the appended system alive as long as the container (`py::keep_alive<1, 2>`), so the order in which Python deletes
+the names does not matter. `AddSystem` and `AppendSystem` share `LinkMainSystem`. The reference manual says so.
+
+The test model `appendSystemTest.py`: a copy appended and its name deleted before the container; `SC.Reset()` with an
+appended copy, which works afterwards in a second container; the system of another container appended and that
+container deleted - each solved, no crash at the end. `simulatorCouplingTwoMbs.py`, which appends the system of another
+container, passes as before. The copy example of the reference manual is the part `copy` of `generalInformation.ipynb`
+now; its comments say that the container keeps the copy.

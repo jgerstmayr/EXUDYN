@@ -254,15 +254,24 @@ MainSystem& MainSystemContainer::AddMainSystem()
 
 	MainSystem* mainSystem = new MainSystem();
 
-	AppendMainSystem(*mainSystem);
+	LinkMainSystem(*mainSystem);
 
 	mainSystem->Reset(); //guarantee same behavior as with Reset itself
 	
 	return *mainSystem;
 }
 
-//! append an existing mainSystem, which is already initialized to SystemContainer
+//! append an existing mainSystem, which is already initialized to SystemContainer; it is not owned by the container:
+//! Python keeps it alive as long as the container (keep_alive in the binding), and Reset() does not delete it (#2842)
 Index MainSystemContainer::AppendMainSystem(MainSystem& mainSystem)
+{
+	MainSystemContainer* previousContainer = mainSystem.HasMainSystemContainer() ? &mainSystem.GetMainSystemContainer() : nullptr;
+	appendedSystems.push_back({ &mainSystem, previousContainer, mainSystem.GetMainSystemIndex() });
+	return LinkMainSystem(mainSystem);
+}
+
+//! link a mainSystem into the container: its visualization, the list of systems and the backlinks
+Index MainSystemContainer::LinkMainSystem(MainSystem& mainSystem)
 {
 	//GetCSystems().Append(mainSystem.GetCSystem());
 	visualizationSystems.Append(&mainSystem.GetVisualizationSystem());
@@ -286,6 +295,22 @@ void MainSystemContainer::Reset()
 	visualizationSystems.Reset(); //this takes care that no invalid pointers to some VisualizationSystem are left
 	for (auto item : mainSystems)
 	{
+		bool appended = false;
+		for (const AppendedSystem& appendedSystem : appendedSystems)
+		{
+			if (appendedSystem.mainSystem == item)
+			{
+				//not ours: it gets back the container it had, and its owner deletes it (#2842)
+				appended = true;
+				if (item->HasMainSystemContainer() && &item->GetMainSystemContainer() == this)
+				{
+					item->SetMainSystemContainer(appendedSystem.previousContainer);
+					item->SetMainSystemIndex(appendedSystem.previousIndex);
+				}
+			}
+		}
+		if (appended) { continue; }
+
 		item->UnlinkVisualizationSystem();
 		item->Reset();
 
@@ -293,6 +318,7 @@ void MainSystemContainer::Reset()
 		delete item; //allocated in AddMainSystem; MainItems are deleted in MainSystemData.Reset()
 	}
 	mainSystems.Flush();
+	appendedSystems.clear();
 	//pout << "MainSystemContainer::Reset() finished" << "\n";
 	//visualizationSystems are already deleted by "delete item" above: DON'T DO THAT; visualizationSystems.Reset();
 }

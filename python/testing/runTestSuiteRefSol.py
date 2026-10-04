@@ -37,6 +37,7 @@ def TestExamplesReferenceSolution():
         'SwitchingConstraintsTest.py': 0.,
         'abaqusImportTest.py': 0.0005885208722206048,               #new 2023-04-20; 5 modes as 8 modes have sensitive "half mode included"
         'allExudynModulesTest.py': 1.0,                               #new 2026-02-03; test all modules (if some major error is contained...)
+        'appendSystemTest.py': 6.274157091191782,                     #new 2026-10-04: SC.AppendSystem of a copy and of the system of another container, deleted once (#2842)
         'ANCFBeamTest.py': 1.010486312035481,                        #new 2023-04-04, after resolving local kappa bug; 2026-10-02: the rotation of the slope nodes consistent (#2763), -2.6e-10
         'ANCFcable2DuserFunction.py': 0.6015588367721973,           #new 2023-12-13
         'ANCFCableBeamDampingTest.py': 0.1899233557201726,          #new 2026-03-25, checking damping between ANCFCable2D and ANCFBeam; 2026-10-02: the rotation of the slope nodes consistent (#2763)

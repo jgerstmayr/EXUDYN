@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 265 | 1.12.284 |
+| 1.12 | Metheney | 266 | 1.12.285 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.285** <span class="textred">`BUG`</span> `HIGH` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` SystemContainer.AppendSystem of a MainSystem that Python owns crashes at the end (#2842)
+  - description: SC.AppendSystem(mbsCopy) with mbsCopy = copy.copy(mbs) - the example 'Copying and referencing C++ objects' of the reference manual - ends in an access violation when SC is deleted or the interpreter exits: AppendMainSystem stores the pointer and MainSystemContainer::Reset() deletes every MainSystem it holds, while the copy made by pickle belongs to its Python object, which deletes it again; deleting mbsCopy before SC leaves a dangling pointer in SC. The same holds for a MainSystem appended to a second container (simulatorCouplingTwoMbs.py). Needs an ownership rule: the container deletes only the systems it created (AddSystem), and AppendSystem keeps the appended one alive (keep\_alive) and unlinks it in Reset. Found by running the examples of the reference manual as notebooks, revision2026b step RG17.4.
+  - **notes:** Fixed: SC.AppendSystem(mbs) with a copy of a system (copy.copy) or the system of another container no longer crashes Python when the container is deleted: the container keeps an appended system alive but does not delete it, and SC.Reset() leaves it to its owner.
+  - date resolved: **2026-10-04 15:51**, date raised: 2026-10-04
 - **1.12.284** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` curves of connectors drawn with a tiling of their own, as watertight tubes (#2839)
   - description: The maintainer, 2026-10-04: 'CObjectConnectorReevingSystemSprings: graphics uses nTile = visualizationSettings.general.cylinderTiling, which is wrong; first: the nTiles should depend on the angle; second: it should be a new SC.visualizationSettings.connectors.curveTiling or a similar name, which should also be used by windings resolution in spring-dampers. And we need a function to draw watertight curves along a line, which could be used then both for the reeving system and the spring windings (if drawn in 3D - with a new flag).' revision2026b step RG6.9.
   - **notes:** Springs and the rope of ObjectConnectorReevingSystemSprings are drawn with visualizationSettings.connectors.curveTiling segments per full turn (the arc of a rope with the share of its angle); connectors.springDraw3D draws the windings of springs as a tube; the rope is one closed tube along its spans and arcs.

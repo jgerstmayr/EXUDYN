@@ -1274,7 +1274,10 @@ class SystemContainer:
         ...
     @overload
     def AppendSystem(self, mainSystem: MainSystem) -> int: 
-        """Append an exsiting computational system to the system container; returns the number of MainSystem in system container."""
+        """Append an existing MainSystem - a copy, or the system of another container - to the system container; returns its index in the container.
+        
+        The container keeps the system alive but does not own it: SC.Reset() and the end of the container leave it to its owner, and the system of another container gets that container back (#2842)
+        """
         ...
     @overload
     def NumberOfSystems(self) -> int: 

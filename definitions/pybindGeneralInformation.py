@@ -92,29 +92,7 @@ There are only a few very important cases where data is referenced in Exudyn , t
 The following code snippets and comments should explain this behavior:
 """, section='Copying and referencing C++ objects', sectionLevel=2, sectionLabel='sec:generalPythonInterface:copyref')
 
-pb.AddDocuCodeBlock(code="""
-import copy                        #for real copying
-import exudyn as exu
-from exudyn.utilities import *
-#create system container, referenced from SC:
-SC = exu.SystemContainer()
-SC2 = SC                           #this will only put a reference to SC
-                                   #SC2 and SC represent the SAME C++ object
-#add a MainSystem (multibody system):
-mbs = SC.AddSystem()               #get reference mbs to C++ system
-mbs2=mbs                           #again, mbs2 and mbs refer to the same C++ object
-og = mbs.AddObject(ObjectGround()) #copy data of ObjectGround() into C++
-o0 = mbs.GetObject(0)              #get copy of internal data as dictionary
-
-mbsCopy=copy.copy(mbs)             #mbsCopy is now a real copy of mbs; uses pickle; experimental!
-SC.AppendSystem(mbsCopy)                #this is needed to work with mbsCopy
-
-del o0                             #delete the local dictionary; C++ data not affected
-del mbs, mbs2                      #references to mbs deleted (C++ data still available)
-del mbsCopy                        #now also copy of mbs destroyed
-del SC                             #references to SystemContainer deleted
-#at this point, mbs and SC are not available any more (data will be cleaned up by Python)
-""")
+pb.AddDocuNotebook('python/Notebooks/reference/generalInformation.ipynb', part='copy')
 
 #+++++++++++++++++++++++++++++++++++
 #EXCEPTIONS
