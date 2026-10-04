@@ -66,6 +66,20 @@ def UsedMacros(paths):
     return used
 
 
+def BlankLinesInDisplayMath(paths):
+    """the display formulas ($$...$$) that contain a blank line: Sphinx splits a formula at a blank line
+    into separate equations, which tears an aligned environment apart - the page then shows
+    '\\begin{aligned} ended with \\end{split}' instead of the formula (#2834)"""
+    found = []
+    for path in paths:
+        text = io.open(path, encoding='utf-8').read()
+        text = re.sub(r'(?m)^[ ]*```.*?^[ ]*```', '', text, flags=re.S)
+        for piece in re.findall(r'(?<!\\)\$\$.*?\$\$', text, flags=re.S):
+            if re.search(r'\n[ \t]*\n', piece.strip('$').strip('\n')):
+                found.append((path, piece.strip('$').strip()[:60]))
+    return found
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check', action='store_true', help='exit 1 when a macro is missing')
@@ -78,6 +92,16 @@ def main():
                              + glob.glob('docs/generated/**/*.md', recursive=True)))
     missing = {name: files for (name, files) in used.items()
                if name not in declared and name not in BUILT_IN}
+
+    blank = BlankLinesInDisplayMath(sorted(glob.glob('docs/manual/*.md') + glob.glob('docs/dev/*.md')
+                                           + glob.glob('docs/howTo/*.md')
+                                           + glob.glob('docs/generated/**/*.md', recursive=True)))
+    if blank:
+        print('BLANK LINES inside display math - Sphinx splits the formula there; remove them:')
+        for (path, start) in blank:
+            print('   ' + path + ': ' + start)
+        if args.check:
+            return 1
 
     if len(missing) == 0:
         print('OK: all ' + str(len(used)) + ' macros used in the documentation math are known to '

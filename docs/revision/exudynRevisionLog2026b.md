@@ -14457,3 +14457,39 @@ evaluation of 2026-09-30: the raytracer draws spheres and curved shapes (RG6.7),
 - the tutorials: six manual pages (`tutorial*.md`), each naming its script in `python/Examples/`
   (`springDamperTutorial*.py`, `rigidBodyTutorial3.py`, `beamTutorial.py`, ...).
 The recommendation is in the plan (RG17.1), its realization RG17.2 (#2831).
+
+<a id="rg2-5"></a>
+### RG2.5, RG10.15, RG3.32, RG3.33 — what a colleague met installing Exudyn (2026-10-04, #2832 to #2835)
+
+*(Feedback of a colleague installing Exudyn and reading the documentation, forwarded by the maintainer 2026-10-04:
+the test suite needs matplotlib; `exudev env` asks for `venvP310`; the start page "reads strange"; "\begin{aligned}
+ended with \end{split}" on the HTML pages - "root cause of the problems should be fixed".)*
+
+**RG2.5** (#2832): measured with matplotlib blocked by an import hook (a `sitecustomize.py` that raises
+`ModuleNotFoundError`): 9 of 158 test models failed. Eight plot after or instead of computing their result
+(`PlotSensor`, `matplotlib.pyplot`); `allExudynModulesTest.py` failed because `exudyn.misc.resultsMonitor` imported
+matplotlib at module level - against rule 6, an optional package fails at the point of use. Now
+`resultsMonitor` imports it if present and `ResultsMonitor` raises an `ImportError` naming it; `runTestSuite.py` reads
+from the error of a failing model whether a package of the `[tests]` extra is missing
+(`testRunnerTools.MissingTestsExtraPackage`: `No module named 'x'`, or the message of `PlotSensor`/the monitor) and
+then reports the model as SKIPPED - unless its result was computed before and agrees, then it passes as before. The
+summary lists the skipped models with `pip install exudyn[tests]`. Deciding by the error, not by the source: a first
+version that scanned the imports skipped 72 models, most of which import matplotlib only in a branch they do not run.
+Without matplotlib: 150 test models pass, 8 skipped, exit code 0; with it, nothing changes.
+
+**RG10.15** (#2833): `exudev env` without `--py`/`--env` took the whole version matrix P310 to P314 and stopped at
+the first environment that does not exist. It now probes the existing ones and names the missing ones as needed only
+for `exudev build --complete`, which keeps requiring all (`test_exudev.py`).
+
+<a id="rg3-32"></a>
+**RG3.32** (#2834): Sphinx splits the content of a math directive at blank lines into separate equations and wraps each
+with a `\\` in `split`, so an `aligned` environment with a blank line in it is torn into `\begin{split}\begin{aligned}
+... \end{split}`, which MathJax refuses. The blank lines came from LaTeX comment lines (`%`) inside the formulas of the
+definitions, which `latexToMarkdown.StripMathComments` emptied but kept (`ObjectRigidBody`, `ObjectANCFCable2D` (3),
+`ObjectConnectorSpringDamper`, `ObjectConnectorRollingDiscPenalty`), and from seven formulas of the hand-written
+`docs/manual/solver.md`. The converter now drops every blank line inside `$$...$$`; `checkMathMacros.py --check` (part
+of the checks of `exudev generate --all-checks`) refuses a blank line inside display math in `docs/`.
+
+**RG3.33** (#2835): the paragraph "This page is the table of contents, and it is hand-written ..." was a note for
+maintainers on the page every reader opens first; removed, and `docs/dev/README.md` names `index.md` as the
+hand-written table of contents in its repository layout.

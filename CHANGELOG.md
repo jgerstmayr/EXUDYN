@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 254 | 1.12.273 |
+| 1.12 | Metheney | 258 | 1.12.277 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.277** `DOCU` `LOW` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the start page of the documentation talks about how the documentation is made (#2835)
+  - description: Feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: 'The text This page is the table of contents, and it is hand-written ... in index.html reads strange =\> remove.' Root cause: a note for maintainers on a page for readers. Removed there; the information is in the repository layout of docs/dev/README.md. revision2026b step RG3.33.
+  - **notes:** The start page of the documentation no longer explains how the documentation is made.
+  - date resolved: **2026-10-04 10:36**, date raised: 2026-10-04
+- **1.12.276** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` aligned formulas break in the HTML pages: begin{aligned} ended with end{split} (#2834)
+  - description: Feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: 'In the html doc, sometimes \\begin{aligned} ended with \\end{split} occurs (e.g. ObjectRigidBody). This should be fixed globally.' Cause: Sphinx splits a display formula at a blank line into separate equations, each wrapped in split, which tears an aligned environment apart; the blank lines came from LaTeX comment lines ('%') inside the formulas of the definitions, which the converter emptied but did not remove (4 item pages), and from blank lines in docs/manual/solver.md (7 formulas). The converter removes such lines; checkMathMacros --check refuses a blank line inside display math. revision2026b step RG3.32.
+  - **notes:** Aligned formulas in the HTML documentation no longer break apart (begin{aligned} ended with end{split}).
+  - date resolved: **2026-10-04 10:36**, date raised: 2026-10-04
+- **1.12.275** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev env stops at the first environment of the version matrix that a developer does not have (#2833)
+  - description: Feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: 'exudev env error message: the conda environment venvP310 does not exist. It searches for all packages of the python matrix for a complete build - not required by a developer that does not do the release-runs and tests. Only for a complete build, different venvs for different Python versions shall be required.' Without --py or --env, exudev env now probes the environments that exist and names the missing ones of the matrix as needed only for build --complete. revision2026b step RG10.15.
+  - **notes:** exudev env no longer requires the environments of the whole Python version matrix; they are needed only for exudev build --complete.
+  - date resolved: **2026-10-04 10:36**, date raised: 2026-10-04
+- **1.12.274** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the test suite fails without matplotlib instead of saying what to install (#2832)
+  - description: Feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: 'The test-suite needs matplotlib to be installed; otherwise, it fails. Should it be like that?' Measured with matplotlib blocked: 9 test models failed - eight plot (PlotSensor, matplotlib.pyplot) after or instead of computing their result, and allExudynModulesTest failed because exudyn.misc.resultsMonitor imported matplotlib at module level. matplotlib is optional (rule 6), part of the \[tests\] extra. Now: resultsMonitor imports it when it is there and says so when the monitor is started without it; a test model that fails for a missing package of the \[tests\] extra is SKIPPED, listed at the end with 'pip install exudyn\[tests\]', and does not fail the run - unless it computed its result before, then it is judged as usual. revision2026b step RG2.5.
+  - **notes:** The test suite runs without matplotlib and the other packages of the \[tests\] extra: a test model that needs a missing one is skipped and listed with pip install exudyn\[tests\].
+  - date resolved: **2026-10-04 10:36**, date raised: 2026-10-04
 - **1.12.273** `CHANGE` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the unused 6x6 Pluecker matrices of the kinematic tree are removed (#2828)
   - description: The maintainer, 2026-10-04: 'the kinematic tree uses the C++ HT, it is a typedef in KinematicsBasics.h ... first remove the unused T66 Pluecker transformations (inside \#ifndef USE\_EFFICIENT\_TRANSFORMATION66 ...)'. USE\_EFFICIENT\_TRANSFORMATION66 was always defined, so Transformation66 is HomogeneousTransformation and the 300 lines of Matrix6D implementations were never compiled. revision2026b step RG16.13.5.
   - **notes:** The unused 6x6 Pluecker matrix implementation of the kinematic tree was removed; the tree computes with homogeneous transformations.

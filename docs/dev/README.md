@@ -56,6 +56,7 @@ python/MiniExamples/                      the generated mini examples
 python/Examples/                          the examples
 python/testing/                           the runners: runTestSuite.py and the rest
 python/logs/                              testmodels/ examples/ performance/ tmp/
+index.md                                  the table of contents of the documentation, hand-written: what comes in which order
 docs/manual/                              the user manual, hand-written Markdown
 docs/generated/                           the generated documentation (emitters, issue tracker)
 docs/figures/                             the images of the documentation

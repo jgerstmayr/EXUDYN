@@ -1,0 +1,17 @@
+{
+  "number": 2834,
+  "title": "aligned formulas break in the HTML pages: begin{aligned} ended with end{split}",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "Feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: 'In the html doc, sometimes \\begin{aligned} ended with \\end{split} occurs (e.g. ObjectRigidBody). This should be fixed globally.' Cause: Sphinx splits a display formula at a blank line into separate equations, each wrapped in split, which tears an aligned environment apart; the blank lines came from LaTeX comment lines ('%') inside the formulas of the definitions, which the converter emptied but did not remove (4 item pages), and from blank lines in docs/manual/solver.md (7 formulas). The converter removes such lines; checkMathMacros --check refuses a blank line inside display math. revision2026b step RG3.32.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "dateResolved": "2026-10-04 10:36",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/generators/latexToMarkdown.py",
+  "releaseNotes": "Aligned formulas in the HTML documentation no longer break apart (begin{aligned} ended with end{split}).",
+  "resolvedInVersion": "1.12.276"
+}

@@ -1,0 +1,17 @@
+{
+  "number": 2835,
+  "title": "the start page of the documentation talks about how the documentation is made",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "DOCU",
+  "priority": "LOW",
+  "effort": "LOW",
+  "description": "Feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: 'The text This page is the table of contents, and it is hand-written ... in index.html reads strange => remove.' Root cause: a note for maintainers on a page for readers. Removed there; the information is in the repository layout of docs/dev/README.md. revision2026b step RG3.33.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "dateResolved": "2026-10-04 10:36",
+  "resolvedAuthor": "Claude-JG",
+  "file": "index.md",
+  "releaseNotes": "The start page of the documentation no longer explains how the documentation is made.",
+  "resolvedInVersion": "1.12.277"
+}

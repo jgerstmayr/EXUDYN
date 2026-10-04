@@ -4,11 +4,6 @@
 a C++ computational core exposed to Python, built for efficient simulation of rigid and flexible
 multibody systems, and for automated model setup and parameter variation from Python.
 
-This page is the table of contents, and it is **hand-written** — the only page of the
-documentation that says what comes in which order. Everything under `docs/generated/` is written
-by the emitters in `tools/generators/` and by the issue tracker; everything under `docs/manual/`,
-`docs/dev/` and `docs/howTo/` is written by people.
-
 New here? Read {ref}`Getting started <sec-installation-gettingstarted>`, then the
 [Tutorial](docs/manual/tutorial.md). What changed between releases is in {ref}`Revisions <sec-revisions>`, every resolved
 issue in the [changelog](CHANGELOG.md), and the issues themselves in the

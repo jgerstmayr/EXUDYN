@@ -133,6 +133,7 @@ if quietMode:
 #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #choose which tests to run:
 TSScope.runTestExamples = True
+TSScope.skippedMissingPackages = {} #test models skipped for a package of the [tests] extra (#2832)
 TSScope.runMiniExamples = True
 TSScope.runCppUnitTests = True
 
@@ -348,6 +349,7 @@ if TSScope.runTestExamples:
         exu.config.outputDirectory = TSScope.solutionDirectory + '/' + TSScope.file[:-3]
         TSScope.testError = -1 #default value !=-1, if there is an error in the calculation
         TSScope.testResult = TSScope.invalidResult #strange default value to see if there is a missing testResult
+        TSScope.missingPackage = '' #set if the model fails for a package of the [tests] extra (#2832)
         #the channel a model uses (#2632): exu.sys instead of an
         #import of this module. It is cleared for every model, because exu.sys lives as long as
         #the interpreter and a value left over from the previous model would be read as this
@@ -368,9 +370,11 @@ if TSScope.runTestExamples:
                 if TSScope.modelRun['failed']:
                     exu.Print('TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file
                               + '") terminated with an error, see its output above')
+                    TSScope.missingPackage = testRunnerTools.MissingTestsExtraPackage(TSScope.modelRun['output'])
             else:
                 exec(open(TSScope.file, encoding='utf8').read(), globals())
         except Exception as e:
+            TSScope.missingPackage = testRunnerTools.MissingTestsExtraPackage(repr(e) + str(e))
             exu.Print('TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") raised exception:\n'+str(e))
             print('TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") raised exception:\n'+str(e), flush=True)
         finally:
@@ -417,7 +421,12 @@ if TSScope.runTestExamples:
             #comparison error. Keep that dictionary as it was, and record the final error here.
             TSScope.examplesTestFinalErrorList[TSScope.name] = TSScope.testError
 
-            if abs(TSScope.testError) < TSScope.testModelTolerance:
+            #a package of the [tests] extra is missing: skipped, not failed - unless the result was computed before (#2832)
+            if TSScope.missingPackage != '' and not abs(TSScope.testError) < TSScope.testModelTolerance:
+                exu.Print('  TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") SKIPPED: needs '
+                          + TSScope.missingPackage + ', which is not installed')
+                TSScope.skippedMissingPackages[TSScope.file] = TSScope.missingPackage
+            elif abs(TSScope.testError) < TSScope.testModelTolerance:
                 exu.Print('******************************************')
                 exu.Print('  TESTMODEL ' + str(TSScope.testExamplesCnt) + ' ("' + TSScope.file + '") FINISHED SUCCESSFUL')
                 exu.Print('  RESULT = ' + str(TSScope.testResult))
@@ -561,7 +570,7 @@ exu.Print('time elapsed =',round(TSScope.timeStart,3),'seconds')
 totalFails = 0
 if TSScope.runTestExamples:
     if len(testsFailed) == 0:
-        exu.Print('ALL ' + str(TSScope.totalTests) + ' TestModel TESTS SUCCESSFUL')
+        exu.Print('ALL ' + str(TSScope.totalTests - len(TSScope.skippedMissingPackages)) + ' TestModel TESTS SUCCESSFUL')
     else:
         exu.Print(str(len(testsFailed)) + ' TestModel TEST(S) OUT OF '+ str(TSScope.totalTests) + ' FAILED: ')
         for i in testsFailed:
@@ -570,6 +579,11 @@ if TSScope.runTestExamples:
     totalFails+=len(testsFailed)
 else:
     exu.Print(', EXAMPLE TESTS SKIPPED')
+if TSScope.runTestExamples and TSScope.skippedMissingPackages:
+    exu.Print(str(len(TSScope.skippedMissingPackages)) + ' TestModel(s) SKIPPED, packages not installed '
+              + '(pip install exudyn[tests]):')
+    for name, missing in sorted(TSScope.skippedMissingPackages.items()):
+        exu.Print('  ' + name + ': needs ' + missing)
     
 if TSScope.runMiniExamples:
     if len(miniExamplesFailed) == 0:

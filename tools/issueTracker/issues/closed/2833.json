@@ -1,0 +1,17 @@
+{
+  "number": 2833,
+  "title": "exudev env stops at the first environment of the version matrix that a developer does not have",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "Feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: 'exudev env error message: the conda environment venvP310 does not exist. It searches for all packages of the python matrix for a complete build - not required by a developer that does not do the release-runs and tests. Only for a complete build, different venvs for different Python versions shall be required.' Without --py or --env, exudev env now probes the environments that exist and names the missing ones of the matrix as needed only for build --complete. revision2026b step RG10.15.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "dateResolved": "2026-10-04 10:36",
+  "resolvedAuthor": "Claude-JG",
+  "file": "tools/exudev/commands.py",
+  "releaseNotes": "exudev env no longer requires the environments of the whole Python version matrix; they are needed only for exudev build --complete.",
+  "resolvedInVersion": "1.12.275"
+}

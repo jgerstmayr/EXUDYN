@@ -1,0 +1,17 @@
+{
+  "number": 2832,
+  "title": "the test suite fails without matplotlib instead of saying what to install",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "FIX",
+  "priority": "NORMAL",
+  "effort": "LOW",
+  "description": "Feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: 'The test-suite needs matplotlib to be installed; otherwise, it fails. Should it be like that?' Measured with matplotlib blocked: 9 test models failed - eight plot (PlotSensor, matplotlib.pyplot) after or instead of computing their result, and allExudynModulesTest failed because exudyn.misc.resultsMonitor imported matplotlib at module level. matplotlib is optional (rule 6), part of the [tests] extra. Now: resultsMonitor imports it when it is there and says so when the monitor is started without it; a test model that fails for a missing package of the [tests] extra is SKIPPED, listed at the end with 'pip install exudyn[tests]', and does not fail the run - unless it computed its result before, then it is judged as usual. revision2026b step RG2.5.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "dateResolved": "2026-10-04 10:36",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/testing/runTestSuite.py",
+  "releaseNotes": "The test suite runs without matplotlib and the other packages of the [tests] extra: a test model that needs a missing one is skipped and listed with pip install exudyn[tests].",
+  "resolvedInVersion": "1.12.274"
+}

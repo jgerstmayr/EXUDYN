@@ -110,8 +110,17 @@ def StripMathComments(text):
     def Strip(match):
         return re.sub(r'(?<!\\)%[^\n]*', '', match.group(0))
 
-    for pattern in [r'(?<!\\)\$\$.*?\$\$', r'(?<!\\)\$(?:\\.|[^$\\])*\$']:
-        text = re.sub(pattern, Strip, text, flags=re.S)
+    def StripDisplay(match):
+        #a line that was only a comment goes entirely, and so does any blank line: Sphinx splits a
+        #display formula at a blank line into separate equations, which tears an aligned environment
+        #apart ("\begin{aligned} ended with \end{split}" on the page, #2834)
+        lines = Strip(match).split('\n')
+        if len(lines) < 3:
+            return '\n'.join(lines)
+        return '\n'.join([lines[0]] + [line for line in lines[1:-1] if line.strip() != ''] + lines[-1:])
+
+    text = re.sub(r'(?<!\\)\$\$.*?\$\$', StripDisplay, text, flags=re.S)
+    text = re.sub(r'(?<!\\)\$(?:\\.|[^$\\])*\$', Strip, text, flags=re.S)
     return text
 
 

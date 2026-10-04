@@ -49,7 +49,6 @@ The system equations of motion in Exudyn follow the notations of {ref}`sec-nomen
 
 $$
 \begin{aligned}
-
   \Mm \ddot \qv + \frac{\partial \gv}{\partial \qv^\mathrm{T}} \tlambda_q +
                   \frac{\partial \gv}{\partial \dot \qv^\mathrm{T}} \tlambda_{\dot q}
                   & = &\fv_\SO(\qv, \dot \qv, t) \\
@@ -131,7 +130,6 @@ The {ref}`ODE1 <ODE1>` and {ref}`ODE2 <ODE2>` equations of {eq}`eq-systemeom`, w
 
 $$
 \begin{aligned}
-
   \dot \qv &= \vel \\
   \dot \vel & = &\Mm^{-1} \fv_\SO(\qv, \vel, t) \\
   \dot \yv & = &\fv_\FO(\yv, t) \\
@@ -273,7 +271,6 @@ The $2^\mathrm{nd}$ order differential equations displacements and velocities an
 
 $$
 \begin{aligned}
-
   \qv_T & = &      \qv_0 + h \dot \qv_0 + h^2 (\frac 1 2 -\beta) \aalg_0 + h^2 \beta \aalg_T\\
   \dot \qv_T & = & \dot \qv_0 + h (1-\gamma) \aalg_0 + h\gamma \aalg_T\\
   \yv_T & = & \yv_0 + h (1-\gamma_\FO) \vel^0_\FO + h\gamma_\FO \vel^T_\FO
@@ -348,7 +345,6 @@ Thus, the residuals at the end of the time step ($T$) read (put all terms to {re
 
 $$
 \begin{aligned}
-
   \rv^\GA_\SO &= \Mm \ddot \qv_T + \frac{\partial \gv}{\partial \qv^\mathrm{T}} \tlambda_T - \fv_\SO(\qv_T, \dot \qv_T, t) = 0\\
   \rv^\GA_\FO &= \dot \yv_T + \frac{\partial \gv}{\partial \yv^\mathrm{T}} \tlambda_T - \fv_\FO(\yv_T, t) = 0\\
   \rv^\GA_\AE &= \gv(\qv_T, \dot \qv_T, \yv_T, \tlambda_T, t) = 0
@@ -443,7 +439,6 @@ $$
   \frac{\partial \gv}{\partial \dot \qv}\ddot \qv_0 =
     -\frac{\partial \gv}{\partial \qv} \dot \qv_0
     -\frac{\partial \gv}{\partial \yv} \dot \yv_0
-
     -  \frac{\partial \gv}{\partial t} \, .
 $$
 Finally, the equations for the computation of the initial accelerations read for velocity level constraints,
@@ -467,7 +462,6 @@ $$
   \frac{\partial^2 \gv}{\partial \qv^2} \dot \qv_0^2 +
   2 \frac{\partial^2 \gv}{\partial \qv \partial t} \dot \qv_0 +
   \frac{\partial \gv}{\partial \qv} \ddot \qv_0 +
-
   \frac{\partial^2 \gv}{\partial t^2} = 0 \, .
 $$ (eq-initialaccelerationspos)
 
@@ -477,7 +471,6 @@ $$
   \frac{\partial \gv}{\partial \qv} \ddot \qv_0 =
   - 2 \frac{\partial^2 \gv}{\partial \qv \partial t} \dot \qv_0
   - \frac{\partial^2 \gv}{\partial \qv^2} \dot \qv_0^2
-
   - \frac{\partial^2 \gv}{\partial t^2} \, .
 $$
 Finally, the equations for the computation of the initial accelerations for position level constraints read

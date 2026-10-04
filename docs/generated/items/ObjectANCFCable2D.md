@@ -229,7 +229,6 @@ By derivation, we obtain the variation of axial strain
 
 $$
 \delta \varepsilon =\frac{\partial \varepsilon}{\partial q_i}\delta q_i
-
 =\frac{1}{\Vert \rv'\Vert}\rv'^{T}\Sm'_i \delta q_i.
 $$ (eq-cable2d-deltaepsilon)
 
@@ -277,7 +276,6 @@ The time derivatives of axial strain $\dot \varepsilon_p$ follows by elementary 
 
 $$
 \dot \varepsilon =  \frac{\partial }{\partial t}\left(\Vert \rv'\Vert-1 \right)
-
 = \frac{1}{\Vert \rv'\Vert} \rv^{\prime T} \Sm' \dot \qv
 $$
 
@@ -287,7 +285,6 @@ $$
 \begin{aligned}
 \dot K & = &  \frac{\partial }{\partial t}\left(\ev_3^T\frac{ \rv'\times \rv'' }{\Vert \rv'\Vert^2}\right) \\
 & = &\frac{\ev_3^T}{(\rv'^T \rv')^2} \left( (\rv'^T \rv')   \frac{\partial \left( \rv' \times \rv'' \right)^T }{\partial t} -\left( \rv' \times \rv'' \right)^T  \frac{\partial  (\rv'^T \rv')}{\partial t} \right)\\
-
 & = &  \frac{\ev_3^T}{(\rv'^T \rv')^2}\left((\rv'^T \rv')\left((\Sm' \dot \qv) \times \rv'' + (\Sm'' \dot \qv) \times \rv'\right)-\left( \rv' \times \rv'' \right) (2\rv'^T (\Sm' \dot \qv)) \right) .
 \end{aligned}
 $$

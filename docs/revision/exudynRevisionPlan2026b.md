@@ -155,6 +155,12 @@ NOT cover, and about the testing that no suite can do.
     **The list and the model DONE 2026-09-29** — [log](exudynRevisionLog2026b.md#rg2-4); **the checks
     themselves** are done once per release on Windows, Ubuntu and macOS, and RG1.4 waits for them.
 
+<a id="rg2-5"></a>
+**RG2.5** **DONE 2026-10-04** (#2832) — [log](exudynRevisionLog2026b.md#rg2-5) *(group RG2; feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: "The
+test-suite needs matplotlib to be installed; otherwise, it fails. Should it be like that?")* **The test suite without
+matplotlib**: a test model that fails for a missing package of the `[tests]` extra is skipped and listed with
+`pip install exudyn[tests]`, `exudyn.misc.resultsMonitor` imports matplotlib only if it is there.
+
 <a id="rg2-3"></a>
 **RG2.3** *(group RG2; maintainer 2026-09-22)* **A graphics regression suite** (#2582). RG2.1
     leaves one model, one setting and one checksum. What is wanted: several models against
@@ -490,6 +496,17 @@ where one fits), for the items whose page gains from a picture.
       adjusted by hand, image by image;
     - **RG3.31.3** the images in `docs/figures/`, each named on the page of its item (`{image}` in the
       `detailedDescription`, as the joints do), and a look at every page.
+
+<a id="rg3-32"></a>
+**RG3.32** **DONE 2026-10-04** (#2834) — [log](exudynRevisionLog2026b.md#rg3-32) *(group RG3; feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04:
+"\begin{aligned} ended with \end{split} ... should be fixed globally")* **A display formula has no blank line**: the
+converter removes the lines a LaTeX comment leaves inside `$$...$$`, `docs/manual/solver.md` lost seven blank lines, and
+`checkMathMacros --check` refuses a blank line inside display math.
+
+<a id="rg3-33"></a>
+**RG3.33** **DONE 2026-10-04** (#2835) — [log](exudynRevisionLog2026b.md#rg3-32) *(group RG3; feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04: "reads
+strange => remove")* **The start page says nothing about how the documentation is made**: the paragraph on the
+hand-written table of contents left `index.md`; `docs/dev/README.md` names `index.md` in the repository layout.
 
 
 ## RG4 — Implementation problems and bugs
@@ -1092,6 +1109,12 @@ file, so an editor cannot complete them).
 
 <a id="rg10-14"></a>
 **RG10.14** **DONE 2026-09-30** (#2760) — [log](exudynRevisionLog2026b.md#rg10-14) · [plan text](exudynRevisionLog2026b.md#plan-rg10-14) — `exudev` runs the pytest files and the MiniExample performance run.
+
+<a id="rg10-15"></a>
+**RG10.15** **DONE 2026-10-04** (#2833) — [log](exudynRevisionLog2026b.md#rg2-5) *(group RG10; feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04:
+"Only for a complete build, different venvs for different Python versions shall be required")* **`exudev env` probes the
+environments that exist**: without `--py` or `--env`, the missing ones of the version matrix are named as needed only
+for `build --complete`, instead of stopping the command.
 
 ## RG11 — Misc
 

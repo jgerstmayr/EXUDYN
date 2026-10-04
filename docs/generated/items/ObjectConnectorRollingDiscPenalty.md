@@ -202,7 +202,6 @@ $$
 \left\{
 \begin{array}{ccl}
 \displaystyle \frac{\LU{J1}{\vv_t}}{|\vv_t|} &\mathrm{if}& |\vv_t|>0 \\
-
 \vp{0}{0} &\mathrm{else}& \\
 \end{array}
 \right.

@@ -562,6 +562,45 @@ indirectPackageNeeds = {
     }
 
 
+#the packages of the [tests] extra of pyproject.toml, as import name -> distribution name: the test
+#models are written for an environment that has them. A test model that needs one which is missing
+#is skipped and listed, with the hint to install the extra, instead of failing with an ImportError -
+#a user checking a fresh installation should learn what to install, not read a traceback (#2832)
+testsExtraPackages = {
+    'matplotlib': 'matplotlib',
+    'scipy':      'scipy',
+    'h5py':       'h5py',
+    'networkx':   'networkx',
+    'psutil':     'psutil',
+    'ngsolve':    'ngsolve',
+    'netgen':     'ngsolve',
+    }
+
+#%%******************************************************************************************************
+def MissingTestsExtraPackage(errorText):
+    """
+    The package of the [tests] extra whose absence made a test model fail, read from its error: an
+    ImportError of the package itself, or the message of an exudyn function that needs it (PlotSensor,
+    the results monitor). Deciding by the error, not by the source, keeps a model that imports a package
+    only in a branch it does not run (an 'if useGraphics:' block) from being skipped (#2832).
+
+    Args:
+        errorText (str): the exception text or the output of the model
+
+    Returns:
+        str: the distribution name, or '' if the error is something else
+    """
+    import re
+    for match in re.finditer(r"No module named '([\w.]+)'", errorText):
+        name = match.group(1).split('.')[0]
+        if name in testsExtraPackages:
+            return testsExtraPackages[name]
+    for name in testsExtraPackages:
+        if (name + ' is not installed') in errorText or ('needs ' + name + ', which is not installed') in errorText:
+            return testsExtraPackages[name]
+    return ''
+
+
 #%%******************************************************************************************************
 def ExampleSkipReason(exampleFileName, fileString):
     """

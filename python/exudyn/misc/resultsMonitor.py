@@ -35,8 +35,11 @@ import sys
 import time
 
 import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
+try:    #matplotlib is optional; the monitor says so when it is started (#2832)
+    import matplotlib
+    import matplotlib.pyplot as plt
+except ImportError:
+    pass
 
 import exudyn
 from exudyn.misc import overrideSettings
@@ -355,6 +358,8 @@ class ResultsMonitor:
                       `xColumns`, `yColumns`, `colorVariations`, `variations`, `once`,
                       `saveFigure`, `title`
         """
+        if 'plt' not in globals():
+            raise ImportError('ResultsMonitor needs matplotlib, which is not installed: pip install matplotlib')
         self.fileName = fileName
         self.settings = settings
         self.header = {}

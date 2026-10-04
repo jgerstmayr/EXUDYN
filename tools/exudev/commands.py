@@ -1258,7 +1258,18 @@ def Environments(options):
     if not getattr(options, 'env', None) and runner.generatorEnvironment not in environments:
         environments += [runner.generatorEnvironment]
 
+    #without --py or --env, the environments of the version matrix that do not exist are named, not
+    #required: only a complete build (build --complete, the release) needs one per Python version (#2833)
     steps = []
+    existing = runner.KnownEnvironments() if not options.noConda else []
+    if existing and not getattr(options, 'env', None) and not getattr(options, 'py', None):
+        missing = [environment for environment in environments if environment not in existing]
+        environments = [environment for environment in environments if environment in existing]
+        if missing:
+            steps += [Step('environments of the version matrix that do not exist', action=lambda: None,
+                           note=', '.join(missing) + ' - needed only for "exudev build --complete"; '
+                           'docs/howTo/condaEnvironments.md says how they are created')]
+
     for environment in environments:
         steps += [Step(environment,
                        argv=runner.InEnvironment(environment, ['python', ProbeScript()], options),

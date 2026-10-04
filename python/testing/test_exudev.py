@@ -158,3 +158,17 @@ def testPerfMiniRunsTheMiniExamplePerformance():
     options.fast = True
     with pytest.raises(SystemExit):
         commands.Performance(options)
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def testEnvListsOnlyTheEnvironmentsThatExist(monkeypatch):
+    """#2833: 'exudev env' stopped at the first environment of the version matrix that a developer does not
+    have; the matrix is needed only for 'build --complete', so the missing ones are named and skipped"""
+    monkeypatch.setattr(runner, 'knownEnvironments', ['base', runner.generatorEnvironment])
+    monkeypatch.setattr(runner, 'CondaExecutable', lambda: 'conda')
+    steps = commands.Environments(Options(env=None, py=None, noConda=False))
+    labels = [step.label for step in steps]
+    assert runner.generatorEnvironment in labels
+    assert labels[0] == 'environments of the version matrix that do not exist'
+    assert 'venvP310' in steps[0].note and 'build --complete' in steps[0].note
+    assert len(labels) == 2
