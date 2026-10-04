@@ -1149,6 +1149,26 @@ void Raytracer::SoftwareRenderer(Index viewID, VisualizationSystemContainerBase*
 				TransformVertexRM(line.point2, RTS.modelViewRM, lineNew.point2);
 				graphicsData.glLines.Append(lineNew);
 			}
+			//a circle in the xy-plane is drawn as the lines of its segments, as OpenGL draws it (#2844)
+			for (const GLCircleXY& circle : data->glCirclesXY)
+			{
+				float nSeg = (float)circle.numberOfSegments;
+				if (nSeg == 0.f) { nSeg = (float)visSettings->general.circleTiling; }
+				GLLine lineNew;
+				lineNew.itemID = circle.itemID;
+				lineNew.color1 = circle.color;
+				lineNew.color2 = circle.color;
+				Float3 point1 = circle.point + Float3({ 0.f, circle.radius, 0.f });
+				for (Index i = 1; i <= (Index)nSeg; i++)
+				{
+					float phi = 2.f*EXUstd::pi_f*(float)i / nSeg;
+					Float3 point2 = circle.point + Float3({ circle.radius*sin(phi), circle.radius*cos(phi), 0.f });
+					TransformVertexRM(point1, RTS.modelViewRM, lineNew.point1);
+					TransformVertexRM(point2, RTS.modelViewRM, lineNew.point2);
+					graphicsData.glLines.Append(lineNew);
+					point1 = point2;
+				}
+			}
 		}
 	}
 	if (cntWrongNormals && !warnedWrongNormals && RTS.verbose)

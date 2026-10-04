@@ -14840,3 +14840,16 @@ settings dialog (what the dialog shows), `HighlightItem` of the FAQ (object 7 of
 imports of `revisions.md` (13).
 
 **Found**: the raytracer draws no `Circle` - **#2844**, RG6.8.7; the example says so.
+
+<a id="rg6-8-7"></a>
+### RG6.8.7 — the raytracer draws circles, as lines (2026-10-04, #2844)
+
+*(Maintainer 2026-10-04: "circles in the raytracer; do it, by converting them to lines, so only a small fix (don't add
+a circle feature ...)".)*
+
+`Raytracing.cpp` takes the lines of the scene, transformed into the view, where it takes the lines and the quadratic
+lines; the circles in the xy-plane (`glCirclesXY`: `GraphicsData` of type `Circle`, and what the 2D items draw with
+`AddCircleXY`) are converted there into the lines of their segments - `numberOfSegments`, or
+`general.circleTiling` if it is 0, starting at the top, as the OpenGL renderer draws them - with the color and item of
+the circle; shown when lines are shown. No new primitive. The `GraphicsData` example of the manual
+(`snippets/graphics.ipynb`) shows its blue circle now; its remark that the raytracer draws none is gone.

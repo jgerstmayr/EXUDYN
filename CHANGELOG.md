@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 267 | 1.12.286 |
+| 1.12 | Metheney | 268 | 1.12.287 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.287** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The raytracer draws no GraphicsData Circle (#2844)
+  - description: GraphicsData of type 'Circle' (graphics.Circle, and the circles that 2D items draw with AddCircleXY: the 2D joints, contact circles, slope nodes) are drawn by OpenGL but not by the raytracer: Raytracing.cpp converts lines, quadratic lines, triangles, spheres and texts, not glCircles. Found with the GraphicsData example of the user manual as notebook (revision2026b step RG17.5).
+  - **notes:** Fixed: the raytracer draws GraphicsData circles (graphics.Circle) and the circles of 2D items such as joints and contact circles, as lines.
+  - date resolved: **2026-10-04 16:39**, date raised: 2026-10-04
 - **1.12.286** `EXTENSION` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` tutorials as Jupyter notebooks: build, test and the first notebook (#2831)
   - description: The realization of the evaluation of revision2026b step RG17.1 (\#2811): notebooks without stored outputs, rendered by myst-nb in the documentation, run by runTestExamples.py, images of the scene with the raytracer; the first notebook is rigidBodyTutorial3 with exu.HT (RG16.12.5). revision2026b step RG17.2.
   - **notes:** Done: the tutorials (python/Notebooks/), the examples of the reference manual (python/Notebooks/reference/) and of the user manual pages on graphics, solving and the renderer (python/Notebooks/snippets/) are notebooks with stored outputs; the documentation shows them with what they printed, and the tests run them.

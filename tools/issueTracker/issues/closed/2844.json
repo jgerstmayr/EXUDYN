@@ -2,11 +2,15 @@
   "number": 2844,
   "title": "The raytracer draws no GraphicsData Circle",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
   "description": "GraphicsData of type 'Circle' (graphics.Circle, and the circles that 2D items draw with AddCircleXY: the 2D joints, contact circles, slope nodes) are drawn by OpenGL but not by the raytracer: Raytracing.cpp converts lines, quadratic lines, triangles, spheres and texts, not glCircles. Found with the GraphicsData example of the user manual as notebook (revision2026b step RG17.5).",
   "dateRaised": "2026-10-04",
   "deadline": "2027-04-02",
-  "file": "src/Graphics/Raytracing.cpp"
+  "dateResolved": "2026-10-04 16:39",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/Graphics/Raytracing.cpp",
+  "releaseNotes": "Fixed: the raytracer draws GraphicsData circles (graphics.Circle) and the circles of 2D items such as joints and contact circles, as lines.",
+  "resolvedInVersion": "1.12.287"
 }

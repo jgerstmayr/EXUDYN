@@ -967,7 +967,8 @@ the arc; the spring windings of the spring-dampers use `connectors.springNumberO
     - **RG6.8.6** (#2237, #2350) macOS: PlotSensor in Spyder; `raytracerNOGLFWtest.py`, excluded on macOS
       since 1.11.0 because offscreen `RedrawAndGetImage` crashes - when the macOS machine is there
       (around 2026-10-20), the manual check P1 in Spyder and the test model without its exclusion;
-    - **RG6.8.7** *open* (#2844) the raytracer draws no `GraphicsData` of type `Circle` (and none of the circles the
+    - **RG6.8.7** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg6-8-7) *(maintainer 2026-10-04: "by
+      converting them to lines, so only a small fix")* (#2844) the raytracer draws no `GraphicsData` of type `Circle` (and none of the circles the
       2D items draw), found by the `GraphicsData` example of RG17.5.
 
 ## RG7 — Python user items
@@ -1766,7 +1767,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.17 | #2763 | `ObjectANCFBeam`: Newton stalls in the right-angle frame with a consistent Jacobian (RG4.17.2) |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |
-| RG6.8 | #2140, #2236, #2237, #2350, #2844 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines; RG6.8.7 the raytracer draws no circles |
+| RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |
 | RG8.1 to RG8.9 | - | the plugin ABI: registry, fingerprint, reference plugin, headers, discovery |
 | RG10.1.1 | #2713 | exudev scripts also runs the scripts, in a local copy with a timeout, after a check for paths |
 | RG13.3 | #2717 | each description synchronized once with its implementation, recorded with a fingerprint |

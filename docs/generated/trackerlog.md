@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.286.dev1
+- Exudyn version = 1.12.287.dev1
 - last change = 2026-10-04
 - Number of issues = 2845
-- Number of resolved issues = 2600 (286 in current version)
+- Number of resolved issues = 2601 (287 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8305,9 +8305,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` The raytracer draws no GraphicsData Circle (#2844)
-  - description: GraphicsData of type 'Circle' (graphics.Circle, and the circles that 2D items draw with AddCircleXY: the 2D joints, contact circles, slope nodes) are drawn by OpenGL but not by the raytracer: Raytracing.cpp converts lines, quadratic lines, triangles, spheres and texts, not glCircles. Found with the GraphicsData example of the user manual as notebook (revision2026b step RG17.5).
-  - date raised: 2026-10-04
 - <span class="textred">`BUG`</span> <span class="textred">`HIGH`</span> `MEDIUM EFF` `raised by: Claude-JG` the raytracer can hang in RedrawAndGetImage when tests run in parallel (#2776)
   - description: Twice on 2026-10-02 the full pytest run (pytest -n 8 python/testing) hung in test\_graphicsRegression.py::testRaytracerImages, in SC.renderer.RedrawAndGetImage(useRaytracer=True) (faulthandler traceback), with all workers idle - a wait, not a loop; a third and fourth run passed, and 8 processes rendering the same images 15 times each in parallel did not hang. The raytracer starts the TaskManager for its ParallelFor (Raytracer::SoftwareRenderer, ExuThreading::EnterTaskManager) unless it is already running; a deadlock there, or a TaskManager left running by a previous test in the same worker, are the candidates. The hung processes stayed and could not be ended from the session.
   - date raised: 2026-10-02

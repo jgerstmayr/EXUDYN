@@ -46,7 +46,7 @@ gArc = {'type':'Lines', 'shape':'quadratic',                 #a quarter circle, 
         'colors': [[1,0,0,1]]*3}
 ```
 
-**Circle** and **Text** - the raytracer draws no circles (#2844), the image below shows none:
+**Circle** and **Text**:
 
 ```python
 gCircle = {'type':'Circle',
