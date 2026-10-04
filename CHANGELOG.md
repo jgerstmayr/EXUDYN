@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 264 | 1.12.283 |
+| 1.12 | Metheney | 265 | 1.12.284 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.284** `IMPROVEMENT` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` curves of connectors drawn with a tiling of their own, as watertight tubes (#2839)
+  - description: The maintainer, 2026-10-04: 'CObjectConnectorReevingSystemSprings: graphics uses nTile = visualizationSettings.general.cylinderTiling, which is wrong; first: the nTiles should depend on the angle; second: it should be a new SC.visualizationSettings.connectors.curveTiling or a similar name, which should also be used by windings resolution in spring-dampers. And we need a function to draw watertight curves along a line, which could be used then both for the reeving system and the spring windings (if drawn in 3D - with a new flag).' revision2026b step RG6.9.
+  - **notes:** Springs and the rope of ObjectConnectorReevingSystemSprings are drawn with visualizationSettings.connectors.curveTiling segments per full turn (the arc of a rope with the share of its angle); connectors.springDraw3D draws the windings of springs as a tube; the rope is one closed tube along its spans and arcs.
+  - date resolved: **2026-10-04 15:20**, date raised: 2026-10-04
 - **1.12.283** `FIX` `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a 3D beam without section geometry is drawn with a coordinate frame at every tile (#2837)
   - description: UpdateGraphicsBeam3D (ObjectBeamGeometricallyExact, ObjectANCFBeam) draws a beam without polygonal section geometry as a line - and, marked 'temporary!' in the code, an orthonormal basis of size nodes.basisSize at each of the axialTiling points, also when nodes are not shown. Found with the item images of revision2026b step RG3.31: the default drawing of a beam is a row of arrows. The basis belongs to a setting (or goes), not to every line-drawn beam.
   - **notes:** Fixed: a 3D beam (ObjectANCFBeam, ObjectBeamGeometricallyExact) without section geometry is drawn as a line; it no longer draws a coordinate frame at every tiling point. The frames are those of its nodes (visualizationSettings.nodes.showBasis).

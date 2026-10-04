@@ -14706,3 +14706,31 @@ texts "B") are gone. The item image of `ObjectBeamGeometricallyExact` has a sect
 
 Seen on the way and remarked at #2840 (RG13.8.1): the line of a contour plot interpolates between the values at the
 local positions 0 and L, while the line runs from -L/2 to L/2.
+
+<a id="rg6-9"></a>
+### RG6.9 — curves of connectors with a tiling of their own, as watertight tubes (2026-10-04, #2839)
+
+*(Maintainer 2026-10-04: "then do RG6.9".)*
+
+**RG6.9.1** - two settings of `visualizationSettings.connectors`: `curveTiling` (default 32), the segments of a full
+turn of a curve a connector draws, and `springDraw3D` (default False). The windings of the springs
+(`ObjectConnectorSpringDamper`, `CartesianSpringDamper`, `CoordinateSpringDamper`, `CoordinateSpringDamperExt`,
+`LinearSpringDamper`) took `general.circleTiling` (16) segments per winding and take `curveTiling` now, through one
+function, `EXUvis::DrawConnectorSpring`, instead of the same three lines in seven places. The arc of the rope of
+`ObjectConnectorReevingSystemSprings` on a sheave took `general.cylinderTiling` segments whatever its angle; it takes
+the share of `curveTiling` of its angle, at least one.
+
+**RG6.9.2** - `EXUvis::DrawTube(points, radius, ...)`: a tube along a polyline, one ring of vertices per point,
+perpendicular to the mean of the directions of its two segments and shared by both - so there is no gap and no
+overlap at a joint -, the ring basis carried from point to point without twist, the ends closed. The reeving system
+draws its rope as one tube along the free spans and the arcs (a cylinder per span and per arc segment before, open at
+every joint); a span without a common tangent ends the tube. `DrawSpring` draws the windings as a tube of
+`wireRadius` if it is given - `springDraw3D` gives a tenth of the spring radius, `general.cylinderTiling` around it -,
+otherwise lines as before; its unused flag `draw3D` is gone.
+
+**RG6.9.3** - the graphics references recorded again: the mini examples with a spring or the reeving system (13; the
+other recorded files differed by rounding and were set back), and `settings.json`, whose variant
+`general.circleTiling=32` changed nothing any more (the representative model has no other circle): it is
+`connectors.curveTiling=16` and `connectors.springDraw3D=True` now. The item images of `ObjectConnectorSpringDamper`,
+`ObjectConnectorCartesianSpringDamper` and `ObjectConnectorReevingSystemSprings` drawn again, with `curveTiling = 64`
+and `springDraw3D = True` in `itemImages.py`. The reference of `parameterConversionTest.py` lists the two new settings.

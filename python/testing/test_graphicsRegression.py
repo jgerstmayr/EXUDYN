@@ -201,7 +201,7 @@ settingVariants = [
     {'loads.show': False}, {'loads.showNumbers': True}, {'loads.drawSimplified': False},
     {'loads.fixedLoadSize': False},
     {'sensors.show': False}, {'sensors.showNumbers': True}, {'sensors.drawSimplified': False},
-    {'general.circleTiling': 32}, {'general.cylinderTiling': 32},
+    {'general.cylinderTiling': 32}, {'connectors.curveTiling': 16}, {'connectors.springDraw3D': True},
     ]
 
 

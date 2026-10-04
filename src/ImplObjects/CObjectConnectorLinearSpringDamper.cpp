@@ -162,9 +162,7 @@ void VisualizationObjectConnectorLinearSpringDamper::UpdateGraphics(const Visual
 	}
 	else
 	{
-		Index numberOfWindings = visualizationSettings.connectors.springNumberOfWindings;
-		const Index nTildePerWinding = visualizationSettings.general.circleTiling;
-		EXUvis::DrawSpring(pos[0], pos[1], numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemID);
+		EXUvis::DrawConnectorSpring(pos[0], pos[1], r, currentColor, vSystem->graphicsData, itemID, visualizationSettings);
 	}
 
 

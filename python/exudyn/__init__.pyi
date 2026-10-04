@@ -1670,6 +1670,8 @@ class VSettingsConnectors:
     """Visualization settings for connectors."""
     contactPointsDefaultSize: float
     """DEPRECATED: do not use! global contact points size; if -1.f, connector size is relative to maxSceneSize."""
+    curveTiling: int
+    """number of segments of a full turn of a curve drawn by a connector: a winding of a spring, the arc of a rope on a sheave (ObjectConnectorReevingSystemSprings); an arc gets the share of its angle, at least one segment."""
     defaultColor: Tuple[float,float,float,float]
     """default RGBA color for connectors; 4th value is alpha-transparency."""
     defaultSize: float
@@ -1686,6 +1688,8 @@ class VSettingsConnectors:
     """flag to decide, whether contact joint axes of 3D joints are shown."""
     showNumbers: bool
     """flag to decide, whether the connector(=object) number is shown."""
+    springDraw3D: bool
+    """flag to draw the windings of springs as a tube with a tenth of the spring radius, instead of lines."""
     springNumberOfWindings: int
     """number of windings for springs drawn as helical spring."""
     def GetDictionary(self) -> dict: ...

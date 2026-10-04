@@ -385,9 +385,7 @@ void VisualizationObjectConnectorCoordinateSpringDamperExt::UpdateGraphics(const
     float r = 0.5f*drawSize; //radius connectorCoordinate
     if (drawSize == -1.f) { r = 0.5f*visualizationSettings.connectors.defaultSize; } //use default size
 
-    Index numberOfWindings = visualizationSettings.connectors.springNumberOfWindings;
-    const Index nTildePerWinding = visualizationSettings.general.circleTiling;
-    EXUvis::DrawSpring(pos[0], pos[1], numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemID);
+    EXUvis::DrawConnectorSpring(pos[0], pos[1], r, currentColor, vSystem->graphicsData, itemID, visualizationSettings);
 
     if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }

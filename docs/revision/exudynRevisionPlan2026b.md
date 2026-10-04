@@ -928,7 +928,7 @@ This group is that revision and what has to happen before it can start.
 **RG6.7** **DONE 2026-10-03** (#2709) — [log](exudynRevisionLog2026b.md#rg6-7-done) · [plan text](exudynRevisionLog2026b.md#plan-rg6-7) — GraphicsData gets a Sphere and a CurvedTriangleList.
 
 <a id="rg6-9"></a>
-**RG6.9** *(maintainer 2026-10-04)* **Curves of connectors drawn with a tiling of their own, as watertight tubes** (#2839).
+**RG6.9** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg6-9) *(maintainer 2026-10-04; "then do RG6.9")* **Curves of connectors drawn with a tiling of their own, as watertight tubes** (#2839).
 `ObjectConnectorReevingSystemSprings` draws its rope arcs with `general.cylinderTiling` segments, whatever the angle of
 the arc; the spring windings of the spring-dampers use `connectors.springNumberOfWindings` and lines.
     - **RG6.9.1** a setting `connectors.curveTiling` - segments per full turn of a curve -, the number of segments of an
@@ -1738,7 +1738,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582, #2776 | the graphics regression suite - open: RG2.3.3.8 the raytracer that can hang in `RedrawAndGetImage` |
-| RG6.9 | #2839 | curves of connectors with a tiling of their own, as watertight tubes; spring windings in 3D |
 | RG13.8 | #2840 | how an item is drawn: an inventory of the `UpdateGraphics` functions, then on the pages |
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |

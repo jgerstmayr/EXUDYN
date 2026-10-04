@@ -225,6 +225,7 @@ VSettingsConnectors has the following items:
 | Name | type / function return type | size | default value / function args | description |
 |---|---|---|---|---|
 | `contactPointsDefaultSize`<br>`SC.visualizationSettings.connectors.contactPointsDefaultSize` | float |  | 0.02 | DEPRECATED: do not use! global contact points size; if -1.f, connector size is relative to maxSceneSize |
+| `curveTiling`<br>`SC.visualizationSettings.connectors.curveTiling` | PInt |  | 32 | number of segments of a full turn of a curve drawn by a connector: a winding of a spring, the arc of a rope on a sheave (ObjectConnectorReevingSystemSprings); an arc gets the share of its angle, at least one segment |
 | `defaultColor`<br>`SC.visualizationSettings.connectors.defaultColor` | Float4 | 4 | [0.2,0.2,1.,1.] | default RGBA color for connectors; 4th value is alpha-transparency |
 | `defaultSize`<br>`SC.visualizationSettings.connectors.defaultSize` | float |  | 0.1 | global connector size; if -1.f, connector size is relative to maxSceneSize |
 | `jointAxesLength`<br>`SC.visualizationSettings.connectors.jointAxesLength` | float |  | 0.2 | global joint axes length |
@@ -233,6 +234,7 @@ VSettingsConnectors has the following items:
 | `showContact`<br>`SC.visualizationSettings.connectors.showContact` | bool |  | False | flag to decide, whether contact points, lines, etc. are shown for special cable-circle contacts; for spheres, triangles, tori, see visualizationSettings.contact |
 | `showJointAxes`<br>`SC.visualizationSettings.connectors.showJointAxes` | bool |  | False | flag to decide, whether contact joint axes of 3D joints are shown |
 | `showNumbers`<br>`SC.visualizationSettings.connectors.showNumbers` | bool |  | False | flag to decide, whether the connector(=object) number is shown |
+| `springDraw3D`<br>`SC.visualizationSettings.connectors.springDraw3D` | bool |  | False | flag to draw the windings of springs as a tube with a tenth of the spring radius, instead of lines |
 | `springNumberOfWindings`<br>`SC.visualizationSettings.connectors.springNumberOfWindings` | PInt |  | 8 | number of windings for springs drawn as helical spring |
 
 

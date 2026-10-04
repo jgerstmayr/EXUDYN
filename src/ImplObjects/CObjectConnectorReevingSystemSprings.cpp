@@ -332,6 +332,12 @@ void VisualizationObjectConnectorReevingSystemSprings::UpdateGraphics(const Visu
 	Matrix3D rotA, rotB;
 	Vector3D lastRB(0.);
 
+	//the rope is one watertight tube along the free spans and the arcs on the sheaves; the arcs get
+	//connectors.curveTiling segments per full turn, in proportion to their angle (#2839)
+	std::vector<Vector3D> rope;
+	Index tubeTiling = visualizationSettings.general.cylinderTiling;
+	Index curveTiling = visualizationSettings.connectors.curveTiling;
+
 	for (Index i = 0; i < nRigidBodyMarkers-1; i++)
 	{
 		Vector3D pA, pB;
@@ -356,11 +362,9 @@ void VisualizationObjectConnectorReevingSystemSprings::UpdateGraphics(const Visu
 
 		if (rv)
 		{
-			EXUvis::DrawCylinder(rA + pA, pB + rB - pA - rA, ropeRadius, color, vSystem->graphicsData, itemID, visualizationSettings.general.cylinderTiling);
-
 			if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5*(rA + rB), vSystem, itemID, "", currentColor); }
 
-			if (i > 0 && RA != 0.)
+			if (i > 0 && RA != 0. && rope.size() != 0)
 			{
 				//compute contact angle
 				Vector3D lastRB0 = (1. / RA) * lastRB;
@@ -369,25 +373,26 @@ void VisualizationObjectConnectorReevingSystemSprings::UpdateGraphics(const Visu
 				Vector3D rA0 = (1. / RA) * rA;
 				Real phi = atan2(lastNB0*rA0, lastRB0*rA0);
 				if (phi < 0) { phi += 2.*EXUstd::pi; }
-				//pout << "phi=" << phi << "\n";
-				//pout << "lastRB0norm=" << lastRB0.GetL2Norm() << "\n";
-				//pout << "lastNB0norm=" << lastNB0.GetL2Norm() << "\n";
 
-				Index nTile = visualizationSettings.general.cylinderTiling;
-				Vector3D v0 = lastRB;
+				//the arc on sheave A, from where the last span ends to where the next one starts
+				Index nTile = EXUstd::Maximum((Index)1, (Index)ceil(curveTiling * phi / (2.*EXUstd::pi)));
 				for (Index j = 1; j <= nTile; j++)
 				{
 					Real phi1 = (j * phi) / (Real)nTile;
-					Vector3D v1 = RA * (lastRB0 * cos(phi1) + lastNB0 * sin(phi1));
-					//pout << "j" << j << ":" << v1 << "\n";
-					EXUvis::DrawCylinder(pA + v0, v1 - v0, ropeRadius, color, vSystem->graphicsData, itemID, visualizationSettings.general.cylinderTiling);
-
-					v0 = v1;
+					rope.push_back(pA + RA * (lastRB0 * cos(phi1) + lastNB0 * sin(phi1)));
 				}
-
 			}
+			//the free span from sheave A to sheave B
+			rope.push_back(pA + rA);
+			rope.push_back(pB + rB);
+		}
+		else
+		{
+			//no common tangent: the rope breaks here
+			EXUvis::DrawTube(rope, ropeRadius, color, vSystem->graphicsData, itemID, tubeTiling);
+			rope.clear();
 		}
 		lastRB = rB;
 	}
-
+	EXUvis::DrawTube(rope, ropeRadius, color, vSystem->graphicsData, itemID, tubeTiling);
 }

@@ -5022,7 +5022,7 @@ class VObjectConnectorReevingSystemSprings:
     Args:
         show: set true, if item is shown in visualization and false if it is not shown; type: bool
 
-        ropeRadius: radius of rope; type: float
+        ropeRadius: radius of rope, drawn as one tube along the free spans and the arcs on the sheaves; visualizationSettings.general.cylinderTiling segments around it, connectors.curveTiling segments per full turn of an arc; type: float
 
         color: RGBA connector color; if R==-1, use default color; type: [float,float,float,float]
 

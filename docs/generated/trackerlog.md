@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.283.dev1
+- Exudyn version = 1.12.284.dev1
 - last change = 2026-10-04
 - Number of issues = 2843
-- Number of resolved issues = 2597 (283 in current version)
+- Number of resolved issues = 2598 (284 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7571,9 +7571,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `DOCU` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` the documentation says how each item is drawn and which settings it uses (#2840)
   - description: The maintainer, 2026-10-04: 'the graphics visualization has no docs about how the items are drawn. Which (default) settings are used for tiling, colors, etc. - only available via the code. So, this should be completed and possibly improved if some misleading or inappropriate settings are used in the UpdateGraphics functions. This is mainly for the objects, but also for other items (but they would probably have a generic description for most nodes, markers, etc.).' revision2026b step RG13.8.
   - **remarks:** For the inventory (found with \#2837): UpdateGraphicsBeam3D without section geometry colors the line of a contour plot with LinearInterpolate(value1, value2, 0, L, x), but x runs from -L/2 to L/2 and value1, value2 are taken at the local positions 0 and L - the colors are those of the middle and of a point beyond the end.
-  - date raised: 2026-10-04
-- `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` curves of connectors drawn with a tiling of their own, as watertight tubes (#2839)
-  - description: The maintainer, 2026-10-04: 'CObjectConnectorReevingSystemSprings: graphics uses nTile = visualizationSettings.general.cylinderTiling, which is wrong; first: the nTiles should depend on the angle; second: it should be a new SC.visualizationSettings.connectors.curveTiling or a similar name, which should also be used by windings resolution in spring-dampers. And we need a function to draw watertight curves along a line, which could be used then both for the reeving system and the spring windings (if drawn in 3D - with a new flag).' revision2026b step RG6.9.
   - date raised: 2026-10-04
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` tutorials as Jupyter notebooks: build, test and the first notebook (#2831)
   - description: The realization of the evaluation of revision2026b step RG17.1 (\#2811): notebooks without stored outputs, rendered by myst-nb in the documentation, run by runTestExamples.py, images of the scene with the raytracer; the first notebook is rigidBodyTutorial3 with exu.HT (RG16.12.5). revision2026b step RG17.2.

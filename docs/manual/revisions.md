@@ -356,6 +356,11 @@ that cannot compute its energy - with a user function defining its force - says 
 `mbs.Inspect` does not list it. The test models `energiesTest.py` and `energiesFlexibleBodiesTest.py`
 show them.
 
+**Springs and ropes drawn as tubes.** `visualizationSettings.connectors.curveTiling` is the number of segments of a
+full turn of a spring winding or of the arc of a rope on a sheave, and `connectors.springDraw3D` draws the windings
+of the springs as a tube instead of lines; the rope of `ObjectConnectorReevingSystemSprings` is one closed tube
+along its spans and arcs (#2839). A 3D beam without section geometry is drawn as a line (#2837).
+
 ### What is new to read
 
 The documentation is **Markdown** and is built with Sphinx for every release; the hand-written

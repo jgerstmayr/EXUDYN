@@ -968,7 +968,7 @@ items = {
     },
     'visualization': {
       'show': {'type': 'Bool', 'size': '', 'range': '', 'default': 'True', 'mustBeGiven': False, 'description': 'set true, if item is shown in visualization and false if it is not shown'},
-      'ropeRadius': {'type': 'float', 'size': '', 'range': '', 'default': '0.001', 'mustBeGiven': False, 'description': 'radius of rope'},
+      'ropeRadius': {'type': 'float', 'size': '', 'range': '', 'default': '0.001', 'mustBeGiven': False, 'description': 'radius of rope, drawn as one tube along the free spans and the arcs on the sheaves; visualizationSettings.general.cylinderTiling segments around it, connectors.curveTiling segments per full turn of an arc'},
       'color': {'type': 'Float4', 'size': '4', 'range': '', 'default': '[-1.,-1.,-1.,-1.]', 'mustBeGiven': False, 'description': 'RGBA connector color; if R==-1, use default color'},
     },
   },

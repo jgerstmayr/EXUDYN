@@ -141,9 +141,21 @@ namespace EXUvis {
 	void DrawSpring2D(const Vector3D& p0, const Vector3D& p1, const Vector3D& vN, Index numberOfPoints, Real halfWidth, 
 		const Float4& color, GraphicsData& graphicsData, Index itemID);
 
-	//! draw a spring in 3D with given endpoints p0,p1, a width, windings and tiling
-	void DrawSpring(const Vector3D& p0, const Vector3D& p1, Index numberOfWindings, Index nTilesPerWinding, 
-		Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID, bool draw3D = true);
+	//! draw a spring in 3D with given endpoints p0,p1, a width, windings and tiling; as lines, or as a tube of
+	//! wireRadius with nTilesWire segments around it if wireRadius > 0
+	void DrawSpring(const Vector3D& p0, const Vector3D& p1, Index numberOfWindings, Index nTilesPerWinding,
+		Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID, Real wireRadius = 0., Index nTilesWire = 12);
+
+	//! draw the spring of a connector as all connectors draw it: connectors.springNumberOfWindings windings of
+	//! connectors.curveTiling segments, as lines or, with connectors.springDraw3D, as a tube (#2839)
+	void DrawConnectorSpring(const Vector3D& p0, const Vector3D& p1, Real radius, const Float4& color, GraphicsData& graphicsData,
+		Index itemID, const VisualizationSettings& visualizationSettings);
+
+	//! draw a watertight tube of radius along the polyline points: one ring of nTiles vertices per point, perpendicular
+	//! to the mean of its two segments and shared by both, carried along the curve without twist; points closer than
+	//! a millionth of the radius to the previous one are skipped; closeEnds draws the two end faces (#2839)
+	void DrawTube(const std::vector<Vector3D>& points, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,
+		Index nTiles = 12, bool closeEnds = true);
 
 	//! draw number for item at selected position and with label, such as 'N' for nodes, etc.
 	void DrawItemNumber(const Float3& pos, VisualizationSystem* vSystem, Index itemID, const char* label = "", const Float4& color = Float4({ 0.f,0.f,0.f,1.f }));

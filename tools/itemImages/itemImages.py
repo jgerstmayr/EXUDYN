@@ -57,7 +57,9 @@ def Settings(SC):
     v.openGL.light0.lightRadius = 0.8
     v.openGL.light0.shadow = 0.4
     v.openGL.lineWidth = 3
-    v.general.cylinderTiling = 64 #currently for the reeving system
+    v.general.cylinderTiling = 64 #also around the rope of the reeving system and the wire of the springs
+    v.connectors.curveTiling = 64 #segments per turn of a spring winding and of the arc of a rope
+    v.connectors.springDraw3D = True
     v.nodes.show = False
     v.markers.show = False
     v.loads.show = False

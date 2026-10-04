@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-09-15  11:13:32 (last modified)
+* @date         2026-10-04  15:12:02 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -25,7 +25,7 @@
 class VisualizationObjectConnectorReevingSystemSprings: public VisualizationObject // AUTO:
 {
 protected: // AUTO:
-    float ropeRadius;                             //!< AUTO: radius of rope
+    float ropeRadius;                             //!< AUTO: radius of rope, drawn as one tube along the free spans and the arcs on the sheaves; visualizationSettings.general.cylinderTiling segments around it, connectors.curveTiling segments per full turn of an arc
     Float4 color;                                 //!< AUTO: RGBA connector color; if R==-1, use default color
 
 public: // AUTO:
@@ -47,11 +47,11 @@ public: // AUTO:
         return true;
     }
 
-    //! AUTO:  Write (Reference) access to:radius of rope
+    //! AUTO:  Write (Reference) access to:radius of rope, drawn as one tube along the free spans and the arcs on the sheaves; visualizationSettings.general.cylinderTiling segments around it, connectors.curveTiling segments per full turn of an arc
     void SetRopeRadius(const float& value) { ropeRadius = value; }
-    //! AUTO:  Read (Reference) access to:radius of rope
+    //! AUTO:  Read (Reference) access to:radius of rope, drawn as one tube along the free spans and the arcs on the sheaves; visualizationSettings.general.cylinderTiling segments around it, connectors.curveTiling segments per full turn of an arc
     const float& GetRopeRadius() const { return ropeRadius; }
-    //! AUTO:  Read (Reference) access to:radius of rope
+    //! AUTO:  Read (Reference) access to:radius of rope, drawn as one tube along the free spans and the arcs on the sheaves; visualizationSettings.general.cylinderTiling segments around it, connectors.curveTiling segments per full turn of an arc
     float& GetRopeRadius() { return ropeRadius; }
 
     //! AUTO:  Write (Reference) access to:RGBA connector color; if R==-1, use default color

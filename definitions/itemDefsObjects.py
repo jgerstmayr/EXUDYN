@@ -9108,7 +9108,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=Tfloat, destination=DestVisu,
             pythonName='ropeRadius',
             defaultValue=0.001,
-            description=r'radius of rope'),
+            description=r'radius of rope, drawn as one tube along the free spans and the arcs on the sheaves; visualizationSettings.general.cylinderTiling segments around it, connectors.curveTiling segments per full turn of an arc'),
         ItemParameter(type=TFloat4, destination=DestVisu,
             pythonName='color',
             defaultValue=DVDefaultColor,

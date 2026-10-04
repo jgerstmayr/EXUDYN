@@ -899,35 +899,137 @@ namespace EXUvis {
 
 	//! draw a spring in 3D with given endpoints p0,p1, a width, windings and tiling
 	void DrawSpring(const Vector3D& p0, const Vector3D& p1, Index numberOfWindings, Index nTilesPerWinding,
-		Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID, bool draw3D)
+		Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID, Real wireRadius, Index nTilesWire)
 	{
 		Vector3D v0 = p1 - p0;
 
 		Real L = v0.GetL2Norm(); //length of spring
 		Real d = L / (Real)numberOfWindings; //split spring into pieces: shaft, (n-2) parts, end
-		if (L != 0.f) 
-		{ 
+		if (L != 0.f)
+		{
 			v0 /= L;
 			Vector3D n1, n2;
 			EXUmath::ComputeOrthogonalBasisVectors(v0, n1, n2, true);
 
-			Vector3D pLast = p0;
-
+			std::vector<Vector3D> points;
+			points.push_back(p0);
 			for (Index i = 0; i < numberOfWindings; i++)
 			{
 				for (Index j = 0; j < nTilesPerWinding; j++)
 				{
 					Real phi = 2 * EXUstd::pi * j / (Real)nTilesPerWinding;
-					Vector3D p = p0 + d * ((Real)i + j / (Real)nTilesPerWinding)*v0 + radius*sin(phi)*n1 + radius*cos(phi)*n2;
-
-					graphicsData.AddLine(pLast, p, color, color, itemID);
-					pLast = p;
+					points.push_back(p0 + d * ((Real)i + j / (Real)nTilesPerWinding)*v0 + radius*sin(phi)*n1 + radius*cos(phi)*n2);
 				}
 			}
-			graphicsData.AddLine(pLast, p1, color, color, itemID);
+			points.push_back(p1);
 
+			if (wireRadius > 0.)
+			{
+				DrawTube(points, wireRadius, color, graphicsData, itemID, nTilesWire);
+			}
+			else
+			{
+				for (size_t i = 1; i < points.size(); i++)
+				{
+					graphicsData.AddLine(points[i - 1], points[i], color, color, itemID);
+				}
+			}
 		}
+	}
 
+	void DrawConnectorSpring(const Vector3D& p0, const Vector3D& p1, Real radius, const Float4& color, GraphicsData& graphicsData,
+		Index itemID, const VisualizationSettings& visualizationSettings)
+	{
+		const VSettingsConnectors& connectors = visualizationSettings.connectors;
+		DrawSpring(p0, p1, connectors.springNumberOfWindings, connectors.curveTiling, radius, color, graphicsData, itemID,
+			connectors.springDraw3D ? 0.1 * radius : 0., visualizationSettings.general.cylinderTiling);
+	}
+
+	void DrawTube(const std::vector<Vector3D>& points, Real radius, const Float4& color, GraphicsData& graphicsData, Index itemID,
+		Index nTiles, bool closeEnds)
+	{
+		if (nTiles < 3) { nTiles = 3; }
+		if (radius <= 0.) { return; }
+
+		//the points without the ones that coincide with their predecessor: a segment needs a direction
+		std::vector<Vector3D> p;
+		for (const Vector3D& point : points)
+		{
+			if (p.size() == 0 || (point - p.back()).GetL2Norm() > 1e-6 * radius) { p.push_back(point); }
+		}
+		Index n = (Index)p.size();
+		if (n < 2) { return; }
+
+		std::array<Vector3D, 3> trigPoints;
+		std::array<Vector3D, 3> normals;
+		std::array<Float4, 3> colors = { {color,color,color} };
+
+		//the ring of the previous point: its vertices and their (radial) normals
+		std::vector<Vector3D> ring0(nTiles), ring1(nTiles), normal0(nTiles), normal1(nTiles);
+		Vector3D n1, n2; //basis of the ring plane, carried from point to point
+		for (Index i = 0; i < n; i++)
+		{
+			//the direction at the point: the mean of the directions of its segments
+			Vector3D direction;
+			if (i == 0) { direction = p[1] - p[0]; }
+			else if (i == n - 1) { direction = p[n - 1] - p[n - 2]; }
+			else
+			{
+				Vector3D s0 = p[i] - p[i - 1];
+				Vector3D s1 = p[i + 1] - p[i];
+				s0.Normalize();
+				s1.Normalize();
+				direction = s0 + s1;
+				if (direction.GetL2Norm() < 1e-8) { direction = s1; } //the curve turns back
+			}
+			direction.Normalize();
+
+			if (i == 0) { EXUmath::ComputeOrthogonalBasisVectors(direction, n1, n2, true); }
+			else
+			{
+				//no twist: the previous n1 projected into the new ring plane
+				n1 -= (n1 * direction) * direction;
+				if (n1.GetL2Norm() < 1e-8) { EXUmath::ComputeOrthogonalBasisVectors(direction, n1, n2, true); }
+				n1.Normalize();
+				n2 = direction.CrossProduct(n1);
+			}
+
+			for (Index k = 0; k < nTiles; k++)
+			{
+				Real phi = 2. * EXUstd::pi * k / (Real)nTiles;
+				normal1[k] = sin(phi) * n1 + cos(phi) * n2;
+				ring1[k] = p[i] + radius * normal1[k];
+			}
+
+			if (i != 0)
+			{
+				for (Index k = 0; k < nTiles; k++)
+				{
+					Index k1 = (k + 1) % nTiles;
+					trigPoints = { ring0[k], ring1[k1], ring1[k] };
+					normals = { normal0[k], normal1[k1], normal1[k] };
+					graphicsData.AddTriangle(trigPoints, normals, colors, itemID);
+					trigPoints = { ring0[k], ring0[k1], ring1[k1] };
+					normals = { normal0[k], normal0[k1], normal1[k1] };
+					graphicsData.AddTriangle(trigPoints, normals, colors, itemID);
+				}
+			}
+
+			if (closeEnds && (i == 0 || i == n - 1))
+			{
+				Vector3D faceNormal = (i == 0) ? -direction : direction;
+				normals = { faceNormal, faceNormal, faceNormal };
+				for (Index k = 0; k < nTiles; k++)
+				{
+					Index k1 = (k + 1) % nTiles;
+					if (i == 0) { trigPoints = { p[i], ring1[k1], ring1[k] }; }
+					else { trigPoints = { p[i], ring1[k], ring1[k1] }; }
+					graphicsData.AddTriangle(trigPoints, normals, colors, itemID);
+				}
+			}
+			std::swap(ring0, ring1);
+			std::swap(normal0, normal1);
+		}
 	}
 
 	////! draw number for item at selected position and with label, such as 'N' for nodes, etc.

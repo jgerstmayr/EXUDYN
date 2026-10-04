@@ -49,7 +49,7 @@ The parameters of `VObjectConnectorReevingSystemSprings`, given as `visualizatio
 | Name | type | size | default value | description |
 |---|---|---|---|---|
 | **show** | Bool |  | True | set true, if item is shown in visualization and false if it is not shown |
-| **ropeRadius** | float |  | 0.001 | radius of rope |
+| **ropeRadius** | float |  | 0.001 | radius of rope, drawn as one tube along the free spans and the arcs on the sheaves; visualizationSettings.general.cylinderTiling segments around it, connectors.curveTiling segments per full turn of an arc |
 | **color** | Float4 | 4 | [-1.,-1.,-1.,-1.] | RGBA connector color; if R==-1, use default color |
 
 ## Output variables

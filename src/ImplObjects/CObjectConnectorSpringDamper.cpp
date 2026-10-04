@@ -201,9 +201,7 @@ void VisualizationObjectConnectorSpringDamper::UpdateGraphics(const Visualizatio
 	//if (Ln != 0.f) { vN /= Ln; }
 	//const Index numberOfPoints = 12;
 	//EXUvis::DrawSpring2D(pos[0], pos[1], vN, numberOfPoints, r, currentColor, vSystem->graphicsData);
-	Index numberOfWindings = visualizationSettings.connectors.springNumberOfWindings;
-	const Index nTildePerWinding = visualizationSettings.general.circleTiling;
-	EXUvis::DrawSpring(pos[0], pos[1], numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemID);
+	EXUvis::DrawConnectorSpring(pos[0], pos[1], r, currentColor, vSystem->graphicsData, itemID, visualizationSettings);
 
 	if (visualizationSettings.connectors.showNumbers) { EXUvis::DrawItemNumber(0.5 * (pos[0] + pos[1]), vSystem, itemID, "", currentColor); }
 }

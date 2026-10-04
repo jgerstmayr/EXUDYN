@@ -137,14 +137,12 @@ void VisualizationObjectConnectorCartesianSpringDamper::UpdateGraphics(const Vis
 	if (cItem->GetParameters().activeConnector) //does not work in visualization ...
 	{
 		//draw 3 orthogonal springs
-		Index numberOfWindings = visualizationSettings.connectors.springNumberOfWindings;
-		const Index nTildePerWinding = visualizationSettings.general.circleTiling;
 		p0 = pos[0]; p1 = pos[0] + Vector3D({ v0[0],0,0 });		//x-direction
-		EXUvis::DrawSpring(p0, p1, numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemID);
+		EXUvis::DrawConnectorSpring(p0, p1, r, currentColor, vSystem->graphicsData, itemID, visualizationSettings);
 		p0 = p1; p1 = pos[0] + Vector3D({ v0[0],v0[1],0 });		//y-direction
-		EXUvis::DrawSpring(p0, p1, numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemID);
+		EXUvis::DrawConnectorSpring(p0, p1, r, currentColor, vSystem->graphicsData, itemID, visualizationSettings);
 		p0 = p1; p1 = pos[0] + v0;								//z-direction
-		EXUvis::DrawSpring(p0, p1, numberOfWindings, nTildePerWinding, r, currentColor, vSystem->graphicsData, itemID);
+		EXUvis::DrawConnectorSpring(p0, p1, r, currentColor, vSystem->graphicsData, itemID, visualizationSettings);
 
 		//const Index numberOfPoints = 12;
 		//p0 = pos[0]; p1 = pos[0] + Vector3D({ v0[0],0,0 });		//x-direction
