@@ -7,6 +7,9 @@
 # ObjectJointSliding2D
 
 A specialized sliding joint (without rotation) in 2D between a Cable2D (marker1) and a position-based marker (marker0); the data coordinate x[0] provides the current index in slidingMarkerNumbers, and x[1] the local position in the cable element at the beginning of the timestep.
+```{image} /docs/figures/itemImages/ObjectJointSliding2D.png
+:width: 500
+```
 
 ## Interface
 

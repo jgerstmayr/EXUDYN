@@ -464,7 +464,7 @@ order since 2026-10-04; the cleanup of 2026-10-03 had left some of them among RG
 **RG3.30** **DONE 2026-10-03** (#2812) — [log](exudynRevisionLog2026b.md#rg3-30) · [plan text](exudynRevisionLog2026b.md#plan-rg3-30) — The flow charts as TikZ again.
 
 <a id="rg3-31"></a>
-**RG3.31** *(group RG3; maintainer 2026-10-04: "I think that most of them are too difficult to do them automatically
+**RG3.31** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg3-31) *(group RG3; maintainer 2026-10-04: "I think that most of them are too difficult to do them automatically
 ... check which items (mostly bodies, loads, joints) would make sense to have a representative image - and which ones
 do not yet have one")* **Representative images for the item pages** (#2830), in place of RG2.3.3.7 (an image per item,
 generated automatically from its MiniExample). A few images, made by hand-written scripts (one or two, or a test model
@@ -489,13 +489,19 @@ where one fits), for the items whose page gains from a picture.
       **Not proposed**: the generic nodes and objects (`NodeGeneric*`, `ObjectGenericODE1/2`), the coordinate markers and
       constraints, `ObjectConnectorCoordinate*`, `ObjectContactCoordinate`, the sensors, `LoadCoordinate`, the 1D masses -
       what they do is a number, not a shape.
-    - **RG3.31.2** after the choice: one or two scripts in `tools/itemImages/` (or a test model where one fits) that build
+    - **DECIDED 2026-10-04** (maintainer): the list as proposed, `ObjectRigidBody2D` "same as ObjectRigidBody but in a
+      planar view", `ObjectFFRFreducedOrder` from the FFRF tutorial; "for the raytracer use shadows on, a light position
+      [,,,1] to have a positional light with lightRadiusVariations=21".
+    - **RG3.31.2** **DONE 2026-10-04** after the choice: one or two scripts in `tools/itemImages/` (or a test model where one fits) that build
       each chosen item in a small scene and write its image with the raytracer (`SC.renderer.RedrawAndGetImage(
       useRaytracer=True)`, no window), 800 x 600, white border cropped; the **non-simplified** drawing modes (springs as
       helices, the basis vectors of markers and nodes as arrows, joints with their axes); view, light and material
       adjusted by hand, image by image;
-    - **RG3.31.3** the images in `docs/figures/`, each named on the page of its item (`{image}` in the
+    - **RG3.31.3** **DONE 2026-10-04** the images in `docs/figures/`, each named on the page of its item (`{image}` in the
       `detailedDescription`, as the joints do), and a look at every page.
+    - **RG3.31.4** *open* (#2837) a 3D beam without polygonal section geometry is drawn as a line with an orthonormal
+      basis at every tile (`UpdateGraphicsBeam3D`, marked "temporary!" in the code), found with the image of
+      `ObjectBeamGeometricallyExact`.
 
 <a id="rg3-32"></a>
 **RG3.32** **DONE 2026-10-04** (#2834) — [log](exudynRevisionLog2026b.md#rg3-32) *(group RG3; feedback of a colleague installing Exudyn, forwarded by the maintainer 2026-10-04:
@@ -1668,7 +1674,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.1 | #2562 | test the drawing code, which one test model covers today |
 | RG2.2 | - | the integration round of the institute before 1.13 |
 | RG2.3 | #2582, #2776 | the graphics regression suite - open: RG2.3.3.8 the raytracer that can hang in `RedrawAndGetImage` |
-| RG3.31 | #2830 | images for the item pages: the list of RG3.31.1 waits for the maintainer's choice |
+| RG3.31.4 | #2837 | a 3D beam without section geometry is drawn with a frame at every tile |
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #1848, #1947 | the open bugs before 1.13: RG4.15.8 `GeneralContact` against the sphere contact |

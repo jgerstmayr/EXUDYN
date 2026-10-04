@@ -7,6 +7,9 @@
 # ObjectBeamGeometricallyExact
 
 A 3D geometrically exact (shear deformable) beam finite element with two 3D rigid body nodes, interpolated on SE(3). The localPosition $x$ of the beam ranges from $-L/2$ (at node 0) to $L/2$ (at node 1); the axial coordinate is $x$ (first coordinate) and the cross section is spanned by the local $y$- and $z$-axes.
+```{image} /docs/figures/itemImages/ObjectBeamGeometricallyExact.png
+:width: 500
+```
 
 ## Interface
 

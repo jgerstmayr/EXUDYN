@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.278.dev1
+- Exudyn version = 1.12.279.dev1
 - last change = 2026-10-04
-- Number of issues = 2837
-- Number of resolved issues = 2592 (278 in current version)
+- Number of issues = 2838
+- Number of resolved issues = 2593 (279 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,11 +7568,11 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `FIX` <span class="textorange">`NORMAL`</span> `LOW EFF` `raised by: Claude-JG` a 3D beam without section geometry is drawn with a coordinate frame at every tile (#2837)
+  - description: UpdateGraphicsBeam3D (ObjectBeamGeometricallyExact, ObjectANCFBeam) draws a beam without polygonal section geometry as a line - and, marked 'temporary!' in the code, an orthonormal basis of size nodes.basisSize at each of the axialTiling points, also when nodes are not shown. Found with the item images of revision2026b step RG3.31: the default drawing of a beam is a row of arrows. The basis belongs to a setting (or goes), not to every line-drawn beam.
+  - date raised: 2026-10-04
 - `EXTENSION` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` tutorials as Jupyter notebooks: build, test and the first notebook (#2831)
   - description: The realization of the evaluation of revision2026b step RG17.1 (\#2811): notebooks without stored outputs, rendered by myst-nb in the documentation, run by runTestExamples.py, images of the scene with the raytracer; the first notebook is rigidBodyTutorial3 with exu.HT (RG16.12.5). revision2026b step RG17.2.
-  - date raised: 2026-10-04
-- `DOCU` <span class="textorange">`NORMAL`</span> `MEDIUM EFF` `raised by: Claude-JG` representative images for the item pages that lack one (#2830)
-  - description: The maintainer, 2026-10-04: 'I think that most of them are too difficult to do them automatically. Suggestion: check which items (mostly bodies, loads, joints) would make sense to have a representative image - and which ones do not yet have one ... add a couple of images, some maybe from a Testmodel or within 1-2 scripts that are hand-made and which extract the images for the missing cases ... use the non-simplified drawing modes for springs, basis vectors, etc.; extract images with raytracer and try to adjust them yourself.' Replaces RG2.3.3.7, an automatic image per item. revision2026b step RG3.31.
   - date raised: 2026-10-04
 - `IMPROVEMENT` <span class="textorange">`NORMAL`</span> `HIGH EFF` `raised by: Claude-JG` ObjectKinematicTree computes directly with homogeneous transformations (#2829)
   - description: The maintainer, 2026-10-04: 'check the main relevant functions in KinematicTree (I suppose ComputeTreeTransformations and ComputeMassMatrixAndODE2LHS); make two local implementations in C++, with a exudyn.experimental switch for the testing. Probably, the evaluations need to be slightly adjusted, as the Featherstone version uses an inverse of the HTs. Most functions like Translation2T66 are just wrappers that did the T66 and the HT path, but with an optimized version just with the HTs, it should be easier to implement and faster. If comparison shows that the new path with HTs works, the old T66 functions could mostly go; probably some 6D motion and force computations will stay - possibly in a more suitable/faster form.' revision2026b step RG16.13.6 to RG16.13.9.

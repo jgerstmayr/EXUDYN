@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 259 | 1.12.278 |
+| 1.12 | Metheney | 260 | 1.12.279 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.279** `DOCU` `NORMAL` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` representative images for the item pages that lack one (#2830)
+  - description: The maintainer, 2026-10-04: 'I think that most of them are too difficult to do them automatically. Suggestion: check which items (mostly bodies, loads, joints) would make sense to have a representative image - and which ones do not yet have one ... add a couple of images, some maybe from a Testmodel or within 1-2 scripts that are hand-made and which extract the images for the missing cases ... use the non-simplified drawing modes for springs, basis vectors, etc.; extract images with raytracer and try to adjust them yourself.' Replaces RG2.3.3.7, an automatic image per item. revision2026b step RG3.31.
+  - **notes:** 23 item pages show a representative image of the item, drawn by the raytracer: the ground, mass point, planar rigid body, kinematic tree, beams, thin plate, FFRF body, the loads, spring-dampers, distance constraint, reeving system, rolling discs, planar joints, sphere contact and the rigid body marker.
+  - date resolved: **2026-10-04 11:15**, date raised: 2026-10-04
 - **1.12.278** <span class="textred">`BUG`</span> `NORMAL` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` PlotSensor fails for data given as numpy array when an output directory is set (#2836)
   - description: mbs.PlotSensor(sensorNumbers=\[data\]) with a numpy matrix raised 'The truth value of an array with more than one element is ambiguous' when exudyn.config.outputDirectory is set (EXUDYN\_OUTPUTDIRECTORY, as the runners and the notebook runner do): the array was passed to OutputFilePath as if it were a file name. Found with the first tutorial notebook (revision2026b step RG17.2). Data given as array is now taken as it is.
   - **notes:** PlotSensor plots data given as numpy array also when an output directory is set (exudyn.config.outputDirectory).

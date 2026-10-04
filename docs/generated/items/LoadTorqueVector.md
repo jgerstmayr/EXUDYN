@@ -7,6 +7,10 @@
 # LoadTorqueVector
 
 Load with (3D) torque vector; attached to rigidbody-based marker.
+```{image} /docs/figures/itemImages/LoadTorqueVector.png
+:width: 500
+```
+
 
 **Simpler**: [`mbs.CreateTorque`](#sec-mainsystemextensions-createtorque) adds this item, with what it needs, in one call.
 

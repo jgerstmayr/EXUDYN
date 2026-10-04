@@ -7,6 +7,10 @@
 # ObjectConnectorCartesianSpringDamper
 
 An 3D spring-damper element, providing springs and dampers in three (global) directions (x,y,z); the connector can be attached to position-based markers.
+```{image} /docs/figures/itemImages/ObjectConnectorCartesianSpringDamper.png
+:width: 500
+```
+
 
 **Simpler**: [`mbs.CreateCartesianSpringDamper`](#sec-mainsystemextensions-createcartesianspringdamper) adds this item, with what it needs, in one call.
 

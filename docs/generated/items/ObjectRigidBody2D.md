@@ -7,6 +7,10 @@
 # ObjectRigidBody2D
 
 A 2D rigid body which is attached to a rigid body 2D node. The body obtains coordinates, position, velocity, etc. from the underlying 2D node.
+```{image} /docs/figures/itemImages/ObjectRigidBody2D.png
+:width: 500
+```
+
 
 **Simpler**: [`mbs.CreateRigidBody`](#sec-mainsystemextensions-createrigidbody) adds this item, with what it needs, in one call.
 

@@ -14537,3 +14537,39 @@ coordinates); `AddDocuNotebook` is a declaration call of `pybindTypes.declaratio
 ambiguous" whenever an output directory is set - the array went to `OutputFilePath` as if it were a file name. Found by
 the notebook runner, which sets `EXUDYN_OUTPUTDIRECTORY`; fixed, and `plotSensorTest.py` plots an array with an output
 directory set (it fails without the fix, result unchanged).
+
+<a id="rg3-31"></a>
+### RG3.31.2, RG3.31.3 — the item images (2026-10-04, #2830, #2837)
+
+*(Maintainer 2026-10-04: the list of RG3.31.1 as proposed - `ObjectRigidBody2D` "same as ObjectRigidBody but in a
+planar view", `ObjectFFRFreducedOrder` "use the FFRF tutorial"; "for the raytracer use shadows on, a light position
+[,,,1] to have a positional light with lightRadiusVariations=21 to make it look nicer".)*
+
+`tools/itemImages/itemImages.py` (a maintainer tool; `python tools/itemImages/itemImages.py [items]`) builds 23 scenes,
+one function per item, and writes `docs/figures/itemImages/<item>.png`: the raytracer without a window, 800 x 600
+cropped to the content; `openGL.light0.position = [3,10,7,1]` (positional), `lightRadius = 0.4`, `shadow = 0.4`,
+`raytracer.lightRadiusVariations = 21`, `multiSampling = 2`, no text, nodes and markers hidden unless they are the
+item, loads and springs not simplified (`loads.drawSimplified = False`, 10 windings), a light grey checkerboard below
+for the shadows. Items: `ObjectGround`, `ObjectMassPoint`, `ObjectRigidBody2D` (planar view), `ObjectKinematicTree`
+(3 links, own link graphics, joint frames hidden), `ObjectANCFCable2D` and `ObjectBeamGeometricallyExact` (cantilevers
+solved statically under gravity or a tip force), `ObjectANCFThinPlate` (4x4 elements, sagging, contour of the
+displacement), `ObjectFFRFreducedOrder` (the FFRF tutorial `NGsolveCMStutorial.py` run as it is, its last state with
+stresses), `LoadForceVector`, `LoadTorqueVector`, `LoadMassProportional`, the spring-dampers (`ObjectConnectorSpringDamper`,
+`CartesianSpringDamper`, `RigidBodySpringDamper`, `TorsionalSpringDamper`), `ObjectConnectorDistance`,
+`ObjectConnectorReevingSystemSprings` (a rope around a moving and a fixed sheave), `ObjectConnectorRollingDiscPenalty`
+and `ObjectJointRollingDisc` (a disc on the ground), `ObjectJointRevolute2D`, `ObjectJointSliding2D` (a mass sliding on
+a sagging cable, solved for 0.4 s), `ObjectContactSphereSphere`, `MarkerBodyRigid` (the marker frame from `localHT`).
+Each image was looked at and the scene adjusted: the light moved until the faces towards the camera are lit, the
+floors cut to the scene, the views of the z-up scenes corrected - `openGL.advanced.initialModelRotation` is the rotation
+of the camera, so a view with z up is `RotationMatrixZ(c) @ RotationMatrixX(pi/2 - a)`.
+
+**The pages**: a definition names its image with the new header field `image='itemImages/<item>.png'`;
+`itemDocsEmitter` writes it below the overall description (`{image}`, width 500) and refuses a file that does not exist;
+`definitions/README.md` lists the field. The images of the joints that existed are unchanged.
+
+**#2837** (RG3.31.4, open): the first image of the beam showed an arrow triad at each of the 48 tiles - a beam without
+polygonal section geometry is drawn with an orthonormal basis per tile, code marked "temporary!"; the image uses a
+16-point polygon as section.
+
+**The notebook** `tutorialRigidBody.ipynb` looked at its checkerboard from below for the same reason; its view is now
+`RotationMatrixX(-0.4) @ RotationMatrixY(-0.5)`, run again.

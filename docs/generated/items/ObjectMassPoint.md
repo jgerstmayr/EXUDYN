@@ -7,6 +7,10 @@
 # ObjectMassPoint
 
 A 3D mass point which is attached to a position-based node, usually NodePoint.
+```{image} /docs/figures/itemImages/ObjectMassPoint.png
+:width: 500
+```
+
 
 **Simpler**: [`mbs.CreateMassPoint`](#sec-mainsystemextensions-createmasspoint) adds this item, with what it needs, in one call.
 

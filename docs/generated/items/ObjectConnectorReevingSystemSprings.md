@@ -7,6 +7,9 @@
 # ObjectConnectorReevingSystemSprings
 
 A rD reeving system defined by a list of torque-free and friction-free sheaves or points that are connected with one rope (modelled as massless spring). NOTE that the spring can undergo tension AND compression (in order to avoid compression, use a PreStepUserFunction to turn off stiffness and damping in this case!). The force is assumed to be constant all over the rope. The sheaves or connection points are defined by $nr$ rigid body markers $[m_0, \, m_1, \, \ldots, \, m_{nr-1}]$. At both ends of the rope there may be a prescribed motion coupled to a coordinate marker each, given by $m_{c0}$ and $m_{c1}$ .
+```{image} /docs/figures/itemImages/ObjectConnectorReevingSystemSprings.png
+:width: 500
+```
 
 ## Interface
 

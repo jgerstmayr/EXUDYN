@@ -7,6 +7,9 @@
 # ObjectANCFCable2D
 
 A 2D cable finite element using 2 nodes of type NodePoint2DSlope1. The localPosition of the beam with length $L$=length and height $h$ ranges in $X$-direction in range $[0, L]$ and in $Y$-direction in range $[-h/2,h/2]$ (which is in fact not needed in the {ref}`EOM <EOM>`).
+```{image} /docs/figures/itemImages/ObjectANCFCable2D.png
+:width: 500
+```
 
 ## Interface
 

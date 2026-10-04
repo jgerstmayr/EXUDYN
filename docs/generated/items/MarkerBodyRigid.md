@@ -7,6 +7,9 @@
 # MarkerBodyRigid
 
 A rigid-body (position+orientation) body-marker attached to a local (body-fixed) position $\pLocB = [b_0,\; b_1,\; b_2]$ ($x$, $y$, and $z$ coordinates) of the body. It provides position and orientation (rotation), as well as the according derivatives. It can be used for most connectors, joints or loads where either position, position and orientation, or orientation are required.
+```{image} /docs/figures/itemImages/MarkerBodyRigid.png
+:width: 500
+```
 
 ## Interface
 

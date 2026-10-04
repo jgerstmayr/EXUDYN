@@ -18,7 +18,7 @@ print('Exudyn version', exu.config.Version())
 ```
 
 ```text
-Exudyn version 1.12.277.dev1
+Exudyn version 1.12.278.dev1
 ```
 
 A `SystemContainer` holds the systems; `mbs` (multibody system) is the one we build. Call it `mbs` in every model,

@@ -7,6 +7,9 @@
 # ObjectANCFThinPlate
 
 OBJECT UNDER CONSTRUCTION: A 3D thin Kirchhoff plate finite element based on the absolute nodal coordinate formulation, using 4 nodes of type NodePointSlope12. The geometry as well as (deformed and distorted) reference configuration is given by the nodes. The localPosition follows unit-coordinates in the range [-1,1] for X, Y and Z coordinates; the thickness of the plate is h; This element is under construction.
+```{image} /docs/figures/itemImages/ObjectANCFThinPlate.png
+:width: 500
+```
 
 ## Interface
 

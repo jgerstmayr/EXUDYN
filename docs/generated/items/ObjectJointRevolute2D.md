@@ -7,6 +7,9 @@
 # ObjectJointRevolute2D
 
 A revolute joint in 2D; constrains the absolute 2D position of two points given by PointMarkers or RigidMarkers
+```{image} /docs/figures/itemImages/ObjectJointRevolute2D.png
+:width: 500
+```
 
 ## Interface
 

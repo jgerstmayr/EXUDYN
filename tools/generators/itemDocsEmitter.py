@@ -213,6 +213,10 @@ def WriteFile(parseInfo, parameterList):
                     section=parseInfo['class'],
                     sectionLevel=1,
                     sectionLabel='sec:item:' + parseInfo['class'])
+        if parseInfo['image']: #the picture of the item, below its description (#2830)
+            if not os.path.isfile(paths.repositoryRoot + 'docs/figures/' + parseInfo['image']):
+                raise ValueError(parseInfo['class'] + ': the image docs/figures/' + parseInfo['image'] + ' does not exist')
+            writer.sMarkdown += '```{image} /docs/figures/' + parseInfo['image'] + '\n:width: 500\n```\n\n'
 
 
         cWriter = DeclarationWriter()
@@ -549,6 +553,7 @@ def main():
                  'requestedNodeTypes':'', #node markers: the node types they need (itemCompatibility.py)
                  'createFunctions':'',  #the mbs.Create... functions that add the item (#2737)
                  'examples':'',         #the examples of the page, instead of those found by name (#2737)
+                 'image':'',            #the representative image of the item, a file in docs/figures/ (#2830)
                  'miniExamplePerformanceTest':''} #the steps of the MiniExample's performance run (#2745); not on the page
     #this defines the columns of the line, which is then filled into this structure
     lineDefinition = ['lineType',       #[V|F[v]]P: V...Value (=member variable), F...Function (access via member function); v ... virtual Function; P ... write Pybind11 interface

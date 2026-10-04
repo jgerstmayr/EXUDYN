@@ -85,7 +85,7 @@ SC.visualizationSettings.nodes.show = False
 SC.visualizationSettings.loads.show = False
 SC.visualizationSettings.connectors.showJointAxes = True
 SC.visualizationSettings.general.showSolverInformation = False
-view = RotationMatrixX(0.4) @ RotationMatrixY(-0.5)
+view = RotationMatrixX(-0.4) @ RotationMatrixY(-0.5)
 image = ShowImage(SC, size=[640,480], modelRotation=view)
 ```
 

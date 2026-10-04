@@ -7,6 +7,10 @@
 # ObjectConnectorDistance
 
 Connector which enforces constant or prescribed distance between two bodies/nodes.
+```{image} /docs/figures/itemImages/ObjectConnectorDistance.png
+:width: 500
+```
+
 
 **Simpler**: [`mbs.CreateDistanceConstraint`](#sec-mainsystemextensions-createdistanceconstraint) adds this item, with what it needs, in one call.
 

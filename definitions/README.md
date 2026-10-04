@@ -260,6 +260,7 @@ link it, do not repeat it.
 | part | source |
 |---|---|
 | title and `overallDescription` | written: one or two sentences, what it is and what it is for |
+| the image below it | `image='itemImages/ObjectGround.png'`, a file in `docs/figures/`; the item images are drawn by `tools/itemImages/itemImages.py`, one hand-written scene each (#2830) |
 | **Simpler**: the Create functions that add the item | `createFunctions=['CreateRigidBody']`, objects and loads; the one place a page names them |
 | **Interface** | generated from the declared types: `itemTypes`, `requestedTypes`, `accessFunctionTypes`, and `requestedNodeTypes` of a node marker (which also generates the check of `Assemble` and the answer of `mbs.Inspect`, #2817) |
 | **Parameters**, **Visualization parameters**, **Output variables** | generated from the `description` of each member |

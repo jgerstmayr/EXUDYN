@@ -47,6 +47,7 @@ def LoadForceVector_loadVectorUserFunction(mbs: MainSystem, t: Real, loadVector:
 
 definitions.append(ItemDefinition(
     className='LoadForceVector',
+    image='itemImages/LoadForceVector.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCLoad,
@@ -166,6 +167,7 @@ def LoadTorqueVector_loadVectorUserFunction(mbs: MainSystem, t: Real, loadVector
 
 definitions.append(ItemDefinition(
     className='LoadTorqueVector',
+    image='itemImages/LoadTorqueVector.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCLoad,
@@ -293,6 +295,7 @@ def LoadMassProportional_loadVectorUserFunction(mbs: MainSystem, t: Real,
 
 definitions.append(ItemDefinition(
     className='LoadMassProportional',
+    image='itemImages/LoadMassProportional.png', #the representative image of the page (#2830)
     addIncludesC=r"""class MainSystem; //AUTO; for std::function / userFunction; avoid including MainSystem.h
 """,
     cParentClass=ParentClassCLoad,

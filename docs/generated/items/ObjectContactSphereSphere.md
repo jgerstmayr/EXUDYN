@@ -7,6 +7,9 @@
 # ObjectContactSphereSphere
 
 A simple contact connector between two spheres, using various contact models and the option for contact of sphere inside hollow sphere (marker1). The connector implements at least the same functionality as in GeneralContact and is intended for simple setups and for testing, while GeneralContact is much more efficient due to parallelization approaches and efficient contact search.
+```{image} /docs/figures/itemImages/ObjectContactSphereSphere.png
+:width: 500
+```
 
 Authors: Gerstmayr Johannes, Weyrer Sebastian
 

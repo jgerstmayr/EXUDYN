@@ -7,6 +7,10 @@
 # ObjectGround
 
 A ground object behaving like a rigid body, but having no degrees of freedom. Used to attach body-connectors without an action. For examples see spring dampers and joints.
+```{image} /docs/figures/itemImages/ObjectGround.png
+:width: 500
+```
+
 
 **Simpler**: [`mbs.CreateGround`](#sec-mainsystemextensions-createground) adds this item, with what it needs, in one call.
 

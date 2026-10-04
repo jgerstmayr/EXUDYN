@@ -7,6 +7,9 @@
 # ObjectFFRFreducedOrder
 
 This object is used to represent modally reduced flexible bodies using the {ref}`FFRF <FFRF>` and the {ref}`CMS <CMS>`. It can be used to model real-life mechanical systems imported from finite element codes or Python tools such as NETGEN/NGsolve, see the `FEMinterface` in [](#sec-fem-feminterface---init--). It contains a RigidBodyNode (always node 0) and a NodeGenericODE2 representing the modal coordinates. Currently, equations must be defined within user functions, which are available in the FEM module, see class `ObjectFFRFreducedOrderInterface`, especially the user functions `UFmassFFRFreducedOrder` and `UFforceFFRFreducedOrder`, [](#sec-fem-objectffrfreducedorderinterface-addobjectffrfreducedorderwithuserfunctions).
+```{image} /docs/figures/itemImages/ObjectFFRFreducedOrder.png
+:width: 500
+```
 
 Authors: Gerstmayr Johannes, Zwölfer Andreas
 

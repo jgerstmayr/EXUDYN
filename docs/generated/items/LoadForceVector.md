@@ -7,6 +7,10 @@
 # LoadForceVector
 
 Load with (3D) force vector; attached to position-based marker.
+```{image} /docs/figures/itemImages/LoadForceVector.png
+:width: 500
+```
+
 
 **Simpler**: [`mbs.CreateForce`](#sec-mainsystemextensions-createforce) adds this item, with what it needs, in one call.
 

@@ -7,6 +7,10 @@
 # ObjectConnectorSpringDamper
 
 An simple spring-damper element with additional force, connecting to position-based markers.
+```{image} /docs/figures/itemImages/ObjectConnectorSpringDamper.png
+:width: 500
+```
+
 
 **Simpler**: [`mbs.CreateSpringDamper`](#sec-mainsystemextensions-createspringdamper) adds this item, with what it needs, in one call.
 

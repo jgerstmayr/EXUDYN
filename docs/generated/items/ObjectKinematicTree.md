@@ -7,6 +7,10 @@
 # ObjectKinematicTree
 
 A special object to represent open kinematic trees using minimal coordinate formulation. The kinematic tree is defined by lists of joint types, parents, inertia parameters (w.r.t. COM), etc. per link (body) and given joint (pre) transformations from the previous joint. Every joint / link is defined by the position and orientation of the previous joint and a coordinate transformation (incl. translation) from the previous link's to this link's joint coordinates. The joint can be combined with a marker, which allows to attach connectors as well as joints to represent closed loop mechanisms. Efficient models can be created by using tree structures in combination with constraints and very long chains should be avoided and replaced by (smaller) jointed chains if possible. The class Robot from exudyn.robotics can also be used to create kinematic trees, which are then exported as KinematicTree or as redundant multibody system. Use specialized settings in VisualizationSettings.bodies.kinematicTree for showing joint frames and other properties.
+```{image} /docs/figures/itemImages/ObjectKinematicTree.png
+:width: 500
+```
+
 
 **Simpler**: [`mbs.CreateKinematicTree`](#sec-mainsystemextensions-createkinematictree) adds this item, with what it needs, in one call.
 

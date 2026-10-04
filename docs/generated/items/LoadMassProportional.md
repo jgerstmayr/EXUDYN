@@ -7,6 +7,10 @@
 # LoadMassProportional
 
 Load attached to MarkerBodyMass marker, applying a 3D vector load (e.g. the vector [0,-g,0] is used to apply gravitational loading of size g in negative y-direction).
+```{image} /docs/figures/itemImages/LoadMassProportional.png
+:width: 500
+```
+
 
 **Simpler**: [`mbs.CreateMassPoint`](#sec-mainsystemextensions-createmasspoint) or [`mbs.CreateRigidBody`](#sec-mainsystemextensions-createrigidbody) add this item, with what it needs, in one call.
 
