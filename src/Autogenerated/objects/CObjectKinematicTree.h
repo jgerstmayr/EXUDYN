@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  08:07:17 (last modified)
+* @date         2026-10-04  16:45:28 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -378,6 +378,15 @@ public: // AUTO:
 
     //! AUTO:  function which adds 3D torques/forces per joint to Fvp
     void AddExternalForces6D(const Transformation66List& Xup, Vector6DList& Fvp) const;
+
+    //! AUTO:  subtract the forces given per joint from the joint forces f: jointForceVector, the P and D control and the forceUserFunction
+    void AddJointForces(Vector& f, const LinkedDataVector& q, const LinkedDataVector& q_t, Index objectNumber) const;
+
+    //! AUTO:  ComputeTreeTransformations on the placements of the links (homogeneous transformations), with the same results; exudyn.experimental.kinematicTreeHT selects it (#2829)
+    void ComputeTreeTransformationsHT(ConfigurationType configuration, bool computeVelocitiesAccelerations, bool computeAbsoluteTransformations, Transformation66List& Xup, Vector6DList& V, Vector6DList& A) const;
+
+    //! AUTO:  ComputeMassMatrixAndODE2LHS on the placements of the links (homogeneous transformations); exudyn.experimental.kinematicTreeHT selects it (#2829)
+    void ComputeMassMatrixAndODE2LHSHT(ResizableMatrix* massMatrix, Vector* ode2Lhs, Index objectNumber, bool computeMass) const;
 
     //! AUTO:  return true, if object has reference frame; return according LOCAL node number
     virtual bool HasReferenceFrame(Index& localReferenceFrameNode) const override

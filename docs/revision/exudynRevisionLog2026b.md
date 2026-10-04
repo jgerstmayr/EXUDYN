@@ -14853,3 +14853,56 @@ lines; the circles in the xy-plane (`glCirclesXY`: `GraphicsData` of type `Circl
 `general.circleTiling` if it is 0, starting at the top, as the OpenGL renderer draws them - with the color and item of
 the circle; shown when lines are shown. No new primitive. The `GraphicsData` example of the manual
 (`snippets/graphics.ipynb`) shows its blue circle now; its remark that the raytracer draws none is gone.
+
+<a id="rg16-13-6"></a>
+### RG16.13.6 to RG16.13.8, RG16.13.10 — the kinematic tree on the placements of its links, compared (2026-10-04, #2829, #2845)
+
+*(Maintainer 2026-10-04: "Then do as far as possible RG16.13.6-.9 (#2829)".)*
+
+**RG16.13.6 - what the functions need.** Featherstone's `Xup[i]` maps a motion of the parent into link `i`; as an HT it
+is the inverse of the placement of the link in its parent, `H = (R, p)` with `x_parent = R x_link + p`. With `H`, every
+T66 function of the tree is a short formula on `R`, `p` and pairs of `Vector3D` - which is what they already were
+inside, behind the names of the 6x6 matrices:
+
+| function of `CObjectKinematicTree` | uses (`RigidBodyMath`) | on the placement `H = (R, p)` |
+|---|---|---|
+| `JointTransformMotionSubspace66` | `RotationTranslation2T66` (6x) | placement of the joint: `R` = rotation by `+q` about the axis, or `p = q e`; the motion subspace is the axis |
+| `ComputeTreeTransformations`, `ComputeMassMatrixAndODE2LHS` | `RotationTranslation2T66Inverse` (`XL`) | `H = (A, offset) (R_J, p_J)` - joint transformation and offset, then the joint |
+| velocities, accelerations | `T66Mult`, `MultT66SkewMotion` | `omega = R^T omega_p`, `v = R^T (v_p + omega_p x p)`; `v x vJ = (omega x omegaJ, v x omegaJ + omega x vJ)` |
+| forces of the inertia | `InertiaT66FromInertiaParameters`, `T66MultInertia`, `MultT66SkewForce` | `n = J omega + mc x v`, `f = m v - mc x omega`; `v x* F = (omega x n + v x f, omega x f)` |
+| forces to the parent | `T66MultTransposed` | `f_p += R f`, `n_p += R n + p x (R f)` |
+| composite inertia | `T66TransformInertia` | `mc_p = R mc + m p`, `J_p = R J_COM R^T - skew(mc_p)^2 / m` |
+| `AddExternalForces6D` | `T66MultTransposedInverse` | `(n, f) += (R_a^T (torque - p_a x force), R_a^T force)`, `H_a` the placement in the base without the base offset |
+| the `Get...KinematicTree` functions, `ComputeJacobian`, `ComputeRigidBodyMarkerDataKT`, `UpdateGraphics` | `T66toRotationTranslationInverse` (12x) | the placement itself: `R`, `p` - today the inverse of the inverse |
+
+**RG16.13.7 - the implementation.** `CObjectKinematicTree.cpp` has a namespace `KinematicTreeHT` with the formulas of
+the table (`RelativePlacement`, `JointMotion`, `JointForce`, `MotionToLink`, `AddForceToParent`, a struct `Inertia` with
+`Set`, `Mult`, `AddChild`) and per-thread work arrays, and the two functions `ComputeTreeTransformationsHT` (the same
+outputs as before: `Xup` as the inverse placements, the motions as `Vector6D`, so that every caller works with both)
+and `ComputeMassMatrixAndODE2LHSHT`. `exudyn.experimental.kinematicTreeHT` (default False) selects them at the top of
+`ComputeTreeTransformations` and `ComputeMassMatrixAndODE2LHS`. The forces per joint - the constant forces, the P and D
+control, the `forceUserFunction` - are one function, `AddJointForces`, for both.
+
+**RG16.13.10 (#2845)**: that function passed `tempVector2` as the joint velocities to the `forceUserFunction`, a vector
+that nothing filled - the user function of a kinematic tree got an empty `q_t`. No example used it. It gets the
+velocities now; the test model `kinematicTreeUserFunctionTest.py` damps one tree with the D control and an equal one with
+a user function returning the same forces from `q_t`, both with either computation, and they move alike.
+
+**RG16.13.8 - the comparison.** The test models of the kinematic tree, each run with the flag off and on
+(`testResult`, difference):
+
+| test model | difference |
+|---|---|
+| `createKinematicTreeTest.py` | 1.2e-13 (of 3.34) |
+| `energiesFlexibleBodiesTest.py` | 0 |
+| `homogeneousTransformationParameterTest.py` | 3.6e-15 |
+| `kinematicTreeAndMBStest.py` | 6.3e-13 (of 264) |
+| `kinematicTreeConstraintTest.py` | 1.6e-14 |
+| `kinematicTreePrismaticJacobianTest.py` | 0 |
+| `kinematicTreeTest.py` (forces and torques per link) | 2.9e-15 |
+| `movingGroundRobotTest.py`, `serialRobotTest.py` | 0 |
+
+The time per evaluation (mass matrix and forces, RK44 with four of each per step, best of five) on a chain of
+revolute and prismatic joints: 6 links 4.29 us (Featherstone) against 3.19 us (placements); 50 links 126.9 us against
+127.7 us - there the solution of the 50x50 mass matrix in each stage dominates. The placements agree to round-off and
+are not slower: RG16.13.9 follows.

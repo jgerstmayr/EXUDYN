@@ -112,6 +112,7 @@ explicitSolversPostNewtonTest
 contactComparisonTest
 kinematicTreePrismaticJacobianTest
 kinematicTreeTest
+kinematicTreeUserFunctionTest
 laserScannerTest
 linearFEMgenericODE2
 loadUserFunctionTest

@@ -1594,7 +1594,7 @@ is a view of the two stored lists `jointTransformations` and `jointOffsets`; `Ro
     - **RG16.13.5** **DONE 2026-10-04** (#2828) — [log](exudynRevisionLog2026b.md#rg16-13-5) the unused 6x6 Pluecker
       matrices removed from `KinematicsBasics.h`: the `#ifndef USE_EFFICIENT_TRANSFORMATION66` branch (about 300 lines,
       never compiled, the switch always defined) and the switch itself; `Transformation66` is `HomogeneousTransformation`.
-    - **RG16.13.6** *(maintainer 2026-10-04)* the functions that matter (#2829): `ComputeTreeTransformations` (positions,
+    - **RG16.13.6** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-13-6) *(maintainer 2026-10-04: "do as far as possible RG16.13.6-.9")* the functions that matter (#2829): `ComputeTreeTransformations` (positions,
       velocities and accelerations of all links: the output variables, markers and sensors) and
       `ComputeMassMatrixAndODE2LHS` (the composite rigid body algorithm and the recursive Newton-Euler terms), with
       `ComputeJacobian`, `AddExternalForces6D` and the `Get...KinematicTree` functions; what they use of
@@ -1603,15 +1603,17 @@ is a view of the two stored lists `jointTransformations` and `jointOffsets`; `Ro
       `T66TransformInertia`, `T66SkewForce`, `T66MultTransposedInverse`, `T66MotionInverse`, `MultT66SkewForce`,
       `InertiaT66FromInertiaParameters` - written down per function: which transformation it needs, in which direction
       (Featherstone's `Xup` maps from the parent to the link, the inverse of the HT that places the link);
-    - **RG16.13.7** two local implementations of those two functions in `CObjectKinematicTree.cpp` on the HT directly:
+    - **RG16.13.7** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-13-6) two local implementations of those two functions in `CObjectKinematicTree.cpp` on the HT directly:
       positions and rotations with `HomogeneousTransformation` products, motion and force vectors as pairs of `Vector3D`
       (no `Vector6D`, no wrappers), selected by a flag of `exudyn.experimental` (a switch for the testing, not a
       setting), the old path as it is;
-    - **RG16.13.8** the comparison: every test model and MiniExample of the kinematic tree with both paths (equal to
+    - **RG16.13.8** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-13-6) the comparison: every test model and MiniExample of the kinematic tree with both paths (equal to
       round-off), and the time per evaluation on trees of 6 and of 50 links;
     - **RG16.13.9** if the HT path agrees and is not slower: it becomes the only one, the switch goes, and the T66
       functions of `KinematicsBasics.h` go with it - except what the 6D motion and force algebra still needs, possibly in a
-      more suitable form.
+      more suitable form;
+    - **RG16.13.10** **DONE 2026-10-04** — [log](exudynRevisionLog2026b.md#rg16-13-6) (#2845) the `forceUserFunction` of
+      `ObjectKinematicTree` received an empty vector as `q_t`, found while moving the forces per joint into one function.
 
 ## RG17 — Notebooks
 

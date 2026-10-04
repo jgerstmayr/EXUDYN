@@ -32,6 +32,7 @@ class PyExperimental
 public: 
     Index eigenFullPivotLUsolverDebugLevel; //!< debug: 0=off, 1=print rank and info, 2=print matrices
     Index markerSuperElementRigidTexpSO3; //!< True: use additional TexpSO3 for FFRF
+    bool kinematicTreeHT;                 //!< True: ObjectKinematicTree computes on the placements of its links (homogeneous transformations), for the comparison of #2829
 
     PyExperimental()
     {
@@ -42,6 +43,7 @@ public:
     {
         eigenFullPivotLUsolverDebugLevel = 0;
         markerSuperElementRigidTexpSO3 = true;
+        kinematicTreeHT = false;
     }
 
     //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -50,6 +52,7 @@ public:
     {
         os << "  eigenFullPivotLUsolverDebugLevel = " << eigenFullPivotLUsolverDebugLevel << "\n";
         os << "  markerSuperElementRigidTexpSO3 = " << markerSuperElementRigidTexpSO3 << "\n";
+        os << "  kinematicTreeHT = " << kinematicTreeHT << "\n";
         os << "\n";
     }
 

@@ -1,0 +1,69 @@
+#%%+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  The forceUserFunction of ObjectKinematicTree, which receives the joint coordinates q and velocities q_t
+#           (#2845): two equal trees of a revolute and a prismatic joint under gravity, the first damped by the D control
+#           of the tree (jointDControlVector), the second by a user function that returns the same forces from q_t;
+#           both must move alike. Run with exudyn.experimental.kinematicTreeHT as well, the computation on the
+#           placements of the links (#2829).
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-04
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+from exudyn.utilities import * #includes itemInterface and rigidBodyUtilities
+import numpy as np
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+damping = [0.8, 5.]
+
+def Tree(mbs, userFunction=0):
+    """a revolute joint about z with a link along x, then a prismatic joint along x, under gravity in -y"""
+    nKT = mbs.AddNode(NodeGenericODE2(referenceCoordinates=[0, 0.2], initialCoordinates=[0.3, 0], initialCoordinates_t=[0, 0.1],
+                                      numberOfODE2Coordinates=2))
+    useControl = userFunction == 0
+    oKT = mbs.AddObject(ObjectKinematicTree(nodeNumber=nKT, linkParents=[-1, 0],
+                                            jointTypes=[exu.JointType.RevoluteZ, exu.JointType.PrismaticX],
+                                            jointTransformations=exu.Matrix3DList([np.eye(3)]*2),
+                                            jointOffsets=exu.Vector3DList([[0, 0, 0], [0.5, 0, 0]]),
+                                            linkInertiasCOM=exu.Matrix3DList([np.eye(3)*0.01]*2),
+                                            linkCOMs=exu.Vector3DList([[0.25, 0, 0], [0.1, 0, 0]]),
+                                            linkMasses=[1, 2], gravity=[0, -9.81, 0],
+                                            jointPositionOffsetVector=[0.1, 0.2], jointPControlVector=[50, 200],
+                                            jointVelocityOffsetVector=[0, 0] if useControl else [],
+                                            jointDControlVector=damping if useControl else [],
+                                            forceUserFunction=userFunction))
+    return nKT
+
+#the D control as a user function: the tree subtracts what it returns, as it subtracts D*(0 - q_t)
+def UFforce(mbs, t, itemNumber, q, q_t):
+    return [-damping[0]*q_t[0], -damping[1]*q_t[1]]
+
+result = 0
+for useHT in [False, True]:
+    exu.experimental.kinematicTreeHT = useHT
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    nControl = Tree(mbs)
+    nUser = Tree(mbs, UFforce)
+    mbs.Assemble()
+
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.timeIntegration.numberOfSteps = 500
+    simulationSettings.timeIntegration.endTime = 1
+    simulationSettings.solution.file.write = False
+    mbs.SolveDynamic(simulationSettings)
+
+    qControl = mbs.GetNodeOutput(nControl, exu.OutputVariableType.Coordinates)
+    qUser = mbs.GetNodeOutput(nUser, exu.OutputVariableType.Coordinates)
+    exu.Print('kinematicTreeHT=', useHT, ': q control=', qControl, ', q user function=', qUser)
+    result += np.sum(qControl) + (1 if np.linalg.norm(qControl - qUser) > 1e-10 else 0) #the second part must be zero
+exu.experimental.kinematicTreeHT = False
+
+exu.Print('kinematicTreeUserFunctionTest result=', result)
+exu.sys['testResult'] = result

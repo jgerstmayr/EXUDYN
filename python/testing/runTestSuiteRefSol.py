@@ -135,6 +135,7 @@ def TestExamplesReferenceSolution():
         'contactComparisonTest.py':1.200116276111891, #2026-09-30: step size recommended also where a contact ends (#2109); before 1.200040705928356; #deepest points and end heights, three contact objects, two laws (#2749, #2750)
         'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164064,
+        'kinematicTreeUserFunctionTest.py': 0.29045112042278526,      #new 2026-10-04: the forceUserFunction of ObjectKinematicTree gets the velocities (#2845), both computations of the tree (#2829)
         'laserScannerTest.py':2.695064443768281 ,                   #new 2024-04-29
         'linearFEMgenericODE2.py': 0.38767197129755937,              #new 2024-10-06 for jacobianUserFunction in GenericODE2
         'loadUserFunctionTest.py': 1.8051173706570727,              #new 2024-10-10 for visualization of time-dependent loads

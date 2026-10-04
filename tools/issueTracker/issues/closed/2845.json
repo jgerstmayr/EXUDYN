@@ -1,0 +1,16 @@
+{
+  "number": 2845,
+  "title": "ObjectKinematicTree.forceUserFunction receives no velocities",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "BUG",
+  "effort": "LOW",
+  "description": "The forceUserFunction(mbs, t, itemNumber, q, q_t) of ObjectKinematicTree is called with tempVector2 as q_t, which nothing fills: the function receives an empty list (or a stale one) instead of the joint velocities. No example or test model uses this user function. Found while moving the joint forces into one function for both paths of revision2026b step RG16.13.7.",
+  "dateRaised": "2026-10-04",
+  "deadline": "2027-04-02",
+  "dateResolved": "2026-10-04 16:55",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectKinematicTree.cpp",
+  "releaseNotes": "Fixed: the forceUserFunction of ObjectKinematicTree receives the joint velocities q_t; it received an empty vector.",
+  "resolvedInVersion": "1.12.288"
+}

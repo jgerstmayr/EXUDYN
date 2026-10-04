@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 268 | 1.12.287 |
+| 1.12 | Metheney | 269 | 1.12.288 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.288** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectKinematicTree.forceUserFunction receives no velocities (#2845)
+  - description: The forceUserFunction(mbs, t, itemNumber, q, q\_t) of ObjectKinematicTree is called with tempVector2 as q\_t, which nothing fills: the function receives an empty list (or a stale one) instead of the joint velocities. No example or test model uses this user function. Found while moving the joint forces into one function for both paths of revision2026b step RG16.13.7.
+  - **notes:** Fixed: the forceUserFunction of ObjectKinematicTree receives the joint velocities q\_t; it received an empty vector.
+  - date resolved: **2026-10-04 16:55**, date raised: 2026-10-04
 - **1.12.287** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` The raytracer draws no GraphicsData Circle (#2844)
   - description: GraphicsData of type 'Circle' (graphics.Circle, and the circles that 2D items draw with AddCircleXY: the 2D joints, contact circles, slope nodes) are drawn by OpenGL but not by the raytracer: Raytracing.cpp converts lines, quadratic lines, triangles, spheres and texts, not glCircles. Found with the GraphicsData example of the user manual as notebook (revision2026b step RG17.5).
   - **notes:** Fixed: the raytracer draws GraphicsData circles (graphics.Circle) and the circles of 2D items such as joints and contact circles, as lines.
