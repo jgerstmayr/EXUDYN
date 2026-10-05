@@ -22,7 +22,7 @@ SC.renderer.Stop()
 ```
 
 ```{container} notebookorigin
-systemContainer.ipynb
+`python/Notebooks/reference/systemContainer.ipynb`
 ```
 
 

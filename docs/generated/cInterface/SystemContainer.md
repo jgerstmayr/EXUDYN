@@ -14,7 +14,7 @@ mbs = SC.AddSystem()
 ```
 
 ```{container} notebookorigin
-systemContainer.ipynb
+`python/Notebooks/reference/systemContainer.ipynb`
 ```
 
 

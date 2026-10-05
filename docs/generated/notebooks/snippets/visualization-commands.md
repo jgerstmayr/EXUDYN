@@ -27,4 +27,6 @@ For details see mbs.systemData, mbs.sys and mbs.variables
 [0.56467641 0.84272909 0.        ]
 ```
 
-(from the notebook `python/Notebooks/snippets/visualization.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/visualization.ipynb`
+```

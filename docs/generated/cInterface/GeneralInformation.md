@@ -17,7 +17,7 @@ import exudyn as exu
 ```
 
 ```{container} notebookorigin
-generalInformation.ipynb
+`python/Notebooks/reference/generalInformation.ipynb`
 ```
 
 For compatibility with examples and other users, we recommend to use the `exu` abbreviation throughout. In addition, you may work with a convenient interface for your items, therefore also always include:

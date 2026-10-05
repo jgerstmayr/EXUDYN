@@ -14,4 +14,6 @@ exudyn.misc.GUI.useRenderWindowDisplayScaling  #if True, the scaling will follow
 exudyn.misc.GUI.textHeightFactor = 1.45        #this factor is used to increase height of lines in tree view as compared to font size
 ```
 
-(from the notebook `python/Notebooks/snippets/visualization.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/visualization.ipynb`
+```

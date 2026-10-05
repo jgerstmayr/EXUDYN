@@ -15355,3 +15355,14 @@ the item parameter changes are listed".)*
 Checked in the PDF: the notation tables, `ObjectMass1D` (parameters, output variables, definition of quantities),
 `ObjectFFRF`, `SolutionFileSettings` (breaks over two pages with its heading repeated), the parameter changes; no
 overfull box in the LaTeX log.
+
+<a id="rg3-34-1"></a>
+### RG3.34.1 — the notebook named by its path, in typewriter (2026-10-05, #2852)
+
+*(Maintainer 2026-10-05: "it appears much less now in the docs. However, now you changed the font. Please put the
+filename as typewriter (that makes it look different from the other text) as before and add the path ... for the
+user to find it.")*
+
+`NotebookOrigins` writes the path of the notebook as inline code - `python/Notebooks/reference/symbolic.ipynb` - in
+the small container of RG3.34. The fragments of the manual pages (`notebookEmitter.py`, the snippets) end with the
+same container instead of "(from the notebook ...)", still one per fragment.

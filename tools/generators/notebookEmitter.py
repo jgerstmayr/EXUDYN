@@ -105,7 +105,8 @@ def Page(name, notebook, origin=None, cells=None, imagePath='images/'):
             elif output['output_type'] == 'error':
                 raise ValueError('notebookEmitter: ' + origin + ' stores an error; run it with "exudev notebooks"')
     if fragment:
-        lines += ['(from the notebook `' + origin + '`)', '']
+        #small and close under the cells, as on the pages of the Python-C++ interface (#2852)
+        lines += ['```{container} notebookorigin', '`' + origin + '`', '```', '']
     return ('\n'.join(lines).rstrip() + '\n', images)
 
 

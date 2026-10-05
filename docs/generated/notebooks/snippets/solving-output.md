@@ -15,4 +15,6 @@ simulationSettings.solution.file.name= "myOutput.txt"
 simulationSettings.solution.file.export.dataCoordinates = False
 ```
 
-(from the notebook `python/Notebooks/snippets/solving.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/solving.ipynb`
+```

@@ -9,4 +9,6 @@ SC.renderer.SetModelView(zoom=8.8,rotationVector=[-0.8120557,0.4727261,0.7176849
 SC.renderer.Stop()
 ```
 
-(from the notebook `python/Notebooks/snippets/visualization.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/visualization.ipynb`
+```

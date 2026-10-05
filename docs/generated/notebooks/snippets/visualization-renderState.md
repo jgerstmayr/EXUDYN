@@ -30,4 +30,6 @@ joystickRotation = [0.0, 0.0, 0.0]
 joystickAvailable = -1
 ```
 
-(from the notebook `python/Notebooks/snippets/visualization.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/visualization.ipynb`
+```

@@ -22,4 +22,6 @@ SC.visualizationSettings.contour.outputVariable = exu.OutputVariableType.Displac
 SC.visualizationSettings.contour.outputVariableComponent = 1 #0=x, 1=y, 2=z
 ```
 
-(from the notebook `python/Notebooks/snippets/visualization.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/visualization.ipynb`
+```

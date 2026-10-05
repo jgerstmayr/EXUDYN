@@ -17,4 +17,6 @@ simulationSettings.solution.file.writePeriod = 0.1
 simulationSettings.linearSolver.solverType = exu.LinearSolverType.EigenSparse
 ```
 
-(from the notebook `python/Notebooks/snippets/solving.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/solving.ipynb`
+```

@@ -16,4 +16,6 @@ DYNAMIC SOLVER FAILED:
 <class 'ZeroDivisionError'>
 ```
 
-(from the notebook `python/Notebooks/snippets/solving.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/solving.ipynb`
+```

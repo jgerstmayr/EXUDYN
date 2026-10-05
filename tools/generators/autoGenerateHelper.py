@@ -203,12 +203,12 @@ def MarkdownCell(text):
 #the name of the notebook a page shows examples from, after the first code cell that comes from it: small and close
 #under the cell, in html by docs/_static/custom.css and in the PDF by the environment sphinxclassnotebookorigin of
 #conf.py. AddDocuNotebook writes a mark after the first code cell of each part; NotebookOrigins turns the first mark
-#of each notebook on a page into its file name and drops the others
+#of each notebook on a page into its path, in typewriter, and drops the others
 notebookOriginMark = '<!--notebook origin: '
 
 
 def NotebookOrigins(page):
-    """the page with the file name of each notebook after its first code cell on the page only"""
+    """the page with the path of each notebook after its first code cell on the page only"""
     shown = set()
     lines = []
     skipBlank = False
@@ -223,7 +223,7 @@ def NotebookOrigins(page):
                 skipBlank = True    #the blank line after the mark goes with it
                 continue
             shown.add(notebookPath)
-            line = '```{container} notebookorigin\n' + os.path.basename(notebookPath) + '\n```'
+            line = '```{container} notebookorigin\n`' + notebookPath + '`\n```'   #the path, so that it can be found
         lines.append(line)
     return '\n'.join(lines)
 

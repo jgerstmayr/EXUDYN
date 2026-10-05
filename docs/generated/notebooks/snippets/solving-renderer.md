@@ -6,4 +6,6 @@ SC.renderer.DoIdleTasks()         #wait for a key press, so the window stays
 SC.renderer.Stop()                #close it
 ```
 
-(from the notebook `python/Notebooks/snippets/solving.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/solving.ipynb`
+```

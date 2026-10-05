@@ -213,4 +213,6 @@ columns imported = [3, 3, 3, 0, 0, 0, 0]
 total columns to be imported = 9 , array size of file = 10
 ```
 
-(from the notebook `python/Notebooks/snippets/visualization.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/visualization.ipynb`
+```

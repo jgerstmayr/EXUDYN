@@ -8,4 +8,6 @@ for i in range(n):
         mbs.SetObjectParameter(i, 'activeConnector', False)
 ```
 
-(from the notebook `python/Notebooks/snippets/visualization.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/visualization.ipynb`
+```

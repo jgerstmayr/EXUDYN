@@ -3,4 +3,6 @@
 SC.visualizationSettings.view0.camera.trackMarker = nMarker
 ```
 
-(from the notebook `python/Notebooks/snippets/visualization.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/visualization.ipynb`
+```

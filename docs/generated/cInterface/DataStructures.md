@@ -293,7 +293,7 @@ print([SC2.renderer.materials[i].name for i in range(10)])
 ```
 
 ```{container} notebookorigin
-systemContainer.ipynb
+`python/Notebooks/reference/systemContainer.ipynb`
 ```
 
 

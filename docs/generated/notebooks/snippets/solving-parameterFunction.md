@@ -13,4 +13,6 @@ print('score:', ParameterFunction({}))
 score: 1.0
 ```
 
-(from the notebook `python/Notebooks/snippets/solving.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/solving.ipynb`
+```

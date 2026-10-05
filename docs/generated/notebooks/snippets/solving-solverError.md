@@ -11,4 +11,6 @@ except exudyn.ModelError as e:
     print('this model cannot be solved:', e)
 ```
 
-(from the notebook `python/Notebooks/snippets/solving.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/solving.ipynb`
+```

@@ -57,7 +57,7 @@ f= 1007.048934256198 , diff= 11.908573304574846
 ```
 
 ```{container} notebookorigin
-symbolic.ipynb
+`python/Notebooks/reference/symbolic.ipynb`
 ```
 
 To create a symbolic Real, use `aa=symbolic.Real(1.23)` to build a Python object aa with value 1.23. In order to use a named value, use `pi=symbolic.Real('pi',3.14)`. Note that in the following, we use the abbreviation `SymReal=exudyn.symbolic.Real`. Member functions of `SymReal`, which are **not recorded**, are:

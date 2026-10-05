@@ -18,4 +18,6 @@ oGround2 = mbs.AddObject(ObjectGround(visualization=
 #.... further code for simulation here
 ```
 
-(from the notebook `python/Notebooks/snippets/visualization.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/visualization.ipynb`
+```

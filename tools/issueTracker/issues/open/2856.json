@@ -1,0 +1,12 @@
+{
+  "number": 2856,
+  "title": "the PDF documentation is built in no gate",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "TESTING",
+  "effort": "MEDIUM",
+  "description": "The maintainer, 2026-10-05: a PDF check in the docs gate. Today exudev docs builds only the html; the PDF (exudev docs --pdf, about 2.5 min) is a release artifact, so a table that runs into the footer, an overfull box, a formula LaTeX cannot set or a missing figure surfaces only when someone reads the PDF. Proposal: exudev docs --pdf --check, run with the gates when the documentation changed, that fails on LaTeX errors and reports overfull boxes and other warnings of the LaTeX log against a baseline.",
+  "dateRaised": "2026-10-05",
+  "deadline": "2027-04-03",
+  "file": "tools/exudev/commands.py"
+}

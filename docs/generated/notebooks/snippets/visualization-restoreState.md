@@ -11,4 +11,6 @@ SC.renderer.RestoreSavedState() #the view of the previous run, if there is one
 SC.renderer.Stop() #stores render state in exu.sys['renderState']
 ```
 
-(from the notebook `python/Notebooks/snippets/visualization.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/visualization.ipynb`
+```

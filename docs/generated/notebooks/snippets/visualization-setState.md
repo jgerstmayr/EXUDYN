@@ -13,4 +13,6 @@ SC.renderer.SetState(renderState)
 SC.renderer.Stop()
 ```
 
-(from the notebook `python/Notebooks/snippets/visualization.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/visualization.ipynb`
+```

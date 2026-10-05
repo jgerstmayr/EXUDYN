@@ -18,7 +18,7 @@ gContact.SetFrictionPairings(0.2*np.ones((1,1))) #set friction pairings and adju
 ```
 
 ```{container} notebookorigin
-mainSystem.ipynb
+`python/Notebooks/reference/mainSystem.ipynb`
 ```
 
 

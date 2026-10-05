@@ -17,7 +17,7 @@ sensor = mbs.AddSensor(SensorBody(bodyNumber=rigid, storeInternal=True,
 ```
 
 ```{container} notebookorigin
-generalInformation.ipynb
+`python/Notebooks/reference/generalInformation.ipynb`
 ```
 
 

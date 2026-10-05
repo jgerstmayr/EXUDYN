@@ -110,4 +110,6 @@ In a script, `SC.visualizationSettings.view0.camera.useRaytracer = True` before 
 `SC.renderer.Start()`) draws the render window with the raytracer; start with a small window, or with
 `raytracer.imageSizeFactor = 3`, which reduces the resolution.
 
-(from the notebook `python/Notebooks/snippets/graphics.ipynb`)
+```{container} notebookorigin
+`python/Notebooks/snippets/graphics.ipynb`
+```

@@ -10,7 +10,7 @@ General information on current version:
 
 - Exudyn version = 1.12.328.dev1
 - last change = 2026-10-05
-- Number of issues = 2856
+- Number of issues = 2857
 - Number of resolved issues = 2642 (328 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `TESTING` `MEDIUM EFF` `raised by: Claude-JG` the PDF documentation is built in no gate (#2856)
+  - description: The maintainer, 2026-10-05: a PDF check in the docs gate. Today exudev docs builds only the html; the PDF (exudev docs --pdf, about 2.5 min) is a release artifact, so a table that runs into the footer, an overfull box, a formula LaTeX cannot set or a missing figure surfaces only when someone reads the PDF. Proposal: exudev docs --pdf --check, run with the gates when the documentation changed, that fails on LaTeX errors and reports overfull boxes and other warnings of the LaTeX log against a baseline.
+  - date raised: 2026-10-05
 - `CHECK` `LOW EFF` `raised by: Claude-JG` a MainSystem does not keep its SystemContainer alive (#2851)
   - description: SC.AddSystem() returns the MainSystem with return\_value\_policy::reference: a script that keeps mbs but drops SC (del SC, or SC created inside a function that returns mbs) works on a system the container has deleted. GetGeneralContact keeps its system alive since \#1512 (reference\_internal); the same for AddSystem/GetSystem would tie mbs to SC. Check what else depends on the current behaviour (SC.Reset, the renderer) before changing it.
   - date raised: 2026-10-05
