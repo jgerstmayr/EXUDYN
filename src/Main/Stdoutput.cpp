@@ -130,6 +130,29 @@ STDstring ResolveOutputFileName(const STDstring& fileName)
 	return outputDirectory + "/" + fileName;
 }
 
+//! the size of a file in bytes, -1 if it does not exist or the size is not available (#2850)
+long long GetFileSize(const STDstring& fileName)
+{
+#ifdef USE_AUTOCREATE_DIRECTORIES
+	std::error_code error;
+	auto size = filesystemNamespace::file_size(fileName, error);
+	if (!error) { return (long long)size; }
+#endif
+	return -1;
+}
+
+//! shorten a file to the given size in bytes; false if that is not possible (#2850)
+bool TruncateFile(const STDstring& fileName, long long size)
+{
+#ifdef USE_AUTOCREATE_DIRECTORIES
+	std::error_code error;
+	filesystemNamespace::resize_file(fileName, (std::uintmax_t)size, error);
+	return !error;
+#else
+	return false;
+#endif
+}
+
 
 
 

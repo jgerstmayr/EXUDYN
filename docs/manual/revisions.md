@@ -199,6 +199,11 @@ The same holds for item parameters: a renamed one is still taken under its old n
 dictionary and by `mbs.GetObjectParameter`/`SetObjectParameter` - with a warning naming the new one; the page of the
 item lists it (#2589).
 
+**A dynamic simulation continues from its restart file.** With `solution.restart.write` the solvers write the state
+every `solution.restart.writePeriod` and at the end, and with `solution.restart.continueIfAvailable` the same script,
+started again, continues from it - appending to its solution and sensor files -, for a job that is stopped and
+resubmitted; see the user manual, *Continuing a simulation from its restart file* (#2850).
+
 **The Create functions take bodies, nodes or markers in `itemNumbers`.** `CreateSpringDamper`,
 `CreateCartesianSpringDamper`, `CreateRigidBodySpringDamper` and `CreateDistanceConstraint` take a body at its local
 position, a node or a marker for each side; the joints and `CreateTorsionalSpringDamper` a body or a rigid marker;

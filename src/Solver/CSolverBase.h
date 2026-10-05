@@ -47,6 +47,25 @@ public: //made public for simpler access via pybind; nevertheless, C++ functions
 	SolverFileData file;
 	NewtonSettings newton; //copy of timeInt or staticSolver (depending on solver)
 	DiscontinuousSettings discontinuous; //copy of discontinuous from timeInt or staticSolver
+
+	//! the state of the restart file, with which a dynamic simulation continues (#2850)
+	struct RestartState
+	{
+		bool active = false;			//!< true: the run continues from the restart file
+		STDstring fileName;				//!< the file it was read from, as opened
+		Real time = 0.;
+		Index stepIndex = 0;
+		Real stepSize = 0.;
+		Real nextStepSize = -1.;		//!< the step size the error control of an explicit solver proposed
+		Index stepsSinceLastStepSizeReduction = 0;
+		Real lastSolutionWritten = 0.;
+		Real lastSensorsWritten = 0.;
+		Real lastImageRecorded = 0.;
+		long long solutionFileSize = -1;	//!< the size of the solution file when the state was written; -1: none
+		std::vector<long long> sensorFileSizes; //!< per sensor, -1: no file
+		std::vector<Real> ODE2, ODE2_t, ODE2_tt, aAlgorithmic, ODE1, ODE1_t, AE, data;
+	} restart;
+	Index stepsSinceLastStepSizeReduction = 0; //!< steps since the step size was reduced; an increase waits for adaptiveStepRecoverySteps of them
 public:
 	CSolverBase()
 	{
@@ -207,7 +226,23 @@ public:
 
 	//! write unique sensor solution file
 	virtual void WriteSensorsToFile(const CSystem& computationalSystem, const SimulationSettings& simulationSettings);
-	
+
+	//! the solver and the numbers of coordinates and items: what a restart file must fit (#2850)
+	virtual STDstring RestartFingerprint(const CSystem& computationalSystem) const;
+
+	//! write the current state, reached by the step stepIndex, into the restart file; written to <name>.tmp and renamed, the previous one kept as <name>.bck (#2850)
+	virtual void WriteRestartFile(const CSystem& computationalSystem, const SimulationSettings& simulationSettings, Index stepIndex);
+
+	//! read the restart file into restart, if solution.restart.continueIfAvailable and the file exists; raises if it does not fit (#2850)
+	virtual void ReadRestartFile(const CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+
+	//! set the state, the time and the output times from restart (#2850)
+	virtual void ApplyRestartState(CSystem& computationalSystem, const SimulationSettings& simulationSettings);
+
+	//! the step size the error control proposes for the next step (explicit solvers), -1: none; kept in the restart file (#2850)
+	virtual Real GetNextStepSize() const { return -1.; }
+	virtual void SetNextStepSize(Real stepSize) { }
+
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 	//! compute simulation end time (depends on static or time integration solver)

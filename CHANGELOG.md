@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 305 | 1.12.339 |
+| 1.12 | Metheney | 306 | 1.12.340 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.340** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a restart mechanism: how a simulation continues from its restart file (#2850)
+  - description: The maintainer, 2026-10-05: before a restart function is written, evaluate how a restart works together with a model script - where the restart file is injected, for example that the system detects a restart file and loads its state from it. The restart file is written already (simulationSettings.solution.restart); a prototype that reads it is \_InitializeFromRestartFile in basicUtilities.py, not public. Successor of \#1565.
+  - **notes:** A dynamic simulation continues from its restart file: with solution.restart.write the solvers write the state every writePeriod and at the end, and with solution.restart.continueIfAvailable the same script continues from it, appending to the solution and sensor files; results are identical to an uninterrupted run (with modified Newton within the Newton tolerance) (revision2026b step RG12.39)
+  - date resolved: **2026-10-05 18:00**, date raised: 2026-10-05
 - **1.12.339** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the PDF documentation is built in no gate (#2856)
   - description: The maintainer, 2026-10-05: a PDF check in the docs gate. Today exudev docs builds only the html; the PDF (exudev docs --pdf, about 2.5 min) is a release artifact, so a table that runs into the footer, an overfull box, a formula LaTeX cannot set or a missing figure surfaces only when someone reads the PDF. Proposal: exudev docs --pdf --check, run with the gates when the documentation changed, that fails on LaTeX errors and reports overfull boxes and other warnings of the LaTeX log against a baseline.
   - **notes:** exudev docs --check builds the PDF and fails on a new LaTeX problem against tools/pdfLogBaseline.json - an error, a missing file or character, an undefined reference, a float or box too large for its page, a line much too wide - with its page; part of the docs gate for changes to docs/, definitions/ or conf.py (revision2026b step RG3.36)

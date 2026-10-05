@@ -138,11 +138,13 @@ SolverOutputData has the following items:
 | `lastImageRecorded` | Real | 0. | simulation time when last image has been recorded |
 | `lastNewtonJacobiCount` | Index | 0 | jacobian update count when written to console (or file) last time |
 | `lastNewtonStepsCount` | Index | 0 | newton steps count when written to console (or file) last time |
+| `lastRestartWritten` | Real | 0. | simulation time when the restart file has been written last |
 | `lastSensorsWritten` | Real | 0. | simulation time when last sensors have been written |
 | `lastSolutionWritten` | Real | 0. | simulation time when last solution has been written |
 | `lastVerboseStepIndex` | Index | 0 | step index when last time written to console (or file) |
 | `multiThreadingMode` | Index | 0 | multithreading mode that has been used: 0=None (serial), 1=multithreading, 2=multithreading with load balancing; (modes new since 2025-06, V1.9.198) |
 | `numberOfThreadsUsed` | Index | 1 | number of threads that have been used in simulation |
+| `restartTime` | Real | -1. | simulation time from which the solver continued with the restart file (solution.restart.continueIfAvailable); -1 if it started at the start time |
 | `simulationStoppedByUser` | bool | False | flag (initialized false) is set true when user stops the simulation (press Q, Escape, etc.) |
 | `simulationStoppedByUserFunction` | bool | False | flag (initialized false) is set true when a user function (PreStep, PostNewton, etc.) sends termination signal |
 | `simulationTimeout` | bool | False | flag (initialized false) is set true when exudyn.special.solver.timeout is reached (and timeout is >= 0) |

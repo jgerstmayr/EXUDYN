@@ -4,7 +4,7 @@
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-03 (last modfied)
+* @date         AUTO: 2026-10-05 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -142,7 +142,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-03 (last modfied)
+* @date         AUTO: 2026-10-05 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -259,7 +259,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-03 (last modfied)
+* @date         AUTO: 2026-10-05 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -366,7 +366,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-03 (last modfied)
+* @date         AUTO: 2026-10-05 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -455,7 +455,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-03 (last modfied)
+* @date         AUTO: 2026-10-05 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -475,11 +475,13 @@ public: // AUTO:
   Real lastImageRecorded;                         //!< AUTO: simulation time when last image has been recorded
   Index lastNewtonJacobiCount;                    //!< AUTO: jacobian update count when written to console (or file) last time
   Index lastNewtonStepsCount;                     //!< AUTO: newton steps count when written to console (or file) last time
+  Real lastRestartWritten;                        //!< AUTO: simulation time when the restart file has been written last
   Real lastSensorsWritten;                        //!< AUTO: simulation time when last sensors have been written
   Real lastSolutionWritten;                       //!< AUTO: simulation time when last solution has been written
   Index lastVerboseStepIndex;                     //!< AUTO: step index when last time written to console (or file)
   Index multiThreadingMode;                       //!< AUTO: multithreading mode that has been used: 0=None (serial), 1=multithreading, 2=multithreading with load balancing; (modes new since 2025-06, V1.9.198)
   Index numberOfThreadsUsed;                      //!< AUTO: number of threads that have been used in simulation
+  Real restartTime;                               //!< AUTO: simulation time from which the solver continued with the restart file (solution.restart.continueIfAvailable); -1 if it started at the start time
   bool simulationStoppedByUser;                   //!< AUTO: flag (initialized false) is set true when user stops the simulation (press Q, Escape, etc.)
   bool simulationStoppedByUserFunction;           //!< AUTO: flag (initialized false) is set true when a user function (PreStep, PostNewton, etc.) sends termination signal
   bool simulationTimeout;                         //!< AUTO: flag (initialized false) is set true when exudyn.special.solver.timeout is reached (and timeout is >= 0)
@@ -505,11 +507,13 @@ public: // AUTO:
     lastImageRecorded = 0.;
     lastNewtonJacobiCount = 0;
     lastNewtonStepsCount = 0;
+    lastRestartWritten = 0.;
     lastSensorsWritten = 0.;
     lastSolutionWritten = 0.;
     lastVerboseStepIndex = 0;
     multiThreadingMode = 0;
     numberOfThreadsUsed = 1;
+    restartTime = -1.;
     simulationStoppedByUser = false;
     simulationStoppedByUserFunction = false;
     simulationTimeout = false;
@@ -539,11 +543,13 @@ public: // AUTO:
     os << "  lastImageRecorded = " << lastImageRecorded << "\n";
     os << "  lastNewtonJacobiCount = " << lastNewtonJacobiCount << "\n";
     os << "  lastNewtonStepsCount = " << lastNewtonStepsCount << "\n";
+    os << "  lastRestartWritten = " << lastRestartWritten << "\n";
     os << "  lastSensorsWritten = " << lastSensorsWritten << "\n";
     os << "  lastSolutionWritten = " << lastSolutionWritten << "\n";
     os << "  lastVerboseStepIndex = " << lastVerboseStepIndex << "\n";
     os << "  multiThreadingMode = " << multiThreadingMode << "\n";
     os << "  numberOfThreadsUsed = " << numberOfThreadsUsed << "\n";
+    os << "  restartTime = " << restartTime << "\n";
     os << "  sensorValuesTemp = " << sensorValuesTemp << "\n";
     os << "  sensorValuesTemp2 = " << sensorValuesTemp2 << "\n";
     os << "  simulationStoppedByUser = " << simulationStoppedByUser << "\n";
@@ -572,7 +578,7 @@ public: // AUTO:
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
-* @date         AUTO: 2026-10-03 (last modfied)
+* @date         AUTO: 2026-10-05 (last modfied)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:

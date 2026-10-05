@@ -1099,13 +1099,15 @@ class SolutionSensorsSettings:
 
 
 class SolutionRestartSettings:
-    """The restart file: the state of the system written regularly, from which a simulation can be continued. Reserved: no solver writes it yet, and write=True gives a warning; how a restart works is #2850."""
+    """The restart file of a dynamic simulation: its state - time, coordinates, velocities, accelerations, the algorithmic accelerations of the generalized-alpha method, the step size and the sizes of the output files - written every writePeriod and at the end, from which the same script continues with continueIfAvailable; for a job that is stopped (e.g. by exudyn.special.solver.timeout or on a cluster) and started again unchanged. The model itself, its user functions and their Python state come from the script; the static solver writes no restart file."""
+    continueIfAvailable: bool
+    """flag (true/false); if true and the restart file exists, a dynamic solver continues from its state instead of starting at startTime: it takes time, state and step size from the file, appends to the solution and sensor files - shortened to what was written up to that state - and writes no initial values; a file that does not fit the system or the solver raises an error; without a file, the simulation starts as usual. Sensors with storeInternal hold only the values after the restart."""
     name: str
-    """filename and (relative) path of the restart file; reserved, see write."""
+    """filename and (relative) path of the restart file."""
     write: bool
-    """flag (true/false), which shall determine if the restart file is written regularly; not implemented yet: True gives a warning (#2850)."""
+    """flag (true/false); if true, the dynamic solvers write the restart file every writePeriod and at the end of the simulation; the file is written to name.tmp and renamed, the previous one kept as name.bck."""
     writePeriod: float
-    """time span (period) in which the restart file shall be updated; reserved, see write."""
+    """time span (period) in which the restart file is updated."""
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 
@@ -2458,6 +2460,8 @@ class SolverOutputData:
     """jacobian update count when written to console (or file) last time."""
     lastNewtonStepsCount: int
     """newton steps count when written to console (or file) last time."""
+    lastRestartWritten: float
+    """simulation time when the restart file has been written last."""
     lastSensorsWritten: float
     """simulation time when last sensors have been written."""
     lastSolutionWritten: float
@@ -2468,6 +2472,8 @@ class SolverOutputData:
     """multithreading mode that has been used: 0=None (serial), 1=multithreading, 2=multithreading with load balancing; (modes new since 2025-06, V1.9.198)."""
     numberOfThreadsUsed: int
     """number of threads that have been used in simulation."""
+    restartTime: float
+    """simulation time from which the solver continued with the restart file (solution.restart.continueIfAvailable); -1 if it started at the start time."""
     simulationStoppedByUser: bool
     """flag (initialized false) is set true when user stops the simulation (press Q, Escape, etc.)."""
     simulationStoppedByUserFunction: bool

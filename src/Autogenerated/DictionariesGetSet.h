@@ -360,13 +360,21 @@ inline void SetDictionary(SolutionSensorsSettings& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const SolutionRestartSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
-    structureDict["structureDescription"] = "The restart file: the state of the system written regularly, from which a simulation can be continued. Reserved: no solver writes it yet, and write=True gives a warning; how a restart works is #2850.";
+    structureDict["structureDescription"] = "The restart file of a dynamic simulation: its state - time, coordinates, velocities, accelerations, the algorithmic accelerations of the generalized-alpha method, the step size and the sizes of the output files - written every writePeriod and at the end, from which the same script continues with continueIfAvailable; for a job that is stopped (e.g. by exudyn.special.solver.timeout or on a cluster) and started again unchanged. The model itself, its user functions and their Python state come from the script; the static solver writes no restart file.";
+    d = py::dict(); //reset local dict
+    d["itemIdentifier"] = std::string(""); //identifier for item
+    d["value"] = data.continueIfAvailable;
+    d["type"] = "bool";
+    d["size"] = std::vector<int>{1};
+    d["description"] = "flag (true/false); if true and the restart file exists, a dynamic solver continues from its state instead of starting at startTime: it takes time, state and step size from the file, appends to the solution and sensor files - shortened to what was written up to that state - and writes no initial values; a file that does not fit the system or the solver raises an error; without a file, the simulation starts as usual. Sensors with storeInternal hold only the values after the restart.";
+    structureDict["continueIfAvailable"] = d;
+
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.name;
     d["type"] = "FileName";
     d["size"] = std::vector<int>{1};
-    d["description"] = "filename and (relative) path of the restart file; reserved, see write";
+    d["description"] = "filename and (relative) path of the restart file";
     structureDict["name"] = d;
 
     d = py::dict(); //reset local dict
@@ -374,7 +382,7 @@ inline py::dict GetDictionaryWithTypeInfo(const SolutionRestartSettings& data) {
     d["value"] = data.write;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "flag (true/false), which shall determine if the restart file is written regularly; not implemented yet: True gives a warning (#2850)";
+    d["description"] = "flag (true/false); if true, the dynamic solvers write the restart file every writePeriod and at the end of the simulation; the file is written to name.tmp and renamed, the previous one kept as name.bck";
     structureDict["write"] = d;
 
     d = py::dict(); //reset local dict
@@ -382,7 +390,7 @@ inline py::dict GetDictionaryWithTypeInfo(const SolutionRestartSettings& data) {
     d["value"] = data.writePeriod;
     d["type"] = "UReal";
     d["size"] = std::vector<int>{1};
-    d["description"] = "time span (period) in which the restart file shall be updated; reserved, see write";
+    d["description"] = "time span (period) in which the restart file is updated";
     structureDict["writePeriod"] = d;
 
     return structureDict;
@@ -391,6 +399,7 @@ inline py::dict GetDictionaryWithTypeInfo(const SolutionRestartSettings& data) {
 //! AUTO: read access to structure; converting into dictionary without type info
 inline py::dict GetDictionary(const SolutionRestartSettings& data) {
     auto structureDict = py::dict();
+    structureDict["continueIfAvailable"] = data.continueIfAvailable;
     structureDict["name"] = data.name;
     structureDict["write"] = data.write;
     structureDict["writePeriod"] = data.writePeriod;
@@ -399,6 +408,7 @@ inline py::dict GetDictionary(const SolutionRestartSettings& data) {
 
 //! AUTO: write access to data structure; converting dictionary d into structure
 inline void SetDictionary(SolutionRestartSettings& data, const py::dict& d) {
+    EPyUtils::FromPython(d["continueIfAvailable"], data.continueIfAvailable, "SolutionRestartSettings.continueIfAvailable");
     EPyUtils::FromPython(d["name"], data.name, "SolutionRestartSettings.name");
     EPyUtils::FromPython(d["write"], data.write, "SolutionRestartSettings.write");
     EPyUtils::FromPython(d["writePeriod"], data.writePeriod, EPyUtils::RangeCheck::nonNegative, "SolutionRestartSettings.writePeriod");

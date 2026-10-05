@@ -1507,29 +1507,7 @@ docstrings; argument annotations only where they help a reader; a check that eve
 **RG12.40** **DONE 2026-10-05** (#2863, #2337) — [log](exudynRevisionLog2026b.md#rg12-40) · [plan text](exudynRevisionLog2026b.md#plan-rg12-40) — The Create functions take bodies, nodes or markers in `itemNumbers`.
 
 <a id="rg12-39"></a>
-**RG12.39** *(group RG12; maintainer 2026-10-05, from RG4.19.8)* **How a simulation continues from its restart file**
-    (#2850). The restart file is written (`simulationSettings.solution.restart`: `write`, `name`, `writePeriod`), and
-    a prototype that reads it back is `_InitializeFromRestartFile` in `basicUtilities.py`, not public since #1565 was
-    closed. Before a function is written, evaluate how a restart works together with the model script: where the
-    restart file comes in - for example the system detects that one is available and loads its state from it -,
-    what else a restart needs (the time, the solver's state, sensors and files that continue), and what the user
-    writes. Then a proposal, for the maintainer's decision.
-    **Evaluated 2026-10-05** — [log](exudynRevisionLog2026b.md#rg12-39) *(maintainer 2026-10-05: "do RG12.39")*:
-    no solver writes a restart file - `solution.restart.write=True` only warns - so the prototype reads a format that
-    does not exist; the descriptions of the settings say so now. **Proposal, for decision** (options in the log):
-    - **RG12.39.1** *(proposed)* the solvers write the restart file: one row - time, ODE2, ODE2_t, ODE2_tt, the
-      algorithmic accelerations of the generalized-alpha method, ODE1, AE, data coordinates, the current step size -
-      and a header with a fingerprint of the system (its numbers of items and coordinates, the solver type), every
-      `writePeriod` and at the end; written to a temporary file and renamed, the previous one kept as `.bck`.
-    - **RG12.39.2** *(proposed)* the script asks for it: `mbs.SolveDynamic(simulationSettings, restartFile='...')`
-      (and `SolveStatic`) - after `Assemble`, the solver checks the fingerprint, sets the state and the start time
-      from the file, and appends to the solution and sensor files; the end time stays the script's. The model -
-      items, user functions - is the script's, which is why the restart is not a pickled `SystemContainer`.
-    - **RG12.39.3** *(proposed, later)* `solution.restart.continueIfAvailable`: the same without changing the
-      script - for a job on a cluster that is killed and started again with the same script; a file whose
-      fingerprint does not fit is an error, not ignored.
-    - Test: a run from 0 to 1 against a run from 0 to 0.5 and a restart to 1 - identical with the algorithmic
-      accelerations stored, which is the reason they are in the file.
+**RG12.39** **DONE 2026-10-05** (#2850) — [log](exudynRevisionLog2026b.md#rg12-39-done) · [plan text](exudynRevisionLog2026b.md#plan-rg12-39) — A dynamic simulation continues from its restart file: `solution.restart.write` and `solution.restart.continueIfAvailable`.
 
 ## RG13 — Item documentation
 
@@ -1934,7 +1912,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #2848, #2849 | the open bugs before 1.13: `GeneralContact`, the contact model of its implicit solver (decision) and the torque on triangle bodies |
-| RG12.39 | #2850 | a restart from the restart file: how it works with a model script, then a proposal |
 | RG4.19 | #692, #1290, #1337, #2851 | the open bugs and checks, evaluated: options and decisions (RG4.19.1-.9) |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |

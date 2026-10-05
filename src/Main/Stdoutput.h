@@ -148,3 +148,9 @@ extern STDstring outputDirectory; //!< global directory prepended to written fil
 //! raises an exception if fileName is an absolute path while outputDirectory is set, because the
 //! two would contradict each other; returns fileName unchanged if outputDirectory is empty
 STDstring ResolveOutputFileName(const STDstring& fileName);
+
+//! the size of a file in bytes, -1 if it does not exist or the size is not available (#2850)
+long long GetFileSize(const STDstring& fileName);
+
+//! shorten a file to the given size in bytes; false if that is not possible (#2850)
+bool TruncateFile(const STDstring& fileName, long long size);

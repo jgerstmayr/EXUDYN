@@ -859,7 +859,7 @@ outcome: bool=1.0 bool=0.0 bool=1.0 bool=1.0 !ExudynTypeError bool=1.0 !ExudynTy
   SimulationSettings.solution: flushFilesImmediately(attribute,dict)
   SimulationSettings.solution.file: append(attribute,dict) binary(attribute,dict) write(attribute,dict) writeFooter(attribute,dict) writeHeader(attribute,dict) writeInitialValues(attribute,dict)
   SimulationSettings.solution.file.export: ODE1Velocities(attribute,dict) accelerations(attribute,dict) algebraicCoordinates(attribute,dict) dataCoordinates(attribute,dict) velocities(attribute,dict)
-  SimulationSettings.solution.restart: write(attribute,dict)
+  SimulationSettings.solution.restart: continueIfAvailable(attribute,dict) write(attribute,dict)
   SimulationSettings.solution.sensors: active(attribute,dict) append(attribute,dict) writeFooter(attribute,dict) writeHeader(attribute,dict)
   SimulationSettings.staticSolver: adaptiveStep(attribute,dict) computeLoadsJacobian(attribute,dict) constrainODE1Coordinates(attribute,dict) loadStepGeometric(attribute,dict) useLoadFactor(attribute,dict)
   SimulationSettings.staticSolver.discontinuous: ignoreMaxIterations(attribute,dict) useRecommendedStepSize(attribute,dict)

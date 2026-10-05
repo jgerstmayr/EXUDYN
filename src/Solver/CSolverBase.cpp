@@ -32,6 +32,8 @@
 
 #include "Utilities/TimerStructure.h"
 #include <fstream>
+#include <cstdio> //std::rename, std::remove for the restart file (#2850)
+#include <map>
 #include "Main/rendererPythonInterface.h" //for regular call to PyExecuteQueue(...)
 
 extern STDstring GetExudynPythonVersionString(); //for sensor/solution file headers
@@ -90,6 +92,7 @@ bool CSolverBase::InitializeSolver(CSystem& computationalSystem, const Simulatio
 		InitializeSolverInitialConditions(computationalSystem, simulationSettings);
 
 		PostInitializeSolverSpecific(computationalSystem, simulationSettings); //do solver specific things
+		if (restart.active) { ApplyRestartState(computationalSystem, simulationSettings); } //after the initial values (#2850)
         output.initializationSuccessful = true;
         return true;
 	}
@@ -105,6 +108,9 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 	
 	if (solution.precision >= 8) { file.binaryFileSettings.realSize = sizeof(double); }
 	else { file.binaryFileSettings.realSize = sizeof(float); }
+
+	//before any file is opened: a run that continues from the restart file appends to the files (#2850)
+	ReadRestartFile(computationalSystem, simulationSettings);
 
 	if (IsStaticSolver())
 	{
@@ -143,6 +149,15 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 
 		if (solution.file.binary) { fileMode = std::ofstream::binary; } //no append right now as loading is more involved!
 
+		if (restart.active) //the rows the stopped run wrote after its restart state are written again (#2850)
+		{
+			if (restart.solutionFileSize >= 0 && GetFileSize(solutionFileName) >= restart.solutionFileSize)
+			{
+				TruncateFile(solutionFileName, restart.solutionFileSize);
+			}
+			fileMode = fileMode | std::ofstream::app;
+		}
+
 		//if (solution.file.append) { file.solutionFile.open(solutionFileName, std::ofstream::app); }
 		//else { file.solutionFile.open(solutionFileName, std::ofstream::out); }
 		file.solutionFile.open(solutionFileName, fileMode);
@@ -159,7 +174,10 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 	}
 	else { output.writeToSolutionFile = false; }
 
-	if (solution.restart.write) { PyWarning("solution.restart.write=True, but feature is yet not implemented"); }
+	if (IsStaticSolver() && (solution.restart.write || solution.restart.continueIfAvailable))
+	{
+		PyWarning("solution.restart: the static solver writes and reads no restart file; only the dynamic solvers do (#2850)");
+	}
 
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	//open solver information file
@@ -167,7 +185,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 	if (output.verboseModeFile > 0 && solverFileName != "")
 	{
 		CheckPathAndCreateDirectories(solverFileName);
-		if (solution.file.append) { file.solverFile.open(solverFileName, std::ofstream::app); }
+		if (solution.file.append || restart.active) { file.solverFile.open(solverFileName, std::ofstream::app); }
 		else { file.solverFile.open(solverFileName, std::ofstream::out); }
 		
 		if (!file.solverFile.is_open()) //failed to open file ...  e.g. invalid file name
@@ -188,6 +206,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 
     if (solution.sensors.active)
     {
+        Index sensorNumber = 0;
         for (auto item : computationalSystem.GetSystemData().GetCSensors())
         {
             Index cnt = 0;
@@ -196,10 +215,15 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
                 std::ofstream* sensorFile = new std::ofstream;
                 file.sensorFileList.push_back(sensorFile);
                 auto fileMode = std::ofstream::out;
-                if (solution.sensors.append) { fileMode = std::ofstream::app; }
+                if (solution.sensors.append || restart.active) { fileMode = std::ofstream::app; }
 
                 STDstring sensorFileName = ResolveOutputFileName(item->GetFileName()); //#2418
                 CheckPathAndCreateDirectories(sensorFileName);
+                if (restart.active && sensorNumber < (Index)restart.sensorFileSizes.size() && restart.sensorFileSizes[sensorNumber] >= 0
+                    && GetFileSize(sensorFileName) >= restart.sensorFileSizes[sensorNumber]) //as the solution file (#2850)
+                {
+                    TruncateFile(sensorFileName, restart.sensorFileSizes[sensorNumber]);
+                }
                 sensorFile->open(sensorFileName, fileMode);
 
                 if (!sensorFile->is_open()) //failed to open file ...  e.g. invalid file name
@@ -248,6 +272,7 @@ void CSolverBase::InitializeSolverOutput(CSystem& computationalSystem, const Sim
 
                 };
             }
+            sensorNumber++;
         }
     }
 
@@ -535,13 +560,17 @@ void CSolverBase::InitializeSolverInitialConditions(CSystem& computationalSystem
 	output.lastSolutionWritten = it.startTime;
 	output.lastSensorsWritten = it.startTime;
 	output.lastImageRecorded = it.startTime;
+	output.lastRestartWritten = it.startTime;
 
 	//+++++++++++++++++++++++++++++++++++++++++
 
 	//do this not earlier than here, because checks need to be done prior to writing the header
 	//2021-02-18: moved from end of function InitializeSolverPreChecks(...) to here in order to have current values available:
-	WriteSolutionFileHeader(computationalSystem, simulationSettings); 
-	WriteSensorsFileHeader(computationalSystem, simulationSettings);
+	if (!restart.active) //a continued run appends to files that have their header (#2850)
+	{
+		WriteSolutionFileHeader(computationalSystem, simulationSettings);
+		WriteSensorsFileHeader(computationalSystem, simulationSettings);
+	}
 
 }
 
@@ -642,6 +671,14 @@ bool CSolverBase::SolveSystem(CSystem& computationalSystem, const SimulationSett
 void CSolverBase::FinalizeSolver(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
 {
 	output.simulationStoppedByUser = SimulationStoppedByUser(computationalSystem);
+
+	//the state at the end - also when stopped by the user, a user function or the timeout -, before the footers, which a
+	//continued run removes with the rest after the restart state (#2850); not after a failed step
+	if (simulationSettings.solution.restart.write && !IsStaticSolver() && output.finishedSuccessfully &&
+		computationalSystem.GetSystemData().GetCData().currentState.time != output.lastRestartWritten)
+	{
+		WriteRestartFile(computationalSystem, simulationSettings, it.currentStepIndex - 1); //the loop has counted on
+	}
 
 	if (IsVerboseCheck(1))
 	{
@@ -835,16 +872,32 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 	conv.stepReductionFailed = false;
 	conv.jacobianUpdateRequested = true;	//for modified Newton, only request Newton at first step
 
-	Index stepsSinceLastStepSizeReduction = 0;
-
-	if (IsVerbose(2)) { Verbose(2, "\nWrite initial step to solution file and visualize ...\n"); }
-	//perform initialization for initial values (write to file, show solution, ...); 
-	
-	//flag to switch off writing of initial values for solution files and sensors
-	FinishStep(computationalSystem, simulationSettings, simulationSettings.solution.file.writeInitialValues); //visualization, console output, file output, ...
-
+	stepsSinceLastStepSizeReduction = 0;
 
 	bool simulationEndTimeReached = false; //signals that end time has been reached (tEnd in time integration, loadFactor=1 in static solver)
+
+	if (restart.active)
+	{
+		//THE RUN CONTINUES FROM THE RESTART FILE (#2850): step index and step size are the ones of the stopped run, so that
+		//the time of each following step is computed as there; the state at the restart time was written by that run, so
+		//it is not written - and no post-step function is called for it - again
+		it.currentStepIndex = restart.stepIndex;
+		it.currentStepSize = restart.stepSize;
+		stepsSinceLastStepSizeReduction = restart.stepsSinceLastStepSizeReduction;
+		output.lastVerboseStepIndex = it.currentStepIndex;
+		output.restartTime = restart.time;
+		pout << "Exudyn: the simulation continues from the restart file '" << restart.fileName << "' at t = " << restart.time << "s\n";
+		if (it.currentTime >= it.endTime - 1e-10) { simulationEndTimeReached = true; }
+	}
+	else
+	{
+		if (IsVerbose(2)) { Verbose(2, "\nWrite initial step to solution file and visualize ...\n"); }
+		//perform initialization for initial values (write to file, show solution, ...);
+
+		//flag to switch off writing of initial values for solution files and sensors
+		FinishStep(computationalSystem, simulationSettings, simulationSettings.solution.file.writeInitialValues); //visualization, console output, file output, ...
+	}
+
 	it.currentStepIndex++; //first step starts with stepIndex = 1
 
 	while (!conv.stepReductionFailed && !simulationEndTimeReached &&
@@ -932,6 +985,15 @@ bool CSolverBase::SolveSteps(CSystem& computationalSystem, const SimulationSetti
 					stepsSinceLastStepSizeReduction = 0;
 				}
 			}
+		}
+
+		//the restart file, once the step is done with its outputs and its step size control (#2850)
+		if (!conv.stepReductionFailed && simulationSettings.solution.restart.write && !IsStaticSolver() &&
+			it.currentTime - output.lastRestartWritten >= simulationSettings.solution.restart.writePeriod - 1e-10)
+		{
+			STARTTIMER(timer.writeSolution);
+			WriteRestartFile(computationalSystem, simulationSettings, it.currentStepIndex);
+			STOPTIMER(timer.writeSolution);
 		}
 
 		it.currentStepIndex++; //increment iteration count
@@ -1700,6 +1762,234 @@ Real CSolverBase::PostNewton(CSystem& computationalSystem, const SimulationSetti
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//THE RESTART FILE (#2850): the state of a dynamic simulation, written every solution.restart.writePeriod and at the
+//end, from which the same script continues with solution.restart.continueIfAvailable - for a job that is stopped and
+//started again unchanged. Text with 17 significant digits, so that every value is read back exactly and the continued
+//run computes what the uninterrupted one would. Beside the state it keeps what the solver carries from step to step:
+//the algorithmic accelerations of the generalized-alpha method, the step index and size, the steps since the last
+//step size reduction, the step size the error control of an explicit solver proposed, the times of the last outputs, and the sizes of the solution and sensor
+//files, to which a continued run shortens them before it appends. The fingerprint - the solver and the numbers of
+//coordinates and items - must fit the system that continues; the model itself is the script's.
+
+//! one line "name=v0,v1,..." of a vector
+template<class TVector>
+void WriteRestartVector(std::ofstream& restartFile, const char* name, const TVector& vector)
+{
+	restartFile << name << "=";
+	for (Index i = 0; i < vector.NumberOfItems(); i++)
+	{
+		if (i != 0) { restartFile << ","; }
+		restartFile << vector[i];
+	}
+	restartFile << "\n";
+}
+
+//! the values of "v0,v1,...", empty for ""
+std::vector<Real> ReadRestartValues(const STDstring& text)
+{
+	std::vector<Real> values;
+	size_t start = 0;
+	while (start < text.size())
+	{
+		size_t end = text.find(',', start);
+		if (end == STDstring::npos) { end = text.size(); }
+		values.push_back(std::stod(text.substr(start, end - start)));
+		start = end + 1;
+	}
+	return values;
+}
+
+//! copy values into a vector of the system, which has its size already
+template<class TVector>
+void CopyRestartValues(const std::vector<Real>& values, TVector& vector)
+{
+	for (Index i = 0; i < vector.NumberOfItems(); i++) { vector[i] = values[i]; }
+}
+
+STDstring CSolverBase::RestartFingerprint(const CSystem& computationalSystem) const
+{
+	const CSystemData& systemData = computationalSystem.GetSystemData();
+	Index nODE2, nODE1, nAE, nData;
+	systemData.GetNumberOfComputationCoordinates(nODE2, nODE1, nAE, nData);
+	return GetSolverName() + ";ODE2=" + EXUstd::ToString(nODE2) + ";ODE1=" + EXUstd::ToString(nODE1) +
+		";AE=" + EXUstd::ToString(nAE) + ";data=" + EXUstd::ToString(nData) +
+		";nodes=" + EXUstd::ToString(systemData.GetCNodes().NumberOfItems()) +
+		";objects=" + EXUstd::ToString(systemData.GetCObjects().NumberOfItems()) +
+		";markers=" + EXUstd::ToString(systemData.GetCMarkers().NumberOfItems()) +
+		";loads=" + EXUstd::ToString(systemData.GetCLoads().NumberOfItems()) +
+		";sensors=" + EXUstd::ToString(systemData.GetCSensors().NumberOfItems());
+}
+
+void CSolverBase::WriteRestartFile(const CSystem& computationalSystem, const SimulationSettings& simulationSettings, Index stepIndex)
+{
+	const CSystemState& state = computationalSystem.GetSystemData().GetCData().currentState;
+	STDstring fileName = ResolveOutputFileName(simulationSettings.solution.restart.name);
+	if (fileName.empty()) { return; }
+	CheckPathAndCreateDirectories(fileName);
+
+	//the output files as far as they are written now: a continued run shortens them to this
+	long long solutionFileSize = -1;
+	if (output.writeToSolutionFile && file.solutionFile.is_open())
+	{
+		file.solutionFile.flush();
+		solutionFileSize = GetFileSize(ResolveOutputFileName(GetSolutionFileName(simulationSettings)));
+	}
+	std::vector<long long> sensorFileSizes;
+	Index sensorNumber = 0;
+	for (auto item : computationalSystem.GetSystemData().GetCSensors())
+	{
+		long long size = -1;
+		if (sensorNumber < (Index)file.sensorFileList.size() && file.sensorFileList[sensorNumber] != nullptr)
+		{
+			file.sensorFileList[sensorNumber]->flush();
+			size = GetFileSize(ResolveOutputFileName(item->GetFileName()));
+		}
+		sensorFileSizes.push_back(size);
+		sensorNumber++;
+	}
+
+	STDstring temporaryName = fileName + ".tmp";
+	std::ofstream restartFile(temporaryName, std::ofstream::out);
+	if (!restartFile.is_open())
+	{
+		PyWarning("solution.restart: failed to write the restart file '" + temporaryName + "'", file.solverFile);
+		return;
+	}
+	restartFile.precision(17);
+	restartFile << "#Exudyn restart file (solution.restart): the state from which solution.restart.continueIfAvailable continues\n";
+	restartFile << "#Exudyn version=" << EXUstd::exudynVersion << ", written " << EXUstd::GetDateTimeString() << "\n";
+	restartFile << "fingerprint=" << RestartFingerprint(computationalSystem) << "\n";
+	restartFile << "time=" << state.time << "\n";
+	restartFile << "stepIndex=" << stepIndex << "\n";
+	restartFile << "stepSize=" << it.currentStepSize << "\n";
+	restartFile << "nextStepSize=" << GetNextStepSize() << "\n";
+	restartFile << "stepsSinceLastStepSizeReduction=" << stepsSinceLastStepSizeReduction << "\n";
+	restartFile << "lastSolutionWritten=" << output.lastSolutionWritten << "\n";
+	restartFile << "lastSensorsWritten=" << output.lastSensorsWritten << "\n";
+	restartFile << "lastImageRecorded=" << output.lastImageRecorded << "\n";
+	restartFile << "solutionFileSize=" << solutionFileSize << "\n";
+	restartFile << "sensorFileSizes=";
+	for (size_t i = 0; i < sensorFileSizes.size(); i++) { restartFile << (i != 0 ? "," : "") << sensorFileSizes[i]; }
+	restartFile << "\n";
+	WriteRestartVector(restartFile, "ODE2", state.ODE2Coords);
+	WriteRestartVector(restartFile, "ODE2_t", state.ODE2Coords_t);
+	WriteRestartVector(restartFile, "ODE2_tt", state.ODE2Coords_tt);
+	WriteRestartVector(restartFile, "aAlgorithmic", data.aAlgorithmic);
+	WriteRestartVector(restartFile, "ODE1", state.ODE1Coords);
+	WriteRestartVector(restartFile, "ODE1_t", state.ODE1Coords_t);
+	WriteRestartVector(restartFile, "AE", state.AECoords);
+	WriteRestartVector(restartFile, "data", state.dataCoords);
+	restartFile << "#FINISHED\n";
+	restartFile.close();
+
+	//the file is replaced only by a complete one; the previous one is kept
+	STDstring backupName = fileName + ".bck";
+	std::remove(backupName.c_str());
+	std::rename(fileName.c_str(), backupName.c_str()); //fails if there is no file yet, which is fine
+	if (std::rename(temporaryName.c_str(), fileName.c_str()) != 0)
+	{
+		PyWarning("solution.restart: failed to rename '" + temporaryName + "' to '" + fileName + "'", file.solverFile);
+	}
+	output.lastRestartWritten = state.time;
+}
+
+void CSolverBase::ReadRestartFile(const CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+{
+	restart = RestartState();
+	if (IsStaticSolver() || !simulationSettings.solution.restart.continueIfAvailable) { return; }
+
+	STDstring fileName = ResolveOutputFileName(simulationSettings.solution.restart.name);
+	std::ifstream restartFile(fileName);
+	if (!restartFile.is_open()) { return; } //nothing to continue from: the simulation starts at its start time
+
+	std::map<STDstring, STDstring> values;
+	STDstring line;
+	bool finished = false;
+	while (std::getline(restartFile, line))
+	{
+		if (!line.empty() && line.back() == '\r') { line.pop_back(); }
+		if (line == "#FINISHED") { finished = true; }
+		size_t equal = line.find('=');
+		if (line.empty() || line[0] == '#' || equal == STDstring::npos) { continue; }
+		values[line.substr(0, equal)] = line.substr(equal + 1);
+	}
+	STDstring errorStart = "solution.restart.continueIfAvailable: the restart file '" + fileName + "' ";
+	const char* keys[] = { "fingerprint", "time", "stepIndex", "stepSize", "nextStepSize", "stepsSinceLastStepSizeReduction", "lastSolutionWritten", "lastSensorsWritten",
+		"lastImageRecorded", "solutionFileSize", "sensorFileSizes", "ODE2", "ODE2_t", "ODE2_tt", "aAlgorithmic", "ODE1", "ODE1_t", "AE", "data" };
+	for (const char* key : keys)
+	{
+		if (!finished || values.count(key) == 0)
+		{
+			PyError(errorStart + "is incomplete (no '" + key + "' or no #FINISHED); remove it to start at the start time", PyErrorType::valueError);
+		}
+	}
+	STDstring fingerprint = RestartFingerprint(computationalSystem);
+	if (values["fingerprint"] != fingerprint)
+	{
+		PyError(errorStart + "does not fit: it was written for '" + values["fingerprint"] + "', this is '" + fingerprint +
+			"'; remove it, or set continueIfAvailable=False, to start at the start time", PyErrorType::valueError);
+	}
+
+	try
+	{
+		restart.fileName = fileName;
+		restart.time = std::stod(values["time"]);
+		restart.stepIndex = (Index)std::stoll(values["stepIndex"]);
+		restart.stepSize = std::stod(values["stepSize"]);
+		restart.nextStepSize = std::stod(values["nextStepSize"]);
+		restart.stepsSinceLastStepSizeReduction = (Index)std::stoll(values["stepsSinceLastStepSizeReduction"]);
+		restart.lastSolutionWritten = std::stod(values["lastSolutionWritten"]);
+		restart.lastSensorsWritten = std::stod(values["lastSensorsWritten"]);
+		restart.lastImageRecorded = std::stod(values["lastImageRecorded"]);
+		restart.solutionFileSize = std::stoll(values["solutionFileSize"]);
+		for (Real size : ReadRestartValues(values["sensorFileSizes"])) { restart.sensorFileSizes.push_back((long long)size); }
+		restart.ODE2 = ReadRestartValues(values["ODE2"]);
+		restart.ODE2_t = ReadRestartValues(values["ODE2_t"]);
+		restart.ODE2_tt = ReadRestartValues(values["ODE2_tt"]);
+		restart.aAlgorithmic = ReadRestartValues(values["aAlgorithmic"]);
+		restart.ODE1 = ReadRestartValues(values["ODE1"]);
+		restart.ODE1_t = ReadRestartValues(values["ODE1_t"]);
+		restart.AE = ReadRestartValues(values["AE"]);
+		restart.data = ReadRestartValues(values["data"]);
+	}
+	catch (const std::exception&) //std::stod and std::stoll
+	{
+		PyError(errorStart + "has a value that is not a number", PyErrorType::valueError);
+	}
+	restart.active = true;
+}
+
+void CSolverBase::ApplyRestartState(CSystem& computationalSystem, const SimulationSettings& simulationSettings)
+{
+	CSystemState& state = computationalSystem.GetSystemData().GetCData().currentState;
+	//the fingerprint has the numbers of coordinates; the sizes are checked all the same, as the values are copied
+	if ((Index)restart.ODE2.size() != state.ODE2Coords.NumberOfItems() || (Index)restart.ODE2_t.size() != state.ODE2Coords.NumberOfItems() ||
+		(Index)restart.ODE2_tt.size() != state.ODE2Coords.NumberOfItems() || (Index)restart.ODE1.size() != state.ODE1Coords.NumberOfItems() ||
+		(Index)restart.ODE1_t.size() != state.ODE1Coords_t.NumberOfItems() || (Index)restart.AE.size() != state.AECoords.NumberOfItems() ||
+		(Index)restart.data.size() != state.dataCoords.NumberOfItems() || (Index)restart.aAlgorithmic.size() != data.aAlgorithmic.NumberOfItems())
+	{
+		PyError("solution.restart.continueIfAvailable: the restart file '" + restart.fileName + "' has vectors of other sizes than the system", PyErrorType::valueError);
+	}
+	CopyRestartValues(restart.ODE2, state.ODE2Coords);
+	CopyRestartValues(restart.ODE2_t, state.ODE2Coords_t);
+	CopyRestartValues(restart.ODE2_tt, state.ODE2Coords_tt);
+	CopyRestartValues(restart.ODE1, state.ODE1Coords);
+	CopyRestartValues(restart.ODE1_t, state.ODE1Coords_t);
+	CopyRestartValues(restart.AE, state.AECoords);
+	CopyRestartValues(restart.data, state.dataCoords);
+	CopyRestartValues(restart.aAlgorithmic, data.aAlgorithmic);
+	state.time = restart.time;
+	computationalSystem.GetSystemData().GetCData().startOfStepState = state;
+
+	it.currentTime = restart.time;
+	SetNextStepSize(restart.nextStepSize);
+	output.lastSolutionWritten = restart.lastSolutionWritten;
+	output.lastSensorsWritten = restart.lastSensorsWritten;
+	output.lastImageRecorded = restart.lastImageRecorded;
+	output.lastRestartWritten = restart.time;
+}
 
 STDstring CSolverBase::GetSolutionFileName(const SimulationSettings& simulationSettings)
 {

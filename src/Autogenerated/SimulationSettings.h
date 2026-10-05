@@ -225,7 +225,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        SolutionRestartSettings
-* @brief        The restart file: the state of the system written regularly, from which a simulation can be continued. Reserved: no solver writes it yet, and write=True gives a warning; how a restart works is #2850.
+* @brief        The restart file of a dynamic simulation: its state - time, coordinates, velocities, accelerations, the algorithmic accelerations of the generalized-alpha method, the step size and the sizes of the output files - written every writePeriod and at the end, from which the same script continues with continueIfAvailable; for a job that is stopped (e.g. by exudyn.special.solver.timeout or on a cluster) and started again unchanged. The model itself, its user functions and their Python state come from the script; the static solver writes no restart file.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
@@ -240,9 +240,10 @@ public: // AUTO:
 class SolutionRestartSettings // AUTO: 
 {
 public: // AUTO: 
-  std::string name;                               //!< AUTO: filename and (relative) path of the restart file; reserved, see write
-  bool write;                                     //!< AUTO: flag (true/false), which shall determine if the restart file is written regularly; not implemented yet: True gives a warning (#2850)
-  Real writePeriod;                               //!< AUTO: must be >= 0; time span (period) in which the restart file shall be updated; reserved, see write
+  bool continueIfAvailable;                       //!< AUTO: flag (true/false); if true and the restart file exists, a dynamic solver continues from its state instead of starting at startTime: it takes time, state and step size from the file, appends to the solution and sensor files - shortened to what was written up to that state - and writes no initial values; a file that does not fit the system or the solver raises an error; without a file, the simulation starts as usual. Sensors with storeInternal hold only the values after the restart.
+  std::string name;                               //!< AUTO: filename and (relative) path of the restart file
+  bool write;                                     //!< AUTO: flag (true/false); if true, the dynamic solvers write the restart file every writePeriod and at the end of the simulation; the file is written to name.tmp and renamed, the previous one kept as name.bck
+  Real writePeriod;                               //!< AUTO: must be >= 0; time span (period) in which the restart file is updated
 
 private: // AUTO: 
   SimulationSettings* backlink; //!< AUTO: backlink for global access of structure
@@ -253,6 +254,7 @@ public: // AUTO:
   SolutionRestartSettings()
   {
     backlink=nullptr;
+    continueIfAvailable = false;
     name = "solution/restartFile.txt";
     write = false;
     writePeriod = 0.01;
@@ -267,6 +269,7 @@ public: // AUTO:
   virtual void Print(std::ostream& os) const
   {
     os << "SolutionRestartSettings" << ":\n";
+    os << "  continueIfAvailable = " << continueIfAvailable << "\n";
     os << "  name = " << name << "\n";
     os << "  write = " << write << "\n";
     os << "  writePeriod = " << writePeriod << "\n";

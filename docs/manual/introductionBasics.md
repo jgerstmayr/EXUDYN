@@ -62,6 +62,30 @@ position, forces or joint data. For viewing sensor results, use the `PlotSensor`
 Finally, the render window allows to show traces (trajectories) of position sensors, sensor vector quantities (e.g., velocity vectors),
 or triads given by rotation matrices. For further information, see the `sensors.traces` structure of `VisualizationSettings`, {ref}`sec-vsettingstraces`.
 
+### Continuing a simulation from its restart file
+
+A long dynamic simulation can be stopped and continued, e.g. a job on a cluster with a time limit, or a run
+stopped by `exudyn.special.solver.timeout`. With `solution.restart.write = True` the solver writes the restart file
+`solution.restart.name` every `solution.restart.writePeriod` and at the end; with
+`solution.restart.continueIfAvailable = True` the same script, started again, continues from that file if it exists:
+
+```python
+simulationSettings.solution.restart.write = True
+simulationSettings.solution.restart.writePeriod = 10      #seconds of simulated time
+simulationSettings.solution.restart.continueIfAvailable = True
+mbs.SolveDynamic(simulationSettings)    #continues where the previous run left its restart file
+```
+
+The file holds the state - time, coordinates, velocities, accelerations, the algorithmic accelerations of the
+generalized-alpha method - and what the solver carries from step to step, so that the continued run computes what an
+uninterrupted one would: exactly, for the explicit solvers and for the implicit ones with
+`timeIntegration.newton.useModifiedNewton = False`; with the modified Newton method the Jacobian is computed again at
+the restart, and the results differ within the Newton tolerance. The solution and sensor files are shortened to what
+was written up to the restart state and continued; sensors with `storeInternal` hold only the values after the
+restart. The model is the script's: it is built again, with its user functions and their Python state, and a restart
+file that does not fit it - other numbers of coordinates or items, another solver - raises an error. The static solver
+writes no restart file.
+
 (sec-overview-basics-seeingthemodel)=
 ## Seeing the model
 

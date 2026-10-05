@@ -11322,6 +11322,36 @@ the `Create...`/FEM functions, two arguments of `GeneticOptimization`, `Generate
     - **RG12.33.4** `exudev scripts` reads the library's deprecations from the same collection, so a user script that
       calls `AddRevoluteJoint` or passes `bodyList` is reported as well.
 
+<a id="plan-rg12-39"></a>
+#### RG12.39
+
+**RG12.39** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg12-39-done) *(group RG12; maintainer 2026-10-05, from RG4.19.8)* **How a simulation continues from its restart file**
+    (#2850). The restart file is written (`simulationSettings.solution.restart`: `write`, `name`, `writePeriod`), and
+    a prototype that reads it back is `_InitializeFromRestartFile` in `basicUtilities.py`, not public since #1565 was
+    closed. Before a function is written, evaluate how a restart works together with the model script: where the
+    restart file comes in - for example the system detects that one is available and loads its state from it -,
+    what else a restart needs (the time, the solver's state, sensors and files that continue), and what the user
+    writes. Then a proposal, for the maintainer's decision.
+    **Evaluated 2026-10-05** — [log](exudynRevisionLog2026b.md#rg12-39) *(maintainer 2026-10-05: "do RG12.39")*:
+    no solver writes a restart file - `solution.restart.write=True` only warns - so the prototype reads a format that
+    does not exist; the descriptions of the settings say so now. **Proposal, for decision** (options in the log):
+    - **RG12.39.1** *(proposed)* the solvers write the restart file: one row - time, ODE2, ODE2_t, ODE2_tt, the
+      algorithmic accelerations of the generalized-alpha method, ODE1, AE, data coordinates, the current step size -
+      and a header with a fingerprint of the system (its numbers of items and coordinates, the solver type), every
+      `writePeriod` and at the end; written to a temporary file and renamed, the previous one kept as `.bck`.
+    - **RG12.39.2** *(proposed)* the script asks for it: `mbs.SolveDynamic(simulationSettings, restartFile='...')`
+      (and `SolveStatic`) - after `Assemble`, the solver checks the fingerprint, sets the state and the start time
+      from the file, and appends to the solution and sensor files; the end time stays the script's. The model -
+      items, user functions - is the script's, which is why the restart is not a pickled `SystemContainer`.
+    - **RG12.39.3** *(proposed, later)* `solution.restart.continueIfAvailable`: the same without changing the
+      script - for a job on a cluster that is killed and started again with the same script; a file whose
+      fingerprint does not fit is an error, not ignored.
+    - Test: a run from 0 to 1 against a run from 0 to 0.5 and a restart to 1 - identical with the algorithmic
+      accelerations stored, which is the reason they are in the file.
+
+  *Decided by the maintainer (2026-10-05): "use (B) with solution.restart.continueIfAvailable, otherwise as
+  suggested"* - RG12.39.1 and RG12.39.3 done, RG12.39.2 (`restartFile=`) not, as (B) takes its place.
+
 <a id="plan-rg12-40"></a>
 #### RG12.40
 
@@ -15683,3 +15713,44 @@ fails the run with the new findings and their pages; findings of the baseline th
 **Tests**: `python/testing/test_checkPdfLog.py` - the kinds and keys of a log and .tex as strings, the table cell known
 by its text from its start and its end, and that only what the baseline lacks fails, errors always. The baseline was
 written from the build of this commit and the check passes on it.
+
+<a id="rg12-39-done"></a>
+### RG12.39 — a dynamic simulation continues from its restart file (2026-10-05, #2850)
+
+*(Maintainer 2026-10-05: "RG12.39: use (B) with solution.restart.continueIfAvailable, otherwise as suggested.")*
+
+**Writing** (`CSolverBase::WriteRestartFile`): with `solution.restart.write`, both dynamic solvers write the restart
+file after a step whose time is `writePeriod` past the last one - once the step is done with its outputs and its step
+size control - and in `FinalizeSolver` at the end, also when the run was stopped by the user, a user function or the
+timeout, but not after a failed step. Text, 17 significant digits, so that every value reads back exactly: a
+fingerprint (solver name, numbers of ODE2/ODE1/AE/data coordinates, of nodes, objects, markers, loads, sensors), time,
+step index, step size, the step size an explicit solver's error control proposed, the steps since the last step size
+reduction (a member now, `stepsSinceLastStepSizeReduction`, before a local of `SolveSteps`), the times of the last
+solution, sensor and image outputs, the sizes of the solution file and of each sensor file (flushed), and the vectors
+ODE2, ODE2_t, ODE2_tt, the algorithmic accelerations, ODE1, ODE1_t, AE, data; `#FINISHED` last. Written to `name.tmp`
+and renamed, the previous file kept as `name.bck`.
+
+**Continuing** (`ReadRestartFile`, `ApplyRestartState`): with `solution.restart.continueIfAvailable` and the file
+present, the solver reads it before it opens any file - an incomplete file or one whose fingerprint differs raises a
+`ValueError` that says to remove it; without a file the run starts as before. The solution and sensor files are
+shortened to the sizes in the restart file (`GetFileSize`, `TruncateFile` in `Stdoutput.cpp`, on `std::filesystem`)
+and appended to without header; the solver information file is appended to. After the initial values are computed,
+the state, the algorithmic accelerations, the time and the output times are set from the file; `SolveSteps` takes the
+step index, step size and counter from it and skips the output of the initial state - and its post-step function -,
+which the stopped run already wrote; it prints that it continues and from when, and `output.restartTime` says it
+(`-1` for a run from the start time; `output.lastRestartWritten` is new as well). The static solver warns that it
+writes and reads no restart file.
+
+**Measured, the test** (`restartFileTest.py`): a double pendulum of rigid bodies with revolute joints and a mass point in
+sphere-sphere contact, to t = 1 in one go; the same stopped by a post-step function at 0.6, the restart file replaced by
+its `.bck` of 0.4 - a job killed after 0.4 with rows up to 0.6 in its files -, and continued. Generalized-alpha and RK44
+(with springs instead of the joints) give **identical** final coordinates and identical rows in the solution file and
+both sensor files. One condition, found by the test: with the modified Newton method - the default of
+`timeIntegration.newton` - the Jacobian of an earlier step is reused, which the restart file cannot hold; the continued
+run computes it anew, and the results differ within the Newton tolerance (3.8e-10 without contact, 8e-5 with the
+contact, which amplifies it). The test uses `useModifiedNewton = False`; the manual says so. Also tested: a file of
+another system raises, a file at the end time computes nothing, and without a file the run starts at its start time.
+
+**Documentation**: the settings (`SolutionRestartSettings`, with `continueIfAvailable`) describe what is written and
+read; the user manual has *Continuing a simulation from its restart file* in *Exudyn basics*; `revisions.md` says it.
+The prototype `_InitializeFromRestartFile` of `basicUtilities.py`, for a format nothing wrote, is removed.

@@ -67,6 +67,9 @@ public: //made public for access via pybind
 	bool minStepSizeWarned; //!< set true, if already warned because of reaching minimum step due to error control
 	Real nextStepSize; //!< step size the error control proposes for the NEXT step, applied when it starts; -1: none (#2109)
 
+	virtual Real GetNextStepSize() const override { return nextStepSize; }
+	virtual void SetNextStepSize(Real stepSize) override { nextStepSize = stepSize; }
+
 	Index nStages;	//!< number of active stages in explicit integrator
 
 	RKdata rk;		//data for RungeKutta scheme / Butcher tableau

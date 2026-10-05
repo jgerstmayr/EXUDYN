@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.339.dev1
+- Exudyn version = 1.12.340.dev1
 - last change = 2026-10-05
 - Number of issues = 2866
-- Number of resolved issues = 2653 (339 in current version)
+- Number of resolved issues = 2654 (340 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7570,10 +7570,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 - `CHECK` `LOW EFF` `raised by: Claude-JG` a MainSystem does not keep its SystemContainer alive (#2851)
   - description: SC.AddSystem() returns the MainSystem with return\_value\_policy::reference: a script that keeps mbs but drops SC (del SC, or SC created inside a function that returns mbs) works on a system the container has deleted. GetGeneralContact keeps its system alive since \#1512 (reference\_internal); the same for AddSystem/GetSystem would tie mbs to SC. Check what else depends on the current behaviour (SC.Reset, the renderer) before changing it.
-  - date raised: 2026-10-05
-- `EXTENSION` `HIGH EFF` `raised by: Claude-JG` a restart mechanism: how a simulation continues from its restart file (#2850)
-  - description: The maintainer, 2026-10-05: before a restart function is written, evaluate how a restart works together with a model script - where the restart file is injected, for example that the system detects a restart file and loads its state from it. The restart file is written already (simulationSettings.solution.restart); a prototype that reads it is \_InitializeFromRestartFile in basicUtilities.py, not public. Successor of \#1565.
-  - **remarks:** RG12.39 evaluated 2026-10-05: no solver writes the restart file; proposal (A) restartFile argument of SolveDynamic/SolveStatic on a file the solvers write, (B) continueIfAvailable later - awaiting the maintainer's decision.
   - date raised: 2026-10-05
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.

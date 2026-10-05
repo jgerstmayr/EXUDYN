@@ -348,23 +348,10 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 - **output**: writes only consistent rows of file to file with name newFileName
 
 
-(sec-basicutilities--initializefromrestartfile)=
-## Function: _InitializeFromRestartFile
-
-[`_InitializeFromRestartFile(mbs, simulationSettings, restartFileName, verbose = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L976)
-
-- **function description**: recover initial coordinates, time, etc. from given restart file; modifies simulationSettings and sets the according initial conditions in mbs
-- **input**:
-  - `mbs`: MainSystem to be operated with
-  - `simulationSettings`: simulationSettings which is updated and shall be used afterwards for SolveDynamic(...) or SolveStatic(...)
-  - `restartFileName`: string containing directory and filename of stored restart file, as given in solution.restart.name
-  - `verbose`: False=no information, True=basic information
-
-
 (sec-basicutilities-setsolutionstate)=
 ## Function: SetSolutionState
 
-[`SetSolutionState(mbs, solution, row, configuration = exudyn.ConfigurationType.Current, sendRedrawSignal = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L1049)
+[`SetSolutionState(mbs, solution, row, configuration = exudyn.ConfigurationType.Current, sendRedrawSignal = True)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L975)
 
 - **function description**: load selected row of solution dictionary (previously loaded with LoadSolutionFile) into specific state; flag sendRedrawSignal is only used if configuration = exudyn.ConfigurationType.Visualization
 
@@ -372,7 +359,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`beltDriveAL
 (sec-basicutilities-animatesolution)=
 ## Function: AnimateSolution
 
-[`AnimateSolution(mbs, solution, rowIncrement = 1, timeout = 0.04, createImages = False, runLoop = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L1075)
+[`AnimateSolution(mbs, solution, rowIncrement = 1, timeout = 0.04, createImages = False, runLoop = False)`](https://github.com/jgerstmayr/EXUDYN/blob/master/python/exudyn/basicUtilities.py#L1001)
 
 - **function description**: This function is not further maintaned and should only be used if you do not have tkinter (like on some MacOS versions); use exudyn.interactive.SolutionViewer() instead! AnimateSolution consecutively load the rows of a solution file and visualize the result
 - **input**:
