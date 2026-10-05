@@ -2,12 +2,16 @@
   "number": 2865,
   "title": "exudev notebooks fails: no --env option",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "BUG",
   "effort": "LOW",
   "description": "exudev notebooks stops with AttributeError: 'Namespace' object has no attribute 'env' - the subparser of notebooks has no --env although Notebooks() in commands.py reads options.env and its help names --env venvP313; found in RG12.40, where tools/runNotebooks.py was run directly instead",
   "dateRaised": "2026-10-05",
   "deadline": "2027-04-03",
+  "dateResolved": "2026-10-05 17:13",
+  "resolvedAuthor": "Claude-JG",
   "file": "tools/exudev/__main__.py",
-  "line": "403"
+  "line": "403",
+  "releaseNotes": "exudev notebooks takes --env (and --py) again; it stopped with an AttributeError without it (revision2026b step RG10.16)",
+  "resolvedInVersion": "1.12.338"
 }

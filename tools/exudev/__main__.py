@@ -400,7 +400,7 @@ def BuildParsers():
     scripts.add_argument('--timeout', type=float, default=120, help='seconds a script may run with --run (default 120)')
     scripts.set_defaults(function=commands.Scripts)
 
-    notebooks = subParsers.add_parser('notebooks', parents=[globalParser],
+    notebooks = subParsers.add_parser('notebooks', parents=[globalParser, versionParser],
         help='run the notebooks of python/Notebooks and store their outputs',
         description='Runs the notebooks (all, or the ones named) with tools/runNotebooks.py, without a '
                     'window, and stores their outputs - text, plots, images of ShowImage - in them; the '

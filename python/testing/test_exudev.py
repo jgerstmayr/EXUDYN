@@ -22,6 +22,7 @@
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 import importlib
+import importlib.util
 import os
 import sys
 
@@ -158,6 +159,26 @@ def testPerfMiniRunsTheMiniExamplePerformance():
     options.fast = True
     with pytest.raises(SystemExit):
         commands.Performance(options)
+
+
+#%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+def testEveryCommandThatReadsEnvHasTheOption():
+    """#2865: 'exudev notebooks' read options.env, which its parser did not declare, and stopped"""
+    import argparse
+    import inspect
+    spec = importlib.util.spec_from_file_location('exudevMain', os.path.join(driverDirectory, '__main__.py'))
+    main = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(main)
+    parser = main.BuildParsers()
+    [subParsers] = [action for action in parser._actions if isinstance(action, argparse._SubParsersAction)]
+    for (name, subParser) in subParsers.choices.items():
+        function = subParser.get_default('function')
+        if function is not None and 'options.env' in inspect.getsource(function):
+            assert any(action.dest == 'env' for action in subParser._actions), name
+    options = parser.parse_args(['notebooks', '--env', 'venvP313', 'solving'])
+    options.noConda = True #the label names the environment; the command itself needs no conda here
+    [step] = options.function(options)
+    assert '(venvP313)' in step.label and step.argv[-1] == 'solving'
 
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

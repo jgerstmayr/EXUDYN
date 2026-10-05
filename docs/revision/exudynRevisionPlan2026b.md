@@ -1274,10 +1274,9 @@ environments that exist**: without `--py` or `--env`, the missing ones of the ve
 for `build --complete`, instead of stopping the command.
 
 <a id="rg10-16"></a>
-**RG10.16** *(group RG10; found in RG12.40, 2026-10-05)* **`exudev notebooks` runs** (#2865): the command stops
+**RG10.16** **DONE 2026-10-05** (#2865) — [log](exudynRevisionLog2026b.md#rg10-16) *(group RG10; found in RG12.40, 2026-10-05)* **`exudev notebooks` runs**: the command stopped
     with `AttributeError: 'Namespace' object has no attribute 'env'` - its subparser has no `--env`, which
-    `commands.Notebooks` reads and its help names. The notebooks of RG12.40 were run with `tools/runNotebooks.py`
-    directly.
+    `commands.Notebooks` reads and its help names. It has `--py`/`--env` now, as `scripts` and `figures`.
 
 ## RG11 — Misc
 
@@ -1934,7 +1933,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #2848, #2849 | the open bugs before 1.13: `GeneralContact`, the contact model of its implicit solver (decision) and the torque on triangle bodies |
-| RG10.16 | #2865 | `exudev notebooks` has no `--env` and stops |
 | RG12.39 | #2850 | a restart from the restart file: how it works with a model script, then a proposal |
 | RG3.36 | #2856 | the PDF checked with the documentation |
 | RG4.19 | #692, #1290, #1337, #2851 | the open bugs and checks, evaluated: options and decisions (RG4.19.1-.9) |

@@ -15645,3 +15645,12 @@ again. `CreateRollingDisc(bodyNumbers=...)` and `MarkerBodiesRelative...(bodyNum
 local position raise, the cable coordinate, `bodyNumbers`/`bodyNumber` warn once and give the same result,
 `bodyOrNodeList` and two names raise the `TypeError`; `libraryDeprecationTest.py` tests `bodyNumbers` in place of
 `bodyList`; `test_checkUserScripts.py` the fix. Found on the way: `exudev notebooks` has no `--env` (#2865, RG10.16).
+
+<a id="rg10-16"></a>
+### RG10.16 — `exudev notebooks --env` (2026-10-05, #2865)
+
+The subparser of `notebooks` takes the version parser (`--py`, `--env`) like `scripts` and `figures`;
+`exudev notebooks --env venvP313 solving` plans `conda run -n venvP313 ... tools/runNotebooks.py solving`. The test
+`testEveryCommandThatReadsEnvHasTheOption` (`test_exudev.py`) builds the parsers and checks, for every command whose
+function reads `options.env`, that its parser declares it - it failed for `notebooks` before the change and finds the
+next such omission.

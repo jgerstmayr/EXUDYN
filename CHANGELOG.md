@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 303 | 1.12.337 |
+| 1.12 | Metheney | 304 | 1.12.338 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.338** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev notebooks fails: no --env option (#2865)
+  - description: exudev notebooks stops with AttributeError: 'Namespace' object has no attribute 'env' - the subparser of notebooks has no --env although Notebooks() in commands.py reads options.env and its help names --env venvP313; found in RG12.40, where tools/runNotebooks.py was run directly instead
+  - **notes:** exudev notebooks takes --env (and --py) again; it stopped with an AttributeError without it (revision2026b step RG10.16)
+  - date resolved: **2026-10-05 17:13**, date raised: 2026-10-05
 - **1.12.337** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Create functions: itemNumbers instead of bodyNumbers and bodyOrNodeList (#2863)
   - description: The maintainer, 2026-10-05: several Create functions accept bodies, nodes and markers in bodyNumbers, some also bodyOrNodeList; the new interface is itemNumbers=\[None,None\]; bodyNumbers stays, deprecated for 5 years; bodyOrNodeList stays with a DeprecationWarning that names itemNumbers. Affected (to be checked): CreateSpringDamper, CreateCartesianSpringDamper, CreateRigidBodySpringDamper, CreateTorsionalSpringDamper, CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint, CreateGenericJoint, CreateDistanceConstraint. A proposal for decision first.
   - **notes:** The Create functions take bodies, nodes or markers in itemNumbers, CreateForce and CreateTorque one item in itemNumber; bodyNumbers and bodyNumber are deprecated until 2031, bodyOrNodeList and bodyList raise a TypeError naming itemNumbers; exudev scripts --fix rewrites them (revision2026b step RG12.40)

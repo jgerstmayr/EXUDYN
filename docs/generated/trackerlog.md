@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.337.dev1
+- Exudyn version = 1.12.338.dev1
 - last change = 2026-10-05
 - Number of issues = 2866
-- Number of resolved issues = 2651 (337 in current version)
+- Number of resolved issues = 2652 (338 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -8219,6 +8219,3 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Known bugs
 
-- <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` exudev notebooks fails: no --env option (#2865)
-  - description: exudev notebooks stops with AttributeError: 'Namespace' object has no attribute 'env' - the subparser of notebooks has no --env although Notebooks() in commands.py reads options.env and its help names --env venvP313; found in RG12.40, where tools/runNotebooks.py was run directly instead
-  - date raised: 2026-10-05
