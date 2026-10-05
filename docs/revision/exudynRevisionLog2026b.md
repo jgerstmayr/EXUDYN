@@ -15366,3 +15366,45 @@ user to find it.")*
 `NotebookOrigins` writes the path of the notebook as inline code - `python/Notebooks/reference/symbolic.ipynb` - in
 the small container of RG3.34. The fragments of the manual pages (`notebookEmitter.py`, the snippets) end with the
 same container instead of "(from the notebook ...)", still one per fragment.
+
+<a id="rg12-39"></a>
+### RG12.39 — how a simulation continues from its restart file: evaluated, a proposal (2026-10-05, #2850)
+
+*(Maintainer 2026-10-05: "do RG12.39".)*
+
+**What exists.** `simulationSettings.solution.restart` (`write`, `name`, `writePeriod`) - but no solver writes the
+file: `CSolverBase::InitializeSolverOutput` warns "solution.restart.write=True, but feature is yet not implemented".
+The prototype `_InitializeFromRestartFile` (`basicUtilities.py`, not public since #1565) reads a text file with a
+header line `#number of written coordinates = [...]` and one row - a format nothing writes. The descriptions of the
+three settings said that the file is written; they say now that it is reserved (#2850).
+
+What a script can do today: `mbs.systemData.GetSystemState()` / `SetSystemState()` (ODE2, ODE2_t, ODE1, AE and data
+coordinates, without the time and the accelerations), `timeIntegration.startTime`, `SolveDynamic(...,
+updateInitialValues=True)`, and `LoadSolutionFile` with `SetSolutionState` for a row of the solution file. Together
+they continue a simulation by hand, approximately: the generalized-alpha method then starts with new initial
+accelerations instead of its algorithmic ones, a small disturbance at the restart.
+
+**What a restart needs.**
+1. The state: time, ODE2 coordinates, velocities and accelerations, ODE1 coordinates, the algebraic coordinates, the
+   data coordinates (contact states, friction), and for the generalized-alpha method its algorithmic accelerations
+   `aAlgorithmic`; with automatic step size the current step size.
+2. The same model: the script builds it again - items, user functions, Python state of user functions - which is the
+   script's business. The file can only check that it fits: a fingerprint of the numbers of nodes, objects, markers,
+   loads, sensors and coordinates, and the solver type.
+3. The outputs: the solution file and the sensor files continue in append mode; the internal storage of sensors
+   (`storeInternal`) starts empty after a restart unless it is read back from their files.
+
+**Where the restart comes in - the options.**
+- (A) **explicitly in the script**: `mbs.SolveDynamic(simulationSettings, restartFile='solution/restartFile.txt')`.
+  The script decides, the solver checks the fingerprint, takes state and start time from the file and appends to
+  the outputs. Simple and visible; a script for a restart differs in one argument.
+- (B) **automatically**: a setting `solution.restart.continueIfAvailable`; the solver looks for the file and
+  continues if it is there and fits. For a cluster job that is killed and resubmitted unchanged; the risk is a stale
+  file - so a file that does not fit raises, and the solver prints that it continues and from when.
+- (C) a pickled `SystemContainer` with its state (`SC.GetDictionary`, "under development"): it would restore the
+  model too, but not Python user functions and their state - not a general restart.
+
+**Proposal**: (A) first, on a file the solvers write (RG12.39.1, RG12.39.2), (B) as a setting on top of it later
+(RG12.39.3), (C) not for the restart. The file is written to a temporary name and renamed, the previous one kept as
+`.bck`, so that a killed process leaves a readable file. The test: 0 to 1 against 0 to 0.5 plus a restart to 1,
+identical to round-off because `aAlgorithmic` is stored.

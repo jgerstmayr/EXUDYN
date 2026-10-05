@@ -1463,6 +1463,22 @@ docstrings; argument annotations only where they help a reader; a check that eve
     restart file comes in - for example the system detects that one is available and loads its state from it -,
     what else a restart needs (the time, the solver's state, sensors and files that continue), and what the user
     writes. Then a proposal, for the maintainer's decision.
+    **Evaluated 2026-10-05** — [log](exudynRevisionLog2026b.md#rg12-39) *(maintainer 2026-10-05: "do RG12.39")*:
+    no solver writes a restart file - `solution.restart.write=True` only warns - so the prototype reads a format that
+    does not exist; the descriptions of the settings say so now. **Proposal, for decision** (options in the log):
+    - **RG12.39.1** *(proposed)* the solvers write the restart file: one row - time, ODE2, ODE2_t, ODE2_tt, the
+      algorithmic accelerations of the generalized-alpha method, ODE1, AE, data coordinates, the current step size -
+      and a header with a fingerprint of the system (its numbers of items and coordinates, the solver type), every
+      `writePeriod` and at the end; written to a temporary file and renamed, the previous one kept as `.bck`.
+    - **RG12.39.2** *(proposed)* the script asks for it: `mbs.SolveDynamic(simulationSettings, restartFile='...')`
+      (and `SolveStatic`) - after `Assemble`, the solver checks the fingerprint, sets the state and the start time
+      from the file, and appends to the solution and sensor files; the end time stays the script's. The model -
+      items, user functions - is the script's, which is why the restart is not a pickled `SystemContainer`.
+    - **RG12.39.3** *(proposed, later)* `solution.restart.continueIfAvailable`: the same without changing the
+      script - for a job on a cluster that is killed and started again with the same script; a file whose
+      fingerprint does not fit is an error, not ignored.
+    - Test: a run from 0 to 1 against a run from 0 to 0.5 and a restart to 1 - identical with the algorithmic
+      accelerations stored, which is the reason they are in the file.
 
 ## RG13 — Item documentation
 

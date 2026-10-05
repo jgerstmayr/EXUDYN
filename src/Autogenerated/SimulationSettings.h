@@ -225,7 +225,7 @@ public: // AUTO:
 
 /** ***********************************************************************************************
 * @class        SolutionRestartSettings
-* @brief        The restart file: the state of the system written regularly, from which a simulation can be continued.
+* @brief        The restart file: the state of the system written regularly, from which a simulation can be continued. Reserved: no solver writes it yet, and write=True gives a warning; how a restart works is #2850.
 *
 * @author       AUTO: Gerstmayr Johannes
 * @date         AUTO: 2019-07-01 (generated)
@@ -240,9 +240,9 @@ public: // AUTO:
 class SolutionRestartSettings // AUTO: 
 {
 public: // AUTO: 
-  std::string name;                               //!< AUTO: filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed
-  bool write;                                     //!< AUTO: flag (true/false), which determines if the restart file is written regularly, see name for details
-  Real writePeriod;                               //!< AUTO: must be >= 0; time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance
+  std::string name;                               //!< AUTO: filename and (relative) path of the restart file; reserved, see write
+  bool write;                                     //!< AUTO: flag (true/false), which shall determine if the restart file is written regularly; not implemented yet: True gives a warning (#2850)
+  Real writePeriod;                               //!< AUTO: must be >= 0; time span (period) in which the restart file shall be updated; reserved, see write
 
 private: // AUTO: 
   SimulationSettings* backlink; //!< AUTO: backlink for global access of structure

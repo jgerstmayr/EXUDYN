@@ -75,7 +75,7 @@ SolutionSensorsSettings has the following items:
 (sec-solutionrestartsettings)=
 ### SolutionRestartSettings
 
-The restart file: the state of the system written regularly, from which a simulation can be continued.
+The restart file: the state of the system written regularly, from which a simulation can be continued. Reserved: no solver writes it yet, and write=True gives a warning; how a restart works is #2850.
 
 SolutionRestartSettings has the following items:
 
@@ -84,9 +84,9 @@ SolutionRestartSettings has the following items:
 
 | name | type | default | description |
 |---|---|---|---|
-| `name`<br>`simulationSettings.solution.restart.name` | FileName | 'solution/restartFile.txt' | filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed |
-| `write`<br>`simulationSettings.solution.restart.write` | bool | False | flag (true/false), which determines if the restart file is written regularly, see name for details |
-| `writePeriod`<br>`simulationSettings.solution.restart.writePeriod` | UReal | 0.01 | time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance |
+| `name`<br>`simulationSettings.solution.restart.name` | FileName | 'solution/restartFile.txt' | filename and (relative) path of the restart file; reserved, see write |
+| `write`<br>`simulationSettings.solution.restart.write` | bool | False | flag (true/false), which shall determine if the restart file is written regularly; not implemented yet: True gives a warning (#2850) |
+| `writePeriod`<br>`simulationSettings.solution.restart.writePeriod` | UReal | 0.01 | time span (period) in which the restart file shall be updated; reserved, see write |
 
 
 

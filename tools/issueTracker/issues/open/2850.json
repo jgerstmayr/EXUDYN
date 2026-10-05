@@ -7,5 +7,6 @@
   "effort": "HIGH",
   "description": "The maintainer, 2026-10-05: before a restart function is written, evaluate how a restart works together with a model script - where the restart file is injected, for example that the system detects a restart file and loads its state from it. The restart file is written already (simulationSettings.solution.restart); a prototype that reads it is _InitializeFromRestartFile in basicUtilities.py, not public. Successor of #1565.",
   "dateRaised": "2026-10-05",
-  "deadline": "2027-04-03"
+  "deadline": "2027-04-03",
+  "workingRemarks": "RG12.39 evaluated 2026-10-05: no solver writes the restart file; proposal (A) restartFile argument of SolveDynamic/SolveStatic on a file the solvers write, (B) continueIfAvailable later - awaiting the maintainer's decision."
 }

@@ -360,13 +360,13 @@ inline void SetDictionary(SolutionSensorsSettings& data, const py::dict& d) {
 inline py::dict GetDictionaryWithTypeInfo(const SolutionRestartSettings& data) {
     auto structureDict = py::dict();
     auto d = py::dict(); //local dict
-    structureDict["structureDescription"] = "The restart file: the state of the system written regularly, from which a simulation can be continued.";
+    structureDict["structureDescription"] = "The restart file: the state of the system written regularly, from which a simulation can be continued. Reserved: no solver writes it yet, and write=True gives a warning; how a restart works is #2850.";
     d = py::dict(); //reset local dict
     d["itemIdentifier"] = std::string(""); //identifier for item
     d["value"] = data.name;
     d["type"] = "FileName";
     d["size"] = std::vector<int>{1};
-    d["description"] = "filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed";
+    d["description"] = "filename and (relative) path of the restart file; reserved, see write";
     structureDict["name"] = d;
 
     d = py::dict(); //reset local dict
@@ -374,7 +374,7 @@ inline py::dict GetDictionaryWithTypeInfo(const SolutionRestartSettings& data) {
     d["value"] = data.write;
     d["type"] = "bool";
     d["size"] = std::vector<int>{1};
-    d["description"] = "flag (true/false), which determines if the restart file is written regularly, see name for details";
+    d["description"] = "flag (true/false), which shall determine if the restart file is written regularly; not implemented yet: True gives a warning (#2850)";
     structureDict["write"] = d;
 
     d = py::dict(); //reset local dict
@@ -382,7 +382,7 @@ inline py::dict GetDictionaryWithTypeInfo(const SolutionRestartSettings& data) {
     d["value"] = data.writePeriod;
     d["type"] = "UReal";
     d["size"] = std::vector<int>{1};
-    d["description"] = "time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance";
+    d["description"] = "time span (period) in which the restart file shall be updated; reserved, see write";
     structureDict["writePeriod"] = d;
 
     return structureDict;

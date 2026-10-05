@@ -1099,13 +1099,13 @@ class SolutionSensorsSettings:
 
 
 class SolutionRestartSettings:
-    """The restart file: the state of the system written regularly, from which a simulation can be continued."""
+    """The restart file: the state of the system written regularly, from which a simulation can be continued. Reserved: no solver writes it yet, and write=True gives a warning; how a restart works is #2850."""
     name: str
-    """filename and (relative) path of text file for storing the solution after every writePeriod if write=True; directory will be created if it does not exist; backup file is created with ending .bck, which should be used if restart file is crashed."""
+    """filename and (relative) path of the restart file; reserved, see write."""
     write: bool
-    """flag (true/false), which determines if the restart file is written regularly, see name for details."""
+    """flag (true/false), which shall determine if the restart file is written regularly; not implemented yet: True gives a warning (#2850)."""
     writePeriod: float
-    """time span (period), determines how often the restart file is updated; this should be often enough to enable restart without too much loss of data; too low values may influence performance."""
+    """time span (period) in which the restart file shall be updated; reserved, see write."""
     def GetDictionary(self) -> dict: ...
     def SetDictionary(self, d: dict) -> None: ...
 
