@@ -75,7 +75,7 @@ oMass = mbs.CreateRigidBody(referencePosition=[x,y,z],
 mMass = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oMass))
 
 quadPoints = exu.Vector3DList([[-size,-size,0],[size,-size,0],[size,size,0],[-size,size,0]])
-oSSC = mbs.CreateSphereQuadContact(bodyNumbers=[oMass, oGround],
+oSSC = mbs.CreateSphereQuadContact(itemNumbers=[oMass, oGround],
                                    quadPoints=quadPoints,
                                    includeEdges=15, #all edges
                                    sphereRadius=radius,

@@ -53,7 +53,7 @@ oBody2 = mbs.CreateRigidBody(referencePosition = [L,0.,0.],
                        gravity = [0.,0.,0.],
                        graphicsDataList = [gBody2],)
  
-oRBSD1 = mbs.CreateRigidBodySpringDamper(bodyList = [oGround, oBody1],
+oRBSD1 = mbs.CreateRigidBodySpringDamper(itemNumbers = [oGround, oBody1],
                                         localPosition0 = [0.5*L,0.,0.], #global position
                                         localPosition1 = [-0.5*L,0.,0.], #global position
                                         stiffness = np.diag([k*0.4,k*0.5,k*0.7, kr,kr*2,kr*1.3]), 
@@ -63,7 +63,7 @@ oRBSD1 = mbs.CreateRigidBodySpringDamper(bodyList = [oGround, oBody1],
                                         )
 
 oRBSD2 = mbs.CreateRigidBodySpringDamper(
-                                         bodyList = [oBody2, oGround],
+                                         itemNumbers = [oBody2, oGround],
                                          localPosition0 = [-0.5*L,0.,0.], #global position
                                          localPosition1 = [0.5*L,0.,0.], #global position
                                          stiffness = np.diag([k*0.4,k*0.5,k*0.7, kr,kr*2,kr*1.3]), 
@@ -91,7 +91,7 @@ oBody3b = mbs.CreateRigidBody(referencePosition = [L,1.,0.],
                        graphicsDataList = [gBody2],)
 
 oRBSD3 = mbs.CreateRigidBodySpringDamper(
-                                         bodyList = [oBody3a, oBody3b],
+                                         itemNumbers = [oBody3a, oBody3b],
                                          localPosition0 = [0.5*L,0.,0.], #global position
                                          localPosition1 = [-0.5*L,0.,0.], #global position
                                          stiffness = 1*np.diag([k*0.4,k*0.5,k*0.7, kr,kr*2,kr*1.3]), 

@@ -152,7 +152,7 @@ def CreateEngine(P):
     nEngine = mbs.GetObjectParameter(oEngine, 'nodeNumber')
     
     ## create joint between engine and ground to measure forces
-    oEngineJoint = mbs.CreateGenericJoint(bodyNumbers=[oEngine, oGround],
+    oEngineJoint = mbs.CreateGenericJoint(itemNumbers=[oEngine, oGround],
                                           position=[0,0,0],
                                           constrainedAxes=[1,1,1, 1,1,1],
                                           show=False)
@@ -245,7 +245,7 @@ def CreateEngine(P):
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     ## create revulute joint between engine and crankshaft
-    oJointCrank = mbs.CreateRevoluteJoint(bodyNumbers=[oEngine, bCrank],
+    oJointCrank = mbs.CreateRevoluteJoint(itemNumbers=[oEngine, bCrank],
                                           position=[0,0,-0.5*eL], 
                                           axis=[0,0,1], 
                                           show=showJoints, 
@@ -263,7 +263,7 @@ def CreateEngine(P):
         #zOff = 0
 
         ### create revolute joint between crankshaft and conrod
-        oJointCC = mbs.CreateRevoluteJoint(bodyNumbers=[bCrank, bConrodList[cnt]], 
+        oJointCC = mbs.CreateRevoluteJoint(itemNumbers=[bCrank, bConrodList[cnt]], 
                                            position=Ac@[P.crankArmLength,0,zOff + P.crankBearingWidth+P.crankArmWidth+0.5*P.conrodCrankCylLength], 
                                            axis=[0,0,1], 
                                            show = showJoints, 
@@ -272,7 +272,7 @@ def CreateEngine(P):
         
         ### create revolute joint between conrod and piston
         pPiston = Ap@[dp,0,zOff + P.crankBearingWidth+P.crankArmWidth+0.5*P.conrodCrankCylLength]
-        oJointCP = mbs.CreateRevoluteJoint(bodyNumbers=[bConrodList[cnt], bPistonList[cnt]], 
+        oJointCP = mbs.CreateRevoluteJoint(itemNumbers=[bConrodList[cnt], bPistonList[cnt]], 
                                            position=pPiston, 
                                            axis=[0,0,1], 
                                            show=showJoints, 
@@ -280,7 +280,7 @@ def CreateEngine(P):
                                            axisLength=P.crankBearingWidth*0.8)
 
         ### create prismatic joint between piston and engine, using a generic joint
-        mbs.CreateGenericJoint(bodyNumbers=[bPistonList[cnt], oEngine], 
+        mbs.CreateGenericJoint(itemNumbers=[bPistonList[cnt], oEngine], 
                                position=[0,0,0],
                                constrainedAxes=[0,1,0, 0,0,1],
                                useGlobalFrame=False, 

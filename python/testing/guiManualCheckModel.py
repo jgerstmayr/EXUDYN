@@ -40,9 +40,9 @@ oGround = mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0.5,-1
 #1) mass point + spring-damper + force (as in the notebook tutorialSpringDamperCreate)
 oMass = mbs.CreateMassPoint(name='mass', referencePosition=[1.5,0.8,0], initialDisplacement=[-0.1,0,0],
                             mass=1.6, drawSize=0.15, color=graphics.color.red)
-oSD = mbs.CreateSpringDamper(name='springDamper', bodyNumbers=[oGround, oMass],
+oSD = mbs.CreateSpringDamper(name='springDamper', itemNumbers=[oGround, oMass],
                              referenceLength=1.5, stiffness=400, damping=0.5, drawSize=0.08)
-lForce = mbs.CreateForce(name='force', bodyNumber=oMass, loadVector=[8,0,0])
+lForce = mbs.CreateForce(name='force', itemNumber=oMass, loadVector=[8,0,0])
 sForce = mbs.AddSensor(SensorObject(objectNumber=oSD, storeInternal=True,
                                     outputVariableType=exu.OutputVariableType.ForceLocal))
 
@@ -57,9 +57,9 @@ b1 = mbs.CreateRigidBody(name='link1', inertia=iCube, referencePosition=[L,0,0.5
                          referenceRotationMatrix=np.array([[0,0,-1],[0,1,0],[1,0,0]]), gravity=[0,-9.81,0],
                          graphicsDataList=[graphics.Brick(size=[L,w,w], color=graphics.color.lightgreen,
                                                           addEdges=True)])
-mbs.CreateRevoluteJoint(name='joint0', bodyNumbers=[oGround, b0], position=[0,0,0], axis=[0,0,1],
+mbs.CreateRevoluteJoint(name='joint0', itemNumbers=[oGround, b0], position=[0,0,0], axis=[0,0,1],
                         axisRadius=0.2*w, axisLength=1.5*w)
-mbs.CreateRevoluteJoint(name='joint1', bodyNumbers=[b0, b1], position=[L,0,0], axis=[1,0,0],
+mbs.CreateRevoluteJoint(name='joint1', itemNumbers=[b0, b1], position=[L,0,0], axis=[1,0,0],
                         axisRadius=0.2*w, axisLength=1.5*w)
 sTip = mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0.5*L,0,0], storeInternal=True,
                                 outputVariableType=exu.OutputVariableType.Position))

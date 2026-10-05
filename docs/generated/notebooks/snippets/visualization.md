@@ -9,7 +9,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 oGround = mbs.CreateGround()
 oMass = mbs.CreateMassPoint(referencePosition=[1,0,0], initialVelocity=[0,1,0], mass=1)
-oSpring = mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass], stiffness=100, damping=1)
+oSpring = mbs.CreateSpringDamper(itemNumbers=[oGround, oMass], stiffness=100, damping=1)
 nMarker = mbs.AddMarker(MarkerBodyPosition(bodyNumber=oMass))
 mbs.AddSensor(SensorBody(bodyNumber=oMass, storeInternal=True, outputVariableType=exu.OutputVariableType.Position))
 mbs.variables['nTrackNode'] = mbs.GetObject(oMass)['nodeNumber']

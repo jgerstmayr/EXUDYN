@@ -75,7 +75,7 @@ for i in range(nBodies):
     body0 = bodyLast
     body1 = oRB
     axis = axisList[i]
-    mbs.CreateRevoluteJoint(bodyNumbers=[body0, body1], position=[0.5*L,0,0], 
+    mbs.CreateRevoluteJoint(itemNumbers=[body0, body1], position=[0.5*L,0,0], 
                             axis=Alast.T@axis, useGlobalFrame=False, 
                             axisRadius=0.6*d, axisLength=1.2*d)
 

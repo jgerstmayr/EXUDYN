@@ -93,7 +93,7 @@ b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
 
 oGround = mbs.AddObject(ObjectGround())
 #add vertical spring
-oSD = mbs.CreateSpringDamper(bodyNumbers=[oGround, b0],
+oSD = mbs.CreateSpringDamper(itemNumbers=[oGround, b0],
                              localPosition0=[2,1,0],
                              localPosition1=[0,0,0],
                              stiffness=1e4, damping=1e2,
@@ -128,7 +128,7 @@ b0 = mbs.CreateMassPoint(referencePosition = [7,0,0],
 
 oGround = mbs.AddObject(ObjectGround())
 
-oSD = mbs.CreateCartesianSpringDamper(bodyNumbers=[oGround, b0],
+oSD = mbs.CreateCartesianSpringDamper(itemNumbers=[oGround, b0],
                               localPosition0=[7.5,1,0],
                               localPosition1=[0,0,0],
                               stiffness=[200,2000,0], damping=[2,20,0],
@@ -164,7 +164,7 @@ b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
                          graphicsDataList = [graphics.Brick(size=[1,0.1,0.1], 
                                                                       color=graphics.color.steelblue)])
 oGround = mbs.AddObject(ObjectGround())
-mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[2.5,0,0], axis=[0,0,1],
+mbs.CreateRevoluteJoint(itemNumbers=[oGround, b0], position=[2.5,0,0], axis=[0,0,1],
                         useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
 
 mbs.Assemble()
@@ -197,7 +197,7 @@ b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
                                                                       color=graphics.color.steelblue)])
 
 oGround = mbs.AddObject(ObjectGround())
-mbs.CreatePrismaticJoint(bodyNumbers=[oGround, b0], position=[3.5,0,0], axis=[0,1,0], 
+mbs.CreatePrismaticJoint(itemNumbers=[oGround, b0], position=[3.5,0,0], axis=[0,1,0], 
                          useGlobalFrame=True, axisRadius=0.02, axisLength=1)
 
 mbs.Assemble()
@@ -230,7 +230,7 @@ b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
                          graphicsDataList = [graphics.Brick(size=[1,0.1,0.1], 
                                                                       color=graphics.color.orange)])
 oGround = mbs.AddObject(ObjectGround())
-mbs.CreateSphericalJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0], 
+mbs.CreateSphericalJoint(itemNumbers=[oGround, b0], position=[5.5,0,0], 
                          useGlobalFrame=True, jointRadius=0.06)
 
 mbs.Assemble()
@@ -262,13 +262,13 @@ b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
                          graphicsDataList = [graphics.Brick(size=[1,0.1,0.1], 
                                                                       color=graphics.color.orange)])
 oGround = mbs.AddObject(ObjectGround())
-mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
+mbs.CreateGenericJoint(itemNumbers=[oGround, b0], position=[5.5,0,0],
                        constrainedAxes=[1,1,1, 1,0,0],
                        rotationMatrixAxes=RotationMatrixX(0.125*pi), #tilt axes
                        useGlobalFrame=True, axesRadius=0.02, axesLength=0.2)
 
 #add global force:
-f0 = mbs.CreateForce(bodyNumber=b0, loadVector=[0.,20.,0.], localPosition=[0.5,0,0])
+f0 = mbs.CreateForce(itemNumber=b0, loadVector=[0.,20.,0.], localPosition=[0.5,0,0])
 
 #define user function for torque
 def UFtorque(mbs, t, load):
@@ -280,7 +280,7 @@ def UFtorque(mbs, t, load):
     return val*np.array(load)
 
 #add torque applied in body coordinates:
-t0 = mbs.CreateTorque(bodyNumber=b0, loadVector=[0.,0.,10.], bodyFixed=True,
+t0 = mbs.CreateTorque(itemNumber=b0, loadVector=[0.,0.,10.], bodyFixed=True,
                       loadVectorUserFunction=UFtorque)
 
 mbs.Assemble()
@@ -312,7 +312,7 @@ b0 = mbs.CreateMassPoint(referencePosition = [2,0,0],
 
 oGround = mbs.AddObject(ObjectGround())
 #add vertical spring
-oSD = mbs.CreateSpringDamper(bodyNumbers=[oGround, b0],
+oSD = mbs.CreateSpringDamper(itemNumbers=[oGround, b0],
                              localPosition0=[2,1,0],
                              localPosition1=[0,0,0],
                              stiffness=1e4, damping=1e2,
@@ -347,7 +347,7 @@ b0 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000,
                          graphicsDataList = [graphics.Brick(size=[1,0.1,0.1], 
                                                                       color=graphics.color.orange)])
 oGround = mbs.AddObject(ObjectGround())
-mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
+mbs.CreateGenericJoint(itemNumbers=[oGround, b0], position=[5.5,0,0],
                        constrainedAxes=[1,1,1, 1,0,0],
                        rotationMatrixAxes=RotationMatrixX(0.125*pi), #tilt axes
                        useGlobalFrame=True, axesRadius=0.02, axesLength=0.2)
@@ -397,13 +397,13 @@ m1 = mbs.CreateMassPoint(referencePosition=[5.5,-1,0],
 n1 = mbs.GetObject(m1)['nodeNumber']
     
 oGround = mbs.AddObject(ObjectGround())
-mbs.CreateDistanceConstraint(bodyNumbers=[oGround, b0], 
+mbs.CreateDistanceConstraint(itemNumbers=[oGround, b0], 
                              localPosition0 = [6.5,1,0],
                              localPosition1 = [0.5,0,0],
                              distance=None, #automatically computed
                              drawSize=0.06)
 
-mbs.CreateDistanceConstraint(bodyOrNodeList=[b0, n1], 
+mbs.CreateDistanceConstraint(itemNumbers=[b0, n1], 
                              localPosition0 = [-0.5,0,0],
                              localPosition1 = [0.,0.,0.], #must be [0,0,0] for Node
                              distance=None, #automatically computed

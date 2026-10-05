@@ -5,8 +5,8 @@
 #           side (#2807): a DeprecationWarning at the line of the script that uses it, once per session
 #           and name - every time with exu.special.deprecations.warnOnce = False -, and each use counted
 #           in exu.sys['deprecationUse']['library']. graphics.BrickXYZ is a deprecated function,
-#           bodyList of the Create functions a deprecated argument; graphics.Brick, which uses BrickXYZ
-#           inside, is not deprecated and records nothing.
+#           bodyNumbers of the Create functions a deprecated argument (#2863), and bodyOrNodeList is not
+#           accepted; graphics.Brick, which uses BrickXYZ inside, is not deprecated and records nothing.
 #
 # Author:   Johannes Gerstmayr
 # Date:     2026-10-03
@@ -60,16 +60,24 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 oGround = mbs.CreateGround()
 b0 = mbs.CreateMassPoint(referencePosition=[1,0,0], mass=1)
-used = Uses('MainSystem.CreateSpringDamper.bodyList')
+used = Uses('MainSystem.CreateSpringDamper.bodyNumbers')
 deprecations.warnOnce = False
 with warnings.catch_warnings(record=True) as caught:
     warnings.simplefilter('always')
-    mbs.CreateSpringDamper(bodyList=[oGround, b0], stiffness=100)
+    mbs.CreateSpringDamper(bodyNumbers=[oGround, b0], stiffness=100)
 caught = [entry for entry in caught if issubclass(entry.category, DeprecationWarning)]
 deprecations.warnOnce = warnOnceStored
-exu.Print('bodyList:', [str(entry.message) for entry in caught])
-if len(caught) != 1 or not FromThisScript(caught) or Uses('MainSystem.CreateSpringDamper.bodyList') != used + 1:
+exu.Print('bodyNumbers:', [str(entry.message) for entry in caught])
+if len(caught) != 1 or not FromThisScript(caught) or Uses('MainSystem.CreateSpringDamper.bodyNumbers') != used + 1:
     errors += 1
+
+#an argument that is not accepted any more says what to use
+try:
+    mbs.CreateSpringDamper(bodyOrNodeList=[oGround, b0], stiffness=100)
+    errors += 1
+except TypeError as error:
+    if 'use itemNumbers' not in str(error):
+        errors += 1
 
 exu.Print('libraryDeprecationTest: warnings', nWarnings, ', errors', errors)
 u = sum(nWarnings) + errors

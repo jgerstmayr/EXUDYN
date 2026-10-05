@@ -81,7 +81,7 @@ for run in runList:
                                     nodeType=exu.NodeType.RotationRxyz,
                                     referencePosition=[L*(i+1)+u0, 0, 0],
                                     gravity=[0,0,0])
-            mbs.CreateRigidBodySpringDamper(bodyNumbers=[lastBody, b],
+            mbs.CreateRigidBodySpringDamper(itemNumbers=[lastBody, b],
                                             localPosition0=[0.5*L,0,0],
                                             localPosition1=[-0.5*L,0,0],
                                             stiffness=np.diag([spring]*3+[0.1*spring]*3),

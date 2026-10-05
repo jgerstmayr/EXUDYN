@@ -212,11 +212,11 @@ sMarkerB1= mbs.AddSensor(SensorMarker(markerNumber=markerB1,outputVariableType=e
 #add joints:
 useJoints = True
 if useJoints:
-    oJointRW = mbs.CreateRevoluteJoint(bodyNumbers=[bR, bB], position=P1, axis=[0,1,0],
+    oJointRW = mbs.CreateRevoluteJoint(itemNumbers=[bR, bB], position=P1, axis=[0,1,0],
                             axisRadius=0.5*dY, axisLength=5*dY)
-    oJointFW = mbs.CreateRevoluteJoint(bodyNumbers=[bF, bH], position=P3, axis=[0,1,0],
+    oJointFW = mbs.CreateRevoluteJoint(itemNumbers=[bF, bH], position=P3, axis=[0,1,0],
                             axisRadius=0.5*dY, axisLength=5*dY)
-    oJointSteer = mbs.CreateRevoluteJoint(bodyNumbers=[bB, bH], 
+    oJointSteer = mbs.CreateRevoluteJoint(itemNumbers=[bB, bH], 
                                           position=P2-bCOM, useGlobalFrame=False,
                                           axis=RotationMatrixY(-lam) @ [0,0,1],
                                           axisRadius=0.5*dY, axisLength=5*dY)

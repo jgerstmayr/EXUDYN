@@ -152,7 +152,7 @@ if True:
     gFloor = graphics.CheckerBoard(point=[0,0,0.],size=8)
     oGround = mbs.CreateGround(graphicsDataList=[gFloor])
     
-    mbs.CreateGenericJoint(bodyNumbers=[mFrameGround,oGround])
+    mbs.CreateGenericJoint(itemNumbers=[mFrameGround,oGround])
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++
 interfaceNameListC = ['attachment']
@@ -314,7 +314,7 @@ for iy in [-1,1]:
     for i, marker in enumerate(mBoxList):
         nANCF = ancf[0][i*(nANCFnodes-1)//2]
         mANCF = mbs.AddMarker(MarkerNodePosition(nodeNumber=nANCF))
-        # mbs.CreateCartesianSpringDamper(bodyNumbers=[marker, nANCF],
+        # mbs.CreateCartesianSpringDamper(itemNumbers=[marker, nANCF],
         #                                 stiffness=[1e5]*3,
         #                                 damping=[2e3]*3)
         mbs.AddObject(SphericalJoint(markerNumbers=[marker, mANCF],
@@ -382,7 +382,7 @@ oGroundCSD = mbs.CreateGround(referencePosition=mbs.GetMarkerOutput(mCarrierAtta
                                                                     exu.OutputVariableType.Position, 
                                                                     exu.ConfigurationType.Reference) )
 
-oCSD = mbs.CreateCartesianSpringDamper(bodyNumbers=[oGroundCSD, mCarrierAttachment],
+oCSD = mbs.CreateCartesianSpringDamper(itemNumbers=[oGroundCSD, mCarrierAttachment],
                                        springForceUserFunction=UFspring,
                                        show=False)
 

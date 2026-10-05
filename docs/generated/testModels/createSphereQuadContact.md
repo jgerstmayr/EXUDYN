@@ -117,7 +117,7 @@ for methodNum, method in enumerate(methodList):
             else:
                 #create contact between each sphere:
                 for oMass2 in listMasses[:-1]:
-                    oSSC = mbs.CreateSphereSphereContact(bodyNumbers=[oMass, oMass2],
+                    oSSC = mbs.CreateSphereSphereContact(itemNumbers=[oMass, oMass2],
                                                          spheresRadii=[radius, radius],
                                                          contactStiffness = contactStiffness,
                                                          dynamicFriction = dynamicFriction,
@@ -133,7 +133,7 @@ for methodNum, method in enumerate(methodList):
                 
                 trigList = [trianglePoints0,trianglePoints1]
                 for k, trianglePoints in enumerate(trigList):
-                    oSSC = mbs.CreateSphereTriangleContact(bodyNumbers=[oMass, oGround],
+                    oSSC = mbs.CreateSphereTriangleContact(itemNumbers=[oMass, oGround],
                                                            trianglePoints=trianglePoints,
                                                            includeEdges=includeEdgesList[k],
                                                            sphereRadius=radius,
@@ -145,7 +145,7 @@ for methodNum, method in enumerate(methodList):
                                                            )
             else: #alternative with quads
                 quadPoints = exu.Vector3DList([[-size,-size,0],[size,-size,0],[size,size,0],[-size,size,0]])
-                oSSC = mbs.CreateSphereQuadContact(bodyNumbers=[oMass, oGround],
+                oSSC = mbs.CreateSphereQuadContact(itemNumbers=[oMass, oGround],
                                                    quadPoints=quadPoints,
                                                    includeEdges=15, #all edges
                                                    sphereRadius=radius,

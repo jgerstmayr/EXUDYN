@@ -88,7 +88,7 @@ for i in range(nBalls):
 
     #approx. constant distance between bodies    
     if lastBody is not None:
-        mbs.CreateSpringDamper(bodyNumbers=[lastBody, oBall],stiffness=2000, damping=1)
+        mbs.CreateSpringDamper(itemNumbers=[lastBody, oBall],stiffness=2000, damping=1)
 
     lastBody = oBall
 

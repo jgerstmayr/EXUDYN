@@ -55,13 +55,13 @@ def UFforce(mbs, t, loadVector):
     #define time-dependent function:
     return [10+5*np.sin(t*10*2*pi),0,0]
 
-mbs.CreateForce(bodyNumber=b0, localPosition=[-0.5,0,0],
+mbs.CreateForce(itemNumber=b0, localPosition=[-0.5,0,0],
                 loadVector=[10,0,0], 
                 loadVectorUserFunction=UFforce,
                 ) #load is 10N in x-direction
 
 #add torque to rigid body at left end
-mbs.CreateTorque(bodyNumber=b0, localPosition=[0.5,0,0],
+mbs.CreateTorque(itemNumber=b0, localPosition=[0.5,0,0],
                 loadVector=[0,1,0]) #torque of 1N around y-axis
 
 #create a simple mass point at [1,-1,0] with initial velocity
@@ -79,14 +79,14 @@ gGround1 = graphics.CheckerBoard(point=[3,0,-2], normal=[0,0,1], size=10)
 oGround = mbs.CreateGround(graphicsDataList=[gGround0,gGround1])
 
 #create a rigid distance between bodies (using local position) or between nodes
-mbs.CreateDistanceConstraint(bodyOrNodeList=[oGround, b0], 
+mbs.CreateDistanceConstraint(itemNumbers=[oGround, b0], 
                              localPosition0 = [ 0. ,0,0],
                              localPosition1 = [-0.5,0,0],
                              distance=None, #automatically computed
                              drawSize=0.06)
 
 #distance constraint between body b0 and mass m1
-mbs.CreateDistanceConstraint(bodyOrNodeList=[b0, m1], 
+mbs.CreateDistanceConstraint(itemNumbers=[b0, m1], 
                              localPosition0 = [0.5,0,0],
                              localPosition1 = [0.,0.,0.], #must be [0,0,0] for Node
                              distance=None, #automatically computed
@@ -114,7 +114,7 @@ b2 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[1,0.
     # axisLength: length of axis for connector graphical representation
     # color: color of connector
 #returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
-mbs.CreateRevoluteJoint(bodyNumbers=[b1, b2], position=[3,0,0], axis=[0,0,1], #rotation along global z-axis
+mbs.CreateRevoluteJoint(itemNumbers=[b1, b2], position=[3,0,0], axis=[0,0,1], #rotation along global z-axis
                         useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
 
 
@@ -129,11 +129,11 @@ mbs.CreateRevoluteJoint(bodyNumbers=[b1, b2], position=[3,0,0], axis=[0,0,1], #r
     # axisLength: length of axis for connector graphical representation
     # color: color of connector
 #returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
-mbs.CreatePrismaticJoint(bodyNumbers=[oGround, b1], position=[2,0,0], axis=[1,0,0], #can move in global x-direction
+mbs.CreatePrismaticJoint(itemNumbers=[oGround, b1], position=[2,0,0], axis=[1,0,0], #can move in global x-direction
                          useGlobalFrame=True, axisRadius=0.02, axisLength=1)
 
 # #instead of the prismatic joint, we could add another revolute joint to b1 to get a double-pendulum:
-# mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b1], position=[2,0,0], axis=[0,0,1],
+# mbs.CreateRevoluteJoint(itemNumbers=[oGround, b1], position=[2,0,0], axis=[0,0,1],
 #                         useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
 
 
@@ -144,7 +144,7 @@ m2 = mbs.CreateMassPoint(referencePosition = [7,2,0],
 
 #create spring damper between bodies (using local position) or between nodes
 #spring-damper may not have size 0; spring reference length is computed from reference configuration
-oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, m2],
+oSD = mbs.CreateSpringDamper(itemNumbers=[oGround, m2],
                              localPosition0=[6,0,0],
                              localPosition1=[0,0,0],
                              stiffness=1e3, damping=1e1,
@@ -152,7 +152,7 @@ oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, m2],
 
 #alternatively, we can use a CartesianSpringDamper; has spring and damper coefficients as list of x/y/z components
 #it has no reference length and acts on the coordinates of both objects:
-oCSD = mbs.CreateCartesianSpringDamper(bodyOrNodeList=[oGround, m2],
+oCSD = mbs.CreateCartesianSpringDamper(itemNumbers=[oGround, m2],
                               localPosition0=[7,2,0],
                               localPosition1=[0,0,0],
                               stiffness=[20,0,1e4], #stiffness in x/y/z direction

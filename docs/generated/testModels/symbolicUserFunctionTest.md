@@ -62,7 +62,7 @@ else:
 oGround = mbs.CreateGround()
 
 oMassPoint = mbs.CreateMassPoint(referencePosition=[1.+0.05,0,0], mass=1)
-co = mbs.CreateSpringDamper(bodyNumbers=[oGround, oMassPoint],
+co = mbs.CreateSpringDamper(itemNumbers=[oGround, oMassPoint],
                             referenceLength = 0.1, stiffness = 100, 
                             damping = 1,
                             springForceUserFunction = springForceUserFunction,

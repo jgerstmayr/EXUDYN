@@ -54,7 +54,7 @@ if True:
                            referenceRotationMatrix=RotationVector2RotationMatrix([0.2,0.3,0.4]),
                            gravity = g,
                            graphicsDataList = [graphicsCOM0, graphicsBody0])
-    r0=mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], 
+    r0=mbs.CreateRevoluteJoint(itemNumbers=[oGround, b0], 
                                position=[0.25,-0.1,0.1], #global position on ground
                                axis=[0,0,1], 
                                #axisRadius=0.2*w, axisLength=1.4*w
@@ -86,7 +86,7 @@ if True:
                            referenceRotationMatrix=RotationVector2RotationMatrix([0.2,0.3,0.4]),
                            gravity = g,
                            graphicsDataList = [graphicsCOM0, graphicsBody2])
-    r0B=mbs.CreateRevoluteJoint(bodyNumbers=[b0B, oGround], 
+    r0B=mbs.CreateRevoluteJoint(itemNumbers=[b0B, oGround], 
                                position=[0.1,-0.05,0.05], #global position on ground
                                axis=[0,1,0],
                                # axis=[0,0,1],

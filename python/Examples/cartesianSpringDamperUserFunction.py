@@ -46,13 +46,13 @@ massPoint = mbs.CreateMassPoint(referencePosition=[L,0,0],
                     mass=mass)
 
 ## create spring damper between ground and mass point
-csd = mbs.CreateCartesianSpringDamper(bodyNumbers=[objectGround, massPoint],
+csd = mbs.CreateCartesianSpringDamper(itemNumbers=[objectGround, massPoint],
                                 stiffness = [k,k,k], 
                                 damping   = [d,0,0],
                                 offset    = [L,0,0])
 
 ## add force on mass point
-load = mbs.CreateForce(bodyNumber=massPoint, loadVector= [f,0,0])
+load = mbs.CreateForce(itemNumber=massPoint, loadVector= [f,0,0])
 
 ## add sensor to measure mass point position
 sMass = mbs.AddSensor(SensorBody(bodyNumber=massPoint, storeInternal=True,

@@ -65,9 +65,9 @@ oCam = mbs.CreateRigidBody(
                             )
 
 mCam = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oCam, localPosition=[0,0,0]))
-mbs.CreateCoordinateConstraint(bodyNumbers=[None, oCam], coordinates=[None,0], show=False)
-mbs.CreateCoordinateConstraint(bodyNumbers=[None, oCam], coordinates=[None,1], show=False)
-oCCtorqueCam = mbs.CreateCoordinateConstraint(bodyNumbers=[None, oCam], coordinates=[None,2], 
+mbs.CreateCoordinateConstraint(itemNumbers=[None, oCam], coordinates=[None,0], show=False)
+mbs.CreateCoordinateConstraint(itemNumbers=[None, oCam], coordinates=[None,1], show=False)
+oCCtorqueCam = mbs.CreateCoordinateConstraint(itemNumbers=[None, oCam], coordinates=[None,2], 
                                velocityLevel=True, offset=omegaCam, show=False)
 sTorque = mbs.AddSensor(SensorObject(objectNumber=oCCtorqueCam, storeInternal=True,
                                      outputVariableType=exu.OutputVariableType.Force))
@@ -112,11 +112,11 @@ mFollower = mbs.AddMarker(MarkerBodyRigid(bodyNumber=oFollower, localPosition=[0
 sPosFollower = mbs.AddSensor(SensorBody(bodyNumber=oFollower, storeInternal=True,
                                         outputVariableType=exu.OutputVariableType.Position))
 
-mbs.CreateCoordinateConstraint(bodyNumbers=[None, oFollower], coordinates=[None,1], show=False)
-mbs.CreateCoordinateConstraint(bodyNumbers=[None, oFollower], coordinates=[None,2], show=False) #rotation
+mbs.CreateCoordinateConstraint(itemNumbers=[None, oFollower], coordinates=[None,1], show=False)
+mbs.CreateCoordinateConstraint(itemNumbers=[None, oFollower], coordinates=[None,2], show=False) #rotation
 
 lSpring = 0.02
-mbs.CreateSpringDamper(bodyNumbers=[oGround, oFollower],
+mbs.CreateSpringDamper(itemNumbers=[oGround, oFollower],
                        localPosition0=pCam+vFollower+[0.5*lFollower+lSpring,0,0],
                        localPosition1=[0.5*lFollower,0,0],
                        referenceLength=lSpring*2,

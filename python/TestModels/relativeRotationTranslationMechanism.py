@@ -94,12 +94,12 @@ for i in range(4):
 
     if rotJoints[i]:
         ### set up revolute joint between two bodies, at global position and with global axis
-        oJoint = mbs.CreateRevoluteJoint(bodyNumbers=[body0, body1], 
+        oJoint = mbs.CreateRevoluteJoint(itemNumbers=[body0, body1], 
                                 position=point, axis=axis, useGlobalFrame=True, 
                                 axisRadius=0.6*d, axisLength=1.2*d)
     else:
         ### set up prismatic joint between two bodies, at global position and with global axis
-        oJoint = mbs.CreatePrismaticJoint(bodyNumbers=[body0, body1], position=point, axis=axis, 
+        oJoint = mbs.CreatePrismaticJoint(itemNumbers=[body0, body1], position=point, axis=axis, 
                                           useGlobalFrame=True, axisRadius=0.6*d, axisLength=1.2*d)
 
 

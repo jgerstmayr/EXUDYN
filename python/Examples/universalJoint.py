@@ -172,16 +172,16 @@ if True: # if true: constant angular velocity constraint for flexible body
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #joints
-mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[0,0,-l/2], axis=[0,0,1],
+mbs.CreateRevoluteJoint(itemNumbers=[oGround, b0], position=[0,0,-l/2], axis=[0,0,1],
                           useGlobalFrame=False, axisRadius=0.02, axisLength=0.01)
 
-mbs.CreateRevoluteJoint(bodyNumbers=[b1, b0], position=[0,0,0], axis=[1,0,0],
+mbs.CreateRevoluteJoint(itemNumbers=[b1, b0], position=[0,0,0], axis=[1,0,0],
                           useGlobalFrame=False, axisRadius=0.02, axisLength=0.5)
 
-mbs.CreateRevoluteJoint(bodyNumbers=[b1, b2], position=[0,0,0], axis=[0,1,0],
+mbs.CreateRevoluteJoint(itemNumbers=[b1, b2], position=[0,0,0], axis=[0,1,0],
                           useGlobalFrame=False, axisRadius=0.02, axisLength=0.5*r2/r)
     
-mbs.CreateGenericJoint(bodyNumbers=[b2, oGround], position=[0,0,l/2], 
+mbs.CreateGenericJoint(itemNumbers=[b2, oGround], position=[0,0,l/2], 
                         useGlobalFrame=False, constrainedAxes=[1,1,0,0,0,0], axesRadius=0.02, axesLength=0.01)
 
 

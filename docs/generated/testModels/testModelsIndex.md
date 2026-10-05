@@ -97,6 +97,7 @@ simulationSettingsRenamesTest
 itemParameterRenamesTest
 binarySolutionFileTest
 rotationMarkerDeprecationTest
+createItemNumbersTest
 libraryDeprecationTest
 homogeneousTransformationInterfaceTest
 homogeneousTransformationTest

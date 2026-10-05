@@ -122,7 +122,7 @@ evalNodes += [nMass]
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=gDataList)))
 
 #only implicit:
-# mbs.CreateGenericJoint(bodyNumbers=[oGround, oMass], position=pRef,
+# mbs.CreateGenericJoint(itemNumbers=[oGround, oMass], position=pRef,
 #                        constrainedAxes=[0,0,0, 1,1,1])
 
 mRot0 = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nMass, coordinate=3))

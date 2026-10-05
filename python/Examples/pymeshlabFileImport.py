@@ -92,7 +92,7 @@ dictCube0 = mbs.CreateRigidBody(
 #revolute joint (free z-axis)
 
 #revolute joint option 3:
-mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[0,0,0], axis=[0,1,0], 
+mbs.CreateRevoluteJoint(itemNumbers=[oGround, b0], position=[0,0,0], axis=[0,1,0], 
                         axisRadius=0.2*w, axisLength=1.4*w)
 
 # AddRevolute*Joint(mbs, body0=oGround, body1=b0, point=[0,0,0], 

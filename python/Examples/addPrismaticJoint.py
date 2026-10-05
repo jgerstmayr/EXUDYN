@@ -78,7 +78,7 @@ for i in range(4):
                                     configuration=exu.ConfigurationType.Reference)
     axis = axisList[i]
     ### set up prismatic joint between two bodies, at global position and with global axis
-    mbs.CreatePrismaticJoint(bodyNumbers=[body0, body1], position=point, axis=axis, 
+    mbs.CreatePrismaticJoint(itemNumbers=[body0, body1], position=point, axis=axis, 
                              useGlobalFrame=True, axisRadius=0.6*d, axisLength=1.2*d)
 
     bodyLast = oRB

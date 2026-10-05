@@ -1366,7 +1366,7 @@ definitions.append(ItemDefinition(
     plate.CreateANCFThinPlateElements(mbs) #adds a NodePointSlope12 per mesh point
     for node in plate.boundaryNodeNumbers['left']:
         mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))
-        mbs.CreateGenericJoint(bodyNumbers=[oGround, mNode]) #clamped: position and orientation
+        mbs.CreateGenericJoint(itemNumbers=[oGround, mNode]) #clamped: position and orientation
     for element in plate.elementNumbers:
         mbs.AddLoad(LoadMassProportional(markerNumber=mbs.AddMarker(MarkerBodyMass(bodyNumber=element)),
                                          loadVector=[0,0,-9.81]))

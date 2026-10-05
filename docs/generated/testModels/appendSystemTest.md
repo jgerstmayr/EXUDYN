@@ -34,8 +34,8 @@ def MassOnSpring(mbs):
     """a mass point on a spring under a force; returns the sensor of its position"""
     oGround = mbs.CreateGround()
     oMass = mbs.CreateMassPoint(referencePosition=[1, 0, 0], mass=2)
-    mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass], stiffness=100, damping=1)
-    mbs.CreateForce(bodyNumber=oMass, loadVector=[5, 0, 0])
+    mbs.CreateSpringDamper(itemNumbers=[oGround, oMass], stiffness=100, damping=1)
+    mbs.CreateForce(itemNumber=oMass, loadVector=[5, 0, 0])
     return mbs.AddSensor(SensorBody(bodyNumber=oMass, storeInternal=True,
                                     outputVariableType=exu.OutputVariableType.Position))
 

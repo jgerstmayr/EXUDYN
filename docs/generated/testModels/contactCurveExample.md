@@ -100,8 +100,8 @@ if True:
                                             visualization=VObjectContactCurveCircles(show=True, color=graphics.color.blue)
                                             ))
 
-    mbs.CreateCoordinateConstraint(bodyNumbers=[lever,None],coordinates=[1,None])
-    mbs.CreateCoordinateConstraint(bodyNumbers=[lever,None],coordinates=[2,None])
+    mbs.CreateCoordinateConstraint(itemNumbers=[lever,None],coordinates=[1,None])
+    mbs.CreateCoordinateConstraint(itemNumbers=[lever,None],coordinates=[2,None])
 
     def UFoffset_t(mbs, t, itemNumber, lOffset): #time derivative of UFoffset
         return 2.2*L*sin(2*pi*t)
@@ -109,7 +109,7 @@ if True:
     def UFoffset(mbs, t, itemNumber, lOffset): #time derivative of UFoffset
         return -0.7*(cos(2*pi*t)-1)
 
-    mbs.CreateCoordinateConstraint(bodyNumbers=[lever,None],coordinates=[0,None],
+    mbs.CreateCoordinateConstraint(itemNumbers=[lever,None],coordinates=[0,None],
                                    #velocityLevel=True,
                                    offsetUserFunction_t=UFoffset_t,
                                    offsetUserFunction=UFoffset,

@@ -56,12 +56,12 @@ b1 = mbs.CreateRigidBody(referencePosition=p1,
                          graphicsDataList=[graphics.Brick(size=b1size,
                                                           color=graphics.color.red)])
 
-mbs.CreateRevoluteJoint(bodyNumbers=[b0,b1],
+mbs.CreateRevoluteJoint(itemNumbers=[b0,b1],
                         position=p1-[0,0.5*L,0.5*w], 
                         axis = [0,0,1],
                         axisRadius=0.5*w, axisLength=2.2*w)
 
-mbs.CreatePrismaticJoint(bodyNumbers=[ground,b0],
+mbs.CreatePrismaticJoint(itemNumbers=[ground,b0],
                          position=p0, 
                          axis = [0,1,0],
                          axisRadius=0.5*w, axisLength=5*L)
@@ -71,7 +71,7 @@ def UFtorque(mbs, t, loadVector):
     f = np.heaviside(t - 1,1)
     return [0,0,-f*2*cos(pi*2*t)]
 
-load = mbs.CreateTorque(bodyNumber=b1, loadVector=[0,0,0],
+load = mbs.CreateTorque(itemNumber=b1, loadVector=[0,0,0],
                         loadVectorUserFunction=UFtorque)
 
 sPos = mbs.AddSensor(SensorBody(bodyNumber=b0, storeInternal=True, 

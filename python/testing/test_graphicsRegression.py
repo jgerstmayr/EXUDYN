@@ -216,10 +216,10 @@ def RepresentativeModel():
     oMass = mbs.CreateMassPoint(referencePosition=[1, 1, 0], mass=1, drawSize=0.1)
     oBody = mbs.CreateRigidBody(inertia=InertiaCuboid(1000, [1, 0.2, 0.2]), referencePosition=[1, 0, 0],
                                 graphicsDataList=[graphics.Brick(size=[1, 0.2, 0.2], color=red)])
-    mbs.CreateRevoluteJoint(bodyNumbers=[oGround, oBody], position=[0.5, 0, 0], axis=[0, 0, 1])
-    mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass], localPosition0=[1, 2, 0], stiffness=100, damping=1)
-    mbs.CreateForce(bodyNumber=oBody, loadVector=[0, -10, 0], localPosition=[0.5, 0, 0])
-    mbs.CreateTorque(bodyNumber=oBody, loadVector=[0, 0, 1])
+    mbs.CreateRevoluteJoint(itemNumbers=[oGround, oBody], position=[0.5, 0, 0], axis=[0, 0, 1])
+    mbs.CreateSpringDamper(itemNumbers=[oGround, oMass], localPosition0=[1, 2, 0], stiffness=100, damping=1)
+    mbs.CreateForce(itemNumber=oBody, loadVector=[0, -10, 0], localPosition=[0.5, 0, 0])
+    mbs.CreateTorque(itemNumber=oBody, loadVector=[0, 0, 1])
     mbs.AddSensor(SensorBody(bodyNumber=oBody, localPosition=[0.5, 0, 0],
                              outputVariableType=exu.OutputVariableType.Position, storeInternal=True))
     mbs.AddSensor(SensorNode(nodeNumber=mbs.GetObject(oMass)['nodeNumber'],
@@ -311,7 +311,7 @@ def UserFunctionModel():
     oBody = mbs.CreateRigidBody(inertia=InertiaCuboid(1000, [0.4, 0.2, 0.1]), referencePosition=[1, 0, 0],
                                 gravity=[0, -9.81, 0])
     mbs.SetObjectParameter(oBody, 'VgraphicsDataUserFunction', UFbodyGraphics)
-    mbs.CreateForce(bodyNumber=oBody, loadVector=[0, -10, 0], loadVectorUserFunction=UFload)
+    mbs.CreateForce(itemNumber=oBody, loadVector=[0, -10, 0], loadVectorUserFunction=UFload)
     mbs.Assemble()
     SC.visualizationSettings.loads.fixedLoadSize = False
     return (SC, mbs)
@@ -478,12 +478,12 @@ def testConnectorLinesAndSensorLoad():
     oGround = mbs.CreateGround()
     oMass0 = mbs.CreateMassPoint(referencePosition=[1, 0, 0], mass=1)
     oMass1 = mbs.CreateMassPoint(referencePosition=[1, 1, 0], mass=1)
-    oDistance = mbs.CreateDistanceConstraint(bodyNumbers=[oGround, oMass0], drawSize=0.02)
+    oDistance = mbs.CreateDistanceConstraint(itemNumbers=[oGround, oMass0], drawSize=0.02)
     from exudyn.utilities import ObjectConnectorGravity, VObjectConnectorGravity, MarkerBodyPosition
     markers = [mbs.AddMarker(MarkerBodyPosition(bodyNumber=body)) for body in [oMass0, oMass1]]
     oGravity = mbs.AddObject(ObjectConnectorGravity(markerNumbers=markers, mass0=1, mass1=1,
                                                     visualization=VObjectConnectorGravity(show=True)))
-    load = mbs.CreateForce(bodyNumber=oMass1, loadVector=[0, 1, 0])
+    load = mbs.CreateForce(itemNumber=oMass1, loadVector=[0, 1, 0])
     mbs.AddSensor(SensorLoad(loadNumber=load, storeInternal=True))
     mbs.Assemble()
 

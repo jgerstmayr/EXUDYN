@@ -33,7 +33,7 @@ def Pendulum():
     oGround = mbs.CreateGround(graphicsDataList=[graphics.CheckerBoard(point=[0, 0, -1], size=4)])
     oBody = mbs.CreateRigidBody(inertia=InertiaCuboid(1000, [1, 0.2, 0.2]), referencePosition=[1, 0, 0],
                                 graphicsDataList=[graphics.Brick(size=[1, 0.2, 0.2], color=graphics.color.red)])
-    mbs.CreateRevoluteJoint(bodyNumbers=[oGround, oBody], position=[0.5, 0, 0], axis=[0, 0, 1])
+    mbs.CreateRevoluteJoint(itemNumbers=[oGround, oBody], position=[0.5, 0, 0], axis=[0, 0, 1])
     mbs.Assemble()
     return (SC, mbs, oGround, oBody)
 
@@ -103,7 +103,7 @@ def testASettingChangesTheDataTheWayItSays():
 def testTheBodyMovesWithTheSolution():
     """the data is the CURRENT state: after a step of the solver the brick is elsewhere"""
     (SC, mbs, oGround, oBody) = Pendulum()
-    mbs.CreateForce(bodyNumber=oBody, loadVector=[0, -1000, 0])
+    mbs.CreateForce(itemNumber=oBody, loadVector=[0, -1000, 0])
     mbs.Assemble()
     objectType = int(exu.ItemType.Object)
 

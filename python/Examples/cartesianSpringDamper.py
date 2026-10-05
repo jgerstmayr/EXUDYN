@@ -46,13 +46,13 @@ massPoint = mbs.CreateMassPoint(referencePosition=[L,0,0],
                     mass=mass)
 
 ## create spring damper  between objectGround and massPoint
-mbs.CreateCartesianSpringDamper(bodyNumbers=[objectGround, massPoint],
+mbs.CreateCartesianSpringDamper(itemNumbers=[objectGround, massPoint],
                                 stiffness = [k,k,k], 
                                 damping   = [d,0,0], 
                                 offset    = [L,0,0])
 
 ## create force vector [f,0,0]
-mbs.CreateForce(bodyNumber=massPoint, loadVector= [f,0,0])
+mbs.CreateForce(itemNumber=massPoint, loadVector= [f,0,0])
 
 ## assemble and solve system
 mbs.Assemble()

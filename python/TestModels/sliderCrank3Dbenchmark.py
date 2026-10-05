@@ -153,19 +153,19 @@ gGround+= [graphics.Brick([0.5*dimX-dimT,+dSlider*0.25+dimY*0.25,-dimT*0.5],[dim
 oGround = mbs.CreateGround(graphicsDataList = gGround)
 
 #conveniently add generic joints:
-mbs.CreateGenericJoint(bodyNumbers=[oGround, b0],
+mbs.CreateGenericJoint(itemNumbers=[oGround, b0],
                        position=pA,
                        constrainedAxes=[1,1,1,0,1,1],
                        useGlobalFrame=False,
                        axesRadius=0.005, axesLength=0.02)
 
-mbs.CreateGenericJoint(bodyNumbers=[oGround, b2],
+mbs.CreateGenericJoint(itemNumbers=[oGround, b2],
                        position=[0,0,0],
                        constrainedAxes=[0,1,1,1,1,1],
                        useGlobalFrame=False,
                        axesRadius=0.005, axesLength=0.02)
 
-mbs.CreateGenericJoint(bodyNumbers=[b0, b1],
+mbs.CreateGenericJoint(itemNumbers=[b0, b1],
                        position=[0,0,lAB],
                        constrainedAxes=[1,1,1,0,0,0],
                        useGlobalFrame=False,
@@ -173,7 +173,7 @@ mbs.CreateGenericJoint(bodyNumbers=[b0, b1],
 
 # the case of two constrained axes, without joint rotations, constrains x-axis of first body (conrod) 
 #    to be perpendicular to y-axis of second body (slider), both defined in initial configuration
-mbs.CreateGenericJoint(bodyNumbers=[b1, b2],
+mbs.CreateGenericJoint(itemNumbers=[b1, b2],
                        position=pC, #global reference position of joint
                        constrainedAxes=[1,1,1,0,0,1], #constraints
                        useGlobalFrame=True, #frame for definition of position and initial axes

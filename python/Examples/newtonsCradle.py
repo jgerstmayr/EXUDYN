@@ -115,12 +115,12 @@ for iz in range(nZ):
         mListSpheres.append(mMassPoint)
     
         #
-        mbs.CreateSphericalJoint(bodyNumbers=[ground, massPoint],
+        mbs.CreateSphericalJoint(itemNumbers=[ground, massPoint],
                                  position=[ix*d, yInit+L, zInit],
                                  show=False)
 
         #distance constraint would work, but spherical joint allows to show string
-        # mbs.CreateDistanceConstraint(bodyNumbers=[ground, massPoint],
+        # mbs.CreateDistanceConstraint(itemNumbers=[ground, massPoint],
         #                              localPosition0=[ix*d, yInit+L, zInit])
     
     

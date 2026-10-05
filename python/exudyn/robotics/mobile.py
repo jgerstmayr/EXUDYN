@@ -261,7 +261,7 @@ def MobileRobot2MBS(mbs, mobileRobot, markerGround, flagGraphicsRollers=True, *a
         mWheelsList += [mWheel]
         mAxle = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bPlatform, localPosition=np.array(pOff) + [0,0,p0Wheel[2]]))
         mAxlesList += [mAxle]
-        jointLink = mbs.CreateRevoluteJoint(bodyNumbers=[bPlatform, dictWheeln['bodyNumber']], 
+        jointLink = mbs.CreateRevoluteJoint(itemNumbers=[bPlatform, dictWheeln['bodyNumber']], 
                                             position=pOff[0:2] + [pOff[2] + p0Wheel[2]], 
                                             axis=[0,1,0],
                                             useGlobalFrame=False, 

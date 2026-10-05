@@ -80,12 +80,12 @@ for testCase, nFact in testCases.items():
     if eigenmodesSimplySupported:
         for node in plateMesh.boundaryNodeNumbers['all']:
             mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))
-            mbs.CreateSphericalJoint(bodyNumbers=[oGround, mNode], jointRadius = 0.025)
+            mbs.CreateSphericalJoint(itemNumbers=[oGround, mNode], jointRadius = 0.025)
 
     if False: #Dmitrochenko/Pogorelov 2003 test case
         for node in plateMesh.boundaryNodeNumbers['all']:
             mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))
-            mbs.CreateSphericalJoint(bodyNumbers=[oGround, mNode], jointRadius = 0.025)
+            mbs.CreateSphericalJoint(itemNumbers=[oGround, mNode], jointRadius = 0.025)
 
         nNodes = len(plateMesh.nodeNumbers)
         a = Lx
@@ -110,11 +110,11 @@ for testCase, nFact in testCases.items():
         if schwabMode == 0: #just change coordinate system
             for node in plateMesh.boundaryNodeNumbers['bottom']:
                 mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))
-                mbs.CreateGenericJoint(bodyNumbers=[oGround, mNode], axesRadius = 0.025, axesLength=0.03)
+                mbs.CreateGenericJoint(itemNumbers=[oGround, mNode], axesRadius = 0.025, axesLength=0.03)
         else:
             for node in plateMesh.boundaryNodeNumbers['left']:
                 mNode = mbs.AddMarker(MarkerNodeRigid(nodeNumber=node))
-                mbs.CreateGenericJoint(bodyNumbers=[oGround, mNode], axesRadius = 0.025, axesLength=0.03)
+                mbs.CreateGenericJoint(itemNumbers=[oGround, mNode], axesRadius = 0.025, axesLength=0.03)
 
     numberOfLoadSteps = 1
     Mtip = 0

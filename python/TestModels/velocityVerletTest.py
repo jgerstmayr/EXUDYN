@@ -29,7 +29,7 @@ mass = mbs.CreateMassPoint(referencePosition=[1,0,0],
                            mass=10, 
                            graphicsDataList=[graphics.Sphere(radius=0.2,color=graphics.color.red)])
 ground = mbs.CreateGround()
-mbs.CreateSpringDamper(bodyNumbers=[ground, mass], referenceLength=1, 
+mbs.CreateSpringDamper(itemNumbers=[ground, mass], referenceLength=1, 
                        stiffness = 1000, damping = 0,
                        drawSize = 0.1, 
                        )

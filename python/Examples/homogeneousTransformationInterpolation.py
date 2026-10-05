@@ -44,7 +44,7 @@ for (H0, H1) in pairs:
                                     referenceHT=H0,
                                     graphicsDataList=[graphics.Brick(size=size, color=color),
                                                       graphics.Basis(length=0.5, radius=0.01)])
-        mbs.CreateGenericJoint(bodyNumbers=[oGround, oBody], position=H0.translation,
+        mbs.CreateGenericJoint(itemNumbers=[oGround, oBody], position=H0.translation,
                                constrainedAxes=[1,1,1, 1,1,1], show=False)
         drivers += [(oGround, oBody, H0, H1, interpolation)]
 

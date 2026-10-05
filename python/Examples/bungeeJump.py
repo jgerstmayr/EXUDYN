@@ -117,7 +117,7 @@ bJumper = mbs.CreateRigidBody(referencePosition=[0,0.5*hJumper,0],
                               graphicsDataList=gJumper)
 
 bGround = mbs.CreateGround()
-fixJumper = mbs.CreateGenericJoint(bodyNumbers=[bJumper, bGround],position=[0,0,0],useGlobalFrame=False,
+fixJumper = mbs.CreateGenericJoint(itemNumbers=[bJumper, bGround],position=[0,0,0],useGlobalFrame=False,
                                    constrainedAxes=[1,1,0, 1,1,1])
 
 mJumper = mbs.AddMarker(MarkerBodyPosition(bodyNumber=bJumper, localPosition=[0,-0.5*hJumper,0]))

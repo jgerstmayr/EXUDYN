@@ -96,7 +96,7 @@ bodyInner = mbs.CreateRigidBody(referencePosition=[0,0,0],
                                                   ],
                             )
 #add coordinate constraint to keep velocity constant:
-mbs.CreateCoordinateConstraint(bodyNumbers=[bodyInner, None], 
+mbs.CreateCoordinateConstraint(itemNumbers=[bodyInner, None], 
                                coordinates=[5,None],
                                velocityLevel=True, offset=omega, show=False)
 
@@ -160,9 +160,9 @@ def UFtorque(mbs, t, loadVector):
         torque = max(t0*(ts+2-t),0)
     return [torque,0,0]
 
-mbs.CreateForce(bodyNumber=bodyInner, localPosition=[0,0,0],
+mbs.CreateForce(itemNumber=bodyInner, localPosition=[0,0,0],
                 loadVectorUserFunction=UFforce)
-mbs.CreateTorque(bodyNumber=bodyInner, 
+mbs.CreateTorque(itemNumber=bodyInner, 
                  loadVectorUserFunction=UFtorque)
 
 

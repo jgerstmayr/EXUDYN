@@ -76,7 +76,7 @@ bodyInner = mbs.CreateRigidBody(referencePosition=[0,0,0],
                                               graphics.Basis(origin=[0,0,2.1*w],length=2*radius),
                                               ],
                             )
-mbs.CreateRevoluteJoint(bodyNumbers=[oGround, bodyInner], position=[0,0,0], axis=[0,0,1])
+mbs.CreateRevoluteJoint(itemNumbers=[oGround, bodyInner], position=[0,0,0], axis=[0,0,1])
 
 mGround = mbs.AddMarker(MarkerNodeRigid(nodeNumber=nGround1))
 mBodyInner = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bodyInner))

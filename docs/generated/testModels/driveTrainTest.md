@@ -158,7 +158,7 @@ for i in range(4):
     
     
     locPos0 = list(Acrank @ np.array([0.5*L0,0,a+offZ]))
-    mbs.CreateGenericJoint(bodyNumbers=[oRB0,oRB1], 
+    mbs.CreateGenericJoint(itemNumbers=[oRB0,oRB1], 
                            position=locPos0, constrainedAxes=[1,1,1, 1,1,0],
                            useGlobalFrame=False,
                            axesRadius=0.5*a,axesLength=2*a)
@@ -187,7 +187,7 @@ for i in range(4):
                                     referenceRotation=A,
                                     visualization=VObjectMass1D(graphicsData=[gGraphicsPiston])))
     
-    mbs.CreateSphericalJoint(bodyNumbers=[oPiston1,oRB1], position=[0,0,0],
+    mbs.CreateSphericalJoint(itemNumbers=[oPiston1,oRB1], position=[0,0,0],
                              constrainedAxes=[1,1,0], useGlobalFrame=False,
                              jointRadius=1.5*a)
     #alternatively, using markers and objects:

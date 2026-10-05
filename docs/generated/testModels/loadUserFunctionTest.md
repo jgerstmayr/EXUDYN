@@ -59,12 +59,12 @@ for case in cases:
     oGround = mbs.CreateGround()
     
     oMassPoint = mbs.CreateMassPoint(referencePosition=[1.+0.05,0,0], mass=1, drawSize=0.1)
-    co = mbs.CreateSpringDamper(bodyNumbers=[oGround, oMassPoint],
+    co = mbs.CreateSpringDamper(itemNumbers=[oGround, oMassPoint],
                                 referenceLength = 1, stiffness = 100, damping = 1)
     sMass = mbs.AddSensor(SensorBody(bodyNumber=oMassPoint, 
                                      outputVariableType=exu.OutputVariableType.Position))
     
-    load = mbs.CreateForce(bodyNumber=oMassPoint, loadVector=[10,0,0], 
+    load = mbs.CreateForce(itemNumber=oMassPoint, loadVector=[10,0,0], 
                            loadVectorUserFunction=UFload)
     
     if useSymbolicUF:

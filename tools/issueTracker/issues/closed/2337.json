@@ -1,0 +1,15 @@
+{
+  "number": 2337,
+  "title": "CreateCoordinateConstraint",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHANGE",
+  "effort": "MEDIUM",
+  "description": "change bodyNumbers to itemNumbers allowing both bodies and nodes to be constrained",
+  "dateRaised": "2026-04-06",
+  "deadline": "2026-10-03",
+  "dateResolved": "2026-10-05 16:10",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "CreateCoordinateConstraint takes a body, a node, or None for the ground in itemNumbers; the coordinate of a body is counted over its nodes (revision2026b step RG12.40)",
+  "resolvedInVersion": "1.12.336"
+}

@@ -96,22 +96,22 @@ for nMasses in [0, 1, 2, 4]:
                                                 create2D=True,
                                                 gravity = g)
                         
-                            mbs.CreateSpringDamper(bodyNumbers=[bLast1, b1], stiffness=stiffness, damping=damping,
+                            mbs.CreateSpringDamper(itemNumbers=[bLast1, b1], stiffness=stiffness, damping=damping,
                                                    springForceUserFunction=springForce)
                             if caseConstraints:
-                                mbs.CreateDistanceConstraint(bodyNumbers=[bLast0, b0])
-                                mbs.CreateDistanceConstraint(bodyNumbers=[bLast1, b0])
-                                mbs.CreateDistanceConstraint(bodyNumbers=[b0, b1])
+                                mbs.CreateDistanceConstraint(itemNumbers=[bLast0, b0])
+                                mbs.CreateDistanceConstraint(itemNumbers=[bLast1, b0])
+                                mbs.CreateDistanceConstraint(itemNumbers=[b0, b1])
                             else:
-                                mbs.CreateSpringDamper(bodyNumbers=[bLast0, b0], stiffness=stiffness, damping=damping)
-                                mbs.CreateSpringDamper(bodyNumbers=[bLast1, b0], stiffness=stiffness, damping=damping)
-                                mbs.CreateSpringDamper(bodyNumbers=[b0, b1], stiffness=stiffness, damping=damping)
+                                mbs.CreateSpringDamper(itemNumbers=[bLast0, b0], stiffness=stiffness, damping=damping)
+                                mbs.CreateSpringDamper(itemNumbers=[bLast1, b0], stiffness=stiffness, damping=damping)
+                                mbs.CreateSpringDamper(itemNumbers=[b0, b1], stiffness=stiffness, damping=damping)
                             
                             bLast0 = b0
                             bLast1 = b1
                         
                         if caseUser:
-                            mbs.CreateForce(bodyNumber=bLast1, 
+                            mbs.CreateForce(itemNumber=bLast1, 
                                             loadVector=[10,20,0],
                                             loadVectorUserFunction=userLoadVector)
                         

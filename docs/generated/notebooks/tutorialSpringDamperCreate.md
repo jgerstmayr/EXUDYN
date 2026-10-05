@@ -22,7 +22,7 @@ print('Exudyn version', exu.config.Version())
 ```
 
 ```text
-Exudyn version 1.12.279.dev1
+Exudyn version 1.12.335.dev1
 ```
 
 The parameters: mass, stiffness and damping of the spring-damper, the initial displacement and velocity of the
@@ -61,9 +61,9 @@ oGround = mbs.CreateGround(graphicsDataList=[graphics.Brick(centerPoint=[0,0,0],
                                                             color=graphics.color.grey)])
 
 #the reference length is the distance of the two points in the reference configuration, L
-oSD = mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass], stiffness=spring, damping=damper)
+oSD = mbs.CreateSpringDamper(itemNumbers=[oGround, oMass], stiffness=spring, damping=damper)
 
-lForce = mbs.CreateForce(bodyNumber=oMass, loadVector=[f,0,0])
+lForce = mbs.CreateForce(itemNumber=oMass, loadVector=[f,0,0])
 ```
 
 Sensors record the force in the spring-damper and the displacement of the mass at every stored step; with

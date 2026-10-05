@@ -33,13 +33,13 @@ oMass = mbs.CreateMassPoint(mass=5, referencePosition=[1,0,0],
                             drawSize=0.3, color=graphics.color.orange,
                             )
 
-oSpringDamper = mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass], #[body0,body1]
+oSpringDamper = mbs.CreateSpringDamper(itemNumbers=[oGround, oMass], #[body0,body1]
                                       localPosition0=[0,0,0], #locally on body0
                                       localPosition1=[0,0,0], #locally on body1
                                       referenceLength=None, #usually set to None (default) => takes the (relaxed) length in reference configuration
                                       stiffness=1e2, damping=1)
 
-oDistance = mbs.CreateDistanceConstraint(bodyNumbers=[oGround, oMass], #[body0,body1]
+oDistance = mbs.CreateDistanceConstraint(itemNumbers=[oGround, oMass], #[body0,body1]
                                          localPosition0 = [0,0,0], #locally on body0
                                          localPosition1 = [0,0,0], #locally on body1
                                          distance=None)
@@ -82,13 +82,13 @@ oBody2 = mbs.CreateRigidBody(inertia = inertiaCube2,
                              #graphicsDataList=[graphicsCube, graphics.Basis(origin=inertiaCube2.COM())],
                              )
 
-loadMassPoint = mbs.CreateForce(bodyNumber=oMass, loadVector=[10,0,0])
-loadRigidBody = mbs.CreateForce(bodyNumber=oBody, localPosition=[0,0,0], loadVector=[10,0,0])
+loadMassPoint = mbs.CreateForce(itemNumber=oMass, loadVector=[10,0,0])
+loadRigidBody = mbs.CreateForce(itemNumber=oBody, localPosition=[0,0,0], loadVector=[10,0,0])
 
 def UFforce(mbs, t, loadVector):
     return (10+5*np.sin(t*10*2*np.pi))*np.array([0,5,0])
 
-mbs.CreateForce(bodyNumber=oBody,
+mbs.CreateForce(itemNumber=oBody,
                 localPosition=[0,1.2,0.5], #position at body
                 loadVectorUserFunction=UFforce)
 
@@ -96,7 +96,7 @@ def UserFunctionTorque(mbs, t, loadVector):
     return np.cos(t*2*np.pi)*np.array(loadVector)
 
 #add torque with user function
-mbs.CreateTorque(bodyNumber=oBody, loadVector=[5,0,0], 
+mbs.CreateTorque(itemNumber=oBody, loadVector=[5,0,0], 
                  loadVectorUserFunction=UserFunctionTorque)
 
 #+++++++++
@@ -110,26 +110,26 @@ oMass1 = mbs.CreateMassPoint(mass=2, referencePosition=[1,0,0],
                              )
 
 #create spherical joint between ground and mass point; could also be applied to two bodies; possible bodies: mass point or rigid body
-mbs.CreateSphericalJoint(bodyNumbers=[oGround, oMass1],
+mbs.CreateSphericalJoint(itemNumbers=[oGround, oMass1],
                          position=[1,0,0], #global position of joint (in reference configuration)
                          constrainedAxes=[1,0,0]) #x,y,z directions: 1 = fixed, 0 = free motion
 
 #constrain Y and Z coordinate of mass point to move z=10*y
-mbs.CreateCoordinateConstraint(bodyNumbers=[oMass1, oMass1], 
+mbs.CreateCoordinateConstraint(itemNumbers=[oMass1, oMass1], 
                                coordinates=[2,1],
                                factor1=10)
 
-mbs.CreatePrismaticJoint(bodyNumbers=[oGround, oBody], 
+mbs.CreatePrismaticJoint(itemNumbers=[oGround, oBody], 
                          position=[3,0,0], #global position of joint
                          axis=[1,0,0], #global axis of joint, can move in global x-direction
                          useGlobalFrame=True) #use local coordinates for joint definition
 
-mbs.CreateRevoluteJoint(bodyNumbers=[oBody, oBody2], 
+mbs.CreateRevoluteJoint(itemNumbers=[oBody, oBody2], 
                         position=[4,-0.5,0], #global position of joint
                         axis=[0,0,1], #rotation along global z-axis
                         useGlobalFrame=True)
 
-mbs.CreateTorsionalSpringDamper(bodyNumbers=[oBody, oBody2],
+mbs.CreateTorsionalSpringDamper(itemNumbers=[oBody, oBody2],
                                 position=[4,-0.5,0], #global position of spring-damper
                                 axis=[0,0,1],        #global rotation axis
                                 stiffness=1000,
@@ -157,8 +157,8 @@ mbs.CreateRollingDiscPenalty(bodyNumbers=[oGround, oDisc], discRadius = rDisc,
                              dryFriction = [mu,mu], color=graphics.color.red)
 
 #constrain Z and Y-rotation of disc, so it rotates only around X
-mbs.CreateCoordinateConstraint(bodyNumbers=[oDisc, None], coordinates=[5,None])
-mbs.CreateCoordinateConstraint(bodyNumbers=[oDisc, oGround], coordinates=[4,None])#also works with ground
+mbs.CreateCoordinateConstraint(itemNumbers=[oDisc, None], coordinates=[5,None])
+mbs.CreateCoordinateConstraint(itemNumbers=[oDisc, oGround], coordinates=[4,None])#also works with ground
 
 mass = 5 
 rDisc = 0.5
@@ -173,7 +173,7 @@ oDisc1 = mbs.CreateRigidBody(inertia=inertiaCylinder,
                             initialAngularVelocity=[-2*np.pi,0.2,0],
                             gravity=[0,0,-9.81])
 
-mbs.CreateForce(bodyNumber=oDisc1, loadVector=[10,0,0])
+mbs.CreateForce(itemNumber=oDisc1, loadVector=[10,0,0])
 
 #create a 'rolling' joint between flat ground defined by plane, lying on oGround, and rigid body given as oDisc:
 mbs.CreateRollingDisc(bodyNumbers=[oGround, oDisc1], discRadius = rDisc, 
@@ -183,12 +183,12 @@ mbs.CreateRollingDisc(bodyNumbers=[oGround, oDisc1], discRadius = rDisc,
                       )
 
 #constrain the two discs to have same X-motion
-mbs.CreateCoordinateConstraint(bodyNumbers=[oDisc,oDisc1],
+mbs.CreateCoordinateConstraint(itemNumbers=[oDisc,oDisc1],
                                velocityLevel=True,
                                coordinates=[0,0])
 
 mbs.CreateCartesianSpringDamper(
-    bodyNumbers=[oGround, oBody2], #[body0,body1]
+    itemNumbers=[oGround, oBody2], #[body0,body1]
     localPosition0=[4,-0.5*rbX,0], #for body0
     localPosition1=[0,0,0],        #for body1
     stiffness = [100,10,10], #x,y,z stiffness

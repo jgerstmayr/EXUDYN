@@ -67,7 +67,7 @@ b0 = mbs.CreateRigidBody(inertia = iCube0, #includes COM
 # revolute joint immediately to rigid bodies, with the position and axis given once, in global coordinates (by
 # default) of the reference configuration; it computes the markers and their frames. The same joint built from markers
 # and a generic joint is in the other rigid body tutorial.
-oJoint0 = mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[0,0,0],
+oJoint0 = mbs.CreateRevoluteJoint(itemNumbers=[oGround, b0], position=[0,0,0],
                                   axis=[0,0,1], axisRadius=0.2*w, axisLength=1.4*w)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -82,7 +82,7 @@ b1 = mbs.CreateRigidBody(inertia = InertiaCuboid(density=5000, sideLengths=[0.1,
                          gravity = g,
                          graphicsDataList = [graphicsBody1])
 
-oJoint1 = mbs.CreateRevoluteJoint(bodyNumbers=[b0, b1], position=[L,0,0],
+oJoint1 = mbs.CreateRevoluteJoint(itemNumbers=[b0, b1], position=[L,0,0],
                                   axis=[1,0,0], axisRadius=0.2*w, axisLength=1.4*w)
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -90,8 +90,8 @@ oJoint1 = mbs.CreateRevoluteJoint(bodyNumbers=[b0, b1], position=[L,0,0],
 # sensor for the position of the tip of the second link:
 force = [0,0.5,0]       #0.5N   in y-direction
 torque = [0.1,0,0]      #0.1Nm around x-axis
-lForce = mbs.CreateForce(bodyNumber=b1, loadVector=force, localPosition=[0,0,0.5], bodyFixed=False)
-lTorque = mbs.CreateTorque(bodyNumber=b1, loadVector=torque, bodyFixed=False)
+lForce = mbs.CreateForce(itemNumber=b1, loadVector=force, localPosition=[0,0,0.5], bodyFixed=False)
+lTorque = mbs.CreateTorque(itemNumber=b1, loadVector=torque, bodyFixed=False)
 
 sens1 = mbs.AddSensor(SensorBody(bodyNumber=b1, localPosition=[0,0,0.5*L], storeInternal=True,
                                  outputVariableType=exu.OutputVariableType.Position))

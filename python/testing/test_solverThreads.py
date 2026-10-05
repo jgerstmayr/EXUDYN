@@ -31,7 +31,7 @@ oMass = mbs.CreateMassPoint(referencePosition=[1,0,0], mass=1)
 def UFspring(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force):
     if t > 0.1: raise ValueError('the user function fails')
     return stiffness*deltaL
-mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass], stiffness=10, springForceUserFunction=UFspring)
+mbs.CreateSpringDamper(itemNumbers=[oGround, oMass], stiffness=10, springForceUserFunction=UFspring)
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings()
 simulationSettings.parallel.numberOfThreads = 4
@@ -74,7 +74,7 @@ def Model():
     previous = mbs.CreateGround()
     for i in range(50):
         body = mbs.CreateMassPoint(referencePosition=[i+1,0,0], mass=1, gravity=[0,-9.81,0])
-        mbs.CreateSpringDamper(bodyNumbers=[previous, body], stiffness=1e3, damping=1)
+        mbs.CreateSpringDamper(itemNumbers=[previous, body], stiffness=1e3, damping=1)
         previous = body
     mbs.Assemble()
     return SC, mbs

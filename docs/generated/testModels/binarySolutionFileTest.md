@@ -33,7 +33,7 @@ SC = exu.SystemContainer()
 mbs = SC.AddSystem()
 oGround = mbs.CreateGround()
 oMass = mbs.CreateMassPoint(referencePosition=[1, 0, 0], initialVelocity=[0, 2, 0], mass=1.3)
-mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass], stiffness=1000, damping=0.7)
+mbs.CreateSpringDamper(itemNumbers=[oGround, oMass], stiffness=1000, damping=0.7)
 mbs.Assemble()
 nNode = mbs.GetObject(oMass)['nodeNumber']
 

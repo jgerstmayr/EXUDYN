@@ -96,7 +96,7 @@ bodyShaft = mbs.CreateRigidBody(referencePosition=[0,offY,0],
                                                   graphicsGear1
                                                   ]
                                 )
-mbs.CreateRevoluteJoint(bodyNumbers=[oGround,bodyShaft], position=[0,offY,0],axis=axis,show=False)
+mbs.CreateRevoluteJoint(itemNumbers=[oGround,bodyShaft], position=[0,offY,0],axis=axis,show=False)
 sAngVel0 = mbs.AddSensor(SensorBody(bodyNumber=bodyShaft, storeInternal=True,
                                     outputVariableType=exu.OutputVariableType.AngularVelocity))
 
@@ -119,12 +119,12 @@ bodyShaft2 = mbs.CreateRigidBody(referencePosition=posShaft2,
                                                   graphicsGear2,
                                                   ]
                                 )
-mbs.CreateRevoluteJoint(bodyNumbers=[oGround,bodyShaft2], position=posShaft2,axis=axis,show=False)
+mbs.CreateRevoluteJoint(itemNumbers=[oGround,bodyShaft2], position=posShaft2,axis=axis,show=False)
 sAngVel2 = mbs.AddSensor(SensorBody(bodyNumber=bodyShaft2, storeInternal=True,
                                     outputVariableType=exu.OutputVariableType.AngularVelocity))
 
 #add coordinate constraint to keep velocity constant:
-# mbs.CreateCoordinateConstraint(bodyNumbers=[bodyShaft, None], 
+# mbs.CreateCoordinateConstraint(itemNumbers=[bodyShaft, None], 
 #                                coordinates=[5,None],
 #                                velocityLevel=True, offset=omega, show=False)
 
@@ -146,7 +146,7 @@ bodyRack = mbs.CreateRigidBody(referencePosition=positionRack,
                                graphicsDataList=[gRack]
                                )
 
-mbs.CreatePrismaticJoint(bodyNumbers=[oGround, bodyRack], position=positionRack,axis=[1,0,0],
+mbs.CreatePrismaticJoint(itemNumbers=[oGround, bodyRack], position=positionRack,axis=[1,0,0],
                          show=False)
 sVelRack = mbs.AddSensor(SensorBody(bodyNumber=bodyRack, storeInternal=True,
                                     outputVariableType=exu.OutputVariableType.Velocity))

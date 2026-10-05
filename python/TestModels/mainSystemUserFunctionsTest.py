@@ -51,7 +51,7 @@ for case in caseList:
                                                                   nTiles=32)]
                                 )
     
-    oCSD = mbs.CreateCartesianSpringDamper(bodyNumbers=[ground, mass0],
+    oCSD = mbs.CreateCartesianSpringDamper(itemNumbers=[ground, mass0],
                                     localPosition0=[L,0,0],
                                     localPosition1=[0,0,0],
                                     stiffness = [spring]*3,

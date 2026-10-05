@@ -184,7 +184,11 @@ outputKeywords = {'fileName': 'Sensor', 'resultsFile': ''}   #keyword -> the cal
 #ARGUMENTS THAT ARE GONE
 removedKeywords = {
     'rBoundingSphere': 'ObjectContactConvexRoll computes it from coefficientsHull; leave it out',
+    'bodyOrNodeList': 'the Create functions take the items in itemNumbers (#2863)',
+    'bodyList': 'the Create functions take the items in itemNumbers (#2863)',
     }
+#the removed keywords that --fix renames: keyword -> its name now
+removedKeywordRenames = {'bodyOrNodeList': 'itemNumbers', 'bodyList': 'itemNumbers'}
 
 #ITEM PARAMETERS THAT ARE GONE, by item: (item class, parameter) -> what to do instead
 removedItemParameters = {
@@ -546,6 +550,11 @@ def CheckTree(tree, tables, fixes=None):
                     Report(node.lineno, ('libraryArgument', className, argument), className + '(' + argument
                            + '=...): the argument is deprecated since ' + since + ' and removed in ' + expires
                            + ('; use ' + use if use else ''))
+                    if fixes is not None and use.isidentifier():  #a renamed argument (#2863)
+                        for keyword in node.keywords:
+                            if keyword.arg == argument:
+                                fixes.append(('span', keyword.lineno, keyword.col_offset,
+                                              keyword.col_offset + len(argument), use))
             #a deprecated item parameter as keyword of its item class (#2805)
             for keyword in node.keywords:
                 entry = (tables.get('itemParameters') or {}).get(keyword.arg, {}).get(className)
@@ -577,6 +586,9 @@ def CheckTree(tree, tables, fixes=None):
         elif isinstance(node, ast.keyword) and node.arg in removedKeywords:
             Report(node.value.lineno, ('keyword', node.arg), "argument '" + node.arg
                    + "' is removed: " + removedKeywords[node.arg])
+            if fixes is not None and node.arg in removedKeywordRenames:
+                fixes.append(('span', node.lineno, node.col_offset, node.col_offset + len(node.arg),
+                              removedKeywordRenames[node.arg]))
 
     #WHERE THE FILES GO (#2718): a file named without a directory is written where the script runs,
     #and the default solution files are in solution/ now, so a script that reads one of them by its

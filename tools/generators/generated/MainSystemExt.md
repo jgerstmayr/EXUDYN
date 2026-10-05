@@ -241,7 +241,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`3SpringsDis
   #
   oGround = mbs.AddObject(ObjectGround())
   #add vertical spring
-  oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, b0],
+  oSD = mbs.CreateSpringDamper(itemNumbers=[oGround, b0],
                                localPosition0=[2,1,0],
                                localPosition1=[0,0,0],
                                stiffness=1e4, damping=1e2,
@@ -295,7 +295,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`ANCFBeamEig
   #
   oGround = mbs.AddObject(ObjectGround())
   #add vertical spring
-  oSD = mbs.CreateSpringDamper(bodyOrNodeList=[oGround, b0],
+  oSD = mbs.CreateSpringDamper(itemNumbers=[oGround, b0],
                                localPosition0=[2,1,0],
                                localPosition1=[0,0,0],
                                stiffness=1e4, damping=1e2,
@@ -352,7 +352,7 @@ Relevant Examples (Ex) and TestModels (TM) with weblink to github: [`nMassOscill
                            graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
                                                                         color=graphics.color.orange)])
   oGround = mbs.AddObject(ObjectGround())
-  mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
+  mbs.CreateGenericJoint(itemNumbers=[oGround, b0], position=[5.5,0,0],
                          constrainedAxes=[1,1,1, 1,0,0],
                          rotationMatrixAxes=RotationMatrixX(0.125*pi), #tilt axes
                          useGlobalFrame=True, axesRadius=0.02, axesLength=0.2)

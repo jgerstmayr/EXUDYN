@@ -2,11 +2,15 @@
   "number": 2863,
   "title": "Create functions: itemNumbers instead of bodyNumbers and bodyOrNodeList",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHANGE",
   "effort": "MEDIUM",
   "description": "The maintainer, 2026-10-05: several Create functions accept bodies, nodes and markers in bodyNumbers, some also bodyOrNodeList; the new interface is itemNumbers=[None,None]; bodyNumbers stays, deprecated for 5 years; bodyOrNodeList stays with a DeprecationWarning that names itemNumbers. Affected (to be checked): CreateSpringDamper, CreateCartesianSpringDamper, CreateRigidBodySpringDamper, CreateTorsionalSpringDamper, CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint, CreateGenericJoint, CreateDistanceConstraint. A proposal for decision first.",
   "dateRaised": "2026-10-05",
   "deadline": "2027-04-03",
-  "file": "python/exudyn/misc/mainSystemExtensions.py"
+  "dateResolved": "2026-10-05 16:10",
+  "resolvedAuthor": "Claude-JG",
+  "file": "python/exudyn/misc/mainSystemExtensions.py",
+  "releaseNotes": "The Create functions take bodies, nodes or markers in itemNumbers, CreateForce and CreateTorque one item in itemNumber; bodyNumbers and bodyNumber are deprecated until 2031, bodyOrNodeList and bodyList raise a TypeError naming itemNumbers; exudev scripts --fix rewrites them (revision2026b step RG12.40)",
+  "resolvedInVersion": "1.12.337"
 }

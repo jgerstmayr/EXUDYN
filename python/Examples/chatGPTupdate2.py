@@ -82,17 +82,17 @@ def UFforce(mbs, t, loadVector):
 
 #add an load with 10N in x-direction to rigid body at marker position
 #add user function to modify load in time
-mbs.CreateForce(bodyNumber=b0,
+mbs.CreateForce(itemNumber=b0,
                 localPosition=[-0.5*L,0,0],
                 loadVector=[10,0,0],
                 loadVectorUserFunction=UFforce)
 
 #add torque to rigid body at left end
-mbs.CreateTorque(bodyNumber=b0, localPosition=[0.5,0,0],
+mbs.CreateTorque(itemNumber=b0, localPosition=[0.5,0,0],
                 loadVector=[0,1,0]) #torque of 1N around y-axis
 
 #create a rigid distance between local position of bodies (or ground) or between nodes
-mbs.CreateDistanceConstraint(bodyOrNodeList=[oGround, b0], 
+mbs.CreateDistanceConstraint(itemNumbers=[oGround, b0], 
                              localPosition0 = [ 0. ,0,0],
                              localPosition1 = [-0.5,0,0],
                              distance=None, #automatically computed
@@ -132,10 +132,10 @@ b2 = mbs.CreateRigidBody(inertia = inertiaCube2,
     # color: color of connector
 #CreateRevoluteJoint returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
 #(global reference) position of joint must be related to local size of rigid bodies
-mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b1], position=[xOff,yOff,0], axis=[0,0,1], #rotation along global z-axis
+mbs.CreateRevoluteJoint(itemNumbers=[oGround, b1], position=[xOff,yOff,0], axis=[0,0,1], #rotation along global z-axis
                         useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
 
-mbs.CreateRevoluteJoint(bodyNumbers=[b1, b2], position=[xOff+a,yOff-b,0], axis=[0,0,1], #rotation along global z-axis
+mbs.CreateRevoluteJoint(itemNumbers=[b1, b2], position=[xOff+a,yOff-b,0], axis=[0,0,1], #rotation along global z-axis
                         useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
 
 #create prismatic joint with following args:
@@ -149,7 +149,7 @@ mbs.CreateRevoluteJoint(bodyNumbers=[b1, b2], position=[xOff+a,yOff-b,0], axis=[
     # axisLength: length of axis for connector graphical representation
     # color: color of connector
 #returns list [oJoint, mBody0, mBody1], containing the joint object number, and the two rigid body markers on body0/1 for the joint
-# mbs.CreatePrismaticJoint(bodyNumbers=[oGround, b1], position=[-0.5,0,0], axis=[1,0,0], #can move in global x-direction
+# mbs.CreatePrismaticJoint(itemNumbers=[oGround, b1], position=[-0.5,0,0], axis=[1,0,0], #can move in global x-direction
 #                          useGlobalFrame=True, axisRadius=0.02, axisLength=1)
 
 

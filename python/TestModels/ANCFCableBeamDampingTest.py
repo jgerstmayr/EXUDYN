@@ -138,7 +138,7 @@ for loadCase, loadVector in enumerate(loadVectorList):
         n0 = n1
 
     # fix cable to ground
-    mbs.CreateGenericJoint(bodyNumbers=[oGround, mCableList[0]], show=True)
+    mbs.CreateGenericJoint(itemNumbers=[oGround, mCableList[0]], show=True)
     # add load to last node
     mbs.AddLoad(LoadForceVector(markerNumber=mCableList[-1],
                                 loadVector=loadVector, bodyFixed=False))

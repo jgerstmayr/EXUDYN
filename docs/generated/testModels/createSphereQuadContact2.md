@@ -93,7 +93,7 @@ for iPhi in range(nSpheres):
         for oMass2 in listMasses[:-1]:
             restitutionCoefficient = 0.75
             impactModel = 2
-            oSSC = mbs.CreateSphereSphereContact(bodyNumbers=[oMass, oMass2],
+            oSSC = mbs.CreateSphereSphereContact(itemNumbers=[oMass, oMass2],
                                                  spheresRadii=[radius, radius],
                                                  contactStiffness = contactStiffness,
                                                  dynamicFriction = dynamicFriction,
@@ -103,7 +103,7 @@ for iPhi in range(nSpheres):
                                                  )
 
     quadPoints = exu.Vector3DList([[-size,-size,0],[size,-size,0],[size,size,0],[-size,size,0]])
-    oSSC = mbs.CreateSphereQuadContact(bodyNumbers=[oMass, oGround],
+    oSSC = mbs.CreateSphereQuadContact(itemNumbers=[oMass, oGround],
                                        quadPoints=quadPoints,
                                        includeEdges=15, #all edges
                                        sphereRadius=radius,
@@ -130,7 +130,7 @@ oBodyTop = mbs.CreateRigidBody(referencePosition=[0,0,2*radius+0.5*zTop],
 sBodyAngVel = mbs.AddSensor(SensorBody(bodyNumber=oBodyTop, 
                                     storeInternal=True, 
                                     outputVariableType=exu.OutputVariableType.AngularVelocity))
-# mbs.CreateGenericJoint(bodyNumbers=[oGround, oBodyTop], position = [0,0,2*radius+0.5*zTop])
+# mbs.CreateGenericJoint(itemNumbers=[oGround, oBodyTop], position = [0,0,2*radius+0.5*zTop])
 
 
 for oMass in listMasses:
@@ -138,7 +138,7 @@ for oMass in listMasses:
                                    [0.5*sizeTop,-0.5*sizeTop,-0.5*zTop],
                                    [0.5*sizeTop,0.5*sizeTop,-0.5*zTop],
                                    [-0.5*sizeTop,0.5*sizeTop,-0.5*zTop]])
-    oSSC = mbs.CreateSphereQuadContact(bodyNumbers=[oMass,oBodyTop],
+    oSSC = mbs.CreateSphereQuadContact(itemNumbers=[oMass,oBodyTop],
                                        quadPoints=quadPoints,
                                        includeEdges=15, #all edges
                                        sphereRadius=radius*1,

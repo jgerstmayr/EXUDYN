@@ -88,12 +88,12 @@ for i in range(4):
     axis = axisList[i]
 
     ### set up revolute joint between two bodies, at global position and with global axis
-    mbs.CreateRevoluteJoint(bodyNumbers=[body0, body1], 
+    mbs.CreateRevoluteJoint(itemNumbers=[body0, body1], 
                             position=point, axis=axis, useGlobalFrame=True, 
                             axisRadius=0.6*d, axisLength=1.2*d)
 
     # alternative: create revolute joint with local frame for axis and position
-    # mbs.CreateRevoluteJoint(bodyNumbers=[body0, body1], 
+    # mbs.CreateRevoluteJoint(itemNumbers=[body0, body1], 
     #                         position=[0.5*L,0,0], axis=Alast.T@axis, useGlobalFrame=False, 
     #                         axisRadius=0.6*d, axisLength=1.2*d)
 

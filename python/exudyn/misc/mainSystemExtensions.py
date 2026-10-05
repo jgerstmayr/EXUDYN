@@ -90,27 +90,75 @@ def _MatMul3x3(A, B):
                       for j in range(3)] for i in range(3)])
 
 
+#THE ITEMS A CREATE FUNCTION CONNECTS (#2863): itemNumbers, two entries, each a body (ObjectIndex, or an int) at a local
+#position, a node (NodeIndex) or a marker (MarkerIndex); which kinds a function takes, its docstring says and it passes
+#to CheckItemNumbers. bodyNumbers is the deprecated name of itemNumbers - each function reports it itself, so that the
+#declared deprecations of the library name the function -, and bodyOrNodeList is not accepted.
+_bodyNodeMarker = ('body', 'node', 'marker')
+_kindNames = {'body': 'ObjectIndex', 'node': 'NodeIndex', 'marker': 'MarkerIndex', 'ground': 'None'}
+
+@docmeta(public=False)
+def ItemKind(item):
+    """'body', 'node', 'marker', or None: what an entry of itemNumbers is; an int is a body"""
+    if isinstance(item, exudyn.MarkerIndex):
+        return 'marker'
+    if isinstance(item, exudyn.NodeIndex):
+        return 'node'
+    if IsValidObjectIndex(item):
+        return 'body'
+    return None
+
+@docmeta(public=False)
+def ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList=None):
+    """the items given to a Create function: itemNumbers, or bodyNumbers, its deprecated name, which the caller reports;
+    a TypeError for both at once, and for bodyOrNodeList"""
+    if bodyOrNodeList is not None:
+        raise TypeError('ERROR in ' + where + ': the argument bodyOrNodeList is not accepted; use itemNumbers')
+    if bodyNumbers is None:
+        return itemNumbers
+    if not (isinstance(itemNumbers, list) and all(item is None for item in itemNumbers)):
+        raise TypeError('ERROR in ' + where + ': bodyNumbers and itemNumbers are given; use itemNumbers only')
+    return bodyNumbers
+
+@docmeta(public=False)
+def CheckItemNumbers(where, itemNumbers, kinds, localPositions=None):
+    """a TypeError unless itemNumbers is a list of two items, entry i of one of the kinds in kinds[i] ('body', 'node',
+    'marker', 'ground' for None); a node or a marker has no local position, so localPositions[i], if given, is [0,0,0]"""
+    if exudyn.__useExudynFast:
+        return
+    if not isinstance(itemNumbers, list) or len(itemNumbers) != 2:
+        RaiseTypeError(where=where, argumentName='itemNumbers', received = itemNumbers, expectedType = 'list of 2 item numbers')
+    for i in range(2):
+        kind = 'ground' if itemNumbers[i] is None else ItemKind(itemNumbers[i])
+        if kind not in kinds[i]:
+            names = [_kindNames[k] for k in kinds[i]]
+            RaiseTypeError(where=where, argumentName='itemNumbers['+str(i)+']', received = itemNumbers[i],
+                           expectedType = ', '.join(names[:-1]) + (' or ' if len(names) > 1 else '') + names[-1])
+        if (kind in ('node', 'marker') and localPositions is not None and IsVector(localPositions[i], 3)
+                and any(x != 0 for x in localPositions[i])):
+            RaiseTypeError(where=where, argumentName='localPosition'+str(i), received = localPositions[i],
+                           expectedType = '[0,0,0] for a ' + _kindNames[kind])
+
+@docmeta(public=False)
+def ItemOutput(mbs, item, localPosition, variableType):
+    """an output of a body at its local position, of a node or of a marker, in the reference configuration"""
+    kind = ItemKind(item)
+    if kind == 'body':
+        return mbs.GetObjectOutputBody(item, variableType, localPosition=localPosition,
+                                       configuration=exudyn.ConfigurationType.Reference)
+    if kind == 'node':
+        return mbs.GetNodeOutput(item, variableType, configuration=exudyn.ConfigurationType.Reference)
+    return mbs.GetMarkerOutput(item, variableType, configuration=exudyn.ConfigurationType.Reference)
+
+
 #internal function: do some pre-checks and calculations for joint
-#extended function which also accepts markers in bodyNumbers and returns new or existing markers
+#extended function which also accepts markers in itemNumbers and returns new or existing markers
 #marker0 overrides the joint "position"
 @docmeta(public=False)
-def JointPreCheckCalcBodyMarkers(where, mbs, name, bodyNumbers, position, show, useGlobalFrame, requireRotMat=True):
+def JointPreCheckCalcBodyMarkers(where, mbs, name, itemNumbers, position, show, useGlobalFrame, requireRotMat=True):
     """Helper to calculate markers."""
+    CheckItemNumbers(where, itemNumbers, [('body', 'marker'), ('body', 'marker')])
     if not exudyn.__useExudynFast:
-        if not isinstance(bodyNumbers, list) or len(bodyNumbers) != 2:
-            RaiseTypeError(where=where, argumentName='bodyNumbers', received = bodyNumbers, expectedType = 'list of 2 body or marker numbers')
-        if not IsValidObjectIndex(bodyNumbers[0]):
-            if not isinstance(bodyNumbers[0], exudyn.MarkerIndex): #also accept marker
-                RaiseTypeError(where=where, argumentName='bodyNumbers[0]', received = bodyNumbers[0], expectedType = 'ObjectIndex or MarkerIndex')
-            elif np.linalg.norm(position) != 0: #for marker, position must be zero!
-                RaiseTypeError(where=where, argumentName='position', received = position, expectedType = '[0,0,0]')
-                
-        if not IsValidObjectIndex(bodyNumbers[1]):
-            if not isinstance(bodyNumbers[1], exudyn.MarkerIndex): #also accept marker
-                RaiseTypeError(where=where, argumentName='bodyNumbers[1]', received = bodyNumbers[1], expectedType = 'ObjectIndex or MarkerIndex')
-            elif np.linalg.norm(position) != 0: #for marker, position must be zero!
-                RaiseTypeError(where=where, argumentName='position', received = position, expectedType = '[0,0,0]')
-    
         if not IsValidBool(show):
             RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
         if not IsValidBool(useGlobalFrame):
@@ -118,8 +166,8 @@ def JointPreCheckCalcBodyMarkers(where, mbs, name, bodyNumbers, position, show, 
         if not isinstance(name, str):
             RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
 
-    mBody0 = bodyNumbers[0] if isinstance(bodyNumbers[0], exudyn.MarkerIndex) else None
-    mBody1 = bodyNumbers[1] if isinstance(bodyNumbers[1], exudyn.MarkerIndex) else None
+    mBody0 = itemNumbers[0] if isinstance(itemNumbers[0], exudyn.MarkerIndex) else None
+    mBody1 = itemNumbers[1] if isinstance(itemNumbers[1], exudyn.MarkerIndex) else None
 
     if not exudyn.__useExudynFast:
         if mBody0 is not None or mBody1 is not None:
@@ -129,164 +177,56 @@ def JointPreCheckCalcBodyMarkers(where, mbs, name, bodyNumbers, position, show, 
         elif not IsVector(position, 3):
             RaiseTypeError(where=where, argumentName='position', received = position, expectedType = ExpectedType.Vector, dim=3)
 
-    pJoint = None
+    p0 = ItemOutput(mbs, itemNumbers[0], [0,0,0], exudyn.OutputVariableType.Position)
+    A0 = ItemOutput(mbs, itemNumbers[0], [0,0,0], exudyn.OutputVariableType.RotationMatrix).reshape((3,3))
+    p1 = ItemOutput(mbs, itemNumbers[1], [0,0,0], exudyn.OutputVariableType.Position)
+    A1 = ItemOutput(mbs, itemNumbers[1], [0,0,0], exudyn.OutputVariableType.RotationMatrix).reshape((3,3))
 
-    if mBody0 is None:
-        p0 = mbs.GetObjectOutputBody(bodyNumbers[0],exudyn.OutputVariableType.Position,
-                                     localPosition=[0,0,0],
-                                     configuration=exudyn.ConfigurationType.Reference)
-        A0 = mbs.GetObjectOutputBody(bodyNumbers[0],exudyn.OutputVariableType.RotationMatrix,
-                                     localPosition=[0,0,0],
-                                     configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
-    else:
-        p0 = mbs.GetMarkerOutput(bodyNumbers[0],
-                                 exudyn.OutputVariableType.Position,
-                                 configuration=exudyn.ConfigurationType.Reference)
-        A0 = mbs.GetMarkerOutput(bodyNumbers[0],
-                                 exudyn.OutputVariableType.RotationMatrix,
-                                 configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
+    if mBody0 is not None:
         pJoint = p0 #marker sets the global joint position!
-        
-    if mBody1 is None:
-        p1 = mbs.GetObjectOutputBody(bodyNumbers[1],exudyn.OutputVariableType.Position,
-                                     localPosition=[0,0,0],
-                                     configuration=exudyn.ConfigurationType.Reference)
-        A1 = mbs.GetObjectOutputBody(bodyNumbers[1],exudyn.OutputVariableType.RotationMatrix,
-                                     localPosition=[0,0,0],
-                                     configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
-    else:
-        p1 = mbs.GetMarkerOutput(bodyNumbers[1],
-                                 exudyn.OutputVariableType.Position,
-                                 configuration=exudyn.ConfigurationType.Reference)
-        A1 = mbs.GetMarkerOutput(bodyNumbers[1],
-                                 exudyn.OutputVariableType.RotationMatrix,
-                                 configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
-        if pJoint is None:
-            pJoint = p1 #marker sets the global joint position!
+    elif mBody1 is not None:
+        pJoint = p1
+    elif useGlobalFrame:
+        pJoint = copy.copy(position)
+    else: #transform into global coordinates, then everything works same
+        pJoint = A0 @ position + p0
 
-    if pJoint is None:
-        if useGlobalFrame:
-            pJoint = copy.copy(position)
-        else: #transform into global coordinates, then everything works same
-            pJoint = A0 @ position + p0
-    
     return [p0, A0, p1, A1, mBody0, mBody1, pJoint]
 
 
-#internal function, which checks bodyList and bodyOrNodeList and returns appropriate bodyOrNodeList
 @docmeta(public=False)
-def ProcessBodyNodeMarkerLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where, bodyList=[None,None]):
-    """Helper to check which items to refer to."""
-    if not exudyn.__useExudynFast:
-        if not isinstance(bodyList, list) or len(bodyList) != 2:
-            RaiseTypeError(where=where, argumentName='bodyList', received = bodyList, expectedType = 'list of 2 body numbers')
-        if not isinstance(bodyNumbers, list) or len(bodyNumbers) != 2:
-            RaiseTypeError(where=where, argumentName='bodyNumbers', received = bodyNumbers, expectedType = 'list of 2 body, node or marker numbers')
-
-    causingArgName = 'bodyOrNodeList'
-    if IsNotNone(bodyNumbers[0]) or IsNotNone(bodyNumbers[1]):
-        bodyOrNodeList = [bodyNumbers[0],bodyNumbers[1]] #flat copy, but otherwise would lead to change of args (mutable args!)
-        causingArgName = 'bodyNumbers'
-    elif IsNotNone(bodyList[0]) or IsNotNone(bodyList[1]):
-        #reported for the Create function, one stack level further up than the helper
-        DeprecatedArgument('bodyList', '1.11.0', 2029, use='bodyNumbers', function=where.replace('(...)', ''), stackLevel=4)
-        bodyOrNodeList = [bodyList[0],bodyList[1]] #flat copy, but otherwise would lead to change of args (mutable args!)
-        causingArgName = 'bodyList'
-
-    if not exudyn.__useExudynFast:
-        if not isinstance(bodyOrNodeList, list) or len(bodyOrNodeList) != 2:
-            RaiseTypeError(where=where, argumentName='bodyOrNodeList', received = bodyOrNodeList, expectedType = 'list of 2 body or node numbers')
-    
-        if (not (IsValidObjectIndex(bodyOrNodeList[0]) 
-                 or (isinstance(bodyOrNodeList[0], exudyn.NodeIndex) and localPosition0==[0.,0.,0.]) 
-                 or (isinstance(bodyOrNodeList[0], exudyn.MarkerIndex) and localPosition0==[0.,0.,0.]) ) ):
-            RaiseTypeError(where=where, argumentName=''+causingArgName+'[0]', received = bodyOrNodeList[0], 
-                           expectedType = 'expected either ObjectIndex, or NodeIndex/MarkerIndex AND localPosition0=[0.,0.,0.]')
-            
-        if (not (IsValidObjectIndex(bodyOrNodeList[1]) 
-                 or (isinstance(bodyOrNodeList[1], exudyn.NodeIndex) and localPosition1==[0.,0.,0.]) 
-                 or (isinstance(bodyOrNodeList[1], exudyn.MarkerIndex) and localPosition1==[0.,0.,0.]) ) ):
-            RaiseTypeError(where=where, argumentName=''+causingArgName+'[1]', received = bodyOrNodeList[1], 
-                           expectedType = 'expected either ObjectIndex, or NodeIndex/MarkerIndex AND localPosition1=[0.,0.,0.]')
-    
-    return bodyOrNodeList
+def ItemMarker(mbs, name, i, item, localPosition, useRigidMarker):
+    """the marker of entry i of itemNumbers: a new one for a body or a node, a rigid one or a position one, named
+    Marker<i>:name; a marker is used as it is"""
+    markerName = 'Marker'+str(i)+':'+name if name != '' else ''
+    kind = ItemKind(item)
+    if kind == 'body':
+        MarkerBodyType = eii.MarkerBodyRigid if useRigidMarker else eii.MarkerBodyPosition
+        return mbs.AddMarker(MarkerBodyType(name=markerName, bodyNumber=item, localPosition=localPosition))
+    if kind == 'node':
+        MarkerNodeType = eii.MarkerNodeRigid if useRigidMarker else eii.MarkerNodePosition
+        return mbs.AddMarker(MarkerNodeType(name=markerName, nodeNumber=item))
+    return item
 
 
-#internal: get markers, positions and orientations
+#internal: the markers of the two items - a body or a node gets a new one, a marker is used as it is - and, if asked for,
+#their positions and rotation matrices in the reference configuration
 @docmeta(public=False)
-def GetMarkersPosRot(mbs, name, internBodyNodeMarkerList, localPosition0, localPosition1, 
+def GetMarkersPosRot(mbs, name, itemNumbers, localPosition0, localPosition1,
                      getPosition=False, getRotationMatrix=False, useRigidMarker=False):
     """Helper to calculate marker pose."""
-    MarkerBodyType = eii.MarkerBodyRigid if useRigidMarker else eii.MarkerBodyPosition
-    MarkerNodeType = eii.MarkerNodeRigid if useRigidMarker else eii.MarkerNodePosition
-    
-    mName0 = ''
-    mName1 = ''
-    if name != '':
-        mName0 = 'Marker0:'+name
-        mName1 = 'Marker1:'+name
-    
-    if IsValidObjectIndex(internBodyNodeMarkerList[0]):
-        mBody0 = mbs.AddMarker(MarkerBodyType(name=mName0,bodyNumber=internBodyNodeMarkerList[0], localPosition=localPosition0))
-    elif isinstance(internBodyNodeMarkerList[0], exudyn.NodeIndex):
-        mBody0 = mbs.AddMarker(MarkerNodeType(name=mName0,nodeNumber=internBodyNodeMarkerList[0]))
-    elif isinstance(internBodyNodeMarkerList[0], exudyn.MarkerIndex):
-        mBody0 = internBodyNodeMarkerList[0]
+    markers = [None, None]
+    positions = [None, None]
+    rotations = [None, None]
+    for (i, localPosition) in enumerate([localPosition0, localPosition1]):
+        item = itemNumbers[i]
+        markers[i] = ItemMarker(mbs, name, i, item, localPosition, useRigidMarker)
+        if getPosition:
+            positions[i] = ItemOutput(mbs, item, localPosition, exudyn.OutputVariableType.Position)
+        if getRotationMatrix:
+            rotations[i] = ItemOutput(mbs, item, localPosition, exudyn.OutputVariableType.RotationMatrix).reshape((3,3))
 
-    if IsValidObjectIndex(internBodyNodeMarkerList[1]):
-        mBody1 = mbs.AddMarker(MarkerBodyType(name=mName1,bodyNumber=internBodyNodeMarkerList[1], localPosition=localPosition1))
-    elif isinstance(internBodyNodeMarkerList[1], exudyn.NodeIndex):
-        mBody1 = mbs.AddMarker(MarkerNodeType(name=mName1,nodeNumber=internBodyNodeMarkerList[1]))
-    elif isinstance(internBodyNodeMarkerList[1], exudyn.MarkerIndex):
-        mBody1 = internBodyNodeMarkerList[1]
-    
-    p0 = None
-    p1 = None
-    A0 = None
-    A1 = None
-    if getPosition:
-        if isinstance(internBodyNodeMarkerList[0], exudyn.ObjectIndex):
-            p0 = mbs.GetObjectOutputBody(internBodyNodeMarkerList[0],exudyn.OutputVariableType.Position,
-                                         localPosition=localPosition0, configuration=exudyn.ConfigurationType.Reference)
-        elif isinstance(internBodyNodeMarkerList[0], exudyn.NodeIndex):
-            p0 = mbs.GetNodeOutput(internBodyNodeMarkerList[0],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
-        else:
-            p0 = mbs.GetMarkerOutput(internBodyNodeMarkerList[0],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
-
-        if isinstance(internBodyNodeMarkerList[1], exudyn.ObjectIndex):
-            p1 = mbs.GetObjectOutputBody(internBodyNodeMarkerList[1],exudyn.OutputVariableType.Position,
-                                         localPosition=localPosition1, configuration=exudyn.ConfigurationType.Reference)
-        elif isinstance(internBodyNodeMarkerList[1], exudyn.NodeIndex):
-            p1 = mbs.GetNodeOutput(internBodyNodeMarkerList[1],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
-        else:
-            p1 = mbs.GetMarkerOutput(internBodyNodeMarkerList[1],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
-
-    if getRotationMatrix:
-        if isinstance(internBodyNodeMarkerList[0], exudyn.ObjectIndex):
-            A0 = mbs.GetObjectOutputBody(objectNumber=internBodyNodeMarkerList[0],variableType=exudyn.OutputVariableType.RotationMatrix,
-                                         localPosition=localPosition0,
-                                         configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
-        elif isinstance(internBodyNodeMarkerList[0], exudyn.NodeIndex):
-            A0 = mbs.GetNodeOutput(nodeNumber=internBodyNodeMarkerList[0], variableType=exudyn.OutputVariableType.RotationMatrix,
-                                   configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
-        else:
-            A0 = mbs.GetMarkerOutput(internBodyNodeMarkerList[0], variableType=exudyn.OutputVariableType.RotationMatrix,
-                                     configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
-    
-        if isinstance(internBodyNodeMarkerList[1], exudyn.ObjectIndex):
-            mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=internBodyNodeMarkerList[1], localPosition=localPosition1))
-            A1 = mbs.GetObjectOutputBody(objectNumber=internBodyNodeMarkerList[1],variableType=exudyn.OutputVariableType.RotationMatrix,
-                                         localPosition=localPosition1,
-                                         configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
-        elif isinstance(internBodyNodeMarkerList[1], exudyn.NodeIndex):
-            mBody1 = mbs.AddMarker(eii.MarkerNodeRigid(name=mName1,nodeNumber=internBodyNodeMarkerList[1]))
-            A1 = mbs.GetNodeOutput(nodeNumber=internBodyNodeMarkerList[1], variableType=exudyn.OutputVariableType.RotationMatrix,
-                                   configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
-        else:
-            A1 = mbs.GetMarkerOutput(internBodyNodeMarkerList[1], variableType=exudyn.OutputVariableType.RotationMatrix,
-                                     configuration=exudyn.ConfigurationType.Reference).reshape((3,3))
-    
-    return [mBody0, mBody1, p0, p1, A0, A1]
+    return [markers[0], markers[1], positions[0], positions[1], rotations[0], rotations[1]]
 
 
 def _RotationIntoMarker(mbs, marker, bodyNodeMarker, localPosition, rotation):
@@ -791,22 +731,20 @@ def MainSystemCreateRigidBody(mbs,
 @extends(exudyn.MainSystem)
 def MainSystemCreateSpringDamper(mbs,
                                  name='',
-                                 bodyNumbers=[None, None], 
+                                 itemNumbers=[None, None], 
                                  localPosition0 = [0.,0.,0.],
                                  localPosition1 = [0.,0.,0.], 
                                  referenceLength = None, 
                                  stiffness = 0., damping = 0., force = 0.,
                                  velocityOffset = 0., 
                                  springForceUserFunction = 0,
-                                 bodyOrNodeList=[None, None], 
-                                 bodyList=[None, None],
-                                 show=True, drawSize=-1, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
+                                 show=True, drawSize=-1, color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
     """helper function to create SpringDamper connector, using arguments from ObjectConnectorSpringDamper; similar interface as CreateDistanceConstraint(...), see there for for further information
 
     Args:
         mbs: the MainSystem where items are created
         name: name string for connector; markers get Marker0:name and Marker1:name
-        bodyNumbers: a list of two body numbers (ObjectIndex) to be connected; alternatively, MarkerIndex or NodeIndex can be used instead of ObjectIndex, setting localPosition0/1==[0,0,0]
+        itemNumbers: a list of two items to be connected, each a body (ObjectIndex) at localPosition0/1, a node (NodeIndex) or a marker (MarkerIndex); for a node or a marker, localPosition0/1 is [0,0,0]
         localPosition0: local position (as 3D list or numpy array) on body0, if not a node of marker number
         localPosition1: local position (as 3D list or numpy array) on body1, if not a node of marker number
         referenceLength: if None, length is computed from reference position of bodies or nodes; if not None, this scalar reference length is used for spring
@@ -815,11 +753,11 @@ def MainSystemCreateSpringDamper(mbs,
         force: scalar additional force applied
         velocityOffset: scalar offset: if referenceLength is changed over time, the velocityOffset may be changed accordingly to emulate a reference motion
         springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, deltaL, deltaL_t, stiffness, damping, force)->float ; this function replaces the internal connector force computation
-        bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
         show: if True, connector visualization is drawn
         drawSize: general drawing size of connector
         color: color of connector
-        bodyList: DEPRECATED
+        bodyNumbers: deprecated name of itemNumbers
+        bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
 
     Returns:
         :ObjectIndex: returns index of newly created object
@@ -836,7 +774,7 @@ def MainSystemCreateSpringDamper(mbs,
                                  drawSize = 0.5, color=exu.graphics.color.blue)
         oGround = mbs.AddObject(ObjectGround())
         #add vertical spring
-        oSD = mbs.CreateSpringDamper(bodyNumbers=[oGround, b0],
+        oSD = mbs.CreateSpringDamper(itemNumbers=[oGround, b0],
                                      localPosition0=[2,1,0],
                                      localPosition1=[0,0,0],
                                      stiffness=1e4, damping=1e2,
@@ -850,7 +788,10 @@ def MainSystemCreateSpringDamper(mbs,
     """
     #perform some checks:
     where='MainSystem.CreateSpringDamper(...)'
-    internBodyNodeMarkerList = ProcessBodyNodeMarkerLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where, bodyList)
+    if bodyNumbers is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumbers', '1.12.337', 2031, use='itemNumbers', function='MainSystem.CreateSpringDamper')
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList)
+    CheckItemNumbers(where, itemNumbers, [_bodyNodeMarker, _bodyNodeMarker], [localPosition0, localPosition1])
     
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
@@ -880,7 +821,7 @@ def MainSystemCreateSpringDamper(mbs,
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
 
-    [mBody0, mBody1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, internBodyNodeMarkerList, localPosition0, localPosition1, 
+    [mBody0, mBody1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, itemNumbers, localPosition0, localPosition1, 
                                                         getPosition=True, getRotationMatrix=False, useRigidMarker=False)
         
     if IsNone(referenceLength): #automatically compute reference length
@@ -904,32 +845,30 @@ def MainSystemCreateSpringDamper(mbs,
 @extends(exudyn.MainSystem)
 def MainSystemCreateCartesianSpringDamper(mbs,
                                  name='',
-                                 bodyNumbers=[None, None], 
+                                 itemNumbers=[None, None], 
                                  localPosition0 = [0.,0.,0.],
                                  localPosition1 = [0.,0.,0.], 
                                  stiffness = [0.,0.,0.], damping = [0.,0.,0.], 
                                  offset = [0.,0.,0.],
                                  springForceUserFunction = 0,
-                                 bodyOrNodeList=[None, None],
-                                 bodyList=[None, None],
-                                 show=True, drawSize=-1, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
+                                 show=True, drawSize=-1, color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
     """helper function to create CartesianSpringDamper connector, using arguments from ObjectConnectorCartesianSpringDamper
 
     Args:
         mbs: the MainSystem where items are created
         name: name string for connector; markers get Marker0:name and Marker1:name
-        bodyNumbers: a list of two body numbers (ObjectIndex) to be connected; alternatively, MarkerIndex or NodeIndex can be used instead of ObjectIndex, setting localPosition0/1==[0,0,0]
+        itemNumbers: a list of two items to be connected, each a body (ObjectIndex) at localPosition0/1, a node (NodeIndex) or a marker (MarkerIndex); for a node or a marker, localPosition0/1 is [0,0,0]
         localPosition0: local position (as 3D list or numpy array) on body0, if not a node of marker number
         localPosition1: local position (as 3D list or numpy array) on body1, if not a node of marker number
         stiffness: stiffness coefficients (as 3D list or numpy array)
         damping: damping coefficients (as 3D list or numpy array)
         offset: offset vector (as 3D list or numpy array)
         springForceUserFunction: a user function springForceUserFunction(mbs, t, itemNumber, displacement, velocity, stiffness, damping, offset)->[float,float,float] ; this function replaces the internal connector force computation
-        bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
-        bodyList: DEPRECATED
         show: if True, connector visualization is drawn
         drawSize: general drawing size of connector
         color: color of connector
+        bodyNumbers: deprecated name of itemNumbers
+        bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
 
     Returns:
         :ObjectIndex: returns index of newly created object
@@ -944,7 +883,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
                                   mass = 1, gravity = [0,-9.81,0],
                                   drawSize = 0.5, color=exu.graphics.color.blue)
         oGround = mbs.AddObject(ObjectGround())
-        oSD = mbs.CreateCartesianSpringDamper(bodyNumbers=[oGround, b0],
+        oSD = mbs.CreateCartesianSpringDamper(itemNumbers=[oGround, b0],
                                       localPosition0=[7.5,1,0],
                                       localPosition1=[0,0,0],
                                       stiffness=[200,2000,0], damping=[2,20,0],
@@ -957,7 +896,10 @@ def MainSystemCreateCartesianSpringDamper(mbs,
         mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
     where='MainSystem.CreateCartesianSpringDamper(...)'
-    internBodyNodeMarkerList = ProcessBodyNodeMarkerLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where, bodyList)
+    if bodyNumbers is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumbers', '1.12.337', 2031, use='itemNumbers', function='MainSystem.CreateCartesianSpringDamper')
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList)
+    CheckItemNumbers(where, itemNumbers, [_bodyNodeMarker, _bodyNodeMarker], [localPosition0, localPosition1])
 
     #perform some checks:
     if not exudyn.__useExudynFast:
@@ -983,7 +925,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
         if not IsVector(color, 4):
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
-    [mBody0, mBody1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, internBodyNodeMarkerList, localPosition0, localPosition1, 
+    [mBody0, mBody1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, itemNumbers, localPosition0, localPosition1, 
                                                         getPosition=False, getRotationMatrix=False, useRigidMarker=False)
                 
     oConnector = mbs.AddObject(eii.ObjectConnectorCartesianSpringDamper(name=name,markerNumbers = [mBody0,mBody1],
@@ -999,7 +941,7 @@ def MainSystemCreateCartesianSpringDamper(mbs,
 @extends(exudyn.MainSystem)
 def MainSystemCreateRigidBodySpringDamper(mbs,
                                  name='',
-                                 bodyNumbers=[None, None], 
+                                 itemNumbers=[None, None], 
                                  localPosition0 = [0.,0.,0.],
                                  localPosition1 = [0.,0.,0.], 
                                  stiffness = np.zeros((6,6)), 
@@ -1010,15 +952,13 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
                                  useIntrinsicFormulation=True,
                                  springForceTorqueUserFunction=0,
                                  postNewtonStepUserFunction=0,
-                                 bodyOrNodeList=[None, None],
-                                 bodyList=[None, None],
-                                 show=True, drawSize=-1, color=exudyn.graphics.color.default, intrinsicFormulation=None) -> exudyn.ObjectIndex:
+                                 show=True, drawSize=-1, color=exudyn.graphics.color.default, intrinsicFormulation=None, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
     """helper function to create RigidBodySpringDamper connector, using arguments from ObjectConnectorRigidBodySpringDamper, see there for the full documentation
 
     Args:
         mbs: the MainSystem where items are created
         name: name string for connector; markers get Marker0:name and Marker1:name
-        bodyNumbers: a list of two body numbers (ObjectIndex) to be connected; alternatively, MarkerIndex or NodeIndex can be used instead of ObjectIndex, setting localPosition0/1==[0,0,0]
+        itemNumbers: a list of two items to be connected, each a body (ObjectIndex) at localPosition0/1, a rigid node (NodeIndex) or a rigid marker (MarkerIndex); for a node or a marker, localPosition0/1 is [0,0,0]
         localPosition0: local position (as 3D list or numpy array) on body0, if not a node of marker number
         localPosition1: local position (as 3D list or numpy array) on body1, if not a node of marker number
         stiffness: stiffness coefficients (as 6D matrix or numpy array)
@@ -1029,12 +969,12 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
         useIntrinsicFormulation: if True, uses intrinsic formulation of Maserati and Morandini, which uses matrix logarithm and is independent of order of markers (preferred formulation); otherwise, Tait-Bryan angles are used for computation of torque, see documentation
         springForceTorqueUserFunction: a user function springForceTorqueUserFunction(mbs, t, itemNumber, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)->[float,float,float, float,float,float] ; this function replaces the internal connector force / torque computation
         postNewtonStepUserFunction: a special user function postNewtonStepUserFunction(mbs, t, Index itemIndex, dataCoordinates, displacement, rotation, velocity, angularVelocity, stiffness, damping, rotJ0, rotJ1, offset)->[PNerror, recommendedStepSize, data[0], data[1], ...] ; for details, see RigidBodySpringDamper for full docu
-        bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
-        bodyList: DEPRECATED
         show: if True, connector visualization is drawn
         drawSize: general drawing size of connector
         color: color of connector
         intrinsicFormulation: deprecated name of useIntrinsicFormulation
+        bodyNumbers: deprecated name of itemNumbers
+        bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
 
     Returns:
         :ObjectIndex: returns index of newly created object
@@ -1046,7 +986,10 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
         DeprecatedArgument('intrinsicFormulation', '1.12.258', 2031, use='useIntrinsicFormulation', function='MainSystem.CreateRigidBodySpringDamper')
         useIntrinsicFormulation = intrinsicFormulation
     where='MainSystem.CreateRigidBodySpringDamper(...)'
-    internBodyNodeMarkerList = ProcessBodyNodeMarkerLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where, bodyList)
+    if bodyNumbers is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumbers', '1.12.337', 2031, use='itemNumbers', function='MainSystem.CreateRigidBodySpringDamper')
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList)
+    CheckItemNumbers(where, itemNumbers, [_bodyNodeMarker, _bodyNodeMarker], [localPosition0, localPosition1])
 
     #perform some checks:
     if not exudyn.__useExudynFast:
@@ -1082,7 +1025,7 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
 
-    [mBody0, mBody1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, internBodyNodeMarkerList, localPosition0, localPosition1, 
+    [mBody0, mBody1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, itemNumbers, localPosition0, localPosition1, 
                                                         getPosition=False, getRotationMatrix=True, useRigidMarker=True)
 
     if useGlobalFrame:
@@ -1095,8 +1038,8 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
         MR1 = _MatMul3x3(_MatMul3x3(A1.T, A0), rotationMatrixJoint)
 
     #the rotations are the markers' (#2745)
-    MR0 = _RotationIntoMarker(mbs, mBody0, internBodyNodeMarkerList[0], localPosition0, MR0)
-    MR1 = _RotationIntoMarker(mbs, mBody1, internBodyNodeMarkerList[1], localPosition1, MR1)
+    MR0 = _RotationIntoMarker(mbs, mBody0, itemNumbers[0], localPosition0, MR0)
+    MR1 = _RotationIntoMarker(mbs, mBody1, itemNumbers[1], localPosition1, MR1)
     (mBody0, MR0) = _MarkerWithRotation(mbs, mBody0, MR0) #a marker the caller gave: a copy turned by the rotation (#2804)
     (mBody1, MR1) = _MarkerWithRotation(mbs, mBody1, MR1)
 
@@ -1120,7 +1063,7 @@ def MainSystemCreateRigidBodySpringDamper(mbs,
 @extends(exudyn.MainSystem)
 def MainSystemCreateTorsionalSpringDamper(mbs,
                                           name='',
-                                          bodyNumbers=[None, None], 
+                                          itemNumbers=[None, None], 
                                           position = [0.,0.,0.],
                                           axis = [0.,0.,0.],
                                           stiffness = 0., 
@@ -1131,13 +1074,13 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
                                           useGlobalFrame=True,
                                           springTorqueUserFunction=0,
                                           unlimitedRotations = True,
-                                          show=True, drawSize=-1, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
+                                          show=True, drawSize=-1, color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
     """helper function to create TorsionalSpringDamper connector, using arguments from ObjectConnectorTorsionalSpringDamper, see there for the full documentation
 
     Args:
         mbs: the MainSystem where items are created
         name: name string for connector; markers get Marker0:name and Marker1:name
-        bodyNumbers: a list of two body numbers (ObjectIndex) to be connected; alternatively, MarkerIndex can be used instead of ObjectIndex, setting localPosition0/1==[0,0,0]
+        itemNumbers: a list of two items to be connected, each a rigid body or a ground object (ObjectIndex) or a rigid marker (MarkerIndex); with a marker, position is [], and the marker sets the position of the spring-damper
         position: a 3D vector as list or np.array: if useGlobalFrame=True it describes the global position of the joint in reference configuration; else: local position in body0
         axis: a 3D vector as list or np.array containing the axis around which the spring acts, either in local body0 coordinates (useGlobalFrame=False), or in global reference configuration (useGlobalFrame=True)
         stiffness: scalar stiffness of spring
@@ -1151,6 +1094,8 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
         show: if True, connector visualization is drawn
         drawSize: general drawing size of connector
         color: color of connector
+        bodyNumbers: deprecated name of itemNumbers
+        bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
 
     Returns:
         :ObjectIndex: returns index of newly created object
@@ -1159,14 +1104,15 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
         #coming later
     """
     where='MainSystem.CreateTorsionalSpringDamper(...)'
+    if bodyNumbers is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumbers', '1.12.337', 2031, use='itemNumbers', function='MainSystem.CreateTorsionalSpringDamper')
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList)
 
     #perform some checks:
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
             RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
                 
-        if not IsVector(position, 3):
-            RaiseTypeError(where=where, argumentName='position', received = position, expectedType = ExpectedType.Vector, dim=3)
         if not IsVector(axis, 3):
             RaiseTypeError(where=where, argumentName='axis', received = axis, expectedType = ExpectedType.Vector, dim=3)
     
@@ -1200,7 +1146,7 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
 
 
     #similar to RevoluteJoint!
-    [p0, A0, p1, A1, mBody0, mBody1, pJoint] = JointPreCheckCalcBodyMarkers(where, mbs, name, bodyNumbers, position, show, useGlobalFrame)
+    [p0, A0, p1, A1, mBody0, mBody1, pJoint] = JointPreCheckCalcBodyMarkers(where, mbs, name, itemNumbers, position, show, useGlobalFrame)
         
     if useGlobalFrame:
         vAxis = copy.copy(axis)
@@ -1231,10 +1177,10 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
         mName1 = 'Marker1:'+name
 
     if mBody0 is None: #the rotation is the marker's (#2745)
-        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localHT=exu.HT(rotation=MR0, translation=pJ0)))
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=itemNumbers[0], localHT=exu.HT(rotation=MR0, translation=pJ0)))
         MR0 = np.eye(3)
     if mBody1 is None:
-        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localHT=exu.HT(rotation=MR1, translation=pJ1)))
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=itemNumbers[1], localHT=exu.HT(rotation=MR1, translation=pJ1)))
         MR1 = np.eye(3)
     (mBody0, MR0) = _MarkerWithRotation(mbs, mBody0, MR0) #a marker the caller gave: a copy turned by the rotation (#2804)
     (mBody1, MR1) = _MarkerWithRotation(mbs, mBody1, MR1)
@@ -1267,15 +1213,15 @@ def MainSystemCreateTorsionalSpringDamper(mbs,
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
-def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None], 
+def MainSystemCreateRevoluteJoint(mbs, name='', itemNumbers=[None, None], 
                                   position=[], axis=[], useGlobalFrame=True, 
-                                  show=True, axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
+                                  show=True, axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
     """Create revolute joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
 
     Args:
         mbs: the MainSystem where joint and markers shall be created
         name: name string for joint; markers get Marker0:name and Marker1:name
-        bodyNumbers: a list of two body numbers (ObjectIndex) to be connected; must be rigid body or ground object; alternatively, MarkerIndex (Rigid) can be used instead of ObjectIndex, setting localPosition0/1==[0,0,0]
+        itemNumbers: a list of two items to be connected, each a rigid body or a ground object (ObjectIndex) or a rigid marker (MarkerIndex); with a marker, position is [], and the marker sets the position of the joint
         position: a 3D vector as list or np.array: if useGlobalFrame=True it describes the global position of the joint in reference configuration; else: local position in body0
         axis: a 3D vector as list or np.array containing the joint axis either in local body0 coordinates (useGlobalFrame=False), or in global reference configuration (useGlobalFrame=True)
         useGlobalFrame: if False, the position and axis vectors are defined in the local coordinate system of body0, otherwise in global (reference) coordinates
@@ -1283,6 +1229,8 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
         axisRadius: radius of axis for connector graphical representation
         axisLength: length of axis for connector graphical representation
         color: color of connector
+        bodyNumbers: deprecated name of itemNumbers
+        bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
 
     Returns:
         :ObjectIndex: returns index of created joint
@@ -1300,7 +1248,7 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
                                  graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
                                                                               color=exu.graphics.color.steelblue)])
         oGround = mbs.AddObject(ObjectGround())
-        mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], position=[2.5,0,0], axis=[0,0,1],
+        mbs.CreateRevoluteJoint(itemNumbers=[oGround, b0], position=[2.5,0,0], axis=[0,0,1],
                                 useGlobalFrame=True, axisRadius=0.02, axisLength=0.14)
         mbs.Assemble()
         simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -1309,6 +1257,9 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
         mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
     where = 'MainSystem.CreateRevoluteJoint(...)'
+    if bodyNumbers is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumbers', '1.12.337', 2031, use='itemNumbers', function='MainSystem.CreateRevoluteJoint')
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList)
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
             RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
@@ -1324,7 +1275,7 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
     #similar to RevoluteJoint!
-    [p0, A0, p1, A1, mBody0, mBody1, pJoint] = JointPreCheckCalcBodyMarkers(where, mbs, name, bodyNumbers, position, show, useGlobalFrame)
+    [p0, A0, p1, A1, mBody0, mBody1, pJoint] = JointPreCheckCalcBodyMarkers(where, mbs, name, itemNumbers, position, show, useGlobalFrame)
         
     if useGlobalFrame:
         vAxis = copy.copy(axis)
@@ -1355,10 +1306,10 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
         mName1 = 'Marker1:'+name
 
     if mBody0 is None: #the rotation is the marker's (#2745)
-        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localHT=exu.HT(rotation=MR0, translation=pJ0)))
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=itemNumbers[0], localHT=exu.HT(rotation=MR0, translation=pJ0)))
         MR0 = np.eye(3)
     if mBody1 is None:
-        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localHT=exu.HT(rotation=MR1, translation=pJ1)))
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=itemNumbers[1], localHT=exu.HT(rotation=MR1, translation=pJ1)))
         MR1 = np.eye(3)
     (mBody0, MR0) = _MarkerWithRotation(mbs, mBody0, MR0) #a marker the caller gave: a copy turned by the rotation (#2804)
     (mBody1, MR1) = _MarkerWithRotation(mbs, mBody1, MR1)
@@ -1372,15 +1323,15 @@ def MainSystemCreateRevoluteJoint(mbs, name='', bodyNumbers=[None, None],
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
-def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None], 
+def MainSystemCreatePrismaticJoint(mbs, name='', itemNumbers=[None, None], 
                                   position=[], axis=[], useGlobalFrame=True, 
-                                  show=True, axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
+                                  show=True, axisRadius=0.1, axisLength=0.4, color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
     """Create prismatic joint between two bodies; definition of joint position and axis in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers, markerRotation and other quantities are automatically computed
 
     Args:
         mbs: the MainSystem where joint and markers shall be created
         name: name string for joint; markers get Marker0:name and Marker1:name
-        bodyNumbers: a list of two body numbers (ObjectIndex) to be connected; must be rigid body or ground object; alternatively, MarkerIndex (Rigid) can be used instead of ObjectIndex, setting localPosition0/1==[0,0,0]
+        itemNumbers: a list of two items to be connected, each a rigid body or a ground object (ObjectIndex) or a rigid marker (MarkerIndex); with a marker, position is [], and the marker sets the position of the joint
         position: a 3D vector as list or np.array: if useGlobalFrame=True it describes the global position of the joint in reference configuration; else: local position in body0
         axis: a 3D vector as list or np.array containing the joint axis either in local body0 coordinates (useGlobalFrame=False), or in global reference configuration (useGlobalFrame=True)
         useGlobalFrame: if False, the position and axis vectors are defined in the local coordinate system of body0, otherwise in global (reference) coordinates
@@ -1388,6 +1339,8 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
         axisRadius: radius of axis for connector graphical representation
         axisLength: length of axis for connector graphical representation
         color: color of connector
+        bodyNumbers: deprecated name of itemNumbers
+        bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
 
     Returns:
         :ObjectIndex: returns index of created joint
@@ -1406,7 +1359,7 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
                                  graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
                                                                               color=exu.graphics.color.steelblue)])
         oGround = mbs.AddObject(ObjectGround())
-        mbs.CreatePrismaticJoint(bodyNumbers=[oGround, b0], position=[3.5,0,0], axis=[0,1,0],
+        mbs.CreatePrismaticJoint(itemNumbers=[oGround, b0], position=[3.5,0,0], axis=[0,1,0],
                                  useGlobalFrame=True, axisRadius=0.02, axisLength=1)
         mbs.Assemble()
         simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -1415,6 +1368,9 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
         mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
     where = 'MainSystem.CreatePrismaticJoint(...)'
+    if bodyNumbers is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumbers', '1.12.337', 2031, use='itemNumbers', function='MainSystem.CreatePrismaticJoint')
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList)
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
             RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
@@ -1429,7 +1385,7 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
         if not IsVector(color, 4):
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
-    [p0, A0, p1, A1, mBody0, mBody1, pJoint] = JointPreCheckCalcBodyMarkers(where, mbs, name, bodyNumbers, position, show, useGlobalFrame)
+    [p0, A0, p1, A1, mBody0, mBody1, pJoint] = JointPreCheckCalcBodyMarkers(where, mbs, name, itemNumbers, position, show, useGlobalFrame)
         
     if useGlobalFrame:
         vAxis = copy.copy(axis)
@@ -1454,10 +1410,10 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
         mName1 = 'Marker1:'+name
 
     if mBody0 is None: #the rotation is the marker's (#2745)
-        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localHT=exu.HT(rotation=MR0, translation=pJ0)))
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=itemNumbers[0], localHT=exu.HT(rotation=MR0, translation=pJ0)))
         MR0 = np.eye(3)
     if mBody1 is None:
-        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localHT=exu.HT(rotation=MR1, translation=pJ1)))
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=itemNumbers[1], localHT=exu.HT(rotation=MR1, translation=pJ1)))
         MR1 = np.eye(3)
     (mBody0, MR0) = _MarkerWithRotation(mbs, mBody0, MR0) #a marker the caller gave: a copy turned by the rotation (#2804)
     (mBody1, MR1) = _MarkerWithRotation(mbs, mBody1, MR1)
@@ -1471,21 +1427,23 @@ def MainSystemCreatePrismaticJoint(mbs, name='', bodyNumbers=[None, None],
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
-def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None], 
+def MainSystemCreateSphericalJoint(mbs, name='', itemNumbers=[None, None], 
                                   position=[], constrainedAxes=[1,1,1], useGlobalFrame=True, 
-                                  show=True, jointRadius=0.1, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
+                                  show=True, jointRadius=0.1, color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
     """Create spherical joint between two bodies; definition of joint position in global coordinates (alternatively in body0 local coordinates) for reference configuration of bodies; all markers are automatically computed
 
     Args:
         mbs: the MainSystem where joint and markers shall be created
         name: name string for joint; markers get Marker0:name and Marker1:name
-        bodyNumbers: a list of two body numbers (ObjectIndex) to be connected; must be point mass, rigid body or ground object; alternatively, MarkerIndex can be used instead of ObjectIndex, setting localPosition0/1==[0,0,0]
+        itemNumbers: a list of two items to be connected, each a mass point, a rigid body or a ground object (ObjectIndex) or a position marker (MarkerIndex); with a marker, position is [], and the marker sets the position of the joint
         position: a 3D vector as list or np.array: if useGlobalFrame=True it describes the global position of the joint in reference configuration; else: local position in body0
         constrainedAxes: flags, which determines which (global) translation axes are constrained; each entry may only be 0 (=free) axis or 1 (=constrained axis)
         useGlobalFrame: if False, the point and axis vectors are defined in the local coordinate system of body0
         show: if True, connector visualization is drawn
         jointRadius: radius of sphere for connector graphical representation
         color: color of connector
+        bodyNumbers: deprecated name of itemNumbers
+        bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
 
     Returns:
         :ObjectIndex: returns index of created joint
@@ -1504,7 +1462,7 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
                                  graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
                                                                               color=exu.graphics.color.orange)])
         oGround = mbs.AddObject(ObjectGround())
-        mbs.CreateSphericalJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
+        mbs.CreateSphericalJoint(itemNumbers=[oGround, b0], position=[5.5,0,0],
                                  useGlobalFrame=True, jointRadius=0.06)
         mbs.Assemble()
         simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -1513,6 +1471,9 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
         mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
     where = 'MainSystem.CreateSphericalJoint(...)'
+    if bodyNumbers is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumbers', '1.12.337', 2031, use='itemNumbers', function='MainSystem.CreateSphericalJoint')
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList)
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
             RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
@@ -1525,7 +1486,7 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
     #similar to RevoluteJoint!
-    [p0, A0, p1, A1, mBody0, mBody1, pJoint] = JointPreCheckCalcBodyMarkers(where, mbs, name, bodyNumbers, position, show, useGlobalFrame, requireRotMat=False)
+    [p0, A0, p1, A1, mBody0, mBody1, pJoint] = JointPreCheckCalcBodyMarkers(where, mbs, name, itemNumbers, position, show, useGlobalFrame, requireRotMat=False)
         
     #compute joint position and axis in bodyNumber0 / 1 coordinates:
     pJ0 = _MatVec3(A0.T, np.array(pJoint) - p0)
@@ -1537,8 +1498,8 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
         mName0 = 'Marker0:'+name
         mName1 = 'Marker1:'+name
 
-    if mBody0 is None: mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0,bodyNumber=bodyNumbers[0], localPosition=pJ0))
-    if mBody1 is None: mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1,bodyNumber=bodyNumbers[1], localPosition=pJ1))
+    if mBody0 is None: mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0,bodyNumber=itemNumbers[0], localPosition=pJ0))
+    if mBody1 is None: mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1,bodyNumber=itemNumbers[1], localPosition=pJ1))
     
     oJoint = mbs.AddObject(eii.ObjectJointSpherical(name=name,markerNumbers=[mBody0,mBody1], 
                                                     constrainedAxes=constrainedAxes,
@@ -1550,19 +1511,19 @@ def MainSystemCreateSphericalJoint(mbs, name='', bodyNumbers=[None, None],
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
-def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None], 
+def MainSystemCreateGenericJoint(mbs, name='', itemNumbers=[None, None], 
                                  position=[], 
                                  rotationMatrixAxes=np.eye(3), 
                                  constrainedAxes=[1,1,1, 1,1,1], 
                                  useGlobalFrame=True,
                                  offsetUserFunction=0, offsetUserFunction_t=0,
-                                 show=True, axesRadius=0.1, axesLength=0.4, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
+                                 show=True, axesRadius=0.1, axesLength=0.4, color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
     """Create generic joint between two bodies; definition of joint position (position) and axes (rotationMatrixAxes) in global coordinates (useGlobalFrame=True) or in local coordinates of body0 (useGlobalFrame=False), where rotationMatrixAxes is an additional rotation to body0; all markers, markerRotation and other quantities are automatically computed
 
     Args:
         mbs: the MainSystem where joint and markers shall be created
         name: name string for joint; markers get Marker0:name and Marker1:name
-        bodyNumbers: a list of two body numbers (ObjectIndex) to be connected; must be rigid body or ground object; alternatively, MarkerIndex (Rigid) can be used instead of ObjectIndex, setting localPosition0/1==[0,0,0]
+        itemNumbers: a list of two items to be connected, each a rigid body or a ground object (ObjectIndex) or a rigid marker (MarkerIndex); with a marker, position is [], and the marker sets the position of the joint
         position: a 3D vector as list or np.array: if useGlobalFrame=True it describes the global position of the joint in reference configuration; else: local position in body0
         rotationMatrixAxes: rotation matrix which defines orientation of constrainedAxes; if useGlobalFrame, this rotation matrix is global, else the rotation matrix is post-multiplied with the rotation of body0, identical with rotationMarker0 in the joint
         constrainedAxes: flag, which determines which translation (0,1,2) and rotation (3,4,5) axes are constrained; each entry may only be 0 (=free) axis or 1 (=constrained axis); ALL constrained Axes are defined relative to reference rotation of body0 times rotation0
@@ -1573,6 +1534,8 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
         axesRadius: radius of axes for connector graphical representation
         axesLength: length of axes for connector graphical representation
         color: color of connector
+        bodyNumbers: deprecated name of itemNumbers
+        bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
 
     Returns:
         :ObjectIndex: returns index of created joint
@@ -1591,7 +1554,7 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
                                  graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
                                                                               color=exu.graphics.color.orange)])
         oGround = mbs.AddObject(ObjectGround())
-        mbs.CreateGenericJoint(bodyNumbers=[oGround, b0], position=[5.5,0,0],
+        mbs.CreateGenericJoint(itemNumbers=[oGround, b0], position=[5.5,0,0],
                                constrainedAxes=[1,1,1, 1,0,0],
                                rotationMatrixAxes=RotationMatrixX(0.125*pi), #tilt axes
                                useGlobalFrame=True, axesRadius=0.02, axesLength=0.2)
@@ -1602,6 +1565,9 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
         mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
     where = 'MainSystem.CreateGenericJoint(...)'
+    if bodyNumbers is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumbers', '1.12.337', 2031, use='itemNumbers', function='MainSystem.CreateGenericJoint')
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList)
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
             RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
@@ -1616,7 +1582,7 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
         if not IsVector(color, 4):
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
-    [p0, A0, p1, A1, mBody0, mBody1, pJoint] = JointPreCheckCalcBodyMarkers(where, mbs, name, bodyNumbers, position, show, useGlobalFrame)
+    [p0, A0, p1, A1, mBody0, mBody1, pJoint] = JointPreCheckCalcBodyMarkers(where, mbs, name, itemNumbers, position, show, useGlobalFrame)
         
     if useGlobalFrame:
         #compute joint marker orientations, rotationMatrixAxes represents global frame:
@@ -1640,10 +1606,10 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
         mName1 = 'Marker1:'+name
 
     if mBody0 is None: #the rotation is the marker's (#2745)
-        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=bodyNumbers[0], localHT=exu.HT(rotation=MR0, translation=pJ0)))
+        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=itemNumbers[0], localHT=exu.HT(rotation=MR0, translation=pJ0)))
         MR0 = np.eye(3)
     if mBody1 is None:
-        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=bodyNumbers[1], localHT=exu.HT(rotation=MR1, translation=pJ1)))
+        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=itemNumbers[1], localHT=exu.HT(rotation=MR1, translation=pJ1)))
         MR1 = np.eye(3)
     (mBody0, MR0) = _MarkerWithRotation(mbs, mBody0, MR0) #a marker the caller gave: a copy turned by the rotation (#2804)
     (mBody1, MR1) = _MarkerWithRotation(mbs, mBody1, MR1)
@@ -1661,27 +1627,25 @@ def MainSystemCreateGenericJoint(mbs, name='', bodyNumbers=[None, None],
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
 def MainSystemCreateDistanceConstraint(mbs, name='', 
-                                       bodyNumbers=[None, None], 
+                                       itemNumbers=[None, None], 
                                        localPosition0 = [0.,0.,0.],
                                        localPosition1 = [0.,0.,0.], 
                                        distance=None, 
-                                       bodyOrNodeList=[None, None],
-                                       bodyList=[None, None],
-                                       show=True, drawSize=-1., color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
+                                       show=True, drawSize=-1., color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
     """Create distance joint between two bodies; definition of joint positions in local coordinates of bodies or nodes; if distance=None, it is computed automatically from reference length; all markers are automatically computed
 
     Args:
         mbs: the MainSystem where joint and markers shall be created
         name: name string for joint; markers get Marker0:name and Marker1:name
-        bodyNumbers: a list of two body numbers (ObjectIndex) to be connected; alternatively, MarkerIndex can be used instead of ObjectIndex, setting localPosition0/1==[0,0,0]
+        itemNumbers: a list of two items to be connected, each a body (ObjectIndex) at localPosition0/1, a node (NodeIndex) or a marker (MarkerIndex); for a node or a marker, localPosition0/1 is [0,0,0]
         localPosition0: local position (as 3D list or numpy array) on body0, if not a node or marker number
         localPosition1: local position (as 3D list or numpy array) on body1, if not a node or marker number
         distance: if None, distance is computed from reference position of bodies or nodes; if not None, this distance is prescribed between the two positions; if distance = 0, it will create a SphericalJoint as this case is not possible with a DistanceConstraint
-        bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
-        bodyList: DEPRECATED
         show: if True, connector visualization is drawn
         drawSize: general drawing size of node
         color: color of connector
+        bodyNumbers: deprecated name of itemNumbers
+        bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
 
     Returns:
         :ObjectIndex: returns index of created joint
@@ -1702,12 +1666,12 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
                                  mass=1, drawSize = 0.2)
         n1 = mbs.GetObject(m1)['nodeNumber']
         oGround = mbs.AddObject(ObjectGround())
-        mbs.CreateDistanceConstraint(bodyNumbers=[oGround, b0],
+        mbs.CreateDistanceConstraint(itemNumbers=[oGround, b0],
                                      localPosition0 = [6.5,1,0],
                                      localPosition1 = [0.5,0,0],
                                      distance=None, #automatically computed
                                      drawSize=0.06)
-        mbs.CreateDistanceConstraint(bodyOrNodeList=[b0, n1],
+        mbs.CreateDistanceConstraint(itemNumbers=[b0, n1],
                                      localPosition0 = [-0.5,0,0],
                                      localPosition1 = [0.,0.,0.], #must be [0,0,0] for Node
                                      distance=None, #automatically computed
@@ -1719,7 +1683,10 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
         mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
     where = 'MainSystem.CreateDistanceConstraint(...)'
-    internBodyNodeMarkerList = ProcessBodyNodeMarkerLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where, bodyList)
+    if bodyNumbers is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumbers', '1.12.337', 2031, use='itemNumbers', function='MainSystem.CreateDistanceConstraint')
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList)
+    CheckItemNumbers(where, itemNumbers, [_bodyNodeMarker, _bodyNodeMarker], [localPosition0, localPosition1])
         
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
@@ -1741,36 +1708,9 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
 
-    mName0 = ''
-    mName1 = ''
-    if name != '':
-        mName0 = 'Marker0:'+name
-        mName1 = 'Marker1:'+name
-        
-    if isinstance(internBodyNodeMarkerList[0], exudyn.ObjectIndex):
-        mBody0 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName0,bodyNumber=internBodyNodeMarkerList[0], localPosition=localPosition0))
-    else:
-        mBody0 = mbs.AddMarker(eii.MarkerNodePosition(name=mName0,nodeNumber=internBodyNodeMarkerList[0]))
-
-    if isinstance(internBodyNodeMarkerList[1], exudyn.ObjectIndex):
-        mBody1 = mbs.AddMarker(eii.MarkerBodyPosition(name=mName1,bodyNumber=internBodyNodeMarkerList[1], localPosition=localPosition1))
-    else:
-        mBody1 = mbs.AddMarker(eii.MarkerNodePosition(name=mName1,nodeNumber=internBodyNodeMarkerList[1]))
-        
+    [mBody0, mBody1, p0, p1, A0, A1] = GetMarkersPosRot(mbs, name, itemNumbers, localPosition0, localPosition1,
+                                                        getPosition=IsNone(distance))
     if IsNone(distance): #automatically compute distance
-        
-        if isinstance(internBodyNodeMarkerList[0], exudyn.ObjectIndex):
-            p0 = mbs.GetObjectOutputBody(internBodyNodeMarkerList[0],exudyn.OutputVariableType.Position,
-                                         localPosition=localPosition0, configuration=exudyn.ConfigurationType.Reference)
-        else:
-            p0 = mbs.GetNodeOutput(internBodyNodeMarkerList[0],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
-            
-        if isinstance(internBodyNodeMarkerList[1], exudyn.ObjectIndex):
-            p1 = mbs.GetObjectOutputBody(internBodyNodeMarkerList[1],exudyn.OutputVariableType.Position,
-                                         localPosition=localPosition1, configuration=exudyn.ConfigurationType.Reference)
-        else:
-            p1 = mbs.GetNodeOutput(internBodyNodeMarkerList[1],exudyn.OutputVariableType.Position, configuration=exudyn.ConfigurationType.Reference)
-        
         distance = np.linalg.norm(np.array(p1)-p0)
     
     if distance != 0:
@@ -1780,11 +1720,8 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
         #VERY SPECIAL case, which should help to resolve problems if distance=0 is used ... 
         exu.Print('WARNING: CreateDistanceConstraint called with distance=0; creating SphericalJoint instead')
         constrainedAxes = [1,1,1]
-        if isinstance(internBodyNodeMarkerList[0], exudyn.ObjectIndex):
-            if '2D' in mbs.GetObject(internBodyNodeMarkerList[0])['objectType']:
-                constrainedAxes[2] = 0
-        if isinstance(internBodyNodeMarkerList[1], exudyn.ObjectIndex):
-            if '2D' in mbs.GetObject(internBodyNodeMarkerList[1])['objectType']:
+        for item in itemNumbers:
+            if ItemKind(item) == 'body' and '2D' in mbs.GetObject(item)['objectType']:
                 constrainedAxes[2] = 0
         oJoint = mbs.AddObject(eii.SphericalJoint(name=name,markerNumbers=[mBody0,mBody1], 
                                                   constrainedAxes=constrainedAxes,
@@ -1795,27 +1732,24 @@ def MainSystemCreateDistanceConstraint(mbs, name='',
 
 
 
-#NOTE: could be added in future for CreateCoordinateConstraint:
-#  bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
-
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
 def MainSystemCreateCoordinateConstraint(mbs, name='', 
-                                        bodyNumbers=[None, None], 
+                                        itemNumbers=[None, None], 
                                         coordinates=[None, None], 
                                         offset = 0.,
                                         factor1 = 1.,
                                         velocityLevel = False,
                                         offsetUserFunction = 0,
                                         offsetUserFunction_t = 0,
-                                        show=True, drawSize=-1., color=exudyn.graphics.color.default, factorValue1=None) -> exudyn.ObjectIndex:
-    """Create coordinate constraint for two bodies, or body on ground; markers and NodePointGround are automatically created when needed
+                                        show=True, drawSize=-1., color=exudyn.graphics.color.default, factorValue1=None, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
+    """Create coordinate constraint between two bodies or nodes, or one of them and the ground; markers and NodePointGround are automatically created when needed
 
     Args:
         mbs: the MainSystem where joint and markers shall be created
         name: name string for joint; markers get Marker0:name and Marker1:name
-        bodyNumbers: a list of two body numbers (ObjectIndex) to be constrained
-        coordinates: a list of two coordinates for the respective bodies (in case of ground, it shall be None)
+        itemNumbers: a list of the two items whose coordinates are constrained, each a body (ObjectIndex), whose coordinates are those of its nodes in their order, a node (NodeIndex), or None or a ground object for the ground
+        coordinates: a list of the two coordinate indices: of the node, or of the body, counted over its nodes in their order; None for the ground
         offset: an fixed offset between the two coordinate values
         factor1: an additional factor multiplied with coordinate value1 used in algebraic equation, to enable (e.g. gear) ratio between coordinates
         velocityLevel: If true: connector constrains velocities (only works for ODE2 coordinates!); offset is used between velocities; if True, the offsetUserFunction_t is considered and offsetUserFunction is ignored
@@ -1825,6 +1759,8 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
         drawSize: general drawing size of node
         color: color of connector
         factorValue1: deprecated name of factor1
+        bodyNumbers: deprecated name of itemNumbers
+        bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
 
     Returns:
         :ObjectIndex: returns index of created joint
@@ -1843,10 +1779,10 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
                                                                               color=exu.graphics.color.orange)])
         m1 = mbs.CreateMassPoint(referencePosition=[5.5,-1,0],
                                  mass=1, drawSize = 0.2)
-        mbs.CreateCoordinateConstraint(bodyNumbers=[None, b0],
+        mbs.CreateCoordinateConstraint(itemNumbers=[None, b0],
                                        coordinates=[None, 0]) #constrains X-coordinate
         #constrain Y-coordinate of b0 to Z-coordinate of m1:
-        mbs.CreateCoordinateConstraint(bodyNumbers=[b0, m1],
+        mbs.CreateCoordinateConstraint(itemNumbers=[b0, m1],
                                        coordinates=[1, 2])
         mbs.Assemble()
         simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -1858,15 +1794,16 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
         DeprecatedArgument('factorValue1', '1.12.258', 2031, use='factor1', function='MainSystem.CreateCoordinateConstraint')
         factor1 = factorValue1
     where = 'MainSystem.CreateCoordinateConstraint(...)'
-        
+    if bodyNumbers is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumbers', '1.12.337', 2031, use='itemNumbers', function='MainSystem.CreateCoordinateConstraint')
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList)
+    CheckItemNumbers(where, itemNumbers, [('body', 'node', 'ground'), ('body', 'node', 'ground')])
+
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
             RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
-            
-        if not isinstance(bodyNumbers, list) or len(bodyNumbers) != 2:
-            RaiseTypeError(where=where, argumentName='bodyNumbers', received = bodyNumbers, expectedType = 'list of 2 body numbers')
         if not isinstance(coordinates, list) or len(coordinates) != 2:
-            RaiseTypeError(where=where, argumentName='coordinates', received = coordinates, expectedType = 'list of 2 coordinate indices of the respective bodies')
+            RaiseTypeError(where=where, argumentName='coordinates', received = coordinates, expectedType = 'list of 2 coordinate indices of the respective items')
 
         if not IsValidBool(show):
             RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
@@ -1875,58 +1812,39 @@ def MainSystemCreateCoordinateConstraint(mbs, name='',
         if not IsVector(color, 4):
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
-
-    mNames = ['','']
-    if name != '':
-        mNames[0] = 'Marker0:'+name
-        mNames[1] = 'Marker1:'+name
-
-    #loop over both bodies to find nodes
-    # nodeNumbers = [None,None]
-    markerNumbers = [None,None]
-    firstBodyIsNone = False
-
     errStr = 'ERROR in ' + where + ': '
+    kinds = ['ground' if item is None else ItemKind(item) for item in itemNumbers]
+    kinds = ['ground' if kind == 'body' and mbs.GetObject(item)['objectType'] == 'Ground' else kind
+             for (kind, item) in zip(kinds, itemNumbers)]
+    if kinds == ['ground', 'ground']:
+        raise ValueError(errStr+'one of the two items must be a body or a node, but received: '+str(itemNumbers))
 
-    for i, body in enumerate(bodyNumbers):
+    markerNumbers = [None,None]
+    for (i, item, kind) in zip(range(2), itemNumbers, kinds):
+        markerName = 'Marker'+str(i)+':'+name if name != '' else ''
         coordinate = coordinates[i]
-        if body is not None and not isinstance(body, exudyn.ObjectIndex):
-            raise ValueError(errStr+f'bodyNumber {body} is no valid ObjectIndex')
-
-        if body is None or mbs.GetObject(body)['objectType'] == 'Ground':
-            #use ground
-            if i == 1 and firstBodyIsNone:
-                raise ValueError(errStr+'one of the two bodyNumbers must be a valid ObjectIndex, but received:'+str(bodyNumbers))
-
+        if kind == 'ground':
             nPointGround = mbs.AddNode(eii.NodePointGround(visualization=eii.VNodePointGround(show=False)))
-            markerNumbers[i] = mbs.AddMarker(eii.MarkerNodeCoordinate(name=mNames[i],nodeNumber=nPointGround, 
-                                                                      coordinate=0))
-            firstBodyIsNone = True
-        else:
-            if not isinstance(body, exudyn.ObjectIndex):
-                raise ValueError(errStr+f'bodyNumber {body} is no valid ObjectIndex')
-            if not IsInteger(coordinate):
-                raise ValueError(errStr+f'coordinates[{i}] = {coordinate} is no valid coordinate index')
-            
-            #get node
-            if int(body) >= mbs.systemData.NumberOfObjects():
-                raise ValueError(errStr+f'bodyNumber {body} is not available in MainSystem')
-            
-            objectDict = mbs.GetObject(body)
-            if 'nodeNumber' in objectDict:
-                nodeNumbers = [objectDict['nodeNumber']]
-            else:
-                nodeNumbers = objectDict['nodeNumbers']
-            
-            coordinateOffset = 0
-            for node in nodeNumbers:
-                nodeLTG = mbs.systemData.GetNodeLTGODE2(node)
-                coordinateOffset += len(nodeLTG)
-                if coordinate < coordinateOffset:
-                    markerNumbers[i] = mbs.AddMarker(eii.MarkerNodeCoordinate(name=mNames[i],nodeNumber=node, 
-                                                                    coordinate=coordinates[i]))
-            if markerNumbers[i] is None:
-                raise ValueError(errStr+f'bodyNumber {body}: requested nodal coordinate {coordinate} not available')
+            markerNumbers[i] = mbs.AddMarker(eii.MarkerNodeCoordinate(name=markerName, nodeNumber=nPointGround, coordinate=0))
+            continue
+
+        if not IsInteger(coordinate):
+            raise ValueError(errStr+f'coordinates[{i}] = {coordinate} is no valid coordinate index')
+        if kind == 'node':
+            (node, nodeCoordinate) = (item, coordinate)
+        else: #the coordinate of a body counts over its nodes
+            objectDict = mbs.GetObject(item)
+            nodeNumbers = [objectDict['nodeNumber']] if 'nodeNumber' in objectDict else objectDict['nodeNumbers']
+            (node, nodeCoordinate) = (None, coordinate)
+            for bodyNode in nodeNumbers:
+                numberOfCoordinates = len(mbs.systemData.GetNodeLTGODE2(bodyNode))
+                if nodeCoordinate < numberOfCoordinates:
+                    node = bodyNode
+                    break
+                nodeCoordinate -= numberOfCoordinates
+            if node is None:
+                raise ValueError(errStr+f'itemNumbers[{i}] = {item}: the body has no coordinate {coordinate}')
+        markerNumbers[i] = mbs.AddMarker(eii.MarkerNodeCoordinate(name=markerName, nodeNumber=node, coordinate=nodeCoordinate))
 
     #now we should have two markers
     oJoint = mbs.AddObject(eii.ObjectConnectorCoordinate( name=name,
@@ -2187,7 +2105,7 @@ def MainSystemCreateRollingDiscPenalty(mbs, name='', bodyNumbers=[None, None],
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
-def MainSystemCreateSphereSphereContact(mbs, name='', bodyNumbers=[None, None], 
+def MainSystemCreateSphereSphereContact(mbs, name='', itemNumbers=[None, None], 
                                        localPosition0 = [0.,0.,0.], localPosition1 = [0.,0.,0.], 
                                        spheresRadii = [-1,-1], isHollowSphere1 = False,
                                        dynamicFriction = 0., frictionProportionalZone = 1e-3,
@@ -2197,14 +2115,13 @@ def MainSystemCreateSphereSphereContact(mbs, name='', bodyNumbers=[None, None],
                                        impactModel = 0,
                                        dataInitialCoordinates = [0,0,0,0],
                                        activeConnector=True,
-                                       bodyOrNodeList=[None, None], 
-                                       show=False, color=exudyn.graphics.color.default) -> exudyn.ObjectIndex:
+                                       show=False, color=exudyn.graphics.color.default, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
     """Create penalty-based sphere-sphere contact between two rigid bodies, mass points (if friction coefficient is zero) or according nodes; the contact is based on ObjectContactSphereSphere; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
 
     Args:
         mbs: the MainSystem where joint and markers shall be created
         name: name string for joint; markers get Marker0:name and Marker1:name
-        bodyNumbers: a list of object numbers for sphere0 and sphere1; Note that if body is a mass point, friction due to rolling is not accounted for!
+        itemNumbers: a list of the two items the spheres are attached to, each a body (ObjectIndex) at localPosition0/1, a node (NodeIndex) or a marker (MarkerIndex); for a node or a marker, localPosition0/1 is [0,0,0]; with friction, a rigid body, node or marker; for a mass point, friction due to rolling is not accounted for
         localPosition0: local position (as 3D list or numpy array) of sphere0 on body0, if not a node number
         localPosition1: local position (as 3D list or numpy array) of sphere1 on body1, if not a node number
         spheresRadii: list containing radius of sphere 0 and radius of sphere 1 [SI:m].
@@ -2223,15 +2140,18 @@ def MainSystemCreateSphereSphereContact(mbs, name='', bodyNumbers=[None, None],
         impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
         dataInitialCoordinates: a list of four values for initialization of the data node, used for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused
         activeConnector: flag to activate or deactivate the connector
-        bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
         show: if True, connector visualization is drawn
         color: color of connector
+        bodyNumbers: deprecated name of itemNumbers
+        bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
 
     Returns:
         :ObjectIndex: returns index of created joint
     """
     where = 'MainSystem.CreateSphereSphereContact(...)'
-    internBodyNodeMarkerList = ProcessBodyNodeMarkerLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where)
+    if bodyNumbers is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumbers', '1.12.337', 2031, use='itemNumbers', function='MainSystem.CreateSphereSphereContact')
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList)
 
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
@@ -2285,25 +2205,10 @@ def MainSystemCreateSphereSphereContact(mbs, name='', bodyNumbers=[None, None],
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
     
-    mName0 = ''
-    mName1 = ''
-    if name != '':
-        mName0 = 'Marker0:'+name
-        mName1 = 'Marker1:'+name
-        
-    NewMarkerBody = eii.MarkerBodyRigid if dynamicFriction != 0 else eii.MarkerBodyPosition
-    NewMarkerNode = eii.MarkerNodeRigid if dynamicFriction != 0 else eii.MarkerNodePosition
-        
-    if isinstance(internBodyNodeMarkerList[0], exudyn.ObjectIndex):
-        mBody0 = mbs.AddMarker(NewMarkerBody(name=mName0,bodyNumber=internBodyNodeMarkerList[0], localPosition=localPosition0))
-    else:
-        mBody0 = mbs.AddMarker(NewMarkerNode(name=mName0,nodeNumber=internBodyNodeMarkerList[0]))
+    CheckItemNumbers(where, itemNumbers, [_bodyNodeMarker, _bodyNodeMarker], [localPosition0, localPosition1])
+    mBody0 = ItemMarker(mbs, name, 0, itemNumbers[0], localPosition0, useRigidMarker=dynamicFriction != 0)
+    mBody1 = ItemMarker(mbs, name, 1, itemNumbers[1], localPosition1, useRigidMarker=dynamicFriction != 0)
 
-    if isinstance(internBodyNodeMarkerList[1], exudyn.ObjectIndex):
-        mBody1 = mbs.AddMarker(NewMarkerBody(name=mName1,bodyNumber=internBodyNodeMarkerList[1], localPosition=localPosition1))
-    else:
-        mBody1 = mbs.AddMarker(NewMarkerNode(name=mName1,nodeNumber=internBodyNodeMarkerList[1]))
-    
     nGeneric = mbs.AddNode(eii.NodeGenericData(initialCoordinates=dataInitialCoordinates,
                                          numberOfDataCoordinates=len(dataInitialCoordinates)))
     oContact = mbs.AddObject(eii.ObjectContactSphereSphere(markerNumbers=[mBody0, mBody1],
@@ -2331,7 +2236,7 @@ def MainSystemCreateSphereSphereContact(mbs, name='', bodyNumbers=[None, None],
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
-def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None], 
+def MainSystemCreateSphereQuadContact(mbs, name='', itemNumbers=[None, None], 
                                        localPosition0 = [0.,0.,0.], sphereRadius = 0,
                                        quadPoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[1,1,0],[0,1,0]]),
                                        includeEdges = 15, dynamicFriction = 0., frictionProportionalZone = 1e-3,
@@ -2340,15 +2245,14 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
                                        impactModel = 0,
                                        dataInitialCoordinates = [0,0,0,0],
                                        activeConnector=True,
-                                       bodyOrNodeList=[None, None], 
                                        localPosition1 = [0.,0.,0.], 
-                                       show=False, color=exudyn.graphics.color.default, radiusSphere=None) -> dict:
+                                       show=False, color=exudyn.graphics.color.default, radiusSphere=None, bodyNumbers=None, bodyOrNodeList=None) -> dict:
     """Create penalty-based sphere-quad contact between two rigid bodies, mass points or according nodes; the contact is based on two ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
 
     Args:
         mbs: the MainSystem where joint and markers shall be created
         name: name string for joint; markers get Marker0:name and Marker1:name
-        bodyNumbers: a list of object numbers for sphere (0) and quad (1); Note that if body is a mass point, friction due to rolling is not accounted for!
+        itemNumbers: the item the sphere is attached to - a body (ObjectIndex) at localPosition0, a node (NodeIndex) or a marker (MarkerIndex), for which localPosition0 is [0,0,0]; with friction, a rigid one - and the body (ObjectIndex) of the quad
         localPosition0: local position (as 3D list or numpy array) of sphere0 on body0, if not a node number
         sphereRadius: radius of sphere 0 [SI:m].
         quadPoints: 4 points as Vector3DList, list or numpy array to define the quad, defined in body1 local coordinates; note that the quad is split into two triangles with point indices [0,1,3] and [1,2,3]
@@ -2363,11 +2267,12 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
         impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
         dataInitialCoordinates: a list of four values for initialization of the data node, used for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused
         activeConnector: flag to activate or deactivate the connector
-        bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
         localPosition1: local position (as 3D list or numpy array) of quad1 on body1; this is usually not needed and adds simply an offset to the quad coordinates
         show: if True, connector visualization is drawn
         color: color of connector
         radiusSphere: deprecated name of sphereRadius
+        bodyNumbers: deprecated name of itemNumbers
+        bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
 
     Returns:
         :dict: dictionary containing oContact0 and oContact1 with ObjectIndex of each contact object
@@ -2376,7 +2281,9 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
         DeprecatedArgument('radiusSphere', '1.12.258', 2031, use='sphereRadius', function='MainSystem.CreateSphereQuadContact')
         sphereRadius = radiusSphere
     where = 'MainSystem.CreateSphereQuadContact(...)'
-    internBodyNodeMarkerList = ProcessBodyNodeMarkerLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where)
+    if bodyNumbers is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumbers', '1.12.337', 2031, use='itemNumbers', function='MainSystem.CreateSphereQuadContact')
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList)
 
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
@@ -2403,7 +2310,7 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
             RaiseTypeError(where=where, argumentName='contactDamping', received = contactDamping, expectedType = ExpectedType.Real)
         if not IsValidPRealInt(contactStiffnessExponent):
             RaiseTypeError(where=where, argumentName='contactStiffnessExponent', received = contactStiffnessExponent, expectedType = ExpectedType.Real)
-
+        if not IsValidPRealInt(restitutionCoefficient):
             RaiseTypeError(where=where, argumentName='restitutionCoefficient', received = restitutionCoefficient, expectedType = ExpectedType.Real)
         if not IsValidURealInt(minimumImpactVelocity):
             RaiseTypeError(where=where, argumentName='minimumImpactVelocity', received = minimumImpactVelocity, expectedType = ExpectedType.Real)
@@ -2421,25 +2328,9 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
     
-    mName0 = ''
-    mName1 = ''
-    if name != '':
-        mName0 = 'Marker0:'+name
-        mName1 = 'Marker1:'+name
-
-    #new marker for sphere can be Position or Rigid
-    NewMarkerBody = eii.MarkerBodyRigid if dynamicFriction != 0 else eii.MarkerBodyPosition
-    NewMarkerNode = eii.MarkerNodeRigid if dynamicFriction != 0 else eii.MarkerNodePosition
-        
-    if isinstance(internBodyNodeMarkerList[0], exudyn.ObjectIndex):
-        mBody0 = mbs.AddMarker(NewMarkerBody(name=mName0,bodyNumber=internBodyNodeMarkerList[0], localPosition=localPosition0))
-    else:
-        mBody0 = mbs.AddMarker(NewMarkerNode(name=mName0,nodeNumber=internBodyNodeMarkerList[0]))
-
-    if isinstance(internBodyNodeMarkerList[1], exudyn.ObjectIndex):
-        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=internBodyNodeMarkerList[1], localPosition=localPosition1))
-    else:
-        mBody1 = mbs.AddMarker(eii.MarkerNodeRigid(name=mName1,nodeNumber=internBodyNodeMarkerList[1]))
+    CheckItemNumbers(where, itemNumbers, [_bodyNodeMarker, ('body',)], [localPosition0, localPosition1])
+    mBody0 = ItemMarker(mbs, name, 0, itemNumbers[0], localPosition0, useRigidMarker=dynamicFriction != 0) #the sphere
+    mBody1 = ItemMarker(mbs, name, 1, itemNumbers[1], localPosition1, useRigidMarker=True) #the quad
 
     trigIndices = [[0,1,3], [1,2,3]] #this is how the quad is split into two triangles
     #compute edges flags from quad edges flags
@@ -2475,7 +2366,7 @@ def MainSystemCreateSphereQuadContact(mbs, name='', bodyNumbers=[None, None],
 
 #%%++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 @extends(exudyn.MainSystem)
-def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None], 
+def MainSystemCreateSphereTriangleContact(mbs, name='', itemNumbers=[None, None], 
                                        localPosition0 = [0.,0.,0.], sphereRadius = 0,
                                        trianglePoints = exudyn.Vector3DList([[0,0,0],[1,0,0],[0,1,0]]),
                                        includeEdges = 7, dynamicFriction = 0., frictionProportionalZone = 1e-3,
@@ -2484,15 +2375,14 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None]
                                        impactModel = 0,
                                        dataInitialCoordinates = [0,0,0,0],
                                        activeConnector=True,
-                                       bodyOrNodeList=[None, None], 
                                        localPosition1 = [0.,0.,0.], 
-                                       show=False, color=exudyn.graphics.color.default, radiusSphere=None) -> exudyn.ObjectIndex:
+                                       show=False, color=exudyn.graphics.color.default, radiusSphere=None, bodyNumbers=None, bodyOrNodeList=None) -> exudyn.ObjectIndex:
     """Create penalty-based sphere-triangle contact between two rigid bodies, mass points or according nodes; the contact is based on ObjectContactSphereTriangle; note that this approach is only intended to be used for small number of contact objects, while GeneralContact shall be used for large scale systems
 
     Args:
         mbs: the MainSystem where joint and markers shall be created
         name: name string for joint; markers get Marker0:name and Marker1:name
-        bodyNumbers: a list of object numbers for sphere (0) and triangle (1); Note that if body is a mass point, friction due to rolling is not accounted for!
+        itemNumbers: the item the sphere is attached to - a body (ObjectIndex) at localPosition0, a node (NodeIndex) or a marker (MarkerIndex), for which localPosition0 is [0,0,0]; with friction, a rigid one - and the body (ObjectIndex) of the triangle
         localPosition0: local position (as 3D list or numpy array) of sphere0 on body0, if not a node number
         sphereRadius: radius of sphere 0 [SI:m].
         trianglePoints: triangle points as Vector3DList, list or numpy array to define the quad, defined in body1 local coordinates
@@ -2507,11 +2397,12 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None]
         impactModel: number of impact model: 0) linear model (only linear damping is used); 1) Hunt-Crossley model; 2) Gonthier/EtAl-Carvalho/Martins mixed model; model 2 is much more accurate regarding the coefficient of restitution, in the full range [0,1] except for 0; NOTE: in all models, the linear contactDamping is added, if not set to zero!
         dataInitialCoordinates: a list of four values for initialization of the data node, used for discontinuous iteration (friction and contact); data variables contain values from last PostNewton iteration: data[0] is the gap, data[1] is the norm of the tangential velocity (and thus contains information if it is stick or slip); data[2] is the impact velocity; data[3] is unused
         activeConnector: flag to activate or deactivate the connector
-        bodyOrNodeList: alternative to bodyNumbers; a list of object numbers (with specific localPosition0/1) or node numbers; may alse be mixed types; to use this case, set bodyNumbers = [None,None]
         localPosition1: local position (as 3D list or numpy array) of triangle1 on body1; this is usually not needed and adds simply an offset to the triangle coordinates
         show: if True, connector visualization is drawn
         color: color of connector
         radiusSphere: deprecated name of sphereRadius
+        bodyNumbers: deprecated name of itemNumbers
+        bodyOrNodeList: not accepted, a TypeError: the items are given in itemNumbers
 
     Returns:
         :ObjectIndex: returns index of created joint
@@ -2520,7 +2411,9 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None]
         DeprecatedArgument('radiusSphere', '1.12.258', 2031, use='sphereRadius', function='MainSystem.CreateSphereTriangleContact')
         sphereRadius = radiusSphere
     where = 'MainSystem.CreateSphereTriangleContact(...)'
-    internBodyNodeMarkerList = ProcessBodyNodeMarkerLists(bodyNumbers, bodyOrNodeList, localPosition0, localPosition1, where)
+    if bodyNumbers is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumbers', '1.12.337', 2031, use='itemNumbers', function='MainSystem.CreateSphereTriangleContact')
+    itemNumbers = ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList)
 
     if not exudyn.__useExudynFast:
         if not isinstance(name, str):
@@ -2547,7 +2440,7 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None]
             RaiseTypeError(where=where, argumentName='contactDamping', received = contactDamping, expectedType = ExpectedType.Real)
         if not IsValidPRealInt(contactStiffnessExponent):
             RaiseTypeError(where=where, argumentName='contactStiffnessExponent', received = contactStiffnessExponent, expectedType = ExpectedType.Real)
-
+        if not IsValidPRealInt(restitutionCoefficient):
             RaiseTypeError(where=where, argumentName='restitutionCoefficient', received = restitutionCoefficient, expectedType = ExpectedType.Real)
         if not IsValidURealInt(minimumImpactVelocity):
             RaiseTypeError(where=where, argumentName='minimumImpactVelocity', received = minimumImpactVelocity, expectedType = ExpectedType.Real)
@@ -2565,22 +2458,10 @@ def MainSystemCreateSphereTriangleContact(mbs, name='', bodyNumbers=[None, None]
             RaiseTypeError(where=where, argumentName='color', received = color, expectedType = ExpectedType.Vector, dim=4)
 
     
-    mName0 = ''
-    mName1 = ''
-    if name != '':
-        mName0 = 'Marker0:'+name
-        mName1 = 'Marker1:'+name
-        
-    if isinstance(internBodyNodeMarkerList[0], exudyn.ObjectIndex):
-        mBody0 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName0,bodyNumber=internBodyNodeMarkerList[0], localPosition=localPosition0))
-    else:
-        mBody0 = mbs.AddMarker(eii.MarkerNodeRigid(name=mName0,nodeNumber=internBodyNodeMarkerList[0]))
+    CheckItemNumbers(where, itemNumbers, [_bodyNodeMarker, ('body',)], [localPosition0, localPosition1])
+    mBody0 = ItemMarker(mbs, name, 0, itemNumbers[0], localPosition0, useRigidMarker=True) #the sphere
+    mBody1 = ItemMarker(mbs, name, 1, itemNumbers[1], localPosition1, useRigidMarker=True) #the triangle
 
-    if isinstance(internBodyNodeMarkerList[1], exudyn.ObjectIndex):
-        mBody1 = mbs.AddMarker(eii.MarkerBodyRigid(name=mName1,bodyNumber=internBodyNodeMarkerList[1], localPosition=localPosition1))
-    else:
-        mBody1 = mbs.AddMarker(eii.MarkerNodeRigid(name=mName1,nodeNumber=internBodyNodeMarkerList[1]))
-    
     nGeneric = mbs.AddNode(eii.NodeGenericData(initialCoordinates=dataInitialCoordinates,
                                          numberOfDataCoordinates=len(dataInitialCoordinates)))
     oContact = mbs.AddObject(eii.ObjectContactSphereTriangle(markerNumbers=[mBody0, mBody1],
@@ -3108,23 +2989,24 @@ def MainSystemCreateFFRFReducedOrderObject(mbs, name, femInterface,
 @extends(exudyn.MainSystem)
 def MainSystemCreateForce(mbs,
                 name = '',   
-                bodyNumber = None,
+                itemNumber = None,
                 loadVector = [0.,0.,0.], 
                 localPosition = [0.,0.,0.], 
                 bodyFixed = False,
                 loadVectorUserFunction = 0,
-                show = True) -> exudyn.LoadIndex:
-    """helper function to create force applied to given body
+                show = True, bodyNumber = None) -> exudyn.LoadIndex:
+    """helper function to create force applied to a body, a node or a marker
 
     Args:
         mbs: the MainSystem where items are created
         name: name string for object
-        bodyNumber: body number (ObjectIndex) at which the force is applied to
+        itemNumber: the item the force is applied to: a body (ObjectIndex) at localPosition, a node (NodeIndex) or a marker (MarkerIndex), for which localPosition is [0,0,0]
         loadVector: force vector (as 3D list or numpy array)
-        localPosition: local position (as 3D list or numpy array) where force is applied
-        bodyFixed: if True, the force is corotated with the body; else, the force is global
+        localPosition: local position (as 3D list or numpy array) on the body where the force is applied
+        bodyFixed: if True, the force is corotated with the body or node; else, the force is global
         loadVectorUserFunction: A Python function f(mbs, t, load)->loadVector which defines the time-dependent load and replaces loadVector in every time step; the arg load is the static loadVector
         show: if True, load is drawn
+        bodyNumber: deprecated name of itemNumber
 
     Returns:
         :LoadIndex: returns load index
@@ -3139,7 +3021,7 @@ def MainSystemCreateForce(mbs,
                                initialVelocity = [2,5,0],
                                mass = 1, gravity = [0,-9.81,0],
                                drawSize = 0.5, color=exu.graphics.color.blue)
-        f0=mbs.CreateForce(bodyNumber=b0, loadVector=[100,0,0],
+        f0=mbs.CreateForce(itemNumber=b0, loadVector=[100,0,0],
                            localPosition=[0,0,0])
         mbs.Assemble()
         simulationSettings = exu.SimulationSettings() #takes currently set values or default values
@@ -3147,22 +3029,24 @@ def MainSystemCreateForce(mbs,
         simulationSettings.timeIntegration.endTime = 2
         mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
-    #error checks:        
+    where='MainSystem.CreateForce(...)'
+    if bodyNumber is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumber', '1.12.337', 2031, use='itemNumber', function='MainSystem.CreateForce')
+        if itemNumber is not None:
+            raise TypeError('ERROR in ' + where + ': bodyNumber and itemNumber are given; use itemNumber only')
+        itemNumber = bodyNumber
+    #error checks:
     if not exudyn.__useExudynFast:
-        where='MainSystem.CreateForce(...)'
         if not isinstance(name, str):
             RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
 
         if not IsVector(localPosition, 3):
             RaiseTypeError(where=where, argumentName='localPosition', received = localPosition, expectedType = ExpectedType.Vector, dim=3)
 
-        # if not IsValidObjectIndex(bodyNumber):
-            # RaiseTypeError(where=where, argumentName='bodyNumber', received = bodyNumber, expectedType = ExpectedType.ObjectIndex)
-        if not IsValidObjectIndex(bodyNumber):
-            if not isinstance(bodyNumber, exudyn.MarkerIndex): #also accept marker
-                RaiseTypeError(where=where, argumentName='bodyNumber', received = bodyNumber, expectedType = 'ObjectIndex or MarkerIndex')
-            elif np.linalg.norm(localPosition) != 0: #for marker, localPosition must be zero!
-                RaiseTypeError(where=where, argumentName='localPosition', received = localPosition, expectedType = '[0,0,0]')
+        if ItemKind(itemNumber) is None:
+            RaiseTypeError(where=where, argumentName='itemNumber', received = itemNumber, expectedType = 'ObjectIndex, NodeIndex or MarkerIndex')
+        elif ItemKind(itemNumber) != 'body' and IsVector(localPosition, 3) and any(x != 0 for x in localPosition):
+            RaiseTypeError(where=where, argumentName='localPosition', received = localPosition, expectedType = '[0,0,0] for a node or a marker')
 
         if not IsVector(loadVector, 3):
             RaiseTypeError(where=where, argumentName='loadVector', received = loadVector, expectedType = ExpectedType.Vector, dim=3)
@@ -3175,14 +3059,8 @@ def MainSystemCreateForce(mbs,
         if not IsValidBool(show):
             RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
     
-    markerNumber = bodyNumber if isinstance(bodyNumber, exudyn.MarkerIndex) else None
+    markerNumber = ItemMarker(mbs, '', 0, itemNumber, localPosition, useRigidMarker=bodyFixed)
 
-    if markerNumber is None:
-        if bodyFixed:
-            markerNumber = mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=bodyNumber, localPosition=localPosition))
-        else:
-            markerNumber = mbs.AddMarker(eii.MarkerBodyPosition(bodyNumber=bodyNumber, localPosition=localPosition))
-        
     loadNumber = mbs.AddLoad(eii.LoadForceVector(markerNumber=markerNumber, 
                                                  loadVector=loadVector,
                                                  bodyFixed=bodyFixed, 
@@ -3195,23 +3073,24 @@ def MainSystemCreateForce(mbs,
 @extends(exudyn.MainSystem)
 def MainSystemCreateTorque(mbs,
                 name = '',
-                bodyNumber = None,
+                itemNumber = None,
                 loadVector = [0.,0.,0.], 
                 localPosition = [0.,0.,0.], 
                 bodyFixed = False,
                 loadVectorUserFunction = 0,
-                show = True) -> exudyn.LoadIndex:
-    """helper function to create torque applied to given body
+                show = True, bodyNumber = None) -> exudyn.LoadIndex:
+    """helper function to create torque applied to a body, a node or a marker
 
     Args:
         mbs: the MainSystem where items are created
         name: name string for object
-        bodyNumber: body number (ObjectIndex) at which the torque is applied to
+        itemNumber: the item the torque is applied to: a body (ObjectIndex) at localPosition, a rigid node (NodeIndex) or a rigid marker (MarkerIndex), for which localPosition is [0,0,0]
         loadVector: torque vector (as 3D list or numpy array)
-        localPosition: local position (as 3D list or numpy array) where torque is applied
-        bodyFixed: if True, the torque is corotated with the body; else, the torque is global
+        localPosition: local position (as 3D list or numpy array) on the body where the torque is applied
+        bodyFixed: if True, the torque is corotated with the body or node; else, the torque is global
         loadVectorUserFunction: A Python function f(mbs, t, load)->loadVector which defines the time-dependent load and replaces loadVector in every time step; the arg load is the static loadVector
         show: if True, load is drawn
+        bodyNumber: deprecated name of itemNumber
 
     Returns:
         :LoadIndex: returns load index
@@ -3228,16 +3107,21 @@ def MainSystemCreateTorque(mbs,
                                  gravity = [0,-9.81,0],
                                  graphicsDataList = [exu.graphics.Brick(size=[1,0.1,0.1],
                                                                               color=exu.graphics.color.red)])
-        f0=mbs.CreateTorque(bodyNumber=b0, loadVector=[0,100,0])
+        f0=mbs.CreateTorque(itemNumber=b0, loadVector=[0,100,0])
         mbs.Assemble()
         simulationSettings = exu.SimulationSettings() #takes currently set values or default values
         simulationSettings.timeIntegration.numberOfSteps = 1000
         simulationSettings.timeIntegration.endTime = 2
         mbs.SolveDynamic(simulationSettings = simulationSettings)
     """
-    #error checks:        
+    where='MainSystem.CreateTorque(...)'
+    if bodyNumber is not None: #the old name of the argument (#2863)
+        DeprecatedArgument('bodyNumber', '1.12.337', 2031, use='itemNumber', function='MainSystem.CreateTorque')
+        if itemNumber is not None:
+            raise TypeError('ERROR in ' + where + ': bodyNumber and itemNumber are given; use itemNumber only')
+        itemNumber = bodyNumber
+    #error checks:
     if not exudyn.__useExudynFast:
-        where='MainSystem.CreateTorque(...)'
         if not isinstance(name, str):
             RaiseTypeError(where=where, argumentName='name', received = name, expectedType = ExpectedType.String)
 
@@ -3246,14 +3130,11 @@ def MainSystemCreateTorque(mbs,
         if not IsVector(localPosition, 3):
             RaiseTypeError(where=where, argumentName='localPosition', received = localPosition, expectedType = ExpectedType.Vector, dim=3)
 
-        # if not IsValidObjectIndex(bodyNumber):
-            # RaiseTypeError(where=where, argumentName='bodyNumber', received = bodyNumber, expectedType = ExpectedType.ObjectIndex)
 
-        if not IsValidObjectIndex(bodyNumber):
-            if not isinstance(bodyNumber, exudyn.MarkerIndex): #also accept marker
-                RaiseTypeError(where=where, argumentName='bodyNumber', received = bodyNumber, expectedType = 'ObjectIndex or MarkerIndex')
-            elif np.linalg.norm(localPosition) != 0: #for marker, localPosition must be zero!
-                RaiseTypeError(where=where, argumentName='localPosition', received = localPosition, expectedType = '[0,0,0]')
+        if ItemKind(itemNumber) is None:
+            RaiseTypeError(where=where, argumentName='itemNumber', received = itemNumber, expectedType = 'ObjectIndex, NodeIndex or MarkerIndex')
+        elif ItemKind(itemNumber) != 'body' and IsVector(localPosition, 3) and any(x != 0 for x in localPosition):
+            RaiseTypeError(where=where, argumentName='localPosition', received = localPosition, expectedType = '[0,0,0] for a node or a marker')
     
         if not IsValidRealInt(bodyFixed):
             RaiseTypeError(where=where, argumentName='bodyFixed', received = bodyFixed, expectedType = ExpectedType.Bool)
@@ -3262,8 +3143,8 @@ def MainSystemCreateTorque(mbs,
         if not IsValidBool(show):
             RaiseTypeError(where=where, argumentName='show', received = show, expectedType = ExpectedType.Bool)
     
-    markerNumber = bodyNumber if isinstance(bodyNumber, exudyn.MarkerIndex) else mbs.AddMarker(eii.MarkerBodyRigid(bodyNumber=bodyNumber, localPosition=localPosition))
-    
+    markerNumber = ItemMarker(mbs, '', 0, itemNumber, localPosition, useRigidMarker=True)
+
     loadNumber = mbs.AddLoad(eii.LoadTorqueVector(markerNumber=markerNumber, 
                                                   loadVector=loadVector,
                                                   bodyFixed=bodyFixed,

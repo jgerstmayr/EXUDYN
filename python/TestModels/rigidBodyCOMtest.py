@@ -90,7 +90,7 @@ for case in range(2):
 
         val=0
         if i==0: val=1
-        mbs.CreateGenericJoint(bodyNumbers=[oRB, oRBlast], position=(np.array([-sx,0.,0]) + com), 
+        mbs.CreateGenericJoint(itemNumbers=[oRB, oRBlast], position=(np.array([-sx,0.,0]) + com), 
                                constrainedAxes=[1,1,1, val,val,0], useGlobalFrame=False)
 
         #for next chain body

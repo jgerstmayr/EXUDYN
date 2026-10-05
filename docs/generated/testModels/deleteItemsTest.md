@@ -57,7 +57,7 @@ for i in range(nMasses):
     nodeNumbers.append(oDict['nodeNumber'])
     loadNumbers.append(oDict['loadNumber'])
 
-    oJoint = mbs.CreateDistanceConstraint(bodyNumbers=[lastBody,oMass])
+    oJoint = mbs.CreateDistanceConstraint(itemNumbers=[lastBody,oMass])
     jointNumbers.append(oJoint)
     lastBody = oMass
 
@@ -94,7 +94,7 @@ mbs.DeleteObject(bodyNumbers[delID0],suppressWarnings=False) #incl. markers
 # mbs.systemData.Info()
 
 #now add constraint again ... delID0 is now the new body; would be easier if names are used
-oJoint = mbs.CreateDistanceConstraint(bodyNumbers=[oGround,bodyNumbers[delID0]])
+oJoint = mbs.CreateDistanceConstraint(itemNumbers=[oGround,bodyNumbers[delID0]])
 
 #%%
 mbs.Assemble()

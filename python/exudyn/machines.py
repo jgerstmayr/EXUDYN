@@ -465,7 +465,7 @@ def CreateBallBearing(mbs, bearingData, markerInnerRing, markerOuterRing, densit
     objectsCageBallContact = []
     if springStiffnessCage != 0 or springDampingCage != 0:
         for k, oBall in enumerate(objectsBalls):
-            oCSD = mbs.CreateCartesianSpringDamper(bodyNumbers=[oBall,objectCage],
+            oCSD = mbs.CreateCartesianSpringDamper(itemNumbers=[oBall,objectCage],
                                                    localPosition0=[0,0,0],
                                                    localPosition1=ballPositions[k],
                                                    stiffness=[springStiffnessCage]*3, 

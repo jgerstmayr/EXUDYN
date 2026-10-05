@@ -157,7 +157,7 @@ bBeam = mbs.CreateRigidBody(inertia = inertiaCuboid,
                         color=graphics.color.orange)])
 mBeamRight = mbs.AddMarker(MarkerBodyRigid(bodyNumber=bBeam, localPosition=[beamL*0.5,0,0]))
 
-mbs.CreateGenericJoint(bodyNumbers= [oGround,bBeam], position= [0.,0.,0.], 
+mbs.CreateGenericJoint(itemNumbers= [oGround,bBeam], position= [0.,0.,0.], 
                        rotationMatrixAxes= np.eye(3), constrainedAxes= [1,1,1,1,1,0], 
                        axesRadius=0.001, axesLength= 0.01, color= graphics.color.default)
 
@@ -245,7 +245,7 @@ b1 = mbs.CreateRigidBody(inertia = inertiaCuboid,
                          graphicsDataList = [graphics.Brick(size=[beamL,beamH,beamW],
                          color=graphics.color.dodgerblue)])
 
-mbs.CreateGenericJoint(bodyNumbers= [oGround,b0], position= [0.,0.,0.], 
+mbs.CreateGenericJoint(itemNumbers= [oGround,b0], position= [0.,0.,0.], 
                        constrainedAxes= [1,1,1,1,1,0], 
                        axesRadius=beamH*2, axesLength=beamW*1.05)
 
@@ -255,14 +255,14 @@ mB1 = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b1, localPosition=-p0))
 mbs.AddObject(GenericJoint(markerNumbers=[mB1,mB0], constrainedAxes=[1,1,1, 1,0,0],
                            visualization=VGenericJoint(axesRadius=beamH*2, axesLength=beamW*1.05)))
 
-mbs.CreateCartesianSpringDamper(bodyOrNodeList=[b1, oGround],
+mbs.CreateCartesianSpringDamper(itemNumbers=[b1, oGround],
                                 localPosition0=p0,
                                 localPosition1=2*p0 + R1@(2*p0),
                                 stiffness=[springK]*3,
                                 damping=[springK*1e-4]*3,
                                 drawSize = beamW
                                 )
-# mbs.CreateGenericJoint(bodyNumbers= [b0, b1], position= 2*p0,
+# mbs.CreateGenericJoint(itemNumbers= [b0, b1], position= 2*p0,
 #                        constrainedAxes= [1,1,1,1,0,0], 
 #                        axesRadius=beamH, axesLength=beamW)
 

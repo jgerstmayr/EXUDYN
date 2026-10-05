@@ -75,7 +75,7 @@ oMass = mbs.CreateMassPoint(referencePosition=[L,0,0],
                             graphicsDataList=[gSphere])
 
 mMass = mbs.AddMarker(MarkerBodyPosition(bodyNumber = oMass))
-oSpringDamper = mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass],
+oSpringDamper = mbs.CreateSpringDamper(itemNumbers=[oGround, oMass],
                                        referenceLength = L,
                                        stiffness = spring,
                                        springForceUserFunction=UserSpringForce,

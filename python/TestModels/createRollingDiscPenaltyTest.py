@@ -66,11 +66,11 @@ oBody = mbs.CreateRigidBody(referencePosition=[0,0,r*1.2],
 gGround = graphics.CheckerBoard(size=50, nTiles=50)
 oGround = mbs.AddObject(ObjectGround(visualization=VObjectGround(graphicsData=[gGround])))
 
-mbs.CreateRevoluteJoint(bodyNumbers=[oWheel0, oBody],
+mbs.CreateRevoluteJoint(itemNumbers=[oWheel0, oBody],
                         position = [0,0,0], axis=[0,1,0], useGlobalFrame=False,
                         axisRadius=0.1*r, axisLength=0.6*r)
 
-mbs.CreateRevoluteJoint(bodyNumbers=[oWheel1, oBody],
+mbs.CreateRevoluteJoint(itemNumbers=[oWheel1, oBody],
                         position = [0,0,0], axis=[0,1,0], useGlobalFrame=False,
                         axisRadius=0.1*r, axisLength=0.6*r)
 

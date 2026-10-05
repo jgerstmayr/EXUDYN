@@ -38,6 +38,10 @@ has 6 components through the thickness instead of the 3 membrane strains, `Curva
 are in the order $xx,\, yy,\, xy$ with one sign - positive where the surface bends towards its normal -, and
 `StressLocal` has the opposite sign of its bending part (#2857, #2864).
 
+**`bodyOrNodeList` and `bodyList` of the Create functions are not accepted**: the items are given in
+`itemNumbers`; a script that passes either gets a `TypeError` that says so, and `exudev scripts --fix` renames
+them (#2863).
+
 **Visualization parameters of items that draw nothing are gone**: `show` of `Node1D`, the generic nodes,
 `ObjectGenericODE1`, the coordinate markers, `LoadCoordinate` and `SensorUserFunction`, `show` and `color` of
 `ObjectConnectorCoordinateVector`, and `drawSize` of `ObjectConnectorGravity`. A script that gives them, e.g.
@@ -194,6 +198,15 @@ array writes `HomogeneousTransformation(A, r)` (#2781).
 The same holds for item parameters: a renamed one is still taken under its old name - in the item class, in a
 dictionary and by `mbs.GetObjectParameter`/`SetObjectParameter` - with a warning naming the new one; the page of the
 item lists it (#2589).
+
+**The Create functions take bodies, nodes or markers in `itemNumbers`.** `CreateSpringDamper`,
+`CreateCartesianSpringDamper`, `CreateRigidBodySpringDamper` and `CreateDistanceConstraint` take a body at its local
+position, a node or a marker for each side; the joints and `CreateTorsionalSpringDamper` a body or a rigid marker;
+`CreateCoordinateConstraint` a body - its coordinates counted over its nodes -, a node, or None for the ground; the
+sphere contacts the sphere on a body, node or marker and the triangle or quad on a body; `CreateForce` and
+`CreateTorque` one body, node or marker in `itemNumber`. `bodyNumbers` and `bodyNumber` are the deprecated names
+until 2031, which `exudev scripts --fix` rewrites; the rolling discs keep `bodyNumbers`, as they take bodies only
+(#2863, #2337).
 
 **More markers on more bodies.** `ObjectRotationalMass1D` takes forces and connectors anywhere on
 its table, not only on its axis; `ObjectANCFBeam` takes `MarkerBodyRigid`, so torques and joints with

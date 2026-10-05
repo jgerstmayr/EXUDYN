@@ -118,9 +118,9 @@ bCar=mbs0.CreateRigidBody(inertia = inertiaCar,
 nCarMbs0 = mbs0.GetObject(bCar)['nodeNumber']
 
 #add zero force to car, used the to interact with particles
-carParticlesForce = mbs0.CreateForce(bodyNumber=bCar)
+carParticlesForce = mbs0.CreateForce(itemNumber=bCar)
 #the zero torque; it is bodyFixed, which agrees with the rotation vector formulation
-carParticlesTorque = mbs0.CreateTorque(bodyNumber=bCar, bodyFixed=True)
+carParticlesTorque = mbs0.CreateTorque(itemNumber=bCar, bodyFixed=True)
 
 
 nWheels = 4
@@ -210,7 +210,7 @@ for iWheel in range(nWheels):
     mCarAxle = mbs0.AddMarker(MarkerBodyRigid(bodyNumber=bCar, localPosition=pOff))
     markerCarAxles += [mCarAxle]
 
-    mbs0.CreateRevoluteJoint(bodyNumbers=[bCar, b0], 
+    mbs0.CreateRevoluteJoint(itemNumbers=[bCar, b0], 
                              position = pOff,
                              useGlobalFrame=False,
                              axis=initialRotation @ [1,0,0], 

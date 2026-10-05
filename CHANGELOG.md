@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 301 | 1.12.335 |
+| 1.12 | Metheney | 303 | 1.12.337 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.337** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` Create functions: itemNumbers instead of bodyNumbers and bodyOrNodeList (#2863)
+  - description: The maintainer, 2026-10-05: several Create functions accept bodies, nodes and markers in bodyNumbers, some also bodyOrNodeList; the new interface is itemNumbers=\[None,None\]; bodyNumbers stays, deprecated for 5 years; bodyOrNodeList stays with a DeprecationWarning that names itemNumbers. Affected (to be checked): CreateSpringDamper, CreateCartesianSpringDamper, CreateRigidBodySpringDamper, CreateTorsionalSpringDamper, CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint, CreateGenericJoint, CreateDistanceConstraint. A proposal for decision first.
+  - **notes:** The Create functions take bodies, nodes or markers in itemNumbers, CreateForce and CreateTorque one item in itemNumber; bodyNumbers and bodyNumber are deprecated until 2031, bodyOrNodeList and bodyList raise a TypeError naming itemNumbers; exudev scripts --fix rewrites them (revision2026b step RG12.40)
+  - date resolved: **2026-10-05 16:10**, date raised: 2026-10-05
+- **1.12.336** `CHANGE` `MEDIUM EFF` `resolved by: Claude-JG` CreateCoordinateConstraint (#2337)
+  - description: change bodyNumbers to itemNumbers allowing both bodies and nodes to be constrained
+  - **notes:** CreateCoordinateConstraint takes a body, a node, or None for the ground in itemNumbers; the coordinate of a body is counted over its nodes (revision2026b step RG12.40)
+  - date resolved: **2026-10-05 16:10**, date raised: 2026-04-06
 - **1.12.335** `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ANCF thin plate: one sign of curvature and moment, thickness gradients along the node slopes, SurfaceMap, the builder removed (#2864)
   - description: The maintainer's decisions of 2026-10-05 on RG4.20.4: CurvatureLocal and TorqueLocal with one sign (the negated first component was wrong); ShellMesh projects the global thickness gradient onto the unit node slopes; default integration mode 0 everywhere; the maps as static methods of SurfaceMap without the Map prefix, no aliases; SymSin/SymCos removed (exu.symbolic.sin/cos take floats); ANCFThinPlateBuilder removed without deprecation - it was public only in development versions since 2026-10-05 - and ShellMesh takes a surfaceMap instead.
   - **notes:** ObjectANCFThinPlate: CurvatureLocal and TorqueLocal with one sign, positive where the surface bends towards its normal; exudyn.shells: ShellMesh(surfaceMap=...) with the maps of SurfaceMap (Cylinder, ConeFrustum, HemisphericalShell, ToroidalPanel, ...), thickness function gradients along the node slopes.

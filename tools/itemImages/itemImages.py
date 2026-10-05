@@ -190,7 +190,7 @@ def _(SC, mbs):
     oGround = Wall(mbs, [0, 0.05, 0], size=[0.6, 0.1, 0.6])
     oMass = mbs.CreateMassPoint(referencePosition=[0, -0.8, 0], mass=1,
                                 graphicsDataList=[graphics.Sphere(radius=0.15, color=graphics.color.red, nTiles=32)])
-    mbs.CreateSpringDamper(bodyNumbers=[oGround, oMass], stiffness=100, drawSize=0.12)
+    mbs.CreateSpringDamper(itemNumbers=[oGround, oMass], stiffness=100, drawSize=0.12)
     return View(0.35, -0.5)
 
 
@@ -315,7 +315,7 @@ def _(SC, mbs):
 def _(SC, mbs):
     Floor(mbs, y=-0.3, size=1.6)
     body = Block(mbs, [0, 0, 0], size=[0.6, 0.3, 0.3])
-    mbs.CreateForce(bodyNumber=body, localPosition=[0.3, 0.15, 0], loadVector=[0.5, 1, 0])
+    mbs.CreateForce(itemNumber=body, localPosition=[0.3, 0.15, 0], loadVector=[0.5, 1, 0])
     SC.visualizationSettings.loads.show = True
     SC.visualizationSettings.loads.defaultSize = 0.5
     return View(0.4, -0.5)
@@ -327,7 +327,7 @@ def _(SC, mbs):
     body = mbs.CreateRigidBody(inertia=InertiaCylinder(1000, 0.2, 0.3, axis=1), referenceHT=exu.HT(),
                                graphicsDataList=[graphics.Cylinder(pAxis=[0, -0.1, 0], vAxis=[0, 0.2, 0], radius=0.3,
                                                                    color=graphics.color.steelblue, nTiles=48)])
-    mbs.CreateTorque(bodyNumber=body, loadVector=[0, 1, 0])
+    mbs.CreateTorque(itemNumber=body, loadVector=[0, 1, 0])
     SC.visualizationSettings.loads.show = True
     SC.visualizationSettings.loads.defaultSize = 0.6
     return View(0.5, -0.5)
@@ -350,7 +350,7 @@ def _(SC, mbs):
     Floor(mbs, y=-0.25, size=2, center=[0.6, 0, 0])
     oGround = Wall(mbs, [-0.05, 0, 0])
     oBody = Block(mbs, [1.2, 0, 0])
-    mbs.CreateSpringDamper(bodyNumbers=[oGround, oBody], localPosition1=[-0.15, 0, 0], stiffness=100, drawSize=0.12)
+    mbs.CreateSpringDamper(itemNumbers=[oGround, oBody], localPosition1=[-0.15, 0, 0], stiffness=100, drawSize=0.12)
     return View(0.45, -0.4)
 
 
@@ -359,7 +359,7 @@ def _(SC, mbs):
     Floor(mbs, y=-0.25, size=2, center=[0.6, 0, 0])
     oGround = Wall(mbs, [-0.05, 0, 0])
     oBody = Block(mbs, [1.0, 0.2, 0.2])
-    mbs.CreateCartesianSpringDamper(bodyNumbers=[oGround, oBody], localPosition1=[-0.15, 0, 0], stiffness=[100, 100, 100],
+    mbs.CreateCartesianSpringDamper(itemNumbers=[oGround, oBody], localPosition1=[-0.15, 0, 0], stiffness=[100, 100, 100],
                                     drawSize=0.1)
     return View(0.45, -0.4)
 
@@ -369,7 +369,7 @@ def _(SC, mbs):
     Floor(mbs, y=-0.25, size=2, center=[0.6, 0, 0])
     oGround = Wall(mbs, [-0.05, 0, 0])
     oBody = Block(mbs, [1.0, 0, 0], rotation=RotationMatrixY(0.3))
-    mbs.CreateRigidBodySpringDamper(bodyNumbers=[oGround, oBody], localPosition1=[-0.15, 0, 0],
+    mbs.CreateRigidBodySpringDamper(itemNumbers=[oGround, oBody], localPosition1=[-0.15, 0, 0],
                                     stiffness=np.eye(6)*100, drawSize=0.15)
     return View(0.45, -0.4)
 
@@ -381,7 +381,7 @@ def _(SC, mbs):
     oBody = mbs.CreateRigidBody(inertia=InertiaCylinder(1000, 0.4, 0.15, axis=0), referenceHT=exu.HT(translation=[0.5, 0, 0]),
                                 graphicsDataList=[graphics.Cylinder(pAxis=[-0.2, 0, 0], vAxis=[0.4, 0, 0], radius=0.15,
                                                                     color=graphics.color.steelblue, nTiles=48)])
-    mbs.CreateTorsionalSpringDamper(bodyNumbers=[oGround, oBody], position=[0.15, 0, 0], axis=[1, 0, 0],
+    mbs.CreateTorsionalSpringDamper(itemNumbers=[oGround, oBody], position=[0.15, 0, 0], axis=[1, 0, 0],
                                     stiffness=10, drawSize=0.15)
     return View(0.45, -0.5)
 
@@ -392,7 +392,7 @@ def _(SC, mbs):
     oGround = Wall(mbs, [0, 0.05, 0], size=[0.3, 0.1, 0.3])
     oMass = mbs.CreateMassPoint(referencePosition=[0.6, -0.7, 0], mass=1,
                                 graphicsDataList=[graphics.Sphere(radius=0.1, color=graphics.color.red, nTiles=32)])
-    mbs.CreateDistanceConstraint(bodyNumbers=[oGround, oMass], drawSize=0.03)
+    mbs.CreateDistanceConstraint(itemNumbers=[oGround, oMass], drawSize=0.03)
     return View(0.3, -0.5)
 
 
@@ -496,7 +496,7 @@ def _(SC, mbs):
     oGround = mbs.CreateGround(graphicsDataList=[graphics.Sphere(radius=0.5, color=graphics.color.lightgrey, nTiles=48)])
     oBall = mbs.CreateRigidBody(inertia=InertiaSphere(1, 0.15), referenceHT=exu.HT(translation=0.65*np.array([0.3, 0.3, 0.27])/np.linalg.norm([0.3, 0.3, 0.27])),
                                 graphicsDataList=[graphics.Sphere(radius=0.15, color=graphics.color.red, nTiles=32)])
-    mbs.CreateSphereSphereContact(bodyNumbers=[oGround, oBall], spheresRadii=[0.5, 0.15], contactStiffness=1e5,
+    mbs.CreateSphereSphereContact(itemNumbers=[oGround, oBall], spheresRadii=[0.5, 0.15], contactStiffness=1e5,
                                   contactDamping=1e3)
     return View(0.35, -0.5)
 

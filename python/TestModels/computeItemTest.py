@@ -35,8 +35,8 @@ b0 = mbs.CreateRigidBody(inertia=inertia, referencePosition=[0.2, 0, 0], nodeTyp
                          initialAngularVelocity=[0, 0, 1], gravity=[0, -9.81, 0], returnDict=True)
 b1 = mbs.CreateRigidBody(inertia=inertia, referencePosition=[0.6, 0, 0], nodeType=exu.NodeType.RotationRxyz,
                          gravity=[0, -9.81, 0], returnDict=True)
-oJoint = mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0['bodyNumber']], position=[0, 0, 0], axis=[0, 0, 1])
-oSpring = mbs.CreateSpringDamper(bodyNumbers=[b0['bodyNumber'], b1['bodyNumber']], localPosition0=[0.2, 0, 0],
+oJoint = mbs.CreateRevoluteJoint(itemNumbers=[oGround, b0['bodyNumber']], position=[0, 0, 0], axis=[0, 0, 1])
+oSpring = mbs.CreateSpringDamper(itemNumbers=[b0['bodyNumber'], b1['bodyNumber']], localPosition0=[0.2, 0, 0],
                                  localPosition1=[-0.2, 0, 0], stiffness=1e3, damping=1)
 p = [0.2, 0, 0] #a point of the first body
 marker = mbs.AddMarker(MarkerBodyRigid(bodyNumber=b0['bodyNumber'], localPosition=p))

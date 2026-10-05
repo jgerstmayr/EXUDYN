@@ -43,7 +43,7 @@ def CreateSystem(mbs, pOff, color0):
 
     #ground body and marker
     oGround = mbs.CreateGround()
-    mbs.CreateRevoluteJoint(bodyNumbers=[oGround, b0], 
+    mbs.CreateRevoluteJoint(itemNumbers=[oGround, b0], 
                             position=p0, axis=[0,0,1],
                             axisRadius=0.01, axisLength=0.1)
     mbs.Assemble()

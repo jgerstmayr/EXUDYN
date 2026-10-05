@@ -71,8 +71,8 @@ oGround = mbs.CreateGround(referencePosition=[0,0,0],
                            graphicsDataList=[gGround])
 
 #joints:
-mbs.CreateSphericalJoint(bodyNumbers=[mBoundary00, oGround], jointRadius = W/4)
-mbs.CreateSphericalJoint(bodyNumbers=[mBoundary01, mBoundary10], jointRadius = W/4)
+mbs.CreateSphericalJoint(itemNumbers=[mBoundary00, oGround], jointRadius = W/4)
+mbs.CreateSphericalJoint(itemNumbers=[mBoundary01, mBoundary10], jointRadius = W/4)
 
 mbs.Assemble()
 simulationSettings = exu.SimulationSettings() #takes currently set values or default values

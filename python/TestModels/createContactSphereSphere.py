@@ -40,7 +40,7 @@ oMass2 = mbs.CreateMassPoint(
     color=exu.graphics.color.red,
 )
 
-mbs.CreateSphereSphereContact(bodyNumbers=[oMass1, oMass2],
+mbs.CreateSphereSphereContact(itemNumbers=[oMass1, oMass2],
                               spheresRadii =[radius,radius],
                               contactStiffness=1e4,
                               dynamicFriction=0,

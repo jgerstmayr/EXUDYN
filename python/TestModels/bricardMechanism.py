@@ -78,26 +78,26 @@ for i, p in enumerate(listP):
         b0 = oGround
 
     if False: #True works less good
-        mbs.CreateRevoluteJoint(bodyNumbers=[listBodies[-1], b0], 
+        mbs.CreateRevoluteJoint(itemNumbers=[listBodies[-1], b0], 
                                 position=p, 
                                 axis=listRotAxes[i],
                                 axisRadius=r, axisLength=1.1*r)
     else:
         #using one GenericJoint works slightly better in full Newton case than pure revolute joints
         if i != 5:
-            mbs.CreateRevoluteJoint(bodyNumbers=[listBodies[-1], b0], 
+            mbs.CreateRevoluteJoint(itemNumbers=[listBodies[-1], b0], 
                                     position=p, 
                                     axis=listRotAxes[i],
                                     axisRadius=r, axisLength=1.1*r)
         else:
-            mbs.CreateGenericJoint(bodyNumbers=[listBodies[-1], b0], 
+            mbs.CreateGenericJoint(itemNumbers=[listBodies[-1], b0], 
                                     position=p,
                                     constrainedAxes=[1,1,1, 0,1,1],
                                     axesRadius=r, axesLength=1.1*r)
 
             # # as this mechanism contains a redundant constraint and the standard solver cannot cope with that
             # # we have to use a flexible joint instead
-            # rbd=mbs.CreateRigidBodySpringDamper(bodyOrNodeList=[listBodies[-1], b0], 
+            # rbd=mbs.CreateRigidBodySpringDamper(itemNumbers=[listBodies[-1], b0], 
             #                         localPosition0=[ L,0,0],
             #                         localPosition1=[ 0,0,L],
             #                         stiffness=1e6*np.diag([1,1,1,0,1,1]),

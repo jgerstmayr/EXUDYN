@@ -11322,6 +11322,46 @@ the `Create...`/FEM functions, two arguments of `GeneticOptimization`, `Generate
     - **RG12.33.4** `exudev scripts` reads the library's deprecations from the same collection, so a user script that
       calls `AddRevoluteJoint` or passes `bodyList` is reported as well.
 
+<a id="plan-rg12-40"></a>
+#### RG12.40
+
+**RG12.40** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg12-40) *(group RG12; maintainer 2026-10-05: "Make a complete proposal ... so I can check and decide")* **The Create
+    functions name what they connect `itemNumbers`** (#2863, takes up #2337). A Create function that connects two items
+    takes bodies, nodes or markers in `bodyNumbers`, some also in `bodyOrNodeList` (and the `bodyList` of 1.11,
+    deprecated until 2029); the name says bodies where markers and nodes are as welcome. **Proposal, for decision:**
+    - **RG12.40.1** *(proposed)* **the interface**: `itemNumbers=[None, None]`, each entry an `ObjectIndex` (a body,
+      with its local position), a `NodeIndex` or a `MarkerIndex` (local position [0,0,0]); what an entry may be stays
+      what the function accepts today. `bodyNumbers` is taken, deprecated since 1.12, removed in 2031
+      (`DeprecatedArgument`, warning once at the line of the user); `bodyOrNodeList` is taken with the same warning,
+      which says "use itemNumbers"; `bodyList` stays as it is (removed in 2029). Two of them given at once raise a
+      `TypeError`. One helper, `ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList, bodyList)`,
+      replaces the naming part of `ProcessBodyNodeMarkerLists` and the checks of `JointPreCheckCalcBodyMarkers`, so
+      every function says the same in its errors.
+    - **RG12.40.2** *(proposed)* **the functions** - checked in `mainSystemExtensions.py`:
+
+      | function | today | accepts | proposal |
+      |---|---|---|---|
+      | CreateSpringDamper, CreateCartesianSpringDamper, CreateRigidBodySpringDamper, CreateDistanceConstraint | `bodyNumbers`, `bodyOrNodeList`, `bodyList` | body, node, marker | `itemNumbers` |
+      | CreateTorsionalSpringDamper, CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint, CreateGenericJoint | `bodyNumbers` | body, marker (rigid) | `itemNumbers`; option (a): also a rigid node (`MarkerNodeRigid`), which the spring-dampers already take |
+      | CreateSphereSphereContact, CreateSphereQuadContact, CreateSphereTriangleContact | `bodyNumbers`, `bodyOrNodeList` | body, node | `itemNumbers` - not in the list of the maintainer, but the same arguments |
+      | CreateCoordinateConstraint | `bodyNumbers` | body, or None for the ground | `itemNumbers` with a body or a node (`MarkerNodeCoordinate`), which is #2337 |
+      | CreateRollingDisc, CreateRollingDiscPenalty | `bodyNumbers` | bodies only (ground and disc) | option (b): keep `bodyNumbers`, or `itemNumbers` for one name everywhere |
+      | CreateForce, CreateTorque | `bodyNumber` | body, marker | option (c): keep, or `itemNumber` |
+    - **RG12.40.3** *(proposed)* **scripts**: the script checker reports `bodyNumbers=` and `bodyOrNodeList=` in these
+      calls and `exudev scripts --fix` writes `itemNumbers=`; the repository is rewritten with it - 169 lines with
+      `bodyNumbers=` in 69 files of the examples, test models, MiniExamples, notebooks and the manual, 9 with
+      `bodyOrNodeList=` - and the declared deprecations of the library (#2807) list both arguments.
+    - **RG12.40.4** *(proposed)* **tests and documentation**: a test model calls each function with `itemNumbers` of
+      each kind it accepts, with `bodyNumbers` and `bodyOrNodeList` (one warning each, same result) and with two of
+      them (`TypeError`); the docstrings describe `itemNumbers` and name the deprecated arguments last;
+      `revisions.md` says it under *What is new to use*.
+    - Decisions: options (a), (b), (c), and whether the contacts and `CreateCoordinateConstraint` are included.
+
+  *Done with the decisions of the maintainer (2026-10-05), which changed the proposal*: `bodyOrNodeList` is not
+  accepted (a `TypeError` that says "use itemNumbers") and `bodyList` is removed, instead of warnings; (a) the joints
+  take no node; (b) the rolling discs keep `bodyNumbers`; (c) `CreateForce`/`CreateTorque` take `itemNumber`,
+  with nodes; `CreateCoordinateConstraint` and the sphere contacts are included.
+
 <a id="plan-rg13-2"></a>
 #### RG13.2
 
@@ -15557,3 +15597,51 @@ Checked with the graphics data (`SC.renderer.GetGraphicsData()`) of a clamped pl
 combinations draw, `drawNormal` adds the envelope and the stems; the graphics references of the plate MiniExamples
 (`ObjectANCFThinPlate`, `NodePointSlope12`) are recorded again for the finer tiling; `test_itemDrawing` finds the six new
 settings declared for the drawing; `parameterConversionTest` has them.
+
+<a id="rg12-40"></a>
+### RG12.40 — the Create functions take `itemNumbers` (2026-10-05, #2863, #2337)
+
+*(Maintainer 2026-10-05, on the proposal: "bodyOrNodeList shall not 'work' anymore. It shall raise an exception, but
+with the clear message 'use itemNumbers'"; "bodyList shall be removed"; "the functionality can & shall be drastically
+simplified ... It only has to process the two remaining cases of bodyNumbers and itemNumbers"; no nodes in the joints;
+the rolling discs "rigid bodies only"; forces and torques "also use itemNumbers, adding also nodes"; CreateCoordinateConstraint
+"itemNumbers with bodies and nodes"; the sphere contacts "with only the options that make sense (sphere can be attached to a
+marker, node or body; triangle has to be on a body with localPosition)"; "torus on a rigid body only" - read as the
+rolling discs, which stay with bodies.)*
+
+**The helpers** (`mainSystemExtensions.py`, all internal): `ItemKind` says what an entry is (an int is a body),
+`ItemNumbersArgument` returns `itemNumbers` or the deprecated `bodyNumbers` and raises the `TypeError` for
+`bodyOrNodeList` and for both names at once, `CheckItemNumbers(where, itemNumbers, kinds, localPositions)` checks the
+kinds a function accepts per side and the local position [0,0,0] of a node or a marker (a `ValueError`, through
+`RaiseTypeError`, as every other argument check of these functions), `ItemOutput` and `ItemMarker` give the reference
+output and the marker of one item. `ProcessBodyNodeMarkerLists` is gone; `GetMarkersPosRot` and
+`JointPreCheckCalcBodyMarkers` are written on the helpers. Each Create function reports `bodyNumbers` itself with
+`DeprecatedArgument(..., function='MainSystem.Create...')`, so `docs/generated/deprecations.md` lists the deprecated
+argument per function (15 entries, since 1.12.337, until 2031) in place of the one entry of the helper for `bodyList`.
+
+**What each takes** (the docstrings say it): the spring-dampers and `CreateDistanceConstraint` a body, node or marker;
+the joints and `CreateTorsionalSpringDamper` a body or a rigid marker (a position marker for the spherical joint), the
+marker setting the joint position; `CreateCoordinateConstraint` a body, a node, or None or a ground object for the
+ground; `CreateSphereSphereContact` a body, node or marker for both spheres, `CreateSphereQuadContact` and
+`CreateSphereTriangleContact` that for the sphere and a body for the quad or triangle; `CreateForce` and
+`CreateTorque` one body, node or marker in `itemNumber` (a rigid marker for `bodyFixed` and for the torque).
+
+**Fixed on the way, as the code was rewritten**: `CreateDistanceConstraint` took a marker as a node; ints were bodies in
+the checks and nodes in the marker creation; `CreateCoordinateConstraint` on a body with several nodes put the marker on
+the last node with the body's coordinate index - it now finds the node and its own coordinate (a cable: coordinate 5 is
+coordinate 1 of the second node, tested); `CreateTorsionalSpringDamper` rejected the `position=[]` that a marker needs;
+`CreateRigidBodySpringDamper` added an unused second marker for body 1; the restitution coefficient of the sphere-quad and
+sphere-triangle contacts was checked under the stiffness exponent. No reference value of the test suite changed.
+
+**Scripts**: `tools/checkUserScripts.py` lists `bodyOrNodeList` and `bodyList` as removed keywords and `--fix` renames
+them to `itemNumbers`; a deprecated argument of the library whose replacement is a name is renamed by `--fix` as well
+(also `factorValue1`, `radiusSphere`, `intrinsicFormulation`). The repository was rewritten with these fixes, limited to
+the four names (193 calls in the examples, test models, MiniExamples, performance models and pytest files), and the
+calls in comments, docstrings, definitions and notebooks by a line-wise pattern (17 more); the six notebooks were run
+again. `CreateRollingDisc(bodyNumbers=...)` and `MarkerBodiesRelative...(bodyNumbers=...)` stay.
+
+**Tests**: `python/TestModels/createItemNumbersTest.py` - each function with each kind it accepts gives the same motion
+(mass point: body, node, marker; rigid body: body, marker, and node where accepted), a rejected kind and a node with a
+local position raise, the cable coordinate, `bodyNumbers`/`bodyNumber` warn once and give the same result,
+`bodyOrNodeList` and two names raise the `TypeError`; `libraryDeprecationTest.py` tests `bodyNumbers` in place of
+`bodyList`; `test_checkUserScripts.py` the fix. Found on the way: `exudev notebooks` has no `--env` (#2865, RG10.16).

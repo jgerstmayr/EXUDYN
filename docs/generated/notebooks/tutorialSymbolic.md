@@ -41,11 +41,11 @@ massPoint = mbs.CreateMassPoint(referencePosition=[L, 0, 0],
                                 initialDisplacement=[u0, 0, 0],
                                 initialVelocity=[v0, 0, 0],
                                 mass=mass)
-csd = mbs.CreateCartesianSpringDamper(bodyNumbers=[objectGround, massPoint],
+csd = mbs.CreateCartesianSpringDamper(itemNumbers=[objectGround, massPoint],
                                       stiffness=[k, k, k],
                                       damping=[d, 0, 0],
                                       offset=[L, 0, 0])
-load = mbs.CreateForce(bodyNumber=massPoint, loadVector=[f, 0, 0])
+load = mbs.CreateForce(itemNumber=massPoint, loadVector=[f, 0, 0])
 sMass = mbs.AddSensor(SensorBody(bodyNumber=massPoint, storeInternal=True,
                                  outputVariableType=exu.OutputVariableType.Position))
 ```

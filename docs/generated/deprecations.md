@@ -4,7 +4,7 @@
 
 Every name of Exudyn that is deprecated, with the version it was deprecated in and the year it is removed. A use warns once per session and is counted in `exudyn.sys['deprecationUse']`; `tools/checkDeprecations.py` fails for a deprecation whose year has come, which then has to be removed. How to deprecate something: `CODING_STYLE.md` §10.5. The version is 1.11.0 for what was deprecated before the history of this repository begins.
 
-## Functions and arguments of the Python library (26)
+## Functions and arguments of the Python library (40)
 
 | name | since | removed in | instead | declared in |
 |---|---|---|---|---|
@@ -19,7 +19,6 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `graphics.BrickXYZ` | 1.11.0 | 2029 | graphics.Brick(centerPoint, size) | python/exudyn/graphics.py |
 | `graphicsDataUtilities.GraphicsDataOrthoCubeLines` | 1.11.0 | 2029 | graphics.Brick(centerPoint, size, addFaces=False, addEdges=True) | python/exudyn/graphicsDataUtilities.py |
 | `graphicsDataUtilities.GraphicsDataRectangle` | 1.11.0 | 2029 | graphics.Lines with the five corner points | python/exudyn/graphicsDataUtilities.py |
-| `misc.mainSystemExtensions.ProcessBodyNodeMarkerLists.bodyList` | 1.11.0 | 2029 | bodyNumbers | python/exudyn/misc/mainSystemExtensions.py |
 | `processing.GeneticOptimization.numberOfChildren` | 1.11.0 | 2029 | populationSize and elitistRatio | python/exudyn/processing.py |
 | `processing.GeneticOptimization.survivingIndividuals` | 1.11.0 | 2029 | populationSize and elitistRatio | python/exudyn/processing.py |
 | `rigidBodyUtilities.AddPrismaticJoint` | 1.11.0 | 2029 | mbs.CreatePrismaticJoint | python/exudyn/rigidBodyUtilities.py |
@@ -28,12 +27,27 @@ Every name of Exudyn that is deprecated, with the version it was deprecated in a
 | `robotics.mobile.MecanumWheelVelocity2XYphi` | 1.11.0 | 2029 | MobileKinematics | python/exudyn/robotics/mobile.py |
 | `robotics.mobile.MecanumXYphi2WheelVelocities` | 1.11.0 | 2029 | MobileKinematics | python/exudyn/robotics/mobile.py |
 | `robotics.models.LinkDictModDHKK2Robot` | 1.11.0 | 2029 | LinkDict2Robot | python/exudyn/robotics/models.py |
+| `MainSystem.CreateCartesianSpringDamper.bodyNumbers` | 1.12.337 | 2031 | itemNumbers | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateCoordinateConstraint.bodyNumbers` | 1.12.337 | 2031 | itemNumbers | python/exudyn/misc/mainSystemExtensions.py |
 | `MainSystem.CreateCoordinateConstraint.factorValue1` | 1.12.258 | 2031 | factor1 | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateDistanceConstraint.bodyNumbers` | 1.12.337 | 2031 | itemNumbers | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateForce.bodyNumber` | 1.12.337 | 2031 | itemNumber | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateGenericJoint.bodyNumbers` | 1.12.337 | 2031 | itemNumbers | python/exudyn/misc/mainSystemExtensions.py |
 | `MainSystem.CreateMassPoint.physicsMass` | 1.12.258 | 2031 | mass | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreatePrismaticJoint.bodyNumbers` | 1.12.337 | 2031 | itemNumbers | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateRevoluteJoint.bodyNumbers` | 1.12.337 | 2031 | itemNumbers | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateRigidBodySpringDamper.bodyNumbers` | 1.12.337 | 2031 | itemNumbers | python/exudyn/misc/mainSystemExtensions.py |
 | `MainSystem.CreateRigidBodySpringDamper.intrinsicFormulation` | 1.12.258 | 2031 | useIntrinsicFormulation | python/exudyn/misc/mainSystemExtensions.py |
 | `MainSystem.CreateRollingDiscPenalty.rollingFrictionViscous` | 1.12.258 | 2031 | rollingViscousFriction | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateSphereQuadContact.bodyNumbers` | 1.12.337 | 2031 | itemNumbers | python/exudyn/misc/mainSystemExtensions.py |
 | `MainSystem.CreateSphereQuadContact.radiusSphere` | 1.12.258 | 2031 | sphereRadius | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateSphereSphereContact.bodyNumbers` | 1.12.337 | 2031 | itemNumbers | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateSphereTriangleContact.bodyNumbers` | 1.12.337 | 2031 | itemNumbers | python/exudyn/misc/mainSystemExtensions.py |
 | `MainSystem.CreateSphereTriangleContact.radiusSphere` | 1.12.258 | 2031 | sphereRadius | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateSphericalJoint.bodyNumbers` | 1.12.337 | 2031 | itemNumbers | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateSpringDamper.bodyNumbers` | 1.12.337 | 2031 | itemNumbers | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateTorque.bodyNumber` | 1.12.337 | 2031 | itemNumber | python/exudyn/misc/mainSystemExtensions.py |
+| `MainSystem.CreateTorsionalSpringDamper.bodyNumbers` | 1.12.337 | 2031 | itemNumbers | python/exudyn/misc/mainSystemExtensions.py |
 
 ## Functions of the C++ module (26)
 
