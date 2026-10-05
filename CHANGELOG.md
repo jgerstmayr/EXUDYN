@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 304 | 1.12.338 |
+| 1.12 | Metheney | 305 | 1.12.339 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.339** `TESTING` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the PDF documentation is built in no gate (#2856)
+  - description: The maintainer, 2026-10-05: a PDF check in the docs gate. Today exudev docs builds only the html; the PDF (exudev docs --pdf, about 2.5 min) is a release artifact, so a table that runs into the footer, an overfull box, a formula LaTeX cannot set or a missing figure surfaces only when someone reads the PDF. Proposal: exudev docs --pdf --check, run with the gates when the documentation changed, that fails on LaTeX errors and reports overfull boxes and other warnings of the LaTeX log against a baseline.
+  - **notes:** exudev docs --check builds the PDF and fails on a new LaTeX problem against tools/pdfLogBaseline.json - an error, a missing file or character, an undefined reference, a float or box too large for its page, a line much too wide - with its page; part of the docs gate for changes to docs/, definitions/ or conf.py (revision2026b step RG3.36)
+  - date resolved: **2026-10-05 17:30**, date raised: 2026-10-05
 - **1.12.338** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudev notebooks fails: no --env option (#2865)
   - description: exudev notebooks stops with AttributeError: 'Namespace' object has no attribute 'env' - the subparser of notebooks has no --env although Notebooks() in commands.py reads options.env and its help names --env venvP313; found in RG12.40, where tools/runNotebooks.py was run directly instead
   - **notes:** exudev notebooks takes --env (and --py) again; it stopped with an AttributeError without it (revision2026b step RG10.16)

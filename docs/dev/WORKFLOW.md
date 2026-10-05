@@ -33,9 +33,14 @@ Documentation build, from the repository root:
 sphinx-build -b html . _build -E
 ```
 
-The **printable documentation** is a separate thing and is built only for a release:
-`exudev docs --pdf` needs a LaTeX installation with `xelatex` and `latexmk`, writes
-`dist/exudynDocumentationV<version>.pdf`, and is in **no gate** (decision D17).
+The **printable documentation** is a release artifact: `exudev docs --pdf` needs a LaTeX installation with
+`xelatex`, writes `dist/exudynDocumentationV<version>.pdf` (decision D17), and takes about 2.5 minutes.
+`exudev docs --check` builds it and checks its LaTeX log against `tools/pdfLogBaseline.json`
+(`tools/checkPdfLog.py`): an error, a missing file or character, an undefined reference, a float or a box too large
+for its page and a line more than 20pt too wide fail unless the baseline has them, and the report gives the page.
+It is part of gate 4 for a change to `docs/`, `definitions/` or `conf.py` (#2856). A finding that is accepted - or
+one fixed, which the check reports as gone - goes into the baseline with `python tools/checkPdfLog.py
+--write-baseline`, committed with the change.
 
 ### Dependencies
 
@@ -792,6 +797,8 @@ with `exudev examples` for releases and large steps only.
 
 - `docs/manual/*.md`, wherever user-visible behaviour changed; the generated pages follow from
   `definitions/` and the docstrings.
+- `exudev docs` builds without a warning; for a change to `docs/`, `definitions/` or `conf.py`,
+  `exudev docs --check` - the PDF as well, its log against the baseline (§1, #2856).
 - The step status in `docs/revision/exudynRevisionPlan2026.md`. If a fact in info document §3 turned out to
   be wrong, correct it there rather than working around it.
 

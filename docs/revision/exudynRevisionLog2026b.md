@@ -15654,3 +15654,32 @@ The subparser of `notebooks` takes the version parser (`--py`, `--env`) like `sc
 `testEveryCommandThatReadsEnvHasTheOption` (`test_exudev.py`) builds the parsers and checks, for every command whose
 function reads `options.env`, that its parser declares it - it failed for `notebooks` before the change and finds the
 next such omission.
+
+<a id="rg3-36"></a>
+### RG3.36 — the PDF checked with the documentation (2026-10-05, #2856)
+
+*(Maintainer 2026-10-05: "Do also RG10.16 and RG3.36" - the proposal as written; of its open question, the check runs
+for a change to `docs/`, `definitions/` or `conf.py`, not with every docs gate, as the build takes 2.5 minutes.)*
+
+**What the log has.** The PDF of 1351 pages leaves 2428 overfull boxes and 4789 underfull ones in the log of xelatex;
+nearly all are harmless - code lines a few points wide, table cells sphinx sets loosely - which is why a check against
+zero cannot work and the check is against a baseline. What counts (`tools/checkPdfLog.py`): an engine error (`!`) and
+a missing file always; an undefined reference or citation, a missing character, a float too large for its page
+(today: the figure of the visualization settings dialog, 7pt), a box too high for its page (9 code blocks, at most
+3pt) and a line wider than the text by more than 20pt (485, mostly long code lines and formulas in tables) if the
+baseline does not have them as often. Under 20pt are 1700 lines of a few points, not visible.
+
+**A finding is known by its text**: the line of the .tex the log names moves with every change, so the key is the
+text of that line - for a line that only structures (the start of a table cell, an `\end{...}`, a short line), the
+next line after a start and the line before after an end, which is the cell's text. 495 findings fall on 336 keys;
+the baseline counts each key, so one more of a known kind is still found. The page is the one the log counts
+(`[123` when a page is shipped out), close to the printed number.
+
+**The command**: `exudev docs --check` builds html and PDF, collects the PDF into `dist/` and then runs the check, which
+fails the run with the new findings and their pages; findings of the baseline that are gone are reported, and
+`python tools/checkPdfLog.py --write-baseline` accepts the state, committed with the change. `WORKFLOW.md` names it in
+§1 and in gate 4; D17 of the information document is amended (before: never part of a gate).
+
+**Tests**: `python/testing/test_checkPdfLog.py` - the kinds and keys of a log and .tex as strings, the table cell known
+by its text from its start and its end, and that only what the baseline lacks fails, errors always. The baseline was
+written from the build of this commit and the check passes on it.

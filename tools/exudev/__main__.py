@@ -372,8 +372,8 @@ def BuildParsers():
     docs = subParsers.add_parser('docs', parents=[globalParser, versionParser],
         help='build the html documentation with sphinx',
         description='sphinx-build -b html . _build -E, from the repository root. With --pdf it '
-                    'also builds the printable documentation, which is a release artifact and not '
-                    'part of any gate.')
+                    'also builds the printable documentation, a release artifact; --check checks it '
+                    'as well, which is the gate of a change to docs/, definitions/ or conf.py.')
     docs.add_argument('--keep-cache', action='store_true',
                       help='incremental build (drop -E); faster, but stale pages are possible')
     docs.add_argument('--no-strict', action='store_true',
@@ -382,6 +382,10 @@ def BuildParsers():
     docs.add_argument('--pdf', action='store_true',
                       help='also build the pdf documentation into dist/ (needs a LaTeX '
                            'installation; everything except the example and test model listings)')
+    docs.add_argument('--check', action='store_true',
+                      help='with --pdf (which it implies): check the LaTeX log against tools/pdfLogBaseline.json and '
+                           'fail on a new finding - an error, a missing file or character, an undefined reference, a '
+                           'float or box too large for its page, a line much too wide (tools/checkPdfLog.py, #2856)')
     docs.add_argument('--open', action='store_true', help='open _build/index.html afterwards')
     docs.set_defaults(function=commands.Docs)
 

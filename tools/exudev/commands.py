@@ -1044,6 +1044,9 @@ def Docs(options):
     steps = [Step('html documentation (' + environment + ')',
                   argv=runner.InEnvironment(environment, argv, options), cwd=root)]
 
+    if getattr(options, 'check', False):
+        options.pdf = True               #the check is of the pdf (#2856)
+
     if options.pdf:
         #TWO steps rather than sphinx's own "-M latexpdf": that shortcut runs make, and on Windows
         #it calls a make.bat that needs a make which MiKTeX does not bring. Doing it in the open
@@ -1069,6 +1072,10 @@ def Docs(options):
         steps += [Step('collect the pdf into dist/', action=CollectDocumentationPdf,
                        note='copy ' + pdfBuildDirectory + '/latex/exudynDocumentation.pdf to '
                             + 'dist/exudynDocumentationV<version>.pdf, beside the wheels')]
+
+        if getattr(options, 'check', False): #the log against the baseline (#2856)
+            steps += [Step('pdf: check the latex log (' + environment + ')',
+                           argv=runner.InEnvironment(environment, ['python', 'tools/checkPdfLog.py'], options), cwd=root)]
 
     if options.open:
         indexFile = os.path.join(root, '_build', 'index.html')

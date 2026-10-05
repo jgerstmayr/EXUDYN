@@ -548,14 +548,15 @@ each parameter into the table")* **A settings table names each item by its name*
 are said once above the table, "Reached as `simulationSettings.timeIntegration.newton.numericalDifferentiation`, ...".
 
 <a id="rg3-36"></a>
-**RG3.36** *(group RG3; maintainer 2026-10-05: "add 'A PDF check in the docs gate' as a step")* **The PDF is checked
-    with the documentation** (#2856). `exudev docs` builds the html; the PDF (`exudev docs --pdf`, about 2.5 min) is
+**RG3.36** **DONE 2026-10-05** (#2856) — [log](exudynRevisionLog2026b.md#rg3-36) *(group RG3; maintainer 2026-10-05: "add 'A PDF check in the docs gate' as a step"; "Do also ... RG3.36")* **The PDF is checked
+    with the documentation**. `exudev docs` builds the html; the PDF (`exudev docs --pdf`, about 2.5 min) is
     a release artifact, so what RG3.35 fixed - tables running into the footer, a column one word wide, a table row
     broken over lines - showed only to a reader of the PDF. Proposal: `exudev docs --pdf --check`, run as a gate
     when the documentation changed (or before a release), that fails on a LaTeX error and on a new warning of the
     LaTeX log - overfull boxes, undefined references, missing figures - against a baseline kept in the repository,
     and reports the pages. Open: whether it runs with every docs gate (+2.5 min) or only before a commit that touches
-    `docs/`, `definitions/` or `conf.py`.
+    `docs/`, `definitions/` or `conf.py`. *Done as proposed, the second way*: `exudev docs --check` (implies `--pdf`),
+    `tools/checkPdfLog.py`, the baseline `tools/pdfLogBaseline.json`; gate 4 of `WORKFLOW.md` and D17 say when.
 
 
 ## RG4 — Implementation problems and bugs
@@ -1934,7 +1935,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #2848, #2849 | the open bugs before 1.13: `GeneralContact`, the contact model of its implicit solver (decision) and the torque on triangle bodies |
 | RG12.39 | #2850 | a restart from the restart file: how it works with a model script, then a proposal |
-| RG3.36 | #2856 | the PDF checked with the documentation |
 | RG4.19 | #692, #1290, #1337, #2851 | the open bugs and checks, evaluated: options and decisions (RG4.19.1-.9) |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |
