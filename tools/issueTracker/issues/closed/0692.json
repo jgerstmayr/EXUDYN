@@ -1,0 +1,15 @@
+{
+  "number": 692,
+  "title": "CSystem",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "check JacobianAE: jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE_ODE2_t ... if _t is correctly used",
+  "dateRaised": "2021-06-28",
+  "deadline": "2021-08-27",
+  "dateResolved": "2026-10-05 18:49",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "The numerical Jacobian of algebraic equations (numericalDifferentiation.forAE) adds for each constraint row only the transposed block the residual has - dC/dq for position-level, dC/dq_t for velocity-level constraints; the analytic one was right (revision2026b step RG4.19.6)",
+  "resolvedInVersion": "1.12.341"
+}

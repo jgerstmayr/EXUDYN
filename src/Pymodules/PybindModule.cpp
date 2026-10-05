@@ -587,7 +587,7 @@ PYBIND11_MODULE(exudynCPP, m) {
 
 		.def("NumberOfSystems", [](const MainSystemContainer& msc) {return msc.GetMainSystems().NumberOfItems(); }, "get number of MainSystems")
 
-		.def("GetSystem", &MainSystemContainer::GetMainSystem, "Get main system i from system container", py::return_value_policy::reference) //added reference options as otherwise system is copied
+		.def("GetSystem", &MainSystemContainer::GetMainSystem, "Get main system i from system container", py::return_value_policy::reference, py::keep_alive<0, 1>()) //a reference, not a copy; and it keeps its container alive, as AddSystem does (#2851)
 
 		.def("GetDictionary", &MainSystemContainer::GetDictionary, "Get dictionary which represents system container; for pickle and copy")
 

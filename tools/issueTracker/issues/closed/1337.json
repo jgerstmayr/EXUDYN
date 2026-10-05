@@ -1,0 +1,15 @@
+{
+  "number": 1337,
+  "title": "Newton",
+  "author": "JG",
+  "status": "RESOLVED",
+  "type": "CHECK",
+  "effort": "MEDIUM",
+  "description": "C++: check if SysError(s) in CSolverBase::Newton() can be changed into regular failure and step reduction for adaptiveStep",
+  "dateRaised": "2022-12-26",
+  "deadline": "2023-06-24",
+  "dateResolved": "2026-10-05 18:49",
+  "resolvedAuthor": "Claude-JG",
+  "releaseNotes": "With adaptiveStep or automatic step size, a singular system Jacobian is a failed step, which is reduced; a singularity of the model ends the run at the minimum step size with the causing coordinate (revision2026b step RG4.19.4)",
+  "resolvedInVersion": "1.12.343"
+}

@@ -97,6 +97,8 @@ simulationSettingsRenamesTest
 itemParameterRenamesTest
 binarySolutionFileTest
 rotationMarkerDeprecationTest
+contactFrictionCircleCable2DnoFrictionTest
+systemContainerLifetimeTest
 restartFileTest
 createItemNumbersTest
 libraryDeprecationTest

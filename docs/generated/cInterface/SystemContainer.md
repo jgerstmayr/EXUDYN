@@ -21,10 +21,10 @@ mbs = SC.AddSystem()
 The class **SystemContainer** has the following **functions and structures**:
 
 - **`Reset()`**: delete all multibody systems and reset SystemContainer (including graphics); this also releases SystemContainer from the renderer, which requires SC.renderer.Attach() to be called in order to reconnect to rendering; a safer way is to delete the current SystemContainer and create a new one (SC=SystemContainer() )
-- **`AddSystem()`**: add a new computational system
+- **`AddSystem()`**: add a new computational system; the returned MainSystem keeps the system container alive
 - **`AppendSystem(mainSystem)`**: append an existing MainSystem - a copy, or the system of another container - to the system container; returns its index in the container. The container keeps the system alive but does not own it: SC.Reset() and the end of the container leave it to its owner, and the system of another container gets that container back (#2842)
 - **`NumberOfSystems()`**: obtain number of multibody systems available in system container
-- **`GetSystem(systemNumber)`**: obtain multibody systems with index from system container
+- **`GetSystem(systemNumber)`**: obtain multibody systems with index from system container; the returned MainSystem keeps the system container alive (#2851)
 - **`visualizationSettings`**: this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. EXAMPLE: `SC = exu.SystemContainer(); SC.visualizationSettings.autoFitScene=False`
 - **`GetDictionary()`**: [UNDER DEVELOPMENT]: return the dictionary of the system container data, e.g., to copy the system or for pickling
 - **`SetDictionary(systemDict)`**: [UNDER DEVELOPMENT]: set system container data from given dictionary; used for pickling

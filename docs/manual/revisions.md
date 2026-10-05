@@ -199,6 +199,14 @@ The same holds for item parameters: a renamed one is still taken under its old n
 dictionary and by `mbs.GetObjectParameter`/`SetObjectParameter` - with a warning naming the new one; the page of the
 item lists it (#2589).
 
+**A singular Jacobian with adaptive steps reduces the step.** With `adaptiveStep` (the default) or automatic step size,
+the static and the implicit dynamic solvers take a singular system Jacobian as a failed step and reduce the step size,
+instead of stopping at once; a singularity of the model still ends the run, at the minimum step size, with the
+causing coordinate in the solver message and file (#1337). `SC.GetSystem(i)` keeps its `SystemContainer` alive, as
+`SC.AddSystem()` does, so that a system returned from a function works after the container went out of scope (#2851).
+`ObjectContactFrictionCircleCable2D` without a friction model - `frictionStiffness` and `frictionVelocityPenalty`
+zero - has no tangential force, also when its data node starts in slip (#1290).
+
 **A dynamic simulation continues from its restart file.** With `solution.restart.write` the solvers write the state
 every `solution.restart.writePeriod` and at the end, and with `solution.restart.continueIfAvailable` the same script,
 started again, continues from it - appending to its solution and sensor files -, for a job that is stopped and

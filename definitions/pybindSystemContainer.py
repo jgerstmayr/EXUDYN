@@ -48,7 +48,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='Reset', cName='Reset',
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='AddSystem', cName='AddMainSystem', 
-                        description="add a new computational system", 
+                        description="add a new computational system; the returned MainSystem keeps the system container alive", 
                         options='py::return_value_policy::reference',
                         returnType='MainSystem',
                         )
@@ -66,7 +66,7 @@ pb.DefPyFunctionAccess(cClass=classStr, pyName='NumberOfSystems', cName='NumberO
                         )
 
 pb.DefPyFunctionAccess(cClass=classStr, pyName='GetSystem', cName='GetMainSystem', 
-                        description="obtain multibody systems with index from system container",
+                        description="obtain multibody systems with index from system container; the returned MainSystem keeps the system container alive (#2851)",
                         argList=['systemNumber'],
                         argTypes=['int'],
                         returnType='MainSystem',

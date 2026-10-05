@@ -223,7 +223,7 @@ void CObjectContactFrictionCircleCable2D::ComputeODE2LHS(Vector& ode2Lhs, const 
 						fTangent += diffStickPos * parameters.frictionStiffness;
 					}
 
-					if (abs((int)isSlipStick) == absValueSlipCase)
+					if (abs((int)isSlipStick) == absValueSlipCase && (parameters.frictionStiffness != 0. || parameters.frictionVelocityPenalty != 0.)) //no friction model: no slip force, whatever state the data node holds (#1290)
 					{
 						//Escalona (2017, Simulation of the rope–sheave interaction) uses Sgn(diffStickPos); seems pretty same as Sgn(fTangent)
 						fTangent = parameters.frictionCoefficient*fabs(fNormal)*(Real)isSlipStick; // EXUstd::Sgn(diffStickPos);
@@ -567,7 +567,7 @@ void CObjectContactFrictionCircleCable2D::GetOutputVariableConnector(OutputVaria
 					fTangent += diffStickPos * parameters.frictionStiffness;
 				}
 
-				if (abs((int)isSlipStick) == absValueSlipCase)
+				if (abs((int)isSlipStick) == absValueSlipCase && (parameters.frictionStiffness != 0. || parameters.frictionVelocityPenalty != 0.)) //as in ComputeODE2LHS (#1290)
 				{
 					//Escalona (2017, Simulation of the rope–sheave interaction) uses Sgn(diffStickPos); seems pretty same as Sgn(fTangent)
 					fTangent = parameters.frictionCoefficient*fabs(fNormal)*(Real)isSlipStick; // EXUstd::Sgn(diffStickPos);

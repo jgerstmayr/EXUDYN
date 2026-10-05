@@ -330,6 +330,39 @@ def test_aSolverFailureReachesTheSolverFile(tmp_path):
     assert "singular" in fileText
 
 
+@pytest.mark.parametrize('adaptiveStep', [False, True])
+def test_aSingularJacobianIsAFailedStepWithAdaptiveSteps(tmp_path, adaptiveStep):
+    """#1337: with adaptive steps a singular Jacobian fails the step, which is reduced; a singularity of the system
+    stays and ends at the minimum step size, with the message in the solver file and the causing row; without
+    adaptive steps it raises at once, with the message"""
+    from exudyn.itemInterface import NodePoint, ObjectMassPoint, MarkerNodeCoordinate, LoadCoordinate
+
+    systemContainer = exu.SystemContainer()
+    mbs = systemContainer.AddSystem()
+    nodeNumber = mbs.AddNode(NodePoint(referenceCoordinates=[0., 0., 0.]))
+    mbs.AddObject(ObjectMassPoint(mass=1., nodeNumber=nodeNumber))
+    markerNumber = mbs.AddMarker(MarkerNodeCoordinate(nodeNumber=nodeNumber, coordinate=0))
+    mbs.AddLoad(LoadCoordinate(markerNumber=markerNumber, load=10.))  #nothing holds the body
+    mbs.Assemble()
+
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.solution.file.write = False
+    simulationSettings.staticSolver.verboseMode = 0
+    simulationSettings.staticSolver.verboseModeFile = 1
+    simulationSettings.staticSolver.adaptiveStep = adaptiveStep
+    simulationSettings.solution.solverInformationFileName = str(tmp_path / "static.txt")
+
+    with pytest.raises(exu.SolverError) as caught:
+        mbs.SolveStatic(simulationSettings)
+    assert ("singular" in str(caught.value)) == (not adaptiveStep)
+    assert mbs.sys['staticSolver'].conv.linearSolverFailed
+    assert mbs.sys['staticSolver'].conv.linearSolverCausingRow == 0
+
+    with io.open(str(tmp_path / "static.txt"), encoding="utf8") as solverFile:
+        fileText = solverFile.read()
+    assert "singular" in fileText and ("the step is reduced" in fileText) == adaptiveStep
+
+
 #+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #the two lists of classes must agree, and only one direction of that fails to compile
 

@@ -2,11 +2,15 @@
   "number": 2851,
   "title": "a MainSystem does not keep its SystemContainer alive",
   "author": "Claude-JG",
-  "status": "RAISED",
+  "status": "RESOLVED",
   "type": "CHECK",
   "effort": "LOW",
   "description": "SC.AddSystem() returns the MainSystem with return_value_policy::reference: a script that keeps mbs but drops SC (del SC, or SC created inside a function that returns mbs) works on a system the container has deleted. GetGeneralContact keeps its system alive since #1512 (reference_internal); the same for AddSystem/GetSystem would tie mbs to SC. Check what else depends on the current behaviour (SC.Reset, the renderer) before changing it.",
   "dateRaised": "2026-10-05",
   "deadline": "2027-04-03",
-  "file": "definitions/pybindSystemContainer.py"
+  "dateResolved": "2026-10-05 18:49",
+  "resolvedAuthor": "Claude-JG",
+  "file": "definitions/pybindSystemContainer.py",
+  "releaseNotes": "SC.GetSystem(i) keeps its SystemContainer alive, as SC.AddSystem() does (revision2026b step RG4.19.10)",
+  "resolvedInVersion": "1.12.344"
 }

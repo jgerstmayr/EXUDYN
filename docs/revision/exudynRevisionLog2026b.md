@@ -15754,3 +15754,46 @@ another system raises, a file at the end time computes nothing, and without a fi
 **Documentation**: the settings (`SolutionRestartSettings`, with `continueIfAvailable`) describe what is written and
 read; the user manual has *Continuing a simulation from its restart file* in *Exudyn basics*; `revisions.md` says it.
 The prototype `_InitializeFromRestartFile` of `basicUtilities.py`, for a format nothing wrote, is removed.
+
+<a id="rg4-19-4"></a>
+### RG4.19.4-.6, RG4.19.10 — the older bugs (2026-10-05, #692, #1290, #1337, #2851)
+
+*(Maintainer 2026-10-05: "Try to resolve the older bugs.")*
+
+**#1337, a singular Jacobian.** `CSolverBase::Newton` raised a `SysError` when the factorization of the Jacobian
+failed. With `adaptiveStep` or automatic step size it is now a failed Newton step - `linearSolverFailed`,
+`linearSolverCausingRow` set, the message with "the step is reduced" written by `VerboseWrite(1, ...)` to the solver
+file -, and `SolveSteps` reduces the step: a Jacobian singular in the iterate of a too large step may be regular in
+the next. A singularity of the model stays; the reduction ends at the minimum step size, and `SolveStatic`/
+`SolveDynamic` raise `SolverError` with the failure block, whose hints and causing items come from the same
+`conv` flags (measured: an unsupported mass point, static solver, fails within milliseconds). Without adaptive steps
+nothing changes. Tests: `test_exceptions.py` with and without `adaptiveStep`.
+
+**#1290, tangential forces without friction.** The PostNewton of `ObjectContactFrictionCircleCable2D` sets the slip
+state to "undefined" when there is no friction model (`frictionStiffness` and `frictionVelocityPenalty` zero), but
+`ComputeODE2LHS` and the output applied $\mu |f_N|$ for a slip state of $\pm 1$ in the data node - the initial values
+until the first PostNewton, and a step whose discontinuous error stays small is accepted with it. Measured with the new
+test model (a cable on a circle, in contact and in slip from the start, pulled along its axis): before, a tangential
+force of 1155 and a motion 20 apart from the one with $\mu = 0$; now zero and identical. Both places apply the slip
+force only with a friction model.
+
+**#692, the transposed `AE_ODE2_t` block.** Checked against the change of the Newton residual of the generalized-alpha
+solver when one multiplier of a rolling disc changes (`test_jacobianAEvelocityLevel.py`; the residual is scaled by a
+factor of the integrator, which is taken out): the analytic Jacobian, which adds $(\partial \Cv/\partial \dot\qv)\tp$
+for a velocity-level object and $(\partial \Cv/\partial \qv)\tp$ for a position-level one, equals the derivative of the
+residual - the residual uses the same choice (`CSystem` line of the reaction forces). The question of the issue is
+answered: it is right. The numerical Jacobian (`numericalDifferentiation.forAE = True`) was not: it added both
+transposed blocks to every row, which for the rolling disc gave reaction terms the residual does not have. It now
+marks the rows of velocity-level constraints and adds the one block, as the analytic Jacobian. No reference value
+changed (`forAE` is off by default).
+
+**#2851, the lifetime of the container.** `AddSystem` has `keep_alive<0, 1>` in `PybindModule.cpp` (the definition
+file, which only documents it, said `reference`); `GetSystem` had only `reference`, so a system obtained by it from a
+container that a function created and dropped pointed into freed memory (measured: 0 objects instead of 1). It has
+`keep_alive<0, 1>` now; the descriptions of both say so; test model `systemContainerLifetimeTest.py`. A cycle would
+need the container stored in `mbs.variables`; not handled.
+
+**The macOS raytracer** (RG6.8.6, maintainer: "The noglfw raytracer test still fails on Mac"): without the output of
+the Mac not reproducible here - every variant runs on Windows. `tmp/MacOS/raytracerCheck.py` (not in the repository)
+runs the variants - threads, text, a solve before - each in its own process with the fault handler, and the test
+model, for the next run on the Mac.

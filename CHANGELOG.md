@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 306 | 1.12.340 |
+| 1.12 | Metheney | 310 | 1.12.344 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,22 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.344** `CHECK` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a MainSystem does not keep its SystemContainer alive (#2851)
+  - description: SC.AddSystem() returns the MainSystem with return\_value\_policy::reference: a script that keeps mbs but drops SC (del SC, or SC created inside a function that returns mbs) works on a system the container has deleted. GetGeneralContact keeps its system alive since \#1512 (reference\_internal); the same for AddSystem/GetSystem would tie mbs to SC. Check what else depends on the current behaviour (SC.Reset, the renderer) before changing it.
+  - **notes:** SC.GetSystem(i) keeps its SystemContainer alive, as SC.AddSystem() does (revision2026b step RG4.19.10)
+  - date resolved: **2026-10-05 18:49**, date raised: 2026-10-05
+- **1.12.343** `CHECK` `MEDIUM EFF` `resolved by: Claude-JG` Newton (#1337)
+  - description: C++: check if SysError(s) in CSolverBase::Newton() can be changed into regular failure and step reduction for adaptiveStep
+  - **notes:** With adaptiveStep or automatic step size, a singular system Jacobian is a failed step, which is reduced; a singularity of the model ends the run at the minimum step size with the causing coordinate (revision2026b step RG4.19.4)
+  - date resolved: **2026-10-05 18:49**, date raised: 2022-12-26
+- **1.12.342** `CHECK` `MEDIUM EFF` `resolved by: Claude-JG` ContactFrictionCircleCable2D (#1290)
+  - description: shows tangential forces in case of all friction stiffness and damping values are zero; may be caused by specific projection
+  - **notes:** ObjectContactFrictionCircleCable2D without a friction model (frictionStiffness and frictionVelocityPenalty zero) has no tangential force, also when its data node starts in slip (revision2026b step RG4.19.5)
+  - date resolved: **2026-10-05 18:49**, date raised: 2022-11-05
+- **1.12.341** `CHECK` `MEDIUM EFF` `resolved by: Claude-JG` CSystem (#692)
+  - description: check JacobianAE: jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE\_ODE2\_t ... if \_t is correctly used
+  - **notes:** The numerical Jacobian of algebraic equations (numericalDifferentiation.forAE) adds for each constraint row only the transposed block the residual has - dC/dq for position-level, dC/dq\_t for velocity-level constraints; the analytic one was right (revision2026b step RG4.19.6)
+  - date resolved: **2026-10-05 18:49**, date raised: 2021-06-28
 - **1.12.340** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` a restart mechanism: how a simulation continues from its restart file (#2850)
   - description: The maintainer, 2026-10-05: before a restart function is written, evaluate how a restart works together with a model script - where the restart file is injected, for example that the system detects a restart file and loads its state from it. The restart file is written already (simulationSettings.solution.restart); a prototype that reads it is \_InitializeFromRestartFile in basicUtilities.py, not public. Successor of \#1565.
   - **notes:** A dynamic simulation continues from its restart file: with solution.restart.write the solvers write the state every writePeriod and at the end, and with solution.restart.continueIfAvailable the same script continues from it, appending to the solution and sensor files; results are identical to an uninterrupted run (with modified Newton within the Newton tolerance) (revision2026b step RG12.39)

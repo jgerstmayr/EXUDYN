@@ -1483,8 +1483,18 @@ bool CSolverBase::Newton(CSystem& computationalSystem, const SimulationSettings&
 				}
 				conv.linearSolverFailed = true;
 				conv.linearSolverCausingRow = factorizeOutput;
-				SysError(s, PyErrorType::solverError); //this error might not be recoverable
 				conv.stopNewton = true;
+				//WITH ADAPTIVE STEPS A FAILED STEP, which is reduced (#1337): a Jacobian may be singular in one configuration -
+				//the iterate of a too large step - and regular in the next; a singularity of the system stays, and the
+				//reduction ends at the minimum step size with this message in the solver file and linearSolverFailed set
+				if (it.adaptiveStep || it.automaticStepSize)
+				{
+					VerboseWrite(1, s + "  the step is reduced\n");
+				}
+				else
+				{
+					SysError(s, PyErrorType::solverError);
+				}
 			}
 			//STOPGLOBALTIMER(TSfactorize);
 			STOPTIMER(timer.factorization);

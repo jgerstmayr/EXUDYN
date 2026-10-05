@@ -1,0 +1,48 @@
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# This is an EXUDYN example
+#
+# Details:  A MainSystem keeps its SystemContainer alive, whether it came from SC.AddSystem() or from
+#           SC.GetSystem(i) (#2851): a function that builds a model in a container of its own and returns
+#           only the system leaves a system that works - before, the system of GetSystem pointed into a
+#           container that had been deleted.
+#
+# Author:   Johannes Gerstmayr
+# Date:     2026-10-05
+#
+# Copyright:This file is part of Exudyn. Exudyn is free software. You can redistribute it and/or modify it under the terms of the Exudyn license. See 'LICENSE.txt' for more details.
+#
+#+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import exudyn as exu
+import gc
+import weakref
+
+testIsActive = exu.sys.get('testIsActive', False)
+
+def BuildModel(useGetSystem):
+    """a model in a container of its own; only the system and a weak reference to the container are returned"""
+    SC = exu.SystemContainer()
+    mbs = SC.AddSystem()
+    mbs.CreateGround()
+    mbs.CreateMassPoint(referencePosition=[1,0,0], mass=1, gravity=[0,-9.81,0])
+    if useGetSystem:
+        mbs = SC.GetSystem(0)
+    return (mbs, weakref.ref(SC))
+
+u = 0
+for useGetSystem in [False, True]:
+    (mbs, container) = BuildModel(useGetSystem)
+    gc.collect()
+    mbs.Assemble()
+    simulationSettings = exu.SimulationSettings()
+    simulationSettings.solution.file.write = False
+    simulationSettings.timeIntegration.verboseMode = 0
+    mbs.SolveDynamic(simulationSettings)
+    alive = container() is not None
+    exu.Print('GetSystem' if useGetSystem else 'AddSystem', ': container alive', alive, ', objects',
+              mbs.systemData.NumberOfObjects())
+    u += alive + mbs.systemData.NumberOfObjects() + mbs.systemData.GetODE2Coordinates()[1]
+
+exu.Print('solution of systemContainerLifetimeTest=', u)
+
+exu.sys['testResult'] = u

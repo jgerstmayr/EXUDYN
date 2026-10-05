@@ -834,12 +834,15 @@ The steps are numbered in the order they were raised and stand here in the order
       a `MainSystem` and its `SystemContainer` is #2851;
     - **RG4.19.3** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-1) (#121) every allocation of
       `ResizableArray` goes through one function that catches `bad_alloc`, as `Vector` and `Matrix` do.
-    - **RG4.19.4** *(option, medium)* (#1337) a singular system Jacobian in `CSolverBase::Newton` is a `SysError`; with
-      `adaptiveStep` it could be a failed step that is reduced. It also bears on RG4.17.3 (c).
-    - **RG4.19.5** *(option, a run first)* (#1290) `ObjectContactFrictionCircleCable2D` shows tangential forces with
-      all friction stiffness and damping zero.
-    - **RG4.19.6** *(option, a run first)* (#692) the transposed `AE_ODE2_t` block of the system Jacobian for
-      velocity-level constraints against a numerical one (a rolling disc).
+    - **RG4.19.4** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-4) (#1337) with adaptive or
+      automatic steps a singular system Jacobian is a failed step, which is reduced; without them the `SysError` as
+      before. It also bears on RG4.17.3 (c).
+    - **RG4.19.5** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-4) (#1290)
+      `ObjectContactFrictionCircleCable2D` without a friction model applied the slip force of a data node that started
+      in slip; test model `contactFrictionCircleCable2DnoFrictionTest.py`.
+    - **RG4.19.6** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-4) (#692) the analytic transposed
+      `AE_ODE2_t` block is right; the numerical one (`forAE`) added $\Cm_\qv\tp$ as well for a velocity-level
+      constraint, now as the analytic one; `test_jacobianAEvelocityLevel.py`.
     - **RG4.19.7** **DECIDED 2026-10-05** (#2130 closed) the contact objects stay as they are - in contact while the
       bodies penetrate, so that the damping may pull: that is what the restitution models of `impactModel` assume,
       and the linear spring-damper law is the same idea. `GeneralContact` gets a setting to do the same (RG4.15.9).
@@ -849,8 +852,9 @@ The steps are numbered in the order they were raised and stand here in the order
       #1683, #1684, #1956 (done by the revisions: `GetDictionary` of the system, the `Inspect`/`Compute` functions of
       `MainSystem`, the item pages); #1681 abandoned (a wrong name). Kept: #142, #591, #1167, #1247, #1740, #1776,
       #1910, and #1920 - a check to investigate before it becomes an extension.
-    - **RG4.19.10** *(option, a check)* (#2851) a `MainSystem` does not keep its `SystemContainer` alive
-      (`AddSystem` returns with `return_value_policy::reference`), found with RG4.19.2.
+    - **RG4.19.10** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-19-4) (#2851) `AddSystem` kept its
+      container alive already (`keep_alive<0, 1>`), `GetSystem` did not and left a system in a deleted container; now
+      both; test model `systemContainerLifetimeTest.py`.
     - Not here, they need a Linux machine or a screen: #2204, #2205 (perspective), #2277, #2278 (GLFW on Linux) - RG6.8.
 
 <a id="rg4-20"></a>
@@ -1912,7 +1916,6 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #2848, #2849 | the open bugs before 1.13: `GeneralContact`, the contact model of its implicit solver (decision) and the torque on triangle bodies |
-| RG4.19 | #692, #1290, #1337, #2851 | the open bugs and checks, evaluated: options and decisions (RG4.19.1-.9) |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |
 | RG6.8 | #2140, #2236, #2237, #2350 | the graphics fixes before 1.13: Linux (RG6.8.5) and macOS (RG6.8.6), which wait for those machines |

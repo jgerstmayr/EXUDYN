@@ -120,6 +120,8 @@ def TestExamplesReferenceSolution():
         'itemParameterRenamesTest.py':66, #new 2026-10-04: every renamed item parameter forwards in the dictionary, Get and SetObjectParameter (#2814)
         'binarySolutionFileTest.py':0.1888874815147666, #new 2026-10-04: the binary solution file as float or double by solution.precision (#2816)
         'rotationMarkerDeprecationTest.py':-0.13402861946207856, #new 2026-10-03: rotationMarker0/1 against localHT of the markers, the deprecation warning once per session (#2745, #2801)
+        'contactFrictionCircleCable2DnoFrictionTest.py':18.22385932515495, #new 2026-10-05: no tangential force without a friction model, whatever the slip state (#1290)
+        'systemContainerLifetimeTest.py':-3.809999999999995, #new 2026-10-05: the MainSystem of AddSystem and GetSystem keeps its SystemContainer alive (#2851)
         'restartFileTest.py':-2.9317602918648324, #new 2026-10-05: a simulation continued from its restart file computes what the uninterrupted one computes, generalized-alpha and RK44 (#2850)
         'createItemNumbersTest.py':10.51570788484358, #new 2026-10-05: the Create functions take bodies, nodes or markers in itemNumbers, bodyNumbers deprecated (#2863)
         'libraryDeprecationTest.py':4, #new 2026-10-03: a deprecated function and argument of the Python library warn once per session at the user's line and are counted (#2807)

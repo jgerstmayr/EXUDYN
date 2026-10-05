@@ -2987,6 +2987,19 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 
 	ComputeAlgebraicEquations(tempArray, f0, velocityLevel); //compute nominal value for jacobian
 
+	//THE REACTION FORCES of a row are the transposed derivative its object puts into the residual (#692): dC/dq for a
+	//position-level constraint, dC/dq_t for a velocity-level one, as JacobianAE and the residual have it; adding both
+	//gave the rolling disc reaction terms the residual does not have
+	std::vector<bool> velocityLevelRow(nAE, false);
+	for (Index j : cSystemData.objectsWithAlgebraicEquations)
+	{
+		CObject& object = *(cSystemData.GetCObjects()[j]);
+		if (((Index)object.GetType() & (Index)CObjectType::Constraint) && ((CObjectConstraint&)object).UsesVelocityLevel())
+		{
+			for (Index row : cSystemData.GetLocalToGlobalAE()[j]) { velocityLevelRow[row] = true; }
+		}
+	}
+
 	//differentiation w.r.t. ODE2 coordinates
 	for (Index i = 0; i < nODE2; i++)
 	{
@@ -3004,7 +3017,7 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 		{
 			Real x = epsInv * (f1[j] - f0[j]);
 			jacobian(offsetAE + j, i) = factorAE_ODE2 * x; //add Cq ==> factor only used for Position constraints ...
-			jacobian(i, offsetAE + j) = factorODE2_AE * x; //add CqT ==> new factor
+			jacobian(i, offsetAE + j) = velocityLevelRow[j] ? 0. : factorODE2_AE * x; //add CqT of a position-level row
 		}
 	}
 
@@ -3025,7 +3038,7 @@ void CSystem::NumericalJacobianAE(TemporaryComputationDataArray& tempArray, cons
 		{
 			Real x = epsInv * (f1[j] - f0[j]);
 			jacobian(offsetAE + j, i) += factorAE_ODE2_t * x; //add Cq ==> factor only used for Position constraints ...
-			jacobian(i, offsetAE + j) += factorODE2_AE * x; //add CqT; this term MUST be added for purly velocity-formulated constraints (e.g. velocity coordinate constraint, rolling joint, ...)
+			if (velocityLevelRow[j]) { jacobian(i, offsetAE + j) += factorODE2_AE * x; } //add Cq_t^T of a velocity-level row (e.g. velocity coordinate constraint, rolling joint, ...)
 		}
 	}
 

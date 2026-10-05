@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.340.dev1
+- Exudyn version = 1.12.344.dev1
 - last change = 2026-10-05
 - Number of issues = 2866
-- Number of resolved issues = 2654 (340 in current version)
+- Number of resolved issues = 2658 (344 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,9 +7568,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
-- `CHECK` `LOW EFF` `raised by: Claude-JG` a MainSystem does not keep its SystemContainer alive (#2851)
-  - description: SC.AddSystem() returns the MainSystem with return\_value\_policy::reference: a script that keeps mbs but drops SC (del SC, or SC created inside a function that returns mbs) works on a system the container has deleted. GetGeneralContact keeps its system alive since \#1512 (reference\_internal); the same for AddSystem/GetSystem would tie mbs to SC. Check what else depends on the current behaviour (SC.Reset, the renderer) before changing it.
-  - date raised: 2026-10-05
 - `CHANGE` <span class="textorange">`NORMAL`</span> `HUGE EFF` `raised by: Claude-JG` objects compute from coordinates passed in, instead of reading them from their nodes (#2746)
   - description: The maintainer, 2026-09-29: CObject::ComputeODE2LHS (bodies, not connectors) getting the coordinates directly instead of retrieving them from the nodes, which enables simpler automatic differentiation. A real performance question with several cases: objects with one node (MassPoint, RigidBody, ...) can use linked data, while finite elements etc. would get displacement and velocity coordinates from the interface. First an evaluation step - what is there now, what are the best options. revision2026b group RG15.
   - date raised: 2026-09-29
@@ -7915,15 +7912,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `EXTENSION` `MEDIUM EFF` InteractiveDialog (#1414)
   - description: extend for explicit solver; needs internally different setup of solvers; use dynamicSolverType with default generalizedAlpha changable to Newmark/Index2 as well as explicit solvers
   - date raised: 2023-01-22
-- `CHECK` `MEDIUM EFF` Newton (#1337)
-  - description: C++: check if SysError(s) in CSolverBase::Newton() can be changed into regular failure and step reduction for adaptiveStep
-  - date raised: 2022-12-26
 - `CHANGE` `MEDIUM EFF` CSensorObject (#1292)
   - description: store MarkerDataStructure locally in order to avoid memory allocations for evaluation of sensor data; also do this for MainSystem::PyGetObjectOutputVariable
   - date raised: 2022-11-13
-- `CHECK` `MEDIUM EFF` ContactFrictionCircleCable2D (#1290)
-  - description: shows tangential forces in case of all friction stiffness and damping values are zero; may be caused by specific projection
-  - date raised: 2022-11-05
 - `CHECK` `HIGH EFF` UserFunctions (#1247)
   - description: check whether optimization of user functions with numba/JIT removes C-\>Python-\>C roundtrip overhead using pybind11 f.target approach from tests/test\_callbacks.cpp; this would enable to retrieve the original c-function pointer
   - date raised: 2022-09-02
@@ -8119,9 +8110,6 @@ The following list contains the issues which have been **RESOLVED** in the accor
 - `CHANGE` `HIGH EFF` GetAvailableJacobians (#698)
   - description: unify constraint.GetAvailableJacobians() with jacobian computations in joints, in order to avoid large overheads for jacobian assembly
   - date raised: 2021-07-01
-- `CHECK` `MEDIUM EFF` CSystem (#692)
-  - description: check JacobianAE: jacobianGM.AddSubmatrixTransposed(temp.localJacobianAE\_ODE2\_t ... if \_t is correctly used
-  - date raised: 2021-06-28
 - `DOCU` `HIGH EFF` solver tutorial (#648)
   - description: create video with frequent solver errors and FAQ
   - date raised: 2021-05-01

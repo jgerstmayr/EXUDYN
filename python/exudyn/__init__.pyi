@@ -4154,7 +4154,7 @@ class SystemContainer:
         ...
     @overload
     def AddSystem(self) -> MainSystem: 
-        """Add a new computational system."""
+        """Add a new computational system; the returned MainSystem keeps the system container alive."""
         ...
     @overload
     def AppendSystem(self, mainSystem: MainSystem) -> int: 
@@ -4169,7 +4169,7 @@ class SystemContainer:
         ...
     @overload
     def GetSystem(self, systemNumber: int) -> MainSystem: 
-        """Obtain multibody systems with index from system container."""
+        """Obtain multibody systems with index from system container; the returned MainSystem keeps the system container alive (#2851)."""
         ...
     visualizationSettings:VisualizationSettings
     """this structure is read/writeable and contains visualization settings, which are immediately applied to the rendering window. EXAMPLE: ``SC = exu.SystemContainer(); SC.visualizationSettings.autoFitScene=False``."""
