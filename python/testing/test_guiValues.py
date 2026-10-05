@@ -867,3 +867,23 @@ def testANarrowDialogKeepsItsButtonColumns():
         assert widths[0] > 0 and widths[2] > 0 and widths[1] > 0
     finally:
         window.destroy()
+
+
+def test_renderStateCodeLines():
+    """the model view as code (#2862): the lines set the window size and give SetState the view it had"""
+    import ast
+    import numpy as np
+    state = {'centerPoint': np.array([0.5, -1.25, 2.]), 'maxSceneSize': 3.5, 'zoom': 0.75,
+             'modelRotation': np.array([[0., -1., 0.], [1., 0., 0.], [0., 0., 1.]]),
+             'currentWindowSize': np.array([800, 600], dtype=np.int32), 'boundingBox': None}
+    lines = [line for (_, line) in gui.RenderStateCodeLines(state, 'SC')]
+    assert 'SC.visualizationSettings.general.autoFitScene = False #keep the view below' in lines
+    assert 'SC.visualizationSettings.view0.window.renderWindowSize = [800, 600]' in lines
+    assert lines.index('SC.renderer.Start()') < len(lines) - 1
+    setState = lines[-1]
+    assert setState.startswith('SC.renderer.SetState(') and setState.endswith(')')
+    view = ast.literal_eval(setState[len('SC.renderer.SetState('):-1])
+    assert set(view) == {'centerPoint', 'maxSceneSize', 'zoom', 'modelRotation'}
+    assert np.allclose(view['centerPoint'], state['centerPoint'])
+    assert np.allclose(view['modelRotation'], state['modelRotation'])
+    assert view['zoom'] == 0.75 and view['maxSceneSize'] == 3.5

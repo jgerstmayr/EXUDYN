@@ -45,12 +45,13 @@ __all__ = [
     'changedValueColor', 'IsApple', 'GetRendererSystemContainer', 'MakeProcessDpiAware',
     'GetTkRootAndNewWindow', 'TkRootExists', 'ColumnWidthFractions', 'DialogFontSize',
     'DialogRowMetrics', 'TkTextHeight', 'GetExudynDisplayScaling', 'GetGUIContentScaling',
-    'DialogScaling', 'SplitStoredFromChanged', 'Tooltip', 'TkinterEditDictionaryWithTypeInfo',
-    'EditDictionaryWithTypeInfo', 'TkinterEditDictionary', 'EditDictionary', 'dialogScreenMargin',
-    'StoreDialogPositions', 'RestoreWindowGeometry', 'RememberWindowGeometry',
-    'StoreGeometryString', 'StoreWindowGeometry', 'ApplyDialogWindowSettings', 'rendererHelpText',
-    'ShowHelpDialog', 'pythonCommandExamples', 'ModelScope', 'ShowPythonCommandDialog',
-    'ShowVisualizationSettingsDialog', 'ShowRightMouseSelectionDialog', 'AskQuitDialog',
+    'DialogScaling', 'SplitStoredFromChanged', 'RenderStateCodeLines', 'Tooltip',
+    'TkinterEditDictionaryWithTypeInfo', 'EditDictionaryWithTypeInfo', 'TkinterEditDictionary',
+    'EditDictionary', 'dialogScreenMargin', 'StoreDialogPositions', 'RestoreWindowGeometry',
+    'RememberWindowGeometry', 'StoreGeometryString', 'StoreWindowGeometry',
+    'ApplyDialogWindowSettings', 'rendererHelpText', 'ShowHelpDialog', 'pythonCommandExamples',
+    'ModelScope', 'ShowPythonCommandDialog', 'ShowVisualizationSettingsDialog',
+    'ShowRightMouseSelectionDialog', 'AskQuitDialog',
     ]
 
 useRenderWindowDisplayScaling = True #using this, scaling will change with render window
@@ -359,6 +360,33 @@ def SplitStoredFromChanged(changes, overriddenPaths, fileName):
                + ' and are applied to every new structure:')] + stored
     return (lines, len(stored))
 
+def RenderStateCodeLines(renderState, systemContainerName='SC'):
+    """The lines that give a script the current model view of the render window (#2862).
+
+    Args:
+        renderState: the dictionary of SC.renderer.GetState()
+        systemContainerName: the name of the SystemContainer in the script
+
+    Returns:
+        [(key, line)]: the window size as a setting, which the window has when it opens, and the view - center
+        point, zoom, model rotation and the scene size the zoom refers to - set after the renderer started;
+        autoFitScene is switched off, which would otherwise fit the scene and replace the view
+    """
+    def Numbers(values):
+        return '[' + ', '.join(f'{float(value):.8g}' for value in values) + ']'
+    rotation = [list(row) for row in renderState['modelRotation']]
+    view = ("{'centerPoint': " + Numbers(renderState['centerPoint'])
+            + ", 'maxSceneSize': " + f"{float(renderState['maxSceneSize']):.8g}"
+            + ", 'zoom': " + f"{float(renderState['zoom']):.8g}" + ',\n'
+            + "     'modelRotation': [" + ', '.join(Numbers(row) for row in rotation) + ']}')
+    windowSize = [int(size) for size in renderState['currentWindowSize']]
+    sc = systemContainerName
+    return [('', '#the model view of the render window, as it is now'),
+            ('general.autoFitScene', sc + '.visualizationSettings.general.autoFitScene = False #keep the view below'),
+            ('view0.window.renderWindowSize', sc + '.visualizationSettings.view0.window.renderWindowSize = ' + str(windowSize)),
+            ('', sc + '.renderer.Start()'),
+            ('', sc + '.renderer.SetState(' + view + ')')]
+
 
 class Tooltip:
     """The small yellow window that shows the description of the row under the mouse.
@@ -602,7 +630,7 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         #Every button says what it does in a tooltip; none of them fits in two words.
         self.buttonFrame = tk.Frame(self)
         self.buttonFrame.grid(row=3, column=0, columnspan=3, sticky=tk.E+tk.W)
-        self.buttonFrame.grid_columnconfigure(4, weight=1)      #the gap between the two groups
+        self.buttonFrame.grid_columnconfigure(5, weight=1)      #the gap between the two groups
         self.buttonTooltip = Tooltip(self, wrapLength=420)
 
         self.diffButton = tk.Button(self.buttonFrame, text='diff to default',
@@ -617,17 +645,22 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         self.storePositionsButton = tk.Button(self.buttonFrame, text='store positions',
                                               command=self.OnStorePositions)
         self.storePositionsButton.grid(row=0, column=3, padx=2, pady=(0, 4))
+        #the model view as code (#2862): only the visualization settings belong to a render window
+        self.viewButton = None
+        if CompiledSettingsClass(self.settingsStructure).__name__ == 'VisualizationSettings':
+            self.viewButton = tk.Button(self.buttonFrame, text='view as code', command=self.OnShowView)
+            self.viewButton.grid(row=0, column=4, padx=2, pady=(0, 4))
 
         self.resetButton = tk.Button(self.buttonFrame, text='reset', command=self.OnReset)
-        self.resetButton.grid(row=0, column=5, padx=2, pady=(0, 4))
+        self.resetButton.grid(row=0, column=6, padx=2, pady=(0, 4))
         self.revertButton = tk.Button(self.buttonFrame, text='revert', command=self.OnRevert)
-        self.revertButton.grid(row=0, column=6, padx=2, pady=(0, 4))
+        self.revertButton.grid(row=0, column=7, padx=2, pady=(0, 4))
         self.undoButton = tk.Button(self.buttonFrame, text='undo', command=self.OnUndo,
                                     state=tk.DISABLED)
-        self.undoButton.grid(row=0, column=7, padx=2, pady=(0, 4))
+        self.undoButton.grid(row=0, column=8, padx=2, pady=(0, 4))
         self.closeButton = tk.Button(self.buttonFrame, text='close',
                                      command=lambda: self.parentFrame.destroy())
-        self.closeButton.grid(row=0, column=8, padx=(2, 4), pady=(0, 4))
+        self.closeButton.grid(row=0, column=9, padx=(2, 4), pady=(0, 4))
 
         for (button, description) in [
                 (self.copyButton, 'copy the line above, which sets the selected setting'),
@@ -642,11 +675,15 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
                 (self.storePositionsButton, 'store where THIS dialog is, so that it opens here next'
                                             ' time; nothing about the settings it shows, and you are'
                                             ' shown what will be written before anything is'),
+                (self.viewButton, 'show the lines that set the current model view of the render window -'
+                                  ' center point, zoom, model rotation and window size - for a script, so that'
+                                  ' every run starts with this view'),
                 (self.resetButton, 'reset to default'),
                 (self.revertButton, 'revert to state when dialog opened'),
                 (self.undoButton, 'undo the last change, a reset or a revert'),
                 (self.closeButton, 'close the dialog (same as ESCAPE)')]:
-            self.buttonTooltip.Bind(button, description)
+            if button is not None:
+                self.buttonTooltip.Bind(button, description)
 
         #one WHOLE state back per entry, so that undo takes a reset and a revert back too
         self.undoStack = []
@@ -1055,6 +1092,16 @@ class TkinterEditDictionaryWithTypeInfo(tk.Frame):
         if stored != 0:
             description += '; ' + str(stored) + ' of them come from the settings file'
         self.ShowCodeLines('settings differing from the defaults', lines, description)
+
+    def OnShowView(self):
+        """the current model view of the render window as code (#2862)"""
+        guiSC = GetRendererSystemContainer()
+        if guiSC is None:
+            self.ShowCodeLines('model view', [], 'no render window is open')
+            return
+        self.ShowCodeLines('model view', RenderStateCodeLines(guiSC.renderer.GetState()),
+                           'the current model view; paste the lines into the script instead of its own'
+                           ' renderer.Start()')
 
     def SettingsFileName(self):
         """the override settings file, or a readable stand-in if it cannot be asked for"""

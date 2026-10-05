@@ -1091,6 +1091,12 @@ the arc; the spring windings of the spring-dampers use `connectors.springNumberO
       converting them to lines, so only a small fix")* (#2844) the raytracer draws no `GraphicsData` of type `Circle` (and none of the circles the
       2D items draw), found by the `GraphicsData` example of RG17.5.
 
+<a id="rg6-10"></a>
+**RG6.10** **DONE 2026-10-05** (#2862) — [log](exudynRevisionLog2026b.md#rg6-10) *(group RG6; maintainer 2026-10-05: "an
+additional button to export important parts of the current render state ... CenterPoint, zoom, modelRotation,
+currentWindowSize")* **The model view as code**: the visualization settings dialog has a button **view as code** that
+shows, and copies, the lines that give a script the current view of the render window.
+
 ## RG7 — Python user items
 
 Items whose behaviour is written in Python. Today that means user functions on existing items -
@@ -1491,6 +1497,39 @@ docstrings; argument annotations only where they help a reader; a check that eve
 
 <a id="rg12-33"></a>
 **RG12.33** **DONE 2026-10-03** (#2807) — [log](exudynRevisionLog2026b.md#rg12-33) · [plan text](exudynRevisionLog2026b.md#plan-rg12-33) — Deprecations of the Python library, declared and checked.
+
+<a id="rg12-40"></a>
+**RG12.40** *(group RG12; maintainer 2026-10-05: "Make a complete proposal ... so I can check and decide")* **The Create
+    functions name what they connect `itemNumbers`** (#2863, takes up #2337). A Create function that connects two items
+    takes bodies, nodes or markers in `bodyNumbers`, some also in `bodyOrNodeList` (and the `bodyList` of 1.11,
+    deprecated until 2029); the name says bodies where markers and nodes are as welcome. **Proposal, for decision:**
+    - **RG12.40.1** *(proposed)* **the interface**: `itemNumbers=[None, None]`, each entry an `ObjectIndex` (a body,
+      with its local position), a `NodeIndex` or a `MarkerIndex` (local position [0,0,0]); what an entry may be stays
+      what the function accepts today. `bodyNumbers` is taken, deprecated since 1.12, removed in 2031
+      (`DeprecatedArgument`, warning once at the line of the user); `bodyOrNodeList` is taken with the same warning,
+      which says "use itemNumbers"; `bodyList` stays as it is (removed in 2029). Two of them given at once raise a
+      `TypeError`. One helper, `ItemNumbersArgument(where, itemNumbers, bodyNumbers, bodyOrNodeList, bodyList)`,
+      replaces the naming part of `ProcessBodyNodeMarkerLists` and the checks of `JointPreCheckCalcBodyMarkers`, so
+      every function says the same in its errors.
+    - **RG12.40.2** *(proposed)* **the functions** - checked in `mainSystemExtensions.py`:
+
+      | function | today | accepts | proposal |
+      |---|---|---|---|
+      | CreateSpringDamper, CreateCartesianSpringDamper, CreateRigidBodySpringDamper, CreateDistanceConstraint | `bodyNumbers`, `bodyOrNodeList`, `bodyList` | body, node, marker | `itemNumbers` |
+      | CreateTorsionalSpringDamper, CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint, CreateGenericJoint | `bodyNumbers` | body, marker (rigid) | `itemNumbers`; option (a): also a rigid node (`MarkerNodeRigid`), which the spring-dampers already take |
+      | CreateSphereSphereContact, CreateSphereQuadContact, CreateSphereTriangleContact | `bodyNumbers`, `bodyOrNodeList` | body, node | `itemNumbers` - not in the list of the maintainer, but the same arguments |
+      | CreateCoordinateConstraint | `bodyNumbers` | body, or None for the ground | `itemNumbers` with a body or a node (`MarkerNodeCoordinate`), which is #2337 |
+      | CreateRollingDisc, CreateRollingDiscPenalty | `bodyNumbers` | bodies only (ground and disc) | option (b): keep `bodyNumbers`, or `itemNumbers` for one name everywhere |
+      | CreateForce, CreateTorque | `bodyNumber` | body, marker | option (c): keep, or `itemNumber` |
+    - **RG12.40.3** *(proposed)* **scripts**: the script checker reports `bodyNumbers=` and `bodyOrNodeList=` in these
+      calls and `exudev scripts --fix` writes `itemNumbers=`; the repository is rewritten with it - 169 lines with
+      `bodyNumbers=` in 69 files of the examples, test models, MiniExamples, notebooks and the manual, 9 with
+      `bodyOrNodeList=` - and the declared deprecations of the library (#2807) list both arguments.
+    - **RG12.40.4** *(proposed)* **tests and documentation**: a test model calls each function with `itemNumbers` of
+      each kind it accepts, with `bodyNumbers` and `bodyOrNodeList` (one warning each, same result) and with two of
+      them (`TypeError`); the docstrings describe `itemNumbers` and name the deprecated arguments last;
+      `revisions.md` says it under *What is new to use*.
+    - Decisions: options (a), (b), (c), and whether the contacts and `CreateCoordinateConstraint` are included.
 
 <a id="rg12-39"></a>
 **RG12.39** *(group RG12; maintainer 2026-10-05, from RG4.19.8)* **How a simulation continues from its restart file**
@@ -1920,6 +1959,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG2.4 | - | the manual GUI check, once per release and platform (list and model done) |
 | RG4.1 | - | the Windows/Linux differences in contact and friction; RG4.1.2 the five macOS-only models, RG4.1.3 the math library |
 | RG4.15 | #2848, #2849 | the open bugs before 1.13: `GeneralContact`, the contact model of its implicit solver (decision) and the torque on triangle bodies |
+| RG12.40 | #2863 | Create functions: itemNumbers instead of bodyNumbers - a proposal for decision |
 | RG12.39 | #2850 | a restart from the restart file: how it works with a model script, then a proposal |
 | RG3.36 | #2856 | the PDF checked with the documentation |
 | RG4.20 | #2859 | ANCF thin plate of a colleague: the visualization (RG4.20.3) and four decisions (RG4.20.4) |

@@ -7,5 +7,6 @@
   "effort": "MEDIUM",
   "description": "change bodyNumbers to itemNumbers allowing both bodies and nodes to be constrained",
   "dateRaised": "2026-04-06",
-  "deadline": "2026-10-03"
+  "deadline": "2026-10-03",
+  "workingRemarks": "Taken up by #2863 (RG12.40): itemNumbers for the Create functions; CreateCoordinateConstraint would take a body or a node there."
 }

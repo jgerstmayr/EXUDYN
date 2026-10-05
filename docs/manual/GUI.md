@@ -126,6 +126,12 @@ dialog opens, so that a model's own settings can be told from the rest. Four but
   `PlotSensor` windows, and the render window - where it *is*, which becomes
   `view0.window.renderWindowSize` and `renderWindowPosition` in the file and in this dialog.
 
+The visualization settings dialog has one more button, **view as code**: it shows the lines that give a
+script the current model view of the render window - `general.autoFitScene = False`, the window size as
+`view0.window.renderWindowSize`, and after `SC.renderer.Start()` the center point, scene size, zoom and
+model rotation through `SC.renderer.SetState(...)` - so that every run of the script starts with this
+view; it writes nothing.
+
 Both storing buttons show exactly what they will write, and ask, before anything is written; see
 [](#sec-usersettings). A geometry that **is** stored is used whenever a dialog opens, whatever
 `visualizationSettings.dialogs.storeDialogPositions` says — that flag decides whether a dialog stores

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 298 | 1.12.332 |
+| 1.12 | Metheney | 299 | 1.12.333 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,10 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.333** `EXTENSION` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` visualization settings dialog: a button that shows the current model view as code (#2862)
+  - description: The maintainer, 2026-10-05: an additional button in the visualization dialog exports the important parts of the current render state - center point, zoom, model rotation, window size - so that they can be set in the code and the model view is the same on every rerun.
+  - **notes:** The visualization settings dialog has a button 'view as code': it shows and copies the lines that give a script the current model view of the render window - window size, center point, zoom, model rotation - so that every run starts with this view.
+  - date resolved: **2026-10-05 14:37**, date raised: 2026-10-05
 - **1.12.332** <span class="textred">`BUG`</span> `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` macOS (Apple clang 15): CObjectJointGeneric.cpp does not compile - missing 'template' before GetColumnVector (#2861)
   - description: Reported 2026-10-05 for 1.12.324.dev1 on arm64 macOS, Python 3.13: in ComputeConstraintEquationsTemplate, A0all is a ConstSizeMatrixBase\<TReal, 9\>, so A0all.GetColumnVector\<3\>(...) needs the template keyword (lines 156, 168, 184, the velocity level written by RG14.2.13 on 2026-10-02). MSVC accepts it, clang does not.
   - **notes:** macOS (Apple clang): ObjectJointGeneric compiles again; three calls of GetColumnVector on a matrix of the template type had no template keyword.

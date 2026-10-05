@@ -8,10 +8,10 @@ Every entry carries the **type** of the issue, then its **priority** and its **e
 
 General information on current version:
 
-- Exudyn version = 1.12.332.dev1
+- Exudyn version = 1.12.333.dev1
 - last change = 2026-10-05
-- Number of issues = 2862
-- Number of resolved issues = 2646 (332 in current version)
+- Number of issues = 2864
+- Number of resolved issues = 2647 (333 in current version)
 
 ## Resolved issues and resolved bugs before version 1.12
 
@@ -7568,6 +7568,9 @@ The following list contains the issues which have been **RESOLVED** in the accor
 
 ## Open issues
 
+- `CHANGE` `MEDIUM EFF` `raised by: Claude-JG` Create functions: itemNumbers instead of bodyNumbers and bodyOrNodeList (#2863)
+  - description: The maintainer, 2026-10-05: several Create functions accept bodies, nodes and markers in bodyNumbers, some also bodyOrNodeList; the new interface is itemNumbers=\[None,None\]; bodyNumbers stays, deprecated for 5 years; bodyOrNodeList stays with a DeprecationWarning that names itemNumbers. Affected (to be checked): CreateSpringDamper, CreateCartesianSpringDamper, CreateRigidBodySpringDamper, CreateTorsionalSpringDamper, CreateRevoluteJoint, CreatePrismaticJoint, CreateSphericalJoint, CreateGenericJoint, CreateDistanceConstraint. A proposal for decision first.
+  - date raised: 2026-10-05
 - `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` ANCF thin plate visualization of the working copy 2026: normal offset, postprocessed contour, contour layer (#2859)
   - description: From the same working copy: visualizationSettings.bodies.shells drawNormal, drawNormalFactor, drawNormalColor, drawNormalLines, usePostprocessedContour (node-averaged contour) and contourZeta; finer tiling; the storage of the postprocessed values in VisualizationSystem. Not the setting integrationMode (port note 2).
   - date raised: 2026-10-05
@@ -7615,6 +7618,7 @@ The following list contains the issues which have been **RESOLVED** in the accor
   - date raised: 2026-04-17
 - `CHANGE` `MEDIUM EFF` CreateCoordinateConstraint (#2337)
   - description: change bodyNumbers to itemNumbers allowing both bodies and nodes to be constrained
+  - **remarks:** Taken up by \#2863 (RG12.40): itemNumbers for the Create functions; CreateCoordinateConstraint would take a body or a node there.
   - date raised: 2026-04-06
 - `DOCU` `MEDIUM EFF` ANCFCable (#2328)
   - description: add documentation

@@ -15485,3 +15485,28 @@ that depends on the template parameter; the velocity-level branch, written by RG
 Fixed. All other calls of a member template with explicit arguments in `src/` (`.Name<N>(`) were checked: they are on
 `Matrix3D` and other types that do not depend on a template parameter. A compiler of the clang family is not available on
 this machine, so the macOS build is the check; a further file may still stop it.
+
+<a id="rg6-10"></a>
+### RG6.10 — the model view as code (2026-10-05, #2862)
+
+*(Maintainer 2026-10-05: "In the visualization dialogue, there should be an additional button to export important parts
+of the current render state (in order to hard-set those in the code to always achieve the same model view upon
+rerunning). Those important parameters are: CenterPoint, zoom, modelRotation, currentWindowSize.")*
+
+`TkinterEditDictionaryWithTypeInfo` (`exudyn/misc/GUI.py`) has a button **view as code**, only for the visualization
+settings. It opens the code window of the other buttons (shows, copies all) with the lines of
+`RenderStateCodeLines(SC.renderer.GetState())`:
+
+```python
+#the model view of the render window, as it is now
+SC.visualizationSettings.general.autoFitScene = False #keep the view below
+SC.visualizationSettings.view0.window.renderWindowSize = [1024, 768]
+SC.renderer.Start()
+SC.renderer.SetState({'centerPoint': [...], 'maxSceneSize': ..., 'zoom': ...,
+     'modelRotation': [[...], [...], [...]]})
+```
+
+The window size is a setting, which the window has when it opens; the view is set after the start. `maxSceneSize` is
+added to the four asked for, because the zoom and the depth of the view refer to it, and `autoFitScene` is switched
+off, which would otherwise fit the scene and replace the view. Nothing is written anywhere. Test
+`test_renderStateCodeLines` in `test_guiValues.py`; `docs/manual/GUI.md` describes the button.
