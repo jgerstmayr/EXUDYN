@@ -112,6 +112,7 @@ explicitSolversPostNewtonTest
 contactComparisonTest
 generalContactTriangleMomentumTest
 inactiveConnectorForceTest
+ANCFThinPlateRevisionTest
 kinematicTreePrismaticJacobianTest
 kinematicTreeTest
 kinematicTreeUserFunctionTest

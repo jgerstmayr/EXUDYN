@@ -3918,15 +3918,19 @@ class ObjectANCFThinPlate:
     Args:
         name: objects's unique name; type: str
 
-        thickness: [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients; type: array_like
+        thickness: [SI:m] thickness of the plate: one value for a constant thickness; 4 values, the thicknesses at the nodes in their order, interpolated bilinearly; or 12 values :math:`[h_0,\, h_{,s,0},\, h_{,t,0},\, \ldots,\, h_3,\, h_{,s,3},\, h_{,t,3}]`, the thickness and its gradients along the element edges at each node, interpolated with the 12 shape functions of the position; with 4 or 12 values, the stiffness is computed from the local thickness, see strainCoefficients; type: array_like
 
         density: [SI:kg/m:math:`^3`] density of the plate, possibly averaged over thickness; type: float
 
         massProportionalDamping: mass-proportional damping coefficient :math:`\alpha` [SI:1/s]; adds massmatrix proportional damping forces :math:`\fv_d = \alpha \Mm \dot{\qv}`; type: float
 
-        strainCoefficients: [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients; type: Matrix3DList
+        stiffnessProportionalDamping: membrane stiffness-proportional damping coefficient :math:`\beta_\varepsilon` [SI:s]: Kelvin-Voigt damping :math:`\beta_\varepsilon\, \Dm_\varepsilon\, \dot\teps` added to the membrane forces, in the current configuration; it does not damp a rigid-body motion; type: float
 
-        curvatureCoefficients: [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients; type: Matrix3DList
+        bendingStiffnessProportionalDamping: bending stiffness-proportional damping coefficient :math:`\beta_\kappa` [SI:s]: Kelvin-Voigt damping :math:`\beta_\kappa\, \Dm_\kappa\, \dot\tkappa` added to the bending moments; if negative (default), :math:`\beta_\varepsilon` of stiffnessProportionalDamping is used, 0 switches it off; type: float
+
+        strainCoefficients: [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate, as a list of 3D matrices; for a constant thickness one matrix; for 4 or 12 thickness values, the first matrix divided by thickness[0] is the material matrix of a homogeneous isotropic plate, :math:`\Dm_\varepsilon = \Dm_b\, h` and :math:`\Dm_\kappa = \Dm_b\, h^3/12` at each point, and further matrices are not used; type: Matrix3DList
+
+        curvatureCoefficients: [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate, as a list of 3D matrices; used for a constant thickness (one matrix); for 4 or 12 thickness values :math:`\Dm_\kappa` follows from strainCoefficients and the local thickness; type: Matrix3DList
 
         strainIsRelativeToReference: if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation; type: float
 
@@ -3936,7 +3940,7 @@ class ObjectANCFThinPlate:
 
         nodeNumbers: 4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)]; type: NodeIndex4
 
-        useReducedOrderIntegration: 0/false: use highest Gauss integration for virtual work of strains
+        useReducedOrderIntegration: integration of the virtual work: 0 - Gauss 5 x 5 points for the membrane and the bending terms; 1 - Lobatto 3 x 3 points for the membrane and Gauss 2 x 2 for the bending terms (disjoint points, against membrane locking); 2 - the same as 1
 
         physicsThickness: deprecated since 1.12.258, removed in 2031: use thickness
 
@@ -3956,11 +3960,13 @@ class ObjectANCFThinPlate:
         Requested Node type: ``Position``
 
     """
-    def __init__(self, name = '', thickness = [], density = 0., massProportionalDamping = 0., strainCoefficients = None, curvatureCoefficients = None, strainIsRelativeToReference = 1., slopesScalingX = [-1.,-1.,-1.,-1.], slopesScalingY = [-1.,-1.,-1.,-1.], nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, physicsThickness = None, physicsDensity = None, physicsMassProportionalDamping = None, physicsStrainCoefficients = None, physicsCurvatureCoefficients = None, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
+    def __init__(self, name = '', thickness = [], density = 0., massProportionalDamping = 0., stiffnessProportionalDamping = 0., bendingStiffnessProportionalDamping = -1., strainCoefficients = None, curvatureCoefficients = None, strainIsRelativeToReference = 1., slopesScalingX = [-1.,-1.,-1.,-1.], slopesScalingY = [-1.,-1.,-1.,-1.], nodeNumbers = [exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex(), exudyn.InvalidIndex()], useReducedOrderIntegration = 0, physicsThickness = None, physicsDensity = None, physicsMassProportionalDamping = None, physicsStrainCoefficients = None, physicsCurvatureCoefficients = None, visualization = {'show': True, 'color': [-1.,-1.,-1.,-1.]}):
         self.name = name
         self.thickness = CheckForValidNumpyArray(thickness)
         self.density = density
         self.massProportionalDamping = massProportionalDamping
+        self.stiffnessProportionalDamping = stiffnessProportionalDamping
+        self.bendingStiffnessProportionalDamping = bendingStiffnessProportionalDamping
         self.strainCoefficients = strainCoefficients
         self.curvatureCoefficients = curvatureCoefficients
         self.strainIsRelativeToReference = strainIsRelativeToReference
@@ -3981,6 +3987,8 @@ class ObjectANCFThinPlate:
         yield 'thickness', self.thickness
         yield 'density', self.density
         yield 'massProportionalDamping', self.massProportionalDamping
+        yield 'stiffnessProportionalDamping', self.stiffnessProportionalDamping
+        yield 'bendingStiffnessProportionalDamping', self.bendingStiffnessProportionalDamping
         yield 'strainCoefficients', self.strainCoefficients
         yield 'curvatureCoefficients', self.curvatureCoefficients
         yield 'strainIsRelativeToReference', self.strainIsRelativeToReference

@@ -5834,29 +5834,57 @@ definitions.append(ItemDefinition(
 
     Four nodes of type `NodePointSlope12`, each with a position and the two in-plane slopes; 36
     coordinates. The local coordinates $(\xi,\,\eta) \in [-1,1]^2$ place node 0 at $(-1,-1)$, node 1 at
-    $(1,-1)$, node 2 at $(1,1)$ and node 3 at $(-1,1)$; the thickness coordinate is in $[-1,1]$ as well.
+    $(1,-1)$, node 2 at $(1,1)$ and node 3 at $(-1,1)$; the thickness coordinate $\zeta$ is in $[-1,1]$ as well.
 
     #### Kinematics and interpolation
 
     The position of the mid-surface is interpolated with 12 shape functions of the
     Adini-Clough-Melosh type - cubic Hermite in each direction, from the positions and slopes of the
-    four nodes -, and the slopes of a node are scaled by `slopesScalingX` and `slopesScalingY`, half
-    the side length of a flat element by default.
+    four nodes -, and the slopes of a node are scaled by `slopesScalingX` and `slopesScalingY`, the
+    side lengths of a flat element by default. The derivatives with respect to $(\xi,\,\eta)$ are mapped to
+    the local frame of the reference configuration, $\ev_1 \parallel \rv_{,\xi}$ and $\ev_2 = \nv_0 \times \ev_1$, with
+    the inverse of the reference Jacobian $\Am = \Jm_0^{-1}$.
 
     #### Strains and elastic forces
 
-    Kirchhoff plate: the in-plane strains of the mid-surface and the curvatures from the second
-    derivatives of the position, relative to the reference configuration with `strainIsRelativeToReference`,
-    with the stiffness coefficients $\Dm_\varepsilon$ = `strainCoefficients` and $\Dm_\kappa$ =
-    `curvatureCoefficients`, integrated over the thickness.
+    Kirchhoff-Love plate: the Green-Lagrange strains of the mid-surface,
+    $\teps = [\frac{1}{2} \rv_{,x}\tp \rv_{,x},\; \frac{1}{2} \rv_{,y}\tp \rv_{,y},\; \rv_{,x}\tp \rv_{,y}]\tp$, and the curvatures of the
+    material measure, with $\nv_3 = \rv_{,x} \times \rv_{,y}$,
+    $$\kappa_{xx} = \frac{\nv_3\tp \rv_{,xx}}{|\nv_3|\,|\rv_{,x}|}, \quad
+      \kappa_{yy} = \frac{\nv_3\tp \rv_{,yy}}{|\nv_3|\,|\rv_{,y}|}, \quad
+      \kappa_{xy} = \frac{2\,\nv_3\tp \rv_{,xy}}{|\nv_3|\,\sqrt{|\rv_{,x}|\,|\rv_{,y}|}},$$
+    each relative to the reference configuration. For a strip, $\kappa_{xx}$ is the curvature of `ObjectANCFCable2D`, and
+    pure bending gives no membrane strain. The membrane forces $\mathbf{N} = \Dm_\varepsilon \teps$ and the moments
+    $\mathbf{M} = \Dm_\kappa \tkappa$ do virtual work in two separate integrals, whose points `useReducedOrderIntegration`
+    chooses: 0 - Gauss $5 \times 5$ for both; 1 - Lobatto $3 \times 3$ for the membrane and Gauss $2 \times 2$ for the bending
+    (disjoint points, against membrane locking, after Ntarladima, Pieber and Gerstmayr 2023); 2 - the same as 1.
+
+    The thickness is constant (one value), bilinear in $(\xi,\,\eta)$ from 4 nodal values, or interpolated from 12 values -
+    a thickness and its two gradients per node - with the 12 shape functions of the position. With 4 or 12 values the
+    stiffness follows the local thickness, $\Dm_\varepsilon = \Dm_b\, h$ and $\Dm_\kappa = \Dm_b\, h^3/12$ with
+    $\Dm_b$ = `strainCoefficients[0]`/`thickness[0]`: a homogeneous isotropic plate.
 
     #### Mass matrix and damping
 
-    Constant; the damping is proportional to the mass matrix, $\fv_d = \alpha \Mm \dot\qv$.
+    The mass matrix is constant (Gauss $5 \times 5$). Mass-proportional damping adds $\fv_d = \alpha \Mm \dot\qv$;
+    Kelvin-Voigt damping adds $\beta_\varepsilon \Dm_\varepsilon \dot\teps$ to the membrane forces and
+    $\beta_\kappa \Dm_\kappa \dot\tkappa$ to the moments, evaluated in the current configuration, so that it does not damp a
+    rigid-body motion. The Jacobian is computed by automatic differentiation with respect to the coordinates and, for
+    the damping, the velocities.
+
+    #### Outputs through the thickness
+
+    At $\zeta \in [-1,1]$: `StrainLocal` $= \teps - \zeta\,\frac{h}{2}\,\tkappa$ and `StressLocal`
+    $= \mathbf{N}/h - \zeta\, 6\mathbf{M}/h^2$, both as 6 components $[\cdot_{11},\, \cdot_{22},\, 0,\, 0,\, 0,\, \cdot_{12}]$;
+    `ForceLocal` $= [N_{11},\, N_{22},\, N_{12}]$ per length, `TorqueLocal` $= [-M_{11},\, M_{22},\, M_{12}]$ and
+    `CurvatureLocal` $= [-\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]$ - the first component with the sign of
+    `ObjectANCFCable2D`.
 
     #### Limitations
 
-    Under construction; for output variables, the local position is given in $[-1,1]^3$.
+    Under construction; for output variables, the local position is given in $[-1,1]^3$. The 12 thickness values are
+    gradients per unit length along the element edges, equal to $\partial h/\partial x$ and $\partial h/\partial y$ only for
+    rectangular elements.
     """,
     mainParentClass=MainParentClassMainObjectBody,
     miniExample=r"""    #a square plate of 2x2 ANCF thin plate elements, clamped at one edge, under its own weight
@@ -5887,11 +5915,11 @@ definitions.append(ItemDefinition(
         ItemOutputVariable(OVVelocity, r"""$\LU{0}{\vv(x,y,z)} = \LU{0}{\dot \rv(x,y,z)}$global velocity vector of local position"""),
         ItemOutputVariable(OVDirector1, r"""$\rv_x(x,y,z)$(axial) slope vector of local position (at $z$=0)"""),
         ItemOutputVariable(OVDirector2, r"""$\rv_y(x,y,z)$(axial) slope vector of local position (at $z$=0)"""),
-        ItemOutputVariable(OVStrainLocal, r"""$\varepsilon$axial strain (scalar) of local axis position (at Z=0)"""),
-        ItemOutputVariable(OVCurvatureLocal, r'$[K_x, K_y, K_z]\tp$local curvature vector'),
+        ItemOutputVariable(OVStrainLocal, r"""$[\varepsilon_{11},\, \varepsilon_{22},\, 0,\, 0,\, 0,\, \gamma_{12}]\tp$ strains at the thickness coordinate $\zeta$ of the local position, $\teps - \zeta\,\frac{h}{2}\,\tkappa$, relative to the reference configuration"""),
+        ItemOutputVariable(OVCurvatureLocal, r'$[-\kappa_{xx},\, \kappa_{yy},\, \kappa_{xy}]\tp$ curvatures of the mid-surface relative to the reference configuration; the first component with the sign of ObjectANCFCable2D'),
         ItemOutputVariable(OVForceLocal, r"""$[N_{xx},\, N_{yy},\, N_{xy}]\tp$ membrane force resultants per length in the local frame, from the membrane strains relative to the reference configuration"""),
-        ItemOutputVariable(OVTorqueLocal, r"""$[M_{xx},\, M_{yy},\, M_{xy}]\tp$ bending moment resultants per length in the local frame, from the curvatures relative to the reference configuration"""),
-        ItemOutputVariable(OVStressLocal, 'local inplane stress components'),
+        ItemOutputVariable(OVTorqueLocal, r"""$[-M_{xx},\, M_{yy},\, M_{xy}]\tp$ bending moment resultants per length in the local frame, from the curvatures relative to the reference configuration; the first component with the sign of ObjectANCFCable2D"""),
+        ItemOutputVariable(OVStressLocal, r"""$[\sigma_{11},\, \sigma_{22},\, 0,\, 0,\, 0,\, \sigma_{12}]\tp$ stresses at the thickness coordinate $\zeta$ of the local position, $\mathbf{N}/h - \zeta\, 6\mathbf{M}/h^2$; without damping"""),
         ItemOutputVariable(OVAcceleration, r"""$\LU{0}{\av(x,y,z)} = \LU{0}{\ddot \rv(x,y,z)}$global acceleration vector of local position"""),
         ItemOutputVariable(OVKineticEnergy, r"""$T = \frac{1}{2} \dot\qv\tp \Mm\, \dot\qv$kinetic energy from the mass matrix of the current state and the velocities of the nodes; current configuration only; localPosition must be $[0,0,0]$"""),
         ItemOutputVariable(OVPotentialEnergy, r"""$V = \frac{1}{2}\int_A \teps\tp \mathbf{N} + \tkappa\tp \mathbf{M}\, dA$elastic energy of the membrane strains and curvatures relative to the reference configuration, with the membrane forces $\mathbf{N}$ and moments $\mathbf{M}$ and the integration rule of the elastic forces; localPosition must be $[0,0,0]$"""),
@@ -5905,7 +5933,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
             pythonName='thickness',
             defaultValue='Vector()',
-            description=r'$h$ [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients'),
+            description=r'$h$ [SI:m] thickness of the plate: one value for a constant thickness; 4 values, the thicknesses at the nodes in their order, interpolated bilinearly; or 12 values $[h_0,\, h_{,s,0},\, h_{,t,0},\, \ldots,\, h_3,\, h_{,s,3},\, h_{,t,3}]$, the thickness and its gradients along the element edges at each node, interpolated with the 12 shape functions of the position; with 4 or 12 values, the stiffness is computed from the local thickness, see strainCoefficients'),
         ItemParameter(type=TNumpyVector, destination=DestComp+DestParam,
             pythonName='physicsThickness',
             deprecated=Deprecated('1.12.258', 2031),
@@ -5925,6 +5953,14 @@ definitions.append(ItemDefinition(
             defaultValue=0.,
             description=r"""mass-proportional damping coefficient $\alpha$ [SI:1/s]; adds massmatrix proportional damping forces $\fv_d = \alpha \Mm \dot{\qv}$"""),
         ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='stiffnessProportionalDamping',
+            defaultValue=0.,
+            description=r"""membrane stiffness-proportional damping coefficient $\beta_\varepsilon$ [SI:s]: Kelvin-Voigt damping $\beta_\varepsilon\, \Dm_\varepsilon\, \dot\teps$ added to the membrane forces, in the current configuration; it does not damp a rigid-body motion"""),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
+            pythonName='bendingStiffnessProportionalDamping',
+            defaultValue=-1.,
+            description=r"""bending stiffness-proportional damping coefficient $\beta_\kappa$ [SI:s]: Kelvin-Voigt damping $\beta_\kappa\, \Dm_\kappa\, \dot\tkappa$ added to the bending moments; if negative (default), $\beta_\varepsilon$ of stiffnessProportionalDamping is used, 0 switches it off"""),
+        ItemParameter(type=TReal, destination=DestComp+DestParam,
             pythonName='physicsMassProportionalDamping',
             deprecated=Deprecated('1.12.258', 2031),
             defaultValue=NoDefaultValue,
@@ -5932,7 +5968,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TMatrix3DList, destination=DestComp+DestParam,
             pythonName='strainCoefficients',
             defaultValue='Matrix3DList()',
-            description=r"""$\Dm_\varepsilon$ [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients"""),
+            description=r"""$\Dm_\varepsilon$ [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate, as a list of 3D matrices; for a constant thickness one matrix; for 4 or 12 thickness values, the first matrix divided by thickness[0] is the material matrix of a homogeneous isotropic plate, $\Dm_\varepsilon = \Dm_b\, h$ and $\Dm_\kappa = \Dm_b\, h^3/12$ at each point, and further matrices are not used"""),
         ItemParameter(type=TMatrix3DList, destination=DestComp+DestParam,
             pythonName='physicsStrainCoefficients',
             deprecated=Deprecated('1.12.258', 2031),
@@ -5941,7 +5977,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TMatrix3DList, destination=DestComp+DestParam,
             pythonName='curvatureCoefficients',
             defaultValue='Matrix3DList()',
-            description=r"""$\Dm_\kappa$ [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients"""),
+            description=r"""$\Dm_\kappa$ [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate, as a list of 3D matrices; used for a constant thickness (one matrix); for 4 or 12 thickness values $\Dm_\kappa$ follows from strainCoefficients and the local thickness"""),
         ItemParameter(type=TMatrix3DList, destination=DestComp+DestParam,
             pythonName='physicsCurvatureCoefficients',
             deprecated=Deprecated('1.12.258', 2031),
@@ -5966,7 +6002,7 @@ definitions.append(ItemDefinition(
         ItemParameter(type=TIndex, destination=DestComp+DestParam,
             pythonName='useReducedOrderIntegration',
             defaultValue=0,
-            description=r'0/false: use highest Gauss integration for virtual work of strains'),
+            description=r'integration of the virtual work: 0 - Gauss 5 x 5 points for the membrane and the bending terms; 1 - Lobatto 3 x 3 points for the membrane and Gauss 2 x 2 for the bending terms (disjoint points, against membrane locking); 2 - the same as 1'),
         ItemFunctionDef('ComputeMassMatrix'),
         ItemFunctionDef('ComputeODE2LHS'),
         ItemFunction(type='template<class TReal> void', destination=DestComp, cFlags=CFConst, isVirtual=False,
@@ -5984,8 +6020,8 @@ definitions.append(ItemDefinition(
             implementation='if (localPosition[2] == 0.) { return true; } reason = "it acts at the plate midsurface only, localPosition[2] = 0"; return false;'),
         ItemFunctionDef('GetOutputVariableBody'),
         ItemFunction(type=Tvoid, destination=DestComp, cFlags=CFConst, isVirtual=False,
-            pythonName='GetIntegrationRule', args='ConstSizeVector<5>& xiGP, ConstSizeVector<5>& xiW',
-            description=r'the integration rule of the elastic forces in each direction, shared with the elastic energy (#2202)'),
+            pythonName='GetIntegrationRules', args='ConstSizeVector<5>& membranePoints, ConstSizeVector<5>& membraneWeights, ConstSizeVector<5>& bendingPoints, ConstSizeVector<5>& bendingWeights',
+            description=r'the integration rules of the membrane and the bending virtual work in each direction, shared with the elastic energy (#2202, #2857)'),
         ItemFunction(type=TReal, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='ComputeElasticEnergy', args='ConfigurationType configuration',
             description=r'the elastic energy of the membrane strains and the curvatures, with the kinematics, coefficients and integration rule of the elastic forces (#2202)'),
@@ -6091,15 +6127,7 @@ definitions.append(ItemDefinition(
         ItemFunction(type=TReal, destination=DestComp, cFlags=CFConst, isVirtual=False,
             pythonName='ComputeThicknessAtPoint',
             args='Real xi, Real eta',
-            description=r'compute thickness from local unit coordinates'),
-        ItemFunction(type=TMatrixND(3, 3), destination=DestComp, cFlags=CFConst, isVirtual=False,
-            pythonName='ComputeStrainCoefficientsAtPoint',
-            args='Real xi, Real eta',
-            description=r'compute strain coefficient matrix from local unit coordinates'),
-        ItemFunction(type=TMatrixND(3, 3), destination=DestComp, cFlags=CFConst, isVirtual=False,
-            pythonName='ComputeCurvatureCoefficientsAtPoint',
-            args='Real xi, Real eta',
-            description=r'compute curvature coefficient matrix from local unit coordinates'),
+            description=r'compute thickness from local unit coordinates, for 1, 4 or 12 thickness values'),
         ItemFunctionDef('ComputeJacobianODE2_ODE2'),
         ItemParameter(type=TBool, destination=DestVisu, fromParent=True,
             pythonName='show',

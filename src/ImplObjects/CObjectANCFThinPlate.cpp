@@ -353,12 +353,23 @@ void ComputeKinematicsPure(
     SlimVectorBase<TReal, 3> n3 = r_x.CrossProduct(r_y);
     TReal n3_norm = n3.GetL2Norm();
     // Assuming non-zero normal (checked in caller)
-    TReal invN = 1.0 / (n3_norm * n3_norm * n3_norm);
+
+    // MATERIAL curvature measure (Gerstmayr-Irschik type, consistent with ANCFCable2D):
+    //   kappa_xx = (n3 . r_xx) / (|n3| * |r_x|),  kappa_yy = (n3 . r_yy) / (|n3| * |r_y|),
+    //   kappa_xy = 2 (n3 . r_xy) / (|n3| * sqrt(|r_x| |r_y|))
+    // Strip limit (|r_y|=1): kappa_xx = (r' x r'') / |r'|^2 = Cable2D measure exactly.
+    // Unlike the GEOMETRIC measure (n3 . r_ii)/|n3|^3, this measure makes pure bending
+    // produce exactly zero membrane force (no parasitic strain eps = h^2 kappa^2 / 12).
+    TReal rxNorm = r_x.GetL2Norm();
+    TReal ryNorm = r_y.GetL2Norm();
+    TReal invNx  = 1.0 / (n3_norm * rxNorm);
+    TReal invNy  = 1.0 / (n3_norm * ryNorm);
+    TReal invNxy = 1.0 / (n3_norm * sqrt(rxNorm * ryNorm));
 
     // Curvatures
-    kappa[0] = (n3 * r_xx) * invN;
-    kappa[1] = (n3 * r_yy) * invN;
-    kappa[2] = 2. * (n3 * r_xy) * invN;// Factor 2 for engineering twist
+    kappa[0] = (n3 * r_xx) * invNx;
+    kappa[1] = (n3 * r_yy) * invNy;
+    kappa[2] = 2. * (n3 * r_xy) * invNxy;// Factor 2 for engineering twist
 
     // --- Strains & Curvatures (Difference) ---
     // Green-Lagrange Strains
@@ -603,7 +614,7 @@ static bool NodeNumbersAreUsable(const CObjectANCFThinPlate& object)
 
 void CObjectANCFThinPlate::ParametersHaveChanged()
 {
-    //recompute mass matrix
+    //recompute mass matrix (constant material/geometry properties)
     massMatrixComputed = false;
 
     //compute scaling for flat elements if not provided by user
@@ -642,37 +653,31 @@ void CObjectANCFThinPlate::ParametersHaveChanged()
      }
 }
 
-//! compute 2x2 element jacobian
+//! compute 2x2 element Jacobian using the classical xi-aligned local frame:
+//! e1 aligned with r_xi (standard ANCF convention, Yan et al., Dufva & Shabana);
+//! e2 = n0 x e1 completes the right-handed in-plane basis.
+//! The formulation is frame-invariant under in-plane rotation of (e1, e2) for isotropic
+//! material; the former useSymmetricFrame (bisector) option was removed for this reason
+//! (no accuracy effect, only relabeled strain/curvature components).  MP, 2026-06-10
+//! Input:  r_xi_ref  -- reference tangent vector dr/dxi at the current Gauss point
+//!         r_eta_ref -- reference tangent vector dr/deta at the current Gauss point
+//!         n0        -- normalized reference surface normal (r_xi_ref x r_eta_ref, normalized)
+//! Output: 2x2 Jacobian matrix J0 mapping parametric derivatives (d/dxi, d/deta)
+//!         to local physical derivatives (d/dx, d/dy)
 template<class TReal>
 ConstSizeMatrixBase<TReal, 4> CObjectANCFThinPlate::GetElementJacobian(const SlimVectorBase<TReal, 3>& r_xi_ref, const SlimVectorBase<TReal, 3>& r_eta_ref,
     const SlimVectorBase<TReal, 3>& n0) const
 {
-    // define a local orthonormal basis (e1, e2) in the reference tangent plane
-    // this defines the "physical" directions for our output strain and curvature.
-    Vector3D e1 = r_xi_ref;
-    e1.Normalize();
-    //Vector3D n0 = r_xi_ref.CrossProduct(r_eta_ref);
-    //n0.Normalize(); // reference normal
-    Vector3D e2 = n0.CrossProduct(e1); // local y-axis (perpendicular to e1 in plane)
-
-    // Maps natural basis (d/dxi, d/deta) to the local physical basis (e1, e2)
     Matrix2D J0(2, 2);
+
+    // curvature kappa maps directly to physical d²r/dx²: StressLocal outer-fibre
+    // at localPosition[2]=1 (zeta=+1 in [-1,1]).
+    Vector3D e1 = r_xi_ref;  e1.Normalize();
+    Vector3D e2 = n0.CrossProduct(e1);
     J0(0, 0) = r_xi_ref * e1;   J0(0, 1) = r_eta_ref * e1;
     J0(1, 0) = r_xi_ref * e2;   J0(1, 1) = r_eta_ref * e2;
-
-    //SYMMETRIC version (could also be used to compute average frame):
-    //// If you want standard engineering strains in a local Cartesian frame 
-    //// that doesn't favor xi or eta, we use the "Mid-v" or "Bisector" basis:
-    //Vector3D bisector = r_xi_ref.GetNormalized() + r_eta_ref.GetNormalized();
-    //bisector.Normalize();
-    //Vector3D n0 = r_xi_ref.CrossProduct(r_eta_ref).GetNormalized();
-    //Vector3D e_avg1 = bisector; // This is the symmetric axis
-    //Vector3D e_avg2 = n0.CrossProduct(e_avg1);
-
-    //// Now construct the J0 using this symmetric basis
-    //Matrix2D J0;
-    //J0(0, 0) = r_xi_ref * e_avg1;   J0(0, 1) = r_eta_ref * e_avg1;
-    //J0(1, 0) = r_xi_ref * e_avg2;   J0(1, 1) = r_eta_ref * e_avg2;
+    // Note: J0(1,0) = r_xi_ref · e2 = 0 by construction for rectangular elements;
+    //       non-zero for skewed/curved elements (correct general-case behaviour).
 
     return J0;
 }
@@ -687,6 +692,26 @@ Real CObjectANCFThinPlate::GetElementJacobian() const
     return (parameters.slopesScalingX[0] * parameters.slopesScalingY[0]) / 4.; //simplified with lengths
 }
 
+
+//! the membrane and bending stiffness at (xi, eta): for a constant thickness strainCoefficients[0] and
+//! curvatureCoefficients[0]; for 4 or 12 thickness values D_eps = D_base h(xi,eta) and D_kappa = D_base h^3/12 with
+//! D_base = strainCoefficients[0]/thickness[0] - a homogeneous isotropic plate; further coefficient matrices are not used
+static void StiffnessAtPoint(const CObjectANCFThinPlate& plate, Real xi, Real eta, Matrix3D& Deps, Matrix3D& Dkappa)
+{
+    const auto& parameters = plate.GetParameters();
+    if (parameters.thickness.NumberOfItems() == 1)
+    {
+        Deps = parameters.strainCoefficients[0];
+        Dkappa = parameters.curvatureCoefficients[0];
+        return;
+    }
+    Real h0 = parameters.thickness[0];  // h at node 0 (valid for both 4- and 12-value cases)
+    CHECKandTHROW(h0 > 0., "CObjectANCFThinPlate: thickness[0] must be > 0", ExudynValueError);
+    Matrix3D Dbase = parameters.strainCoefficients[0] * (1.0 / h0);  // = E/(1-nu^2) * M_iso
+    Real h = plate.ComputeThicknessAtPoint(xi, eta);
+    Deps = Dbase * h;
+    Dkappa = Dbase * (h * h * h / 12.0);
+}
 
 //! Compute left-hand-side (LHS) of second order ODE
 //! qANCFtotal are total coordinates!
@@ -737,202 +762,415 @@ void CObjectANCFThinPlate::ComputeODE2LHStemplate(VectorBase<TReal>& ode2Lhs,
     //const Matrix3D& Deps = parameters.strainCoefficients;
     //const Matrix3D& Dkappa = parameters.curvatureCoefficients;
 
-    // Get Gauss integration points based on useReducedOrderIntegration
-    ConstSizeVector<5> xiGP, xiW;
-    GetIntegrationRule(xiGP, xiW);
-    
-    // Loop over Gauss points and compute forces directly
-    // ConstSizeVectorBase can be used as owning container when properly initialized
+    ConstSizeVector<5> gaussPoints;      // Gauss integration points:  used for bending integral
+    ConstSizeVector<5> gaussWeights;     // Gauss integration weights: used for bending integral
+    ConstSizeVector<5> membranePoints;   // membrane integration points:  Lobatto (mode 1) or Gauss (mode 0)
+    ConstSizeVector<5> membraneWeights;  // membrane integration weights: Lobatto (mode 1) or Gauss (mode 0)
+    GetIntegrationRules(membranePoints, membraneWeights, gaussPoints, gaussWeights);
+
     ConstSizeVectorBase<TReal, nODE2coordinates> elasticForces;
 
-    for (Index iGP = 0; iGP < xiGP.NumberOfItems(); iGP++)
+    //──────────────────────────────────────────────────────────────────────────────────────────────
+    // MEMBRANE INTEGRAL
+    // Integrates the virtual work of in-plane (membrane) forces delta_W_membrane = N . d(eps)/dq.
+    // Uses membranePoints: Lobatto in mode 1 (locking reduction), Gauss in mode 0.
+    //──────────────────────────────────────────────────────────────────────────────────────────────
+    for (Index iGP = 0; iGP < membranePoints.NumberOfItems(); iGP++)
     {
-        Real xi = xiGP[iGP];
-        for (Index jGP = 0; jGP < xiGP.NumberOfItems(); jGP++)
+        Real xi  = membranePoints[iGP];   // parametric coordinate xi  in [-1, 1]
+        for (Index jGP = 0; jGP < membranePoints.NumberOfItems(); jGP++)
         {
-            Real eta = xiGP[jGP];
-            
-            // 1. Get shape functions and derivatives for force computation
-            Vector12D sf_x, sf_y, sf_xx, sf_yy, sf_xy;
+            Real eta = membranePoints[jGP]; // parametric coordinate eta in [-1, 1]
+
+            // 1. Shape function first derivatives at (xi, eta)
+            //    (second derivatives not needed for the membrane integral)
+            Vector12D sf_x, sf_y;
             ComputeShapeFunctions_xy(xi, eta, sf_x, sf_y);
-            ComputeShapeFunctions_xxyy(xi, eta, sf_xx, sf_yy, sf_xy);
-            
-            // 2. Compute reference geometry (Jacobian and transformation matrix)
-            SlimVectorBase<Real, 3> r_xi_ref = MapCoordinates(sf_x, qANCFref);
-            SlimVectorBase<Real, 3> r_eta_ref = MapCoordinates(sf_y, qANCFref);
-            SlimVectorBase<Real, 3> r_xixi_ref = MapCoordinates(sf_xx, qANCFref);
-            SlimVectorBase<Real, 3> r_etaeta_ref = MapCoordinates(sf_yy, qANCFref);
-            SlimVectorBase<Real, 3> r_xieta_ref = MapCoordinates(sf_xy, qANCFref);
 
-            // 3. Jacobian & transformation matrix
-            SlimVectorBase<Real, 3> n0 = r_xi_ref.CrossProduct(r_eta_ref);
-            Real n0_norm = n0.GetL2Norm();
-            Matrix2D J0 = GetElementJacobian(r_xi_ref, r_eta_ref, n0 * (1. / n0_norm));
-            Matrix2D A = J0.GetInverse();
-            Real integrationFactor = xiW[iGP] * xiW[jGP] * J0.GetDeterminant();
+            // 2. Reference parametric first derivatives of position field
+            SlimVectorBase<Real, 3> r_xi_ref  = MapCoordinates(sf_x, qANCFref); // dr/dxi  in reference config
+            SlimVectorBase<Real, 3> r_eta_ref = MapCoordinates(sf_y, qANCFref); // dr/deta in reference config
 
-            // 4. Transform reference derivatives
-            SlimVectorBase<Real, 3> r_x_ref, r_y_ref, r_xx_ref, r_yy_ref, r_xy_ref;
-            TransformDerivatives(A, r_xi_ref, r_eta_ref, r_xixi_ref, r_etaeta_ref, r_xieta_ref,
-                r_x_ref, r_y_ref, r_xx_ref, r_yy_ref, r_xy_ref);
+            // 3. Jacobian: mapping from parametric (xi, eta) to physical (x, y) space
+            SlimVectorBase<Real, 3> n0              = r_xi_ref.CrossProduct(r_eta_ref); // reference surface normal
+            Real n0Norm                             = n0.GetL2Norm();
+            Matrix2D jacobian0                      = GetElementJacobian(r_xi_ref, r_eta_ref, n0 * (1. / n0Norm));
+            Matrix2D inverseJacobian0               = jacobian0.GetInverse();     // A = J0^{-1}: maps dxi->dx
+            Real integrationFactor                  = membraneWeights[iGP] * membraneWeights[jGP] * jacobian0.GetDeterminant();
 
-            // 5. Current parametric derivatives
-            SlimVectorBase<TReal, 3> r_xi_cur = MapCoordinates(sf_x, qANCFtotal);
-            SlimVectorBase<TReal, 3> r_eta_cur = MapCoordinates(sf_y, qANCFtotal);
-            SlimVectorBase<TReal, 3> r_xixi_cur = MapCoordinates(sf_xx, qANCFtotal);
-            SlimVectorBase<TReal, 3> r_etaeta_cur = MapCoordinates(sf_yy, qANCFtotal);
-            SlimVectorBase<TReal, 3> r_xieta_cur = MapCoordinates(sf_xy, qANCFtotal);
+            // 4. Physical first derivatives of position in reference configuration
+            //    chain rule: r_x = A[0,0]*r_xi + A[1,0]*r_eta
+            SlimVectorBase<Real, 3> r_x_ref = r_xi_ref * inverseJacobian0(0, 0) + r_eta_ref * inverseJacobian0(1, 0);
+            SlimVectorBase<Real, 3> r_y_ref = r_xi_ref * inverseJacobian0(0, 1) + r_eta_ref * inverseJacobian0(1, 1);
 
-            // 6. Transform current derivatives
-            SlimVectorBase<TReal, 3> r_x_cur, r_y_cur, r_xx_cur, r_yy_cur, r_xy_cur;
-            TransformDerivatives(A, r_xi_cur, r_eta_cur, r_xixi_cur, r_etaeta_cur, r_xieta_cur,
-                r_x_cur, r_y_cur, r_xx_cur, r_yy_cur, r_xy_cur);
+            // 5. Current parametric first derivatives
+            SlimVectorBase<TReal, 3> r_xi_cur  = MapCoordinates(sf_x, qANCFtotal); // dr/dxi  in current config
+            SlimVectorBase<TReal, 3> r_eta_cur = MapCoordinates(sf_y, qANCFtotal); // dr/deta in current config
 
-            // 7. Compute kinematics (strains/curvatures) using physical vectors
-            SlimVectorBase<Real, 3> eps_mid_ref, kappa_ref;
-            SlimVectorBase<TReal, 3> eps_mid_cur, kappa_cur;
-            ComputeKinematicsPure(r_x_ref, r_y_ref, r_xx_ref, r_yy_ref, r_xy_ref,
-                eps_mid_ref, kappa_ref);
-            ComputeKinematicsPure(r_x_cur, r_y_cur, r_xx_cur, r_yy_cur, r_xy_cur,
-                eps_mid_cur, kappa_cur);
+            // 6. Physical first derivatives in current configuration
+            SlimVectorBase<TReal, 3> r_x_cur = r_xi_cur * inverseJacobian0(0, 0) + r_eta_cur * inverseJacobian0(1, 0);
+            SlimVectorBase<TReal, 3> r_y_cur = r_xi_cur * inverseJacobian0(0, 1) + r_eta_cur * inverseJacobian0(1, 1);
 
-            SlimVectorBase<TReal, 3> eps_mid, kappa;
-            for (Index i = 0; i < kappa.NumberOfItems(); i++)
+            // 7. Green-Lagrange membrane strains (relative to reference configuration)
+            // reference midplane strains: eps_ref[i] = 0.5*(r_a_ref . r_b_ref)
+            SlimVectorBase<Real, 3> epsMidReference;
+            epsMidReference[0] = 0.5 * (r_x_ref * r_x_ref);     // normal strain in x-direction
+            epsMidReference[1] = 0.5 * (r_y_ref * r_y_ref);     // normal strain in y-direction
+            epsMidReference[2] = (r_x_ref * r_y_ref);           // engineering shear strain (gamma_xy)
+
+            // current midplane strains: eps_cur[i] = 0.5*(r_a_cur . r_b_cur)
+            SlimVectorBase<TReal, 3> epsMidCurrent;
+            epsMidCurrent[0] = TReal(0.5) * (r_x_cur * r_x_cur);
+            epsMidCurrent[1] = TReal(0.5) * (r_y_cur * r_y_cur);
+            epsMidCurrent[2] = (r_x_cur * r_y_cur);
+
+            // relative membrane strains: eps_mid = eps_cur - eps_ref
+            SlimVectorBase<TReal, 3> epsMid;
+            for (Index i = 0; i < 3; i++) { epsMid[i] = epsMidCurrent[i] - epsMidReference[i]; }
+
+            // 8. Membrane stress resultants: membraneForceResultants = D_eps * eps_mid  [SI: N/m]
+            // For variable thickness: D_eps = D_base * h(xi,eta) evaluated at this Gauss point.
+            Matrix3D Deps, Dkappa;
+            StiffnessAtPoint(*this, xi, eta, Deps, Dkappa);
+            SlimVectorBase<TReal, 3> membraneForceResultants;
+            EXUmath::MultMatrixVectorTemplate(Deps, epsMid, membraneForceResultants);
+
+            // 8b. Kelvin-Voigt material damping (Rayleigh stiffness-proportional damping):
+            //     consistent damping stress σ_d = β · D_eps · ε̇ at the CURRENT configuration.
+            //     ε̇ is computed from the current-config strain measure, so it vanishes
+            //     identically for any rigid-body motion (translation or finite rotation) of
+            //     the element — no spurious damping of rigid-body modes (unlike β·K_ref·q_t).
+            if (parameters.stiffnessProportionalDamping != 0.)
             {
-                eps_mid[i] = eps_mid_cur[i] - eps_mid_ref[i];
-                kappa[i] = kappa_cur[i] - kappa_ref[i];
+                // velocity-mapped parametric first derivatives of the displacement field
+                SlimVectorBase<TReal, 3> r_xi_dot  = MapCoordinates(sf_x, qANCF_t);
+                SlimVectorBase<TReal, 3> r_eta_dot = MapCoordinates(sf_y, qANCF_t);
+                // physical (x,y) first derivatives of velocity (constant reference Jacobian A)
+                SlimVectorBase<TReal, 3> r_x_dot = r_xi_dot * inverseJacobian0(0, 0) + r_eta_dot * inverseJacobian0(1, 0);
+                SlimVectorBase<TReal, 3> r_y_dot = r_xi_dot * inverseJacobian0(0, 1) + r_eta_dot * inverseJacobian0(1, 1);
+                // Green-Lagrange membrane strain rate at current config: ε̇_i = d/dt(0.5 r_a·r_b)
+                SlimVectorBase<TReal, 3> epsDot;
+                epsDot[0] = MultVectors121(r_x_cur, r_x_dot);
+                epsDot[1] = MultVectors121(r_y_cur, r_y_dot);
+                epsDot[2] = MultVectors121(r_x_cur, r_y_dot) + MultVectors121(r_y_cur, r_x_dot);
+                // damping stress σ_d = β · D_eps · ε̇  → added to N before the virtual-work loop
+                SlimVectorBase<TReal, 3> dampStress;
+                EXUmath::MultMatrixVectorTemplate(Deps, epsDot, dampStress);
+                for (Index k = 0; k < 3; k++)
+                {
+                    membraneForceResultants[k] += parameters.stiffnessProportionalDamping * dampStress[k];
+                }
             }
 
-            // Compute stress resultants from strains
-            SlimVectorBase<TReal, 3> N;  // Membrane forces
-            EXUmath::MultMatrixVectorTemplate(ComputeStrainCoefficientsAtPoint(xi, eta), eps_mid, N);
-
-            // Compute moment resultants from curvatures
-            SlimVectorBase<TReal, 3> M;  // Bending moments
-            EXUmath::MultMatrixVectorTemplate(ComputeCurvatureCoefficientsAtPoint(xi, eta), kappa, M);
-
-            //could also be passed from ComputeKinematicsPure
-            SlimVectorBase<TReal, 3> n3 = r_x_cur.CrossProduct(r_y_cur);
-            TReal n3_norm = n3.GetL2Norm();
-            // Degenerate check (should ideally be handled in Newton/Solver, but safe here)
-            CHECKandTHROW((Real)n3_norm != 0., "CObjectANCFThinPlate::ComputeODE2LHStemplate: plate normal is degenerated");
-
-            TReal n3_3 = EXUstd::Cube(n3_norm);
-            TReal inv_n3_3 = 1.0 / n3_3;
-
+            // 9. Virtual work of membrane forces for each generalized coordinate
             elasticForces.SetAll(0.);
-            
-            // Loop over all nODE2coordinates coordinates
-            // Coordinate layout: [node0(rx,ry,rz,sxx,sxy,sxz,syx,syy,syz), node1(...), ...]
-            for (Index coordIdx = 0; coordIdx < nODE2coordinates; coordIdx++)
+            for (Index coordinateIndex = 0; coordinateIndex < nODE2coordinates; coordinateIndex++)
             {
-                Index nodeIdx = coordIdx / 9;
-                Index vecComp = (coordIdx % 9) / 3; // 0=pos, 1=slopeX, 2=slopeY
-                Index spatialComp = coordIdx % 3;   // 0=x, 1=y, 2=z
-                Index sfIdx = nodeIdx * 3 + vecComp;
+                Index nodeIndex          = coordinateIndex / 9;           // which node (0..3)
+                Index vectorComponent    = (coordinateIndex % 9) / 3;    // 0=position, 1=slopeX, 2=slopeY
+                Index spatialComponent   = coordinateIndex % 3;          // spatial direction: 0=x, 1=y, 2=z
+                Index shapeFunctionIndex = nodeIndex * 3 + vectorComponent;
 
-                // 1. Transform Shape Function derivatives (Parametric -> Physical)
-                // We apply matrix A (invJ0) to the scalar derivatives of the Shape Function.
-                // This corresponds to chain rule: dS/dx = dS/dxi * dxi/dx + dS/deta * deta/dx
-                Real S_xi = sf_x[sfIdx];
-                Real S_eta = sf_y[sfIdx];
+                // transform shape function first derivatives from parametric to physical space
+                // chain rule: dS/dx = dS/dxi * A[0,0] + dS/deta * A[1,0]
+                Real sf_xi             = sf_x[shapeFunctionIndex];
+                Real sf_eta            = sf_y[shapeFunctionIndex];
+                Real dShapeFunction_dx = sf_xi * inverseJacobian0(0, 0) + sf_eta * inverseJacobian0(1, 0); // dS/dx
+                Real dShapeFunction_dy = sf_xi * inverseJacobian0(0, 1) + sf_eta * inverseJacobian0(1, 1); // dS/dy
 
-                Real dS_dx = S_xi * A(0, 0) + S_eta * A(1, 0);
-                Real dS_dy = S_xi * A(0, 1) + S_eta * A(1, 1);
+                // variation of physical first derivatives (sparse: only spatialComponent is nonzero)
+                SlimVectorBase<Real, 3> variation_r_x(0.); // d(r_x)/d(q_coordinateIndex)
+                SlimVectorBase<Real, 3> variation_r_y(0.); // d(r_y)/d(q_coordinateIndex)
+                variation_r_x[spatialComponent] = dShapeFunction_dx;
+                variation_r_y[spatialComponent] = dShapeFunction_dy;
 
-                Real S_xixi = sf_xx[sfIdx];
-                Real S_etaeta = sf_yy[sfIdx];
-                Real S_xieta = sf_xy[sfIdx];
+                // variation of membrane strains: d(eps_mid)/d(q_coordinateIndex)
+                // d(eps_x)/dq = r_x . d(r_x)/dq
+                // d(eps_y)/dq = r_y . d(r_y)/dq
+                // d(gamma)/dq = r_x . d(r_y)/dq + r_y . d(r_x)/dq
+                SlimVectorBase<TReal, 3> variation_epsMid;
+                variation_epsMid[0] = MultVectors121(r_x_cur, variation_r_x);
+                variation_epsMid[1] = MultVectors121(r_y_cur, variation_r_y);
+                variation_epsMid[2] = MultVectors121(r_x_cur, variation_r_y) + MultVectors121(r_y_cur, variation_r_x);
 
-                // d²S/dx² = S_xixi*A00² + ... (same pattern as r_xx transformation)
-                Real dS_dxx = S_xixi * (A(0, 0) * A(0, 0)) + S_xieta * (2. * A(0, 0) * A(1, 0)) + S_etaeta * (A(1, 0) * A(1, 0));
-                Real dS_dyy = S_xixi * (A(0, 1) * A(0, 1)) + S_xieta * (2. * A(0, 1) * A(1, 1)) + S_etaeta * (A(1, 1) * A(1, 1));
-                Real dS_dxy = S_xixi * (A(0, 0) * A(0, 1)) + S_xieta * (A(0, 0) * A(1, 1) + A(1, 0) * A(0, 1)) + S_etaeta * (A(1, 0) * A(1, 1));
-
-                // 2. Construct Variation Vectors
-                // The variation vectors are sparse (only spatialComp is non-zero).
-                SlimVectorBase<Real, 3> dr_x_dq(0.);
-                SlimVectorBase<Real, 3> dr_y_dq(0.);
-                SlimVectorBase<Real, 3> dr_xx_dq(0.);
-                SlimVectorBase<Real, 3> dr_yy_dq(0.);
-                SlimVectorBase<Real, 3> dr_xy_dq(0.);
-
-                dr_x_dq[spatialComp] = dS_dx;
-                dr_y_dq[spatialComp] = dS_dy;
-                dr_xx_dq[spatialComp] = dS_dxx;
-                dr_yy_dq[spatialComp] = dS_dyy;
-                dr_xy_dq[spatialComp] = dS_dxy;
-
-                // 3. Membrane Strain Variation (deps/dq)
-                // d(0.5*(r_x*r_x - 1))/dq = r_x * dr_x/dq
-                SlimVectorBase<TReal, 3> deps_dq;
-                deps_dq[0] = MultVectors121(r_x_cur, dr_x_dq);
-                deps_dq[1] = MultVectors121(r_y_cur, dr_y_dq);
-                deps_dq[2] = MultVectors121(r_x_cur, dr_y_dq) + MultVectors121(r_y_cur, dr_x_dq);
-
-                TReal force_membrane = N * deps_dq;
-
-                // 4. Curvature Variation (dkappa/dq)
-                // Variation of normal vector n3 = r_x X r_y
-                // dn3/dq = dr_x/dq X r_y + r_x X dr_y/dq
-                SlimVectorBase<TReal, 3> dn3_dq;
-                // Manual cross product for performance/clarity with sparse vectors
-                dn3_dq[0] = dr_x_dq[1] * r_y_cur[2] + r_x_cur[1] * dr_y_dq[2] - dr_x_dq[2] * r_y_cur[1] - r_x_cur[2] * dr_y_dq[1];
-                dn3_dq[1] = dr_x_dq[2] * r_y_cur[0] + r_x_cur[2] * dr_y_dq[0] - dr_x_dq[0] * r_y_cur[2] - r_x_cur[0] * dr_y_dq[2];
-                dn3_dq[2] = dr_x_dq[0] * r_y_cur[1] + r_x_cur[0] * dr_y_dq[1] - dr_x_dq[1] * r_y_cur[0] - r_x_cur[1] * dr_y_dq[0];
-
-
-                // Variation of scaling factor 1/n^3
-                // d(1/n^3) = -3/n^5 * (n . dn)
-                TReal dn3_norm_dq = (n3 * dn3_dq) / n3_norm;
-                TReal d_inv_n3_3_dq = TReal(-3.0) * inv_n3_3 * dn3_norm_dq / n3_norm;
-
-                // Variation of kappa components
-                // kappa_i = (n3 . r_ii) / n3^3
-                SlimVectorBase<TReal, 3> dkappa_dq;
-
-                dkappa_dq[0] = (dn3_dq * r_xx_cur + MultVectors121(n3, dr_xx_dq)) * inv_n3_3 +
-                    (n3 * r_xx_cur) * d_inv_n3_3_dq;
-
-                dkappa_dq[1] = (dn3_dq * r_yy_cur + MultVectors121(n3, dr_yy_dq)) * inv_n3_3 +
-                    (n3 * r_yy_cur) * d_inv_n3_3_dq;
-
-                // Note factor 2.0 for engineering twist
-                dkappa_dq[2] = ((dn3_dq * r_xy_cur + MultVectors121(n3, dr_xy_dq)) * inv_n3_3 +
-                    (n3 * r_xy_cur) * d_inv_n3_3_dq) * 2.0;
-
-                TReal force_bending = M * dkappa_dq;
-
-                // 5. Accumulate Force
-                elasticForces[coordIdx] = (force_membrane + force_bending) * integrationFactor;
+                // virtual work contribution: delta_W_membrane = N . d(eps_mid)/dq
+                elasticForces[coordinateIndex] = (membraneForceResultants * variation_epsMid) * integrationFactor;
             }
 
-            // Accumulate forces into ode2Lhs
-            for (Index i = 0; i < nODE2coordinates; i++)
-            {
-                ode2Lhs[i] += elasticForces[i];
-            }
+            // accumulate membrane contribution into total generalized forces
+            for (Index i = 0; i < nODE2coordinates; i++) { ode2Lhs[i] += elasticForces[i]; }
         }
     }
 
+    //──────────────────────────────────────────────────────────────────────────────────────────────
+    // BENDING INTEGRAL
+    // Integrates the virtual work of bending forces delta_W_bending = M . d(kappa)/dq.
+    // Modes 0/1: standard tensor-product Gauss rule (5x5 or 2x2).
+    // Mode 2:    cross-axis Gauss-2 -- 4 pts at (+-g, 0) and (0, +-g), weight 1 each.
+    //
+    // Build flat list of bending quadrature (xi, eta, weight) for all modes.
+    // Max 25 entries for mode 0 (5x5 Gauss); 4 for modes 1 and 2.  MP, 2026-05-26
+    //──────────────────────────────────────────────────────────────────────────────────────────────
+    // Build flat list of bending quadrature (xi, eta, weight) for all modes.
+    // All modes use the standard tensor-product Gauss rule (flattened into a single list).
+    // Mode 0: 5x5 full Gauss (25 pts).  Modes 1 and 2: 2x2 Gauss (4 pts).  MP, 2026-05-26
+    ConstSizeVector<25> bendXiArr, bendEtaArr, bendWgtArr;
+    Index nBendPts = 0;
+    for (Index i = 0; i < gaussPoints.NumberOfItems(); i++)
+    {
+        for (Index j = 0; j < gaussPoints.NumberOfItems(); j++)
+        {
+            bendXiArr[nBendPts]  = gaussPoints[i];
+            bendEtaArr[nBendPts] = gaussPoints[j];
+            bendWgtArr[nBendPts] = gaussWeights[i] * gaussWeights[j];
+            nBendPts++;
+        }
+    }
+
+    for (Index pt = 0; pt < nBendPts; pt++)
+    {
+        Real xi  = bendXiArr[pt];   // parametric coordinate xi  in [-1, 1]
+        Real eta = bendEtaArr[pt];  // parametric coordinate eta in [-1, 1]
+        {
+
+            // 1. Shape function first and second derivatives at (xi, eta)
+            //    (both orders needed: first for normal vector variation, second for curvature)
+            Vector12D sf_x, sf_y, sf_xx, sf_yy, sf_xy;
+            ComputeShapeFunctions_xy(xi, eta, sf_x, sf_y);
+            ComputeShapeFunctions_xxyy(xi, eta, sf_xx, sf_yy, sf_xy);
+
+            // 2. Reference parametric derivatives of position field (first and second order)
+            SlimVectorBase<Real, 3> r_xi_ref     = MapCoordinates(sf_x,  qANCFref); // dr/dxi
+            SlimVectorBase<Real, 3> r_eta_ref    = MapCoordinates(sf_y,  qANCFref); // dr/deta
+            SlimVectorBase<Real, 3> r_xixi_ref   = MapCoordinates(sf_xx, qANCFref); // d²r/dxi²
+            SlimVectorBase<Real, 3> r_etaeta_ref = MapCoordinates(sf_yy, qANCFref); // d²r/deta²
+            SlimVectorBase<Real, 3> r_xieta_ref  = MapCoordinates(sf_xy, qANCFref); // d²r/dxi deta
+
+            // 3. Jacobian: mapping from parametric to physical space
+            SlimVectorBase<Real, 3> n0     = r_xi_ref.CrossProduct(r_eta_ref); // reference surface normal
+            Real n0Norm                    = n0.GetL2Norm();
+            Matrix2D jacobian0             = GetElementJacobian(r_xi_ref, r_eta_ref, n0 * (1. / n0Norm));
+            Matrix2D inverseJacobian0      = jacobian0.GetInverse();            // A = J0^{-1}
+            Real integrationFactor         = bendWgtArr[pt] * jacobian0.GetDeterminant(); // weight from flat bending list; MP, 2026-05-26
+
+            // 4. Physical derivatives in reference configuration (first and second order)
+            SlimVectorBase<Real, 3> r_x_ref, r_y_ref, r_xx_ref, r_yy_ref, r_xy_ref;
+            TransformDerivatives(inverseJacobian0, r_xi_ref, r_eta_ref, r_xixi_ref, r_etaeta_ref, r_xieta_ref,
+                r_x_ref, r_y_ref, r_xx_ref, r_yy_ref, r_xy_ref);
+
+            // 5. Current parametric derivatives (first and second order)
+            SlimVectorBase<TReal, 3> r_xi_cur     = MapCoordinates(sf_x,  qANCFtotal);
+            SlimVectorBase<TReal, 3> r_eta_cur    = MapCoordinates(sf_y,  qANCFtotal);
+            SlimVectorBase<TReal, 3> r_xixi_cur   = MapCoordinates(sf_xx, qANCFtotal);
+            SlimVectorBase<TReal, 3> r_etaeta_cur = MapCoordinates(sf_yy, qANCFtotal);
+            SlimVectorBase<TReal, 3> r_xieta_cur  = MapCoordinates(sf_xy, qANCFtotal);
+
+            // 6. Physical derivatives in current configuration (first and second order)
+            SlimVectorBase<TReal, 3> r_x_cur, r_y_cur, r_xx_cur, r_yy_cur, r_xy_cur;
+            TransformDerivatives(inverseJacobian0, r_xi_cur, r_eta_cur, r_xixi_cur, r_etaeta_cur, r_xieta_cur,
+                r_x_cur, r_y_cur, r_xx_cur, r_yy_cur, r_xy_cur);
+
+            // 7. Current surface normal vector and tangent norms (shared by kappa_cur and per-coord variation)
+            //    n3 = r_x × r_y (current surface normal vector)
+            //    MATERIAL curvature measure (consistent with ANCFCable2D, Gerstmayr-Irschik type):
+            //      kappa_xx = (n3 . r_xx) / (|n3| |r_x|),  kappa_yy = (n3 . r_yy) / (|n3| |r_y|),
+            //      kappa_xy = 2 (n3 . r_xy) / (|n3| sqrt(|r_x||r_y|))
+            //    Strip limit (|r_y|=1): kappa_xx = (r' x r'')/|r'|^2 = Cable2D measure exactly.
+            //    The previous GEOMETRIC measure (n3 . r_ii)/|n3|^3 couples bending to membrane
+            //    stretch and produces a mesh-independent parasitic membrane strain
+            //    eps = h^2 kappa^2 / 12 in pure bending; the material measure does not.
+            SlimVectorBase<TReal, 3> n3  = r_x_cur.CrossProduct(r_y_cur); // current surface normal: n3 = r_x × r_y
+            TReal n3Norm                 = n3.GetL2Norm();
+            CHECKandTHROW((Real)n3Norm != 0., "CObjectANCFThinPlate::ComputeODE2LHStemplate: plate normal is degenerated");
+            TReal rxNorm  = r_x_cur.GetL2Norm();   // |r_x| current
+            TReal ryNorm  = r_y_cur.GetL2Norm();   // |r_y| current
+            TReal invNx   = TReal(1.0) / (n3Norm * rxNorm);                  // 1/(|n3| |r_x|)
+            TReal invNy   = TReal(1.0) / (n3Norm * ryNorm);                  // 1/(|n3| |r_y|)
+            TReal invNxy  = TReal(1.0) / (n3Norm * sqrt(rxNorm * ryNorm));   // 1/(|n3| sqrt(|r_x||r_y|))
+
+            // 8. Curvatures in reference configuration (same material measure)
+            SlimVectorBase<Real, 3> kappaReference;
+            {
+                SlimVectorBase<Real, 3> n3Reference = r_x_ref.CrossProduct(r_y_ref); // reference surface normal
+                Real n3RefNorm  = n3Reference.GetL2Norm();
+                Real rxRefNorm  = r_x_ref.GetL2Norm();
+                Real ryRefNorm  = r_y_ref.GetL2Norm();
+                kappaReference[0] = (n3Reference * r_xx_ref) / (n3RefNorm * rxRefNorm);           // kappa_x
+                kappaReference[1] = (n3Reference * r_yy_ref) / (n3RefNorm * ryRefNorm);           // kappa_y
+                kappaReference[2] = 2.0 * (n3Reference * r_xy_ref) / (n3RefNorm * sqrt(rxRefNorm * ryRefNorm)); // engineering twist (factor 2)
+            }
+
+            // 9. Curvatures in current configuration (n3, norms already computed above)
+            SlimVectorBase<TReal, 3> kappaCurrent;
+            kappaCurrent[0] = (n3 * r_xx_cur) * invNx;
+            kappaCurrent[1] = (n3 * r_yy_cur) * invNy;
+            kappaCurrent[2] = TReal(2.0) * (n3 * r_xy_cur) * invNxy; // engineering twist (factor 2)
+
+            // relative curvatures (relative to reference configuration)
+            SlimVectorBase<TReal, 3> kappa;
+            for (Index i = 0; i < 3; i++) { kappa[i] = kappaCurrent[i] - kappaReference[i]; }
+
+            // 10. Bending moment resultants: bendingMomentResultants = D_kappa * kappa  [SI: Nm/m]
+            // For variable thickness: D_kappa = D_base * h(xi,eta)³/12 evaluated at this Gauss point.
+            Matrix3D Deps, Dkappa;
+            StiffnessAtPoint(*this, xi, eta, Deps, Dkappa);
+            SlimVectorBase<TReal, 3> bendingMomentResultants;
+            EXUmath::MultMatrixVectorTemplate(Dkappa, kappa, bendingMomentResultants);
+
+            // 10b. Kelvin-Voigt material damping (Rayleigh stiffness-proportional damping):
+            //      m_d = β_κ · D_kappa · κ̇  at the CURRENT configuration.  κ̇ is the curvature
+            //      rate of the deformed surface and vanishes identically for rigid-body motion.
+            const Real betaBend = (parameters.bendingStiffnessProportionalDamping >= 0.)
+                ? parameters.bendingStiffnessProportionalDamping
+                : parameters.stiffnessProportionalDamping;
+            if (betaBend != 0.)
+            {
+                // velocity-mapped parametric derivatives (first + second order) of the field r(q)
+                SlimVectorBase<TReal, 3> r_xi_dot     = MapCoordinates(sf_x,  qANCF_t);
+                SlimVectorBase<TReal, 3> r_eta_dot    = MapCoordinates(sf_y,  qANCF_t);
+                SlimVectorBase<TReal, 3> r_xixi_dot   = MapCoordinates(sf_xx, qANCF_t);
+                SlimVectorBase<TReal, 3> r_etaeta_dot = MapCoordinates(sf_yy, qANCF_t);
+                SlimVectorBase<TReal, 3> r_xieta_dot  = MapCoordinates(sf_xy, qANCF_t);
+                // physical (x,y) derivatives of the velocity
+                SlimVectorBase<TReal, 3> r_x_dot, r_y_dot, r_xx_dot, r_yy_dot, r_xy_dot;
+                TransformDerivatives(inverseJacobian0,
+                    r_xi_dot, r_eta_dot, r_xixi_dot, r_etaeta_dot, r_xieta_dot,
+                    r_x_dot, r_y_dot, r_xx_dot, r_yy_dot, r_xy_dot);
+                // n3_dot = d/dt(r_x × r_y) = r_x_dot × r_y + r_x × r_y_dot
+                SlimVectorBase<TReal, 3> n3_dot;
+                n3_dot[0] = r_x_dot[1]*r_y_cur[2] + r_x_cur[1]*r_y_dot[2]
+                          - r_x_dot[2]*r_y_cur[1] - r_x_cur[2]*r_y_dot[1];
+                n3_dot[1] = r_x_dot[2]*r_y_cur[0] + r_x_cur[2]*r_y_dot[0]
+                          - r_x_dot[0]*r_y_cur[2] - r_x_cur[0]*r_y_dot[2];
+                n3_dot[2] = r_x_dot[0]*r_y_cur[1] + r_x_cur[0]*r_y_dot[1]
+                          - r_x_dot[1]*r_y_cur[0] - r_x_cur[1]*r_y_dot[0];
+                // time derivatives of normalization factors of the MATERIAL curvature measure:
+                //   d/dt[1/(|n3| |r_a|)] = -1/(|n3| |r_a|) * [ (n3·n3_dot)/|n3|² + (r_a·r_a_dot)/|r_a|² ]
+                TReal relN3dot = (n3 * n3_dot) / (n3Norm * n3Norm);          // (n3·ṅ3)/|n3|²
+                TReal relRxdot = (r_x_cur * r_x_dot) / (rxNorm * rxNorm);    // (r_x·ṙ_x)/|r_x|²
+                TReal relRydot = (r_y_cur * r_y_dot) / (ryNorm * ryNorm);    // (r_y·ṙ_y)/|r_y|²
+                TReal dInvNx_dt  = -invNx  * (relN3dot + relRxdot);
+                TReal dInvNy_dt  = -invNy  * (relN3dot + relRydot);
+                TReal dInvNxy_dt = -invNxy * (relN3dot + TReal(0.5) * (relRxdot + relRydot));
+                // κ̇_i = d/dt[(n3 · r_ii) · invN_i]
+                //      = (n3_dot · r_ii + n3 · r_ii_dot) · invN_i + (n3 · r_ii) · d(invN_i)/dt
+                SlimVectorBase<TReal, 3> kappaDot;
+                kappaDot[0] = (n3_dot * r_xx_cur + MultVectors121(n3, r_xx_dot)) * invNx
+                            + (n3 * r_xx_cur) * dInvNx_dt;
+                kappaDot[1] = (n3_dot * r_yy_cur + MultVectors121(n3, r_yy_dot)) * invNy
+                            + (n3 * r_yy_cur) * dInvNy_dt;
+                // factor 2 for engineering twist (matches kappaCurrent component [2])
+                kappaDot[2] = TReal(2.0) * ((n3_dot * r_xy_cur + MultVectors121(n3, r_xy_dot)) * invNxy
+                                          + (n3 * r_xy_cur) * dInvNxy_dt);
+                // damping moment m_d = β · D_kappa · κ̇  → added to M before the virtual-work loop
+                SlimVectorBase<TReal, 3> dampMoment;
+                EXUmath::MultMatrixVectorTemplate(Dkappa, kappaDot, dampMoment);
+                for (Index i = 0; i < 3; i++)
+                {
+                    bendingMomentResultants[i] += betaBend * dampMoment[i];
+                }
+            }
+
+            // 11. Virtual work of bending forces for each generalized coordinate
+            elasticForces.SetAll(0.);
+            for (Index coordinateIndex = 0; coordinateIndex < nODE2coordinates; coordinateIndex++)
+            {
+                Index nodeIndex          = coordinateIndex / 9;
+                Index vectorComponent    = (coordinateIndex % 9) / 3;    // 0=position, 1=slopeX, 2=slopeY
+                Index spatialComponent   = coordinateIndex % 3;          // spatial direction: 0=x, 1=y, 2=z
+                Index shapeFunctionIndex = nodeIndex * 3 + vectorComponent;
+
+                // transform shape function first derivatives from parametric to physical space
+                Real sf_xi  = sf_x[shapeFunctionIndex];
+                Real sf_eta = sf_y[shapeFunctionIndex];
+                Real dShapeFunction_dx = sf_xi * inverseJacobian0(0, 0) + sf_eta * inverseJacobian0(1, 0); // dS/dx
+                Real dShapeFunction_dy = sf_xi * inverseJacobian0(0, 1) + sf_eta * inverseJacobian0(1, 1); // dS/dy
+
+                // transform shape function second derivatives from parametric to physical space
+                // chain rule: d²S/dx² = S_xixi*A00² + 2*S_xieta*A00*A10 + S_etaeta*A10²
+                Real sf_xixi   = sf_xx[shapeFunctionIndex];
+                Real sf_etaeta = sf_yy[shapeFunctionIndex];
+                Real sf_xieta  = sf_xy[shapeFunctionIndex];
+                Real dShapeFunction_dxx = sf_xixi*(inverseJacobian0(0,0)*inverseJacobian0(0,0))
+                                        + sf_xieta*(2.*inverseJacobian0(0,0)*inverseJacobian0(1,0))
+                                        + sf_etaeta*(inverseJacobian0(1,0)*inverseJacobian0(1,0)); // d²S/dx²
+                Real dShapeFunction_dyy = sf_xixi*(inverseJacobian0(0,1)*inverseJacobian0(0,1))
+                                        + sf_xieta*(2.*inverseJacobian0(0,1)*inverseJacobian0(1,1))
+                                        + sf_etaeta*(inverseJacobian0(1,1)*inverseJacobian0(1,1)); // d²S/dy²
+                Real dShapeFunction_dxy = sf_xixi*(inverseJacobian0(0,0)*inverseJacobian0(0,1))
+                                        + sf_xieta*(inverseJacobian0(0,0)*inverseJacobian0(1,1) + inverseJacobian0(1,0)*inverseJacobian0(0,1))
+                                        + sf_etaeta*(inverseJacobian0(1,0)*inverseJacobian0(1,1)); // d²S/dxdy
+
+                // variation of physical derivatives (sparse: only spatialComponent is nonzero)
+                SlimVectorBase<Real, 3> variation_r_x(0.),  variation_r_y(0.);   // d(r_x)/dq, d(r_y)/dq
+                SlimVectorBase<Real, 3> variation_r_xx(0.), variation_r_yy(0.),  // d(r_xx)/dq, d(r_yy)/dq
+                                        variation_r_xy(0.);                       // d(r_xy)/dq
+                variation_r_x[spatialComponent]  = dShapeFunction_dx;
+                variation_r_y[spatialComponent]  = dShapeFunction_dy;
+                variation_r_xx[spatialComponent] = dShapeFunction_dxx;
+                variation_r_yy[spatialComponent] = dShapeFunction_dyy;
+                variation_r_xy[spatialComponent] = dShapeFunction_dxy;
+
+                // variation of surface normal: d(n3)/dq = d(r_x × r_y)/dq
+                //   = d(r_x)/dq × r_y + r_x × d(r_y)/dq
+                SlimVectorBase<TReal, 3> variation_n3;
+                variation_n3[0] = variation_r_x[1]*r_y_cur[2] + r_x_cur[1]*variation_r_y[2]
+                                - variation_r_x[2]*r_y_cur[1] - r_x_cur[2]*variation_r_y[1];
+                variation_n3[1] = variation_r_x[2]*r_y_cur[0] + r_x_cur[2]*variation_r_y[0]
+                                - variation_r_x[0]*r_y_cur[2] - r_x_cur[0]*variation_r_y[2];
+                variation_n3[2] = variation_r_x[0]*r_y_cur[1] + r_x_cur[0]*variation_r_y[1]
+                                - variation_r_x[1]*r_y_cur[0] - r_x_cur[1]*variation_r_y[0];
+
+                // variations of the normalization factors of the MATERIAL curvature measure:
+                //   d[1/(|n3| |r_a|)]/dq = -1/(|n3| |r_a|) * [ (n3·dn3)/|n3|² + (r_a·dr_a)/|r_a|² ]
+                TReal relVarN3 = (n3 * variation_n3) / (n3Norm * n3Norm);                       // (n3·δn3)/|n3|²
+                TReal relVarRx = MultVectors121(r_x_cur, variation_r_x) / (rxNorm * rxNorm);    // (r_x·δr_x)/|r_x|²
+                TReal relVarRy = MultVectors121(r_y_cur, variation_r_y) / (ryNorm * ryNorm);    // (r_y·δr_y)/|r_y|²
+                TReal variation_invNx  = -invNx  * (relVarN3 + relVarRx);
+                TReal variation_invNy  = -invNy  * (relVarN3 + relVarRy);
+                TReal variation_invNxy = -invNxy * (relVarN3 + TReal(0.5) * (relVarRx + relVarRy));
+
+                // variation of curvature: d(kappa_i)/dq
+                //   kappa_i = (n3 . r_ii) * invN_i
+                //   => d(kappa_i)/dq = (d(n3)/dq . r_ii + n3 . d(r_ii)/dq) * invN_i
+                //                    + (n3 . r_ii) * d(invN_i)/dq
+                SlimVectorBase<TReal, 3> variation_kappa;
+                variation_kappa[0] = (variation_n3 * r_xx_cur + MultVectors121(n3, variation_r_xx)) * invNx
+                                   + (n3 * r_xx_cur) * variation_invNx;                            // d(kappa_x)/dq
+                variation_kappa[1] = (variation_n3 * r_yy_cur + MultVectors121(n3, variation_r_yy)) * invNy
+                                   + (n3 * r_yy_cur) * variation_invNy;                            // d(kappa_y)/dq
+                // factor 2 for engineering twist curvature
+                variation_kappa[2] = ((variation_n3 * r_xy_cur + MultVectors121(n3, variation_r_xy)) * invNxy
+                                   + (n3 * r_xy_cur) * variation_invNxy) * TReal(2.0);             // d(kappa_twist)/dq
+
+                // virtual work contribution: delta_W_bending = M . d(kappa)/dq
+                elasticForces[coordinateIndex] = (bendingMomentResultants * variation_kappa) * integrationFactor;
+            }
+
+            // accumulate bending contribution into total generalized forces
+            for (Index i = 0; i < nODE2coordinates; i++) { ode2Lhs[i] += elasticForces[i]; }
+        }  // end inner brace (preserves body indentation after loop restructuring)
+    }      // end bending quadrature point loop (modes 0/1: tensor-product; mode 2: cross-axis)
+
     //-----------------------------------------------------------------------------------------
-    // mass-proportional: f_d = alpha * M * q_t
-    // This matches the approach used in the Python mesh test (dampingMatrix = damp_fac * massMatrix),
-    // but implemented here inside the element.
-    // alpha has unit [1/s].
+    // mass-proportional: f_d = alpha * M * q_t   [alpha in 1/s]
     if (parameters.massProportionalDamping != 0.)
     {
-        PreComputeMassTerms(); // ensures precomputedMassMatrix is available
+        PreComputeMassTerms();
         for (Index i = 0; i < nODE2coordinates; i++)
         {
             TReal sum = 0.;
             for (Index j = 0; j < nODE2coordinates; j++)
-            {
                 sum += precomputedMassMatrix(i, j) * qANCF_t[j];
-            }
             ode2Lhs[i] += parameters.massProportionalDamping * sum;
         }
     }
+
+    // Note: stiffness-proportional damping is NOT applied here as a global β·K_ref·q̇.
+    // It is integrated point-wise as a Kelvin–Voigt material damping inside the membrane
+    // and bending Gauss-point loops above (β·D_eps·ε̇ and β·D_kappa·κ̇).  That formulation is
+    // frame-indifferent and produces zero damping force for any rigid-body motion of the
+    // element, which is required for elements that undergo finite rotations.
 }
 
 
@@ -952,55 +1190,55 @@ void CObjectANCFThinPlate::ComputeMassMatrix(EXUmath::MatrixContainer& massMatri
 
 //bool testSF = true;
 
-//! Compute thickness at element point (xi, eta) in [-1,1] x [-1,1]
-//! using bilinear Q4 interpolation of thicknessAtNodes.
-//! Node order matches element layout: n0=(-1,-1), n1=(+1,-1), n2=(+1,+1), n3=(-1,+1)
-//! Falls back to constant thickness if all nodal values are zero.
+//! Compute thickness at element point (xi, eta) in [-1,1] x [-1,1].
+//! Three modes depending on the length of thickness:
+//!   1 value  -- constant thickness: h(xi,eta) = thickness[0]
+//!   4 values -- bilinear Q4 interpolation of nodal values [h0,h1,h2,h3]
+//!  12 values -- ANCF-consistent cubic interpolation: thickness =
+//!               [h0, dh/dx0, dh/dy0,  h1, dh/dx1, dh/dy1,
+//!                h2, dh/dx2, dh/dy2,  h3, dh/dx3, dh/dy3]
+//!               uses the same scaled ANCF shape functions as the position field,
+//!               giving a cubic variation in xi and eta that is fully consistent
+//!               with the element's displacement interpolation.
+//! Node order: n0=(-1,-1), n1=(+1,-1), n2=(+1,+1), n3=(-1,+1)
+//! Input:  xi, eta -- parametric coordinates in [-1,1]
+//! Output: interpolated thickness value at (xi, eta)
 Real CObjectANCFThinPlate::ComputeThicknessAtPoint(Real xi, Real eta) const
 {
-    if (parameters.thickness.NumberOfItems() == 1) { return parameters.thickness[0]; }
-    else
+    const Index numberOfThicknessValues = parameters.thickness.NumberOfItems();
+
+    if (numberOfThicknessValues == 1)
     {
-        CHECKandTHROW(parameters.thickness.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeThicknessAtPoint: thickness must have length 1 or 4", ExudynValueError);
+        // constant thickness
+        return parameters.thickness[0];
+    }
+    else if (numberOfThicknessValues == 4)
+    {
+        // bilinear Q4 interpolation: N_i = 0.25*(1 + xi_i*xi)*(1 + eta_i*eta)
         const Vector& coeffs = parameters.thickness;
-        // Standard bilinear (Q4) shape functions: N_i = 0.25*(1+xi_i*xi)*(1+eta_i*eta)
         Real N0 = 0.25 * (1. - xi) * (1. - eta);  // node 0: (-1,-1)
         Real N1 = 0.25 * (1. + xi) * (1. - eta);  // node 1: (+1,-1)
         Real N2 = 0.25 * (1. + xi) * (1. + eta);  // node 2: (+1,+1)
         Real N3 = 0.25 * (1. - xi) * (1. + eta);  // node 3: (-1,+1)
         return N0 * coeffs[0] + N1 * coeffs[1] + N2 * coeffs[2] + N3 * coeffs[3];
     }
-}
-//! Compute StrainCoefficients at element point (xi, eta) in [-1,1] x [-1,1]; same as ComputeThicknessAtPoint
-Matrix3D CObjectANCFThinPlate::ComputeStrainCoefficientsAtPoint(Real xi, Real eta) const
-{
-    if (parameters.strainCoefficients.NumberOfItems() == 1) { return parameters.strainCoefficients[0]; }
-    else
+    else if (numberOfThicknessValues == 12)
     {
-        CHECKandTHROW(parameters.strainCoefficients.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeStrainCoefficientsAtPoint: strainCoefficients must have length 1 or 4", ExudynValueError);
-        const Matrix3DList& coeffs = parameters.strainCoefficients;
-        // Standard bilinear (Q4) shape functions: N_i = 0.25*(1+xi_i*xi)*(1+eta_i*eta)
-        Real N0 = 0.25 * (1. - xi) * (1. - eta);  // node 0: (-1,-1)
-        Real N1 = 0.25 * (1. + xi) * (1. - eta);  // node 1: (+1,-1)
-        Real N2 = 0.25 * (1. + xi) * (1. + eta);  // node 2: (+1,+1)
-        Real N3 = 0.25 * (1. - xi) * (1. + eta);  // node 3: (-1,+1)
-        return N0 * coeffs[0] + N1 * coeffs[1] + N2 * coeffs[2] + N3 * coeffs[3];
+        // ANCF-consistent cubic interpolation: dot the 12 scaled ANCF scalar shape functions
+        // with the 12 thickness parameters [h_i, dh/dx_i, dh/dy_i] for i=0..3.
+        // Scaled shape functions ensure that thickness[3*i+1] = dh/dx and
+        // thickness[3*i+2] = dh/dy are in the same physical units as the stored
+        // position slopes (dr/dx, dr/dy), giving exact cubic reproduction.
+        Vector12D sf;
+        ComputeShapeFunctions(xi, eta, sf, /*scaled=*/true);
+        Real h = 0.;
+        for (Index i = 0; i < 12; i++) { h += sf[i] * parameters.thickness[i]; }
+        return h;
     }
-}
-//! Compute StrainCoefficients at element point (xi, eta) in [-1,1] x [-1,1]; same as ComputeThicknessAtPoint
-Matrix3D CObjectANCFThinPlate::ComputeCurvatureCoefficientsAtPoint(Real xi, Real eta) const
-{
-    if (parameters.curvatureCoefficients.NumberOfItems() == 1) { return parameters.curvatureCoefficients[0]; }
     else
     {
-        CHECKandTHROW(parameters.curvatureCoefficients.NumberOfItems() == 4, "CObjectANCFThinPlate::ComputeCurvatureCoefficientsAtPoint: curvatureCoefficients must have length 1 or 4", ExudynValueError);
-        const Matrix3DList& coeffs = parameters.curvatureCoefficients;
-        // Standard bilinear (Q4) shape functions: N_i = 0.25*(1+xi_i*xi)*(1+eta_i*eta)
-        Real N0 = 0.25 * (1. - xi) * (1. - eta);  // node 0: (-1,-1)
-        Real N1 = 0.25 * (1. + xi) * (1. - eta);  // node 1: (+1,-1)
-        Real N2 = 0.25 * (1. + xi) * (1. + eta);  // node 2: (+1,+1)
-        Real N3 = 0.25 * (1. - xi) * (1. + eta);  // node 3: (-1,+1)
-        return N0 * coeffs[0] + N1 * coeffs[1] + N2 * coeffs[2] + N3 * coeffs[3];
+        CHECKandTHROWstring("CObjectANCFThinPlate::ComputeThicknessAtPoint: thickness must have length 1, 4, or 12", ExudynValueError);
+        return 0.; // unreachable
     }
 }
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -1081,7 +1319,6 @@ void CObjectANCFThinPlate::PreComputeMassTerms() const
     
     massMatrixComputed = true;
 }
-
 
 //! the position Jacobian d(v)/d(q_t) at localPosition, 3 x n (#2744)
 void CObjectANCFThinPlate::GetPositionJacobian(const Vector3D& localPosition, Matrix& value) const
@@ -1176,21 +1413,45 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
         }
         qANCFtotal += qANCFref;
     }
+    // strains and curvatures are computed in the classical xi-aligned local frame
+    // (GetElementJacobian); components map directly to physical quantities and
+    // zeta=+-1 in localPosition[2] is the physical outer fibre.
+    // REMOVED: useSymmetricFrame back-rotation (RotateToClassical) -- the bisector
+    // frame option was removed (frame-invariant for isotropic material).  MP, 2026-06-10
+
     switch (variableType)
     {
     case OutputVariableType::StrainLocal:
+    {
+        // Through-thickness Green-Lagrange strains at localPosition[2] = zeta in [-1,1].
+        // Kirchhoff-Love kinematics: eps(xi,eta,zeta) = eps_mid - (zeta*h/2)*kappa
+        // where eps_mid = mid-surface membrane strains, kappa = curvature (physical, units 1/m),
+        //       h = local thickness [m], zeta in [-1,1]: zeta=+1 -> outer fiber at z=+h/2 [m].
+        // Factor h/2 converts the normalized zeta to physical distance z = zeta*(h/2).
+        // Consistent with Cable2D: eps = eps_axial - y*kappa, where y = physical distance [m].
+        // Consistent with StressLocal: s = N/h - zeta*(6*M/h^2) = E*(eps_mid - zeta*(h/2)*kappa)
+        //   => StrainLocal = StressLocal/E (for nu=0) = eps_mid - zeta*(h/2)*kappa. (MP/JG, 2026)
+        // Returns 6-component vector [e11, e22, e33, e23, e13, e12] (engineering strains).
+        // e33=e23=e13=0 (plane-stress Kirchhoff-Love: no transverse normal/shear strains).
+        // e12 = gamma_xy is the engineering shear strain (includes factor-2 from kappa[2]).
+        SlimVectorBase<Real, 3> eps_mid, kappa;
+        ComputeKinematics(xi, eta, qANCFref, qANCFtotal, eps_mid, kappa);
+        Real zeta = localPosition[2];           // in [-1,1]: -1 = bottom, 0 = mid, +1 = top surface
+        Real h = ComputeThicknessAtPoint(xi, eta);  // local thickness [m]; supports variable thickness
+        Real halfH = 0.5 * h;                   // physical distance to outer fiber = h/2 [m]
+        // Kirchhoff-Love: eps(zeta) = eps_mid - (zeta*halfH)*kappa; sign: kappa>0 -> concave-downward
+        Real e11 = eps_mid[0] - zeta * halfH * kappa[0];  // normal strain xx (MP/JG, 2026)
+        Real e22 = eps_mid[1] - zeta * halfH * kappa[1];  // normal strain yy
+        Real e12 = eps_mid[2] - zeta * halfH * kappa[2];  // engineering shear strain gamma_xy
+        // 6-component format [e11,e22,e33,e23,e13,e12] matches StressLocal output layout
+        value.SetVector({ e11, e22, 0., 0., 0., e12 });
+        break;
+    }
     case OutputVariableType::CurvatureLocal:
     {
         SlimVectorBase<Real, 3> eps_mid, kappa;
         ComputeKinematics(xi, eta, qANCFref, qANCFtotal, eps_mid, kappa);
-        if (variableType == OutputVariableType::StrainLocal)
-        {
-            value.SetVector({ eps_mid[0], eps_mid[1], eps_mid[2] });
-        }
-        else
-        {
-            value.SetVector({ kappa[1], -kappa[0], kappa[2] }); //switched, as curvatures are perpendicular to r_xx and r_yy
-        }
+        value.SetVector({ -kappa[0], kappa[1], kappa[2] }); //[0]=-kappa_xx: sign matches Cable2D (kappa<0 for downward bending, M=EI*kappa<0), [1]=kappa_yy, [2]=kappa_xy
         break;
     }
     case OutputVariableType::Position:
@@ -1216,24 +1477,25 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
     case OutputVariableType::StressLocal:
     {
         // Through-thickness engineering stress at localPosition[2] = zeta in [-1,1]
-        // sigma(xi,eta,zeta) = N/h + zeta*(6*M/h^2)
+        // sigma(xi,eta,zeta) = N/h - zeta*(6*M/h^2)
         // where N = D_eps * Delta_eps_m  (membrane force resultant, 3 components)
         //       M = D_kappa * Delta_kappa  (moment resultant, 3 components)
         //       h = local thickness, zeta in [-1,1] is through-thickness coordinate
+        // sign: kappa = n·r_xx uses opposite sign from Kirchhoff convention; minus compensates.
         SlimVectorBase<Real, 3> eps_mid, kappa;
         ComputeKinematics(xi, eta, qANCFref, qANCFtotal, eps_mid, kappa);
 
         SlimVectorBase<Real, 3> N, M;
-        
-        EXUmath::MultMatrixVectorTemplate(ComputeStrainCoefficientsAtPoint(xi, eta),    eps_mid, N);
-        EXUmath::MultMatrixVectorTemplate(ComputeCurvatureCoefficientsAtPoint(xi, eta), kappa,   M);
-
         Real h = ComputeThicknessAtPoint(xi, eta);
+        Matrix3D Deps, Dkappa;
+        StiffnessAtPoint(*this, xi, eta, Deps, Dkappa);
+        EXUmath::MultMatrixVectorTemplate(Deps, eps_mid, N);
+        EXUmath::MultMatrixVectorTemplate(Dkappa, kappa, M);
         CHECKandTHROW(h > 0., "CObjectANCFThinPlate::GetOutputVariableBody: thickness h must be > 0 for StressLocal", ExudynValueError);
         Real zeta = localPosition[2];  // in [-1,1]: -1 = bottom, +1 = top surface
-        Real s11 = N[0]/h + zeta*(6.*M[0]/(h*h));
-        Real s22 = N[1]/h + zeta*(6.*M[1]/(h*h));
-        Real s12 = N[2]/h + zeta*(6.*M[2]/(h*h));
+        Real s11 = N[0]/h - zeta*(6.*M[0]/(h*h));
+        Real s22 = N[1]/h - zeta*(6.*M[1]/(h*h));
+        Real s12 = N[2]/h - zeta*(6.*M[2]/(h*h));
         // return 6-component vector [s11,s22,s33,s23,s13,s12] with zero out-of-plane components
         // => component=-1 (norm flag) automatically computes plane-stress von Mises in the renderer
         value.SetVector({ s11, s22, 0., 0., 0., s12 });
@@ -1249,20 +1511,34 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
         break;
     }
     case OutputVariableType::ForceLocal:
+    {
+        // Membrane force resultants N = [N11, N22, N12]  [N/m]
+        // N = D_eps * Delta_eps_mid, integrated through thickness.
+        // Comparable to Cable2D ForceLocal (axial force [N]) after dividing by plate width.
+        // MP, 2026-05-26
+        SlimVectorBase<Real, 3> eps_mid, kappa;
+        ComputeKinematics(xi, eta, qANCFref, qANCFtotal, eps_mid, kappa);
+        SlimVectorBase<Real, 3> N;
+        Matrix3D Deps, Dkappa;
+        StiffnessAtPoint(*this, xi, eta, Deps, Dkappa);
+        EXUmath::MultMatrixVectorTemplate(Deps, eps_mid, N);
+        value.SetVector({ N[0], N[1], N[2] });
+        break;
+    }
     case OutputVariableType::TorqueLocal:
     {
-        //the membrane force and moment resultants per length, as StressLocal uses them (#2768)
-        SlimVectorBase<Real, 3> eps_mid, kappa, resultant;
+        // Bending moment resultants M = [M11, M22, M12]  [N*m/m = N]
+        // M = D_kappa * Delta_kappa  (bending stiffness times curvature change).
+        // Comparable to Cable2D TorqueLocal (bending moment [N*m]) after multiplying by plate width.
+        // Sign convention: M[0] negated to match Cable2D (M<0 for downward bending),
+        // consistent with CurvatureLocal[0] = -kappa[0].  MP, 2026-05-26
+        SlimVectorBase<Real, 3> eps_mid, kappa;
         ComputeKinematics(xi, eta, qANCFref, qANCFtotal, eps_mid, kappa);
-        if (variableType == OutputVariableType::ForceLocal)
-        {
-            EXUmath::MultMatrixVectorTemplate(ComputeStrainCoefficientsAtPoint(xi, eta), eps_mid, resultant);
-        }
-        else
-        {
-            EXUmath::MultMatrixVectorTemplate(ComputeCurvatureCoefficientsAtPoint(xi, eta), kappa, resultant);
-        }
-        value.CopyFrom(resultant);
+        SlimVectorBase<Real, 3> M;
+        Matrix3D Deps, Dkappa;
+        StiffnessAtPoint(*this, xi, eta, Deps, Dkappa);
+        EXUmath::MultMatrixVectorTemplate(Dkappa, kappa, M);
+        value.SetVector({ -M[0], M[1], M[2] }); // -M[0]: sign matches Cable2D TorqueLocal convention
         break;
     }
     case OutputVariableType::PotentialEnergy: {
@@ -1276,25 +1552,52 @@ void CObjectANCFThinPlate::GetOutputVariableBody(OutputVariableType variableType
     }
 }
 
-//! the integration rule of the elastic forces in each direction, shared with the elastic energy (#2202)
-void CObjectANCFThinPlate::GetIntegrationRule(ConstSizeVector<5>& xiGP, ConstSizeVector<5>& xiW) const
+//! the integration rules of the elastic forces: the membrane and the bending virtual work, shared with the elastic
+//! energy (#2202, #2857)
+void CObjectANCFThinPlate::GetIntegrationRules(ConstSizeVector<5>& membranePoints, ConstSizeVector<5>& membraneWeights,
+    ConstSizeVector<5>& gaussPoints, ConstSizeVector<5>& gaussWeights) const
 {
+    // Choose integration rules for membrane and bending integrals ─────────────────────────────
+    // Mode 0: full Gauss (order 9, 5 points per direction) for both membrane and bending.
+    //         Safe baseline; may exhibit membrane locking for very thin plates.
+    // Mode 1: selective reduced integration (Ntarladima/Pieber/Gerstmayr, Nonlinear Dyn 2023, Table 1 scheme c):
+    //         - membrane/strain:   Lobatto order 3 (3 points at {-1, 0, +1} per direction; 9 pts in 2D)
+    //         - bending/curvature: Gauss  order 3 (2 points at {+-1/sqrt(3)} per direction; 4 pts in 2D)
+    //         Key property: membrane and bending points are COMPLETELY DISJOINT (Lobatto {-1,0,+1}
+    //         and Gauss-2pt {+-0.577} share no common value), which eliminates membrane locking.
     if (parameters.useReducedOrderIntegration == 0)
     {
-        EXUmath::SetGaussIntegrationRule(7, xiGP, xiW);  // order=7 gives 4-point Gauss (higher order)
+        // full Gauss: order 9 (5 points per direction) for both membrane and bending
+        EXUmath::SetGaussIntegrationRule(9, gaussPoints, gaussWeights);
+        membranePoints.CopyFrom(gaussPoints);
+        membraneWeights.CopyFrom(gaussWeights);
     }
     else if (parameters.useReducedOrderIntegration == 1)
     {
-        EXUmath::SetGaussIntegrationRule(5, xiGP, xiW);  // order=5 gives 3-point Gauss
+        // Lobatto SRI: membrane uses Lobatto order 3 (3 pts at {-1, 0, +1}),
+        // bending uses Gauss order 3 (2 pts at {+-1/sqrt(3)}) -- completely disjoint
+        EXUmath::SetGaussIntegrationRule(3, gaussPoints, gaussWeights);
+        EXUmath::SetLobattoIntegrationRule(3, membranePoints, membraneWeights);
+    }
+    else if (parameters.useReducedOrderIntegration == 2)
+    {
+        // Mode 2 = same as Mode 1 (Lobatto SRI).
+        // NOTE: cross-axis bending (points at (+-g,0) and (0,+-g)) was tested and found
+        // incompatible with ANCF bicubic elements: the cross-derivative DOF shape function
+        // S_cross = H1(xi)*H1(eta) evaluates to ZERO at all cross-axis points (H1(0)=0),
+        // giving the cross-derivative DOF zero bending stiffness and creating a spurious
+        // zero-energy mechanism.  Mode 2 therefore falls back to Mode 1.  MP, 2026-05-26
+        EXUmath::SetGaussIntegrationRule(3, gaussPoints, gaussWeights);         // 2 pts at +-1/sqrt(3)
+        EXUmath::SetLobattoIntegrationRule(3, membranePoints, membraneWeights); // 3 pts at {-1, 0, +1}
     }
     else
     {
-        CHECKandTHROWstring("CObjectANCFThinPlate::ComputeODE2LHStemplate: useReducedOrderIntegration must be 0 or 1", ExudynValueError);
+        CHECKandTHROWstring("CObjectANCFThinPlate: useReducedOrderIntegration must be 0 (full Gauss), 1 (Lobatto SRI), or 2 (same as 1)", ExudynValueError);
     }
 }
 
-//! the elastic energy of the membrane strains and the curvatures, with the kinematics, coefficients and integration rule
-//! of the elastic forces (#2202)
+//! the elastic energy of the membrane strains and the curvatures, with the kinematics, stiffness and integration rules
+//! of the elastic forces (#2202): membrane energy at the membrane points, bending energy at the bending points
 Real CObjectANCFThinPlate::ComputeElasticEnergy(ConfigurationType configuration) const
 {
     ConstSizeVector<nODE2coordinates> qANCFref, qANCFtotal;
@@ -1308,28 +1611,42 @@ Real CObjectANCFThinPlate::ComputeElasticEnergy(ConfigurationType configuration)
             qNodeU += ((CNodeODE2*)GetCNode(i))->GetCoordinateVector(configuration);
         }
     }
-    ConstSizeVector<5> xiGP, xiW;
-    GetIntegrationRule(xiGP, xiW);
+    ConstSizeVector<5> membranePoints, membraneWeights, bendingPoints, bendingWeights;
+    GetIntegrationRules(membranePoints, membraneWeights, bendingPoints, bendingWeights);
     Real energy = 0.;
-    for (Index iGP = 0; iGP < xiGP.NumberOfItems(); iGP++)
+    for (Index pass = 0; pass < 2; pass++) //0: membrane, 1: bending
     {
-        for (Index jGP = 0; jGP < xiGP.NumberOfItems(); jGP++)
+        const ConstSizeVector<5>& points = (pass == 0) ? membranePoints : bendingPoints;
+        const ConstSizeVector<5>& weights = (pass == 0) ? membraneWeights : bendingWeights;
+        for (Index iGP = 0; iGP < points.NumberOfItems(); iGP++)
         {
-            Real xi = xiGP[iGP];
-            Real eta = xiGP[jGP];
-            //the area factor of the elastic forces, J0.GetDeterminant()
-            Vector12D sf_x, sf_y;
-            ComputeShapeFunctions_xy(xi, eta, sf_x, sf_y);
-            SlimVectorBase<Real, 3> r_xi_ref = MapCoordinates(sf_x, qANCFref);
-            SlimVectorBase<Real, 3> r_eta_ref = MapCoordinates(sf_y, qANCFref);
-            SlimVectorBase<Real, 3> n0 = r_xi_ref.CrossProduct(r_eta_ref);
-            Matrix2D J0 = GetElementJacobian(r_xi_ref, r_eta_ref, n0 * (1. / n0.GetL2Norm()));
+            for (Index jGP = 0; jGP < points.NumberOfItems(); jGP++)
+            {
+                Real xi = points[iGP];
+                Real eta = points[jGP];
+                //the area factor of the elastic forces, J0.GetDeterminant()
+                Vector12D sf_x, sf_y;
+                ComputeShapeFunctions_xy(xi, eta, sf_x, sf_y);
+                SlimVectorBase<Real, 3> r_xi_ref = MapCoordinates(sf_x, qANCFref);
+                SlimVectorBase<Real, 3> r_eta_ref = MapCoordinates(sf_y, qANCFref);
+                SlimVectorBase<Real, 3> n0 = r_xi_ref.CrossProduct(r_eta_ref);
+                Matrix2D J0 = GetElementJacobian(r_xi_ref, r_eta_ref, n0 * (1. / n0.GetL2Norm()));
 
-            SlimVectorBase<Real, 3> eps_mid, kappa, N, M;
-            ComputeKinematics(xi, eta, qANCFref, qANCFtotal, eps_mid, kappa);
-            EXUmath::MultMatrixVectorTemplate(ComputeStrainCoefficientsAtPoint(xi, eta), eps_mid, N);
-            EXUmath::MultMatrixVectorTemplate(ComputeCurvatureCoefficientsAtPoint(xi, eta), kappa, M);
-            energy += xiW[iGP] * xiW[jGP] * J0.GetDeterminant() * 0.5 * (eps_mid * N + kappa * M);
+                SlimVectorBase<Real, 3> eps_mid, kappa, resultant;
+                ComputeKinematics(xi, eta, qANCFref, qANCFtotal, eps_mid, kappa);
+                Matrix3D Deps, Dkappa;
+                StiffnessAtPoint(*this, xi, eta, Deps, Dkappa);
+                if (pass == 0)
+                {
+                    EXUmath::MultMatrixVectorTemplate(Deps, eps_mid, resultant);
+                    energy += weights[iGP] * weights[jGP] * J0.GetDeterminant() * 0.5 * (eps_mid * resultant);
+                }
+                else
+                {
+                    EXUmath::MultMatrixVectorTemplate(Dkappa, kappa, resultant);
+                    energy += weights[iGP] * weights[jGP] * J0.GetDeterminant() * 0.5 * (kappa * resultant);
+                }
+            }
         }
     }
     return energy;
@@ -1653,9 +1970,11 @@ template void CObjectANCFThinPlate::ComputeKinematics<DReal36>(
     Real, Real, const ConstSizeVectorBase<Real, nODE2coordinates>&, const ConstSizeVectorBase<DReal36, nODE2coordinates>&,
     SlimVectorBase<DReal36, 3>&, SlimVectorBase<DReal36, 3>&) const;
 
-//! Compute Jacobian using AutoDiff - FIXED: only compute position derivatives
-//! Forces do not depend on velocity, so velocity Jacobian is zero
-void CObjectANCFThinPlate::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, 
+//! Compute Jacobian via two-pass automatic differentiation.
+//! Pass 1 seeds q   → captures factorODE2   · ∂(ode2Lhs)/∂q       (elastic K_t and damping-q-dependence).
+//! Pass 2 seeds q̇   → captures factorODE2_t · ∂(ode2Lhs)/∂q̇       (α·M + β·∂f_d/∂q̇ at current config).
+//! Pass 2 is skipped when factorODE2_t == 0 or when no velocity-dependent forces are present.
+void CObjectANCFThinPlate::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp,
                                                      Real factorODE2, Real factorODE2_t,
                                                      Index objectNumber, const ArrayIndex& ltg) const
 {
@@ -1664,58 +1983,67 @@ void CObjectANCFThinPlate::ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& ja
     ComputeCurrentTotalObjectCoordinates(qANCF0total);
     ComputeObjectVelocities(qANCF0_t);
 
-    // For template types (like DReal36), use ConstSizeVectorBase directly
-    // ConstSizeVector is only for Real type (ConstSizeVector = ConstSizeVectorBase<Real, size>)
-    ConstSizeVectorBase<DReal36, nODE2coordinates> qANCFtotal;
-    ConstSizeVectorBase<DReal36, nODE2coordinates> qANCF_t;
-    
-    // Set up AutoDiff variables: qANCFtotal[i].DValue(j) = 1 if i==j (for position Jacobian only)
-    // Note: Forces do not depend on velocity, so we only seed position derivatives
-    // DReal36 has nODE2coordinates derivatives (indices 0-35), which matches nODE2coordinates
-    for (Index i = 0; i < nODE2coordinates; i++)
-    {
-        qANCFtotal[i] = DReal36(qANCF0total[i]);
-        qANCF_t[i] = DReal36(qANCF0_t[i]);  // Velocity is passed but not used in force computation
-        qANCFtotal[i].DValue(i) = 1;  // Seed position derivative: d/dq[i]
-        // No velocity derivative seeding - forces are position-only
-    }
-    
-    ConstSizeVectorBase<DReal36, nODE2coordinates> ode2Lhs;
-    LinkedDataVectorBase<DReal36> linkedOde2Lhs(ode2Lhs);
-    
-    ComputeODE2LHStemplate<DReal36>(linkedOde2Lhs, qANCFtotal, qANCF_t);
-    
     jacobianODE2.SetUseDenseMatrix(true);
     ResizableMatrix& jac = jacobianODE2.GetInternalDenseMatrix();
     jac.SetNumberOfRowsAndColumns(nODE2coordinates, nODE2coordinates);
-    
-    // Extract autodifferentiated result: jac(i,j) = d(ode2Lhs[i])/dq[j]
-    // Position Jacobian: factorODE2 * d(ode2Lhs)/dq
-    // Velocity Jacobian: factorODE2_t * d(ode2Lhs)/dq_t = 0 (forces don't depend on velocity)
-    for (Index i = 0; i < nODE2coordinates; i++)
-    {
-        for (Index j = 0; j < nODE2coordinates; j++)
-        {
-            // Assert that we're not accessing out-of-range derivatives
-            jac(i, j) = factorODE2 * ode2Lhs[i].DValue(j);
-            // Velocity contribution is zero since forces don't depend on velocity
-            // factorODE2_t * ode2Lhs[i].DValue((int)(j + nODE2coordinates)) would be out of range
-        }
-    }
 
-    // Add analytical velocity Jacobian contribution for mass-proportional damping:
-    // d(ode2Lhs)/dq_t = alpha * M (constant)
-    Real alpha = parameters.massProportionalDamping;
-    if (factorODE2_t != 0. && alpha != 0.)
+    //--------------------------------------------------------------------------------------
+    // Pass 1 — position Jacobian: seed dq for autodiff, dq̇ = 0.
+    // Captures elastic K_t(q) as well as the q-dependence of the Kelvin–Voigt damping force
+    // (variation of B(q) acting on q̇ — the "geometric" part).
+    //--------------------------------------------------------------------------------------
     {
-        PreComputeMassTerms();
+        ConstSizeVectorBase<DReal36, nODE2coordinates> qANCFtotal;
+        ConstSizeVectorBase<DReal36, nODE2coordinates> qANCF_t;
         for (Index i = 0; i < nODE2coordinates; i++)
         {
-            for (Index j = 0; j < nODE2coordinates; j++)
-            {
-                jac(i, j) += factorODE2_t * alpha * precomputedMassMatrix(i, j);
-            }
+            qANCFtotal[i] = DReal36(qANCF0total[i]);
+            qANCF_t[i]    = DReal36(qANCF0_t[i]);   // not seeded → treated as constant in this pass
+            qANCFtotal[i].DValue(i) = 1;             // seed position derivative ∂/∂q[i]
         }
+
+        ConstSizeVectorBase<DReal36, nODE2coordinates> ode2Lhs;
+        LinkedDataVectorBase<DReal36> linkedOde2Lhs(ode2Lhs);
+        ComputeODE2LHStemplate<DReal36>(linkedOde2Lhs, qANCFtotal, qANCF_t);
+
+        for (Index i = 0; i < nODE2coordinates; i++)
+            for (Index j = 0; j < nODE2coordinates; j++)
+                jac(i, j) = factorODE2 * ode2Lhs[i].DValue(j);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Pass 2 — velocity Jacobian: seed dq̇ for autodiff, dq = 0.
+    // Captures the full velocity Jacobian of ode2Lhs at the CURRENT configuration, including
+    //   - α · M                              (mass-proportional damping)
+    //   - β · (material part of K_t(q))     (Kelvin–Voigt damping — exact, no K_ref needed)
+    // Only run if there is any velocity-dependent contribution.
+    //--------------------------------------------------------------------------------------
+    const Real betaBendJacobian = (parameters.bendingStiffnessProportionalDamping >= 0.)
+        ? parameters.bendingStiffnessProportionalDamping
+        : parameters.stiffnessProportionalDamping;
+    const bool hasVelocityCoupling =
+           (parameters.massProportionalDamping      != 0.)
+        || (parameters.stiffnessProportionalDamping != 0.)
+        || (betaBendJacobian != 0.);
+
+    if (factorODE2_t != 0. && hasVelocityCoupling)
+    {
+        ConstSizeVectorBase<DReal36, nODE2coordinates> qANCFtotal;
+        ConstSizeVectorBase<DReal36, nODE2coordinates> qANCF_t;
+        for (Index i = 0; i < nODE2coordinates; i++)
+        {
+            qANCFtotal[i] = DReal36(qANCF0total[i]);   // not seeded
+            qANCF_t[i]    = DReal36(qANCF0_t[i]);
+            qANCF_t[i].DValue(i) = 1;                  // seed velocity derivative ∂/∂q̇[i]
+        }
+
+        ConstSizeVectorBase<DReal36, nODE2coordinates> ode2Lhs;
+        LinkedDataVectorBase<DReal36> linkedOde2Lhs(ode2Lhs);
+        ComputeODE2LHStemplate<DReal36>(linkedOde2Lhs, qANCFtotal, qANCF_t);
+
+        for (Index i = 0; i < nODE2coordinates; i++)
+            for (Index j = 0; j < nODE2coordinates; j++)
+                jac(i, j) += factorODE2_t * ode2Lhs[i].DValue(j);
     }
 }
 

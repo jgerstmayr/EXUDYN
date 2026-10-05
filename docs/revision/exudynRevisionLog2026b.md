@@ -15408,3 +15408,54 @@ accelerations instead of its algorithmic ones, a small disturbance at the restar
 (RG12.39.3), (C) not for the restart. The file is written to a temporary name and renamed, the previous one kept as
 `.bck`, so that a killed process leaves a readable file. The test: 0 to 1 against 0 to 0.5 plus a restart to 1,
 identical to round-off because `aAlgorithmic` is stored.
+
+<a id="rg4-20"></a>
+### RG4.20.1-.2 — the ANCF thin plate of a colleague, ported (2026-10-05, #2857, #2858)
+
+*(Maintainer 2026-10-05: "I have a modification from an internal colleague the ANCFThinPlate element. He checked
+everything with the literature and added all information (from his Claude agent) in tmp\shells\changesANCFThinPlate2026
+... ideally, immediately integrate the changes. They are mostly for exudyn/shells.py and for the ANCF element.")*
+
+**How.** The patch is relative to a commit that is not in this repository; reversing it on the colleague's final files
+gave the base, and a three-way merge with the repository showed what changed on each side: 22 conflicts in the element,
+the whole class in `shells.py`. So the colleague's files are the starting point, and the changes of the repository
+since were applied again by a script: the include paths, the parameter names of 1.12 (`thickness`, `density`,
+`strainCoefficients`, ... - the two new damping parameters without the `physics` prefix, as they are new),
+`NodeNumbersAreUsable` (#2467), the access functions `GetPositionJacobian`/`GetMassWeightedPositionJacobian`
+(#2744), the outputs `Director1`/`Director2` (#2768), `PotentialEnergy`/`KineticEnergy` (#2202), the exception types,
+and the drawing of the plate that moved into the element file (#2555).
+
+**The element (#2857)**, as the colleague describes it: the curvatures of the material measure
+$\kappa_{ii} = \nv_3\tp \rv_{,ii}/(|\nv_3|\,|\rv_{,i}|)$, membrane and bending virtual work in separate loops (mode 0:
+Gauss 5 x 5 for both; 1: Lobatto 3 x 3 for the membrane, Gauss 2 x 2 for the bending; 2: the same as 1), the thickness
+from 1, 4 or 12 values with the stiffness from the local thickness, Kelvin-Voigt damping in the current configuration,
+the Jacobian by automatic differentiation in two passes (coordinates, then velocities), and `StrainLocal`,
+`StressLocal`, `ForceLocal`, `TorqueLocal`, `CurvatureLocal` through the thickness. Beyond the patch:
+- one function for the stiffness at a point (`StiffnessAtPoint`), used by the forces, the outputs and the energy - the
+  patch had it three times; `ComputeStrainCoefficientsAtPoint`/`ComputeCurvatureCoefficientsAtPoint` are gone (port
+  note 9);
+- `GetIntegrationRules` returns the membrane and the bending rule, and `ComputeElasticEnergy` integrates the membrane
+  energy at the membrane points and the bending energy at the bending points - the energy of RG9.4 had one rule;
+  `energiesFlexibleBodiesTest.py` moves by 1e-12 only;
+- the consistency check takes 12 thickness values (positive thickness at indices 0, 3, 6, 9) and 1 or 4 coefficient
+  matrices for a variable thickness (port note 3); it also checks all 4 nodes, not 2;
+- the descriptions say what the element does (port note 1): `useReducedOrderIntegration`, `thickness`, the coefficient
+  matrices, the outputs, and the detailed description; `revisions.md` says what changes for a script.
+
+**`exudyn.shells` (#2858)**: the colleague's module with the repository's docstrings (Google style, `docmeta`,
+`__all__`); the new functions in UpperCamelCase (`CODING_STYLE.md`): `MapSkewParallelogram`, `MapTrapezoid`,
+`MapCurvedEdge`, `MapOutOfPlaneWarp`, `MapBezierStrip`, `MapConeFrustum`, `MapCylinder`, `MapHemisphericalShell`,
+`MapToroidalPanel`, `SymSin`, `SymCos`, `AddNodeConstraints`, `AddSphericalJointToGround`, `AddClampToGround`,
+`AddSlopeConformityConstraints`, `AddDistributedClampToEdge`, `ApplyEdgeLoad`, `AddRotationalSpringDamper`,
+`AddEdgeSpringDamper`; `ANCFThinPlateBuilder` with `Build`, `Rotation`, `SetVisualizationThicknessFactor`; the vector
+helpers private (`_UnitVector`, `_RotAxisAngle`, `_RotZ`). `stiffnessProportionalDamping` of `ShellMesh` is its last
+parameter (port note 10a), the builder checks its arguments before it builds (note 13). Not ported, as the colleague
+asks: the belt-drive contacts and their helpers, the setting `shells.integrationMode`, the self-test of `shells.py`.
+
+**Checked**: the colleague's verification script, with the new names, gives what his document reports - the cantilever
+equal to $FL^3/(3EI)$ in all modes (1 and 2 bitwise identical), the arc of pure bending to 6.9e-7 m, curvature and
+moment to 0.065 %, no damping of a rigid rotation, and the sign conventions of his note 4. His unit tests are the test
+model `ANCFThinPlateRevisionTest.py`: 18 pass; the one for 12 thickness values now compares with the constant thickness
+(note 3); the one of the curvature sign stays an expected failure until RG4.20.4 (a); the one of the visualization
+settings comes with RG4.20.3. The plate MiniExamples move by 7.5e-7 (`ObjectANCFThinPlate.py`, `NodePointSlope12.py`),
+`parameterConversionTest` has the two new parameters.

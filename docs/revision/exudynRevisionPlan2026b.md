@@ -846,6 +846,33 @@ The steps are numbered in the order they were raised and stand here in the order
       (`AddSystem` returns with `return_value_policy::reference`), found with RG4.19.2.
     - Not here, they need a Linux machine or a screen: #2204, #2205 (perspective), #2277, #2278 (GLFW on Linux) - RG6.8.
 
+<a id="rg4-20"></a>
+**RG4.20** *(group RG4; maintainer 2026-10-05: "a modification from an internal colleague the ANCFThinPlate element. He
+    checked everything with the literature ... add a step and issue for that and, ideally, immediately integrate the
+    changes")* **`ObjectANCFThinPlate` and `exudyn.shells`: the revision of a colleague, ported** (#2857, #2858,
+    #2859). Michael Pieber revised the element in a working copy based on a state of 2026-06-01 and documented it for
+    the port - description, patch, the changed files, a verification script and 19 unit tests, in
+    `tmp/shells/changesANCFThinPlate2026/` (not in the repository). The port re-applies what the repository changed since
+    that state: the renames of 1.12, the access functions, the energies, the outputs Director1/2.
+    - **RG4.20.1** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-20) (#2857) the element: material curvature
+      measure, membrane and bending integrated at separate points (mode 0 Gauss 5 x 5; 1 and 2 Lobatto 3 x 3 / Gauss
+      2 x 2), 12 thickness values and the stiffness from the local thickness, Kelvin-Voigt damping
+      (`stiffnessProportionalDamping`, `bendingStiffnessProportionalDamping`), Jacobian by automatic differentiation of
+      coordinates and velocities, outputs through the thickness; the consistency check takes 12 thickness values;
+      test model `ANCFThinPlateRevisionTest.py`.
+    - **RG4.20.2** **DONE 2026-10-05** — [log](exudynRevisionLog2026b.md#rg4-20) (#2858) `exudyn.shells`:
+      `ANCFThinPlateBuilder`, the geometry maps, the constraint, load and hinge functions, ShellMesh with damping and a
+      thickness function; the names in UpperCamelCase.
+    - **RG4.20.3** *(open)* (#2859) the visualization: `drawNormal`, the postprocessed contour, `contourZeta`, the
+      finer tiling.
+    - **RG4.20.4** *(decisions, the port notes of the colleague)*: (a) note 4 - the first component of
+      `CurvatureLocal` and `TorqueLocal` is negated, so that a plate strip along x has the sign of `ObjectANCFCable2D`
+      but the opposite sign of a strip along y: one convention for all components? (b) note 10b - the thickness
+      function of `ShellMesh` differentiates with respect to global x and y, the element reads the 12 values as
+      gradients along its edges: convert, or keep the restriction to rectangular elements in the x-y plane (it is
+      documented); (c) note 11 - the default integration mode is 0 for the element and `ShellMesh`, 1 for
+      `ANCFThinPlateBuilder`; (d) notes 6, 7, 8 belong to RG4.20.3.
+
 ## RG5 — Performance
 
 Measurement first, then the code that is actually hot. revision2026 step R2.16 measured the linear
@@ -1885,6 +1912,7 @@ issue and a short title only. The open issues that are not steps are in the trac
 | RG4.15 | #2848, #2849 | the open bugs before 1.13: `GeneralContact`, the contact model of its implicit solver (decision) and the torque on triangle bodies |
 | RG12.39 | #2850 | a restart from the restart file: how it works with a model script, then a proposal |
 | RG3.36 | #2856 | the PDF checked with the documentation |
+| RG4.20 | #2859 | ANCF thin plate of a colleague: the visualization (RG4.20.3) and four decisions (RG4.20.4) |
 | RG4.19 | #692, #1290, #1337, #2851 | the open bugs and checks, evaluated: options and decisions (RG4.19.1-.9) |
 | RG5.1 | - | a maintained micro-benchmark of the linear algebra, inside Exudyn (from #2397); RG5.1.1 the no-rotation flag of the HT |
 | RG5.2 | - | make the hot linear algebra vectorizable |

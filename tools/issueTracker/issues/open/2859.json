@@ -1,0 +1,12 @@
+{
+  "number": 2859,
+  "title": "ANCF thin plate visualization of the working copy 2026: normal offset, postprocessed contour, contour layer",
+  "author": "Claude-JG",
+  "status": "RAISED",
+  "type": "EXTENSION",
+  "effort": "MEDIUM",
+  "description": "From the same working copy: visualizationSettings.bodies.shells drawNormal, drawNormalFactor, drawNormalColor, drawNormalLines, usePostprocessedContour (node-averaged contour) and contourZeta; finer tiling; the storage of the postprocessed values in VisualizationSystem. Not the setting integrationMode (port note 2).",
+  "dateRaised": "2026-10-05",
+  "deadline": "2027-04-03",
+  "file": "src/ImplObjects/CObjectANCFThinPlate.cpp"
+}

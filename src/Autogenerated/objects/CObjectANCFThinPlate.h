@@ -4,7 +4,7 @@
 *
 * @author       Gerstmayr Johannes
 * @date         2019-07-01 (generated)
-* @date         2026-10-03  18:09:00 (last modified)
+* @date         2026-10-05  08:53:07 (last modified)
 *
 * @copyright    This file is part of Exudyn. Exudyn is free software: you can redistribute it and/or modify it under the terms of the Exudyn license. See "LICENSE.txt" for more details.
 * @note         Bug reports, support and further information:
@@ -27,22 +27,26 @@
 class CObjectANCFThinPlateParameters // AUTO:
 {
 public: // AUTO:
-    Vector thickness;                             //!< AUTO:  [SI:m] thickness of plate either provided as scalar or as vector (4 values, same order as local element node numbers) values that are linearly interpolated from nodal values; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients
+    Vector thickness;                             //!< AUTO:  [SI:m] thickness of the plate: one value for a constant thickness; 4 values, the thicknesses at the nodes in their order, interpolated bilinearly; or 12 values \f$[h_0,\, h_{,s,0},\, h_{,t,0},\, \ldots,\, h_3,\, h_{,s,3},\, h_{,t,3}]\f$, the thickness and its gradients along the element edges at each node, interpolated with the 12 shape functions of the position; with 4 or 12 values, the stiffness is computed from the local thickness, see strainCoefficients
     Real density;                                 //!< AUTO: must be >= 0;  [SI:kg/m\f$^3\f$] density of the plate, possibly averaged over thickness
     Real massProportionalDamping;                 //!< AUTO: mass-proportional damping coefficient \f$\alpha\f$ [SI:1/s]; adds massmatrix proportional damping forces \f$\fv_d = \alpha \Mm \dot{\qv}\f$
-    Matrix3DList strainCoefficients;              //!< AUTO:  [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients
-    Matrix3DList curvatureCoefficients;           //!< AUTO:  [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate; either given as 3D Matrix (numpy array), or a list of 3D matrices at each nodal point, see thickness; dimensionality must agree between thickness, strainCoefficients and curvatureCoefficients
+    Real stiffnessProportionalDamping;            //!< AUTO: membrane stiffness-proportional damping coefficient \f$\f[ta_\varepsilon\f$ [SI:s]: Kelvin-Voigt damping \f$\f[ta_\varepsilon\, \Dm_\varepsilon\, \dot\teps\f$ added to the membrane forces, in the current configuration; it does not damp a rigid-body motion
+    Real bendingStiffnessProportionalDamping;     //!< AUTO: bending stiffness-proportional damping coefficient \f$\f[ta_\kappa\f$ [SI:s]: Kelvin-Voigt damping \f$\f[ta_\kappa\, \Dm_\kappa\, \dot\tkappa\f$ added to the bending moments; if negative (default), \f$\f[ta_\varepsilon\f$ of stiffnessProportionalDamping is used, 0 switches it off
+    Matrix3DList strainCoefficients;              //!< AUTO:  [SI:N/m] stiffness coefficients related to inplane normal and shear strains, integrated over height of the plate, as a list of 3D matrices; for a constant thickness one matrix; for 4 or 12 thickness values, the first matrix divided by thickness[0] is the material matrix of a homogeneous isotropic plate, \f$\Dm_\varepsilon = \Dm_b\, h\f$ and \f$\Dm_\kappa = \Dm_b\, h^3/12\f$ at each point, and further matrices are not used
+    Matrix3DList curvatureCoefficients;           //!< AUTO:  [SI:Nm] stiffness coefficients related to curvatures, integrated over height of the plate, as a list of 3D matrices; used for a constant thickness (one matrix); for 4 or 12 thickness values \f$\Dm_\kappa\f$ follows from strainCoefficients and the local thickness
     Real strainIsRelativeToReference;             //!< AUTO:  if set to 1., a pre-deformed reference configuration is considered as the stressless state; if set to 0., the straight configuration serves as a reference geometry; allows also values between 0. and 1. to perform a transition during static computation
     Vector4D slopesScalingX;                      //!< AUTO: scaling of x-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.
     Vector4D slopesScalingY;                      //!< AUTO: scaling of y-slopes at each element node; flat elements: half of the side length of the element; curved: optimal values such that curved geometry is best approximated; if negative (default) values are used, length is computed from node distances.
     Index4 nodeNumbers;                           //!< AUTO: 4 NodePointSlope12 node numbers, with local (xi,eta) coordinates as [(-1,-1),(1,-1),(1,1),(-1,1)]
-    Index useReducedOrderIntegration;             //!< AUTO: 0/false: use highest Gauss integration for virtual work of strains
+    Index useReducedOrderIntegration;             //!< AUTO: integration of the virtual work: 0 - Gauss 5 x 5 points for the membrane and the bending terms; 1 - Lobatto 3 x 3 points for the membrane and Gauss 2 x 2 for the bending terms (disjoint points, against membrane locking); 2 - the same as 1
     //! AUTO: default constructor with parameter initialization
     CObjectANCFThinPlateParameters()
     {
         thickness = Vector();
         density = 0.;
         massProportionalDamping = 0.;
+        stiffnessProportionalDamping = 0.;
+        bendingStiffnessProportionalDamping = -1.;
         strainCoefficients = Matrix3DList();
         curvatureCoefficients = Matrix3DList();
         strainIsRelativeToReference = 1.;
@@ -136,8 +140,8 @@ public: // AUTO:
     //! AUTO:  provide according output variable in 'value'
     virtual void GetOutputVariableBody(OutputVariableType variableType, const Vector3D& localPosition, ConfigurationType configuration, Vector& value, Index objectNumber) const override;
 
-    //! AUTO:  the integration rule of the elastic forces in each direction, shared with the elastic energy (#2202)
-    void GetIntegrationRule(ConstSizeVector<5>& xiGP, ConstSizeVector<5>& xiW) const;
+    //! AUTO:  the integration rules of the membrane and the bending virtual work in each direction, shared with the elastic energy (#2202, #2857)
+    void GetIntegrationRules(ConstSizeVector<5>& membranePoints, ConstSizeVector<5>& membraneWeights, ConstSizeVector<5>& bendingPoints, ConstSizeVector<5>& bendingWeights) const;
 
     //! AUTO:  the elastic energy of the membrane strains and the curvatures, with the kinematics, coefficients and integration rule of the elastic forces (#2202)
     Real ComputeElasticEnergy(ConfigurationType configuration) const;
@@ -254,14 +258,8 @@ public: // AUTO:
     //! AUTO:  precompute mass terms if it has not been done yet
     void PreComputeMassTerms() const;
 
-    //! AUTO:  compute thickness from local unit coordinates
+    //! AUTO:  compute thickness from local unit coordinates, for 1, 4 or 12 thickness values
     Real ComputeThicknessAtPoint(Real xi, Real eta) const;
-
-    //! AUTO:  compute strain coefficient matrix from local unit coordinates
-    Matrix3D ComputeStrainCoefficientsAtPoint(Real xi, Real eta) const;
-
-    //! AUTO:  compute curvature coefficient matrix from local unit coordinates
-    Matrix3D ComputeCurvatureCoefficientsAtPoint(Real xi, Real eta) const;
 
     //! AUTO:  Computational function: compute jacobian (dense or sparse mode, see parent CObject function)
     virtual void ComputeJacobianODE2_ODE2(EXUmath::MatrixContainer& jacobianODE2, JacobianTemp& temp, Real factorODE2, Real factorODE2_t, Index objectNumber, const ArrayIndex& ltg) const override;

@@ -159,14 +159,6 @@ bool MainObjectANCFThinPlate::CheckPreAssembleConsistency(const MainSystem& main
 {
 	CObjectANCFThinPlate* cObject = (CObjectANCFThinPlate*)GetCObject();
 
-	for (Index i = 0; i < 2; i++) {
-		if (std::strcmp(mainSystem.GetMainSystemData().GetMainNode(cObject->GetNodeNumber(i)).GetTypeName(), "PointSlope12") != 0)
-		{
-			errorString = "ObjectANCFThinPlate: node " + EXUstd::ToString(i) + " must be of type 'PointSlope12', but found type '" +
-				mainSystem.GetMainSystemData().GetMainNode(cObject->GetNodeNumber(i)).GetTypeName() + "'";
-			return false;
-		}
-	}
 	if (cObject->GetNumberOfNodes() != CObjectANCFThinPlate::nNodes)
 	{
 		errorString = "ObjectANCFThinPlate: must have 4 nodes but received " +
@@ -174,35 +166,45 @@ bool MainObjectANCFThinPlate::CheckPreAssembleConsistency(const MainSystem& main
 		return false;
 
 	}
-
-	if (cObject->GetParameters().thickness.NumberOfItems() != 1 &&
-		cObject->GetParameters().thickness.NumberOfItems() != 4)
-	{
-		errorString = "ObjectANCFThinPlate: thickness must either be scalar (or list/array with 1 component) or a list/array of 4 parameters, but received " +
-			EXUstd::ToString(cObject->GetParameters().thickness);
-		return false;
-	}
-	for (Real thickness: cObject->GetParameters().thickness)
-	{
-		if (thickness <= 0)
+	for (Index i = 0; i < CObjectANCFThinPlate::nNodes; i++) {
+		if (std::strcmp(mainSystem.GetMainSystemData().GetMainNode(cObject->GetNodeNumber(i)).GetTypeName(), "PointSlope12") != 0)
 		{
-			errorString = "ObjectANCFThinPlate: each component of thickness must be > 0 but received " + EXUstd::ToString(cObject->GetParameters().thickness);
+			errorString = "ObjectANCFThinPlate: node " + EXUstd::ToString(i) + " must be of type 'PointSlope12', but found type '" +
+				mainSystem.GetMainSystemData().GetMainNode(cObject->GetNodeNumber(i)).GetTypeName() + "'";
 			return false;
 		}
 	}
 
-
-	if (cObject->GetParameters().thickness.NumberOfItems() !=
-		cObject->GetParameters().strainCoefficients.NumberOfItems())
+	//1 value: constant; 4: nodal thicknesses; 12: nodal thicknesses and their gradients along the edges (#2857)
+	const Vector& thickness = cObject->GetParameters().thickness;
+	const Index nThickness = thickness.NumberOfItems();
+	if (nThickness != 1 && nThickness != 4 && nThickness != 12)
 	{
-		errorString = "ObjectANCFThinPlate: thickness and strainCoefficients must be have consistent dimentions (either one height and one strain cofficient matrix, or a list with same length each)";
+		errorString = "ObjectANCFThinPlate: thickness must either be scalar (or list/array with 1 component), a list/array of 4 nodal thicknesses or of 12 values (nodal thickness and its two gradients per node), but received " +
+			EXUstd::ToString(thickness);
 		return false;
 	}
-
-	if (cObject->GetParameters().thickness.NumberOfItems() !=
-		cObject->GetParameters().curvatureCoefficients.NumberOfItems())
+	const Index thicknessStride = (nThickness == 12) ? 3 : 1; //the gradients of 12 values may be zero or negative
+	for (Index i = 0; i < nThickness; i += thicknessStride)
 	{
-		errorString = "ObjectANCFThinPlate: thickness and curvatureCoefficients must be have consistent dimentions (either one height and one curvature cofficient matrix, or a list with same length each)";
+		if (thickness[i] <= 0)
+		{
+			errorString = "ObjectANCFThinPlate: each thickness must be > 0 but received " + EXUstd::ToString(thickness);
+			return false;
+		}
+	}
+
+	//a variable thickness uses only the first coefficient matrix (homogeneous isotropic plate); the nodal ones may be given
+	const Index nStrain = cObject->GetParameters().strainCoefficients.NumberOfItems();
+	const Index nCurvature = cObject->GetParameters().curvatureCoefficients.NumberOfItems();
+	if ((nThickness == 1 && nStrain != 1) || (nThickness != 1 && nStrain != 1 && nStrain != 4))
+	{
+		errorString = "ObjectANCFThinPlate: strainCoefficients must be one matrix for a constant thickness, and one or 4 matrices for a variable thickness, but received " + EXUstd::ToString(nStrain) + " matrices";
+		return false;
+	}
+	if ((nThickness == 1 && nCurvature != 1) || (nThickness != 1 && nCurvature != 1 && nCurvature != 4))
+	{
+		errorString = "ObjectANCFThinPlate: curvatureCoefficients must be one matrix for a constant thickness, and one or 4 matrices for a variable thickness, but received " + EXUstd::ToString(nCurvature) + " matrices";
 		return false;
 	}
 

@@ -12,7 +12,7 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 | release | name | resolved issues | highest version |
 |---|---|---|---|
-| 1.12 | Metheney | 294 | 1.12.328 |
+| 1.12 | Metheney | 296 | 1.12.330 |
 | 1.11 | McLaughlin | 240 | 1.11.240 |
 | 1.10 | Lagrene | 160 | 1.10.160 |
 | 1.9 | Krall | 235 | 1.9.234 |
@@ -29,6 +29,14 @@ This file is generated; it is written by the tracker whenever an issue closes.
 
 ## Version 1.12 - Metheney (current)
 
+- **1.12.330** `EXTENSION` `MEDIUM EFF` `raised by: Claude-JG` `resolved by: Claude-JG` exudyn.shells: ANCFThinPlateBuilder, geometry maps and plate helpers of the working copy 2026, ported (#2858)
+  - description: From the same working copy: ShellMesh with stiffness-proportional damping and a thickness function (12 thickness values), exact slopes of the bilinear corner map, ANCFThinPlateBuilder, geometry maps (cylinder, cone, hemisphere, torus, Bezier strip, ...), constraint, edge-load and hinge helpers; names in UpperCamelCase.
+  - **notes:** exudyn.shells (revision by Michael Pieber): ANCFThinPlateBuilder for plate meshes on mapped rectangles, the maps MapCylinder, MapConeFrustum, MapHemisphericalShell, MapToroidalPanel, MapBezierStrip and others, functions for constraints, edge loads and hinges of plate nodes, and ShellMesh with stiffness-proportional damping and a thickness function.
+  - date resolved: **2026-10-05 09:16**, date raised: 2026-10-05
+- **1.12.329** `EXTENSION` `HIGH EFF` `raised by: Claude-JG` `resolved by: Claude-JG` ObjectANCFThinPlate: the revision of the working copy 2026 (M. Pieber), ported (#2857)
+  - description: A colleague (Michael Pieber) checked the element against the literature in his working copy and documented the changes in tmp/shells/changesANCFThinPlate2026: material curvature measure, separate membrane and bending integration (modes 0, 1, 2), 12 thickness values and stiffness from the local thickness, Kelvin-Voigt damping, two-pass automatic differentiation of the Jacobian, outputs through the thickness (StrainLocal, StressLocal, ForceLocal, TorqueLocal). Port into the current repository with the renames of 1.12 and the corrections of the port notes.
+  - **notes:** ObjectANCFThinPlate (revision by Michael Pieber): curvatures of the material measure, membrane and bending integrated at separate points (useReducedOrderIntegration 0: Gauss 5x5; 1 and 2: Lobatto 3x3 for the membrane, Gauss 2x2 for the bending), 1, 4 or 12 thickness values with the stiffness from the local thickness, Kelvin-Voigt damping (stiffnessProportionalDamping, bendingStiffnessProportionalDamping) that does not damp rigid motion, and StrainLocal, StressLocal, ForceLocal, TorqueLocal through the thickness; StrainLocal has 6 components, CurvatureLocal is \[-kxx, kyy, kxy\]; test model ANCFThinPlateRevisionTest.py.
+  - date resolved: **2026-10-05 09:16**, date raised: 2026-10-05
 - **1.12.328** `DOCU` `LOW EFF` `raised by: Claude-JG` `resolved by: Claude-JG` the renamed and deprecated item parameters are listed only on each item's page (#2855)
   - description: The maintainer, 2026-10-05: the settings changes are listed at the end of the settings pages, but where are the item parameter changes listed? Each item page lists its own under the parameter table; a list of all of them, like that of the settings, is missing.
   - **notes:** The index page of the items reference manual lists every renamed and deprecated item parameter, with a link to its item, as the settings pages list theirs.

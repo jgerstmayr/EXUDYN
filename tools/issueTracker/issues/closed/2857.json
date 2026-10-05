@@ -1,0 +1,16 @@
+{
+  "number": 2857,
+  "title": "ObjectANCFThinPlate: the revision of the working copy 2026 (M. Pieber), ported",
+  "author": "Claude-JG",
+  "status": "RESOLVED",
+  "type": "EXTENSION",
+  "effort": "HIGH",
+  "description": "A colleague (Michael Pieber) checked the element against the literature in his working copy and documented the changes in tmp/shells/changesANCFThinPlate2026: material curvature measure, separate membrane and bending integration (modes 0, 1, 2), 12 thickness values and stiffness from the local thickness, Kelvin-Voigt damping, two-pass automatic differentiation of the Jacobian, outputs through the thickness (StrainLocal, StressLocal, ForceLocal, TorqueLocal). Port into the current repository with the renames of 1.12 and the corrections of the port notes.",
+  "dateRaised": "2026-10-05",
+  "deadline": "2027-04-03",
+  "dateResolved": "2026-10-05 09:16",
+  "resolvedAuthor": "Claude-JG",
+  "file": "src/ImplObjects/CObjectANCFThinPlate.cpp",
+  "releaseNotes": "ObjectANCFThinPlate (revision by Michael Pieber): curvatures of the material measure, membrane and bending integrated at separate points (useReducedOrderIntegration 0: Gauss 5x5; 1 and 2: Lobatto 3x3 for the membrane, Gauss 2x2 for the bending), 1, 4 or 12 thickness values with the stiffness from the local thickness, Kelvin-Voigt damping (stiffnessProportionalDamping, bendingStiffnessProportionalDamping) that does not damp rigid motion, and StrainLocal, StressLocal, ForceLocal, TorqueLocal through the thickness; StrainLocal has 6 components, CurvatureLocal is [-kxx, kyy, kxy]; test model ANCFThinPlateRevisionTest.py.",
+  "resolvedInVersion": "1.12.329"
+}

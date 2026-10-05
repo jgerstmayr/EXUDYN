@@ -110,7 +110,7 @@ def TestExamplesReferenceSolution():
         'geometricallyExactBeamCurvedTest.py':4.561491685469841, #the 45-degree bend, stress-free in its curved reference configuration (#1494)
         'geometricallyExactBeamRightAngleFrame.py':3.306181713660017, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 3.306181714013268; #lateral buckling of the right-angle frame at 1.088 N (#1499)
         'rightAngleFrame.py':4.3718231979938, #2026-10-02: JointGeneric on the connector interface, reaction forces summed in another order (#2745), before 4.371823197993865; #the same frame driven by displacement, past the buckling point (#2762)
-        'energiesFlexibleBodiesTest.py':5.850170604919896, #elastic energy of beams, plate and kinematic tree in free oscillations (#2202)
+        'energiesFlexibleBodiesTest.py':5.850170604918965, #2026-10-05: the ANCF thin plate of the working copy 2026 (#2857), round-off; before 5.850170604919896; #elastic energy of beams, plate and kinematic tree in free oscillations (#2202)
         'accessFunctionsTest.py':1.255546526424125, #new 2026-10-02: the access functions of a body at a local position, and what Assemble() refuses (#2744); 2026-10-02: a force at the rim of ObjectRotationalMass1D (#2775)
         'computeItemTest.py':71.26280786574209, #new 2026-10-02: mbs.ComputeItem and NumericalJacobian on a double pendulum (#2779)
         'emptySystemTest.py':124.09765181769477, #new 2026-10-02: a system without coordinates through every solver, dense and sparse (#2790)
@@ -135,6 +135,7 @@ def TestExamplesReferenceSolution():
         'contactComparisonTest.py':4.773734739232028, #2026-10-05: GeneralContact with keepContactWhilePenetrating as a fifth case (#2848); before 4.561317500364976; #2026-10-04: GeneralContact as a fourth case and the sliding ball (#1848, #1947); before 1.200116276111891; #2026-09-30: step size recommended also where a contact ends (#2109); before 1.200040705928356; #deepest points and end heights, three contact objects, two laws (#2749, #2750)
         'generalContactTriangleMomentumTest.py':4.035299999516676, #new 2026-10-05: momentum conservation of the GeneralContact sphere-triangle contact (#2849)
         'inactiveConnectorForceTest.py':16204.677320386909, #new 2026-10-05: an inactive connector reports no force (#984)
+        'ANCFThinPlateRevisionTest.py':18, #new 2026-10-05: the tests of the ANCF thin plate of the working copy 2026, the number of tests that passed (#2857, #2858)
         'kinematicTreePrismaticJacobianTest.py':1.249999999999995, #5 cases of 0.25 (#2740)
         'kinematicTreeTest.py':-1.3093839602164064,
         'kinematicTreeUserFunctionTest.py': 0.14522556021139263,      #new 2026-10-04: the forceUserFunction of ObjectKinematicTree gets the velocities (#2845)
@@ -452,7 +453,7 @@ def MiniExamplesReferenceSolution():
         'ObjectANCFBeam.py':-0.3381249577076517,
         'ObjectBeamGeometricallyExact2D.py':-0.3381249616596102,
         'ObjectBeamGeometricallyExact.py':-0.33812496093079464,
-        'ObjectANCFThinPlate.py':-0.06987553667440825,
+        'ObjectANCFThinPlate.py':-0.06987478663348738, #2026-10-05: material curvature measure, Gauss 5x5 (#2857); before -0.06987553667440825
         'ObjectALEANCFCable2D.py':0.2500092945807542,
         'ObjectJointALEMoving2D.py':0.7249978132591198,
         'ObjectConnectorCoordinateSpringDamperExt.py':0.050495049504950505,
@@ -514,7 +515,7 @@ def MiniExamplesReferenceSolution():
         'NodePoint2DSlope1.py':-0.3333332497979799,
         'NodePointGround.py':0.10000000000000009,
         'NodePointSlope1.py':-0.3333332497979799,
-        'NodePointSlope12.py':-0.06987553667440825,
+        'NodePointSlope12.py':-0.06987478663348738, #2026-10-05: material curvature measure, Gauss 5x5 (#2857); before -0.06987553667440825
         'NodePointSlope23.py':-0.3381249577076517,
         'NodeRigidBody2D.py':3.0,
         'NodeRigidBodyEP.py':1.5707880511569134,
